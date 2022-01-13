@@ -2,8 +2,8 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-from core import DiscoveryServices_pb2 as DiscoveryServices__pb2
-from core import ServiceLocation_pb2 as ServiceLocation__pb2
+import DiscoveryServices_pb2 as DiscoveryServices__pb2
+import ServiceLocation_pb2 as ServiceLocation__pb2
 
 
 class RegistryServiceStub(object):
@@ -23,27 +23,27 @@ class RegistryServiceStub(object):
             channel: A grpc.Channel.
         """
         self.RegisterService = channel.unary_unary(
-                '/NIMeasurementServices.RegistryService/RegisterService',
+                '/ni.measurements.discovery.v1.RegistryService/RegisterService',
                 request_serializer=DiscoveryServices__pb2.RegisterServiceRequest.SerializeToString,
                 response_deserializer=DiscoveryServices__pb2.RegisterServiceResponse.FromString,
                 )
         self.UnregisterService = channel.unary_unary(
-                '/NIMeasurementServices.RegistryService/UnregisterService',
+                '/ni.measurements.discovery.v1.RegistryService/UnregisterService',
                 request_serializer=DiscoveryServices__pb2.UnregisterServiceRequest.SerializeToString,
                 response_deserializer=DiscoveryServices__pb2.UnregisterServiceResponse.FromString,
                 )
         self.EnumerateServices = channel.unary_unary(
-                '/NIMeasurementServices.RegistryService/EnumerateServices',
+                '/ni.measurements.discovery.v1.RegistryService/EnumerateServices',
                 request_serializer=DiscoveryServices__pb2.EnumerateServicesRequest.SerializeToString,
                 response_deserializer=DiscoveryServices__pb2.EnumerateServicesResponse.FromString,
                 )
         self.ResolveService = channel.unary_unary(
-                '/NIMeasurementServices.RegistryService/ResolveService',
+                '/ni.measurements.discovery.v1.RegistryService/ResolveService',
                 request_serializer=DiscoveryServices__pb2.ResolveServiceRequest.SerializeToString,
                 response_deserializer=ServiceLocation__pb2.ServiceLocation.FromString,
                 )
         self.ResolveMonikerEndpoint = channel.unary_unary(
-                '/NIMeasurementServices.RegistryService/ResolveMonikerEndpoint',
+                '/ni.measurements.discovery.v1.RegistryService/ResolveMonikerEndpoint',
                 request_serializer=DiscoveryServices__pb2.ResolveMonikerEndpointRequest.SerializeToString,
                 response_deserializer=ServiceLocation__pb2.ServiceLocation.FromString,
                 )
@@ -130,7 +130,7 @@ def add_RegistryServiceServicer_to_server(servicer, server):
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'NIMeasurementServices.RegistryService', rpc_method_handlers)
+            'ni.measurements.discovery.v1.RegistryService', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
 
 
@@ -156,7 +156,7 @@ class RegistryService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/NIMeasurementServices.RegistryService/RegisterService',
+        return grpc.experimental.unary_unary(request, target, '/ni.measurements.discovery.v1.RegistryService/RegisterService',
             DiscoveryServices__pb2.RegisterServiceRequest.SerializeToString,
             DiscoveryServices__pb2.RegisterServiceResponse.FromString,
             options, channel_credentials,
@@ -173,7 +173,7 @@ class RegistryService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/NIMeasurementServices.RegistryService/UnregisterService',
+        return grpc.experimental.unary_unary(request, target, '/ni.measurements.discovery.v1.RegistryService/UnregisterService',
             DiscoveryServices__pb2.UnregisterServiceRequest.SerializeToString,
             DiscoveryServices__pb2.UnregisterServiceResponse.FromString,
             options, channel_credentials,
@@ -190,7 +190,7 @@ class RegistryService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/NIMeasurementServices.RegistryService/EnumerateServices',
+        return grpc.experimental.unary_unary(request, target, '/ni.measurements.discovery.v1.RegistryService/EnumerateServices',
             DiscoveryServices__pb2.EnumerateServicesRequest.SerializeToString,
             DiscoveryServices__pb2.EnumerateServicesResponse.FromString,
             options, channel_credentials,
@@ -207,7 +207,7 @@ class RegistryService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/NIMeasurementServices.RegistryService/ResolveService',
+        return grpc.experimental.unary_unary(request, target, '/ni.measurements.discovery.v1.RegistryService/ResolveService',
             DiscoveryServices__pb2.ResolveServiceRequest.SerializeToString,
             ServiceLocation__pb2.ServiceLocation.FromString,
             options, channel_credentials,
@@ -224,7 +224,7 @@ class RegistryService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/NIMeasurementServices.RegistryService/ResolveMonikerEndpoint',
+        return grpc.experimental.unary_unary(request, target, '/ni.measurements.discovery.v1.RegistryService/ResolveMonikerEndpoint',
             DiscoveryServices__pb2.ResolveMonikerEndpointRequest.SerializeToString,
             ServiceLocation__pb2.ServiceLocation.FromString,
             options, channel_credentials,

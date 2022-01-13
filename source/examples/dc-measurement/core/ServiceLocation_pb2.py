@@ -15,11 +15,11 @@ _sym_db = _symbol_database.Default()
 
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='ServiceLocation.proto',
-  package='NIMeasurementServices',
+  package='ni.measurements.discovery.v1',
   syntax='proto3',
-  serialized_options=b'\252\002\'NationalInstruments.MeasurementServices',
+  serialized_options=b'\252\0021NationalInstruments.MeasurementServices.Discovery',
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x15ServiceLocation.proto\x12\x15NIMeasurementServices\"q\n\x0fServiceLocation\x12\x10\n\x08location\x18\x01 \x01(\t\x12\x15\n\roptimal_route\x18\x02 \x01(\t\x12\x15\n\rinsecure_port\x18\x03 \x01(\t\x12\x1e\n\x16ssl_authenticated_port\x18\x04 \x01(\tB*\xaa\x02\'NationalInstruments.MeasurementServicesb\x06proto3'
+  serialized_pb=b'\n\x15ServiceLocation.proto\x12\x1cni.measurements.discovery.v1\"q\n\x0fServiceLocation\x12\x10\n\x08location\x18\x01 \x01(\t\x12\x15\n\roptimal_route\x18\x02 \x01(\t\x12\x15\n\rinsecure_port\x18\x03 \x01(\t\x12\x1e\n\x16ssl_authenticated_port\x18\x04 \x01(\tB4\xaa\x02\x31NationalInstruments.MeasurementServices.Discoveryb\x06proto3'
 )
 
 
@@ -27,35 +27,35 @@ DESCRIPTOR = _descriptor.FileDescriptor(
 
 _SERVICELOCATION = _descriptor.Descriptor(
   name='ServiceLocation',
-  full_name='NIMeasurementServices.ServiceLocation',
+  full_name='ni.measurements.discovery.v1.ServiceLocation',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='location', full_name='NIMeasurementServices.ServiceLocation.location', index=0,
+      name='location', full_name='ni.measurements.discovery.v1.ServiceLocation.location', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='optimal_route', full_name='NIMeasurementServices.ServiceLocation.optimal_route', index=1,
+      name='optimal_route', full_name='ni.measurements.discovery.v1.ServiceLocation.optimal_route', index=1,
       number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='insecure_port', full_name='NIMeasurementServices.ServiceLocation.insecure_port', index=2,
+      name='insecure_port', full_name='ni.measurements.discovery.v1.ServiceLocation.insecure_port', index=2,
       number=3, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='ssl_authenticated_port', full_name='NIMeasurementServices.ServiceLocation.ssl_authenticated_port', index=3,
+      name='ssl_authenticated_port', full_name='ni.measurements.discovery.v1.ServiceLocation.ssl_authenticated_port', index=3,
       number=4, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
@@ -73,8 +73,8 @@ _SERVICELOCATION = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=48,
-  serialized_end=161,
+  serialized_start=55,
+  serialized_end=168,
 )
 
 DESCRIPTOR.message_types_by_name['ServiceLocation'] = _SERVICELOCATION
@@ -83,7 +83,7 @@ _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 ServiceLocation = _reflection.GeneratedProtocolMessageType('ServiceLocation', (_message.Message,), {
   'DESCRIPTOR' : _SERVICELOCATION,
   '__module__' : 'ServiceLocation_pb2'
-  # @@protoc_insertion_point(class_scope:NIMeasurementServices.ServiceLocation)
+  # @@protoc_insertion_point(class_scope:ni.measurements.discovery.v1.ServiceLocation)
   })
 _sym_db.RegisterMessage(ServiceLocation)
 

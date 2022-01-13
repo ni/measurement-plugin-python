@@ -1,20 +1,18 @@
 """
-Measurement - Edited By User
-Import driver and 3Party Packages based on user requirements
+Measurement - Can be Edited By User
+User can Import driver and 3Party Packages based on requirements
 """
 
 import hightime
 import nidcpower
 
-from core import validate
-
+import Metadata
 
 """
-User Measurement API 
+User Measurement API. Returns Voltage Measurement as the only output
 """
 
 
-@validate.ValidateAnnotation  # Decoration Performing both parameter validation and tags the function as Measurement API
 def measure(
     voltage_level: float = 0.01,
     current_limit: float = 0.01,
@@ -22,8 +20,10 @@ def measure(
     current_limit_range: float = 0.01,
     source_delay: float = 0.0,
 ) -> float:
+
+    # User Logic :
     timeout = hightime.timedelta(seconds=(source_delay + 1.0))
-    with nidcpower.Session(resource_name="DPS_4145") as session:
+    with nidcpower.Session(resource_name=Metadata.RESOURCE_NAME) as session:
         # Configure the session.
         session.source_mode = nidcpower.SourceMode.SINGLE_POINT
         session.output_function = nidcpower.OutputFunction.DC_VOLTAGE
@@ -52,7 +52,13 @@ def measure(
     return voltages[0] / 10
 
 
+"""
+Utility Method that formats and print the Measured Values
+"""
+
+
 def print_fetched_measurements(measurements):
     print("             Voltage : {:f} V".format(measurements[0].voltage))
     print("              Current: {:f} A".format(measurements[0].current))
     print("        In compliance: {0}".format(measurements[0].in_compliance))
+    return None

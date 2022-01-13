@@ -11,16 +11,16 @@ from google.protobuf import symbol_database as _symbol_database
 _sym_db = _symbol_database.Default()
 
 
-from core import ServiceLocation_pb2 as ServiceLocation__pb2
+import ServiceLocation_pb2 as ServiceLocation__pb2
 
 
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='DiscoveryServices.proto',
-  package='NIMeasurementServices',
+  package='ni.measurements.discovery.v1',
   syntax='proto3',
   serialized_options=b'\252\0021NationalInstruments.MeasurementServices.Discovery',
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x17\x44iscoveryServices.proto\x12\x15NIMeasurementServices\x1a\x15ServiceLocation.proto\"e\n\x11ServiceDescriptor\x12\x12\n\nservice_id\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x17\n\x0f\x64\x65scription_url\x18\x03 \x01(\t\x12\x15\n\rservice_class\x18\x04 \x01(\t\"\xb4\x01\n\x16RegisterServiceRequest\x12\x45\n\x13service_description\x18\x01 \x01(\x0b\x32(.NIMeasurementServices.ServiceDescriptor\x12\x19\n\x11provided_services\x18\x02 \x03(\t\x12\x38\n\x08location\x18\x03 \x01(\x0b\x32&.NIMeasurementServices.ServiceLocation\"2\n\x17RegisterServiceResponse\x12\x17\n\x0fregistration_id\x18\x01 \x01(\t\"3\n\x18UnregisterServiceRequest\x12\x17\n\x0fregistration_id\x18\x01 \x01(\t\"\x1b\n\x19UnregisterServiceResponse\"4\n\x18\x45numerateServicesRequest\x12\x18\n\x10required_service\x18\x01 \x01(\t\"a\n\x19\x45numerateServicesResponse\x12\x44\n\x12\x61vailable_services\x18\x01 \x03(\x0b\x32(.NIMeasurementServices.ServiceDescriptor\"V\n\x15ResolveServiceRequest\x12\x1d\n\x15request_data_location\x18\x01 \x01(\t\x12\x1e\n\x16required_service_class\x18\x02 \x01(\t\"{\n\x1dResolveMonikerEndpointRequest\x12\x18\n\x10request_location\x18\x01 \x01(\t\x12@\n\x10moniker_location\x18\x02 \x01(\x0b\x32&.NIMeasurementServices.ServiceLocation2\xdd\x04\n\x0fRegistryService\x12r\n\x0fRegisterService\x12-.NIMeasurementServices.RegisterServiceRequest\x1a..NIMeasurementServices.RegisterServiceResponse\"\x00\x12x\n\x11UnregisterService\x12/.NIMeasurementServices.UnregisterServiceRequest\x1a\x30.NIMeasurementServices.UnregisterServiceResponse\"\x00\x12x\n\x11\x45numerateServices\x12/.NIMeasurementServices.EnumerateServicesRequest\x1a\x30.NIMeasurementServices.EnumerateServicesResponse\"\x00\x12h\n\x0eResolveService\x12,.NIMeasurementServices.ResolveServiceRequest\x1a&.NIMeasurementServices.ServiceLocation\"\x00\x12x\n\x16ResolveMonikerEndpoint\x12\x34.NIMeasurementServices.ResolveMonikerEndpointRequest\x1a&.NIMeasurementServices.ServiceLocation\"\x00\x42\x34\xaa\x02\x31NationalInstruments.MeasurementServices.Discoveryb\x06proto3'
+  serialized_pb=b'\n\x17\x44iscoveryServices.proto\x12\x1cni.measurements.discovery.v1\x1a\x15ServiceLocation.proto\"e\n\x11ServiceDescriptor\x12\x12\n\nservice_id\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x17\n\x0f\x64\x65scription_url\x18\x03 \x01(\t\x12\x15\n\rservice_class\x18\x04 \x01(\t\"\xc2\x01\n\x16RegisterServiceRequest\x12L\n\x13service_description\x18\x01 \x01(\x0b\x32/.ni.measurements.discovery.v1.ServiceDescriptor\x12\x19\n\x11provided_services\x18\x02 \x03(\t\x12?\n\x08location\x18\x03 \x01(\x0b\x32-.ni.measurements.discovery.v1.ServiceLocation\"2\n\x17RegisterServiceResponse\x12\x17\n\x0fregistration_id\x18\x01 \x01(\t\"3\n\x18UnregisterServiceRequest\x12\x17\n\x0fregistration_id\x18\x01 \x01(\t\"\x1b\n\x19UnregisterServiceResponse\"4\n\x18\x45numerateServicesRequest\x12\x18\n\x10required_service\x18\x01 \x01(\t\"h\n\x19\x45numerateServicesResponse\x12K\n\x12\x61vailable_services\x18\x01 \x03(\x0b\x32/.ni.measurements.discovery.v1.ServiceDescriptor\"V\n\x15ResolveServiceRequest\x12\x1d\n\x15request_data_location\x18\x01 \x01(\t\x12\x1e\n\x16required_service_class\x18\x02 \x01(\t\"\x82\x01\n\x1dResolveMonikerEndpointRequest\x12\x18\n\x10request_location\x18\x01 \x01(\t\x12G\n\x10moniker_location\x18\x02 \x01(\x0b\x32-.ni.measurements.discovery.v1.ServiceLocation2\xa7\x05\n\x0fRegistryService\x12\x80\x01\n\x0fRegisterService\x12\x34.ni.measurements.discovery.v1.RegisterServiceRequest\x1a\x35.ni.measurements.discovery.v1.RegisterServiceResponse\"\x00\x12\x86\x01\n\x11UnregisterService\x12\x36.ni.measurements.discovery.v1.UnregisterServiceRequest\x1a\x37.ni.measurements.discovery.v1.UnregisterServiceResponse\"\x00\x12\x86\x01\n\x11\x45numerateServices\x12\x36.ni.measurements.discovery.v1.EnumerateServicesRequest\x1a\x37.ni.measurements.discovery.v1.EnumerateServicesResponse\"\x00\x12v\n\x0eResolveService\x12\x33.ni.measurements.discovery.v1.ResolveServiceRequest\x1a-.ni.measurements.discovery.v1.ServiceLocation\"\x00\x12\x86\x01\n\x16ResolveMonikerEndpoint\x12;.ni.measurements.discovery.v1.ResolveMonikerEndpointRequest\x1a-.ni.measurements.discovery.v1.ServiceLocation\"\x00\x42\x34\xaa\x02\x31NationalInstruments.MeasurementServices.Discoveryb\x06proto3'
   ,
   dependencies=[ServiceLocation__pb2.DESCRIPTOR,])
 
@@ -29,35 +29,35 @@ DESCRIPTOR = _descriptor.FileDescriptor(
 
 _SERVICEDESCRIPTOR = _descriptor.Descriptor(
   name='ServiceDescriptor',
-  full_name='NIMeasurementServices.ServiceDescriptor',
+  full_name='ni.measurements.discovery.v1.ServiceDescriptor',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='service_id', full_name='NIMeasurementServices.ServiceDescriptor.service_id', index=0,
+      name='service_id', full_name='ni.measurements.discovery.v1.ServiceDescriptor.service_id', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='name', full_name='NIMeasurementServices.ServiceDescriptor.name', index=1,
+      name='name', full_name='ni.measurements.discovery.v1.ServiceDescriptor.name', index=1,
       number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='description_url', full_name='NIMeasurementServices.ServiceDescriptor.description_url', index=2,
+      name='description_url', full_name='ni.measurements.discovery.v1.ServiceDescriptor.description_url', index=2,
       number=3, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='service_class', full_name='NIMeasurementServices.ServiceDescriptor.service_class', index=3,
+      name='service_class', full_name='ni.measurements.discovery.v1.ServiceDescriptor.service_class', index=3,
       number=4, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
@@ -75,35 +75,35 @@ _SERVICEDESCRIPTOR = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=73,
-  serialized_end=174,
+  serialized_start=80,
+  serialized_end=181,
 )
 
 
 _REGISTERSERVICEREQUEST = _descriptor.Descriptor(
   name='RegisterServiceRequest',
-  full_name='NIMeasurementServices.RegisterServiceRequest',
+  full_name='ni.measurements.discovery.v1.RegisterServiceRequest',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='service_description', full_name='NIMeasurementServices.RegisterServiceRequest.service_description', index=0,
+      name='service_description', full_name='ni.measurements.discovery.v1.RegisterServiceRequest.service_description', index=0,
       number=1, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='provided_services', full_name='NIMeasurementServices.RegisterServiceRequest.provided_services', index=1,
+      name='provided_services', full_name='ni.measurements.discovery.v1.RegisterServiceRequest.provided_services', index=1,
       number=2, type=9, cpp_type=9, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='location', full_name='NIMeasurementServices.RegisterServiceRequest.location', index=2,
+      name='location', full_name='ni.measurements.discovery.v1.RegisterServiceRequest.location', index=2,
       number=3, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
@@ -121,21 +121,21 @@ _REGISTERSERVICEREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=177,
-  serialized_end=357,
+  serialized_start=184,
+  serialized_end=378,
 )
 
 
 _REGISTERSERVICERESPONSE = _descriptor.Descriptor(
   name='RegisterServiceResponse',
-  full_name='NIMeasurementServices.RegisterServiceResponse',
+  full_name='ni.measurements.discovery.v1.RegisterServiceResponse',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='registration_id', full_name='NIMeasurementServices.RegisterServiceResponse.registration_id', index=0,
+      name='registration_id', full_name='ni.measurements.discovery.v1.RegisterServiceResponse.registration_id', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
@@ -153,21 +153,21 @@ _REGISTERSERVICERESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=359,
-  serialized_end=409,
+  serialized_start=380,
+  serialized_end=430,
 )
 
 
 _UNREGISTERSERVICEREQUEST = _descriptor.Descriptor(
   name='UnregisterServiceRequest',
-  full_name='NIMeasurementServices.UnregisterServiceRequest',
+  full_name='ni.measurements.discovery.v1.UnregisterServiceRequest',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='registration_id', full_name='NIMeasurementServices.UnregisterServiceRequest.registration_id', index=0,
+      name='registration_id', full_name='ni.measurements.discovery.v1.UnregisterServiceRequest.registration_id', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
@@ -185,14 +185,14 @@ _UNREGISTERSERVICEREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=411,
-  serialized_end=462,
+  serialized_start=432,
+  serialized_end=483,
 )
 
 
 _UNREGISTERSERVICERESPONSE = _descriptor.Descriptor(
   name='UnregisterServiceResponse',
-  full_name='NIMeasurementServices.UnregisterServiceResponse',
+  full_name='ni.measurements.discovery.v1.UnregisterServiceResponse',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
@@ -210,21 +210,21 @@ _UNREGISTERSERVICERESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=464,
-  serialized_end=491,
+  serialized_start=485,
+  serialized_end=512,
 )
 
 
 _ENUMERATESERVICESREQUEST = _descriptor.Descriptor(
   name='EnumerateServicesRequest',
-  full_name='NIMeasurementServices.EnumerateServicesRequest',
+  full_name='ni.measurements.discovery.v1.EnumerateServicesRequest',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='required_service', full_name='NIMeasurementServices.EnumerateServicesRequest.required_service', index=0,
+      name='required_service', full_name='ni.measurements.discovery.v1.EnumerateServicesRequest.required_service', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
@@ -242,21 +242,21 @@ _ENUMERATESERVICESREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=493,
-  serialized_end=545,
+  serialized_start=514,
+  serialized_end=566,
 )
 
 
 _ENUMERATESERVICESRESPONSE = _descriptor.Descriptor(
   name='EnumerateServicesResponse',
-  full_name='NIMeasurementServices.EnumerateServicesResponse',
+  full_name='ni.measurements.discovery.v1.EnumerateServicesResponse',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='available_services', full_name='NIMeasurementServices.EnumerateServicesResponse.available_services', index=0,
+      name='available_services', full_name='ni.measurements.discovery.v1.EnumerateServicesResponse.available_services', index=0,
       number=1, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
@@ -274,28 +274,28 @@ _ENUMERATESERVICESRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=547,
-  serialized_end=644,
+  serialized_start=568,
+  serialized_end=672,
 )
 
 
 _RESOLVESERVICEREQUEST = _descriptor.Descriptor(
   name='ResolveServiceRequest',
-  full_name='NIMeasurementServices.ResolveServiceRequest',
+  full_name='ni.measurements.discovery.v1.ResolveServiceRequest',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='request_data_location', full_name='NIMeasurementServices.ResolveServiceRequest.request_data_location', index=0,
+      name='request_data_location', full_name='ni.measurements.discovery.v1.ResolveServiceRequest.request_data_location', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='required_service_class', full_name='NIMeasurementServices.ResolveServiceRequest.required_service_class', index=1,
+      name='required_service_class', full_name='ni.measurements.discovery.v1.ResolveServiceRequest.required_service_class', index=1,
       number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
@@ -313,28 +313,28 @@ _RESOLVESERVICEREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=646,
-  serialized_end=732,
+  serialized_start=674,
+  serialized_end=760,
 )
 
 
 _RESOLVEMONIKERENDPOINTREQUEST = _descriptor.Descriptor(
   name='ResolveMonikerEndpointRequest',
-  full_name='NIMeasurementServices.ResolveMonikerEndpointRequest',
+  full_name='ni.measurements.discovery.v1.ResolveMonikerEndpointRequest',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='request_location', full_name='NIMeasurementServices.ResolveMonikerEndpointRequest.request_location', index=0,
+      name='request_location', full_name='ni.measurements.discovery.v1.ResolveMonikerEndpointRequest.request_location', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='moniker_location', full_name='NIMeasurementServices.ResolveMonikerEndpointRequest.moniker_location', index=1,
+      name='moniker_location', full_name='ni.measurements.discovery.v1.ResolveMonikerEndpointRequest.moniker_location', index=1,
       number=2, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
@@ -352,8 +352,8 @@ _RESOLVEMONIKERENDPOINTREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=734,
-  serialized_end=857,
+  serialized_start=763,
+  serialized_end=893,
 )
 
 _REGISTERSERVICEREQUEST.fields_by_name['service_description'].message_type = _SERVICEDESCRIPTOR
@@ -374,63 +374,63 @@ _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 ServiceDescriptor = _reflection.GeneratedProtocolMessageType('ServiceDescriptor', (_message.Message,), {
   'DESCRIPTOR' : _SERVICEDESCRIPTOR,
   '__module__' : 'DiscoveryServices_pb2'
-  # @@protoc_insertion_point(class_scope:NIMeasurementServices.ServiceDescriptor)
+  # @@protoc_insertion_point(class_scope:ni.measurements.discovery.v1.ServiceDescriptor)
   })
 _sym_db.RegisterMessage(ServiceDescriptor)
 
 RegisterServiceRequest = _reflection.GeneratedProtocolMessageType('RegisterServiceRequest', (_message.Message,), {
   'DESCRIPTOR' : _REGISTERSERVICEREQUEST,
   '__module__' : 'DiscoveryServices_pb2'
-  # @@protoc_insertion_point(class_scope:NIMeasurementServices.RegisterServiceRequest)
+  # @@protoc_insertion_point(class_scope:ni.measurements.discovery.v1.RegisterServiceRequest)
   })
 _sym_db.RegisterMessage(RegisterServiceRequest)
 
 RegisterServiceResponse = _reflection.GeneratedProtocolMessageType('RegisterServiceResponse', (_message.Message,), {
   'DESCRIPTOR' : _REGISTERSERVICERESPONSE,
   '__module__' : 'DiscoveryServices_pb2'
-  # @@protoc_insertion_point(class_scope:NIMeasurementServices.RegisterServiceResponse)
+  # @@protoc_insertion_point(class_scope:ni.measurements.discovery.v1.RegisterServiceResponse)
   })
 _sym_db.RegisterMessage(RegisterServiceResponse)
 
 UnregisterServiceRequest = _reflection.GeneratedProtocolMessageType('UnregisterServiceRequest', (_message.Message,), {
   'DESCRIPTOR' : _UNREGISTERSERVICEREQUEST,
   '__module__' : 'DiscoveryServices_pb2'
-  # @@protoc_insertion_point(class_scope:NIMeasurementServices.UnregisterServiceRequest)
+  # @@protoc_insertion_point(class_scope:ni.measurements.discovery.v1.UnregisterServiceRequest)
   })
 _sym_db.RegisterMessage(UnregisterServiceRequest)
 
 UnregisterServiceResponse = _reflection.GeneratedProtocolMessageType('UnregisterServiceResponse', (_message.Message,), {
   'DESCRIPTOR' : _UNREGISTERSERVICERESPONSE,
   '__module__' : 'DiscoveryServices_pb2'
-  # @@protoc_insertion_point(class_scope:NIMeasurementServices.UnregisterServiceResponse)
+  # @@protoc_insertion_point(class_scope:ni.measurements.discovery.v1.UnregisterServiceResponse)
   })
 _sym_db.RegisterMessage(UnregisterServiceResponse)
 
 EnumerateServicesRequest = _reflection.GeneratedProtocolMessageType('EnumerateServicesRequest', (_message.Message,), {
   'DESCRIPTOR' : _ENUMERATESERVICESREQUEST,
   '__module__' : 'DiscoveryServices_pb2'
-  # @@protoc_insertion_point(class_scope:NIMeasurementServices.EnumerateServicesRequest)
+  # @@protoc_insertion_point(class_scope:ni.measurements.discovery.v1.EnumerateServicesRequest)
   })
 _sym_db.RegisterMessage(EnumerateServicesRequest)
 
 EnumerateServicesResponse = _reflection.GeneratedProtocolMessageType('EnumerateServicesResponse', (_message.Message,), {
   'DESCRIPTOR' : _ENUMERATESERVICESRESPONSE,
   '__module__' : 'DiscoveryServices_pb2'
-  # @@protoc_insertion_point(class_scope:NIMeasurementServices.EnumerateServicesResponse)
+  # @@protoc_insertion_point(class_scope:ni.measurements.discovery.v1.EnumerateServicesResponse)
   })
 _sym_db.RegisterMessage(EnumerateServicesResponse)
 
 ResolveServiceRequest = _reflection.GeneratedProtocolMessageType('ResolveServiceRequest', (_message.Message,), {
   'DESCRIPTOR' : _RESOLVESERVICEREQUEST,
   '__module__' : 'DiscoveryServices_pb2'
-  # @@protoc_insertion_point(class_scope:NIMeasurementServices.ResolveServiceRequest)
+  # @@protoc_insertion_point(class_scope:ni.measurements.discovery.v1.ResolveServiceRequest)
   })
 _sym_db.RegisterMessage(ResolveServiceRequest)
 
 ResolveMonikerEndpointRequest = _reflection.GeneratedProtocolMessageType('ResolveMonikerEndpointRequest', (_message.Message,), {
   'DESCRIPTOR' : _RESOLVEMONIKERENDPOINTREQUEST,
   '__module__' : 'DiscoveryServices_pb2'
-  # @@protoc_insertion_point(class_scope:NIMeasurementServices.ResolveMonikerEndpointRequest)
+  # @@protoc_insertion_point(class_scope:ni.measurements.discovery.v1.ResolveMonikerEndpointRequest)
   })
 _sym_db.RegisterMessage(ResolveMonikerEndpointRequest)
 
@@ -439,17 +439,17 @@ DESCRIPTOR._options = None
 
 _REGISTRYSERVICE = _descriptor.ServiceDescriptor(
   name='RegistryService',
-  full_name='NIMeasurementServices.RegistryService',
+  full_name='ni.measurements.discovery.v1.RegistryService',
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=860,
-  serialized_end=1465,
+  serialized_start=896,
+  serialized_end=1575,
   methods=[
   _descriptor.MethodDescriptor(
     name='RegisterService',
-    full_name='NIMeasurementServices.RegistryService.RegisterService',
+    full_name='ni.measurements.discovery.v1.RegistryService.RegisterService',
     index=0,
     containing_service=None,
     input_type=_REGISTERSERVICEREQUEST,
@@ -459,7 +459,7 @@ _REGISTRYSERVICE = _descriptor.ServiceDescriptor(
   ),
   _descriptor.MethodDescriptor(
     name='UnregisterService',
-    full_name='NIMeasurementServices.RegistryService.UnregisterService',
+    full_name='ni.measurements.discovery.v1.RegistryService.UnregisterService',
     index=1,
     containing_service=None,
     input_type=_UNREGISTERSERVICEREQUEST,
@@ -469,7 +469,7 @@ _REGISTRYSERVICE = _descriptor.ServiceDescriptor(
   ),
   _descriptor.MethodDescriptor(
     name='EnumerateServices',
-    full_name='NIMeasurementServices.RegistryService.EnumerateServices',
+    full_name='ni.measurements.discovery.v1.RegistryService.EnumerateServices',
     index=2,
     containing_service=None,
     input_type=_ENUMERATESERVICESREQUEST,
@@ -479,7 +479,7 @@ _REGISTRYSERVICE = _descriptor.ServiceDescriptor(
   ),
   _descriptor.MethodDescriptor(
     name='ResolveService',
-    full_name='NIMeasurementServices.RegistryService.ResolveService',
+    full_name='ni.measurements.discovery.v1.RegistryService.ResolveService',
     index=3,
     containing_service=None,
     input_type=_RESOLVESERVICEREQUEST,
@@ -489,7 +489,7 @@ _REGISTRYSERVICE = _descriptor.ServiceDescriptor(
   ),
   _descriptor.MethodDescriptor(
     name='ResolveMonikerEndpoint',
-    full_name='NIMeasurementServices.RegistryService.ResolveMonikerEndpoint',
+    full_name='ni.measurements.discovery.v1.RegistryService.ResolveMonikerEndpoint',
     index=4,
     containing_service=None,
     input_type=_RESOLVEMONIKERENDPOINTREQUEST,

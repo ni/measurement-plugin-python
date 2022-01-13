@@ -2,71 +2,82 @@
 # Internal Helper Measurement Services
 # Not Edited by User.
 ####################################################
+
 import io
 import inspect
 import re
+import pathlib
 from concurrent import futures
+
 
 import grpc
 import google.protobuf.any_pb2 as grpc_any
-import google.protobuf.wrappers_pb2 as grpc_wrapper
+import google.protobuf.wrappers_pb2 as grpc_wrappers
+import google.protobuf.type_pb2 as grpc_type
 from google.protobuf.internal import encoder
 from google.protobuf.internal import decoder
 
 # By Default Import userMeasurement module as Measurement Module
-import measurement
-from core import DiscoveryServices_pb2_grpc as ds_stub
-from core import DiscoveryServices_pb2 as ds_message
-from core import ServiceLocation_pb2 as sl_message
-from core import Measurement_pb2_grpc as ms_stub
-from core import Measurement_pb2 as ms_message
+import Measurement
+import Metadata
+import Measurement_pb2
+import Measurement_pb2_grpc
+import DiscoveryServices_pb2
+import DiscoveryServices_pb2_grpc
+import ServiceLocation_pb2
 
 
-class MeasurementServiceImplementation(ms_stub.MeasurementServiceServicer):
+class MeasurementServiceImplementation(Measurement_pb2_grpc.MeasurementServiceServicer):
     def GetMetadata(self, request, context):
-        methodName = "measure"  # Further Scope: Get Method name based on reflection
-        func = getattr(measurement, methodName)
+        # Further Scope: Get Method name based on reflection
+        methodName = Metadata.MEASUREMENT_METHOD_NAME
+        func = getattr(Measurement, methodName)
         signature = inspect.signature(func)
 
         # measurement details
-        measurement_details = ms_message.MeasurementDetails()
-        measurement_details.display_name = "DCMeasurement"
-        measurement_details.version = "0.0.0.1"
-        measurement_details.measurement_type = "DC"
-        measurement_details.product_type = "ADC"
+        measurement_details = Measurement_pb2.MeasurementDetails()
+        measurement_details.display_name = Metadata.DISPLAY_NAME
+        measurement_details.version = Metadata.VERSION
+        measurement_details.measurement_type = Metadata.MEASUREMENT_TYPE
+        measurement_details.product_type = Metadata.PRODUCT_TYPE
 
         # Measurement Parameters
-        measurement_parameters = ms_message.MeasurementParameters(
-            configuration_parameters_messagetype="Measurement_v1.MeasurementConfigurations",
-            outputs_messagetype="Measurement_v1.MeasurementOutputs",
+        # Future Scope : Send Default Values to Clients
+        measurement_parameters = Measurement_pb2.MeasurementParameters(
+            configuration_parameters_messagetype="ni.measurements.v1.MeasurementConfigurations",
+            outputs_message_type="ni.measurements.v1.MeasurementOutputs",
         )
         # Configurations
         for i, x in enumerate(signature.parameters.values()):
-            configuration_parameter = ms_message.ConfigurationParameter()
+            configuration_parameter = Measurement_pb2.ConfigurationParameter()
             configuration_parameter.protobuf_id = i + 1
             configuration_parameter.name = snake_to_camel(x.name)
             # Hardcoded type to Double
-            configuration_parameter.type = ms_message.Type.TYPE_DOUBLE
+            configuration_parameter.type = grpc_type.Field.Kind.TYPE_DOUBLE
             configuration_parameter.repeated = False
             measurement_parameters.configuration_parameters.append(
                 configuration_parameter
             )
 
         # Output Parameters Metadata - Hardcoded - Further Scope - get this info from the User(May be via a config file)
-        output_parameter1 = ms_message.Output()
+        output_parameter1 = Measurement_pb2.Output()
         output_parameter1.protobuf_id = 1
         output_parameter1.name = "VoltageMeasurement"
-        output_parameter1.type = ms_message.Type.TYPE_DOUBLE
+        output_parameter1.type = grpc_type.Field.Kind.TYPE_DOUBLE
         output_parameter1.repeated = False
 
         measurement_parameters.outputs.append(output_parameter1)
 
         # User Interface details
-        ui_details = ms_message.UserInterfaceDetails()
-        ui_details.configuration_ui_url = "C:\\Users\\vasanthakumar\\Desktop\\DCMeasurementScreen.isscr"  # Change to relative path
+        ui_details = Measurement_pb2.UserInterfaceDetails()
+
+        measurement_base_path = str(pathlib.Path(__file__).parent.parent.resolve())
+        ui_details.configuration_ui_url = (
+            measurement_base_path + "\\" + Metadata.SCREEN_FILE_NAME
+        )
 
         # Sending back Response
-        metadata_response = ms_message.GetMetadataResponse(
+        metadata_response = Measurement_pb2.GetMetadataResponse(
             measurement_details=measurement_details,
             measurement_parameters=measurement_parameters,
             user_interface_details=ui_details,
@@ -74,8 +85,9 @@ class MeasurementServiceImplementation(ms_stub.MeasurementServiceServicer):
         return metadata_response
 
     def Measure(self, request, context):
-        methodName = "measure"  # Further Scope : Get Method name based on reflection and Store as Local Cache
-        func = getattr(measurement, methodName)
+        # Further Scope : Get Method name based on reflection and Store as Local Cache
+        methodName = Metadata.MEASUREMENT_METHOD_NAME
+        func = getattr(Measurement, methodName)
         signature = inspect.signature(func)
         mapping = {}
         byteString = request.configuration_parameters.value
@@ -88,18 +100,14 @@ class MeasurementServiceImplementation(ms_stub.MeasurementServiceServicer):
                 "<class 'double'>", byteIO, pos, i + 1, x.name, mapping
             )
         # Calling the Actual Measurement here...
-        outputValue = measurement.measure(**mapping)
+        outputValue = Measurement.measure(**mapping)
 
         # Serialize the output and Sending it
-        output = grpc_any.Any()
-        outputDoubleData = grpc_wrapper.DoubleValue()
+        output_any = grpc_any.Any()
+        outputDoubleData = grpc_wrappers.DoubleValue()
         outputDoubleData.value = outputValue
-        output.value = outputDoubleData.SerializeToString()
-        measurement_value = ms_message.MeasurementValue(any=output)
-        error_value = ms_message.ErrorInformation(is_error=False)
-        returnValue = ms_message.MeasureResponse(
-            outputs=[measurement_value], error=error_value
-        )
+        output_any.value = outputDoubleData.SerializeToString()
+        returnValue = Measurement_pb2.MeasureResponse(outputs=output_any)
         return returnValue
 
 
@@ -110,10 +118,10 @@ Converts Python Type literal to DataType(gRPC enum) defined in protobuf file
 
 def pyType_to_gType(typeLiteral):
     switcher = {
-        "<class 'bool'>": ms_message.Type.TYPE_BOOL,
-        "<class 'float'>": ms_message.Type.TYPE_FLOAT,
-        "<class 'int'>": ms_message.Type.TYPE_INT32,
-        "<class 'str'>": ms_message.Type.TYPE_STRING,
+        "<class 'bool'>": grpc_type.Field.Kind.TYPE_BOOL,
+        "<class 'float'>": grpc_type.Field.Kind.TYPE_FLOAT,
+        "<class 'int'>": grpc_type.Field.Kind.TYPE_INT32,
+        "<class 'str'>": grpc_type.Field.Kind.TYPE_STRING,
     }
     return switcher.get(typeLiteral, "nothing")
 
@@ -126,13 +134,13 @@ Returns: byteString
 
 def serialize_value(type, value):
     if type == "<class 'bool'>":
-        data = grpc_wrapper.BoolValue()
+        data = grpc_wrappers.BoolValue()
     elif type == "<class 'float'>":
-        data = grpc_wrapper.FloatValue()
+        data = grpc_wrappers.FloatValue()
     elif type == "<class 'int'>":
-        data = grpc_wrapper.Int32Value()
+        data = grpc_wrappers.Int32Value()
     elif type == "<class 'str'>":
-        data = grpc_wrapper.StringValue()
+        data = grpc_wrappers.StringValue()
     data.value = value
     byteString = data.SerializeToString()
     return byteString
@@ -146,17 +154,17 @@ Returns:UpdatedByteString and Value
 
 def deserialize_value(type, byteString):
     if type == "<class 'bool'>":
-        data = grpc_wrapper.BoolValue.FromString(byteString)
-        removeData = grpc_wrapper.BoolValue()
+        data = grpc_wrappers.BoolValue.FromString(byteString)
+        removeData = grpc_wrappers.BoolValue()
     elif type == "<class 'float'>":
-        data = grpc_wrapper.FloatValue.FromString(byteString)
-        removeData = grpc_wrapper.FloatValue()
+        data = grpc_wrappers.FloatValue.FromString(byteString)
+        removeData = grpc_wrappers.FloatValue()
     elif type == "<class 'int'>":
-        data = grpc_wrapper.Int32Value.FromString(byteString)
-        removeData = grpc_wrapper.Int32Value()
+        data = grpc_wrappers.Int32Value.FromString(byteString)
+        removeData = grpc_wrappers.Int32Value()
     elif type == "<class 'str'>":
-        data = grpc_wrapper.StringValue.FromString(byteString)
-        removeData = grpc_wrapper.StringValue()
+        data = grpc_wrappers.StringValue.FromString(byteString)
+        removeData = grpc_wrappers.StringValue()
     removeData.value = data.value
     dataString = removeData.SerializeToString()
     updatedByteString = byteString.removeprefix(dataString)
@@ -185,8 +193,7 @@ def serialize_value_with_tag(fieldIndex, type, value, out_buffer):
 
 """
 De-serialize byte string based on tag. Variable Map will be updated with the Variable Value
-Returns:new-position 
-"""
+Returns:new-position"""
 
 
 def deserialize_value_with_tag(type, byteIO, pos, fieldIndex, varName, out_variableMap):
@@ -251,7 +258,7 @@ Host the Service.
 
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-    ms_stub.add_MeasurementServiceServicer_to_server(
+    Measurement_pb2_grpc.add_MeasurementServiceServicer_to_server(
         MeasurementServiceImplementation(), server
     )
     port = server.add_insecure_port("[::]:0")
@@ -269,24 +276,22 @@ Registers the Measurement to the Discovery Service
 
 def register_service(port):
     channel = grpc.insecure_channel("localhost:42000")
-    stub = ds_stub.RegistryServiceStub(channel)
+    stub = DiscoveryServices_pb2_grpc.RegistryServiceStub(channel)
     # Service Location
-    service_location = sl_message.ServiceLocation()
+    service_location = ServiceLocation_pb2.ServiceLocation()
     service_location.location = "localhost"
     service_location.insecure_port = str(port)
     # Service Descriptor
-    service_descriptor = ds_message.ServiceDescriptor()
-    service_descriptor.service_id = "{B290B571-CB76-426F-9ACC-5168DC1B027C}"
-    service_descriptor.name = "DCMeasurement(Python)"
-    service_descriptor.service_class = "DCMeasurementPython"
-    service_descriptor.description_url = (
-        "https://www.ni.com/measurementservices/dcmeasurement.html"
-    )
+    service_descriptor = DiscoveryServices_pb2.ServiceDescriptor()
+    service_descriptor.service_id = Metadata.SERVICE_ID
+    service_descriptor.name = Metadata.DISPLAY_NAME
+    service_descriptor.service_class = Metadata.SERVICE_CLASS
+    service_descriptor.description_url = Metadata.DESCRIPTION_URL
     # Request Creation
-    request = ds_message.RegisterServiceRequest(
+    request = DiscoveryServices_pb2.RegisterServiceRequest(
         location=service_location, service_description=service_descriptor
     )
-    request.provided_services.append("MeasurementService")
+    request.provided_services.append(Metadata.PROVIDED_SERVICE)
     # Register RPC Call
     stub.RegisterService(request)
     print("Successfully registered with DiscoveryService")
