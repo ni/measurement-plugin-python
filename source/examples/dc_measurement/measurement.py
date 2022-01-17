@@ -6,7 +6,7 @@ User can Import driver and 3Party Packages based on requirements
 import hightime
 import nidcpower
 
-import Metadata
+import metadata
 
 """
 User Measurement API. Returns Voltage Measurement as the only output
@@ -22,8 +22,9 @@ def measure(
 ) -> float:
 
     # User Logic :
+    print("Executing DCMeasurement(Py)")
     timeout = hightime.timedelta(seconds=(source_delay + 1.0))
-    with nidcpower.Session(resource_name=Metadata.RESOURCE_NAME) as session:
+    with nidcpower.Session(resource_name=metadata.RESOURCE_NAME) as session:
         # Configure the session.
         session.source_mode = nidcpower.SourceMode.SINGLE_POINT
         session.output_function = nidcpower.OutputFunction.DC_VOLTAGE
@@ -33,23 +34,17 @@ def measure(
         session.source_delay = hightime.timedelta(seconds=source_delay)
         session.measure_when = nidcpower.MeasureWhen.AUTOMATICALLY_AFTER_SOURCE_COMPLETE
         session.voltage_level = voltage_level
-        voltages = []
+        measured_value = None
         with session.initiate():
-            channel_indices = "0-{0}".format(session.channel_count - 1)
-            channels = session.get_channel_names(channel_indices)
-            for channel_name in channels:
-                print("Channel: {0}".format(channel_name))
-                print("---------------------------------")
-                print("Voltage 1:")
-                measurementValue = session.channels[channel_name].fetch_multiple(
-                    count=1, timeout=timeout
-                )
-                print_fetched_measurements(measurementValue)
-                session.output_enabled = False
-                print("")
-                voltages.append(measurementValue[0].voltage)
-    print("Output:", voltages[0])
-    return voltages[0] / 10
+            channel = session.get_channel_names("0")
+            measured_value = session.channels[channel].fetch_multiple(
+                count=1, timeout=timeout
+            )
+    print_fetched_measurements(measured_value)
+    output_value = measured_value[0].voltage / 10
+    print("Output Value:", output_value)
+    print("---------------------------------")
+    return output_value
 
 
 """
@@ -58,7 +53,9 @@ Utility Method that formats and print the Measured Values
 
 
 def print_fetched_measurements(measurements):
-    print("             Voltage : {:f} V".format(measurements[0].voltage))
-    print("              Current: {:f} A".format(measurements[0].current))
-    print("        In compliance: {0}".format(measurements[0].in_compliance))
+    layout = "{: >20} : {:f}{}"
+    print("Fetched Measurement Values:")
+    print(layout.format("Voltage", measurements[0].voltage, " V"))
+    print(layout.format("Current", measurements[0].current, " A"))
+    print(layout.format("In compliance", measurements[0].in_compliance, ""))
     return None

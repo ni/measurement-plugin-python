@@ -18,8 +18,8 @@ from google.protobuf.internal import encoder
 from google.protobuf.internal import decoder
 
 # By Default Import userMeasurement module as Measurement Module
-import Measurement
-import Metadata
+import measurement
+import metadata
 import Measurement_pb2
 import Measurement_pb2_grpc
 import DiscoveryServices_pb2
@@ -30,16 +30,16 @@ import ServiceLocation_pb2
 class MeasurementServiceImplementation(Measurement_pb2_grpc.MeasurementServiceServicer):
     def GetMetadata(self, request, context):
         # Further Scope: Get Method name based on reflection
-        methodName = Metadata.MEASUREMENT_METHOD_NAME
-        func = getattr(Measurement, methodName)
+        methodName = metadata.MEASUREMENT_METHOD_NAME
+        func = getattr(measurement, methodName)
         signature = inspect.signature(func)
 
         # measurement details
         measurement_details = Measurement_pb2.MeasurementDetails()
-        measurement_details.display_name = Metadata.DISPLAY_NAME
-        measurement_details.version = Metadata.VERSION
-        measurement_details.measurement_type = Metadata.MEASUREMENT_TYPE
-        measurement_details.product_type = Metadata.PRODUCT_TYPE
+        measurement_details.display_name = metadata.DISPLAY_NAME
+        measurement_details.version = metadata.VERSION
+        measurement_details.measurement_type = metadata.MEASUREMENT_TYPE
+        measurement_details.product_type = metadata.PRODUCT_TYPE
 
         # Measurement Parameters
         # Future Scope : Send Default Values to Clients
@@ -68,12 +68,12 @@ class MeasurementServiceImplementation(Measurement_pb2_grpc.MeasurementServiceSe
 
         measurement_parameters.outputs.append(output_parameter1)
 
-        # User Interface details
+        # User Interface details - Framed relative to the metadata python File
         ui_details = Measurement_pb2.UserInterfaceDetails()
 
-        measurement_base_path = str(pathlib.Path(__file__).parent.parent.resolve())
+        meatadata_base_path = str(pathlib.Path(metadata.__file__).parent.resolve())
         ui_details.configuration_ui_url = (
-            measurement_base_path + "\\" + Metadata.SCREEN_FILE_NAME
+            meatadata_base_path + "\\" + metadata.SCREEN_FILE_NAME
         )
 
         # Sending back Response
@@ -86,8 +86,8 @@ class MeasurementServiceImplementation(Measurement_pb2_grpc.MeasurementServiceSe
 
     def Measure(self, request, context):
         # Further Scope : Get Method name based on reflection and Store as Local Cache
-        methodName = Metadata.MEASUREMENT_METHOD_NAME
-        func = getattr(Measurement, methodName)
+        methodName = metadata.MEASUREMENT_METHOD_NAME
+        func = getattr(measurement, methodName)
         signature = inspect.signature(func)
         mapping = {}
         byteString = request.configuration_parameters.value
@@ -100,7 +100,7 @@ class MeasurementServiceImplementation(Measurement_pb2_grpc.MeasurementServiceSe
                 "<class 'double'>", byteIO, pos, i + 1, x.name, mapping
             )
         # Calling the Actual Measurement here...
-        outputValue = Measurement.measure(**mapping)
+        outputValue = measurement.measure(**mapping)
 
         # Serialize the output and Sending it
         output_any = grpc_any.Any()
@@ -263,8 +263,8 @@ def serve():
     )
     port = server.add_insecure_port("[::]:0")
     server.start()
+    print("Hosted Python Measurement as Service at Port:", port)
     register_service(port)
-    print("Hosting Python Measurement as Service at", port)
     server.wait_for_termination()
     return None
 
@@ -275,23 +275,29 @@ Registers the Measurement to the Discovery Service
 
 
 def register_service(port):
-    channel = grpc.insecure_channel("localhost:42000")
-    stub = DiscoveryServices_pb2_grpc.RegistryServiceStub(channel)
-    # Service Location
-    service_location = ServiceLocation_pb2.ServiceLocation()
-    service_location.location = "localhost"
-    service_location.insecure_port = str(port)
-    # Service Descriptor
-    service_descriptor = DiscoveryServices_pb2.ServiceDescriptor()
-    service_descriptor.service_id = Metadata.SERVICE_ID
-    service_descriptor.name = Metadata.DISPLAY_NAME
-    service_descriptor.service_class = Metadata.SERVICE_CLASS
-    service_descriptor.description_url = Metadata.DESCRIPTION_URL
-    # Request Creation
-    request = DiscoveryServices_pb2.RegisterServiceRequest(
-        location=service_location, service_description=service_descriptor
-    )
-    request.provided_services.append(Metadata.PROVIDED_SERVICE)
-    # Register RPC Call
-    stub.RegisterService(request)
-    print("Successfully registered with DiscoveryService")
+    try:
+        channel = grpc.insecure_channel("localhost:42000")
+        stub = DiscoveryServices_pb2_grpc.RegistryServiceStub(channel)
+        # Service Location
+        service_location = ServiceLocation_pb2.ServiceLocation()
+        service_location.location = "localhost"
+        service_location.insecure_port = str(port)
+        # Service Descriptor
+        service_descriptor = DiscoveryServices_pb2.ServiceDescriptor()
+        service_descriptor.service_id = metadata.SERVICE_ID
+        service_descriptor.name = metadata.DISPLAY_NAME
+        service_descriptor.service_class = metadata.SERVICE_CLASS
+        service_descriptor.description_url = metadata.DESCRIPTION_URL
+        # Request Creation
+        request = DiscoveryServices_pb2.RegisterServiceRequest(
+            location=service_location, service_description=service_descriptor
+        )
+        request.provided_services.append(metadata.PROVIDED_SERVICE)
+        # Register RPC Call
+        stub.RegisterService(request)
+        print("Successfully registered with DiscoveryService")
+    except (grpc._channel._InactiveRpcError):
+        print(
+            "Unable to register with discovery service. Possible reasons : Discovery Service not Available."
+        )
+    return None
