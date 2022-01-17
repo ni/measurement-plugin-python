@@ -3,6 +3,7 @@
 # Not Edited by User.
 ####################################################
 
+import enum
 import io
 import inspect
 import re
@@ -97,7 +98,7 @@ class MeasurementServiceImplementation(Measurement_pb2_grpc.MeasurementServiceSe
         for i, x in enumerate(signature.parameters.values()):
             # <class 'double'> is not available for python, Added as workaround for screen files.
             pos = deserialize_value_with_tag(
-                "<class 'double'>", byteIO, pos, i + 1, x.name, mapping
+                DataTypeTags.double, byteIO, pos, i + 1, x.name, mapping
             )
         # Calling the Actual Measurement here...
         outputValue = measurement.measure(**mapping)
@@ -111,6 +112,14 @@ class MeasurementServiceImplementation(Measurement_pb2_grpc.MeasurementServiceSe
         return returnValue
 
 
+class DataTypeTags(enum.Enum):
+    double = "<class 'double'>"
+    bool = "<class 'bool'>"
+    float = "<class 'float'>"
+    integer = "<class 'int'>"
+    string = "<class 'str'>"
+
+
 """
 Converts Python Type literal to DataType(gRPC enum) defined in protobuf file
 """
@@ -118,10 +127,10 @@ Converts Python Type literal to DataType(gRPC enum) defined in protobuf file
 
 def pyType_to_gType(typeLiteral):
     switcher = {
-        "<class 'bool'>": grpc_type.Field.Kind.TYPE_BOOL,
-        "<class 'float'>": grpc_type.Field.Kind.TYPE_FLOAT,
-        "<class 'int'>": grpc_type.Field.Kind.TYPE_INT32,
-        "<class 'str'>": grpc_type.Field.Kind.TYPE_STRING,
+        DataTypeTags.bool: grpc_type.Field.Kind.TYPE_BOOL,
+        DataTypeTags.float: grpc_type.Field.Kind.TYPE_FLOAT,
+        DataTypeTags.integer: grpc_type.Field.Kind.TYPE_INT64,
+        DataTypeTags.string: grpc_type.Field.Kind.TYPE_STRING,
     }
     return switcher.get(typeLiteral, "nothing")
 
@@ -133,13 +142,13 @@ Returns: byteString
 
 
 def serialize_value(type, value):
-    if type == "<class 'bool'>":
+    if type == DataTypeTags.bool:
         data = grpc_wrappers.BoolValue()
-    elif type == "<class 'float'>":
+    elif type == DataTypeTags.float:
         data = grpc_wrappers.FloatValue()
-    elif type == "<class 'int'>":
+    elif type == DataTypeTags.integer:
         data = grpc_wrappers.Int32Value()
-    elif type == "<class 'str'>":
+    elif type == DataTypeTags.string:
         data = grpc_wrappers.StringValue()
     data.value = value
     byteString = data.SerializeToString()
@@ -153,16 +162,16 @@ Returns:UpdatedByteString and Value
 
 
 def deserialize_value(type, byteString):
-    if type == "<class 'bool'>":
+    if type == DataTypeTags.bool:
         data = grpc_wrappers.BoolValue.FromString(byteString)
         removeData = grpc_wrappers.BoolValue()
-    elif type == "<class 'float'>":
+    elif type == DataTypeTags.float:
         data = grpc_wrappers.FloatValue.FromString(byteString)
         removeData = grpc_wrappers.FloatValue()
-    elif type == "<class 'int'>":
+    elif type == DataTypeTags.integer:
         data = grpc_wrappers.Int32Value.FromString(byteString)
         removeData = grpc_wrappers.Int32Value()
-    elif type == "<class 'str'>":
+    elif type == DataTypeTags.string:
         data = grpc_wrappers.StringValue.FromString(byteString)
         removeData = grpc_wrappers.StringValue()
     removeData.value = data.value
@@ -178,13 +187,13 @@ Returns: byteString
 
 
 def serialize_value_with_tag(fieldIndex, type, value, out_buffer):
-    if type == "<class 'bool'>":
+    if type == DataTypeTags.bool:
         coder = encoder.BoolEncoder(fieldIndex, False, False)
-    elif type == "<class 'float'>":
+    elif type == DataTypeTags.float:
         coder = encoder.FloatEncoder(fieldIndex, False, False)
-    elif type == "<class 'int'>":
+    elif type == DataTypeTags.integer:
         coder = encoder.Int32Encoder(fieldIndex, False, False)
-    elif type == "<class 'str'>":
+    elif type == DataTypeTags.string:
         coder = encoder.StringEncoder(fieldIndex, False, False)
     coder(out_buffer.write, value)
     byteString = out_buffer.getvalue()
@@ -197,25 +206,25 @@ Returns:new-position"""
 
 
 def deserialize_value_with_tag(type, byteIO, pos, fieldIndex, varName, out_variableMap):
-    if type == "<class 'bool'>":
+    if type == DataTypeTags.bool:
         coder = decoder.BoolDecoder(
             fieldIndex, False, False, varName, get_default_value
         )
-    elif type == "<class 'float'>":
+    elif type == DataTypeTags.float:
         coder = decoder.DoubleDecoder(
             fieldIndex, False, False, varName, get_default_value
         )
     elif (
-        type == "<class 'double'>"
+        type == DataTypeTags.double
     ):  # <class 'double'> is not available for python, Added as workaround for screen files.
         coder = decoder.DoubleDecoder(
             fieldIndex, False, False, varName, get_default_value
         )
-    elif type == "<class 'int'>":  # Not handling Un-singed range
+    elif type == DataTypeTags.integer:  # Not handling Un-singed range
         coder = decoder.Int64Decoder(
             fieldIndex, False, False, varName, get_default_value
         )
-    elif type == "<class 'str'>":
+    elif type == DataTypeTags.string:
         coder = decoder.StringDecoder(
             fieldIndex, False, False, varName, get_default_value
         )
@@ -240,13 +249,13 @@ def snake_to_camel(stringValue):
 
 
 def get_default_value(type):
-    if type == "<class 'bool'>":
+    if type == DataTypeTags.bool:
         return False
-    elif type == "<class 'float'>":
+    elif type == DataTypeTags.float:
         return 0
-    elif type == "<class 'int'>":
+    elif type == DataTypeTags.integer:
         return 0
-    elif type == "<class 'str'>":
+    elif type == DataTypeTags.string:
         return ""
     return None
 
