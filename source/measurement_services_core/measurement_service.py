@@ -19,13 +19,17 @@ from google.protobuf.internal import encoder
 from google.protobuf.internal import decoder
 
 # By Default Import userMeasurement module as Measurement Module
-import measurement
-import metadata
+
+
 import Measurement_pb2
 import Measurement_pb2_grpc
 import DiscoveryServices_pb2
 import DiscoveryServices_pb2_grpc
 import ServiceLocation_pb2
+
+
+metadata = __import__("metadata")
+measurement = __import__(metadata.MEASUREMENT_MODULE_NAME)
 
 
 class MeasurementServiceImplementation(Measurement_pb2_grpc.MeasurementServiceServicer):

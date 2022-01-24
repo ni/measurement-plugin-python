@@ -6,6 +6,7 @@ VERSION = "0.0.1"
 MEASUREMENT_TYPE = "DC"
 PRODUCT_TYPE = "ADC"
 SCREEN_FILE_NAME = "DCMeasurementScreen.isscr"
+MEASUREMENT_MODULE_NAME = "measurement"
 MEASUREMENT_METHOD_NAME = "measure"
 
 """
