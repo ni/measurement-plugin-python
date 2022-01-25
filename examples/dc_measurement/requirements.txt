@@ -13,6 +13,7 @@ platformdirs==2.4.1
 protobuf==3.19.1
 pycodestyle==2.8.0
 pyflakes==2.4.0
+pywin32==301
 six==1.16.0
 tomli==1.2.3
 typing-extensions==4.0.1

@@ -8,6 +8,7 @@ import io
 import inspect
 import re
 import pathlib
+import time
 from concurrent import futures
 
 
@@ -15,6 +16,7 @@ import grpc
 import google.protobuf.any_pb2 as grpc_any
 import google.protobuf.wrappers_pb2 as grpc_wrappers
 import google.protobuf.type_pb2 as grpc_type
+import win32api
 from google.protobuf.internal import encoder
 from google.protobuf.internal import decoder
 
@@ -270,20 +272,23 @@ Host the Service.
 
 
 def serve():
+    global server
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     Measurement_pb2_grpc.add_MeasurementServiceServicer_to_server(
         MeasurementServiceImplementation(), server
     )
     port = server.add_insecure_port("[::]:0")
     server.start()
+    win32api.SetConsoleCtrlHandler(on_exit, True)
     print("Hosted Python Measurement as Service at Port:", port)
     register_service(port)
-    server.wait_for_termination()
     return None
 
 
 """
 Registers the Measurement to the Discovery Service
+Args:
+    port: Port number of the service
 """
 
 
@@ -301,16 +306,64 @@ def register_service(port):
         service_descriptor.name = metadata.DISPLAY_NAME
         service_descriptor.service_class = metadata.SERVICE_CLASS
         service_descriptor.description_url = metadata.DESCRIPTION_URL
-        # Request Creation
+        # Registration Request Creation
         request = DiscoveryServices_pb2.RegisterServiceRequest(
             location=service_location, service_description=service_descriptor
         )
         request.provided_services.append(metadata.PROVIDED_SERVICE)
-        # Register RPC Call
-        stub.RegisterService(request)
+        # Registration RPC Call
+        registerRequest = stub.RegisterService(request)
+        global registration_id_cache
+        registration_id_cache = registerRequest.registration_id
         print("Successfully registered with DiscoveryService")
     except (grpc._channel._InactiveRpcError):
         print(
             "Unable to register with discovery service. Possible reasons : Discovery Service not Available."
         )
     return None
+
+
+"""
+UnRegisters the Measurement to the Discovery Service
+"""
+
+
+def unregister_service():
+    try:
+        channel = grpc.insecure_channel("localhost:42000")
+        stub = DiscoveryServices_pb2_grpc.RegistryServiceStub(channel)
+
+        # Un-registration Request Creation
+        request = DiscoveryServices_pb2.UnregisterServiceRequest(
+            registration_id=registration_id_cache
+        )
+        # Un-registration RPC Call
+        stub.UnregisterService(request)
+        print("Successfully unregistered with DiscoveryService")
+    except (grpc._channel._InactiveRpcError):
+        print(
+            "Unable to unregister with discovery service. Possible reasons : Discovery Service not Available."
+        )
+    return None
+
+
+"""
+Exit Handler to un-register measurement running in separate window exits.
+"""
+
+
+def on_exit(sig, func=None):
+    print("Exit handler invoked")
+    unregister_stop_service()
+
+
+"""
+Unregister Service form Discovery service and Exits the Service
+"""
+
+
+def unregister_stop_service():
+    unregister_service()
+    server.stop(2)
+    print("Exiting Python Measurement Service")
+    time.sleep(3)
