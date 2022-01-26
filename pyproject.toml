@@ -1,2 +1,29 @@
 [tool.black]
-extend-exclude ='((.+_pb2_grpc)|(.+_pb2))+(.py)$' # Regex to files with _pb2_grpc.py and _pb2.py
+extend-exclude ='((.+_pb2_grpc)|(.+_pb2))+(.py)$' # Regex to files with _pb2_grpc.py and _pb2.py Auto Generated Code are excluded
+line-length = 100
+exclude = '''
+(
+\.git # root of the project
+| \.venv
+)
+'''
+
+[tool.poetry]
+name = "ni-python-styleguide"
+# The -alpha.0 here denotes a source based version
+# This is removed when released through the Publish-Package.yml GitHub action
+# Official PyPI releases follow Major.Minor.Patch
+version = "0.1.10-alpha.0" # Version can be valid one based on release version 
+description = "NI's internal and external Python linter rules and plugins"
+authors = ["NI <opensource@ni.com>"]
+readme = "README.md" # apply the repo readme to the package as well
+#repository = "https://github.com/ni/python-styleguide"
+#license = "MIT"
+#include = ["ni_python_styleguide/config.toml"]
+ 
+[tool.poetry.dependencies]
+python = ">=3.6.2"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"

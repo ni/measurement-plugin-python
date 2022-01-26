@@ -1,7 +1,5 @@
-black==21.12b0
 click==8.0.3
 colorama==0.4.4
-flake8==4.0.1
 grpcio==1.41.1
 grpcio-tools==1.41.1
 hightime==0.2.1

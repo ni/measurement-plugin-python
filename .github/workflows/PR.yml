@@ -1,0 +1,69 @@
+name: PR
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - measurement-services-python/**
+      - pyproject.toml
+      - .github/workflows/PR.yml
+
+env:
+  POETRY_VERSION: 1.1.6
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    env:
+      PYTHON_VERSION: 3.8 
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - uses: Gr1N/setup-poetry@v4
+        with:
+          poetry-version: ${{ env.POETRY_VERSION }}
+      # @TODO: This is a workaround for there not being a way to check the lock file
+      #   See: https://github.com/python-poetry/poetry/issues/453
+      # We might need to make sure the Test dependencies(as of now - Style Guides)
+      - name: Check for lock changes
+        run: |
+          PYTHONPATH="${PYTHONPATH}:${HOME}/.poetry/lib:${HOME}/.poetry/lib/poetry/_vendor/py${{ env.PYTHON_VERSION }}" \
+          python -c "from poetry.factory import Factory; \
+            locker = Factory().create_poetry('.').locker; \
+            exit(0) if locker.is_locked() and locker.is_fresh() else exit(1)" \
+            && echo 'OK'
+      - uses: actions/cache@v2
+        with:
+          path: ~/.cache/pypoetry/virtualenvs
+          key: ${{ runner.os }}-poetry-${{ hashFiles('poetry.lock') }}
+      - name: Install the Package
+        run: poetry install -vvv
+      - name: Lint the Code
+        run: poetry run ni-python-styleguide lint
+
+  # tests:
+    # runs-on: ${{ matrix.os }}
+    # strategy:
+      # matrix:
+        # os: [macos-latest, windows-latest, ubuntu-latest]
+        # python-version: [3.6, 3.7, 3.8, 3.9]
+    # steps:
+      # - uses: actions/checkout@v2
+      # - uses: actions/setup-python@v2
+        # with:
+          # python-version: ${{ matrix.python-version }}
+
+      # - uses: Gr1N/setup-poetry@v4
+        # with:
+          # poetry-version: ${{ env.POETRY_VERSION }}
+      # - uses: actions/cache@v2
+        # with:
+          # path: ~/.cache/pypoetry/virtualenvs
+          # key: ${{ runner.os }}-poetry-${{ hashFiles('poetry.lock') }}
+      # - name: Install the Package
+        # # run: poetry install
+      # # - name: Run tests
+        # # run: poetry run pytest -v
