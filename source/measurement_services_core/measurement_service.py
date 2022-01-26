@@ -62,9 +62,7 @@ class MeasurementServiceImplementation(Measurement_pb2_grpc.MeasurementServiceSe
             # Hardcoded type to Double
             configuration_parameter.type = grpc_type.Field.Kind.TYPE_DOUBLE
             configuration_parameter.repeated = False
-            measurement_parameters.configuration_parameters.append(
-                configuration_parameter
-            )
+            measurement_parameters.configuration_parameters.append(configuration_parameter)
 
         # Output Parameters Metadata - Hardcoded - Further Scope - get this info from the User(May be via a config file)
         output_parameter1 = Measurement_pb2.Output()
@@ -79,9 +77,7 @@ class MeasurementServiceImplementation(Measurement_pb2_grpc.MeasurementServiceSe
         ui_details = Measurement_pb2.UserInterfaceDetails()
 
         meatadata_base_path = str(pathlib.Path(metadata.__file__).parent.resolve())
-        ui_details.configuration_ui_url = (
-            meatadata_base_path + "\\" + metadata.SCREEN_FILE_NAME
-        )
+        ui_details.configuration_ui_url = meatadata_base_path + "\\" + metadata.SCREEN_FILE_NAME
 
         # Sending back Response
         metadata_response = Measurement_pb2.GetMetadataResponse(
@@ -213,27 +209,17 @@ Returns:new-position"""
 
 def deserialize_value_with_tag(type, byteIO, pos, fieldIndex, varName, out_variableMap):
     if type == DataTypeTags.bool:
-        coder = decoder.BoolDecoder(
-            fieldIndex, False, False, varName, get_default_value
-        )
+        coder = decoder.BoolDecoder(fieldIndex, False, False, varName, get_default_value)
     elif type == DataTypeTags.float:
-        coder = decoder.DoubleDecoder(
-            fieldIndex, False, False, varName, get_default_value
-        )
+        coder = decoder.DoubleDecoder(fieldIndex, False, False, varName, get_default_value)
     elif (
         type == DataTypeTags.double
     ):  # <class 'double'> is not available for python, Added as workaround for screen files.
-        coder = decoder.DoubleDecoder(
-            fieldIndex, False, False, varName, get_default_value
-        )
+        coder = decoder.DoubleDecoder(fieldIndex, False, False, varName, get_default_value)
     elif type == DataTypeTags.integer:  # Not handling Un-singed range
-        coder = decoder.Int64Decoder(
-            fieldIndex, False, False, varName, get_default_value
-        )
+        coder = decoder.Int64Decoder(fieldIndex, False, False, varName, get_default_value)
     elif type == DataTypeTags.string:
-        coder = decoder.StringDecoder(
-            fieldIndex, False, False, varName, get_default_value
-        )
+        coder = decoder.StringDecoder(fieldIndex, False, False, varName, get_default_value)
     new_pos = coder(
         byteIO.getbuffer(),
         pos + encoder._TagSize(fieldIndex),

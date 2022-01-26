@@ -37,9 +37,7 @@ def measure(
         measured_value = None
         with session.initiate():
             channel = session.get_channel_names("0")
-            measured_value = session.channels[channel].fetch_multiple(
-                count=1, timeout=timeout
-            )
+            measured_value = session.channels[channel].fetch_multiple(count=1, timeout=timeout)
     print_fetched_measurements(measured_value)
     output_value = measured_value[0].voltage / 10
     print("Output Value:", output_value)
