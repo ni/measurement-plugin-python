@@ -15,7 +15,13 @@ def measure(
     current_limit_range: float = 0.01,
     source_delay: float = 0.0,
 ) -> float:
-    """User Measurement API. Returns Voltage Measurement as the only output."""
+    """User Measurement API. Returns Voltage Measurement as the only output.
+
+    Returns
+    -------
+        Tuple of Output Variables, in the order configured in the metadata.py
+
+    """
     # User Logic :
     print("Executing DCMeasurement(Py)")
     timeout = hightime.timedelta(seconds=(source_delay + 1.0))
@@ -37,7 +43,7 @@ def measure(
     output_value = measured_value[0].voltage / 10
     print("Output Value:", output_value)
     print("---------------------------------")
-    return output_value
+    return (output_value, 12.0, 100.21)
 
 
 def print_fetched_measurements(measurements):

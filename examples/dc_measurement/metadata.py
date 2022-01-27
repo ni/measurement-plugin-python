@@ -11,6 +11,8 @@ SCREEN_FILE_NAME = "DCMeasurementScreen.isscr"
 MEASUREMENT_MODULE_NAME = "measurement"
 MEASUREMENT_METHOD_NAME = "measure"
 
+# Measurement Output Info
+MEASUREMENT_OUTPUTS = ["Voltage Measurement", "Output2", "Output3"]
 
 # Instrument Info
 RESOURCE_NAME = "DPS_4145"

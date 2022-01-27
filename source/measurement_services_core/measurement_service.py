@@ -58,22 +58,24 @@ class MeasurementServiceImplementation(Measurement_pb2_grpc.MeasurementServiceSe
         # Configurations
         for i, x in enumerate(signature.parameters.values()):
             configuration_parameter = Measurement_pb2.ConfigurationParameter()
-            configuration_parameter.protobuf_id = i + 1
+            configuration_parameter.protobuf_id = (
+                i + 1
+            )  # i starts from 0 and protobuf id starts from 1
             configuration_parameter.name = snake_to_camel(x.name)
             # Hardcoded type to Double
             configuration_parameter.type = grpc_type.Field.Kind.TYPE_DOUBLE
             configuration_parameter.repeated = False
             measurement_parameters.configuration_parameters.append(configuration_parameter)
 
-        # Output Parameters Metadata - Hardcoded
-        # Further Scope - get this info from the User(May be via a config file)
-        output_parameter1 = Measurement_pb2.Output()
-        output_parameter1.protobuf_id = 1
-        output_parameter1.name = "VoltageMeasurement"
-        output_parameter1.type = grpc_type.Field.Kind.TYPE_DOUBLE
-        output_parameter1.repeated = False
-
-        measurement_parameters.outputs.append(output_parameter1)
+        # Output Parameters Metadata
+        # Further Scope : Update taking the data type of output
+        for i, output_name in enumerate(metadata.MEASUREMENT_OUTPUTS):
+            output_parameter = Measurement_pb2.Output()
+            output_parameter.protobuf_id = i + 1
+            output_parameter.name = output_name
+            output_parameter.type = grpc_type.Field.Kind.TYPE_DOUBLE
+            output_parameter.repeated = False
+            measurement_parameters.outputs.append(output_parameter)
 
         # User Interface details - Framed relative to the metadata python File
         ui_details = Measurement_pb2.UserInterfaceDetails()
@@ -108,11 +110,21 @@ class MeasurementServiceImplementation(Measurement_pb2_grpc.MeasurementServiceSe
         # Calling the Actual Measurement here...
         output_value = measurement.measure(**mapping)
 
-        # Serialize the output and Sending it
         output_any = grpc_any.Any()
-        output_double_data = grpc_wrappers.DoubleValue()
-        output_double_data.value = output_value
-        output_any.value = output_double_data.SerializeToString()
+        output_byte_io = io.BytesIO()
+        # Serialize the output and Sending it
+        for i, output in enumerate(output_value):
+            # Sending One value Implementation:
+            # output_double_data = grpc_wrappers.DoubleValue()
+            # output_double_data.value = output
+            # output_any.value = output_any.value + output_double_data.SerializeToString()
+
+            # Sending more than one output value:
+            # output_bytestring will grow for each loop
+            output_bytestring = serialize_value_with_tag(
+                i + 1, DataTypeTags.double, output, output_byte_io
+            )
+        output_any.value = output_bytestring
         return_value = Measurement_pb2.MeasureResponse(outputs=output_any)
         return return_value
 
@@ -127,7 +139,7 @@ class DataTypeTags(enum.Enum):
     string = "<class 'str'>"
 
 
-def pytype_to_gtype(type_literal):
+def pythontype_to_grpctype(type_literal):
     """Convert Python Type literal to DataType(gRPC enum) defined in protobuf file."""
     switcher = {
         DataTypeTags.bool: grpc_type.Field.Kind.TYPE_BOOL,
@@ -188,6 +200,8 @@ def serialize_value_with_tag(field_index, type, value, out_buffer):
         coder = encoder.BoolEncoder(field_index, False, False)
     elif type == DataTypeTags.float:
         coder = encoder.FloatEncoder(field_index, False, False)
+    elif type == DataTypeTags.double:
+        coder = encoder.DoubleEncoder(field_index, False, False)
     elif type == DataTypeTags.integer:
         coder = encoder.Int32Encoder(field_index, False, False)
     elif type == DataTypeTags.string:
