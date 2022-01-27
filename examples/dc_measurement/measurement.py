@@ -1,16 +1,11 @@
-"""
-Measurement - Can be Edited By User
+"""Measurement - Can be Edited By User.
+
 User can Import driver and 3Party Packages based on requirements
 """
 
 import hightime
-import nidcpower
-
 import metadata
-
-"""
-User Measurement API. Returns Voltage Measurement as the only output
-"""
+import nidcpower
 
 
 def measure(
@@ -20,7 +15,7 @@ def measure(
     current_limit_range: float = 0.01,
     source_delay: float = 0.0,
 ) -> float:
-
+    """User Measurement API. Returns Voltage Measurement as the only output."""
     # User Logic :
     print("Executing DCMeasurement(Py)")
     timeout = hightime.timedelta(seconds=(source_delay + 1.0))
@@ -45,12 +40,8 @@ def measure(
     return output_value
 
 
-"""
-Utility Method that formats and print the Measured Values
-"""
-
-
 def print_fetched_measurements(measurements):
+    """Format and print the Measured Values."""
     layout = "{: >20} : {:f}{}"
     print("Fetched Measurement Values:")
     print(layout.format("Voltage", measurements[0].voltage, " V"))

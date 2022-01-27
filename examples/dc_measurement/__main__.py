@@ -1,14 +1,12 @@
 #!/usr/bin/env python3
 
-"""
-Startup File
+"""Startup File.
 """
 
 import sys
 from pathlib import Path
 
-"""
-Driver Method
+"""Driver Method.
 """
 if __name__ == "__main__":
     # core_path can be removed when the measurement_services_core is installed a python package.

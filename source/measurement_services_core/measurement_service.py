@@ -1,33 +1,31 @@
-####################################################
-# Internal Helper Measurement Services
-# Not Edited by User.
-####################################################
+"""Internal Helper Measurement Services.
+
+Not Edited by User.
+"""
 
 import enum
-import io
 import inspect
-import re
+import io
 import pathlib
+import re
 import time
 from concurrent import futures
 
-
-import grpc
-import google.protobuf.any_pb2 as grpc_any
-import google.protobuf.wrappers_pb2 as grpc_wrappers
-import google.protobuf.type_pb2 as grpc_type
-import win32api
-from google.protobuf.internal import encoder
-from google.protobuf.internal import decoder
-
-# By Default Import userMeasurement module as Measurement Module
-
-
-import Measurement_pb2
-import Measurement_pb2_grpc
 import DiscoveryServices_pb2
 import DiscoveryServices_pb2_grpc
+import google.protobuf.any_pb2 as grpc_any
+import google.protobuf.type_pb2 as grpc_type
+import google.protobuf.wrappers_pb2 as grpc_wrappers
+import grpc
+import Measurement_pb2
+import Measurement_pb2_grpc
 import ServiceLocation_pb2
+import win32api
+from google.protobuf.internal import decoder
+from google.protobuf.internal import encoder
+
+
+# By Default Import userMeasurement module as Measurement Module
 
 
 metadata = __import__("metadata")
@@ -35,10 +33,13 @@ measurement = __import__(metadata.MEASUREMENT_MODULE_NAME)
 
 
 class MeasurementServiceImplementation(Measurement_pb2_grpc.MeasurementServiceServicer):
+    """Implementation of gRPC Service - MeasurementService."""
+
     def GetMetadata(self, request, context):
+        """RPC Method that Get the Metdata of a Measurement."""
         # Further Scope: Get Method name based on reflection
-        methodName = metadata.MEASUREMENT_METHOD_NAME
-        func = getattr(measurement, methodName)
+        method_name = metadata.MEASUREMENT_METHOD_NAME
+        func = getattr(measurement, method_name)
         signature = inspect.signature(func)
 
         # measurement details
@@ -64,7 +65,8 @@ class MeasurementServiceImplementation(Measurement_pb2_grpc.MeasurementServiceSe
             configuration_parameter.repeated = False
             measurement_parameters.configuration_parameters.append(configuration_parameter)
 
-        # Output Parameters Metadata - Hardcoded - Further Scope - get this info from the User(May be via a config file)
+        # Output Parameters Metadata - Hardcoded
+        # Further Scope - get this info from the User(May be via a config file)
         output_parameter1 = Measurement_pb2.Output()
         output_parameter1.protobuf_id = 1
         output_parameter1.name = "VoltageMeasurement"
@@ -88,33 +90,36 @@ class MeasurementServiceImplementation(Measurement_pb2_grpc.MeasurementServiceSe
         return metadata_response
 
     def Measure(self, request, context):
+        """RPC Method that Executes the Measurement."""
         # Further Scope : Get Method name based on reflection and Store as Local Cache
-        methodName = metadata.MEASUREMENT_METHOD_NAME
-        func = getattr(measurement, methodName)
+        method_name = metadata.MEASUREMENT_METHOD_NAME
+        func = getattr(measurement, method_name)
         signature = inspect.signature(func)
         mapping = {}
-        byteString = request.configuration_parameters.value
-        byteIO = io.BytesIO()
-        byteIO.write(byteString)
+        byte_string = request.configuration_parameters.value
+        byte_io = io.BytesIO()
+        byte_io.write(byte_string)
         pos = 0
         for i, x in enumerate(signature.parameters.values()):
             # <class 'double'> is not available for python, Added as workaround for screen files.
             pos = deserialize_value_with_tag(
-                DataTypeTags.double, byteIO, pos, i + 1, x.name, mapping
+                DataTypeTags.double, byte_io, pos, i + 1, x.name, mapping
             )
         # Calling the Actual Measurement here...
-        outputValue = measurement.measure(**mapping)
+        output_value = measurement.measure(**mapping)
 
         # Serialize the output and Sending it
         output_any = grpc_any.Any()
-        outputDoubleData = grpc_wrappers.DoubleValue()
-        outputDoubleData.value = outputValue
-        output_any.value = outputDoubleData.SerializeToString()
-        returnValue = Measurement_pb2.MeasureResponse(outputs=output_any)
-        return returnValue
+        output_double_data = grpc_wrappers.DoubleValue()
+        output_double_data.value = output_value
+        output_any.value = output_double_data.SerializeToString()
+        return_value = Measurement_pb2.MeasureResponse(outputs=output_any)
+        return return_value
 
 
 class DataTypeTags(enum.Enum):
+    """Enum of datatype."""
+
     double = "<class 'double'>"
     bool = "<class 'bool'>"
     float = "<class 'float'>"
@@ -122,28 +127,22 @@ class DataTypeTags(enum.Enum):
     string = "<class 'str'>"
 
 
-"""
-Converts Python Type literal to DataType(gRPC enum) defined in protobuf file
-"""
-
-
-def pyType_to_gType(typeLiteral):
+def pytype_to_gtype(type_literal):
+    """Convert Python Type literal to DataType(gRPC enum) defined in protobuf file."""
     switcher = {
         DataTypeTags.bool: grpc_type.Field.Kind.TYPE_BOOL,
         DataTypeTags.float: grpc_type.Field.Kind.TYPE_FLOAT,
         DataTypeTags.integer: grpc_type.Field.Kind.TYPE_INT64,
         DataTypeTags.string: grpc_type.Field.Kind.TYPE_STRING,
     }
-    return switcher.get(typeLiteral, "nothing")
-
-
-"""
-Serialize the value to Byte string
-Returns: byteString
-"""
+    return switcher.get(type_literal, "nothing")
 
 
 def serialize_value(type, value):
+    """Serialize the value to Byte string.
+
+    Returns: byteString
+    """
     if type == DataTypeTags.bool:
         data = grpc_wrappers.BoolValue()
     elif type == DataTypeTags.float:
@@ -153,94 +152,92 @@ def serialize_value(type, value):
     elif type == DataTypeTags.string:
         data = grpc_wrappers.StringValue()
     data.value = value
-    byteString = data.SerializeToString()
-    return byteString
+    byte_string = data.SerializeToString()
+    return byte_string
 
 
-"""
-De-serialize byte string
-Returns:UpdatedByteString and Value
-"""
+def deserialize_value(type, byte_string):
+    """De-serialize byte string.
 
-
-def deserialize_value(type, byteString):
+    Returns:UpdatedByteString and Value
+    """
     if type == DataTypeTags.bool:
-        data = grpc_wrappers.BoolValue.FromString(byteString)
-        removeData = grpc_wrappers.BoolValue()
+        data = grpc_wrappers.BoolValue.FromString(byte_string)
+        remove_data = grpc_wrappers.BoolValue()
     elif type == DataTypeTags.float:
-        data = grpc_wrappers.FloatValue.FromString(byteString)
-        removeData = grpc_wrappers.FloatValue()
+        data = grpc_wrappers.FloatValue.FromString(byte_string)
+        remove_data = grpc_wrappers.FloatValue()
     elif type == DataTypeTags.integer:
-        data = grpc_wrappers.Int32Value.FromString(byteString)
-        removeData = grpc_wrappers.Int32Value()
+        data = grpc_wrappers.Int32Value.FromString(byte_string)
+        remove_data = grpc_wrappers.Int32Value()
     elif type == DataTypeTags.string:
-        data = grpc_wrappers.StringValue.FromString(byteString)
-        removeData = grpc_wrappers.StringValue()
-    removeData.value = data.value
-    dataString = removeData.SerializeToString()
-    updatedByteString = byteString.removeprefix(dataString)
-    return updatedByteString, data.value
+        data = grpc_wrappers.StringValue.FromString(byte_string)
+        remove_data = grpc_wrappers.StringValue()
+    remove_data.value = data.value
+    data_string = remove_data.SerializeToString()
+    updated_byte_string = byte_string.removeprefix(data_string)
+    return updated_byte_string, data.value
 
 
-"""
-Serialize the value to Byte string based on tag
-Returns: byteString
-"""
+def serialize_value_with_tag(field_index, type, value, out_buffer):
+    """Serialize the value to Byte string based on tag.
 
-
-def serialize_value_with_tag(fieldIndex, type, value, out_buffer):
+    Returns: byteString
+    """
     if type == DataTypeTags.bool:
-        coder = encoder.BoolEncoder(fieldIndex, False, False)
+        coder = encoder.BoolEncoder(field_index, False, False)
     elif type == DataTypeTags.float:
-        coder = encoder.FloatEncoder(fieldIndex, False, False)
+        coder = encoder.FloatEncoder(field_index, False, False)
     elif type == DataTypeTags.integer:
-        coder = encoder.Int32Encoder(fieldIndex, False, False)
+        coder = encoder.Int32Encoder(field_index, False, False)
     elif type == DataTypeTags.string:
-        coder = encoder.StringEncoder(fieldIndex, False, False)
+        coder = encoder.StringEncoder(field_index, False, False)
     coder(out_buffer.write, value)
-    byteString = out_buffer.getvalue()
-    return byteString
+    byte_string = out_buffer.getvalue()
+    return byte_string
 
 
-"""
-De-serialize byte string based on tag. Variable Map will be updated with the Variable Value
-Returns:new-position"""
+def deserialize_value_with_tag(type, byte_io, pos, field_index, variable_name, out_variable_map):
+    """De-serialize byte string based on tag. Variable Map will be updated with the Variable Value.
 
-
-def deserialize_value_with_tag(type, byteIO, pos, fieldIndex, varName, out_variableMap):
+    Returns:new-position
+    """
     if type == DataTypeTags.bool:
-        coder = decoder.BoolDecoder(fieldIndex, False, False, varName, get_default_value)
+        coder = decoder.BoolDecoder(field_index, False, False, variable_name, get_default_value)
     elif type == DataTypeTags.float:
-        coder = decoder.DoubleDecoder(fieldIndex, False, False, varName, get_default_value)
+        coder = decoder.DoubleDecoder(field_index, False, False, variable_name, get_default_value)
     elif (
         type == DataTypeTags.double
     ):  # <class 'double'> is not available for python, Added as workaround for screen files.
-        coder = decoder.DoubleDecoder(fieldIndex, False, False, varName, get_default_value)
+        coder = decoder.DoubleDecoder(field_index, False, False, variable_name, get_default_value)
     elif type == DataTypeTags.integer:  # Not handling Un-singed range
-        coder = decoder.Int64Decoder(fieldIndex, False, False, varName, get_default_value)
+        coder = decoder.Int64Decoder(field_index, False, False, variable_name, get_default_value)
     elif type == DataTypeTags.string:
-        coder = decoder.StringDecoder(fieldIndex, False, False, varName, get_default_value)
+        coder = decoder.StringDecoder(field_index, False, False, variable_name, get_default_value)
     new_pos = coder(
-        byteIO.getbuffer(),
-        pos + encoder._TagSize(fieldIndex),
-        byteIO.__sizeof__(),
+        byte_io.getbuffer(),
+        pos + encoder._TagSize(field_index),
+        byte_io.__sizeof__(),
         type,
-        out_variableMap,
+        out_variable_map,
     )
     return new_pos
 
 
-def camel_to_snake(stringValue):
+def camel_to_snake(string_value):
+    """Convert a string from camel case to snake case."""
     pattern = re.compile(r"(?<!^)(?=[A-Z])")
-    return pattern.sub("_", stringValue).lower()
+    return pattern.sub("_", string_value).lower()
 
 
-def snake_to_camel(stringValue):
-    returnValue = "".join(word.title() for word in stringValue.split("_"))
-    return returnValue
+def snake_to_camel(string_value):
+    """Convert a string from snake case to camel case."""
+    return_value = "".join(word.title() for word in string_value.split("_"))
+    return return_value
 
 
 def get_default_value(type):
+    """Get the default value of data type."""
     if type == DataTypeTags.bool:
         return False
     elif type == DataTypeTags.float:
@@ -252,12 +249,8 @@ def get_default_value(type):
     return None
 
 
-"""
-Host the Service.
-"""
-
-
 def serve():
+    """Host the Service."""
     global server
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     Measurement_pb2_grpc.add_MeasurementServiceServicer_to_server(
@@ -271,14 +264,15 @@ def serve():
     return None
 
 
-"""
-Registers the Measurement to the Discovery Service
-Args:
-    port: Port number of the service
-"""
-
-
 def register_service(port):
+    """Register the Measurement to the Discovery Service.
+
+    Args:
+    ----
+        port: Port number of the service
+
+
+    """
     try:
         channel = grpc.insecure_channel("localhost:42000")
         stub = DiscoveryServices_pb2_grpc.RegistryServiceStub(channel)
@@ -298,9 +292,9 @@ def register_service(port):
         )
         request.provided_services.append(metadata.PROVIDED_SERVICE)
         # Registration RPC Call
-        registerRequest = stub.RegisterService(request)
+        register_request = stub.RegisterService(request)
         global registration_id_cache
-        registration_id_cache = registerRequest.registration_id
+        registration_id_cache = register_request.registration_id
         print("Successfully registered with DiscoveryService")
     except (grpc._channel._InactiveRpcError):
         print(
@@ -309,12 +303,8 @@ def register_service(port):
     return None
 
 
-"""
-UnRegisters the Measurement to the Discovery Service
-"""
-
-
 def unregister_service():
+    """Un-Register the Measurement to the Discovery Service."""
     try:
         channel = grpc.insecure_channel("localhost:42000")
         stub = DiscoveryServices_pb2_grpc.RegistryServiceStub(channel)
@@ -333,22 +323,14 @@ def unregister_service():
     return None
 
 
-"""
-Exit Handler to un-register measurement running in separate window exits.
-"""
-
-
 def on_exit(sig, func=None):
+    """Exit Handler to un-register measurement running in separate window exits."""
     print("Exit handler invoked")
     unregister_stop_service()
 
 
-"""
-Unregister Service form Discovery service and Exits the Service
-"""
-
-
 def unregister_stop_service():
+    """Unregister Service form Discovery service and Exits the Service."""
     unregister_service()
     server.stop(2)
     print("Exiting Python Measurement Service")

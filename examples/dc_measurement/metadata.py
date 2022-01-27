@@ -1,3 +1,5 @@
+""" Metadata for measurement.
+"""
 # Measurement Metadata
 DISPLAY_NAME = "DC Measurement(Py)"
 VERSION = "0.0.1"
