@@ -35,7 +35,7 @@ measurement = __import__(metadata.MEASUREMENT_MODULE_NAME)
 class MeasurementServiceImplementation(Measurement_pb2_grpc.MeasurementServiceServicer):
     """Implementation of gRPC Service - MeasurementService."""
 
-    def GetMetadata(self, request, context):
+    def GetMetadata(self, request, context):  # noqa N802:inherited method names-autogen baseclass
         """RPC Method that Get the Metdata of a Measurement."""
         # Further Scope: Get Method name based on reflection
         method_name = metadata.MEASUREMENT_METHOD_NAME
@@ -91,7 +91,7 @@ class MeasurementServiceImplementation(Measurement_pb2_grpc.MeasurementServiceSe
         )
         return metadata_response
 
-    def Measure(self, request, context):
+    def Measure(self, request, context):  # noqa N802:inherited method names-autogen baseclass
         """RPC Method that Executes the Measurement."""
         # Further Scope : Get Method name based on reflection and Store as Local Cache
         method_name = metadata.MEASUREMENT_METHOD_NAME

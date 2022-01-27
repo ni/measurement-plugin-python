@@ -1,4 +1,4 @@
-"""Measurement - Can be Edited By User.
+"""Measurement Logic : Can be Edited By User.
 
 User can Import driver and 3Party Packages based on requirements
 """
@@ -53,4 +53,3 @@ def print_fetched_measurements(measurements):
     print(layout.format("Voltage", measurements[0].voltage, " V"))
     print(layout.format("Current", measurements[0].current, " A"))
     print(layout.format("In compliance", measurements[0].in_compliance, ""))
-    return None
