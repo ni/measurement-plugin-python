@@ -34,7 +34,7 @@ DC Measurement is a simple python based example that interacts with DCPower 4145
 
 4. Run the \_\_main\_\_.py from the dc_measurement directory. You will see a window similar to the image below. The Port number might be different in your case. Now the measurement is ready for interaction from clients.
 
-![Startup Successful](img\dc_measurement_startup.png)
+![Startup Successful](img/dc_measurement_startup.png)
 
 #### Overview on the Components of dc_measurement
 
