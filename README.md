@@ -56,6 +56,8 @@ DC Measurement is a simple python based example that interacts with DCPower 4145
     - UI file for the Measurement.
     - The Name of this file is configured by `SCREEN_FILE_NAME` in metadata.py
 
+Note: DC Measurement currently supports only the double datatype for the Configuration (Input Parameters of `measure` method) and Output Values(Return Values of `measure` method).
+
 ## Template
 
 Template support is coming soon. :)
