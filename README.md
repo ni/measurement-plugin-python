@@ -32,9 +32,15 @@ DC Measurement is a simple python based example that interacts with DCPower 4145
 
 3. Make sure the resource name of the available DCPower 4145 is the same as the string value set for the `RESOURCE_NAME` constant in the metadata.py.
 
-4. Run the \_\_main\_\_.py from the dc_measurement directory. You will see a window similar to the image below. The Port number might be different in your case. Now the measurement is ready for interaction from clients.
+4. Activate the virtual environment if not already activated.
+    - Command : `venv\scripts\activate.bat`.
+    - After successful activation, you can see the name of the environment, here `(venv)` tag, added to the command prompt.
 
+5. Run the \_\_main\_\_.py from the dc_measurement directory. You will see a window similar to the image below. The Port number might be different in your case. Now the measurement is ready for interaction from clients.
 ![Startup Successful](img/dc_measurement_startup.png)
+
+6. After the usage of Measurement, deactivate the virtual environment.
+     - Command : `deactivate`.
 
 #### Overview on the Components of dc_measurement
 
