@@ -6,7 +6,8 @@ from google.protobuf.internal import decoder
 
 is_repeated_scalar = False
 is_repeated_array = True
-is_packed = True
+is_packed_scalar = False
+is_packed_array = True
 
 
 class BaseStrategy:
@@ -28,11 +29,11 @@ class DoubleStrategy(BaseStrategy):
         return 0.0
 
     def encoder(self, field_index: int):
-        return encoder.DoubleEncoder(field_index, is_repeated_scalar, is_packed)
+        return encoder.DoubleEncoder(field_index, is_repeated_scalar, is_packed_scalar)
 
     def decoder(self, field_index: int, name: str):
         return decoder.DoubleDecoder(
-            field_index, is_repeated_scalar, is_packed, name, self.__new_default
+            field_index, is_repeated_scalar, is_packed_scalar, name, self.__new_default
         )
 
 
@@ -41,11 +42,11 @@ class DoubleArrayStrategy(BaseStrategy):
         return []
 
     def encoder(self, field_index: int):
-        return encoder.DoubleEncoder(field_index, is_repeated_array, is_packed)
+        return encoder.DoubleEncoder(field_index, is_repeated_array, is_packed_array)
 
     def decoder(self, field_index: int, name: str):
         return decoder.DoubleDecoder(
-            field_index, is_repeated_array, is_packed, name, self.__new_default
+            field_index, is_repeated_array, is_packed_array, name, self.__new_default
         )
 
 
@@ -54,11 +55,11 @@ class BoolStrategy(BaseStrategy):
         return False
 
     def encoder(self, field_index: int):
-        return encoder.BoolEncoder(field_index, is_repeated_scalar, is_packed)
+        return encoder.BoolEncoder(field_index, is_repeated_scalar, is_packed_scalar)
 
     def decoder(self, field_index: int, name: str):
         return decoder.BoolDecoder(
-            field_index, is_repeated_scalar, is_packed, name, self.__new_default
+            field_index, is_repeated_scalar, is_packed_scalar, name, self.__new_default
         )
 
 
@@ -67,11 +68,11 @@ class StringStrategy(BaseStrategy):
         return ""
 
     def encoder(self, field_index: int):
-        return encoder.StringEncoder(field_index, is_repeated_scalar, is_packed)
+        return encoder.StringEncoder(field_index, is_repeated_scalar, is_packed_scalar)
 
     def decoder(self, field_index: int, name: str):
         return decoder.StringDecoder(
-            field_index, is_repeated_scalar, is_packed, name, self.__new_default
+            field_index, is_repeated_scalar, is_packed_scalar, name, self.__new_default
         )
 
 
@@ -80,11 +81,11 @@ class FloatStrategy(BaseStrategy):
         return 0.0
 
     def encoder(self, field_index: int):
-        return encoder.FloatEncoder(field_index, is_repeated_scalar, is_packed)
+        return encoder.FloatEncoder(field_index, is_repeated_scalar, is_packed_scalar)
 
     def decoder(self, field_index: int, name: str):
         return decoder.FloatDecoder(
-            field_index, is_repeated_scalar, is_packed, name, self.__new_default
+            field_index, is_repeated_scalar, is_packed_scalar, name, self.__new_default
         )
 
 
@@ -93,11 +94,11 @@ class Int32Strategy(BaseStrategy):
         return 0
 
     def encoder(self, field_index: int):
-        return encoder.Int32Encoder(field_index, is_repeated_scalar, is_packed)
+        return encoder.Int32Encoder(field_index, is_repeated_scalar, is_packed_scalar)
 
     def decoder(self, field_index: int, name: str):
         return decoder.Int32Decoder(
-            field_index, is_repeated_scalar, is_packed, name, self.__new_default
+            field_index, is_repeated_scalar, is_packed_scalar, name, self.__new_default
         )
 
 
@@ -106,11 +107,11 @@ class Int64Strategy(BaseStrategy):
         return 0
 
     def encoder(self, field_index: int):
-        return encoder.Int32Encoder(field_index, is_repeated_scalar, is_packed)
+        return encoder.Int32Encoder(field_index, is_repeated_scalar, is_packed_scalar)
 
     def decoder(self, field_index: int, name: str):
         return decoder.Int64Decoder(
-            field_index, is_repeated_scalar, is_packed, name, self.__new_default
+            field_index, is_repeated_scalar, is_packed_scalar, name, self.__new_default
         )
 
 
@@ -119,11 +120,11 @@ class UInt32Strategy(BaseStrategy):
         return 0
 
     def encoder(self, field_index: int):
-        return encoder.UInt32Encoder(field_index, is_repeated_scalar, is_packed)
+        return encoder.UInt32Encoder(field_index, is_repeated_scalar, is_packed_scalar)
 
     def decoder(self, field_index: int, name: str):
         return decoder.UInt32Decoder(
-            field_index, is_repeated_scalar, is_packed, name, self.__new_default
+            field_index, is_repeated_scalar, is_packed_scalar, name, self.__new_default
         )
 
 
@@ -132,11 +133,11 @@ class UInt64Strategy(BaseStrategy):
         return 0
 
     def encoder(self, field_index: int):
-        return encoder.UInt32Encoder(field_index, is_repeated_scalar, is_packed)
+        return encoder.UInt32Encoder(field_index, is_repeated_scalar, is_packed_scalar)
 
     def decoder(self, field_index: int, name: str):
         return decoder.UInt64Decoder(
-            field_index, is_repeated_scalar, is_packed, name, self.__new_default
+            field_index, is_repeated_scalar, is_packed_scalar, name, self.__new_default
         )
 
 
@@ -152,6 +153,7 @@ class Context:
         type_pb2.Field.TYPE_UINT32: (UInt32Strategy(), None),
         type_pb2.Field.TYPE_UINT64: (UInt64Strategy(), None),
         type_pb2.Field.TYPE_STRING: (StringStrategy(), None),
+        type_pb2.Field.TYPE_FLOAT: (FloatStrategy(), None),
     }
 
     def get_strategy(type: type_pb2.Field, repeated: bool) -> BaseStrategy:
