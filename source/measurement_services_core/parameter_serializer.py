@@ -21,15 +21,15 @@ class ParameterMetadata:
 def deserialize_parameters(parameter_metadata_dict: Dict[id, ParameterMetadata], parameter_bytes):
 
     position = 0
-    mapping = {}
+    mapping = {}  # inner_decoder update the mapping
     for key in parameter_metadata_dict:
         name = parameter_metadata_dict[key].name
         type = parameter_metadata_dict[key].type
         is_repeated = parameter_metadata_dict[key].repeated
         field_index = key
-        serializer = serializationstrategy.Context.get_strategy(type, is_repeated)
-        decoder = serializer.decoder(field_index, name)
-        position = decoder(
+        decoder = serializationstrategy.Context.get_decoder(type, is_repeated)
+        inner_decoder = decoder(field_index, name)
+        position = inner_decoder(
             parameter_bytes,
             position + encoder._TagSize(field_index),
             parameter_bytes.__sizeof__(),
@@ -40,12 +40,12 @@ def deserialize_parameters(parameter_metadata_dict: Dict[id, ParameterMetadata],
 
 
 def serialize_parameters(parameter_metadata_dict: Dict[id, ParameterMetadata], parameter_value):
-    serialize_buffer = io.BytesIO()
+    serialize_buffer = io.BytesIO()  # inner_encoder updates the serialize_buffer
     for i, parameter in enumerate(parameter_value):
-        serializer = serializationstrategy.Context.get_strategy(
+        encoder = serializationstrategy.Context.get_encoder(
             parameter_metadata_dict[i + 1].type,
             parameter_metadata_dict[i + 1].repeated,
         )
-        encoder = serializer.encoder(i + 1)
-        encoder(serialize_buffer.write, parameter, None)
+        inner_encoder = encoder(i + 1)
+        inner_encoder(serialize_buffer.write, parameter, None)
     return serialize_buffer.getvalue()

@@ -1,163 +1,112 @@
 import google.protobuf.type_pb2 as type_pb2
-from abc import abstractmethod
 from google.protobuf.internal import encoder
 from google.protobuf.internal import decoder
 
 
-is_repeated_scalar = False
-is_repeated_array = True
-is_packed_scalar = False
-is_packed_array = True
+def _ScalarEncoder(encoder):
+    def ScalarEncoder(field_index):
+        is_repeated = False
+        is_packed = False
+        return encoder(field_index, is_repeated, is_packed)
+
+    return ScalarEncoder
 
 
-class BaseStrategy:
-    @abstractmethod
-    def __new_default(self, message):
-        pass
+def _VectorEncoder(encoder):
+    def VectorEncoder(field_index):
+        is_repeated = True
+        is_packed = True
+        return encoder(field_index, is_repeated, is_packed)
 
-    @abstractmethod
-    def encoder(self, field_index):
-        pass
-
-    @abstractmethod
-    def decoder(self, field_index, name):
-        pass
+    return VectorEncoder
 
 
-class DoubleStrategy(BaseStrategy):
-    def __new_default(self, message):
-        return 0.0
+def _ScalarDecoder(decoder):
+    def ScalarDecoder(field_index, name):
+        is_repeated = False
+        is_packed = False
+        return decoder(field_index, is_repeated, is_packed, name, None)
 
-    def encoder(self, field_index: int):
-        return encoder.DoubleEncoder(field_index, is_repeated_scalar, is_packed_scalar)
-
-    def decoder(self, field_index: int, name: str):
-        return decoder.DoubleDecoder(
-            field_index, is_repeated_scalar, is_packed_scalar, name, self.__new_default
-        )
+    return ScalarDecoder
 
 
-class DoubleArrayStrategy(BaseStrategy):
-    def __new_default(self, message):
+def _VectorDecoder(decoder):
+    def _new_default(unused_message=None):
         return []
 
-    def encoder(self, field_index: int):
-        return encoder.DoubleEncoder(field_index, is_repeated_array, is_packed_array)
+    def VectorDecoder(field_index, name):
+        is_repeated = True
+        is_packed = True
+        return decoder(field_index, is_repeated, is_packed, name, _new_default)
 
-    def decoder(self, field_index: int, name: str):
-        return decoder.DoubleDecoder(
-            field_index, is_repeated_array, is_packed_array, name, self.__new_default
-        )
-
-
-class BoolStrategy(BaseStrategy):
-    def __new_default(self, message):
-        return False
-
-    def encoder(self, field_index: int):
-        return encoder.BoolEncoder(field_index, is_repeated_scalar, is_packed_scalar)
-
-    def decoder(self, field_index: int, name: str):
-        return decoder.BoolDecoder(
-            field_index, is_repeated_scalar, is_packed_scalar, name, self.__new_default
-        )
+    return VectorDecoder
 
 
-class StringStrategy(BaseStrategy):
-    def __new_default(self, message):
-        return ""
+FloatEncoder = _ScalarEncoder(encoder.FloatEncoder)
+DoubleEncoder = _ScalarEncoder(encoder.DoubleEncoder)
+IntEncoder = _ScalarEncoder(encoder.Int32Encoder)
+UIntEncoder = _ScalarEncoder(encoder.UInt32Encoder)
+BoolEncoder = _ScalarEncoder(encoder.BoolEncoder)
+StringEncoder = _ScalarEncoder(encoder.StringEncoder)
 
-    def encoder(self, field_index: int):
-        return encoder.StringEncoder(field_index, is_repeated_scalar, is_packed_scalar)
-
-    def decoder(self, field_index: int, name: str):
-        return decoder.StringDecoder(
-            field_index, is_repeated_scalar, is_packed_scalar, name, self.__new_default
-        )
-
-
-class FloatStrategy(BaseStrategy):
-    def __new_default(self, message):
-        return 0.0
-
-    def encoder(self, field_index: int):
-        return encoder.FloatEncoder(field_index, is_repeated_scalar, is_packed_scalar)
-
-    def decoder(self, field_index: int, name: str):
-        return decoder.FloatDecoder(
-            field_index, is_repeated_scalar, is_packed_scalar, name, self.__new_default
-        )
+FloatArrayEncoder = _VectorEncoder(encoder.FloatEncoder)
+DoubleArrayEncoder = _VectorEncoder(encoder.DoubleEncoder)
+IntArrayEncoder = _VectorEncoder(encoder.Int32Encoder)
+UIntArrayEncoder = _VectorEncoder(encoder.UInt32Encoder)
+BoolArrayEncoder = _VectorEncoder(encoder.BoolEncoder)
+StringArrayEncoder = _VectorEncoder(encoder.StringEncoder)
 
 
-class Int32Strategy(BaseStrategy):
-    def __new_default(self, message):
-        return 0
+FloatDecoder = _ScalarDecoder(decoder.FloatDecoder)
+DoubleDecoder = _ScalarDecoder(decoder.DoubleDecoder)
+Int32Decoder = _ScalarDecoder(decoder.Int32Decoder)
+UInt32Decoder = _ScalarDecoder(decoder.UInt32Decoder)
+Int64Decoder = _ScalarDecoder(decoder.Int64Decoder)
+UInt64Decoder = _ScalarDecoder(decoder.UInt64Decoder)
+BoolDecoder = _ScalarDecoder(decoder.BoolDecoder)
+StringDecoder = _ScalarDecoder(decoder.StringDecoder)
 
-    def encoder(self, field_index: int):
-        return encoder.Int32Encoder(field_index, is_repeated_scalar, is_packed_scalar)
-
-    def decoder(self, field_index: int, name: str):
-        return decoder.Int32Decoder(
-            field_index, is_repeated_scalar, is_packed_scalar, name, self.__new_default
-        )
-
-
-class Int64Strategy(BaseStrategy):
-    def __new_default(self, message):
-        return 0
-
-    def encoder(self, field_index: int):
-        return encoder.Int32Encoder(field_index, is_repeated_scalar, is_packed_scalar)
-
-    def decoder(self, field_index: int, name: str):
-        return decoder.Int64Decoder(
-            field_index, is_repeated_scalar, is_packed_scalar, name, self.__new_default
-        )
-
-
-class UInt32Strategy(BaseStrategy):
-    def __new_default(self, message):
-        return 0
-
-    def encoder(self, field_index: int):
-        return encoder.UInt32Encoder(field_index, is_repeated_scalar, is_packed_scalar)
-
-    def decoder(self, field_index: int, name: str):
-        return decoder.UInt32Decoder(
-            field_index, is_repeated_scalar, is_packed_scalar, name, self.__new_default
-        )
-
-
-class UInt64Strategy(BaseStrategy):
-    def __new_default(self, message):
-        return 0
-
-    def encoder(self, field_index: int):
-        return encoder.UInt32Encoder(field_index, is_repeated_scalar, is_packed_scalar)
-
-    def decoder(self, field_index: int, name: str):
-        return decoder.UInt64Decoder(
-            field_index, is_repeated_scalar, is_packed_scalar, name, self.__new_default
-        )
+FloatArrayDecoder = _VectorDecoder(decoder.FloatDecoder)
+DoubleArrayDecoder = _VectorDecoder(decoder.DoubleDecoder)
+Int32ArrayDecoder = _VectorDecoder(decoder.Int32Decoder)
+UInt32ArrayDecoder = _VectorDecoder(decoder.UInt32Decoder)
+Int64ArrayDecoder = _VectorDecoder(decoder.Int64Decoder)
+UInt64ArrayDecoder = _VectorDecoder(decoder.UInt64Decoder)
+BoolArrayDecoder = _VectorDecoder(decoder.BoolDecoder)
+StringArrayDecoder = _VectorDecoder(decoder.StringDecoder)
 
 
 class Context:
-    serialization_strategy_set = {
-        type_pb2.Field.TYPE_DOUBLE: (
-            DoubleStrategy(),
-            DoubleArrayStrategy(),
-        ),
-        type_pb2.Field.TYPE_BOOL: (BoolStrategy(), None),
-        type_pb2.Field.TYPE_INT32: (Int32Strategy(), None),
-        type_pb2.Field.TYPE_INT64: (Int64Strategy(), None),
-        type_pb2.Field.TYPE_UINT32: (UInt32Strategy(), None),
-        type_pb2.Field.TYPE_UINT64: (UInt64Strategy(), None),
-        type_pb2.Field.TYPE_STRING: (StringStrategy(), None),
-        type_pb2.Field.TYPE_FLOAT: (FloatStrategy(), None),
+    encoder_strategy_set = {
+        type_pb2.Field.TYPE_FLOAT: (FloatEncoder, FloatArrayEncoder),
+        type_pb2.Field.TYPE_DOUBLE: (DoubleEncoder, DoubleArrayEncoder),
+        type_pb2.Field.TYPE_INT32: (IntEncoder, IntArrayEncoder),
+        type_pb2.Field.TYPE_INT64: (IntEncoder, IntArrayEncoder),
+        type_pb2.Field.TYPE_UINT32: (UIntEncoder, UIntArrayEncoder),
+        type_pb2.Field.TYPE_UINT64: (UIntEncoder, UIntArrayEncoder),
+        type_pb2.Field.TYPE_BOOL: (BoolEncoder, BoolArrayEncoder),
+        type_pb2.Field.TYPE_STRING: (StringEncoder, StringArrayEncoder),
     }
 
-    def get_strategy(type: type_pb2.Field, repeated: bool) -> BaseStrategy:
-        (scalar, array) = Context.serialization_strategy_set.get(type)
+    decoder_strategy_set = {
+        type_pb2.Field.TYPE_FLOAT: (FloatDecoder, FloatArrayDecoder),
+        type_pb2.Field.TYPE_DOUBLE: (DoubleDecoder, DoubleArrayDecoder),
+        type_pb2.Field.TYPE_INT32: (Int32Decoder, Int32ArrayDecoder),
+        type_pb2.Field.TYPE_INT64: (Int64Decoder, Int64ArrayDecoder),
+        type_pb2.Field.TYPE_UINT32: (UInt32Decoder, UInt32ArrayDecoder),
+        type_pb2.Field.TYPE_UINT64: (UInt64Decoder, UInt64ArrayDecoder),
+        type_pb2.Field.TYPE_BOOL: (BoolDecoder, BoolArrayDecoder),
+        type_pb2.Field.TYPE_STRING: (StringDecoder, StringArrayDecoder),
+    }
+
+    def get_encoder(type: type_pb2.Field, repeated: bool):
+        (scalar, array) = Context.encoder_strategy_set.get(type)
+        if repeated:
+            return array
+        return scalar
+
+    def get_decoder(type: type_pb2.Field, repeated: bool):
+        (scalar, array) = Context.decoder_strategy_set.get(type)
         if repeated:
             return array
         return scalar
