@@ -1,21 +1,20 @@
 import io
-from typing import Dict
+from typing import Any, Dict, NamedTuple
 import serializationstrategy
 import google.protobuf.type_pb2 as type_pb2
 from google.protobuf.internal import encoder
 
 
-class Parameter:
-    def __init__(self, id, value):
-        self.id = id
-        self.value = value
+class Parameter(NamedTuple):
+    id: int
+    value: Any  # any object
 
 
-class ParameterMetadata:
-    def __init__(self, name: str, type: type_pb2.Field, repeated: bool):
-        self.name = name
-        self.type = type
-        self.repeated = repeated
+class ParameterMetadata(NamedTuple):
+    name: str
+    type: type_pb2.Field
+    repeated: bool
+    default_value: Any  # any object
 
 
 def deserialize_parameters(parameter_metadata_dict: Dict[id, ParameterMetadata], parameter_bytes):
