@@ -77,7 +77,7 @@ StringArrayDecoder = _VectorDecoder(decoder.StringDecoder)
 
 
 class Context:
-    encoder_strategy_set = {
+    _FIELD_TYPE_TO_ENCODER_MAPPING = {
         type_pb2.Field.TYPE_FLOAT: (FloatEncoder, FloatArrayEncoder),
         type_pb2.Field.TYPE_DOUBLE: (DoubleEncoder, DoubleArrayEncoder),
         type_pb2.Field.TYPE_INT32: (IntEncoder, IntArrayEncoder),
@@ -88,7 +88,7 @@ class Context:
         type_pb2.Field.TYPE_STRING: (StringEncoder, StringArrayEncoder),
     }
 
-    decoder_strategy_set = {
+    _FIELD_TYPE_TO_DECODER_MAPPING = {
         type_pb2.Field.TYPE_FLOAT: (FloatDecoder, FloatArrayDecoder),
         type_pb2.Field.TYPE_DOUBLE: (DoubleDecoder, DoubleArrayDecoder),
         type_pb2.Field.TYPE_INT32: (Int32Decoder, Int32ArrayDecoder),
@@ -100,13 +100,17 @@ class Context:
     }
 
     def get_encoder(type: type_pb2.Field, repeated: bool):
-        (scalar, array) = Context.encoder_strategy_set.get(type)
+        if type not in Context._FIELD_TYPE_TO_ENCODER_MAPPING:
+            raise Exception(f"Error can not encode type '{type}'")
+        (scalar, array) = Context._FIELD_TYPE_TO_ENCODER_MAPPING.get(type)
         if repeated:
             return array
         return scalar
 
     def get_decoder(type: type_pb2.Field, repeated: bool):
-        (scalar, array) = Context.decoder_strategy_set.get(type)
+        if type not in Context._FIELD_TYPE_TO_DECODER_MAPPING:
+            raise Exception(f"Error can not decode type '{type}'")
+        (scalar, array) = Context._FIELD_TYPE_TO_DECODER_MAPPING.get(type)
         if repeated:
             return array
         return scalar

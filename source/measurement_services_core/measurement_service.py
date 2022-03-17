@@ -32,8 +32,10 @@ measurement = __import__(metadata.MEASUREMENT_MODULE_NAME)
 class MeasurementServiceImplementation(Measurement_pb2_grpc.MeasurementServiceServicer):
     """Implementation of gRPC Service - MeasurementService."""
 
-    configuration_metadata = {}
-    output_metadata = {}
+    def __init__(self) -> None:
+        super().__init__()
+        self.configuration_metadata = {}
+        self.output_metadata = {}
 
     def GetMetadata(self, request, context):  # noqa N802:inherited method names-autogen baseclass
         """RPC Method that Get the Metdata of a Measurement."""
@@ -98,9 +100,9 @@ class MeasurementServiceImplementation(Measurement_pb2_grpc.MeasurementServiceSe
         # User Interface details - Framed relative to the metadata python File
         ui_details = Measurement_pb2.UserInterfaceDetails()
 
-        meatadata_base_path = str(pathlib.Path(metadata.__file__).parent.resolve())
+        metadata_base_path = str(pathlib.Path(metadata.__file__).parent.resolve())
         ui_details.configuration_ui_url = (
-            metadata.SCREEN_UI_TYPE + meatadata_base_path + "\\" + metadata.SCREEN_FILE_NAME
+            metadata.SCREEN_UI_TYPE + metadata_base_path + "\\" + metadata.SCREEN_FILE_NAME
         )
 
         # Sending back Response
@@ -135,8 +137,8 @@ def pythontype_to_grpctype(type_literal):
     """Convert Python Type literal to DataType(gRPC enum) defined in protobuf file."""
     switcher = {
         "<class 'double'>": grpc_type.Field.Kind.TYPE_DOUBLE,
-        "<class 'bool'>": grpc_type.Field.Kind.TYPE_BOOL,
         "<class 'float'>": grpc_type.Field.Kind.TYPE_DOUBLE,
+        "<class 'bool'>": grpc_type.Field.Kind.TYPE_BOOL,
         "<class 'int'>": grpc_type.Field.Kind.TYPE_INT64,
         "<class 'str'>": grpc_type.Field.Kind.TYPE_STRING,
         "<class 'list'>": grpc_type.Field.Kind.TYPE_DOUBLE,

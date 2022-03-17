@@ -22,10 +22,10 @@ def deserialize_parameters(parameter_metadata_dict: Dict[id, ParameterMetadata],
 
     position = 0
     mapping = {}  # inner_decoder update the mapping
-    for key in parameter_metadata_dict:
-        name = parameter_metadata_dict[key].name
-        type = parameter_metadata_dict[key].type
-        is_repeated = parameter_metadata_dict[key].repeated
+    for key, value in parameter_metadata_dict.items():
+        name = value.name
+        type = value.type
+        is_repeated = value.repeated
         field_index = key
         decoder = serializationstrategy.Context.get_decoder(type, is_repeated)
         inner_decoder = decoder(field_index, name)
