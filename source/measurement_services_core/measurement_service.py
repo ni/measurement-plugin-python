@@ -85,10 +85,7 @@ class MeasurementServiceImplementation(Measurement_pb2_grpc.MeasurementServiceSe
             output_parameter.protobuf_id = i + 1
             output_parameter.name = output_name
             output_parameter.type = pythontype_to_grpctype(metadata.MEASUREMENT_OUTPUTS_TYPE[i])
-            if metadata.MEASUREMENT_OUTPUTS_TYPE[i] == "<class 'list'>":
-                output_parameter.repeated = True
-            else:
-                output_parameter.repeated = False
+            output_parameter.repeated = metadata.MEASUREMENT_OUTPUTS_TYPE[i] == "<class 'list'>"
             measurement_parameters.outputs.append(output_parameter)
             parameter = ParameterMetadata(
                 output_parameter.name,
