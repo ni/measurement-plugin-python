@@ -167,6 +167,17 @@ class Context:
         type_pb2.Field.TYPE_STRING: (StringDecoder, StringArrayDecoder),
     }
 
+    _TYPE_DEFAULT_MAPPING = {
+        type_pb2.Field.TYPE_FLOAT: float(),
+        type_pb2.Field.TYPE_DOUBLE: float(),
+        type_pb2.Field.TYPE_INT32: int(),
+        type_pb2.Field.TYPE_INT64: int(),
+        type_pb2.Field.TYPE_UINT32: int(),
+        type_pb2.Field.TYPE_UINT64: int(),
+        type_pb2.Field.TYPE_BOOL: bool(),
+        type_pb2.Field.TYPE_STRING: str(),
+    }
+
     @staticmethod
     def get_encoder(type: type_pb2.Field, repeated: bool) -> Callable[[int], Callable]:
         """Get the Scalar Encoder or Vector Encoder for the specified type based on repeated bool.
@@ -216,3 +227,9 @@ class Context:
         if repeated:
             return array
         return scalar
+
+    def get_type_default(type: type_pb2.Field, repeated: bool):
+        type_default_value = Context._TYPE_DEFAULT_MAPPING.get(type)
+        if repeated:
+            return list()
+        return type_default_value
