@@ -1,6 +1,6 @@
 [tool.black]
 extend-exclude ='((.+_pb2_grpc)|(.+_pb2))+(.py)$' # Regex to files with _pb2_grpc.py and _pb2.py Auto Generated Code are excluded
-line-length = 100
+line-length = 150
 exclude = '''
 (
 \.git # root of the project
