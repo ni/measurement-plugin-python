@@ -1,45 +1,13 @@
-import enum
 import time
-from typing import NamedTuple
-import measurement_service.core.servicer as servicer
-import measurement_service.core.parameter.metadata as parameter_metadata
-import google.protobuf.type_pb2 as type_pb2
+import nimf.internal.servicer as servicer
+import nimf.internal.parameter.metadata as parameter_metadata
+
+import nimf.internal.utilities.consoleexitfunctions as consoleexitfunctions
+from nimf.measurement.info import MeasurementInfo, ServiceInfo, DataType
+import nimf.internal.discoveryclient as discoveryclient
 
 
-class MeasurementInfo(NamedTuple):
-    display_name: str = None
-    version: str = None
-    measurement_type: str = None
-    product_type: str = None
-    ui_file_path: str = None
-    ui_file_type: str = None
-
-
-class ServiceInfo(NamedTuple):
-    service_class: str
-    service_id: str
-    description_url: str
-
-
-class DataType(enum.Enum):
-    Int32 = (type_pb2.Field.TYPE_INT32, False)
-    Int64 = (type_pb2.Field.TYPE_INT64, False)
-    UInt32 = (type_pb2.Field.TYPE_UINT32, False)
-    UInt64 = (type_pb2.Field.TYPE_UINT64, False)
-    Float = (type_pb2.Field.TYPE_FLOAT, False)
-    Double = (type_pb2.Field.TYPE_DOUBLE, False)
-    Boolean = (type_pb2.Field.TYPE_BOOL, False)
-    String = (type_pb2.Field.TYPE_STRING, False)
-
-    Int32Array1D = (type_pb2.Field.TYPE_INT32, True)
-    Int64Array1D = (type_pb2.Field.TYPE_INT64, True)
-    UInt32Array1D = (type_pb2.Field.TYPE_UINT32, True)
-    UInt64Array1D = (type_pb2.Field.TYPE_UINT64, True)
-    FloatArray1D = (type_pb2.Field.TYPE_FLOAT, True)
-    DoubleArray1D = (type_pb2.Field.TYPE_DOUBLE, True)
-
-
-class Service:
+class MeasurementService:
     def __init__(self, measurement_info: MeasurementInfo, service_info: ServiceInfo):
         self.measurement_info: MeasurementInfo = measurement_info
         self.service_info: ServiceInfo = service_info
@@ -78,14 +46,10 @@ class Service:
 
         print("Hosted Service at Port:", port)
 
-        import measurement_service.core.discoveryclient as discoveryclient
-        import measurement_service.utilities.consoleexitfunctions as consoleexitfunctions
-
         discoveryclient.register_measurement_service(port, self.service_info, self.measurement_info.display_name)
         consoleexitfunctions.setup_unregister_on_console_close(self.close_service)
 
     def close_service(self):
-        import measurement_service.core.discoveryclient as discoveryclient
 
         discoveryclient.unregister_service()
         server.stop(5)

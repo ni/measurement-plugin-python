@@ -1,8 +1,8 @@
 import grpc
-from measurement_service.stubs import DiscoveryServices_pb2
-from measurement_service.stubs import DiscoveryServices_pb2_grpc
-from measurement_service.stubs import ServiceLocation_pb2
-import measurement_service.framework as framework
+from nimf.internal.stubs import DiscoveryServices_pb2
+from nimf.internal.stubs import DiscoveryServices_pb2_grpc
+from nimf.internal.stubs import ServiceLocation_pb2
+import nimf.measurement.framework as framework
 
 
 _DISCOVERY_SERVICE_ADDRESS = "localhost:42000"

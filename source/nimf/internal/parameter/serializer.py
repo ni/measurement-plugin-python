@@ -1,11 +1,11 @@
 import io
 from typing import Dict
 from google.protobuf.internal import encoder
-from measurement_service.core.parameter import metadata
-import measurement_service.core.parameter.serializationstrategy as serializationstrategy
+from nimf.internal.parameter.metadata import ParameterMetadata
+import nimf.internal.parameter.serializationstrategy as serializationstrategy
 
 
-def deserialize_parameters(metadata_dict: Dict[id, metadata.ParameterMetadata], parameter_bytes):
+def deserialize_parameters(metadata_dict: Dict[id, ParameterMetadata], parameter_bytes):
 
     position = 0
     mapping_by_filed_index = {}  # inner_decoder update the mapping
@@ -25,7 +25,7 @@ def deserialize_parameters(metadata_dict: Dict[id, metadata.ParameterMetadata], 
     return mapping_by_filed_index
 
 
-def serialize_parameters(metadata_dict: Dict[id, metadata.ParameterMetadata], parameter_value):
+def serialize_parameters(metadata_dict: Dict[id, ParameterMetadata], parameter_value):
     serialize_buffer = io.BytesIO()  # inner_encoder updates the serialize_buffer
     for i, parameter in enumerate(parameter_value):
         encoder = serializationstrategy.Context.get_encoder(

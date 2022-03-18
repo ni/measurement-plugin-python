@@ -2,21 +2,19 @@
 
 Not Edited by User.
 """
-
-
 import inspect
 import io
 from concurrent import futures
 
 import google.protobuf.any_pb2 as grpc_any
 import grpc
-from measurement_service.stubs import Measurement_pb2
-from measurement_service.stubs import Measurement_pb2_grpc
+from nimf.internal.stubs import Measurement_pb2
+from nimf.internal.stubs import Measurement_pb2_grpc
 
 
-from measurement_service.core.parameter import serializer
-import measurement_service.core.parameter.metadata as parameter_metadata
-import measurement_service.framework as framework
+import nimf.internal.parameter.serializer as serializer
+import nimf.internal.parameter.metadata as parameter_metadata
+import nimf.measurement.framework as framework
 
 
 class MeasurementServiceServicer(Measurement_pb2_grpc.MeasurementServiceServicer):
