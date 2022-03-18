@@ -89,6 +89,9 @@ class MeasurementServiceServicer(Measurement_pb2_grpc.MeasurementServiceServicer
             configuration_parameter.type = configuration_metadata.type
             measurement_parameters.configuration_parameters.append(configuration_parameter)
 
+        # Configuration Defaults
+        measurement_parameters.configuration_defaults.value = serializer.serialize_default_values(self.configuration_metadata)
+
         # Output Parameters Metadata
         for id, output_metadata in self.output_metadata.items():
             output_metadata: parameter_metadata.ParameterMetadata
