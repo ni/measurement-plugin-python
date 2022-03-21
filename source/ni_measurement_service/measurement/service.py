@@ -4,7 +4,7 @@ from typing import Any, Callable
 
 import ni_measurement_service.internal.discoveryclient as discoveryclient
 import ni_measurement_service.internal.parameter.metadata as parameter_metadata
-import ni_measurement_service.internal.servicer as servicer
+import ni_measurement_service.internal.grpc_servicer as grpc_servicer
 import ni_measurement_service.internal.utilities.consoleexitfunctions as consoleexitfunctions
 from ni_measurement_service.measurement.info import MeasurementInfo, ServiceInfo, DataType
 
@@ -36,7 +36,7 @@ class MeasurementService:
         self.configuration_parameter_list: list = []
         self.output_parameter_list: list = []
 
-    def register_measurement(self, func: Callable) -> Callable:
+    def register_measurement(self, measurement_function: Callable) -> Callable:
         """Register the function as the measurement. Recommended to use as a decorator.
 
         Args
@@ -48,8 +48,8 @@ class MeasurementService:
             Callable: Python Function.
 
         """
-        self.measure_function = func
-        return func
+        self.measure_function = measurement_function
+        return measurement_function
 
     def configuration(self, display_name: str, type: DataType, default_value: Any) -> Callable:
         """Add configuration parameter info for a measurement.Recommended to use as a decorator.
@@ -113,7 +113,7 @@ class MeasurementService:
         if self.measure_function is None:
             raise Exception("Error, must register measurement method.")
         global server
-        server, port = servicer.serve(
+        server, port = grpc_servicer.serve(
             self.measurement_info,
             self.configuration_parameter_list,
             self.output_parameter_list,
@@ -127,7 +127,7 @@ class MeasurementService:
         return None
 
     def close_service(self) -> None:
-        """Close the Servie after un-registering with discovery service and cleanups."""
+        """Close the Service after un-registering with discovery service and cleanups."""
         discoveryclient.unregister_service()
         server.stop(5)
         print("Measurement service exited.")

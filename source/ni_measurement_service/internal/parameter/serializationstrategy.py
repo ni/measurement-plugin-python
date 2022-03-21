@@ -18,7 +18,7 @@ def _scalar_encoder(encoder: Callable[[int, bool, bool], Callable]) -> Callable[
     Returns
     -------
         Callable[[int],Callable]: Callable Encoder for scalar types that takes
-        in field_index and retruns the Low-level Encode Callable.
+        in field_index and returns the Low-level Encode Callable.
 
     """
 
@@ -41,7 +41,7 @@ def _vector_encoder(encoder: Callable[[int, bool, bool], Callable]) -> Callable[
     Returns
     -------
         Callable[[int],Callable]: Callable Encoder for 1D Array types that takes in
-        field_index and retruns the Low-level Encode Callable.
+        field_index and returns the Low-level Encode Callable.
 
     """
 

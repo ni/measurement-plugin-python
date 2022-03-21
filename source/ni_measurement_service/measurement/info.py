@@ -36,7 +36,7 @@ class MeasurementInfo(NamedTuple):
 
 
 class ServiceInfo(NamedTuple):
-    """Class the represts the service information.
+    """Class the represents the service information.
 
     Attributes
     ----------
@@ -54,7 +54,7 @@ class ServiceInfo(NamedTuple):
 
 
 class DataType(enum.Enum):
-    """Enum that represents the suppported data types."""
+    """Enum that represents the supported data types."""
 
     Int32 = (type_pb2.Field.TYPE_INT32, False)
     Int64 = (type_pb2.Field.TYPE_INT64, False)
