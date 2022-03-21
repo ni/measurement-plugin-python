@@ -7,12 +7,12 @@ from typing import Callable, Dict, List, Tuple
 
 import google.protobuf.any_pb2 as grpc_any
 import grpc
-import nimf.internal.parameter.metadata as parameter_metadata
-import nimf.internal.parameter.serializer as serializer
-import nimf.measurement.info as info
-from nimf.internal.stubs import Measurement_pb2
-from nimf.internal.stubs import Measurement_pb2_grpc
-from source.nimf.internal.parameter.metadata import ParameterMetadata
+import ni_measurement_service.internal.parameter.metadata as parameter_metadata
+import ni_measurement_service.internal.parameter.serializer as serializer
+import ni_measurement_service.measurement.info as info
+from ni_measurement_service.internal.stubs import Measurement_pb2
+from ni_measurement_service.internal.stubs import Measurement_pb2_grpc
+from source.ni_measurement_service.internal.parameter.metadata import ParameterMetadata
 
 
 class MeasurementServiceServicer(Measurement_pb2_grpc.MeasurementServiceServicer):
@@ -20,7 +20,7 @@ class MeasurementServiceServicer(Measurement_pb2_grpc.MeasurementServiceServicer
 
     Attributes
     ----------
-        measurement_info (framework.MeasurementInfo): Measurement info
+        measurement_info (info.MeasurementInfo): Measurement info
         configuration_parameter_list (List): List of configuration parameters.
         output_parameter_list (list): List of output parameters.
         measure_function (Callable): Registered measurement function.

@@ -2,9 +2,9 @@
 import io
 from typing import Dict
 
-import nimf.internal.parameter.serializationstrategy as serializationstrategy
+import ni_measurement_service.internal.parameter.serializationstrategy as serializationstrategy
 from google.protobuf.internal import encoder
-from nimf.internal.parameter.metadata import ParameterMetadata
+from ni_measurement_service.internal.parameter.metadata import ParameterMetadata
 
 
 def deserialize_parameters(metadata_dict: Dict[id, ParameterMetadata], parameter_bytes):

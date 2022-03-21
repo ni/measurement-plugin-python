@@ -1,10 +1,10 @@
 """ Contains API to register and un-register measurement service with discovery service.
 """
 import grpc
-import nimf.measurement.info as info
-from nimf.internal.stubs import DiscoveryServices_pb2
-from nimf.internal.stubs import DiscoveryServices_pb2_grpc
-from nimf.internal.stubs import ServiceLocation_pb2
+import ni_measurement_service.measurement.info as info
+from ni_measurement_service.internal.stubs import DiscoveryServices_pb2
+from ni_measurement_service.internal.stubs import DiscoveryServices_pb2_grpc
+from ni_measurement_service.internal.stubs import ServiceLocation_pb2
 
 
 _DISCOVERY_SERVICE_ADDRESS = "localhost:42000"
@@ -18,7 +18,7 @@ def register_measurement_service(service_port: str, service_info: info.ServiceIn
     Args:
     ----
         service_port (str): Port Number of the measurement service.
-        service_info (framework.ServiceInfo): Service Info.
+        service_info (info.ServiceInfo): Service Info.
         display_name (str): Display name of the service.
 
     """

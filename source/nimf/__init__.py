@@ -1,2 +1,0 @@
-"""National Instruments Measurement Framework.
-"""

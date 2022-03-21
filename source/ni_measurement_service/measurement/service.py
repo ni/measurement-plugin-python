@@ -2,11 +2,11 @@
 import time
 from typing import Any, Callable
 
-import nimf.internal.discoveryclient as discoveryclient
-import nimf.internal.parameter.metadata as parameter_metadata
-import nimf.internal.servicer as servicer
-import nimf.internal.utilities.consoleexitfunctions as consoleexitfunctions
-from nimf.measurement.info import MeasurementInfo, ServiceInfo, DataType
+import ni_measurement_service.internal.discoveryclient as discoveryclient
+import ni_measurement_service.internal.parameter.metadata as parameter_metadata
+import ni_measurement_service.internal.servicer as servicer
+import ni_measurement_service.internal.utilities.consoleexitfunctions as consoleexitfunctions
+from ni_measurement_service.measurement.info import MeasurementInfo, ServiceInfo, DataType
 
 
 class MeasurementService:
