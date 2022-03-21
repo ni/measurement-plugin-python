@@ -1,6 +1,6 @@
 """Serialization Strategy."""
 
-from typing import Callable
+from typing import Any, Callable
 
 import google.protobuf.type_pb2 as type_pb2
 from google.protobuf.internal import decoder
@@ -228,7 +228,20 @@ class Context:
             return array
         return scalar
 
-    def get_type_default(type: type_pb2.Field, repeated: bool):
+    @staticmethod
+    def get_type_default(type: type_pb2.Field, repeated: bool) -> Any:
+        """Get the Type deafult.
+
+        Args
+        ----
+            type (type_pb2.Field): Type of the Parameter.
+            repeated (bool): Boolean that represents if the Parameter is repeated or not.
+
+        Returns
+        -------
+            Any: Default value.
+
+        """
         type_default_value = Context._TYPE_DEFAULT_MAPPING.get(type)
         if repeated:
             return list()
