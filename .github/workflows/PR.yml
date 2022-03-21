@@ -5,7 +5,8 @@ on:
     branches:
       - main
     paths:
-      - measurement-services-python/**
+      - source/**
+      - examples/**
       - pyproject.toml
       - .github/workflows/PR.yml
 
