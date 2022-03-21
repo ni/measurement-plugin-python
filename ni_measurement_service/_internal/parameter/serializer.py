@@ -9,7 +9,9 @@ from google.protobuf.internal import encoder
 from ni_measurement_service._internal.parameter.metadata import ParameterMetadata
 
 
-def deserialize_parameters(parameter_metadata_dict: Dict[id, ParameterMetadata], parameter_bytes: Bytes) -> Dict[id, Any]:
+def deserialize_parameters(
+    parameter_metadata_dict: Dict[id, ParameterMetadata], parameter_bytes: Bytes
+) -> Dict[id, Any]:
     """Deserialize the bytes of the parameter based on the metadata.
 
     Args
@@ -23,14 +25,20 @@ def deserialize_parameters(parameter_metadata_dict: Dict[id, ParameterMetadata],
 
     """
     # Getting overlapping parameters
-    overlapping_parameter_by_id = _get_overlapping_parameters(parameter_metadata_dict, parameter_bytes)
+    overlapping_parameter_by_id = _get_overlapping_parameters(
+        parameter_metadata_dict, parameter_bytes
+    )
     # Adding missing parameters with type defaults
-    missing_parameters = _get_missing_parameters(parameter_metadata_dict, overlapping_parameter_by_id)
+    missing_parameters = _get_missing_parameters(
+        parameter_metadata_dict, overlapping_parameter_by_id
+    )
     overlapping_parameter_by_id.update(missing_parameters)
     return overlapping_parameter_by_id
 
 
-def serialize_parameters(parameter_metadata_dict: Dict[id, ParameterMetadata], parameter_value: List[Any]) -> Bytes:
+def serialize_parameters(
+    parameter_metadata_dict: Dict[id, ParameterMetadata], parameter_value: List[Any]
+) -> Bytes:
     """Serialize the parameter values in same order based on the metadata_dict.
 
     Args
@@ -45,19 +53,19 @@ def serialize_parameters(parameter_metadata_dict: Dict[id, ParameterMetadata], p
     """
     serialize_buffer = io.BytesIO()  # inner_encoder updates the serialize_buffer
     for i, parameter in enumerate(parameter_value):
+        parameter_metadata = parameter_metadata_dict[i + 1]
         encoder = serializationstrategy.Context.get_encoder(
-            parameter_metadata_dict[i + 1].type,
-            parameter_metadata_dict[i + 1].repeated,
+            parameter_metadata.type,
+            parameter_metadata.repeated,
         )
         type_default_value = serializationstrategy.Context.get_type_default(
-            parameter_metadata_dict[i + 1].type,
-            parameter_metadata_dict[i + 1].repeated,
+            parameter_metadata.type,
+            parameter_metadata.repeated,
         )
         # Skipping serialization if the value is None or if its a type default value.
-        if parameter is None or parameter == type_default_value:
-            continue
-        inner_encoder = encoder(i + 1)
-        inner_encoder(serialize_buffer.write, parameter, None)
+        if parameter is not None and parameter != type_default_value:
+            inner_encoder = encoder(i + 1)
+            inner_encoder(serialize_buffer.write, parameter, None)
     return serialize_buffer.getvalue()
 
 
@@ -82,19 +90,26 @@ def serialize_default_values(parameter_metadata_dict: Dict[id, ParameterMetadata
 
 
 def _get_field_index(parameter_bytes: Bytes, tag_position: int):
-    """Get the Filed Index based on the tag's position. The tag Position should be the index of the TagValue in the ByteArray for valid field index.
+    """Get the Filed Index based on the tag's position.
 
-    Args:
+    The tag Position should be the index of the TagValue in the ByteArray for valid field index.
+
+    Args
+    ----
         parameter_bytes (Bytes): _description_
         position (int): _description_
 
-    Returns:
+    Returns
+    -------
         int: Filed index of the Tag Position
+
     """
     return parameter_bytes[tag_position] >> 3
 
 
-def _get_overlapping_parameters(parameter_metadata_dict: Dict[id, ParameterMetadata], parameter_bytes: Bytes) -> Dict[id, Any]:
+def _get_overlapping_parameters(
+    parameter_metadata_dict: Dict[id, ParameterMetadata], parameter_bytes: Bytes
+) -> Dict[id, Any]:
     """Get the parameters present in both `parameter_metadata_dict` and `parameter_bytes`.
 
     Args
@@ -116,7 +131,9 @@ def _get_overlapping_parameters(parameter_metadata_dict: Dict[id, ParameterMetad
     while position < len(parameter_bytes):
         field_index = _get_field_index(parameter_bytes, position)
         if field_index not in parameter_metadata_dict:
-            raise Exception(f"Error occurred while reading the parameter - given protobuf index '{field_index}' is invalid.")
+            raise Exception(
+                f"Error occurred while reading the parameter - given protobuf index '{field_index}' is invalid."
+            )
         type = parameter_metadata_dict[field_index].type
         is_repeated = parameter_metadata_dict[field_index].repeated
         decoder = serializationstrategy.Context.get_decoder(type, is_repeated)
@@ -133,7 +150,9 @@ def _get_overlapping_parameters(parameter_metadata_dict: Dict[id, ParameterMetad
     return overlapping_parameters_by_id
 
 
-def _get_missing_parameters(parameter_metadata_dict: Dict[id, ParameterMetadata], parameter_by_id: Dict[id, Any]) -> Dict[id, Any]:
+def _get_missing_parameters(
+    parameter_metadata_dict: Dict[id, ParameterMetadata], parameter_by_id: Dict[id, Any]
+) -> Dict[id, Any]:
     """Get the Parameters defined in `parameter_metadata_dict` but not in `parameter_by_id`.
 
     Args
@@ -149,5 +168,7 @@ def _get_missing_parameters(parameter_metadata_dict: Dict[id, ParameterMetadata]
     missing_parameters = {}
     for key, value in parameter_metadata_dict.items():
         if key not in parameter_by_id:
-            missing_parameters[value.name] = serializationstrategy.Context.get_type_default(value.type, value.repeated)
+            missing_parameters[value.name] = serializationstrategy.Context.get_type_default(
+                value.type, value.repeated
+            )
     return missing_parameters

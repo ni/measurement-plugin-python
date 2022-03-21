@@ -89,7 +89,9 @@ class MeasurementServiceServicer(Measurement_pb2_grpc.MeasurementServiceServicer
             measurement_parameters.configuration_parameters.append(configuration_parameter)
 
         # Configuration Defaults
-        measurement_parameters.configuration_defaults.value = serializer.serialize_default_values(self.configuration_metadata)
+        measurement_parameters.configuration_defaults.value = serializer.serialize_default_values(
+            self.configuration_metadata
+        )
 
         # Output Parameters Metadata
         for id, output_metadata in self.output_metadata.items():
@@ -122,7 +124,9 @@ class MeasurementServiceServicer(Measurement_pb2_grpc.MeasurementServiceServicer
         mapping_by_id = serializer.deserialize_parameters(self.configuration_metadata, byte_string)
 
         # Calling the registered measurement
-        mapping_by_variable_name = self._get_mapping_by_parameter_name(mapping_by_id, self.measure_function)
+        mapping_by_variable_name = self._get_mapping_by_parameter_name(
+            mapping_by_id, self.measure_function
+        )
         output_value = self.measure_function(**mapping_by_variable_name)
         output_bytestring = serializer.serialize_parameters(self.output_metadata, output_value)
         # Frame the respone and send back.
@@ -131,7 +135,9 @@ class MeasurementServiceServicer(Measurement_pb2_grpc.MeasurementServiceServicer
         return_value = Measurement_pb2.MeasureResponse(outputs=output_any)
         return return_value
 
-    def _get_mapping_by_parameter_name(self, mapping_by_id: Dict[id, Any], measure_function: Callable) -> Dict[str, Any]:
+    def _get_mapping_by_parameter_name(
+        self, mapping_by_id: Dict[id, Any], measure_function: Callable
+    ) -> Dict[str, Any]:
         """Transform the mapping by id to mapping by parameter names of the measurement function.
 
         Args
