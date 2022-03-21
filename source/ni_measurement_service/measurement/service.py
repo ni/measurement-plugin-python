@@ -3,8 +3,8 @@ import time
 from typing import Any, Callable
 
 import ni_measurement_service.internal.discoveryclient as discoveryclient
-import ni_measurement_service.internal.parameter.metadata as parameter_metadata
 import ni_measurement_service.internal.grpc_servicer as grpc_servicer
+import ni_measurement_service.internal.parameter.metadata as parameter_metadata
 import ni_measurement_service.internal.utilities.consoleexitfunctions as consoleexitfunctions
 from ni_measurement_service.measurement.info import MeasurementInfo, ServiceInfo, DataType
 
