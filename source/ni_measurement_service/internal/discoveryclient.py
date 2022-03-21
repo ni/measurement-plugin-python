@@ -12,7 +12,9 @@ _PROVIDED_MEASUREMENT_SERVICE = "ni.measurements.v1.MeasurementService"
 _registration_id = None
 
 
-def register_measurement_service(service_port: str, service_info: info.ServiceInfo, display_name: str) -> None:
+def register_measurement_service(
+    service_port: str, service_info: info.ServiceInfo, display_name: str
+) -> None:
     """Register the measurement service with the discovery service.
 
     Args:
@@ -36,7 +38,9 @@ def register_measurement_service(service_port: str, service_info: info.ServiceIn
         service_descriptor.service_class = service_info.service_class
         service_descriptor.description_url = service_info.description_url
         # Registration Request Creation
-        request = DiscoveryServices_pb2.RegisterServiceRequest(location=service_location, service_description=service_descriptor)
+        request = DiscoveryServices_pb2.RegisterServiceRequest(
+            location=service_location, service_description=service_descriptor
+        )
         request.provided_services.append(_PROVIDED_MEASUREMENT_SERVICE)
         # Registration RPC Call
         register_request = stub.RegisterService(request)
@@ -44,7 +48,9 @@ def register_measurement_service(service_port: str, service_info: info.ServiceIn
         _registration_id = register_request.registration_id
         print("Successfully registered with DiscoveryService")
     except (grpc._channel._InactiveRpcError):
-        print("Unable to register with discovery service. Possible reasons : Discovery Service not Available.")
+        print(
+            "Unable to register with discovery service. Possible reasons : Discovery Service not Available."
+        )
     return None
 
 
@@ -64,5 +70,7 @@ def unregister_service():
         stub.UnregisterService(request)
         print("Successfully unregistered with DiscoveryService")
     except (grpc._channel._InactiveRpcError):
-        print("Unable to unregister with discovery service. Possible reasons : Discovery Service not Available.")
+        print(
+            "Unable to unregister with discovery service. Possible reasons : Discovery Service not Available."
+        )
     return None

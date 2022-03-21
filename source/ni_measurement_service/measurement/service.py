@@ -1,4 +1,4 @@
-"""Framework to support measurement service."""
+"""Framework to host measurement service."""
 import time
 from typing import Any, Callable
 
@@ -67,7 +67,9 @@ class MeasurementService:
 
         """
         grpc_field_type, repeated = type.value
-        parameter = parameter_metadata.ParameterMetadata(display_name, grpc_field_type, repeated, default_value)
+        parameter = parameter_metadata.ParameterMetadata(
+            display_name, grpc_field_type, repeated, default_value
+        )
         self.configuration_parameter_list.append(parameter)
 
         def _configuration(func):
@@ -90,7 +92,9 @@ class MeasurementService:
 
         """
         grpc_field_type, repeated = type.value
-        parameter = parameter_metadata.ParameterMetadata(display_name, grpc_field_type, repeated, None)
+        parameter = parameter_metadata.ParameterMetadata(
+            display_name, grpc_field_type, repeated, None
+        )
         self.output_parameter_list.append(parameter)
 
         def _output(func):
@@ -109,9 +113,16 @@ class MeasurementService:
         if self.measure_function is None:
             raise Exception("Error, must register measurement method.")
         global server
-        server, port = servicer.serve(self.measurement_info, self.configuration_parameter_list, self.output_parameter_list, self.measure_function)
+        server, port = servicer.serve(
+            self.measurement_info,
+            self.configuration_parameter_list,
+            self.output_parameter_list,
+            self.measure_function,
+        )
         print("Hosted Service at Port:", port)
-        discoveryclient.register_measurement_service(port, self.service_info, self.measurement_info.display_name)
+        discoveryclient.register_measurement_service(
+            port, self.service_info, self.measurement_info.display_name
+        )
         consoleexitfunctions.setup_unregister_on_console_close(self.close_service)
         return None
 

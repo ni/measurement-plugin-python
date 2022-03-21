@@ -53,7 +53,9 @@ def _vector_encoder(encoder: Callable[[int, bool, bool], Callable]) -> Callable[
     return vector_encoder
 
 
-def _scalar_decoder(decoder: Callable[[int, bool, bool, str, Callable], Callable]) -> Callable[[int, str], Callable]:
+def _scalar_decoder(
+    decoder: Callable[[int, bool, bool, str, Callable], Callable]
+) -> Callable[[int, str], Callable]:
     """Abstract Specific Decoder(Callable) as Scalar Decoder Callable that takes in fieldindex,key.
 
     Args
@@ -77,7 +79,9 @@ def _scalar_decoder(decoder: Callable[[int, bool, bool, str, Callable], Callable
     return scalar_decoder
 
 
-def _vector_decoder(decoder: Callable[[int, bool, bool], Callable]) -> Callable[[int, str], Callable]:
+def _vector_decoder(
+    decoder: Callable[[int, bool, bool], Callable]
+) -> Callable[[int, str], Callable]:
     """Abstract Specific Decoder(Callable) as Vector Decoder Callable that takes in fieldindex,key.
 
     Args

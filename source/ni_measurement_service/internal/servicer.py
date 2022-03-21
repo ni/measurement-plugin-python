@@ -55,8 +55,12 @@ class MeasurementServiceServicer(Measurement_pb2_grpc.MeasurementServiceServicer
                 metadata_dict[i] = parameter
             return metadata_dict
 
-        self.configuration_metadata: Dict[int, ParameterMetadata] = frame_metadata_dict(configuration_parameter_list)
-        self.output_metadata: Dict[int, ParameterMetadata] = frame_metadata_dict(output_parameter_list)
+        self.configuration_metadata: Dict[int, ParameterMetadata] = frame_metadata_dict(
+            configuration_parameter_list
+        )
+        self.output_metadata: Dict[int, ParameterMetadata] = frame_metadata_dict(
+            output_parameter_list
+        )
         self.measurement_info: info.MeasurementInfo = measurement_info
         self.measure_function = measure_function
 
@@ -98,7 +102,9 @@ class MeasurementServiceServicer(Measurement_pb2_grpc.MeasurementServiceServicer
         # User Interface details - Framed relative to the metadata python File
         ui_details = Measurement_pb2.UserInterfaceDetails()
 
-        ui_details.configuration_ui_url = self.measurement_info.ui_file_type + "\\" + self.measurement_info.ui_file_path
+        ui_details.configuration_ui_url = (
+            self.measurement_info.ui_file_type + "\\" + self.measurement_info.ui_file_path
+        )
 
         # Sending back Response
         metadata_response = Measurement_pb2.GetMetadataResponse(
@@ -113,7 +119,9 @@ class MeasurementServiceServicer(Measurement_pb2_grpc.MeasurementServiceServicer
         byte_string = request.configuration_parameters.value
         byte_io = io.BytesIO()
         byte_io.write(byte_string)
-        mapping_by_id = serializer.deserialize_parameters(self.configuration_metadata, byte_io.getbuffer())
+        mapping_by_id = serializer.deserialize_parameters(
+            self.configuration_metadata, byte_io.getbuffer()
+        )
         signature = inspect.signature(self.measure_function)
         # Calling the registered measurement
         mapping_by_variable_name = {}
@@ -150,7 +158,9 @@ def serve(
     """
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     Measurement_pb2_grpc.add_MeasurementServiceServicer_to_server(
-        MeasurementServiceServicer(measurement_info, configuration_parameter_list, output_parameter_list, measure_function),
+        MeasurementServiceServicer(
+            measurement_info, configuration_parameter_list, output_parameter_list, measure_function
+        ),
         server,
     )
     port = server.add_insecure_port("[::]:0")
