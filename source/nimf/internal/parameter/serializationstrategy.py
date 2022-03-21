@@ -163,7 +163,8 @@ class Context:
         type_pb2.Field.TYPE_STRING: (StringDecoder, StringArrayDecoder),
     }
 
-    def get_encoder(self, type: type_pb2.Field, repeated: bool) -> Callable[[int], Callable]:
+    @staticmethod
+    def get_encoder(type: type_pb2.Field, repeated: bool) -> Callable[[int], Callable]:
         """Get the Scalar Encoder or Vector Encoder for the specified type based on repeated bool.
 
         Args
@@ -187,7 +188,8 @@ class Context:
             return array
         return scalar
 
-    def get_decoder(self, type: type_pb2.Field, repeated: bool) -> Callable[[int, str], Callable]:
+    @staticmethod
+    def get_decoder(type: type_pb2.Field, repeated: bool) -> Callable[[int, str], Callable]:
         """Get the Scalar Decoder or Vector Decoder for the specified type based on repeated bool.
 
         Args

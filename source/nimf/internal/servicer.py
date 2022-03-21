@@ -33,7 +33,7 @@ class MeasurementServiceServicer(Measurement_pb2_grpc.MeasurementServiceServicer
     def __init__(
         self,
         measurement_info: info.MeasurementInfo,
-        configuration_parameter_list: List(ParameterMetadata),
+        configuration_parameter_list: List[ParameterMetadata],
         output_parameter_list: list,
         measure_function: Callable,
     ) -> None:
@@ -133,7 +133,7 @@ def serve(
     configuration_parameter_list: List[ParameterMetadata],
     output_parameter_list: List[ParameterMetadata],
     measure_function: Callable,
-) -> Tuple(grpc.Server, int):
+) -> Tuple[grpc.Server, int]:
     """Host a gRPC service with the registered measurement method.
 
     Args
