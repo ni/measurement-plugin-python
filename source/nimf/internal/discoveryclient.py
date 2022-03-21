@@ -1,8 +1,10 @@
+""" Contains API to register and un-register measurement service with discovery service.
+"""
 import grpc
+import nimf.measurement.framework as framework
 from nimf.internal.stubs import DiscoveryServices_pb2
 from nimf.internal.stubs import DiscoveryServices_pb2_grpc
 from nimf.internal.stubs import ServiceLocation_pb2
-import nimf.measurement.framework as framework
 
 
 _DISCOVERY_SERVICE_ADDRESS = "localhost:42000"
@@ -10,13 +12,14 @@ _PROVIDED_MEASUREMENT_SERVICE = "ni.measurements.v1.MeasurementService"
 _registration_id = None
 
 
-def register_measurement_service(service_port: str, service_info: framework.ServiceInfo, display_name: str):
-    """Register the Measurement to the Discovery Service.
+def register_measurement_service(service_port: str, service_info: framework.ServiceInfo, display_name: str) -> None:
+    """Register the measurement service with the discovery service.
 
     Args:
     ----
-        port: Port number of the service
-
+        service_port (str): Port Number of the measurement service.
+        service_info (framework.ServiceInfo): Service Info.
+        display_name (str): Display name of the service.
 
     """
     try:
@@ -46,7 +49,11 @@ def register_measurement_service(service_port: str, service_info: framework.Serv
 
 
 def unregister_service():
-    """Un-Register the Measurement to the Discovery Service."""
+    """Un-registers the measurement service from the discovery service.
+
+    Should be called before the service is closed.
+
+    """
     try:
         channel = grpc.insecure_channel(_DISCOVERY_SERVICE_ADDRESS)
         stub = DiscoveryServices_pb2_grpc.RegistryServiceStub(channel)

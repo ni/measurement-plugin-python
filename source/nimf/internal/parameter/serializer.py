@@ -1,12 +1,25 @@
+"""Parameter Serializer."""
 import io
 from typing import Dict
+
+import nimf.internal.parameter.serializationstrategy as serializationstrategy
 from google.protobuf.internal import encoder
 from nimf.internal.parameter.metadata import ParameterMetadata
-import nimf.internal.parameter.serializationstrategy as serializationstrategy
 
 
 def deserialize_parameters(metadata_dict: Dict[id, ParameterMetadata], parameter_bytes):
+    """To do.
 
+    Args
+    ----
+        metadata_dict (Dict[id, ParameterMetadata]): _description_
+        parameter_bytes (_type_): _description_
+
+    Returns
+    -------
+        _type_: _description_
+
+    """
     position = 0
     mapping_by_filed_index = {}  # inner_decoder update the mapping
     for key, value in metadata_dict.items():
@@ -26,6 +39,18 @@ def deserialize_parameters(metadata_dict: Dict[id, ParameterMetadata], parameter
 
 
 def serialize_parameters(metadata_dict: Dict[id, ParameterMetadata], parameter_value):
+    """Todo.
+
+    Args
+    ----
+        metadata_dict (Dict[id, ParameterMetadata]): _description_
+        parameter_value (_type_): _description_
+
+    Returns
+    -------
+        _type_: _description_
+
+    """
     serialize_buffer = io.BytesIO()  # inner_encoder updates the serialize_buffer
     for i, parameter in enumerate(parameter_value):
         encoder = serializationstrategy.Context.get_encoder(

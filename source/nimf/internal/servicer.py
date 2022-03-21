@@ -1,26 +1,52 @@
-"""Internal Helper Measurement Services.
-
-Not Edited by User.
+"""Contains Measurement Service Implementation class and method to host the service.
 """
 import inspect
 import io
 from concurrent import futures
+from typing import Callable, Dict, List, Tuple
 
 import google.protobuf.any_pb2 as grpc_any
 import grpc
+import nimf.internal.parameter.metadata as parameter_metadata
+import nimf.internal.parameter.serializer as serializer
+import nimf.measurement.info as info
 from nimf.internal.stubs import Measurement_pb2
 from nimf.internal.stubs import Measurement_pb2_grpc
-
-
-import nimf.internal.parameter.serializer as serializer
-import nimf.internal.parameter.metadata as parameter_metadata
-import nimf.measurement.framework as framework
+from source.nimf.internal.parameter.metadata import ParameterMetadata
 
 
 class MeasurementServiceServicer(Measurement_pb2_grpc.MeasurementServiceServicer):
-    """Implementation of gRPC Service - MeasurementService."""
+    """Implementation of the Measurement Service's gRPC base class.
 
-    def __init__(self, measurement_info, configuration_parameter_list, output_parameter_list, measure_function) -> None:
+    Attributes
+    ----------
+        measurement_info (framework.MeasurementInfo): Measurement info
+        configuration_parameter_list (List): List of configuration parameters.
+        output_parameter_list (list): List of output parameters.
+        measure_function (Callable): Registered measurement function.
+    Args:
+    ----
+        Measurement_pb2_grpc (MeasurementServiceServicer): Measurement Service's gRPC base class.
+
+    """
+
+    def __init__(
+        self,
+        measurement_info: info.MeasurementInfo,
+        configuration_parameter_list: List(ParameterMetadata),
+        output_parameter_list: list,
+        measure_function: Callable,
+    ) -> None:
+        """Initialize the Measurement Service Servicer.
+
+        Args:
+        ----
+            measurement_info (info.MeasurementInfo): Measurement info
+            configuration_parameter_list (List): List of configuration parameters.
+            output_parameter_list (list): List of output parameters.
+            measure_function (Callable): Registered measurement function.
+
+        """
         super().__init__()
 
         def frame_metadata_dict(parameter_list: list):
@@ -29,14 +55,13 @@ class MeasurementServiceServicer(Measurement_pb2_grpc.MeasurementServiceServicer
                 metadata_dict[i] = parameter
             return metadata_dict
 
-        self.configuration_metadata: dict = frame_metadata_dict(configuration_parameter_list)
-        self.output_metadata: dict = frame_metadata_dict(output_parameter_list)
-        self.measurement_info: framework.MeasurementInfo = measurement_info
+        self.configuration_metadata: Dict[int, ParameterMetadata] = frame_metadata_dict(configuration_parameter_list)
+        self.output_metadata: Dict[int, ParameterMetadata] = frame_metadata_dict(output_parameter_list)
+        self.measurement_info: info.MeasurementInfo = measurement_info
         self.measure_function = measure_function
 
     def GetMetadata(self, request, context):  # noqa N802:inherited method names-autogen baseclass
-        """RPC Method that Get the Metdata of a Measurement."""
-
+        """RPC API to get complete metadata."""
         # measurement details
         measurement_details = Measurement_pb2.MeasurementDetails()
         measurement_details.display_name = self.measurement_info.display_name
@@ -84,7 +109,7 @@ class MeasurementServiceServicer(Measurement_pb2_grpc.MeasurementServiceServicer
         return metadata_response
 
     def Measure(self, request, context):  # noqa N802:inherited method names-autogen baseclass
-        """RPC Method that Executes the Measurement."""
+        """RPC API that Executes the registered measurement method."""
         byte_string = request.configuration_parameters.value
         byte_io = io.BytesIO()
         byte_io.write(byte_string)
@@ -103,8 +128,26 @@ class MeasurementServiceServicer(Measurement_pb2_grpc.MeasurementServiceServicer
         return return_value
 
 
-def serve(measurement_info, configuration_parameter_list, output_parameter_list, measure_function):
-    """Host the Service."""
+def serve(
+    measurement_info: info.MeasurementInfo,
+    configuration_parameter_list: List[ParameterMetadata],
+    output_parameter_list: List[ParameterMetadata],
+    measure_function: Callable,
+) -> Tuple(grpc.Server, int):
+    """Host a gRPC service with the registered measurement method.
+
+    Args
+    ----
+        measurement_info (info.MeasurementInfo): Measurement info
+        configuration_parameter_list (List): List of configuration parameters.
+        output_parameter_list (list): List of output parameters.
+        measure_function (Callable): Registered measurement function.
+
+    Returns
+    -------
+        Tuple(grpc.Server, int): Tuple of the gRPC server and the port number of the server
+
+    """
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     Measurement_pb2_grpc.add_MeasurementServiceServicer_to_server(
         MeasurementServiceServicer(measurement_info, configuration_parameter_list, output_parameter_list, measure_function),
