@@ -7,12 +7,12 @@ from typing import Callable, Dict, List, Tuple
 
 import google.protobuf.any_pb2 as grpc_any
 import grpc
-import ni_measurement_service.internal.parameter.metadata as parameter_metadata
-import ni_measurement_service.internal.parameter.serializer as serializer
+import ni_measurement_service._internal.parameter.metadata as parameter_metadata
+import ni_measurement_service._internal.parameter.serializer as serializer
 import ni_measurement_service.measurement.info as info
-from ni_measurement_service.internal.stubs import Measurement_pb2
-from ni_measurement_service.internal.stubs import Measurement_pb2_grpc
-from source.ni_measurement_service.internal.parameter.metadata import ParameterMetadata
+from ni_measurement_service._internal.parameter.metadata import ParameterMetadata
+from ni_measurement_service._internal.stubs import Measurement_pb2
+from ni_measurement_service._internal.stubs import Measurement_pb2_grpc
 
 
 class MeasurementServiceServicer(Measurement_pb2_grpc.MeasurementServiceServicer):

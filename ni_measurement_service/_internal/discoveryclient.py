@@ -2,9 +2,9 @@
 """
 import grpc
 import ni_measurement_service.measurement.info as info
-from ni_measurement_service.internal.stubs import DiscoveryServices_pb2
-from ni_measurement_service.internal.stubs import DiscoveryServices_pb2_grpc
-from ni_measurement_service.internal.stubs import ServiceLocation_pb2
+from ni_measurement_service._internal.stubs import DiscoveryServices_pb2
+from ni_measurement_service._internal.stubs import DiscoveryServices_pb2_grpc
+from ni_measurement_service._internal.stubs import ServiceLocation_pb2
 
 
 _DISCOVERY_SERVICE_ADDRESS = "localhost:42000"
