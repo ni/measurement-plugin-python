@@ -3,7 +3,7 @@
 import enum
 from typing import NamedTuple
 
-import google.protobuf.type_pb2 as type_pb2
+from google.protobuf import type_pb2
 
 
 class UIFileType(enum.Enum):

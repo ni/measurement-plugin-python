@@ -2,7 +2,7 @@
 
 from typing import Any, Callable
 
-import google.protobuf.type_pb2 as type_pb2
+from google.protobuf import type_pb2
 from google.protobuf.internal import decoder
 from google.protobuf.internal import encoder
 

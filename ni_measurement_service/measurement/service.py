@@ -2,10 +2,10 @@
 import time
 from typing import Any, Callable
 
-import ni_measurement_service._internal.discoveryclient as discoveryclient
-import ni_measurement_service._internal.grpc_servicer as grpc_servicer
-import ni_measurement_service._internal.parameter.metadata as parameter_metadata
-import ni_measurement_service._internal.utilities.consoleexitfunctions as consoleexitfunctions
+from ni_measurement_service._internal import discoveryclient
+from ni_measurement_service._internal import grpc_servicer
+from ni_measurement_service._internal.parameter import metadata as parameter_metadata
+from ni_measurement_service._internal.utilities import consoleexitfunctions
 from ni_measurement_service.measurement.info import MeasurementInfo, ServiceInfo, DataType
 
 

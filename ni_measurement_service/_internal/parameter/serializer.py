@@ -1,11 +1,11 @@
 """Parameter Serializer."""
 
-import io
 from ast import Bytes
+from io import BytesIO
 from typing import Any, Dict, List
 
-import ni_measurement_service._internal.parameter.serializationstrategy as serializationstrategy
 from google.protobuf.internal import encoder
+from ni_measurement_service._internal.parameter import serializationstrategy
 from ni_measurement_service._internal.parameter.metadata import ParameterMetadata
 
 
@@ -54,7 +54,7 @@ def serialize_parameters(
         Bytes: Serialized Bytes of Parameter Values.
 
     """
-    serialize_buffer = io.BytesIO()  # inner_encoder updates the serialize_buffer
+    serialize_buffer = BytesIO()  # inner_encoder updates the serialize_buffer
     for i, parameter in enumerate(parameter_value):
         parameter_metadata = parameter_metadata_dict[i + 1]
         encoder = serializationstrategy.Context.get_encoder(
@@ -140,7 +140,7 @@ def _get_overlapping_parameters(
         is_repeated = parameter_metadata_dict[field_index].repeated
         decoder = serializationstrategy.Context.get_decoder(type, is_repeated)
         inner_decoder = decoder(field_index, field_index)
-        parameter_bytes_io = io.BytesIO(parameter_bytes)
+        parameter_bytes_io = BytesIO(parameter_bytes)
         parameter_bytes_memory_view = parameter_bytes_io.getbuffer()
         position = inner_decoder(
             parameter_bytes_memory_view,

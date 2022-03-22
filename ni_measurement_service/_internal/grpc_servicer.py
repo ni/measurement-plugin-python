@@ -4,14 +4,13 @@ import inspect
 from concurrent import futures
 from typing import Any, Callable, Dict, List, Tuple
 
-import google.protobuf.any_pb2 as grpc_any
 import grpc
-import ni_measurement_service._internal.parameter.metadata as parameter_metadata
-import ni_measurement_service._internal.parameter.serializer as serializer
-import ni_measurement_service.measurement.info as info
+from google.protobuf import any_pb2
+from ni_measurement_service._internal.parameter import serializer
 from ni_measurement_service._internal.parameter.metadata import ParameterMetadata
 from ni_measurement_service._internal.stubs import Measurement_pb2
 from ni_measurement_service._internal.stubs import Measurement_pb2_grpc
+from ni_measurement_service.measurement.info import MeasurementInfo
 
 
 class MeasurementServiceServicer(Measurement_pb2_grpc.MeasurementServiceServicer):
@@ -19,9 +18,9 @@ class MeasurementServiceServicer(Measurement_pb2_grpc.MeasurementServiceServicer
 
     Attributes
     ----------
-        measurement_info (info.MeasurementInfo): Measurement info
+        measurement_info (MeasurementInfo): Measurement info
         configuration_parameter_list (List): List of configuration parameters.
-        output_parameter_list (list): List of output parameters.
+        output_parameter_list (List): List of output parameters.
         measure_function (Callable): Registered measurement function.
     Args:
     ----
@@ -31,7 +30,7 @@ class MeasurementServiceServicer(Measurement_pb2_grpc.MeasurementServiceServicer
 
     def __init__(
         self,
-        measurement_info: info.MeasurementInfo,
+        measurement_info: MeasurementInfo,
         configuration_parameter_list: List[ParameterMetadata],
         output_parameter_list: list,
         measure_function: Callable,
@@ -40,9 +39,9 @@ class MeasurementServiceServicer(Measurement_pb2_grpc.MeasurementServiceServicer
 
         Args:
         ----
-            measurement_info (info.MeasurementInfo): Measurement info
+            measurement_info (MeasurementInfo): Measurement info
             configuration_parameter_list (List): List of configuration parameters.
-            output_parameter_list (list): List of output parameters.
+            output_parameter_list (List): List of output parameters.
             measure_function (Callable): Registered measurement function.
 
         """
@@ -60,7 +59,7 @@ class MeasurementServiceServicer(Measurement_pb2_grpc.MeasurementServiceServicer
         self.output_metadata: Dict[int, ParameterMetadata] = frame_metadata_dict(
             output_parameter_list
         )
-        self.measurement_info: info.MeasurementInfo = measurement_info
+        self.measurement_info: MeasurementInfo = measurement_info
         self.measure_function = measure_function
 
     def GetMetadata(self, request, context):  # noqa N802:inherited method names-autogen baseclass
@@ -80,7 +79,7 @@ class MeasurementServiceServicer(Measurement_pb2_grpc.MeasurementServiceServicer
 
         # Configurations
         for id, configuration_metadata in self.configuration_metadata.items():
-            configuration_metadata: parameter_metadata.ParameterMetadata
+            configuration_metadata: ParameterMetadata
             configuration_parameter = Measurement_pb2.ConfigurationParameter()
             configuration_parameter.protobuf_id = id
             configuration_parameter.name = configuration_metadata.display_name
@@ -95,7 +94,7 @@ class MeasurementServiceServicer(Measurement_pb2_grpc.MeasurementServiceServicer
 
         # Output Parameters Metadata
         for id, output_metadata in self.output_metadata.items():
-            output_metadata: parameter_metadata.ParameterMetadata
+            output_metadata: ParameterMetadata
             output_parameter = Measurement_pb2.Output()
             output_parameter.protobuf_id = id
             output_parameter.name = output_metadata.display_name
@@ -130,7 +129,7 @@ class MeasurementServiceServicer(Measurement_pb2_grpc.MeasurementServiceServicer
         output_value = self.measure_function(**mapping_by_variable_name)
         output_bytestring = serializer.serialize_parameters(self.output_metadata, output_value)
         # Frame the respone and send back.
-        output_any = grpc_any.Any()
+        output_any = any_pb2.Any()
         output_any.value = output_bytestring
         return_value = Measurement_pb2.MeasureResponse(outputs=output_any)
         return return_value
@@ -158,7 +157,7 @@ class MeasurementServiceServicer(Measurement_pb2_grpc.MeasurementServiceServicer
 
 
 def serve(
-    measurement_info: info.MeasurementInfo,
+    measurement_info: MeasurementInfo,
     configuration_parameter_list: List[ParameterMetadata],
     output_parameter_list: List[ParameterMetadata],
     measure_function: Callable,
@@ -167,9 +166,9 @@ def serve(
 
     Args
     ----
-        measurement_info (info.MeasurementInfo): Measurement info
+        measurement_info (MeasurementInfo): Measurement info
         configuration_parameter_list (List): List of configuration parameters.
-        output_parameter_list (list): List of output parameters.
+        output_parameter_list (List): List of output parameters.
         measure_function (Callable): Registered measurement function.
 
     Returns
