@@ -103,7 +103,7 @@ class MeasurementServiceServicer(Measurement_pb2_grpc.MeasurementServiceServicer
         ui_details = Measurement_pb2.UserInterfaceDetails()
 
         ui_details.configuration_ui_url = (
-            self.measurement_info.ui_file_type + "\\" + self.measurement_info.ui_file_path
+            self.measurement_info.ui_file_type.value + "\\" + self.measurement_info.ui_file_path
         )
 
         # Sending back Response
