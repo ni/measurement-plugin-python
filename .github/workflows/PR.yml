@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - source/**
+      - ni_measurement_service/**
       - examples/**
       - pyproject.toml
       - .github/workflows/PR.yml
