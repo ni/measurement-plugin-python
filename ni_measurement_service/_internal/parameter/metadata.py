@@ -26,7 +26,7 @@ class ParameterMetadata(NamedTuple):
 
 
 def validate_default_value_type(parameter_metadata: ParameterMetadata) -> None:
-    """Validate and raise expection if the default value is not matching the type info.
+    """Validate and raise exception if the default value does not match the type info.
 
     Args
     ----
@@ -34,7 +34,7 @@ def validate_default_value_type(parameter_metadata: ParameterMetadata) -> None:
 
     Raises
     ------
-        TypeError: If default value is not matching the Datatype.
+        TypeError: If default value does not match the Datatype.
 
     """
     display_name = parameter_metadata.display_name
