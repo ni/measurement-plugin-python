@@ -48,7 +48,7 @@ def validate_default_value_type(parameter_metadata: ParameterMetadata) -> None:
 
     if type(default_value) != expected_type:
         raise TypeError(
-            f"Default value for '{display_name}' cannot be of type: {type(default_value)}.Expected type: {expected_type}."
+            f"Unexpected type {type(default_value)} in the default value for '{display_name}'. Expected type: {expected_type}."
         )
 
     if parameter_metadata.repeated:
@@ -56,6 +56,6 @@ def validate_default_value_type(parameter_metadata: ParameterMetadata) -> None:
         for element in default_value:
             if type(element) != expected_element_type:
                 raise TypeError(
-                    f"Default value list for '{display_name}' cannot contain an element of type: {type(element)}.Expected type for all elements: {expected_type}."
+                    f"Unexpected element of type {type(element)} in the default value for '{display_name}'. Expected element type: {expected_type}."
                 )
     return None
