@@ -1,0 +1,218 @@
+"""Serialization Strategy."""
+
+from typing import Callable
+
+import google.protobuf.type_pb2 as type_pb2
+from google.protobuf.internal import decoder
+from google.protobuf.internal import encoder
+
+
+def _scalar_encoder(encoder: Callable[[int, bool, bool], Callable]) -> Callable[[int], Callable]:
+    """Abstract Specific Encoder(Callable) as Scalar Encoder Callable that takes in fieldindex.
+
+    Args
+    ----
+       encoder (Callable[[int, bool, bool], Callable]): Specific encoder that takes in
+       field_index, is_repeated, is_packed and returns the Low-level Encode Callable.
+
+    Returns
+    -------
+        Callable[[int],Callable]: Callable Encoder for scalar types that takes
+        in field_index and returns the Low-level Encode Callable.
+
+    """
+
+    def scalar_encoder(field_index):
+        is_repeated = False
+        is_packed = False
+        return encoder(field_index, is_repeated, is_packed)
+
+    return scalar_encoder
+
+
+def _vector_encoder(encoder: Callable[[int, bool, bool], Callable]) -> Callable[[int], Callable]:
+    """Abstract Specific Encoder(Callable) as Vector Encoder Callable that takes in fieldindex.
+
+    Args
+    ----
+       encoder (Callable[[int, bool, bool], Callable]): Specific encoder(Callable) that takes in
+       field_index, is_repeated, is_packed and returns the Low-level Encode Callable.
+
+    Returns
+    -------
+        Callable[[int],Callable]: Callable Encoder for 1D Array types that takes in
+        field_index and returns the Low-level Encode Callable.
+
+    """
+
+    def vector_encoder(field_index):
+        is_repeated = True
+        is_packed = True
+        return encoder(field_index, is_repeated, is_packed)
+
+    return vector_encoder
+
+
+def _scalar_decoder(
+    decoder: Callable[[int, bool, bool, str, Callable], Callable]
+) -> Callable[[int, str], Callable]:
+    """Abstract Specific Decoder(Callable) as Scalar Decoder Callable that takes in fieldindex,key.
+
+    Args
+    ----
+        decoder (Callable[[int, bool, bool], Callable]): Specific decoder(Callable) that takes in
+        field_index, is_repeated, is_packed,  key, new_default and
+        returns the Low-level Decode Callable.
+
+    Returns
+    -------
+        Callable[[int,str],Callable]: Callable Decoder for scalar types that takes in
+        field_index, key and returns the Low-level Decode Callable.
+
+    """
+
+    def scalar_decoder(field_index, key):
+        is_repeated = False
+        is_packed = False
+        return decoder(field_index, is_repeated, is_packed, key, None)
+
+    return scalar_decoder
+
+
+def _vector_decoder(
+    decoder: Callable[[int, bool, bool], Callable]
+) -> Callable[[int, str], Callable]:
+    """Abstract Specific Decoder(Callable) as Vector Decoder Callable that takes in fieldindex,key.
+
+    Args
+    ----
+        decoder (Callable[[int, bool, bool], Callable]): Specific decoder(Callable) that takes in
+        field_index, is_repeated, is_packed,  key, new_default and
+        returns the Low-level Decode Callable.
+
+    Returns
+    -------
+        Callable[[int,str],Callable]: Callable Decoder for 1D Array types that takes in
+        field_index , key and returns the Low-level Decode Callable.
+
+    """
+
+    def _new_default(unused_message=None):
+        return []
+
+    def vector_decoder(field_index, key):
+        is_repeated = True
+        is_packed = True
+        return decoder(field_index, is_repeated, is_packed, key, _new_default)
+
+    return vector_decoder
+
+
+FloatEncoder = _scalar_encoder(encoder.FloatEncoder)
+DoubleEncoder = _scalar_encoder(encoder.DoubleEncoder)
+IntEncoder = _scalar_encoder(encoder.Int32Encoder)
+UIntEncoder = _scalar_encoder(encoder.UInt32Encoder)
+BoolEncoder = _scalar_encoder(encoder.BoolEncoder)
+StringEncoder = _scalar_encoder(encoder.StringEncoder)
+
+FloatArrayEncoder = _vector_encoder(encoder.FloatEncoder)
+DoubleArrayEncoder = _vector_encoder(encoder.DoubleEncoder)
+IntArrayEncoder = _vector_encoder(encoder.Int32Encoder)
+UIntArrayEncoder = _vector_encoder(encoder.UInt32Encoder)
+BoolArrayEncoder = _vector_encoder(encoder.BoolEncoder)
+StringArrayEncoder = _vector_encoder(encoder.StringEncoder)
+
+
+FloatDecoder = _scalar_decoder(decoder.FloatDecoder)
+DoubleDecoder = _scalar_decoder(decoder.DoubleDecoder)
+Int32Decoder = _scalar_decoder(decoder.Int32Decoder)
+UInt32Decoder = _scalar_decoder(decoder.UInt32Decoder)
+Int64Decoder = _scalar_decoder(decoder.Int64Decoder)
+UInt64Decoder = _scalar_decoder(decoder.UInt64Decoder)
+BoolDecoder = _scalar_decoder(decoder.BoolDecoder)
+StringDecoder = _scalar_decoder(decoder.StringDecoder)
+
+FloatArrayDecoder = _vector_decoder(decoder.FloatDecoder)
+DoubleArrayDecoder = _vector_decoder(decoder.DoubleDecoder)
+Int32ArrayDecoder = _vector_decoder(decoder.Int32Decoder)
+UInt32ArrayDecoder = _vector_decoder(decoder.UInt32Decoder)
+Int64ArrayDecoder = _vector_decoder(decoder.Int64Decoder)
+UInt64ArrayDecoder = _vector_decoder(decoder.UInt64Decoder)
+BoolArrayDecoder = _vector_decoder(decoder.BoolDecoder)
+StringArrayDecoder = _vector_decoder(decoder.StringDecoder)
+
+
+class Context:
+    """Strategy context."""
+
+    _FIELD_TYPE_TO_ENCODER_MAPPING = {
+        type_pb2.Field.TYPE_FLOAT: (FloatEncoder, FloatArrayEncoder),
+        type_pb2.Field.TYPE_DOUBLE: (DoubleEncoder, DoubleArrayEncoder),
+        type_pb2.Field.TYPE_INT32: (IntEncoder, IntArrayEncoder),
+        type_pb2.Field.TYPE_INT64: (IntEncoder, IntArrayEncoder),
+        type_pb2.Field.TYPE_UINT32: (UIntEncoder, UIntArrayEncoder),
+        type_pb2.Field.TYPE_UINT64: (UIntEncoder, UIntArrayEncoder),
+        type_pb2.Field.TYPE_BOOL: (BoolEncoder, BoolArrayEncoder),
+        type_pb2.Field.TYPE_STRING: (StringEncoder, StringArrayEncoder),
+    }
+
+    _FIELD_TYPE_TO_DECODER_MAPPING = {
+        type_pb2.Field.TYPE_FLOAT: (FloatDecoder, FloatArrayDecoder),
+        type_pb2.Field.TYPE_DOUBLE: (DoubleDecoder, DoubleArrayDecoder),
+        type_pb2.Field.TYPE_INT32: (Int32Decoder, Int32ArrayDecoder),
+        type_pb2.Field.TYPE_INT64: (Int64Decoder, Int64ArrayDecoder),
+        type_pb2.Field.TYPE_UINT32: (UInt32Decoder, UInt32ArrayDecoder),
+        type_pb2.Field.TYPE_UINT64: (UInt64Decoder, UInt64ArrayDecoder),
+        type_pb2.Field.TYPE_BOOL: (BoolDecoder, BoolArrayDecoder),
+        type_pb2.Field.TYPE_STRING: (StringDecoder, StringArrayDecoder),
+    }
+
+    @staticmethod
+    def get_encoder(type: type_pb2.Field, repeated: bool) -> Callable[[int], Callable]:
+        """Get the Scalar Encoder or Vector Encoder for the specified type based on repeated bool.
+
+        Args
+        ----
+            type (type_pb2.Field): Type of the Parameter.
+            repeated (bool): Boolean that represents if the Parameter is repeated or not.
+
+        Raises
+        ------
+            Exception: If the specified type is not supported.
+
+        Returns
+        -------
+            Callable[[int], Callable]: ScalarEnoder or VectorEncoder.
+
+        """
+        if type not in Context._FIELD_TYPE_TO_ENCODER_MAPPING:
+            raise Exception(f"Error can not encode type '{type}'")
+        (scalar, array) = Context._FIELD_TYPE_TO_ENCODER_MAPPING.get(type)
+        if repeated:
+            return array
+        return scalar
+
+    @staticmethod
+    def get_decoder(type: type_pb2.Field, repeated: bool) -> Callable[[int, str], Callable]:
+        """Get the Scalar Decoder or Vector Decoder for the specified type based on repeated bool.
+
+        Args
+        ----
+            type (type_pb2.Field): Type of the Parameter.
+            repeated (bool): Boolean that represents if the Parameter is repeated or not.
+
+        Raises
+        ------
+            Exception: If the specified type is not supported.
+
+        Returns
+        -------
+            Callable[[int], Callable]: ScalarDecoder or VectorDecoder.
+
+        """
+        if type not in Context._FIELD_TYPE_TO_DECODER_MAPPING:
+            raise Exception(f"Error can not decode type '{type}'")
+        (scalar, array) = Context._FIELD_TYPE_TO_DECODER_MAPPING.get(type)
+        if repeated:
+            return array
+        return scalar
