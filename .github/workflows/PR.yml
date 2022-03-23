@@ -1,13 +1,6 @@
 name: PR
 
-on:
-  pull_request:
-    branches:
-      - main
-    paths:
-      - '**.py'
-      - pyproject.toml
-      - .github/workflows/PR.yml
+on: [pull_request]
 
 env:
   POETRY_VERSION: 1.1.6
