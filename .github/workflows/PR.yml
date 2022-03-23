@@ -1,6 +1,9 @@
 name: PR
 
-on: [pull_request]
+on:
+  pull_request:
+    branches:
+      - main
 
 env:
   POETRY_VERSION: 1.1.6
