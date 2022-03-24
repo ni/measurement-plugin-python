@@ -3,17 +3,22 @@
 User can Import driver and 3Party Packages based on requirements.
 
 """
-
-from ni_measurement_service.measurement.service import MeasurementService
-from ni_measurement_service.measurement.info import MeasurementInfo, ServiceInfo, DataType, UIFileType
 import os
+
+from ni_measurement_service.measurement.info import DataType
+from ni_measurement_service.measurement.info import MeasurementInfo
+from ni_measurement_service.measurement.info import ServiceInfo
+from ni_measurement_service.measurement.info import UIFileType
+from ni_measurement_service.measurement.service import MeasurementService
 
 measurement_info = MeasurementInfo(
     display_name="SampleMeasurement",
     version="0.1.0.0",
     measurement_type="Sample",
     product_type="Sample",
-    ui_file_path=os.path.join(os.path.dirname(os.path.abspath(__file__)), "SampleMeasurementScreen.isscr"),
+    ui_file_path=os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "SampleMeasurementScreen.isscr"
+    ),
     ui_file_type=UIFileType.ScreenFile,
 )
 
@@ -28,7 +33,9 @@ sample_measurement_service = MeasurementService(measurement_info, service_info)
 
 @sample_measurement_service.register_measurement
 @sample_measurement_service.configuration("Float In", DataType.Float, 0.06)
-@sample_measurement_service.configuration("Double Array In", DataType.DoubleArray1D, [0.1, 0.2, 0.3])
+@sample_measurement_service.configuration(
+    "Double Array In", DataType.DoubleArray1D, [0.1, 0.2, 0.3]
+)
 @sample_measurement_service.configuration("Bool In", DataType.Boolean, False)
 @sample_measurement_service.configuration("String In", DataType.String, "sample string")
 @sample_measurement_service.output("Float out", DataType.Float)

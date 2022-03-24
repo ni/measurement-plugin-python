@@ -4,16 +4,16 @@ User can Import driver and 3rd Party Packages based on requirements.
 
 """
 
-from ni_measurement_service.measurement.service import MeasurementService
-from ni_measurement_service.measurement.info import (
-    MeasurementInfo,
-    ServiceInfo,
-    DataType,
-    UIFileType,
-)
-import nidcpower
-import hightime
 import os
+
+import hightime
+import nidcpower
+from ni_measurement_service.measurement.info import DataType
+from ni_measurement_service.measurement.info import MeasurementInfo
+from ni_measurement_service.measurement.info import ServiceInfo
+from ni_measurement_service.measurement.info import UIFileType
+from ni_measurement_service.measurement.service import MeasurementService
+
 
 measurement_info = MeasurementInfo(
     display_name="DCMeasurement(Py)",
