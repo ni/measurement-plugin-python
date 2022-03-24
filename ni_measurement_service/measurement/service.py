@@ -70,6 +70,7 @@ class MeasurementService:
         parameter = parameter_metadata.ParameterMetadata(
             display_name, grpc_field_type, repeated, default_value
         )
+        parameter_metadata.validate_default_value_type(parameter)
         self.configuration_parameter_list.append(parameter)
 
         def _configuration(func):

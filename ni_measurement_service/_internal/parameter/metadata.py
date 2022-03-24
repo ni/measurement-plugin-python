@@ -2,6 +2,7 @@
 from typing import Any, NamedTuple
 
 import google.protobuf.type_pb2 as type_pb2
+from ni_measurement_service._internal.parameter.serializationstrategy import Context
 
 
 class ParameterMetadata(NamedTuple):
@@ -22,3 +23,39 @@ class ParameterMetadata(NamedTuple):
     type: type_pb2.Field
     repeated: bool
     default_value: Any
+
+
+def validate_default_value_type(parameter_metadata: ParameterMetadata) -> None:
+    """Validate and raise exception if the default value does not match the type info.
+
+    Args
+    ----
+        parameter_metadata (ParameterMetadata): Parameter metadata
+
+    Raises
+    ------
+        TypeError: If default value does not match the Datatype.
+
+    """
+    display_name = parameter_metadata.display_name
+    default_value = parameter_metadata.default_value
+    if default_value is None:
+        return None
+
+    expected_type = type(
+        Context.get_type_default(parameter_metadata.type, parameter_metadata.repeated)
+    )
+
+    if isinstance(default_value, expected_type):
+        raise TypeError(
+            f"Unexpected type {type(default_value)} in the default value for '{display_name}'. Expected type: {expected_type}."
+        )
+
+    if parameter_metadata.repeated:
+        expected_element_type = type(Context.get_type_default(parameter_metadata.type, False))
+        for element in default_value:
+            if isinstance(element, expected_element_type):
+                raise TypeError(
+                    f"Unexpected element of type {type(element)} in the default value for '{display_name}'. Expected element type: {expected_type}."
+                )
+    return None
