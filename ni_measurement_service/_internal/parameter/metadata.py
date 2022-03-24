@@ -46,7 +46,7 @@ def validate_default_value_type(parameter_metadata: ParameterMetadata) -> None:
         Context.get_type_default(parameter_metadata.type, parameter_metadata.repeated)
     )
 
-    if type(default_value) != expected_type:
+    if isinstance(default_value, expected_type):
         raise TypeError(
             f"Unexpected type {type(default_value)} in the default value for '{display_name}'. Expected type: {expected_type}."
         )
@@ -54,7 +54,7 @@ def validate_default_value_type(parameter_metadata: ParameterMetadata) -> None:
     if parameter_metadata.repeated:
         expected_element_type = type(Context.get_type_default(parameter_metadata.type, False))
         for element in default_value:
-            if type(element) != expected_element_type:
+            if isinstance(element, expected_element_type):
                 raise TypeError(
                     f"Unexpected element of type {type(element)} in the default value for '{display_name}'. Expected element type: {expected_type}."
                 )
