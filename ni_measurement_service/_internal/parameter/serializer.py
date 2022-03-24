@@ -9,6 +9,9 @@ from google.protobuf.internal import encoder
 from ni_measurement_service._internal.parameter.metadata import ParameterMetadata
 
 
+_GRPC_WIRE_TYPE_BIT_WIDTH = 3
+
+
 def deserialize_parameters(
     parameter_metadata_dict: Dict[id, ParameterMetadata], parameter_bytes: Bytes
 ) -> Dict[id, Any]:
@@ -82,10 +85,9 @@ def serialize_default_values(parameter_metadata_dict: Dict[id, ParameterMetadata
 
     """
     default_value_parameter_array = list()
-    for parameter in parameter_metadata_dict.values():
-        parameter: ParameterMetadata
-        default_value = parameter.default_value
-        default_value_parameter_array.append(default_value)
+    default_value_parameter_array = [
+        parameter.default_value for parameter in parameter_metadata_dict.values()
+    ]
     return serialize_parameters(parameter_metadata_dict, default_value_parameter_array)
 
 
@@ -104,7 +106,7 @@ def _get_field_index(parameter_bytes: Bytes, tag_position: int):
         int: Filed index of the Tag Position
 
     """
-    return parameter_bytes[tag_position] >> 3
+    return parameter_bytes[tag_position] >> _GRPC_WIRE_TYPE_BIT_WIDTH
 
 
 def _get_overlapping_parameters(

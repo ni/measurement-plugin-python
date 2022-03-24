@@ -230,7 +230,7 @@ class Context:
 
     @staticmethod
     def get_type_default(type: type_pb2.Field, repeated: bool) -> Any:
-        """Get the Type deafult.
+        """Get the Type default.
 
         Args
         ----
@@ -242,7 +242,7 @@ class Context:
             Any: Default value.
 
         """
-        type_default_value = Context._TYPE_DEFAULT_MAPPING.get(type)
         if repeated:
             return list()
+        type_default_value = Context._TYPE_DEFAULT_MAPPING.get(type)
         return type_default_value
