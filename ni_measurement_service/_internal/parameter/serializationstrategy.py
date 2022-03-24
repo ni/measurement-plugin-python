@@ -1,6 +1,6 @@
 """Serialization Strategy."""
 
-from typing import Callable
+from typing import Any, Callable
 
 import google.protobuf.type_pb2 as type_pb2
 from google.protobuf.internal import decoder
@@ -167,6 +167,17 @@ class Context:
         type_pb2.Field.TYPE_STRING: (StringDecoder, StringArrayDecoder),
     }
 
+    _TYPE_DEFAULT_MAPPING = {
+        type_pb2.Field.TYPE_FLOAT: float(),
+        type_pb2.Field.TYPE_DOUBLE: float(),
+        type_pb2.Field.TYPE_INT32: int(),
+        type_pb2.Field.TYPE_INT64: int(),
+        type_pb2.Field.TYPE_UINT32: int(),
+        type_pb2.Field.TYPE_UINT64: int(),
+        type_pb2.Field.TYPE_BOOL: bool(),
+        type_pb2.Field.TYPE_STRING: str(),
+    }
+
     @staticmethod
     def get_encoder(type: type_pb2.Field, repeated: bool) -> Callable[[int], Callable]:
         """Get the Scalar Encoder or Vector Encoder for the specified type based on repeated bool.
@@ -216,3 +227,22 @@ class Context:
         if repeated:
             return array
         return scalar
+
+    @staticmethod
+    def get_type_default(type: type_pb2.Field, repeated: bool) -> Any:
+        """Get the Type default.
+
+        Args
+        ----
+            type (type_pb2.Field): Type of the Parameter.
+            repeated (bool): Boolean that represents if the Parameter is repeated or not.
+
+        Returns
+        -------
+            Any: Default value.
+
+        """
+        if repeated:
+            return list()
+        type_default_value = Context._TYPE_DEFAULT_MAPPING.get(type)
+        return type_default_value

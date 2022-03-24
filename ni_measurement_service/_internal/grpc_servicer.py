@@ -1,9 +1,8 @@
 """Contains Measurement Service Implementation class and method to host the service.
 """
 import inspect
-import io
 from concurrent import futures
-from typing import Callable, Dict, List, Tuple
+from typing import Any, Callable, Dict, List, Tuple
 
 import google.protobuf.any_pb2 as grpc_any
 import grpc
@@ -89,6 +88,11 @@ class MeasurementServiceServicer(Measurement_pb2_grpc.MeasurementServiceServicer
             configuration_parameter.type = configuration_metadata.type
             measurement_parameters.configuration_parameters.append(configuration_parameter)
 
+        # Configuration Defaults
+        measurement_parameters.configuration_defaults.value = serializer.serialize_default_values(
+            self.configuration_metadata
+        )
+
         # Output Parameters Metadata
         for id, output_metadata in self.output_metadata.items():
             output_metadata: parameter_metadata.ParameterMetadata
@@ -117,23 +121,40 @@ class MeasurementServiceServicer(Measurement_pb2_grpc.MeasurementServiceServicer
     def Measure(self, request, context):  # noqa N802:inherited method names-autogen baseclass
         """RPC API that Executes the registered measurement method."""
         byte_string = request.configuration_parameters.value
-        byte_io = io.BytesIO()
-        byte_io.write(byte_string)
-        mapping_by_id = serializer.deserialize_parameters(
-            self.configuration_metadata, byte_io.getbuffer()
-        )
-        signature = inspect.signature(self.measure_function)
-        # Calling the registered measurement
-        mapping_by_variable_name = {}
-        for i, parameter in enumerate(signature.parameters.values(), start=1):
-            mapping_by_variable_name[parameter.name] = mapping_by_id[i]
-        output_value = self.measure_function(**mapping_by_variable_name)
+        mapping_by_id = serializer.deserialize_parameters(self.configuration_metadata, byte_string)
 
+        # Calling the registered measurement
+        mapping_by_variable_name = self._get_mapping_by_parameter_name(
+            mapping_by_id, self.measure_function
+        )
+        output_value = self.measure_function(**mapping_by_variable_name)
         output_bytestring = serializer.serialize_parameters(self.output_metadata, output_value)
+        # Frame the respone and send back.
         output_any = grpc_any.Any()
         output_any.value = output_bytestring
         return_value = Measurement_pb2.MeasureResponse(outputs=output_any)
         return return_value
+
+    def _get_mapping_by_parameter_name(
+        self, mapping_by_id: Dict[id, Any], measure_function: Callable
+    ) -> Dict[str, Any]:
+        """Transform the mapping by id to mapping by parameter names of the measurement function.
+
+        Args
+        ----
+            mapping_by_id (Dict[id, Any]): Mapping by ID
+            measure_function (callable): Function from which the parameter names are extracted.
+
+        Returns
+        -------
+            Dict[str, Any]: Mapping by Paramters names based on the measurement function.
+
+        """
+        signature = inspect.signature(measure_function)
+        mapping_by_variable_name = {}
+        for i, parameter in enumerate(signature.parameters.values(), start=1):
+            mapping_by_variable_name[parameter.name] = mapping_by_id[i]
+        return mapping_by_variable_name
 
 
 def serve(
