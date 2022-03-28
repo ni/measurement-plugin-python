@@ -35,8 +35,8 @@ dc_measurement_service = MeasurementService(measurement_info, service_info)
 
 @dc_measurement_service.register_measurement
 @dc_measurement_service.configuration("Resource name", DataType.String, "DPS_4145")
-@dc_measurement_service.configuration("Voltage level(V)", DataType.Double, 0.01)
-@dc_measurement_service.configuration("Voltage level range(V)", DataType.Double, 6)
+@dc_measurement_service.configuration("Voltage level(V)", DataType.Double, 6.0)
+@dc_measurement_service.configuration("Voltage level range(V)", DataType.Double, 6.0)
 @dc_measurement_service.configuration("Current limit(A)", DataType.Double, 0.01)
 @dc_measurement_service.configuration("Current limit range(A)", DataType.Double, 0.01)
 @dc_measurement_service.configuration("Source delay(s)", DataType.Double, 0.0)
@@ -75,8 +75,8 @@ def measure(
             channel = session.get_channel_names("0")
             measured_value = session.channels[channel].fetch_multiple(count=1, timeout=timeout)
     print_fetched_measurements(measured_value)
-    measured_voltage = measured_value[0].voltage / 10
-    measured_current = measured_value[0].current / 10
+    measured_voltage = measured_value[0].voltage
+    measured_current = measured_value[0].current
     print("Voltage Value:", measured_voltage)
     print("Current Value:", measured_current)
     print("---------------------------------")
