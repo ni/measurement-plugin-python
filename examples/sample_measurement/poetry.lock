@@ -1,0 +1,32 @@
+[[package]]
+name = "hightime"
+version = "0.2.1"
+description = "Hightime Python API"
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
+name = "nidcpower"
+version = "1.4.1"
+description = "NI-DCPower Python API"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+hightime = ">=0.2.0"
+
+[metadata]
+lock-version = "1.1"
+python-versions = "^3.8"
+content-hash = "e1dd4dfe3d407068976bf3f01a3de3919b260150990942dacdbba5848b0f703b"
+
+[metadata.files]
+hightime = [
+    {file = "hightime-0.2.1-py3-none-any.whl", hash = "sha256:a300434692de16273ce46f9c1f2de01e90091b151ccfb4e0973a6a6e1d51f032"},
+]
+nidcpower = [
+    {file = "nidcpower-1.4.1-py2.py3-none-any.whl", hash = "sha256:2f8b4096b167632ecc1c7f35a66de6eaced1f011de08185a80b13fb7a1d3d97f"},
+    {file = "nidcpower-1.4.1.tar.gz", hash = "sha256:84d5cdf5a97eab012eaa40bce3eb7d5ada34333c6176e444271a614511c985db"},
+]
