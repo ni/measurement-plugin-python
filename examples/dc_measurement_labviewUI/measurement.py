@@ -7,41 +7,36 @@ User can Import driver and 3rd Party Packages based on requirements.
 import os
 
 import hightime
+import ni_measurement_service as nims
 import nidcpower
-from ni_measurement_service.measurement.info import DataType
-from ni_measurement_service.measurement.info import MeasurementInfo
-from ni_measurement_service.measurement.info import ServiceInfo
-from ni_measurement_service.measurement.info import UIFileType
-from ni_measurement_service.measurement.service import MeasurementService
 
 
-measurement_info = MeasurementInfo(
-    display_name="DCMeasurement(Py)",
+measurement_info = nims.MeasurementInfo(
+    display_name="DCMeasurement(Py_VI)",
     version="0.1.0.0",
     measurement_type="DC",
     product_type="ADC",
     ui_file_path=os.path.join(os.path.dirname(os.path.abspath(__file__)), "DCMeasurementUI.vi"),
-    ui_file_type=UIFileType.LabVIEW,
+    ui_file_type=nims.UIFileType.LabVIEW,
 )
 
-service_info = ServiceInfo(
-    service_class="DCMeasurement_Python",
-    service_id="{B290B571-CB76-426F-9ACC-5168DC1B027C}",
+service_info = nims.ServiceInfo(
+    service_class="DCMeasurement_Python_VI",
+    service_id="{B290B571-CB76-426F-9ACC-5168DC1B027B}",
     description_url="https://www.ni.com/measurementservices/dcmeasurement.html",
 )
-
-dc_measurement_service = MeasurementService(measurement_info, service_info)
+dc_measurement_service = nims.MeasurementService(measurement_info, service_info)
 
 
 @dc_measurement_service.register_measurement
-@dc_measurement_service.configuration("Resource name", DataType.String, "DPS_4145")
-@dc_measurement_service.configuration("Voltage level(V)", DataType.Double, 6.0)
-@dc_measurement_service.configuration("Voltage level range(V)", DataType.Double, 6.0)
-@dc_measurement_service.configuration("Current limit(A)", DataType.Double, 0.01)
-@dc_measurement_service.configuration("Current limit range(A)", DataType.Double, 0.01)
-@dc_measurement_service.configuration("Source delay(s)", DataType.Double, 0.0)
-@dc_measurement_service.output("Voltage Measurement(V)", DataType.Double)
-@dc_measurement_service.output("Current Measurement(A)", DataType.Double)
+@dc_measurement_service.configuration("Resource name", nims.DataType.String, "DPS_4145")
+@dc_measurement_service.configuration("Voltage level(V)", nims.DataType.Double, 6.0)
+@dc_measurement_service.configuration("Voltage level range(V)", nims.DataType.Double, 6.0)
+@dc_measurement_service.configuration("Current limit(A)", nims.DataType.Double, 0.01)
+@dc_measurement_service.configuration("Current limit range(A)", nims.DataType.Double, 0.01)
+@dc_measurement_service.configuration("Source delay(s)", nims.DataType.Double, 0.0)
+@dc_measurement_service.output("Voltage Measurement(V)", nims.DataType.Double)
+@dc_measurement_service.output("Current Measurement(A)", nims.DataType.Double)
 def measure(
     resource_name,
     voltage_level,
