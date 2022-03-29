@@ -7,8 +7,9 @@ User can Import driver and 3rd Party Packages based on requirements.
 import os
 
 import hightime
-import ni_measurement_service as nims
 import nidcpower
+
+import ni_measurement_service as nims
 
 
 measurement_info = nims.MeasurementInfo(
