@@ -6,7 +6,7 @@ authors = ["National Instruments"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
-ni-measurement-service = {path = "../../ni_measurement_service-0.1.0.0-py3-none-any.whl"}
+ni-measurement-service = {path = "../../" , develop = true}
 
 [tool.poetry.dev-dependencies]
 
