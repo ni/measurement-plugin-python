@@ -48,7 +48,7 @@ poetry init
 
 - In command prompt: `poetry shell`
 - In vscode ([link](https://code.visualstudio.com/docs/python/environments#_select-and-activate-an-environment))
-- ALTERNATIVE: run commands with `poetry run`. I.e., `poetry run python measurement.py`
+- ALTERNATIVE: run commands with `poetry run`. i.e., `poetry run python measurement.py`
 
 # Adding dependencies
 
