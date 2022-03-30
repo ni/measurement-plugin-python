@@ -23,7 +23,7 @@ See [GitHub's official documentation](https://help.github.com/articles/using-pul
 
 ## Prerequisites
 
-- Install the Visual Code.
+- Install the [Visual Studio Code](https://code.visualstudio.com/download).
 - Install Git.
 - Install [Poetry](https://python-poetry.org/docs/#installation).
 - Install Python and add it to the PATH. (Recommended Version:3.8)
@@ -64,9 +64,9 @@ Add **development dependencies** with the `-D` switch as shown below.
 poetry add -D <name_of_dev_dependency>:<version>
 ```
 
-# Updating Stubs when protobuf file modifies
+# Updating gRPC stubs when a .proto file is modified
 
-`ni_measurement_service\_internal\stubs` directory contains the auto-generated python file based on measurement services related protobuf(.proto) files. The file needs to be replaced whenever there is a change in the following protobuf files:
+`ni_measurement_service\_internal\stubs` directory contains the auto-generated python files based on measurement services related protobuf(.proto) files. The file needs to be replaced whenever there is a change to these .proto files:
 
 - DiscoveryServices.proto
 - Measurement.proto

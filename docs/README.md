@@ -14,7 +14,7 @@
 
     2. [Developing a minimal python measurement](#developing-a-minimal-python-measurement)
 
-    3. [Steps to run a measurement service](#steps-to-run-a-measurement-service)
+    3. [Steps to run a measurement service](#steps-to-run-the-measurement-service)
 
 5. [Managing Measurement as Python Package(Project)](#managing-measurement-as-python-packageproject)
     1. [Create and Manage Python Measurement Package using poetry](#create-and-manage-python-measurement-package-using-poetry)
@@ -29,8 +29,6 @@
 ---
 
 ## Introduction
-
-**Measurement methodology** is a way in which certain parameters of Device Under Test (or Objects) are calculated. These parameters can be like an electrical characteristic of a Semiconductor Chip. Normally, a measurement procedure can be written in test documentation on how best a measurement can be made using the given instrumentation. If we convert the Measurement methodology from test documentation into a software program, it is called the **Measurement Code Module**. We will refer Measurement Code Module as **Measurement** in this document.
 
 `ni_measurement_service` is a python framework that enables measurement developers to quickly create python measurements and run them as a service(gRPC)
 
@@ -88,7 +86,10 @@ poetry add <path_of_ni_measurement_service-x.x.x.tar.gz>
         version="0.1.0.0", # The version of the measurement
         measurement_type="", # The Type of the measurement.
         product_type="", # The Product Type related to the measurement.
-        ui_file_path="", # Absolute file path of the UI File. Developer can relative construct the path here.
+        # Absolute file path of the UI File. 
+        ui_file_path="", 
+        # Developer can construct related this .py file like this:
+        # ui_file_path=os.path.join(os.path.dirname(os.path.abspath(__file__)), "FileName.isscr")
         ui_file_type="", # Type of UI File.
     )
 
@@ -160,7 +161,7 @@ poetry add <path_of_ni_measurement_service-x.x.x.tar.gz>
         foo_measurement_service.close_service()
     ```
 
-### Steps to run a measurement service
+### Steps to run the measurement service
 
 1. Start the discovery service if not already started.
 
@@ -172,9 +173,11 @@ poetry add <path_of_ni_measurement_service-x.x.x.tar.gz>
 
     - After successful activation, you can see the name of the environment, `(.venv)` is added to the command prompt.
 
-3. Run the measurement file created using NIMS.
+3. [Run](https://code.visualstudio.com/docs/python/python-tutorial#_run-hello-world)/[Debug](https://code.visualstudio.com/docs/python/debugging#_basic-debugging) the measurement python file created using NIMS
 
-4. After the usage of measurement, deactivate the virtual environment. Measurement developers can skip this step if they are not using any virtual environments or poetry-based projects.
+4. To step the running measurement service, press `Enter` in the terminal to properly close the service.
+
+5. After the usage of measurement, deactivate the virtual environment. Measurement developers can skip this step if they are not using any virtual environments or poetry-based projects.
 
     ```cmd
     deactivate
@@ -322,8 +325,6 @@ The example measurements shared are based on poetry. Follow the below steps to  
 
 ### Executing the Example Measurements
 
-1. [Run the measurement](#steps-to-run-a-measurement-service) by executing the `measurement.py` python file.
-
-2. To Exit the measurement service, press `Enter` in the terminal to properly close the service.
+1. Run/Debug the measurement(`measurement.py`) by following the steps discussed in the section ["Steps to run the measurement service".]((#steps-to-run-the-measurement-service))
 
 ---
