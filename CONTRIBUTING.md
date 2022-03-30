@@ -66,7 +66,7 @@ poetry add -D <name_of_dev_dependency>:<version>
 
 # Updating Stubs when protobuf file modifies
 
-`ni_measurement_service\_internal\stubs` directory contains the auto-generated python file based on measurement service and related protobuf(.proto) files. The file needs to be replaced whenever there is a change in the following protobuf files:
+`ni_measurement_service\_internal\stubs` directory contains the auto-generated python file based on measurement services related protobuf(.proto) files. The file needs to be replaced whenever there is a change in the following protobuf files:
 
 - DiscoveryServices.proto
 - Measurement.proto
