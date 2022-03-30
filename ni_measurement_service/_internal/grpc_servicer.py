@@ -6,6 +6,7 @@ from typing import Any, Callable, Dict, List, Tuple
 
 import grpc
 from google.protobuf import any_pb2
+
 from ni_measurement_service._internal.parameter import serializer
 from ni_measurement_service._internal.parameter.metadata import ParameterMetadata
 from ni_measurement_service._internal.stubs import Measurement_pb2

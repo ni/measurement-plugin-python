@@ -5,6 +5,7 @@ from io import BytesIO
 from typing import Any, Dict, List
 
 from google.protobuf.internal import encoder
+
 from ni_measurement_service._internal.parameter import serializationstrategy
 from ni_measurement_service._internal.parameter.metadata import ParameterMetadata
 

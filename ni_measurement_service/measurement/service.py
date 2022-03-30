@@ -1,12 +1,16 @@
 """Framework to host measurement service."""
+# fmt: off
+import os
 import time
 from typing import Any, Callable
 
 from ni_measurement_service._internal import discoveryclient
 from ni_measurement_service._internal import grpc_servicer
 from ni_measurement_service._internal.parameter import metadata as parameter_metadata
-from ni_measurement_service._internal.utilities import consoleexitfunctions
+if os.name == "nt":
+    from ni_measurement_service._internal.utilities import consoleexitfunctions
 from ni_measurement_service.measurement.info import MeasurementInfo, ServiceInfo, DataType
+# fmt: on
 
 
 class MeasurementService:
@@ -124,7 +128,8 @@ class MeasurementService:
         discoveryclient.register_measurement_service(
             port, self.service_info, self.measurement_info.display_name
         )
-        consoleexitfunctions.setup_unregister_on_console_close(self.close_service)
+        if os.name == "nt":
+            consoleexitfunctions.setup_unregister_on_console_close(self.close_service)
         return None
 
     def close_service(self) -> None:

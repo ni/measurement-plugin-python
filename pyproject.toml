@@ -10,27 +10,26 @@ exclude = '''
 '''
 
 [tool.poetry]
-name = "ni-measurements-services-python"
-# The -alpha.0 here denotes a source based version
-# This is removed when released through the Publish-Package.yml GitHub action
-# Official PyPI releases follow Major.Minor.Patch
-version = "0.1.0-alpha.0" # Version can be valid one based on release
-description = "Todo"
-authors = ["NI <opensource@ni.com>"]
-readme = "README.md" # apply the repo readme to the package as well
+name = "ni_measurement_service"
+version = "0.5.0.0"
+description = "Develop language agnostic measurement plugins reusable by both the Interactive Debugging/Validation and Test Automation workflow."
+authors = ["NationalInstruments"]
 repository = "https://github.com/ni/measurement-services-python/"
-#license = "Todo"
 
- 
 [tool.poetry.dependencies]
-python = ">=3.6.2"
+python = "^3.8"
+grpcio = "1.41.1"
+protobuf = "3.19.1"
+pywin32 = {version = "301", platform = "win32"}
 
 [tool.poetry.dev-dependencies]
+pytest = "^5.2"
+nidcpower = "1.4.1"
 ni-python-styleguide = ">=0.1.9"
 
 [build-system]
-requires = ["poetry>=0.12"]
-build-backend = "poetry.masonry.api"
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
 
 [tool.ni-python-styleguide]
 extend_exclude = "*_pb2_grpc.py,*_pb2.py,venv"
