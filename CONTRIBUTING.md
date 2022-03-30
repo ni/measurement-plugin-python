@@ -73,7 +73,7 @@ poetry add -D <name_of_dev_dependency>:<version>
 - ServiceLocation.proto
 - ServiceManagement.proto
 
-This command generates the py file from all the above-listed proto files.
+This command generates the py file from all the above-listed proto files. Run the command after activating the `.venv` from the project root(since the required `grpcio-tool` package is already added as a development dependency in pyproject.toml).
 
 ```cmd
 python -m grpc_tools.protoc -I proto --python_out=. --grpc_python_out=. ServiceLocation.proto DiscoveryServices.proto Measurement.proto ServiceManagement.proto 
