@@ -73,7 +73,13 @@ poetry add -D <name_of_dev_dependency>:<version>
 - ServiceLocation.proto
 - ServiceManagement.proto
 
-This command generates the py file from all the above-listed proto files. Run the command after activating the `.venv` from the project root(since the required `grpcio-tool` package is already added as a development dependency in pyproject.toml).
+The .proto files are currently available in [Azure Repo](https://dev.azure.com/ni/DevCentral/_git/ASW?path=/Source/MeasurementServices/proto). From the Azure Repo manually copy the proto files to the `ni_measurement_service\_internal\stubs\proto` folder.
+
+The below commands generates the py file from all the above-listed proto files. Run the commands after activating the `.venv` from the project root(since the required `grpcio-tool` package is already added as a development dependency in pyproject.toml).
+
+```cmd
+cd <parent_path_of_repo>\ni_measurement_service\_internal\stubs
+```
 
 ```cmd
 python -m grpc_tools.protoc -I proto --python_out=. --grpc_python_out=. ServiceLocation.proto DiscoveryServices.proto Measurement.proto ServiceManagement.proto 
