@@ -149,13 +149,13 @@ poetry add <path_of_ni_measurement_service-x.x.x.tar.gz>
         ```
 
 8. Startup logic.
-    - To start the service call the `host_as_grpc_service()` from the `MeasurementService` instance.
-    - Use the close_service() function to terminate the service.
-    - A typical implementation is shown below
+    - To start the registered measurement as service call the `host_service()` from the `MeasurementService` instance.
+    - Use the `close_service()` function to properly terminate the service.
+    - A typical implementation is shown below:
 
     ``` python
     if __name__ == "__main__":
-        foo_measurement_service.host_as_grpc_service()
+        foo_measurement_service.host_service()
         input("To Exit during the Service lifetime, Press Enter.\n")
         foo_measurement_service.close_service()
     ```
@@ -194,7 +194,7 @@ Measurement and its related files can be maintained as a python package. The bas
     - UI file for the Measurement. Type of Supported UI Files are:
         - Screen file(.isscr): created using the **Plugin UI Editor application**.
         - LabVIEW UI(.vi)
-    - The path and type of this file is configured by `ui_file_path` and `ui_file_type` respectively in `measurement_info` variable definition in `measurement.py`.
+    - The path and type of this file is configured by `ui_file_path` and `ui_file_type` respectively in `measurement_info` variable definition in Measurement Python Module(.py file).
 
 Python communities have different ways of managing a python package and its dependencies. It is up to the measurement developer, on how they wanted to maintain the package and dependencies. Measurement developers can choose from a few common approaches discussed below based on their requirements.
 Note: Once we have the template support for Python measurement, the approach to managing the python measurement package(project) will be streamlined and simplified.
