@@ -46,8 +46,8 @@ poetry init
 
 ## Ensure that the `./.venv` virtual environment is activated
 
-- In command prompt: `poetry shell`
-- In vscode ([link](https://code.visualstudio.com/docs/python/environments#_select-and-activate-an-environment))
+- In the command prompt: `poetry shell`
+- In the vscode ([link](https://code.visualstudio.com/docs/python/environments#_select-and-activate-an-environment))
 - ALTERNATIVE: run commands with `poetry run`. i.e., `poetry run python measurement.py`
 
 # Adding dependencies
@@ -66,7 +66,7 @@ poetry add -D <name_of_dev_dependency>:<version>
 
 # Updating gRPC stubs when a .proto file is modified
 
-`ni_measurement_service\_internal\stubs` directory contains the auto-generated python files based on measurement services related protobuf(.proto) files. The file needs to be replaced whenever there is a change to these .proto files:
+The `ni_measurement_service\_internal\stubs` directory contains the auto-generated python files based on measurement services related protobuf (.proto) files. The file needs to be replaced whenever there is a change to these .proto files:
 
 - DiscoveryServices.proto
 - Measurement.proto
@@ -75,7 +75,7 @@ poetry add -D <name_of_dev_dependency>:<version>
 
 The .proto files are currently available in [Azure Repo](https://dev.azure.com/ni/DevCentral/_git/ASW?path=/Source/MeasurementServices/proto). From the Azure Repo manually copy the proto files to the `ni_measurement_service\_internal\stubs\proto` folder.
 
-The below commands generates the py file from all the above-listed proto files. Run the commands after activating the `.venv` from the project root(since the required `grpcio-tool` package is already added as a development dependency in pyproject.toml).
+The commands below generate the .py file from all the proto files listed above. Run the commands after activating the `.venv` from the project root. The required `grpcio-tool` package is already added as a development dependency in pyproject.toml.
 
 ```cmd
 cd <parent_path_of_repo>\ni_measurement_service\_internal\stubs

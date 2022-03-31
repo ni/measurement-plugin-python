@@ -1,21 +1,20 @@
 # Python Measurements
 
-## Contents
-
-1. [Introduction](#introduction)
-2. [Abbreviations](#abbreviations)
-3. [Dependencies](#dependencies)
-4. [Quick Start](#quick-start)
-    1. [Installation](#installation)
-    2. [Developing a minimal python measurement](#developing-a-minimal-python-measurement)
-    3. [Steps to run the measurement service](#steps-to-run-the-measurement-service)
-5. [Managing Measurement as Python Package(Project)](#managing-measurement-as-python-packageproject)
-    1. [Create and Manage Python Measurement Package using poetry](#create-and-manage-python-measurement-package-using-poetry)
-    2. [Create and Manage Python Measurement Package using venv](#create-and-manage-python-measurement-package-using-venv)
-    3. [Create and Manage Python Measurement Package by directly installing NIMS as a system-level package](#create-and-manage-python-measurement-package-by-directly-installing-nims-as-a-system-level-package)
-6. [Examples](#examples)
-    1. [Setting up the Example Measurements](#setting-up-the-example-measurements)
-    2. [Executing the Example Measurements](#executing-the-example-measurements)
+- [Python Measurements](#python-measurements)
+  - [Introduction](#introduction)
+  - [Abbreviations](#abbreviations)
+  - [Dependencies](#dependencies)
+  - [Quick Start](#quick-start)
+    - [Installation](#installation)
+    - [Developing a minimal python measurement](#developing-a-minimal-python-measurement)
+    - [Steps to run the measurement service](#steps-to-run-the-measurement-service)
+  - [Managing Measurement as Python Package(Project)](#managing-measurement-as-python-packageproject)
+    - [Create and Manage Python Measurement Package using poetry](#create-and-manage-python-measurement-package-using-poetry)
+    - [Create and Manage Python Measurement Package using venv](#create-and-manage-python-measurement-package-using-venv)
+    - [Create and Manage Python Measurement Package by directly installing NIMS as a system-level package](#create-and-manage-python-measurement-package-by-directly-installing-nims-as-a-system-level-package)
+  - [Examples](#examples)
+    - [Setting up the Example Measurements](#setting-up-the-example-measurements)
+    - [Executing the Example Measurements](#executing-the-example-measurements)
 
 ---
 
@@ -33,9 +32,9 @@
 
 ## Dependencies
 
-- Python >= 3.8( 3.8 recommended)
-- [grpcio](https://pypi.org/project/grpcio/1.41.1/) = 1.41.1
-- [protobuf](https://pypi.org/project/protobuf/3.19.1/) = 3.19.1
+- [Python >= 3.8( 3.8 recommended)](https://www.python.org/downloads/release/python-3810/)
+- [grpcio = 1.41.1](https://pypi.org/project/grpcio/1.41.1/)
+- [protobuf = 3.19.1](https://pypi.org/project/protobuf/3.19.1/)
 
 ---
 
