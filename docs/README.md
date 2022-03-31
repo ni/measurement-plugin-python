@@ -308,7 +308,7 @@ The example measurements shared are based on poetry. Follow the below steps to  
     REM Example: cd "..\examples\dc_measurement"
     ```
 
-3. Install the dependency needed for the Example into `.venv`
+3. The below command installs all the dependencies needed for the Example into `.venv`
 
     ``` cmd
     poetry install
