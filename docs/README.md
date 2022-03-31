@@ -166,7 +166,7 @@ poetry add <path_of_ni_measurement_service-x.x.x.tar.gz>
 
 3. [Run](https://code.visualstudio.com/docs/python/python-tutorial#_run-hello-world)/[Debug](https://code.visualstudio.com/docs/python/debugging#_basic-debugging) the measurement python file created using NIMS
 
-4. To step the running measurement service, press `Enter` in the terminal to properly close the service.
+4. To stop the running measurement service, press `Enter` in the terminal to properly close the service.
 
 5. After the usage of measurement, deactivate the virtual environment. Measurement developers can skip this step if they are not using any virtual environments or poetry-based projects.
 
@@ -288,7 +288,7 @@ Measurement developers can also install the NIMS framework as a system package i
 
 ## Examples
 
-The list of python measurement example projects.
+`measurement-services-python\examples` contains the below list of python measurement example projects:  
 
 1. **Sample measurement**: Sample Measurement is a simple python-based example that has configurations defined for all supported data types. The measurement logic simply assigns the configuration values to respective output values.
 2. **DC Measurements**: Simple python measurement example that interacts with DCPower 4145 Instrument.
@@ -305,10 +305,10 @@ The example measurements shared are based on poetry. Follow the below steps to  
 
     ``` cmd
     cd <path_of_example_measurement>
-    REM Example: cd "..\examples\dc_measurement"
+    REM Example: cd "..\measurement-services-python\examples\dc_measurement"
     ```
 
-3. The below command installs all the dependencies needed for the Example into `.venv`
+3. Run poetry install. The command creates/updates the .venv and installs all the dependencies needed for the Example into `.venv`
 
     ``` cmd
     poetry install
