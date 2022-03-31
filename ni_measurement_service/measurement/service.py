@@ -107,7 +107,7 @@ class MeasurementService:
 
         return _output
 
-    def host_as_grpc_service(self) -> None:
+    def host_service(self) -> None:
         """Host the registered measurement method as gRPC measurement service.
 
         Raises

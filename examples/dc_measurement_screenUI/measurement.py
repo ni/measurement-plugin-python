@@ -96,6 +96,6 @@ Driver Method.
 """
 
 if __name__ == "__main__":
-    dc_measurement_service.host_as_grpc_service()
+    dc_measurement_service.host_service()
     input("To Exit during the Service lifetime, Press Enter.\n")
     dc_measurement_service.close_service()

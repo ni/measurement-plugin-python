@@ -1,185 +1,320 @@
-# Measurement Services Support for Python
+# Python Measurements
 
-This repo contains the necessary Python Measurement templates and examples to call into the Measurement Services.
+- [Python Measurements](#python-measurements)
+  - [Introduction](#introduction)
+  - [Abbreviations](#abbreviations)
+  - [Dependencies](#dependencies)
+  - [Quick Start](#quick-start)
+    - [Installation](#installation)
+    - [Developing a minimal python measurement](#developing-a-minimal-python-measurement)
+    - [Steps to run the measurement service](#steps-to-run-the-measurement-service)
+  - [Managing Measurement as Python Package(Project)](#managing-measurement-as-python-packageproject)
+    - [Create and Manage Python Measurement Package using poetry](#create-and-manage-python-measurement-package-using-poetry)
+    - [Create and Manage Python Measurement Package using venv](#create-and-manage-python-measurement-package-using-venv)
+    - [Create and Manage Python Measurement Package by directly installing NIMS as a system-level package](#create-and-manage-python-measurement-package-by-directly-installing-nims-as-a-system-level-package)
+  - [Examples](#examples)
+    - [Setting up the Example Measurements](#setting-up-the-example-measurements)
+    - [Executing the Example Measurements](#executing-the-example-measurements)
 
-Recommended Python Version: 3.8
+---
 
-## Getting started with Python measurements
+## Introduction
 
-## Steps to setup a measurement
+`ni_measurement_service` is a python framework that enables measurement developers to quickly create python measurements and run them as a service(gRPC).
 
-**Setting up measurement project using poetry** 
+---
 
-1. Make sure the system has the recommended python version installed.
+## Abbreviations
 
-2. Install `poetry` using the installation steps given in https://python-poetry.org/docs/#installation.
+- NIMS - Nationals Instrument Measurement Service Framework - `ni_measurement_service`.
 
-3. Open command prompt in the folder where the python project is to be created and run the command `poetry new <name of the project>`.
+---
 
-4. Add the `ni_measurement_service-x.x.x` package by running the command `poetry add <path_of_ni_measurement_service-x.x.x.tar.gz>`.
-    - A virtual environment will be setup.
-    - The dependencies given will be installed into the virtual environment.
+## Dependencies
 
-5. Add futher required project dependencies using `poetry add <dependency name>`.
+- [Python >= 3.8( 3.8 recommended)](https://www.python.org/downloads/release/python-3810/)
+- [grpcio = 1.41.1](https://pypi.org/project/grpcio/1.41.1/)
+- [protobuf = 3.19.1](https://pypi.org/project/protobuf/3.19.1/)
 
-**Setting up measurement project by manually creating the virtual environment.** 
+---
 
-1. Make sure the system has the recommended python version installed.
+## Quick Start
 
-2. Create a new directory for containing the measurement files.
+### Installation
 
-3. Open a command prompt and change the working directory to the newly created directory.
+Download the `ni_measurement_service.tar.gz` and install the NIMS Framework.
 
-3. Create a virtual environment.
-    - Command: `python -m venv .venv`. This creates a virtual environment named venv
+If using [pip](https://pip.pypa.io/).
 
-4. Activate the virtual environment.
-    - Command : `.venv\scripts\activate`.
-    - After successful activation, you can see the name of the environment, `(.venv)` is added to the command prompt.
-    - Optionally upgrade the pip within the venv by executing the command: `python -m pip install -U pip`
-
-5. Install the `ni_measurement_service-x.x.x`.tar.gz file into the virtual environment.
-    - Install the file using `pip install <path_of_ni_measurement_service-x.x.x.tar.gz>`
-
-**Setting up measurement project without virtual environment**
-
-1. Make sure the system has the recommended python version installed.
-
-2. Install the `ni_measurement_service-x.x.x`.tar.gz file into the virtual environment.
-    - Install the file using `pip install <path_of_ni_measurement_service-x.x.x.tar.gz>` 
-
-Note: This will add the `ni_measurement_service-x.x.x` as a system-wide python package.
-
-
-## Steps to create a new measurement service.
-
-1. Create a new python file.
-
-2. Import the items shown in the snippet. These imports get the required definitions for setting up a measurement.
-``` python
-from ni_measurement_service.measurement.info import DataType
-from ni_measurement_service.measurement.info import MeasurementInfo
-from ni_measurement_service.measurement.info import ServiceInfo
-from ni_measurement_service.measurement.info import UIFileType
-from ni_measurement_service.measurement.service import MeasurementService
+``` cmd
+REM Activate the required virtual environment if any.
+pip install <path_of_ni_measurement_service-x.x.x.tar.gz>
 ```
 
-3. Define `measurement_info` and `service_info` with the required details, as shown in the snippet below:
-``` python
-measurement_info = MeasurementInfo(
-    display_name="FooMeasurement",
-    version="0.1.0.0",
-    measurement_type="",
-    product_type="",
-    ui_file_path="",
-    ui_file_type="",
-)
+If using [poetry](https://python-poetry.org/) to manage a python project.
 
-service_info = ServiceInfo(
-    service_class="FooMeasurement_Python",
-    service_id="<GUID>",
-    description_url="",
-)
+``` cmd
+REM Run the command from within the poetry project directory.
+poetry add <path_of_ni_measurement_service-x.x.x.tar.gz>
 ```
+
+### Developing a minimal python measurement
+
+1. Create a python file(.py file) using the IDE of your choice or using the [Visual Studio Code.](https://code.visualstudio.com/download).
+
+2. Import `ni_measurement_service`
+
+    ``` python
+    import ni_measurement_service as nims
+    ```
+
+3. Define `measurement_info` and `service_info` with the required details.
+
+    ``` python
+    measurement_info = nims.MeasurementInfo(
+        display_name="FooMeasurement", # The display name of the measurement
+        version="0.1.0.0", # The version of the measurement
+        measurement_type="", # The Type of the measurement.
+        product_type="", # The Product Type related to the measurement.
+        # Absolute file path of the UI File. 
+        ui_file_path="", 
+        # Developer can construct related this .py file like this:
+        # ui_file_path=os.path.join(os.path.dirname(os.path.abspath(__file__)), "FileName.isscr")
+        ui_file_type="", # Type of UI File.
+    )
+
+    service_info = nims.ServiceInfo(
+        service_class="FooMeasurement_Python", # Service Class that the measurement belongs to.
+        service_id="<GUID>", #Unique GUID 
+        description_url="", # Description URL that contains information about the measurement. Can be Empty if there is no Description URL.
+    )
+    ```
+
 4. Create a new `MeasurementService` Instance.
-``` python
-foo_measurement_service = MeasurementService(measurement_info, service_info)
-```
 
-5. Define a function to perform the measurement. The measurement function can have any name.
-    - To register the measurement function use the `register_measurment` decorartor from the `MeasurmentService` instance.
     ``` python
-    @foo_measurement_service.register_measurement
-    def measure(input_1, input_2):
+    foo_measurement_service = nims.MeasurementService(measurement_info, service_info)
     ```
 
-6. Define the configuration parameters required by the measurement 
-    - Use the `configuration()` decorator to defne the configuartions
-    ``` python 
-    @foo_measurement_service.register_measurement
-    @foo_measurement_service.configuration("Input 1", DataType.String, "default value")
-    @foo_measurement_service.configuration("Input 2", DataType.String, "default value")
-    def measure(input_1, input_2):
-    ```
-    - One thing to note is that the order of the decorators from top to bottom must match the
-    order of the parameters in the `measure` function. For example, in the snippet above the
-    decorator for "Input 1" will be mapped to the `input_1` parameter and "Input 2" will be mapped to `input_2` parameter.
-7. Define the ouput parameters required by the measurement.
-    - Use the `output()` decorator available in the `MeasurementService` instance
+5. Define a python function with required measurement logic based on your required measurement methodology.
+    1. The measurement function must return the outputs as a list.
+
     ``` python
-    @foo_measurement_service.register_measurement
-    @foo_measurement_service.configuration("Input 1", DataType.String, "default value")
-    @foo_measurement_service.configuration("Input 2", DataType.String, "default value")
-    @foo_measurement_service.output("Output 1", DataType.String)
-    @foo_measurement_service.output("Output 2", DataType.String)
-    def measure(input_1, input_2):
+    def measure(input_1, input_2): 
+        ''' A simple Measurement method'''
         return ["foo", "bar"]
     ```
-    - The measurement function must return the outputs as a list.
-    - One thing to note is that the order of the decorators from top to bottom must match the
-    order of the values of the list returned by the `measure` function. For example, in the snippet above, the output named "Output 1" will have the value "foo" and the output named "Output 2" will have the value "bar"
 
-8. Add the startup logic that is to be executed when the measurement is started.
-    - To start the service call the `host_as_grpc_service()` from the `MeasurementService` instance.
-    - Use the close_service() function to terminate the service.
-    - A typical implementation is shown below
+6. Register the defined python function as measurement.
+
+    ``` python
+    @foo_measurement_service.register_measurement
+    def measure(input_1, input_2): 
+        ''' A simple Measurement method'''
+        return ["foo", "bar"]
+    ```
+
+7. Provide metadata of the measurement's configuration(input parameters) and outputs(output parameters)
+    1. Use the `configuration()` decorator to provide metadata about the configurations.**The order of the configuration decorator must match with the order of the parameters defined in the function signature.**
+
+        ``` python
+        @foo_measurement_service.register_measurement
+        #Display Names can not contains backslash or front slash.
+        @foo_measurement_service.configuration("DisplayNameForInput1", DataType.String, "DefaultValueForInput1")
+        @foo_measurement_service.configuration("DisplayNameForInput2", DataType.String, "DefaultValueForInput2")
+        def measure(input_1, input_2):
+            ''' A simple Measurement method'''
+            return ["foo", "bar"]
+        ```
+
+    2. Use the `output()` decorator to provide metadata about the output.**The order of the output decorators from top to bottom must match the order of the values of the list returned by the function.**
+
+        ``` python
+        @foo_measurement_service.register_measurement
+        @foo_measurement_service.configuration("DisplayNameForInput1", DataType.String, "DefaultValueForInput1")
+        @foo_measurement_service.configuration("DisplayNameForInput2", DataType.String, "DefaultValueForInput2")
+        @foo_measurement_service.output("DisplayNameForOutput1", DataType.String)
+        @foo_measurement_service.output("DisplayNameForOutput2", DataType.String)
+        def measure(input_1, input_2):
+            return ["foo", "bar"]
+        ```
+
+8. Startup logic.
+    - To start the registered measurement as service call the `host_service()` from the `MeasurementService` instance.
+    - Use the `close_service()` function to properly terminate the service.
+    - A typical implementation is shown below:
+
     ``` python
     if __name__ == "__main__":
-        foo_measurement_service.host_as_grpc_service()
+        foo_measurement_service.host_service()
         input("To Exit during the Service lifetime, Press Enter.\n")
         foo_measurement_service.close_service()
     ```
 
-## Steps to run a measurement service.
+### Steps to run the measurement service
 
-1. Start the discovery service if not already started. 
+1. Start the discovery service if not already started.
 
-2. Activate the virtual environment if not already activated.
-    - Command : `.venv\scripts\activate`.
+2. Activate related virtual environments. Measurement developers can skip this step if they are not using any virtual environments or poetry-based projects.
+
+    ```cmd
+    .venv\scripts\activate
+    ```
+
     - After successful activation, you can see the name of the environment, `(.venv)` is added to the command prompt.
 
-3. Run the measurement file to start the measurement as a service, after which the measurement can be used in clients like Teststand or InstrumentStudio.
+3. [Run](https://code.visualstudio.com/docs/python/python-tutorial#_run-hello-world)/[Debug](https://code.visualstudio.com/docs/python/debugging#_basic-debugging) the measurement python file created using NIMS
 
-4. After the usage of measurement, deactivate the virtual environment.
-     - Command : `deactivate`.
+4. To stop the running measurement service, press `Enter` in the terminal to properly close the service.
+
+5. After the usage of measurement, deactivate the virtual environment. Measurement developers can skip this step if they are not using any virtual environments or poetry-based projects.
+
+    ```cmd
+    deactivate
+    ```
+
+---
+
+## Managing Measurement as Python Package(Project)
+
+Measurement and its related files can be maintained as a python package. The basic Components of any Python Measurement Package are:
+
+1. Measurement Python Module(.py file)
+    - This file contains all the details related to the measurement and also contains the logic for the measurement execution.
+    - This file is run to start the measurement as a service.
+
+2. UI File
+    - UI file for the Measurement. Type of Supported UI Files are:
+        - Screen file(.isscr): created using the **Plugin UI Editor application**.
+        - LabVIEW UI(.vi)
+    - The path and type of this file is configured by `ui_file_path` and `ui_file_type` respectively in `measurement_info` variable definition in Measurement Python Module(.py file).
+
+Python communities have different ways of managing a python package and its dependencies. It is up to the measurement developer, on how they wanted to maintain the package and dependencies. Measurement developers can choose from a few common approaches discussed below based on their requirements.
+Note: Once we have the template support for Python measurement, the approach to managing the python measurement package(project) will be streamlined and simplified.
+
+### Create and Manage Python Measurement Package using poetry
+
+1. Setting up Poetry(One-time setup)
+    1. Make sure the system has the recommended python version installed.
+
+    2. Install `poetry` using the installation steps given in <https://python-poetry.org/docs/#installation>.
+
+2. Create a new python project and add NIMS Framework as a dependency to the project.
+
+    1. Open a command prompt, change the working directory to the directory of your choice where you want to create the project.
+
+        ``` cmd
+        cd <path_of_directory_of_your_choice>
+        ```
+
+    2. Create a python package(project) using the poetry new command. Poetry will create boilerplate files and folders that are commonly needed for a python project.
+
+        ``` cmd
+        poetry new <name_of_the_project>
+        ```
+
+    3. Add the `ni_measurement_service-x.x.x` framework package as a dependency.
+
+        ``` cmd
+        cd <name_of_the_project>
+        poetry add <path_of_ni_measurement_service-x.x.x.tar.gz>
+        ```
+
+    4. Virtual environment will be auto-created by poetry.
+
+    5. Create measurement modules as described in ["Developing a minimal python measurement"](#developing-a-minimal-python-measurement)
+        - Any additional dependencies required by measurement can be added using add command.
+
+            ``` cmd
+            poetry add <dependency_package_name>
+            ```
+
+For detailed info on managing projects using poetry [refer to the official documentation](https://python-poetry.org/docs/cli/).
+
+### Create and Manage Python Measurement Package using venv
+
+1. Make sure the system has the recommended python version installed.
+
+2. Open a command prompt, change the working directory to the directory of your choice where you want to create a project.
+
+    ``` cmd
+    cd <path_of_directory_of_your_choice>
+    ```
+
+3. Create a virtual environment.
+
+    ``` cmd
+    REM This creates a virtual environment named .venv
+    python -m venv .venv
+    ```
+
+4. Activate the virtual environment.After successful activation
+
+    ``` cmd
+    .venv\scripts\activate
+    REM Optionally upgrade the pip within the venv by executing the command
+    python -m pip install -U pip
+    ```
+
+5. Install the `ni_measurement_service-x.x.x`.tar.gz package into the virtual environment.
+
+    ``` cmd
+    pip install <path_of_ni_measurement_service-x.x.x.tar.gz>
+    ```
+
+6. Create measurement modules as described in ["Developing a minimal python measurement"](#developing-a-minimal-python-measurement)
+    - Any additional dependencies required by measurement can be added pip install.
+
+        ``` cmd
+        pip install <dependency_package_name>
+        ```
+
+For detailed info on managing projects with a virtual environment [refer to the official documentation](https://docs.python.org/3/tutorial/venv.html).
+
+### Create and Manage Python Measurement Package by directly installing NIMS as a system-level package
+
+Measurement developers can also install the NIMS framework as a system package if their requirement is demanding.
+
+1. Install the `ni_measurement_service-x.x.x`.tar.gz package from the command prompt
+
+    ``` cmd
+    pip install <path_of_ni_measurement_service-x.x.x.tar.gz>
+    ```
+
+2. Create measurement modules as described in ["Developing a minimal python measurement"]
+
+---
 
 ## Examples
 
-1. ### DC Measurement
-    DC Measurement is a simple python based example that interacts with DCPower 4145 Instrument.
+`measurement-services-python\examples` contains the below list of python measurement example projects:  
 
-    #### Steps to run the dc_measurement
+1. **Sample measurement**: Sample Measurement is a simple python-based example that has configurations defined for all supported data types. The measurement logic simply assigns the configuration values to respective output values.
+2. **DC Measurements**: Simple python measurement example that interacts with DCPower 4145 Instrument.
+    1. DC Measurement with Screen file UI
+    2. DC Measurement with LabVIEW UI
 
-    1. **Setting up python with required dependency.** This step is only for first-time users.
-        1.  The measurement file can be found in  `..\examples\dc_measurement` 
-        
-        2. Install `poetry` if not already installed. Refer to https://python-poetry.org/docs/#installation for information on installing poetry.
-        
-        3. Open command prompt in the directory and run the command `"poetry install"`
-            - A virtual environment will be setup.
-            - All the dependencies required by the project will be installed.
+### Setting up the Example Measurements
 
-    2. [Run the measurment](#steps-to-run-a-measurement-service) using the `measurement.py` python file. hit Enter in the python terminal to close the service.
+The example measurements shared are based on poetry. Follow the below steps to  for setting up the example measurement:
 
+1. Install `poetry` if not already installed. Refer to <https://python-poetry.org/docs/#installation> for information on installing poetry.
 
-    #### Overview on the Components of dc_measurement
-    1. measurement.py
-        - This file contains all the details related to the measurement and also contains the logic for the measurement execution.
-        - This file is run to start the measurment as a service.
+2. Open a command prompt, change the working directory to the directory of the example measurement you want to work with.
 
-    2. DCMeasurementScreen.isscr
-        - UI file for the Measurement.
-        - The path and type of this file is configured by `ui_file_path` and `ui_file_type` respectively in `measurement_info` variable definition in `measurement.py`.
+    ``` cmd
+    cd <path_of_example_measurement>
+    REM Example: cd "..\measurement-services-python\examples\dc_measurement"
+    ```
 
-2. ### DC Measurement with LabVIEW UI
-    This example is similar to the [dc_measurement example](#steps-to-run-the-dcmeasurement)  example, with the only difference being the UI used. This example uses a LabVIEW VI as the UI element.
+3. Run poetry install. The command creates/updates the .venv and installs all the dependencies needed for the Example into `.venv`
 
-3. ### Sample Measurement
-    Sample Measurement is a simple python-based example that has configurations defined for all supported datatypes. The measurement logic simply assigns the configuration values to respective output values.
+    ``` cmd
+    poetry install
+    ```
 
-    #### Steps to run the sample_measurement
-    - The measurment files can be found in `..\examples\sample_measurement` .
-    - Follow the same steps provided in the [dc_measurement example](#steps-to-run-the-dcmeasurement) documentation with the sample_measurement files to use the sample_measurement example.
+### Executing the Example Measurements
 
-    #### Overview on the Components of sample_measurement
-    - Similar to the [dc_measurement example](#overview-on-the-components-of-dcmeasurement) the sample_measurement example also contains a `measurement.py` to start the measurement service and  a UI file named `SamplemeasurmentScreen.isscr` for the UI.
+1. Run/Debug the measurement(`measurement.py`) by following the steps discussed in the section ["Steps to run the measurement service".](#steps-to-run-the-measurement-service)
+
+---

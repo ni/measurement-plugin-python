@@ -53,6 +53,6 @@ def measure(float_input, double_array_input, bool_input, string_input):
 """Driver Method.
 """
 if __name__ == "__main__":
-    sample_measurement_service.host_as_grpc_service()
+    sample_measurement_service.host_service()
     input("To Exit during the Service lifetime, Press Enter.\n")
     sample_measurement_service.close_service()
