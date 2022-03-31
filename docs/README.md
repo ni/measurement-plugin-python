@@ -8,7 +8,7 @@
 4. [Quick Start](#quick-start)
     1. [Installation](#installation)
     2. [Developing a minimal python measurement](#developing-a-minimal-python-measurement)
-    3. [Steps to run a measurement service](#steps-to-run-the-measurement-service)
+    3. [Steps to run the measurement service](#steps-to-run-the-measurement-service)
 5. [Managing Measurement as Python Package(Project)](#managing-measurement-as-python-packageproject)
     1. [Create and Manage Python Measurement Package using poetry](#create-and-manage-python-measurement-package-using-poetry)
     2. [Create and Manage Python Measurement Package using venv](#create-and-manage-python-measurement-package-using-venv)
@@ -316,6 +316,6 @@ The example measurements shared are based on poetry. Follow the below steps to  
 
 ### Executing the Example Measurements
 
-1. Run/Debug the measurement(`measurement.py`) by following the steps discussed in the section ["Steps to run the measurement service".]((#steps-to-run-the-measurement-service))
+1. Run/Debug the measurement(`measurement.py`) by following the steps discussed in the section ["Steps to run the measurement service".](#steps-to-run-the-measurement-service)
 
 ---
