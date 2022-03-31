@@ -61,7 +61,7 @@ poetry add <path_of_ni_measurement_service-x.x.x.tar.gz>
 
 ### Developing a minimal python measurement
 
-1. Create a python file(.py file)
+1. Create a python file(.py file) using the IDE of your choice or using the [Visual Studio Code.](https://code.visualstudio.com/download).
 
 2. Import `ni_measurement_service`
 
