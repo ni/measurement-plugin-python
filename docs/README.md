@@ -3,26 +3,17 @@
 ## Contents
 
 1. [Introduction](#introduction)
-
 2. [Abbreviations](#abbreviations)
-
 3. [Dependencies](#dependencies)
-
 4. [Quick Start](#quick-start)
-
     1. [Installation](#installation)
-
     2. [Developing a minimal python measurement](#developing-a-minimal-python-measurement)
-
     3. [Steps to run a measurement service](#steps-to-run-the-measurement-service)
-
 5. [Managing Measurement as Python Package(Project)](#managing-measurement-as-python-packageproject)
     1. [Create and Manage Python Measurement Package using poetry](#create-and-manage-python-measurement-package-using-poetry)
     2. [Create and Manage Python Measurement Package using venv](#create-and-manage-python-measurement-package-using-venv)
     3. [Create and Manage Python Measurement Package by directly installing NIMS as a system-level package](#create-and-manage-python-measurement-package-by-directly-installing-nims-as-a-system-level-package)
-
 6. [Examples](#examples)
-
     1. [Setting up the Example Measurements](#setting-up-the-example-measurements)
     2. [Executing the Example Measurements](#executing-the-example-measurements)
 
@@ -30,13 +21,13 @@
 
 ## Introduction
 
-`ni_measurement_service` is a python framework that enables measurement developers to quickly create python measurements and run them as a service(gRPC)
+`ni_measurement_service` is a python framework that enables measurement developers to quickly create python measurements and run them as a service(gRPC).
 
 ---
 
 ## Abbreviations
 
-- NIMS - Nationals Instrument Measurement Service Framework - `ni_measurement_service`
+- NIMS - Nationals Instrument Measurement Service Framework - `ni_measurement_service`.
 
 ---
 
