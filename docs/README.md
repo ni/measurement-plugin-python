@@ -4,17 +4,18 @@
   - [Introduction](#introduction)
   - [Abbreviations](#abbreviations)
   - [Dependencies](#dependencies)
+  - [Examples](#examples)
+    - [Setting up the Example Measurements](#setting-up-the-example-measurements)
+    - [Executing the Example Measurements](#executing-the-example-measurements)
   - [Quick Start](#quick-start)
     - [Installation](#installation)
     - [Developing a minimal python measurement](#developing-a-minimal-python-measurement)
     - [Steps to run the measurement service](#steps-to-run-the-measurement-service)
-  - [Managing Measurement as Python Package(Project)](#managing-measurement-as-python-packageproject)
+  - [Template Support](#template-support)
+  - [Appendix: Managing Measurement as Python Package(Project)](#appendix-managing-measurement-as-python-packageproject)
     - [Create and Manage Python Measurement Package using poetry](#create-and-manage-python-measurement-package-using-poetry)
     - [Create and Manage Python Measurement Package using venv](#create-and-manage-python-measurement-package-using-venv)
     - [Create and Manage Python Measurement Package by directly installing NIMS as a system-level package](#create-and-manage-python-measurement-package-by-directly-installing-nims-as-a-system-level-package)
-  - [Examples](#examples)
-    - [Setting up the Example Measurements](#setting-up-the-example-measurements)
-    - [Executing the Example Measurements](#executing-the-example-measurements)
 
 ---
 
@@ -36,6 +37,40 @@ The `ni_measurement_service` is a python framework that enables measurement deve
 - [grpcio = 1.41.1](https://pypi.org/project/grpcio/1.41.1/)
 - [protobuf = 3.19.1](https://pypi.org/project/protobuf/3.19.1/)
 - [pywin32 >= 303 (Only for Windows)](https://pypi.org/project/pywin32/303/)
+
+---
+
+## Examples
+
+The `measurement-services-python\examples` directory contains the below list of python measurement example projects:  
+
+1. **Sample measurement**: Sample Measurement is a simple python-based example that has configurations defined for all supported data types. The measurement logic simply assigns the configuration values to respective output values.
+2. **DC Measurements**: Simple python measurement example that interacts with DCPower 4145 Instrument.
+    1. DC Measurement with Screen file UI
+    2. DC Measurement with LabVIEW UI
+
+### Setting up the Example Measurements
+
+The example measurements shared are based on poetry. Follow the below steps to  for setting up the example measurement:
+
+1. Install `poetry` if not already installed. Refer to <https://python-poetry.org/docs/#installation> for information on installing poetry.
+
+2. Open a command prompt, change the working directory to the directory of the example measurement you want to work with.
+
+    ``` cmd
+    cd <path_of_example_measurement>
+    REM Example: cd "..\measurement-services-python\examples\dc_measurement"
+    ```
+
+3. Run poetry install. The command creates/updates the .venv and installs all the dependencies needed for the Example into `.venv`
+
+    ``` cmd
+    poetry install
+    ```
+
+### Executing the Example Measurements
+
+1. Run/Debug the measurement(`measurement.py`) by following the steps discussed in the section ["Steps to run the measurement service".](#steps-to-run-the-measurement-service)
 
 ---
 
@@ -164,7 +199,7 @@ poetry add <path_of_ni_measurement_service-x.x.x.tar.gz>
 
     - After successful activation, you can see the name of the environment, `(.venv)` is added to the command prompt.
 
-3. [Run](https://code.visualstudio.com/docs/python/python-tutorial#_run-hello-world)/[Debug](https://code.visualstudio.com/docs/python/debugging#_basic-debugging) the measurement python file created using NIMS
+3. [Run](https://code.visualstudio.com/docs/python/python-tutorial#_run-hello-world)/[Debug](https://code.visualstudio.com/docs/python/debugging#_basic-debugging) the measurement python file created using NIMS.
 
 4. To stop the running measurement service, press `Enter` in the terminal to properly close the service.
 
@@ -176,7 +211,11 @@ poetry add <path_of_ni_measurement_service-x.x.x.tar.gz>
 
 ---
 
-## Managing Measurement as Python Package(Project)
+## Template Support
+
+Coming Soon :)
+
+## Appendix: Managing Measurement as Python Package(Project)
 
 Measurement and its related files can be maintained as a python package. The basic components of any Python Measurement Package are:
 
@@ -191,7 +230,8 @@ Measurement and its related files can be maintained as a python package. The bas
     - The path and type of this file is configured by `ui_file_path` and `ui_file_type` respectively in `measurement_info` variable definition in Measurement Python Module(.py file).
 
 Python communities have different ways of managing a python package and its dependencies. It is up to the measurement developer, on how they wanted to maintain the package and dependencies. Measurement developers can choose from a few common approaches discussed below based on their requirements.
-Note: Once we have the template support for Python measurement, the approach to managing the python measurement package(project) will be streamlined and simplified.
+
+Note: Once we have the [template support](#template-support) for Python measurement, the approach to managing the python measurement package(project) will be streamlined and simplified.
 
 ### Create and Manage Python Measurement Package using poetry
 
@@ -283,39 +323,5 @@ Measurement developers can also install the NIMS framework as a system package i
     ```
 
 2. Create measurement modules as described in ["Developing a minimal python measurement"](#developing-a-minimal-python-measurement)
-
----
-
-## Examples
-
-`measurement-services-python\examples` contains the below list of python measurement example projects:  
-
-1. **Sample measurement**: Sample Measurement is a simple python-based example that has configurations defined for all supported data types. The measurement logic simply assigns the configuration values to respective output values.
-2. **DC Measurements**: Simple python measurement example that interacts with DCPower 4145 Instrument.
-    1. DC Measurement with Screen file UI
-    2. DC Measurement with LabVIEW UI
-
-### Setting up the Example Measurements
-
-The example measurements shared are based on poetry. Follow the below steps to  for setting up the example measurement:
-
-1. Install `poetry` if not already installed. Refer to <https://python-poetry.org/docs/#installation> for information on installing poetry.
-
-2. Open a command prompt, change the working directory to the directory of the example measurement you want to work with.
-
-    ``` cmd
-    cd <path_of_example_measurement>
-    REM Example: cd "..\measurement-services-python\examples\dc_measurement"
-    ```
-
-3. Run poetry install. The command creates/updates the .venv and installs all the dependencies needed for the Example into `.venv`
-
-    ``` cmd
-    poetry install
-    ```
-
-### Executing the Example Measurements
-
-1. Run/Debug the measurement(`measurement.py`) by following the steps discussed in the section ["Steps to run the measurement service".](#steps-to-run-the-measurement-service)
 
 ---
