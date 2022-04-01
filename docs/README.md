@@ -78,7 +78,7 @@ The example measurements shared are based on poetry. Follow the below steps to  
 
 ### Installation
 
-Download the `ni_measurement_service.tar.gz` and install the NIMS Framework.
+Download the `ni_measurement_service-x.x.x.x.tar.gz` and install the NIMS Framework.
 
 If using [pip](https://pip.pypa.io/).
 
