@@ -20,21 +20,22 @@
 
 ## Introduction
 
-`ni_measurement_service` is a python framework that enables measurement developers to quickly create python measurements and run them as a service(gRPC).
+The `ni_measurement_service` is a python framework that enables measurement developers to quickly create python measurements and run them as a service(gRPC).
 
 ---
 
 ## Abbreviations
 
-- NIMS - Nationals Instrument Measurement Service Framework - `ni_measurement_service`.
+- NIMS - NI Measurement Service Framework - `ni_measurement_service`.
 
 ---
 
 ## Dependencies
 
-- [Python >= 3.8( 3.8 recommended)](https://www.python.org/downloads/release/python-3810/)
+- Python >= 3.8 [(3.8 recommended)](https://www.python.org/downloads/release/python-3810/)
 - [grpcio = 1.41.1](https://pypi.org/project/grpcio/1.41.1/)
 - [protobuf = 3.19.1](https://pypi.org/project/protobuf/3.19.1/)
+- [pywin32 >= 303 (Only for Windows)](https://pypi.org/project/pywin32/303/)
 
 ---
 
@@ -90,7 +91,7 @@ poetry add <path_of_ni_measurement_service-x.x.x.tar.gz>
     )
     ```
 
-4. Create a new `MeasurementService` Instance.
+4. Create a new `MeasurementService` instance.
 
     ``` python
     foo_measurement_service = nims.MeasurementService(measurement_info, service_info)
@@ -177,14 +178,14 @@ poetry add <path_of_ni_measurement_service-x.x.x.tar.gz>
 
 ## Managing Measurement as Python Package(Project)
 
-Measurement and its related files can be maintained as a python package. The basic Components of any Python Measurement Package are:
+Measurement and its related files can be maintained as a python package. The basic components of any Python Measurement Package are:
 
 1. Measurement Python Module(.py file)
     - This file contains all the details related to the measurement and also contains the logic for the measurement execution.
     - This file is run to start the measurement as a service.
 
 2. UI File
-    - UI file for the Measurement. Type of Supported UI Files are:
+    - UI file for the Measurement. Types of supported UI file are:
         - Screen file(.isscr): created using the **Plugin UI Editor application**.
         - LabVIEW UI(.vi)
     - The path and type of this file is configured by `ui_file_path` and `ui_file_type` respectively in `measurement_info` variable definition in Measurement Python Module(.py file).
@@ -195,7 +196,7 @@ Note: Once we have the template support for Python measurement, the approach to 
 ### Create and Manage Python Measurement Package using poetry
 
 1. Setting up Poetry(One-time setup)
-    1. Make sure the system has the recommended python version installed.
+    1. Make sure the system has the recommended python version is installed.
 
     2. Install `poetry` using the installation steps given in <https://python-poetry.org/docs/#installation>.
 
@@ -233,7 +234,7 @@ For detailed info on managing projects using poetry [refer to the official docum
 
 ### Create and Manage Python Measurement Package using venv
 
-1. Make sure the system has the recommended python version installed.
+1. Make sure the system has the recommended python version is installed.
 
 2. Open a command prompt, change the working directory to the directory of your choice where you want to create a project.
 
@@ -281,7 +282,7 @@ Measurement developers can also install the NIMS framework as a system package i
     pip install <path_of_ni_measurement_service-x.x.x.tar.gz>
     ```
 
-2. Create measurement modules as described in ["Developing a minimal python measurement"]
+2. Create measurement modules as described in ["Developing a minimal python measurement"](#developing-a-minimal-python-measurement)
 
 ---
 
