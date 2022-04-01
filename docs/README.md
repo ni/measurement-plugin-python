@@ -55,7 +55,7 @@ The example measurements shared are *poetry-based* projects. Follow the below st
 
 1. Install `poetry`. Refer to <https://python-poetry.org/docs/#installation> for information on installing poetry.
 
-2. Open a command prompt, change the working directory to the directory of the example measurement you want to work with.
+2. Open a command prompt, and change the working directory to the directory of the example measurement you want to work with.
 
     ``` cmd
     cd <path_of_example_measurement>
@@ -281,7 +281,7 @@ For detailed info on managing projects using poetry [refer to the official docum
 
 1. Make sure the system has the recommended python version is installed.
 
-2. Open a command prompt, change the working directory to the directory of your choice where you want to create a project.
+2. Open a command prompt, and change the working directory to the directory of your choice where you want to create a project.
 
     ``` cmd
     cd <path_of_directory_of_your_choice>
