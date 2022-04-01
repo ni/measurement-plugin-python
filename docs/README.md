@@ -53,7 +53,7 @@ The `measurement-services-python\examples` directory contains the below list of 
 
 The example measurements shared are based on poetry. Follow the below steps to  for setting up the example measurement:
 
-1. Install `poetry` if not already installed. Refer to <https://python-poetry.org/docs/#installation> for information on installing poetry.
+1. Install `poetry`. Refer to <https://python-poetry.org/docs/#installation> for information on installing poetry.
 
 2. Open a command prompt, change the working directory to the directory of the example measurement you want to work with.
 
@@ -78,20 +78,11 @@ The example measurements shared are based on poetry. Follow the below steps to  
 
 ### Installation
 
-Download the `ni_measurement_service-x.x.x.x.tar.gz` and install the NIMS Framework.
-
-If using [pip](https://pip.pypa.io/).
+Make sure the system has the recommended python version is installed.Download the `ni_measurement_service-x.x.x.x.tar.gz` and install the NIMS Framework using [pip](https://pip.pypa.io/).
 
 ``` cmd
 REM Activate the required virtual environment if any.
 pip install <path_of_ni_measurement_service-x.x.x.tar.gz>
-```
-
-If using [poetry](https://python-poetry.org/) to manage a python project.
-
-``` cmd
-REM Run the command from within the poetry project directory.
-poetry add <path_of_ni_measurement_service-x.x.x.tar.gz>
 ```
 
 ### Developing a minimal python measurement
