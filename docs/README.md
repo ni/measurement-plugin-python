@@ -7,10 +7,10 @@
   - [Examples](#examples)
     - [Setting up the Example Measurements](#setting-up-the-example-measurements)
     - [Executing the Example Measurements](#executing-the-example-measurements)
-  - [Quick Start](#quick-start)
+  - [Developing Measurements: Quick Start](#developing-measurements-quick-start)
     - [Installation](#installation)
     - [Developing a minimal python measurement](#developing-a-minimal-python-measurement)
-    - [Steps to run the measurement service](#steps-to-run-the-measurement-service)
+  - [Steps to run/debug the measurement service](#steps-to-rundebug-the-measurement-service)
   - [Template Support](#template-support)
   - [Appendix: Managing Measurement as Python Package(Project)](#appendix-managing-measurement-as-python-packageproject)
     - [Create and Manage Python Measurement Package using poetry](#create-and-manage-python-measurement-package-using-poetry)
@@ -51,7 +51,7 @@ The `measurement-services-python\examples` directory contains the below list of 
 
 ### Setting up the Example Measurements
 
-The example measurements shared are based on poetry. Follow the below steps to  for setting up the example measurement:
+The example measurements shared are *poetry-based* projects. Follow the below steps to  for setting up the example measurement:
 
 1. Install `poetry`. Refer to <https://python-poetry.org/docs/#installation> for information on installing poetry.
 
@@ -62,7 +62,7 @@ The example measurements shared are based on poetry. Follow the below steps to  
     REM Example: cd "..\measurement-services-python\examples\dc_measurement"
     ```
 
-3. Run poetry install. The command creates/updates the .venv and installs all the dependencies needed for the Example into `.venv`
+3. Run poetry install. The command creates/updates the .venv and installs all the dependencies(including `ni_measurement_service` package) needed for the Example into `.venv`
 
     ``` cmd
     poetry install
@@ -70,15 +70,18 @@ The example measurements shared are based on poetry. Follow the below steps to  
 
 ### Executing the Example Measurements
 
-1. Run/Debug the measurement(`measurement.py`) by following the steps discussed in the section ["Steps to run the measurement service".](#steps-to-run-the-measurement-service)
+1. Start the discovery service if not already started.
+2. Run/Debug the measurement file (`measurement.py`) after activating the `.venv`. For detailed info check the section ["Steps to run/debug the measurement service".](#steps-to-rundebug-the-measurement-service)
 
 ---
 
-## Quick Start
+## Developing Measurements: Quick Start
+
+This section provides instructions to develop custom python measurement services using NIMS.
 
 ### Installation
 
-Make sure the system has the recommended python version is installed.Download the `ni_measurement_service-x.x.x.x.tar.gz` and install the NIMS Framework using [pip](https://pip.pypa.io/).
+Make sure the system has the recommended python version is installed. Download the `ni_measurement_service-x.x.x.x.tar.gz` and install the NIMS Framework using [pip](https://pip.pypa.io/).
 
 ``` cmd
 REM Activate the required virtual environment if any.
@@ -105,9 +108,9 @@ pip install <path_of_ni_measurement_service-x.x.x.tar.gz>
         product_type="", # The Product Type related to the measurement.
         # Absolute file path of the UI File. 
         ui_file_path="", 
-        # Developer can construct related this .py file like this:
+        # Developer can construct relative path w.r.t the .py file like this:
         # ui_file_path=os.path.join(os.path.dirname(os.path.abspath(__file__)), "FileName.isscr")
-        ui_file_type="", # Type of UI File.
+        ui_file_type=nims.UIFileType.ScreenFile, # Type of UI File, use UIFileType Enum.
     )
 
     service_info = nims.ServiceInfo(
@@ -178,23 +181,32 @@ pip install <path_of_ni_measurement_service-x.x.x.tar.gz>
         foo_measurement_service.close_service()
     ```
 
-### Steps to run the measurement service
+9. Run/Debug the created measurement by following the steps discussed in the section ["Steps to run/debug the measurement service".](#steps-to-rundebug-the-measurement-service)
+
+---
+
+## Steps to run/debug the measurement service
 
 1. Start the discovery service if not already started.
 
-2. Activate related virtual environments. Measurement developers can skip this step if they are not using any virtual environments or poetry-based projects.
+2. (Optional)Activate related virtual environments. Measurement developers can skip this step if they are not using any [virtual environments](#create-and-manage-python-measurement-package-using-venv) or [poetry-based projects.](#create-and-manage-python-measurement-package-using-poetry)
 
     ```cmd
     .venv\scripts\activate
     ```
 
     - After successful activation, you can see the name of the environment, `(.venv)` is added to the command prompt.
+    - If you face an access issue when trying to activate, retry after allowing scripts to run as Administrator by executing the below command in Windows PowerShell:
+
+        ```cmd
+        Set-ExecutionPolicy RemoteSigned 
+        ```
 
 3. [Run](https://code.visualstudio.com/docs/python/python-tutorial#_run-hello-world)/[Debug](https://code.visualstudio.com/docs/python/debugging#_basic-debugging) the measurement python file created using NIMS.
 
 4. To stop the running measurement service, press `Enter` in the terminal to properly close the service.
 
-5. After the usage of measurement, deactivate the virtual environment. Measurement developers can skip this step if they are not using any virtual environments or poetry-based projects.
+5. (Optional)After the usage of measurement, deactivate the virtual environment. Measurement developers can skip this step if they are not using any [virtual environments](#create-and-manage-python-measurement-package-using-venv) or [poetry-based projects.](#create-and-manage-python-measurement-package-using-poetry)
 
     ```cmd
     deactivate
@@ -205,6 +217,8 @@ pip install <path_of_ni_measurement_service-x.x.x.tar.gz>
 ## Template Support
 
 Coming Soon :)
+
+---
 
 ## Appendix: Managing Measurement as Python Package(Project)
 
