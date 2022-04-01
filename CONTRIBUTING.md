@@ -38,7 +38,7 @@ git clone https://github.com/ni/measurement-services-python.git
 
 ## Initializing the repo with .venv
 
-From the root directory of the repo, initialize the project using the [poetry init](https://python-poetry.org/docs/cli/#init) command. This will set up a .venv with all the required dependencies based on poetry.lock file and pyproject.toml.
+From the root directory of the repo, initialize the project using the [poetry install](https://python-poetry.org/docs/cli/#install) command. This will set up a .venv with all the required dependencies based on poetry.lock file and pyproject.toml.
 
 ```cmd
 poetry init 
