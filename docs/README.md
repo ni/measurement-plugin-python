@@ -11,7 +11,6 @@
     - [Installation](#installation)
     - [Developing a minimal python measurement](#developing-a-minimal-python-measurement)
   - [Steps to run/debug the measurement service](#steps-to-rundebug-the-measurement-service)
-  - [Template Support](#template-support)
   - [Appendix: Managing Measurement as Python Package(Project)](#appendix-managing-measurement-as-python-packageproject)
     - [Create and Manage Python Measurement Package using poetry](#create-and-manage-python-measurement-package-using-poetry)
     - [Create and Manage Python Measurement Package using venv](#create-and-manage-python-measurement-package-using-venv)
@@ -214,12 +213,6 @@ pip install <path_of_ni_measurement_service-x.x.x.tar.gz>
 
 ---
 
-## Template Support
-
-Coming Soon :)
-
----
-
 ## Appendix: Managing Measurement as Python Package(Project)
 
 Measurement and its related files can be maintained as a python package. The basic components of any Python Measurement Package are:
@@ -236,7 +229,7 @@ Measurement and its related files can be maintained as a python package. The bas
 
 Python communities have different ways of managing a python package and its dependencies. It is up to the measurement developer, on how they wanted to maintain the package and dependencies. Measurement developers can choose from a few common approaches discussed below based on their requirements.
 
-Note: Once we have the [template support](#template-support) for Python measurement, the approach to managing the python measurement package(project) will be streamlined and simplified.
+Note: Once we have the template support for Python measurement, the approach to managing the python measurement package(project) will be streamlined and simplified.
 
 ### Create and Manage Python Measurement Package using poetry
 
@@ -247,7 +240,7 @@ Note: Once we have the [template support](#template-support) for Python measurem
 
 2. Create a new python project and add NIMS Framework as a dependency to the project.
 
-    1. Open a command prompt, change the working directory to the directory of your choice where you want to create the project.
+    1. Open a command prompt, and change the working directory to the directory of your choice where you want to create the project.
 
         ``` cmd
         cd <path_of_directory_of_your_choice>
