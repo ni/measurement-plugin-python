@@ -1,0 +1,80 @@
+name: Publish NIMS
+
+on:
+  release:
+    types: [released]
+
+env:
+  # Versions are also listed in PR.yml
+  POETRY_VERSION: 1.1.6
+  PYTHON_VERSION: 3.8
+
+jobs:
+  build:
+    name: Publish NIMS Package to PyPI
+    runs-on : ubuntu-latest 
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - uses: Gr1N/setup-poetry@v4
+        with:
+          poetry-version: ${{ env.POETRY_VERSION }}
+      # @TODO: This is a workaround for there not being a way to check the lock file
+      #   See: https://github.com/python-poetry/poetry/issues/453
+      - name: Check for lock changes
+        run: |
+          PYTHONPATH="${PYTHONPATH}:${HOME}/.poetry/lib:${HOME}/.poetry/lib/poetry/_vendor/py${{ env.PYTHON_VERSION }}" \
+          python -c "from poetry.factory import Factory; \
+            locker = Factory().create_poetry('.').locker; \
+            exit(0) if locker.is_locked() and locker.is_fresh() else exit(1)" \
+            && echo 'OK'
+      - uses: actions/cache@v2
+        with:
+          path: ~/.cache/pypoetry/virtualenvs
+          key: ${{ runner.os }}-poetry-${{ hashFiles('poetry.lock') }}
+
+      - name: Setup NIMS
+        run: poetry install
+
+      - name: Lint the Code
+        run: poetry run ni-python-styleguide lint
+
+      # If the tag is 0.1.0, this will set the version of NIMS package to 0.1.0
+      - name: Store version from Tag
+        id: vars
+        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+
+      - name: Promote NIMS package version to tag name.
+        run: |
+          poetry version ${{ steps.vars.outputs.tag }}
+
+      - name: Build Python package and publish to PyPI
+        if: ${{ startsWith(github.event.release.target_commitish, 'release/') }}
+        run: |
+          poetry publish --build --username __token__ --password ${{ secrets.PYPI_TOKEN }} -r test-pypi
+      
+      - uses: actions/upload-artifact@v3
+        with:
+          name: NIMS Artifacts
+          path: dist/ # path/to/artifact
+      
+      - name: Promote NIMS package version to next alpha version
+        run: |
+          poetry version prepatch
+      
+      - name: Commit file changes.
+        if: ${{ startsWith(github.event.release.target_commitish, 'release/') }}
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git commit -m "Promote NIMS package version" -a
+      
+      - name: Push changes to the release branch
+        if: ${{ startsWith(github.event.release.target_commitish, 'release/') }}
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.event.release.target_commitish }}    
+
