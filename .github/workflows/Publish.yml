@@ -50,11 +50,12 @@ jobs:
         run: |
           poetry version ${{ steps.vars.outputs.tag }}
 
+      # To Test the Publish use : poetry publish --build --username __token__ --password ${{ secrets.TEST_PYPI_TOKEN }} -r test-pypi
       - name: Build Python package and publish to PyPI
         if: ${{ startsWith(github.event.release.target_commitish, 'release/') }}
         run: |
-          poetry publish --build --username __token__ --password ${{ secrets.PYPI_TOKEN }} -r test-pypi
-      
+          poetry publish --build --username __token__ --password ${{ secrets.PYPI_TOKEN }}
+          
       - uses: actions/upload-artifact@v3
         with:
           name: NIMS Artifacts
