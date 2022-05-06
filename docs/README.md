@@ -20,7 +20,7 @@
 
 ## Introduction
 
-The `ni-measurement-service` is a python framework that enables measurement developers to quickly create python measurements and run them as a service(gRPC).
+The `ni-measurement-service` is a python framework that enables measurement developers to quickly create python measurements and run them as a service (gRPC).
 
 ---
 
@@ -80,7 +80,7 @@ This section provides instructions to develop custom python measurement services
 
 ### Installation
 
-Make sure the system has the recommended python version is installed.Install the NIMS Framework using [pip](https://pip.pypa.io/).
+Make sure the system has the recommended python version is installed. Install the NIMS Framework using [pip](https://pip.pypa.io/).
 
 ``` cmd
 REM Activate the required virtual environment if any.
