@@ -20,13 +20,13 @@
 
 ## Introduction
 
-The `ni_measurement_service` is a python framework that enables measurement developers to quickly create python measurements and run them as a service(gRPC).
+The `ni-measurement-service` is a python framework that enables measurement developers to quickly create python measurements and run them as a service(gRPC).
 
 ---
 
 ## Abbreviations
 
-- NIMS - NI Measurement Service Framework - `ni_measurement_service`.
+- NIMS - NI Measurement Service Framework - `ni-measurement-service`.
 
 ---
 
@@ -61,7 +61,7 @@ The example measurements shared are *poetry-based* projects. Follow the below st
     REM Example: cd "..\measurement-services-python\examples\dc_measurement"
     ```
 
-3. Run poetry install. The command creates/updates the .venv and installs all the dependencies(including `ni_measurement_service` package) needed for the Example into `.venv`
+3. Run poetry install. The command creates/updates the .venv and installs all the dependencies(including `ni-measurement-service` package) needed for the Example into `.venv`
 
     ``` cmd
     poetry install
@@ -80,11 +80,11 @@ This section provides instructions to develop custom python measurement services
 
 ### Installation
 
-Make sure the system has the recommended python version is installed. Download the `ni_measurement_service-x.x.x.x.tar.gz` and install the NIMS Framework using [pip](https://pip.pypa.io/).
+Make sure the system has the recommended python version is installed.Install the NIMS Framework using [pip](https://pip.pypa.io/).
 
 ``` cmd
 REM Activate the required virtual environment if any.
-pip install <path_of_ni_measurement_service-x.x.x.tar.gz>
+pip install ni-measurement-service
 ```
 
 ### Developing a minimal python measurement
@@ -252,17 +252,17 @@ Note: Once we have the template support for Python measurement, the approach to 
         poetry new <name_of_the_project>
         ```
 
-    3. Add the `ni_measurement_service-x.x.x` framework package as a dependency.
+    3. Add the `ni-measurement-service` framework package as a dependency using [poetry add command](https://python-poetry.org/docs/cli/#add).
 
         ``` cmd
         cd <name_of_the_project>
-        poetry add <path_of_ni_measurement_service-x.x.x.tar.gz>
+        poetry add ni-measurement-service
         ```
 
     4. Virtual environment will be auto-created by poetry.
 
     5. Create measurement modules as described in ["Developing a minimal python measurement"](#developing-a-minimal-python-measurement)
-        - Any additional dependencies required by measurement can be added using add command.
+        - Any additional dependencies required by measurement can be added using [add command](https://python-poetry.org/docs/cli/#add).
 
             ``` cmd
             poetry add <dependency_package_name>
@@ -295,10 +295,10 @@ For detailed info on managing projects using poetry [refer to the official docum
     python -m pip install -U pip
     ```
 
-5. Install the `ni_measurement_service-x.x.x`.tar.gz package into the virtual environment.
+5. Install the `ni-measurement-service` package into the virtual environment.
 
     ``` cmd
-    pip install <path_of_ni_measurement_service-x.x.x.tar.gz>
+    pip install ni-measurement-service
     ```
 
 6. Create measurement modules as described in ["Developing a minimal python measurement"](#developing-a-minimal-python-measurement)
@@ -314,10 +314,10 @@ For detailed info on managing projects with a virtual environment [refer to the 
 
 Measurement developers can also install the NIMS framework as a system package if their requirement is demanding.
 
-1. Install the `ni_measurement_service-x.x.x`.tar.gz package from the command prompt
+1. Install the `ni-measurement-service` package from the command prompt
 
     ``` cmd
-    pip install <path_of_ni_measurement_service-x.x.x.tar.gz>
+    pip install ni-measurement-service
     ```
 
 2. Create measurement modules as described in ["Developing a minimal python measurement"](#developing-a-minimal-python-measurement)
