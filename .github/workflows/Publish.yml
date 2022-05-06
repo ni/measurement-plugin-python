@@ -6,7 +6,7 @@ on:
 
 env:
   # Versions are also listed in PR.yml
-  POETRY_VERSION: 1.1.6
+  POETRY_VERSION: 1.1.10
   PYTHON_VERSION: 3.8
 
 jobs:
@@ -60,10 +60,6 @@ jobs:
         with:
           name: NIMS Artifacts
           path: dist/ # path/to/artifact
-      
-      - name: Promote NIMS package version to next alpha version
-        run: |
-          poetry version prepatch
       
       - name: Commit file changes.
         if: ${{ startsWith(github.event.release.target_commitish, 'releases/') }}
