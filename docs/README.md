@@ -11,6 +11,9 @@
     - [Installation](#installation)
     - [Developing a minimal python measurement](#developing-a-minimal-python-measurement)
   - [Steps to run/debug the measurement service](#steps-to-rundebug-the-measurement-service)
+  - [Static Registration of Python Measurements](#static-registration-of-python-measurements)
+    - [Create a batch file that runs a python measurement](#create-a-batch-file-that-runs-a-python-measurement)
+    - [Create Executable for Python Scripts](#create-executable-for-python-scripts)
   - [Appendix: Managing Measurement as Python Package(Project)](#appendix-managing-measurement-as-python-packageproject)
     - [Create and Manage Python Measurement Package using poetry](#create-and-manage-python-measurement-package-using-poetry)
     - [Create and Manage Python Measurement Package using venv](#create-and-manage-python-measurement-package-using-venv)
@@ -125,7 +128,7 @@ pip install ni-measurement-service
     foo_measurement_service = nims.MeasurementService(measurement_info, service_info)
     ```
 
-5. Define a python function with required measurement logic based on your required measurement methodology.
+5. Define a Python function with the required measurement logic based on your required measurement methodology.
     1. The measurement function must return the outputs as a list.
 
     ``` python
@@ -213,6 +216,30 @@ pip install ni-measurement-service
 
 ---
 
+## Static Registration of Python Measurements
+
+Refer to the Discovery Service Readme for the steps needed to statically register a measurement.
+
+### Create a batch file that runs a python measurement
+
+The batch file used for static registration is responsible for starting the Python Scripts.
+
+Typical Batch File:
+
+``` cmd
+"<path_to_python_exe>" "<path_to_measurement_file>"
+```
+
+### Create Executable for Python Scripts
+
+To create an executable from a measurement, measurement authors can use the [pyinstaller](https://www.pyinstaller.org/) tooling. During the executable creation, the user can also embed the User Interface file using the `--add-data "<path_of_the_UI_File>;."`.
+
+Typical Pyinstaller command to build executable.
+
+```cmd
+pyinstaller --onefile --console --add-data "<path_of_the_UI_File>;." --paths .venv\Lib\site-packages\ <path_of_the_measurement_script>
+```
+
 ## Appendix: Managing Measurement as Python Package(Project)
 
 Measurement and its related files can be maintained as a python package. The basic components of any Python Measurement Package are:
@@ -222,10 +249,10 @@ Measurement and its related files can be maintained as a python package. The bas
     - This file is run to start the measurement as a service.
 
 2. UI File
-    - UI file for the Measurement. Types of supported UI file are:
+    - UI file for the Measurement. Types of supported UI files are:
         - Screen file(.isscr): created using the **Plugin UI Editor application**.
         - LabVIEW UI(.vi)
-    - The path and type of this file is configured by `ui_file_path` and `ui_file_type` respectively in `measurement_info` variable definition in Measurement Python Module(.py file).
+    - The path and type of this file are configured by `ui_file_path` and `ui_file_type` respectively in `measurement_info` variable definition in Measurement Python Module(.py file).
 
 Python communities have different ways of managing a python package and its dependencies. It is up to the measurement developer, on how they wanted to maintain the package and dependencies. Measurement developers can choose from a few common approaches discussed below based on their requirements.
 
@@ -234,9 +261,9 @@ Note: Once we have the template support for Python measurement, the approach to 
 ### Create and Manage Python Measurement Package using poetry
 
 1. Setting up Poetry(One-time setup)
-    1. Make sure the system has the recommended python version is installed.
+    1. Make sure the system has the recommended python version installed.
 
-    2. Install `poetry` using the installation steps given in <https://python-poetry.org/docs/#installation>.
+    2. Install the `poetry` using the installation steps given in <https://python-poetry.org/docs/#installation>.
 
 2. Create a new python project and add NIMS Framework as a dependency to the project.
 
@@ -252,14 +279,14 @@ Note: Once we have the template support for Python measurement, the approach to 
         poetry new <name_of_the_project>
         ```
 
-    3. Add the `ni-measurement-service` framework package as a dependency using [poetry add command](https://python-poetry.org/docs/cli/#add).
+    3. Add the `ni-measurement-service` framework package as a dependency using the [poetry add command](https://python-poetry.org/docs/cli/#add).
 
         ``` cmd
         cd <name_of_the_project>
         poetry add ni-measurement-service
         ```
 
-    4. Virtual environment will be auto-created by poetry.
+    4. The virtual environment will be auto-created by poetry.
 
     5. Create measurement modules as described in ["Developing a minimal python measurement"](#developing-a-minimal-python-measurement)
         - Any additional dependencies required by measurement can be added using [add command](https://python-poetry.org/docs/cli/#add).
@@ -272,7 +299,7 @@ For detailed info on managing projects using poetry [refer to the official docum
 
 ### Create and Manage Python Measurement Package using venv
 
-1. Make sure the system has the recommended python version is installed.
+1. Make sure the system has the recommended python version installed.
 
 2. Open a command prompt, and change the working directory to the directory of your choice where you want to create a project.
 
@@ -287,7 +314,7 @@ For detailed info on managing projects using poetry [refer to the official docum
     python -m venv .venv
     ```
 
-4. Activate the virtual environment.After successful activation
+4. Activate the virtual environment. After successful activation
 
     ``` cmd
     .venv\scripts\activate
