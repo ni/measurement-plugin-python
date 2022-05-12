@@ -230,6 +230,24 @@ Typical Batch File:
 "<path_to_python_exe>" "<path_to_measurement_file>"
 ```
 
+Examples to start the fictitious file named `foo_measurement.py`:
+
+1. Using the Python system distribution
+
+    ```cmd
+    python foo_measurement.py
+    ```
+
+2. Using the virtual environment
+
+    ```cmd
+    REM Windows
+    .\.venv\Scripts\python.exe foo_measurement.py
+
+    REM Linux 
+    .venv/bin/python foo_measurement.py
+    ```
+
 ### Create Executable for Python Scripts
 
 To create an executable from a measurement, measurement authors can use the [pyinstaller](https://www.pyinstaller.org/) tooling. During the executable creation, the user can also embed the User Interface file using the `--add-data "<path_of_the_UI_File>;."`.
