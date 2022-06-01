@@ -193,7 +193,7 @@ class Context:
 
         Returns
         -------
-            Callable[[int], Callable]: ScalarEnoder or VectorEncoder.
+            Callable[[int], Callable]: ScalarEncoder or VectorEncoder.
 
         """
         if type not in Context._FIELD_TYPE_TO_ENCODER_MAPPING:
