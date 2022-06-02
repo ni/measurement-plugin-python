@@ -44,7 +44,7 @@ The `ni-measurement-service` is a python framework that enables measurement deve
 
 ## Examples
 
-The `measurement-services-python\examples` directory contains the below list of python measurement example projects:  
+The `Python\examples` directory contains the below list of python measurement example projects:  
 
 1. **Sample measurement**: Sample Measurement is a simple python-based example that has configurations defined for all supported data types. The measurement logic simply assigns the configuration values to respective output values.
 2. **DC Measurements**: Simple python measurement example that interacts with DCPower 4145 Instrument.
@@ -218,7 +218,7 @@ pip install ni-measurement-service
 
 ## Static Registration of Python Measurements
 
-Refer to the Discovery Service Readme for the steps needed to statically register a measurement.
+Refer to the [Static Registration of measurements section]() for the steps needed to statically register a measurement.
 
 ### Create a batch file that runs a python measurement
 
@@ -268,7 +268,7 @@ Measurement and its related files can be maintained as a python package. The bas
 
 2. UI File
     - UI file for the Measurement. Types of supported UI files are:
-        - Screen file(.isscr): created using the **Plugin UI Editor application**.
+        - Screen file(.isscr): created using the **Measurement UI Editor application**.
         - LabVIEW UI(.vi)
     - The path and type of this file are configured by `ui_file_path` and `ui_file_type` respectively in `measurement_info` variable definition in Measurement Python Module(.py file).
 
