@@ -1,4 +1,6 @@
+"""Contains tests to validate metadata.py."""
 import pytest
+
 from ni_measurement_service._internal.parameter import metadata
 from ni_measurement_service.measurement.info import DataType
 
@@ -16,6 +18,14 @@ from ni_measurement_service.measurement.info import DataType
     ],
 )
 def test__default_value_different_from_type__validate__raises_type_exception(type, default_value):
+    """Tests if exceptions are raised when the default value provided is not matching the type.
+
+    Args:
+    ----
+        type (DataType): Type of the parameter.
+        default_value (Any): Default value of the parameter.
+
+    """
     grpc_field_type, repeated = type.value
     parameter_metadata = metadata.ParameterMetadata(
         "test_display_name", grpc_field_type, repeated, default_value
@@ -35,6 +45,14 @@ def test__default_value_different_from_type__validate__raises_type_exception(typ
     ],
 )
 def test__default_value_same_as_type__validate__raises_no_exception(type, default_value):
+    """Tests if no exceptions are raised when the default value provided is matching the type.
+
+    Args:
+    ----
+        type (DataType): Type of the parameter.
+        default_value (Any): Default value of the parameter.
+
+    """
     grpc_field_type, repeated = DataType.Int32.value
     parameter_metadata = metadata.ParameterMetadata(
         "test_display_name", grpc_field_type, repeated, 1
@@ -42,5 +60,5 @@ def test__default_value_same_as_type__validate__raises_no_exception(type, defaul
 
     try:
         metadata.validate_default_value_type(parameter_metadata)
-    except:
+    except (TypeError):
         assert False

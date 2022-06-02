@@ -1,6 +1,8 @@
+"""Contains tests to validate the serializationstrategy.py. """
 import pytest
-from ni_measurement_service._internal.parameter import serializationstrategy
 from google.protobuf import type_pb2
+
+from ni_measurement_service._internal.parameter import serializationstrategy
 
 
 @pytest.mark.parametrize(
@@ -19,6 +21,15 @@ from google.protobuf import type_pb2
 def test__serialization_strategy__get_encoder__returns_expected_encoder(
     type, is_repeated, expected_encoder
 ):
+    """Validate if proper encoder is returned.
+
+    Args:
+    ----
+        type (type_pb2.Field.): gRPC type.
+        is_repeated (bool): Represents if the parameter is array or scalar. True if array.
+        expected_encoder (Callable): Callable expected to be returned for the type and is_repeated.
+
+    """
     encoder = serializationstrategy.Context.get_encoder(type, is_repeated)
 
     assert encoder == expected_encoder
@@ -40,6 +51,15 @@ def test__serialization_strategy__get_encoder__returns_expected_encoder(
 def test__serialization_strategy__get_decoder__returns_expected_decoder(
     type, is_repeated, expected_decoder
 ):
+    """Validate if proper decoder is returned.
+
+    Args:
+    ----
+        type (type_pb2.Field.): gRPC type.
+        is_repeated (bool): Represents if the parameter is array or scalar. True if array.
+        expected_decoder (Callable): Callable expected to be returned for the type and is_repeated.
+
+    """
     decoder = serializationstrategy.Context.get_decoder(type, is_repeated)
 
     assert decoder == expected_decoder
@@ -61,6 +81,15 @@ def test__serialization_strategy__get_decoder__returns_expected_decoder(
 def test__serialization_strategy__get_default_value__returns_type_defaults(
     type, is_repeated, expected_default_value
 ):
+    """Validate if the type default is returned.
+
+    Args:
+    ----
+        type (type_pb2.Field.): gRPC type.
+        is_repeated (bool): Represents if the parameter is array or scalar. True if array.
+        expected_default_value (Callable): Type default value.
+
+    """
     default_value = serializationstrategy.Context.get_type_default(type, is_repeated)
 
     assert default_value == expected_default_value
