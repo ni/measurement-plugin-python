@@ -25,7 +25,7 @@ measurement_info = nims.MeasurementInfo(
 
 service_info = nims.ServiceInfo(
     service_class="DCMeasurement_Python",
-    service_id="{B290B571-CB76-426F-9ACC-5168DC1B027C}",
+    service_id="{825076C9-0484-4123-B360-81D29397824F}",
     description_url="https://www.ni.com/measurementservices/dcmeasurement.html",
 )
 

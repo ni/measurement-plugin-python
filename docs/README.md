@@ -44,7 +44,7 @@ The `ni-measurement-service` is a python framework that enables measurement deve
 
 ## Examples
 
-The `measurement-services-python\examples` directory contains the below list of python measurement example projects:  
+The `examples` directory contains the below list of python measurement example projects:  
 
 1. **Sample measurement**: Sample Measurement is a simple python-based example that has configurations defined for all supported data types. The measurement logic simply assigns the configuration values to respective output values.
 2. **DC Measurements**: Simple python measurement example that interacts with DCPower 4145 Instrument.
@@ -218,7 +218,11 @@ pip install ni-measurement-service
 
 ## Static Registration of Python Measurements
 
-Refer to the Discovery Service Readme for the steps needed to statically register a measurement.
+Refer to the [Static Registration of measurements section]() for the detailed steps needed to statically register a measurement.
+
+To Statically register the examples provided, the user can copy the example directory with the service config file with the startup batch file, to the search paths and follow the [Setting up the Example Measurements](#setting-up-the-example-measurements) section to set up the measurements.
+
+Note: The startup batch file can be modified accordingly if the user wants to run with a custom python distribution or virtual environment
 
 ### Create a batch file that runs a python measurement
 
@@ -268,7 +272,7 @@ Measurement and its related files can be maintained as a python package. The bas
 
 2. UI File
     - UI file for the Measurement. Types of supported UI files are:
-        - Screen file(.isscr): created using the **Plugin UI Editor application**.
+        - Screen file(.isscr): created using the **Measurement UI Editor application**.
         - LabVIEW UI(.vi)
     - The path and type of this file are configured by `ui_file_path` and `ui_file_type` respectively in `measurement_info` variable definition in Measurement Python Module(.py file).
 

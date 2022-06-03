@@ -1,0 +1,12 @@
+{
+  "services": [
+    {
+      "id": "{825076C9-0484-4123-B360-81D29397824F}",
+      "name": "DCMeasurement(Py)",
+      "serviceClass": "DCMeasurement_Python",
+      "descriptionUrl": "https://www.ni.com/measurementservices/dcmeasurement.html",
+      "providedServices": [ "ni.measurements.v1.MeasurementService" ],
+      "path": "start.bat"
+    }
+  ]
+}
