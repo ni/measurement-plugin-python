@@ -218,7 +218,11 @@ pip install ni-measurement-service
 
 ## Static Registration of Python Measurements
 
-Refer to the [Static Registration of measurements section]() for the steps needed to statically register a measurement.
+Refer to the Static Registration Readme for the detailed steps needed to statically register a measurement.
+
+To Statically register the examples provided, the user can copy the example directory with the service config file with the startup batch file, to the search paths and follow the [Setting up the Example Measurements](#setting-up-the-example-measurements) section to set up the measurements.
+
+Note: The startup batch file can be modified accordingly if the user wants to run with a custom python distribution or virtual environment
 
 ### Create a batch file that runs a python measurement
 
