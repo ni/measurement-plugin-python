@@ -44,7 +44,7 @@ The `ni-measurement-service` is a python framework that enables measurement deve
 
 ## Examples
 
-The `Python\examples` directory contains the below list of python measurement example projects:  
+The `examples` directory contains the below list of python measurement example projects:  
 
 1. **Sample measurement**: Sample Measurement is a simple python-based example that has configurations defined for all supported data types. The measurement logic simply assigns the configuration values to respective output values.
 2. **DC Measurements**: Simple python measurement example that interacts with DCPower 4145 Instrument.
