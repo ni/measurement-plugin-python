@@ -1,7 +1,7 @@
 """Contains tests to validate serializer.py."""
 import pytest
 from google.protobuf import type_pb2
-from google.protobuf.any_pb2 import Any
+from google.protobuf import any_pb2
 
 from ni_measurement_service._internal.parameter import serializer
 from ni_measurement_service._internal.parameter.metadata import ParameterMetadata
@@ -15,7 +15,7 @@ from tests.assets import test_pb2
         [-0.9999, -0.9999, -13, 1, 1000, 2, True, "////", [5.5, -13.3, 1, 0.0, -99.9999]],
     ],
 )
-def test__serializer__serialize_parameter__successful_serialization(test_values):
+def test___serializer___serialize_parameter___successful_serialization(test_values):
     """Validates if the custom serializer serializes data same as protobuf serialization.
 
     Args:
@@ -40,7 +40,7 @@ def test__serializer__serialize_parameter__successful_serialization(test_values)
         [-0.9999, -0.9999, -13, 1, 1000, 2, True, "////", [5.5, -13.3, 1, 0.0, -99.9999]],
     ],
 )
-def test__serializer__serialize_default_parameter__successful_serialization(default_values):
+def test___serializer___serialize_default_parameter___successful_serialization(default_values):
     """Validates if the custom serializer serializes default values same as protobuf serialization.
 
     Args:
@@ -58,11 +58,13 @@ def test__serializer__serialize_default_parameter__successful_serialization(defa
 
 
 @pytest.mark.parametrize("values", [[2.0, 19.2, 3, 1, 2, 2, True, "TestString", [5.5, 3.3, 1.0]]])
-def test__serializer__deserialize_parameter_successful_deserialization(values):
+def test___serializer___deserialize_parameter___successful_deserialization(values):
     """Validates if the custom deserializer deserializes data same as protobuf deserialization."""
     parameter = _get_test_parameter_by_id_data(values)
     grpc_serialized_data = _get_grpc_serialized_data(values)
+
     parameter_value_by_id = serializer.deserialize_parameters(parameter, grpc_serialized_data)
+
     assert list(parameter_value_by_id.values()) == values
 
 
@@ -74,7 +76,7 @@ def _validate_serialized_bytes(custom_serialized_bytes, values):
 
 def _get_grpc_serialized_data(values):
     grpc_parameter = _get_test_grpc_message(values)
-    parameter_any = Any()
+    parameter_any = any_pb2.Any()
     parameter_any.Pack(grpc_parameter)
     grpc_serialized_data = parameter_any.value
     return grpc_serialized_data

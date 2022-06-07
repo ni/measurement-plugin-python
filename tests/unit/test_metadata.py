@@ -17,7 +17,9 @@ from ni_measurement_service.measurement.info import DataType
         (DataType.Double, 1),
     ],
 )
-def test__default_value_different_from_type__validate__raises_type_exception(type, default_value):
+def test___default_value_different_from_type___validate___raises_type_exception(
+    type, default_value
+):
     """Tests if exceptions are raised when the default value provided is not matching the type.
 
     Args:
@@ -30,6 +32,7 @@ def test__default_value_different_from_type__validate__raises_type_exception(typ
     parameter_metadata = metadata.ParameterMetadata(
         "test_display_name", grpc_field_type, repeated, default_value
     )
+
     with pytest.raises(TypeError):
         metadata.validate_default_value_type(parameter_metadata)
 
@@ -44,7 +47,7 @@ def test__default_value_different_from_type__validate__raises_type_exception(typ
         (DataType.Double, 1.0),
     ],
 )
-def test__default_value_same_as_type__validate__raises_no_exception(type, default_value):
+def test___default_value_same_as_type___validate___raises_no_exception(type, default_value):
     """Tests if no exceptions are raised when the default value provided is matching the type.
 
     Args:
@@ -58,7 +61,4 @@ def test__default_value_same_as_type__validate__raises_no_exception(type, defaul
         "test_display_name", grpc_field_type, repeated, 1
     )
 
-    try:
-        metadata.validate_default_value_type(parameter_metadata)
-    except (TypeError):
-        assert False
+    metadata.validate_default_value_type(parameter_metadata)  # implicitly assert does not throw

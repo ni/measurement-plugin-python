@@ -18,7 +18,7 @@ from ni_measurement_service._internal.parameter import serializationstrategy
         (type_pb2.Field.TYPE_STRING, False, serializationstrategy.StringEncoder),
     ],
 )
-def test__serialization_strategy__get_encoder__returns_expected_encoder(
+def test___serialization_strategy___get_encoder___returns_expected_encoder(
     type, is_repeated, expected_encoder
 ):
     """Validate if proper encoder is returned.
@@ -48,7 +48,7 @@ def test__serialization_strategy__get_encoder__returns_expected_encoder(
         (type_pb2.Field.TYPE_STRING, False, serializationstrategy.StringDecoder),
     ],
 )
-def test__serialization_strategy__get_decoder__returns_expected_decoder(
+def test___serialization_strategy___get_decoder___returns_expected_decoder(
     type, is_repeated, expected_decoder
 ):
     """Validate if proper decoder is returned.
@@ -78,7 +78,7 @@ def test__serialization_strategy__get_decoder__returns_expected_decoder(
         (type_pb2.Field.TYPE_STRING, False, ""),
     ],
 )
-def test__serialization_strategy__get_default_value__returns_type_defaults(
+def test___serialization_strategy___get_default_value___returns_type_defaults(
     type, is_repeated, expected_default_value
 ):
     """Validate if the type default is returned.
