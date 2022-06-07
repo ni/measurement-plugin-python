@@ -57,19 +57,28 @@ def test__serializer__serialize_default_parameter__successful_serialization(defa
     _validate_serialized_bytes(custom_serialized_bytes, default_values)
 
 
-def test__serializer__deserialize_parameter_successful_deserialization():
+@pytest.mark.parametrize("values", [[2.0, 19.2, 3, 1, 2, 2, True, "TestString", [5.5, 3.3, 1.0]]])
+def test__serializer__deserialize_parameter_successful_deserialization(values):
     """Validates if the custom deserializer deserializes data same as protobuf deserialization."""
-    # Todo
-    pass
+
+    parameter = _get_test_parameter_by_id_data(values)
+    grpc_serialized_data = _get_grpc_serialized_data(values)
+    parameter_value_by_id = serializer.deserialize_parameters(parameter, grpc_serialized_data)
+    assert list(parameter_value_by_id.values()) == values
 
 
 def _validate_serialized_bytes(custom_serialized_bytes, values):
     # Serialization using gRPC Any
+    grpc_serialized_data = _get_grpc_serialized_data(values)
+    assert grpc_serialized_data == custom_serialized_bytes
+
+
+def _get_grpc_serialized_data(values):
     grpc_parameter = _get_test_grpc_message(values)
     parameter_any = Any()
     parameter_any.Pack(grpc_parameter)
     grpc_serialized_data = parameter_any.value
-    assert grpc_serialized_data == custom_serialized_bytes
+    return grpc_serialized_data
 
 
 def _get_test_parameter_by_id_data(default_values):
