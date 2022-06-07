@@ -22,25 +22,32 @@ class ServiceManager:
 
     Attributes
     ----------
-        measurement_info (MeasurementInfo): Measurement info
-        service_info (ServiceInfo): Service info
-        configuration_parameter_list (List): List of configuration parameters.
-        output_parameter_list (List): List of output parameters.
-        measure_function (Callable): Registered measurement function.
-        discovery_client (DiscoveryClient, optional): _description_. Defaults to None.
+        discovery_client (DiscoveryClient, optional): Instance of Discovery Client.
+        Defaults to None.
 
     """
 
-    def __init__(
+    def __init__(self, discovery_client: DiscoveryClient = None) -> None:
+        """Initialize Service Manager.
+
+        Args:
+        ----
+            discovery_client (DiscoveryClient, optional): Instance of Discovery Client.
+            Defaults to None.
+
+        """
+        self.discovery_client = discovery_client or DiscoveryClient()
+        return None
+
+    def serve(
         self,
         measurement_info: MeasurementInfo,
         service_info: ServiceInfo,
         configuration_parameter_list: List[ParameterMetadata],
         output_parameter_list: List[ParameterMetadata],
         measure_function: Callable,
-        discovery_client: DiscoveryClient = None,
-    ) -> None:
-        """Initialize Service Manager.
+    ) -> int:
+        """Host a gRPC service with the registered measurement method.
 
         Args:
         ----
@@ -49,41 +56,27 @@ class ServiceManager:
             configuration_parameter_list (List): List of configuration parameters.
             output_parameter_list (List): List of output parameters.
             measure_function (Callable): Registered measurement function.
-            discovery_client (DiscoveryClient, optional): Instance of Discovery Client.
-            Defaults to None.
-
-        """
-        self.measurement_info = measurement_info
-        self.service_info = service_info
-        self.configuration_parameter_list = configuration_parameter_list
-        self.output_parameter_list = output_parameter_list
-        self.measure_function = measure_function
-        self.discovery_client = discovery_client or DiscoveryClient()
-        return None
-
-    def serve(self) -> int:
-        """Host a gRPC service with the registered measurement method.
 
         Returns
         -------
             int: The port number of the server
 
         """
-        server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
+        self.server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
         Measurement_pb2_grpc.add_MeasurementServiceServicer_to_server(
             MeasurementServiceServicer(
-                self.measurement_info,
-                self.configuration_parameter_list,
-                self.output_parameter_list,
-                self.measure_function,
+                measurement_info,
+                configuration_parameter_list,
+                output_parameter_list,
+                measure_function,
             ),
-            server,
+            self.server,
         )
-        port = server.add_insecure_port("[::]:0")
-        server.start()
+        port = self.server.add_insecure_port("[::]:0")
+        self.server.start()
         print("Hosted Service at Port:", port)
         self.discovery_client.register_measurement_service(
-            port, self.service_info, self.measurement_info.display_name
+            port, service_info, measurement_info.display_name
         )
         if os.name == "nt":
             console_exit_functions.setup_unregister_on_console_close(self.close_service)
@@ -92,7 +85,7 @@ class ServiceManager:
     def close_service(self) -> None:
         """Close the Service after un-registering with discovery service and cleanups."""
         self.discovery_client.unregister_service()
-        grpc.server.stop(5)
+        self.server.stop(5)
         print("Measurement service exited.")
         time.sleep(2)
         return None

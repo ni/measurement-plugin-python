@@ -33,9 +33,7 @@ class DiscoveryClient:
 
         """
         channel = grpc.insecure_channel(_DISCOVERY_SERVICE_ADDRESS)
-        self._stub = registry_service_stub or DiscoveryServices_pb2_grpc.RegistryServiceStub(
-            channel
-        )
+        self.stub = registry_service_stub or DiscoveryServices_pb2_grpc.RegistryServiceStub(channel)
 
     def register_measurement_service(
         self, service_port: str, service_info: ServiceInfo, display_name: str
