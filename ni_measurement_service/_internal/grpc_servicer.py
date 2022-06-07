@@ -1,10 +1,8 @@
 """Contains Measurement Service Implementation class and method to host the service.
 """
 import inspect
-from concurrent import futures
-from typing import Any, Callable, Dict, List, Tuple
+from typing import Any, Callable, Dict, List
 
-import grpc
 from google.protobuf import any_pb2
 
 from ni_measurement_service._internal.parameter import serializer
@@ -129,7 +127,7 @@ class MeasurementServiceServicer(Measurement_pb2_grpc.MeasurementServiceServicer
         )
         output_value = self.measure_function(**mapping_by_variable_name)
         output_bytestring = serializer.serialize_parameters(self.output_metadata, output_value)
-        # Frame the respone and send back.
+        # Frame the response and send back.
         output_any = any_pb2.Any()
         output_any.value = output_bytestring
         return_value = Measurement_pb2.MeasureResponse(outputs=output_any)
@@ -147,7 +145,7 @@ class MeasurementServiceServicer(Measurement_pb2_grpc.MeasurementServiceServicer
 
         Returns
         -------
-            Dict[str, Any]: Mapping by Paramters names based on the measurement function.
+            Dict[str, Any]: Mapping by Parameters names based on the measurement function.
 
         """
         signature = inspect.signature(measure_function)
@@ -155,35 +153,3 @@ class MeasurementServiceServicer(Measurement_pb2_grpc.MeasurementServiceServicer
         for i, parameter in enumerate(signature.parameters.values(), start=1):
             mapping_by_variable_name[parameter.name] = mapping_by_id[i]
         return mapping_by_variable_name
-
-
-def serve(
-    measurement_info: MeasurementInfo,
-    configuration_parameter_list: List[ParameterMetadata],
-    output_parameter_list: List[ParameterMetadata],
-    measure_function: Callable,
-) -> Tuple[grpc.Server, int]:
-    """Host a gRPC service with the registered measurement method.
-
-    Args
-    ----
-        measurement_info (MeasurementInfo): Measurement info
-        configuration_parameter_list (List): List of configuration parameters.
-        output_parameter_list (List): List of output parameters.
-        measure_function (Callable): Registered measurement function.
-
-    Returns
-    -------
-        Tuple(grpc.Server, int): Tuple of the gRPC server and the port number of the server
-
-    """
-    server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-    Measurement_pb2_grpc.add_MeasurementServiceServicer_to_server(
-        MeasurementServiceServicer(
-            measurement_info, configuration_parameter_list, output_parameter_list, measure_function
-        ),
-        server,
-    )
-    port = server.add_insecure_port("[::]:0")
-    server.start()
-    return server, port
