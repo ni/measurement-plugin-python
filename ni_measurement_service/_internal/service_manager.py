@@ -17,7 +17,7 @@ if os.name == "nt":
 # fmt: on
 
 
-class ServiceManager:
+class GrpcService:
     """Class that manages hosting the measurement as service and closing service.
 
     Attributes
@@ -37,9 +37,8 @@ class ServiceManager:
 
         """
         self.discovery_client = discovery_client or DiscoveryClient()
-        return None
 
-    def serve(
+    def start(
         self,
         measurement_info: MeasurementInfo,
         service_info: ServiceInfo,
@@ -79,13 +78,12 @@ class ServiceManager:
             port, service_info, measurement_info.display_name
         )
         if os.name == "nt":
-            console_exit_functions.setup_unregister_on_console_close(self.close_service)
+            console_exit_functions.setup_unregister_on_console_close(self.stop)
         return port
 
-    def close_service(self) -> None:
+    def stop(self) -> None:
         """Close the Service after un-registering with discovery service and cleanups."""
         self.discovery_client.unregister_service()
         self.server.stop(5)
         print("Measurement service exited.")
         time.sleep(2)
-        return None

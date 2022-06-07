@@ -3,7 +3,7 @@
 from typing import Any, Callable
 
 from ni_measurement_service._internal.parameter import metadata as parameter_metadata
-from ni_measurement_service._internal.service_manager import ServiceManager
+from ni_measurement_service._internal.service_manager import GrpcService
 from ni_measurement_service.measurement.info import MeasurementInfo, ServiceInfo, DataType
 
 
@@ -33,7 +33,7 @@ class MeasurementService:
         self.service_info: ServiceInfo = service_info
         self.configuration_parameter_list: list = []
         self.output_parameter_list: list = []
-        self.service_manager = ServiceManager()
+        self.grpc_service = GrpcService()
 
     def register_measurement(self, measurement_function: Callable) -> Callable:
         """Register the function as the measurement. Recommended to use as a decorator.
@@ -112,7 +112,7 @@ class MeasurementService:
         """
         if self.measure_function is None:
             raise Exception("Error, must register measurement method.")
-        self.service_manager.serve(
+        self.grpc_service.start(
             self.measurement_info,
             self.service_info,
             self.configuration_parameter_list,
@@ -123,4 +123,4 @@ class MeasurementService:
 
     def close_service(self) -> None:
         """Close the Service after un-registering with discovery service and cleanups."""
-        self.service_manager.close_service()
+        self.grpc_service.stop()
