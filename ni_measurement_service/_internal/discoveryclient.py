@@ -1,7 +1,8 @@
 """ Contains API to register and un-register measurement service with discovery service.
 """
-import grpc
 import logging
+
+import grpc
 
 from ni_measurement_service._internal.stubs import DiscoveryServices_pb2
 from ni_measurement_service._internal.stubs import DiscoveryServices_pb2_grpc

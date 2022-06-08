@@ -4,8 +4,8 @@ import inspect
 from typing import Any, Callable, Dict, List, Tuple
 
 import grpc
-from grpc.framework.foundation import logging_pool
 from google.protobuf import any_pb2
+from grpc.framework.foundation import logging_pool
 
 from ni_measurement_service._internal.parameter import serializer
 from ni_measurement_service._internal.parameter.metadata import ParameterMetadata
