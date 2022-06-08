@@ -8,6 +8,7 @@ import logging
 import os
 import sys
 
+import click
 import hightime
 import nidcpower
 
@@ -93,23 +94,15 @@ def print_fetched_measurements(measurements):
     print(layout.format("In compliance", measurements[0].in_compliance, ""))
 
 
-def main():
-    """Host the measurement service."""
-    import argparse
-
-    parser = argparse.ArgumentParser(description="DC Measurement Service (Screen UI)")
-    parser.add_argument(
-        "--verbose",
-        "-v",
-        action="count",
-        default=0,
-        help="Enable verbose logging. Repeat to increase verbosity.",
-    )
-    args = parser.parse_args()
-
-    if args.verbose > 1:
+@click.command
+@click.option(
+    "-v", "--verbose", count=True, help="Enable verbose logging. Repeat to increase verbosity."
+)
+def main(verbose: int):
+    """Host the DC Measurement (Screen UI) service."""
+    if verbose > 1:
         level = logging.DEBUG
-    elif args.verbose == 1:
+    elif verbose == 1:
         level = logging.INFO
     else:
         level = logging.WARNING

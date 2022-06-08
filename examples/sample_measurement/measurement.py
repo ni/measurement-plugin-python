@@ -7,6 +7,8 @@ import logging
 import os
 import sys
 
+import click
+
 import ni_measurement_service as nims
 
 
@@ -52,23 +54,15 @@ def measure(float_input, double_array_input, bool_input, string_input):
     return [float_output, float_array_output, bool_output, string_output]
 
 
-def main():
-    """Host the measurement service."""
-    import argparse
-
-    parser = argparse.ArgumentParser(description="Sample Measurement Service")
-    parser.add_argument(
-        "--verbose",
-        "-v",
-        action="count",
-        default=0,
-        help="Enable verbose logging. Repeat to increase verbosity.",
-    )
-    args = parser.parse_args()
-
-    if args.verbose > 1:
+@click.command
+@click.option(
+    "-v", "--verbose", count=True, help="Enable verbose logging. Repeat to increase verbosity."
+)
+def main(verbose: int):
+    """Host the Sample Measurement service."""
+    if verbose > 1:
         level = logging.DEBUG
-    elif args.verbose == 1:
+    elif verbose == 1:
         level = logging.INFO
     else:
         level = logging.WARNING
