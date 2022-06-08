@@ -1,6 +1,7 @@
 """ Contains API to register and un-register measurement service with discovery service.
 """
 import grpc
+import logging
 
 from ni_measurement_service._internal.stubs import DiscoveryServices_pb2
 from ni_measurement_service._internal.stubs import DiscoveryServices_pb2_grpc
@@ -11,6 +12,7 @@ from ni_measurement_service.measurement.info import ServiceInfo
 _DISCOVERY_SERVICE_ADDRESS = "localhost:42000"
 _PROVIDED_MEASUREMENT_SERVICE = "ni.measurements.v1.MeasurementService"
 _registration_id = None
+_logger = logging.getLogger(__name__)
 
 
 def register_measurement_service(
@@ -47,9 +49,9 @@ def register_measurement_service(
         register_request = stub.RegisterService(request)
         global _registration_id
         _registration_id = register_request.registration_id
-        print("Successfully registered with DiscoveryService")
+        _logger.info("Successfully registered with discovery service.")
     except (grpc._channel._InactiveRpcError):
-        print(
+        _logger.error(
             "Unable to register with discovery service. Possible reasons : Discovery Service not Available."
         )
     return None
@@ -69,9 +71,9 @@ def unregister_service():
         request = DiscoveryServices_pb2.UnregisterServiceRequest(registration_id=_registration_id)
         # Un-registration RPC Call
         stub.UnregisterService(request)
-        print("Successfully unregistered with DiscoveryService")
+        _logger.info("Successfully unregistered with discovery service.")
     except (grpc._channel._InactiveRpcError):
-        print(
+        _logger.error(
             "Unable to unregister with discovery service. Possible reasons : Discovery Service not Available."
         )
     return None

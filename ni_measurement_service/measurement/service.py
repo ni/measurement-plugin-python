@@ -1,5 +1,6 @@
 """Framework to host measurement service."""
 # fmt: off
+import logging
 import os
 import time
 from typing import Any, Callable
@@ -11,6 +12,9 @@ if os.name == "nt":
     from ni_measurement_service._internal.utilities import consoleexitfunctions
 from ni_measurement_service.measurement.info import MeasurementInfo, ServiceInfo, DataType
 # fmt: on
+
+
+_logger = logging.getLogger(__name__)
 
 
 class MeasurementService:
@@ -124,7 +128,7 @@ class MeasurementService:
             self.output_parameter_list,
             self.measure_function,
         )
-        print("Hosted Service at Port:", port)
+        _logger.info("Measurement service hosted on port: %d", port)
         discoveryclient.register_measurement_service(
             port, self.service_info, self.measurement_info.display_name
         )
@@ -136,6 +140,6 @@ class MeasurementService:
         """Close the Service after un-registering with discovery service and cleanups."""
         discoveryclient.unregister_service()
         server.stop(5)
-        print("Measurement service exited.")
+        _logger.info("Measurement service closed.")
         time.sleep(2)
         return None
