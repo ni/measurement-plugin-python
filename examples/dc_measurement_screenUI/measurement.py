@@ -96,9 +96,15 @@ def print_fetched_measurements(measurements):
 def main():
     """Host the measurement service."""
     import argparse
+
     parser = argparse.ArgumentParser(description="DC Measurement Service (Screen UI)")
-    parser.add_argument("--verbose", "-v", action="count", default=0,
-                        help="Enable verbose logging. Repeat to increase verbosity.")
+    parser.add_argument(
+        "--verbose",
+        "-v",
+        action="count",
+        default=0,
+        help="Enable verbose logging. Repeat to increase verbosity.",
+    )
     args = parser.parse_args()
 
     if args.verbose > 1:

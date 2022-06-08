@@ -55,9 +55,15 @@ def measure(float_input, double_array_input, bool_input, string_input):
 def main():
     """Host the measurement service."""
     import argparse
+
     parser = argparse.ArgumentParser(description="Sample Measurement Service")
-    parser.add_argument("--verbose", "-v", action="count", default=0,
-                        help="Enable verbose logging. Repeat to increase verbosity.")
+    parser.add_argument(
+        "--verbose",
+        "-v",
+        action="count",
+        default=0,
+        help="Enable verbose logging. Repeat to increase verbosity.",
+    )
     args = parser.parse_args()
 
     if args.verbose > 1:
