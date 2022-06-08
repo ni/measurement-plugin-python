@@ -6,6 +6,7 @@ User can Import driver and 3rd Party Packages based on requirements.
 
 import logging
 import os
+import sys
 
 import hightime
 import nidcpower
@@ -89,12 +90,26 @@ def print_fetched_measurements(measurements):
     print(layout.format("In compliance", measurements[0].in_compliance, ""))
 
 
-"""
-Driver Method.
-"""
+def main():
+    """Host the measurement service."""
+    import argparse
+    parser = argparse.ArgumentParser(description="DC Measurement Service (LabVIEW UI)")
+    parser.add_argument("--verbose", "-v", action="count", default=0,
+                        help="Enable verbose logging. Repeat to increase verbosity.")
+    args = parser.parse_args()
 
-if __name__ == "__main__":
-    logging.basicConfig(format="%(levelname)s: %(message)s", level=logging.DEBUG)
+    if args.verbose > 1:
+        level = logging.DEBUG
+    elif args.verbose == 1:
+        level = logging.INFO
+    else:
+        level = logging.WARNING
+    logging.basicConfig(format="%(asctime)s %(levelname)s: %(message)s", level=level)
+
     dc_measurement_service.host_service()
     input("Press enter to close the measurement service.\n")
     dc_measurement_service.close_service()
+
+
+if __name__ == "__main__":
+    sys.exit(main())
