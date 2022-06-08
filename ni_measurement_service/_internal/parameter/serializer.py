@@ -6,7 +6,7 @@ from typing import Any, Dict, List
 
 from google.protobuf.internal import encoder
 
-from ni_measurement_service._internal.parameter import serializationstrategy
+from ni_measurement_service._internal.parameter import serialization_strategy
 from ni_measurement_service._internal.parameter.metadata import ParameterMetadata
 
 
@@ -58,11 +58,11 @@ def serialize_parameters(
     serialize_buffer = BytesIO()  # inner_encoder updates the serialize_buffer
     for i, parameter in enumerate(parameter_value):
         parameter_metadata = parameter_metadata_dict[i + 1]
-        encoder = serializationstrategy.Context.get_encoder(
+        encoder = serialization_strategy.Context.get_encoder(
             parameter_metadata.type,
             parameter_metadata.repeated,
         )
-        type_default_value = serializationstrategy.Context.get_type_default(
+        type_default_value = serialization_strategy.Context.get_type_default(
             parameter_metadata.type,
             parameter_metadata.repeated,
         )
@@ -139,7 +139,7 @@ def _get_overlapping_parameters(
             )
         type = parameter_metadata_dict[field_index].type
         is_repeated = parameter_metadata_dict[field_index].repeated
-        decoder = serializationstrategy.Context.get_decoder(type, is_repeated)
+        decoder = serialization_strategy.Context.get_decoder(type, is_repeated)
         inner_decoder = decoder(field_index, field_index)
         parameter_bytes_io = BytesIO(parameter_bytes)
         parameter_bytes_memory_view = parameter_bytes_io.getbuffer()
@@ -171,7 +171,7 @@ def _get_missing_parameters(
     missing_parameters = {}
     for key, value in parameter_metadata_dict.items():
         if key not in parameter_by_id:
-            missing_parameters[value.name] = serializationstrategy.Context.get_type_default(
+            missing_parameters[value.name] = serialization_strategy.Context.get_type_default(
                 value.type, value.repeated
             )
     return missing_parameters
