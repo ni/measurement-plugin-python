@@ -3,6 +3,7 @@
 User can Import driver and 3Party Packages based on requirements.
 
 """
+import logging
 import os
 
 import ni_measurement_service as nims
@@ -53,6 +54,7 @@ def measure(float_input, double_array_input, bool_input, string_input):
 """Driver Method.
 """
 if __name__ == "__main__":
+    logging.basicConfig(format="%(levelname)s: %(message)s", level=logging.DEBUG)
     sample_measurement_service.host_service()
-    input("To Exit during the Service lifetime, Press Enter.\n")
+    input("Press enter to close the measurement service.\n")
     sample_measurement_service.close_service()

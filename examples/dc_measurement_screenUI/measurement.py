@@ -4,6 +4,7 @@ User can Import driver and 3rd Party Packages based on requirements.
 
 """
 
+import logging
 import os
 
 import hightime
@@ -96,6 +97,7 @@ Driver Method.
 """
 
 if __name__ == "__main__":
+    logging.basicConfig(format="%(levelname)s: %(message)s", level=logging.DEBUG)
     dc_measurement_service.host_service()
-    input("To Exit during the Service lifetime, Press Enter.\n")
+    input("Press enter to close the measurement service.\n")
     dc_measurement_service.close_service()
