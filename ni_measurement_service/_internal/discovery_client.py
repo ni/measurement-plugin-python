@@ -69,13 +69,16 @@ class DiscoveryClient:
             )
             request.provided_services.append(_PROVIDED_MEASUREMENT_SERVICE)
             # Registration RPC Call
-            register_request = self.stub.RegisterService(request)
-            self.registration_id = register_request.registration_id
+            register_response = self.stub.RegisterService(request)
+            self.registration_id = register_response.registration_id
             print("Successfully registered with DiscoveryService")
         except (grpc._channel._InactiveRpcError):
             print(
                 "Unable to register with discovery service. Possible reasons : Discovery Service not Available."
             )
+            return False
+        except (Exception):
+            print("Error in Registering measurement.")
             return False
         return True
 
@@ -101,5 +104,8 @@ class DiscoveryClient:
             print(
                 "Unable to unregister with discovery service. Possible reasons : Discovery Service not Available."
             )
+            return False
+        except (Exception):
+            print("Error in Registering measurement.")
             return False
         return True
