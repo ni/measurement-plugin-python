@@ -1,10 +1,10 @@
 """Contains Measurement Service Implementation class and method to host the service.
 """
 import inspect
-from concurrent import futures
 from typing import Any, Callable, Dict, List, Tuple
 
 import grpc
+from grpc.framework.foundation import logging_pool
 from google.protobuf import any_pb2
 
 from ni_measurement_service._internal.parameter import serializer
@@ -177,7 +177,7 @@ def serve(
         Tuple(grpc.Server, int): Tuple of the gRPC server and the port number of the server
 
     """
-    server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
+    server = grpc.server(logging_pool.pool(max_workers=10))
     Measurement_pb2_grpc.add_MeasurementServiceServicer_to_server(
         MeasurementServiceServicer(
             measurement_info, configuration_parameter_list, output_parameter_list, measure_function
