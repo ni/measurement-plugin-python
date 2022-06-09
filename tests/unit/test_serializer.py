@@ -25,7 +25,7 @@ def test___serializer___serialize_parameter___successful_serialization(test_valu
 
     """
     default_values = [2.0, 19.2, 3, 1, 2, 2, True, "TestString", [5.5, 3.3, 1]]
-    parameter = _get_test_parameter_by_id_data(default_values)
+    parameter = _get_test_parameter_by_id(default_values)
 
     # Custom Serialization
     custom_serialized_bytes = serializer.serialize_parameters(parameter, test_values)
@@ -49,7 +49,7 @@ def test___serializer___serialize_default_parameter___successful_serialization(d
         This should match the "MeasurementParameter" message defined in test.proto.
 
     """
-    parameter = _get_test_parameter_by_id_data(default_values)
+    parameter = _get_test_parameter_by_id(default_values)
 
     # Custom Serialization
     custom_serialized_bytes = serializer.serialize_default_values(parameter)
@@ -60,7 +60,7 @@ def test___serializer___serialize_default_parameter___successful_serialization(d
 @pytest.mark.parametrize("values", [[2.0, 19.2, 3, 1, 2, 2, True, "TestString", [5.5, 3.3, 1.0]]])
 def test___serializer___deserialize_parameter___successful_deserialization(values):
     """Validates if the custom deserializer deserializes data same as protobuf deserialization."""
-    parameter = _get_test_parameter_by_id_data(values)
+    parameter = _get_test_parameter_by_id(values)
     grpc_serialized_data = _get_grpc_serialized_data(values)
 
     parameter_value_by_id = serializer.deserialize_parameters(parameter, grpc_serialized_data)
@@ -82,7 +82,7 @@ def _get_grpc_serialized_data(values):
     return grpc_serialized_data
 
 
-def _get_test_parameter_by_id_data(default_values):
+def _get_test_parameter_by_id(default_values):
     parameter_by_id = {
         1: ParameterMetadata(
             display_name="float_data",
