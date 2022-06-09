@@ -41,14 +41,14 @@ def deserialize_parameters(
 
 
 def serialize_parameters(
-    parameter_metadata_dict: Dict[id, ParameterMetadata], parameter_value: List[Any]
+    parameter_metadata_dict: Dict[int, ParameterMetadata], parameter_value: List[Any]
 ) -> Bytes:
     """Serialize the parameter values in same order based on the metadata_dict.
 
     Args
     ----
-        parameter_metadata_dict (Dict[id, ParameterMetadata]): Parameter metadata by ID.
-        parameter_value (_type_): List of Parameter values that need to be serialized.
+        parameter_metadata_dict (Dict[int, ParameterMetadata]): Parameter metadata by ID.
+        parameter_value (List[Any]): List of Parameter values that need to be serialized.
 
     Returns
     -------
