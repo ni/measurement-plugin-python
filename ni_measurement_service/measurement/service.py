@@ -1,16 +1,10 @@
 """Framework to host measurement service."""
-# fmt: off
-import os
-import time
+
 from typing import Any, Callable
 
-from ni_measurement_service._internal import discoveryclient
-from ni_measurement_service._internal import grpc_servicer
 from ni_measurement_service._internal.parameter import metadata as parameter_metadata
-if os.name == "nt":
-    from ni_measurement_service._internal.utilities import consoleexitfunctions
+from ni_measurement_service._internal.service_manager import GrpcService
 from ni_measurement_service.measurement.info import MeasurementInfo, ServiceInfo, DataType
-# fmt: on
 
 
 class MeasurementService:
@@ -39,6 +33,7 @@ class MeasurementService:
         self.service_info: ServiceInfo = service_info
         self.configuration_parameter_list: list = []
         self.output_parameter_list: list = []
+        self.grpc_service = GrpcService()
 
     def register_measurement(self, measurement_function: Callable) -> Callable:
         """Register the function as the measurement. Recommended to use as a decorator.
@@ -117,25 +112,15 @@ class MeasurementService:
         """
         if self.measure_function is None:
             raise Exception("Error, must register measurement method.")
-        global server
-        server, port = grpc_servicer.serve(
+        self.grpc_service.start(
             self.measurement_info,
+            self.service_info,
             self.configuration_parameter_list,
             self.output_parameter_list,
             self.measure_function,
         )
-        print("Hosted Service at Port:", port)
-        discoveryclient.register_measurement_service(
-            port, self.service_info, self.measurement_info.display_name
-        )
-        if os.name == "nt":
-            consoleexitfunctions.setup_unregister_on_console_close(self.close_service)
         return None
 
     def close_service(self) -> None:
         """Close the Service after un-registering with discovery service and cleanups."""
-        discoveryclient.unregister_service()
-        server.stop(5)
-        print("Measurement service exited.")
-        time.sleep(2)
-        return None
+        self.grpc_service.stop()
