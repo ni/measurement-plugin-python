@@ -15,7 +15,7 @@ _TEST_DISPLAY_NAME = "TestMeasurement"
 
 def test___discovery_service_available___register_service___registration_success():
     """Test the successful registration when the discovery service is available."""
-    fake_registry_service_stub = FakeRegistryServiceStubError()
+    fake_registry_service_stub = FakeRegistryServiceStub()
     discovery_client_obj = discovery_client.DiscoveryClient(fake_registry_service_stub)
 
     registration_success_flag = discovery_client_obj.register_measurement_service(

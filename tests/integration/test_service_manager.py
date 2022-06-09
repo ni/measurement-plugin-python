@@ -1,10 +1,12 @@
+"""Contains test to validate service_manager.py."""
+from examples.sample_measurement import measurement
+
 from ni_measurement_service._internal.discovery_client import DiscoveryClient
 from ni_measurement_service._internal.service_manager import GrpcService
 from tests.utilities.fake_registry_service import (
     FakeRegistryServiceStub,
     FakeRegistryServiceStubError,
 )
-from examples.sample_measurement import measurement
 
 
 def test___grpc_service___start_service___service_hosted():
@@ -21,7 +23,7 @@ def test___grpc_service___start_service___service_hosted():
 
 
 def test___grpc_service_without_discovery_service___start_service___service_hosted():
-    """Test to validate if measurement service is started despite the discovery service not available."""
+    """Test to validate if measurement service start when the discovery service not available."""
     grpc_service = GrpcService(DiscoveryClient(FakeRegistryServiceStubError()))
 
     grpc_service.start(
