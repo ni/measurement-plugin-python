@@ -29,6 +29,9 @@ class GrpcService:
         ----
             discovery_client (DiscoveryClient, optional): Instance of Discovery Client.
             Defaults to None.
+            servicer(MeasurementServiceServicer): The gRPC implementation class of the service.
+            Used in tests.
+            port(str) : The port number of the hosted service.Used in Tests.
 
         """
         self.discovery_client = discovery_client or DiscoveryClient()
@@ -57,16 +60,14 @@ class GrpcService:
 
         """
         self.server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-        Measurement_pb2_grpc.add_MeasurementServiceServicer_to_server(
-            MeasurementServiceServicer(
-                measurement_info,
-                configuration_parameter_list,
-                output_parameter_list,
-                measure_function,
-            ),
-            self.server,
+        self.servicer = MeasurementServiceServicer(
+            measurement_info,
+            configuration_parameter_list,
+            output_parameter_list,
+            measure_function,
         )
-        port = self.server.add_insecure_port("[::]:0")
+        Measurement_pb2_grpc.add_MeasurementServiceServicer_to_server(self.servicer, self.server)
+        port = str(self.server.add_insecure_port("[::]:0"))
         self.server.start()
         print("Hosted Service at Port:", port)
         self.discovery_client.register_measurement_service(

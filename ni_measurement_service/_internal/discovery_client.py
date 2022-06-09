@@ -56,7 +56,7 @@ class DiscoveryClient:
             # Service Location
             service_location = ServiceLocation_pb2.ServiceLocation()
             service_location.location = "localhost"
-            service_location.insecure_port = str(service_port)
+            service_location.insecure_port = service_port
             # Service Descriptor
             service_descriptor = DiscoveryServices_pb2.ServiceDescriptor()
             service_descriptor.service_id = service_info.service_id

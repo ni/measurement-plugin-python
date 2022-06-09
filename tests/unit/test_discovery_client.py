@@ -79,7 +79,7 @@ class FakeRegistrationResponse:
 class FakeRegistryServiceStub:
     """Fake Registry Service Stub."""
 
-    def RegisterService(self, request):  # noqa
+    def RegisterService(self, request):  # noqa N802:inherited method names-autogen baseclass
         """Fake gRPC registration call to discovery service."""
         self.request = request
         response = FakeRegistrationResponse()
@@ -87,7 +87,7 @@ class FakeRegistryServiceStub:
         self.registration_done = True
         return response
 
-    def UnregisterService(self, request):  # noqa
+    def UnregisterService(self, request):  # noqa N802:inherited method names-autogen baseclass
         """Fake gRPC un-registration call to discovery service."""
         pass
 
@@ -95,10 +95,10 @@ class FakeRegistryServiceStub:
 class FakeRegistryServiceStubError(FakeRegistryServiceStub):
     """Fake Registry Service Stub that throws error to mimic unavailability of discovery service."""
 
-    def RegisterService(self, request):  # noqa
+    def RegisterService(self, request):  # noqa N802:inherited method names-autogen baseclass
         """Fake gRPC registration call to discovery service."""
         raise Exception("TestException")
 
-    def UnregisterService(self, request):  # noqa
+    def UnregisterService(self, request):  # noqa N802:inherited method names-autogen baseclass
         """Fake gRPC un-registration call to discovery service."""
         raise Exception("TestException")
