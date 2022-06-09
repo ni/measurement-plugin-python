@@ -1,4 +1,6 @@
 """Tests to validate measurement service. Uses the Sample Measurement Example."""
+from os import path
+
 import grpc
 import pytest
 from examples.sample_measurement import measurement
@@ -6,6 +8,7 @@ from google.protobuf import any_pb2
 
 from ni_measurement_service._internal.stubs import Measurement_pb2
 from ni_measurement_service._internal.stubs import Measurement_pb2_grpc
+from ni_measurement_service.measurement.info import UIFileType
 from tests.assets import sample_measurement_test_pb2
 
 
@@ -17,7 +20,7 @@ def test___measurement_service___get_metadata_rpc_call___returns_metadata():
         stub = Measurement_pb2_grpc.MeasurementServiceStub(channel)
         get_metadata_response = stub.GetMetadata(Measurement_pb2.GetMetadataRequest())
 
-    assert get_metadata_response.measurement_details.display_name == "SampleMeasurement"
+    _validate_metadata_response(get_metadata_response)
 
 
 @pytest.mark.parametrize(
@@ -77,3 +80,25 @@ def _get_serialized_measurement_parameters(float_in, double_array_in, bool_in, s
     temp_any.Pack(config_params)
     grpc_serialized_data = temp_any.value
     return grpc_serialized_data
+
+
+def _validate_metadata_response(get_metadata_response):
+    assert get_metadata_response.measurement_details.display_name == "SampleMeasurement"
+    assert get_metadata_response.measurement_details.version == "0.1.0.0"
+    assert get_metadata_response.measurement_details.measurement_type == "Sample"
+    assert get_metadata_response.measurement_details.product_type == "Sample"
+
+    assert (
+        get_metadata_response.measurement_parameters.configuration_parameters_messagetype
+        == "ni.measurements.v1.MeasurementConfigurations"
+    )
+    assert (
+        get_metadata_response.measurement_parameters.outputs_message_type
+        == "ni.measurements.v1.MeasurementOutputs"
+    )
+    assert len(get_metadata_response.measurement_parameters.configuration_parameters) == 4
+    assert len(get_metadata_response.measurement_parameters.outputs) == 4
+
+    url = get_metadata_response.user_interface_details.configuration_ui_url.split("//")
+    assert url[0] + "//" == UIFileType.ScreenFile.value
+    assert path.exists(url[1])
