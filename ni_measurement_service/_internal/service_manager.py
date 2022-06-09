@@ -1,5 +1,3 @@
-# fmt: off
-import os
 import time
 from concurrent import futures
 from typing import Callable, List
@@ -10,11 +8,8 @@ from ni_measurement_service._internal.discovery_client import DiscoveryClient
 from ni_measurement_service._internal.grpc_servicer import MeasurementServiceServicer
 from ni_measurement_service._internal.parameter.metadata import ParameterMetadata
 from ni_measurement_service._internal.stubs import Measurement_pb2_grpc
+from ni_measurement_service._internal.utilities import console_exit_functions
 from ni_measurement_service.measurement.info import MeasurementInfo, ServiceInfo
-if os.name == "nt":
-    from ni_measurement_service._internal.utilities import console_exit_functions
-
-# fmt: on
 
 
 class GrpcService:
@@ -77,8 +72,8 @@ class GrpcService:
         self.discovery_client.register_measurement_service(
             port, service_info, measurement_info.display_name
         )
-        if os.name == "nt":
-            console_exit_functions.setup_unregister_on_console_close(self.stop)
+
+        console_exit_functions.setup_unregister_on_console_close(self.stop)
         return port
 
     def stop(self) -> None:
