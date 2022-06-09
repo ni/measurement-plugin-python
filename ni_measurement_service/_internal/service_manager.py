@@ -75,6 +75,7 @@ class GrpcService:
         )
 
         console_exit_functions.setup_unregister_on_console_close(self.stop)
+        self.port = port
         return port
 
     def stop(self) -> None:
