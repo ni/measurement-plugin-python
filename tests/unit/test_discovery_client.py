@@ -1,9 +1,11 @@
 """Contains tests to validate the discovery_client.py.
 """
-import uuid
-
 from ni_measurement_service._internal import discovery_client
 from ni_measurement_service.measurement.info import ServiceInfo
+from tests.utilities.fake_registry_service import (
+    FakeRegistryServiceStub,
+    FakeRegistryServiceStubError,
+)
 
 
 _TEST_SERVICE_PORT = "9999"
@@ -13,7 +15,7 @@ _TEST_DISPLAY_NAME = "TestMeasurement"
 
 def test___discovery_service_available___register_service___registration_success():
     """Test the successful registration when the discovery service is available."""
-    fake_registry_service_stub = FakeRegistryServiceStub()
+    fake_registry_service_stub = FakeRegistryServiceStubError()
     discovery_client_obj = discovery_client.DiscoveryClient(fake_registry_service_stub)
 
     registration_success_flag = discovery_client_obj.register_measurement_service(
@@ -68,37 +70,3 @@ def _validate_grpc_request(request):
     assert request.service_description.description_url == _TEST_SERVICE_INFO.description_url
     assert request.service_description.name == _TEST_DISPLAY_NAME
     assert discovery_client._PROVIDED_MEASUREMENT_SERVICE in request.provided_services
-
-
-class FakeRegistrationResponse:
-    """Fake Registration Response."""
-
-    registration_id: str
-
-
-class FakeRegistryServiceStub:
-    """Fake Registry Service Stub."""
-
-    def RegisterService(self, request):  # noqa N802:inherited method names-autogen baseclass
-        """Fake gRPC registration call to discovery service."""
-        self.request = request
-        response = FakeRegistrationResponse()
-        response.registration_id = str(uuid.uuid4())
-        self.registration_done = True
-        return response
-
-    def UnregisterService(self, request):  # noqa N802:inherited method names-autogen baseclass
-        """Fake gRPC un-registration call to discovery service."""
-        pass
-
-
-class FakeRegistryServiceStubError(FakeRegistryServiceStub):
-    """Fake Registry Service Stub that throws error to mimic unavailability of discovery service."""
-
-    def RegisterService(self, request):  # noqa N802:inherited method names-autogen baseclass
-        """Fake gRPC registration call to discovery service."""
-        raise Exception("TestException")
-
-    def UnregisterService(self, request):  # noqa N802:inherited method names-autogen baseclass
-        """Fake gRPC un-registration call to discovery service."""
-        raise Exception("TestException")
