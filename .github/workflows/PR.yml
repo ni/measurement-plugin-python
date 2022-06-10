@@ -62,5 +62,5 @@ jobs:
           key: ${{ runner.os }}-poetry-${{ hashFiles('poetry.lock') }}
       - name: Install the Package
         run: poetry install -vvv
-      - name: Run tests
-        run: poetry run pytest -v
+      - name: Run tests with coverage summary
+        run: poetry run pytest -v --cov=ni_measurement_service .\tests\
