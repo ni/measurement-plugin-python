@@ -100,5 +100,5 @@ def _validate_metadata_response(get_metadata_response):
     assert len(get_metadata_response.measurement_parameters.outputs) == 4
 
     url = get_metadata_response.user_interface_details.configuration_ui_url.split("//")
-    assert url[0] + "//" == UIFileType.ScreenFile.value
+    assert url[0] + "//" == UIFileType.MeasurementUI.value
     assert path.exists(url[1])
