@@ -17,9 +17,7 @@ measurement_info = nims.MeasurementInfo(
     version="0.1.0.0",
     measurement_type="DC",
     product_type="ADC",
-    ui_file_path=os.path.join(
-        os.path.dirname(os.path.abspath(__file__)), "DCMeasurement.measui"
-    ),
+    ui_file_path=os.path.join(os.path.dirname(os.path.abspath(__file__)), "DCMeasurement.measui"),
     ui_file_type=nims.UIFileType.MeasurementUI,
 )
 
