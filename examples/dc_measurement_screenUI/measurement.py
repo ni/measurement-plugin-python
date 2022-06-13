@@ -18,9 +18,9 @@ measurement_info = nims.MeasurementInfo(
     measurement_type="DC",
     product_type="ADC",
     ui_file_path=os.path.join(
-        os.path.dirname(os.path.abspath(__file__)), "DCMeasurementScreen.isscr"
+        os.path.dirname(os.path.abspath(__file__)), "DCMeasurement.measui"
     ),
-    ui_file_type=nims.UIFileType.ScreenFile,
+    ui_file_type=nims.UIFileType.MeasurementUI,
 )
 
 service_info = nims.ServiceInfo(

@@ -9,7 +9,7 @@ from google.protobuf import type_pb2
 class UIFileType(enum.Enum):
     """Enum that represents the supported UI Types."""
 
-    ScreenFile = "ni_scr://"
+    MeasurementUI = "ni_measui://"
     LabVIEW = "ni_vi://"
 
 

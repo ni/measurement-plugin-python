@@ -14,9 +14,9 @@ measurement_info = nims.MeasurementInfo(
     measurement_type="Sample",
     product_type="Sample",
     ui_file_path=os.path.join(
-        os.path.dirname(os.path.abspath(__file__)), "SampleMeasurementScreen.isscr"
+        os.path.dirname(os.path.abspath(__file__)), "SampleMeasurement.measui"
     ),
-    ui_file_type=nims.UIFileType.ScreenFile,
+    ui_file_type=nims.UIFileType.MeasurementUI,
 )
 
 service_info = nims.ServiceInfo(
