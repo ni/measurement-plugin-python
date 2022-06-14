@@ -13,9 +13,13 @@ class MeasurementService:
     Attributes
     ----------
         measurement_info (info.MeasurementInfo): Measurement info
+
         service_info(info.ServiceInfo) : Service Info
+
         configuration_parameter_list (List): List of configuration parameters.
+
         output_parameter_list (list): List of output parameters.
+
         measure_function (Callable): Registered measurement function.
 
     """
@@ -26,6 +30,7 @@ class MeasurementService:
         Args:
         ----
             measurement_info (MeasurementInfo): Measurement Info
+
             service_info (ServiceInfo): Service Info
 
         """
@@ -56,7 +61,9 @@ class MeasurementService:
         Args
         ----
             display_name (str): Display name of the configuration.
+
             type (DataType): Data type of the configuration.
+
             default_value (Any): Default value of the configuration.
 
         Returns
@@ -83,6 +90,7 @@ class MeasurementService:
         Args
         ----
             display_name (str): Display name of the output.
+
             type (DataType): Data type of the output.
 
         Returns

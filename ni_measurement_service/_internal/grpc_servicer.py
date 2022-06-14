@@ -18,8 +18,11 @@ class MeasurementServiceServicer(Measurement_pb2_grpc.MeasurementServiceServicer
     Attributes
     ----------
         measurement_info (MeasurementInfo): Measurement info
+
         configuration_parameter_list (List): List of configuration parameters.
+
         output_parameter_list (List): List of output parameters.
+
         measure_function (Callable): Registered measurement function.
     Args:
     ----
@@ -39,8 +42,11 @@ class MeasurementServiceServicer(Measurement_pb2_grpc.MeasurementServiceServicer
         Args:
         ----
             measurement_info (MeasurementInfo): Measurement info
+
             configuration_parameter_list (List): List of configuration parameters.
+
             output_parameter_list (List): List of output parameters.
+
             measure_function (Callable): Registered measurement function.
 
         """
@@ -141,6 +147,7 @@ class MeasurementServiceServicer(Measurement_pb2_grpc.MeasurementServiceServicer
         Args
         ----
             mapping_by_id (Dict[id, Any]): Mapping by ID
+
             measure_function (callable): Function from which the parameter names are extracted.
 
         Returns

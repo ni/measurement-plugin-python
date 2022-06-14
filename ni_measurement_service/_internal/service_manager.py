@@ -33,8 +33,10 @@ class GrpcService:
         ----
             discovery_client (DiscoveryClient, optional): Instance of Discovery Client.
             Defaults to None.
+
             servicer(MeasurementServiceServicer): The gRPC implementation class of the service.
             Used in tests.
+
             port(str) : The port number of the hosted service.Used in Tests.
 
         """
@@ -53,9 +55,13 @@ class GrpcService:
         Args:
         ----
             measurement_info (MeasurementInfo): Measurement info
+
             service_info (ServiceInfo): Service info
+
             configuration_parameter_list (List): List of configuration parameters.
+
             output_parameter_list (List): List of output parameters.
+
             measure_function (Callable): Registered measurement function.
 
         Returns

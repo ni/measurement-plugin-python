@@ -12,10 +12,15 @@ class ParameterMetadata(NamedTuple):
     Attributes
     ----------
         display_name (str): The display name of the parameter.
-        type (type_pb2.Field): The datatype of the parameter
+
+        type (type_pb2.Field): The datatype of the parameter.
+
         represented by the gRPC Field Enum.
+
         repeated (bool): Represent if the parameter is a scalar or 1D array.
+
         True for 1DArray and false for scalar.
+
         default_value (Any): The default value of the parameter.
 
     """
