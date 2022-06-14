@@ -103,7 +103,29 @@ Running this command from the repo's root directory will generate the tar.gz fil
 
 # Testing
 
-TODO: include testing steps here.
+`ni-measurement-service` includes tests under the directory `tests\` that exercises the python and grpc modules. The GitHub CI run these tests for PRs targeting the main branch. It is recommended that during development you run the tests locally before creating a PR.
+
+In order to run the `ni-measurement-service` tests locally:
+
+## Using Command Line
+
+1. Install production dependencies and development dependencies into a venv by running `poetry install`.
+2. Execute the command `poetry run pytest -v` to run the tests, from the repo's root directory.
+
+    ``` ps
+    (.venv) PS D:\TAF\measurement-services-python> poetry run pytest -v
+    ```
+
+## Using VS code Test Explorer extension(UI)
+
+Install and configure the `Python Test Explorer for Visual Studio Code` extension to execute/debug the tests using UI. For more details related to the extension, refer [here](https://marketplace.visualstudio.com/items?itemName=LittleFoxTeam.vscode-python-test-adapter).
+
+## Steps to generate code coverage report
+
+- Install the required dependency by running `poetry install`
+- Activate the virtual environment if not already activated : `.venv\Scripts\activate`
+- Run the command `pytest --cov=ni_measurement_service`, from the repo's root directory **to get the summary of test coverage** in the console.
+- Run the command `pytest --cov-report html:cov_html --cov=ni_measurement_service`, from the repo's root directory **to generate detailed HTML based coverage report**. Upon running, the coverage reports will be created under `<repo_root>\cov_html` directory.
 
 # Developer Certificate of Origin (DCO)
 
