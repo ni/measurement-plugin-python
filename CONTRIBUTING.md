@@ -118,7 +118,7 @@ In order to run the `ni-measurement-service` tests locally:
 
 ## Using VS code Test Explorer extension(UI)
 
-Install and configure the `Python Test Explorer for Visual Studio code` extension to execute/debug the tests using UI. For more details related to the extension, refer [here](https://marketplace.visualstudio.com/items?itemName=LittleFoxTeam.vscode-python-test-adapter).
+Install and configure the `Python Test Explorer for Visual Studio Code` extension to execute/debug the tests using UI. For more details related to the extension, refer [here](https://marketplace.visualstudio.com/items?itemName=LittleFoxTeam.vscode-python-test-adapter).
 
 ## Steps to generate code coverage report
 
