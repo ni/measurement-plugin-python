@@ -37,3 +37,8 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.ni-python-styleguide]
 extend_exclude = "*_pb2_grpc.py,*_pb2.py,venv"
+
+[tool.pytest.ini_options]
+testpaths = [
+    "tests"
+]

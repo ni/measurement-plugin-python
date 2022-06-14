@@ -122,8 +122,10 @@ Install and configure the `Python Test Explorer for Visual Studio code` extensio
 
 ## Steps to generate code coverage report
 
-- Run the command `pytest --cov=ni_measurement_service .\tests\`, from the repo's root directory **to get the summary of test coverage** in the console.
-- Run the command `pytest --cov-report html:cov_html --cov=ni_measurement_service .\tests\`, from the repo's root directory **to generate detailed HTML based coverage report**. Upon running, the coverage reports will be created under `<repo_root>\cov_html` directory.
+- Install the required dependency by running `poetry install`
+- Activate the virtual environment if not already activated : `.venv\Scripts\activate`
+- Run the command `pytest --cov=ni_measurement_service`, from the repo's root directory **to get the summary of test coverage** in the console.
+- Run the command `pytest --cov-report html:cov_html --cov=ni_measurement_service`, from the repo's root directory **to generate detailed HTML based coverage report**. Upon running, the coverage reports will be created under `<repo_root>\cov_html` directory.
 
 # Developer Certificate of Origin (DCO)
 
