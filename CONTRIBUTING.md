@@ -103,7 +103,7 @@ Running this command from the repo's root directory will generate the tar.gz fil
 
 # Testing
 
-`ni-measurement-service` includes tests suites under the directory `tests\` that exercises the python and grpc modules. The GitHub CI run these tests for you when a PR is raised targeting the main branch. It is recommended that during development you run the tests locally before raising PR.
+`ni-measurement-service` includes tests under the directory `tests\` that exercises the python and grpc modules. The GitHub CI run these tests for PRs targeting the main branch. It is recommended that during development you run the tests locally before creating a PR.
 
 In order to run the `ni-measurement-service` tests locally:
 
