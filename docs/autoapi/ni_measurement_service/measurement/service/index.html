@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ni_measurement_service.measurement.service &mdash; ni_measurement_service 0.6 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../index.html" class="icon icon-home"> ni_measurement_service
+          </a>
+              <div class="version">
+                0.6.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">ni_measurement_service</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li><code class="xref py py-mod docutils literal notranslate"><span class="pre">ni_measurement_service.measurement.service</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../_sources/autoapi/ni_measurement_service/measurement/service/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-ni_measurement_service.measurement.service">
+<span id="ni-measurement-service-measurement-service"></span><h1><a class="reference internal" href="#module-ni_measurement_service.measurement.service" title="ni_measurement_service.measurement.service"><code class="xref py py-mod docutils literal notranslate"><span class="pre">ni_measurement_service.measurement.service</span></code></a><a class="headerlink" href="#module-ni_measurement_service.measurement.service" title="Permalink to this heading"></a></h1>
+<p>Framework to host measurement service.</p>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this heading"></a></h2>
+<section id="classes">
+<h3>Classes<a class="headerlink" href="#classes" title="Permalink to this heading"></a></h3>
+<table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ni_measurement_service.measurement.service.MeasurementService" title="ni_measurement_service.measurement.service.MeasurementService"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MeasurementService</span></code></a></p></td>
+<td><p>Class the supports registering and hosting a python function as a gRPC service.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py class">
+<dt class="sig sig-object py" id="ni_measurement_service.measurement.service.MeasurementService">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ni_measurement_service.measurement.service.</span></span><span class="sig-name descname"><span class="pre">MeasurementService</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">measurement_info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">service_info</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/ni_measurement_service/measurement/service.html#MeasurementService"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurement_service.measurement.service.MeasurementService" title="Permalink to this definition"></a></dt>
+<dd><p>Class the supports registering and hosting a python function as a gRPC service.</p>
+<blockquote>
+<div><p>measurement_info (info.MeasurementInfo): Measurement info</p>
+<p>service_info(info.ServiceInfo) : Service Info</p>
+<p>configuration_parameter_list (List): List of configuration parameters.</p>
+<p>output_parameter_list (list): List of output parameters.</p>
+<p>measure_function (Callable): Registered measurement function.</p>
+</div></blockquote>
+<dl class="py method">
+<dt class="sig sig-object py" id="ni_measurement_service.measurement.service.MeasurementService.register_measurement">
+<span class="sig-name descname"><span class="pre">register_measurement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">measurement_function</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/ni_measurement_service/measurement/service.html#MeasurementService.register_measurement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurement_service.measurement.service.MeasurementService.register_measurement" title="Permalink to this definition"></a></dt>
+<dd><p>Register the function as the measurement. Recommended to use as a decorator.</p>
+<blockquote>
+<div><p>func (Callable): Any Python Function.</p>
+</div></blockquote>
+<blockquote>
+<div><p>Callable: Python Function.</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ni_measurement_service.measurement.service.MeasurementService.configuration">
+<span class="sig-name descname"><span class="pre">configuration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">display_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/ni_measurement_service/measurement/service.html#MeasurementService.configuration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurement_service.measurement.service.MeasurementService.configuration" title="Permalink to this definition"></a></dt>
+<dd><p>Add configuration parameter info for a measurement.Recommended to use as a decorator.</p>
+<blockquote>
+<div><p>display_name (str): Display name of the configuration.</p>
+<p>type (DataType): Data type of the configuration.</p>
+<p>default_value (Any): Default value of the configuration.</p>
+</div></blockquote>
+<blockquote>
+<div><p>Callable: Callable that takes in Any Python Function
+and returns the same python function.</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ni_measurement_service.measurement.service.MeasurementService.output">
+<span class="sig-name descname"><span class="pre">output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">display_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/ni_measurement_service/measurement/service.html#MeasurementService.output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurement_service.measurement.service.MeasurementService.output" title="Permalink to this definition"></a></dt>
+<dd><p>Add output parameter info for a measurement.Recommended to use as a decorator.</p>
+<blockquote>
+<div><p>display_name (str): Display name of the output.</p>
+<p>type (DataType): Data type of the output.</p>
+</div></blockquote>
+<blockquote>
+<div><p>Callable: Callable that takes in Any Python Function and
+returns the same python function.</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ni_measurement_service.measurement.service.MeasurementService.host_service">
+<span class="sig-name descname"><span class="pre">host_service</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/ni_measurement_service/measurement/service.html#MeasurementService.host_service"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurement_service.measurement.service.MeasurementService.host_service" title="Permalink to this definition"></a></dt>
+<dd><p>Host the registered measurement method as gRPC measurement service.</p>
+<blockquote>
+<div><p>Exception: If register measurement methods not available.</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ni_measurement_service.measurement.service.MeasurementService.close_service">
+<span class="sig-name descname"><span class="pre">close_service</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/ni_measurement_service/measurement/service.html#MeasurementService.close_service"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurement_service.measurement.service.MeasurementService.close_service" title="Permalink to this definition"></a></dt>
+<dd><p>Close the Service after un-registering with discovery service and cleanups.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, National Instruments.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

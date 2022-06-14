@@ -1,0 +1,260 @@
+:py:mod:`ni_measurement_service._internal.parameter.serialization_strategy`
+===========================================================================
+
+.. py:module:: ni_measurement_service._internal.parameter.serialization_strategy
+
+.. autoapi-nested-parse::
+
+   Serialization Strategy.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   ni_measurement_service._internal.parameter.serialization_strategy.Context
+
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   ni_measurement_service._internal.parameter.serialization_strategy.FloatEncoder
+   ni_measurement_service._internal.parameter.serialization_strategy.DoubleEncoder
+   ni_measurement_service._internal.parameter.serialization_strategy.IntEncoder
+   ni_measurement_service._internal.parameter.serialization_strategy.UIntEncoder
+   ni_measurement_service._internal.parameter.serialization_strategy.BoolEncoder
+   ni_measurement_service._internal.parameter.serialization_strategy.StringEncoder
+   ni_measurement_service._internal.parameter.serialization_strategy.FloatArrayEncoder
+   ni_measurement_service._internal.parameter.serialization_strategy.DoubleArrayEncoder
+   ni_measurement_service._internal.parameter.serialization_strategy.IntArrayEncoder
+   ni_measurement_service._internal.parameter.serialization_strategy.UIntArrayEncoder
+   ni_measurement_service._internal.parameter.serialization_strategy.BoolArrayEncoder
+   ni_measurement_service._internal.parameter.serialization_strategy.StringArrayEncoder
+   ni_measurement_service._internal.parameter.serialization_strategy.FloatDecoder
+   ni_measurement_service._internal.parameter.serialization_strategy.DoubleDecoder
+   ni_measurement_service._internal.parameter.serialization_strategy.Int32Decoder
+   ni_measurement_service._internal.parameter.serialization_strategy.UInt32Decoder
+   ni_measurement_service._internal.parameter.serialization_strategy.Int64Decoder
+   ni_measurement_service._internal.parameter.serialization_strategy.UInt64Decoder
+   ni_measurement_service._internal.parameter.serialization_strategy.BoolDecoder
+   ni_measurement_service._internal.parameter.serialization_strategy.StringDecoder
+   ni_measurement_service._internal.parameter.serialization_strategy.FloatArrayDecoder
+   ni_measurement_service._internal.parameter.serialization_strategy.DoubleArrayDecoder
+   ni_measurement_service._internal.parameter.serialization_strategy.Int32ArrayDecoder
+   ni_measurement_service._internal.parameter.serialization_strategy.UInt32ArrayDecoder
+   ni_measurement_service._internal.parameter.serialization_strategy.Int64ArrayDecoder
+   ni_measurement_service._internal.parameter.serialization_strategy.UInt64ArrayDecoder
+   ni_measurement_service._internal.parameter.serialization_strategy.BoolArrayDecoder
+   ni_measurement_service._internal.parameter.serialization_strategy.StringArrayDecoder
+
+
+.. py:data:: FloatEncoder
+   
+
+   
+
+.. py:data:: DoubleEncoder
+   
+
+   
+
+.. py:data:: IntEncoder
+   
+
+   
+
+.. py:data:: UIntEncoder
+   
+
+   
+
+.. py:data:: BoolEncoder
+   
+
+   
+
+.. py:data:: StringEncoder
+   
+
+   
+
+.. py:data:: FloatArrayEncoder
+   
+
+   
+
+.. py:data:: DoubleArrayEncoder
+   
+
+   
+
+.. py:data:: IntArrayEncoder
+   
+
+   
+
+.. py:data:: UIntArrayEncoder
+   
+
+   
+
+.. py:data:: BoolArrayEncoder
+   
+
+   
+
+.. py:data:: StringArrayEncoder
+   
+
+   
+
+.. py:data:: FloatDecoder
+   
+
+   
+
+.. py:data:: DoubleDecoder
+   
+
+   
+
+.. py:data:: Int32Decoder
+   
+
+   
+
+.. py:data:: UInt32Decoder
+   
+
+   
+
+.. py:data:: Int64Decoder
+   
+
+   
+
+.. py:data:: UInt64Decoder
+   
+
+   
+
+.. py:data:: BoolDecoder
+   
+
+   
+
+.. py:data:: StringDecoder
+   
+
+   
+
+.. py:data:: FloatArrayDecoder
+   
+
+   
+
+.. py:data:: DoubleArrayDecoder
+   
+
+   
+
+.. py:data:: Int32ArrayDecoder
+   
+
+   
+
+.. py:data:: UInt32ArrayDecoder
+   
+
+   
+
+.. py:data:: Int64ArrayDecoder
+   
+
+   
+
+.. py:data:: UInt64ArrayDecoder
+   
+
+   
+
+.. py:data:: BoolArrayDecoder
+   
+
+   
+
+.. py:data:: StringArrayDecoder
+   
+
+   
+
+.. py:class:: Context
+
+   Strategy context.
+
+   .. py:method:: get_encoder(type, repeated)
+      :staticmethod:
+
+      Get the Scalar Encoder or Vector Encoder for the specified type based on repeated bool.
+
+      Args
+      ----
+          type (type_pb2.Field): Type of the Parameter.
+          repeated (bool): Boolean that represents if the Parameter is repeated or not.
+
+      Raises
+      ------
+          Exception: If the specified type is not supported.
+
+      Returns
+      -------
+          Callable[[int], Callable]: ScalarEncoder or VectorEncoder.
+
+
+
+   .. py:method:: get_decoder(type, repeated)
+      :staticmethod:
+
+      Get the Scalar Decoder or Vector Decoder for the specified type based on repeated bool.
+
+      Args
+      ----
+          type (type_pb2.Field): Type of the Parameter.
+          repeated (bool): Boolean that represents if the Parameter is repeated or not.
+
+      Raises
+      ------
+          Exception: If the specified type is not supported.
+
+      Returns
+      -------
+          Callable[[int], Callable]: ScalarDecoder or VectorDecoder.
+
+
+
+   .. py:method:: get_type_default(type, repeated)
+      :staticmethod:
+
+      Get the Type default.
+
+      Args
+      ----
+          type (type_pb2.Field): Type of the Parameter.
+          repeated (bool): Boolean that represents if the Parameter is repeated or not.
+
+      Returns
+      -------
+          Any: Default value.
+
+
+
+

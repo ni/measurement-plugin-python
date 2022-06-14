@@ -1,0 +1,55 @@
+:py:mod:`ni_measurement_service._internal.grpc_servicer`
+========================================================
+
+.. py:module:: ni_measurement_service._internal.grpc_servicer
+
+.. autoapi-nested-parse::
+
+   Contains Measurement Service Implementation class and method to host the service.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   ni_measurement_service._internal.grpc_servicer.MeasurementServiceServicer
+
+
+
+
+.. py:class:: MeasurementServiceServicer(measurement_info, configuration_parameter_list, output_parameter_list, measure_function)
+
+   Bases: :py:obj:`ni_measurement_service._internal.stubs.Measurement_pb2_grpc.MeasurementServiceServicer`
+
+   Implementation of the Measurement Service's gRPC base class.
+
+   Attributes
+   ----------
+       measurement_info (MeasurementInfo): Measurement info
+
+       configuration_parameter_list (List): List of configuration parameters.
+
+       output_parameter_list (List): List of output parameters.
+
+       measure_function (Callable): Registered measurement function.
+   Args:
+   ----
+       Measurement_pb2_grpc (MeasurementServiceServicer): Measurement Service's gRPC base class.
+
+
+   .. py:method:: GetMetadata(self, request, context)
+
+      RPC API to get complete metadata.
+
+
+   .. py:method:: Measure(self, request, context)
+
+      RPC API that Executes the registered measurement method.
+
+
+

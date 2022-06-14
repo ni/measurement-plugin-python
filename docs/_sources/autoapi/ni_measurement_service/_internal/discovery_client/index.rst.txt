@@ -1,0 +1,66 @@
+:py:mod:`ni_measurement_service._internal.discovery_client`
+===========================================================
+
+.. py:module:: ni_measurement_service._internal.discovery_client
+
+.. autoapi-nested-parse::
+
+   Contains API to register and un-register measurement service with discovery service.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   ni_measurement_service._internal.discovery_client.DiscoveryClient
+
+
+
+
+.. py:class:: DiscoveryClient(registry_service_stub = None)
+
+   Class that contains APIs need to interact with discovery service.
+
+   Attributes
+   ----------
+       registryServiceStub (RegistryServiceStub): The gRPC stub to interact with discovery service.
+
+       registration_id(string): The ID from discovery service upon successful registration.
+
+
+   .. py:method:: register_measurement_service(self, service_port, service_info, display_name)
+
+      Register the measurement service with the discovery service.
+
+      Args:
+      ----
+          service_port (str): Port Number of the measurement service.
+
+          service_info (ServiceInfo): Service Info.
+
+          display_name (str): Display name of the service.
+
+      Returns
+      -------
+          bool: Boolean to represent if the registration is successful.
+
+
+
+   .. py:method:: unregister_service(self)
+
+      Un-registers the measurement service from the discovery service.
+
+      Should be called before the service is closed.
+
+      Returns
+      -------
+          bool: Boolean to represent if the un-registration is successful.
+
+
+
+
