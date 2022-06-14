@@ -1,8 +1,5 @@
-.. mdinclude:: ../README.md
-
-
-Documentation
--------------
+NI Measurement Service
+----------------------
 .. toctree::
    :maxdepth: 4
 
