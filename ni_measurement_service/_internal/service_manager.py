@@ -1,8 +1,9 @@
+import logging
 import time
-from concurrent import futures
 from typing import Callable, List
 
 import grpc
+from grpc.framework.foundation import logging_pool
 
 from ni_measurement_service._internal.discovery_client import DiscoveryClient
 from ni_measurement_service._internal.grpc_servicer import MeasurementServiceServicer
@@ -10,6 +11,9 @@ from ni_measurement_service._internal.parameter.metadata import ParameterMetadat
 from ni_measurement_service._internal.stubs import Measurement_pb2_grpc
 from ni_measurement_service._internal.utilities import console_exit_functions
 from ni_measurement_service.measurement.info import MeasurementInfo, ServiceInfo
+
+
+_logger = logging.getLogger(__name__)
 
 
 class GrpcService:
@@ -59,7 +63,7 @@ class GrpcService:
             int: The port number of the server
 
         """
-        self.server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
+        self.server = grpc.server(logging_pool.pool(max_workers=10))
         self.servicer = MeasurementServiceServicer(
             measurement_info,
             configuration_parameter_list,
@@ -69,7 +73,7 @@ class GrpcService:
         Measurement_pb2_grpc.add_MeasurementServiceServicer_to_server(self.servicer, self.server)
         port = str(self.server.add_insecure_port("[::]:0"))
         self.server.start()
-        print("Hosted Service at Port:", port)
+        _logger.info("Measurement service hosted on port: %d", port)
         self.discovery_client.register_measurement_service(
             port, service_info, measurement_info.display_name
         )
@@ -82,5 +86,5 @@ class GrpcService:
         """Close the Service after un-registering with discovery service and cleanups."""
         self.discovery_client.unregister_service()
         self.server.stop(5)
-        print("Measurement service exited.")
+        _logger.info("Measurement service closed.")
         time.sleep(2)
