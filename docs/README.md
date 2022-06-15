@@ -48,7 +48,7 @@ The `examples` directory contains the below list of python measurement example p
 
 1. **Sample measurement**: Sample Measurement is a simple python-based example that has configurations defined for all supported data types. The measurement logic simply assigns the configuration values to respective output values.
 2. **DC Measurements**: Simple python measurement example that interacts with DCPower 4145 Instrument.
-    1. DC Measurement with Screen file UI
+    1. DC Measurement with Measurement UI
     2. DC Measurement with LabVIEW UI
 
 ### Setting up the Example Measurements
@@ -112,7 +112,7 @@ pip install ni-measurement-service
         ui_file_path="", 
         # Developer can construct relative path w.r.t the .py file like this:
         # ui_file_path=os.path.join(os.path.dirname(os.path.abspath(__file__)), "FileName.isscr")
-        ui_file_type=nims.UIFileType.ScreenFile, # Type of UI File, use UIFileType Enum.
+        ui_file_type=nims.UIFileType.MeasurementUI, # Type of UI File, use UIFileType Enum.
     )
 
     service_info = nims.ServiceInfo(
@@ -272,7 +272,7 @@ Measurement and its related files can be maintained as a python package. The bas
 
 2. UI File
     - UI file for the Measurement. Types of supported UI files are:
-        - Screen file(.isscr): created using the **Measurement UI Editor application**.
+        - Measurement UI(.measui): created using the **Measurement UI Editor application**.
         - LabVIEW UI(.vi)
     - The path and type of this file are configured by `ui_file_path` and `ui_file_type` respectively in `measurement_info` variable definition in Measurement Python Module(.py file).
 
