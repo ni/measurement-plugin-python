@@ -1,5 +1,7 @@
 """ Contains API to register and un-register measurement service with discovery service.
 """
+import logging
+
 import grpc
 
 from ni_measurement_service._internal.stubs import DiscoveryServices_pb2
@@ -9,6 +11,8 @@ from ni_measurement_service.measurement.info import ServiceInfo
 
 _DISCOVERY_SERVICE_ADDRESS = "localhost:42000"
 _PROVIDED_MEASUREMENT_SERVICE = "ni.measurements.v1.MeasurementService"
+
+_logger = logging.getLogger(__name__)
 
 
 class DiscoveryClient:
@@ -34,6 +38,7 @@ class DiscoveryClient:
         """
         channel = grpc.insecure_channel(_DISCOVERY_SERVICE_ADDRESS)
         self.stub = registry_service_stub or DiscoveryServices_pb2_grpc.RegistryServiceStub(channel)
+        self.registration_id = ""
 
     def register_measurement_service(
         self, service_port: str, service_info: ServiceInfo, display_name: str
@@ -71,14 +76,14 @@ class DiscoveryClient:
             # Registration RPC Call
             register_response = self.stub.RegisterService(request)
             self.registration_id = register_response.registration_id
-            print("Successfully registered with DiscoveryService")
+            _logger.info("Successfully registered with discovery service.")
         except (grpc._channel._InactiveRpcError):
-            print(
-                "Unable to register with discovery service. Possible reasons : Discovery Service not Available."
+            _logger.error(
+                "Unable to register with discovery service. Possible reason: discovery service not available."
             )
             return False
         except (Exception):
-            print("Error in Registering measurement.")
+            _logger.exception("Error in registering with discovery service.")
             return False
         return True
 
@@ -93,19 +98,22 @@ class DiscoveryClient:
 
         """
         try:
-            # Un-registration Request Creation
-            request = DiscoveryServices_pb2.UnregisterServiceRequest(
-                registration_id=self.registration_id
-            )
-            # Un-registration RPC Call
-            self.stub.UnregisterService(request)
-            print("Successfully unregistered with DiscoveryService")
+            if self.registration_id:
+                # Un-registration Request Creation
+                request = DiscoveryServices_pb2.UnregisterServiceRequest(
+                    registration_id=self.registration_id
+                )
+                # Un-registration RPC Call
+                self.stub.UnregisterService(request)
+                _logger.info("Successfully unregistered with discovery service.")
+            else:
+                _logger.info("Not registered with discovery service.")
         except (grpc._channel._InactiveRpcError):
-            print(
-                "Unable to unregister with discovery service. Possible reasons : Discovery Service not Available."
+            _logger.error(
+                "Unable to unregister with discovery service. Possible reason: discovery service not available."
             )
             return False
         except (Exception):
-            print("Error in Registering measurement.")
+            _logger.exception("Error in unregistering with discovery service.")
             return False
         return True

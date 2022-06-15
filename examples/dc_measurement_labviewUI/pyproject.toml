@@ -8,7 +8,7 @@ authors = ["National Instruments"]
 python = "^3.8"
 nidcpower = "1.4.1"
 ni-measurement-service = "*"
-
+click = ">=7.1.2"
 
 [tool.poetry.dev-dependencies]
 

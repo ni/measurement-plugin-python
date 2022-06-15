@@ -3,7 +3,11 @@
 User can Import driver and 3Party Packages based on requirements.
 
 """
+import logging
 import os
+import sys
+
+import click
 
 import ni_measurement_service as nims
 
@@ -50,9 +54,24 @@ def measure(float_input, double_array_input, bool_input, string_input):
     return [float_output, float_array_output, bool_output, string_output]
 
 
-"""Driver Method.
-"""
-if __name__ == "__main__":
+@click.command
+@click.option(
+    "-v", "--verbose", count=True, help="Enable verbose logging. Repeat to increase verbosity."
+)
+def main(verbose: int):
+    """Host the Sample Measurement service."""
+    if verbose > 1:
+        level = logging.DEBUG
+    elif verbose == 1:
+        level = logging.INFO
+    else:
+        level = logging.WARNING
+    logging.basicConfig(format="%(asctime)s %(levelname)s: %(message)s", level=level)
+
     sample_measurement_service.host_service()
-    input("To Exit during the Service lifetime, Press Enter.\n")
+    input("Press enter to close the measurement service.\n")
     sample_measurement_service.close_service()
+
+
+if __name__ == "__main__":
+    sys.exit(main())
