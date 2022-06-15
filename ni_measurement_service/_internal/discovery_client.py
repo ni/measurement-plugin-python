@@ -38,6 +38,7 @@ class DiscoveryClient:
         """
         channel = grpc.insecure_channel(_DISCOVERY_SERVICE_ADDRESS)
         self.stub = registry_service_stub or DiscoveryServices_pb2_grpc.RegistryServiceStub(channel)
+        self.registration_id = ""
 
     def register_measurement_service(
         self, service_port: str, service_info: ServiceInfo, display_name: str
@@ -97,13 +98,16 @@ class DiscoveryClient:
 
         """
         try:
-            # Un-registration Request Creation
-            request = DiscoveryServices_pb2.UnregisterServiceRequest(
-                registration_id=self.registration_id
-            )
-            # Un-registration RPC Call
-            self.stub.UnregisterService(request)
-            _logger.info("Successfully unregistered with discovery service.")
+            if self.registration_id:
+                # Un-registration Request Creation
+                request = DiscoveryServices_pb2.UnregisterServiceRequest(
+                    registration_id=self.registration_id
+                )
+                # Un-registration RPC Call
+                self.stub.UnregisterService(request)
+                _logger.info("Successfully unregistered with discovery service.")
+            else:
+                _logger.info("Not registered with discovery service.")
         except (grpc._channel._InactiveRpcError):
             _logger.error(
                 "Unable to unregister with discovery service. Possible reason: discovery service not available."
