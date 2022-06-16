@@ -1,4 +1,4 @@
-name: Publish NIMS
+name:  Update docs and Publish NIMS
 
 on:
   release:
@@ -50,16 +50,18 @@ jobs:
         run: |
           poetry version ${{ steps.vars.outputs.tag }}
       
-      -name: NIMS API Reference Document Generation using Sphinx
+      - name: Update API Reference Documents(Generated using Sphinx)
         run: |
-          rm -rf docs\api_reference\html\
-          sphinx-build .\docs\api_reference\source\ .\docs\api_reference\html -b html
+          rm -rf docs/api_reference/html
+          mkdir -p docs/api_reference/html
+          poetry run sphinx-build docs/api_reference/source docs/api_reference/html -b html
 
       - name: Commit file changes.
         if: ${{ startsWith(github.event.release.target_commitish, 'main') }}
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
+          git add .
           git commit -m "Promote NIMS package version and update Sphinx generated files in _docs" -a
       
       - name: Push changes to the release branch
