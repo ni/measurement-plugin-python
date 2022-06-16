@@ -11,7 +11,7 @@ env:
 
 jobs:
   build:
-    name: Publish NIMS Package to PyPI
+    name: Update API reference docs and Publish NIMS Package to PyPI
     runs-on : ubuntu-latest 
     steps:
       - uses: actions/checkout@v2
