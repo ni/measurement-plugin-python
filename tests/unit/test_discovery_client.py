@@ -1,7 +1,7 @@
 """Contains tests to validate the discovery_client.py.
 """
 from ni_measurement_service._internal import discovery_client
-from ni_measurement_service.measurement.info import ServiceInfo
+from ni_measurement_service.measurement.info import ServiceInfo, MeasurementInfo, UIFileType
 from tests.utilities.fake_registry_service import (
     FakeRegistryServiceStub,
     FakeRegistryServiceStubError,
@@ -10,7 +10,7 @@ from tests.utilities.fake_registry_service import (
 
 _TEST_SERVICE_PORT = "9999"
 _TEST_SERVICE_INFO = ServiceInfo("TestServiceClass", "TestServiceID", "TestUrl")
-_TEST_DISPLAY_NAME = "TestMeasurement"
+_TEST_DISPLAY_NAME = MeasurementInfo("TestMeasurement", ui_file_type=UIFileType.LabVIEW)
 
 
 def test___discovery_service_available___register_service___registration_success():

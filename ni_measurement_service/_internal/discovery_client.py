@@ -7,7 +7,7 @@ import grpc
 from ni_measurement_service._internal.stubs import DiscoveryServices_pb2
 from ni_measurement_service._internal.stubs import DiscoveryServices_pb2_grpc
 from ni_measurement_service._internal.stubs import ServiceLocation_pb2
-from ni_measurement_service.measurement.info import ServiceInfo
+from ni_measurement_service.measurement.info import MeasurementInfo, ServiceInfo
 
 _DISCOVERY_SERVICE_ADDRESS = "localhost:42000"
 _PROVIDED_MEASUREMENT_SERVICE = "ni.measurements.v1.MeasurementService"
@@ -41,7 +41,7 @@ class DiscoveryClient:
         self.registration_id = ""
 
     def register_measurement_service(
-        self, service_port: str, service_info: ServiceInfo, display_name: str
+        self, service_port: str, service_info: ServiceInfo, measurement_info: MeasurementInfo
     ) -> bool:
         """Register the measurement service with the discovery service.
 
@@ -65,9 +65,10 @@ class DiscoveryClient:
             # Service Descriptor
             service_descriptor = DiscoveryServices_pb2.ServiceDescriptor()
             service_descriptor.service_id = service_info.service_id
-            service_descriptor.name = display_name
+            service_descriptor.name = measurement_info.display_name
             service_descriptor.service_class = service_info.service_class
             service_descriptor.description_url = service_info.description_url
+            service_descriptor.attributes = ["UserInterfaceType="]
             # Registration Request Creation
             request = DiscoveryServices_pb2.RegisterServiceRequest(
                 location=service_location, service_description=service_descriptor

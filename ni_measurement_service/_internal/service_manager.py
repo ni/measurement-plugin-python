@@ -75,7 +75,7 @@ class GrpcService:
         self.server.start()
         _logger.info("Measurement service hosted on port: %s", port)
         self.discovery_client.register_measurement_service(
-            port, service_info, measurement_info.display_name
+            port, service_info, measurement_info
         )
 
         console_exit_functions.setup_unregister_on_console_close(self.stop)
