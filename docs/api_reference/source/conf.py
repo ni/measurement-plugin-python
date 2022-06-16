@@ -16,8 +16,8 @@ extensions = [
     "m2r2",
 ]
 
-
-pyproj_file = pathlib.Path(__file__).parent.parent.parent / "pyproject.toml"
+root_path = pathlib.Path(__file__).parent.parent.parent.parent
+pyproj_file = root_path / "pyproject.toml"
 proj_config = toml.loads(pyproj_file.read_text())
 
 
@@ -42,7 +42,7 @@ htmlhelp_basename = "{}doc".format(project)
 # tell autoapi to doc the public options
 autoapi_options = list(autoapi.extension._DEFAULT_OPTIONS)
 autoapi_options.remove("private-members")  # note: remove this to include "_" members in docs
-autoapi_dirs = ["../../ni_measurement_service"]
+autoapi_dirs = [root_path / "ni_measurement_service"]
 autoapi_type = "python"
 autodoc_typehints = "none"
 

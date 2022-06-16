@@ -52,8 +52,8 @@ jobs:
       
       -name: NIMS API Reference Document Generation using Sphinx
         run: |
-          rm -rf docs\_docs
-          sphinx-build .\docs\source\ .\docs\_docs -b html
+          rm -rf docs\api_reference\html\
+          sphinx-build .\docs\api_reference\source\ .\docs\api_reference\html -b html
 
       # To Test the Publish use : poetry publish --build --username __token__ --password ${{ secrets.TEST_PYPI_TOKEN }} -r test-pypi
       - name: Build Python package and publish to PyPI
