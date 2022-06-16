@@ -1,7 +1,7 @@
 NI Measurement Service
 ----------------------
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 3
 
 Indices and tables
 ------------------

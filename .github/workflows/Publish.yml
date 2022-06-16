@@ -49,10 +49,15 @@ jobs:
       - name: Promote NIMS package version to tag name.
         run: |
           poetry version ${{ steps.vars.outputs.tag }}
+      
+      -name: NIMS API Reference Document Generation using Sphinx
+        run: |
+          rm -rf docs\_docs
+          sphinx-build .\docs\source\ .\docs\_docs -b html
 
       # To Test the Publish use : poetry publish --build --username __token__ --password ${{ secrets.TEST_PYPI_TOKEN }} -r test-pypi
       - name: Build Python package and publish to PyPI
-        if: ${{ startsWith(github.event.release.target_commitish, 'releases/') }}
+        if: ${{ startsWith(github.event.release.target_commitish, 'main') }}
         run: |
           poetry publish --build --username __token__ --password ${{ secrets.PYPI_TOKEN }}
           
@@ -62,14 +67,14 @@ jobs:
           path: dist/ # path/to/artifact
       
       - name: Commit file changes.
-        if: ${{ startsWith(github.event.release.target_commitish, 'releases/') }}
+        if: ${{ startsWith(github.event.release.target_commitish, 'main') }}
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git commit -m "Promote NIMS package version" -a
+          git commit -m "Promote NIMS package version and update Sphinx generated files in _docs" -a
       
       - name: Push changes to the release branch
-        if: ${{ startsWith(github.event.release.target_commitish, 'releases/') }}
+        if: ${{ startsWith(github.event.release.target_commitish, 'main') }}
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
