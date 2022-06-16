@@ -64,11 +64,11 @@ jobs:
           git add .
           git commit -m "Promote NIMS package version and update Sphinx generated files in _docs" -a
       
-      - name: Push changes to the release branch
+      - name: Push changes to the Main branch
         if: ${{ startsWith(github.event.release.target_commitish, 'main') }}
         uses: ad-m/github-push-action@master
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.ADMIN_PAT }}
           branch: ${{ github.event.release.target_commitish }}    
 
       # To Test the Publish use : poetry publish --build --username __token__ --password ${{ secrets.TEST_PYPI_TOKEN }} -r test-pypi
