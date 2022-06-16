@@ -18,7 +18,7 @@ extensions = [
     "m2r2",
 ]
 
-root_path = pathlib.Path(__file__).parent.parent.parent.parent
+root_path = pathlib.Path(__file__).parent.parent
 pyproj_file = root_path / "pyproject.toml"
 proj_config = toml.loads(pyproj_file.read_text())
 

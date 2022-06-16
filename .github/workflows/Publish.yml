@@ -52,9 +52,10 @@ jobs:
       
       - name: Update API Reference Documents(Generated using Sphinx)
         run: |
-          rm -rf docs/api_reference/html
-          mkdir -p docs/api_reference/html
-          poetry run sphinx-build docs/api_reference/source docs/api_reference/html -b html
+          rm -rf docs
+          mkdir -p docs
+          touch .nojekyll         
+          poetry run sphinx-build _docs_source docs -b html
 
       - name: Commit file changes.
         if: ${{ startsWith(github.event.release.target_commitish, 'main') }}
