@@ -54,7 +54,7 @@ jobs:
         run: |
           rm -rf docs
           mkdir -p docs
-          touch .nojekyll         
+          touch docs/.nojekyll         
           poetry run sphinx-build _docs_source docs -b html
 
       - name: Commit file changes.
