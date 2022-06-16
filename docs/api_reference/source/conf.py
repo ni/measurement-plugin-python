@@ -1,6 +1,8 @@
-import autoapi.extension
+"""Sphinx Configuration File."""
 import datetime
 import pathlib
+
+import autoapi.extension
 import toml
 
 
