@@ -19,10 +19,15 @@ class MeasurementInfo(NamedTuple):
     Attributes
     ----------
         display_name (str): The display name of the measurement.
+
         version (str): The version of the measurement.
+
         measurement_type (str): Type of the measurement.
+
         product_type (str): Type of product related to the measurement.
+
         ui_file_path (str): Path of the UI file linked to the measurement.
+
         ui_file_type (UIFileType): Type of the linked UI file.
 
     """
@@ -43,7 +48,9 @@ class ServiceInfo(NamedTuple):
         service_class (str): Service class that the measurement belongs to.
         Measurements under same service class expected to perform same logic.
         For e.g., different version of measurement can come under same service class.
+
         service_id (str): Unique service of the measurement. Should be an Unique GUID.
+
         description_url (str): Description URL of the measurement.
 
     """

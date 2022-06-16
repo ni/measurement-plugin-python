@@ -21,6 +21,7 @@ class DiscoveryClient:
     Attributes
     ----------
         registryServiceStub (RegistryServiceStub): The gRPC stub to interact with discovery service.
+
         registration_id(string): The ID from discovery service upon successful registration.
 
     """
@@ -48,7 +49,9 @@ class DiscoveryClient:
         Args:
         ----
             service_port (str): Port Number of the measurement service.
+
             service_info (ServiceInfo): Service Info.
+
             display_name (str): Display name of the service.
 
         Returns

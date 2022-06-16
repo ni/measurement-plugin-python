@@ -14,6 +14,7 @@
   - [Static Registration of Python Measurements](#static-registration-of-python-measurements)
     - [Create a batch file that runs a python measurement](#create-a-batch-file-that-runs-a-python-measurement)
     - [Create Executable for Python Scripts](#create-executable-for-python-scripts)
+  - [API References](#api-references)
   - [Appendix: Managing Measurement as Python Package(Project)](#appendix-managing-measurement-as-python-packageproject)
     - [Create and Manage Python Measurement Package using poetry](#create-and-manage-python-measurement-package-using-poetry)
     - [Create and Manage Python Measurement Package using venv](#create-and-manage-python-measurement-package-using-venv)
@@ -261,6 +262,10 @@ Typical Pyinstaller command to build executable.
 ```cmd
 pyinstaller --onefile --console --add-data "<path_of_the_UI_File>;." --paths .venv\Lib\site-packages\ <path_of_the_measurement_script>
 ```
+
+## API References
+
+[Click here](https://symmetrical-journey-236e860a.pages.github.io/) to view the API reference documentation.
 
 ## Appendix: Managing Measurement as Python Package(Project)
 

@@ -21,6 +21,7 @@ def deserialize_parameters(
     Args
     ----
         parameter_metadata_dict (Dict[id, ParameterMetadata]): Parameter metadata by ID.
+
         parameter_bytes (bytes): Bytes of Parameter that need to be deserialized.
 
     Returns
@@ -48,6 +49,7 @@ def serialize_parameters(
     Args
     ----
         parameter_metadata_dict (Dict[int, ParameterMetadata]): Parameter metadata by ID.
+
         parameter_value (List[Any]): List of Parameter values that need to be serialized.
 
     Returns
@@ -99,8 +101,9 @@ def _get_field_index(parameter_bytes: Bytes, tag_position: int):
 
     Args
     ----
-        parameter_bytes (Bytes): _description_
-        position (int): _description_
+        parameter_bytes (Bytes): Serialized Bytes
+
+        tag_position (int): Tag position
 
     Returns
     -------
@@ -118,6 +121,7 @@ def _get_overlapping_parameters(
     Args
     ----
         parameter_metadata_dict (Dict[id, ParameterMetadata]): Parameter metadata by ID.
+
         parameter_bytes (bytes): Bytes of Parameter that need to be deserialized.
 
     Raises
@@ -160,7 +164,8 @@ def _get_missing_parameters(
 
     Args
     ----
-        parameter_metadata_dict (Dict[id, ParameterMetadata]): _description_
+        parameter_metadata_dict (Dict[id, ParameterMetadata]): Parameter metadata by id.
+
         parameter_by_id (Dict[id, Any]): Parameters by ID to compare the metadata with.
 
     Returns
