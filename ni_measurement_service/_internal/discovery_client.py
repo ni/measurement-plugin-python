@@ -7,7 +7,9 @@ import grpc
 from ni_measurement_service._internal.stubs import DiscoveryServices_pb2
 from ni_measurement_service._internal.stubs import DiscoveryServices_pb2_grpc
 from ni_measurement_service._internal.stubs import ServiceLocation_pb2
-from ni_measurement_service.measurement.info import MeasurementInfo, ServiceInfo, UIFileType
+from ni_measurement_service.measurement.info import MeasurementInfo
+from ni_measurement_service.measurement.info import ServiceInfo
+from ni_measurement_service.measurement.info import UIFileType
 
 _DISCOVERY_SERVICE_ADDRESS = "localhost:42000"
 _PROVIDED_MEASUREMENT_SERVICE = "ni.measurements.v1.MeasurementService"
