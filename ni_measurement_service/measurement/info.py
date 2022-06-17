@@ -32,12 +32,12 @@ class MeasurementInfo(NamedTuple):
 
     """
 
-    display_name: str = None
-    version: str = None
-    measurement_type: str = None
-    product_type: str = None
-    ui_file_path: str = None
-    ui_file_type: UIFileType = None
+    display_name: str
+    version: str
+    measurement_type: str
+    product_type: str
+    ui_file_path: str
+    ui_file_type: UIFileType
 
 
 class ServiceInfo(NamedTuple):

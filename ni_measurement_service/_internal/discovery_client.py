@@ -126,6 +126,6 @@ class DiscoveryClient:
             )
             return False
         except (Exception):
-            _logger.exception("Error in unregistering with discovery service.")
+            _logger.exception("Error in un-registering with discovery service.")
             return False
         return True

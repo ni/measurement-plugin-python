@@ -84,7 +84,6 @@ class MeasurementServiceServicer(Measurement_pb2_grpc.MeasurementServiceServicer
 
         # Configurations
         for id, configuration_metadata in self.configuration_metadata.items():
-            configuration_metadata: ParameterMetadata
             configuration_parameter = Measurement_pb2.ConfigurationParameter()
             configuration_parameter.protobuf_id = id
             configuration_parameter.name = configuration_metadata.display_name
@@ -99,7 +98,6 @@ class MeasurementServiceServicer(Measurement_pb2_grpc.MeasurementServiceServicer
 
         # Output Parameters Metadata
         for id, output_metadata in self.output_metadata.items():
-            output_metadata: ParameterMetadata
             output_parameter = Measurement_pb2.Output()
             output_parameter.protobuf_id = id
             output_parameter.name = output_metadata.display_name
@@ -140,13 +138,13 @@ class MeasurementServiceServicer(Measurement_pb2_grpc.MeasurementServiceServicer
         return return_value
 
     def _get_mapping_by_parameter_name(
-        self, mapping_by_id: Dict[id, Any], measure_function: Callable
+        self, mapping_by_id: Dict[int, Any], measure_function: Callable[[], None]
     ) -> Dict[str, Any]:
         """Transform the mapping by id to mapping by parameter names of the measurement function.
 
         Args
         ----
-            mapping_by_id (Dict[id, Any]): Mapping by ID
+            mapping_by_id (Dict[int, Any]): Mapping by ID
 
             measure_function (callable): Function from which the parameter names are extracted.
 

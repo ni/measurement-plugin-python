@@ -49,7 +49,7 @@ class GrpcService:
         configuration_parameter_list: List[ParameterMetadata],
         output_parameter_list: List[ParameterMetadata],
         measure_function: Callable,
-    ) -> int:
+    ) -> str:
         """Host a gRPC service with the registered measurement method.
 
         Args:
