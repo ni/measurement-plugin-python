@@ -7,10 +7,12 @@ import grpc
 from ni_measurement_service._internal.stubs import DiscoveryServices_pb2
 from ni_measurement_service._internal.stubs import DiscoveryServices_pb2_grpc
 from ni_measurement_service._internal.stubs import ServiceLocation_pb2
-from ni_measurement_service.measurement.info import MeasurementInfo, ServiceInfo
+from ni_measurement_service.measurement.info import MeasurementInfo, ServiceInfo, UIFileType
 
 _DISCOVERY_SERVICE_ADDRESS = "localhost:42000"
 _PROVIDED_MEASUREMENT_SERVICE = "ni.measurements.v1.MeasurementService"
+_MEASUREMENT_UI_ATTRIBUTE = "UserInterfaceType=MeasurementUI"
+_LABVIEW_ATTRIBUTE = "UserInterfaceType=LabVIEW"
 
 _logger = logging.getLogger(__name__)
 
@@ -71,9 +73,11 @@ class DiscoveryClient:
             service_descriptor.name = measurement_info.display_name
             service_descriptor.service_class = service_info.service_class
             service_descriptor.description_url = service_info.description_url
-            service_descriptor.attributes.append(
-                "UserInterfaceType=" + measurement_info.ui_file_type.value
-            )
+            if measurement_info.ui_file_type is UIFileType.LabVIEW:
+                service_descriptor.attributes.append(_LABVIEW_ATTRIBUTE)
+            elif measurement_info.ui_file_type is UIFileType.MeasurementUI:
+                service_descriptor.attributes.append(_MEASUREMENT_UI_ATTRIBUTE)
+
             # Registration Request Creation
             request = DiscoveryServices_pb2.RegisterServiceRequest(
                 location=service_location, service_description=service_descriptor

@@ -6,8 +6,8 @@
       "serviceClass": "DCMeasurement_Python_VI",
       "descriptionUrl": "https://www.ni.com/measurementservices/dcmeasurement.html",
       "providedServices": [ "ni.measurements.v1.MeasurementService" ],
-      "path": "start.bat"
-      "attributes": ["UserInterfaceType=ni_vi://"]
+      "path": "start.bat",
+      "attributes": [ "UserInterfaceType=LabVIEW" ]
     }
   ]
 }

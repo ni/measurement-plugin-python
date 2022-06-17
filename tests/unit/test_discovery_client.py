@@ -69,8 +69,5 @@ def _validate_grpc_request(request):
     assert request.service_description.service_class == _TEST_SERVICE_INFO.service_class
     assert request.service_description.description_url == _TEST_SERVICE_INFO.description_url
     assert request.service_description.name == _TEST_MEASUREMENT_INFO.display_name
-    assert (
-        "UserInterfaceType=" + _TEST_MEASUREMENT_INFO.ui_file_type.value
-        in request.service_description.attributes
-    )
+    assert discovery_client._LABVIEW_ATTRIBUTE in request.service_description.attributes
     assert discovery_client._PROVIDED_MEASUREMENT_SERVICE in request.provided_services
