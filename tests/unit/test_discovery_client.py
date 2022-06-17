@@ -10,7 +10,14 @@ from tests.utilities.fake_registry_service import (
 
 _TEST_SERVICE_PORT = "9999"
 _TEST_SERVICE_INFO = ServiceInfo("TestServiceClass", "TestServiceID", "TestUrl")
-_TEST_MEASUREMENT_INFO = MeasurementInfo("TestMeasurement", ui_file_type=UIFileType.LabVIEW)
+_TEST_MEASUREMENT_INFO = MeasurementInfo(
+    display_name="TestMeasurement",
+    ui_file_type=UIFileType.LabVIEW,
+    version="1.0.0.0",
+    measurement_type="Test",
+    product_type="Test",
+    ui_file_path="",
+)
 
 
 def test___discovery_service_available___register_service___registration_success():
