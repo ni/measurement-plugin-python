@@ -221,7 +221,7 @@ class Context:
         """
         if type not in Context._FIELD_TYPE_TO_DECODER_MAPPING:
             raise Exception(f"Error can not decode type '{type}'")
-        (scalar, array) = Context._FIELD_TYPE_TO_DECODER_MAPPING.get(type)  # type: ignore[call-overload]
+        scalar, array = Context._FIELD_TYPE_TO_DECODER_MAPPING.get(type)  # type: ignore[call-overload]
         if repeated:
             return array
         return scalar
