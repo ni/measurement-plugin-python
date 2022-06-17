@@ -8,7 +8,7 @@ if os.name == "nt":
 # fmt: on
 
 
-def setup_unregister_on_console_close(close_service_func: Callable[[None], None]) -> None:
+def setup_unregister_on_console_close(close_service_func: Callable[[], None]) -> None:
     """Register the Callable to the SetConsoleCtrlHandler.
 
     Args:

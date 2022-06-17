@@ -14,19 +14,19 @@ _GRPC_WIRE_TYPE_BIT_WIDTH = 3
 
 
 def deserialize_parameters(
-    parameter_metadata_dict: Dict[id, ParameterMetadata], parameter_bytes: Bytes
-) -> Dict[id, Any]:
+    parameter_metadata_dict: Dict[int, ParameterMetadata], parameter_bytes: Bytes
+) -> Dict[int, Any]:
     """Deserialize the bytes of the parameter based on the metadata.
 
     Args
     ----
-        parameter_metadata_dict (Dict[id, ParameterMetadata]): Parameter metadata by ID.
+        parameter_metadata_dict (Dict[int, ParameterMetadata]): Parameter metadata by ID.
 
         parameter_bytes (bytes): Bytes of Parameter that need to be deserialized.
 
     Returns
     -------
-        Dict[id, Any]: Deserialized parameters by ID
+        Dict[int, Any]: Deserialized parameters by ID
 
     """
     # Getting overlapping parameters
@@ -43,7 +43,7 @@ def deserialize_parameters(
 
 def serialize_parameters(
     parameter_metadata_dict: Dict[int, ParameterMetadata], parameter_value: List[Any]
-) -> Bytes:
+) -> bytes:
     """Serialize the parameter values in same order based on the metadata_dict.
 
     Args
@@ -75,16 +75,16 @@ def serialize_parameters(
     return serialize_buffer.getvalue()
 
 
-def serialize_default_values(parameter_metadata_dict: Dict[id, ParameterMetadata]) -> Bytes:
+def serialize_default_values(parameter_metadata_dict: Dict[int, ParameterMetadata]) -> bytes:
     """Serialize the Default values in the Metadata.
 
     Args
     -----
-        parameter_metadata_dict (Dict[id, ParameterMetadata]): Configuration metadata.
+        parameter_metadata_dict (Dict[int, ParameterMetadata]): Configuration metadata.
 
     Returns
     -------
-        Bytes: Serialized Bytes of default value.
+        bytes: Serialized Bytes of default value.
 
     """
     default_value_parameter_array = list()
@@ -94,7 +94,7 @@ def serialize_default_values(parameter_metadata_dict: Dict[id, ParameterMetadata
     return serialize_parameters(parameter_metadata_dict, default_value_parameter_array)
 
 
-def _get_field_index(parameter_bytes: Bytes, tag_position: int):
+def _get_field_index(parameter_bytes, tag_position: int):
     """Get the Filed Index based on the tag's position.
 
     The tag Position should be the index of the TagValue in the ByteArray for valid field index.
@@ -114,13 +114,13 @@ def _get_field_index(parameter_bytes: Bytes, tag_position: int):
 
 
 def _get_overlapping_parameters(
-    parameter_metadata_dict: Dict[id, ParameterMetadata], parameter_bytes: Bytes
-) -> Dict[id, Any]:
+    parameter_metadata_dict: Dict[int, ParameterMetadata], parameter_bytes
+) -> Dict[int, Any]:
     """Get the parameters present in both `parameter_metadata_dict` and `parameter_bytes`.
 
     Args
     ----
-        parameter_metadata_dict (Dict[id, ParameterMetadata]): Parameter metadata by ID.
+        parameter_metadata_dict (Dict[int, ParameterMetadata]): Parameter metadata by ID.
 
         parameter_bytes (bytes): Bytes of Parameter that need to be deserialized.
 
@@ -130,10 +130,12 @@ def _get_overlapping_parameters(
 
     Returns
     -------
-        Dict[id, Any]: Overlapping Parameters by ID.
+        Dict[int, Any]: Overlapping Parameters by ID.
 
     """
-    overlapping_parameters_by_id = {}  # inner_decoder update the overlapping_parameters
+    overlapping_parameters_by_id: Dict[
+        int, Any
+    ] = {}  # inner_decoder update the overlapping_parameters
     position = 0
     while position < len(parameter_bytes):
         field_index = _get_field_index(parameter_bytes, position)
@@ -149,7 +151,7 @@ def _get_overlapping_parameters(
         parameter_bytes_memory_view = parameter_bytes_io.getbuffer()
         position = inner_decoder(
             parameter_bytes_memory_view,
-            position + encoder._TagSize(field_index),
+            position + encoder._TagSize(field_index),  # type: ignore[attr-defined]
             len(parameter_bytes),
             type,
             overlapping_parameters_by_id,
@@ -158,25 +160,25 @@ def _get_overlapping_parameters(
 
 
 def _get_missing_parameters(
-    parameter_metadata_dict: Dict[id, ParameterMetadata], parameter_by_id: Dict[id, Any]
-) -> Dict[id, Any]:
+    parameter_metadata_dict: Dict[int, ParameterMetadata], parameter_by_id: Dict[int, Any]
+) -> Dict[int, Any]:
     """Get the Parameters defined in `parameter_metadata_dict` but not in `parameter_by_id`.
 
     Args
     ----
-        parameter_metadata_dict (Dict[id, ParameterMetadata]): Parameter metadata by id.
+        parameter_metadata_dict (Dict[int, ParameterMetadata]): Parameter metadata by id.
 
-        parameter_by_id (Dict[id, Any]): Parameters by ID to compare the metadata with.
+        parameter_by_id (Dict[int, Any]): Parameters by ID to compare the metadata with.
 
     Returns
     -------
-        Dict[id, Any]: Missing parameter(as typedefaults) by ID.
+        Dict[int, Any]: Missing parameter(as type defaults) by ID.
 
     """
     missing_parameters = {}
     for key, value in parameter_metadata_dict.items():
         if key not in parameter_by_id:
-            missing_parameters[value.name] = serialization_strategy.Context.get_type_default(
+            missing_parameters[key] = serialization_strategy.Context.get_type_default(
                 value.type, value.repeated
             )
     return missing_parameters

@@ -74,7 +74,7 @@ class MeasurementService:
         """
         grpc_field_type, repeated = type.value
         parameter = parameter_metadata.ParameterMetadata(
-            display_name, grpc_field_type, repeated, default_value
+            display_name, grpc_field_type, repeated, default_value  # type: ignore[arg-type]
         )
         parameter_metadata.validate_default_value_type(parameter)
         self.configuration_parameter_list.append(parameter)
@@ -101,7 +101,7 @@ class MeasurementService:
         """
         grpc_field_type, repeated = type.value
         parameter = parameter_metadata.ParameterMetadata(
-            display_name, grpc_field_type, repeated, None
+            display_name, grpc_field_type, repeated, None  # type: ignore[arg-type]
         )
         self.output_parameter_list.append(parameter)
 
