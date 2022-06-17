@@ -7,8 +7,8 @@ from google.protobuf.internal import decoder
 from google.protobuf.internal import encoder
 
 
-def _scalar_encoder(encoder: Callable[[int, bool, bool], Callable]) -> Callable[[int], Callable]:
-    """Abstract Specific Encoder(Callable) as Scalar Encoder Callable that takes in fieldindex.
+def _scalar_encoder(encoder) -> Callable[[int], Callable]:
+    """Abstract Specific Encoder(Callable) as Scalar Encoder Callable that takes in field index.
 
     Args
     ----
@@ -30,8 +30,8 @@ def _scalar_encoder(encoder: Callable[[int, bool, bool], Callable]) -> Callable[
     return scalar_encoder
 
 
-def _vector_encoder(encoder: Callable[[int, bool, bool], Callable]) -> Callable[[int], Callable]:
-    """Abstract Specific Encoder(Callable) as Vector Encoder Callable that takes in fieldindex.
+def _vector_encoder(encoder) -> Callable[[int], Callable]:
+    """Abstract Specific Encoder(Callable) as Vector Encoder Callable that takes in field index.
 
     Args
     ----
@@ -53,10 +53,8 @@ def _vector_encoder(encoder: Callable[[int, bool, bool], Callable]) -> Callable[
     return vector_encoder
 
 
-def _scalar_decoder(
-    decoder: Callable[[int, bool, bool, str, Callable], Callable]
-) -> Callable[[int, str], Callable]:
-    """Abstract Specific Decoder(Callable) as Scalar Decoder Callable that takes in fieldindex,key.
+def _scalar_decoder(decoder) -> Callable[[int, str], Callable]:
+    """Abstract Specific Decoder(Callable) as Scalar Decoder Callable that takes in field index,key.
 
     Args
     ----
@@ -79,10 +77,8 @@ def _scalar_decoder(
     return scalar_decoder
 
 
-def _vector_decoder(
-    decoder: Callable[[int, bool, bool], Callable]
-) -> Callable[[int, str], Callable]:
-    """Abstract Specific Decoder(Callable) as Vector Decoder Callable that takes in fieldindex,key.
+def _vector_decoder(decoder) -> Callable[[int, str], Callable]:
+    """Abstract Specific Decoder(Callable) as Vector Decoder Callable that takes in field index,key.
 
     Args
     ----
@@ -185,6 +181,7 @@ class Context:
         Args
         ----
             type (type_pb2.Field): Type of the Parameter.
+
             repeated (bool): Boolean that represents if the Parameter is repeated or not.
 
         Raises
@@ -198,7 +195,7 @@ class Context:
         """
         if type not in Context._FIELD_TYPE_TO_ENCODER_MAPPING:
             raise Exception(f"Error can not encode type '{type}'")
-        (scalar, array) = Context._FIELD_TYPE_TO_ENCODER_MAPPING.get(type)
+        scalar, array = Context._FIELD_TYPE_TO_ENCODER_MAPPING.get(type)  # type: ignore[call-overload]
         if repeated:
             return array
         return scalar
@@ -210,6 +207,7 @@ class Context:
         Args
         ----
             type (type_pb2.Field): Type of the Parameter.
+
             repeated (bool): Boolean that represents if the Parameter is repeated or not.
 
         Raises
@@ -223,7 +221,7 @@ class Context:
         """
         if type not in Context._FIELD_TYPE_TO_DECODER_MAPPING:
             raise Exception(f"Error can not decode type '{type}'")
-        (scalar, array) = Context._FIELD_TYPE_TO_DECODER_MAPPING.get(type)
+        scalar, array = Context._FIELD_TYPE_TO_DECODER_MAPPING.get(type)  # type: ignore[call-overload]
         if repeated:
             return array
         return scalar
@@ -235,6 +233,7 @@ class Context:
         Args
         ----
             type (type_pb2.Field): Type of the Parameter.
+
             repeated (bool): Boolean that represents if the Parameter is repeated or not.
 
         Returns
@@ -244,5 +243,5 @@ class Context:
         """
         if repeated:
             return list()
-        type_default_value = Context._TYPE_DEFAULT_MAPPING.get(type)
+        type_default_value = Context._TYPE_DEFAULT_MAPPING.get(type)  # type: ignore[call-overload]
         return type_default_value
