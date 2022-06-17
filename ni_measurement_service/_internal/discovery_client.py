@@ -68,7 +68,9 @@ class DiscoveryClient:
             service_descriptor.name = measurement_info.display_name
             service_descriptor.service_class = service_info.service_class
             service_descriptor.description_url = service_info.description_url
-            service_descriptor.attributes = ["UserInterfaceType="]
+            service_descriptor.attributes.append(
+                "UserInterfaceType=" + measurement_info.ui_file_type.value
+            )
             # Registration Request Creation
             request = DiscoveryServices_pb2.RegisterServiceRequest(
                 location=service_location, service_description=service_descriptor

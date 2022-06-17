@@ -10,7 +10,7 @@ from tests.utilities.fake_registry_service import (
 
 _TEST_SERVICE_PORT = "9999"
 _TEST_SERVICE_INFO = ServiceInfo("TestServiceClass", "TestServiceID", "TestUrl")
-_TEST_DISPLAY_NAME = MeasurementInfo("TestMeasurement", ui_file_type=UIFileType.LabVIEW)
+_TEST_MEASUREMENT_INFO = MeasurementInfo("TestMeasurement", ui_file_type=UIFileType.LabVIEW)
 
 
 def test___discovery_service_available___register_service___registration_success():
@@ -19,7 +19,7 @@ def test___discovery_service_available___register_service___registration_success
     discovery_client_obj = discovery_client.DiscoveryClient(fake_registry_service_stub)
 
     registration_success_flag = discovery_client_obj.register_measurement_service(
-        _TEST_SERVICE_PORT, _TEST_SERVICE_INFO, _TEST_DISPLAY_NAME
+        _TEST_SERVICE_PORT, _TEST_SERVICE_INFO, _TEST_MEASUREMENT_INFO
     )
 
     _validate_grpc_request(fake_registry_service_stub.request)
@@ -31,7 +31,7 @@ def test___discovery_service_available___unregister_registered_service___un_regi
     fake_registry_service_stub = FakeRegistryServiceStub()
     discovery_client_obj = discovery_client.DiscoveryClient(fake_registry_service_stub)
     discovery_client_obj.register_measurement_service(
-        _TEST_SERVICE_PORT, _TEST_SERVICE_INFO, _TEST_DISPLAY_NAME
+        _TEST_SERVICE_PORT, _TEST_SERVICE_INFO, _TEST_MEASUREMENT_INFO
     )
 
     un_registration_success_flag = discovery_client_obj.unregister_service()
@@ -54,7 +54,7 @@ def test___discovery_service_unavailable___register_service_registration_failure
     fake_registry_service_stub = FakeRegistryServiceStubError()
     discovery_client_obj = discovery_client.DiscoveryClient(fake_registry_service_stub)
     discovery_client_obj.register_measurement_service(
-        _TEST_SERVICE_PORT, _TEST_SERVICE_INFO, _TEST_DISPLAY_NAME
+        _TEST_SERVICE_PORT, _TEST_SERVICE_INFO, _TEST_MEASUREMENT_INFO
     )
 
     un_registration_success_flag = discovery_client_obj.unregister_service()
@@ -68,5 +68,9 @@ def _validate_grpc_request(request):
     assert request.service_description.service_id == _TEST_SERVICE_INFO.service_id
     assert request.service_description.service_class == _TEST_SERVICE_INFO.service_class
     assert request.service_description.description_url == _TEST_SERVICE_INFO.description_url
-    assert request.service_description.name == _TEST_DISPLAY_NAME
+    assert request.service_description.name == _TEST_MEASUREMENT_INFO.display_name
+    assert (
+        "UserInterfaceType=" + _TEST_MEASUREMENT_INFO.ui_file_type.value
+        in request.service_description.attributes
+    )
     assert discovery_client._PROVIDED_MEASUREMENT_SERVICE in request.provided_services
