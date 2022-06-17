@@ -39,6 +39,8 @@ jobs:
         run: poetry install -vvv
       - name: Lint the Code
         run: poetry run ni-python-styleguide lint
+      - name: MyPy Static Analysis 
+        run:  poetry run mypy -p ni_measurement_service --show-error-codes -v
 
   
   tests:
