@@ -67,10 +67,11 @@ jobs:
       
       - name: Push changes to the Main branch
         if: ${{ startsWith(github.event.release.target_commitish, 'main') }}
-        uses: ad-m/github-push-action@master
+        uses: CasperWA/push-protected@v2.10.0
         with:
-          github_token: ${{ secrets.ADMIN_PAT }}
-          branch: ${{ github.event.release.target_commitish }}    
+          token: ${{ secrets.ADMIN_PAT }}
+          branch: ${{ github.event.release.target_commitish }}  
+          unprotect_reviews: true
 
       # To Test the Publish use : poetry publish --build --username __token__ --password ${{ secrets.TEST_PYPI_TOKEN }} -r test-pypi
       - name: Build Python package and publish to PyPI
