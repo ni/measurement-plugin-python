@@ -1,0 +1,24 @@
+:py:mod:`ni_measurement_service._internal.stubs.ServiceLocation_pb2`
+====================================================================
+
+.. py:module:: ni_measurement_service._internal.stubs.ServiceLocation_pb2
+
+.. autoapi-nested-parse::
+
+   Generated protocol buffer code.
+
+
+
+Module Contents
+---------------
+
+.. py:data:: DESCRIPTOR
+   
+
+   
+
+.. py:data:: ServiceLocation
+   
+
+   
+

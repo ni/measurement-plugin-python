@@ -1,0 +1,67 @@
+:py:mod:`ni_measurement_service._internal.stubs.ServiceManagement_pb2_grpc`
+===========================================================================
+
+.. py:module:: ni_measurement_service._internal.stubs.ServiceManagement_pb2_grpc
+
+.. autoapi-nested-parse::
+
+   Client and server classes corresponding to protobuf-defined services.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   ni_measurement_service._internal.stubs.ServiceManagement_pb2_grpc.ServiceManagementServiceStub
+   ni_measurement_service._internal.stubs.ServiceManagement_pb2_grpc.ServiceManagementServiceServicer
+   ni_measurement_service._internal.stubs.ServiceManagement_pb2_grpc.ServiceManagementService
+
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   ni_measurement_service._internal.stubs.ServiceManagement_pb2_grpc.add_ServiceManagementServiceServicer_to_server
+
+
+
+.. py:class:: ServiceManagementServiceStub(channel)
+
+   Bases: :py:obj:`object`
+
+   Service that contains methods related to service management
+
+
+.. py:class:: ServiceManagementServiceServicer
+
+   Bases: :py:obj:`object`
+
+   Service that contains methods related to service management
+
+   .. py:method:: StopService(self, request, context)
+
+      API to stop the measurement service
+
+
+
+.. py:function:: add_ServiceManagementServiceServicer_to_server(servicer, server)
+
+
+.. py:class:: ServiceManagementService
+
+   Bases: :py:obj:`object`
+
+   Service that contains methods related to service management
+
+   .. py:method:: StopService(request, target, options=(), channel_credentials=None, call_credentials=None, insecure=False, compression=None, wait_for_ready=None, timeout=None, metadata=None)
+      :staticmethod:
+
+
+

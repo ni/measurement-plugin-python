@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ni_measurement_service._internal.parameter.serializer &mdash; ni_measurement_service 0.6 documentation</title>
+      <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../../_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
+        <script src="../../../../../_static/jquery.js"></script>
+        <script src="../../../../../_static/underscore.js"></script>
+        <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../../../_static/doctools.js"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../../index.html" class="icon icon-home"> ni_measurement_service
+          </a>
+              <div class="version">
+                0.6.4
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">ni_measurement_service</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li><code class="xref py py-mod docutils literal notranslate"><span class="pre">ni_measurement_service._internal.parameter.serializer</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../_sources/autoapi/ni_measurement_service/_internal/parameter/serializer/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-ni_measurement_service._internal.parameter.serializer">
+<span id="ni-measurement-service-internal-parameter-serializer"></span><h1><a class="reference internal" href="#module-ni_measurement_service._internal.parameter.serializer" title="ni_measurement_service._internal.parameter.serializer"><code class="xref py py-mod docutils literal notranslate"><span class="pre">ni_measurement_service._internal.parameter.serializer</span></code></a><a class="headerlink" href="#module-ni_measurement_service._internal.parameter.serializer" title="Permalink to this heading"></a></h1>
+<p>Parameter Serializer.</p>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this heading"></a></h2>
+<section id="functions">
+<h3>Functions<a class="headerlink" href="#functions" title="Permalink to this heading"></a></h3>
+<table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ni_measurement_service._internal.parameter.serializer.deserialize_parameters" title="ni_measurement_service._internal.parameter.serializer.deserialize_parameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">deserialize_parameters</span></code></a>(parameter_metadata_dict, parameter_bytes)</p></td>
+<td><p>Deserialize the bytes of the parameter based on the metadata.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ni_measurement_service._internal.parameter.serializer.serialize_parameters" title="ni_measurement_service._internal.parameter.serializer.serialize_parameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">serialize_parameters</span></code></a>(parameter_metadata_dict, parameter_value)</p></td>
+<td><p>Serialize the parameter values in same order based on the metadata_dict.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ni_measurement_service._internal.parameter.serializer.serialize_default_values" title="ni_measurement_service._internal.parameter.serializer.serialize_default_values"><code class="xref py py-obj docutils literal notranslate"><span class="pre">serialize_default_values</span></code></a>(parameter_metadata_dict)</p></td>
+<td><p>Serialize the Default values in the Metadata.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py function">
+<dt class="sig sig-object py" id="ni_measurement_service._internal.parameter.serializer.deserialize_parameters">
+<span class="sig-prename descclassname"><span class="pre">ni_measurement_service._internal.parameter.serializer.</span></span><span class="sig-name descname"><span class="pre">deserialize_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameter_metadata_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter_bytes</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/ni_measurement_service/_internal/parameter/serializer.html#deserialize_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurement_service._internal.parameter.serializer.deserialize_parameters" title="Permalink to this definition"></a></dt>
+<dd><p>Deserialize the bytes of the parameter based on the metadata.</p>
+<blockquote>
+<div><p>parameter_metadata_dict (Dict[int, ParameterMetadata]): Parameter metadata by ID.</p>
+<p>parameter_bytes (bytes): Bytes of Parameter that need to be deserialized.</p>
+</div></blockquote>
+<blockquote>
+<div><p>Dict[int, Any]: Deserialized parameters by ID</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ni_measurement_service._internal.parameter.serializer.serialize_parameters">
+<span class="sig-prename descclassname"><span class="pre">ni_measurement_service._internal.parameter.serializer.</span></span><span class="sig-name descname"><span class="pre">serialize_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameter_metadata_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter_value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/ni_measurement_service/_internal/parameter/serializer.html#serialize_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurement_service._internal.parameter.serializer.serialize_parameters" title="Permalink to this definition"></a></dt>
+<dd><p>Serialize the parameter values in same order based on the metadata_dict.</p>
+<blockquote>
+<div><p>parameter_metadata_dict (Dict[int, ParameterMetadata]): Parameter metadata by ID.</p>
+<p>parameter_value (List[Any]): List of Parameter values that need to be serialized.</p>
+</div></blockquote>
+<blockquote>
+<div><p>Bytes: Serialized Bytes of Parameter Values.</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ni_measurement_service._internal.parameter.serializer.serialize_default_values">
+<span class="sig-prename descclassname"><span class="pre">ni_measurement_service._internal.parameter.serializer.</span></span><span class="sig-name descname"><span class="pre">serialize_default_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameter_metadata_dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/ni_measurement_service/_internal/parameter/serializer.html#serialize_default_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurement_service._internal.parameter.serializer.serialize_default_values" title="Permalink to this definition"></a></dt>
+<dd><p>Serialize the Default values in the Metadata.</p>
+<blockquote>
+<div><p>parameter_metadata_dict (Dict[int, ParameterMetadata]): Configuration metadata.</p>
+</div></blockquote>
+<blockquote>
+<div><p>bytes: Serialized Bytes of default value.</p>
+</div></blockquote>
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, National Instruments.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
