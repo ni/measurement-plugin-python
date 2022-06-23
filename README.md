@@ -265,7 +265,7 @@ pyinstaller --onefile --console --add-data "<path_of_the_UI_File>;." --paths .ve
 
 ## API References
 
-[Click here](https://symmetrical-journey-236e860a.pages.github.io/) to view the API reference documentation.
+[Click here](https://ni.github.io/measurement-services-python/) to view the API reference documentation.
 
 ## Appendix: Managing Measurement as Python Package(Project)
 
