@@ -1,0 +1,138 @@
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+syntax = "proto3";
+
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+package ni.measurements.v1;
+
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+option csharp_namespace = "NationalInstruments.MeasurementServices.Measurements";
+
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+import "google/protobuf/any.proto";
+import "google/protobuf/type.proto";
+
+// Service that contains methods related to measurement
+service MeasurementService {
+  
+  // API to get complete metadata
+  rpc GetMetadata (GetMetadataRequest) returns (GetMetadataResponse);
+  
+  // API to measure
+  rpc Measure (MeasureRequest) returns (MeasureResponse);  
+}
+
+// Below message is the metadata request which is currently empty
+// Can add any fields in future as required
+message GetMetadataRequest{}
+
+// Contains measurement details
+// Other details can be added in future as required
+message MeasurementDetails{
+  // Measurement Display name for client to display to user
+  string display_name = 1;
+
+  // Measurement version that helps to maintain versions of a measurement in future
+  string version = 2;
+
+  // Represents category of measurement for the ProductType(example: AC or DC measurements)
+  // Helps to provide better UI experience(example: filter using measurement_type)
+  string measurement_type = 3;
+
+  // Represents type of the DUT(example: ADC, LDO,...)
+  // Helps to provide better UI experience(example: filter using product_type)
+  string product_type = 4;
+}
+
+// Contains measurement parameters details
+message MeasurementParameters{
+  // Configuration Message's Packagename.MessageName
+  // This is used by client to set Any Typeurl
+  string configuration_parameters_messagetype = 1;
+
+  // Measurement configuration parameters details
+  // Helps client to form request with configurations for executing measurement
+  repeated ConfigurationParameter configuration_parameters = 2;
+
+  // Parameter default values
+  // Can be used to show the default value in the UI for a bound element
+  google.protobuf.Any configuration_defaults = 3;
+
+  // Output Message's Packagename.MessageName.
+  // This is used by client to set Any Typeurl
+  string outputs_message_type = 4;
+
+  // Measurement output details
+  // Helps client to de-serialize measurement response after executing measurement
+  repeated Output outputs = 5;
+}
+
+// Contains measurement User Interface details - other details can be added in future as required
+message UserInterfaceDetails{
+  // Measurement configuration UI URL
+  // Helps client to load UI URL for user interactions
+  string configuration_ui_url = 1;
+}
+
+// Contains all metadata related to measurement(Basic, Parameter and UserInterface)
+message GetMetadataResponse{
+  // Measurement details
+  MeasurementDetails measurement_details = 1;
+
+  // Measurement Configurations and outputs details
+  MeasurementParameters measurement_parameters = 2;
+    
+  // Measurement User Interface details
+  UserInterfaceDetails user_interface_details = 3;
+}
+
+// measurement configuration info that is part of metadata
+message ConfigurationParameter {
+  // Represents order of parameter
+  // Used for gRPC message serialization
+  // This allows measurement services to use the gRPC approach for backwards compatibility
+  uint32 protobuf_id = 1;
+
+  // Datatype of the parameter
+  // Helps to de-serialize data into appropriate type
+  google.protobuf.Field.Kind type = 2;
+
+  // Parameter name
+  // Helps to bind UI elements with configurations
+  string name = 3;
+
+  // Represents if the value is repeated
+  bool repeated = 4;
+}
+
+// measurement output info that is part of metadata
+message Output {
+  // Represents order of outputs
+  // Used for gRPC message serialization
+  // This allows measurement services to use the gRPC approach for backwards compatibility
+  uint32 protobuf_id = 1;
+
+  // Datatype of the output
+  // Helps to de-serialize data into appropriate type
+  google.protobuf.Field.Kind type = 2;
+
+  // output name
+  // Helps to bind UI elements with outputs
+  string name = 3;
+
+  // Represents if the value is repeated
+  bool repeated = 4;
+}
+
+// message that holds measurement configurations at run time
+message MeasureRequest{
+  google.protobuf.Any configuration_parameters = 1;
+}
+
+// message that holds measurement outputs at run time
+message MeasureResponse{
+  google.protobuf.Any outputs = 1;
+}

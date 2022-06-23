@@ -1,0 +1,23 @@
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+syntax = "proto3";
+
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+package ni.measurements.servicemanagement.v1;
+
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+option csharp_namespace = "NationalInstruments.MeasurementServices.ServiceManagement";
+
+// Service that contains methods related to service management
+service ServiceManagementService {
+  // API to stop the measurement service
+  rpc StopService (StopServiceRequest) returns (StopServiceResponse);
+}
+
+// Stop Measurement service request - Can add fields in future as required
+message StopServiceRequest{}
+
+//Stop Measurement service response - Can add fields in future as required
+message StopServiceResponse{}
