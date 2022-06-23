@@ -93,4 +93,3 @@ class GrpcService:
         self.discovery_client.unregister_service()
         self.server.stop(5)
         _logger.info("Measurement service closed.")
-        time.sleep(2)
