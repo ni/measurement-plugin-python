@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
     syntax="proto3",
     serialized_options=b"\252\0021NationalInstruments.MeasurementServices.Discovery",
     create_key=_descriptor._internal_create_key,
-    serialized_pb=b'\n\x17\x44iscoveryServices.proto\x12\x1cni.measurements.discovery.v1\x1a\x15ServiceLocation.proto"e\n\x11ServiceDescriptor\x12\x12\n\nservice_id\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x17\n\x0f\x64\x65scription_url\x18\x03 \x01(\t\x12\x15\n\rservice_class\x18\x04 \x01(\t"\xc2\x01\n\x16RegisterServiceRequest\x12L\n\x13service_description\x18\x01 \x01(\x0b\x32/.ni.measurements.discovery.v1.ServiceDescriptor\x12\x19\n\x11provided_services\x18\x02 \x03(\t\x12?\n\x08location\x18\x03 \x01(\x0b\x32-.ni.measurements.discovery.v1.ServiceLocation"2\n\x17RegisterServiceResponse\x12\x17\n\x0fregistration_id\x18\x01 \x01(\t"3\n\x18UnregisterServiceRequest\x12\x17\n\x0fregistration_id\x18\x01 \x01(\t"\x1b\n\x19UnregisterServiceResponse"4\n\x18\x45numerateServicesRequest\x12\x18\n\x10required_service\x18\x01 \x01(\t"h\n\x19\x45numerateServicesResponse\x12K\n\x12\x61vailable_services\x18\x01 \x03(\x0b\x32/.ni.measurements.discovery.v1.ServiceDescriptor"V\n\x15ResolveServiceRequest\x12\x1d\n\x15request_data_location\x18\x01 \x01(\t\x12\x1e\n\x16required_service_class\x18\x02 \x01(\t"\x82\x01\n\x1dResolveMonikerEndpointRequest\x12\x18\n\x10request_location\x18\x01 \x01(\t\x12G\n\x10moniker_location\x18\x02 \x01(\x0b\x32-.ni.measurements.discovery.v1.ServiceLocation2\xa7\x05\n\x0fRegistryService\x12\x80\x01\n\x0fRegisterService\x12\x34.ni.measurements.discovery.v1.RegisterServiceRequest\x1a\x35.ni.measurements.discovery.v1.RegisterServiceResponse"\x00\x12\x86\x01\n\x11UnregisterService\x12\x36.ni.measurements.discovery.v1.UnregisterServiceRequest\x1a\x37.ni.measurements.discovery.v1.UnregisterServiceResponse"\x00\x12\x86\x01\n\x11\x45numerateServices\x12\x36.ni.measurements.discovery.v1.EnumerateServicesRequest\x1a\x37.ni.measurements.discovery.v1.EnumerateServicesResponse"\x00\x12v\n\x0eResolveService\x12\x33.ni.measurements.discovery.v1.ResolveServiceRequest\x1a-.ni.measurements.discovery.v1.ServiceLocation"\x00\x12\x86\x01\n\x16ResolveMonikerEndpoint\x12;.ni.measurements.discovery.v1.ResolveMonikerEndpointRequest\x1a-.ni.measurements.discovery.v1.ServiceLocation"\x00\x42\x34\xaa\x02\x31NationalInstruments.MeasurementServices.Discoveryb\x06proto3',
+    serialized_pb=b'\n\x17\x44iscoveryServices.proto\x12\x1cni.measurements.discovery.v1\x1a\x15ServiceLocation.proto"y\n\x11ServiceDescriptor\x12\x12\n\nservice_id\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x17\n\x0f\x64\x65scription_url\x18\x03 \x01(\t\x12\x15\n\rservice_class\x18\x04 \x01(\t\x12\x12\n\nattributes\x18\x05 \x03(\t"\xc2\x01\n\x16RegisterServiceRequest\x12L\n\x13service_description\x18\x01 \x01(\x0b\x32/.ni.measurements.discovery.v1.ServiceDescriptor\x12\x19\n\x11provided_services\x18\x02 \x03(\t\x12?\n\x08location\x18\x03 \x01(\x0b\x32-.ni.measurements.discovery.v1.ServiceLocation"2\n\x17RegisterServiceResponse\x12\x17\n\x0fregistration_id\x18\x01 \x01(\t"3\n\x18UnregisterServiceRequest\x12\x17\n\x0fregistration_id\x18\x01 \x01(\t"\x1b\n\x19UnregisterServiceResponse"4\n\x18\x45numerateServicesRequest\x12\x18\n\x10required_service\x18\x01 \x01(\t"h\n\x19\x45numerateServicesResponse\x12K\n\x12\x61vailable_services\x18\x01 \x03(\x0b\x32/.ni.measurements.discovery.v1.ServiceDescriptor"V\n\x15ResolveServiceRequest\x12\x1d\n\x15request_data_location\x18\x01 \x01(\t\x12\x1e\n\x16required_service_class\x18\x02 \x01(\t"\x82\x01\n\x1dResolveMonikerEndpointRequest\x12\x18\n\x10request_location\x18\x01 \x01(\t\x12G\n\x10moniker_location\x18\x02 \x01(\x0b\x32-.ni.measurements.discovery.v1.ServiceLocation2\xa7\x05\n\x0fRegistryService\x12\x80\x01\n\x0fRegisterService\x12\x34.ni.measurements.discovery.v1.RegisterServiceRequest\x1a\x35.ni.measurements.discovery.v1.RegisterServiceResponse"\x00\x12\x86\x01\n\x11UnregisterService\x12\x36.ni.measurements.discovery.v1.UnregisterServiceRequest\x1a\x37.ni.measurements.discovery.v1.UnregisterServiceResponse"\x00\x12\x86\x01\n\x11\x45numerateServices\x12\x36.ni.measurements.discovery.v1.EnumerateServicesRequest\x1a\x37.ni.measurements.discovery.v1.EnumerateServicesResponse"\x00\x12v\n\x0eResolveService\x12\x33.ni.measurements.discovery.v1.ResolveServiceRequest\x1a-.ni.measurements.discovery.v1.ServiceLocation"\x00\x12\x86\x01\n\x16ResolveMonikerEndpoint\x12;.ni.measurements.discovery.v1.ResolveMonikerEndpointRequest\x1a-.ni.measurements.discovery.v1.ServiceLocation"\x00\x42\x34\xaa\x02\x31NationalInstruments.MeasurementServices.Discoveryb\x06proto3',
     dependencies=[
         ServiceLocation__pb2.DESCRIPTOR,
     ],
@@ -112,6 +112,25 @@ _SERVICEDESCRIPTOR = _descriptor.Descriptor(
             file=DESCRIPTOR,
             create_key=_descriptor._internal_create_key,
         ),
+        _descriptor.FieldDescriptor(
+            name="attributes",
+            full_name="ni.measurements.discovery.v1.ServiceDescriptor.attributes",
+            index=4,
+            number=5,
+            type=9,
+            cpp_type=9,
+            label=3,
+            has_default_value=False,
+            default_value=[],
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
+        ),
     ],
     extensions=[],
     nested_types=[],
@@ -122,7 +141,7 @@ _SERVICEDESCRIPTOR = _descriptor.Descriptor(
     extension_ranges=[],
     oneofs=[],
     serialized_start=80,
-    serialized_end=181,
+    serialized_end=201,
 )
 
 
@@ -200,8 +219,8 @@ _REGISTERSERVICEREQUEST = _descriptor.Descriptor(
     syntax="proto3",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=184,
-    serialized_end=378,
+    serialized_start=204,
+    serialized_end=398,
 )
 
 
@@ -241,8 +260,8 @@ _REGISTERSERVICERESPONSE = _descriptor.Descriptor(
     syntax="proto3",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=380,
-    serialized_end=430,
+    serialized_start=400,
+    serialized_end=450,
 )
 
 
@@ -282,8 +301,8 @@ _UNREGISTERSERVICEREQUEST = _descriptor.Descriptor(
     syntax="proto3",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=432,
-    serialized_end=483,
+    serialized_start=452,
+    serialized_end=503,
 )
 
 
@@ -303,8 +322,8 @@ _UNREGISTERSERVICERESPONSE = _descriptor.Descriptor(
     syntax="proto3",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=485,
-    serialized_end=512,
+    serialized_start=505,
+    serialized_end=532,
 )
 
 
@@ -344,8 +363,8 @@ _ENUMERATESERVICESREQUEST = _descriptor.Descriptor(
     syntax="proto3",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=514,
-    serialized_end=566,
+    serialized_start=534,
+    serialized_end=586,
 )
 
 
@@ -385,8 +404,8 @@ _ENUMERATESERVICESRESPONSE = _descriptor.Descriptor(
     syntax="proto3",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=568,
-    serialized_end=672,
+    serialized_start=588,
+    serialized_end=692,
 )
 
 
@@ -445,8 +464,8 @@ _RESOLVESERVICEREQUEST = _descriptor.Descriptor(
     syntax="proto3",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=674,
-    serialized_end=760,
+    serialized_start=694,
+    serialized_end=780,
 )
 
 
@@ -505,14 +524,18 @@ _RESOLVEMONIKERENDPOINTREQUEST = _descriptor.Descriptor(
     syntax="proto3",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=763,
-    serialized_end=893,
+    serialized_start=783,
+    serialized_end=913,
 )
 
 _REGISTERSERVICEREQUEST.fields_by_name["service_description"].message_type = _SERVICEDESCRIPTOR
-_REGISTERSERVICEREQUEST.fields_by_name["location"].message_type = ServiceLocation__pb2._SERVICELOCATION
+_REGISTERSERVICEREQUEST.fields_by_name[
+    "location"
+].message_type = ServiceLocation__pb2._SERVICELOCATION
 _ENUMERATESERVICESRESPONSE.fields_by_name["available_services"].message_type = _SERVICEDESCRIPTOR
-_RESOLVEMONIKERENDPOINTREQUEST.fields_by_name["moniker_location"].message_type = ServiceLocation__pb2._SERVICELOCATION
+_RESOLVEMONIKERENDPOINTREQUEST.fields_by_name[
+    "moniker_location"
+].message_type = ServiceLocation__pb2._SERVICELOCATION
 DESCRIPTOR.message_types_by_name["ServiceDescriptor"] = _SERVICEDESCRIPTOR
 DESCRIPTOR.message_types_by_name["RegisterServiceRequest"] = _REGISTERSERVICEREQUEST
 DESCRIPTOR.message_types_by_name["RegisterServiceResponse"] = _REGISTERSERVICERESPONSE
@@ -633,8 +656,8 @@ _REGISTRYSERVICE = _descriptor.ServiceDescriptor(
     index=0,
     serialized_options=None,
     create_key=_descriptor._internal_create_key,
-    serialized_start=896,
-    serialized_end=1575,
+    serialized_start=916,
+    serialized_end=1595,
     methods=[
         _descriptor.MethodDescriptor(
             name="RegisterService",

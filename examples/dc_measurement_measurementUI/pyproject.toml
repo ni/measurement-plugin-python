@@ -1,7 +1,7 @@
 [tool.poetry]
-name = "dc_measurement_screenui"
+name = "dc_measurement_measurementUI"
 version = "0.5.0"
-description = "Example Measurement that performs operations with DcPower Instrument. Linked to Screen File UI."
+description = "Example Measurement that performs operations with DcPower Instrument. Linked to Measurement UI."
 authors = ["National Instruments"]
 
 [tool.poetry.dependencies]

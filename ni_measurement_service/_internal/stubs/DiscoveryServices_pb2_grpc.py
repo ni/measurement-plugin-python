@@ -127,7 +127,9 @@ def add_RegistryServiceServicer_to_server(servicer, server):
             response_serializer=ServiceLocation__pb2.ServiceLocation.SerializeToString,
         ),
     }
-    generic_handler = grpc.method_handlers_generic_handler("ni.measurements.discovery.v1.RegistryService", rpc_method_handlers)
+    generic_handler = grpc.method_handlers_generic_handler(
+        "ni.measurements.discovery.v1.RegistryService", rpc_method_handlers
+    )
     server.add_generic_rpc_handlers((generic_handler,))
 
 

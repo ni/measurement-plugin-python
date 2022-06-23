@@ -1,0 +1,32 @@
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+syntax = "proto3";
+
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+option csharp_namespace = "NationalInstruments.MeasurementServices.Discovery";
+
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+package ni.measurements.discovery.v1;
+
+// Represents the location of a service.  The location is generally
+// the IP address and port number.  But it can also be something
+// like a UDS socket.
+message ServiceLocation {
+
+    // location (ipaddress) of the service
+    string location = 1;
+
+    // optimal route (ipaddress) to use when communicating with the
+    // service
+    // This may be a link-local connection, or a high speed link that
+    // is available between the two communicating services
+    string optimal_route = 2;
+
+    // port to use for insecure HTTP connections
+    string insecure_port = 3;
+
+    // port to use for Secure SSL authenticated connections
+    string ssl_authenticated_port = 4;
+}

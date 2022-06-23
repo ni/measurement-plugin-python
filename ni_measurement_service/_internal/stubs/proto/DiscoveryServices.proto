@@ -1,0 +1,138 @@
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+syntax = "proto3";
+
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+import "ServiceLocation.proto";
+
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+option csharp_namespace = "NationalInstruments.MeasurementServices.Discovery";
+
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+package ni.measurements.discovery.v1;
+
+// Service registry for the Measurement Services System. Measurement Services uses Client
+// Used to:
+//   Register Services - When a service starts up it can dynamically register
+//   Service Enumeration - Find all classes of a service which implement a specific
+//       service interface
+//   Service Path Resolution - Used to find optimal instances and network paths to
+//       a specific service
+service RegistryService {
+
+  // Registers a service instance with the registry
+  rpc RegisterService (RegisterServiceRequest) returns (RegisterServiceResponse) {};
+
+  // Unregisters a service instance with the registry
+  rpc UnregisterService(UnregisterServiceRequest) returns (UnregisterServiceResponse) {};
+
+  // Enumerate all services which implement a specific service interface
+  // This is useful for plugin type systems where the possible services are not know ahead of time.
+  rpc EnumerateServices(EnumerateServicesRequest) returns (EnumerateServicesResponse) {};
+
+  // Given a specific service class this will find the best service implementation which
+  // best optimizes communication performance. Factors such as data path and service load
+  // will be taken into account 
+  rpc ResolveService(ResolveServiceRequest) returns (ServiceLocation) {};
+
+  // Given a specific moniker endpoint this will find the best data path to use to
+  // optimize the performance of communcation.  For example if there are multiple
+  // network paths (1Gb public IP, and 10Gb link-local) this will resolve to the path
+  // which will give the best performance.
+  rpc ResolveMonikerEndpoint(ResolveMonikerEndpointRequest) returns (ServiceLocation) {};
+}
+
+// Description of a registered service.  This information can be used to display
+// to the user information about the service when services are being developed for
+// a plug-in architecture
+message ServiceDescriptor {
+
+  string service_id = 1;
+
+  // The user visible name of a service
+  string name = 2;
+
+  // Url which provides descriptive information about the service
+  string description_url = 3;
+
+  // The "class" of a service.  All services of the same class provide identical
+  // functionality.  When a service interface is defined for a plug-in system
+  // many services which provide different functionality may provide a service by that
+  // interface. The class can be used to uniquely identify the functionality the service
+  // provides.
+  string service_class = 4;
+
+  // Optional attributes of a service
+  repeated string attributes = 5;
+}
+
+// Request used when registering a service
+message RegisterServiceRequest {
+
+  // The service description
+  ServiceDescriptor service_description = 1;
+
+  // The list of services the service instance provides.  These are the gRPC Full Name of the
+  // service.  Registration can use the gRPC metadata to provide this name
+  repeated string provided_services = 2;
+
+  // The canonical location information for the service.
+  ServiceLocation location = 3;
+}
+
+// Response to registering a service
+message RegisterServiceResponse {
+
+  // ID that can be used to unregister the service
+  string registration_id = 1;
+}
+
+// Service unregistration request
+message UnregisterServiceRequest {
+
+  // The ID of the registered service to unregister
+  string registration_id = 1;
+}
+
+// Response for registering a service
+message UnregisterServiceResponse {
+}
+
+// Requested used when enumerating a service
+message EnumerateServicesRequest {
+  
+  // The gRPC full name of the service interface that is needed
+  // Caller can use the gRPC metadata to provide this name
+  string required_service = 1;
+}
+
+// Response used when enumerating services
+message EnumerateServicesResponse {
+
+  // The list of available services which implement the specified service
+  // interface
+  repeated ServiceDescriptor available_services = 1;
+}
+
+// Request used when resolving for a specific service instance
+message ResolveServiceRequest {
+
+  // The location of the caller / consumer of the data provided by the
+  // service.
+	string request_data_location = 1;
+
+  // The service "class" that is required
+	string required_service_class = 2;
+}
+
+message ResolveMonikerEndpointRequest {
+  // The location, IP Address, which will be doing the communication
+  // with the data endpoint
+	string request_location = 1;
+
+  // The location of the source / sink of the data
+	ServiceLocation moniker_location = 2;
+}

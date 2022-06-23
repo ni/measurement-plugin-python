@@ -39,7 +39,9 @@ def add_ServiceManagementServiceServicer_to_server(servicer, server):
             response_serializer=ServiceManagement__pb2.StopServiceResponse.SerializeToString,
         ),
     }
-    generic_handler = grpc.method_handlers_generic_handler("ni.measurements.servicemanagement.v1.ServiceManagementService", rpc_method_handlers)
+    generic_handler = grpc.method_handlers_generic_handler(
+        "ni.measurements.servicemanagement.v1.ServiceManagementService", rpc_method_handlers
+    )
     server.add_generic_rpc_handlers((generic_handler,))
 
 

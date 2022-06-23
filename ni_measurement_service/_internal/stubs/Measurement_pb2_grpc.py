@@ -55,7 +55,9 @@ def add_MeasurementServiceServicer_to_server(servicer, server):
             response_serializer=Measurement__pb2.MeasureResponse.SerializeToString,
         ),
     }
-    generic_handler = grpc.method_handlers_generic_handler("ni.measurements.v1.MeasurementService", rpc_method_handlers)
+    generic_handler = grpc.method_handlers_generic_handler(
+        "ni.measurements.v1.MeasurementService", rpc_method_handlers
+    )
     server.add_generic_rpc_handlers((generic_handler,))
 
 
