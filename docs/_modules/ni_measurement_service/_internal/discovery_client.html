@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ni_measurement_service._internal.discovery_client &mdash; ni_measurement_service 0.6 documentation</title>
+  <title>ni_measurement_service._internal.discovery_client &mdash; ni_measurement_service 0.8 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
@@ -29,7 +29,7 @@
             <a href="../../../index.html" class="icon icon-home"> ni_measurement_service
           </a>
               <div class="version">
-                0.6.5
+                0.8.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -77,10 +77,14 @@
 <span class="kn">from</span> <span class="nn">ni_measurement_service._internal.stubs</span> <span class="kn">import</span> <span class="n">DiscoveryServices_pb2</span>
 <span class="kn">from</span> <span class="nn">ni_measurement_service._internal.stubs</span> <span class="kn">import</span> <span class="n">DiscoveryServices_pb2_grpc</span>
 <span class="kn">from</span> <span class="nn">ni_measurement_service._internal.stubs</span> <span class="kn">import</span> <span class="n">ServiceLocation_pb2</span>
+<span class="kn">from</span> <span class="nn">ni_measurement_service.measurement.info</span> <span class="kn">import</span> <span class="n">MeasurementInfo</span>
 <span class="kn">from</span> <span class="nn">ni_measurement_service.measurement.info</span> <span class="kn">import</span> <span class="n">ServiceInfo</span>
+<span class="kn">from</span> <span class="nn">ni_measurement_service.measurement.info</span> <span class="kn">import</span> <span class="n">UIFileType</span>
 
 <span class="n">_DISCOVERY_SERVICE_ADDRESS</span> <span class="o">=</span> <span class="s2">&quot;localhost:42000&quot;</span>
 <span class="n">_PROVIDED_MEASUREMENT_SERVICE</span> <span class="o">=</span> <span class="s2">&quot;ni.measurements.v1.MeasurementService&quot;</span>
+<span class="n">_MEASUREMENT_UI_ATTRIBUTE</span> <span class="o">=</span> <span class="s2">&quot;UserInterfaceType=MeasurementUI&quot;</span>
+<span class="n">_LABVIEW_ATTRIBUTE</span> <span class="o">=</span> <span class="s2">&quot;UserInterfaceType=LabVIEW&quot;</span>
 
 <span class="n">_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
@@ -112,7 +116,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">registration_id</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
 
 <div class="viewcode-block" id="DiscoveryClient.register_measurement_service"><a class="viewcode-back" href="../../../autoapi/ni_measurement_service/_internal/discovery_client/index.html#ni_measurement_service._internal.discovery_client.DiscoveryClient.register_measurement_service">[docs]</a>    <span class="k">def</span> <span class="nf">register_measurement_service</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">service_port</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">service_info</span><span class="p">:</span> <span class="n">ServiceInfo</span><span class="p">,</span> <span class="n">display_name</span><span class="p">:</span> <span class="nb">str</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">service_port</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">service_info</span><span class="p">:</span> <span class="n">ServiceInfo</span><span class="p">,</span> <span class="n">measurement_info</span><span class="p">:</span> <span class="n">MeasurementInfo</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Register the measurement service with the discovery service.</span>
 
@@ -138,9 +142,14 @@
             <span class="c1"># Service Descriptor</span>
             <span class="n">service_descriptor</span> <span class="o">=</span> <span class="n">DiscoveryServices_pb2</span><span class="o">.</span><span class="n">ServiceDescriptor</span><span class="p">()</span>
             <span class="n">service_descriptor</span><span class="o">.</span><span class="n">service_id</span> <span class="o">=</span> <span class="n">service_info</span><span class="o">.</span><span class="n">service_id</span>
-            <span class="n">service_descriptor</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">display_name</span>
+            <span class="n">service_descriptor</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">measurement_info</span><span class="o">.</span><span class="n">display_name</span>
             <span class="n">service_descriptor</span><span class="o">.</span><span class="n">service_class</span> <span class="o">=</span> <span class="n">service_info</span><span class="o">.</span><span class="n">service_class</span>
             <span class="n">service_descriptor</span><span class="o">.</span><span class="n">description_url</span> <span class="o">=</span> <span class="n">service_info</span><span class="o">.</span><span class="n">description_url</span>
+            <span class="k">if</span> <span class="n">measurement_info</span><span class="o">.</span><span class="n">ui_file_type</span> <span class="ow">is</span> <span class="n">UIFileType</span><span class="o">.</span><span class="n">LabVIEW</span><span class="p">:</span>
+                <span class="n">service_descriptor</span><span class="o">.</span><span class="n">attributes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_LABVIEW_ATTRIBUTE</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">measurement_info</span><span class="o">.</span><span class="n">ui_file_type</span> <span class="ow">is</span> <span class="n">UIFileType</span><span class="o">.</span><span class="n">MeasurementUI</span><span class="p">:</span>
+                <span class="n">service_descriptor</span><span class="o">.</span><span class="n">attributes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_MEASUREMENT_UI_ATTRIBUTE</span><span class="p">)</span>
+
             <span class="c1"># Registration Request Creation</span>
             <span class="n">request</span> <span class="o">=</span> <span class="n">DiscoveryServices_pb2</span><span class="o">.</span><span class="n">RegisterServiceRequest</span><span class="p">(</span>
                 <span class="n">location</span><span class="o">=</span><span class="n">service_location</span><span class="p">,</span> <span class="n">service_description</span><span class="o">=</span><span class="n">service_descriptor</span>
