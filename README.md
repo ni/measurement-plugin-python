@@ -91,6 +91,12 @@ REM Activate the required virtual environment if any.
 pip install ni-measurement-service
 ```
 
+Check if you have installed the expected version of NIMS installed by running the below command:
+
+```cmd
+pip show ni-measurement-service
+```
+
 ### Developing a minimal python measurement
 
 1. Create a python file(.py file) using the IDE of your choice or using the [Visual Studio Code.](https://code.visualstudio.com/download).
@@ -164,10 +170,10 @@ pip install ni-measurement-service
 
         ``` python
         @foo_measurement_service.register_measurement
-        @foo_measurement_service.configuration("DisplayNameForInput1", DataType.String, "DefaultValueForInput1")
-        @foo_measurement_service.configuration("DisplayNameForInput2", DataType.String, "DefaultValueForInput2")
-        @foo_measurement_service.output("DisplayNameForOutput1", DataType.String)
-        @foo_measurement_service.output("DisplayNameForOutput2", DataType.String)
+        @foo_measurement_service.configuration("DisplayNameForInput1", nims.DataType.String, "DefaultValueForInput1")
+        @foo_measurement_service.configuration("DisplayNameForInput2", nims.DataType.String, "DefaultValueForInput2")
+        @foo_measurement_service.output("DisplayNameForOutput1", nims.DataType.String)
+        @foo_measurement_service.output("DisplayNameForOutput2", nims.DataType.String)
         def measure(input_1, input_2):
             return ["foo", "bar"]
         ```
