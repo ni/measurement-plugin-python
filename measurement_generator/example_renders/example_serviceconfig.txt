@@ -1,0 +1,12 @@
+{
+  "services": [
+    {
+      "id": "{E0095551-CB4B-4352-B65B-4280973694B2}", 
+      "name": "SampleMeasurement", 
+      "serviceClass": "SampleMeasurement_Python", 
+      "descriptionUrl": "description",
+      "providedServices": [ "ni.measurements.v1.MeasurementService" ], 
+      "path": "runSampleMeasurement.bat" 
+    }
+  ]
+}
