@@ -67,7 +67,7 @@ def _create_file(template_name: str, file_name: str, **template_args) -> str:
 def _create_bat(name):
     output_file = pathlib.Path(__file__).parent / f"run_{name}.bat"
 
-    py_file_path = str(pathlib.Path(__file__).parent.absolute() / f"{name}.py")
+    py_file_path = (pathlib.Path(__file__).parent / f"{name}.py").resolve()
 
     with output_file.open("w") as fout:
         fout.write(f"call python {py_file_path}")
