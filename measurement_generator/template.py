@@ -19,7 +19,7 @@ def _render_template(template_name: str, **template_args):
 def _read_file(file_name):
     file_path = (
         pathlib.Path(__file__).parent.absolute()
-        / f"example_renders/{file_name}"
+        / "example_renders" / file_name
     )
     with file_path.open("r") as fout:
         return fout.read()
