@@ -1,4 +1,4 @@
-<%page args="display_name, version, measurement_type, product_type, ui_file, service_class, service_id, description"/>\
+<%page args="display_name, version, measurement_type, product_type, ui_file, ui_file_type, service_class, service_id, description"/>\
 \
 import logging
 import os
@@ -13,7 +13,7 @@ measurement_info = nims.MeasurementInfo(
     measurement_type="${measurement_type}",
     product_type="${product_type}",
     ui_file_path=os.path.join(os.path.dirname(os.path.abspath(__file__)), "${ui_file}"),
-    ui_file_type=nims.UIFileType.MeasurementUI,
+    ui_file_type=nims.UIFileType.${ui_file_type},
 )
 
 service_info = nims.ServiceInfo(
@@ -51,4 +51,5 @@ def main(verbose: int):
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    main()
+    sys.exit(0)

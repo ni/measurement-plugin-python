@@ -1,6 +1,6 @@
+"""Utilizes command line args to create a measurement using template files."""
 import pathlib
 import re
-import unittest
 import uuid
 
 import click
@@ -8,55 +8,19 @@ from mako import exceptions
 from mako.template import Template
 
 
-def _render_template(template_name: str, **template_args):
+def _render_template(template_name: str, **template_args) -> str:
+    file_path = str(pathlib.Path(__file__).parent / "templates" / template_name)
+    template = Template(filename=file_path)
     try:
-        template = Template(filename=str(pathlib.Path(__file__).parent / template_name))
         return template.render(**template_args)
     except:  # noqa: E722
         print(exceptions.text_error_template().render())
 
 
-def _read_file(file_name):
-    file_path = (
-        pathlib.Path(__file__).parent.absolute()
-        / "example_renders" / file_name
-    )
-    with file_path.open("r") as fout:
-        return fout.read()
-
-
-class TestRender(unittest.TestCase):
-    def test_py_render(self):
-        self.assertEqual(
-            _render_template(
-                "templates/pyTemplate.txt.mako",
-                display_name="SampleMeasurement",
-                version="1.0.0",
-                measurement_type="Sample",
-                product_type="Sample",
-                ui_file="measurementUI.measui",
-                service_class="SampleMeasurement_Python",
-                service_id="{E0095551-CB4B-4352-B65B-4280973694B2}",
-                description="description",
-            ),
-            _read_file("example_py.txt"),
-        )
-
-    def test_sc_render(self):
-        self.assertEqual(
-            _render_template(
-                "templates/scTemplate.txt.mako",
-                display_name="SampleMeasurement",
-                service_class="SampleMeasurement_Python",
-                service_id="{E0095551-CB4B-4352-B65B-4280973694B2}",
-                description="description",
-            ),
-            _read_file("example_serviceconfig.txt"),
-        )
-
-
-def _create_file(template_name: str, file_name: str, **template_args) -> str:
-    output_file = pathlib.Path(__file__).parent / file_name
+def _create_file(
+    template_name: str, file_name: str, directory_out, **template_args
+) -> str:
+    output_file = pathlib.Path(directory_out) / file_name
 
     output = _render_template(template_name, **template_args)
 
@@ -64,17 +28,17 @@ def _create_file(template_name: str, file_name: str, **template_args) -> str:
         fout.write(output)
 
 
-def _create_bat(name):
-    output_file = pathlib.Path(__file__).parent / f"run_{name}.bat"
+def _create_bat(name, directory_out):
+    output_file = pathlib.Path(directory_out) / f"start.bat"
 
-    py_file_path = (pathlib.Path(__file__).parent / f"{name}.py").resolve()
+    py_file_path = (pathlib.Path(directory_out) / f"{name}.py").resolve()
 
     with output_file.open("w") as fout:
         fout.write(f"call python {py_file_path}")
 
 
 def _check_version(ctx, param, version):
-    pattern = r"^[0-9]+\.[0-9]+\.[0-9]+$"  # ex: 2.6.8
+    pattern = r"^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$"
     if re.match(pattern, version):
         return version
     raise ValueError("version not entered correctly")
@@ -88,8 +52,20 @@ def _check_ui(ctx, param, ui_file):
     return ui_file
 
 
-def _create_service_class(service_class, display_name):
-    if service_class == "":
+def _check_ui_type(ui_file):
+    ext = pathlib.Path(ui_file).suffix
+    if ext == ".measui":
+        return "MeasurementUI"
+    elif ext == ".vi":
+        return "LabVIEW"
+    else:
+        raise ValueError(
+            "UI file extension does not match possible UI file types. Should be .measui or .vi."
+        )
+
+
+def _assess_service_class(service_class, display_name):
+    if service_class is None:
         return f"{display_name}_Python"
     else:
         return service_class
@@ -104,7 +80,7 @@ def _check_uuid(test_uuid):
 
 
 def _check_guid(ctx, param, service_id):
-    if service_id == "":
+    if service_id is None:
         return "{" + str(uuid.uuid4()) + "}"
     else:
         service_id = service_id.replace("{", "").replace("}", "")
@@ -113,37 +89,39 @@ def _check_guid(ctx, param, service_id):
         raise ValueError("GUID not entered correctly")
 
 
-# Takes in command line arguments to create a .py file, a .serviceConfig file, and a .bat file.
 @click.command()
 @click.argument("display_name")
 @click.argument("version", callback=_check_version)
 @click.argument("measurement_type")
 @click.argument("product_type")
 @click.option(
-    "-U",
+    "-u",
     "--ui-file",
-    default="",
+    default="measurementUI.measui",
     help="Name of the UI File",
     callback=_check_ui,
 )
 @click.option(
-    "-S",
+    "-s",
     "--service-class",
-    default="",
-    help="Service Class that the measurement belongs to",
+    help="Service Class that the measurement belongs to. Default is <display_name>_Python",
 )
 @click.option(
-    "-I",
+    "-i",
     "--service-id",
-    default="",
     help="Unique GUID",
     callback=_check_guid,
 )
 @click.option(
-    "-D",
+    "-d",
     "--description",
-    default="",
     help="Description URL that contains information about the measurement",
+)
+@click.option(
+    "-o",
+    "--directory-out",
+    default=pathlib.Path(__file__).parent,
+    help="Output directory for measurement files",
 )
 def _create_measurement(
     display_name,
@@ -154,30 +132,50 @@ def _create_measurement(
     service_class,
     service_id,
     description,
+    directory_out,
 ):
-    service_class = _create_service_class(service_class, display_name)
+    """Takes in command line arguments to create a .py file, a .serviceConfig file, and a .bat file.
+    These files work in unison to preform a measurement, 
+    although the .bat file is optional in its use.
+
+    DISPLAY_NAME is the name of the measurement.
+    The created .py file and .serviceConfig file will take this as its file name.
+
+    VERSION is the current version of the measurement.
+    Should be formatted like x.x.x.x
+    EX: 0.2.6.8
+
+    MEASUREMENT_TYPE is the type of measurement the measurement files will eventually preform.
+
+    PRODUCT_TYPE is the type of product the measurement files will eventually produce.
+    """
+    service_class = _assess_service_class(service_class, display_name)
+    ui_file_type = _check_ui_type(ui_file)
 
     _create_file(
-        "templates/pyTemplate.txt.mako",
+        "pyTemplate.py.mako",
         f"{display_name}.py",
+        directory_out,
         display_name=display_name,
         version=version,
         measurement_type=measurement_type,
-        product_type=measurement_type,
+        product_type=product_type,
         ui_file=ui_file,
+        ui_file_type=ui_file_type,
         service_class=service_class,
         service_id=service_id,
         description=description,
     )
     _create_file(
-        "templates/scTemplate.txt.mako",
+        "scTemplate.serviceConfig.mako",
         f"{display_name}.serviceConfig",
+        directory_out,
         display_name=display_name,
         service_class=service_class,
         service_id=service_id,
         description=description,
     )
-    _create_bat(display_name)
+    _create_bat(display_name, directory_out)
 
 
 def main():

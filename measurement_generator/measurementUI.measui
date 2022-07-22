@@ -1,31 +1,31 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<SourceFile Checksum="B67968979D9482016D8B96B8084025256CB33F61FC3C9B561665C47240C9448EECAA7998AAF16E4E90B06EE4BC7D91F3D3AEBC5F7C235D54E416152253B64EB1" Timestamp="1D892D798EB2CE7" xmlns="http://www.ni.com/PlatformFramework">
+<SourceFile Checksum="F6BC453A030B5A154B8AA72258BE892CEC0C544EA4EA406EE2BE4D88932478C05B29F9D74FB1DFDB6603EC46C77B7C757160E6413A7CFC6C971302FF7C4D5903" Timestamp="1D89D49951B3C35" xmlns="http://www.ni.com/PlatformFramework">
 	<SourceModelFeatureSet>
-		<ParsableNamespace AssemblyFileVersion="9.5.0.2358" FeatureSetName="Configuration Based Software Core" Name="http://www.ni.com/ConfigurationBasedSoftware.Core" OldestCompatibleVersion="6.3.0.49152" Version="6.3.0.49152" />
-		<ParsableNamespace AssemblyFileVersion="9.5.0.2358" FeatureSetName="LabVIEW Controls" Name="http://www.ni.com/Controls.LabVIEW.Design" OldestCompatibleVersion="8.1.0.49152" Version="8.1.0.49152" />
-		<ParsableNamespace AssemblyFileVersion="22.5.0.2358" FeatureSetName="InstrumentStudio Measurement UI" Name="http://www.ni.com/InstrumentFramework/ScreenDocument" OldestCompatibleVersion="22.1.0.0" Version="22.1.0.0" />
-		<ParsableNamespace AssemblyFileVersion="9.5.0.2358" FeatureSetName="Editor" Name="http://www.ni.com/PanelCommon" OldestCompatibleVersion="6.1.0.0" Version="6.1.0.49152" />
-		<ParsableNamespace AssemblyFileVersion="9.5.0.2358" FeatureSetName="Editor" Name="http://www.ni.com/PlatformFramework" OldestCompatibleVersion="8.1.0.49152" Version="8.1.0.49152" />
-		<ApplicationVersionInfo Build="22.5.0.2358" Name="Measurement UI Editor" Version="22.5.0.2358" />
+		<ParsableNamespace AssemblyFileVersion="9.6.0.975" FeatureSetName="Configuration Based Software Core" Name="http://www.ni.com/ConfigurationBasedSoftware.Core" OldestCompatibleVersion="6.3.0.49152" Version="6.3.0.49152" />
+		<ParsableNamespace AssemblyFileVersion="9.6.0.975" FeatureSetName="LabVIEW Controls" Name="http://www.ni.com/Controls.LabVIEW.Design" OldestCompatibleVersion="8.1.0.49152" Version="8.1.0.49152" />
+		<ParsableNamespace AssemblyFileVersion="22.8.0.975" FeatureSetName="InstrumentStudio Measurement UI" Name="http://www.ni.com/InstrumentFramework/ScreenDocument" OldestCompatibleVersion="22.1.0.0" Version="22.1.0.0" />
+		<ParsableNamespace AssemblyFileVersion="9.6.0.975" FeatureSetName="Editor" Name="http://www.ni.com/PanelCommon" OldestCompatibleVersion="6.1.0.0" Version="6.1.0.49152" />
+		<ParsableNamespace AssemblyFileVersion="9.6.0.975" FeatureSetName="Editor" Name="http://www.ni.com/PlatformFramework" OldestCompatibleVersion="8.1.0.49152" Version="8.1.0.49152" />
+		<ApplicationVersionInfo Build="22.8.0.975" Name="Measurement UI Editor" Version="22.8.0.975" />
 	</SourceModelFeatureSet>
-	<Screen ClientId="{3335a90b-8f1e-4a58-9a87-8c2ec88901a8}" DisplayName="r" Id="81314d519120414b8a8b84cf7122b00d" ServiceClass="r_Python" xmlns="http://www.ni.com/InstrumentFramework/ScreenDocument">
-		<ScreenSurface Height="[float]1680" Id="3ceb858b3343417e8d1b9dd156048530" Left="[float]0" PanelSizeMode="Fixed" Top="[float]0" Width="[float]2009" xmlns="http://www.ni.com/ConfigurationBasedSoftware.Core">
-			<ScreenSurfaceCanvas Background="[SMSolidColorBrush]#80808080" BaseName="[string]Canvas" Height="[float]198" Id="bb1211cd3e0f4dae99c4df222547d806" Label="[UIModel]289cb4b5ddda44228eb4202924236fd0" Left="[float]78" Top="[float]34" Width="[float]159">
-				<ChannelArrayViewer ArrayElement="[UIModel]a69eda6c5c3d45fa91e4b40d11d0addf" BaseName="[string]Numeric Array Input" Channel="[string]Configuration/Array in" Columns="[int]1" Dimensions="[int]1" Height="[float]120" Id="778d5afe2a9046c28f2c8e99fffe38da" IndexVisibility="[Visibility]Collapsed" Label="[UIModel]dc816529e384bed9779923807d3bd41" Left="[float]24" Orientation="[SMOrientation]Vertical" Rows="[int]4" Top="[float]30" VerticalScrollBarVisibility="[ScrollBarVisibility]Visible" Width="[float]104">
+	<Screen ClientId="{f2193b1d-1b6e-450a-b051-b268966356ce}" DisplayName="r" Id="172a7c38b0dc4ac6b18ca4397c8d6832" ServiceClass="r_Python" xmlns="http://www.ni.com/InstrumentFramework/ScreenDocument">
+		<ScreenSurface Height="[float]400" Id="5996746ebab246d8ace75a4305e4a290" Left="[float]0" PanelSizeMode="Fixed" Top="[float]0" Width="[float]800" xmlns="http://www.ni.com/ConfigurationBasedSoftware.Core">
+			<ScreenSurfaceCanvas Background="[SMSolidColorBrush]#80808080" BaseName="[string]Canvas" Height="[float]155" Id="2af6108da1054dc9a76e83663d3e6a69" Label="[UIModel]d75763afd14e48838daea830ed6372e1" Left="[float]25" Top="[float]31" Width="[float]134">
+				<ChannelArrayViewer ArrayElement="[UIModel]42af83617b204148b9f703d86ddad9f2" BaseName="[string]Numeric Array Input" Channel="[string]Configuration/Array in" Columns="[int]1" Dimensions="[int]1" Height="[float]120" Id="62525389c3647d595a3583252b623c0" IndexVisibility="[Visibility]Collapsed" Label="[UIModel]ba7278f5626c4b8ea67bb08286c51d21" Left="[float]11" Orientation="[SMOrientation]Vertical" Rows="[int]4" Top="[float]26" VerticalScrollBarVisibility="[ScrollBarVisibility]Visible" Width="[float]104">
 					<p.DefaultElementValue>0x0</p.DefaultElementValue>
-					<ChannelArrayNumericText BaseName="[string]Numeric" Height="[float]24" Id="a69eda6c5c3d45fa91e4b40d11d0addf" UnitAnnotation="[string]" ValueFormatter="[string]LV:G5" ValueType="[Type]Double" Width="[float]72" />
+					<ChannelArrayNumericText BaseName="[string]Numeric" Height="[float]24" Id="42af83617b204148b9f703d86ddad9f2" UnitAnnotation="[string]" ValueFormatter="[string]LV:G5" ValueType="[Type]Double" Width="[float]72" />
 				</ChannelArrayViewer>
-				<Label Height="[float]16" Id="dc816529e384bed9779923807d3bd41" LabelOwner="[UIModel]778d5afe2a9046c28f2c8e99fffe38da" Left="[float]24" Text="[string]Array in" Top="[float]10" Width="[float]41" xmlns="http://www.ni.com/PanelCommon" />
+				<Label Height="[float]16" Id="ba7278f5626c4b8ea67bb08286c51d21" LabelOwner="[UIModel]62525389c3647d595a3583252b623c0" Left="[float]11" Text="[string]Array in" Top="[float]6" Width="[float]41" xmlns="http://www.ni.com/PanelCommon" />
 			</ScreenSurfaceCanvas>
-			<Label Height="[float]16" Id="289cb4b5ddda44228eb4202924236fd0" LabelOwner="[UIModel]bb1211cd3e0f4dae99c4df222547d806" Left="[float]78" Text="[string]Input" Top="[float]14" Width="[float]28" xmlns="http://www.ni.com/PanelCommon" />
-			<ScreenSurfaceCanvas Background="[SMSolidColorBrush]#80808080" BaseName="[string]Canvas" Height="[float]198" Id="a5f4f4b46ddb440180d8c401e0f84832" Label="[UIModel]ff41338babd0460098d841eef1709498" Left="[float]279" Top="[float]34" Width="[float]159">
-				<ChannelArrayViewer ArrayElement="[UIModel]254ada8ea13b4b9d988f5cd14c9ecb36" BaseName="[string]Numeric Array Output" Channel="[string]Output/Array out" Columns="[int]1" Dimensions="[int]1" Height="[float]120" Id="38b7e5b7f7984fd5aefc71bd93ee171e" IndexVisibility="[Visibility]Collapsed" Label="[UIModel]1d1cc4ae955542c7b5c7f0139e27b6e4" Left="[float]24" Orientation="[SMOrientation]Vertical" Rows="[int]4" Top="[float]32" VerticalScrollBarVisibility="[ScrollBarVisibility]Visible" Width="[float]104">
+			<Label Height="[float]16" Id="d75763afd14e48838daea830ed6372e1" LabelOwner="[UIModel]2af6108da1054dc9a76e83663d3e6a69" Left="[float]25" Text="[string]Input" Top="[float]11" Width="[float]28" xmlns="http://www.ni.com/PanelCommon" />
+			<ScreenSurfaceCanvas Background="[SMSolidColorBrush]#80808080" BaseName="[string]Canvas" Height="[float]155" Id="bdbab52d1a884aa6a37de7a4911309a3" Label="[UIModel]66e07f634ac64c3fa47cd4cf37a5d244" Left="[float]207" Top="[float]31" Width="[float]134">
+				<ChannelArrayViewer ArrayElement="[UIModel]5b0ecf3b36c94ca19be98db9e002aec2" BaseName="[string]Numeric Array Output" Channel="[string]Output/Array out" Columns="[int]1" Dimensions="[int]1" Height="[float]120" Id="440509c9226d4bcaa6e23a49125c2798" IndexVisibility="[Visibility]Collapsed" Label="[UIModel]3872fcc74c6e4427a6c1522d52bd16f1" Left="[float]11" Orientation="[SMOrientation]Vertical" Rows="[int]4" Top="[float]27" VerticalScrollBarVisibility="[ScrollBarVisibility]Visible" Width="[float]104">
 					<p.DefaultElementValue>0x0</p.DefaultElementValue>
-					<ChannelArrayNumericText BaseName="[string]Numeric" Height="[float]24" Id="254ada8ea13b4b9d988f5cd14c9ecb36" IsReadOnly="[bool]True" UnitAnnotation="[string]" ValueFormatter="[string]LV:G5" ValueType="[Type]Double" Width="[float]72" />
+					<ChannelArrayNumericText BaseName="[string]Numeric" Height="[float]24" Id="5b0ecf3b36c94ca19be98db9e002aec2" IsReadOnly="[bool]True" UnitAnnotation="[string]" ValueFormatter="[string]LV:G5" ValueType="[Type]Double" Width="[float]72" />
 				</ChannelArrayViewer>
-				<Label Height="[float]16" Id="1d1cc4ae955542c7b5c7f0139e27b6e4" LabelOwner="[UIModel]38b7e5b7f7984fd5aefc71bd93ee171e" Left="[float]24" Text="[string]Array out" Top="[float]12" Width="[float]49" xmlns="http://www.ni.com/PanelCommon" />
+				<Label Height="[float]16" Id="3872fcc74c6e4427a6c1522d52bd16f1" LabelOwner="[UIModel]440509c9226d4bcaa6e23a49125c2798" Left="[float]11" Text="[string]Array out" Top="[float]7" Width="[float]49" xmlns="http://www.ni.com/PanelCommon" />
 			</ScreenSurfaceCanvas>
-			<Label Height="[float]16" Id="ff41338babd0460098d841eef1709498" LabelOwner="[UIModel]a5f4f4b46ddb440180d8c401e0f84832" Left="[float]279" Text="[string]Output" Top="[float]14" Width="[float]38" xmlns="http://www.ni.com/PanelCommon" />
+			<Label Height="[float]16" Id="66e07f634ac64c3fa47cd4cf37a5d244" LabelOwner="[UIModel]bdbab52d1a884aa6a37de7a4911309a3" Left="[float]207" Text="[string]Output" Top="[float]11" Width="[float]38" xmlns="http://www.ni.com/PanelCommon" />
 		</ScreenSurface>
 	</Screen>
 </SourceFile>
