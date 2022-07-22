@@ -11,7 +11,7 @@ from template import _create_measurement
 
 
 def test___command_line_args___create_measurement___render_without_exception(tmpdir):
-    """Tests to validate command line args and render calls using a sample measurement."""
+    """Given example command line args when create_measurement assert renders without excpetions."""
 
     temp_directory = tmpdir.mkdir("measurement_files")
     _create_measurement.callback(
