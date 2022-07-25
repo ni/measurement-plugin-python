@@ -8,8 +8,8 @@ import ni_measurement_service as nims
 measurement_info = nims.MeasurementInfo(
     display_name="SampleMeasurement",
     version="1.0.0.0",
-    measurement_type="Sample",
-    product_type="Sample",
+    measurement_type="Measurement",
+    product_type="Product",
     ui_file_path=os.path.join(os.path.dirname(os.path.abspath(__file__)), "measurementUI.measui"),
     ui_file_type=nims.UIFileType.MeasurementUI,
 )

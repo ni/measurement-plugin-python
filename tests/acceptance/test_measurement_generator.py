@@ -13,39 +13,33 @@ from template import _create_measurement
 def test___command_line_args___create_measurement___render_without_exception(tmpdir):
     """Given example command line args when create_measurement assert renders without excpetions."""
 
-    temp_directory = tmpdir.mkdir("measurement_files")
+    temp_directory = pathlib.Path(tmpdir.mkdir("measurement_files"))
     _create_measurement.callback(
-        "SampleMeasurement",
-        "1.0.0.0",
-        "Sample",
-        "Sample",
-        "measurementUI.measui",
-        "SampleMeasurement_Python",
-        "{E0095551-CB4B-4352-B65B-4280973694B2}",
-        "description",
-        temp_directory,
+        "SampleMeasurement", # display name
+        "1.0.0.0", # version
+        "Measurement", # measurement type
+        "Product", # product type 
+        "measurementUI.measui", # UI file
+        "SampleMeasurement_Python", # service class
+        "{E0095551-CB4B-4352-B65B-4280973694B2}", # GUID
+        "description", # description
+        temp_directory, # output directory
     )
 
     golden_path = generator_path / "example_renders"
 
     _assert_equal(
-        golden_path / "example_py.json",
-        temp_directory / "SampleMeasurement.py",
+        golden_path / "example_py.py",
+        temp_directory / "measurement.py",
     )
     _assert_equal(
-        golden_path / "example_serviceconfig.json",
+        golden_path / "example_serviceconfig.serviceConfig",
         temp_directory / "SampleMeasurement.serviceConfig",
     )
 
 
-def _read_file(file_path):
-    with file_path.open("r") as fout:
-        return fout.read()
-
-
-def _assert_equal(expected_path, result_path):
-    expected = _read_file(expected_path)
+def _assert_equal(expected_path: pathlib.Path, result_path: pathlib.Path):
+    expected = expected_path.read_text()
+    result = result_path.read_text()
     
-    result = _read_file(result_path)
-
     assert expected == result

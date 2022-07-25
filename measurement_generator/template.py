@@ -28,10 +28,10 @@ def _create_file(
         fout.write(output)
 
 
-def _create_bat(name, directory_out):
+def _create_bat(directory_out):
     output_file = pathlib.Path(directory_out) / f"start.bat"
 
-    py_file_path = (pathlib.Path(directory_out) / f"{name}.py").resolve()
+    py_file_path = (pathlib.Path(directory_out) / f"measurement.py").resolve()
 
     with output_file.open("w") as fout:
         fout.write(f"call python {py_file_path}")
@@ -44,15 +44,14 @@ def _check_version(ctx, param, version):
     raise ValueError("version not entered correctly")
 
 
-def _check_ui(ctx, param, ui_file):
+def _check_ui(ui_file):
     if ui_file != "" and not pathlib.Path.exists(
         pathlib.Path(__file__).parent.absolute() / ui_file
     ):
         raise ValueError("can't find UI file")
-    return ui_file
 
 
-def _check_ui_type(ui_file):
+def _get_ui_type(ui_file):
     ext = pathlib.Path(ui_file).suffix
     if ext == ".measui":
         return "MeasurementUI"
@@ -64,7 +63,15 @@ def _check_ui_type(ui_file):
         )
 
 
-def _assess_service_class(service_class, display_name):
+def _resolve_ui_file(ui_file, display_name):
+    if ui_file is None:
+        return f"{display_name}.measui"
+    else:
+        _check_ui(ui_file)
+        return ui_file
+
+
+def _resolve_service_class(service_class, display_name):
     if service_class is None:
         return f"{display_name}_Python"
     else:
@@ -97,9 +104,7 @@ def _check_guid(ctx, param, service_id):
 @click.option(
     "-u",
     "--ui-file",
-    default="measurementUI.measui",
     help="Name of the UI File",
-    callback=_check_ui,
 )
 @click.option(
     "-s",
@@ -134,27 +139,29 @@ def _create_measurement(
     description,
     directory_out,
 ):
-    """Takes in command line arguments to create a .py file, a .serviceConfig file, and a .bat file.
-    These files work in unison to preform a measurement, 
-    although the .bat file is optional in its use.
+    """Generates a Python measurement service from a template.
+    You can use this to get started writing your own measurement services.
 
-    DISPLAY_NAME is the name of the measurement.
+    DISPLAY_NAME: The measurement display name for client to display to user.
     The created .py file and .serviceConfig file will take this as its file name.
 
-    VERSION is the current version of the measurement.
+    VERSION: The measurement version that helps to maintain versions of a measurement in future.
     Should be formatted like x.x.x.x
-    EX: 0.2.6.8
+    e.g. 0.2.6.8
 
-    MEASUREMENT_TYPE is the type of measurement the measurement files will eventually preform.
+    MEASUREMENT_TYPE: Represents category of measurement for the ProductType,
+    e.g. AC or DC measurements.
 
-    PRODUCT_TYPE is the type of product the measurement files will eventually produce.
+    PRODUCT_TYPE: Represents type of the DUT,
+    e.g. ADC, LDO.
     """
-    service_class = _assess_service_class(service_class, display_name)
-    ui_file_type = _check_ui_type(ui_file)
+    service_class = _resolve_service_class(service_class, display_name)
+    ui_file = _resolve_ui_file(ui_file, display_name)
+    ui_file_type = _get_ui_type(ui_file)
 
     _create_file(
         "pyTemplate.py.mako",
-        f"{display_name}.py",
+        "measurement.py",
         directory_out,
         display_name=display_name,
         version=version,
@@ -175,7 +182,7 @@ def _create_measurement(
         service_id=service_id,
         description=description,
     )
-    _create_bat(display_name, directory_out)
+    _create_bat(directory_out)
 
 
 def main():

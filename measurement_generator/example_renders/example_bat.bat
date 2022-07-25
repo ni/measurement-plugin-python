@@ -1,0 +1,1 @@
+call python C:\Users\Administrator\Documents\measurement_services_python\measurement_generator\example_renders\example_py.py
