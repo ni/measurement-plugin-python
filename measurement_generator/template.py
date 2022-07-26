@@ -104,29 +104,29 @@ def _check_guid(ctx, param, service_id):
 @click.option(
     "-u",
     "--ui-file",
-    help="Name of the UI File",
+    help="Name of the UI File. Default is <display_name>.measui.",
 )
 @click.option(
     "-s",
     "--service-class",
-    help="Service Class that the measurement belongs to. Default is <display_name>_Python",
+    help="Service Class that the measurement belongs to. Default is <display_name>_Python.",
 )
 @click.option(
     "-i",
     "--service-id",
-    help="Unique GUID",
+    help="Unique GUID.",
     callback=_check_guid,
 )
 @click.option(
     "-d",
     "--description",
-    help="Description URL that contains information about the measurement",
+    help="Description URL that contains information about the measurement.",
 )
 @click.option(
     "-o",
     "--directory-out",
     default=pathlib.Path(__file__).parent,
-    help="Output directory for measurement files",
+    help="Output directory for measurement files.",
 )
 def _create_measurement(
     display_name,
