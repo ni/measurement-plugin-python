@@ -1,6 +1,7 @@
 """Contains Measurement Service Implementation class and method to host the service.
 """
 import inspect
+from contextvars import ContextVar
 from typing import Any, Callable, Dict, List
 
 from google.protobuf import any_pb2
@@ -9,8 +10,12 @@ from ni_measurement_service._internal.parameter import serializer
 from ni_measurement_service._internal.parameter.metadata import ParameterMetadata
 from ni_measurement_service._internal.stubs import Measurement_pb2
 from ni_measurement_service._internal.stubs import Measurement_pb2_grpc
+from ni_measurement_service._internal.utilities.service_context import ServiceContext
 from ni_measurement_service.measurement.info import MeasurementInfo
 
+service_context: ContextVar[ServiceContext] = ContextVar(
+    "service_context"
+)
 
 class MeasurementServiceServicer(Measurement_pb2_grpc.MeasurementServiceServicer):
     """Implementation of the Measurement Service's gRPC base class.
@@ -69,56 +74,64 @@ class MeasurementServiceServicer(Measurement_pb2_grpc.MeasurementServiceServicer
 
     def GetMetadata(self, request, context):  # noqa N802:inherited method names-autogen baseclass
         """RPC API to get complete metadata."""
-        # measurement details
-        measurement_details = Measurement_pb2.MeasurementDetails()
-        measurement_details.display_name = self.measurement_info.display_name
-        measurement_details.version = self.measurement_info.version
-        measurement_details.measurement_type = self.measurement_info.measurement_type
-        measurement_details.product_type = self.measurement_info.product_type
+        token = service_context.set(ServiceContext(context))
+        try:
+            # measurement details
+            measurement_details = Measurement_pb2.MeasurementDetails()
+            measurement_details.display_name = self.measurement_info.display_name
+            measurement_details.version = self.measurement_info.version
+            measurement_details.measurement_type = self.measurement_info.measurement_type
+            measurement_details.product_type = self.measurement_info.product_type
 
-        # Measurement Parameters
-        measurement_parameters = Measurement_pb2.MeasurementParameters(
-            configuration_parameters_messagetype="ni.measurements.v1.MeasurementConfigurations",
-            outputs_message_type="ni.measurements.v1.MeasurementOutputs",
-        )
+            # Measurement Parameters
+            measurement_parameters = Measurement_pb2.MeasurementParameters(
+                configuration_parameters_messagetype="ni.measurements.v1.MeasurementConfigurations",
+                outputs_message_type="ni.measurements.v1.MeasurementOutputs",
+            )
 
-        # Configurations
-        for id, configuration_metadata in self.configuration_metadata.items():
-            configuration_parameter = Measurement_pb2.ConfigurationParameter()
-            configuration_parameter.protobuf_id = id
-            configuration_parameter.name = configuration_metadata.display_name
-            configuration_parameter.repeated = configuration_metadata.repeated
-            configuration_parameter.type = configuration_metadata.type
-            measurement_parameters.configuration_parameters.append(configuration_parameter)
+            # Configurations
+            for id, configuration_metadata in self.configuration_metadata.items():
+                configuration_parameter = Measurement_pb2.ConfigurationParameter()
+                configuration_parameter.protobuf_id = id
+                configuration_parameter.name = configuration_metadata.display_name
+                configuration_parameter.repeated = configuration_metadata.repeated
+                configuration_parameter.type = configuration_metadata.type
+                measurement_parameters.configuration_parameters.append(configuration_parameter)
 
-        # Configuration Defaults
-        measurement_parameters.configuration_defaults.value = serializer.serialize_default_values(
-            self.configuration_metadata
-        )
+            # Configuration Defaults
+            measurement_parameters.configuration_defaults.value = serializer.serialize_default_values(
+                self.configuration_metadata
+            )
 
-        # Output Parameters Metadata
-        for id, output_metadata in self.output_metadata.items():
-            output_parameter = Measurement_pb2.Output()
-            output_parameter.protobuf_id = id
-            output_parameter.name = output_metadata.display_name
-            output_parameter.type = output_metadata.type
-            output_parameter.repeated = output_metadata.repeated
-            measurement_parameters.outputs.append(output_parameter)
+            # Output Parameters Metadata
+            for id, output_metadata in self.output_metadata.items():
+                output_parameter = Measurement_pb2.Output()
+                output_parameter.protobuf_id = id
+                output_parameter.name = output_metadata.display_name
+                output_parameter.type = output_metadata.type
+                output_parameter.repeated = output_metadata.repeated
+                measurement_parameters.outputs.append(output_parameter)
 
-        # User Interface details - Framed relative to the metadata python File
-        ui_details = Measurement_pb2.UserInterfaceDetails()
+            # User Interface details - Framed relative to the metadata python File
+            ui_details = Measurement_pb2.UserInterfaceDetails()
 
-        ui_details.configuration_ui_url = (
-            self.measurement_info.ui_file_type.value + self.measurement_info.ui_file_path
-        )
+            ui_details.configuration_ui_url = (
+                self.measurement_info.ui_file_type.value + self.measurement_info.ui_file_path
+            )
 
-        # Sending back Response
-        metadata_response = Measurement_pb2.GetMetadataResponse(
-            measurement_details=measurement_details,
-            measurement_parameters=measurement_parameters,
-            user_interface_details=ui_details,
-        )
-        return metadata_response
+            # Sending back Response
+            metadata_response = Measurement_pb2.GetMetadataResponse(
+                measurement_details=measurement_details,
+                measurement_parameters=measurement_parameters,
+                user_interface_details=ui_details,
+            )
+            service_context.get().mark_complete()
+            return metadata_response
+        except Exception as e:
+            service_context.get().mark_complete(exception=e)
+            raise
+        finally:
+            service_context.reset(token)
 
     def Measure(self, request, context):  # noqa N802:inherited method names-autogen baseclass
         """RPC API that Executes the registered measurement method."""
@@ -129,8 +142,17 @@ class MeasurementServiceServicer(Measurement_pb2_grpc.MeasurementServiceServicer
         mapping_by_variable_name = self._get_mapping_by_parameter_name(
             mapping_by_id, self.measure_function
         )
-        output_value = self.measure_function(**mapping_by_variable_name)
+        token = service_context.set(ServiceContext(context))
+        try:
+            output_value = self.measure_function(**mapping_by_variable_name)
+            service_context.get().mark_complete()
+        except Exception as e:
+            service_context.get().mark_complete(exception=e)
+            raise
+        finally:
+            service_context.reset(token)
         output_bytestring = serializer.serialize_parameters(self.output_metadata, output_value)
+
         # Frame the response and send back.
         output_any = any_pb2.Any()
         output_any.value = output_bytestring

@@ -2,10 +2,17 @@
 
 from typing import Any, Callable
 
+from ni_measurement_service._internal import grpc_servicer
 from ni_measurement_service._internal.parameter import metadata as parameter_metadata
 from ni_measurement_service._internal.service_manager import GrpcService
 from ni_measurement_service.measurement.info import MeasurementInfo, ServiceInfo, DataType
 
+class MeasurementContext:
+    """Proxy for the Measurement Service's context-local state."""
+
+    def add_cancel_callback(self, cancel_callback: Callable):
+        """Add a callback which is invoked when the RPC is canceled."""
+        grpc_servicer.measurement_service_context.get().add_cancel_callback(cancel_callback)
 
 class MeasurementService:
     """Class the supports registering and hosting a python function as a gRPC service.
@@ -39,6 +46,7 @@ class MeasurementService:
         self.configuration_parameter_list: list = []
         self.output_parameter_list: list = []
         self.grpc_service = GrpcService()
+        self.context: MeasurementContext = MeasurementContext()
 
     def register_measurement(self, measurement_function: Callable) -> Callable:
         """Register the function as the measurement. Recommended to use as a decorator.
