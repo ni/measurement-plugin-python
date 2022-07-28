@@ -45,6 +45,27 @@ def test___measurement_service___measure_rpc_call___returns_output(
     assert measure_response.outputs.value == serialized_parameter
 
 
+def test___measurement_service___timed_out_measure_rpc_call___raises_exception():
+    """End to End Test to validate Measure RPC call cancel callback."""
+    measurement_service_port = _host_service()
+
+    with grpc.insecure_channel("localhost:" + measurement_service_port) as channel:
+        stub = Measurement_pb2_grpc.MeasurementServiceStub(channel)
+        request = Measurement_pb2.MeasureRequest()
+        with pytest.raises(Exception):
+            stub.Measure(request, timeout = 0)
+
+
+def test___measurement_service___timed_out_get_metadata_rpc_call___raises_exception():
+    """End to End Test to validate Measure RPC call cancel callback."""
+    measurement_service_port = _host_service()
+
+    with grpc.insecure_channel("localhost:" + measurement_service_port) as channel:
+        stub = Measurement_pb2_grpc.MeasurementServiceStub(channel)
+        with pytest.raises(Exception):
+            stub.GetMetadata(Measurement_pb2.GetMetadataRequest(timeout = 0))
+                
+
 def _host_service() -> int:
     measurement.sample_measurement_service.host_service()
     return str(measurement.sample_measurement_service.grpc_service.port)
