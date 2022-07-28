@@ -2,20 +2,45 @@
 """
 import inspect
 from contextvars import ContextVar
-from typing import Any, Callable, Dict, List
+from typing import Any, Callable, Dict, List, Optional
 
+import grpc
 from google.protobuf import any_pb2
 
 from ni_measurement_service._internal.parameter import serializer
 from ni_measurement_service._internal.parameter.metadata import ParameterMetadata
 from ni_measurement_service._internal.stubs import Measurement_pb2
 from ni_measurement_service._internal.stubs import Measurement_pb2_grpc
-from ni_measurement_service._internal.utilities.service_context import ServiceContext
 from ni_measurement_service.measurement.info import MeasurementInfo
 
-service_context: ContextVar[ServiceContext] = ContextVar(
-    "service_context"
+class MeasurementServiceContext:
+    """Accessor for the Measurement Service's context-local state."""
+
+    def __init__(self, grpc_context: grpc.ServicerContext):
+        """Initialize the Measurement Service Context."""
+        self._grpc_context: grpc.ServicerContext = grpc_context
+        self._is_complete: bool = False
+        self._exception: Optional[Exception] = None
+
+    def mark_complete(self, exception: Optional[Exception] = None):
+        """Mark the current RPC as complete."""
+        self._is_complete = True
+        self._exception = exception
+
+    def add_cancel_callback(self, cancel_callback: Callable):
+        """Add a callback that is invoked when the RPC is canceled."""
+
+        def grpc_callback():
+            if not self._is_complete:
+                cancel_callback()
+
+        self._grpc_context.add_callback(grpc_callback)
+
+
+measurement_service_context: ContextVar[MeasurementServiceContext] = ContextVar(
+    "measurement_service_context"
 )
+
 
 class MeasurementServiceServicer(Measurement_pb2_grpc.MeasurementServiceServicer):
     """Implementation of the Measurement Service's gRPC base class.
@@ -74,7 +99,7 @@ class MeasurementServiceServicer(Measurement_pb2_grpc.MeasurementServiceServicer
 
     def GetMetadata(self, request, context):  # noqa N802:inherited method names-autogen baseclass
         """RPC API to get complete metadata."""
-        token = service_context.set(ServiceContext(context))
+        token = measurement_service_context.set(MeasurementServiceContext(context))
         try:
             # measurement details
             measurement_details = Measurement_pb2.MeasurementDetails()
@@ -125,13 +150,13 @@ class MeasurementServiceServicer(Measurement_pb2_grpc.MeasurementServiceServicer
                 measurement_parameters=measurement_parameters,
                 user_interface_details=ui_details,
             )
-            service_context.get().mark_complete()
+            measurement_service_context.get().mark_complete()
             return metadata_response
         except Exception as e:
-            service_context.get().mark_complete(exception=e)
+            measurement_service_context.get().mark_complete(exception=e)
             raise
         finally:
-            service_context.reset(token)
+            measurement_service_context.reset(token)
 
     def Measure(self, request, context):  # noqa N802:inherited method names-autogen baseclass
         """RPC API that Executes the registered measurement method."""
@@ -142,15 +167,15 @@ class MeasurementServiceServicer(Measurement_pb2_grpc.MeasurementServiceServicer
         mapping_by_variable_name = self._get_mapping_by_parameter_name(
             mapping_by_id, self.measure_function
         )
-        token = service_context.set(ServiceContext(context))
+        token = measurement_service_context.set(MeasurementServiceContext(context))
         try:
             output_value = self.measure_function(**mapping_by_variable_name)
-            service_context.get().mark_complete()
+            measurement_service_context.get().mark_complete()
         except Exception as e:
-            service_context.get().mark_complete(exception=e)
+            measurement_service_context.get().mark_complete(exception=e)
             raise
         finally:
-            service_context.reset(token)
+            measurement_service_context.reset(token)
         output_bytestring = serializer.serialize_parameters(self.output_metadata, output_value)
 
         # Frame the response and send back.
