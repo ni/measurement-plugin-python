@@ -38,13 +38,19 @@ def test___command_line_args___create_measurement___render_without_exception(tmp
     golden_path = generator_path / "example_renders"
 
     _assert_equal(
-        golden_path / "example_py.py",
+        golden_path / "example.py",
         temp_directory / "measurement.py",
     )
     _assert_equal(
-        golden_path / "example_serviceconfig.serviceConfig",
+        golden_path / "example.serviceConfig",
         temp_directory / "SampleMeasurement.serviceConfig",
     )
+
+    _assert_equal(
+        golden_path / "example.bat",
+        temp_directory / "start.bat",
+    )
+    
 
 
 def _assert_equal(expected_path: pathlib.Path, result_path: pathlib.Path):

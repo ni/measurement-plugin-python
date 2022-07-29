@@ -29,12 +29,10 @@ def _create_file(
 
 
 def _create_bat(directory_out):
-    output_file = pathlib.Path(directory_out) / f"start.bat"
-
-    py_file_path = (pathlib.Path(directory_out) / f"measurement.py").resolve()
+    output_file = pathlib.Path(directory_out) / "start.bat"
 
     with output_file.open("w") as fout:
-        fout.write(f"call python {py_file_path}")
+        fout.write(f"call python %~dp0measurement.py")
 
 
 def _check_version(ctx, param, version):
@@ -90,7 +88,7 @@ def _check_guid(ctx, param, service_id):
     if service_id is None:
         return "{" + str(uuid.uuid4()) + "}"
     else:
-        service_id = service_id.replace("{", "").replace("}", "")
+        service_id = str(service_id).replace("{", "").replace("}", "")
         if _check_uuid(service_id):
             return "{" + service_id + "}"
         raise ValueError("GUID not entered correctly")
@@ -104,7 +102,7 @@ def _check_guid(ctx, param, service_id):
 @click.option(
     "-u",
     "--ui-file",
-    help="Name of the UI File. Default is <display_name>.measui.",
+    help="Name of the UI File, Default is <display_name>.measui.",
 )
 @click.option(
     "-s",
@@ -160,7 +158,7 @@ def _create_measurement(
     ui_file_type = _get_ui_type(ui_file)
 
     _create_file(
-        "pyTemplate.py.mako",
+        "measurement.py.mako",
         "measurement.py",
         directory_out,
         display_name=display_name,
@@ -174,7 +172,7 @@ def _create_measurement(
         description=description,
     )
     _create_file(
-        "scTemplate.serviceConfig.mako",
+        "measurement.serviceConfig.mako",
         f"{display_name}.serviceConfig",
         directory_out,
         display_name=display_name,
