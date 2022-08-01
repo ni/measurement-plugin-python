@@ -1,6 +1,7 @@
 """Contains Measurement Service Implementation class and method to host the service.
 """
 import inspect
+import threading
 from contextvars import ContextVar
 from datetime import datetime
 from typing import Any, Callable, Dict, List, Optional
@@ -46,6 +47,11 @@ class MeasurementServiceContext:
         """Set length of allowed time remaining for RPC."""
         if deadline > datetime.now():
             self._deadline = deadline
+
+    def get_deadline(self):
+        """Set length of allowed time remaining for RPC."""
+        if self._deadline is not None:
+            return self._deadline
 
 
 measurement_service_context: ContextVar[MeasurementServiceContext] = ContextVar(
@@ -111,7 +117,12 @@ class MeasurementServiceServicer(Measurement_pb2_grpc.MeasurementServiceServicer
     def GetMetadata(self, request, context):  # noqa N802:inherited method names-autogen baseclass
         """RPC API to get complete metadata."""
         token = measurement_service_context.set(MeasurementServiceContext(context))
+        deadline = measurement_service_context.get().get_deadline()
         try:
+            if deadline is not None:
+                timer = threading.Timer(deadline, measurement_service_context.get().cancel())
+                timer.start();
+
             # measurement details
             measurement_details = Measurement_pb2.MeasurementDetails()
             measurement_details.display_name = self.measurement_info.display_name
@@ -168,6 +179,8 @@ class MeasurementServiceServicer(Measurement_pb2_grpc.MeasurementServiceServicer
             raise
         finally:
             measurement_service_context.reset(token)
+            if deadline is not None:
+                timer.cancel();
 
     def Measure(self, request, context):  # noqa N802:inherited method names-autogen baseclass
         """RPC API that Executes the registered measurement method."""
@@ -179,7 +192,12 @@ class MeasurementServiceServicer(Measurement_pb2_grpc.MeasurementServiceServicer
             mapping_by_id, self.measure_function
         )
         token = measurement_service_context.set(MeasurementServiceContext(context))
+        deadline = measurement_service_context.get().get_deadline()
         try:
+            if deadline is not None:
+                timer = threading.Timer(deadline, measurement_service_context.get().cancel())
+                timer.start();
+
             output_value = self.measure_function(**mapping_by_variable_name)
             measurement_service_context.get().mark_complete()
         except Exception as e:
@@ -187,6 +205,8 @@ class MeasurementServiceServicer(Measurement_pb2_grpc.MeasurementServiceServicer
             raise
         finally:
             measurement_service_context.reset(token)
+            if deadline is not None:
+                timer.cancel();
         output_bytestring = serializer.serialize_parameters(self.output_metadata, output_value)
 
         # Frame the response and send back.
