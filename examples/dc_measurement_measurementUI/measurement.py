@@ -12,6 +12,7 @@ import click
 import hightime
 import nidcpower
 import time
+from datetime import datetime, timedelta
 
 import ni_measurement_service as nims
 
@@ -67,9 +68,9 @@ def measure(
             session.abort()
 
     dc_measurement_service.context.add_cancel_callback(cancel_callback)
+    dc_measurement_service.context.set_deadline(datetime.now() + timedelta(minutes=5))
     
     timeout = hightime.timedelta(seconds=(source_delay + 1.0))
-    measurement_start_time = time.time()
     with nidcpower.Session(resource_name=resource_name) as session:
         # Configure the session.
         session.source_mode = nidcpower.SourceMode.SINGLE_POINT
@@ -83,14 +84,9 @@ def measure(
         measured_value = None
         with session.initiate():
             channel = session.get_channel_names("0")
-            fetch_start_time = time.time()
             simulate_source_delay(session)
             measured_value = session.channels[channel].fetch_multiple(count=1, timeout=timeout)
-            fetch_stop_time = time.time()
-            logging.debug("Fetch time (s): %f", fetch_stop_time - fetch_start_time)
         session = None  # Don't abort after this point
-    measurement_stop_time = time.time()
-    logging.debug("Measurement time (s): %f", measurement_stop_time - measurement_start_time)
     print_fetched_measurements(measured_value)
     measured_voltage = measured_value[0].voltage
     measured_current = measured_value[0].current
