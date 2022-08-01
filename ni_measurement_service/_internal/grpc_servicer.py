@@ -2,6 +2,7 @@
 """
 import inspect
 from contextvars import ContextVar
+from datetime import datetime
 from typing import Any, Callable, Dict, List, Optional
 
 import grpc
@@ -20,6 +21,7 @@ class MeasurementServiceContext:
         """Initialize the Measurement Service Context."""
         self._grpc_context: grpc.ServicerContext = grpc_context
         self._is_complete: bool = False
+        self._deadline: datetime = None
         self._exception: Optional[Exception] = None
 
     def mark_complete(self, exception: Optional[Exception] = None):
@@ -35,6 +37,15 @@ class MeasurementServiceContext:
                 cancel_callback()
 
         self._grpc_context.add_callback(grpc_callback)
+
+    def cancel(self):
+        if not self._is_complete:
+            self._grpc_context.cancel()
+
+    def set_deadline(self, deadline: datetime):
+        """Set length of allowed time remaining for RPC."""
+        if deadline > datetime.now():
+            self._deadline = deadline
 
 
 measurement_service_context: ContextVar[MeasurementServiceContext] = ContextVar(

@@ -1,5 +1,6 @@
 """Framework to host measurement service."""
 
+from datetime import datetime
 from typing import Any, Callable
 
 from ni_measurement_service._internal import grpc_servicer
@@ -13,6 +14,12 @@ class MeasurementContext:
     def add_cancel_callback(self, cancel_callback: Callable):
         """Add a callback which is invoked when the RPC is canceled."""
         grpc_servicer.measurement_service_context.get().add_cancel_callback(cancel_callback)
+
+    def cancel(self):
+        grpc_servicer.measurement_service_context.get().cancel()
+
+    def set_deadline(self, deadline: datetime):
+        grpc_servicer.measurement_service_context.get().set_deadline(deadline)
 
 class MeasurementService:
     """Class the supports registering and hosting a python function as a gRPC service.
