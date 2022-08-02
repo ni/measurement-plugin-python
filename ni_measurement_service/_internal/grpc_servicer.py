@@ -36,7 +36,7 @@ class MeasurementServiceContext:
                     break
                 time.sleep(0)
 
-        self._deadline_thread: Thread = Thread(target=check_deadline)
+        self._deadline_thread: Thread = Thread(target=check_deadline, args=[self])
         self._exception: Optional[Exception] = None
 
     def mark_complete(self, exception: Optional[Exception] = None):
@@ -58,7 +58,7 @@ class MeasurementServiceContext:
         if not self._is_complete:
             self._grpc_context.cancel()
 
-    def stop_deadline_checker(self):
+    def start_deadline_checker(self):
         """Starts the deadline checker thread to cancel the RPC if it exceeds the deadline."""
         self._deadline_thread.start()
 
@@ -135,7 +135,7 @@ class MeasurementServiceServicer(Measurement_pb2_grpc.MeasurementServiceServicer
         """RPC API to get complete metadata."""
         token = measurement_service_context.set(MeasurementServiceContext(context))
         try:
-            measurement_service_context.get().stop_deadline_checker()
+            measurement_service_context.get().start_deadline_checker()
 
             # measurement details
             measurement_details = Measurement_pb2.MeasurementDetails()
@@ -206,7 +206,7 @@ class MeasurementServiceServicer(Measurement_pb2_grpc.MeasurementServiceServicer
         )
         token = measurement_service_context.set(MeasurementServiceContext(context))
         try:
-            measurement_service_context.get().stop_deadline_checker()
+            measurement_service_context.get().start_deadline_checker()
             output_value = self.measure_function(**mapping_by_variable_name)
             measurement_service_context.get().mark_complete()
         except Exception as e:
