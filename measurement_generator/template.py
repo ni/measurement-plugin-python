@@ -17,9 +17,7 @@ def _render_template(template_name: str, **template_args) -> str:
         print(exceptions.text_error_template().render())
 
 
-def _create_file(
-    template_name: str, file_name: str, directory_out, **template_args
-) -> str:
+def _create_file(template_name: str, file_name: str, directory_out, **template_args) -> str:
     output_file = pathlib.Path(directory_out) / file_name
 
     output = _render_template(template_name, **template_args)
@@ -76,22 +74,12 @@ def _resolve_service_class(service_class, display_name):
         return service_class
 
 
-def _check_uuid(test_uuid):
-    try:
-        uuid.UUID(test_uuid)
-        return True
-    except ValueError:
-        return False
-
-
 def _check_guid(ctx, param, service_id):
-    if service_id is None:
-        return "{" + str(uuid.uuid4()) + "}"
-    else:
-        service_id = str(service_id).replace("{", "").replace("}", "")
-        if _check_uuid(service_id):
-            return "{" + service_id + "}"
-        raise ValueError("GUID not entered correctly")
+    try:
+        parsed_id = uuid.uuid4() if service_id is None else uuid.UUID(service_id)
+        return "{" + str(parsed_id).upper() + "}"
+    except ValueError:
+        raise ValueError(f"The {param} must be a valid GUID.")
 
 
 @click.command()
@@ -141,7 +129,7 @@ def _create_measurement(
     You can use this to get started writing your own measurement services.
 
     DISPLAY_NAME: The measurement display name for client to display to user.
-    The created .py file and .serviceConfig file will take this as its file name.
+    The created .serviceconfig file will take this as its file name.
 
     VERSION: The measurement version that helps to maintain versions of a measurement in future.
     Should be formatted like x.x.x.x
@@ -172,8 +160,8 @@ def _create_measurement(
         description=description,
     )
     _create_file(
-        "measurement.serviceConfig.mako",
-        f"{display_name}.serviceConfig",
+        "measurement.serviceconfig.mako",
+        f"{display_name}.serviceconfig",
         directory_out,
         display_name=display_name,
         service_class=service_class,

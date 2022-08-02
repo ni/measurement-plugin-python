@@ -28,6 +28,7 @@ measurement_service = nims.MeasurementService(measurement_info, service_info)
 @measurement_service.configuration("Array in", nims.DataType.DoubleArray1D, [0.0])
 @measurement_service.output("Array out", nims.DataType.DoubleArray1D)
 def measure(array_input):
+    #TODO: replace the following line with your own measurement logic.
     array_output = array_input
     return [array_output]
 
