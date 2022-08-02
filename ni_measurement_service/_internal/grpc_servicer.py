@@ -1,12 +1,11 @@
 """Contains Measurement Service Implementation class and method to host the service.
 """
 import inspect
-import threading
 from contextvars import ContextVar
-from datetime import datetime
 import time
-from typing import Any, Callable, Dict, List, Optional
+from datetime import datetime
 from threading import Thread
+from typing import Any, Callable, Dict, List, Optional
 
 import grpc
 from google.protobuf import any_pb2
@@ -54,16 +53,16 @@ class MeasurementServiceContext:
         self._grpc_context.add_callback(grpc_callback)
 
     def cancel(self):
-        """Cancels the RPC."""
+        """Cancel the RPC."""
         if not self._is_complete:
             self._grpc_context.cancel()
 
     def start_deadline_checker(self):
-        """Starts the deadline checker thread to cancel the RPC if it exceeds the deadline."""
+        """Start the deadline checker thread to cancel the RPC if it exceeds the deadline."""
         self._deadline_thread.start()
 
     def stop_deadline_checker(self):
-        """Stops the deadline checker thread to cancel the RPC if it exceeds the deadline."""
+        """Stop the deadline checker thread to cancel the RPC if it exceeds the deadline."""
         self._stop_deadline_thread = True
 
     def set_deadline(self, deadline: datetime):

@@ -16,9 +16,11 @@ class MeasurementContext:
         grpc_servicer.measurement_service_context.get().add_cancel_callback(cancel_callback)
 
     def cancel(self):
+        """Cancel the RPC."""
         grpc_servicer.measurement_service_context.get().cancel()
 
     def set_deadline(self, deadline: datetime):
+        """Set length of allowed time remaining for RPC."""
         grpc_servicer.measurement_service_context.get().set_deadline(deadline)
 
 class MeasurementService:

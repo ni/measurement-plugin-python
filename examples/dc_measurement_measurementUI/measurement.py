@@ -7,12 +7,12 @@ User can Import driver and 3rd Party Packages based on requirements.
 import logging
 import os
 import sys
+import time
+from datetime import datetime, timedelta
 
 import click
 import hightime
 import nidcpower
-import time
-from datetime import datetime, timedelta
 
 import ni_measurement_service as nims
 
