@@ -43,7 +43,6 @@ def test___measurement_service___measure_rpc_call___returns_output(
         float_in, double_array_in, bool_in, string_in
     )
     assert measure_response.outputs.value == serialized_parameter
-                
 
 def _host_service() -> int:
     measurement.sample_measurement_service.host_service()
