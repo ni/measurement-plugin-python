@@ -1,8 +1,8 @@
 """Contains Measurement Service Implementation class and method to host the service.
 """
 import inspect
-from contextvars import ContextVar
 import time
+from contextvars import ContextVar
 from datetime import datetime
 from threading import Thread
 from typing import Any, Callable, Dict, List, Optional
