@@ -19,10 +19,6 @@ class MeasurementContext:
         """Cancel the RPC."""
         grpc_servicer.measurement_service_context.get().cancel()
 
-    def set_deadline(self, deadline: datetime):
-        """Set length of allowed time remaining for RPC."""
-        grpc_servicer.measurement_service_context.get().set_deadline(deadline)
-
 class MeasurementService:
     """Class the supports registering and hosting a python function as a gRPC service.
 

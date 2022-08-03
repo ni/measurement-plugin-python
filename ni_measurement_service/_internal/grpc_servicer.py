@@ -1,5 +1,6 @@
 """Contains Measurement Service Implementation class and method to host the service.
 """
+import asyncio
 import inspect
 import time
 from contextvars import ContextVar
@@ -23,19 +24,6 @@ class MeasurementServiceContext:
         """Initialize the Measurement Service Context."""
         self._grpc_context: grpc.ServicerContext = grpc_context
         self._is_complete: bool = False
-        self._deadline: datetime = None
-        self._stop_deadline_thread: bool = False
-
-        def check_deadline(self):
-            while True:
-                if self._stop_deadline_thread:
-                    break
-                if self._deadline is not None and datetime.now() > self._deadline:
-                    self.cancel()
-                    break
-                time.sleep(0)
-
-        self._deadline_thread: Thread = Thread(target=check_deadline, args=[self])
         self._exception: Optional[Exception] = None
 
     def mark_complete(self, exception: Optional[Exception] = None):
@@ -57,17 +45,10 @@ class MeasurementServiceContext:
         if not self._is_complete:
             self._grpc_context.cancel()
 
-    def start_deadline_checker(self):
-        """Start the deadline checker thread to cancel the RPC if it exceeds the deadline."""
-        self._deadline_thread.start()
+    def get_time_remaining(self):
+        """Return the time remaining for the RPC."""
+        return self._grpc_context.time_remaining()
 
-    def stop_deadline_checker(self):
-        """Stop the deadline checker thread to cancel the RPC if it exceeds the deadline."""
-        self._stop_deadline_thread = True
-
-    def set_deadline(self, deadline: datetime):
-        """Set length of allowed time remaining for RPC."""
-        self._deadline = deadline
 
 
 measurement_service_context: ContextVar[MeasurementServiceContext] = ContextVar(
@@ -134,8 +115,6 @@ class MeasurementServiceServicer(Measurement_pb2_grpc.MeasurementServiceServicer
         """RPC API to get complete metadata."""
         token = measurement_service_context.set(MeasurementServiceContext(context))
         try:
-            measurement_service_context.get().start_deadline_checker()
-
             # measurement details
             measurement_details = Measurement_pb2.MeasurementDetails()
             measurement_details.display_name = self.measurement_info.display_name
@@ -191,7 +170,6 @@ class MeasurementServiceServicer(Measurement_pb2_grpc.MeasurementServiceServicer
             measurement_service_context.get().mark_complete(exception=e)
             raise
         finally:
-            measurement_service_context.get().stop_deadline_checker()
             measurement_service_context.reset(token)
 
     def Measure(self, request, context):  # noqa N802:inherited method names-autogen baseclass
@@ -205,14 +183,12 @@ class MeasurementServiceServicer(Measurement_pb2_grpc.MeasurementServiceServicer
         )
         token = measurement_service_context.set(MeasurementServiceContext(context))
         try:
-            measurement_service_context.get().start_deadline_checker()
             output_value = self.measure_function(**mapping_by_variable_name)
             measurement_service_context.get().mark_complete()
         except Exception as e:
             measurement_service_context.get().mark_complete(exception=e)
             raise
         finally:
-            measurement_service_context.get().stop_deadline_checker()
             measurement_service_context.reset(token)
         output_bytestring = serializer.serialize_parameters(self.output_metadata, output_value)
 
