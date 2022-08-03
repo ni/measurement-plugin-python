@@ -84,7 +84,6 @@ def measure(
         measured_value = None
         with session.initiate():
             channel = session.get_channel_names("0")
-            simulate_source_delay(session)
             measured_value = session.channels[channel].fetch_multiple(count=1, timeout=timeout)
         session = None  # Don't abort after this point
     print_fetched_measurements(measured_value)
@@ -94,14 +93,6 @@ def measure(
     print("Current Value:", measured_current)
     print("---------------------------------")
     return [measured_voltage, measured_current]
-
-
-def simulate_source_delay(session):
-    """Simulate the behavior of the NI-DCPower source_delay property."""
-    if session.simulate:
-        source_complete_time = time.time() + session.source_delay.seconds
-        while time.time() < source_complete_time:
-            time.sleep(10e-3)
 
 
 def print_fetched_measurements(measurements):
