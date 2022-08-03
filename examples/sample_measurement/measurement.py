@@ -53,7 +53,6 @@ def measure(float_input, double_array_input, bool_input, string_input):
         print("Canceling SampleMeasurement(Py)")
     
     sample_measurement_service.context.add_cancel_callback(cancel_callback)
-    sample_measurement_service.context.set_deadline(datetime.now() + timedelta(minutes=5))
 
     float_output = float_input
     float_array_output = double_array_input

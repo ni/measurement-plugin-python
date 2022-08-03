@@ -68,7 +68,6 @@ def measure(
             session.abort()
 
     dc_measurement_service.context.add_cancel_callback(cancel_callback)
-    dc_measurement_service.context.set_deadline(datetime.now() + timedelta(minutes=5))
     
     timeout = hightime.timedelta(seconds=(source_delay + 1.0))
     with nidcpower.Session(resource_name=resource_name) as session:
