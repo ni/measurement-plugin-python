@@ -50,7 +50,6 @@ class MeasurementServiceContext:
         return self._grpc_context.time_remaining()
 
 
-
 measurement_service_context: ContextVar[MeasurementServiceContext] = ContextVar(
     "measurement_service_context"
 )
@@ -183,7 +182,6 @@ class MeasurementServiceServicer(Measurement_pb2_grpc.MeasurementServiceServicer
         finally:
             measurement_service_context.reset(token)
         output_bytestring = serializer.serialize_parameters(self.output_metadata, output_value)
-
         # Frame the response and send back.
         output_any = any_pb2.Any()
         output_any.value = output_bytestring
