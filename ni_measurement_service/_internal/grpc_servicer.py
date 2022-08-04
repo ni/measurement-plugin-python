@@ -21,12 +21,10 @@ class MeasurementServiceContext:
         """Initialize the Measurement Service Context."""
         self._grpc_context: grpc.ServicerContext = grpc_context
         self._is_complete: bool = False
-        self._exception: Optional[Exception] = None
 
-    def mark_complete(self, exception: Optional[Exception] = None):
+    def mark_complete(self):
         """Mark the current RPC as complete."""
         self._is_complete = True
-        self._exception = exception
 
     def get_grpc_context(self):
         """Get the context for the RPC."""
@@ -176,11 +174,8 @@ class MeasurementServiceServicer(Measurement_pb2_grpc.MeasurementServiceServicer
         token = measurement_service_context.set(MeasurementServiceContext(context))
         try:
             output_value = self.measure_function(**mapping_by_variable_name)
-            measurement_service_context.get().mark_complete()
-        except Exception as e:
-            measurement_service_context.get().mark_complete(exception=e)
-            raise
         finally:
+            measurement_service_context.get().mark_complete()
             measurement_service_context.reset(token)
         output_bytestring = serializer.serialize_parameters(self.output_metadata, output_value)
         # Frame the response and send back.
