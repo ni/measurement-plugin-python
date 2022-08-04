@@ -31,6 +31,10 @@ class MeasurementServiceContext:
         self._is_complete = True
         self._exception = exception
 
+    def get_grpc_context(self):
+        """Get the context for the RPC."""
+        return self._grpc_context
+
     def add_cancel_callback(self, cancel_callback: Callable):
         """Add a callback that is invoked when the RPC is canceled."""
 
@@ -44,10 +48,6 @@ class MeasurementServiceContext:
         """Cancel the RPC."""
         if not self._is_complete:
             self._grpc_context.cancel()
-
-    def get_time_remaining(self):
-        """Return the time remaining for the RPC."""
-        return self._grpc_context.time_remaining()
 
 
 measurement_service_context: ContextVar[MeasurementServiceContext] = ContextVar(

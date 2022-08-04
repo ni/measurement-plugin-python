@@ -11,6 +11,10 @@ from ni_measurement_service.measurement.info import MeasurementInfo, ServiceInfo
 class MeasurementContext:
     """Proxy for the Measurement Service's context-local state."""
 
+    def get_grpc_context(self):
+        """Get the context for the RPC."""
+        return grpc_servicer.measurement_service_context.get().get_grpc_context()
+
     def add_cancel_callback(self, cancel_callback: Callable):
         """Add a callback which is invoked when the RPC is canceled."""
         grpc_servicer.measurement_service_context.get().add_cancel_callback(cancel_callback)
