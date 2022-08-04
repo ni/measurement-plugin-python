@@ -52,7 +52,6 @@ def measure(float_input, double_array_input, bool_input, string_input):
         print("Canceling SampleMeasurement(Py)")
     
     sample_measurement_service.context.add_cancel_callback(cancel_callback)
-    timeout = sample_measurement_service.context.get_grpc_context().time_remaining()
 
     float_output = float_input
     float_array_output = double_array_input
