@@ -13,6 +13,7 @@ from ni_measurement_service._internal.stubs import Measurement_pb2
 from ni_measurement_service._internal.stubs import Measurement_pb2_grpc
 from ni_measurement_service.measurement.info import MeasurementInfo
 
+
 class MeasurementServiceContext:
     """Accessor for the Measurement Service's context-local state."""
 

@@ -50,7 +50,7 @@ def measure(float_input, double_array_input, bool_input, string_input):
 
     def cancel_callback():
         print("Canceling SampleMeasurement(Py)")
-    
+
     sample_measurement_service.context.add_cancel_callback(cancel_callback)
 
     float_output = float_input

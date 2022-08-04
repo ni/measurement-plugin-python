@@ -7,6 +7,7 @@ from ni_measurement_service._internal.parameter import metadata as parameter_met
 from ni_measurement_service._internal.service_manager import GrpcService
 from ni_measurement_service.measurement.info import MeasurementInfo, ServiceInfo, DataType
 
+
 class MeasurementContext:
     """Proxy for the Measurement Service's context-local state."""
 
@@ -21,6 +22,7 @@ class MeasurementContext:
     def cancel(self):
         """Cancel the RPC."""
         grpc_servicer.measurement_service_context.get().cancel()
+
 
 class MeasurementService:
     """Class the supports registering and hosting a python function as a gRPC service.
