@@ -6,7 +6,6 @@ User can Import driver and 3Party Packages based on requirements.
 import logging
 import os
 import sys
-from datetime import datetime, timedelta
 
 import click
 

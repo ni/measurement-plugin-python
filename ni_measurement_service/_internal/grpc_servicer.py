@@ -1,11 +1,7 @@
 """Contains Measurement Service Implementation class and method to host the service.
 """
-import asyncio
 import inspect
-import time
 from contextvars import ContextVar
-from datetime import datetime
-from threading import Thread
 from typing import Any, Callable, Dict, List, Optional
 
 import grpc
