@@ -2,7 +2,7 @@
 """
 import inspect
 from contextvars import ContextVar
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Callable, Dict, List
 
 import grpc
 from google.protobuf import any_pb2
