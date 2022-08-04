@@ -1,6 +1,5 @@
 """Framework to host measurement service."""
 
-from datetime import datetime
 from typing import Any, Callable
 
 from ni_measurement_service._internal import grpc_servicer
