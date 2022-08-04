@@ -66,7 +66,7 @@ def measure(
             session.abort()
 
     dc_measurement_service.context.add_cancel_callback(cancel_callback)
-    time_remaining = dc_measurement_service.context.get_grpc_context().time_remaining()
+    time_remaining = dc_measurement_service.context.time_remaining()
 
     timeout = hightime.timedelta(seconds=(min(time_remaining, source_delay + 1.0)))
     with nidcpower.Session(resource_name=resource_name) as session:

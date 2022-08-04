@@ -23,6 +23,10 @@ class MeasurementContext:
         """Cancel the RPC."""
         grpc_servicer.measurement_service_context.get().cancel()
 
+    def time_remaining(self):
+        """Get the time remaining for the RPC."""
+        return grpc_servicer.measurement_service_context.get().time_remaining()
+
 
 class MeasurementService:
     """Class the supports registering and hosting a python function as a gRPC service.

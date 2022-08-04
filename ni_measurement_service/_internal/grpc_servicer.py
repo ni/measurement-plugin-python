@@ -46,6 +46,10 @@ class MeasurementServiceContext:
         if not self._is_complete:
             self._grpc_context.cancel()
 
+    def time_remaining(self):
+        """Get the time remaining for the RPC."""
+        return self._grpc_context.time_remaining()
+
 
 measurement_service_context: ContextVar[MeasurementServiceContext] = ContextVar(
     "measurement_service_context"
