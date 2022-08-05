@@ -1,14 +1,12 @@
 """Tests to validate the python measurement generator."""
 import pathlib
-import sys
+
 import pytest
 
-generator_path = pathlib.Path(
-    pathlib.Path(__file__).resolve().parent.parent.parent / "measurement_generator"
-)
-sys.path.append(str(generator_path))
+from ni_measurement_generator import template
 
-from template import _create_measurement
+
+generator_path = pathlib.Path(template.__file__).parent
 
 
 def test___command_line_args___create_measurement___render_without_exception(tmpdir):
@@ -16,14 +14,14 @@ def test___command_line_args___create_measurement___render_without_exception(tmp
     temp_directory = pathlib.Path(tmpdir.mkdir("measurement_files"))
 
     with pytest.raises(SystemExit):
-        _create_measurement(
+        template._create_measurement(
             [
                 "SampleMeasurement",
                 "1.0.0.0",
                 "Measurement",
                 "Product",
                 "--ui-file",
-                "measurementUI.measui",
+                "MeasurementUI.measui",
                 "--service-class",
                 "SampleMeasurement_Python",
                 "--service-id",

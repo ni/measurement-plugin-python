@@ -125,7 +125,8 @@ def _create_measurement(
     description,
     directory_out,
 ):
-    """Generates a Python measurement service from a template.
+    """Generate a Python measurement service from a template.
+
     You can use this to get started writing your own measurement services.
 
     DISPLAY_NAME: The measurement display name for client to display to user.

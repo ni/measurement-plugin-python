@@ -10,7 +10,7 @@ measurement_info = nims.MeasurementInfo(
     version="1.0.0.0",
     measurement_type="Measurement",
     product_type="Product",
-    ui_file_path=os.path.join(os.path.dirname(os.path.abspath(__file__)), "measurementUI.measui"),
+    ui_file_path=os.path.join(os.path.dirname(os.path.abspath(__file__)), "MeasurementUI.measui"),
     ui_file_type=nims.UIFileType.MeasurementUI,
 )
 
