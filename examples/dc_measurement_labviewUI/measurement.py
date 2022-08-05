@@ -58,7 +58,16 @@ def measure(
     """
     # User Logic :
     print("Executing DCMeasurement(Py)")
-    timeout = hightime.timedelta(seconds=(source_delay + 1.0))
+
+    def cancel_callback():
+        print("Canceling DCMeasurement(Py)")
+        if session is not None:
+            session.abort()
+
+    dc_measurement_service.context.add_cancel_callback(cancel_callback)
+    time_remaining = dc_measurement_service.context.time_remaining()
+
+    timeout = hightime.timedelta(seconds=(min(time_remaining, source_delay + 1.0)))
     with nidcpower.Session(resource_name=resource_name) as session:
         # Configure the session.
         session.source_mode = nidcpower.SourceMode.SINGLE_POINT
@@ -73,6 +82,7 @@ def measure(
         with session.initiate():
             channel = session.get_channel_names("0")
             measured_value = session.channels[channel].fetch_multiple(count=1, timeout=timeout)
+        session = None  # Don't abort after this point
     print_fetched_measurements(measured_value)
     measured_voltage = measured_value[0].voltage
     measured_current = measured_value[0].current

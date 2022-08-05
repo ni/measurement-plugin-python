@@ -1,8 +1,10 @@
 """Contains Measurement Service Implementation class and method to host the service.
 """
 import inspect
+from contextvars import ContextVar
 from typing import Any, Callable, Dict, List
 
+import grpc
 from google.protobuf import any_pb2
 
 from ni_measurement_service._internal.parameter import serializer
@@ -10,6 +12,46 @@ from ni_measurement_service._internal.parameter.metadata import ParameterMetadat
 from ni_measurement_service._internal.stubs import Measurement_pb2
 from ni_measurement_service._internal.stubs import Measurement_pb2_grpc
 from ni_measurement_service.measurement.info import MeasurementInfo
+
+
+class MeasurementServiceContext:
+    """Accessor for the Measurement Service's context-local state."""
+
+    def __init__(self, grpc_context: grpc.ServicerContext):
+        """Initialize the Measurement Service Context."""
+        self._grpc_context: grpc.ServicerContext = grpc_context
+        self._is_complete: bool = False
+
+    def mark_complete(self):
+        """Mark the current RPC as complete."""
+        self._is_complete = True
+
+    def get_grpc_context(self):
+        """Get the context for the RPC."""
+        return self._grpc_context
+
+    def add_cancel_callback(self, cancel_callback: Callable):
+        """Add a callback that is invoked when the RPC is canceled."""
+
+        def grpc_callback():
+            if not self._is_complete:
+                cancel_callback()
+
+        self._grpc_context.add_callback(grpc_callback)
+
+    def cancel(self):
+        """Cancel the RPC."""
+        if not self._is_complete:
+            self._grpc_context.cancel()
+
+    def time_remaining(self):
+        """Get the time remaining for the RPC."""
+        return self._grpc_context.time_remaining()
+
+
+measurement_service_context: ContextVar[MeasurementServiceContext] = ContextVar(
+    "measurement_service_context"
+)
 
 
 class MeasurementServiceServicer(Measurement_pb2_grpc.MeasurementServiceServicer):
@@ -129,7 +171,12 @@ class MeasurementServiceServicer(Measurement_pb2_grpc.MeasurementServiceServicer
         mapping_by_variable_name = self._get_mapping_by_parameter_name(
             mapping_by_id, self.measure_function
         )
-        output_value = self.measure_function(**mapping_by_variable_name)
+        token = measurement_service_context.set(MeasurementServiceContext(context))
+        try:
+            output_value = self.measure_function(**mapping_by_variable_name)
+        finally:
+            measurement_service_context.get().mark_complete()
+            measurement_service_context.reset(token)
         output_bytestring = serializer.serialize_parameters(self.output_metadata, output_value)
         # Frame the response and send back.
         output_any = any_pb2.Any()

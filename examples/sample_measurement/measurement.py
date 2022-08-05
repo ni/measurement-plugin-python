@@ -46,6 +46,13 @@ sample_measurement_service = nims.MeasurementService(measurement_info, service_i
 def measure(float_input, double_array_input, bool_input, string_input):
     """User Measurement."""
     # User Logic :
+    print("Executing SampleMeasurement(Py)")
+
+    def cancel_callback():
+        print("Canceling SampleMeasurement(Py)")
+
+    sample_measurement_service.context.add_cancel_callback(cancel_callback)
+
     float_output = float_input
     float_array_output = double_array_input
     bool_output = bool_input
