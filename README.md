@@ -99,7 +99,7 @@ pip show ni-measurement-service
 
 ### Developing a minimal python measurement
 
-1. Open a command prompt, and change the working directory to the directory of `template.py`.
+1. Open a command prompt, and change the working directory to `ni_measurement_generator`
 
     ``` cmd
     cd <path_of_template.py>
