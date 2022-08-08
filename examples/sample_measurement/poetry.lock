@@ -11,7 +11,7 @@ colorama = {version = "*", markers = "platform_system == \"Windows\""}
 
 [[package]]
 name = "colorama"
-version = "0.4.4"
+version = "0.4.5"
 description = "Cross-platform colored terminal text."
 category = "main"
 optional = false
@@ -33,16 +33,21 @@ protobuf = ["grpcio-tools (>=1.41.1)"]
 
 [[package]]
 name = "ni-measurement-service"
-version = "0.6.0"
+version = "0.8.0"
 description = "Develop language agnostic measurement plugins reusable by both the Interactive Debugging/Validation and Test Automation workflow."
 category = "main"
 optional = false
-python-versions = ">=3.8,<4.0"
+python-versions = "^3.8"
+develop = true
 
 [package.dependencies]
 grpcio = "1.41.1"
 protobuf = "3.19.1"
-pywin32 = {version = ">=303,<304", markers = "sys_platform == \"win32\""}
+pywin32 = {version = "^303", markers = "sys_platform == \"win32\""}
+
+[package.source]
+type = "directory"
+url = "../.."
 
 [[package]]
 name = "protobuf"
@@ -71,17 +76,14 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "e8f5b9320ec3cd1f46fb0d953df26eea654d990d6a4b007d3822849cb8fd7cc7"
+content-hash = "6527cd93e3ab78f3f624ff1ba61d9b4c0466bcd18e11feb92ff630b75276d4b5"
 
 [metadata.files]
 click = [
     {file = "click-8.1.3-py3-none-any.whl", hash = "sha256:bb4d8133cb15a609f44e8213d9b391b0809795062913b383c62be0ee95b1db48"},
     {file = "click-8.1.3.tar.gz", hash = "sha256:7682dc8afb30297001674575ea00d1814d808d6a36af415a82bd481d37ba7b8e"},
 ]
-colorama = [
-    {file = "colorama-0.4.4-py2.py3-none-any.whl", hash = "sha256:9f47eda37229f68eee03b24b9748937c7dc3868f906e8ba69fbcbdd3bc5dc3e2"},
-    {file = "colorama-0.4.4.tar.gz", hash = "sha256:5941b2b48a20143d2267e95b1c2a7603ce057ee39fd88e7329b0c292aa16869b"},
-]
+colorama = []
 grpcio = [
     {file = "grpcio-1.41.1-cp310-cp310-linux_armv7l.whl", hash = "sha256:ead9885b53777bed4b0694ff0baea9d2c519ff774b17b177bde43d73e2b4aa38"},
     {file = "grpcio-1.41.1-cp310-cp310-macosx_10_10_universal2.whl", hash = "sha256:3b4b7c1ab18283eb64af5648d20eabef9237a2aec09e30a805f18adc9497258d"},
@@ -128,10 +130,7 @@ grpcio = [
     {file = "grpcio-1.41.1-cp39-cp39-win_amd64.whl", hash = "sha256:c3a446b6a1f8077cc03d0d496fc1cecdd3d0b66860c0c5b65cc92d0549117840"},
     {file = "grpcio-1.41.1.tar.gz", hash = "sha256:9b751271b029432a526a4970dc9b70d93eb6f0963b6a841b574f780b72651969"},
 ]
-ni-measurement-service = [
-    {file = "ni_measurement_service-0.6.0-py3-none-any.whl", hash = "sha256:7b28a6756fa3268149d54091a324bc8b1af2898cee8fa3b4570bed6862721bce"},
-    {file = "ni_measurement_service-0.6.0.tar.gz", hash = "sha256:4db167ca1e68e460d2ab221207a27e0cee3fb5c3be34fe5424e53c04ff968bac"},
-]
+ni-measurement-service = []
 protobuf = [
     {file = "protobuf-3.19.1-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:d80f80eb175bf5f1169139c2e0c5ada98b1c098e2b3c3736667f28cbbea39fc8"},
     {file = "protobuf-3.19.1-cp310-cp310-manylinux2014_aarch64.whl", hash = "sha256:a529e7df52204565bcd33738a7a5f288f3d2d37d86caa5d78c458fa5fabbd54d"},
