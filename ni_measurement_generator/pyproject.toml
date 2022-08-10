@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "ni_measurement_generator"
 version = "0.1.0"
-description = ""
+description = "A utility for generating Python measurement service projects that use the ni_measurement_service"
 authors = ["Your Name <you@example.com>"]
 
 [tool.poetry.dependencies]
