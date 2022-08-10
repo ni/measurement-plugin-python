@@ -114,7 +114,7 @@ def _check_guid(ctx, param, service_id):
     default=pathlib.Path(__file__).parent,
     help="Output directory for measurement files.",
 )
-def _create_measurement(
+def create_measurement(
     display_name,
     version,
     measurement_type,
@@ -170,11 +170,3 @@ def _create_measurement(
         description=description,
     )
     _create_bat(directory_out)
-
-
-def main():
-    _create_measurement()
-
-
-if __name__ == "__main__":
-    main()

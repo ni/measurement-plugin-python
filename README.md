@@ -103,27 +103,21 @@ pip show ni-measurement-service
 
     ``` cmd
     cd <path_of_template.py>
-    REM Example: cd "..\measurement-services-python\measurement_generator"
+    REM Example: cd "..\measurement-services-python\ni_measurement_generator"
     ```
 
 2. Run `template.py` in a command prompt using command line arguments for `display_name`, `version`, `measurement_type`, and `product_type`.
-    1. Running `template.py` without optional arguments:
+    1. Running `template` without optional arguments:
 
-    ``` cmd
-    python template.py SampleMeasurement 0.1.0.0 Measurement Product
-    ```
+    `poetry run python ni-measurement-generator SampleMeasurement 0.1.0.0 Measurement Product`
 
-    2. Running `template.py` with optional arguments for `ui_file`, `service_class`, `service_id`, and `description`:
+    2. Running `template` with optional arguments for `ui_file`, `service_class`, `service_id`, and `description`:
 
-    ``` cmd
-    python template.py SampleMeasurement 0.1.0.0 Measurement Product --ui-file MeasurementUI.measui --service-class SampleMeasurement_Python --service-id ECFC33EB-AA2E-41A5-A7C8-CAA2A8245052 --description description
-    ```
+    `poetry run python ni-measurement-generator SampleMeasurement 0.1.0.0 Measurement Product --ui-file MeasurementUI.measui --service-class SampleMeasurement_Python --service-id ECFC33EB-AA2E-41A5-A7C8-CAA2A8245052 --description description`
 
-    3. Running `template.py` with optional argument `directory_out`:
+    3. Running `template` with optional argument `directory_out`:
 
-    ``` cmd
-    python template.py SampleMeasurement 0.1.0.0 Measurement Product --directory-out <new_path_for_created_files> 
-    ```
+    `poetry run python ni-measurement-generator SampleMeasurement 0.1.0.0 Measurement Product --directory-out <new_path_for_created_files>`
 
 
 3. To customize the created measurement, provide metadata of the measurement's configuration(input parameters) and outputs(output parameters) in `measurement.py`.

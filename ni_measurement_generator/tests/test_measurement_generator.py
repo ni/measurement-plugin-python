@@ -14,7 +14,7 @@ def test___command_line_args___create_measurement___render_without_exception(tmp
     temp_directory = pathlib.Path(tmpdir.mkdir("measurement_files"))
 
     with pytest.raises(SystemExit):
-        template._create_measurement(
+        template.create_measurement(
             [
                 "SampleMeasurement",
                 "1.0.0.0",
