@@ -28,7 +28,7 @@ jobs:
         run: |
           PYTHONPATH="${PYTHONPATH}:${HOME}/.poetry/lib:${HOME}/.poetry/lib/poetry/_vendor/py${{ env.PYTHON_VERSION }}" \
           python -c "from poetry.factory import Factory; \
-            locker = Factory().create_poetry('.').locker; \
+            locker = Factory().create_poetry('./ni_measurement_generator').locker; \
             exit(0) if locker.is_locked() and locker.is_fresh() else exit(1)" \
             && echo 'OK'
       - uses: actions/cache@v2
@@ -65,4 +65,6 @@ jobs:
       - name: Install the Package
         run: poetry install -vvv
       - name: Run tests and Code coverage summary.
-        run: poetry run pytest -v --cov=ni_measurement_service
+        run: |
+          poetry run pytest -v --cov=ni_measurement_service
+          poetry run pytest -v --cov=ni_measurement_generator
