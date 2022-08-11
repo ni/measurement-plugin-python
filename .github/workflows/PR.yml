@@ -24,7 +24,14 @@ jobs:
       # @TODO: This is a workaround for there not being a way to check the lock file
       #   See: https://github.com/python-poetry/poetry/issues/453
       # We might need to make sure the Test dependencies(as of now - Style Guides)
-      - name: Check for lock changes
+      - name: Check for lock changes (measurement service)
+        run: |
+          PYTHONPATH="${PYTHONPATH}:${HOME}/.poetry/lib:${HOME}/.poetry/lib/poetry/_vendor/py${{ env.PYTHON_VERSION }}" \
+          python -c "from poetry.factory import Factory; \
+            locker = Factory().create_poetry('.').locker; \
+            exit(0) if locker.is_locked() and locker.is_fresh() else exit(1)" \
+            && echo 'OK'
+      - name: Check for lock changes (generator)
         run: |
           PYTHONPATH="${PYTHONPATH}:${HOME}/.poetry/lib:${HOME}/.poetry/lib/poetry/_vendor/py${{ env.PYTHON_VERSION }}" \
           python -c "from poetry.factory import Factory; \
@@ -64,7 +71,8 @@ jobs:
           key: ${{ runner.os }}-poetry-${{ hashFiles('poetry.lock') }}
       - name: Install the Package
         run: poetry install -vvv
-      - name: Run tests and Code coverage summary.
-        run: |
-          poetry run pytest -v --cov=ni_measurement_service
-          poetry run pytest -v --cov=ni_measurement_generator
+      - name: Run tests and Code coverage summary (measurement service).
+        run: poetry run pytest -v --cov=ni_measurement_service
+      - name: Run tests and Code coverage summary (generator).
+        run: poetry run pytest -v --cov=ni_measurement_generator
+        working-directory: ./ni_measurement_generator

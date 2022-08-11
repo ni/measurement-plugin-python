@@ -17,7 +17,9 @@ def _render_template(template_name: str, **template_args) -> str:
         print(exceptions.text_error_template().render())
 
 
-def _create_file(template_name: str, file_name: str, directory_out, **template_args) -> str:
+def _create_file(
+    template_name: str, file_name: str, directory_out, **template_args
+) -> str:
     output_file = pathlib.Path(directory_out) / file_name
 
     output = _render_template(template_name, **template_args)
