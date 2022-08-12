@@ -10,7 +10,10 @@ from mako.template import Template
 
 def _render_template(template_name: str, **template_args) -> str:
     file_path = str(pathlib.Path(__file__).parent / "templates" / template_name)
-    template = Template(filename=file_path)
+
+    with open(file_path, "r") as file:
+        file_contents = file.read()
+    template = Template(file_contents)
     try:
         return template.render(**template_args)
     except:  # noqa: E722
