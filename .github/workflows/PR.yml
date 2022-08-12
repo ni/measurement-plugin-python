@@ -69,10 +69,13 @@ jobs:
         with:
           path: ~/.cache/pypoetry/virtualenvs
           key: ${{ runner.os }}-poetry-${{ hashFiles('poetry.lock') }}
-      - name: Install the Package
+      - name: Install the Package (measurement service).
         run: poetry install -vvv
       - name: Run tests and Code coverage summary (measurement service).
         run: poetry run pytest ./tests -v --cov=ni_measurement_service
+      - name: Install the Package (generator).
+        run: poetry install -vvv
+        working-directory: ./ni_measurement_generator
       - name: Run tests and Code coverage summary (generator).
         run: poetry run pytest -v
         working-directory: ./ni_measurement_generator
