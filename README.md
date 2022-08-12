@@ -99,61 +99,28 @@ pip show ni-measurement-service
 
 ### Developing a minimal python measurement
 
-1. Create a python file(.py file) using the IDE of your choice or using the [Visual Studio Code.](https://code.visualstudio.com/download).
+1. Open a command prompt, and change the working directory to `ni_measurement_generator`
 
-2. Import `ni_measurement_service`
-
-    ``` python
-    import ni_measurement_service as nims
+    ``` cmd
+    cd <path_of_template.py>
+    REM Example: cd "..\measurement-services-python\ni_measurement_generator"
     ```
 
-3. Define `measurement_info` and `service_info` with the required details.
+2. Run `template.py` in a command prompt using command line arguments for `display_name`, `version`, `measurement_type`, and `product_type`.
+    1. Running `template` without optional arguments:
 
-    ``` python
-    measurement_info = nims.MeasurementInfo(
-        display_name="FooMeasurement", # The display name of the measurement
-        version="0.1.0.0", # The version of the measurement
-        measurement_type="", # The Type of the measurement.
-        product_type="", # The Product Type related to the measurement.
-        # Absolute file path of the UI File. 
-        ui_file_path="", 
-        # Developer can construct relative path w.r.t the .py file like this:
-        # ui_file_path=os.path.join(os.path.dirname(os.path.abspath(__file__)), "FileName.isscr")
-        ui_file_type=nims.UIFileType.MeasurementUI, # Type of UI File, use UIFileType Enum.
-    )
+    `poetry run python ni-measurement-generator SampleMeasurement 0.1.0.0 Measurement Product`
 
-    service_info = nims.ServiceInfo(
-        service_class="FooMeasurement_Python", # Service Class that the measurement belongs to.
-        service_id="<GUID>", #Unique GUID 
-        description_url="", # Description URL that contains information about the measurement. Can be Empty if there is no Description URL.
-    )
-    ```
+    2. Running `template` with optional arguments for `ui_file`, `service_class`, `service_id`, and `description`:
 
-4. Create a new `MeasurementService` instance.
+    `poetry run python ni-measurement-generator SampleMeasurement 0.1.0.0 Measurement Product --ui-file MeasurementUI.measui --service-class SampleMeasurement_Python --service-id ECFC33EB-AA2E-41A5-A7C8-CAA2A8245052 --description description`
 
-    ``` python
-    foo_measurement_service = nims.MeasurementService(measurement_info, service_info)
-    ```
+    3. Running `template` with optional argument `directory_out`:
 
-5. Define a Python function with the required measurement logic based on your required measurement methodology.
-    1. The measurement function must return the outputs as a list.
+    `poetry run python ni-measurement-generator SampleMeasurement 0.1.0.0 Measurement Product --directory-out <new_path_for_created_files>`
 
-    ``` python
-    def measure(input_1, input_2): 
-        ''' A simple Measurement method'''
-        return ["foo", "bar"]
-    ```
 
-6. Register the defined python function as measurement.
-
-    ``` python
-    @foo_measurement_service.register_measurement
-    def measure(input_1, input_2): 
-        ''' A simple Measurement method'''
-        return ["foo", "bar"]
-    ```
-
-7. Provide metadata of the measurement's configuration(input parameters) and outputs(output parameters)
+3. To customize the created measurement, provide metadata of the measurement's configuration(input parameters) and outputs(output parameters) in `measurement.py`.
     1. Use the `configuration()` decorator to provide metadata about the configurations.**The order of the configuration decorator must match with the order of the parameters defined in the function signature.**
 
         ``` python
@@ -178,19 +145,7 @@ pip show ni-measurement-service
             return ["foo", "bar"]
         ```
 
-8. Startup logic.
-    - To start the registered measurement as service call the `host_service()` from the `MeasurementService` instance.
-    - Use the `close_service()` function to properly terminate the service.
-    - A typical implementation is shown below:
-
-    ``` python
-    if __name__ == "__main__":
-        foo_measurement_service.host_service()
-        input("To Exit during the Service lifetime, Press Enter.\n")
-        foo_measurement_service.close_service()
-    ```
-
-9. Run/Debug the created measurement by following the steps discussed in the section ["Steps to run/debug the measurement service".](#steps-to-rundebug-the-measurement-service)
+4. Run/Debug the created measurement by following the steps discussed in the section ["Steps to run/debug the measurement service".](#steps-to-rundebug-the-measurement-service)
 
 ---
 
