@@ -13,9 +13,7 @@ measurement_info = nims.MeasurementInfo(
     version="${version}",
     measurement_type="${measurement_type}",
     product_type="${product_type}",
-    ui_file_path=os.path.join(
-        os.path.dirname(os.path.abspath(__file__)), "${ui_file}"
-    ),
+    ui_file_path=os.path.join(os.path.dirname(os.path.abspath(__file__)), "${ui_file}"),
     ui_file_type=nims.UIFileType.${ui_file_type},
 )
 
@@ -39,9 +37,9 @@ def measure(array_input):
 
 @click.command
 @click.option(
-    "-v", 
-    "--verbose", 
-    count=True, 
+    "-v",
+    "--verbose",
+    count=True,
     help="Enable verbose logging. Repeat to increase verbosity.",
 )
 def main(verbose: int):
