@@ -6,6 +6,7 @@ import os
 import sys
 
 import click
+
 import ni_measurement_service as nims
 
 measurement_info = nims.MeasurementInfo(
