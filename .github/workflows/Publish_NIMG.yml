@@ -1,0 +1,51 @@
+name: Publish NIMG
+
+on:
+  release:
+    types: [released]
+
+env:
+  # Versions are also listed in PR.yml
+  POETRY_VERSION: 1.1.10
+  PYTHON_VERSION: 3.8
+
+jobs:
+  build:
+    name: Publish NIMG Package to PyPI
+    runs-on : ubuntu-latest 
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - uses: Gr1N/setup-poetry@v4
+        with:
+          poetry-version: ${{ env.POETRY_VERSION }}
+      # @TODO: This is a workaround for there not being a way to check the lock file
+      #   See: https://github.com/python-poetry/poetry/issues/453
+      - name: Check for lock changes
+        run: |
+          PYTHONPATH="${PYTHONPATH}:${HOME}/.poetry/lib:${HOME}/.poetry/lib/poetry/_vendor/py${{ env.PYTHON_VERSION }}" \
+          python -c "from poetry.factory import Factory; \
+            locker = Factory().create_poetry('./ni_measurement_generator').locker; \
+            exit(0) if locker.is_locked() and locker.is_fresh() else exit(1)" \
+            && echo 'OK'
+      - uses: actions/cache@v2
+        with:
+          path: ~/.cache/pypoetry/virtualenvs
+          key: ${{ runner.os }}-poetry-${{ hashFiles('poetry.lock') }}
+
+      - name: Setup NIMG
+        run: poetry install
+        working-directory: ./ni_measurement_generator
+
+      - name: Lint the Code
+        run: poetry run ni-python-styleguide lint
+        working-directory: ./ni_measurement_generator
+
+      # To Test the Publish use : poetry publish --build --username __token__ --password ${{ secrets.TEST_PYPI_TOKEN }} -r test-pypi
+      - name: Build Python package and publish to PyPI
+        if: ${{ startsWith(github.event.release.target_commitish, 'main') }}
+        run: |
+          poetry publish --build --username __token__ --password ${{ secrets.PYPI_TOKEN }}
+        working-directory: ./ni_measurement_generator
