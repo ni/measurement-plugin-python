@@ -72,7 +72,7 @@ jobs:
       - name: Install the Package
         run: poetry install -vvv
       - name: Run tests and Code coverage summary (measurement service).
-        run: poetry run pytest -v --cov=ni_measurement_service
+        run: poetry run pytest ./tests -v --cov=ni_measurement_service
       - name: Run tests and Code coverage summary (generator).
         run: poetry run pytest -v --cov=ni_measurement_generator
         working-directory: ./ni_measurement_generator
