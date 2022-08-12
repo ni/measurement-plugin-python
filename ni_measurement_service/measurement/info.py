@@ -20,7 +20,7 @@ class MeasurementInfo(NamedTuple):
     ----------
         display_name (str): The measurement display name for client to display to user.
 
-        version (str): The measurement version that helps to 
+        version (str): The measurement version that helps to
         maintain versions of a measurement in future.
 
         measurement_type (str): Represents category of measurement for the ProductType,
