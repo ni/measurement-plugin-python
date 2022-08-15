@@ -7,7 +7,7 @@
       "descriptionUrl": "description",
       "providedServices": [ "ni.measurements.v1.MeasurementService" ], 
       "attributes": [ "UserInterfaceType=MeasurementUI" ],
-      "path": "runSampleMeasurement.bat" 
+      "path": "start.bat" 
     }
   ]
 }
