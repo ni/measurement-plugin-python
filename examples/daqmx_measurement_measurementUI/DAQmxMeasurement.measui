@@ -1,1 +1,28 @@
-﻿
+﻿<?xml version="1.0" encoding="utf-8"?>
+<SourceFile Checksum="4FA3F723F52DE9F33A518762A6F8B92F1D6BBB1145767B9167CAD64A931B8F1DA2C83AD81BA7314BB603A1222840C1B5685F4647E8A3A795C054F2DA29EE234E" Timestamp="1D8B1ADFDFBAA88" xmlns="http://www.ni.com/PlatformFramework">
+	<SourceModelFeatureSet>
+		<ParsableNamespace AssemblyFileVersion="9.6.0.1163" FeatureSetName="Configuration Based Software Core" Name="http://www.ni.com/ConfigurationBasedSoftware.Core" OldestCompatibleVersion="6.3.0.49152" Version="6.3.0.49152" />
+		<ParsableNamespace AssemblyFileVersion="9.6.0.1163" FeatureSetName="LabVIEW Controls" Name="http://www.ni.com/Controls.LabVIEW.Design" OldestCompatibleVersion="8.1.0.49152" Version="8.1.0.49152" />
+		<ParsableNamespace AssemblyFileVersion="22.8.0.1163" FeatureSetName="InstrumentStudio Measurement UI" Name="http://www.ni.com/InstrumentFramework/ScreenDocument" OldestCompatibleVersion="22.1.0.0" Version="22.1.0.0" />
+		<ParsableNamespace AssemblyFileVersion="9.6.0.1163" FeatureSetName="Editor" Name="http://www.ni.com/PanelCommon" OldestCompatibleVersion="6.1.0.0" Version="6.1.0.49152" />
+		<ParsableNamespace AssemblyFileVersion="9.6.0.1163" FeatureSetName="Editor" Name="http://www.ni.com/PlatformFramework" OldestCompatibleVersion="8.1.0.49152" Version="8.1.0.49152" />
+		<ApplicationVersionInfo Build="22.8.0.1163" Name="Measurement UI Editor" Version="22.8.0.1163" />
+	</SourceModelFeatureSet>
+	<Screen ClientId="{5f88d1ec-4b12-4bf9-b28f-707b534a0575}" ConfigurationParameters="&quot;{\r\n  &quot;timeInSeconds&quot;: 10\r\n}&quot;" DisplayName="DAQmxMeasurement(Py)" Id="ce8cc70d4b0b487db029384b996c0e8a" ServiceClass="DAQmx_Measurement_Python" xmlns="http://www.ni.com/InstrumentFramework/ScreenDocument">
+		<ScreenSurface BackgroundColor="[SMSolidColorBrush]#ffffffff" Height="[float]400" Id="1224789d85bd4cdfa59e83e724ab737e" Left="[float]0" PanelSizeMode="Fixed" Top="[float]0" Width="[float]800" xmlns="http://www.ni.com/ConfigurationBasedSoftware.Core">
+			<ScreenSurfaceCanvas Background="[SMSolidColorBrush]#80808080" BackgroundColor="[SMSolidColorBrush]#ffe0e0e0" BackgroundImagePath="[string]" BaseName="[string]Canvas" Height="[float]369" Id="4e96cb89acf541079595dbb3c7523350" Label="[UIModel]4ffc5fad8b714344b162db4bc48efc3e" Left="[float]321" Top="[float]148" Width="[float]476">
+				<ScreenSurfaceCanvas Background="[SMSolidColorBrush]#80808080" BackgroundColor="[SMSolidColorBrush]#fff5cea4" BaseName="[string]Canvas" Height="[float]200" Id="3507d01be4bc4a26abc81ac1e2385674" Label="[UIModel]82dfa849cb640f9bdcd4d7c1256e976" Left="[float]18" Top="[float]119" Width="[float]439" />
+				<Label Height="[float]16" Id="82dfa849cb640f9bdcd4d7c1256e976" LabelOwner="[UIModel]3507d01be4bc4a26abc81ac1e2385674" Left="[float]18" Text="[string]Measurement Results" Top="[float]99" Width="[float]113" xmlns="http://www.ni.com/PanelCommon" />
+				<ChannelStringControl AcceptsReturn="[bool]False" BaseName="[string]String" Channel="[string]Configuration/Resource name" Height="[float]24" HorizontalScrollBarVisibility="[ScrollBarVisibility]Hidden" Id="9b31a82d9b6240409bac2174fd4c5a13" IsLabelBoundToChannel="[bool]False" Label="[UIModel]5bbf7c5f53314e61a6f8ea81a1d653c8" Left="[float]18" Text="[string]" Top="[float]61" VerticalScrollBarVisibility="[ScrollBarVisibility]Auto" Width="[float]311" />
+				<Label Height="[float]16" Id="5bbf7c5f53314e61a6f8ea81a1d653c8" LabelOwner="[UIModel]9b31a82d9b6240409bac2174fd4c5a13" Left="[float]18" Text="[string]Resource Name" Top="[float]41" Width="[float]83" xmlns="http://www.ni.com/PanelCommon" />
+				<ChannelArrayViewer ArrayElement="[UIModel]fae05b8846534010b622fa845707b171" BaseName="[string]Numeric Array Output" Channel="[string]Output/Measurements" Columns="[int]1" Dimensions="[int]1" FirstIndex="[ArrayElementIndex]0" Height="[float]120" Id="65fded8c7ff34acf84a86c7862fa2c78" IndexVisibility="[Visibility]Collapsed" IsLabelBoundToChannel="[bool]False" Label="[UIModel]e654c1886aec4f8c8d696072bb2c7a41" Left="[float]56" Orientation="[SMOrientation]Vertical" Rows="[int]4" Top="[float]159" VerticalScrollBarVisibility="[ScrollBarVisibility]Visible" Width="[float]104">
+					<p.DefaultElementValue>0x0</p.DefaultElementValue>
+					<ChannelArrayNumericText BaseName="[string]Numeric" Height="[float]24" Id="fae05b8846534010b622fa845707b171" IsReadOnly="[bool]True" UnitAnnotation="[string]" ValueFormatter="[string]LV:G5" ValueType="[Type]Double" Width="[float]72" />
+				</ChannelArrayViewer>
+				<Label Height="[float]16" Id="e654c1886aec4f8c8d696072bb2c7a41" LabelOwner="[UIModel]65fded8c7ff34acf84a86c7862fa2c78" Left="[float]56" Text="[string]Measured Values Output" Top="[float]139" Width="[float]131" xmlns="http://www.ni.com/PanelCommon" />
+			</ScreenSurfaceCanvas>
+			<Label Height="[float]16" Id="4ffc5fad8b714344b162db4bc48efc3e" LabelOwner="[UIModel]4e96cb89acf541079595dbb3c7523350" Left="[float]321" Text="[string]DAQmx Measurment" Top="[float]128" Width="[float]111" xmlns="http://www.ni.com/PanelCommon" />
+		</ScreenSurface>
+	</Screen>
+</SourceFile>
+</SourceFile>
