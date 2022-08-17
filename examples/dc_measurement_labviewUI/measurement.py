@@ -39,8 +39,8 @@ dc_measurement_service = nims.MeasurementService(measurement_info, service_info)
 @dc_measurement_service.configuration("Current limit(A)", nims.DataType.Double, 0.01)
 @dc_measurement_service.configuration("Current limit range(A)", nims.DataType.Double, 0.01)
 @dc_measurement_service.configuration("Source delay(s)", nims.DataType.Double, 0.0)
-@dc_measurement_service.output("Voltage Measurement(V)", nims.DataType.Double)
-@dc_measurement_service.output("Current Measurement(A)", nims.DataType.Double)
+@dc_measurement_service.output("Voltage Measurements(V)", nims.DataType.DoubleArray1D)
+@dc_measurement_service.output("Current Measurements(A)", nims.DataType.DoubleArray1D)
 def measure(
     resource_name,
     voltage_level,
@@ -62,8 +62,10 @@ def measure(
     def cancel_callback():
         print("Canceling DCMeasurement(Py)")
         if session is not None:
+            pending_cancellation = True
             session.abort()
 
+    pending_cancellation = False
     dc_measurement_service.context.add_cancel_callback(cancel_callback)
     time_remaining = dc_measurement_service.context.time_remaining()
 
@@ -78,18 +80,24 @@ def measure(
         session.source_delay = hightime.timedelta(seconds=source_delay)
         session.measure_when = nidcpower.MeasureWhen.AUTOMATICALLY_AFTER_SOURCE_COMPLETE
         session.voltage_level = voltage_level
-        measured_value = None
+        measured_values = []
         with session.initiate():
             channel = session.get_channel_names("0")
-            measured_value = session.channels[channel].fetch_multiple(count=1, timeout=timeout)
+            for i in range(0,5):
+                if pending_cancellation:
+                    break
+                measured_values[i] = session.channels[channel].fetch_multiple(count=1, timeout=timeout)
         session = None  # Don't abort after this point
-    print_fetched_measurements(measured_value)
-    measured_voltage = measured_value[0].voltage
-    measured_current = measured_value[0].current
-    print("Voltage Value:", measured_voltage)
-    print("Current Value:", measured_current)
-    print("---------------------------------")
-    return [measured_voltage, measured_current]
+    measured_voltages = []
+    measured_currents = []
+    for i, measured_value in measured_values:
+        print_fetched_measurements(measured_value)
+        measured_voltages[i] = measured_value[0].voltage
+        measured_currents[i] = measured_value[0].current
+        print("Voltage Value:", measured_voltages[i])
+        print("Current Value:", measured_currents[i])
+        print("---------------------------------")
+    return [measured_voltages, measured_currents]
 
 
 def print_fetched_measurements(measurements):
