@@ -9,7 +9,6 @@ import os
 import sys
 
 import click
-import hightime
 import nidaqmx
 from nidaqmx import constants
 
@@ -36,7 +35,7 @@ daqmx_measurement_service = nims.MeasurementService(measurement_info, service_in
 
 @daqmx_measurement_service.register_measurement
 @daqmx_measurement_service.configuration("Resource name", nims.DataType.String, "Dev1")
-@daqmx_measurement_service.output("Measurements", nims.DataType.DoubleArray1D)
+@daqmx_measurement_service.output("Voltage Measurement", nims.DataType.Double)
 def measure(resource_name):
     """User Measurement API. Returns Voltage Measurement as the only output.
 
@@ -56,17 +55,15 @@ def measure(resource_name):
     daqmx_measurement_service.context.add_cancel_callback(cancel_callback)
     time_remaining = daqmx_measurement_service.context.time_remaining()
 
-    timeout = hightime.timedelta(seconds=(min(time_remaining, 10.0)))
-    measured_values = []
+    timeout = min(time_remaining, 10.0)
     with nidaqmx.Task() as task:
-        task.ai_channels.add_ai_voltage_chan("Dev1/ai0")
-        measured_values = task.read(number_of_samples_per_channel=10, timeout=timeout)
+        task.ai_channels.add_ai_voltage_chan(resource_name + "/ai0")
+        voltage_value = task.read(number_of_samples_per_channel=1, timeout=timeout)[0]
         task = None  # Don't abort after this point
-
-    for i, measured_value in measured_values:
-        print("Measured Value:", measured_value)
-        print("---------------------------------")
-    return measured_values
+        
+    print("Voltage Value:", voltage_value)
+    print("---------------------------------")
+    return [voltage_value]
 
 @click.command
 @click.option(
