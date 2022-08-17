@@ -1,0 +1,13 @@
+{
+  "services": [
+    {
+      "id": "{D8B7FF34-3532-4604-9EEE-B5AFC43B7909}",
+      "name": "DAQmxMeasurement(Py)",
+      "serviceClass": "DAQmx_Measurement_Python",
+      "descriptionUrl": "https://www.ni.com/measurementservices/daqmxmeasurement.html",
+      "providedServices": [ "ni.measurements.v1.MeasurementService" ],
+      "path": "start.bat",
+      "attributes": [ "UserInterfaceType=MeasurementUI" ]
+    }
+  ]
+}

@@ -1,0 +1,111 @@
+[[package]]
+name = "click"
+version = "8.1.3"
+description = "Composable command line interface toolkit"
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[package.dependencies]
+colorama = {version = "*", markers = "platform_system == \"Windows\""}
+
+[[package]]
+name = "colorama"
+version = "0.4.4"
+description = "Cross-platform colored terminal text."
+category = "main"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
+
+[[package]]
+name = "grpcio"
+version = "1.41.1"
+description = "HTTP/2-based RPC framework"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+six = ">=1.5.2"
+
+[package.extras]
+protobuf = ["grpcio-tools (>=1.41.1)"]
+
+[[package]]
+name = "ni-measurement-service"
+version = "0.6.0"
+description = "Develop language agnostic measurement plugins reusable by both the Interactive Debugging/Validation and Test Automation workflow."
+category = "main"
+optional = false
+python-versions = ">=3.8,<4.0"
+
+[package.dependencies]
+grpcio = "1.41.1"
+protobuf = "3.19.1"
+pywin32 = {version = ">=303,<304", markers = "sys_platform == \"win32\""}
+
+[[package]]
+name = "nidaqmx"
+version = "0.6.3"
+description = "NI-DAQmx Python API"
+category = "main"
+optional = false
+python-versions = ">=3.7,<4.0"
+
+[package.dependencies]
+numpy = [
+    {version = ">=1.20,<2.0", markers = "python_version < \"3.10\""},
+    {version = ">=1.22,<2.0", markers = "python_version >= \"3.10\" and python_version < \"4.0\""},
+]
+six = ">=1.16,<2.0"
+
+[package.extras]
+docs = ["Sphinx (>=4.4,<5.0)", "sphinx_rtd_theme (>=1.0,<2.0)"]
+
+[[package]]
+name = "numpy"
+version = "1.23.2"
+description = "NumPy is the fundamental package for array computing with Python."
+category = "main"
+optional = false
+python-versions = ">=3.8"
+
+[[package]]
+name = "protobuf"
+version = "3.19.1"
+description = "Protocol Buffers"
+category = "main"
+optional = false
+python-versions = ">=3.5"
+
+[[package]]
+name = "pywin32"
+version = "303"
+description = "Python for Window Extensions"
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
+name = "six"
+version = "1.16.0"
+description = "Python 2 and 3 compatibility utilities"
+category = "main"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*"
+
+[metadata]
+lock-version = "1.1"
+python-versions = "^3.8"
+content-hash = "dad1f69e87da090bab5804e88ae7b21d58f140533908b6f0a050d42fae15203e"
+
+[metadata.files]
+click = []
+colorama = []
+grpcio = []
+ni-measurement-service = []
+nidaqmx = []
+numpy = []
+protobuf = []
+pywin32 = []
+six = []
