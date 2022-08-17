@@ -66,7 +66,7 @@ poetry add -D <name_of_dev_dependency>:<version>
 
 # Updating gRPC Stubs When a `.proto` File Is Modified
 
-The `ni_measurement_service\_internal\stubs` directory contains the auto-generated python files based on measurement services related protobuf (.proto) files. The file needs to be replaced whenever there is a change to these .proto files:
+The `ni_measurement_service\_internal\stubs` directory contains the auto-generated Python files based on measurement services related protobuf (.proto) files. The file needs to be replaced whenever there is a change to these .proto files:
 
 - DiscoveryServices.proto
 - Measurement.proto
@@ -104,7 +104,7 @@ Running this command from the repo's root directory will generate the tar.gz fil
 
 # Testing
 
-`ni-measurement-service` includes tests under the directory `tests\` that exercises the python and grpc modules. The GitHub CI run these tests for PRs targeting the main branch. It is recommended that during development you run the tests locally before creating a PR.
+`ni-measurement-service` includes tests under the directory `tests\` that exercises the Python and grpc modules. The GitHub CI run these tests for PRs targeting the main branch. It is recommended that during development you run the tests locally before creating a PR.
 
 In order to run the `ni-measurement-service` tests locally:
 
