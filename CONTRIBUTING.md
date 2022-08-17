@@ -36,21 +36,21 @@ Clone the repo, this will pull the NI Measurement Service Framework components a
 git clone https://github.com/ni/measurement-services-python.git
 ```
 
-## Initializing the repo with .venv
+## Initializing the Repo with `.venv`
 
 From the root directory of the repo, initialize the project using the [poetry install](https://python-poetry.org/docs/cli/#install) command. This will set up a .venv with all the required dependencies based on poetry.lock file and pyproject.toml.
 
 ```cmd
-poetry init 
+poetry init
 ```
 
-## Ensure that the `./.venv` virtual environment is activated
+## Ensure That the `.venv` Virtual Environment Is Activated
 
 - In the command prompt: `poetry shell`
 - In the vscode ([link](https://code.visualstudio.com/docs/python/environments#_select-and-activate-an-environment))
 - ALTERNATIVE: run commands with `poetry run`. i.e., `poetry run python measurement.py`
 
-# Adding dependencies
+# Adding Dependencies
 
 Add dependency package for `ni_measurement_service`  using [poetry add](https://python-poetry.org/docs/cli/#add) command.
 
@@ -64,7 +64,7 @@ Add **development dependencies** with the `-D` switch as shown below.
 poetry add -D <name_of_dev_dependency>:<version>
 ```
 
-# Updating gRPC stubs when a .proto file is modified
+# Updating gRPC Stubs When a `.proto` File Is Modified
 
 The `ni_measurement_service\_internal\stubs` directory contains the auto-generated python files based on measurement services related protobuf (.proto) files. The file needs to be replaced whenever there is a change to these .proto files:
 
@@ -117,11 +117,11 @@ In order to run the `ni-measurement-service` tests locally:
     (.venv) PS D:\TAF\measurement-services-python> poetry run pytest -v
     ```
 
-## Using VS code Test Explorer extension(UI)
+## Using VS code Test Explorer extension (UI)
 
 Install and configure the `Python Test Explorer for Visual Studio Code` extension to execute/debug the tests using UI. For more details related to the extension, refer [here](https://marketplace.visualstudio.com/items?itemName=LittleFoxTeam.vscode-python-test-adapter).
 
-## Steps to generate code coverage report
+## Steps to Generate Code Coverage Report
 
 - Install the required dependency by running `poetry install`
 - Activate the virtual environment if not already activated : `.venv\Scripts\activate`
