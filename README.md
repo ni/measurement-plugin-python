@@ -65,7 +65,7 @@ The example measurements shared are *Poetry-based* projects. Follow the below st
     REM Example: cd "..\measurement-services-python\examples\dc_measurement"
     ```
 
-3. Run `poetry install`. The command creates/updates the .venv and installs all the dependencies(including `ni-measurement-service` package) needed for the Example into `.venv`
+3. Run `poetry install`. The command creates/updates the .venv and installs all the dependencies (including `ni-measurement-service` package) needed for the Example into `.venv`
 
     ``` cmd
     poetry install
@@ -120,7 +120,7 @@ pip show ni-measurement-service
     `poetry run python ni-measurement-generator SampleMeasurement 0.1.0.0 Measurement Product --directory-out <new_path_for_created_files>`
 
 
-3. To customize the created measurement, provide metadata of the measurement's configuration(input parameters) and outputs(output parameters) in `measurement.py`.
+3. To customize the created measurement, provide metadata of the measurement's configuration (input parameters) and outputs (output parameters) in `measurement.py`.
     1. Use the `configuration()` decorator to provide metadata about the configurations.**The order of the configuration decorator must match with the order of the parameters defined in the function signature.**
 
         ``` python
@@ -153,7 +153,7 @@ pip show ni-measurement-service
 
 1. Start the discovery service if not already started.
 
-2. (Optional)Activate related virtual environments. Measurement developers can skip this step if they are not using any [virtual environments](#create-and-manage-python-measurement-package-using-venv) or [Poetry-based projects.](#create-and-manage-python-measurement-package-using-poetry)
+2. (Optional) Activate related virtual environments. Measurement developers can skip this step if they are not using any [virtual environments](#create-and-manage-python-measurement-package-using-venv) or [Poetry-based projects.](#create-and-manage-python-measurement-package-using-poetry)
 
     ```cmd
     .venv\scripts\activate
@@ -170,7 +170,7 @@ pip show ni-measurement-service
 
 4. To stop the running measurement service, press `Enter` in the terminal to properly close the service.
 
-5. (Optional)After the usage of measurement, deactivate the virtual environment. Measurement developers can skip this step if they are not using any [virtual environments](#create-and-manage-python-measurement-package-using-venv) or [Poetry-based projects.](#create-and-manage-python-measurement-package-using-poetry)
+5. (Optional) After the usage of measurement, deactivate the virtual environment. Measurement developers can skip this step if they are not using any [virtual environments](#create-and-manage-python-measurement-package-using-venv) or [Poetry-based projects.](#create-and-manage-python-measurement-package-using-poetry)
 
     ```cmd
     deactivate
@@ -232,23 +232,23 @@ pyinstaller --onefile --console --add-data "<path_of_the_UI_File>;." --paths .ve
 
 Measurement and its related files can be maintained as a Python package. The basic components of any Python measurement package are:
 
-1. Measurement Python Module(.py file)
+1. Measurement Python Module (.py file)
     - This file contains all the details related to the measurement and also contains the logic for the measurement execution.
     - This file is run to start the measurement as a service.
 
 2. UI File
     - UI file for the Measurement. Types of supported UI files are:
-        - Measurement UI(.measui): created using the **Measurement UI Editor application**.
-        - LabVIEW UI(.vi)
-    - The path and type of this file are configured by `ui_file_path` and `ui_file_type` respectively in `measurement_info` variable definition in Measurement Python Module(.py file).
+        - Measurement UI (.measui): created using the **Measurement UI Editor application**.
+        - LabVIEW UI (.vi)
+    - The path and type of this file are configured by `ui_file_path` and `ui_file_type` respectively in `measurement_info` variable definition in Measurement Python Module (.py file).
 
 Python communities have different ways of managing a Python package and its dependencies. It is up to the measurement developer, on how they wanted to maintain the package and dependencies. Measurement developers can choose from a few common approaches discussed below based on their requirements.
 
-Note: Once we have the template support for Python measurement, the approach to managing the Python measurement package(project) will be streamlined and simplified.
+Note: Once we have the template support for Python measurement, the approach to managing the Python measurement package (project) will be streamlined and simplified.
 
 ### Create and Manage Python Measurement Package Using Poetry
 
-1. Setting up Poetry(One-time setup)
+1. Setting up Poetry (One-time setup)
     1. Make sure the system has the recommended Python version installed.
 
     2. Install Poetry using the installation steps given in <https://python-poetry.org/docs/#installation>.
@@ -261,7 +261,7 @@ Note: Once we have the template support for Python measurement, the approach to 
         cd <path_of_directory_of_your_choice>
         ```
 
-    2. Create a Python package(project) using the `poetry new` command. Poetry will create boilerplate files and folders that are commonly needed for a Python project.
+    2. Create a Python package (project) using the `poetry new` command. Poetry will create boilerplate files and folders that are commonly needed for a Python project.
 
         ``` cmd
         poetry new <name_of_the_project>
