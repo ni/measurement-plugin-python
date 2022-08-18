@@ -10,7 +10,6 @@ import sys
 
 import click
 import nidaqmx
-from nidaqmx import constants
 
 import ni_measurement_service as nims
 
@@ -20,7 +19,9 @@ measurement_info = nims.MeasurementInfo(
     version="0.1.0.0",
     measurement_type="DAQmx",
     product_type="DAQ",
-    ui_file_path=os.path.join(os.path.dirname(os.path.abspath(__file__)), "DAQmxMeasurement.measui"),
+    ui_file_path=os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "DAQmxMeasurement.measui"
+    ),
     ui_file_type=nims.UIFileType.MeasurementUI,
 )
 
@@ -51,7 +52,7 @@ def measure(resource_name):
         print("Canceling DAQmxMeasurement(Py)")
         if task is not None:
             task.control(nidaqmx.constants.TaskMode.TASK_ABORT)
-            
+
     daqmx_measurement_service.context.add_cancel_callback(cancel_callback)
     time_remaining = daqmx_measurement_service.context.time_remaining()
 
@@ -60,10 +61,11 @@ def measure(resource_name):
         task.ai_channels.add_ai_voltage_chan(resource_name + "/ai0")
         voltage_value = task.read(number_of_samples_per_channel=1, timeout=timeout)[0]
         task = None  # Don't abort after this point
-        
+
     print("Voltage Value:", voltage_value)
     print("---------------------------------")
     return [voltage_value]
+
 
 @click.command
 @click.option(

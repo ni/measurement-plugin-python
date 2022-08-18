@@ -84,10 +84,12 @@ def measure(
         measured_values = []
         with session.initiate():
             channel = session.get_channel_names("0")
-            for i in range(0,5):
+            for i in range(0, 5):
                 if pending_cancellation:
                     break
-                measured_values.append(session.channels[channel].fetch_multiple(count=1, timeout=timeout))
+                measured_values.append(
+                    session.channels[channel].fetch_multiple(count=1, timeout=timeout)
+                )
         session = None  # Don't abort after this point
     measured_voltages = []
     measured_currents = []
