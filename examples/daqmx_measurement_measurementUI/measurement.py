@@ -35,7 +35,7 @@ daqmx_measurement_service = nims.MeasurementService(measurement_info, service_in
 
 @daqmx_measurement_service.register_measurement
 @daqmx_measurement_service.configuration("Resource name", nims.DataType.String, "Dev1")
-@daqmx_measurement_service.output("Voltage Measurement", nims.DataType.Double)
+@daqmx_measurement_service.output("Voltage Measurement(V)", nims.DataType.Double)
 def measure(resource_name):
     """User Measurement API. Returns Voltage Measurement as the only output.
 
