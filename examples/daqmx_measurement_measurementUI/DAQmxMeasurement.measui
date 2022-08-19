@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<SourceFile Checksum="5DCA723B0B18D4048B3E999AD11F4D4E2887F525A5E0802816757D2E050FD7D89BCC959FF9DCA27F44E3CC9A9F234F002A5F145226C422EDEE5849FC37159D0B" Timestamp="1D8B3FF766AB447" xmlns="http://www.ni.com/PlatformFramework">
+<SourceFile Checksum="758402B254C855616CA791C94F8CBCDF64DE51AC455CFC6AB11745BC3ED75C4F6859C504B911197D99FF92D1DE6C627CD81C3F8B568017270913465A5DE22C34" Timestamp="1D8B401764EC247" xmlns="http://www.ni.com/PlatformFramework">
 	<SourceModelFeatureSet>
 		<ParsableNamespace AssemblyFileVersion="9.6.0.1163" FeatureSetName="Configuration Based Software Core" Name="http://www.ni.com/ConfigurationBasedSoftware.Core" OldestCompatibleVersion="6.3.0.49152" Version="6.3.0.49152" />
 		<ParsableNamespace AssemblyFileVersion="9.6.0.1163" FeatureSetName="LabVIEW Controls" Name="http://www.ni.com/Controls.LabVIEW.Design" OldestCompatibleVersion="8.1.0.49152" Version="8.1.0.49152" />
@@ -10,8 +10,8 @@
 	</SourceModelFeatureSet>
 	<Screen ClientId="{5f88d1ec-4b12-4bf9-b28f-707b534a0575}" ConfigurationParameters="&quot;{\r\n  &quot;timeInSeconds&quot;: 10\r\n}&quot;" DisplayName="DAQmxMeasurement(Py)" Id="ce8cc70d4b0b487db029384b996c0e8a" ServiceClass="DAQmx_Measurement_Python" xmlns="http://www.ni.com/InstrumentFramework/ScreenDocument">
 		<ScreenSurface BackgroundColor="[SMSolidColorBrush]#ffffffff" Height="[float]603" Id="1224789d85bd4cdfa59e83e724ab737e" Left="[float]0" PanelSizeMode="Fixed" Top="[float]0" Width="[float]1137" xmlns="http://www.ni.com/ConfigurationBasedSoftware.Core">
-			<ScreenSurfaceCanvas Background="[SMSolidColorBrush]#80808080" BackgroundColor="[SMSolidColorBrush]#ffe0e0e0" BackgroundImagePath="[string]" BaseName="[string]Canvas" Height="[float]512" Id="4e96cb89acf541079595dbb3c7523350" Label="[UIModel]4ffc5fad8b714344b162db4bc48efc3e" Left="[float]79" Top="[float]86" Width="[float]1035">
-				<ScreenSurfaceCanvas Background="[SMSolidColorBrush]#80808080" BackgroundColor="[SMSolidColorBrush]#fff5cea4" BaseName="[string]Canvas" Height="[float]356" Id="3507d01be4bc4a26abc81ac1e2385674" Label="[UIModel]82dfa849cb640f9bdcd4d7c1256e976" Left="[float]234" Top="[float]132" Width="[float]772">
+			<ScreenSurfaceCanvas Background="[SMSolidColorBrush]#80808080" BackgroundColor="[SMSolidColorBrush]#ffe0e0e0" BackgroundImagePath="[string]" BaseName="[string]Canvas" Height="[float]512" Id="4e96cb89acf541079595dbb3c7523350" Label="[UIModel]4ffc5fad8b714344b162db4bc48efc3e" Left="[float]79" Top="[float]86" Width="[float]815">
+				<ScreenSurfaceCanvas Background="[SMSolidColorBrush]#80808080" BackgroundColor="[SMSolidColorBrush]#fff5cea4" BaseName="[string]Canvas" Height="[float]356" Id="3507d01be4bc4a26abc81ac1e2385674" Label="[UIModel]82dfa849cb640f9bdcd4d7c1256e976" Left="[float]234" Top="[float]132" Width="[float]552">
 					<ArrayGraph BaseName="[string]Array Graph" Height="[float]300" Id="1038f1f785834b068ae033f7220d5089" Label="[UIModel]e04632237a7740d49b79e7dde2cc6f37" Left="[float]23" MinWidth="[float]230" PlotAreaMargin="[SMThickness]28,26,7,27" PreferIndexData="[bool]False" RenderMode="[RenderMode]Hardware" SuppressScaleLayout="[bool]False" Top="[float]29" Width="[float]500">
 						<ArrayGraphAxis Adjuster="[RangeAdjuster]FitExactly" Id="85e339f99854551aae9bd9a4557aefe" Label="[string]Index" LabelVisibility="[SMVisibility]Collapsed" MajorDivisions="[UIModel]753fe08f076f484d85e26b768259f0cd" MinorTickVisibility="[SMVisibility]Collapsed" Orientation="[SMOrientation]Horizontal" Range="[IRange]0, 10, System.Double" ValueType="[Type]Double">
 							<RangeLabeledDivisions Id="753fe08f076f484d85e26b768259f0cd" xmlns="http://www.ni.com/Controls.LabVIEW.Design">
@@ -27,7 +27,7 @@
 							<PlotRenderer Id="5548f2820b448958e0700bae3e40fbf" LineStroke="[SMSolidColorBrush]#ffea4225" LineThickness="[double]1" xmlns="http://www.ni.com/Controls.LabVIEW.Design" />
 						</HmiGraphPlot>
 					</ArrayGraph>
-					<HmiChartPlotLegend Graph="[UIModel]1038f1f785834b068ae033f7220d5089" Height="[float]28" Id="de2eaaf02d064db498ad613ba983b860" Left="[float]530" Top="[float]29" />
+					<HmiChartPlotLegend Graph="[UIModel]1038f1f785834b068ae033f7220d5089" Height="[float]28" Id="de2eaaf02d064db498ad613ba983b860" Left="[float]530" Top="[float]29" Visible="[bool]False" />
 					<HmiChartCursorLegend Graph="[UIModel]1038f1f785834b068ae033f7220d5089" Height="[float]80" Id="a251fbd52594ce3b5ef300e249b2a30" Left="[float]28" MinHeight="[float]80" Top="[float]358" Visible="[bool]False" Width="[float]316" />
 					<HmiChartScaleLegend Graph="[UIModel]1038f1f785834b068ae033f7220d5089" Height="[float]52" Id="c46b164665404108a3d7bdf3c73fc0d1" Left="[float]448" Top="[float]336" Visible="[bool]False" />
 					<ArrayGraphTools BackgroundColor="[SMSolidColorBrush]#fff7f7f7" Graph="[UIModel]1038f1f785834b068ae033f7220d5089" Height="[float]26" Id="3a2673ce615f482fb2b58fc7dd768b46" Left="[float]369" OffsetX="[float]346" OffsetY="[float]0" Top="[float]29" Width="[float]122">
