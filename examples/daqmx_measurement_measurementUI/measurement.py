@@ -35,11 +35,11 @@ daqmx_measurement_service = nims.MeasurementService(measurement_info, service_in
 
 
 @daqmx_measurement_service.register_measurement
-@daqmx_measurement_service.configuration("Resource name", nims.DataType.String, "Dev1")
+@daqmx_measurement_service.configuration("Physical Channel", nims.DataType.String, "Dev1/ai0")
 @daqmx_measurement_service.configuration("Sample Rate", nims.DataType.Double, 1000.0)
 @daqmx_measurement_service.configuration("Number of Samples", nims.DataType.UInt64, 100)
 @daqmx_measurement_service.output("Voltage Measurements(V)", nims.DataType.DoubleArray1D)
-def measure(resource_name, sample_rate, number_of_samples):
+def measure(physical_channel, sample_rate, number_of_samples):
     """User Measurement API. Returns Voltage Measurement as the only output.
 
     Returns
@@ -60,7 +60,7 @@ def measure(resource_name, sample_rate, number_of_samples):
 
     timeout = min(time_remaining, 10.0)
     with nidaqmx.Task() as task:
-        task.ai_channels.add_ai_voltage_chan(resource_name + "/ai0")
+        task.ai_channels.add_ai_voltage_chan(physical_channel)
         task.timing.cfg_samp_clk_timing(rate=sample_rate,
             source="", 
             active_edge=nidaqmx.constants.Edge.RISING,
