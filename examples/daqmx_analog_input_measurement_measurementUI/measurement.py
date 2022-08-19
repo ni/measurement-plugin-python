@@ -72,7 +72,7 @@ def measure(physical_channel, sample_rate, number_of_samples):
     for voltage_value in voltage_values:
         print("Voltage Value:", voltage_value)
         print("---------------------------------")
-    return [voltage_values]
+    return (voltage_values, )
 
 
 @click.command

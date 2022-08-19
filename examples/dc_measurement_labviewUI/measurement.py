@@ -100,7 +100,7 @@ def measure(
         print("Voltage Value:", measured_value[0].voltage)
         print("Current Value:", measured_value[0].current)
         print("---------------------------------")
-    return [measured_voltages, measured_currents]
+    return (measured_voltages, measured_currents)
 
 
 def print_fetched_measurements(measurements):
