@@ -35,10 +35,16 @@ daqmx_analog_input_measurement_service = nims.MeasurementService(measurement_inf
 
 
 @daqmx_analog_input_measurement_service.register_measurement
-@daqmx_analog_input_measurement_service.configuration("Physical Channel", nims.DataType.String, "Dev1/ai0")
+@daqmx_analog_input_measurement_service.configuration(
+    "Physical Channel", nims.DataType.String, "Dev1/ai0"
+)
 @daqmx_analog_input_measurement_service.configuration("Sample Rate", nims.DataType.Double, 1000.0)
-@daqmx_analog_input_measurement_service.configuration("Number of Samples", nims.DataType.UInt64, 100)
-@daqmx_analog_input_measurement_service.output("Voltage Measurements(V)", nims.DataType.DoubleArray1D)
+@daqmx_analog_input_measurement_service.configuration(
+    "Number of Samples", nims.DataType.UInt64, 100
+)
+@daqmx_analog_input_measurement_service.output(
+    "Voltage Measurements(V)", nims.DataType.DoubleArray1D
+)
 def measure(physical_channel, sample_rate, number_of_samples):
     """User Measurement API. Returns Voltage Measurement as the only output.
 
@@ -61,18 +67,20 @@ def measure(physical_channel, sample_rate, number_of_samples):
     timeout = min(time_remaining, 10.0)
     with nidaqmx.Task() as task:
         task.ai_channels.add_ai_voltage_chan(physical_channel)
-        task.timing.cfg_samp_clk_timing(rate=sample_rate,
-            source="", 
+        task.timing.cfg_samp_clk_timing(
+            rate=sample_rate,
+            source="",
             active_edge=nidaqmx.constants.Edge.RISING,
             sample_mode=nidaqmx.constants.AcquisitionType.CONTINUOUS,
-            samps_per_chan=number_of_samples)
+            samps_per_chan=number_of_samples,
+        )
         voltage_values = task.read(number_of_samples_per_channel=number_of_samples, timeout=timeout)
         task = None  # Don't abort after this point
 
     for voltage_value in voltage_values:
         print("Voltage Value:", voltage_value)
         print("---------------------------------")
-    return (voltage_values, )
+    return (voltage_values,)
 
 
 @click.command
