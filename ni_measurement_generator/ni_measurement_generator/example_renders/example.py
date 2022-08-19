@@ -31,7 +31,7 @@ measurement_service = nims.MeasurementService(measurement_info, service_info)
 def measure(array_input):
     """TODO: replace the following line with your own measurement logic."""
     array_output = array_input
-    return (array_output, )
+    return (array_output,)
 
 
 @click.command
