@@ -171,5 +171,6 @@ def create_measurement(
         service_class=service_class,
         service_id=service_id,
         description=description,
+        ui_file_type=ui_file_type,
     )
     _create_bat(directory_out)

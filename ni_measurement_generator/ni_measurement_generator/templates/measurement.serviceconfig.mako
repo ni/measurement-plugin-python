@@ -1,4 +1,4 @@
-<%page args="display_name, service_class, service_id, description"/>\
+<%page args="display_name, service_class, service_id, description, ui_file_type"/>\
 \
 {
   "services": [
@@ -8,7 +8,8 @@
       "serviceClass": "${service_class}", 
       "descriptionUrl": "${description}",
       "providedServices": [ "ni.measurements.v1.MeasurementService" ], 
-      "path": "run${display_name}.bat" 
+      "attributes": [ "UserInterfaceType=${ui_file_type}" ],
+      "path": "start.bat" 
     }
   ]
 }

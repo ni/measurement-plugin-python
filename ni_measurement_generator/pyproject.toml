@@ -14,7 +14,7 @@ pytest = "^5.2"
 ni-python-styleguide = "^0.1.12"
 
 [tool.poetry.scripts]
-ni-measurement-generator = "ni_measurement_generator.template:main"
+ni-measurement-generator = "ni_measurement_generator.template:create_measurement"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
