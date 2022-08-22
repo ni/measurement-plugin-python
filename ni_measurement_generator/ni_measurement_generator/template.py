@@ -43,13 +43,6 @@ def _check_version(ctx, param, version):
     raise ValueError("version not entered correctly")
 
 
-def _check_ui(ui_file):
-    if ui_file != "" and not pathlib.Path.exists(
-        pathlib.Path(__file__).parent.absolute() / ui_file
-    ):
-        raise ValueError("can't find UI file")
-
-
 def _get_ui_type(ui_file):
     ext = pathlib.Path(ui_file).suffix
     if ext == ".measui":
@@ -66,7 +59,6 @@ def _resolve_ui_file(ui_file, display_name):
     if ui_file is None:
         return f"{display_name}.measui"
     else:
-        _check_ui(ui_file)
         return ui_file
 
 
@@ -87,9 +79,16 @@ def _check_guid(ctx, param, service_id):
 
 @click.command()
 @click.argument("display_name")
-@click.argument("version", callback=_check_version)
-@click.argument("measurement_type")
-@click.argument("product_type")
+@click.option(
+    "--measurement-version",
+    callback=_check_version,
+    help="Version number in the form x.y.z.q",
+    default="1.0.0.0",
+)
+@click.option(
+    "--measurement-type", help="Service-defined Measurement type", default="MeasurementType"
+)
+@click.option("--product-type", help="Service-defined Product type", default="ProductType")
 @click.option(
     "-u",
     "--ui-file",
@@ -119,7 +118,7 @@ def _check_guid(ctx, param, service_id):
 )
 def create_measurement(
     display_name,
-    version,
+    measurement_version,
     measurement_type,
     product_type,
     ui_file,
@@ -154,7 +153,7 @@ def create_measurement(
         "measurement.py",
         directory_out,
         display_name=display_name,
-        version=version,
+        version=measurement_version,
         measurement_type=measurement_type,
         product_type=product_type,
         ui_file=ui_file,
@@ -173,4 +172,18 @@ def create_measurement(
         description=description,
         ui_file_type=ui_file_type,
     )
+    if ui_file_type == "MeasurementUI":
+        _create_file(
+            "measurement.measui.mako",
+            f"{ui_file}",
+            directory_out,
+            display_name=display_name,
+            service_class=service_class,
+        )
+        _create_file(
+            "measurement.measproj.mako",
+            f"{display_name}.measproj",
+            directory_out,
+            ui_file=ui_file,
+        )
     _create_bat(directory_out)

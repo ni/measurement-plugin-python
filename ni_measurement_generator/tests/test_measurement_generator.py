@@ -16,8 +16,11 @@ def test___command_line_args___create_measurement___render_without_exception(tmp
         template.create_measurement(
             [
                 "SampleMeasurement",
+                "--measurement-version",
                 "1.0.0.0",
+                "--measurement-type",
                 "Measurement",
+                "--product-type",
                 "Product",
                 "--ui-file",
                 "MeasurementUI.measui",

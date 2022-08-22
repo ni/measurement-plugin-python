@@ -1,4 +1,6 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+﻿<%page args="display_name, service_class"/>\
+\
+<?xml version="1.0" encoding="utf-8"?>
 <SourceFile Checksum="F6BC453A030B5A154B8AA72258BE892CEC0C544EA4EA406EE2BE4D88932478C05B29F9D74FB1DFDB6603EC46C77B7C757160E6413A7CFC6C971302FF7C4D5903" Timestamp="1D89D49951B3C35" xmlns="http://www.ni.com/PlatformFramework">
 	<SourceModelFeatureSet>
 		<ParsableNamespace AssemblyFileVersion="9.6.0.975" FeatureSetName="Configuration Based Software Core" Name="http://www.ni.com/ConfigurationBasedSoftware.Core" OldestCompatibleVersion="6.3.0.49152" Version="6.3.0.49152" />
@@ -8,7 +10,7 @@
 		<ParsableNamespace AssemblyFileVersion="9.6.0.975" FeatureSetName="Editor" Name="http://www.ni.com/PlatformFramework" OldestCompatibleVersion="8.1.0.49152" Version="8.1.0.49152" />
 		<ApplicationVersionInfo Build="22.8.0.975" Name="Measurement UI Editor" Version="22.8.0.975" />
 	</SourceModelFeatureSet>
-	<Screen ClientId="{f2193b1d-1b6e-450a-b051-b268966356ce}" DisplayName="r" Id="172a7c38b0dc4ac6b18ca4397c8d6832" ServiceClass="r_Python" xmlns="http://www.ni.com/InstrumentFramework/ScreenDocument">
+	<Screen ClientId="{f2193b1d-1b6e-450a-b051-b268966356ce}" DisplayName="${display_name}" Id="172a7c38b0dc4ac6b18ca4397c8d6832" ServiceClass="${service_class}" xmlns="http://www.ni.com/InstrumentFramework/ScreenDocument">
 		<ScreenSurface Height="[float]400" Id="5996746ebab246d8ace75a4305e4a290" Left="[float]0" PanelSizeMode="Fixed" Top="[float]0" Width="[float]800" xmlns="http://www.ni.com/ConfigurationBasedSoftware.Core">
 			<ScreenSurfaceCanvas Background="[SMSolidColorBrush]#80808080" BaseName="[string]Canvas" Height="[float]155" Id="2af6108da1054dc9a76e83663d3e6a69" Label="[UIModel]d75763afd14e48838daea830ed6372e1" Left="[float]25" Top="[float]31" Width="[float]134">
 				<ChannelArrayViewer ArrayElement="[UIModel]42af83617b204148b9f703d86ddad9f2" BaseName="[string]Numeric Array Input" Channel="[string]Configuration/Array in" Columns="[int]1" Dimensions="[int]1" Height="[float]120" Id="62525389c3647d595a3583252b623c0" IndexVisibility="[Visibility]Collapsed" Label="[UIModel]ba7278f5626c4b8ea67bb08286c51d21" Left="[float]11" Orientation="[SMOrientation]Vertical" Rows="[int]4" Top="[float]26" VerticalScrollBarVisibility="[ScrollBarVisibility]Visible" Width="[float]104">
