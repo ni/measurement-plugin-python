@@ -43,13 +43,6 @@ def _check_version(ctx, param, version):
     raise ValueError("version not entered correctly")
 
 
-def _check_ui(ui_file):
-    if ui_file != "" and not pathlib.Path.exists(
-        pathlib.Path(__file__).parent.absolute() / ui_file
-    ):
-        raise ValueError("can't find UI file")
-
-
 def _get_ui_type(ui_file):
     ext = pathlib.Path(ui_file).suffix
     if ext == ".measui":
@@ -66,7 +59,6 @@ def _resolve_ui_file(ui_file, display_name):
     if ui_file is None:
         return f"{display_name}.measui"
     else:
-        _check_ui(ui_file)
         return ui_file
 
 
@@ -172,5 +164,10 @@ def create_measurement(
         service_id=service_id,
         description=description,
         ui_file_type=ui_file_type,
+    )
+    _create_file(
+        "measurement.measui.mako",
+        f"{ui_file}",
+        directory_out,
     )
     _create_bat(directory_out)
