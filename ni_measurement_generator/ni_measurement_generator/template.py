@@ -177,5 +177,13 @@ def create_measurement(
             "measurement.measui.mako",
             f"{ui_file}",
             directory_out,
+            display_name=display_name,
+            service_class=service_class,
+        )
+        _create_file(
+            "measurement.measproj.mako",
+            f"{display_name}.measproj",
+            directory_out,
+            ui_file=ui_file,
         )
     _create_bat(directory_out)
