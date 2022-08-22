@@ -30,7 +30,7 @@
             <a href="../../../../index.html" class="icon icon-home"> ni_measurement_service
           </a>
               <div class="version">
-                0.8.0
+                0.8.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
@@ -81,11 +81,44 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#ni_measurement_service.measurement.service.MeasurementService" title="ni_measurement_service.measurement.service.MeasurementService"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MeasurementService</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ni_measurement_service.measurement.service.MeasurementContext" title="ni_measurement_service.measurement.service.MeasurementContext"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MeasurementContext</span></code></a></p></td>
+<td><p>Proxy for the Measurement Service's context-local state.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ni_measurement_service.measurement.service.MeasurementService" title="ni_measurement_service.measurement.service.MeasurementService"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MeasurementService</span></code></a></p></td>
 <td><p>Class the supports registering and hosting a python function as a gRPC service.</p></td>
 </tr>
 </tbody>
 </table>
+<dl class="py class">
+<dt class="sig sig-object py" id="ni_measurement_service.measurement.service.MeasurementContext">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ni_measurement_service.measurement.service.</span></span><span class="sig-name descname"><span class="pre">MeasurementContext</span></span><a class="reference internal" href="../../../../_modules/ni_measurement_service/measurement/service.html#MeasurementContext"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurement_service.measurement.service.MeasurementContext" title="Permalink to this definition"></a></dt>
+<dd><p>Proxy for the Measurement Service’s context-local state.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="ni_measurement_service.measurement.service.MeasurementContext.get_grpc_context">
+<span class="sig-name descname"><span class="pre">get_grpc_context</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/ni_measurement_service/measurement/service.html#MeasurementContext.get_grpc_context"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurement_service.measurement.service.MeasurementContext.get_grpc_context" title="Permalink to this definition"></a></dt>
+<dd><p>Get the context for the RPC.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ni_measurement_service.measurement.service.MeasurementContext.add_cancel_callback">
+<span class="sig-name descname"><span class="pre">add_cancel_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cancel_callback</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/ni_measurement_service/measurement/service.html#MeasurementContext.add_cancel_callback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurement_service.measurement.service.MeasurementContext.add_cancel_callback" title="Permalink to this definition"></a></dt>
+<dd><p>Add a callback which is invoked when the RPC is canceled.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ni_measurement_service.measurement.service.MeasurementContext.cancel">
+<span class="sig-name descname"><span class="pre">cancel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/ni_measurement_service/measurement/service.html#MeasurementContext.cancel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurement_service.measurement.service.MeasurementContext.cancel" title="Permalink to this definition"></a></dt>
+<dd><p>Cancel the RPC.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ni_measurement_service.measurement.service.MeasurementContext.time_remaining">
+<span class="sig-name descname"><span class="pre">time_remaining</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/ni_measurement_service/measurement/service.html#MeasurementContext.time_remaining"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurement_service.measurement.service.MeasurementContext.time_remaining" title="Permalink to this definition"></a></dt>
+<dd><p>Get the time remaining for the RPC.</p>
+</dd></dl>
+
+</dd></dl>
+
 <dl class="py class">
 <dt class="sig sig-object py" id="ni_measurement_service.measurement.service.MeasurementService">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ni_measurement_service.measurement.service.</span></span><span class="sig-name descname"><span class="pre">MeasurementService</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">measurement_info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">service_info</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/ni_measurement_service/measurement/service.html#MeasurementService"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurement_service.measurement.service.MeasurementService" title="Permalink to this definition"></a></dt>

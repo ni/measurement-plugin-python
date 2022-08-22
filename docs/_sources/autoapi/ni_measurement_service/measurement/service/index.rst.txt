@@ -17,8 +17,34 @@ Classes
 
 .. autoapisummary::
 
+   ni_measurement_service.measurement.service.MeasurementContext
    ni_measurement_service.measurement.service.MeasurementService
 
+
+
+
+.. py:class:: MeasurementContext
+
+   Proxy for the Measurement Service's context-local state.
+
+   .. py:method:: get_grpc_context(self)
+
+      Get the context for the RPC.
+
+
+   .. py:method:: add_cancel_callback(self, cancel_callback)
+
+      Add a callback which is invoked when the RPC is canceled.
+
+
+   .. py:method:: cancel(self)
+
+      Cancel the RPC.
+
+
+   .. py:method:: time_remaining(self)
+
+      Get the time remaining for the RPC.
 
 
 

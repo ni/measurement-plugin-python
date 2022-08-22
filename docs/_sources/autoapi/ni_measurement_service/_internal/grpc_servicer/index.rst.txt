@@ -17,10 +17,54 @@ Classes
 
 .. autoapisummary::
 
+   ni_measurement_service._internal.grpc_servicer.MeasurementServiceContext
    ni_measurement_service._internal.grpc_servicer.MeasurementServiceServicer
 
 
 
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   ni_measurement_service._internal.grpc_servicer.measurement_service_context
+
+
+.. py:class:: MeasurementServiceContext(grpc_context)
+
+   Accessor for the Measurement Service's context-local state.
+
+   .. py:method:: mark_complete(self)
+
+      Mark the current RPC as complete.
+
+
+   .. py:method:: get_grpc_context(self)
+
+      Get the context for the RPC.
+
+
+   .. py:method:: add_cancel_callback(self, cancel_callback)
+
+      Add a callback that is invoked when the RPC is canceled.
+
+
+   .. py:method:: cancel(self)
+
+      Cancel the RPC.
+
+
+   .. py:method:: time_remaining(self)
+
+      Get the time remaining for the RPC.
+
+
+
+.. py:data:: measurement_service_context
+   :annotation: :contextvars.ContextVar[MeasurementServiceContext]
+
+   
 
 .. py:class:: MeasurementServiceServicer(measurement_info, configuration_parameter_list, output_parameter_list, measure_function)
 

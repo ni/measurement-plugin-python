@@ -30,7 +30,7 @@
             <a href="../../../../index.html" class="icon icon-home"> ni_measurement_service
           </a>
               <div class="version">
-                0.8.0
+                0.8.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
@@ -118,10 +118,13 @@
 <dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">NamedTuple</span></code></p>
 <p>Class that represents the measurement information.</p>
 <blockquote>
-<div><p>display_name (str): The display name of the measurement.</p>
-<p>version (str): The version of the measurement.</p>
-<p>measurement_type (str): Type of the measurement.</p>
-<p>product_type (str): Type of product related to the measurement.</p>
+<div><p>display_name (str): The measurement display name for client to display to user.</p>
+<p>version (str): The measurement version that helps to
+maintain versions of a measurement in future.</p>
+<p>measurement_type (str): Represents category of measurement for the ProductType,
+e.g. AC or DC measurements.</p>
+<p>product_type (str): Represents type of the DUT,
+e.g. ADC, LDO.</p>
 <p>ui_file_path (str): Path of the UI file linked to the measurement.</p>
 <p>ui_file_type (UIFileType): Type of the linked UI file.</p>
 </div></blockquote>

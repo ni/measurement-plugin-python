@@ -95,13 +95,16 @@ Classes
 
    Attributes
    ----------
-       display_name (str): The display name of the measurement.
+       display_name (str): The measurement display name for client to display to user.
 
-       version (str): The version of the measurement.
+       version (str): The measurement version that helps to
+       maintain versions of a measurement in future.
 
-       measurement_type (str): Type of the measurement.
+       measurement_type (str): Represents category of measurement for the ProductType,
+       e.g. AC or DC measurements.
 
-       product_type (str): Type of product related to the measurement.
+       product_type (str): Represents type of the DUT,
+       e.g. ADC, LDO.
 
        ui_file_path (str): Path of the UI file linked to the measurement.
 

@@ -29,7 +29,7 @@
             <a href="../../../index.html" class="icon icon-home"> ni_measurement_service
           </a>
               <div class="version">
-                0.8.0
+                0.8.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -72,9 +72,30 @@
 
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span>
 
+<span class="kn">from</span> <span class="nn">ni_measurement_service._internal</span> <span class="kn">import</span> <span class="n">grpc_servicer</span>
 <span class="kn">from</span> <span class="nn">ni_measurement_service._internal.parameter</span> <span class="kn">import</span> <span class="n">metadata</span> <span class="k">as</span> <span class="n">parameter_metadata</span>
 <span class="kn">from</span> <span class="nn">ni_measurement_service._internal.service_manager</span> <span class="kn">import</span> <span class="n">GrpcService</span>
 <span class="kn">from</span> <span class="nn">ni_measurement_service.measurement.info</span> <span class="kn">import</span> <span class="n">MeasurementInfo</span><span class="p">,</span> <span class="n">ServiceInfo</span><span class="p">,</span> <span class="n">DataType</span>
+
+
+<div class="viewcode-block" id="MeasurementContext"><a class="viewcode-back" href="../../../autoapi/ni_measurement_service/measurement/service/index.html#ni_measurement_service.MeasurementContext">[docs]</a><span class="k">class</span> <span class="nc">MeasurementContext</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Proxy for the Measurement Service&#39;s context-local state.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="MeasurementContext.get_grpc_context"><a class="viewcode-back" href="../../../autoapi/ni_measurement_service/measurement/service/index.html#ni_measurement_service.MeasurementContext.get_grpc_context">[docs]</a>    <span class="k">def</span> <span class="nf">get_grpc_context</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the context for the RPC.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">grpc_servicer</span><span class="o">.</span><span class="n">measurement_service_context</span><span class="o">.</span><span class="n">get</span><span class="p">()</span><span class="o">.</span><span class="n">get_grpc_context</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="MeasurementContext.add_cancel_callback"><a class="viewcode-back" href="../../../autoapi/ni_measurement_service/measurement/service/index.html#ni_measurement_service.MeasurementContext.add_cancel_callback">[docs]</a>    <span class="k">def</span> <span class="nf">add_cancel_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cancel_callback</span><span class="p">:</span> <span class="n">Callable</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Add a callback which is invoked when the RPC is canceled.&quot;&quot;&quot;</span>
+        <span class="n">grpc_servicer</span><span class="o">.</span><span class="n">measurement_service_context</span><span class="o">.</span><span class="n">get</span><span class="p">()</span><span class="o">.</span><span class="n">add_cancel_callback</span><span class="p">(</span><span class="n">cancel_callback</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MeasurementContext.cancel"><a class="viewcode-back" href="../../../autoapi/ni_measurement_service/measurement/service/index.html#ni_measurement_service.MeasurementContext.cancel">[docs]</a>    <span class="k">def</span> <span class="nf">cancel</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Cancel the RPC.&quot;&quot;&quot;</span>
+        <span class="n">grpc_servicer</span><span class="o">.</span><span class="n">measurement_service_context</span><span class="o">.</span><span class="n">get</span><span class="p">()</span><span class="o">.</span><span class="n">cancel</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="MeasurementContext.time_remaining"><a class="viewcode-back" href="../../../autoapi/ni_measurement_service/measurement/service/index.html#ni_measurement_service.MeasurementContext.time_remaining">[docs]</a>    <span class="k">def</span> <span class="nf">time_remaining</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the time remaining for the RPC.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">grpc_servicer</span><span class="o">.</span><span class="n">measurement_service_context</span><span class="o">.</span><span class="n">get</span><span class="p">()</span><span class="o">.</span><span class="n">time_remaining</span><span class="p">()</span></div></div>
 
 
 <div class="viewcode-block" id="MeasurementService"><a class="viewcode-back" href="../../../autoapi/ni_measurement_service/measurement/service/index.html#ni_measurement_service.MeasurementService">[docs]</a><span class="k">class</span> <span class="nc">MeasurementService</span><span class="p">:</span>
@@ -109,6 +130,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">configuration_parameter_list</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">output_parameter_list</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">grpc_service</span> <span class="o">=</span> <span class="n">GrpcService</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="p">:</span> <span class="n">MeasurementContext</span> <span class="o">=</span> <span class="n">MeasurementContext</span><span class="p">()</span>
 
 <div class="viewcode-block" id="MeasurementService.register_measurement"><a class="viewcode-back" href="../../../autoapi/ni_measurement_service/measurement/service/index.html#ni_measurement_service.MeasurementService.register_measurement">[docs]</a>    <span class="k">def</span> <span class="nf">register_measurement</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">measurement_function</span><span class="p">:</span> <span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Register the function as the measurement. Recommended to use as a decorator.</span>
