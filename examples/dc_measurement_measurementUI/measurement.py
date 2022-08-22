@@ -16,6 +16,8 @@ import nidcpower
 import ni_measurement_service as nims
 
 
+NIDCPOWER_WAIT_FOR_EVENT_TIMEOUT_ERROR_CODE = -1074116059
+
 measurement_info = nims.MeasurementInfo(
     display_name="DCMeasurement(Py)",
     version="0.1.0.0",
@@ -32,7 +34,6 @@ service_info = nims.ServiceInfo(
 )
 
 dc_measurement_service = nims.MeasurementService(measurement_info, service_info)
-
 
 @dc_measurement_service.register_measurement
 @dc_measurement_service.configuration("Resource name", nims.DataType.String, "DPS_4145")
@@ -99,7 +100,6 @@ def measure(
                     we have gone past the specified timeout. WaitForEvent will throw an exception
                     if it times out, which is why we are catching and doing nothing.
                     """
-                    NIDCPOWER_WAIT_FOR_EVENT_TIMEOUT_ERROR_CODE = -1074116059
                     if e.code == NIDCPOWER_WAIT_FOR_EVENT_TIMEOUT_ERROR_CODE:
                         pass
                     else:
