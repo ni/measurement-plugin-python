@@ -104,11 +104,15 @@ def measure(
                     else:
                         raise
             channel = session.get_channel_names("0")
-            measured_voltage = session.channels[channel].measure(nidcpower.enums.MeasurementTypes.VOLTAGE)
-            measured_current = session.channels[channel].measure(nidcpower.enums.MeasurementTypes.CURRENT)
+            measured_voltage = session.channels[channel].measure(
+                nidcpower.enums.MeasurementTypes.VOLTAGE
+            )
+            measured_current = session.channels[channel].measure(
+                nidcpower.enums.MeasurementTypes.CURRENT
+            )
             in_compliance = session.channels[channel].query_in_compliance()
         session = None  # Don't abort after this point
-        
+
     print_fetched_measurements(measured_voltage, measured_current, in_compliance)
     print("---------------------------------")
     return (measured_voltage, measured_current)
