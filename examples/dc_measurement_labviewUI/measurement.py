@@ -7,6 +7,7 @@ User can Import driver and 3rd Party Packages based on requirements.
 import logging
 import os
 import sys
+import time
 
 import click
 import hightime
@@ -39,8 +40,8 @@ dc_measurement_service = nims.MeasurementService(measurement_info, service_info)
 @dc_measurement_service.configuration("Current limit(A)", nims.DataType.Double, 0.01)
 @dc_measurement_service.configuration("Current limit range(A)", nims.DataType.Double, 0.01)
 @dc_measurement_service.configuration("Source delay(s)", nims.DataType.Double, 0.0)
-@dc_measurement_service.output("Voltage Measurements(V)", nims.DataType.DoubleArray1D)
-@dc_measurement_service.output("Current Measurements(A)", nims.DataType.DoubleArray1D)
+@dc_measurement_service.output("Voltage Measurement(V)", nims.DataType.Double)
+@dc_measurement_service.output("Current Measurement(A)", nims.DataType.Double)
 def measure(
     resource_name,
     voltage_level,
@@ -70,7 +71,6 @@ def measure(
     dc_measurement_service.context.add_cancel_callback(cancel_callback)
     time_remaining = dc_measurement_service.context.time_remaining()
 
-    timeout = hightime.timedelta(seconds=(min(time_remaining, source_delay + 1.0)))
     with nidcpower.Session(resource_name=resource_name) as session:
         # Configure the session.
         session.source_mode = nidcpower.SourceMode.SINGLE_POINT
@@ -79,37 +79,48 @@ def measure(
         session.voltage_level_range = voltage_level_range
         session.current_limit_range = current_limit_range
         session.source_delay = hightime.timedelta(seconds=source_delay)
-        session.measure_when = nidcpower.MeasureWhen.AUTOMATICALLY_AFTER_SOURCE_COMPLETE
         session.voltage_level = voltage_level
-        measured_values = []
+        measured_voltage = None
+        measured_current = None
+        in_compliance = None
         with session.initiate():
-            channel = session.get_channel_names("0")
-            for i in range(0, 5):
+            deadline = time.time() + time_remaining
+            while deadline >= time.time():
                 if pending_cancellation:
                     break
-                measured_values.append(
-                    session.channels[channel].fetch_multiple(count=1, timeout=timeout)
-                )
+                try:
+                    session.wait_for_event(nidcpower.enums.Event.SOURCE_COMPLETE, timeout=0.1)
+                    break
+                except nidcpower.DriverError as e:
+                    """
+                    There is no native way to support cancellation when taking a DCPower measurement.
+                    To support cancellation, we will be calling WaitForEvent until it succeeds or
+                    we have gone past the specified timeout. WaitForEvent will throw an exception
+                    if it times out, which is why we are catching and doing nothing.
+                    """
+                    NIDCPOWER_WAIT_FOR_EVENT_TIMEOUT_ERROR_CODE = -1074116059
+                    if e.code == NIDCPOWER_WAIT_FOR_EVENT_TIMEOUT_ERROR_CODE:
+                        pass
+                    else:
+                        raise
+            channel = session.get_channel_names("0")
+            measured_voltage = session.channels[channel].measure(nidcpower.enums.MeasurementTypes.VOLTAGE)
+            measured_current = session.channels[channel].measure(nidcpower.enums.MeasurementTypes.CURRENT)
+            in_compliance = session.channels[channel].query_in_compliance()
         session = None  # Don't abort after this point
-    measured_voltages = []
-    measured_currents = []
-    for measured_value in measured_values:
-        print_fetched_measurements(measured_value)
-        measured_voltages.append(measured_value[0].voltage)
-        measured_currents.append(measured_value[0].current)
-        print("Voltage Value:", measured_value[0].voltage)
-        print("Current Value:", measured_value[0].current)
-        print("---------------------------------")
-    return (measured_voltages, measured_currents)
+        
+    print_fetched_measurements(measured_voltage, measured_current, in_compliance)
+    print("---------------------------------")
+    return (measured_voltage, measured_current)
 
 
-def print_fetched_measurements(measurements):
+def print_fetched_measurements(measured_voltage, measured_current, in_compliance):
     """Format and print the Measured Values."""
     layout = "{: >20} : {:f}{}"
     print("Fetched Measurement Values:")
-    print(layout.format("Voltage", measurements[0].voltage, " V"))
-    print(layout.format("Current", measurements[0].current, " A"))
-    print(layout.format("In compliance", measurements[0].in_compliance, ""))
+    print(layout.format("Voltage", measured_voltage, " V"))
+    print(layout.format("Current", measured_current, " A"))
+    print(layout.format("In compliance", in_compliance, ""))
 
 
 @click.command
