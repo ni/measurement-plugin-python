@@ -80,16 +80,15 @@ def _check_guid(ctx, param, service_id):
 @click.command()
 @click.argument("display_name")
 @click.option(
-    "-v",
-    "--version",
+    "--measurement-version",
     callback=_check_version,
     help="Version number in the form x.y.z.q",
     default="1.0.0.0",
 )
 @click.option(
-    "-m", "--measurement-type", help="Service-defined Measurement type", default="MeasurementType"
+    "--measurement-type", help="Service-defined Measurement type", default="MeasurementType"
 )
-@click.option("-p", "--product-type", help="Service-defined Product type", default="ProductType")
+@click.option("--product-type", help="Service-defined Product type", default="ProductType")
 @click.option(
     "-u",
     "--ui-file",
@@ -119,7 +118,7 @@ def _check_guid(ctx, param, service_id):
 )
 def create_measurement(
     display_name,
-    version,
+    measurement_version,
     measurement_type,
     product_type,
     ui_file,
@@ -154,7 +153,7 @@ def create_measurement(
         "measurement.py",
         directory_out,
         display_name=display_name,
-        version=version,
+        version=measurement_version,
         measurement_type=measurement_type,
         product_type=product_type,
         ui_file=ui_file,
