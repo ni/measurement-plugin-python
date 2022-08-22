@@ -79,9 +79,22 @@ def _check_guid(ctx, param, service_id):
 
 @click.command()
 @click.argument("display_name")
-@click.argument("version", callback=_check_version)
-@click.argument("measurement_type")
-@click.argument("product_type")
+@click.option(
+    "-v",
+    "--version",
+    callback=_check_version,
+    help="Version number in the form x.y.z.q",
+    default="1.0.0.0")
+@click.option(
+    "-m",
+    "--measurement-type",
+    help="Service-defined Measurement type",
+    default="MeasurementType")
+@click.option(
+    "-p",
+    "--product-type",
+    help="Service-defined Product type",
+    default="ProductType")
 @click.option(
     "-u",
     "--ui-file",
