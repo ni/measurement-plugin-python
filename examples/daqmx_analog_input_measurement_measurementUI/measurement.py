@@ -69,9 +69,6 @@ def measure(physical_channel, sample_rate, number_of_samples):
         task.ai_channels.add_ai_voltage_chan(physical_channel)
         task.timing.cfg_samp_clk_timing(
             rate=sample_rate,
-            source="",
-            active_edge=nidaqmx.constants.Edge.RISING,
-            sample_mode=nidaqmx.constants.AcquisitionType.FINITE,
             samps_per_chan=number_of_samples,
         )
         voltage_values = task.read(number_of_samples_per_channel=number_of_samples, timeout=timeout)
