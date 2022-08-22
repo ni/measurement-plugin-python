@@ -35,6 +35,7 @@ service_info = nims.ServiceInfo(
 
 dc_measurement_service = nims.MeasurementService(measurement_info, service_info)
 
+
 @dc_measurement_service.register_measurement
 @dc_measurement_service.configuration("Resource name", nims.DataType.String, "DPS_4145")
 @dc_measurement_service.configuration("Voltage level(V)", nims.DataType.Double, 6.0)
@@ -95,10 +96,11 @@ def measure(
                     break
                 except nidcpower.DriverError as e:
                     """
-                    There is no native way to support cancellation when taking a DCPower measurement.
-                    To support cancellation, we will be calling WaitForEvent until it succeeds or
-                    we have gone past the specified timeout. WaitForEvent will throw an exception
-                    if it times out, which is why we are catching and doing nothing.
+                    There is no native way to support cancellation when taking a DCPower
+                    measurement. To support cancellation, we will be calling WaitForEvent
+                    until it succeeds or we have gone past the specified timeout. WaitForEvent
+                    will throw an exception if it times out, which is why we are catching
+                    and doing nothing.
                     """
                     if e.code == NIDCPOWER_WAIT_FOR_EVENT_TIMEOUT_ERROR_CODE:
                         pass
