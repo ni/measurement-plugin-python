@@ -84,17 +84,12 @@ def _check_guid(ctx, param, service_id):
     "--version",
     callback=_check_version,
     help="Version number in the form x.y.z.q",
-    default="1.0.0.0")
+    default="1.0.0.0",
+)
 @click.option(
-    "-m",
-    "--measurement-type",
-    help="Service-defined Measurement type",
-    default="MeasurementType")
-@click.option(
-    "-p",
-    "--product-type",
-    help="Service-defined Product type",
-    default="ProductType")
+    "-m", "--measurement-type", help="Service-defined Measurement type", default="MeasurementType"
+)
+@click.option("-p", "--product-type", help="Service-defined Product type", default="ProductType")
 @click.option(
     "-u",
     "--ui-file",
@@ -178,9 +173,10 @@ def create_measurement(
         description=description,
         ui_file_type=ui_file_type,
     )
-    _create_file(
-        "measurement.measui.mako",
-        f"{ui_file}",
-        directory_out,
-    )
+    if ui_file_type == "MeasurementUI":
+        _create_file(
+            "measurement.measui.mako",
+            f"{ui_file}",
+            directory_out,
+        )
     _create_bat(directory_out)
