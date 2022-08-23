@@ -1,7 +1,7 @@
 """Tests to validate the python measurement generator."""
 import pathlib
-
 import pytest
+
 from ni_measurement_generator import template
 
 
