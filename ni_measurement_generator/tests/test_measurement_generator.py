@@ -2,8 +2,8 @@
 import pathlib
 
 import pytest
-from ni_measurement_generator import template
 
+from ni_measurement_generator import template
 
 generator_path = pathlib.Path(template.__file__).parent
 
