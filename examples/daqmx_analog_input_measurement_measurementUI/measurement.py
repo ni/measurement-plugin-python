@@ -58,9 +58,9 @@ def measure(physical_channel, sample_rate, number_of_samples):
 
     def cancel_callback():
         print("Canceling DAQmx Analog Input Measurement(Py)")
-        taskToAbort = task
-        if taskToAbort is not None:
-            taskToAbort.control(nidaqmx.constants.TaskMode.TASK_ABORT)
+        task_to_abort = task
+        if task_to_abort is not None:
+            task_to_abort.control(nidaqmx.constants.TaskMode.TASK_ABORT)
 
     daqmx_analog_input_measurement_service.context.add_cancel_callback(cancel_callback)
     time_remaining = daqmx_analog_input_measurement_service.context.time_remaining()

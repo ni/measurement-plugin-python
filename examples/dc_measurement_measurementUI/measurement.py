@@ -125,6 +125,7 @@ def print_fetched_measurements(measured_value):
 
 class MeasurementCancelledError(Exception):
     """Raised when the measurement is cancelled."""
+
     pass
 
 
