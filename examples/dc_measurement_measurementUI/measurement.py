@@ -83,14 +83,14 @@ def measure(
         session.current_limit_range = current_limit_range
         session.source_delay = hightime.timedelta(seconds=source_delay)
         session.voltage_level = voltage_level
-        measured_voltage = None
-        measured_current = None
-        in_compliance = None
+        measured_value = None
         with session.initiate():
             deadline = time.time() + time_remaining
-            while deadline >= time.time():
+            while True:
+                if time.time() > deadline:
+                    raise MeasurementCancelledError("Deadline Exceeded")
                 if pending_cancellation:
-                    break
+                    raise MeasurementCancelledError("Client Requested Cancellation")
                 try:
                     session.wait_for_event(nidcpower.enums.Event.SOURCE_COMPLETE, timeout=0.1)
                     break
@@ -107,27 +107,25 @@ def measure(
                     else:
                         raise
             channel = session.get_channel_names("0")
-            measured_voltage = session.channels[channel].measure(
-                nidcpower.enums.MeasurementTypes.VOLTAGE
-            )
-            measured_current = session.channels[channel].measure(
-                nidcpower.enums.MeasurementTypes.CURRENT
-            )
-            in_compliance = session.channels[channel].query_in_compliance()
+            measured_value = session.channels[channel].measure_multiple()
         session = None  # Don't abort after this point
 
-    print_fetched_measurements(measured_voltage, measured_current, in_compliance)
+    print_fetched_measurements(measured_value)
     print("---------------------------------")
-    return (measured_voltage, measured_current)
+    return (measured_value[0].voltage, measured_value[0].current)
 
 
-def print_fetched_measurements(measured_voltage, measured_current, in_compliance):
+def print_fetched_measurements(measured_value):
     """Format and print the Measured Values."""
     layout = "{: >20} : {:f}{}"
     print("Fetched Measurement Values:")
-    print(layout.format("Voltage", measured_voltage, " V"))
-    print(layout.format("Current", measured_current, " A"))
-    print(layout.format("In compliance", in_compliance, ""))
+    print(layout.format("Voltage", measured_value[0].voltage, " V"))
+    print(layout.format("Current", measured_value[0].current, " A"))
+
+
+class MeasurementCancelledError(Exception):
+    """Raised when the measurement is cancelled."""
+    pass
 
 
 @click.command
