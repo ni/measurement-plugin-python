@@ -48,6 +48,10 @@ class MeasurementServiceContext:
         """Get the time remaining for the RPC."""
         return self._grpc_context.time_remaining()
 
+    def abort(self, code, details):
+        """Aborts the RPC."""
+        self._grpc_context.abort(code, details)
+
 
 measurement_service_context: ContextVar[MeasurementServiceContext] = ContextVar(
     "measurement_service_context"

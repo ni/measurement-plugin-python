@@ -27,6 +27,10 @@ class MeasurementContext:
         """Get the time remaining for the RPC."""
         return grpc_servicer.measurement_service_context.get().time_remaining()
 
+    def abort(self, code, details):
+        """Aborts the RPC."""
+        grpc_servicer.measurement_service_context.get().abort(code, details)
+
 
 class MeasurementService:
     """Class the supports registering and hosting a python function as a gRPC service.

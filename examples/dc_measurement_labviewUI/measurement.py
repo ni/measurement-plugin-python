@@ -10,6 +10,7 @@ import sys
 import time
 
 import click
+import grpc
 import hightime
 import nidcpower
 
@@ -89,9 +90,13 @@ def measure(
             deadline = time.time() + time_remaining
             while True:
                 if time.time() > deadline:
-                    raise RuntimeError("deadline exceeded")
+                    dc_measurement_service.context.abort(
+                        grpc.StatusCode.DEADLINE_EXCEEDED, "deadline exceeded"
+                    )
                 if pending_cancellation:
-                    raise RuntimeError("client requested cancellation")
+                    dc_measurement_service.context.abort(
+                        grpc.StatusCode.CANCELLED, "client requested cancellation"
+                    )
                 try:
                     session.wait_for_event(nidcpower.enums.Event.SOURCE_COMPLETE, timeout=0.1)
                     break
