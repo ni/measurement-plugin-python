@@ -66,10 +66,11 @@ def measure(
 
     def cancel_callback():
         print("Canceling DCMeasurement(Py)")
-        if session is not None:
+        session_to_abort = session
+        if session_to_abort is not None:
             nonlocal pending_cancellation
             pending_cancellation = True
-            session.abort()
+            session_to_abort.abort()
 
     pending_cancellation = False
     dc_measurement_service.context.add_cancel_callback(cancel_callback)
