@@ -84,13 +84,14 @@ def measure(
         session.source_delay = hightime.timedelta(seconds=source_delay)
         session.voltage_level = voltage_level
         measured_value = None
+        in_compliance = None
         with session.initiate():
             deadline = time.time() + time_remaining
             while True:
                 if time.time() > deadline:
-                    raise MeasurementCancelledError("Deadline Exceeded")
+                    raise RuntimeError("deadline exceeded")
                 if pending_cancellation:
-                    raise MeasurementCancelledError("Client Requested Cancellation")
+                    raise RuntimeError("client requested cancellation")
                 try:
                     session.wait_for_event(nidcpower.enums.Event.SOURCE_COMPLETE, timeout=0.1)
                     break
@@ -108,25 +109,21 @@ def measure(
                         raise
             channel = session.get_channel_names("0")
             measured_value = session.channels[channel].measure_multiple()
+            in_compliance = session.channels[channel].query_in_compliance()
         session = None  # Don't abort after this point
 
-    print_fetched_measurements(measured_value)
+    print_fetched_measurements(measured_value, in_compliance)
     print("---------------------------------")
     return (measured_value[0].voltage, measured_value[0].current)
 
 
-def print_fetched_measurements(measured_value):
+def print_fetched_measurements(measured_value, in_compliance):
     """Format and print the Measured Values."""
     layout = "{: >20} : {:f}{}"
     print("Fetched Measurement Values:")
     print(layout.format("Voltage", measured_value[0].voltage, " V"))
     print(layout.format("Current", measured_value[0].current, " A"))
-
-
-class MeasurementCancelledError(Exception):
-    """Raised when the measurement is cancelled."""
-
-    pass
+    print(layout.format("In compliance", in_compliance, ""))
 
 
 @click.command
