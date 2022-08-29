@@ -1,5 +1,4 @@
 """Utilizes command line args to create a measurement using template files."""
-import os
 import pathlib
 import re
 import uuid
