@@ -1,4 +1,5 @@
 """Utilizes command line args to create a measurement using template files."""
+import os
 import pathlib
 import re
 import uuid
@@ -113,7 +114,7 @@ def _check_guid(ctx, param, service_id):
 @click.option(
     "-o",
     "--directory-out",
-    default=pathlib.Path(__file__).parent,
+    default=".",
     help="Output directory for measurement files.",
 )
 def create_measurement(
@@ -147,6 +148,11 @@ def create_measurement(
     service_class = _resolve_service_class(service_class, display_name)
     ui_file = _resolve_ui_file(ui_file, display_name)
     ui_file_type = _get_ui_type(ui_file)
+    if (directory_out == "."): 
+        directory_out = "." / display_name
+
+    if (not os.path.exists(directory_out)):
+        os.makedirs(directory_out)
 
     _create_file(
         "measurement.py.mako",
