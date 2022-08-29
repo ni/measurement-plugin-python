@@ -1,6 +1,6 @@
 # Default code owner for the repository
-* @csjall @jonlugoatx @dixonjoel
+* @csjall @jonlugoatx @dixonjoel @bkeryan
 
 # add mshafer-ni for Python files
-*.py @csjall @jonlugoatx @dixonjoel @mshafer-ni
+*.py @csjall @jonlugoatx @dixonjoel @bkeryan @mshafer-ni
 
