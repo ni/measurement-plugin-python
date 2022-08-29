@@ -114,8 +114,7 @@ def _check_guid(ctx, param, service_id):
 @click.option(
     "-o",
     "--directory-out",
-    default=".",
-    help="Output directory for measurement files.",
+    help="Output directory for measurement files. Default is the current directory/<display_name>",
 )
 def create_measurement(
     display_name,
@@ -148,11 +147,12 @@ def create_measurement(
     service_class = _resolve_service_class(service_class, display_name)
     ui_file = _resolve_ui_file(ui_file, display_name)
     ui_file_type = _get_ui_type(ui_file)
-    if (directory_out == "."): 
-        directory_out = "." / display_name
+    if directory_out is None:
+        directory_out = pathlib.Path.cwd() / display_name
+    else:
+        directory_out = pathlib.Path(directory_out)
 
-    if (not os.path.exists(directory_out)):
-        os.makedirs(directory_out)
+    directory_out.mkdir(exist_ok=True, parents=True)
 
     _create_file(
         "measurement.py.mako",
