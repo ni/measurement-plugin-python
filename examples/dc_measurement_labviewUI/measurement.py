@@ -7,13 +7,17 @@ User can Import driver and 3rd Party Packages based on requirements.
 import logging
 import os
 import sys
+import time
 
 import click
+import grpc
 import hightime
 import nidcpower
 
 import ni_measurement_service as nims
 
+
+NIDCPOWER_WAIT_FOR_EVENT_TIMEOUT_ERROR_CODE = -1074116059
 
 measurement_info = nims.MeasurementInfo(
     display_name="DCMeasurement(Py_VI)",
@@ -29,6 +33,7 @@ service_info = nims.ServiceInfo(
     service_id="{B290B571-CB76-426F-9ACC-5168DC1B027B}",
     description_url="https://www.ni.com/measurementservices/dcmeasurement.html",
 )
+
 dc_measurement_service = nims.MeasurementService(measurement_info, service_info)
 
 
@@ -61,13 +66,16 @@ def measure(
 
     def cancel_callback():
         print("Canceling DCMeasurement(Py)")
-        if session is not None:
-            session.abort()
+        session_to_abort = session
+        if session_to_abort is not None:
+            nonlocal pending_cancellation
+            pending_cancellation = True
+            session_to_abort.abort()
 
+    pending_cancellation = False
     dc_measurement_service.context.add_cancel_callback(cancel_callback)
     time_remaining = dc_measurement_service.context.time_remaining()
 
-    timeout = hightime.timedelta(seconds=(min(time_remaining, source_delay + 1.0)))
     with nidcpower.Session(resource_name=resource_name) as session:
         # Configure the session.
         session.source_mode = nidcpower.SourceMode.SINGLE_POINT
@@ -76,29 +84,52 @@ def measure(
         session.voltage_level_range = voltage_level_range
         session.current_limit_range = current_limit_range
         session.source_delay = hightime.timedelta(seconds=source_delay)
-        session.measure_when = nidcpower.MeasureWhen.AUTOMATICALLY_AFTER_SOURCE_COMPLETE
         session.voltage_level = voltage_level
         measured_value = None
+        in_compliance = None
         with session.initiate():
+            deadline = time.time() + time_remaining
+            while True:
+                if time.time() > deadline:
+                    dc_measurement_service.context.abort(
+                        grpc.StatusCode.DEADLINE_EXCEEDED, "deadline exceeded"
+                    )
+                if pending_cancellation:
+                    dc_measurement_service.context.abort(
+                        grpc.StatusCode.CANCELLED, "client requested cancellation"
+                    )
+                try:
+                    session.wait_for_event(nidcpower.enums.Event.SOURCE_COMPLETE, timeout=0.1)
+                    break
+                except nidcpower.DriverError as e:
+                    """
+                    There is no native way to support cancellation when taking a DCPower
+                    measurement. To support cancellation, we will be calling WaitForEvent
+                    until it succeeds or we have gone past the specified timeout. WaitForEvent
+                    will throw an exception if it times out, which is why we are catching
+                    and doing nothing.
+                    """
+                    if e.code == NIDCPOWER_WAIT_FOR_EVENT_TIMEOUT_ERROR_CODE:
+                        pass
+                    else:
+                        raise
             channel = session.get_channel_names("0")
-            measured_value = session.channels[channel].fetch_multiple(count=1, timeout=timeout)
+            measured_value = session.channels[channel].measure_multiple()
+            in_compliance = session.channels[channel].query_in_compliance()
         session = None  # Don't abort after this point
-    print_fetched_measurements(measured_value)
-    measured_voltage = measured_value[0].voltage
-    measured_current = measured_value[0].current
-    print("Voltage Value:", measured_voltage)
-    print("Current Value:", measured_current)
+
+    print_fetched_measurements(measured_value, in_compliance)
     print("---------------------------------")
-    return [measured_voltage, measured_current]
+    return (measured_value[0].voltage, measured_value[0].current)
 
 
-def print_fetched_measurements(measurements):
+def print_fetched_measurements(measured_value, in_compliance):
     """Format and print the Measured Values."""
     layout = "{: >20} : {:f}{}"
     print("Fetched Measurement Values:")
-    print(layout.format("Voltage", measurements[0].voltage, " V"))
-    print(layout.format("Current", measurements[0].current, " A"))
-    print(layout.format("In compliance", measurements[0].in_compliance, ""))
+    print(layout.format("Voltage", measured_value[0].voltage, " V"))
+    print(layout.format("Current", measured_value[0].current, " A"))
+    print(layout.format("In compliance", in_compliance, ""))
 
 
 @click.command

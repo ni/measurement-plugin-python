@@ -58,7 +58,7 @@ def measure(float_input, double_array_input, bool_input, string_input):
     bool_output = bool_input
     string_output = string_input
 
-    return [float_output, float_array_output, bool_output, string_output]
+    return (float_output, float_array_output, bool_output, string_output)
 
 
 @click.command
