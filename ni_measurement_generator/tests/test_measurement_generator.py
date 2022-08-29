@@ -5,7 +5,7 @@ import pytest
 
 from ni_measurement_generator import template
 
-generator_path = pathlib.Path(template.__file__).parent
+test_assets_path = pathlib.Path(__file__).parent / "test_assets"
 
 
 def test___command_line_args___create_measurement___render_without_exception(tmpdir):
@@ -35,7 +35,7 @@ def test___command_line_args___create_measurement___render_without_exception(tmp
             ]
         )
 
-    golden_path = generator_path / "example_renders"
+    golden_path = test_assets_path / "example_renders"
 
     _assert_equal(
         golden_path / "example.py",
