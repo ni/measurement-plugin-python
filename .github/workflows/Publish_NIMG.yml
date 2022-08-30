@@ -70,7 +70,6 @@ jobs:
           token: ${{ secrets.ADMIN_PAT }}
           branch: ${{ github.event.release.target_commitish }}  
           unprotect_reviews: true
-        working-directory: ./ni_measurement_generator
 
       # To Test the Publish use : poetry publish --build --username __token__ --password ${{ secrets.TEST_PYPI_TOKEN }} -r test-pypi
       - name: Build Python package and publish to PyPI
