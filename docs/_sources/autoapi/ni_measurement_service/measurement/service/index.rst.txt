@@ -47,6 +47,11 @@ Classes
       Get the time remaining for the RPC.
 
 
+   .. py:method:: abort(self, code, details)
+
+      Aborts the RPC.
+
+
 
 .. py:class:: MeasurementService(measurement_info, service_info)
 

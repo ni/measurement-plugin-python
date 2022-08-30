@@ -60,6 +60,11 @@ Attributes
       Get the time remaining for the RPC.
 
 
+   .. py:method:: abort(self, code, details)
+
+      Aborts the RPC.
+
+
 
 .. py:data:: measurement_service_context
    :annotation: :contextvars.ContextVar[MeasurementServiceContext]

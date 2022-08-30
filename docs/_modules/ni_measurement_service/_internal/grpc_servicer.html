@@ -29,7 +29,7 @@
             <a href="../../../index.html" class="icon icon-home"> ni_measurement_service
           </a>
               <div class="version">
-                0.8.2
+                0.8.3
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -116,7 +116,11 @@
 
 <div class="viewcode-block" id="MeasurementServiceContext.time_remaining"><a class="viewcode-back" href="../../../autoapi/ni_measurement_service/_internal/grpc_servicer/index.html#ni_measurement_service._internal.grpc_servicer.MeasurementServiceContext.time_remaining">[docs]</a>    <span class="k">def</span> <span class="nf">time_remaining</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get the time remaining for the RPC.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_grpc_context</span><span class="o">.</span><span class="n">time_remaining</span><span class="p">()</span></div></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_grpc_context</span><span class="o">.</span><span class="n">time_remaining</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="MeasurementServiceContext.abort"><a class="viewcode-back" href="../../../autoapi/ni_measurement_service/_internal/grpc_servicer/index.html#ni_measurement_service._internal.grpc_servicer.MeasurementServiceContext.abort">[docs]</a>    <span class="k">def</span> <span class="nf">abort</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code</span><span class="p">,</span> <span class="n">details</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Aborts the RPC.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_grpc_context</span><span class="o">.</span><span class="n">abort</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="n">details</span><span class="p">)</span></div></div>
 
 
 <span class="n">measurement_service_context</span><span class="p">:</span> <span class="n">ContextVar</span><span class="p">[</span><span class="n">MeasurementServiceContext</span><span class="p">]</span> <span class="o">=</span> <span class="n">ContextVar</span><span class="p">(</span>
