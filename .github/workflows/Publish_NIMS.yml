@@ -62,6 +62,8 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
+          git fetch
+          git rebase origin/main
           git add .
           git commit -m "Promote NIMS package version and update Sphinx generated files in _docs" -a
       
