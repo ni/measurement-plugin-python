@@ -55,9 +55,9 @@ def _get_ui_type(ui_file):
         )
 
 
-def _resolve_ui_file(ui_file, display_name):
+def _resolve_ui_file(ui_file, display_name_for_filenames):
     if ui_file is None:
-        return f"{display_name}.measui"
+        return f"{display_name_for_filenames}.measui"
     else:
         return ui_file
 
@@ -144,10 +144,11 @@ def create_measurement(
     e.g. ADC, LDO.
     """
     service_class = _resolve_service_class(service_class, display_name)
-    ui_file = _resolve_ui_file(ui_file, display_name)
+    display_name_for_filenames = re.sub(r"\s+", "", display_name)
+    ui_file = _resolve_ui_file(ui_file, display_name_for_filenames)
     ui_file_type = _get_ui_type(ui_file)
     if directory_out is None:
-        directory_out = pathlib.Path.cwd() / display_name
+        directory_out = pathlib.Path.cwd() / display_name_for_filenames
     else:
         directory_out = pathlib.Path(directory_out)
 
@@ -169,7 +170,7 @@ def create_measurement(
     )
     _create_file(
         "measurement.serviceconfig.mako",
-        f"{display_name}.serviceconfig",
+        f"{display_name_for_filenames}.serviceconfig",
         directory_out,
         display_name=display_name,
         service_class=service_class,
@@ -187,7 +188,7 @@ def create_measurement(
         )
         _create_file(
             "measurement.measproj.mako",
-            f"{display_name}.measproj",
+            f"{display_name_for_filenames}.measproj",
             directory_out,
             ui_file=ui_file,
         )
