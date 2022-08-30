@@ -13,6 +13,7 @@ jobs:
   build:
     name: Publish NIMG Package to PyPI
     runs-on : ubuntu-latest 
+    concurrency: publish_to_pypi
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
