@@ -99,30 +99,30 @@ pip show ni-measurement-service
 
 ### Developing a minimal python measurement
 
-1. Install the ni-measurement-generator to create a measurement service. This tool generates a measurement service and additional files to support the creation of the service.
+1. Install the `ni-measurement-generator` package.
 
 ``` cmd
 REM Activate the required virtual environment if any.
 pip install ni-measurement-generator
 ```
 
-2. Run the generator script `ni-measurement-generator` in a command prompt using command line arguments for `display_name`, and optionally `version`, `measurement_type`, and `product_type`.
+2. Run the `ni-measurement-generator` tool. Use command line arguments to specify the `display-name` and optionally the `version`, `measurement-type`, and `product-type`.
 
     1. Running `ni-measurement-generator` without optional arguments:
 
-    `ni-measurement-generator.exe SampleMeasurement`
+    `ni-measurement-generator SampleMeasurement`
 
-    'SampleMeasurement' is the Display Name of your measurement service. Without the optional arguments,
-    the other arguments are generated for you based on the
-    display name.
+    'SampleMeasurement' is the display name of your measurement service. Without the optional arguments,
+    the other arguments are generated for you based on the display name.
 
-    2. Running `ni-measurement-generator` with optional arguments for Version, Measurement Type, Product Type, UI File, Service Class, Service ID, and Description:
+    2. Running `ni-measurement-generator` with optional arguments for `version`, `measurement-type`, `product-type`, `ui-file`,
+    `service-class`, `service-id`, and `description`:
 
-    `ni-measurement-generator.exe SampleMeasurement 0.1.0.0 Measurement Product --ui-file MeasurementUI.measui --service-class SampleMeasurement_Python --service-id ECFC33EB-AA2E-41A5-A7C8-CAA2A8245052 --description description`
+    `ni-measurement-generator SampleMeasurement 0.1.0.0 Measurement Product --ui-file MeasurementUI.measui --service-class SampleMeasurement_Python --service-id ECFC33EB-AA2E-41A5-A7C8-CAA2A8245052 --description description`
 
-    3. Running `ni-measurement-generator` with optional argument for Output directory:
+    3. Running `ni-measurement-generator` with optional argument for `directory-out`
 
-    `ni-measurement-generator.exe SampleMeasurement --directory-out <new_path_for_created_files>`
+    `ni-measurement-generator SampleMeasurement --directory-out <new_path_for_created_files>`
 
     If no output directory is specified, the files will
     be placed in a new folder under the current directory
