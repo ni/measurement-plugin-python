@@ -99,26 +99,34 @@ pip show ni-measurement-service
 
 ### Developing a minimal python measurement
 
-1. Open a command prompt, and change the working directory to `ni_measurement_generator`
+1. Install the ni-measurement-generator to create a measurement service. This tool generates a measurement service and additional files to support the creation of the service.
 
-    ``` cmd
-    cd <path_of_template.py>
-    REM Example: cd "..\measurement-services-python\ni_measurement_generator"
-    ```
+``` cmd
+REM Activate the required virtual environment if any.
+pip install ni-measurement-generator
+```
 
-2. Run `template.py` in a command prompt using command line arguments for `display_name`, `version`, `measurement_type`, and `product_type`.
-    1. Running `template` without optional arguments:
+2. Run the generator script `ni-measurement-generator` in a command prompt using command line arguments for `display_name`, and optionally `version`, `measurement_type`, and `product_type`.
 
-    `poetry run python ni-measurement-generator SampleMeasurement 0.1.0.0 Measurement Product`
+    1. Running `ni-measurement-generator` without optional arguments:
 
-    2. Running `template` with optional arguments for `ui_file`, `service_class`, `service_id`, and `description`:
+    `ni-measurement-generator.exe SampleMeasurement`
 
-    `poetry run python ni-measurement-generator SampleMeasurement 0.1.0.0 Measurement Product --ui-file MeasurementUI.measui --service-class SampleMeasurement_Python --service-id ECFC33EB-AA2E-41A5-A7C8-CAA2A8245052 --description description`
+    'SampleMeasurement' is the Display Name of your measurement service. Without the optional arguments,
+    the other arguments are generated for you based on the
+    display name.
 
-    3. Running `template` with optional argument `directory_out`:
+    2. Running `ni-measurement-generator` with optional arguments for Version, Measurement Type, Product Type, UI File, Service Class, Service ID, and Description:
 
-    `poetry run python ni-measurement-generator SampleMeasurement 0.1.0.0 Measurement Product --directory-out <new_path_for_created_files>`
+    `ni-measurement-generator.exe SampleMeasurement 0.1.0.0 Measurement Product --ui-file MeasurementUI.measui --service-class SampleMeasurement_Python --service-id ECFC33EB-AA2E-41A5-A7C8-CAA2A8245052 --description description`
 
+    3. Running `ni-measurement-generator` with optional argument for Output directory:
+
+    `ni-measurement-generator.exe SampleMeasurement --directory-out <new_path_for_created_files>`
+
+    If no output directory is specified, the files will
+    be placed in a new folder under the current directory
+    named after the display name without spaces.
 
 3. To customize the created measurement, provide metadata of the measurement's configuration(input parameters) and outputs(output parameters) in `measurement.py`.
     1. Use the `configuration()` decorator to provide metadata about the configurations.**The order of the configuration decorator must match with the order of the parameters defined in the function signature.**
