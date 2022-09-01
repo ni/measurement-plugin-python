@@ -11,7 +11,7 @@ colorama = {version = "*", markers = "platform_system == \"Windows\""}
 
 [[package]]
 name = "colorama"
-version = "0.4.4"
+version = "0.4.5"
 description = "Cross-platform colored terminal text."
 category = "main"
 optional = false
@@ -41,7 +41,7 @@ python-versions = "*"
 
 [[package]]
 name = "ni-measurement-service"
-version = "0.6.0"
+version = "0.8.8"
 description = "Develop language agnostic measurement plugins reusable by both the Interactive Debugging/Validation and Test Automation workflow."
 category = "main"
 optional = false
@@ -98,8 +98,8 @@ click = [
     {file = "click-8.1.3.tar.gz", hash = "sha256:7682dc8afb30297001674575ea00d1814d808d6a36af415a82bd481d37ba7b8e"},
 ]
 colorama = [
-    {file = "colorama-0.4.4-py2.py3-none-any.whl", hash = "sha256:9f47eda37229f68eee03b24b9748937c7dc3868f906e8ba69fbcbdd3bc5dc3e2"},
-    {file = "colorama-0.4.4.tar.gz", hash = "sha256:5941b2b48a20143d2267e95b1c2a7603ce057ee39fd88e7329b0c292aa16869b"},
+    {file = "colorama-0.4.5-py2.py3-none-any.whl", hash = "sha256:854bf444933e37f5824ae7bfc1e98d5bce2ebe4160d46b5edf346a89358e99da"},
+    {file = "colorama-0.4.5.tar.gz", hash = "sha256:e6c6b4334fc50988a639d9b98aa429a0b57da6e17b9a44f0451f930b6967b7a4"},
 ]
 grpcio = [
     {file = "grpcio-1.41.1-cp310-cp310-linux_armv7l.whl", hash = "sha256:ead9885b53777bed4b0694ff0baea9d2c519ff774b17b177bde43d73e2b4aa38"},
@@ -151,8 +151,8 @@ hightime = [
     {file = "hightime-0.2.1-py3-none-any.whl", hash = "sha256:a300434692de16273ce46f9c1f2de01e90091b151ccfb4e0973a6a6e1d51f032"},
 ]
 ni-measurement-service = [
-    {file = "ni_measurement_service-0.6.0-py3-none-any.whl", hash = "sha256:7b28a6756fa3268149d54091a324bc8b1af2898cee8fa3b4570bed6862721bce"},
-    {file = "ni_measurement_service-0.6.0.tar.gz", hash = "sha256:4db167ca1e68e460d2ab221207a27e0cee3fb5c3be34fe5424e53c04ff968bac"},
+    {file = "ni_measurement_service-0.8.8-py3-none-any.whl", hash = "sha256:d45955c1b3e516675af1bf09463135d36afab6d7b4ba51e0bf052746da46b9e0"},
+    {file = "ni_measurement_service-0.8.8.tar.gz", hash = "sha256:0585feafd1b39fa243a938c6f9597435a66750855a76b14d020397c35b3314a7"},
 ]
 nidcpower = [
     {file = "nidcpower-1.4.1-py2.py3-none-any.whl", hash = "sha256:2f8b4096b167632ecc1c7f35a66de6eaced1f011de08185a80b13fb7a1d3d97f"},
