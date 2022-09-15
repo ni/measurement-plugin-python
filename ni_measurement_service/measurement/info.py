@@ -75,4 +75,10 @@ class DataType(enum.Enum):
     Boolean = (type_pb2.Field.TYPE_BOOL, False)
     String = (type_pb2.Field.TYPE_STRING, False)
 
+    Int32Array1D = (type_pb2.Field.TYPE_INT32, True)
+    Int64Array1D = (type_pb2.Field.TYPE_INT64, True)
+    UInt32Array1D = (type_pb2.Field.TYPE_UINT32, True)
+    UInt64Array1D = (type_pb2.Field.TYPE_UINT64, True)
+    FloatArray1D = (type_pb2.Field.TYPE_FLOAT, True)
     DoubleArray1D = (type_pb2.Field.TYPE_DOUBLE, True)
+    BooleanArray1D = (type_pb2.Field.TYPE_BOOL, True)
