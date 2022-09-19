@@ -1,5 +1,6 @@
 """Tests to validate measurement service. Uses the Sample Measurement Example."""
 from os import path
+import random
 
 import grpc
 import pytest
@@ -16,7 +17,7 @@ def test___measurement_service___get_metadata_rpc_call___returns_metadata():
     """End to End Test to validate GetMetadata RPC call with Sample Measurement."""
     measurement_service_port = _host_service()
 
-    with grpc.insecure_channel("localhost:" + measurement_service_port) as channel:
+    with _create_channel(measurement_service_port) as channel:
         stub = Measurement_pb2_grpc.MeasurementServiceStub(channel)
         get_metadata_response = stub.GetMetadata(Measurement_pb2.GetMetadataRequest())
 
@@ -32,7 +33,33 @@ def test___measurement_service___measure_rpc_call___returns_output(
     """End to End Test to validate Measure RPC call with Sample Measurement."""
     measurement_service_port = _host_service()
 
-    with grpc.insecure_channel("localhost:" + measurement_service_port) as channel:
+    with _create_channel(measurement_service_port) as channel:
+        stub = Measurement_pb2_grpc.MeasurementServiceStub(channel)
+        request = _get_sample_measurement_measure_request(
+            float_in, double_array_in, bool_in, string_in
+        )
+        measure_response = stub.Measure(request)
+
+    serialized_parameter = _get_serialized_measurement_parameters(
+        float_in, double_array_in, bool_in, string_in
+    )
+    assert measure_response.outputs.value == serialized_parameter
+
+
+@pytest.mark.parametrize(
+    "double_array_len", [10000, 100000, 1000000, 10000000] # up to 80 MB
+)
+def test___measurement_service___measure_with_large_array___returns_output(
+    double_array_len
+):
+    """End to End Test to validate Measure RPC call with Sample Measurement."""
+    measurement_service_port = _host_service()
+    float_in = 1.23
+    double_array_in = [random.random() for i in range(double_array_len)]
+    bool_in = False
+    string_in = "InputString"
+
+    with _create_channel(measurement_service_port) as channel:
         stub = Measurement_pb2_grpc.MeasurementServiceStub(channel)
         request = _get_sample_measurement_measure_request(
             float_in, double_array_in, bool_in, string_in
@@ -48,6 +75,15 @@ def test___measurement_service___measure_rpc_call___returns_output(
 def _host_service() -> int:
     measurement.sample_measurement_service.host_service()
     return str(measurement.sample_measurement_service.grpc_service.port)
+
+
+def _create_channel(port):
+    return grpc.insecure_channel(
+        "localhost:" + port,
+        options=[
+            ("grpc.max_receive_message_length", -1),
+            ("grpc.max_send_message_length", -1),
+        ])
 
 
 def _get_sample_measurement_measure_request(float_in, double_array_in, bool_in, string_in):
