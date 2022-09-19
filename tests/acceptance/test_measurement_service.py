@@ -46,12 +46,8 @@ def test___measurement_service___measure_rpc_call___returns_output(
     assert measure_response.outputs.value == serialized_parameter
 
 
-@pytest.mark.parametrize(
-    "double_array_len", [10000, 100000, 1000000, 10000000] # up to 80 MB
-)
-def test___measurement_service___measure_with_large_array___returns_output(
-    double_array_len
-):
+@pytest.mark.parametrize("double_array_len", [10000, 100000, 1000000, 10000000])  # up to 80 MB
+def test___measurement_service___measure_with_large_array___returns_output(double_array_len):
     """End to End Test to validate Measure RPC call with Sample Measurement."""
     measurement_service_port = _host_service()
     float_in = 1.23
@@ -83,7 +79,8 @@ def _create_channel(port):
         options=[
             ("grpc.max_receive_message_length", -1),
             ("grpc.max_send_message_length", -1),
-        ])
+        ],
+    )
 
 
 def _get_sample_measurement_measure_request(float_in, double_array_in, bool_in, string_in):

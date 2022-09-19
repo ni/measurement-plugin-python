@@ -73,7 +73,8 @@ class GrpcService:
             options=[
                 ("grpc.max_receive_message_length", -1),
                 ("grpc.max_send_message_length", -1),
-            ])
+            ],
+        )
         self.servicer = MeasurementServiceServicer(
             measurement_info,
             configuration_parameter_list,
