@@ -1,6 +1,6 @@
 """Tests to validate measurement service. Uses the Sample Measurement Example."""
-from os import path
 import random
+from os import path
 
 import grpc
 import pytest
