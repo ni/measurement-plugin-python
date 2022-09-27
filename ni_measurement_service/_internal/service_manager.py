@@ -68,7 +68,13 @@ class GrpcService:
             int: The port number of the server
 
         """
-        self.server = grpc.server(logging_pool.pool(max_workers=10))
+        self.server = grpc.server(
+            logging_pool.pool(max_workers=10),
+            options=[
+                ("grpc.max_receive_message_length", -1),
+                ("grpc.max_send_message_length", -1),
+            ],
+        )
         self.servicer = MeasurementServiceServicer(
             measurement_info,
             configuration_parameter_list,
