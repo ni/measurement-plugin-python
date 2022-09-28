@@ -176,7 +176,37 @@ Classes
 
       
 
+   .. py:attribute:: Int32Array1D
+      
+
+      
+
+   .. py:attribute:: Int64Array1D
+      
+
+      
+
+   .. py:attribute:: UInt32Array1D
+      
+
+      
+
+   .. py:attribute:: UInt64Array1D
+      
+
+      
+
+   .. py:attribute:: FloatArray1D
+      
+
+      
+
    .. py:attribute:: DoubleArray1D
+      
+
+      
+
+   .. py:attribute:: BooleanArray1D
       
 
       
