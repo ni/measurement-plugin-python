@@ -1,1 +1,1 @@
-call python %~dp0measurement.py
+call python "%~dp0measurement.py"
