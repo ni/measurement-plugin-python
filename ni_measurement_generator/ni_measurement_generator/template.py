@@ -33,7 +33,7 @@ def _create_bat(directory_out):
     output_file = pathlib.Path(directory_out) / "start.bat"
 
     with output_file.open("w") as fout:
-        fout.write(f"call python %~dp0measurement.py")
+        fout.write(f'call python "%~dp0measurement.py"')
 
 
 def _check_version(ctx, param, version):

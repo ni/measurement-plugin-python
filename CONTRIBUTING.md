@@ -94,7 +94,17 @@ from . import DiscoveryServices_pb2 as DiscoveryServices__pb2
 from . import ServiceLocation_pb2 as ServiceLocation__pb2
 ```
 
-# Build
+# Lint and Build Code
+
+## Linting (correctly formatting) code
+
+To check the code and update it for formatting errors
+
+```cmd
+poetry run ni-python-styleguide fix
+```
+
+## Building
 
 ```cmd
 poetry build
