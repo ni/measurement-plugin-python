@@ -94,7 +94,25 @@ from . import DiscoveryServices_pb2 as DiscoveryServices__pb2
 from . import ServiceLocation_pb2 as ServiceLocation__pb2
 ```
 
-# Build
+# Lint and Build Code
+
+## Linting (correctly formatting) code
+
+Ensure the linting tools `black` and `ni-python-styleguide` are installed using
+
+```cmd
+pip install black
+pip install ni-python-styleguide
+```
+
+To check the code and update it for formatting errors
+
+```cmd
+poetry run black .
+poetry run ni-python-styleguide lint
+```
+
+## Building
 
 ```cmd
 poetry build
