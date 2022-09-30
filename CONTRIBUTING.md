@@ -96,8 +96,6 @@ from . import ServiceLocation_pb2 as ServiceLocation__pb2
 
 # Lint and Build Code
 
-(Ensure that the virtual environment is activated with `.\.venv\scripts\activate`)
-
 ## Linting (correctly formatting) code
 
 To check the code and update it for formatting errors
