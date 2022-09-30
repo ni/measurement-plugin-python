@@ -67,6 +67,7 @@ jobs:
             locker = Factory().create_poetry('.').locker; \
             exit(0) if locker.is_locked() and locker.is_fresh() else exit(1)" \
             && echo 'OK'
+        working-directory: ./ni_measurement_generator
       - uses: actions/cache@v2
         with:
           path: ~/.cache/pypoetry/virtualenvs
