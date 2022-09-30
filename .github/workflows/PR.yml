@@ -10,7 +10,6 @@ env:
 
 jobs:
   checks-nims:
-    name: nims-checks
     runs-on: ubuntu-latest
     env:
       PYTHON_VERSION: 3.8 
@@ -32,13 +31,6 @@ jobs:
             locker = Factory().create_poetry('.').locker; \
             exit(0) if locker.is_locked() and locker.is_fresh() else exit(1)" \
             && echo 'OK'
-      - name: Check for lock changes (generator)
-        run: |
-          PYTHONPATH="${PYTHONPATH}:${HOME}/.poetry/lib:${HOME}/.poetry/lib/poetry/_vendor/py${{ env.PYTHON_VERSION }}" \
-          python -c "from poetry.factory import Factory; \
-            locker = Factory().create_poetry('./ni_measurement_generator').locker; \
-            exit(0) if locker.is_locked() and locker.is_fresh() else exit(1)" \
-            && echo 'OK'
       - uses: actions/cache@v2
         with:
           path: ~/.cache/pypoetry/virtualenvs
@@ -51,7 +43,6 @@ jobs:
         run:  poetry run mypy -p ni_measurement_service --show-error-codes -v
         
   checks-nimg:
-    name: nimg-generator-checks
     runs-on: ubuntu-latest
     defaults: # in theory this sets the working-dir for all steps in this job
       run:
@@ -69,13 +60,6 @@ jobs:
       # @TODO: This is a workaround for there not being a way to check the lock file
       #   See: https://github.com/python-poetry/poetry/issues/453
       # We might need to make sure the Test dependencies(as of now - Style Guides)
-      - name: Check for lock changes (measurement service)
-        run: |
-          PYTHONPATH="${PYTHONPATH}:${HOME}/.poetry/lib:${HOME}/.poetry/lib/poetry/_vendor/py${{ env.PYTHON_VERSION }}" \
-          python -c "from poetry.factory import Factory; \
-            locker = Factory().create_poetry('.').locker; \
-            exit(0) if locker.is_locked() and locker.is_fresh() else exit(1)" \
-            && echo 'OK'
       - name: Check for lock changes (generator)
         run: |
           PYTHONPATH="${PYTHONPATH}:${HOME}/.poetry/lib:${HOME}/.poetry/lib/poetry/_vendor/py${{ env.PYTHON_VERSION }}" \
