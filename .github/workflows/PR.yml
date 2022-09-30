@@ -9,7 +9,7 @@ env:
   POETRY_VERSION: 1.1.10
 
 jobs:
-  checks:
+  checks-nims:
     name: nims-checks
     runs-on: ubuntu-latest
     env:
@@ -49,7 +49,8 @@ jobs:
         run: poetry run ni-python-styleguide lint
       - name: MyPy Static Analysis 
         run:  poetry run mypy -p ni_measurement_service --show-error-codes -v
-
+        
+  checks-nimg:
     name: nimg-generator-checks
     runs-on: ubuntu-latest
     defaults: # in theory this sets the working-dir for all steps in this job
