@@ -96,20 +96,14 @@ from . import ServiceLocation_pb2 as ServiceLocation__pb2
 
 # Lint and Build Code
 
+(Ensure that the virtual environment is activated with `.\.venv\scripts\activate`)
+
 ## Linting (correctly formatting) code
-
-Ensure the linting tools `black` and `ni-python-styleguide` are installed using
-
-```cmd
-pip install black
-pip install ni-python-styleguide
-```
 
 To check the code and update it for formatting errors
 
 ```cmd
-poetry run black .
-poetry run ni-python-styleguide lint
+poetry run ni-python-styleguide fix
 ```
 
 ## Building
