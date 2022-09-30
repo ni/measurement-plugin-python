@@ -44,8 +44,11 @@ jobs:
           key: ${{ runner.os }}-poetry-${{ hashFiles('poetry.lock') }}
       - name: Install the Package
         run: poetry install -vvv
-      - name: Lint the Code
+      - name: Lint the Code (measurement service)
         run: poetry run ni-python-styleguide lint
+      - name: Lint the Code (generator)
+        run: poetry run ni-python-styleguide lint
+        working-directory: ./ni_measurement_generator
       - name: MyPy Static Analysis 
         run:  poetry run mypy -p ni_measurement_service --show-error-codes -v
 
