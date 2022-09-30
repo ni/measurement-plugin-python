@@ -28,9 +28,10 @@ jobs:
         run: |
           PYTHONPATH="${PYTHONPATH}:${HOME}/.poetry/lib:${HOME}/.poetry/lib/poetry/_vendor/py${{ env.PYTHON_VERSION }}" \
           python -c "from poetry.factory import Factory; \
-            locker = Factory().create_poetry('.').locker; \
-            exit(0) if locker.is_locked() and locker.is_fresh() else exit(1)" \
-            && echo 'OK'
+            locker = Factory().create_poetry('.').locker \
+            lock_is_fresh = locker.is_locked() and locker.is_fresh() \
+            print("" if lock_is_fresh else "Lock is stale, run 'poetry lock' to update the lock file.") \
+            exit(0) if lock_is_fresh else exit(1)
       - uses: actions/cache@v2
         with:
           path: ~/.cache/pypoetry/virtualenvs
@@ -64,9 +65,10 @@ jobs:
         run: |
           PYTHONPATH="${PYTHONPATH}:${HOME}/.poetry/lib:${HOME}/.poetry/lib/poetry/_vendor/py${{ env.PYTHON_VERSION }}" \
           python -c "from poetry.factory import Factory; \
-            locker = Factory().create_poetry('.').locker; \
-            exit(0) if locker.is_locked() and locker.is_fresh() else exit(1)" \
-            && echo 'OK'
+            locker = Factory().create_poetry('.').locker \
+            lock_is_fresh = locker.is_locked() and locker.is_fresh() \
+            print("" if lock_is_fresh else "Lock is stale, run 'poetry lock' to update the lock file.") \
+            exit(0) if lock_is_fresh else exit(1)
         working-directory: ./ni_measurement_generator
       - uses: actions/cache@v2
         with:
