@@ -14,15 +14,16 @@ option csharp_namespace = "NationalInstruments.MeasurementServices.Measurements"
 //---------------------------------------------------------------------
 import "google/protobuf/any.proto";
 import "google/protobuf/type.proto";
+import "ni/measurements/pin_map_context.proto";
 
 // Service that contains methods related to measurement
 service MeasurementService {
-  
+
   // API to get complete metadata
   rpc GetMetadata (GetMetadataRequest) returns (GetMetadataResponse);
-  
+
   // API to measure
-  rpc Measure (MeasureRequest) returns (MeasureResponse);  
+  rpc Measure (MeasureRequest) returns (MeasureResponse);
 }
 
 // Below message is the metadata request which is currently empty
@@ -84,9 +85,9 @@ message GetMetadataResponse{
 
   // Measurement Configurations and outputs details
   MeasurementParameters measurement_parameters = 2;
-    
+
   // Measurement User Interface details
-  UserInterfaceDetails user_interface_details = 3;
+  repeated UserInterfaceDetails user_interface_details = 3;
 }
 
 // measurement configuration info that is part of metadata
@@ -130,6 +131,8 @@ message Output {
 // message that holds measurement configurations at run time
 message MeasureRequest{
   google.protobuf.Any configuration_parameters = 1;
+
+  ni.measurements.PinMapContext pin_map_context = 2;
 }
 
 // message that holds measurement outputs at run time

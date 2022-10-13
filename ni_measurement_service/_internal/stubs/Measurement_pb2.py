@@ -14,6 +14,7 @@ _sym_db = _symbol_database.Default()
 
 from google.protobuf import any_pb2 as google_dot_protobuf_dot_any__pb2
 from google.protobuf import type_pb2 as google_dot_protobuf_dot_type__pb2
+from .ni.measurements import  pin_map_context_pb2 as ni_dot_measurements_dot_pin__map__context__pb2
 
 
 DESCRIPTOR = _descriptor.FileDescriptor(
@@ -22,10 +23,11 @@ DESCRIPTOR = _descriptor.FileDescriptor(
     syntax="proto3",
     serialized_options=b"\252\0024NationalInstruments.MeasurementServices.Measurements",
     create_key=_descriptor._internal_create_key,
-    serialized_pb=b'\n\x11Measurement.proto\x12\x12ni.measurements.v1\x1a\x19google/protobuf/any.proto\x1a\x1agoogle/protobuf/type.proto"\x14\n\x12GetMetadataRequest"k\n\x12MeasurementDetails\x12\x14\n\x0c\x64isplay_name\x18\x01 \x01(\t\x12\x0f\n\x07version\x18\x02 \x01(\t\x12\x18\n\x10measurement_type\x18\x03 \x01(\t\x12\x14\n\x0cproduct_type\x18\x04 \x01(\t"\x94\x02\n\x15MeasurementParameters\x12,\n$configuration_parameters_messagetype\x18\x01 \x01(\t\x12L\n\x18\x63onfiguration_parameters\x18\x02 \x03(\x0b\x32*.ni.measurements.v1.ConfigurationParameter\x12\x34\n\x16\x63onfiguration_defaults\x18\x03 \x01(\x0b\x32\x14.google.protobuf.Any\x12\x1c\n\x14outputs_message_type\x18\x04 \x01(\t\x12+\n\x07outputs\x18\x05 \x03(\x0b\x32\x1a.ni.measurements.v1.Output"4\n\x14UserInterfaceDetails\x12\x1c\n\x14\x63onfiguration_ui_url\x18\x01 \x01(\t"\xef\x01\n\x13GetMetadataResponse\x12\x43\n\x13measurement_details\x18\x01 \x01(\x0b\x32&.ni.measurements.v1.MeasurementDetails\x12I\n\x16measurement_parameters\x18\x02 \x01(\x0b\x32).ni.measurements.v1.MeasurementParameters\x12H\n\x16user_interface_details\x18\x03 \x01(\x0b\x32(.ni.measurements.v1.UserInterfaceDetails"x\n\x16\x43onfigurationParameter\x12\x13\n\x0bprotobuf_id\x18\x01 \x01(\r\x12)\n\x04type\x18\x02 \x01(\x0e\x32\x1b.google.protobuf.Field.Kind\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x10\n\x08repeated\x18\x04 \x01(\x08"h\n\x06Output\x12\x13\n\x0bprotobuf_id\x18\x01 \x01(\r\x12)\n\x04type\x18\x02 \x01(\x0e\x32\x1b.google.protobuf.Field.Kind\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x10\n\x08repeated\x18\x04 \x01(\x08"H\n\x0eMeasureRequest\x12\x36\n\x18\x63onfiguration_parameters\x18\x01 \x01(\x0b\x32\x14.google.protobuf.Any"8\n\x0fMeasureResponse\x12%\n\x07outputs\x18\x01 \x01(\x0b\x32\x14.google.protobuf.Any2\xc8\x01\n\x12MeasurementService\x12^\n\x0bGetMetadata\x12&.ni.measurements.v1.GetMetadataRequest\x1a\'.ni.measurements.v1.GetMetadataResponse\x12R\n\x07Measure\x12".ni.measurements.v1.MeasureRequest\x1a#.ni.measurements.v1.MeasureResponseB7\xaa\x02\x34NationalInstruments.MeasurementServices.Measurementsb\x06proto3',
+    serialized_pb=b'\n\x11Measurement.proto\x12\x12ni.measurements.v1\x1a\x19google/protobuf/any.proto\x1a\x1agoogle/protobuf/type.proto\x1a%ni/measurements/pin_map_context.proto"\x14\n\x12GetMetadataRequest"k\n\x12MeasurementDetails\x12\x14\n\x0c\x64isplay_name\x18\x01 \x01(\t\x12\x0f\n\x07version\x18\x02 \x01(\t\x12\x18\n\x10measurement_type\x18\x03 \x01(\t\x12\x14\n\x0cproduct_type\x18\x04 \x01(\t"\x94\x02\n\x15MeasurementParameters\x12,\n$configuration_parameters_messagetype\x18\x01 \x01(\t\x12L\n\x18\x63onfiguration_parameters\x18\x02 \x03(\x0b\x32*.ni.measurements.v1.ConfigurationParameter\x12\x34\n\x16\x63onfiguration_defaults\x18\x03 \x01(\x0b\x32\x14.google.protobuf.Any\x12\x1c\n\x14outputs_message_type\x18\x04 \x01(\t\x12+\n\x07outputs\x18\x05 \x03(\x0b\x32\x1a.ni.measurements.v1.Output"4\n\x14UserInterfaceDetails\x12\x1c\n\x14\x63onfiguration_ui_url\x18\x01 \x01(\t"\xef\x01\n\x13GetMetadataResponse\x12\x43\n\x13measurement_details\x18\x01 \x01(\x0b\x32&.ni.measurements.v1.MeasurementDetails\x12I\n\x16measurement_parameters\x18\x02 \x01(\x0b\x32).ni.measurements.v1.MeasurementParameters\x12H\n\x16user_interface_details\x18\x03 \x03(\x0b\x32(.ni.measurements.v1.UserInterfaceDetails"x\n\x16\x43onfigurationParameter\x12\x13\n\x0bprotobuf_id\x18\x01 \x01(\r\x12)\n\x04type\x18\x02 \x01(\x0e\x32\x1b.google.protobuf.Field.Kind\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x10\n\x08repeated\x18\x04 \x01(\x08"h\n\x06Output\x12\x13\n\x0bprotobuf_id\x18\x01 \x01(\r\x12)\n\x04type\x18\x02 \x01(\x0e\x32\x1b.google.protobuf.Field.Kind\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x10\n\x08repeated\x18\x04 \x01(\x08"\x81\x01\n\x0eMeasureRequest\x12\x36\n\x18\x63onfiguration_parameters\x18\x01 \x01(\x0b\x32\x14.google.protobuf.Any\x12\x37\n\x0fpin_map_context\x18\x02 \x01(\x0b\x32\x1e.ni.measurements.PinMapContext"8\n\x0fMeasureResponse\x12%\n\x07outputs\x18\x01 \x01(\x0b\x32\x14.google.protobuf.Any2\xc8\x01\n\x12MeasurementService\x12^\n\x0bGetMetadata\x12&.ni.measurements.v1.GetMetadataRequest\x1a\'.ni.measurements.v1.GetMetadataResponse\x12R\n\x07Measure\x12".ni.measurements.v1.MeasureRequest\x1a#.ni.measurements.v1.MeasureResponseB7\xaa\x02\x34NationalInstruments.MeasurementServices.Measurementsb\x06proto3',
     dependencies=[
         google_dot_protobuf_dot_any__pb2.DESCRIPTOR,
         google_dot_protobuf_dot_type__pb2.DESCRIPTOR,
+        ni_dot_measurements_dot_pin__map__context__pb2.DESCRIPTOR,
     ],
 )
 
@@ -46,8 +48,8 @@ _GETMETADATAREQUEST = _descriptor.Descriptor(
     syntax="proto3",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=96,
-    serialized_end=116,
+    serialized_start=135,
+    serialized_end=155,
 )
 
 
@@ -144,8 +146,8 @@ _MEASUREMENTDETAILS = _descriptor.Descriptor(
     syntax="proto3",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=118,
-    serialized_end=225,
+    serialized_start=157,
+    serialized_end=264,
 )
 
 
@@ -261,8 +263,8 @@ _MEASUREMENTPARAMETERS = _descriptor.Descriptor(
     syntax="proto3",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=228,
-    serialized_end=504,
+    serialized_start=267,
+    serialized_end=543,
 )
 
 
@@ -302,8 +304,8 @@ _USERINTERFACEDETAILS = _descriptor.Descriptor(
     syntax="proto3",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=506,
-    serialized_end=558,
+    serialized_start=545,
+    serialized_end=597,
 )
 
 
@@ -360,9 +362,9 @@ _GETMETADATARESPONSE = _descriptor.Descriptor(
             number=3,
             type=11,
             cpp_type=10,
-            label=1,
+            label=3,
             has_default_value=False,
-            default_value=None,
+            default_value=[],
             message_type=None,
             enum_type=None,
             containing_type=None,
@@ -381,8 +383,8 @@ _GETMETADATARESPONSE = _descriptor.Descriptor(
     syntax="proto3",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=561,
-    serialized_end=800,
+    serialized_start=600,
+    serialized_end=839,
 )
 
 
@@ -479,8 +481,8 @@ _CONFIGURATIONPARAMETER = _descriptor.Descriptor(
     syntax="proto3",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=802,
-    serialized_end=922,
+    serialized_start=841,
+    serialized_end=961,
 )
 
 
@@ -577,8 +579,8 @@ _OUTPUT = _descriptor.Descriptor(
     syntax="proto3",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=924,
-    serialized_end=1028,
+    serialized_start=963,
+    serialized_end=1067,
 )
 
 
@@ -609,6 +611,25 @@ _MEASUREREQUEST = _descriptor.Descriptor(
             file=DESCRIPTOR,
             create_key=_descriptor._internal_create_key,
         ),
+        _descriptor.FieldDescriptor(
+            name="pin_map_context",
+            full_name="ni.measurements.v1.MeasureRequest.pin_map_context",
+            index=1,
+            number=2,
+            type=11,
+            cpp_type=10,
+            label=1,
+            has_default_value=False,
+            default_value=None,
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
+        ),
     ],
     extensions=[],
     nested_types=[],
@@ -618,8 +639,8 @@ _MEASUREREQUEST = _descriptor.Descriptor(
     syntax="proto3",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=1030,
-    serialized_end=1102,
+    serialized_start=1070,
+    serialized_end=1199,
 )
 
 
@@ -659,8 +680,8 @@ _MEASURERESPONSE = _descriptor.Descriptor(
     syntax="proto3",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=1104,
-    serialized_end=1160,
+    serialized_start=1201,
+    serialized_end=1257,
 )
 
 _MEASUREMENTPARAMETERS.fields_by_name[
@@ -680,6 +701,9 @@ _OUTPUT.fields_by_name["type"].enum_type = google_dot_protobuf_dot_type__pb2._FI
 _MEASUREREQUEST.fields_by_name[
     "configuration_parameters"
 ].message_type = google_dot_protobuf_dot_any__pb2._ANY
+_MEASUREREQUEST.fields_by_name[
+    "pin_map_context"
+].message_type = ni_dot_measurements_dot_pin__map__context__pb2._PINMAPCONTEXT
 _MEASURERESPONSE.fields_by_name["outputs"].message_type = google_dot_protobuf_dot_any__pb2._ANY
 DESCRIPTOR.message_types_by_name["GetMetadataRequest"] = _GETMETADATAREQUEST
 DESCRIPTOR.message_types_by_name["MeasurementDetails"] = _MEASUREMENTDETAILS
@@ -801,8 +825,8 @@ _MEASUREMENTSERVICE = _descriptor.ServiceDescriptor(
     index=0,
     serialized_options=None,
     create_key=_descriptor._internal_create_key,
-    serialized_start=1163,
-    serialized_end=1363,
+    serialized_start=1260,
+    serialized_end=1460,
     methods=[
         _descriptor.MethodDescriptor(
             name="GetMetadata",
