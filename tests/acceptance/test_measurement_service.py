@@ -9,7 +9,6 @@ from google.protobuf import any_pb2
 
 from ni_measurement_service._internal.stubs import Measurement_pb2
 from ni_measurement_service._internal.stubs import Measurement_pb2_grpc
-from ni_measurement_service.measurement.info import UIFileType
 from tests.assets import sample_measurement_test_pb2
 
 
