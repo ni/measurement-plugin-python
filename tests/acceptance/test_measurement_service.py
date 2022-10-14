@@ -9,7 +9,6 @@ from google.protobuf import any_pb2
 
 from ni_measurement_service._internal.stubs import Measurement_pb2
 from ni_measurement_service._internal.stubs import Measurement_pb2_grpc
-from ni_measurement_service.measurement.info import UIFileType
 from tests.assets import sample_measurement_test_pb2
 
 
@@ -132,6 +131,6 @@ def _validate_metadata_response(get_metadata_response):
     assert len(get_metadata_response.measurement_parameters.configuration_parameters) == 4
     assert len(get_metadata_response.measurement_parameters.outputs) == 4
 
-    url = get_metadata_response.user_interface_details.configuration_ui_url.split("//")
-    assert url[0] + "//" == UIFileType.MeasurementUI.value
-    assert path.exists(url[1])
+    assert len(get_metadata_response.user_interface_details) == 1
+    url = get_metadata_response.user_interface_details[0].configuration_ui_url
+    assert path.exists(url)
