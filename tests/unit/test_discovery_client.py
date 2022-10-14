@@ -1,7 +1,7 @@
 """Contains tests to validate the discovery_client.py.
 """
 from ni_measurement_service._internal import discovery_client
-from ni_measurement_service.measurement.info import ServiceInfo, MeasurementInfo, UIFileType
+from ni_measurement_service.measurement.info import ServiceInfo, MeasurementInfo
 from tests.utilities.fake_registry_service import (
     FakeRegistryServiceStub,
     FakeRegistryServiceStubError,
@@ -12,7 +12,6 @@ _TEST_SERVICE_PORT = "9999"
 _TEST_SERVICE_INFO = ServiceInfo("TestServiceClass", "TestServiceID", "TestUrl")
 _TEST_MEASUREMENT_INFO = MeasurementInfo(
     display_name="TestMeasurement",
-    ui_file_type=UIFileType.LabVIEW,
     version="1.0.0.0",
     measurement_type="Test",
     product_type="Test",
@@ -76,5 +75,4 @@ def _validate_grpc_request(request):
     assert request.service_description.service_class == _TEST_SERVICE_INFO.service_class
     assert request.service_description.description_url == _TEST_SERVICE_INFO.description_url
     assert request.service_description.name == _TEST_MEASUREMENT_INFO.display_name
-    assert discovery_client._LABVIEW_ATTRIBUTE in request.service_description.attributes
     assert discovery_client._PROVIDED_MEASUREMENT_SERVICE in request.provided_services

@@ -11,7 +11,6 @@ import click
 
 import ni_measurement_service as nims
 
-
 measurement_info = nims.MeasurementInfo(
     display_name="SampleMeasurement",
     version="0.1.0.0",
@@ -20,7 +19,6 @@ measurement_info = nims.MeasurementInfo(
     ui_file_path=os.path.join(
         os.path.dirname(os.path.abspath(__file__)), "SampleMeasurement.measui"
     ),
-    ui_file_type=nims.UIFileType.MeasurementUI,
 )
 
 service_info = nims.ServiceInfo(
