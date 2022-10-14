@@ -1,6 +1,7 @@
 """Tests to validate measurement service. Uses the Sample Measurement Example."""
 import random
 import urllib.parse
+import urllib.request
 from os import path
 
 import grpc
@@ -136,4 +137,5 @@ def _validate_metadata_response(get_metadata_response):
     url = urllib.parse.urlparse(
         get_metadata_response.user_interface_details[0].configuration_ui_url
     )
-    assert path.exists(url.path.strip("/"))
+    localpath = urllib.request.url2pathname(url.path)
+    assert path.exists(localpath)
