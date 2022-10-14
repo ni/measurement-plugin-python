@@ -1,6 +1,7 @@
 """Contains Measurement Service Implementation class and method to host the service.
 """
 import inspect
+import pathlib
 from contextvars import ContextVar
 from typing import Any, Callable, Dict, List
 
@@ -154,7 +155,7 @@ class MeasurementServiceServicer(Measurement_pb2_grpc.MeasurementServiceServicer
         # User Interface details - Framed relative to the metadata python File
         ui_details = Measurement_pb2.UserInterfaceDetails()
 
-        ui_details.configuration_ui_url = self.measurement_info.ui_file_path
+        ui_details.configuration_ui_url = pathlib.Path(self.measurement_info.ui_file_path).as_uri()
 
         # Sending back Response
         metadata_response = Measurement_pb2.GetMetadataResponse(
