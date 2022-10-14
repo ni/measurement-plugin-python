@@ -6,7 +6,6 @@
       "serviceClass": "SampleMeasurement_Python", 
       "descriptionUrl": "description",
       "providedServices": [ "ni.measurements.v1.MeasurementService" ], 
-      "attributes": [ "UserInterfaceType=MeasurementUI" ],
       "path": "start.bat" 
     }
   ]

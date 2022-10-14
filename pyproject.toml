@@ -40,6 +40,7 @@ pytest-cov = "^3.0.0"
 mypy = "^0.961"
 types-protobuf = "^3.19.21"
 typed-ast = "*"
+mako = "*"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

@@ -6,13 +6,6 @@ from typing import NamedTuple
 from google.protobuf import type_pb2
 
 
-class UIFileType(enum.Enum):
-    """Enum that represents the supported UI Types."""
-
-    MeasurementUI = "ni_measui://"
-    LabVIEW = "ni_vi://"
-
-
 class MeasurementInfo(NamedTuple):
     """Class that represents the measurement information.
 
@@ -31,8 +24,6 @@ class MeasurementInfo(NamedTuple):
 
         ui_file_path (str): Path of the UI file linked to the measurement.
 
-        ui_file_type (UIFileType): Type of the linked UI file.
-
     """
 
     display_name: str
@@ -40,7 +31,6 @@ class MeasurementInfo(NamedTuple):
     measurement_type: str
     product_type: str
     ui_file_path: str
-    ui_file_type: UIFileType
 
 
 class ServiceInfo(NamedTuple):
