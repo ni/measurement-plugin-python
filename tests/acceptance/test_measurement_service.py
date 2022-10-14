@@ -133,5 +133,7 @@ def _validate_metadata_response(get_metadata_response):
     assert len(get_metadata_response.measurement_parameters.outputs) == 4
 
     assert len(get_metadata_response.user_interface_details) == 1
-    url = urllib.parse.urlparse(get_metadata_response.user_interface_details[0].configuration_ui_url)
+    url = urllib.parse.urlparse(
+        get_metadata_response.user_interface_details[0].configuration_ui_url
+    )
     assert path.exists(url.path.strip("/"))
