@@ -158,6 +158,7 @@ class MeasurementServiceServicer(Measurement_pb2_grpc.MeasurementServiceServicer
             measurement_parameters=measurement_parameters,
             user_interface_details=None,
         )
+        
         # User Interface details - Framed relative to the metadata python File
         for ui_file_path in self.measurement_info.ui_file_paths:
             ui_details = Measurement_pb2.UserInterfaceDetails()
