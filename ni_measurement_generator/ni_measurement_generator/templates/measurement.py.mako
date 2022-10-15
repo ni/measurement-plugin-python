@@ -13,7 +13,9 @@ measurement_info = nims.MeasurementInfo(
     version="${version}",
     measurement_type="${measurement_type}",
     product_type="${product_type}",
-    ui_file_paths=[os.path.join(os.path.dirname(os.path.abspath(__file__)), "${ui_file}")],
+    ui_file_paths=[
+        os.path.join(os.path.dirname(os.path.abspath(__file__)), "${ui_file}")
+    ],
 )
 
 service_info = nims.ServiceInfo(
