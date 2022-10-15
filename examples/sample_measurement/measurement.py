@@ -18,6 +18,8 @@ measurement_info = nims.MeasurementInfo(
     product_type="Sample",
     ui_file_paths=[os.path.join(
         os.path.dirname(os.path.abspath(__file__)), "SampleMeasurement.measui"
+    ), os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "SampleAllParameters.measui"
     )],
 )
 
