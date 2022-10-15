@@ -3,7 +3,10 @@
 import inspect
 import pathlib
 from contextvars import ContextVar
-from typing import Any, Callable, Dict, List
+from typing import Any
+from typing import Callable
+from typing import Dict
+from typing import List
 
 import grpc
 from google.protobuf import any_pb2
@@ -158,7 +161,7 @@ class MeasurementServiceServicer(Measurement_pb2_grpc.MeasurementServiceServicer
             measurement_parameters=measurement_parameters,
             user_interface_details=None,
         )
-        
+
         # User Interface details - Framed relative to the metadata python File
         for ui_file_path in self.measurement_info.ui_file_paths:
             ui_details = Measurement_pb2.UserInterfaceDetails()

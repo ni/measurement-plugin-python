@@ -139,8 +139,8 @@ def _validate_metadata_response(get_metadata_response):
     )
     localpath = urllib.request.url2pathname(existingFileUrl.path)
     assert path.exists(localpath)
-    missingFileUrl = urllib.parse.urlparse(
+    alternateFileUrl = urllib.parse.urlparse(
         get_metadata_response.user_interface_details[1].configuration_ui_url
     )
-    localpath = urllib.request.url2pathname(missingFileUrl.path)
-    assert not path.exists(localpath)
+    localpath = urllib.request.url2pathname(alternateFileUrl.path)
+    assert path.exists(localpath)
