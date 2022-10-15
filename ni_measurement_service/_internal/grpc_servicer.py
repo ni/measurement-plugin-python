@@ -152,18 +152,18 @@ class MeasurementServiceServicer(Measurement_pb2_grpc.MeasurementServiceServicer
             output_parameter.repeated = output_metadata.repeated
             measurement_parameters.outputs.append(output_parameter)
 
-        # User Interface details - Framed relative to the metadata python File
-        ui_details = Measurement_pb2.UserInterfaceDetails()
-
-        ui_details.configuration_ui_url = pathlib.Path(self.measurement_info.ui_file_path).as_uri()
-
         # Sending back Response
         metadata_response = Measurement_pb2.GetMetadataResponse(
             measurement_details=measurement_details,
             measurement_parameters=measurement_parameters,
             user_interface_details=None,
         )
-        metadata_response.user_interface_details.append(ui_details)
+        # User Interface details - Framed relative to the metadata python File
+        for ui_file_path in self.measurement_info.ui_file_paths:
+            ui_details = Measurement_pb2.UserInterfaceDetails()
+            ui_details.configuration_ui_url = pathlib.Path(ui_file_path).as_uri()
+            metadata_response.user_interface_details.append(ui_details)
+
         return metadata_response
 
     def Measure(self, request, context):  # noqa N802:inherited method names-autogen baseclass

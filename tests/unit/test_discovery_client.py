@@ -15,7 +15,7 @@ _TEST_MEASUREMENT_INFO = MeasurementInfo(
     version="1.0.0.0",
     measurement_type="Test",
     product_type="Test",
-    ui_file_path="",
+    ui_file_paths=[""],
 )
 
 
