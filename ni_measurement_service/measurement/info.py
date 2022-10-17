@@ -1,4 +1,5 @@
 """Contains classes and enums to represent measurement metadata."""
+from __future__ import annotations
 
 import enum
 from typing import NamedTuple
@@ -30,7 +31,7 @@ class MeasurementInfo(NamedTuple):
     version: str
     measurement_type: str
     product_type: str
-    ui_file_paths: "list[str]"
+    ui_file_paths: list[str]
 
 
 class ServiceInfo(NamedTuple):
