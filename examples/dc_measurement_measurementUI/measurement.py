@@ -63,6 +63,7 @@ def measure(
     print("Executing DCMeasurement(Py)")
 
     pending_cancellation = False
+
     def cancel_callback():
         print("Canceling DCMeasurement(Py)")
         session_to_abort = session

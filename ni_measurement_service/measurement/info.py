@@ -2,6 +2,8 @@
 from __future__ import annotations
 
 import enum
+import typing
+from pathlib import Path
 from typing import NamedTuple
 
 from google.protobuf import type_pb2
@@ -31,7 +33,7 @@ class MeasurementInfo(NamedTuple):
     version: str
     measurement_type: str
     product_type: str
-    ui_file_paths: list[str]
+    ui_file_paths: typing.List[Path]
 
 
 class ServiceInfo(NamedTuple):
