@@ -5,7 +5,7 @@ User can Import driver and 3rd Party Packages based on requirements.
 """
 
 import logging
-import os
+import pathlib
 import sys
 
 import click
@@ -19,10 +19,7 @@ measurement_info = nims.MeasurementInfo(
     version="0.1.0.0",
     measurement_type="DAQmx Analog Input",
     product_type="DAQ",
-    ui_file_path=os.path.join(
-        os.path.dirname(os.path.abspath(__file__)), "DAQmxAnalogInputMeasurement.measui"
-    ),
-    ui_file_type=nims.UIFileType.MeasurementUI,
+    ui_file_paths=[pathlib.Path(__file__).resolve().parent / "DAQmxAnalogInputMeasurement.measui"]
 )
 
 service_info = nims.ServiceInfo(

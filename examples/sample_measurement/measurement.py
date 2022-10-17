@@ -17,8 +17,8 @@ measurement_info = nims.MeasurementInfo(
     measurement_type="Sample",
     product_type="Sample",
     ui_file_paths=[
-        pathlib.Path(__file__).parent.resolve() / "SampleMeasurement.measui",
-        pathlib.Path(__file__).parent.resolve() / "SampleAllParameters.measui",
+        pathlib.Path(__file__).resolve().parent / "SampleMeasurement.measui",
+        pathlib.Path(__file__).resolve().parent / "SampleAllParameters.measui",
     ],
 )
 

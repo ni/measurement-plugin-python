@@ -1,6 +1,6 @@
 """A default measurement with an array in and out."""
 import logging
-import os
+import pathlib
 import sys
 
 import click
@@ -12,8 +12,8 @@ measurement_info = nims.MeasurementInfo(
     measurement_type="Measurement",
     product_type="Product",
     ui_file_paths=[
-        os.path.join(os.path.dirname(os.path.abspath(__file__)), "MeasurementUI.measui")
-    ],
+        pathlib.Path(__file__).resolve().parent / "MeasurementUI.measui"
+    ]
 )
 
 service_info = nims.ServiceInfo(
