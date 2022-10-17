@@ -44,6 +44,8 @@ jobs:
         run:  poetry run mypy -p ni_measurement_service --show-error-codes -v
       - name: MyPy Static Analysis on examples 
         run:  poetry run mypy -p examples --show-error-codes -v
+      - name: MyPy Static Analysis ni_measurement_generator
+        run:  poetry run mypy -p ni_measurement_generator --show-error-codes -v
         
   checks-nimg:
     runs-on: ubuntu-latest
@@ -80,8 +82,6 @@ jobs:
         run: poetry install -vvv
       - name: Lint the Code
         run: poetry run ni-python-styleguide lint
-      - name: MyPy Static Analysis 
-        run:  poetry run mypy -p . --show-error-codes -v
 
   tests:
     runs-on: ${{ matrix.os }}
