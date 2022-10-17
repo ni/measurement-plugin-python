@@ -9,8 +9,9 @@ import pathlib
 import sys
 
 import click
-import ni_measurement_service as nims
 import nidaqmx
+
+import ni_measurement_service as nims
 
 measurement_info = nims.MeasurementInfo(
     display_name="DAQmx Analog Input Measurement(Py)",
