@@ -12,9 +12,8 @@ import time
 import click
 import grpc
 import hightime
-import nidcpower
-
 import ni_measurement_service as nims
+import nidcpower
 
 NIDCPOWER_WAIT_FOR_EVENT_TIMEOUT_ERROR_CODE = -1074116059
 
