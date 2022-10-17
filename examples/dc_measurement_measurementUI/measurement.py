@@ -23,7 +23,7 @@ measurement_info = nims.MeasurementInfo(
     version="0.1.0.0",
     measurement_type="DC",
     product_type="ADC",
-    ui_file_paths=[pathlib.Path(__file__).resolve().parent / "DCMeasurement.measui"],
+    ui_file_paths=[str(pathlib.Path(__file__).resolve().parent / "DCMeasurement.measui")],
 )
 
 service_info = nims.ServiceInfo(
@@ -62,6 +62,7 @@ def measure(
     # User Logic :
     print("Executing DCMeasurement(Py)")
 
+    pending_cancellation = False
     def cancel_callback():
         print("Canceling DCMeasurement(Py)")
         session_to_abort = session
@@ -70,7 +71,6 @@ def measure(
             pending_cancellation = True
             session_to_abort.abort()
 
-    pending_cancellation = False
     dc_measurement_service.context.add_cancel_callback(cancel_callback)
     time_remaining = dc_measurement_service.context.time_remaining()
 

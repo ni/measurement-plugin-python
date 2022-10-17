@@ -14,7 +14,7 @@ measurement_info = nims.MeasurementInfo(
     measurement_type="${measurement_type}",
     product_type="${product_type}",
     ui_file_paths=[
-        pathlib.Path(__file__).resolve().parent / "${ui_file}"
+        str(pathlib.Path(__file__).resolve().parent / "${ui_file}")
     ]
 )
 
