@@ -13,13 +13,12 @@ import nidaqmx
 
 import ni_measurement_service as nims
 
-
 measurement_info = nims.MeasurementInfo(
     display_name="DAQmx Analog Input Measurement(Py)",
     version="0.1.0.0",
     measurement_type="DAQmx Analog Input",
     product_type="DAQ",
-    ui_file_paths=[pathlib.Path(__file__).resolve().parent / "DAQmxAnalogInputMeasurement.measui"]
+    ui_file_paths=[pathlib.Path(__file__).resolve().parent / "DAQmxAnalogInputMeasurement.measui"],
 )
 
 service_info = nims.ServiceInfo(

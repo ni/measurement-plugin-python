@@ -16,7 +16,6 @@ import nidcpower
 
 import ni_measurement_service as nims
 
-
 NIDCPOWER_WAIT_FOR_EVENT_TIMEOUT_ERROR_CODE = -1074116059
 
 measurement_info = nims.MeasurementInfo(
@@ -24,7 +23,7 @@ measurement_info = nims.MeasurementInfo(
     version="0.1.0.0",
     measurement_type="DC",
     product_type="ADC",
-    ui_file_paths=[pathlib.Path(__file__).resolve().parent / "DCMeasurement.measui"]
+    ui_file_paths=[pathlib.Path(__file__).resolve().parent / "DCMeasurement.measui"],
 )
 
 service_info = nims.ServiceInfo(
