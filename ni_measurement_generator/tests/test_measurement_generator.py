@@ -35,7 +35,7 @@ def test___command_line_args___create_measurement___render_without_exception(tmp
             ]
         )
 
-    golden_path =  test_assets_path / "example_renders"
+    golden_path = test_assets_path / "example_renders"
 
     _assert_equal(
         golden_path / "example.py",

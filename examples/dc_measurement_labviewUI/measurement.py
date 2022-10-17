@@ -23,7 +23,7 @@ measurement_info = nims.MeasurementInfo(
     version="0.1.0.0",
     measurement_type="DC",
     product_type="ADC",
-    ui_file_paths=[str(pathlib.Path(__file__).resolve().parent / "DCMeasurementUI.vi")],
+    ui_file_paths=[pathlib.Path(__file__).resolve().parent / "DCMeasurementUI.vi"],
 )
 
 service_info = nims.ServiceInfo(

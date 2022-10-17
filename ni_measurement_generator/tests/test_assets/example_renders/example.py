@@ -11,7 +11,7 @@ measurement_info = nims.MeasurementInfo(
     version="1.0.0.0",
     measurement_type="Measurement",
     product_type="Product",
-    ui_file_paths=[pathlib.Path(__file__).resolve().parent / "MeasurementUI.measui"]
+    ui_file_paths=[pathlib.Path(__file__).resolve().parent / "MeasurementUI.measui"],
 )
 
 service_info = nims.ServiceInfo(
