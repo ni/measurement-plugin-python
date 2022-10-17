@@ -19,6 +19,8 @@ def _render_template(template_name: str, **template_args) -> str:
     except:  # noqa: E722
         print(exceptions.text_error_template().render())
 
+    return ""
+
 
 def _create_file(template_name: str, file_name: str, directory_out, **template_args) -> str:
     output_file = pathlib.Path(directory_out) / file_name
@@ -27,6 +29,8 @@ def _create_file(template_name: str, file_name: str, directory_out, **template_a
 
     with output_file.open("w") as fout:
         fout.write(output)
+
+    return ""
 
 
 def _create_bat(directory_out):
