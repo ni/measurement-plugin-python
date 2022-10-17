@@ -4,7 +4,7 @@ User can Import driver and 3Party Packages based on requirements.
 
 """
 import logging
-import os
+import pathlib
 import sys
 
 import click
@@ -17,8 +17,8 @@ measurement_info = nims.MeasurementInfo(
     measurement_type="Sample",
     product_type="Sample",
     ui_file_paths=[
-        os.path.join(os.path.dirname(os.path.abspath(__file__)), "SampleMeasurement.measui"),
-        os.path.join(os.path.dirname(os.path.abspath(__file__)), "SampleAllParameters.measui"),
+        pathlib.Path(__file__).parent.resolve() / "SampleMeasurement.measui",
+        pathlib.Path(__file__).parent.resolve() / "SampleAllParameters.measui",
     ],
 )
 

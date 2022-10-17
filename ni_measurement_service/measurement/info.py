@@ -22,7 +22,7 @@ class MeasurementInfo(NamedTuple):
         product_type (str): Represents type of the DUT,
         e.g. ADC, LDO.
 
-        ui_file_paths (list): Paths of the UI file(s) linked to the measurement.
+        ui_file_paths (list): Absolute paths of the UI file(s) linked to the measurement.
 
     """
 
@@ -30,7 +30,7 @@ class MeasurementInfo(NamedTuple):
     version: str
     measurement_type: str
     product_type: str
-    ui_file_paths: list
+    ui_file_paths: "list[str]"
 
 
 class ServiceInfo(NamedTuple):
