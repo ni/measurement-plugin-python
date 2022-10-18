@@ -16,6 +16,7 @@
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -29,7 +30,7 @@
             <a href="../../../index.html" class="icon icon-home"> ni_measurement_service
           </a>
               <div class="version">
-                0.9.1
+                0.9.2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -71,8 +72,12 @@
 <span></span><span class="sd">&quot;&quot;&quot;Contains Measurement Service Implementation class and method to host the service.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">inspect</span>
+<span class="kn">import</span> <span class="nn">pathlib</span>
 <span class="kn">from</span> <span class="nn">contextvars</span> <span class="kn">import</span> <span class="n">ContextVar</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
 
 <span class="kn">import</span> <span class="nn">grpc</span>
 <span class="kn">from</span> <span class="nn">google.protobuf</span> <span class="kn">import</span> <span class="n">any_pb2</span>
@@ -221,19 +226,19 @@
             <span class="n">output_parameter</span><span class="o">.</span><span class="n">repeated</span> <span class="o">=</span> <span class="n">output_metadata</span><span class="o">.</span><span class="n">repeated</span>
             <span class="n">measurement_parameters</span><span class="o">.</span><span class="n">outputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">output_parameter</span><span class="p">)</span>
 
-        <span class="c1"># User Interface details - Framed relative to the metadata python File</span>
-        <span class="n">ui_details</span> <span class="o">=</span> <span class="n">Measurement_pb2</span><span class="o">.</span><span class="n">UserInterfaceDetails</span><span class="p">()</span>
-
-        <span class="n">ui_details</span><span class="o">.</span><span class="n">configuration_ui_url</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">measurement_info</span><span class="o">.</span><span class="n">ui_file_type</span><span class="o">.</span><span class="n">value</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">measurement_info</span><span class="o">.</span><span class="n">ui_file_path</span>
-        <span class="p">)</span>
-
         <span class="c1"># Sending back Response</span>
         <span class="n">metadata_response</span> <span class="o">=</span> <span class="n">Measurement_pb2</span><span class="o">.</span><span class="n">GetMetadataResponse</span><span class="p">(</span>
             <span class="n">measurement_details</span><span class="o">=</span><span class="n">measurement_details</span><span class="p">,</span>
             <span class="n">measurement_parameters</span><span class="o">=</span><span class="n">measurement_parameters</span><span class="p">,</span>
-            <span class="n">user_interface_details</span><span class="o">=</span><span class="n">ui_details</span><span class="p">,</span>
+            <span class="n">user_interface_details</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="p">)</span>
+
+        <span class="c1"># User Interface details - Framed relative to the metadata python File</span>
+        <span class="k">for</span> <span class="n">ui_file_path</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">measurement_info</span><span class="o">.</span><span class="n">ui_file_paths</span><span class="p">:</span>
+            <span class="n">ui_details</span> <span class="o">=</span> <span class="n">Measurement_pb2</span><span class="o">.</span><span class="n">UserInterfaceDetails</span><span class="p">()</span>
+            <span class="n">ui_details</span><span class="o">.</span><span class="n">configuration_ui_url</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">ui_file_path</span><span class="p">)</span><span class="o">.</span><span class="n">as_uri</span><span class="p">()</span>
+            <span class="n">metadata_response</span><span class="o">.</span><span class="n">user_interface_details</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ui_details</span><span class="p">)</span>
+
         <span class="k">return</span> <span class="n">metadata_response</span></div>
 
 <div class="viewcode-block" id="MeasurementServiceServicer.Measure"><a class="viewcode-back" href="../../../autoapi/ni_measurement_service/_internal/grpc_servicer/index.html#ni_measurement_service._internal.grpc_servicer.MeasurementServiceServicer.Measure">[docs]</a>    <span class="k">def</span> <span class="nf">Measure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>  <span class="c1"># noqa N802:inherited method names-autogen baseclass</span>

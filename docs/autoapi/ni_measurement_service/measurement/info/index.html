@@ -17,6 +17,7 @@
         <script src="../../../../_static/underscore.js"></script>
         <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -30,7 +31,7 @@
             <a href="../../../../index.html" class="icon icon-home"> ni_measurement_service
           </a>
               <div class="version">
-                0.9.1
+                0.9.2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
@@ -81,37 +82,17 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#ni_measurement_service.measurement.info.UIFileType" title="ni_measurement_service.measurement.info.UIFileType"><code class="xref py py-obj docutils literal notranslate"><span class="pre">UIFileType</span></code></a></p></td>
-<td><p>Enum that represents the supported UI Types.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#ni_measurement_service.measurement.info.MeasurementInfo" title="ni_measurement_service.measurement.info.MeasurementInfo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MeasurementInfo</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ni_measurement_service.measurement.info.MeasurementInfo" title="ni_measurement_service.measurement.info.MeasurementInfo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MeasurementInfo</span></code></a></p></td>
 <td><p>Class that represents the measurement information.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#ni_measurement_service.measurement.info.ServiceInfo" title="ni_measurement_service.measurement.info.ServiceInfo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ServiceInfo</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#ni_measurement_service.measurement.info.ServiceInfo" title="ni_measurement_service.measurement.info.ServiceInfo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ServiceInfo</span></code></a></p></td>
 <td><p>Class the represents the service information.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#ni_measurement_service.measurement.info.DataType" title="ni_measurement_service.measurement.info.DataType"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataType</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ni_measurement_service.measurement.info.DataType" title="ni_measurement_service.measurement.info.DataType"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataType</span></code></a></p></td>
 <td><p>Enum that represents the supported data types.</p></td>
 </tr>
 </tbody>
 </table>
-<dl class="py class">
-<dt class="sig sig-object py" id="ni_measurement_service.measurement.info.UIFileType">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ni_measurement_service.measurement.info.</span></span><span class="sig-name descname"><span class="pre">UIFileType</span></span><a class="reference internal" href="../../../../_modules/ni_measurement_service/measurement/info.html#UIFileType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurement_service.measurement.info.UIFileType" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">enum.Enum</span></code></p>
-<p>Enum that represents the supported UI Types.</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ni_measurement_service.measurement.info.UIFileType.MeasurementUI">
-<span class="sig-name descname"><span class="pre">MeasurementUI</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">ni_measui://</span></em><a class="headerlink" href="#ni_measurement_service.measurement.info.UIFileType.MeasurementUI" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ni_measurement_service.measurement.info.UIFileType.LabVIEW">
-<span class="sig-name descname"><span class="pre">LabVIEW</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">ni_vi://</span></em><a class="headerlink" href="#ni_measurement_service.measurement.info.UIFileType.LabVIEW" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
 <dl class="py class">
 <dt class="sig sig-object py" id="ni_measurement_service.measurement.info.MeasurementInfo">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ni_measurement_service.measurement.info.</span></span><span class="sig-name descname"><span class="pre">MeasurementInfo</span></span><a class="reference internal" href="../../../../_modules/ni_measurement_service/measurement/info.html#MeasurementInfo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurement_service.measurement.info.MeasurementInfo" title="Permalink to this definition"></a></dt>
@@ -125,8 +106,7 @@ maintain versions of a measurement in future.</p>
 e.g. AC or DC measurements.</p>
 <p>product_type (str): Represents type of the DUT,
 e.g. ADC, LDO.</p>
-<p>ui_file_path (str): Path of the UI file linked to the measurement.</p>
-<p>ui_file_type (UIFileType): Type of the linked UI file.</p>
+<p>ui_file_paths (list): Absolute paths of the UI file(s) linked to the measurement.</p>
 </div></blockquote>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ni_measurement_service.measurement.info.MeasurementInfo.display_name">
@@ -149,13 +129,8 @@ e.g. ADC, LDO.</p>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="ni_measurement_service.measurement.info.MeasurementInfo.ui_file_path">
-<span class="sig-name descname"><span class="pre">ui_file_path</span></span><em class="property"><span class="w"> </span><span class="pre">:str</span></em><a class="headerlink" href="#ni_measurement_service.measurement.info.MeasurementInfo.ui_file_path" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ni_measurement_service.measurement.info.MeasurementInfo.ui_file_type">
-<span class="sig-name descname"><span class="pre">ui_file_type</span></span><em class="property"><span class="w"> </span><span class="pre">:UIFileType</span></em><a class="headerlink" href="#ni_measurement_service.measurement.info.MeasurementInfo.ui_file_type" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="ni_measurement_service.measurement.info.MeasurementInfo.ui_file_paths">
+<span class="sig-name descname"><span class="pre">ui_file_paths</span></span><em class="property"><span class="w"> </span><span class="pre">:List[pathlib.Path]</span></em><a class="headerlink" href="#ni_measurement_service.measurement.info.MeasurementInfo.ui_file_paths" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>

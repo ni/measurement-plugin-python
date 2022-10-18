@@ -27,7 +27,7 @@ Classes
        Defaults to None.
 
 
-   .. py:method:: start(self, measurement_info, service_info, configuration_parameter_list, output_parameter_list, measure_function)
+   .. py:method:: start(measurement_info, service_info, configuration_parameter_list, output_parameter_list, measure_function)
 
       Host a gRPC service with the registered measurement method.
 
@@ -49,7 +49,7 @@ Classes
 
 
 
-   .. py:method:: stop(self)
+   .. py:method:: stop()
 
       Close the Service after un-registering with discovery service and cleanups.
 

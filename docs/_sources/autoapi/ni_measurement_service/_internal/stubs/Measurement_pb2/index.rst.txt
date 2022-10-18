@@ -67,6 +67,11 @@ Module Contents
 
    
 
+.. py:data:: message_type
+   
+
+   
+
 .. py:data:: GetMetadataRequest
    
 

@@ -35,32 +35,32 @@ Attributes
 
    Accessor for the Measurement Service's context-local state.
 
-   .. py:method:: mark_complete(self)
+   .. py:method:: mark_complete()
 
       Mark the current RPC as complete.
 
 
-   .. py:method:: get_grpc_context(self)
+   .. py:method:: get_grpc_context()
 
       Get the context for the RPC.
 
 
-   .. py:method:: add_cancel_callback(self, cancel_callback)
+   .. py:method:: add_cancel_callback(cancel_callback)
 
       Add a callback that is invoked when the RPC is canceled.
 
 
-   .. py:method:: cancel(self)
+   .. py:method:: cancel()
 
       Cancel the RPC.
 
 
-   .. py:method:: time_remaining(self)
+   .. py:method:: time_remaining()
 
       Get the time remaining for the RPC.
 
 
-   .. py:method:: abort(self, code, details)
+   .. py:method:: abort(code, details)
 
       Aborts the RPC.
 
@@ -91,12 +91,12 @@ Attributes
        Measurement_pb2_grpc (MeasurementServiceServicer): Measurement Service's gRPC base class.
 
 
-   .. py:method:: GetMetadata(self, request, context)
+   .. py:method:: GetMetadata(request, context)
 
       RPC API to get complete metadata.
 
 
-   .. py:method:: Measure(self, request, context)
+   .. py:method:: Measure(request, context)
 
       RPC API that Executes the registered measurement method.
 

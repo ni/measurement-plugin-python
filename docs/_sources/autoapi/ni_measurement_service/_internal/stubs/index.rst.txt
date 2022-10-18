@@ -9,6 +9,15 @@
 
 
 
+Subpackages
+-----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 3
+
+   ni/index.rst
+
+
 Submodules
 ----------
 .. toctree::

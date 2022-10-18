@@ -27,27 +27,27 @@ Classes
 
    Proxy for the Measurement Service's context-local state.
 
-   .. py:method:: get_grpc_context(self)
+   .. py:method:: get_grpc_context()
 
       Get the context for the RPC.
 
 
-   .. py:method:: add_cancel_callback(self, cancel_callback)
+   .. py:method:: add_cancel_callback(cancel_callback)
 
       Add a callback which is invoked when the RPC is canceled.
 
 
-   .. py:method:: cancel(self)
+   .. py:method:: cancel()
 
       Cancel the RPC.
 
 
-   .. py:method:: time_remaining(self)
+   .. py:method:: time_remaining()
 
       Get the time remaining for the RPC.
 
 
-   .. py:method:: abort(self, code, details)
+   .. py:method:: abort(code, details)
 
       Aborts the RPC.
 
@@ -70,7 +70,7 @@ Classes
        measure_function (Callable): Registered measurement function.
 
 
-   .. py:method:: register_measurement(self, measurement_function)
+   .. py:method:: register_measurement(measurement_function)
 
       Register the function as the measurement. Recommended to use as a decorator.
 
@@ -84,7 +84,7 @@ Classes
 
 
 
-   .. py:method:: configuration(self, display_name, type, default_value)
+   .. py:method:: configuration(display_name, type, default_value)
 
       Add configuration parameter info for a measurement.Recommended to use as a decorator.
 
@@ -103,7 +103,7 @@ Classes
 
 
 
-   .. py:method:: output(self, display_name, type)
+   .. py:method:: output(display_name, type)
 
       Add output parameter info for a measurement.Recommended to use as a decorator.
 
@@ -120,7 +120,7 @@ Classes
 
 
 
-   .. py:method:: host_service(self)
+   .. py:method:: host_service()
 
       Host the registered measurement method as gRPC measurement service.
 
@@ -130,7 +130,7 @@ Classes
 
 
 
-   .. py:method:: close_service(self)
+   .. py:method:: close_service()
 
       Close the Service after un-registering with discovery service and cleanups.
 

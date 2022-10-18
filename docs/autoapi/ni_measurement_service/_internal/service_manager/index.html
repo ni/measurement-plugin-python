@@ -17,6 +17,7 @@
         <script src="../../../../_static/underscore.js"></script>
         <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -30,7 +31,7 @@
             <a href="../../../../index.html" class="icon icon-home"> ni_measurement_service
           </a>
               <div class="version">
-                0.9.1
+                0.9.2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
@@ -95,7 +96,7 @@ Defaults to None.</p>
 </div></blockquote>
 <dl class="py method">
 <dt class="sig sig-object py" id="ni_measurement_service._internal.service_manager.GrpcService.start">
-<span class="sig-name descname"><span class="pre">start</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">measurement_info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">service_info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configuration_parameter_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_parameter_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">measure_function</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/ni_measurement_service/_internal/service_manager.html#GrpcService.start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurement_service._internal.service_manager.GrpcService.start" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">start</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">measurement_info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">service_info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configuration_parameter_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_parameter_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">measure_function</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/ni_measurement_service/_internal/service_manager.html#GrpcService.start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurement_service._internal.service_manager.GrpcService.start" title="Permalink to this definition"></a></dt>
 <dd><p>Host a gRPC service with the registered measurement method.</p>
 <blockquote>
 <div><p>measurement_info (MeasurementInfo): Measurement info</p>
@@ -111,7 +112,7 @@ Defaults to None.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ni_measurement_service._internal.service_manager.GrpcService.stop">
-<span class="sig-name descname"><span class="pre">stop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/ni_measurement_service/_internal/service_manager.html#GrpcService.stop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurement_service._internal.service_manager.GrpcService.stop" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">stop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/ni_measurement_service/_internal/service_manager.html#GrpcService.stop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurement_service._internal.service_manager.GrpcService.stop" title="Permalink to this definition"></a></dt>
 <dd><p>Close the Service after un-registering with discovery service and cleanups.</p>
 </dd></dl>
 

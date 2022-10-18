@@ -45,12 +45,12 @@ Functions
 
    Service that contains methods related to measurement
 
-   .. py:method:: GetMetadata(self, request, context)
+   .. py:method:: GetMetadata(request, context)
 
       API to get complete metadata
 
 
-   .. py:method:: Measure(self, request, context)
+   .. py:method:: Measure(request, context)
 
       API to measure
 

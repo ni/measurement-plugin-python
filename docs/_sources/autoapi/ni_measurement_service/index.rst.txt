@@ -29,7 +29,6 @@ Classes
    ni_measurement_service.DataType
    ni_measurement_service.MeasurementInfo
    ni_measurement_service.ServiceInfo
-   ni_measurement_service.UIFileType
    ni_measurement_service.MeasurementService
 
 
@@ -136,9 +135,7 @@ Classes
        product_type (str): Represents type of the DUT,
        e.g. ADC, LDO.
 
-       ui_file_path (str): Path of the UI file linked to the measurement.
-
-       ui_file_type (UIFileType): Type of the linked UI file.
+       ui_file_paths (list): Absolute paths of the UI file(s) linked to the measurement.
 
 
    .. py:attribute:: display_name
@@ -161,13 +158,8 @@ Classes
 
       
 
-   .. py:attribute:: ui_file_path
-      :annotation: :str
-
-      
-
-   .. py:attribute:: ui_file_type
-      :annotation: :UIFileType
+   .. py:attribute:: ui_file_paths
+      :annotation: :List[pathlib.Path]
 
       
 
@@ -205,23 +197,6 @@ Classes
       
 
 
-.. py:class:: UIFileType
-
-   Bases: :py:obj:`enum.Enum`
-
-   Enum that represents the supported UI Types.
-
-   .. py:attribute:: MeasurementUI
-      :annotation: = ni_measui://
-
-      
-
-   .. py:attribute:: LabVIEW
-      :annotation: = ni_vi://
-
-      
-
-
 .. py:class:: MeasurementService(measurement_info, service_info)
 
    Class the supports registering and hosting a python function as a gRPC service.
@@ -239,7 +214,7 @@ Classes
        measure_function (Callable): Registered measurement function.
 
 
-   .. py:method:: register_measurement(self, measurement_function)
+   .. py:method:: register_measurement(measurement_function)
 
       Register the function as the measurement. Recommended to use as a decorator.
 
@@ -253,7 +228,7 @@ Classes
 
 
 
-   .. py:method:: configuration(self, display_name, type, default_value)
+   .. py:method:: configuration(display_name, type, default_value)
 
       Add configuration parameter info for a measurement.Recommended to use as a decorator.
 
@@ -272,7 +247,7 @@ Classes
 
 
 
-   .. py:method:: output(self, display_name, type)
+   .. py:method:: output(display_name, type)
 
       Add output parameter info for a measurement.Recommended to use as a decorator.
 
@@ -289,7 +264,7 @@ Classes
 
 
 
-   .. py:method:: host_service(self)
+   .. py:method:: host_service()
 
       Host the registered measurement method as gRPC measurement service.
 
@@ -299,7 +274,7 @@ Classes
 
 
 
-   .. py:method:: close_service(self)
+   .. py:method:: close_service()
 
       Close the Service after un-registering with discovery service and cleanups.
 

@@ -45,7 +45,7 @@ Functions
 
    Service that contains methods related to service management
 
-   .. py:method:: StopService(self, request, context)
+   .. py:method:: StopService(request, context)
 
       API to stop the measurement service
 

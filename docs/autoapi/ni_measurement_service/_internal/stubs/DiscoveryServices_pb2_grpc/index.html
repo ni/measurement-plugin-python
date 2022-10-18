@@ -17,6 +17,7 @@
         <script src="../../../../../_static/underscore.js"></script>
         <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../../_static/doctools.js"></script>
+        <script src="../../../../../_static/sphinx_highlight.js"></script>
     <script src="../../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../search.html" /> 
@@ -30,7 +31,7 @@
             <a href="../../../../../index.html" class="icon icon-home"> ni_measurement_service
           </a>
               <div class="version">
-                0.9.1
+                0.9.2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
@@ -132,26 +133,26 @@ Service Path Resolution - Used to find optimal instances and network paths to
 a specific service</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="ni_measurement_service._internal.stubs.DiscoveryServices_pb2_grpc.RegistryServiceServicer.RegisterService">
-<span class="sig-name descname"><span class="pre">RegisterService</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/ni_measurement_service/_internal/stubs/DiscoveryServices_pb2_grpc.html#RegistryServiceServicer.RegisterService"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurement_service._internal.stubs.DiscoveryServices_pb2_grpc.RegistryServiceServicer.RegisterService" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">RegisterService</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/ni_measurement_service/_internal/stubs/DiscoveryServices_pb2_grpc.html#RegistryServiceServicer.RegisterService"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurement_service._internal.stubs.DiscoveryServices_pb2_grpc.RegistryServiceServicer.RegisterService" title="Permalink to this definition"></a></dt>
 <dd><p>Registers a service instance with the registry</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ni_measurement_service._internal.stubs.DiscoveryServices_pb2_grpc.RegistryServiceServicer.UnregisterService">
-<span class="sig-name descname"><span class="pre">UnregisterService</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/ni_measurement_service/_internal/stubs/DiscoveryServices_pb2_grpc.html#RegistryServiceServicer.UnregisterService"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurement_service._internal.stubs.DiscoveryServices_pb2_grpc.RegistryServiceServicer.UnregisterService" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">UnregisterService</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/ni_measurement_service/_internal/stubs/DiscoveryServices_pb2_grpc.html#RegistryServiceServicer.UnregisterService"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurement_service._internal.stubs.DiscoveryServices_pb2_grpc.RegistryServiceServicer.UnregisterService" title="Permalink to this definition"></a></dt>
 <dd><p>Unregisters a service instance with the registry</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ni_measurement_service._internal.stubs.DiscoveryServices_pb2_grpc.RegistryServiceServicer.EnumerateServices">
-<span class="sig-name descname"><span class="pre">EnumerateServices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/ni_measurement_service/_internal/stubs/DiscoveryServices_pb2_grpc.html#RegistryServiceServicer.EnumerateServices"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurement_service._internal.stubs.DiscoveryServices_pb2_grpc.RegistryServiceServicer.EnumerateServices" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">EnumerateServices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/ni_measurement_service/_internal/stubs/DiscoveryServices_pb2_grpc.html#RegistryServiceServicer.EnumerateServices"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurement_service._internal.stubs.DiscoveryServices_pb2_grpc.RegistryServiceServicer.EnumerateServices" title="Permalink to this definition"></a></dt>
 <dd><p>Enumerate all services which implement a specific service interface
 This is useful for plugin type systems where the possible services are not know ahead of time.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ni_measurement_service._internal.stubs.DiscoveryServices_pb2_grpc.RegistryServiceServicer.ResolveService">
-<span class="sig-name descname"><span class="pre">ResolveService</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/ni_measurement_service/_internal/stubs/DiscoveryServices_pb2_grpc.html#RegistryServiceServicer.ResolveService"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurement_service._internal.stubs.DiscoveryServices_pb2_grpc.RegistryServiceServicer.ResolveService" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">ResolveService</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/ni_measurement_service/_internal/stubs/DiscoveryServices_pb2_grpc.html#RegistryServiceServicer.ResolveService"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurement_service._internal.stubs.DiscoveryServices_pb2_grpc.RegistryServiceServicer.ResolveService" title="Permalink to this definition"></a></dt>
 <dd><p>Given a specific service class this will find the best service implementation which
 best optimizes communication performance. Factors such as data path and service load
 will be taken into account</p>
@@ -159,7 +160,7 @@ will be taken into account</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ni_measurement_service._internal.stubs.DiscoveryServices_pb2_grpc.RegistryServiceServicer.ResolveMonikerEndpoint">
-<span class="sig-name descname"><span class="pre">ResolveMonikerEndpoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/ni_measurement_service/_internal/stubs/DiscoveryServices_pb2_grpc.html#RegistryServiceServicer.ResolveMonikerEndpoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurement_service._internal.stubs.DiscoveryServices_pb2_grpc.RegistryServiceServicer.ResolveMonikerEndpoint" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">ResolveMonikerEndpoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/ni_measurement_service/_internal/stubs/DiscoveryServices_pb2_grpc.html#RegistryServiceServicer.ResolveMonikerEndpoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurement_service._internal.stubs.DiscoveryServices_pb2_grpc.RegistryServiceServicer.ResolveMonikerEndpoint" title="Permalink to this definition"></a></dt>
 <dd><p>Given a specific moniker endpoint this will find the best data path to use to
 optimize the performance of communcation.  For example if there are multiple
 network paths (1Gb public IP, and 10Gb link-local) this will resolve to the path

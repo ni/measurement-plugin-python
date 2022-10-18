@@ -57,30 +57,30 @@ Functions
    Service Path Resolution - Used to find optimal instances and network paths to
    a specific service
 
-   .. py:method:: RegisterService(self, request, context)
+   .. py:method:: RegisterService(request, context)
 
       Registers a service instance with the registry
 
 
-   .. py:method:: UnregisterService(self, request, context)
+   .. py:method:: UnregisterService(request, context)
 
       Unregisters a service instance with the registry
 
 
-   .. py:method:: EnumerateServices(self, request, context)
+   .. py:method:: EnumerateServices(request, context)
 
       Enumerate all services which implement a specific service interface
       This is useful for plugin type systems where the possible services are not know ahead of time.
 
 
-   .. py:method:: ResolveService(self, request, context)
+   .. py:method:: ResolveService(request, context)
 
       Given a specific service class this will find the best service implementation which
       best optimizes communication performance. Factors such as data path and service load
       will be taken into account
 
 
-   .. py:method:: ResolveMonikerEndpoint(self, request, context)
+   .. py:method:: ResolveMonikerEndpoint(request, context)
 
       Given a specific moniker endpoint this will find the best data path to use to
       optimize the performance of communcation.  For example if there are multiple

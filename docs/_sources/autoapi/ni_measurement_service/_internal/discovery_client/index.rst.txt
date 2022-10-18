@@ -33,7 +33,7 @@ Classes
        registration_id(string): The ID from discovery service upon successful registration.
 
 
-   .. py:method:: register_measurement_service(self, service_port, service_info, measurement_info)
+   .. py:method:: register_measurement_service(service_port, service_info, measurement_info)
 
       Register the measurement service with the discovery service.
 
@@ -51,7 +51,7 @@ Classes
 
 
 
-   .. py:method:: unregister_service(self)
+   .. py:method:: unregister_service()
 
       Un-registers the measurement service from the discovery service.
 

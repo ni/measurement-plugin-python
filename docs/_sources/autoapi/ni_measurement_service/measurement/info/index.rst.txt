@@ -17,29 +17,11 @@ Classes
 
 .. autoapisummary::
 
-   ni_measurement_service.measurement.info.UIFileType
    ni_measurement_service.measurement.info.MeasurementInfo
    ni_measurement_service.measurement.info.ServiceInfo
    ni_measurement_service.measurement.info.DataType
 
 
-
-
-.. py:class:: UIFileType
-
-   Bases: :py:obj:`enum.Enum`
-
-   Enum that represents the supported UI Types.
-
-   .. py:attribute:: MeasurementUI
-      :annotation: = ni_measui://
-
-      
-
-   .. py:attribute:: LabVIEW
-      :annotation: = ni_vi://
-
-      
 
 
 .. py:class:: MeasurementInfo
@@ -61,9 +43,7 @@ Classes
        product_type (str): Represents type of the DUT,
        e.g. ADC, LDO.
 
-       ui_file_path (str): Path of the UI file linked to the measurement.
-
-       ui_file_type (UIFileType): Type of the linked UI file.
+       ui_file_paths (list): Absolute paths of the UI file(s) linked to the measurement.
 
 
    .. py:attribute:: display_name
@@ -86,13 +66,8 @@ Classes
 
       
 
-   .. py:attribute:: ui_file_path
-      :annotation: :str
-
-      
-
-   .. py:attribute:: ui_file_type
-      :annotation: :UIFileType
+   .. py:attribute:: ui_file_paths
+      :annotation: :List[pathlib.Path]
 
       
 

@@ -16,6 +16,7 @@
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -29,7 +30,7 @@
             <a href="../../../index.html" class="icon icon-home"> ni_measurement_service
           </a>
               <div class="version">
-                0.9.1
+                0.9.2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -69,18 +70,14 @@
              
   <h1>Source code for ni_measurement_service.measurement.info</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Contains classes and enums to represent measurement metadata.&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
 <span class="kn">import</span> <span class="nn">enum</span>
+<span class="kn">import</span> <span class="nn">typing</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">NamedTuple</span>
 
 <span class="kn">from</span> <span class="nn">google.protobuf</span> <span class="kn">import</span> <span class="n">type_pb2</span>
-
-
-<div class="viewcode-block" id="UIFileType"><a class="viewcode-back" href="../../../autoapi/ni_measurement_service/measurement/info/index.html#ni_measurement_service.UIFileType">[docs]</a><span class="k">class</span> <span class="nc">UIFileType</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Enum that represents the supported UI Types.&quot;&quot;&quot;</span>
-
-    <span class="n">MeasurementUI</span> <span class="o">=</span> <span class="s2">&quot;ni_measui://&quot;</span>
-    <span class="n">LabVIEW</span> <span class="o">=</span> <span class="s2">&quot;ni_vi://&quot;</span></div>
 
 
 <div class="viewcode-block" id="MeasurementInfo"><a class="viewcode-back" href="../../../autoapi/ni_measurement_service/measurement/info/index.html#ni_measurement_service.MeasurementInfo">[docs]</a><span class="k">class</span> <span class="nc">MeasurementInfo</span><span class="p">(</span><span class="n">NamedTuple</span><span class="p">):</span>
@@ -99,9 +96,7 @@
 <span class="sd">        product_type (str): Represents type of the DUT,</span>
 <span class="sd">        e.g. ADC, LDO.</span>
 
-<span class="sd">        ui_file_path (str): Path of the UI file linked to the measurement.</span>
-
-<span class="sd">        ui_file_type (UIFileType): Type of the linked UI file.</span>
+<span class="sd">        ui_file_paths (list): Absolute paths of the UI file(s) linked to the measurement.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -109,8 +104,7 @@
     <span class="n">version</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">measurement_type</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">product_type</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">ui_file_path</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">ui_file_type</span><span class="p">:</span> <span class="n">UIFileType</span></div>
+    <span class="n">ui_file_paths</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="ServiceInfo"><a class="viewcode-back" href="../../../autoapi/ni_measurement_service/measurement/info/index.html#ni_measurement_service.ServiceInfo">[docs]</a><span class="k">class</span> <span class="nc">ServiceInfo</span><span class="p">(</span><span class="n">NamedTuple</span><span class="p">):</span>
