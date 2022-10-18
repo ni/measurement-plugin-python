@@ -14,7 +14,9 @@ _sym_db = _symbol_database.Default()
 
 from google.protobuf import any_pb2 as google_dot_protobuf_dot_any__pb2
 from google.protobuf import type_pb2 as google_dot_protobuf_dot_type__pb2
-from .ni.measurements import  pin_map_context_pb2 as ni_dot_measurements_dot_pin__map__context__pb2
+from ni_measurement_service._internal.stubs.ni.measurements import (
+    pin_map_context_pb2 as ni_dot_measurements_dot_pin__map__context__pb2,
+)
 
 
 DESCRIPTOR = _descriptor.FileDescriptor(
