@@ -5,7 +5,7 @@ User can Import driver and 3rd Party Packages based on requirements.
 """
 
 import logging
-import os
+import pathlib
 import sys
 import time
 
@@ -16,7 +16,6 @@ import nidcpower
 
 import ni_measurement_service as nims
 
-
 NIDCPOWER_WAIT_FOR_EVENT_TIMEOUT_ERROR_CODE = -1074116059
 
 measurement_info = nims.MeasurementInfo(
@@ -24,8 +23,7 @@ measurement_info = nims.MeasurementInfo(
     version="0.1.0.0",
     measurement_type="DC",
     product_type="ADC",
-    ui_file_path=os.path.join(os.path.dirname(os.path.abspath(__file__)), "DCMeasurementUI.vi"),
-    ui_file_type=nims.UIFileType.LabVIEW,
+    ui_file_paths=[pathlib.Path(__file__).resolve().parent / "DCMeasurementUI.vi"],
 )
 
 service_info = nims.ServiceInfo(
@@ -64,6 +62,8 @@ def measure(
     # User Logic :
     print("Executing DCMeasurement(Py)")
 
+    pending_cancellation = False
+
     def cancel_callback():
         print("Canceling DCMeasurement(Py)")
         session_to_abort = session
@@ -72,7 +72,6 @@ def measure(
             pending_cancellation = True
             session_to_abort.abort()
 
-    pending_cancellation = False
     dc_measurement_service.context.add_cancel_callback(cancel_callback)
     time_remaining = dc_measurement_service.context.time_remaining()
 

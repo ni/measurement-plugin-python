@@ -133,9 +133,8 @@ def _validate_metadata_response(get_metadata_response):
     assert len(get_metadata_response.measurement_parameters.configuration_parameters) == 4
     assert len(get_metadata_response.measurement_parameters.outputs) == 4
 
-    assert len(get_metadata_response.user_interface_details) == 1
-    url = urllib.parse.urlparse(
-        get_metadata_response.user_interface_details[0].configuration_ui_url
-    )
-    localpath = urllib.request.url2pathname(url.path)
-    assert path.exists(localpath)
+    assert len(get_metadata_response.user_interface_details) == 2
+    for details in get_metadata_response.user_interface_details:
+        url = urllib.parse.urlparse(details.configuration_ui_url)
+        localpath = urllib.request.url2pathname(url.path)
+        assert path.exists(localpath)

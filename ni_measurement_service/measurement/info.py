@@ -1,6 +1,9 @@
 """Contains classes and enums to represent measurement metadata."""
+from __future__ import annotations
 
 import enum
+import typing
+from pathlib import Path
 from typing import NamedTuple
 
 from google.protobuf import type_pb2
@@ -22,7 +25,7 @@ class MeasurementInfo(NamedTuple):
         product_type (str): Represents type of the DUT,
         e.g. ADC, LDO.
 
-        ui_file_path (str): Path of the UI file linked to the measurement.
+        ui_file_paths (list): Absolute paths of the UI file(s) linked to the measurement.
 
     """
 
@@ -30,7 +33,7 @@ class MeasurementInfo(NamedTuple):
     version: str
     measurement_type: str
     product_type: str
-    ui_file_path: str
+    ui_file_paths: typing.List[Path]
 
 
 class ServiceInfo(NamedTuple):
