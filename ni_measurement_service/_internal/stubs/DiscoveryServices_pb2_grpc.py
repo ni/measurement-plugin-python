@@ -2,8 +2,8 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-from . import DiscoveryServices_pb2 as DiscoveryServices__pb2
-from . import ServiceLocation_pb2 as ServiceLocation__pb2
+from ni_measurement_service._internal.stubs import DiscoveryServices_pb2 as DiscoveryServices__pb2
+from ni_measurement_service._internal.stubs import ServiceLocation_pb2 as ServiceLocation__pb2
 
 
 class RegistryServiceStub(object):
