@@ -4,6 +4,7 @@ User can Import driver and 3rd Party Packages based on requirements.
 
 """
 
+import contextlib
 import logging
 import os
 import sys
@@ -38,7 +39,7 @@ dc_measurement_service = nims.MeasurementService(measurement_info, service_info)
 
 
 @dc_measurement_service.register_measurement
-@dc_measurement_service.configuration("Resource name", nims.DataType.String, "DPS_4145")
+@dc_measurement_service.configuration("Pin name", nims.DataType.String, "DPS_4145")
 @dc_measurement_service.configuration("Voltage level(V)", nims.DataType.Float, 6.0)
 @dc_measurement_service.configuration("Voltage level range(V)", nims.DataType.Float, 6.0)
 @dc_measurement_service.configuration("Current limit(A)", nims.DataType.Float, 0.01)
@@ -47,7 +48,7 @@ dc_measurement_service = nims.MeasurementService(measurement_info, service_info)
 @dc_measurement_service.output("Voltage Measurement(V)", nims.DataType.Float)
 @dc_measurement_service.output("Current Measurement(A)", nims.DataType.Float)
 def measure(
-    resource_name,
+    pin_name,
     voltage_level,
     voltage_level_range,
     current_limit,
@@ -76,7 +77,19 @@ def measure(
     dc_measurement_service.context.add_cancel_callback(cancel_callback)
     time_remaining = dc_measurement_service.context.time_remaining()
 
-    with nidcpower.Session(resource_name=resource_name) as session:
+    with contextlib.ExitStack as stack:
+        session_manager = nims.SessionManager()
+        session_info = list(
+            session_manager.register_sessions(
+                pin_names=[pin_name], instrument_type_id="niDCPower", context=nims.PinMapContext()
+            )
+        )
+        stack.callback(session_manager.unreserve_sessions, session_info)
+
+        session = stack.enter_context(
+            nidcpower.Session(resource_name=session_info[0].resource_name)
+        )
+
         # Configure the session.
         session.source_mode = nidcpower.SourceMode.SINGLE_POINT
         session.output_function = nidcpower.OutputFunction.DC_VOLTAGE
