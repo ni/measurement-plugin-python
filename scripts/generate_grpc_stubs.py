@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """Generates gRPC Python stubs from proto files."""
 
 import pathlib
