@@ -1,0 +1,153 @@
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+syntax = "proto3";
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+package ni.measurements.v1;
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+option csharp_namespace = "NationalInstruments.MeasurementServices.Measurements";
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+import "ni/measurements/pin_map_context.proto";
+// Service that contains methods related to managing driver sessions
+service SessionManagerService {
+  
+  // Reserve session(s) for the given pins, sites, and instrument type and return the session names and channel lists.
+  // Returns the session name for each session, which allows the measurement service to get or create the session. Also returns the channel list.
+  // Also reserves the session (in Session Managers's own session reservation system) so other processes cannot access it.
+  // The request message for this method includes a timeout value, which allows the client to specify no timeout, infinite timeout, or a timeout value in milliseconds.
+  // Error occurs if the session cannot be reserved because a session by that name is already reserved, when timeout is set to 0 or a positive numeric value.
+  rpc ReserveSessions(ReserveSessionsRequest) returns (ReserveSessionsResponse);
+
+  // Unreserves sessions so they can be accessed by other clients.
+  rpc UnreserveSessions(UnreserveSessionsRequest) returns (UnreserveSessionsResponse);
+
+  // Registers the sessions with the Session Manager. Indicates that the sessions are open and will need to be closed later.
+  // Error occurs if a session by the same name is already registered.
+  rpc RegisterSessions(RegisterSessionsRequest) returns (RegisterSessionsResponse);
+
+  // Unregisters the sessions from the Session Manager. Indicates that the sessions have been closed and will need to be reopened before they can be used again.
+  rpc UnregisterSessions(UnregisterSessionsRequest) returns (UnregisterSessionsResponse);
+
+  // Reserves and gets all session information from the pin map.
+  // Used in init code to create sessions.
+  // Returns the session name, resource name, channel list, and instrument type ID for each session.
+  rpc ReserveAllSessionsFromPinMap(ReserveAllSessionsFromPinMapRequest) returns (ReserveAllSessionsFromPinMapResponse);
+
+  // Reserves and gets all sessions currently registered in the Session Manager.
+  rpc ReserveAllRegisteredSessions(ReserveAllRegisteredSessionsRequest) returns (ReserveAllRegisteredSessionsResponse);
+
+  // NOTE: The two "ActivePinMap" methods below are not decided on for 1.0. There is a feature to determine whether this concept is needed.
+
+  // Sets the given pin map as active, allowing sessions to be opened to it.
+  // Throws an error if another pin map is already active.
+  rpc SetActivePinMap(SetActivePinMapRequest) returns (SetActivePinMapResponse);
+
+  // "Un-sets" the active pin map, allowing another pin map to be made active.
+  rpc ClearActivePinMap(ClearActivePinMapRequest) returns (ClearActivePinMapResponse);
+}
+
+// Session identification information. Used to reference a specific session in NI grpc-device or in any other driver session management system.
+message Session {
+    // Required. Session name to uniquely identify the session in NI grpc-device or other drivers.
+    string name = 1;
+}
+
+message SessionInformation{
+    // Session identifier used to identify the session in Session Manager, as well as in driver services such as grpc-device.
+    Session session = 1;
+
+    // Resource name used to open this session in the driver.
+    string resource_name = 2;
+
+    // Channel list used for driver initialization and measurement methods.
+    // This string includes all channels needed to access the pins that this session is connected to. To map pin names to specific channels, use the GetSessionAndChannelIndex method on the Pin Map Service.
+    string channel_list = 3;
+
+    // Instrument type ID to identify which type of instrument the session represents.
+    string instrument_type_id = 4;
+
+    // Indicates whether the session exists in the Session Manager. This indicates whether the session has been created.
+    bool session_exists = 5;
+}
+
+message ReserveSessionsRequest {
+    // Pin names or pin group names to use for the measurement.
+    repeated string pin_names = 1;
+
+    // Instrument type IDs for the measurement. Pin maps allow you to connect multiple instrument types to the same pin, 
+    // so we need this information to return the correct type of instrument to the user.
+    string instrument_type_id = 2;
+
+    // Pin map context, which contains the pin map and sites for the measurement. 
+    PinMapContext context = 3;
+
+    // Timeout for the reservation request.
+    // Allowed values: 0 (non-blocking, fails immediately if resources cannot be reserved), -1 (infinite timeout), or any other positive numeric value (wait for that number of milliseconds)
+    int32 timeout_in_milliseconds = 4;
+}
+
+message ReserveSessionsResponse{
+    // Session name, resource name, and channel list for each session.
+    repeated SessionInformation sessions = 1;
+}
+
+message UnreserveSessionsRequest{
+    // Session names for the sessions to unreserve
+    repeated string session_names = 1;
+}
+
+message UnreserveSessionsResponse{
+}
+
+message RegisterSessionsRequest{
+    // Session names which uniquely identify the sessions.
+    repeated string session_names = 1;
+
+    // Pin map context, which contains the pin map and sites for the measurement. 
+    PinMapContext context = 2;
+}
+
+message RegisterSessionsResponse{
+}
+
+message UnregisterSessionsRequest{
+    // Session names that were used to register the sessions.
+    repeated string session_names = 1;
+}
+
+message UnregisterSessionsResponse{
+}
+
+message ReserveAllSessionsFromPinMapRequest{
+    // Pin map context, which contains the pin map and sites for the measurement. 
+    PinMapContext context = 1;
+}
+
+message ReserveAllSessionsFromPinMapResponse{
+    // Sessions for all pins in the pin map.
+    repeated SessionInformation sessions = 1;
+}
+
+message ReserveAllRegisteredSessionsRequest{
+}
+
+message ReserveAllRegisteredSessionsResponse{
+    // Sessions currently registered in Session Manager
+    repeated SessionInformation sessions = 1;
+}
+
+message SetActivePinMapRequest{
+    // Pin map context, which will have been passed in from the host application.
+    PinMapContext context = 1;
+}
+
+message SetActivePinMapResponse{
+}
+
+message ClearActivePinMapRequest{
+}
+
+message ClearActivePinMapResponse{
+}
