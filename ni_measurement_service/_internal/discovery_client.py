@@ -1,6 +1,7 @@
 """ Contains API to register and un-register measurement service with discovery service.
 """
 import logging
+from typing import NamedTuple
 
 import grpc
 
@@ -14,6 +15,15 @@ _DISCOVERY_SERVICE_ADDRESS = "localhost:42000"
 _PROVIDED_MEASUREMENT_SERVICE = "ni.measurements.v1.MeasurementService"
 
 _logger = logging.getLogger(__name__)
+
+
+class ServiceLocation(NamedTuple):
+    """Represents the location of a service."""
+
+    location: str
+    optimal_route: str
+    insecure_port: str
+    ssl_authenticated_port: str
 
 
 class DiscoveryClient:
@@ -122,3 +132,32 @@ class DiscoveryClient:
             _logger.exception("Error in un-registering with discovery service.")
             return False
         return True
+
+    def resolve_service(self, service_class: str, location: str = "localhost") -> ServiceLocation:
+        """Return the location of a given service class.
+
+        Given a specific service class this will find the best service implementation which
+        best optimizes communication performance. Factors such as data path and service load
+        will be taken into account
+
+        Args:
+        ----
+            service_class: The class can be used to uniquely identify the functionality the service
+              provides.
+
+            location: The canonical location information for the service
+
+        Returns
+        -------
+            A ServiceLocation location object that represents the location of a service. The
+            location is generally the IP address and port number. But it can also be something
+            like a UDS socket.
+
+        """
+        request = ServiceLocation_pb2.ResolveServiceRequest()
+        request.request_data_location = location
+        request.required_service_class = service_class
+
+        response = self.stub.ResolveService(request)
+
+        return ServiceLocation(*(response[f] for f in ServiceLocation._fields))
