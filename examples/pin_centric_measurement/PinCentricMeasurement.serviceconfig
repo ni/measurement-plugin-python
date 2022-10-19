@@ -1,0 +1,12 @@
+{
+  "services": [
+    {
+      "id": "{B7C55EA2-925B-4246-9088-668EAFD32CFA}", 
+      "name": "Pin Centric Measurement", 
+      "serviceClass": "Pin Centric Measurement_Python", 
+      "descriptionUrl": "None",
+      "providedServices": [ "ni.measurements.v1.MeasurementService" ], 
+      "path": "start.bat" 
+    }
+  ]
+}
