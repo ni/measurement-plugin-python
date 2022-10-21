@@ -15,6 +15,11 @@ class MeasurementContext:
         """Get the context for the RPC."""
         return grpc_servicer.measurement_service_context.get().get_grpc_context()
 
+    @property
+    def pin_map_context(self):
+        """Return the pin map context for the RPC."""
+        return grpc_servicer.measurement_service_context.get().pin_map_context
+
     def add_cancel_callback(self, cancel_callback: Callable):
         """Add a callback which is invoked when the RPC is canceled."""
         grpc_servicer.measurement_service_context.get().add_cancel_callback(cancel_callback)
