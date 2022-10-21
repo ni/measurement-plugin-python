@@ -15,6 +15,7 @@ from ni_measurement_service._internal.parameter import serializer
 from ni_measurement_service._internal.parameter.metadata import ParameterMetadata
 from ni_measurement_service._internal.stubs import Measurement_pb2
 from ni_measurement_service._internal.stubs import Measurement_pb2_grpc
+from ni_measurement_service._internal.stubs.ni.measurements import pin_map_context_pb2
 from ni_measurement_service.measurement.info import MeasurementInfo
 
 
@@ -177,7 +178,7 @@ class MeasurementServiceServicer(Measurement_pb2_grpc.MeasurementServiceServicer
 
         # Calling the registered measurement
         mapping_by_variable_name = self._get_mapping_by_parameter_name(
-            mapping_by_id, self.measure_function
+            mapping_by_id, request.pin_map_context, self.measure_function
         )
         token = measurement_service_context.set(MeasurementServiceContext(context))
         try:
@@ -193,7 +194,10 @@ class MeasurementServiceServicer(Measurement_pb2_grpc.MeasurementServiceServicer
         return return_value
 
     def _get_mapping_by_parameter_name(
-        self, mapping_by_id: Dict[int, Any], measure_function: Callable[[], None]
+        self,
+        mapping_by_id: Dict[int, Any],
+        pin_map_context: pin_map_context_pb2.PinMapContext,
+        measure_function: Callable[[], None],
     ) -> Dict[str, Any]:
         """Transform the mapping by id to mapping by parameter names of the measurement function.
 
@@ -210,6 +214,13 @@ class MeasurementServiceServicer(Measurement_pb2_grpc.MeasurementServiceServicer
         """
         signature = inspect.signature(measure_function)
         mapping_by_variable_name = {}
-        for i, parameter in enumerate(signature.parameters.values(), start=1):
+
+        if any("pin_map_context" == param.name for param in signature.parameters.values()):
+            mapping_by_variable_name["pin_map_context"] = pin_map_context
+
+        for i, parameter in enumerate(
+            (param for param in signature.parameters.values() if param.name != "pin_map_context"),
+            start=1,
+        ):
             mapping_by_variable_name[parameter.name] = mapping_by_id[i]
         return mapping_by_variable_name
