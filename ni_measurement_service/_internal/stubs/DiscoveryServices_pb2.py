@@ -12,7 +12,7 @@ from google.protobuf import symbol_database as _symbol_database
 _sym_db = _symbol_database.Default()
 
 
-from . import ServiceLocation_pb2 as ServiceLocation__pb2
+from ni_measurement_service._internal.stubs import ServiceLocation_pb2 as ServiceLocation__pb2
 
 
 DESCRIPTOR = _descriptor.FileDescriptor(

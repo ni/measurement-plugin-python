@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-import ServiceManagement_pb2 as ServiceManagement__pb2
+from ni_measurement_service._internal.stubs import ServiceManagement_pb2 as ServiceManagement__pb2
 
 
 class ServiceManagementServiceStub(object):

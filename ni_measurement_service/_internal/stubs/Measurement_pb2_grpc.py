@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-from . import Measurement_pb2 as Measurement__pb2
+from ni_measurement_service._internal.stubs import Measurement_pb2 as Measurement__pb2
 
 
 class MeasurementServiceStub(object):
