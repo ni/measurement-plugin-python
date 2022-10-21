@@ -46,6 +46,7 @@ dc_measurement_service = nims.MeasurementService(measurement_info, service_info)
 @dc_measurement_service.output("Current Measurement(A)", nims.DataType.Float)
 def measure(
     resource_name,
+    pin_map_context,
     voltage_level,
     voltage_level_range,
     current_limit,
