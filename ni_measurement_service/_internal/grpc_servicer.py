@@ -15,15 +15,19 @@ from ni_measurement_service._internal.parameter import serializer
 from ni_measurement_service._internal.parameter.metadata import ParameterMetadata
 from ni_measurement_service._internal.stubs import Measurement_pb2
 from ni_measurement_service._internal.stubs import Measurement_pb2_grpc
+from ni_measurement_service._internal.stubs.ni.measurements import pin_map_context_pb2
 from ni_measurement_service.measurement.info import MeasurementInfo
 
 
 class MeasurementServiceContext:
     """Accessor for the Measurement Service's context-local state."""
 
-    def __init__(self, grpc_context: grpc.ServicerContext):
+    def __init__(
+        self, grpc_context: grpc.ServicerContext, pin_map_context: pin_map_context_pb2.PinMapContext
+    ):
         """Initialize the Measurement Service Context."""
         self._grpc_context: grpc.ServicerContext = grpc_context
+        self._pin_map_context: pin_map_context_pb2.PinMapContext = pin_map_context
         self._is_complete: bool = False
 
     def mark_complete(self):
@@ -34,6 +38,11 @@ class MeasurementServiceContext:
     def grpc_context(self):
         """Get the context for the RPC."""
         return self._grpc_context
+
+    @property
+    def pin_map_context(self):
+        """Get the pin map context for the RPC."""
+        return self._pin_map_context
 
     def add_cancel_callback(self, cancel_callback: Callable):
         """Add a callback that is invoked when the RPC is canceled."""
@@ -181,7 +190,9 @@ class MeasurementServiceServicer(Measurement_pb2_grpc.MeasurementServiceServicer
         mapping_by_variable_name = self._get_mapping_by_parameter_name(
             mapping_by_id, self.measure_function
         )
-        token = measurement_service_context.set(MeasurementServiceContext(context))
+        token = measurement_service_context.set(
+            MeasurementServiceContext(context, request.pin_map_context)
+        )
         try:
             output_value = self.measure_function(**mapping_by_variable_name)
         finally:
