@@ -25,7 +25,7 @@ class ParameterMetadata(NamedTuple):
     """
 
     display_name: str
-    type: type_pb2.Field
+    type: type_pb2.Field.Kind.ValueType
     repeated: bool
     default_value: Any
 
