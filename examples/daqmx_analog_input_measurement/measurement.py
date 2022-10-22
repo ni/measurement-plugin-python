@@ -59,7 +59,7 @@ def measure(physical_channel, sample_rate, number_of_samples):
             task_to_abort.control(nidaqmx.constants.TaskMode.TASK_ABORT)
 
     daqmx_analog_input_measurement_service.context.add_cancel_callback(cancel_callback)
-    time_remaining = daqmx_analog_input_measurement_service.context.time_remaining()
+    time_remaining = daqmx_analog_input_measurement_service.context.time_remaining
 
     timeout = min(time_remaining, 10.0)
     with nidaqmx.Task() as task:
