@@ -30,7 +30,8 @@ class MeasurementServiceContext:
         """Mark the current RPC as complete."""
         self._is_complete = True
 
-    def get_grpc_context(self):
+    @property
+    def grpc_context(self):
         """Get the context for the RPC."""
         return self._grpc_context
 
@@ -48,6 +49,7 @@ class MeasurementServiceContext:
         if not self._is_complete:
             self._grpc_context.cancel()
 
+    @property
     def time_remaining(self):
         """Get the time remaining for the RPC."""
         return self._grpc_context.time_remaining()
