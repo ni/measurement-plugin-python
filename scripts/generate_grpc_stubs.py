@@ -29,6 +29,7 @@ def generate_python_files():
         f"--proto_path={str(PROTO_PATH)}",
         f"--proto_path={pkg_resources.resource_filename('grpc_tools', '_proto')}",
         f"--python_out={str(STUBS_PATH)}",
+        f"--mypy_out={str(STUBS_PATH)}",
         f"--grpc_python_out={str(STUBS_PATH)}",
     ]
     arguments += [str(path.relative_to(PROTO_PATH)).replace("\\", "/") for path in PROTO_FILES]
