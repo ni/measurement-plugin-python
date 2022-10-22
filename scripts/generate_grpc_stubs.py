@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Generates gRPC Python stubs from proto files."""
 
+import itertools
 import pathlib
 
 import black
@@ -59,7 +60,7 @@ def fix_import_paths():
 def blacken_code():
     """Run black on generated files."""
     print("Running black")
-    for py_path in STUBS_PATH.rglob("*.py"):
+    for py_path in itertools.chain(STUBS_PATH.rglob("*.py"), STUBS_PATH.rglob("*.pyi")):
         if black.format_file_in_place(
             src=py_path, fast=False, mode=Mode(line_length=100), write_back=black.WriteBack.YES
         ):
