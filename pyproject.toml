@@ -21,7 +21,7 @@ license = "MIT"
 [tool.poetry.dependencies]
 python = "^3.8"
 grpcio = "1.41.1"
-protobuf = "3.19.1"
+protobuf = "^3.20"
 pywin32 = {version = "^303", platform = "win32"}
 
 [tool.poetry.dev-dependencies]
@@ -39,7 +39,7 @@ sphinx-click = "^4.1.0"
 pytest-cov = "^3.0.0"
 mypy = "^0.961"
 mypy-protobuf = "^3.0"
-types-protobuf = "^3.19.21"
+types-protobuf = "^3.20"
 typed-ast = "*"
 mako = "*"
 
