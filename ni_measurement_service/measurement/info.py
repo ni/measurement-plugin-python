@@ -45,14 +45,11 @@ class ServiceInfo(NamedTuple):
         Measurements under same service class expected to perform same logic.
         For e.g., different version of measurement can come under same service class.
 
-        service_id (str): Unique service of the measurement. Should be an Unique GUID.
-
         description_url (str): Description URL of the measurement.
 
     """
 
     service_class: str
-    service_id: str
     description_url: str
 
 
