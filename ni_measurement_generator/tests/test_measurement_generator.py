@@ -26,8 +26,6 @@ def test___command_line_args___create_measurement___render_without_exception(tmp
                 "MeasurementUI.measui",
                 "--service-class",
                 "SampleMeasurement_Python",
-                "--service-id",
-                "{E0095551-CB4B-4352-B65B-4280973694B2}",
                 "--description",
                 "description",
                 "--directory-out",
