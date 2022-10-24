@@ -65,7 +65,7 @@ The example measurements shared are *poetry-based* projects. Follow the below st
     REM Example: cd "..\measurement-services-python\examples\dc_measurement"
     ```
 
-3. Run poetry install. The command creates/updates the .venv and installs all the dependencies(including `ni-measurement-service` package) needed for the Example into `.venv`
+3. Run `poetry install`. This command creates/updates the .venv and installs all the dependencies(including `ni-measurement-service` package) needed for the Example into `.venv`
 
     ``` cmd
     poetry install
@@ -74,7 +74,11 @@ The example measurements shared are *poetry-based* projects. Follow the below st
 ### Executing the Example Measurements
 
 1. Start the discovery service if not already started.
-2. Run/Debug the measurement file (`measurement.py`) after activating the `.venv`. For detailed info check the section ["Steps to run/debug the measurement service".](#steps-to-rundebug-the-measurement-service)
+2. Use `poetry run` to run the measurement service:
+
+    ``` cmd
+    poetry run python measurement.py
+    ```
 
 ---
 
