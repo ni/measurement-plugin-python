@@ -1,0 +1,130 @@
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+syntax = "proto3";
+
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+package ni.measurements.discovery.v1;
+
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+option csharp_namespace = "NationalInstruments.MeasurementServices.Discovery.V1";
+option go_package = "discoveryv1";
+option java_multiple_files = true;
+option java_outer_classname = "DiscoveryServiceProto";
+option java_package = "com.ni.measurementservices.discovery.v1";
+option objc_class_prefix = "NIMD";
+option php_namespace = "NationalInstruments\\MeasurementServices\\Discovery\\V1";
+option ruby_package = "NationalInstruments::MeasurementServices::Discovery::V1";
+
+// The service used as a registry for other services. This service can be used to discover
+// and activate other services present in the system.
+service DiscoveryService {
+  // Registers a service instance with the discovery service.
+  // Status Codes for errors:
+  // - INVALID_ARGUMENT:
+  //   - ServiceDescriptor.display_name is empty
+  //   - ServiceDescriptor.provided_interfaces is empty
+  //   - ServiceDescriptor.service_class is empty
+  //   - ServiceLocation.location is empty
+  //   - Both ServiceLocation.insecure_port and ServiceLocation.ssl_authenticated_port are empty
+  //   - Either ServiceLocation.insecure_port or ServiceLocation.ssl_authenticated_port contain an invalid port number
+  rpc RegisterService (RegisterServiceRequest) returns (RegisterServiceResponse);
+
+  // Unregisters a service instance with the discovery service.
+  rpc UnregisterService(UnregisterServiceRequest) returns (UnregisterServiceResponse);
+
+  // Enumerate all services which implement a specific service interface.
+  // This is useful for plugin type systems where the possible services are not known ahead of time.
+  rpc EnumerateServices(EnumerateServicesRequest) returns (EnumerateServicesResponse);
+
+  // Given a description of a service, returns information that can be used to establish communication
+  // with that service. If necessary, the service will be started by the discovery service if it has not
+  // already been started. Activation of the service is accomplished through use of a .serviceconfig file
+  // which includes information describing the service. Services that register a .serviceconfig file must
+  // call RegisterService when their service is started or this call will never complete successfully when
+  // the discovery service attempts to start it.
+  // Status Codes for errors:
+  // - INVALID_ARGUMENT: provided_interfaces is empty
+  // - NOT_FOUND: No service matching the resolve request was found
+  // - FAILED_PRECONDITION: More than one service matching the resolve request was found
+  rpc ResolveService(ResolveServiceRequest) returns (ServiceLocation);
+}
+
+// Description of a registered service. This information can be used to display information to the user
+// about the service when services are being developed for a plugin architecture
+message ServiceDescriptor {
+  // Required. The user visible name of the service.
+  string display_name = 1;
+
+  // Optional. Url which provides descriptive information about the service
+  string description_url = 2;
+
+  // Required. The service interfaces provided by the service. This is the gRPC Full Name of the service.
+  // Registration can use the gRPC metadata to provide these names.
+  repeated string provided_interfaces = 3;
+
+  // Required. The "class" of a service. The value of this field should be unique for a given interface in provided_interfaces.
+  // In effect, the .proto service declaration defines the interface, and this field defines a class or concrete type of the interface.
+  string service_class = 4;
+
+  // Optional. Attributes that define additional metadata about the service. There are currently no system defined attributes.
+  repeated string attributes = 5;
+}
+
+// Represents the location of a service. The location generally includes the IP address and port number for the service
+// which can be used to establish communication with the service.
+message ServiceLocation {
+  // Required: The location of the service. This is typically an IP address or DNS name.
+  string location = 1;
+
+  // The port to use when communicating with the service for insecure HTTP connections. At least one of insecure_port or
+  // ssl_authenticated_port is required.
+  string insecure_port = 2;
+
+  // The port to use when communicating with the service for secure SSL authenticated connections. At least one of
+  // insecure_port or ssl_authenticated_port is required.
+  string ssl_authenticated_port = 3;
+}
+
+message RegisterServiceRequest {
+  // Required. The description of the service.
+  ServiceDescriptor service_description = 1;
+
+  // Required. The canonical location information for the service.
+  ServiceLocation location = 2;
+}
+
+message RegisterServiceResponse {
+  // ID that can be used to unregister the service.
+  string registration_id = 1;
+}
+
+message UnregisterServiceRequest {
+  // Required. The registration ID of the service that should be unregistered.
+  string registration_id = 1;
+}
+
+message UnregisterServiceResponse {
+}
+
+message EnumerateServicesRequest {
+  // Optional. The gRPC full name of the service interface that is needed. If empty,
+  // information for all services registered with the discovery service will be returned.
+  string provided_interface = 1;
+}
+
+message EnumerateServicesResponse {
+  // The list of available services which implement the specified service interface.
+  repeated ServiceDescriptor available_services = 1;
+}
+
+message ResolveServiceRequest {
+  // Required. This corresponds to the gRPC Full Name of the service and should match the information
+  // that was supplied in the RegisterServiceRequest message.
+  string provided_interface = 1;
+
+  // Optional. The service "class" that should be matched. If the value of this field is not specified and there
+  // is more than one matching service registered, an error is returned.
+  string service_class = 2;
+}
