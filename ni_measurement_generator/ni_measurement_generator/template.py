@@ -1,7 +1,6 @@
 """Utilizes command line args to create a measurement using template files."""
 import pathlib
 import re
-import uuid
 
 import click
 from mako import exceptions
@@ -73,14 +72,6 @@ def _resolve_service_class(service_class, display_name):
         return service_class
 
 
-def _check_guid(ctx, param, service_id):
-    try:
-        parsed_id = uuid.uuid4() if service_id is None else uuid.UUID(service_id)
-        return "{" + str(parsed_id).upper() + "}"
-    except ValueError:
-        raise ValueError(f"The {param} must be a valid GUID.")
-
-
 @click.command()
 @click.argument("display_name")
 @click.option(
@@ -104,12 +95,6 @@ def _check_guid(ctx, param, service_id):
     help="Service Class that the measurement belongs to. Default is <display_name>_Python.",
 )
 @click.option(
-    "-i",
-    "--service-id",
-    help="Unique GUID.",
-    callback=_check_guid,
-)
-@click.option(
     "-d",
     "--description",
     help="Description URL that contains information about the measurement.",
@@ -126,7 +111,6 @@ def create_measurement(
     product_type,
     ui_file,
     service_class,
-    service_id,
     description,
     directory_out,
 ):
@@ -169,7 +153,6 @@ def create_measurement(
         ui_file=ui_file,
         ui_file_type=ui_file_type,
         service_class=service_class,
-        service_id=service_id,
         description=description,
     )
     _create_file(
@@ -178,7 +161,6 @@ def create_measurement(
         directory_out,
         display_name=display_name,
         service_class=service_class,
-        service_id=service_id,
         description=description,
         ui_file_type=ui_file_type,
     )
