@@ -23,8 +23,7 @@ measurement_info = nims.MeasurementInfo(
 )
 
 service_info = nims.ServiceInfo(
-    service_class="SampleMeasurement_Python",
-    service_id="{E0095551-CB4B-4352-B65B-4280973694B2}",
+    service_class="ni.examples.SampleMeasurement_Python",
     description_url="https://www.ni.com/measurementservices/samplemeasurement.html",
 )
 
