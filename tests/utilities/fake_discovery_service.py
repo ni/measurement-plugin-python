@@ -8,7 +8,7 @@ class FakeRegistrationResponse:
     registration_id: str
 
 
-class FakeRegistryServiceStub:
+class FakeDiscoveryServiceStub:
     """Fake Registry Service Stub."""
 
     def RegisterService(self, request):  # noqa N802:inherited method names-autogen baseclass
@@ -24,7 +24,7 @@ class FakeRegistryServiceStub:
         pass
 
 
-class FakeRegistryServiceStubError(FakeRegistryServiceStub):
+class FakeDiscoveryServiceStubError(FakeDiscoveryServiceStub):
     """Fake Registry Service Stub that throws error to mimic unavailability of discovery service."""
 
     def RegisterService(self, request):  # noqa N802:inherited method names-autogen baseclass

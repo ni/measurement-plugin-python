@@ -6,15 +6,15 @@ from examples.sample_measurement import measurement
 from ni_measurement_service._internal.discovery_client import DiscoveryClient
 from ni_measurement_service._internal.service_manager import GrpcService
 from ni_measurement_service._internal.stubs import Measurement_pb2, Measurement_pb2_grpc
-from tests.utilities.fake_registry_service import (
-    FakeRegistryServiceStub,
-    FakeRegistryServiceStubError,
+from tests.utilities.fake_discovery_service import (
+    FakeDiscoveryServiceStub,
+    FakeDiscoveryServiceStubError,
 )
 
 
 def test___grpc_service___start_service___service_hosted():
     """Test to validate if measurement service is started."""
-    grpc_service = GrpcService(DiscoveryClient(FakeRegistryServiceStub()))
+    grpc_service = GrpcService(DiscoveryClient(FakeDiscoveryServiceStub()))
 
     port_number = grpc_service.start(
         measurement.measurement_info,
@@ -29,7 +29,7 @@ def test___grpc_service___start_service___service_hosted():
 
 def test___grpc_service_without_discovery_service___start_service___service_hosted():
     """Test to validate if measurement service start when the discovery service not available."""
-    grpc_service = GrpcService(DiscoveryClient(FakeRegistryServiceStubError()))
+    grpc_service = GrpcService(DiscoveryClient(FakeDiscoveryServiceStubError()))
 
     port_number = grpc_service.start(
         measurement.measurement_info,
@@ -44,7 +44,7 @@ def test___grpc_service_without_discovery_service___start_service___service_host
 
 def test___grpc_service_started___stop_service___service_stopped():
     """Test to validate if measurement service is stopped."""
-    grpc_service = GrpcService(DiscoveryClient(FakeRegistryServiceStub()))
+    grpc_service = GrpcService(DiscoveryClient(FakeDiscoveryServiceStub()))
     port_number = grpc_service.start(
         measurement.measurement_info,
         measurement.service_info,
