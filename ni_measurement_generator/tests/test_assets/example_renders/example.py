@@ -16,7 +16,6 @@ measurement_info = nims.MeasurementInfo(
 
 service_info = nims.ServiceInfo(
     service_class="SampleMeasurement_Python",
-    service_id="{E0095551-CB4B-4352-B65B-4280973694B2}",
     description_url="description",
 )
 

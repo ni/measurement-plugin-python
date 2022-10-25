@@ -4,7 +4,6 @@ isort:skip_file
 ---------------------------------------------------------------------
 ---------------------------------------------------------------------
 """
-import ServiceLocation_pb2
 import builtins
 import collections.abc
 import google.protobuf.descriptor
@@ -20,41 +19,43 @@ else:
 DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
 
 class ServiceDescriptor(google.protobuf.message.Message):
-    """Description of a registered service.  This information can be used to display
-    to the user information about the service when services are being developed for
-    a plug-in architecture
+    """Description of a registered service. This information can be used to display information to the user
+    about the service when services are being developed for a plugin architecture
     """
 
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
-    SERVICE_ID_FIELD_NUMBER: builtins.int
-    NAME_FIELD_NUMBER: builtins.int
+    DISPLAY_NAME_FIELD_NUMBER: builtins.int
     DESCRIPTION_URL_FIELD_NUMBER: builtins.int
+    PROVIDED_INTERFACES_FIELD_NUMBER: builtins.int
     SERVICE_CLASS_FIELD_NUMBER: builtins.int
     ATTRIBUTES_FIELD_NUMBER: builtins.int
-    service_id: builtins.str
-    name: builtins.str
-    """The user visible name of a service"""
+    display_name: builtins.str
+    """Required. The user visible name of the service."""
     description_url: builtins.str
-    """Url which provides descriptive information about the service"""
+    """Optional. Url which provides descriptive information about the service"""
+    @property
+    def provided_interfaces(
+        self,
+    ) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]:
+        """Required. The service interfaces provided by the service. This is the gRPC Full Name of the service.
+        Registration can use the gRPC metadata to provide these names.
+        """
     service_class: builtins.str
-    """The "class" of a service.  All services of the same class provide identical
-    functionality.  When a service interface is defined for a plug-in system
-    many services which provide different functionality may provide a service by that
-    interface. The class can be used to uniquely identify the functionality the service
-    provides.
+    """Required. The "class" of a service. The value of this field should be unique for a given interface in provided_interfaces.
+    In effect, the .proto service declaration defines the interface, and this field defines a class or concrete type of the interface.
     """
     @property
     def attributes(
         self,
     ) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]:
-        """Optional attributes of a service"""
+        """Optional. Attributes that define additional metadata about the service. There are currently no system defined attributes."""
     def __init__(
         self,
         *,
-        service_id: builtins.str = ...,
-        name: builtins.str = ...,
+        display_name: builtins.str = ...,
         description_url: builtins.str = ...,
+        provided_interfaces: collections.abc.Iterable[builtins.str] | None = ...,
         service_class: builtins.str = ...,
         attributes: collections.abc.Iterable[builtins.str] | None = ...,
     ) -> None: ...
@@ -65,44 +66,74 @@ class ServiceDescriptor(google.protobuf.message.Message):
             b"attributes",
             "description_url",
             b"description_url",
-            "name",
-            b"name",
+            "display_name",
+            b"display_name",
+            "provided_interfaces",
+            b"provided_interfaces",
             "service_class",
             b"service_class",
-            "service_id",
-            b"service_id",
         ],
     ) -> None: ...
 
 global___ServiceDescriptor = ServiceDescriptor
 
-class RegisterServiceRequest(google.protobuf.message.Message):
-    """Request used when registering a service"""
+class ServiceLocation(google.protobuf.message.Message):
+    """Represents the location of a service. The location generally includes the IP address and port number for the service
+    which can be used to establish communication with the service.
+    """
 
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
+    LOCATION_FIELD_NUMBER: builtins.int
+    INSECURE_PORT_FIELD_NUMBER: builtins.int
+    SSL_AUTHENTICATED_PORT_FIELD_NUMBER: builtins.int
+    location: builtins.str
+    """Required: The location of the service. This is typically an IP address or DNS name."""
+    insecure_port: builtins.str
+    """The port to use when communicating with the service for insecure HTTP connections. At least one of insecure_port or
+    ssl_authenticated_port is required.
+    """
+    ssl_authenticated_port: builtins.str
+    """The port to use when communicating with the service for secure SSL authenticated connections. At least one of
+    insecure_port or ssl_authenticated_port is required.
+    """
+    def __init__(
+        self,
+        *,
+        location: builtins.str = ...,
+        insecure_port: builtins.str = ...,
+        ssl_authenticated_port: builtins.str = ...,
+    ) -> None: ...
+    def ClearField(
+        self,
+        field_name: typing_extensions.Literal[
+            "insecure_port",
+            b"insecure_port",
+            "location",
+            b"location",
+            "ssl_authenticated_port",
+            b"ssl_authenticated_port",
+        ],
+    ) -> None: ...
+
+global___ServiceLocation = ServiceLocation
+
+class RegisterServiceRequest(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
     SERVICE_DESCRIPTION_FIELD_NUMBER: builtins.int
-    PROVIDED_SERVICES_FIELD_NUMBER: builtins.int
     LOCATION_FIELD_NUMBER: builtins.int
     @property
     def service_description(self) -> global___ServiceDescriptor:
-        """The service description"""
+        """Required. The description of the service."""
     @property
-    def provided_services(
-        self,
-    ) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]:
-        """The list of services the service instance provides.  These are the gRPC Full Name of the
-        service.  Registration can use the gRPC metadata to provide this name
-        """
-    @property
-    def location(self) -> ServiceLocation_pb2.ServiceLocation:
-        """The canonical location information for the service."""
+    def location(self) -> global___ServiceLocation:
+        """Required. The canonical location information for the service."""
     def __init__(
         self,
         *,
         service_description: global___ServiceDescriptor | None = ...,
-        provided_services: collections.abc.Iterable[builtins.str] | None = ...,
-        location: ServiceLocation_pb2.ServiceLocation | None = ...,
+        location: global___ServiceLocation | None = ...,
     ) -> None: ...
     def HasField(
         self,
@@ -113,25 +144,18 @@ class RegisterServiceRequest(google.protobuf.message.Message):
     def ClearField(
         self,
         field_name: typing_extensions.Literal[
-            "location",
-            b"location",
-            "provided_services",
-            b"provided_services",
-            "service_description",
-            b"service_description",
+            "location", b"location", "service_description", b"service_description"
         ],
     ) -> None: ...
 
 global___RegisterServiceRequest = RegisterServiceRequest
 
 class RegisterServiceResponse(google.protobuf.message.Message):
-    """Response to registering a service"""
-
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
     REGISTRATION_ID_FIELD_NUMBER: builtins.int
     registration_id: builtins.str
-    """ID that can be used to unregister the service"""
+    """ID that can be used to unregister the service."""
     def __init__(
         self,
         *,
@@ -144,13 +168,11 @@ class RegisterServiceResponse(google.protobuf.message.Message):
 global___RegisterServiceResponse = RegisterServiceResponse
 
 class UnregisterServiceRequest(google.protobuf.message.Message):
-    """Service unregistration request"""
-
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
     REGISTRATION_ID_FIELD_NUMBER: builtins.int
     registration_id: builtins.str
-    """The ID of the registered service to unregister"""
+    """Required. The registration ID of the service that should be unregistered."""
     def __init__(
         self,
         *,
@@ -163,8 +185,6 @@ class UnregisterServiceRequest(google.protobuf.message.Message):
 global___UnregisterServiceRequest = UnregisterServiceRequest
 
 class UnregisterServiceResponse(google.protobuf.message.Message):
-    """Response for registering a service"""
-
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
     def __init__(
@@ -174,29 +194,25 @@ class UnregisterServiceResponse(google.protobuf.message.Message):
 global___UnregisterServiceResponse = UnregisterServiceResponse
 
 class EnumerateServicesRequest(google.protobuf.message.Message):
-    """Requested used when enumerating a service"""
-
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
-    REQUIRED_SERVICE_FIELD_NUMBER: builtins.int
-    required_service: builtins.str
-    """The gRPC full name of the service interface that is needed
-    Caller can use the gRPC metadata to provide this name
+    PROVIDED_INTERFACE_FIELD_NUMBER: builtins.int
+    provided_interface: builtins.str
+    """Optional. The gRPC full name of the service interface that is needed. If empty,
+    information for all services registered with the discovery service will be returned.
     """
     def __init__(
         self,
         *,
-        required_service: builtins.str = ...,
+        provided_interface: builtins.str = ...,
     ) -> None: ...
     def ClearField(
-        self, field_name: typing_extensions.Literal["required_service", b"required_service"]
+        self, field_name: typing_extensions.Literal["provided_interface", b"provided_interface"]
     ) -> None: ...
 
 global___EnumerateServicesRequest = EnumerateServicesRequest
 
 class EnumerateServicesResponse(google.protobuf.message.Message):
-    """Response used when enumerating services"""
-
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
     AVAILABLE_SERVICES_FIELD_NUMBER: builtins.int
@@ -206,9 +222,7 @@ class EnumerateServicesResponse(google.protobuf.message.Message):
     ) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[
         global___ServiceDescriptor
     ]:
-        """The list of available services which implement the specified service
-        interface
-        """
+        """The list of available services which implement the specified service interface."""
     def __init__(
         self,
         *,
@@ -221,62 +235,29 @@ class EnumerateServicesResponse(google.protobuf.message.Message):
 global___EnumerateServicesResponse = EnumerateServicesResponse
 
 class ResolveServiceRequest(google.protobuf.message.Message):
-    """Request used when resolving for a specific service instance"""
-
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
-    REQUEST_DATA_LOCATION_FIELD_NUMBER: builtins.int
-    REQUIRED_SERVICE_CLASS_FIELD_NUMBER: builtins.int
-    request_data_location: builtins.str
-    """The location of the caller / consumer of the data provided by the
-    service.
+    PROVIDED_INTERFACE_FIELD_NUMBER: builtins.int
+    SERVICE_CLASS_FIELD_NUMBER: builtins.int
+    provided_interface: builtins.str
+    """Required. This corresponds to the gRPC Full Name of the service and should match the information
+    that was supplied in the RegisterServiceRequest message.
     """
-    required_service_class: builtins.str
-    """The service "class" that is required"""
+    service_class: builtins.str
+    """Optional. The service "class" that should be matched. If the value of this field is not specified and there
+    is more than one matching service registered, an error is returned.
+    """
     def __init__(
         self,
         *,
-        request_data_location: builtins.str = ...,
-        required_service_class: builtins.str = ...,
+        provided_interface: builtins.str = ...,
+        service_class: builtins.str = ...,
     ) -> None: ...
     def ClearField(
         self,
         field_name: typing_extensions.Literal[
-            "request_data_location",
-            b"request_data_location",
-            "required_service_class",
-            b"required_service_class",
+            "provided_interface", b"provided_interface", "service_class", b"service_class"
         ],
     ) -> None: ...
 
 global___ResolveServiceRequest = ResolveServiceRequest
-
-class ResolveMonikerEndpointRequest(google.protobuf.message.Message):
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
-
-    REQUEST_LOCATION_FIELD_NUMBER: builtins.int
-    MONIKER_LOCATION_FIELD_NUMBER: builtins.int
-    request_location: builtins.str
-    """The location, IP Address, which will be doing the communication
-    with the data endpoint
-    """
-    @property
-    def moniker_location(self) -> ServiceLocation_pb2.ServiceLocation:
-        """The location of the source / sink of the data"""
-    def __init__(
-        self,
-        *,
-        request_location: builtins.str = ...,
-        moniker_location: ServiceLocation_pb2.ServiceLocation | None = ...,
-    ) -> None: ...
-    def HasField(
-        self, field_name: typing_extensions.Literal["moniker_location", b"moniker_location"]
-    ) -> builtins.bool: ...
-    def ClearField(
-        self,
-        field_name: typing_extensions.Literal[
-            "moniker_location", b"moniker_location", "request_location", b"request_location"
-        ],
-    ) -> None: ...
-
-global___ResolveMonikerEndpointRequest = ResolveMonikerEndpointRequest

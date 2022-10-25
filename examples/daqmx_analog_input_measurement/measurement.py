@@ -22,8 +22,7 @@ measurement_info = nims.MeasurementInfo(
 )
 
 service_info = nims.ServiceInfo(
-    service_class="DAQmx_Analog_Input_Measurement_Python",
-    service_id="{D8B7FF34-3532-4604-9EEE-B5AFC43B7909}",
+    service_class="ni.examples.DAQmx_Analog_Input_Measurement_Python",
     description_url="https://www.ni.com/measurementservices/daqmxmeasurement.html",
 )
 

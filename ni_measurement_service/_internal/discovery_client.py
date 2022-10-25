@@ -4,9 +4,12 @@ import logging
 
 import grpc
 
-from ni_measurement_service._internal.stubs import DiscoveryServices_pb2
-from ni_measurement_service._internal.stubs import DiscoveryServices_pb2_grpc
-from ni_measurement_service._internal.stubs import ServiceLocation_pb2
+from ni_measurement_service._internal.stubs.ni.measurements.discovery.v1 import (
+    discovery_service_pb2,
+)
+from ni_measurement_service._internal.stubs.ni.measurements.discovery.v1 import (
+    discovery_service_pb2_grpc,
+)
 from ni_measurement_service.measurement.info import MeasurementInfo
 from ni_measurement_service.measurement.info import ServiceInfo
 
@@ -21,25 +24,24 @@ class DiscoveryClient:
 
     Attributes
     ----------
-        registryServiceStub (RegistryServiceStub): The gRPC stub to interact with discovery service.
+        stub (DiscoveryServiceStub): The gRPC stub to interact with discovery
+        service.
 
         registration_id(string): The ID from discovery service upon successful registration.
 
     """
 
-    def __init__(
-        self, registry_service_stub: DiscoveryServices_pb2_grpc.RegistryServiceStub = None
-    ):
+    def __init__(self, stub: discovery_service_pb2_grpc.DiscoveryServiceStub = None):
         """Initialise the Discovery Client with provided registry service stub.
 
         Args:
         ----
-            registry_service_stub (RegistryServiceStub, optional):The gRPC stub to interact with
-            discovery service.Defaults to None.
+            stub (DiscoveryServiceStub, optional): The gRPC stub to interact with discovery
+            service.Defaults to None.
 
         """
         channel = grpc.insecure_channel(_DISCOVERY_SERVICE_ADDRESS)
-        self.stub = registry_service_stub or DiscoveryServices_pb2_grpc.RegistryServiceStub(channel)
+        self.stub = stub or discovery_service_pb2_grpc.DiscoveryServiceStub(channel)
         self.registration_id = ""
 
     def register_measurement_service(
@@ -63,21 +65,20 @@ class DiscoveryClient:
         try:
 
             # Service Location
-            service_location = ServiceLocation_pb2.ServiceLocation()
+            service_location = discovery_service_pb2.ServiceLocation()
             service_location.location = "localhost"
             service_location.insecure_port = service_port
             # Service Descriptor
-            service_descriptor = DiscoveryServices_pb2.ServiceDescriptor()
-            service_descriptor.service_id = service_info.service_id
-            service_descriptor.name = measurement_info.display_name
+            service_descriptor = discovery_service_pb2.ServiceDescriptor()
+            service_descriptor.display_name = measurement_info.display_name
             service_descriptor.service_class = service_info.service_class
             service_descriptor.description_url = service_info.description_url
+            service_descriptor.provided_interfaces.append(_PROVIDED_MEASUREMENT_SERVICE)
 
             # Registration Request Creation
-            request = DiscoveryServices_pb2.RegisterServiceRequest(
+            request = discovery_service_pb2.RegisterServiceRequest(
                 location=service_location, service_description=service_descriptor
             )
-            request.provided_services.append(_PROVIDED_MEASUREMENT_SERVICE)
             # Registration RPC Call
             register_response = self.stub.RegisterService(request)
             self.registration_id = register_response.registration_id
@@ -105,7 +106,7 @@ class DiscoveryClient:
         try:
             if self.registration_id:
                 # Un-registration Request Creation
-                request = DiscoveryServices_pb2.UnregisterServiceRequest(
+                request = discovery_service_pb2.UnregisterServiceRequest(
                     registration_id=self.registration_id
                 )
                 # Un-registration RPC Call

@@ -1,11 +1,10 @@
 {
   "services": [
     {
-      "id": "{B290B571-CB76-426F-9ACC-5168DC1B027B}",
-      "name": "DCMeasurement(Py_VI)",
-      "serviceClass": "DCMeasurement_Python_VI",
+      "displayName": "DCMeasurement(Py_VI)",
+      "serviceClass": "ni.examples.DCMeasurement_Python_VI",
       "descriptionUrl": "https://www.ni.com/measurementservices/dcmeasurement.html",
-      "providedServices": [ "ni.measurements.v1.MeasurementService" ],
+      "providedInterfaces": [ "ni.measurements.v1.MeasurementService" ],
       "path": "start.bat",
       "attributes": [ "UserInterfaceType=LabVIEW" ]
     }
