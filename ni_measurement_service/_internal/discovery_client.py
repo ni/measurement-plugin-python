@@ -2,8 +2,8 @@
 """
 import json
 import logging
-import pathlib
 import os
+import pathlib
 import platform
 import typing
 
@@ -142,7 +142,9 @@ def _get_discovery_service_address() -> str:
             key_json = json.load(key_file)
             return "localhost:" + key_json["InsecurePort"]
     except Exception as e:
-        raise RuntimeError("Failed to read discovery service port number. Ensure the discovery service is running.") from e
+        raise RuntimeError(
+            "Failed to read discovery service port number. Ensure the discovery service is running."
+        ) from e
 
 
 def _get_key_file_path(cluster_id: typing.Optional[str] = None) -> pathlib.Path:
@@ -166,8 +168,10 @@ def _get_key_file_directory() -> pathlib.Path:
 
 def _open_key_file(path: str) -> typing.TextIO:
     if platform.system() == "Windows":
-        # Use the Win32 API to specify the share mode. Otherwise, opening the file throws PermissionError due to a sharing violation.
-        # This is a workaround for https://github.com/python/cpython/issues/59449 (Support for opening files with FILE_SHARE_DELETE on Windows).
+        # Use the Win32 API to specify the share mode. Otherwise, opening the file throws
+        # PermissionError due to a sharing violation. This is a workaround for
+        # https://github.com/python/cpython/issues/59449
+        # (Support for opening files with FILE_SHARE_DELETE on Windows).
         fh = win32file.CreateFile(
             str(path),
             win32file.GENERIC_READ,
