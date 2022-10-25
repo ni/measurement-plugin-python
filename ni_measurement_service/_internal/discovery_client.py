@@ -4,7 +4,7 @@ import json
 import logging
 import os
 import pathlib
-import platform
+import sys
 import typing
 
 import grpc
@@ -18,7 +18,7 @@ from ni_measurement_service._internal.stubs.ni.measurements.discovery.v1 import 
 from ni_measurement_service.measurement.info import MeasurementInfo
 from ni_measurement_service.measurement.info import ServiceInfo
 
-if platform.system() == "Windows":
+if sys.platform == "win32":
     import msvcrt
     import win32con
     import win32file
@@ -154,7 +154,7 @@ def _get_key_file_path(cluster_id: typing.Optional[str] = None) -> pathlib.Path:
 
 
 def _get_key_file_directory() -> pathlib.Path:
-    if platform.system() == "Windows":
+    if sys.platform == "win32":
         return (
             pathlib.Path(os.environ["ProgramData"])
             / "National Instruments"
@@ -167,7 +167,7 @@ def _get_key_file_directory() -> pathlib.Path:
 
 
 def _open_key_file(path: str) -> typing.TextIO:
-    if platform.system() == "Windows":
+    if sys.platform == "win32":
         # Use the Win32 API to specify the share mode. Otherwise, opening the file throws
         # PermissionError due to a sharing violation. This is a workaround for
         # https://github.com/python/cpython/issues/59449
