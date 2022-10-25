@@ -73,7 +73,7 @@ def measure(
             session_to_abort.abort()
 
     dc_measurement_service.context.add_cancel_callback(cancel_callback)
-    time_remaining = dc_measurement_service.context.time_remaining()
+    time_remaining = dc_measurement_service.context.time_remaining
 
     with nidcpower.Session(resource_name=resource_name) as session:
         # Configure the session.

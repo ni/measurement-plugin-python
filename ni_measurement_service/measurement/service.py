@@ -11,9 +11,15 @@ from ni_measurement_service.measurement.info import MeasurementInfo, ServiceInfo
 class MeasurementContext:
     """Proxy for the Measurement Service's context-local state."""
 
-    def get_grpc_context(self):
+    @property
+    def grpc_context(self):
         """Get the context for the RPC."""
-        return grpc_servicer.measurement_service_context.get().get_grpc_context()
+        return grpc_servicer.measurement_service_context.get().grpc_context
+
+    @property
+    def pin_map_context(self):
+        """Get the pin map context for the RPC."""
+        return grpc_servicer.measurement_service_context.get().pin_map_context
 
     def add_cancel_callback(self, cancel_callback: Callable):
         """Add a callback which is invoked when the RPC is canceled."""
@@ -23,9 +29,10 @@ class MeasurementContext:
         """Cancel the RPC."""
         grpc_servicer.measurement_service_context.get().cancel()
 
+    @property
     def time_remaining(self):
         """Get the time remaining for the RPC."""
-        return grpc_servicer.measurement_service_context.get().time_remaining()
+        return grpc_servicer.measurement_service_context.get().time_remaining
 
     def abort(self, code, details):
         """Aborts the RPC."""
@@ -100,7 +107,7 @@ class MeasurementService:
         """
         grpc_field_type, repeated = type.value
         parameter = parameter_metadata.ParameterMetadata(
-            display_name, grpc_field_type, repeated, default_value  # type: ignore[arg-type]
+            display_name, grpc_field_type, repeated, default_value
         )
         parameter_metadata.validate_default_value_type(parameter)
         self.configuration_parameter_list.append(parameter)
@@ -127,7 +134,7 @@ class MeasurementService:
         """
         grpc_field_type, repeated = type.value
         parameter = parameter_metadata.ParameterMetadata(
-            display_name, grpc_field_type, repeated, None  # type: ignore[arg-type]
+            display_name, grpc_field_type, repeated, None
         )
         self.output_parameter_list.append(parameter)
 

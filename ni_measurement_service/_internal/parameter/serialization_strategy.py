@@ -175,12 +175,14 @@ class Context:
     }
 
     @staticmethod
-    def get_encoder(type: type_pb2.Field, repeated: bool) -> Callable[[int], Callable]:
+    def get_encoder(
+        type: type_pb2.Field.Kind.ValueType, repeated: bool
+    ) -> Callable[[int], Callable]:
         """Get the Scalar Encoder or Vector Encoder for the specified type based on repeated bool.
 
         Args
         ----
-            type (type_pb2.Field): Type of the Parameter.
+            type (type_pb2.Field.Kind.ValueType): Type of the Parameter.
 
             repeated (bool): Boolean that represents if the Parameter is repeated or not.
 
@@ -195,18 +197,20 @@ class Context:
         """
         if type not in Context._FIELD_TYPE_TO_ENCODER_MAPPING:
             raise Exception(f"Error can not encode type '{type}'")
-        scalar, array = Context._FIELD_TYPE_TO_ENCODER_MAPPING.get(type)  # type: ignore[call-overload]
+        scalar, array = Context._FIELD_TYPE_TO_ENCODER_MAPPING[type]
         if repeated:
             return array
         return scalar
 
     @staticmethod
-    def get_decoder(type: type_pb2.Field, repeated: bool) -> Callable[[int, str], Callable]:
+    def get_decoder(
+        type: type_pb2.Field.Kind.ValueType, repeated: bool
+    ) -> Callable[[int, str], Callable]:
         """Get the Scalar Decoder or Vector Decoder for the specified type based on repeated bool.
 
         Args
         ----
-            type (type_pb2.Field): Type of the Parameter.
+            type (type_pb2.Field.Kind.ValueType): Type of the Parameter.
 
             repeated (bool): Boolean that represents if the Parameter is repeated or not.
 
@@ -221,18 +225,18 @@ class Context:
         """
         if type not in Context._FIELD_TYPE_TO_DECODER_MAPPING:
             raise Exception(f"Error can not decode type '{type}'")
-        scalar, array = Context._FIELD_TYPE_TO_DECODER_MAPPING.get(type)  # type: ignore[call-overload]
+        scalar, array = Context._FIELD_TYPE_TO_DECODER_MAPPING[type]
         if repeated:
             return array
         return scalar
 
     @staticmethod
-    def get_type_default(type: type_pb2.Field, repeated: bool) -> Any:
+    def get_type_default(type: type_pb2.Field.Kind.ValueType, repeated: bool) -> Any:
         """Get the Type default.
 
         Args
         ----
-            type (type_pb2.Field): Type of the Parameter.
+            type (type_pb2.Field.Kind.ValueType): Type of the Parameter.
 
             repeated (bool): Boolean that represents if the Parameter is repeated or not.
 
@@ -243,5 +247,5 @@ class Context:
         """
         if repeated:
             return list()
-        type_default_value = Context._TYPE_DEFAULT_MAPPING.get(type)  # type: ignore[call-overload]
+        type_default_value = Context._TYPE_DEFAULT_MAPPING.get(type)
         return type_default_value
