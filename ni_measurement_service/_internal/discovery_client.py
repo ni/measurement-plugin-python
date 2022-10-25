@@ -1,6 +1,11 @@
 """ Contains API to register and un-register measurement service with discovery service.
 """
+import json
 import logging
+import pathlib
+import os
+import platform
+import typing
 
 import grpc
 
@@ -13,7 +18,12 @@ from ni_measurement_service._internal.stubs.ni.measurements.discovery.v1 import 
 from ni_measurement_service.measurement.info import MeasurementInfo
 from ni_measurement_service.measurement.info import ServiceInfo
 
-_DISCOVERY_SERVICE_ADDRESS = "localhost:42000"
+if platform.system() == "Windows":
+    import msvcrt
+    import win32con
+    import win32file
+
+
 _PROVIDED_MEASUREMENT_SERVICE = "ni.measurements.v1.MeasurementService"
 
 _logger = logging.getLogger(__name__)
@@ -40,7 +50,7 @@ class DiscoveryClient:
             service.Defaults to None.
 
         """
-        channel = grpc.insecure_channel(_DISCOVERY_SERVICE_ADDRESS)
+        channel = grpc.insecure_channel(_get_discovery_service_address())
         self.stub = stub or discovery_service_pb2_grpc.DiscoveryServiceStub(channel)
         self.registration_id = ""
 
@@ -123,3 +133,52 @@ class DiscoveryClient:
             _logger.exception("Error in un-registering with discovery service.")
             return False
         return True
+
+
+def _get_discovery_service_address() -> str:
+    key_file_path = _get_key_file_path()
+    try:
+        with _open_key_file(str(key_file_path)) as key_file:
+            key_json = json.load(key_file)
+            return "localhost:" + key_json["InsecurePort"]
+    except Exception as e:
+        raise RuntimeError("Failed to read discovery service port number. Ensure the discovery service is running.") from e
+
+
+def _get_key_file_path(cluster_id: typing.Optional[str] = None) -> pathlib.Path:
+    if cluster_id is not None:
+        return _get_key_file_directory() / f"DiscoveryService_{cluster_id}.json"
+    return _get_key_file_directory() / "DiscoveryService.json"
+
+
+def _get_key_file_directory() -> pathlib.Path:
+    if platform.system() == "Windows":
+        return (
+            pathlib.Path(os.getenv("ProgramData"))
+            / "National Instruments"
+            / "Measurement Framework"
+            / "Discovery"
+            / "v1"
+        )
+    else:
+        raise NotImplementedError("Platform not supported")
+
+
+def _open_key_file(path: str) -> typing.TextIO:
+    if platform.system() == "Windows":
+        # Use the Win32 API to specify the share mode. Otherwise, opening the file throws PermissionError due to a sharing violation.
+        # This is a workaround for https://github.com/python/cpython/issues/59449 (Support for opening files with FILE_SHARE_DELETE on Windows).
+        fh = win32file.CreateFile(
+            str(path),
+            win32file.GENERIC_READ,
+            win32file.FILE_SHARE_READ | win32file.FILE_SHARE_WRITE | win32file.FILE_SHARE_DELETE,
+            None,
+            win32con.OPEN_EXISTING,
+            0,
+            None,
+        )
+        fd = msvcrt.open_osfhandle(fh.handle, os.O_RDONLY | os.O_TEXT)
+        fh.Detach()
+        return os.fdopen(fd, "r", encoding="utf-8-sig")
+    else:
+        return open(path, "r")
