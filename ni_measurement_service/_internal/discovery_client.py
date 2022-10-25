@@ -154,7 +154,7 @@ def _get_key_file_path(cluster_id: typing.Optional[str] = None) -> pathlib.Path:
 def _get_key_file_directory() -> pathlib.Path:
     if platform.system() == "Windows":
         return (
-            pathlib.Path(os.getenv("ProgramData"))
+            pathlib.Path(os.environ["ProgramData"])
             / "National Instruments"
             / "Measurement Framework"
             / "Discovery"
