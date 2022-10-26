@@ -1,4 +1,4 @@
-<%page args="display_name, version, measurement_type, product_type, ui_file, ui_file_type, service_class, description"/>\
+<%page args="display_name, version, ui_file, ui_file_type, service_class, description"/>\
 \
 """A default measurement with an array in and out."""
 import logging
@@ -11,8 +11,6 @@ import ni_measurement_service as nims
 measurement_info = nims.MeasurementInfo(
     display_name="${display_name}",
     version="${version}",
-    measurement_type="${measurement_type}",
-    product_type="${product_type}",
     ui_file_paths=[pathlib.Path(__file__).resolve().parent / "${ui_file}"],
 )
 
