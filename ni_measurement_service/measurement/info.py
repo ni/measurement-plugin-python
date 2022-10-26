@@ -19,20 +19,12 @@ class MeasurementInfo(NamedTuple):
         version (str): The measurement version that helps to
         maintain versions of a measurement in future.
 
-        measurement_type (str): Represents category of measurement for the ProductType,
-        e.g. AC or DC measurements.
-
-        product_type (str): Represents type of the DUT,
-        e.g. ADC, LDO.
-
         ui_file_paths (list): Absolute paths of the UI file(s) linked to the measurement.
 
     """
 
     display_name: str
     version: str
-    measurement_type: str
-    product_type: str
     ui_file_paths: typing.List[Path]
 
 
