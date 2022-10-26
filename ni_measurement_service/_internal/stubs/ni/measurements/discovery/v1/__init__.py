@@ -1,1 +1,1 @@
-""" Auto generated gRPC files."""
+"""Auto generated gRPC files."""
