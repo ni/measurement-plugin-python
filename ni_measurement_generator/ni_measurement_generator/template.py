@@ -81,10 +81,6 @@ def _resolve_service_class(service_class, display_name):
     default="1.0.0.0",
 )
 @click.option(
-    "--measurement-type", help="Service-defined Measurement type", default="MeasurementType"
-)
-@click.option("--product-type", help="Service-defined Product type", default="ProductType")
-@click.option(
     "-u",
     "--ui-file",
     help="Name of the UI File, Default is <display_name>.measui.",
@@ -107,8 +103,6 @@ def _resolve_service_class(service_class, display_name):
 def create_measurement(
     display_name,
     measurement_version,
-    measurement_type,
-    product_type,
     ui_file,
     service_class,
     description,
@@ -124,12 +118,6 @@ def create_measurement(
     VERSION: The measurement version that helps to maintain versions of a measurement in future.
     Should be formatted like x.x.x.x
     e.g. 0.2.6.8
-
-    MEASUREMENT_TYPE: Represents category of measurement for the ProductType,
-    e.g. AC or DC measurements.
-
-    PRODUCT_TYPE: Represents type of the DUT,
-    e.g. ADC, LDO.
     """
     service_class = _resolve_service_class(service_class, display_name)
     display_name_for_filenames = re.sub(r"\s+", "", display_name)
@@ -148,8 +136,6 @@ def create_measurement(
         directory_out,
         display_name=display_name,
         version=measurement_version,
-        measurement_type=measurement_type,
-        product_type=product_type,
         ui_file=ui_file,
         ui_file_type=ui_file_type,
         service_class=service_class,
