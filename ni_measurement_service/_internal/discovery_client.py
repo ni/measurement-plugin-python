@@ -195,7 +195,7 @@ def _open_key_file(path: str) -> typing.TextIO:
         # (Support for opening files with FILE_SHARE_DELETE on Windows).
         try:
             win32_file_handle = win32file.CreateFile(
-                str(path),
+                path,
                 win32file.GENERIC_READ,
                 win32file.FILE_SHARE_READ
                 | win32file.FILE_SHARE_WRITE
@@ -207,12 +207,12 @@ def _open_key_file(path: str) -> typing.TextIO:
             )
         except win32file.error as e:
             if e.winerror == winerror.ERROR_FILE_NOT_FOUND:
-                raise FileNotFoundError(errno.ENOENT, e.strerror, str(path)) from e
+                raise FileNotFoundError(errno.ENOENT, e.strerror, path) from e
             elif (
                 e.winerror == winerror.ERROR_ACCESS_DENIED
                 or e.winerror == winerror.ERROR_SHARING_VIOLATION
             ):
-                raise PermissionError(errno.EACCES, e.strerror, str(path)) from e
+                raise PermissionError(errno.EACCES, e.strerror, path) from e
             raise
 
         # The CRT file descriptor takes ownership of the Win32 file handle.
