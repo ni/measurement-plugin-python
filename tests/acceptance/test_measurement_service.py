@@ -9,8 +9,12 @@ import pytest
 from examples.sample_measurement import measurement
 from google.protobuf import any_pb2
 
-from ni_measurement_service._internal.stubs import Measurement_pb2
-from ni_measurement_service._internal.stubs import Measurement_pb2_grpc
+from ni_measurement_service._internal.stubs.ni.measurements.measurementservice import (
+    measurement_service_pb2,
+)
+from ni_measurement_service._internal.stubs.ni.measurements.measurementservice import (
+    measurement_service_pb2_grpc,
+)
 from tests.assets import sample_measurement_test_pb2
 
 
@@ -19,8 +23,8 @@ def test___measurement_service___get_metadata_rpc_call___returns_metadata():
     measurement_service_port = _host_service()
 
     with _create_channel(measurement_service_port) as channel:
-        stub = Measurement_pb2_grpc.MeasurementServiceStub(channel)
-        get_metadata_response = stub.GetMetadata(Measurement_pb2.GetMetadataRequest())
+        stub = measurement_service_pb2_grpc.MeasurementServiceStub(channel)
+        get_metadata_response = stub.GetMetadata(measurement_service_pb2.GetMetadataRequest())
 
     _validate_metadata_response(get_metadata_response)
 
@@ -35,13 +39,13 @@ def test___measurement_service___measure_rpc_call___returns_output(
     measurement_service_port = _host_service()
 
     with _create_channel(measurement_service_port) as channel:
-        stub = Measurement_pb2_grpc.MeasurementServiceStub(channel)
+        stub = measurement_service_pb2_grpc.MeasurementServiceStub(channel)
         request = _get_sample_measurement_measure_request(
             float_in, double_array_in, bool_in, string_in
         )
         measure_response = stub.Measure(request)
 
-    serialized_parameter = _get_serialized_measurement_parameters(
+    serialized_parameter = _get_serialized_measurement_signature(
         float_in, double_array_in, bool_in, string_in
     )
     assert measure_response.outputs.value == serialized_parameter
@@ -57,13 +61,13 @@ def test___measurement_service___measure_with_large_array___returns_output(doubl
     string_in = "InputString"
 
     with _create_channel(measurement_service_port) as channel:
-        stub = Measurement_pb2_grpc.MeasurementServiceStub(channel)
+        stub = measurement_service_pb2_grpc.MeasurementServiceStub(channel)
         request = _get_sample_measurement_measure_request(
             float_in, double_array_in, bool_in, string_in
         )
         measure_response = stub.Measure(request)
 
-    serialized_parameter = _get_serialized_measurement_parameters(
+    serialized_parameter = _get_serialized_measurement_signature(
         float_in, double_array_in, bool_in, string_in
     )
     assert measure_response.outputs.value == serialized_parameter
@@ -86,7 +90,7 @@ def _create_channel(port):
 
 def _get_sample_measurement_measure_request(float_in, double_array_in, bool_in, string_in):
 
-    request = Measurement_pb2.MeasureRequest(
+    request = measurement_service_pb2.MeasureRequest(
         configuration_parameters=_get_configuration_parameters(
             float_in, double_array_in, bool_in, string_in
         )
@@ -95,7 +99,7 @@ def _get_sample_measurement_measure_request(float_in, double_array_in, bool_in, 
 
 
 def _get_configuration_parameters(float_in, double_array_in, bool_in, string_in):
-    serialized_parameter = _get_serialized_measurement_parameters(
+    serialized_parameter = _get_serialized_measurement_signature(
         float_in, double_array_in, bool_in, string_in
     )
     config_params_any = any_pb2.Any()
@@ -103,7 +107,7 @@ def _get_configuration_parameters(float_in, double_array_in, bool_in, string_in)
     return config_params_any
 
 
-def _get_serialized_measurement_parameters(float_in, double_array_in, bool_in, string_in):
+def _get_serialized_measurement_signature(float_in, double_array_in, bool_in, string_in):
     config_params = sample_measurement_test_pb2.SampleMeasurementParameter()
     config_params.float_in = float_in
     config_params.double_array_in.extend(double_array_in)
@@ -119,22 +123,20 @@ def _get_serialized_measurement_parameters(float_in, double_array_in, bool_in, s
 def _validate_metadata_response(get_metadata_response):
     assert get_metadata_response.measurement_details.display_name == "SampleMeasurement"
     assert get_metadata_response.measurement_details.version == "0.1.0.0"
-    assert get_metadata_response.measurement_details.measurement_type == "Sample"
-    assert get_metadata_response.measurement_details.product_type == "Sample"
 
     assert (
-        get_metadata_response.measurement_parameters.configuration_parameters_messagetype
+        get_metadata_response.measurement_signature.configuration_parameters_message_type
         == "ni.measurements.v1.MeasurementConfigurations"
     )
     assert (
-        get_metadata_response.measurement_parameters.outputs_message_type
+        get_metadata_response.measurement_signature.outputs_message_type
         == "ni.measurements.v1.MeasurementOutputs"
     )
-    assert len(get_metadata_response.measurement_parameters.configuration_parameters) == 4
-    assert len(get_metadata_response.measurement_parameters.outputs) == 4
+    assert len(get_metadata_response.measurement_signature.configuration_parameters) == 4
+    assert len(get_metadata_response.measurement_signature.outputs) == 4
 
     assert len(get_metadata_response.user_interface_details) == 2
     for details in get_metadata_response.user_interface_details:
-        url = urllib.parse.urlparse(details.configuration_ui_url)
+        url = urllib.parse.urlparse(details.file_url)
         localpath = urllib.request.url2pathname(url.path)
         assert path.exists(localpath)
