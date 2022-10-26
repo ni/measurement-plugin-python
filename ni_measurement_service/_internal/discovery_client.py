@@ -183,7 +183,7 @@ def _open_key_file(path: str) -> typing.TextIO:
         # PermissionError due to a sharing violation. This is a workaround for
         # https://github.com/python/cpython/issues/59449
         # (Support for opening files with FILE_SHARE_DELETE on Windows).
-        fh = win32file.CreateFile(
+        win32_file_handle = win32file.CreateFile(
             str(path),
             win32file.GENERIC_READ,
             win32file.FILE_SHARE_READ | win32file.FILE_SHARE_WRITE | win32file.FILE_SHARE_DELETE,
@@ -192,8 +192,14 @@ def _open_key_file(path: str) -> typing.TextIO:
             0,
             None,
         )
-        fd = msvcrt.open_osfhandle(fh.handle, os.O_RDONLY | os.O_TEXT)
-        fh.Detach()
-        return os.fdopen(fd, "r", encoding="utf-8-sig")
+
+        # The CRT file descriptor takes ownership of the Win32 file handle.
+        # os.O_TEXT is unnecessary because Python handles newline conversion.
+        crt_file_descriptor = msvcrt.open_osfhandle(win32_file_handle.handle, os.O_RDONLY)
+        win32_file_handle.Detach()
+
+        # The Python file object takes ownership of the CRT file descriptor. Closing the Python
+        # file object closes the underlying Win32 file handle.
+        return os.fdopen(crt_file_descriptor, "r", encoding="utf-8-sig")
     else:
         return open(path, "r")
