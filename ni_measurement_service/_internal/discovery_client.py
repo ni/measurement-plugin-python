@@ -112,7 +112,9 @@ class DiscoveryClient:
                 _logger.exception("Error in registering with discovery service.")
             return False
         except FileNotFoundError:
-            _logger.error("Unable to register with discovery service. Possible reason: discovery service not running.")
+            _logger.error(
+                "Unable to register with discovery service. Possible reason: discovery service not running."
+            )
         except Exception:
             _logger.exception("Error in registering with discovery service.")
             return False
@@ -139,7 +141,7 @@ class DiscoveryClient:
                 _logger.info("Successfully unregistered with discovery service.")
             else:
                 _logger.info("Not registered with discovery service.")
-        except grpc.RpcError:
+        except grpc.RpcError as e:
             if e.code() == grpc.StatusCode.UNAVAILABLE:
                 _logger.error(
                     "Unable to unregister with discovery service. Possible reason: discovery service not available."
@@ -148,7 +150,9 @@ class DiscoveryClient:
                 _logger.exception("Error in unregistering with discovery service.")
             return False
         except FileNotFoundError:
-            _logger.error("Unable to unregister with discovery service. Possible reason: discovery service not running.")
+            _logger.error(
+                "Unable to unregister with discovery service. Possible reason: discovery service not running."
+            )
         except Exception:
             _logger.exception("Error in unregistering with discovery service.")
             return False
@@ -193,7 +197,9 @@ def _open_key_file(path: str) -> typing.TextIO:
             win32_file_handle = win32file.CreateFile(
                 str(path),
                 win32file.GENERIC_READ,
-                win32file.FILE_SHARE_READ | win32file.FILE_SHARE_WRITE | win32file.FILE_SHARE_DELETE,
+                win32file.FILE_SHARE_READ
+                | win32file.FILE_SHARE_WRITE
+                | win32file.FILE_SHARE_DELETE,
                 None,
                 win32con.OPEN_EXISTING,
                 0,
@@ -202,7 +208,10 @@ def _open_key_file(path: str) -> typing.TextIO:
         except win32file.error as e:
             if e.winerror == winerror.ERROR_FILE_NOT_FOUND:
                 raise FileNotFoundError(errno.ENOENT, e.strerror, str(path)) from e
-            elif e.winerror == winerror.ERROR_ACCESS_DENIED or e.winerror == winerror.ERROR_SHARING_VIOLATION:
+            elif (
+                e.winerror == winerror.ERROR_ACCESS_DENIED
+                or e.winerror == winerror.ERROR_SHARING_VIOLATION
+            ):
                 raise PermissionError(errno.EACCES, e.strerror, str(path)) from e
             raise
 
