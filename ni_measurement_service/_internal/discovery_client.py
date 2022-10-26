@@ -146,6 +146,7 @@ class DiscoveryClient:
 
 def _get_discovery_service_address() -> str:
     key_file_path = _get_key_file_path()
+    _logger.debug("Key file path: %s", key_file_path)
     try:
         with _open_key_file(str(key_file_path)) as key_file:
             key_json = json.load(key_file)
@@ -163,13 +164,14 @@ def _get_key_file_path(cluster_id: typing.Optional[str] = None) -> pathlib.Path:
 
 
 def _get_key_file_directory() -> pathlib.Path:
+    version = discovery_service_pb2.DESCRIPTOR.package.split(".")[-1]
     if sys.platform == "win32":
         return (
             pathlib.Path(os.environ["ProgramData"])
             / "National Instruments"
             / "Measurement Framework"
             / "Discovery"
-            / "v1"
+            / version
         )
     else:
         raise NotImplementedError("Platform not supported")
