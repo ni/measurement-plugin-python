@@ -8,7 +8,6 @@ import sys
 import typing
 
 import grpc
-import grpc._channel
 
 from ni_measurement_service._internal.stubs.ni.measurements.discovery.v1 import (
     discovery_service_pb2,
@@ -20,9 +19,11 @@ from ni_measurement_service.measurement.info import MeasurementInfo
 from ni_measurement_service.measurement.info import ServiceInfo
 
 if sys.platform == "win32":
+    import errno
     import msvcrt
     import win32con
     import win32file
+    import winerror
 
 
 _PROVIDED_MEASUREMENT_SERVICE = "ni.measurements.v1.MeasurementService"
@@ -102,12 +103,17 @@ class DiscoveryClient:
             register_response = self.stub.RegisterService(request)
             self.registration_id = register_response.registration_id
             _logger.info("Successfully registered with discovery service.")
-        except (grpc._channel._InactiveRpcError):
-            _logger.error(
-                "Unable to register with discovery service. Possible reason: discovery service not available."
-            )
+        except grpc.RpcError as e:
+            if e.code() == grpc.StatusCode.UNAVAILABLE:
+                _logger.error(
+                    "Unable to register with discovery service. Possible reason: discovery service not available."
+                )
+            else:
+                _logger.exception("Error in registering with discovery service.")
             return False
-        except (Exception):
+        except FileNotFoundError:
+            _logger.error("Unable to register with discovery service. Possible reason: discovery service not running.")
+        except Exception:
             _logger.exception("Error in registering with discovery service.")
             return False
         return True
@@ -133,13 +139,18 @@ class DiscoveryClient:
                 _logger.info("Successfully unregistered with discovery service.")
             else:
                 _logger.info("Not registered with discovery service.")
-        except (grpc._channel._InactiveRpcError):
-            _logger.error(
-                "Unable to unregister with discovery service. Possible reason: discovery service not available."
-            )
+        except grpc.RpcError:
+            if e.code() == grpc.StatusCode.UNAVAILABLE:
+                _logger.error(
+                    "Unable to unregister with discovery service. Possible reason: discovery service not available."
+                )
+            else:
+                _logger.exception("Error in unregistering with discovery service.")
             return False
-        except (Exception):
-            _logger.exception("Error in un-registering with discovery service.")
+        except FileNotFoundError:
+            _logger.error("Unable to unregister with discovery service. Possible reason: discovery service not running.")
+        except Exception:
+            _logger.exception("Error in unregistering with discovery service.")
             return False
         return True
 
@@ -147,14 +158,9 @@ class DiscoveryClient:
 def _get_discovery_service_address() -> str:
     key_file_path = _get_key_file_path()
     _logger.debug("Key file path: %s", key_file_path)
-    try:
-        with _open_key_file(str(key_file_path)) as key_file:
-            key_json = json.load(key_file)
-            return "localhost:" + key_json["InsecurePort"]
-    except Exception as e:
-        raise RuntimeError(
-            "Failed to read discovery service port number. Ensure the discovery service is running."
-        ) from e
+    with _open_key_file(str(key_file_path)) as key_file:
+        key_json = json.load(key_file)
+        return "localhost:" + key_json["InsecurePort"]
 
 
 def _get_key_file_path(cluster_id: typing.Optional[str] = None) -> pathlib.Path:
@@ -183,15 +189,22 @@ def _open_key_file(path: str) -> typing.TextIO:
         # PermissionError due to a sharing violation. This is a workaround for
         # https://github.com/python/cpython/issues/59449
         # (Support for opening files with FILE_SHARE_DELETE on Windows).
-        win32_file_handle = win32file.CreateFile(
-            str(path),
-            win32file.GENERIC_READ,
-            win32file.FILE_SHARE_READ | win32file.FILE_SHARE_WRITE | win32file.FILE_SHARE_DELETE,
-            None,
-            win32con.OPEN_EXISTING,
-            0,
-            None,
-        )
+        try:
+            win32_file_handle = win32file.CreateFile(
+                str(path),
+                win32file.GENERIC_READ,
+                win32file.FILE_SHARE_READ | win32file.FILE_SHARE_WRITE | win32file.FILE_SHARE_DELETE,
+                None,
+                win32con.OPEN_EXISTING,
+                0,
+                None,
+            )
+        except win32file.error as e:
+            if e.winerror == winerror.ERROR_FILE_NOT_FOUND:
+                raise FileNotFoundError(errno.ENOENT, e.strerror, str(path)) from e
+            elif e.winerror == winerror.ERROR_ACCESS_DENIED or e.winerror == winerror.ERROR_SHARING_VIOLATION:
+                raise PermissionError(errno.EACCES, e.strerror, str(path)) from e
+            raise
 
         # The CRT file descriptor takes ownership of the Win32 file handle.
         # os.O_TEXT is unnecessary because Python handles newline conversion.
