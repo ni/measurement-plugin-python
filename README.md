@@ -70,6 +70,8 @@ The example measurements shared are *poetry-based* projects. Follow the below st
     ``` cmd
     poetry install
     ```
+    - After poetry installation, if the path is not added to the System Path, you might face this. You need to explicitly add the Poetry path to the path variable to resolve this error.
+    ![PoetryInstallFail](PoetryInstallFail.png)
 
 ### Executing the Example Measurements
 
