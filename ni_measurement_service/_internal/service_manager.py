@@ -8,7 +8,6 @@ from ni_measurement_service._internal.discovery_client import DiscoveryClient
 from ni_measurement_service._internal.grpc_servicer import MeasurementServiceServicer
 from ni_measurement_service._internal.parameter.metadata import ParameterMetadata
 from ni_measurement_service._internal.stubs import Measurement_pb2_grpc
-from ni_measurement_service._internal.utilities import console_exit_functions
 from ni_measurement_service.measurement.info import MeasurementInfo, ServiceInfo
 
 
@@ -87,7 +86,6 @@ class GrpcService:
         _logger.info("Measurement service hosted on port: %s", port)
         self.discovery_client.register_measurement_service(port, service_info, measurement_info)
 
-        console_exit_functions.setup_unregister_on_console_close(self.stop)
         self.port = port
         return port
 

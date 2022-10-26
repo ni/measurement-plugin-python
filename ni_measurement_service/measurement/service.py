@@ -1,5 +1,7 @@
 """Framework to host measurement service."""
 
+from __future__ import annotations
+
 from typing import Any, Callable
 
 from ni_measurement_service._internal import grpc_servicer
@@ -143,8 +145,13 @@ class MeasurementService:
 
         return _output
 
-    def host_service(self) -> None:
+    def host_service(self) -> MeasurementService:
         """Host the registered measurement method as gRPC measurement service.
+
+        Returns
+        -------
+            MeasurementService: Context manager that can be used with a with-statement to close
+            the service.
 
         Raises
         ------
@@ -160,8 +167,16 @@ class MeasurementService:
             self.output_parameter_list,
             self.measure_function,
         )
-        return None
+        return self
 
     def close_service(self) -> None:
         """Close the Service after un-registering with discovery service and cleanups."""
         self.grpc_service.stop()
+
+    def __enter__(self) -> MeasurementService:
+        """Enter the runtime context related to the measurement service."""
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback) -> None:
+        """Exit the runtime context related to the measurement service."""
+        self.close_service()
