@@ -8,6 +8,7 @@ import sys
 import typing
 
 import grpc
+import grpc._channel
 
 from ni_measurement_service._internal.stubs.ni.measurements.discovery.v1 import (
     discovery_service_pb2,
@@ -34,7 +35,7 @@ class DiscoveryClient:
 
     Attributes
     ----------
-        stub (DiscoveryServiceStub): The gRPC stub to interact with discovery
+        stub (DiscoveryServiceStub): The gRPC stub used to interact with the discovery
         service.
 
         registration_id(string): The ID from discovery service upon successful registration.
@@ -47,12 +48,20 @@ class DiscoveryClient:
         Args:
         ----
             stub (DiscoveryServiceStub, optional): The gRPC stub to interact with discovery
-            service.Defaults to None.
+            service. Defaults to None.
 
         """
-        channel = grpc.insecure_channel(_get_discovery_service_address())
-        self.stub = stub or discovery_service_pb2_grpc.DiscoveryServiceStub(channel)
+        self._stub = stub
         self.registration_id = ""
+
+    @property
+    def stub(self) -> discovery_service_pb2_grpc.DiscoveryServiceStub:
+        """Get the gRPC stub used to interact with the discovery service."""
+        if self._stub is None:
+            address = _get_discovery_service_address()
+            channel = grpc.insecure_channel(address)
+            self._stub = discovery_service_pb2_grpc.DiscoveryServiceStub(channel)
+        return self._stub
 
     def register_measurement_service(
         self, service_port: str, service_info: ServiceInfo, measurement_info: MeasurementInfo
