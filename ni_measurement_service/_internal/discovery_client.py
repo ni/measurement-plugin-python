@@ -1,6 +1,11 @@
 """ Contains API to register and un-register measurement service with discovery service.
 """
+import json
 import logging
+import os
+import pathlib
+import sys
+import typing
 
 import grpc
 
@@ -13,7 +18,14 @@ from ni_measurement_service._internal.stubs.ni.measurements.discovery.v1 import 
 from ni_measurement_service.measurement.info import MeasurementInfo
 from ni_measurement_service.measurement.info import ServiceInfo
 
-_DISCOVERY_SERVICE_ADDRESS = "localhost:42000"
+if sys.platform == "win32":
+    import errno
+    import msvcrt
+    import win32con
+    import win32file
+    import winerror
+
+
 _PROVIDED_MEASUREMENT_SERVICE = "ni.measurements.v1.MeasurementService"
 
 _logger = logging.getLogger(__name__)
@@ -24,7 +36,7 @@ class DiscoveryClient:
 
     Attributes
     ----------
-        stub (DiscoveryServiceStub): The gRPC stub to interact with discovery
+        stub (DiscoveryServiceStub): The gRPC stub used to interact with the discovery
         service.
 
         registration_id(string): The ID from discovery service upon successful registration.
@@ -37,12 +49,20 @@ class DiscoveryClient:
         Args:
         ----
             stub (DiscoveryServiceStub, optional): The gRPC stub to interact with discovery
-            service.Defaults to None.
+            service. Defaults to None.
 
         """
-        channel = grpc.insecure_channel(_DISCOVERY_SERVICE_ADDRESS)
-        self.stub = stub or discovery_service_pb2_grpc.DiscoveryServiceStub(channel)
+        self._stub = stub
         self.registration_id = ""
+
+    @property
+    def stub(self) -> discovery_service_pb2_grpc.DiscoveryServiceStub:
+        """Get the gRPC stub used to interact with the discovery service."""
+        if self._stub is None:
+            address = _get_discovery_service_address()
+            channel = grpc.insecure_channel(address)
+            self._stub = discovery_service_pb2_grpc.DiscoveryServiceStub(channel)
+        return self._stub
 
     def register_measurement_service(
         self, service_port: str, service_info: ServiceInfo, measurement_info: MeasurementInfo
@@ -83,12 +103,19 @@ class DiscoveryClient:
             register_response = self.stub.RegisterService(request)
             self.registration_id = register_response.registration_id
             _logger.info("Successfully registered with discovery service.")
-        except (grpc._channel._InactiveRpcError):
-            _logger.error(
-                "Unable to register with discovery service. Possible reason: discovery service not available."
-            )
+        except grpc.RpcError as e:
+            if e.code() == grpc.StatusCode.UNAVAILABLE:
+                _logger.error(
+                    "Unable to register with discovery service. Possible reason: discovery service not available."
+                )
+            else:
+                _logger.exception("Error in registering with discovery service.")
             return False
-        except (Exception):
+        except FileNotFoundError:
+            _logger.error(
+                "Unable to register with discovery service. Possible reason: discovery service not running."
+            )
+        except Exception:
             _logger.exception("Error in registering with discovery service.")
             return False
         return True
@@ -114,12 +141,87 @@ class DiscoveryClient:
                 _logger.info("Successfully unregistered with discovery service.")
             else:
                 _logger.info("Not registered with discovery service.")
-        except (grpc._channel._InactiveRpcError):
-            _logger.error(
-                "Unable to unregister with discovery service. Possible reason: discovery service not available."
-            )
+        except grpc.RpcError as e:
+            if e.code() == grpc.StatusCode.UNAVAILABLE:
+                _logger.error(
+                    "Unable to unregister with discovery service. Possible reason: discovery service not available."
+                )
+            else:
+                _logger.exception("Error in unregistering with discovery service.")
             return False
-        except (Exception):
-            _logger.exception("Error in un-registering with discovery service.")
+        except FileNotFoundError:
+            _logger.error(
+                "Unable to unregister with discovery service. Possible reason: discovery service not running."
+            )
+        except Exception:
+            _logger.exception("Error in unregistering with discovery service.")
             return False
         return True
+
+
+def _get_discovery_service_address() -> str:
+    key_file_path = _get_key_file_path()
+    _logger.debug("Discovery service key file path: %s", key_file_path)
+    with _open_key_file(str(key_file_path)) as key_file:
+        key_json = json.load(key_file)
+        return "localhost:" + key_json["InsecurePort"]
+
+
+def _get_key_file_path(cluster_id: typing.Optional[str] = None) -> pathlib.Path:
+    if cluster_id is not None:
+        return _get_key_file_directory() / f"DiscoveryService_{cluster_id}.json"
+    return _get_key_file_directory() / "DiscoveryService.json"
+
+
+def _get_key_file_directory() -> pathlib.Path:
+    version = discovery_service_pb2.DESCRIPTOR.package.split(".")[-1]
+    if sys.platform == "win32":
+        return (
+            pathlib.Path(os.environ["ProgramData"])
+            / "National Instruments"
+            / "Measurement Framework"
+            / "Discovery"
+            / version
+        )
+    else:
+        raise NotImplementedError("Platform not supported")
+
+
+def _open_key_file(path: str) -> typing.TextIO:
+    if sys.platform == "win32":
+        # Use the Win32 API to specify the share mode. Otherwise, opening the file throws
+        # PermissionError due to a sharing violation. This is a workaround for
+        # https://github.com/python/cpython/issues/59449
+        # (Support for opening files with FILE_SHARE_DELETE on Windows).
+        try:
+            win32_file_handle = win32file.CreateFile(
+                path,
+                win32file.GENERIC_READ,
+                win32file.FILE_SHARE_READ
+                | win32file.FILE_SHARE_WRITE
+                | win32file.FILE_SHARE_DELETE,
+                None,
+                win32con.OPEN_EXISTING,
+                0,
+                None,
+            )
+        except win32file.error as e:
+            if e.winerror == winerror.ERROR_FILE_NOT_FOUND:
+                raise FileNotFoundError(errno.ENOENT, e.strerror, path) from e
+            elif (
+                e.winerror == winerror.ERROR_ACCESS_DENIED
+                or e.winerror == winerror.ERROR_SHARING_VIOLATION
+            ):
+                raise PermissionError(errno.EACCES, e.strerror, path) from e
+            raise
+
+        # The CRT file descriptor takes ownership of the Win32 file handle.
+        # os.O_TEXT is unnecessary because Python handles newline conversion.
+        crt_file_descriptor = msvcrt.open_osfhandle(win32_file_handle.handle, os.O_RDONLY)
+        win32_file_handle.Detach()
+
+        # The Python file object takes ownership of the CRT file descriptor. Closing the Python
+        # file object closes the underlying Win32 file handle.
+        return os.fdopen(crt_file_descriptor, "r", encoding="utf-8-sig")
+    else:
+        return open(path, "r")
