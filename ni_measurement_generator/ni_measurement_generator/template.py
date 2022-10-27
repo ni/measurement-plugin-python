@@ -114,10 +114,6 @@ def create_measurement(
 
     DISPLAY_NAME: The measurement display name for client to display to user.
     The created .serviceconfig file will take this as its file name.
-
-    VERSION: The measurement version that helps to maintain versions of a measurement in future.
-    Should be formatted like x.x.x.x
-    e.g. 0.2.6.8
     """
     service_class = _resolve_service_class(service_class, display_name)
     display_name_for_filenames = re.sub(r"\s+", "", display_name)
