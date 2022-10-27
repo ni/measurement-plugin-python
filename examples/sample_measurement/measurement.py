@@ -71,9 +71,8 @@ def main(verbose: int):
         level = logging.WARNING
     logging.basicConfig(format="%(asctime)s %(levelname)s: %(message)s", level=level)
 
-    sample_measurement_service.host_service()
-    input("Press enter to close the measurement service.\n")
-    sample_measurement_service.close_service()
+    with sample_measurement_service.host_service():
+        input("Press enter to close the measurement service.\n")
 
 
 if __name__ == "__main__":
