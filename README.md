@@ -70,6 +70,8 @@ The example measurements shared are *poetry-based* projects. Follow the below st
     ``` cmd
     poetry install
     ```
+    - If you get a "command not found" error during `poetry install`, make sure that you added the Poetry path to the system path. Refer to [https://python-poetry.org/docs/#installing-with-the-official-installer/Add-poetry-to-your-path](https://python-poetry.org/docs/#installing-with-the-official-installer:~:text=Add%20Poetry%20to%20your%20PATH)
+    ![PoetryInstallFail](PoetryInstallFail.png)
 
 ### Executing the Example Measurements
 

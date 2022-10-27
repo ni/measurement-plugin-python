@@ -7,7 +7,9 @@ from grpc.framework.foundation import logging_pool
 from ni_measurement_service._internal.discovery_client import DiscoveryClient
 from ni_measurement_service._internal.grpc_servicer import MeasurementServiceServicer
 from ni_measurement_service._internal.parameter.metadata import ParameterMetadata
-from ni_measurement_service._internal.stubs import Measurement_pb2_grpc
+from ni_measurement_service._internal.stubs.ni.measurements.measurementservice import (
+    measurement_service_pb2_grpc,
+)
 from ni_measurement_service.measurement.info import MeasurementInfo, ServiceInfo
 
 
@@ -80,7 +82,9 @@ class GrpcService:
             output_parameter_list,
             measure_function,
         )
-        Measurement_pb2_grpc.add_MeasurementServiceServicer_to_server(self.servicer, self.server)
+        measurement_service_pb2_grpc.add_MeasurementServiceServicer_to_server(
+            self.servicer, self.server
+        )
         port = str(self.server.add_insecure_port("[::]:0"))
         self.server.start()
         _logger.info("Measurement service hosted on port: %s", port)

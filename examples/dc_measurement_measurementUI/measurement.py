@@ -21,8 +21,6 @@ NIDCPOWER_WAIT_FOR_EVENT_TIMEOUT_ERROR_CODE = -1074116059
 measurement_info = nims.MeasurementInfo(
     display_name="DCMeasurement(Py)",
     version="0.1.0.0",
-    measurement_type="DC",
-    product_type="ADC",
     ui_file_paths=[pathlib.Path(__file__).resolve().parent / "DCMeasurement.measui"],
 )
 

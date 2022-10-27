@@ -13,8 +13,6 @@ _TEST_SERVICE_INFO = ServiceInfo("TestServiceClass", "TestUrl")
 _TEST_MEASUREMENT_INFO = MeasurementInfo(
     display_name="TestMeasurement",
     version="1.0.0.0",
-    measurement_type="Test",
-    product_type="Test",
     ui_file_paths=[],
 )
 

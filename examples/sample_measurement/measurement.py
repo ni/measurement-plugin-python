@@ -14,8 +14,6 @@ import ni_measurement_service as nims
 measurement_info = nims.MeasurementInfo(
     display_name="SampleMeasurement",
     version="0.1.0.0",
-    measurement_type="Sample",
-    product_type="Sample",
     ui_file_paths=[
         pathlib.Path(__file__).resolve().parent / "SampleMeasurement.measui",
         pathlib.Path(__file__).resolve().parent / "SampleAllParameters.measui",

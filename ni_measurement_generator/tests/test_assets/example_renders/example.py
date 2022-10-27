@@ -9,8 +9,6 @@ import ni_measurement_service as nims
 measurement_info = nims.MeasurementInfo(
     display_name="SampleMeasurement",
     version="1.0.0.0",
-    measurement_type="Measurement",
-    product_type="Product",
     ui_file_paths=[pathlib.Path(__file__).resolve().parent / "MeasurementUI.measui"],
 )
 

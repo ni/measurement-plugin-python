@@ -5,11 +5,14 @@ from examples.sample_measurement import measurement
 
 from ni_measurement_service._internal.discovery_client import DiscoveryClient
 from ni_measurement_service._internal.service_manager import GrpcService
-from ni_measurement_service._internal.stubs import Measurement_pb2, Measurement_pb2_grpc
-from tests.utilities.fake_discovery_service import (
-    FakeDiscoveryServiceStub,
-    FakeDiscoveryServiceStubError,
+from ni_measurement_service._internal.stubs.ni.measurements.measurementservice import (
+    measurement_service_pb2,
 )
+from ni_measurement_service._internal.stubs.ni.measurements.measurementservice import (
+    measurement_service_pb2_grpc,
+)
+from tests.utilities.fake_discovery_service import FakeDiscoveryServiceStub
+from tests.utilities.fake_discovery_service import FakeDiscoveryServiceStubError
 
 
 def test___grpc_service___start_service___service_hosted():
@@ -65,5 +68,5 @@ def _validate_if_service_running_by_making_rpc(port_number):
     Throws exception during RPC if service not hosted.
     """
     with grpc.insecure_channel("localhost:" + port_number) as channel:
-        stub = Measurement_pb2_grpc.MeasurementServiceStub(channel)
-        stub.GetMetadata(Measurement_pb2.GetMetadataRequest())  # RPC call
+        stub = measurement_service_pb2_grpc.MeasurementServiceStub(channel)
+        stub.GetMetadata(measurement_service_pb2.GetMetadataRequest())  # RPC call
