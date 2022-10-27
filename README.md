@@ -70,7 +70,7 @@ The example measurements shared are *poetry-based* projects. Follow the below st
     ``` cmd
     poetry install
     ```
-    - When installing poetry, you may encounter this error if the path is not added to the system path. You need to explicitly add the Poetry path to the path variable to resolve this error. Refer to [https://python-poetry.org/docs/#installing-with-the-official-installer/Add-poetry-to-your-path](https://python-poetry.org/docs/#installing-with-the-official-installer:~:text=Add%20Poetry%20to%20your%20PATH)
+    - When performing `poetry install`, you may encounter this error if the path is not added to the system path. You need to explicitly add the Poetry path to the path variable to resolve this error. Refer to [https://python-poetry.org/docs/#installing-with-the-official-installer/Add-poetry-to-your-path](https://python-poetry.org/docs/#installing-with-the-official-installer:~:text=Add%20Poetry%20to%20your%20PATH)
     ![PoetryInstallFail](PoetryInstallFail.png)
 
 ### Executing the Example Measurements
