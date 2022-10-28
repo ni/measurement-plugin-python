@@ -22,15 +22,22 @@ Classes
 
 
 
-.. py:class:: DiscoveryClient(registry_service_stub = None)
+.. py:class:: DiscoveryClient(stub = None)
 
    Class that contains APIs need to interact with discovery service.
 
    Attributes
    ----------
-       registryServiceStub (RegistryServiceStub): The gRPC stub to interact with discovery service.
+       stub (DiscoveryServiceStub): The gRPC stub used to interact with the discovery
+       service.
 
        registration_id(string): The ID from discovery service upon successful registration.
+
+
+   .. py:method:: stub()
+      :property:
+
+      Get the gRPC stub used to interact with the discovery service.
 
 
    .. py:method:: register_measurement_service(service_port, service_info, measurement_info)

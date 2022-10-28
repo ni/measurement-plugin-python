@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ni_measurement_service._internal.parameter.serializer &mdash; ni_measurement_service 0.9 documentation</title>
+  <title>ni_measurement_service._internal.parameter.serializer &mdash; ni_measurement_service 0.10 documentation</title>
       <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../../../_static/graphviz.css" type="text/css" />
@@ -31,7 +31,7 @@
             <a href="../../../../../index.html" class="icon icon-home"> ni_measurement_service
           </a>
               <div class="version">
-                0.9.2
+                0.10.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
@@ -97,38 +97,56 @@
 <dt class="sig sig-object py" id="ni_measurement_service._internal.parameter.serializer.deserialize_parameters">
 <span class="sig-prename descclassname"><span class="pre">ni_measurement_service._internal.parameter.serializer.</span></span><span class="sig-name descname"><span class="pre">deserialize_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameter_metadata_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter_bytes</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/ni_measurement_service/_internal/parameter/serializer.html#deserialize_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurement_service._internal.parameter.serializer.deserialize_parameters" title="Permalink to this definition"></a></dt>
 <dd><p>Deserialize the bytes of the parameter based on the metadata.</p>
+<section id="args">
+<h4>Args<a class="headerlink" href="#args" title="Permalink to this heading"></a></h4>
 <blockquote>
 <div><p>parameter_metadata_dict (Dict[int, ParameterMetadata]): Parameter metadata by ID.</p>
 <p>parameter_bytes (bytes): Bytes of Parameter that need to be deserialized.</p>
 </div></blockquote>
+</section>
+<section id="returns">
+<h4>Returns<a class="headerlink" href="#returns" title="Permalink to this heading"></a></h4>
 <blockquote>
 <div><p>Dict[int, Any]: Deserialized parameters by ID</p>
 </div></blockquote>
+</section>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="ni_measurement_service._internal.parameter.serializer.serialize_parameters">
 <span class="sig-prename descclassname"><span class="pre">ni_measurement_service._internal.parameter.serializer.</span></span><span class="sig-name descname"><span class="pre">serialize_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameter_metadata_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter_value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/ni_measurement_service/_internal/parameter/serializer.html#serialize_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurement_service._internal.parameter.serializer.serialize_parameters" title="Permalink to this definition"></a></dt>
 <dd><p>Serialize the parameter values in same order based on the metadata_dict.</p>
+<section id="id1">
+<h4>Args<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h4>
 <blockquote>
 <div><p>parameter_metadata_dict (Dict[int, ParameterMetadata]): Parameter metadata by ID.</p>
 <p>parameter_value (List[Any]): List of Parameter values that need to be serialized.</p>
 </div></blockquote>
+</section>
+<section id="id2">
+<h4>Returns<a class="headerlink" href="#id2" title="Permalink to this heading"></a></h4>
 <blockquote>
 <div><p>Bytes: Serialized Bytes of Parameter Values.</p>
 </div></blockquote>
+</section>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="ni_measurement_service._internal.parameter.serializer.serialize_default_values">
 <span class="sig-prename descclassname"><span class="pre">ni_measurement_service._internal.parameter.serializer.</span></span><span class="sig-name descname"><span class="pre">serialize_default_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameter_metadata_dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/ni_measurement_service/_internal/parameter/serializer.html#serialize_default_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurement_service._internal.parameter.serializer.serialize_default_values" title="Permalink to this definition"></a></dt>
 <dd><p>Serialize the Default values in the Metadata.</p>
+<section id="id3">
+<h4>Args<a class="headerlink" href="#id3" title="Permalink to this heading"></a></h4>
 <blockquote>
 <div><p>parameter_metadata_dict (Dict[int, ParameterMetadata]): Configuration metadata.</p>
 </div></blockquote>
+</section>
+<section id="id4">
+<h4>Returns<a class="headerlink" href="#id4" title="Permalink to this heading"></a></h4>
 <blockquote>
 <div><p>bytes: Serialized Bytes of default value.</p>
 </div></blockquote>
+</section>
 </dd></dl>
 
 </section>

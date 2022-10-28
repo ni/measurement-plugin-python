@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ni_measurement_service._internal.parameter.serialization_strategy &mdash; ni_measurement_service 0.9 documentation</title>
+  <title>ni_measurement_service._internal.parameter.serialization_strategy &mdash; ni_measurement_service 0.10 documentation</title>
       <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../../../_static/graphviz.css" type="text/css" />
@@ -31,7 +31,7 @@
             <a href="../../../../../index.html" class="icon icon-home"> ni_measurement_service
           </a>
               <div class="version">
-                0.9.2
+                0.10.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
@@ -330,45 +330,69 @@
 <dt class="sig sig-object py" id="ni_measurement_service._internal.parameter.serialization_strategy.Context.get_encoder">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_encoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeated</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/ni_measurement_service/_internal/parameter/serialization_strategy.html#Context.get_encoder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurement_service._internal.parameter.serialization_strategy.Context.get_encoder" title="Permalink to this definition"></a></dt>
 <dd><p>Get the Scalar Encoder or Vector Encoder for the specified type based on repeated bool.</p>
+<section id="args">
+<h4>Args<a class="headerlink" href="#args" title="Permalink to this heading"></a></h4>
 <blockquote>
-<div><p>type (type_pb2.Field): Type of the Parameter.</p>
+<div><p>type (type_pb2.Field.Kind.ValueType): Type of the Parameter.</p>
 <p>repeated (bool): Boolean that represents if the Parameter is repeated or not.</p>
 </div></blockquote>
+</section>
+<section id="raises">
+<h4>Raises<a class="headerlink" href="#raises" title="Permalink to this heading"></a></h4>
 <blockquote>
 <div><p>Exception: If the specified type is not supported.</p>
 </div></blockquote>
+</section>
+<section id="returns">
+<h4>Returns<a class="headerlink" href="#returns" title="Permalink to this heading"></a></h4>
 <blockquote>
 <div><p>Callable[[int], Callable]: ScalarEncoder or VectorEncoder.</p>
 </div></blockquote>
+</section>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ni_measurement_service._internal.parameter.serialization_strategy.Context.get_decoder">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_decoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeated</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/ni_measurement_service/_internal/parameter/serialization_strategy.html#Context.get_decoder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurement_service._internal.parameter.serialization_strategy.Context.get_decoder" title="Permalink to this definition"></a></dt>
 <dd><p>Get the Scalar Decoder or Vector Decoder for the specified type based on repeated bool.</p>
+<section id="id1">
+<h4>Args<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h4>
 <blockquote>
-<div><p>type (type_pb2.Field): Type of the Parameter.</p>
+<div><p>type (type_pb2.Field.Kind.ValueType): Type of the Parameter.</p>
 <p>repeated (bool): Boolean that represents if the Parameter is repeated or not.</p>
 </div></blockquote>
+</section>
+<section id="id2">
+<h4>Raises<a class="headerlink" href="#id2" title="Permalink to this heading"></a></h4>
 <blockquote>
 <div><p>Exception: If the specified type is not supported.</p>
 </div></blockquote>
+</section>
+<section id="id3">
+<h4>Returns<a class="headerlink" href="#id3" title="Permalink to this heading"></a></h4>
 <blockquote>
 <div><p>Callable[[int], Callable]: ScalarDecoder or VectorDecoder.</p>
 </div></blockquote>
+</section>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ni_measurement_service._internal.parameter.serialization_strategy.Context.get_type_default">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_type_default</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeated</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/ni_measurement_service/_internal/parameter/serialization_strategy.html#Context.get_type_default"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurement_service._internal.parameter.serialization_strategy.Context.get_type_default" title="Permalink to this definition"></a></dt>
 <dd><p>Get the Type default.</p>
+<section id="id4">
+<h4>Args<a class="headerlink" href="#id4" title="Permalink to this heading"></a></h4>
 <blockquote>
-<div><p>type (type_pb2.Field): Type of the Parameter.</p>
+<div><p>type (type_pb2.Field.Kind.ValueType): Type of the Parameter.</p>
 <p>repeated (bool): Boolean that represents if the Parameter is repeated or not.</p>
 </div></blockquote>
+</section>
+<section id="id5">
+<h4>Returns<a class="headerlink" href="#id5" title="Permalink to this heading"></a></h4>
 <blockquote>
 <div><p>Any: Default value.</p>
 </div></blockquote>
+</section>
 </dd></dl>
 
 </dd></dl>

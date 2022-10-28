@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ni_measurement_service._internal.parameter.metadata &mdash; ni_measurement_service 0.9 documentation</title>
+  <title>ni_measurement_service._internal.parameter.metadata &mdash; ni_measurement_service 0.10 documentation</title>
       <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../../../_static/graphviz.css" type="text/css" />
@@ -31,7 +31,7 @@
             <a href="../../../../../index.html" class="icon icon-home"> ni_measurement_service
           </a>
               <div class="version">
-                0.9.2
+                0.10.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
@@ -106,6 +106,8 @@
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ni_measurement_service._internal.parameter.metadata.</span></span><span class="sig-name descname"><span class="pre">ParameterMetadata</span></span><a class="reference internal" href="../../../../../_modules/ni_measurement_service/_internal/parameter/metadata.html#ParameterMetadata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurement_service._internal.parameter.metadata.ParameterMetadata" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">NamedTuple</span></code></p>
 <p>Class that represents the metadata of parameters.</p>
+<section id="attributes">
+<h4>Attributes<a class="headerlink" href="#attributes" title="Permalink to this heading"></a></h4>
 <blockquote>
 <div><p>display_name (str): The display name of the parameter.</p>
 <p>type (type_pb2.Field): The datatype of the parameter
@@ -121,7 +123,7 @@ represented by the gRPC Field Enum.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ni_measurement_service._internal.parameter.metadata.ParameterMetadata.type">
-<span class="sig-name descname"><span class="pre">type</span></span><em class="property"><span class="w"> </span><span class="pre">:google.protobuf.type_pb2.Field</span></em><a class="headerlink" href="#ni_measurement_service._internal.parameter.metadata.ParameterMetadata.type" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">type</span></span><em class="property"><span class="w"> </span><span class="pre">:google.protobuf.type_pb2.Field.Kind.ValueType</span></em><a class="headerlink" href="#ni_measurement_service._internal.parameter.metadata.ParameterMetadata.type" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -134,18 +136,25 @@ represented by the gRPC Field Enum.</p>
 <span class="sig-name descname"><span class="pre">default_value</span></span><em class="property"><span class="w"> </span><span class="pre">:Any</span></em><a class="headerlink" href="#ni_measurement_service._internal.parameter.metadata.ParameterMetadata.default_value" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
+</section>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="ni_measurement_service._internal.parameter.metadata.validate_default_value_type">
 <span class="sig-prename descclassname"><span class="pre">ni_measurement_service._internal.parameter.metadata.</span></span><span class="sig-name descname"><span class="pre">validate_default_value_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameter_metadata</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/ni_measurement_service/_internal/parameter/metadata.html#validate_default_value_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurement_service._internal.parameter.metadata.validate_default_value_type" title="Permalink to this definition"></a></dt>
 <dd><p>Validate and raise exception if the default value does not match the type info.</p>
+<section id="args">
+<h4>Args<a class="headerlink" href="#args" title="Permalink to this heading"></a></h4>
 <blockquote>
 <div><p>parameter_metadata (ParameterMetadata): Parameter metadata</p>
 </div></blockquote>
+</section>
+<section id="raises">
+<h4>Raises<a class="headerlink" href="#raises" title="Permalink to this heading"></a></h4>
 <blockquote>
 <div><p>TypeError: If default value does not match the Datatype.</p>
 </div></blockquote>
+</section>
 </dd></dl>
 
 </section>

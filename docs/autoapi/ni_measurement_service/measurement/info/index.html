@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ni_measurement_service.measurement.info &mdash; ni_measurement_service 0.9 documentation</title>
+  <title>ni_measurement_service.measurement.info &mdash; ni_measurement_service 0.10 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
@@ -31,7 +31,7 @@
             <a href="../../../../index.html" class="icon icon-home"> ni_measurement_service
           </a>
               <div class="version">
-                0.9.2
+                0.10.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
@@ -98,14 +98,12 @@
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ni_measurement_service.measurement.info.</span></span><span class="sig-name descname"><span class="pre">MeasurementInfo</span></span><a class="reference internal" href="../../../../_modules/ni_measurement_service/measurement/info.html#MeasurementInfo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurement_service.measurement.info.MeasurementInfo" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">NamedTuple</span></code></p>
 <p>Class that represents the measurement information.</p>
+<section id="attributes">
+<h4>Attributes<a class="headerlink" href="#attributes" title="Permalink to this heading"></a></h4>
 <blockquote>
 <div><p>display_name (str): The measurement display name for client to display to user.</p>
 <p>version (str): The measurement version that helps to
 maintain versions of a measurement in future.</p>
-<p>measurement_type (str): Represents category of measurement for the ProductType,
-e.g. AC or DC measurements.</p>
-<p>product_type (str): Represents type of the DUT,
-e.g. ADC, LDO.</p>
 <p>ui_file_paths (list): Absolute paths of the UI file(s) linked to the measurement.</p>
 </div></blockquote>
 <dl class="py attribute">
@@ -119,20 +117,11 @@ e.g. ADC, LDO.</p>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="ni_measurement_service.measurement.info.MeasurementInfo.measurement_type">
-<span class="sig-name descname"><span class="pre">measurement_type</span></span><em class="property"><span class="w"> </span><span class="pre">:str</span></em><a class="headerlink" href="#ni_measurement_service.measurement.info.MeasurementInfo.measurement_type" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ni_measurement_service.measurement.info.MeasurementInfo.product_type">
-<span class="sig-name descname"><span class="pre">product_type</span></span><em class="property"><span class="w"> </span><span class="pre">:str</span></em><a class="headerlink" href="#ni_measurement_service.measurement.info.MeasurementInfo.product_type" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
 <dt class="sig sig-object py" id="ni_measurement_service.measurement.info.MeasurementInfo.ui_file_paths">
 <span class="sig-name descname"><span class="pre">ui_file_paths</span></span><em class="property"><span class="w"> </span><span class="pre">:List[pathlib.Path]</span></em><a class="headerlink" href="#ni_measurement_service.measurement.info.MeasurementInfo.ui_file_paths" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
+</section>
 </dd></dl>
 
 <dl class="py class">
@@ -140,11 +129,12 @@ e.g. ADC, LDO.</p>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ni_measurement_service.measurement.info.</span></span><span class="sig-name descname"><span class="pre">ServiceInfo</span></span><a class="reference internal" href="../../../../_modules/ni_measurement_service/measurement/info.html#ServiceInfo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurement_service.measurement.info.ServiceInfo" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">NamedTuple</span></code></p>
 <p>Class the represents the service information.</p>
+<section id="id1">
+<h4>Attributes<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h4>
 <blockquote>
 <div><p>service_class (str): Service class that the measurement belongs to.
 Measurements under same service class expected to perform same logic.
 For e.g., different version of measurement can come under same service class.</p>
-<p>service_id (str): Unique service of the measurement. Should be an Unique GUID.</p>
 <p>description_url (str): Description URL of the measurement.</p>
 </div></blockquote>
 <dl class="py attribute">
@@ -153,15 +143,11 @@ For e.g., different version of measurement can come under same service class.</p
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="ni_measurement_service.measurement.info.ServiceInfo.service_id">
-<span class="sig-name descname"><span class="pre">service_id</span></span><em class="property"><span class="w"> </span><span class="pre">:str</span></em><a class="headerlink" href="#ni_measurement_service.measurement.info.ServiceInfo.service_id" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
 <dt class="sig sig-object py" id="ni_measurement_service.measurement.info.ServiceInfo.description_url">
 <span class="sig-name descname"><span class="pre">description_url</span></span><em class="property"><span class="w"> </span><span class="pre">:str</span></em><a class="headerlink" href="#ni_measurement_service.measurement.info.ServiceInfo.description_url" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
+</section>
 </dd></dl>
 
 <dl class="py class">

@@ -31,7 +31,7 @@ Attributes
    ni_measurement_service._internal.grpc_servicer.measurement_service_context
 
 
-.. py:class:: MeasurementServiceContext(grpc_context)
+.. py:class:: MeasurementServiceContext(grpc_context, pin_map_context)
 
    Accessor for the Measurement Service's context-local state.
 
@@ -40,9 +40,16 @@ Attributes
       Mark the current RPC as complete.
 
 
-   .. py:method:: get_grpc_context()
+   .. py:method:: grpc_context()
+      :property:
 
       Get the context for the RPC.
+
+
+   .. py:method:: pin_map_context()
+      :property:
+
+      Get the pin map context for the RPC.
 
 
    .. py:method:: add_cancel_callback(cancel_callback)
@@ -56,6 +63,7 @@ Attributes
 
 
    .. py:method:: time_remaining()
+      :property:
 
       Get the time remaining for the RPC.
 
@@ -73,7 +81,7 @@ Attributes
 
 .. py:class:: MeasurementServiceServicer(measurement_info, configuration_parameter_list, output_parameter_list, measure_function)
 
-   Bases: :py:obj:`ni_measurement_service._internal.stubs.Measurement_pb2_grpc.MeasurementServiceServicer`
+   Bases: :py:obj:`ni_measurement_service._internal.stubs.ni.measurements.measurementservice.measurement_service_pb2_grpc.MeasurementServiceServicer`
 
    Implementation of the Measurement Service's gRPC base class.
 
@@ -86,9 +94,6 @@ Attributes
        output_parameter_list (List): List of output parameters.
 
        measure_function (Callable): Registered measurement function.
-   Args:
-   ----
-       Measurement_pb2_grpc (MeasurementServiceServicer): Measurement Service's gRPC base class.
 
 
    .. py:method:: GetMetadata(request, context)

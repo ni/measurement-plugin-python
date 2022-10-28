@@ -27,9 +27,16 @@ Classes
 
    Proxy for the Measurement Service's context-local state.
 
-   .. py:method:: get_grpc_context()
+   .. py:method:: grpc_context()
+      :property:
 
       Get the context for the RPC.
+
+
+   .. py:method:: pin_map_context()
+      :property:
+
+      Get the pin map context for the RPC.
 
 
    .. py:method:: add_cancel_callback(cancel_callback)
@@ -43,6 +50,7 @@ Classes
 
 
    .. py:method:: time_remaining()
+      :property:
 
       Get the time remaining for the RPC.
 
@@ -124,6 +132,11 @@ Classes
 
       Host the registered measurement method as gRPC measurement service.
 
+      Returns
+      -------
+          MeasurementService: Context manager that can be used with a with-statement to close
+          the service.
+
       Raises
       ------
           Exception: If register measurement methods not available.
@@ -133,6 +146,16 @@ Classes
    .. py:method:: close_service()
 
       Close the Service after un-registering with discovery service and cleanups.
+
+
+   .. py:method:: __enter__()
+
+      Enter the runtime context related to the measurement service.
+
+
+   .. py:method:: __exit__(exc_type, exc_value, traceback)
+
+      Exit the runtime context related to the measurement service.
 
 
 

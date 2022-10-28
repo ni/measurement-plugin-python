@@ -9,6 +9,16 @@
 
 
 
+Subpackages
+-----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 3
+
+   discovery/index.rst
+   measurementservice/index.rst
+
+
 Submodules
 ----------
 .. toctree::

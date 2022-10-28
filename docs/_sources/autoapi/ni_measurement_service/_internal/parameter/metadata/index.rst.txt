@@ -56,7 +56,7 @@ Functions
       
 
    .. py:attribute:: type
-      :annotation: :google.protobuf.type_pb2.Field
+      :annotation: :google.protobuf.type_pb2.Field.Kind.ValueType
 
       
 

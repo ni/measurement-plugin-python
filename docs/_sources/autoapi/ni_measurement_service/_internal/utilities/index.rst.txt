@@ -9,12 +9,3 @@
 
 
 
-Submodules
-----------
-.. toctree::
-   :titlesonly:
-   :maxdepth: 1
-
-   console_exit_functions/index.rst
-
-

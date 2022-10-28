@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ni_measurement_service._internal.discovery_client &mdash; ni_measurement_service 0.9 documentation</title>
+  <title>ni_measurement_service._internal.discovery_client &mdash; ni_measurement_service 0.10 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
@@ -31,7 +31,7 @@
             <a href="../../../../index.html" class="icon icon-home"> ni_measurement_service
           </a>
               <div class="version">
-                0.9.2
+                0.10.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
@@ -89,24 +89,39 @@
 </table>
 <dl class="py class">
 <dt class="sig sig-object py" id="ni_measurement_service._internal.discovery_client.DiscoveryClient">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ni_measurement_service._internal.discovery_client.</span></span><span class="sig-name descname"><span class="pre">DiscoveryClient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">registry_service_stub</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/ni_measurement_service/_internal/discovery_client.html#DiscoveryClient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurement_service._internal.discovery_client.DiscoveryClient" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ni_measurement_service._internal.discovery_client.</span></span><span class="sig-name descname"><span class="pre">DiscoveryClient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/ni_measurement_service/_internal/discovery_client.html#DiscoveryClient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurement_service._internal.discovery_client.DiscoveryClient" title="Permalink to this definition"></a></dt>
 <dd><p>Class that contains APIs need to interact with discovery service.</p>
+<section id="attributes">
+<h4>Attributes<a class="headerlink" href="#attributes" title="Permalink to this heading"></a></h4>
 <blockquote>
-<div><p>registryServiceStub (RegistryServiceStub): The gRPC stub to interact with discovery service.</p>
+<div><p>stub (DiscoveryServiceStub): The gRPC stub used to interact with the discovery
+service.</p>
 <p>registration_id(string): The ID from discovery service upon successful registration.</p>
 </div></blockquote>
+<dl class="py method">
+<dt class="sig sig-object py" id="ni_measurement_service._internal.discovery_client.DiscoveryClient.stub">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stub</span></span><a class="headerlink" href="#ni_measurement_service._internal.discovery_client.DiscoveryClient.stub" title="Permalink to this definition"></a></dt>
+<dd><p>Get the gRPC stub used to interact with the discovery service.</p>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="ni_measurement_service._internal.discovery_client.DiscoveryClient.register_measurement_service">
 <span class="sig-name descname"><span class="pre">register_measurement_service</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">service_port</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">service_info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">measurement_info</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/ni_measurement_service/_internal/discovery_client.html#DiscoveryClient.register_measurement_service"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurement_service._internal.discovery_client.DiscoveryClient.register_measurement_service" title="Permalink to this definition"></a></dt>
 <dd><p>Register the measurement service with the discovery service.</p>
+<section id="args">
+<h5>Args:<a class="headerlink" href="#args" title="Permalink to this heading"></a></h5>
 <blockquote>
 <div><p>service_port (str): Port Number of the measurement service.</p>
 <p>service_info (ServiceInfo): Service Info.</p>
 <p>display_name (str): Display name of the service.</p>
 </div></blockquote>
+</section>
+<section id="returns">
+<h5>Returns<a class="headerlink" href="#returns" title="Permalink to this heading"></a></h5>
 <blockquote>
 <div><p>bool: Boolean to represent if the registration is successful.</p>
 </div></blockquote>
+</section>
 </dd></dl>
 
 <dl class="py method">
@@ -114,11 +129,15 @@
 <span class="sig-name descname"><span class="pre">unregister_service</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/ni_measurement_service/_internal/discovery_client.html#DiscoveryClient.unregister_service"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurement_service._internal.discovery_client.DiscoveryClient.unregister_service" title="Permalink to this definition"></a></dt>
 <dd><p>Un-registers the measurement service from the discovery service.</p>
 <p>Should be called before the service is closed.</p>
+<section id="id1">
+<h5>Returns<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h5>
 <blockquote>
 <div><p>bool: Boolean to represent if the un-registration is successful.</p>
 </div></blockquote>
+</section>
 </dd></dl>
 
+</section>
 </dd></dl>
 
 </section>

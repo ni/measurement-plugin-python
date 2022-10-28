@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ni_measurement_service._internal.parameter.serialization_strategy &mdash; ni_measurement_service 0.9 documentation</title>
+  <title>ni_measurement_service._internal.parameter.serialization_strategy &mdash; ni_measurement_service 0.10 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
@@ -30,7 +30,7 @@
             <a href="../../../../index.html" class="icon icon-home"> ni_measurement_service
           </a>
               <div class="version">
-                0.9.2
+                0.10.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
@@ -246,12 +246,14 @@
     <span class="p">}</span>
 
 <div class="viewcode-block" id="Context.get_encoder"><a class="viewcode-back" href="../../../../autoapi/ni_measurement_service/_internal/parameter/serialization_strategy/index.html#ni_measurement_service._internal.parameter.serialization_strategy.Context.get_encoder">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">get_encoder</span><span class="p">(</span><span class="nb">type</span><span class="p">:</span> <span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="p">,</span> <span class="n">repeated</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">int</span><span class="p">],</span> <span class="n">Callable</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">get_encoder</span><span class="p">(</span>
+        <span class="nb">type</span><span class="p">:</span> <span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">Kind</span><span class="o">.</span><span class="n">ValueType</span><span class="p">,</span> <span class="n">repeated</span><span class="p">:</span> <span class="nb">bool</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">int</span><span class="p">],</span> <span class="n">Callable</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Get the Scalar Encoder or Vector Encoder for the specified type based on repeated bool.</span>
 
 <span class="sd">        Args</span>
 <span class="sd">        ----</span>
-<span class="sd">            type (type_pb2.Field): Type of the Parameter.</span>
+<span class="sd">            type (type_pb2.Field.Kind.ValueType): Type of the Parameter.</span>
 
 <span class="sd">            repeated (bool): Boolean that represents if the Parameter is repeated or not.</span>
 
@@ -266,18 +268,20 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">Context</span><span class="o">.</span><span class="n">_FIELD_TYPE_TO_ENCODER_MAPPING</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error can not encode type &#39;</span><span class="si">{</span><span class="nb">type</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
-        <span class="n">scalar</span><span class="p">,</span> <span class="n">array</span> <span class="o">=</span> <span class="n">Context</span><span class="o">.</span><span class="n">_FIELD_TYPE_TO_ENCODER_MAPPING</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">type</span><span class="p">)</span>  <span class="c1"># type: ignore[call-overload]</span>
+        <span class="n">scalar</span><span class="p">,</span> <span class="n">array</span> <span class="o">=</span> <span class="n">Context</span><span class="o">.</span><span class="n">_FIELD_TYPE_TO_ENCODER_MAPPING</span><span class="p">[</span><span class="nb">type</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">repeated</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">array</span>
         <span class="k">return</span> <span class="n">scalar</span></div>
 
 <div class="viewcode-block" id="Context.get_decoder"><a class="viewcode-back" href="../../../../autoapi/ni_measurement_service/_internal/parameter/serialization_strategy/index.html#ni_measurement_service._internal.parameter.serialization_strategy.Context.get_decoder">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">get_decoder</span><span class="p">(</span><span class="nb">type</span><span class="p">:</span> <span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="p">,</span> <span class="n">repeated</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">Callable</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">get_decoder</span><span class="p">(</span>
+        <span class="nb">type</span><span class="p">:</span> <span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">Kind</span><span class="o">.</span><span class="n">ValueType</span><span class="p">,</span> <span class="n">repeated</span><span class="p">:</span> <span class="nb">bool</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">Callable</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Get the Scalar Decoder or Vector Decoder for the specified type based on repeated bool.</span>
 
 <span class="sd">        Args</span>
 <span class="sd">        ----</span>
-<span class="sd">            type (type_pb2.Field): Type of the Parameter.</span>
+<span class="sd">            type (type_pb2.Field.Kind.ValueType): Type of the Parameter.</span>
 
 <span class="sd">            repeated (bool): Boolean that represents if the Parameter is repeated or not.</span>
 
@@ -292,18 +296,18 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">Context</span><span class="o">.</span><span class="n">_FIELD_TYPE_TO_DECODER_MAPPING</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error can not decode type &#39;</span><span class="si">{</span><span class="nb">type</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
-        <span class="n">scalar</span><span class="p">,</span> <span class="n">array</span> <span class="o">=</span> <span class="n">Context</span><span class="o">.</span><span class="n">_FIELD_TYPE_TO_DECODER_MAPPING</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">type</span><span class="p">)</span>  <span class="c1"># type: ignore[call-overload]</span>
+        <span class="n">scalar</span><span class="p">,</span> <span class="n">array</span> <span class="o">=</span> <span class="n">Context</span><span class="o">.</span><span class="n">_FIELD_TYPE_TO_DECODER_MAPPING</span><span class="p">[</span><span class="nb">type</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">repeated</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">array</span>
         <span class="k">return</span> <span class="n">scalar</span></div>
 
 <div class="viewcode-block" id="Context.get_type_default"><a class="viewcode-back" href="../../../../autoapi/ni_measurement_service/_internal/parameter/serialization_strategy/index.html#ni_measurement_service._internal.parameter.serialization_strategy.Context.get_type_default">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">get_type_default</span><span class="p">(</span><span class="nb">type</span><span class="p">:</span> <span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="p">,</span> <span class="n">repeated</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">get_type_default</span><span class="p">(</span><span class="nb">type</span><span class="p">:</span> <span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">Kind</span><span class="o">.</span><span class="n">ValueType</span><span class="p">,</span> <span class="n">repeated</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Get the Type default.</span>
 
 <span class="sd">        Args</span>
 <span class="sd">        ----</span>
-<span class="sd">            type (type_pb2.Field): Type of the Parameter.</span>
+<span class="sd">            type (type_pb2.Field.Kind.ValueType): Type of the Parameter.</span>
 
 <span class="sd">            repeated (bool): Boolean that represents if the Parameter is repeated or not.</span>
 
@@ -314,7 +318,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">repeated</span><span class="p">:</span>
             <span class="k">return</span> <span class="nb">list</span><span class="p">()</span>
-        <span class="n">type_default_value</span> <span class="o">=</span> <span class="n">Context</span><span class="o">.</span><span class="n">_TYPE_DEFAULT_MAPPING</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">type</span><span class="p">)</span>  <span class="c1"># type: ignore[call-overload]</span>
+        <span class="n">type_default_value</span> <span class="o">=</span> <span class="n">Context</span><span class="o">.</span><span class="n">_TYPE_DEFAULT_MAPPING</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">type</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">type_default_value</span></div></div>
 </pre></div>
 

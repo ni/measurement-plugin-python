@@ -208,7 +208,7 @@ Attributes
 
       Args
       ----
-          type (type_pb2.Field): Type of the Parameter.
+          type (type_pb2.Field.Kind.ValueType): Type of the Parameter.
 
           repeated (bool): Boolean that represents if the Parameter is repeated or not.
 
@@ -229,7 +229,7 @@ Attributes
 
       Args
       ----
-          type (type_pb2.Field): Type of the Parameter.
+          type (type_pb2.Field.Kind.ValueType): Type of the Parameter.
 
           repeated (bool): Boolean that represents if the Parameter is repeated or not.
 
@@ -250,7 +250,7 @@ Attributes
 
       Args
       ----
-          type (type_pb2.Field): Type of the Parameter.
+          type (type_pb2.Field.Kind.ValueType): Type of the Parameter.
 
           repeated (bool): Boolean that represents if the Parameter is repeated or not.
 

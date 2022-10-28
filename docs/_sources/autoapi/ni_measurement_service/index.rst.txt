@@ -129,12 +129,6 @@ Classes
        version (str): The measurement version that helps to
        maintain versions of a measurement in future.
 
-       measurement_type (str): Represents category of measurement for the ProductType,
-       e.g. AC or DC measurements.
-
-       product_type (str): Represents type of the DUT,
-       e.g. ADC, LDO.
-
        ui_file_paths (list): Absolute paths of the UI file(s) linked to the measurement.
 
 
@@ -144,16 +138,6 @@ Classes
       
 
    .. py:attribute:: version
-      :annotation: :str
-
-      
-
-   .. py:attribute:: measurement_type
-      :annotation: :str
-
-      
-
-   .. py:attribute:: product_type
       :annotation: :str
 
       
@@ -176,17 +160,10 @@ Classes
        Measurements under same service class expected to perform same logic.
        For e.g., different version of measurement can come under same service class.
 
-       service_id (str): Unique service of the measurement. Should be an Unique GUID.
-
        description_url (str): Description URL of the measurement.
 
 
    .. py:attribute:: service_class
-      :annotation: :str
-
-      
-
-   .. py:attribute:: service_id
       :annotation: :str
 
       
@@ -268,6 +245,11 @@ Classes
 
       Host the registered measurement method as gRPC measurement service.
 
+      Returns
+      -------
+          MeasurementService: Context manager that can be used with a with-statement to close
+          the service.
+
       Raises
       ------
           Exception: If register measurement methods not available.
@@ -277,6 +259,16 @@ Classes
    .. py:method:: close_service()
 
       Close the Service after un-registering with discovery service and cleanups.
+
+
+   .. py:method:: __enter__()
+
+      Enter the runtime context related to the measurement service.
+
+
+   .. py:method:: __exit__(exc_type, exc_value, traceback)
+
+      Exit the runtime context related to the measurement service.
 
 
 
