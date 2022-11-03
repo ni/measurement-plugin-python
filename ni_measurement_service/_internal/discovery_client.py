@@ -13,8 +13,7 @@ from ni_measurement_service._internal.stubs.ni.measurementlink.discovery.v1 impo
     discovery_service_pb2,
     discovery_service_pb2_grpc,
 )
-from ni_measurement_service.measurement.info import MeasurementInfo
-from ni_measurement_service.measurement.info import ServiceInfo
+from ni_measurement_service.measurement.info import MeasurementInfo, ServiceInfo
 
 if sys.platform == "win32":
     import errno

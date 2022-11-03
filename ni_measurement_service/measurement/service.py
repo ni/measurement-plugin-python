@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
-from typing import Any, Dict
-from typing import Callable
+from functools import lru_cache
+from typing import Any, Callable, Dict
+
+import grpc
 
 from ni_measurement_service._internal import grpc_servicer
 from ni_measurement_service._internal.discovery_client import DiscoveryClient
@@ -229,3 +231,13 @@ class MeasurementService:
     def __exit__(self, exc_type, exc_value, traceback) -> None:
         """Exit the runtime context related to the measurement service."""
         self.close_service()
+
+    @lru_cache(maxsize=None)
+    def get_channel(self, service_class: str, location: str = "localhost") -> grpc.Channel:
+        """Return gRPC channel."""
+        service_location = self.grpc_service.discovery_client.resolve_service(
+            service_class, location
+        )
+        return grpc.insecure_channel(
+            f"{service_location.location}:{service_location.insecure_port}"
+        )
