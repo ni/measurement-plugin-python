@@ -12,7 +12,7 @@ import click
 import ni_measurement_service as nims
 
 measurement_info = nims.MeasurementInfo(
-    display_name="SampleMeasurement",
+    display_name="Sample Measurement (Python)",
     version="0.1.0.0",
     ui_file_paths=[
         pathlib.Path(__file__).resolve().parent / "SampleMeasurement.measui",

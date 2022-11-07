@@ -14,7 +14,7 @@ import nidaqmx
 import ni_measurement_service as nims
 
 measurement_info = nims.MeasurementInfo(
-    display_name="DAQmx Analog Input Measurement(Py)",
+    display_name="DAQmx Analog Input Measurement (Python)",
     version="0.1.0.0",
     ui_file_paths=[pathlib.Path(__file__).resolve().parent / "DAQmxAnalogInputMeasurement.measui"],
 )
@@ -79,7 +79,7 @@ def measure(physical_channel, sample_rate, number_of_samples):
     "-v", "--verbose", count=True, help="Enable verbose logging. Repeat to increase verbosity."
 )
 def main(verbose: int):
-    """Host the DAQmx Analog Input Measurement (Screen UI) service."""
+    """Host the DAQmx Analog Input Measurement (Measurement UI) service."""
     if verbose > 1:
         level = logging.DEBUG
     elif verbose == 1:

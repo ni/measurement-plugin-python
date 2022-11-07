@@ -19,7 +19,7 @@ import ni_measurement_service as nims
 NIDCPOWER_WAIT_FOR_EVENT_TIMEOUT_ERROR_CODE = -1074116059
 
 measurement_info = nims.MeasurementInfo(
-    display_name="DCMeasurement(Py)",
+    display_name="DC Measurement (Python)",
     version="0.1.0.0",
     ui_file_paths=[pathlib.Path(__file__).resolve().parent / "DCMeasurement.measui"],
 )
@@ -133,7 +133,7 @@ def print_fetched_measurements(measured_value, in_compliance):
     "-v", "--verbose", count=True, help="Enable verbose logging. Repeat to increase verbosity."
 )
 def main(verbose: int):
-    """Host the DC Measurement (Screen UI) service."""
+    """Host the DC Measurement (Measurement UI) service."""
     if verbose > 1:
         level = logging.DEBUG
     elif verbose == 1:

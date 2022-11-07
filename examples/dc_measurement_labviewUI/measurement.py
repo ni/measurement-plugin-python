@@ -19,7 +19,7 @@ import ni_measurement_service as nims
 NIDCPOWER_WAIT_FOR_EVENT_TIMEOUT_ERROR_CODE = -1074116059
 
 measurement_info = nims.MeasurementInfo(
-    display_name="DCMeasurement(Py_VI)",
+    display_name="DC Measurement (Python, LabVIEW UI)",
     version="0.1.0.0",
     ui_file_paths=[pathlib.Path(__file__).resolve().parent / "DCMeasurementUI.vi"],
 )
