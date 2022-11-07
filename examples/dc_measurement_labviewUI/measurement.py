@@ -57,12 +57,14 @@ def measure(
 
     """
     # User Logic :
-    print("Executing DCMeasurement(Py)")
+    logging.info(
+        "Executing measurement: resource_name=%s voltage_level=%g", resource_name, voltage_level
+    )
 
     pending_cancellation = False
 
     def cancel_callback():
-        print("Canceling DCMeasurement(Py)")
+        logging.info("Canceling measurement")
         session_to_abort = session
         if session_to_abort is not None:
             nonlocal pending_cancellation
@@ -114,18 +116,16 @@ def measure(
             in_compliance = session.channels[channel].query_in_compliance()
         session = None  # Don't abort after this point
 
-    print_fetched_measurements(measured_value, in_compliance)
-    print("---------------------------------")
+    _log_measured_values(measured_value, in_compliance)
+    logging.info("Completed measurement")
     return (measured_value[0].voltage, measured_value[0].current)
 
 
-def print_fetched_measurements(measured_value, in_compliance):
-    """Format and print the Measured Values."""
-    layout = "{: >20} : {:f}{}"
-    print("Fetched Measurement Values:")
-    print(layout.format("Voltage", measured_value[0].voltage, " V"))
-    print(layout.format("Current", measured_value[0].current, " A"))
-    print(layout.format("In compliance", in_compliance, ""))
+def _log_measured_values(measured_value, in_compliance):
+    """Log the measured values."""
+    logging.info("Voltage: %g V", measured_value[0].voltage)
+    logging.info("Current: %g A", measured_value[0].current)
+    logging.info("In compliance: %s", str(in_compliance))
 
 
 @click.command
