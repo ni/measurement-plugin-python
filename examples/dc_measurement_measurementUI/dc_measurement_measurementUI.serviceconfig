@@ -1,12 +1,11 @@
 {
   "services": [
     {
-      "displayName": "DCMeasurement(Py)",
+      "displayName": "DC Measurement (Python)",
       "serviceClass": "ni.examples.DCMeasurement_Python",
       "descriptionUrl": "https://www.ni.com/measurementservices/dcmeasurement.html",
       "providedInterfaces": [ "ni.measurements.v1.MeasurementService" ],
-      "path": "start.bat",
-      "attributes": [ "UserInterfaceType=MeasurementUI" ]
+      "path": "start.bat"
     }
   ]
 }

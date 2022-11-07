@@ -1,12 +1,11 @@
 {
   "services": [
     {
-      "displayName": "DCMeasurement(Py_VI)",
+      "displayName": "DC Measurement (Python, LabVIEW UI)",
       "serviceClass": "ni.examples.DCMeasurement_Python_VI",
       "descriptionUrl": "https://www.ni.com/measurementservices/dcmeasurement.html",
       "providedInterfaces": [ "ni.measurements.v1.MeasurementService" ],
-      "path": "start.bat",
-      "attributes": [ "UserInterfaceType=LabVIEW" ]
+      "path": "start.bat"
     }
   ]
 }
