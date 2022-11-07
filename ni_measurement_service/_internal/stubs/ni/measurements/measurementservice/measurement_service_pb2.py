@@ -25,7 +25,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
     syntax="proto3",
     serialized_options=b"\252\0024NationalInstruments.MeasurementServices.Measurements",
     create_key=_descriptor._internal_create_key,
-    serialized_pb=b'\n<ni/measurements/measurementservice/measurement_service.proto\x12\x12ni.measurements.v1\x1a\x19google/protobuf/any.proto\x1a\x1agoogle/protobuf/type.proto\x1a%ni/measurements/pin_map_context.proto"\x14\n\x12GetMetadataRequest"\xed\x01\n\x13GetMetadataResponse\x12\x43\n\x13measurement_details\x18\x01 \x01(\x0b\x32&.ni.measurements.v1.MeasurementDetails\x12G\n\x15measurement_signature\x18\x02 \x01(\x0b\x32(.ni.measurements.v1.MeasurementSignature\x12H\n\x16user_interface_details\x18\x03 \x03(\x0b\x32(.ni.measurements.v1.UserInterfaceDetails"\x81\x01\n\x0eMeasureRequest\x12\x36\n\x18\x63onfiguration_parameters\x18\x01 \x01(\x0b\x32\x14.google.protobuf.Any\x12\x37\n\x0fpin_map_context\x18\x02 \x01(\x0b\x32\x1e.ni.measurements.PinMapContext"8\n\x0fMeasureResponse\x12%\n\x07outputs\x18\x01 \x01(\x0b\x32\x14.google.protobuf.Any";\n\x12MeasurementDetails\x12\x14\n\x0c\x64isplay_name\x18\x01 \x01(\t\x12\x0f\n\x07version\x18\x02 \x01(\t"\x94\x02\n\x14MeasurementSignature\x12-\n%configuration_parameters_message_type\x18\x01 \x01(\t\x12L\n\x18\x63onfiguration_parameters\x18\x02 \x03(\x0b\x32*.ni.measurements.v1.ConfigurationParameter\x12\x34\n\x16\x63onfiguration_defaults\x18\x03 \x01(\x0b\x32\x14.google.protobuf.Any\x12\x1c\n\x14outputs_message_type\x18\x04 \x01(\t\x12+\n\x07outputs\x18\x05 \x03(\x0b\x32\x1a.ni.measurements.v1.Output"(\n\x14UserInterfaceDetails\x12\x10\n\x08\x66ile_url\x18\x01 \x01(\t"y\n\x16\x43onfigurationParameter\x12\x14\n\x0c\x66ield_number\x18\x01 \x01(\x05\x12)\n\x04type\x18\x02 \x01(\x0e\x32\x1b.google.protobuf.Field.Kind\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x10\n\x08repeated\x18\x04 \x01(\x08"i\n\x06Output\x12\x14\n\x0c\x66ield_number\x18\x01 \x01(\x05\x12)\n\x04type\x18\x02 \x01(\x0e\x32\x1b.google.protobuf.Field.Kind\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x10\n\x08repeated\x18\x04 \x01(\x08\x32\xc8\x01\n\x12MeasurementService\x12^\n\x0bGetMetadata\x12&.ni.measurements.v1.GetMetadataRequest\x1a\'.ni.measurements.v1.GetMetadataResponse\x12R\n\x07Measure\x12".ni.measurements.v1.MeasureRequest\x1a#.ni.measurements.v1.MeasureResponseB7\xaa\x02\x34NationalInstruments.MeasurementServices.Measurementsb\x06proto3',
+    serialized_pb=b'\n<ni/measurements/measurementservice/measurement_service.proto\x12\x12ni.measurements.v1\x1a\x19google/protobuf/any.proto\x1a\x1agoogle/protobuf/type.proto\x1a%ni/measurements/pin_map_context.proto"\x14\n\x12GetMetadataRequest"\xed\x01\n\x13GetMetadataResponse\x12\x43\n\x13measurement_details\x18\x01 \x01(\x0b\x32&.ni.measurements.v1.MeasurementDetails\x12G\n\x15measurement_signature\x18\x02 \x01(\x0b\x32(.ni.measurements.v1.MeasurementSignature\x12H\n\x16user_interface_details\x18\x03 \x03(\x0b\x32(.ni.measurements.v1.UserInterfaceDetails"\x81\x01\n\x0eMeasureRequest\x12\x36\n\x18\x63onfiguration_parameters\x18\x01 \x01(\x0b\x32\x14.google.protobuf.Any\x12\x37\n\x0fpin_map_context\x18\x02 \x01(\x0b\x32\x1e.ni.measurements.PinMapContext"8\n\x0fMeasureResponse\x12%\n\x07outputs\x18\x01 \x01(\x0b\x32\x14.google.protobuf.Any";\n\x12MeasurementDetails\x12\x14\n\x0c\x64isplay_name\x18\x01 \x01(\t\x12\x0f\n\x07version\x18\x02 \x01(\t"\x94\x02\n\x14MeasurementSignature\x12-\n%configuration_parameters_message_type\x18\x01 \x01(\t\x12L\n\x18\x63onfiguration_parameters\x18\x02 \x03(\x0b\x32*.ni.measurements.v1.ConfigurationParameter\x12\x34\n\x16\x63onfiguration_defaults\x18\x03 \x01(\x0b\x32\x14.google.protobuf.Any\x12\x1c\n\x14outputs_message_type\x18\x04 \x01(\t\x12+\n\x07outputs\x18\x05 \x03(\x0b\x32\x1a.ni.measurements.v1.Output"(\n\x14UserInterfaceDetails\x12\x10\n\x08\x66ile_url\x18\x01 \x01(\t"\xff\x01\n\x16\x43onfigurationParameter\x12\x14\n\x0c\x66ield_number\x18\x01 \x01(\x05\x12)\n\x04type\x18\x02 \x01(\x0e\x32\x1b.google.protobuf.Field.Kind\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x10\n\x08repeated\x18\x04 \x01(\x08\x12P\n\x0b\x61nnotations\x18\x05 \x03(\x0b\x32;.ni.measurements.v1.ConfigurationParameter.AnnotationsEntry\x1a\x32\n\x10\x41nnotationsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01"i\n\x06Output\x12\x14\n\x0c\x66ield_number\x18\x01 \x01(\x05\x12)\n\x04type\x18\x02 \x01(\x0e\x32\x1b.google.protobuf.Field.Kind\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x10\n\x08repeated\x18\x04 \x01(\x08\x32\xc8\x01\n\x12MeasurementService\x12^\n\x0bGetMetadata\x12&.ni.measurements.v1.GetMetadataRequest\x1a\'.ni.measurements.v1.GetMetadataResponse\x12R\n\x07Measure\x12".ni.measurements.v1.MeasureRequest\x1a#.ni.measurements.v1.MeasureResponseB7\xaa\x02\x34NationalInstruments.MeasurementServices.Measurementsb\x06proto3',
     dependencies=[
         google_dot_protobuf_dot_any__pb2.DESCRIPTOR,
         google_dot_protobuf_dot_type__pb2.DESCRIPTOR,
@@ -453,6 +453,65 @@ _USERINTERFACEDETAILS = _descriptor.Descriptor(
 )
 
 
+_CONFIGURATIONPARAMETER_ANNOTATIONSENTRY = _descriptor.Descriptor(
+    name="AnnotationsEntry",
+    full_name="ni.measurements.v1.ConfigurationParameter.AnnotationsEntry",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    create_key=_descriptor._internal_create_key,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="key",
+            full_name="ni.measurements.v1.ConfigurationParameter.AnnotationsEntry.key",
+            index=0,
+            number=1,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=b"".decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
+        ),
+        _descriptor.FieldDescriptor(
+            name="value",
+            full_name="ni.measurements.v1.ConfigurationParameter.AnnotationsEntry.value",
+            index=1,
+            number=2,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=b"".decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    serialized_options=b"8\001",
+    is_extendable=False,
+    syntax="proto3",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=1218,
+    serialized_end=1268,
+)
+
 _CONFIGURATIONPARAMETER = _descriptor.Descriptor(
     name="ConfigurationParameter",
     full_name="ni.measurements.v1.ConfigurationParameter",
@@ -537,17 +596,38 @@ _CONFIGURATIONPARAMETER = _descriptor.Descriptor(
             file=DESCRIPTOR,
             create_key=_descriptor._internal_create_key,
         ),
+        _descriptor.FieldDescriptor(
+            name="annotations",
+            full_name="ni.measurements.v1.ConfigurationParameter.annotations",
+            index=4,
+            number=5,
+            type=11,
+            cpp_type=10,
+            label=3,
+            has_default_value=False,
+            default_value=[],
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
+        ),
     ],
     extensions=[],
-    nested_types=[],
+    nested_types=[
+        _CONFIGURATIONPARAMETER_ANNOTATIONSENTRY,
+    ],
     enum_types=[],
     serialized_options=None,
     is_extendable=False,
     syntax="proto3",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=1012,
-    serialized_end=1133,
+    serialized_start=1013,
+    serialized_end=1268,
 )
 
 
@@ -644,8 +724,8 @@ _OUTPUT = _descriptor.Descriptor(
     syntax="proto3",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=1135,
-    serialized_end=1240,
+    serialized_start=1270,
+    serialized_end=1375,
 )
 
 _GETMETADATARESPONSE.fields_by_name["measurement_details"].message_type = _MEASUREMENTDETAILS
@@ -665,9 +745,13 @@ _MEASUREMENTSIGNATURE.fields_by_name[
     "configuration_defaults"
 ].message_type = google_dot_protobuf_dot_any__pb2._ANY
 _MEASUREMENTSIGNATURE.fields_by_name["outputs"].message_type = _OUTPUT
+_CONFIGURATIONPARAMETER_ANNOTATIONSENTRY.containing_type = _CONFIGURATIONPARAMETER
 _CONFIGURATIONPARAMETER.fields_by_name[
     "type"
 ].enum_type = google_dot_protobuf_dot_type__pb2._FIELD_KIND
+_CONFIGURATIONPARAMETER.fields_by_name[
+    "annotations"
+].message_type = _CONFIGURATIONPARAMETER_ANNOTATIONSENTRY
 _OUTPUT.fields_by_name["type"].enum_type = google_dot_protobuf_dot_type__pb2._FIELD_KIND
 DESCRIPTOR.message_types_by_name["GetMetadataRequest"] = _GETMETADATAREQUEST
 DESCRIPTOR.message_types_by_name["GetMetadataResponse"] = _GETMETADATARESPONSE
@@ -761,12 +845,22 @@ ConfigurationParameter = _reflection.GeneratedProtocolMessageType(
     "ConfigurationParameter",
     (_message.Message,),
     {
+        "AnnotationsEntry": _reflection.GeneratedProtocolMessageType(
+            "AnnotationsEntry",
+            (_message.Message,),
+            {
+                "DESCRIPTOR": _CONFIGURATIONPARAMETER_ANNOTATIONSENTRY,
+                "__module__": "ni.measurements.measurementservice.measurement_service_pb2"
+                # @@protoc_insertion_point(class_scope:ni.measurements.v1.ConfigurationParameter.AnnotationsEntry)
+            },
+        ),
         "DESCRIPTOR": _CONFIGURATIONPARAMETER,
         "__module__": "ni.measurements.measurementservice.measurement_service_pb2"
         # @@protoc_insertion_point(class_scope:ni.measurements.v1.ConfigurationParameter)
     },
 )
 _sym_db.RegisterMessage(ConfigurationParameter)
+_sym_db.RegisterMessage(ConfigurationParameter.AnnotationsEntry)
 
 Output = _reflection.GeneratedProtocolMessageType(
     "Output",
@@ -781,6 +875,7 @@ _sym_db.RegisterMessage(Output)
 
 
 DESCRIPTOR._options = None
+_CONFIGURATIONPARAMETER_ANNOTATIONSENTRY._options = None
 
 _MEASUREMENTSERVICE = _descriptor.ServiceDescriptor(
     name="MeasurementService",
@@ -789,8 +884,8 @@ _MEASUREMENTSERVICE = _descriptor.ServiceDescriptor(
     index=0,
     serialized_options=None,
     create_key=_descriptor._internal_create_key,
-    serialized_start=1243,
-    serialized_end=1443,
+    serialized_start=1378,
+    serialized_end=1578,
     methods=[
         _descriptor.MethodDescriptor(
             name="GetMetadata",

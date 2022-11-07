@@ -110,6 +110,16 @@ message ConfigurationParameter {
 
   // Required. True if this configuration parameter represents repeated data and False if it represents a scalar value.
   bool repeated = 4;
+
+  // Optional. Represents a set of annotations on the type.
+  // Well-known annotations:
+  // - Type specialization. The keys to other annotations will be read based on the value of `ni/type_specialization` annotation.
+  //   - Key: "ni/type_specialization"
+  //   - Common Values: "pin" ...    
+  // - For string parameter with ni/type_specialization annotation equals "pin"
+  //   - Key: "ni/pin.instrument_type"
+  //   - Common Values: "niDCPower", "niScope"...
+  map<string, string> annotations = 5;
 }
 
 // Message that defines an output of the measurement.
