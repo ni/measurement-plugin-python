@@ -9,10 +9,8 @@ import pytest
 from examples.sample_measurement import measurement
 from google.protobuf import any_pb2
 
-from ni_measurement_service._internal.stubs.ni.measurements.measurementservice import (
+from ni_measurement_service._internal.stubs.ni.measurementlink.measurement.v1 import (
     measurement_service_pb2,
-)
-from ni_measurement_service._internal.stubs.ni.measurements.measurementservice import (
     measurement_service_pb2_grpc,
 )
 from tests.assets import sample_measurement_test_pb2
@@ -126,11 +124,11 @@ def _validate_metadata_response(get_metadata_response):
 
     assert (
         get_metadata_response.measurement_signature.configuration_parameters_message_type
-        == "ni.measurements.v1.MeasurementConfigurations"
+        == "ni.measurementlink.measurement.v1.MeasurementConfigurations"
     )
     assert (
         get_metadata_response.measurement_signature.outputs_message_type
-        == "ni.measurements.v1.MeasurementOutputs"
+        == "ni.measurementlink.measurement.v1.MeasurementOutputs"
     )
     assert len(get_metadata_response.measurement_signature.configuration_parameters) == 4
     assert len(get_metadata_response.measurement_signature.outputs) == 4
