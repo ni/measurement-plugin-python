@@ -7,7 +7,7 @@ from grpc.framework.foundation import logging_pool
 from ni_measurement_service._internal.discovery_client import DiscoveryClient
 from ni_measurement_service._internal.grpc_servicer import MeasurementServiceServicer
 from ni_measurement_service._internal.parameter.metadata import ParameterMetadata
-from ni_measurement_service._internal.stubs.ni.measurements.measurementservice import (
+from ni_measurement_service._internal.stubs.ni.measurementlink.measurement.v1 import (
     measurement_service_pb2_grpc,
 )
 from ni_measurement_service.measurement.info import MeasurementInfo, ServiceInfo

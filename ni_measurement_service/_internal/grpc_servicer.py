@@ -13,11 +13,9 @@ from google.protobuf import any_pb2
 
 from ni_measurement_service._internal.parameter import serializer
 from ni_measurement_service._internal.parameter.metadata import ParameterMetadata
-from ni_measurement_service._internal.stubs.ni.measurements import pin_map_context_pb2
-from ni_measurement_service._internal.stubs.ni.measurements.measurementservice import (
+from ni_measurement_service._internal.stubs.ni.measurementlink import pin_map_context_pb2
+from ni_measurement_service._internal.stubs.ni.measurementlink.measurement.v1 import (
     measurement_service_pb2,
-)
-from ni_measurement_service._internal.stubs.ni.measurements.measurementservice import (
     measurement_service_pb2_grpc,
 )
 from ni_measurement_service.measurement.info import MeasurementInfo
@@ -138,8 +136,8 @@ class MeasurementServiceServicer(measurement_service_pb2_grpc.MeasurementService
 
         # Measurement Parameters
         measurement_signature = measurement_service_pb2.MeasurementSignature(
-            configuration_parameters_message_type="ni.measurements.v1.MeasurementConfigurations",
-            outputs_message_type="ni.measurements.v1.MeasurementOutputs",
+            configuration_parameters_message_type="ni.measurementlink.measurement.v1.MeasurementConfigurations",
+            outputs_message_type="ni.measurementlink.measurement.v1.MeasurementOutputs",
         )
 
         # Configurations
