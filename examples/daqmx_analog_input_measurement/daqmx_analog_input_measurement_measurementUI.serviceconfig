@@ -4,7 +4,7 @@
       "displayName": "DAQmxAnalogInputMeasurement(Py)",
       "serviceClass": "ni.examples.DAQmx_Analog_Input_Measurement_Python",
       "descriptionUrl": "https://www.ni.com/measurementservices/daqmxanaloginputmeasurement.html",
-      "providedInterfaces": [ "ni.measurements.v1.MeasurementService" ],
+      "providedInterfaces": [ "ni.measurementlink.measurement.v1.MeasurementService" ],
       "path": "start.bat",
       "attributes": [ "UserInterfaceType=MeasurementUI" ]
     }
