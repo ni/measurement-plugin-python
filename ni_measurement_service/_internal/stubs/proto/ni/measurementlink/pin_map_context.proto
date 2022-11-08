@@ -1,20 +1,15 @@
 syntax = "proto3";
 
-package ni.measurements;
+package ni.measurementlink;
 
-option csharp_namespace = "NationalInstruments.MeasurementServices";
-
-option go_package = "nationalinstruments.com/measurementservices/pin_map_context;pin_map_context";
-
+option csharp_namespace = "NationalInstruments.MeasurementLink";
+option go_package = "pinmapcontextv1";
 option java_multiple_files = true;
-
 option java_outer_classname = "PinMapContextProto";
-
-option java_package = "com.nationalinstruments.measurementservices";
-
-option objc_class_prefix = "NIMS";
-
-option php_namespace = "NationalInstruments\\MeasurementServices";
+option java_package = "com.ni.measurementlink";
+option objc_class_prefix = "NIM";
+option php_namespace = "NI\\MeasurementLink";
+option ruby_package = "NI::MeasurementLink";
 
 message PinMapContext {
     // Required. The resource id of the pin map in the Pin Map service that should be used for the call.

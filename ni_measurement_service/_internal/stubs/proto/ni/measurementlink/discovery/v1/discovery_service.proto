@@ -4,18 +4,18 @@ syntax = "proto3";
 
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-package ni.measurements.discovery.v1;
+package ni.measurementlink.discovery.v1;
 
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-option csharp_namespace = "NationalInstruments.MeasurementServices.Discovery.V1";
+option csharp_namespace = "NationalInstruments.MeasurementLink.Discovery.V1";
 option go_package = "discoveryv1";
 option java_multiple_files = true;
 option java_outer_classname = "DiscoveryServiceProto";
-option java_package = "com.ni.measurementservices.discovery.v1";
+option java_package = "com.ni.measurementlink.discovery.v1";
 option objc_class_prefix = "NIMD";
-option php_namespace = "NationalInstruments\\MeasurementServices\\Discovery\\V1";
-option ruby_package = "NationalInstruments::MeasurementServices::Discovery::V1";
+option php_namespace = "NI\\MeasurementLink\\Discovery\\V1";
+option ruby_package = "NI::MeasurementLink::Discovery::V1";
 
 // The service used as a registry for other services. This service can be used to discover
 // and activate other services present in the system.
