@@ -2,8 +2,8 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-from ni_measurement_service._internal.stubs.ni.measurements.discovery.v1 import (
-    discovery_service_pb2 as ni_dot_measurements_dot_discovery_dot_v1_dot_discovery__service__pb2,
+from ni_measurement_service._internal.stubs.ni.measurementlink.discovery.v1 import (
+    discovery_service_pb2 as ni_dot_measurementlink_dot_discovery_dot_v1_dot_discovery__service__pb2,
 )
 
 
@@ -19,24 +19,24 @@ class DiscoveryServiceStub(object):
             channel: A grpc.Channel.
         """
         self.RegisterService = channel.unary_unary(
-            "/ni.measurements.discovery.v1.DiscoveryService/RegisterService",
-            request_serializer=ni_dot_measurements_dot_discovery_dot_v1_dot_discovery__service__pb2.RegisterServiceRequest.SerializeToString,
-            response_deserializer=ni_dot_measurements_dot_discovery_dot_v1_dot_discovery__service__pb2.RegisterServiceResponse.FromString,
+            "/ni.measurementlink.discovery.v1.DiscoveryService/RegisterService",
+            request_serializer=ni_dot_measurementlink_dot_discovery_dot_v1_dot_discovery__service__pb2.RegisterServiceRequest.SerializeToString,
+            response_deserializer=ni_dot_measurementlink_dot_discovery_dot_v1_dot_discovery__service__pb2.RegisterServiceResponse.FromString,
         )
         self.UnregisterService = channel.unary_unary(
-            "/ni.measurements.discovery.v1.DiscoveryService/UnregisterService",
-            request_serializer=ni_dot_measurements_dot_discovery_dot_v1_dot_discovery__service__pb2.UnregisterServiceRequest.SerializeToString,
-            response_deserializer=ni_dot_measurements_dot_discovery_dot_v1_dot_discovery__service__pb2.UnregisterServiceResponse.FromString,
+            "/ni.measurementlink.discovery.v1.DiscoveryService/UnregisterService",
+            request_serializer=ni_dot_measurementlink_dot_discovery_dot_v1_dot_discovery__service__pb2.UnregisterServiceRequest.SerializeToString,
+            response_deserializer=ni_dot_measurementlink_dot_discovery_dot_v1_dot_discovery__service__pb2.UnregisterServiceResponse.FromString,
         )
         self.EnumerateServices = channel.unary_unary(
-            "/ni.measurements.discovery.v1.DiscoveryService/EnumerateServices",
-            request_serializer=ni_dot_measurements_dot_discovery_dot_v1_dot_discovery__service__pb2.EnumerateServicesRequest.SerializeToString,
-            response_deserializer=ni_dot_measurements_dot_discovery_dot_v1_dot_discovery__service__pb2.EnumerateServicesResponse.FromString,
+            "/ni.measurementlink.discovery.v1.DiscoveryService/EnumerateServices",
+            request_serializer=ni_dot_measurementlink_dot_discovery_dot_v1_dot_discovery__service__pb2.EnumerateServicesRequest.SerializeToString,
+            response_deserializer=ni_dot_measurementlink_dot_discovery_dot_v1_dot_discovery__service__pb2.EnumerateServicesResponse.FromString,
         )
         self.ResolveService = channel.unary_unary(
-            "/ni.measurements.discovery.v1.DiscoveryService/ResolveService",
-            request_serializer=ni_dot_measurements_dot_discovery_dot_v1_dot_discovery__service__pb2.ResolveServiceRequest.SerializeToString,
-            response_deserializer=ni_dot_measurements_dot_discovery_dot_v1_dot_discovery__service__pb2.ServiceLocation.FromString,
+            "/ni.measurementlink.discovery.v1.DiscoveryService/ResolveService",
+            request_serializer=ni_dot_measurementlink_dot_discovery_dot_v1_dot_discovery__service__pb2.ResolveServiceRequest.SerializeToString,
+            response_deserializer=ni_dot_measurementlink_dot_discovery_dot_v1_dot_discovery__service__pb2.ServiceLocation.FromString,
         )
 
 
@@ -95,27 +95,27 @@ def add_DiscoveryServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
         "RegisterService": grpc.unary_unary_rpc_method_handler(
             servicer.RegisterService,
-            request_deserializer=ni_dot_measurements_dot_discovery_dot_v1_dot_discovery__service__pb2.RegisterServiceRequest.FromString,
-            response_serializer=ni_dot_measurements_dot_discovery_dot_v1_dot_discovery__service__pb2.RegisterServiceResponse.SerializeToString,
+            request_deserializer=ni_dot_measurementlink_dot_discovery_dot_v1_dot_discovery__service__pb2.RegisterServiceRequest.FromString,
+            response_serializer=ni_dot_measurementlink_dot_discovery_dot_v1_dot_discovery__service__pb2.RegisterServiceResponse.SerializeToString,
         ),
         "UnregisterService": grpc.unary_unary_rpc_method_handler(
             servicer.UnregisterService,
-            request_deserializer=ni_dot_measurements_dot_discovery_dot_v1_dot_discovery__service__pb2.UnregisterServiceRequest.FromString,
-            response_serializer=ni_dot_measurements_dot_discovery_dot_v1_dot_discovery__service__pb2.UnregisterServiceResponse.SerializeToString,
+            request_deserializer=ni_dot_measurementlink_dot_discovery_dot_v1_dot_discovery__service__pb2.UnregisterServiceRequest.FromString,
+            response_serializer=ni_dot_measurementlink_dot_discovery_dot_v1_dot_discovery__service__pb2.UnregisterServiceResponse.SerializeToString,
         ),
         "EnumerateServices": grpc.unary_unary_rpc_method_handler(
             servicer.EnumerateServices,
-            request_deserializer=ni_dot_measurements_dot_discovery_dot_v1_dot_discovery__service__pb2.EnumerateServicesRequest.FromString,
-            response_serializer=ni_dot_measurements_dot_discovery_dot_v1_dot_discovery__service__pb2.EnumerateServicesResponse.SerializeToString,
+            request_deserializer=ni_dot_measurementlink_dot_discovery_dot_v1_dot_discovery__service__pb2.EnumerateServicesRequest.FromString,
+            response_serializer=ni_dot_measurementlink_dot_discovery_dot_v1_dot_discovery__service__pb2.EnumerateServicesResponse.SerializeToString,
         ),
         "ResolveService": grpc.unary_unary_rpc_method_handler(
             servicer.ResolveService,
-            request_deserializer=ni_dot_measurements_dot_discovery_dot_v1_dot_discovery__service__pb2.ResolveServiceRequest.FromString,
-            response_serializer=ni_dot_measurements_dot_discovery_dot_v1_dot_discovery__service__pb2.ServiceLocation.SerializeToString,
+            request_deserializer=ni_dot_measurementlink_dot_discovery_dot_v1_dot_discovery__service__pb2.ResolveServiceRequest.FromString,
+            response_serializer=ni_dot_measurementlink_dot_discovery_dot_v1_dot_discovery__service__pb2.ServiceLocation.SerializeToString,
         ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-        "ni.measurements.discovery.v1.DiscoveryService", rpc_method_handlers
+        "ni.measurementlink.discovery.v1.DiscoveryService", rpc_method_handlers
     )
     server.add_generic_rpc_handlers((generic_handler,))
 
@@ -142,9 +142,9 @@ class DiscoveryService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            "/ni.measurements.discovery.v1.DiscoveryService/RegisterService",
-            ni_dot_measurements_dot_discovery_dot_v1_dot_discovery__service__pb2.RegisterServiceRequest.SerializeToString,
-            ni_dot_measurements_dot_discovery_dot_v1_dot_discovery__service__pb2.RegisterServiceResponse.FromString,
+            "/ni.measurementlink.discovery.v1.DiscoveryService/RegisterService",
+            ni_dot_measurementlink_dot_discovery_dot_v1_dot_discovery__service__pb2.RegisterServiceRequest.SerializeToString,
+            ni_dot_measurementlink_dot_discovery_dot_v1_dot_discovery__service__pb2.RegisterServiceResponse.FromString,
             options,
             channel_credentials,
             insecure,
@@ -171,9 +171,9 @@ class DiscoveryService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            "/ni.measurements.discovery.v1.DiscoveryService/UnregisterService",
-            ni_dot_measurements_dot_discovery_dot_v1_dot_discovery__service__pb2.UnregisterServiceRequest.SerializeToString,
-            ni_dot_measurements_dot_discovery_dot_v1_dot_discovery__service__pb2.UnregisterServiceResponse.FromString,
+            "/ni.measurementlink.discovery.v1.DiscoveryService/UnregisterService",
+            ni_dot_measurementlink_dot_discovery_dot_v1_dot_discovery__service__pb2.UnregisterServiceRequest.SerializeToString,
+            ni_dot_measurementlink_dot_discovery_dot_v1_dot_discovery__service__pb2.UnregisterServiceResponse.FromString,
             options,
             channel_credentials,
             insecure,
@@ -200,9 +200,9 @@ class DiscoveryService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            "/ni.measurements.discovery.v1.DiscoveryService/EnumerateServices",
-            ni_dot_measurements_dot_discovery_dot_v1_dot_discovery__service__pb2.EnumerateServicesRequest.SerializeToString,
-            ni_dot_measurements_dot_discovery_dot_v1_dot_discovery__service__pb2.EnumerateServicesResponse.FromString,
+            "/ni.measurementlink.discovery.v1.DiscoveryService/EnumerateServices",
+            ni_dot_measurementlink_dot_discovery_dot_v1_dot_discovery__service__pb2.EnumerateServicesRequest.SerializeToString,
+            ni_dot_measurementlink_dot_discovery_dot_v1_dot_discovery__service__pb2.EnumerateServicesResponse.FromString,
             options,
             channel_credentials,
             insecure,
@@ -229,9 +229,9 @@ class DiscoveryService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            "/ni.measurements.discovery.v1.DiscoveryService/ResolveService",
-            ni_dot_measurements_dot_discovery_dot_v1_dot_discovery__service__pb2.ResolveServiceRequest.SerializeToString,
-            ni_dot_measurements_dot_discovery_dot_v1_dot_discovery__service__pb2.ServiceLocation.FromString,
+            "/ni.measurementlink.discovery.v1.DiscoveryService/ResolveService",
+            ni_dot_measurementlink_dot_discovery_dot_v1_dot_discovery__service__pb2.ResolveServiceRequest.SerializeToString,
+            ni_dot_measurementlink_dot_discovery_dot_v1_dot_discovery__service__pb2.ServiceLocation.FromString,
             options,
             channel_credentials,
             insecure,
