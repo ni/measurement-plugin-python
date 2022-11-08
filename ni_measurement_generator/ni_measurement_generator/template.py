@@ -32,13 +32,6 @@ def _create_file(template_name: str, file_name: str, directory_out, **template_a
     return ""
 
 
-def _create_bat(directory_out):
-    output_file = pathlib.Path(directory_out) / "start.bat"
-
-    with output_file.open("w") as fout:
-        fout.write(f'call python "%~dp0measurement.py"')
-
-
 def _check_version(ctx, param, version):
     pattern = r"^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$"
     if re.match(pattern, version):
@@ -160,4 +153,4 @@ def create_measurement(
             directory_out,
             ui_file=ui_file,
         )
-    _create_bat(directory_out)
+    _create_file("start.bat.mako", "start.bat", directory_out)
