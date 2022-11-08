@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, Dict
 from typing import Callable
 
 from ni_measurement_service._internal import grpc_servicer
@@ -100,7 +100,7 @@ class MeasurementService:
         self.measure_function = measurement_function
         return measurement_function
 
-    def configuration(self, display_name: str, type: DataType, default_value: Any) -> Callable:
+    def configuration(self, display_name: str, type: DataType, default_value: Any, *, instrument_type: str = None) -> Callable:
         """Add configuration parameter info for a measurement.Recommended to use as a decorator.
 
         Args
@@ -111,6 +111,8 @@ class MeasurementService:
 
             default_value (Any): Default value of the configuration.
 
+            instrument_type (str): Optional. Intrument type to be used to show instrument specific values to the configurations.
+
         Returns
         -------
             Callable: Callable that takes in Any Python Function
@@ -118,8 +120,9 @@ class MeasurementService:
 
         """
         grpc_field_type, repeated = type.value
+        annotations = self.__get_annotations(type, instrument_type)
         parameter = parameter_metadata.ParameterMetadata(
-            display_name, grpc_field_type, repeated, default_value
+            display_name, grpc_field_type, repeated, default_value, annotations
         )
         parameter_metadata.validate_default_value_type(parameter)
         self.configuration_parameter_list.append(parameter)
@@ -146,7 +149,7 @@ class MeasurementService:
         """
         grpc_field_type, repeated = type.value
         parameter = parameter_metadata.ParameterMetadata(
-            display_name, grpc_field_type, repeated, None
+            display_name, grpc_field_type, repeated, None, None
         )
         self.output_parameter_list.append(parameter)
 
@@ -178,6 +181,23 @@ class MeasurementService:
             self.measure_function,
         )
         return self
+
+    def __get_annotations(self, type: DataType, instrument_type: str) -> Dict[str, str]:
+        """ Gets the annotations for the parameter based on the type and instruement type information
+
+        Returns
+        -------
+            Dict[str, str]: The annotations for the given type.
+
+        """
+        annotations = {}
+        if type == DataType.Pin:
+            annotations["ni/type_specialization"] = "Pin"
+
+            if instrument_type != None:
+                annotations["ni/pin.instrument_type"] = instrument_type
+
+        return annotations
 
     def close_service(self) -> None:
         """Close the Service after un-registering with discovery service and cleanups."""
