@@ -58,7 +58,7 @@ def test___default_value_same_as_type___validate___raises_no_exception(type, def
     """
     grpc_field_type, repeated = DataType.Int32.value
     parameter_metadata = metadata.ParameterMetadata(
-        "test_display_name", grpc_field_type, repeated, 1, None
+        "test_display_name", grpc_field_type, repeated, 1, annotations=None
     )
 
     metadata.validate_default_value_type(parameter_metadata)  # implicitly assert does not throw

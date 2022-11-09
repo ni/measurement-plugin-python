@@ -30,7 +30,7 @@ class ParameterMetadata(NamedTuple):
     type: type_pb2.Field.Kind.ValueType
     repeated: bool
     default_value: Any
-    annotations: Dict[str,str]
+    annotations: Dict[str, str]
 
 
 def validate_default_value_type(parameter_metadata: ParameterMetadata) -> None:
