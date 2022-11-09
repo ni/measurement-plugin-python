@@ -4,10 +4,12 @@ User can Import driver and 3rd Party Packages based on requirements.
 
 """
 
+import contextlib
 import logging
 import pathlib
 import sys
 import time
+import typing
 
 import click
 import grpc
@@ -74,8 +76,24 @@ def measure(
     dc_measurement_service.context.add_cancel_callback(cancel_callback)
     time_remaining = dc_measurement_service.context.time_remaining
 
-    with nidcpower.Session(resource_name=resource_name) as session:
-        # Configure the session.
+    with contextlib.ExitStack() as stack:
+        session_kwargs = {}
+        if dc_measurement_service_options.use_grpc_device:
+            session_grpc_address = dc_measurement_service_options.grpc_device_address
+            if not session_grpc_address:
+                session_grpc_address = dc_measurement_service.discovery_client.resolve_service(
+                    provided_interface="nidcpower_grpc.NiDCPower"
+                ).insecure_address
+            session_grpc_channel = stack.enter_context(grpc.insecure_channel(session_grpc_address))
+            session_kwargs["_grpc_options"] = nidcpower.GrpcSessionOptions(
+                session_grpc_channel,
+                session_name="",
+                initialization_behavior=nidcpower.SessionInitializationBehavior.AUTO,
+            )
+
+        session = stack.enter_context(
+            nidcpower.Session(resource_name=resource_name, **session_kwargs)
+        )
         session.source_mode = nidcpower.SourceMode.SINGLE_POINT
         session.output_function = nidcpower.OutputFunction.DC_VOLTAGE
         session.current_limit = current_limit
@@ -132,7 +150,15 @@ def _log_measured_values(measured_value, in_compliance):
 @click.option(
     "-v", "--verbose", count=True, help="Enable verbose logging. Repeat to increase verbosity."
 )
-def main(verbose: int):
+@click.option(
+    "--use-grpc-device", default=False, is_flag=True, help="Use the NI gRPC Device Server."
+)
+@click.option(
+    "--grpc-device-address",
+    default="",
+    help="NI gRPC Device Server address (e.g. localhost:31763). If unspecified, use the discovery service to resolve the address.",
+)
+def main(verbose: int, use_grpc_device: bool, grpc_device_address: str):
     """Host the DC Measurement (LabVIEW UI) service."""
     if verbose > 1:
         level = logging.DEBUG
@@ -141,6 +167,11 @@ def main(verbose: int):
     else:
         level = logging.WARNING
     logging.basicConfig(format="%(asctime)s %(levelname)s: %(message)s", level=level)
+
+    global dc_measurement_service_options
+    dc_measurement_service_options = ServiceOptions(
+        use_grpc_device=use_grpc_device, grpc_device_address=grpc_device_address
+    )
 
     with dc_measurement_service.host_service():
         input("Press enter to close the measurement service.\n")
