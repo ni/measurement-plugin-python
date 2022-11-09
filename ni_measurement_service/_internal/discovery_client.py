@@ -196,7 +196,7 @@ class DiscoveryClient:
         request.provided_interface = provided_interface
         request.service_class = service_class
 
-        response = self.stub.ResolveService(request)
+        response: discovery_service_pb2.ServiceLocation = self.stub.ResolveService(request)
 
         return ServiceLocation(
             location=response.location,
