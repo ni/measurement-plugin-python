@@ -4,7 +4,7 @@
       "displayName": "DCMeasurement(Py)",
       "serviceClass": "ni.examples.DCMeasurement_Python",
       "descriptionUrl": "https://www.ni.com/measurementservices/dcmeasurement.html",
-      "providedInterfaces": [ "ni.measurements.v1.MeasurementService" ],
+      "providedInterfaces": [ "ni.measurementlink.measurement.v1.MeasurementService" ],
       "path": "start.bat",
       "attributes": [ "UserInterfaceType=MeasurementUI" ]
     }

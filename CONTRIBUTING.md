@@ -68,9 +68,9 @@ poetry add -D <name_of_dev_dependency>:<version>
 
 The `ni_measurement_service\_internal\stubs` directory contains the auto-generated python files based on measurement services related protobuf (.proto) files. The file needs to be replaced whenever there is a change to these .proto files:
 
-- ni/measurements/pin_map_context.proto
-- ni/measurements/discovery/v1/discovery_service.proto
-- ni/measurements/measurementservice/measurement_service.proto
+- ni/measurementlink/pin_map_context.proto
+- ni/measurementlink/discovery/v1/discovery_service.proto
+- ni/measurementlink/measurement/v1/measurement_service.proto
 
 The latest .proto files are available in [Azure Repo](https://dev.azure.com/ni/DevCentral/_git/ASW?path=/Source/Protos). From the Azure Repo manually download and overwrite the proto files under the `ni_measurement_service\_internal\stubs\proto` folder.
 

@@ -2,8 +2,8 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-from ni_measurement_service._internal.stubs.ni.measurements.measurementservice import (
-    measurement_service_pb2 as ni_dot_measurements_dot_measurementservice_dot_measurement__service__pb2,
+from ni_measurement_service._internal.stubs.ni.measurementlink.measurement.v1 import (
+    measurement_service_pb2 as ni_dot_measurementlink_dot_measurement_dot_v1_dot_measurement__service__pb2,
 )
 
 
@@ -19,14 +19,14 @@ class MeasurementServiceStub(object):
             channel: A grpc.Channel.
         """
         self.GetMetadata = channel.unary_unary(
-            "/ni.measurements.v1.MeasurementService/GetMetadata",
-            request_serializer=ni_dot_measurements_dot_measurementservice_dot_measurement__service__pb2.GetMetadataRequest.SerializeToString,
-            response_deserializer=ni_dot_measurements_dot_measurementservice_dot_measurement__service__pb2.GetMetadataResponse.FromString,
+            "/ni.measurementlink.measurement.v1.MeasurementService/GetMetadata",
+            request_serializer=ni_dot_measurementlink_dot_measurement_dot_v1_dot_measurement__service__pb2.GetMetadataRequest.SerializeToString,
+            response_deserializer=ni_dot_measurementlink_dot_measurement_dot_v1_dot_measurement__service__pb2.GetMetadataResponse.FromString,
         )
         self.Measure = channel.unary_unary(
-            "/ni.measurements.v1.MeasurementService/Measure",
-            request_serializer=ni_dot_measurements_dot_measurementservice_dot_measurement__service__pb2.MeasureRequest.SerializeToString,
-            response_deserializer=ni_dot_measurements_dot_measurementservice_dot_measurement__service__pb2.MeasureResponse.FromString,
+            "/ni.measurementlink.measurement.v1.MeasurementService/Measure",
+            request_serializer=ni_dot_measurementlink_dot_measurement_dot_v1_dot_measurement__service__pb2.MeasureRequest.SerializeToString,
+            response_deserializer=ni_dot_measurementlink_dot_measurement_dot_v1_dot_measurement__service__pb2.MeasureResponse.FromString,
         )
 
 
@@ -52,17 +52,17 @@ def add_MeasurementServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
         "GetMetadata": grpc.unary_unary_rpc_method_handler(
             servicer.GetMetadata,
-            request_deserializer=ni_dot_measurements_dot_measurementservice_dot_measurement__service__pb2.GetMetadataRequest.FromString,
-            response_serializer=ni_dot_measurements_dot_measurementservice_dot_measurement__service__pb2.GetMetadataResponse.SerializeToString,
+            request_deserializer=ni_dot_measurementlink_dot_measurement_dot_v1_dot_measurement__service__pb2.GetMetadataRequest.FromString,
+            response_serializer=ni_dot_measurementlink_dot_measurement_dot_v1_dot_measurement__service__pb2.GetMetadataResponse.SerializeToString,
         ),
         "Measure": grpc.unary_unary_rpc_method_handler(
             servicer.Measure,
-            request_deserializer=ni_dot_measurements_dot_measurementservice_dot_measurement__service__pb2.MeasureRequest.FromString,
-            response_serializer=ni_dot_measurements_dot_measurementservice_dot_measurement__service__pb2.MeasureResponse.SerializeToString,
+            request_deserializer=ni_dot_measurementlink_dot_measurement_dot_v1_dot_measurement__service__pb2.MeasureRequest.FromString,
+            response_serializer=ni_dot_measurementlink_dot_measurement_dot_v1_dot_measurement__service__pb2.MeasureResponse.SerializeToString,
         ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-        "ni.measurements.v1.MeasurementService", rpc_method_handlers
+        "ni.measurementlink.measurement.v1.MeasurementService", rpc_method_handlers
     )
     server.add_generic_rpc_handlers((generic_handler,))
 
@@ -89,9 +89,9 @@ class MeasurementService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            "/ni.measurements.v1.MeasurementService/GetMetadata",
-            ni_dot_measurements_dot_measurementservice_dot_measurement__service__pb2.GetMetadataRequest.SerializeToString,
-            ni_dot_measurements_dot_measurementservice_dot_measurement__service__pb2.GetMetadataResponse.FromString,
+            "/ni.measurementlink.measurement.v1.MeasurementService/GetMetadata",
+            ni_dot_measurementlink_dot_measurement_dot_v1_dot_measurement__service__pb2.GetMetadataRequest.SerializeToString,
+            ni_dot_measurementlink_dot_measurement_dot_v1_dot_measurement__service__pb2.GetMetadataResponse.FromString,
             options,
             channel_credentials,
             insecure,
@@ -118,9 +118,9 @@ class MeasurementService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            "/ni.measurements.v1.MeasurementService/Measure",
-            ni_dot_measurements_dot_measurementservice_dot_measurement__service__pb2.MeasureRequest.SerializeToString,
-            ni_dot_measurements_dot_measurementservice_dot_measurement__service__pb2.MeasureResponse.FromString,
+            "/ni.measurementlink.measurement.v1.MeasurementService/Measure",
+            ni_dot_measurementlink_dot_measurement_dot_v1_dot_measurement__service__pb2.MeasureRequest.SerializeToString,
+            ni_dot_measurementlink_dot_measurement_dot_v1_dot_measurement__service__pb2.MeasureResponse.FromString,
             options,
             channel_credentials,
             insecure,

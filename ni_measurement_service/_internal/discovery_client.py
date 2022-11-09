@@ -9,10 +9,8 @@ import typing
 
 import grpc
 
-from ni_measurement_service._internal.stubs.ni.measurements.discovery.v1 import (
+from ni_measurement_service._internal.stubs.ni.measurementlink.discovery.v1 import (
     discovery_service_pb2,
-)
-from ni_measurement_service._internal.stubs.ni.measurements.discovery.v1 import (
     discovery_service_pb2_grpc,
 )
 from ni_measurement_service.measurement.info import MeasurementInfo
@@ -26,7 +24,7 @@ if sys.platform == "win32":
     import winerror
 
 
-_PROVIDED_MEASUREMENT_SERVICE = "ni.measurements.v1.MeasurementService"
+_PROVIDED_MEASUREMENT_SERVICE = "ni.measurementlink.measurement.v1.MeasurementService"
 
 _logger = logging.getLogger(__name__)
 

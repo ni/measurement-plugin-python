@@ -11,7 +11,7 @@ import google.protobuf.descriptor
 import google.protobuf.internal.containers
 import google.protobuf.message
 import google.protobuf.type_pb2
-import ni.measurements.pin_map_context_pb2
+import ni.measurementlink.pin_map_context_pb2
 import sys
 
 if sys.version_info >= (3, 8):
@@ -92,7 +92,7 @@ class MeasureRequest(google.protobuf.message.Message):
         to valid input ranges.
         """
     @property
-    def pin_map_context(self) -> ni.measurements.pin_map_context_pb2.PinMapContext:
+    def pin_map_context(self) -> ni.measurementlink.pin_map_context_pb2.PinMapContext:
         """Optional. Specifies the pin map context for the measurement, if any. This field is optional in that callers
         may not always have a pin map context available to include in the request message. Each measurement will
         define if a valid pin map context is required in order to run or not and generate errors appropriately.
@@ -101,7 +101,7 @@ class MeasureRequest(google.protobuf.message.Message):
         self,
         *,
         configuration_parameters: google.protobuf.any_pb2.Any | None = ...,
-        pin_map_context: ni.measurements.pin_map_context_pb2.PinMapContext | None = ...,
+        pin_map_context: ni.measurementlink.pin_map_context_pb2.PinMapContext | None = ...,
     ) -> None: ...
     def HasField(
         self,

@@ -4,17 +4,24 @@ syntax = "proto3";
 
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-package ni.measurements.v1;
+package ni.measurementlink.measurement.v1;
 
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
 import "google/protobuf/any.proto";
 import "google/protobuf/type.proto";
-import "ni/measurements/pin_map_context.proto";
+import "ni/measurementlink/pin_map_context.proto";
 
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-option csharp_namespace = "NationalInstruments.MeasurementServices.Measurements";
+option csharp_namespace = "NationalInstruments.MeasurementLink.Measurement.V1";
+option go_package = "measurementv1";
+option java_multiple_files = true;
+option java_outer_classname = "MeasurementServiceProto";
+option java_package = "com.ni.measurementlink.measurement.v1";
+option objc_class_prefix = "NIMM";
+option php_namespace = "NI\\MeasurementLink\\Measurement\\V1";
+option ruby_package = "NI::MeasurementLink::Measurement::V1";
 
 // Service that implements a measurement. Unlike other services, a MeasurementService is designed to be a plugin
 // where there can be multiple implementations of the service that provide different measurement capabilities.
@@ -48,7 +55,7 @@ message MeasureRequest{
   // Optional. Specifies the pin map context for the measurement, if any. This field is optional in that callers
   // may not always have a pin map context available to include in the request message. Each measurement will
   // define if a valid pin map context is required in order to run or not and generate errors appropriately.
-  ni.measurements.PinMapContext pin_map_context = 2;
+  ni.measurementlink.PinMapContext pin_map_context = 2;
 }
 
 message MeasureResponse{
