@@ -100,8 +100,7 @@ class MeasurementService:
         self.measure_function = measurement_function
         return measurement_function
 
-    def configuration(
-        self, display_name: str, type: DataType, default_value: Any, *, instrument_type: str = ""
+    def configuration(self, display_name: str, type: DataType, default_value: Any, *, instrument_type: str = ""
     ) -> Callable:
         """Add configuration parameter info for a measurement.Recommended to use as a decorator.
 
@@ -189,7 +188,7 @@ class MeasurementService:
     def _get_annotations(self, type: DataType, instrument_type: str) -> Dict[str, str]:
         annotations = {}
         if type == DataType.Pin:
-            annotations["ni/type_specialization"] = "Pin"
+            annotations["ni/type_specialization"] = "pin"
 
             if instrument_type != "" or instrument_type is not None:
                 annotations["ni/pin.instrument_type"] = instrument_type
