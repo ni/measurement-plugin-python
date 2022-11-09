@@ -113,7 +113,7 @@ class MeasurementService:
             default_value (Any): Default value of the configuration.
 
             instrument_type (str): Optional.
-            Intrument type to be used to show instrument specific values to the configurations.
+            Instrument type to be used to show instrument specific values to the configurations.
             This is only supported when configuration type is DataType.Pin.
 
         Returns
