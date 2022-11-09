@@ -191,7 +191,7 @@ class MeasurementService:
         if type == DataType.Pin:
             annotations["ni/type_specialization"] = "Pin"
 
-            if instrument_type is not "" or instrument_type is not None:
+            if instrument_type != "" or instrument_type is not None:
                 annotations["ni/pin.instrument_type"] = instrument_type
 
         return annotations
