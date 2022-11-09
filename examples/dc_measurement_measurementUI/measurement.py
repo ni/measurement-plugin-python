@@ -93,12 +93,12 @@ def measure(
             session_grpc_address = dc_measurement_service_options.grpc_device_address
             if not session_grpc_address:
                 session_grpc_address = dc_measurement_service.discovery_client.resolve_service(
-                    provided_interface="nidcpower_grpc.NiDCPower"
+                    provided_interface=nidcpower.GRPC_SERVICE_INTERFACE_NAME
                 ).insecure_address
             session_grpc_channel = stack.enter_context(grpc.insecure_channel(session_grpc_address))
             session_kwargs["_grpc_options"] = nidcpower.GrpcSessionOptions(
                 session_grpc_channel,
-                session_name="",
+                session_name=resource_name,
                 initialization_behavior=nidcpower.SessionInitializationBehavior.AUTO,
             )
 
