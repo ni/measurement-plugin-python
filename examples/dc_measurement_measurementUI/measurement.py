@@ -9,7 +9,7 @@ import logging
 import pathlib
 import sys
 import time
-from typing import NamedTuple
+import typing
 
 import click
 import grpc
@@ -17,9 +17,7 @@ import hightime
 import nidcpower
 
 import ni_measurement_service as nims
-from ni_measurement_service._internal.stubs.ni.measurementlink.discovery.v1 import (
-    discovery_service_pb2,
-)
+
 
 NIDCPOWER_WAIT_FOR_EVENT_TIMEOUT_ERROR_CODE = -1074116059
 
@@ -37,7 +35,7 @@ service_info = nims.ServiceInfo(
 dc_measurement_service = nims.MeasurementService(measurement_info, service_info)
 
 
-class ServiceOptions(NamedTuple):
+class ServiceOptions(typing.NamedTuple):
     """Service options specified on the command line."""
 
     use_grpc_device: bool
@@ -92,11 +90,12 @@ def measure(
     with contextlib.ExitStack() as stack:
         session_kwargs = {}
         if dc_measurement_service_options.use_grpc_device:
-            session_grpc_channel = stack.enter_context(
-                _create_grpc_device_channel(
-                    dc_measurement_service_options, provided_interface="nidcpower_grpc.NiDCPower"
-                )
-            )
+            session_grpc_address = dc_measurement_service_options.grpc_device_address
+            if not session_grpc_address:
+                session_grpc_address = dc_measurement_service.discovery_client.resolve_service(
+                    provided_interface="nidcpower_grpc.NiDCPower"
+                ).insecure_address
+            session_grpc_channel = stack.enter_context(grpc.insecure_channel(session_grpc_address))
             session_kwargs["_grpc_options"] = nidcpower.GrpcSessionOptions(
                 session_grpc_channel,
                 session_name="",
@@ -156,18 +155,6 @@ def _log_measured_values(measured_value, in_compliance):
     logging.info("Voltage: %g V", measured_value[0].voltage)
     logging.info("Current: %g A", measured_value[0].current)
     logging.info("In compliance: %s", str(in_compliance))
-
-
-def _create_grpc_device_channel(
-    service_options: ServiceOptions, provided_interface: str
-) -> grpc.Channel:
-    address = service_options.grpc_device_address
-    if not address:
-        service_location = dc_measurement_service.grpc_service.discovery_client.stub.ResolveService(
-            discovery_service_pb2.ResolveServiceRequest(provided_interface=provided_interface)
-        )
-        address = f"{service_location.address}:{service_location.insecure_port}"
-    return grpc.insecure_channel(address)
 
 
 @click.command
