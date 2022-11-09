@@ -175,18 +175,23 @@ class DiscoveryClient:
         return True
 
     def resolve_service(self, provided_interface: str, service_class: str = "") -> ServiceLocation:
-        """Given a description of a service, returns information that can be used to establish communication
-        with that service. If necessary, the service will be started by the discovery service if it has not
-        already been started.
+        """Resolve the location of a service.
+
+        Given a description of a service, returns information that can be used to establish
+        communication with that service. If necessary, the service will be started by the
+        discovery service if it has not already been started.
 
         Args:
         ----
             provided_interface: The gRPC Full Name of the service.
-            service_class: The service "class" that should be matched. If the value is not specified
-                and there is more than one matching service registered, an error is returned.
+            service_class: The service "class" that should be matched. If the value is not
+                specified and there is more than one matching service registered, an error
+                is returned.
+
         Returns
         -------
             A ServiceLocation location object that represents the location of a service.
+
         """
         request = discovery_service_pb2.ResolveServiceRequest()
         request.provided_interface = provided_interface

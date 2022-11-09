@@ -42,7 +42,7 @@ class ServiceOptions(typing.NamedTuple):
     grpc_device_address: str
 
 
-dc_measurement_service_options = ServiceOptions(use_grpc_device=False, grpc_device_address="")
+service_options = ServiceOptions(use_grpc_device=False, grpc_device_address="")
 
 
 @dc_measurement_service.register_measurement
@@ -89,8 +89,8 @@ def measure(
 
     with contextlib.ExitStack() as stack:
         session_kwargs = {}
-        if dc_measurement_service_options.use_grpc_device:
-            session_grpc_address = dc_measurement_service_options.grpc_device_address
+        if service_options.use_grpc_device:
+            session_grpc_address = service_options.grpc_device_address
             if not session_grpc_address:
                 session_grpc_address = dc_measurement_service.discovery_client.resolve_service(
                     provided_interface=nidcpower.GRPC_SERVICE_INTERFACE_NAME
@@ -179,8 +179,8 @@ def main(verbose: int, use_grpc_device: bool, grpc_device_address: str):
         level = logging.WARNING
     logging.basicConfig(format="%(asctime)s %(levelname)s: %(message)s", level=level)
 
-    global dc_measurement_service_options
-    dc_measurement_service_options = ServiceOptions(
+    global service_options
+    service_options = ServiceOptions(
         use_grpc_device=use_grpc_device, grpc_device_address=grpc_device_address
     )
 
