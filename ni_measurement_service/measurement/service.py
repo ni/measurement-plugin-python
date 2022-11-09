@@ -101,7 +101,7 @@ class MeasurementService:
         return measurement_function
 
     def configuration(
-        self, display_name: str, type: DataType, default_value: Any, *, instrument_type: str = None
+        self, display_name: str, type: DataType, default_value: Any, *, instrument_type: str = ""
     ) -> Callable:
         """Add configuration parameter info for a measurement.Recommended to use as a decorator.
 
@@ -153,7 +153,7 @@ class MeasurementService:
         """
         grpc_field_type, repeated = type.value
         parameter = parameter_metadata.ParameterMetadata(
-            display_name, grpc_field_type, repeated, default_value=None, annotations=None
+            display_name, grpc_field_type, repeated, default_value=None, annotations={}
         )
         self.output_parameter_list.append(parameter)
 
@@ -191,7 +191,7 @@ class MeasurementService:
         if type == DataType.Pin:
             annotations["ni/type_specialization"] = "Pin"
 
-            if instrument_type is not None:
+            if instrument_type is not "" or instrument_type is not None:
                 annotations["ni/pin.instrument_type"] = instrument_type
 
         return annotations
