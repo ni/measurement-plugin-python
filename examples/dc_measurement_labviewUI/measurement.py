@@ -9,7 +9,7 @@ import logging
 import pathlib
 import sys
 import time
-import typing
+from typing import List, NamedTuple
 
 import click
 import grpc
@@ -34,7 +34,7 @@ service_info = nims.ServiceInfo(
 dc_measurement_service = nims.MeasurementService(measurement_info, service_info)
 
 
-class ServiceOptions(typing.NamedTuple):
+class ServiceOptions(NamedTuple):
     """Service options specified on the command line."""
 
     use_grpc_device: bool
@@ -111,8 +111,8 @@ def measure(
         session.current_limit_range = current_limit_range
         session.source_delay = hightime.timedelta(seconds=source_delay)
         session.voltage_level = voltage_level
-        measured_value = None
-        in_compliance = None
+        measured_value: List[nidcpower.Measurement] = []
+        in_compliance = False
         with session.initiate():
             deadline = time.time() + time_remaining
             while True:
