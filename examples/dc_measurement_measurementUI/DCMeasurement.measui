@@ -28,10 +28,10 @@
 				<Label Height="[float]16" Id="773adb6f1d1d4b1aa089d06052643f3a" LabelOwner="[UIModel]6d5d2dfd900343e7aa9550cc343c153c" Left="[float]20" Text="[string]Voltage Measurement (V)" Top="[float]16" Width="[float]136" xmlns="http://www.ni.com/PanelCommon" />
 				<Label Height="[float]16" Id="efe7d830f4e8408db480881024297fc3" LabelOwner="[UIModel]5da06abaf2604546b26bbb85f5fb3e26" Left="[float]20" Text="[string]Current Measurement (A)" Top="[float]66" Width="[float]136" xmlns="http://www.ni.com/PanelCommon" />
 			</ScreenSurfaceCanvas>
-			<ChannelStringControl AcceptsReturn="[bool]False" BaseName="[string]String" Channel="[string]Configuration/Resource name" Height="[float]24" HorizontalScrollBarVisibility="[ScrollBarVisibility]Hidden" Id="9b31a82d9b6240409bac2174fd4c5a13" IsLabelBoundToChannel="[bool]False" Label="[UIModel]5bbf7c5f53314e61a6f8ea81a1d653c8" Left="[float]40" Text="[string]" Top="[float]40" VerticalScrollBarVisibility="[ScrollBarVisibility]Auto" Width="[float]200" />
+			<ChannelStringControl AcceptsReturn="[bool]False" BaseName="[string]String" Channel="[string]Configuration/Pin name" Height="[float]24" HorizontalScrollBarVisibility="[ScrollBarVisibility]Hidden" Id="9b31a82d9b6240409bac2174fd4c5a13" IsLabelBoundToChannel="[bool]False" Label="[UIModel]5bbf7c5f53314e61a6f8ea81a1d653c8" Left="[float]40" Text="[string]" Top="[float]40" VerticalScrollBarVisibility="[ScrollBarVisibility]Auto" Width="[float]200" />
 			<Label Height="[float]16" Id="2f53b6c7f87b41879b8d84f4fb87c844" LabelOwner="[UIModel]4b93ed01d79049dc8d2c3ef426384b35" Left="[float]40" Text="[string]Measurement Configurations" Top="[float]80" Width="[float]156" xmlns="http://www.ni.com/PanelCommon" />
 			<Label Height="[float]16" Id="82dfa849cb640f9bdcd4d7c1256e976" LabelOwner="[UIModel]3507d01be4bc4a26abc81ac1e2385674" Left="[float]280" Text="[string]Measurement Results" Top="[float]80" Width="[float]114" xmlns="http://www.ni.com/PanelCommon" />
-			<Label Height="[float]16" Id="5bbf7c5f53314e61a6f8ea81a1d653c8" LabelOwner="[UIModel]9b31a82d9b6240409bac2174fd4c5a13" Left="[float]40" Text="[string]Resource Name" Top="[float]20" Width="[float]84" xmlns="http://www.ni.com/PanelCommon" />
+			<Label Height="[float]16" Id="5bbf7c5f53314e61a6f8ea81a1d653c8" LabelOwner="[UIModel]9b31a82d9b6240409bac2174fd4c5a13" Left="[float]40" Text="[string]Pin Name" Top="[float]20" Width="[float]84" xmlns="http://www.ni.com/PanelCommon" />
 		</ScreenSurface>
 	</Screen>
 </SourceFile>
