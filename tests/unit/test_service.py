@@ -65,7 +65,7 @@ def test___measurement_service___add_pin_configuration__pin_configuration_added(
         and param.repeated == type.value[1]
         and param.default_value == default_value
         and param.annotations
-        == {"ni/type_specialization": "Pin", "ni/pin.instrument_type": instrument_type}
+        == {"ni/type_specialization": "pin", "ni/pin.instrument_type": instrument_type}
         for param in measurement_service.configuration_parameter_list
     )
 
