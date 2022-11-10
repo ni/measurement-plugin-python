@@ -86,23 +86,36 @@ class MeasurementService:
         self.discovery_client: DiscoveryClient = self.grpc_service.discovery_client
 
     def register_measurement(self, measurement_function: Callable) -> Callable:
-        """Register the function as the measurement. Recommended to use as a decorator.
+        """Register a function as the measurement function for a measurement service.
 
-        Args
-        ----
-            func (Callable): Any Python Function.
+        To declare a measurement function, use this idiom:
 
-        Returns
-        -------
-            Callable: Python Function.
+        @measurement_service.register_measurement
+        @measurement_service.configuration("Configuration 1", ...)
+        @measurement_service.configuration("Configuration 2", ...)
+        @measurement_service.output("Output 1", ...)
+        @measurement_service.output("Output 2", ...)
 
+        def measure(configuration1, configuration2):
+            ...
+            return (output1, output2)
+
+        See also: :func:`.configuration`, :func:`.output`
         """
         self.measure_function = measurement_function
         return measurement_function
 
-    def configuration(self, display_name: str, type: DataType, default_value: Any, *, instrument_type: str = ""
+    def configuration(
+        self, display_name: str, type: DataType, default_value: Any, *, instrument_type: str = ""
     ) -> Callable:
-        """Add configuration parameter info for a measurement.Recommended to use as a decorator.
+        """Add a configuration parameter to a measurement function.
+
+        This decorator maps the measurement service's configuration parameters
+        to Python positional parameters. To add multiple configuration parameters
+        to the same measurement function, use this decorator multiple times.
+        The order of decorator calls must match the order of positional parameters.
+
+        See also: :func:`.register_measurement`
 
         Args
         ----
@@ -136,7 +149,15 @@ class MeasurementService:
         return _configuration
 
     def output(self, display_name: str, type: DataType) -> Callable:
-        """Add output parameter info for a measurement.Recommended to use as a decorator.
+        """Add a output parameter to a measurement function.
+
+        This decorator maps the measurement service's output parameters to
+        Python positional parameters.To add multiple output parameters to the
+        same measurement function, use this decorator multiple times.
+        The order of decorator calls must match the order of elements
+        returned by the measurement fuction.
+
+        See also: :func:`.register_measurement`
 
         Args
         ----
