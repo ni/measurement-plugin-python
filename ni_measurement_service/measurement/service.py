@@ -2,12 +2,16 @@
 
 from __future__ import annotations
 
-from typing import Any, Callable
+from typing import Any
+from typing import Callable
 
 from ni_measurement_service._internal import grpc_servicer
+from ni_measurement_service._internal.discovery_client import DiscoveryClient
 from ni_measurement_service._internal.parameter import metadata as parameter_metadata
 from ni_measurement_service._internal.service_manager import GrpcService
-from ni_measurement_service.measurement.info import MeasurementInfo, ServiceInfo, DataType
+from ni_measurement_service.measurement.info import DataType
+from ni_measurement_service.measurement.info import MeasurementInfo
+from ni_measurement_service.measurement.info import ServiceInfo
 
 
 class MeasurementContext:
@@ -56,6 +60,11 @@ class MeasurementService:
 
         measure_function (Callable): Registered measurement function.
 
+        context (MeasurementContext): Accessor for context-local state.
+
+        discovery_client (DiscoveryClient): Client for accessing the MeasurementLink discovery
+            service.
+
     """
 
     def __init__(self, measurement_info: MeasurementInfo, service_info: ServiceInfo) -> None:
@@ -74,6 +83,7 @@ class MeasurementService:
         self.output_parameter_list: list = []
         self.grpc_service = GrpcService()
         self.context: MeasurementContext = MeasurementContext()
+        self.discovery_client: DiscoveryClient = self.grpc_service.discovery_client
 
     def register_measurement(self, measurement_function: Callable) -> Callable:
         """Register the function as the measurement. Recommended to use as a decorator.
