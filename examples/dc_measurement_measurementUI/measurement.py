@@ -74,19 +74,6 @@ def measure(
         "Executing measurement: resource_name=%s voltage_level=%g", resource_name, voltage_level
     )
 
-    pending_cancellation = False
-
-    def cancel_callback():
-        logging.info("Canceling measurement")
-        session_to_abort = session
-        if session_to_abort is not None:
-            nonlocal pending_cancellation
-            pending_cancellation = True
-            session_to_abort.abort()
-
-    dc_measurement_service.context.add_cancel_callback(cancel_callback)
-    time_remaining = dc_measurement_service.context.time_remaining
-
     with contextlib.ExitStack() as stack:
         session_kwargs = {}
         if service_options.use_grpc_device:
@@ -105,6 +92,20 @@ def measure(
         session = stack.enter_context(
             nidcpower.Session(resource_name=resource_name, **session_kwargs)
         )
+
+        pending_cancellation = False
+
+        def cancel_callback():
+            logging.info("Canceling measurement")
+            session_to_abort = session
+            if session_to_abort is not None:
+                nonlocal pending_cancellation
+                pending_cancellation = True
+                session_to_abort.abort()
+
+        dc_measurement_service.context.add_cancel_callback(cancel_callback)
+        time_remaining = dc_measurement_service.context.time_remaining
+
         session.source_mode = nidcpower.SourceMode.SINGLE_POINT
         session.output_function = nidcpower.OutputFunction.DC_VOLTAGE
         session.current_limit = current_limit
