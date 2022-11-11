@@ -82,9 +82,10 @@ def measure(
     with contextlib.ExitStack() as stack:
         reservation = stack.enter_context(
             session_management_client.reserve_sessions(
+                context=dc_measurement_service.context.pin_map_context,
                 pin_names=[pin_name],
                 instrument_type_id="niDCPower",
-                context=dc_measurement_service.context.pin_map_context,
+                timeout=-1,
             )
         )
 

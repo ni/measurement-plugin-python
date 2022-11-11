@@ -64,7 +64,13 @@ class GrpcChannelPool(object):
         self.close()
 
     def get_channel(self, target: str) -> grpc.Channel:
-        """Return a gRPC channel."""
+        """Return a gRPC channel.
+
+        Args:
+        ----
+            target (str): The server address
+
+        """
         new_channel = None
         with self._lock:
             if target not in self._channel_cache:
@@ -280,7 +286,24 @@ class MeasurementService:
         self.close_service()
 
     def get_channel(self, provided_interface: str, service_class: str = "") -> grpc.Channel:
-        """Return gRPC channel."""
+        """Return gRPC channel to specified service.
+
+        Args
+        ----
+            provided_interface (str): The gRPC Full Name of the service.
+
+            service_class (str): The service "class" that should be matched.
+
+        Returns
+        -------
+            grpc.Channel: A channel to the gRPC service.
+
+        Raises
+        ------
+            Exception: If service_class is not specified and there is more than one matching service
+                registered.
+
+        """
         service_location = self.grpc_service.discovery_client.resolve_service(
             provided_interface, service_class
         )

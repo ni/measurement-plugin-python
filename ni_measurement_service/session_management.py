@@ -1,6 +1,6 @@
 """Contains methods related to managing driver sessions."""
 from functools import cached_property
-from typing import Iterable, List, NamedTuple
+from typing import Iterable, List, NamedTuple, Optional
 
 import grpc
 
@@ -82,39 +82,64 @@ class Client(object):
 
     def reserve_sessions(
         self,
-        pin_names: Iterable[str],
-        instrument_type_id: str,
         context: PinMapContext,
-        timeout: float = -1.0,
+        pin_names: Optional[Iterable[str]] = None,
+        instrument_type_id: Optional[str] = None,
+        timeout: Optional[float] = None,
     ) -> Reservation:
-        """Reserves sessions.
+        """Reserve session(s).
 
-        Reserves session(s) for the given pins, sites, and instrument type and return the session
-        names and channel lists.
+        Reserve session(s) for the given pins, sites, and instrument type ID and returns the
+        information needed to create or access the session.
 
-        Returns the session name for each session, which allows the measurement service to get or
-        create the session. Also returns the channel list.
-        Also reserves the session (in Session Managers's own session reservation system) so other
-        processes cannot access it.
-        The request message for this method includes a timeout value, which allows the client to
-        specify no timeout, infinite timeout, or a timeout value in milliseconds.
-        Error occurs if the session cannot be reserved because a session by that name is already
-        reserved, when timeout is set to 0 or a positive numeric value.
+        Args
+        ----
+            context (PinMapContext): Includes the pin map ID for the pin map in the Pin Map Service,
+                as well as the list of sites for the measurement.
+
+            pin_names (Iterable[str]): List of pin names or pin group names to use for the
+                measurement. If unspecified, reserve sessions for all pins in the registered pin map
+                resource.
+
+            instrument_type_id (str): Instrument type ID for the measurement. If unspecified,
+                reserve sessions for all instrument types connected in the registered pin map
+                resource. Pin maps have built in instrument definitions using the following NI
+                driver based instrument type ids:
+                    "niDCPower"
+                    "niDigitalPattern"
+                    "niScope"
+                    "niDMM"
+                    "niDAQmx".
+                For custom instruments the user defined instrument type id is defined in the pin
+                map file.
+
+            timeout (float): Timeout in seconds. Allowed values,
+                0 (non-blocking, fails immediately if resources cannot be reserved),
+                -1 or negative (infinite timeout), or
+                any  positive numeric value (wait for that number of second).
+
+        Returns
+        -------
+            Reservation: Context manager that can be used with a with-statement to unreserve the
+            sessions.
+
         """
-        timeout_in_ms = int(timeout * 1000)
-        if timeout_in_ms < 0:
-            timeout_in_ms = -1
-
         pin_map_context = pin_map_context_pb2.PinMapContext(
             pin_map_id=context.pin_map_id, sites=context.sites
         )
 
-        request = session_management_service_pb2.ReserveSessionsRequest(
-            pin_names=pin_names,
-            instrument_type_id=instrument_type_id,
-            pin_map_context=pin_map_context,
-            timeout_in_milliseconds=timeout_in_ms,
-        )
+        request_kwargs: dict = {"pin_map_context": pin_map_context}
+        if instrument_type_id is not None:
+            request_kwargs["instrument_type_id"] = instrument_type_id
+        if pin_names is not None:
+            request_kwargs["pin_names"] = pin_names
+        if timeout is not None:
+            timeout_in_ms = round(timeout * 1000)
+            if timeout_in_ms < 0:
+                timeout_in_ms = -1
+            request_kwargs["timeout_in_milliseconds"] = timeout_in_ms
+        request = session_management_service_pb2.ReserveSessionsRequest(**request_kwargs)
+
         response: session_management_service_pb2.ReserveSessionsResponse = (
             self._client.ReserveSessions(request)
         )
@@ -136,7 +161,15 @@ class Client(object):
 
         Indicates that the sessions are open and will need to be closed later.
 
-        Error occurs if a session by the same name is already registered.
+        Args:
+        ----
+            session_info (Iterable[SessionInformation]): Sessions to register with the session
+            management service to track as the sessions are open.
+
+        Raises
+        ------
+            Exception: If a session by the same name is already registered.
+
         """
         request = session_management_service_pb2.RegisterSessionsRequest(
             sessions=(
@@ -157,6 +190,11 @@ class Client(object):
 
         Indicates that the sessions have been closed and will need to be reopened before they can be
         used again.
+
+        Args:
+        ----
+            session_info (Iterable[SessionInformation]): Sessions to be registered.
+
         """
         request = session_management_service_pb2.UnregisterSessionsRequest(
             sessions=(
@@ -173,7 +211,14 @@ class Client(object):
         self._client.UnregisterSessions(request)
 
     def reserve_all_registered_sessions(self) -> Reservation:
-        """Reserves and gets all sessions currently registered in the Session Manager."""
+        """Reserves and gets all sessions currently registered in the Session Manager.
+
+        Returns
+        -------
+            Reservation: Context manager that can be used with a with-statement to unreserve the
+            sessions.
+
+        """
         request = session_management_service_pb2.ReserveAllRegisteredSessionsRequest()
         response: session_management_service_pb2.ReserveAllRegisteredSessionsResponse = (
             self._client.ReserveAllRegisteredSessions(request)
