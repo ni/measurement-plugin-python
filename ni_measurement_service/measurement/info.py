@@ -56,6 +56,7 @@ class DataType(enum.Enum):
     Double = (type_pb2.Field.TYPE_DOUBLE, False)
     Boolean = (type_pb2.Field.TYPE_BOOL, False)
     String = (type_pb2.Field.TYPE_STRING, False)
+    Pin = (type_pb2.Field.TYPE_STRING, False)
 
     Int32Array1D = (type_pb2.Field.TYPE_INT32, True)
     Int64Array1D = (type_pb2.Field.TYPE_INT64, True)

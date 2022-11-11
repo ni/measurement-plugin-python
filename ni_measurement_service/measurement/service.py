@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, Dict
 from typing import Callable
 
 from ni_measurement_service._internal import grpc_servicer
@@ -86,22 +86,37 @@ class MeasurementService:
         self.discovery_client: DiscoveryClient = self.grpc_service.discovery_client
 
     def register_measurement(self, measurement_function: Callable) -> Callable:
-        """Register the function as the measurement. Recommended to use as a decorator.
+        """Register a function as the measurement function for a measurement service.
 
-        Args
-        ----
-            func (Callable): Any Python Function.
+        To declare a measurement function, use this idiom:
 
-        Returns
-        -------
-            Callable: Python Function.
+        ```
+        @measurement_service.register_measurement
+        @measurement_service.configuration("Configuration 1", ...)
+        @measurement_service.configuration("Configuration 2", ...)
+        @measurement_service.output("Output 1", ...)
+        @measurement_service.output("Output 2", ...)
+        def measure(configuration1, configuration2):
+            ...
+            return (output1, output2)
+        ```
 
+        See also: :func:`.configuration`, :func:`.output`
         """
         self.measure_function = measurement_function
         return measurement_function
 
-    def configuration(self, display_name: str, type: DataType, default_value: Any) -> Callable:
-        """Add configuration parameter info for a measurement.Recommended to use as a decorator.
+    def configuration(
+        self, display_name: str, type: DataType, default_value: Any, *, instrument_type: str = ""
+    ) -> Callable:
+        """Add a configuration parameter to a measurement function.
+
+        This decorator maps the measurement service's configuration parameters
+        to Python positional parameters. To add multiple configuration parameters
+        to the same measurement function, use this decorator multiple times.
+        The order of decorator calls must match the order of positional parameters.
+
+        See also: :func:`.register_measurement`
 
         Args
         ----
@@ -111,6 +126,10 @@ class MeasurementService:
 
             default_value (Any): Default value of the configuration.
 
+            instrument_type (str): Optional.
+            Instrument type to be used to show instrument specific values to the configurations.
+            This is only supported when configuration type is DataType.Pin.
+
         Returns
         -------
             Callable: Callable that takes in Any Python Function
@@ -118,8 +137,9 @@ class MeasurementService:
 
         """
         grpc_field_type, repeated = type.value
+        annotations = self._get_annotations(type, instrument_type)
         parameter = parameter_metadata.ParameterMetadata(
-            display_name, grpc_field_type, repeated, default_value
+            display_name, grpc_field_type, repeated, default_value, annotations
         )
         parameter_metadata.validate_default_value_type(parameter)
         self.configuration_parameter_list.append(parameter)
@@ -130,7 +150,16 @@ class MeasurementService:
         return _configuration
 
     def output(self, display_name: str, type: DataType) -> Callable:
-        """Add output parameter info for a measurement.Recommended to use as a decorator.
+        """Add a output parameter to a measurement function.
+
+        This decorator maps the measurement service's output parameters to
+        the elements of the tuple returned by the measurement function.
+        To add multiple output parameters to the same measurement function,
+        use this decorator multiple times.
+        The order of decorator calls must match the order of elements
+        returned by the measurement fuction.
+
+        See also: :func:`.register_measurement`
 
         Args
         ----
@@ -146,7 +175,7 @@ class MeasurementService:
         """
         grpc_field_type, repeated = type.value
         parameter = parameter_metadata.ParameterMetadata(
-            display_name, grpc_field_type, repeated, None
+            display_name, grpc_field_type, repeated, default_value=None, annotations={}
         )
         self.output_parameter_list.append(parameter)
 
@@ -178,6 +207,16 @@ class MeasurementService:
             self.measure_function,
         )
         return self
+
+    def _get_annotations(self, type: DataType, instrument_type: str) -> Dict[str, str]:
+        annotations = {}
+        if type == DataType.Pin:
+            annotations["ni/type_specialization"] = "pin"
+
+            if instrument_type != "" or instrument_type is not None:
+                annotations["ni/pin.instrument_type"] = instrument_type
+
+        return annotations
 
     def close_service(self) -> None:
         """Close the Service after un-registering with discovery service and cleanups."""

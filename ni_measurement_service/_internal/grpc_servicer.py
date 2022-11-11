@@ -147,6 +147,7 @@ class MeasurementServiceServicer(measurement_service_pb2_grpc.MeasurementService
             configuration_parameter.name = configuration_metadata.display_name
             configuration_parameter.repeated = configuration_metadata.repeated
             configuration_parameter.type = configuration_metadata.type
+            configuration_parameter.annotations.update(configuration_metadata.annotations)
             measurement_signature.configuration_parameters.append(configuration_parameter)
 
         # Configuration Defaults
