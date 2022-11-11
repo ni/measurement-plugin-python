@@ -103,7 +103,7 @@ def create_measurement(
 ):
     """Generate a Python measurement service from a template.
 
-    You can use this to get started writing your own measurement services.
+    You can use this to get started writing your own MeasurementLink services.
 
     DISPLAY_NAME: The measurement display name for client to display to user.
     The created .serviceconfig file will take this as its file name.
