@@ -10,7 +10,7 @@
   - [Developing Measurements: Quick Start](#developing-measurements-quick-start)
     - [Installation](#installation)
     - [Developing a minimal python measurement](#developing-a-minimal-python-measurement)
-  - [Steps to run/debug the MeasurementLink service](#steps-to-rundebug-the-measurementlink-service)
+  - [Steps to run/debug the measurement service](#steps-to-rundebug-the-measurement-service)
   - [Static Registration of Python Measurements](#static-registration-of-python-measurements)
     - [Create a batch file that runs a python measurement](#create-a-batch-file-that-runs-a-python-measurement)
     - [Create Executable for Python Scripts](#create-executable-for-python-scripts)
@@ -76,7 +76,7 @@ The example measurements shared are *poetry-based* projects. Follow the below st
 ### Executing the Example Measurements
 
 1. Start the discovery service if not already started.
-2. Use `poetry run` to run the MeasurementLink service:
+2. Use `poetry run` to run the measurement service:
 
     ``` cmd
     poetry run python measurement.py
@@ -118,7 +118,7 @@ pip install ni-measurement-generator
 
     `ni-measurement-generator SampleMeasurement`
 
-    'SampleMeasurement' is the display name of your MeasurementLink service. Without the optional arguments,
+    'SampleMeasurement' is the display name of your measurement service. Without the optional arguments,
     the other arguments are generated for you based on the display name.
 
     2. Running `ni-measurement-generator` with optional arguments for `version`, `measurement-type`, `product-type`, `ui-file`,
@@ -159,11 +159,11 @@ pip install ni-measurement-generator
             return ["foo", "bar"]
         ```
 
-4. Run/Debug the created measurement by following the steps discussed in the section ["Steps to run/debug the MeasurementLink service".](#steps-to-rundebug-the-measurementlink-service)
+4. Run/Debug the created measurement by following the steps discussed in the section ["Steps to run/debug the measurement service".](#steps-to-rundebug-the-measurement-service)
 
 ---
 
-## Steps to run/debug the MeasurementLink service
+## Steps to run/debug the measurement service
 
 1. Start the discovery service if not already started.
 
@@ -182,7 +182,7 @@ pip install ni-measurement-generator
 
 3. [Run](https://code.visualstudio.com/docs/python/python-tutorial#_run-hello-world)/[Debug](https://code.visualstudio.com/docs/python/debugging#_basic-debugging) the measurement python file created using NIMS.
 
-4. To stop the running MeasurementLink service, press `Enter` in the terminal to properly close the service.
+4. To stop the running measurement service, press `Enter` in the terminal to properly close the service.
 
 5. (Optional)After the usage of measurement, deactivate the virtual environment. Measurement developers can skip this step if they are not using any [virtual environments](#create-and-manage-python-measurement-package-using-venv) or [poetry-based projects.](#create-and-manage-python-measurement-package-using-poetry)
 
