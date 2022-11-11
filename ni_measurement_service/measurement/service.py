@@ -89,16 +89,17 @@ class MeasurementService:
         """Register a function as the measurement function for a measurement service.
 
         To declare a measurement function, use this idiom:
-
+        
+        ```
         @measurement_service.register_measurement
         @measurement_service.configuration("Configuration 1", ...)
         @measurement_service.configuration("Configuration 2", ...)
         @measurement_service.output("Output 1", ...)
         @measurement_service.output("Output 2", ...)
-
         def measure(configuration1, configuration2):
             ...
             return (output1, output2)
+        ```
 
         See also: :func:`.configuration`, :func:`.output`
         """
@@ -112,7 +113,7 @@ class MeasurementService:
 
         This decorator maps the measurement service's configuration parameters
         to Python positional parameters. To add multiple configuration parameters
-        to the same measurement function, use this decorator multiple times.
+        to the same measurement function, use this decorator multiple times. 
         The order of decorator calls must match the order of positional parameters.
 
         See also: :func:`.register_measurement`
@@ -126,7 +127,7 @@ class MeasurementService:
             default_value (Any): Default value of the configuration.
 
             instrument_type (str): Optional.
-            Instrument type to be used to show instrument specific values to the configurations.
+            Instrument type to be used to show instrument specific values to the configurations. 
             This is only supported when configuration type is DataType.Pin.
 
         Returns
@@ -152,8 +153,9 @@ class MeasurementService:
         """Add a output parameter to a measurement function.
 
         This decorator maps the measurement service's output parameters to
-        Python positional parameters.To add multiple output parameters to the
-        same measurement function, use this decorator multiple times.
+        the elements of the tuple returned by the measurement function. 
+        To add multiple output parameters to the same measurement function, 
+        use this decorator multiple times. 
         The order of decorator calls must match the order of elements
         returned by the measurement fuction.
 
