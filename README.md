@@ -1,6 +1,6 @@
-# Python MeasurementLink Services
+# Python MeasurementLink™ Services
 
-- [Python MeasurementLink Services](#python-measurementlink-services)
+- [Python MeasurementLink™ Services](#python-measurementlink--services)
   - [Introduction](#introduction)
   - [Abbreviations](#abbreviations)
   - [Dependencies](#dependencies)

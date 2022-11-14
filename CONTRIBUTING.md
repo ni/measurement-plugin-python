@@ -1,4 +1,4 @@
-# Contributing to MeasurementLink Python Support
+# Contributing to MeasurementLink™ Python Support
 
 Contributions to MeasurementLink Python Support are welcome from all!
 
