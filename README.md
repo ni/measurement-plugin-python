@@ -1,6 +1,6 @@
-# Python Measurements
+# Python MeasurementLink Services
 
-- [Python Measurements](#python-measurements)
+- [Python MeasurementLink Services](#python-measurementlink-services)
   - [Introduction](#introduction)
   - [Abbreviations](#abbreviations)
   - [Dependencies](#dependencies)
@@ -24,7 +24,7 @@
 
 ## Introduction
 
-The `ni-measurement-service` is a python framework that enables measurement developers to quickly create python measurements and run them as a service (gRPC).
+NI MeasurementLink Services (`ni-measurement-service`) is a python framework that enables measurement developers to quickly create python measurements and run them as a service (gRPC).
 
 ---
 
