@@ -86,7 +86,7 @@ The example measurements shared are *poetry-based* projects. Follow the below st
 
 ## Developing Measurements: Quick Start
 
-This section provides instructions to develop custom python MeasurementLink services using NIMS.
+This section provides instructions to develop custom Python MeasurementLink services using NIMS.
 
 ### Installation
 
