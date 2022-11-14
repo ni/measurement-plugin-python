@@ -39,7 +39,7 @@ class Reservation(object):
         session_manager: "Client",
         session_info: Iterable[session_management_service_pb2.SessionInformation],
     ):
-        """Initialise Reservation."""
+        """Initialize reservation object."""
         self._session_manager = session_manager
         self._session_info = session_info
 
@@ -75,7 +75,7 @@ class Client(object):
     """Class that manages driver sessions."""
 
     def __init__(self, *, grpc_channel: grpc.Channel):
-        """Initialise SessionManager."""
+        """Initialize session manangement client."""
         self._client: session_management_service_pb2_grpc.SessionManagementServiceStub = (
             session_management_service_pb2_grpc.SessionManagementServiceStub(grpc_channel)
         )
@@ -128,17 +128,18 @@ class Client(object):
             pin_map_id=context.pin_map_id, sites=context.sites
         )
 
-        request_kwargs: dict = {"pin_map_context": pin_map_context}
+        request = session_management_service_pb2.ReserveSessionsRequest(
+            pin_map_context=pin_map_context
+        )
         if instrument_type_id is not None:
-            request_kwargs["instrument_type_id"] = instrument_type_id
+            request.instrument_type_id = instrument_type_id
         if pin_names is not None:
-            request_kwargs["pin_names"] = pin_names
+            request.pin_names.extend(pin_names)
         if timeout is not None:
             timeout_in_ms = round(timeout * 1000)
             if timeout_in_ms < 0:
                 timeout_in_ms = -1
-            request_kwargs["timeout_in_milliseconds"] = timeout_in_ms
-        request = session_management_service_pb2.ReserveSessionsRequest(**request_kwargs)
+            request.timeout_in_milliseconds = timeout_in_ms
 
         response: session_management_service_pb2.ReserveSessionsResponse = (
             self._client.ReserveSessions(request)

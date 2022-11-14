@@ -59,7 +59,7 @@ class GrpcChannelPool(object):
         """Enter the runtime context of the GrpcChannelPool."""
         return self
 
-    def __exit__(self, exc_type, exc_value, traceback) -> None:
+    def __exit__(self, exc_type, exc_value, traceback):
         """Exit the runtime context of the GrpcChannelPool."""
         self.close()
 
@@ -93,7 +93,7 @@ class GrpcChannelPool(object):
         with self._lock:
             for channel in self._channel_cache.values():
                 channel.close()
-            self._channel_cache = {}
+            self._channel_cache.clear()
 
 
 class MeasurementService:
@@ -281,7 +281,7 @@ class MeasurementService:
         """Enter the runtime context related to the measurement service."""
         return self
 
-    def __exit__(self, exc_type, exc_value, traceback) -> None:
+    def __exit__(self, exc_type, exc_value, traceback):
         """Exit the runtime context related to the measurement service."""
         self.close_service()
 

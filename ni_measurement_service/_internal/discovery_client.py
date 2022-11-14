@@ -59,7 +59,7 @@ class DiscoveryClient:
     """
 
     def __init__(self, stub: discovery_service_pb2_grpc.DiscoveryServiceStub = None):
-        """Initialise the Discovery Client with provided registry service stub.
+        """Initialize the Discovery Client with provided registry service stub.
 
         Args:
         ----
