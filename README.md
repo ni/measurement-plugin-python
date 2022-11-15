@@ -80,7 +80,7 @@ The example measurements shared are *poetry-based* projects. Follow the below st
 
 ## Developing Measurements: Quick Start
 
-This section provides instructions to develop custom measurement services in Python using MeasurementLink Services.
+This section provides instructions to develop custom measurement services in Python using MeasurementLink Services Python Support.
 
 ### Installation
 
