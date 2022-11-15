@@ -333,7 +333,7 @@ For detailed info on managing projects using poetry [refer to the official docum
 
 For detailed info on managing projects with a virtual environment [refer to the official documentation](https://docs.python.org/3/tutorial/venv.html).
 
-### Create and Manage Python Measurement Package by directly installing MeasurementLink Services as a system-level package
+### Create and Manage Python Measurement Package by directly installing `ni-measurement-service` as a system-level package
 
 Measurement developers can also install MeasurementLink Services as a system package if their requirement is demanding.
 
