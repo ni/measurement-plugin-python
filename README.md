@@ -84,7 +84,7 @@ This section provides instructions to develop custom measurement services in Pyt
 
 ### Installation
 
-Make sure the system has the recommended python version is installed. Install MeasurementLink Services using [pip](https://pip.pypa.io/).
+Make sure the system has the recommended python version is installed. Install MeasurementLink Services Python Support using [pip](https://pip.pypa.io/).
 
 ``` cmd
 REM Activate the required virtual environment if any.
