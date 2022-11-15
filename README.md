@@ -91,7 +91,7 @@ REM Activate the required virtual environment if any.
 pip install ni-measurement-service
 ```
 
-Check if you have installed the expected version of MeasurementLink Services installed by running the below command:
+Check if you have installed the expected version of MeasurementLink Services Python Support installed by running the below command:
 
 ```cmd
 pip show ni-measurement-service
