@@ -261,7 +261,7 @@ Note: Once we have the template support for Python measurement, the approach to 
 
     2. Install the `poetry` using the installation steps given in <https://python-poetry.org/docs/#installation>.
 
-2. Create a new python project and add MeasurementLink Services as a dependency to the project.
+2. Create a new python project and add `ni-measurement-service` as a dependency to the project.
 
     1. Open a command prompt, and change the working directory to the directory of your choice where you want to create the project.
 
