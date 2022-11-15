@@ -335,7 +335,7 @@ For detailed info on managing projects with a virtual environment [refer to the 
 
 ### Create and Manage Python Measurement Package by directly installing `ni-measurement-service` as a system-level package
 
-Measurement developers can also install MeasurementLink Services as a system package if their requirement is demanding.
+Measurement developers can also install `ni-measurement-service` as a system package if their requirement is demanding.
 
 1. Install the `ni-measurement-service` package from the command prompt
 
