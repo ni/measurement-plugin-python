@@ -1,6 +1,6 @@
-# Python MeasurementLink™ Services
+# MeasurementLink™ Services Python Support
 
-- [Python MeasurementLink™ Services](#python-measurementlink--services)
+- [MeasurementLink™ Services Python Support](#python-measurementlink--services)
   - [Introduction](#introduction)
   - [Abbreviations](#abbreviations)
   - [Dependencies](#dependencies)
@@ -18,19 +18,13 @@
   - [Appendix: Managing Measurement as Python Package(Project)](#appendix-managing-measurement-as-python-packageproject)
     - [Create and Manage Python Measurement Package using poetry](#create-and-manage-python-measurement-package-using-poetry)
     - [Create and Manage Python Measurement Package using venv](#create-and-manage-python-measurement-package-using-venv)
-    - [Create and Manage Python Measurement Package by directly installing NIMS as a system-level package](#create-and-manage-python-measurement-package-by-directly-installing-nims-as-a-system-level-package)
+    - [Create and Manage Python Measurement Package by directly installing MeasurementLink Services as a system-level package](#create-and-manage-python-measurement-package-by-directly-installing-measurementlink-services-as-a-system-level-package)
 
 ---
 
 ## Introduction
 
-NI MeasurementLink Services (`ni-measurement-service`) is a python framework that enables measurement developers to quickly create python measurements and run them as a service (gRPC).
-
----
-
-## Abbreviations
-
-- NIMS - NI MeasurementLink Service Framework - `ni-measurement-service`.
+MeasurementLink Services Python Support (`ni-measurement-service`) is a python framework that enables measurement developers to quickly create python measurements and run them as a service (gRPC).
 
 ---
 
@@ -86,18 +80,18 @@ The example measurements shared are *poetry-based* projects. Follow the below st
 
 ## Developing Measurements: Quick Start
 
-This section provides instructions to develop custom Python MeasurementLink services using NIMS.
+This section provides instructions to develop custom measurement services in Python using MeasurementLink Services.
 
 ### Installation
 
-Make sure the system has the recommended python version is installed. Install the NIMS Framework using [pip](https://pip.pypa.io/).
+Make sure the system has the recommended python version is installed. Install MeasurementLink Services using [pip](https://pip.pypa.io/).
 
 ``` cmd
 REM Activate the required virtual environment if any.
 pip install ni-measurement-service
 ```
 
-Check if you have installed the expected version of NIMS installed by running the below command:
+Check if you have installed the expected version of MeasurementLink Services installed by running the below command:
 
 ```cmd
 pip show ni-measurement-service
@@ -180,7 +174,7 @@ pip install ni-measurement-generator
         Set-ExecutionPolicy RemoteSigned 
         ```
 
-3. [Run](https://code.visualstudio.com/docs/python/python-tutorial#_run-hello-world)/[Debug](https://code.visualstudio.com/docs/python/debugging#_basic-debugging) the measurement python file created using NIMS.
+3. [Run](https://code.visualstudio.com/docs/python/python-tutorial#_run-hello-world)/[Debug](https://code.visualstudio.com/docs/python/debugging#_basic-debugging) the measurement python file created using MeasurementLink Services.
 
 4. To stop the running measurement service, press `Enter` in the terminal to properly close the service.
 
@@ -267,7 +261,7 @@ Note: Once we have the template support for Python measurement, the approach to 
 
     2. Install the `poetry` using the installation steps given in <https://python-poetry.org/docs/#installation>.
 
-2. Create a new python project and add NIMS Framework as a dependency to the project.
+2. Create a new python project and add MeasurementLink Services as a dependency to the project.
 
     1. Open a command prompt, and change the working directory to the directory of your choice where you want to create the project.
 
@@ -281,7 +275,7 @@ Note: Once we have the template support for Python measurement, the approach to 
         poetry new <name_of_the_project>
         ```
 
-    3. Add the `ni-measurement-service` framework package as a dependency using the [poetry add command](https://python-poetry.org/docs/cli/#add).
+    3. Add the `ni-measurement-service` package as a dependency using the [poetry add command](https://python-poetry.org/docs/cli/#add).
 
         ``` cmd
         cd <name_of_the_project>
@@ -339,9 +333,9 @@ For detailed info on managing projects using poetry [refer to the official docum
 
 For detailed info on managing projects with a virtual environment [refer to the official documentation](https://docs.python.org/3/tutorial/venv.html).
 
-### Create and Manage Python Measurement Package by directly installing NIMS as a system-level package
+### Create and Manage Python Measurement Package by directly installing MeasurementLink Services as a system-level package
 
-Measurement developers can also install the NIMS framework as a system package if their requirement is demanding.
+Measurement developers can also install MeasurementLink Services as a system package if their requirement is demanding.
 
 1. Install the `ni-measurement-service` package from the command prompt
 

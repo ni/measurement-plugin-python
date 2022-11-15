@@ -1,11 +1,11 @@
-# Contributing to MeasurementLink™ Python Support
+# Contributing to MeasurementLink™ Services Python Support
 
-Contributions to MeasurementLink Python Support are welcome from all!
+Contributions to MeasurementLink Services Python Support are welcome from all!
 
-MeasurementLink Python Support is managed via [git](https://git-scm.com), with the canonical upstream
+MeasurementLink Services Python Support is managed via [git](https://git-scm.com), with the canonical upstream
 repository hosted on [GitHub](https://github.com/ni/measurement-services-python/). The repo contains the necessary Python MeasurementLink templates and examples to call into the MeasurementLink Services.
 
-MeasurementLink Python Support follows a pull-request model for development.  If you wish to
+MeasurementLink Services Python Support follows a pull-request model for development.  If you wish to
 contribute, you will need to create a GitHub account, fork this project, push a
 branch with your changes to your project, and then submit a pull request.
 
@@ -30,7 +30,7 @@ See [GitHub's official documentation](https://help.github.com/articles/using-pul
 
 ## Clone Repo
 
-Clone the repo, this will pull the NI MeasurementLink Python components and related components.
+Clone the repo, this will pull the MeasurementLink Services Python Support components and related components.
 
 ```cmd
 git clone https://github.com/ni/measurement-services-python.git
@@ -151,4 +151,4 @@ Install and configure the `Python Test Explorer for Visual Studio Code` extensio
 (taken from [developercertificate.org](https://developercertificate.org/))
 
 See [LICENSE](https://github.com/ni/measurement-services-python/blob/master/LICENSE)
-for details about how MeasurementLink Python Support is licensed.
+for details about how MeasurementLink Services Python Support is licensed.

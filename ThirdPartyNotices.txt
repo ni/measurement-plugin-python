@@ -1,7 +1,7 @@
 THIRD-PARTY SOFTWARE NOTICES AND INFORMATION
 Do Not Translate or Localize
 
-NI MeasurementLink™ Service (NIMS) uses third party material from the projects listed below.
+MeasurementLink™ Services Python Support uses third party material from the projects listed below.
 
 ****** gRPC (https://github.com/grpc/grpc) ******
 
