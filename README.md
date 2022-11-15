@@ -174,7 +174,7 @@ pip install ni-measurement-generator
         Set-ExecutionPolicy RemoteSigned 
         ```
 
-3. [Run](https://code.visualstudio.com/docs/python/python-tutorial#_run-hello-world)/[Debug](https://code.visualstudio.com/docs/python/debugging#_basic-debugging) the measurement python file created using MeasurementLink Services.
+3. [Run](https://code.visualstudio.com/docs/python/python-tutorial#_run-hello-world)/[Debug](https://code.visualstudio.com/docs/python/debugging#_basic-debugging) the measurement python file.
 
 4. To stop the running measurement service, press `Enter` in the terminal to properly close the service.
 
