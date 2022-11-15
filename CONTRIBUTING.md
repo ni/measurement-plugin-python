@@ -3,7 +3,7 @@
 Contributions to MeasurementLink Services Python Support are welcome from all!
 
 MeasurementLink Services Python Support is managed via [git](https://git-scm.com), with the canonical upstream
-repository hosted on [GitHub](https://github.com/ni/measurement-services-python/). The repo contains the necessary Python MeasurementLink templates and examples to call into the MeasurementLink Services.
+repository hosted on [GitHub](https://github.com/ni/measurement-services-python/). The repo contains templates and examples for developing MeasurementLink services in Python.
 
 MeasurementLink Services Python Support follows a pull-request model for development.  If you wish to
 contribute, you will need to create a GitHub account, fork this project, push a
