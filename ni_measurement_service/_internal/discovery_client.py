@@ -13,8 +13,7 @@ from ni_measurement_service._internal.stubs.ni.measurementlink.discovery.v1 impo
     discovery_service_pb2,
     discovery_service_pb2_grpc,
 )
-from ni_measurement_service.measurement.info import MeasurementInfo
-from ni_measurement_service.measurement.info import ServiceInfo
+from ni_measurement_service.measurement.info import MeasurementInfo, ServiceInfo
 
 if sys.platform == "win32":
     import errno
@@ -60,7 +59,7 @@ class DiscoveryClient:
     """
 
     def __init__(self, stub: discovery_service_pb2_grpc.DiscoveryServiceStub = None):
-        """Initialise the Discovery Client with provided registry service stub.
+        """Initialize the Discovery Client with provided registry service stub.
 
         Args:
         ----
@@ -197,7 +196,7 @@ class DiscoveryClient:
         request.provided_interface = provided_interface
         request.service_class = service_class
 
-        response = self.stub.ResolveService(request)
+        response: discovery_service_pb2.ServiceLocation = self.stub.ResolveService(request)
 
         return ServiceLocation(
             location=response.location,

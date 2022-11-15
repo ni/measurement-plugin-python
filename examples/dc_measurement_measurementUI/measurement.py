@@ -46,7 +46,7 @@ service_options = ServiceOptions(use_grpc_device=False, grpc_device_address="")
 
 
 @dc_measurement_service.register_measurement
-@dc_measurement_service.configuration("Resource name", nims.DataType.String, "DPS_4145")
+@dc_measurement_service.configuration("Pin name", nims.DataType.Pin, "Pin1")
 @dc_measurement_service.configuration("Voltage level(V)", nims.DataType.Float, 6.0)
 @dc_measurement_service.configuration("Voltage level range(V)", nims.DataType.Float, 6.0)
 @dc_measurement_service.configuration("Current limit(A)", nims.DataType.Float, 0.01)
@@ -55,7 +55,7 @@ service_options = ServiceOptions(use_grpc_device=False, grpc_device_address="")
 @dc_measurement_service.output("Voltage Measurement(V)", nims.DataType.Float)
 @dc_measurement_service.output("Current Measurement(A)", nims.DataType.Float)
 def measure(
-    resource_name,
+    pin_name,
     voltage_level,
     voltage_level_range,
     current_limit,
@@ -70,32 +70,40 @@ def measure(
 
     """
     # User Logic :
-    logging.info(
-        "Executing measurement: resource_name=%s voltage_level=%g", resource_name, voltage_level
+    logging.info("Executing measurement: pin_name=%s voltage_level=%g", pin_name, voltage_level)
+
+    session_management_client = nims.session_management.Client(
+        grpc_channel=dc_measurement_service.get_channel(
+            provided_interface=nims.session_management.GRPC_SERVICE_INTERFACE_NAME,
+            service_class=nims.session_management.GRPC_SERVICE_CLASS,
+        )
     )
 
-    pending_cancellation = False
-
-    def cancel_callback():
-        logging.info("Canceling measurement")
-        session_to_abort = session
-        if session_to_abort is not None:
-            nonlocal pending_cancellation
-            pending_cancellation = True
-            session_to_abort.abort()
-
-    dc_measurement_service.context.add_cancel_callback(cancel_callback)
-    time_remaining = dc_measurement_service.context.time_remaining
-
     with contextlib.ExitStack() as stack:
+        reservation = stack.enter_context(
+            session_management_client.reserve_sessions(
+                context=dc_measurement_service.context.pin_map_context,
+                pin_names=[pin_name],
+                instrument_type_id="niDCPower",
+                timeout=-1,
+            )
+        )
+
+        resource_name = reservation.session_info[0].resource_name
+
         session_kwargs = {}
         if service_options.use_grpc_device:
             session_grpc_address = service_options.grpc_device_address
+
             if not session_grpc_address:
-                session_grpc_address = dc_measurement_service.discovery_client.resolve_service(
-                    provided_interface=nidcpower.GRPC_SERVICE_INTERFACE_NAME
-                ).insecure_address
-            session_grpc_channel = stack.enter_context(grpc.insecure_channel(session_grpc_address))
+                session_grpc_channel = dc_measurement_service.get_channel(
+                    provided_interface=nidcpower.GRPC_SERVICE_INTERFACE_NAME,
+                    service_class="ni.measurementlink.v1.grpcdeviceserver",
+                )
+            else:
+                session_grpc_channel = dc_measurement_service.channel_pool.get_channel(
+                    target=session_grpc_address
+                )
             session_kwargs["_grpc_options"] = nidcpower.GrpcSessionOptions(
                 session_grpc_channel,
                 session_name=resource_name,
@@ -105,6 +113,20 @@ def measure(
         session = stack.enter_context(
             nidcpower.Session(resource_name=resource_name, **session_kwargs)
         )
+
+        pending_cancellation = False
+
+        def cancel_callback():
+            logging.info("Canceling measurement")
+            session_to_abort = session
+            if session_to_abort is not None:
+                nonlocal pending_cancellation
+                pending_cancellation = True
+                session_to_abort.abort()
+
+        dc_measurement_service.context.add_cancel_callback(cancel_callback)
+        time_remaining = dc_measurement_service.context.time_remaining
+
         session.source_mode = nidcpower.SourceMode.SINGLE_POINT
         session.output_function = nidcpower.OutputFunction.DC_VOLTAGE
         session.current_limit = current_limit
