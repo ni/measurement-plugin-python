@@ -28,7 +28,7 @@ def test___default_value_different_from_type___validate___raises_type_exception(
         default_value (Any): Default value of the parameter.
 
     """
-    grpc_field_type, repeated = type.value
+    grpc_field_type, repeated, type_specialization = type.value
     parameter_metadata = metadata.ParameterMetadata(
         "test_display_name", grpc_field_type, repeated, default_value, annotations={}
     )
@@ -56,7 +56,7 @@ def test___default_value_same_as_type___validate___raises_no_exception(type, def
         default_value (Any): Default value of the parameter.
 
     """
-    grpc_field_type, repeated = DataType.Int32.value
+    grpc_field_type, repeated, type_specialization = DataType.Int32.value
     parameter_metadata = metadata.ParameterMetadata(
         "test_display_name", grpc_field_type, repeated, 1, annotations={}
     )

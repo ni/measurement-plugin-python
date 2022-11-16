@@ -9,11 +9,12 @@ import grpc
 
 from ni_measurement_service._internal import grpc_servicer
 from ni_measurement_service._internal.discovery_client import DiscoveryClient
-from ni_measurement_service._internal.parameter import metadata as parameter_metadata
+from ni_measurement_service._internal.parameter import \
+    metadata as parameter_metadata
 from ni_measurement_service._internal.service_manager import GrpcService
-from ni_measurement_service.measurement.info import DataType
-from ni_measurement_service.measurement.info import MeasurementInfo
-from ni_measurement_service.measurement.info import ServiceInfo
+from ni_measurement_service.measurement.info import (DataType, MeasurementInfo,
+                                                     ServiceInfo,
+                                                     TypeSpecialization)
 
 
 class MeasurementContext:
@@ -190,8 +191,8 @@ class MeasurementService:
             and returns the same python function.
 
         """
-        grpc_field_type, repeated = type.value
-        annotations = self._get_annotations(type, instrument_type)
+        grpc_field_type, repeated, type_specialization = type.value
+        annotations = self._get_annotations(type_specialization, instrument_type)
         parameter = parameter_metadata.ParameterMetadata(
             display_name, grpc_field_type, repeated, default_value, annotations
         )
@@ -227,7 +228,7 @@ class MeasurementService:
             returns the same python function.
 
         """
-        grpc_field_type, repeated = type.value
+        grpc_field_type, repeated, type_specialization = type.value
         parameter = parameter_metadata.ParameterMetadata(
             display_name, grpc_field_type, repeated, default_value=None, annotations={}
         )
@@ -262,11 +263,13 @@ class MeasurementService:
         )
         return self
 
-    def _get_annotations(self, type: DataType, instrument_type: str) -> Dict[str, str]:
+    def _get_annotations(self, type_specialization: TypeSpecialization, instrument_type: str) -> Dict[str, str]:
         annotations = {}
-        if type == DataType.Pin:
-            annotations["ni/type_specialization"] = "pin"
+        if type_specialization == TypeSpecialization.No_Type:
+            return annotations
 
+        annotations["ni/type_specialization"] = type_specialization.value
+        if type_specialization == TypeSpecialization.Pin:
             if instrument_type != "" or instrument_type is not None:
                 annotations["ni/pin.instrument_type"] = instrument_type
 
