@@ -18,7 +18,7 @@
   - [Appendix: Managing Measurement as Python Package(Project)](#appendix-managing-measurement-as-python-packageproject)
     - [Create and Manage Python Measurement Package using poetry](#create-and-manage-python-measurement-package-using-poetry)
     - [Create and Manage Python Measurement Package using venv](#create-and-manage-python-measurement-package-using-venv)
-    - [Create and Manage Python Measurement Package by directly installing MeasurementLink Services as a system-level package](#create-and-manage-python-measurement-package-by-directly-installing-measurementlink-services-as-a-system-level-package)
+    - [Create and Manage Python Measurement Package by directly installing `ni-measurement-service` as a system-level package](#create-and-manage-python-measurement-package-by-directly-installing-ni-measurement-service-as-a-system-level-package)
 
 ---
 
