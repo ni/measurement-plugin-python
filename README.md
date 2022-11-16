@@ -1,6 +1,6 @@
-# MeasurementLink™ Services for Python
+# MeasurementLink™ Support for Python
 
-- [MeasurementLink™ Services for Python](#measurementlink--services-for-python)
+- [MeasurementLink™ Support for Python](#measurementlink--support-for-python)
   - [Introduction](#introduction)
   - [Abbreviations](#abbreviations)
   - [Dependencies](#dependencies)
@@ -24,7 +24,7 @@
 
 ## Introduction
 
-MeasurementLink Services for Python (`ni-measurement-service`) is a python framework that enables measurement developers to quickly create python measurements and run them as a service (gRPC).
+MeasurementLink Support for Python (`ni-measurement-service`) is a python framework that enables measurement developers to quickly create python measurements and run them as a service (gRPC).
 
 ---
 
@@ -80,18 +80,18 @@ The example measurements shared are *poetry-based* projects. Follow the below st
 
 ## Developing Measurements: Quick Start
 
-This section provides instructions to develop custom measurement services in Python using MeasurementLink Services for Python.
+This section provides instructions to develop custom measurement services in Python using MeasurementLink Support for Python.
 
 ### Installation
 
-Make sure the system has the recommended python version is installed. Install MeasurementLink Services for Python using [pip](https://pip.pypa.io/).
+Make sure the system has the recommended python version is installed. Install MeasurementLink Support for Python using [pip](https://pip.pypa.io/).
 
 ``` cmd
 REM Activate the required virtual environment if any.
 pip install ni-measurement-service
 ```
 
-Check if you have installed the expected version of MeasurementLink Services for Python installed by running the below command:
+Check if you have installed the expected version of MeasurementLink Support for Python installed by running the below command:
 
 ```cmd
 pip show ni-measurement-service
