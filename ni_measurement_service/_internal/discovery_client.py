@@ -225,7 +225,7 @@ def _get_key_file_directory() -> pathlib.Path:
         return (
             pathlib.Path(os.environ["ProgramData"])
             / "National Instruments"
-            / "Measurement Framework"
+            / "MeasurementLink"
             / "Discovery"
             / version
         )
