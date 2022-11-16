@@ -1,4 +1,4 @@
-"""MeasurementLink Services Python Support."""
+"""MeasurementLink Services for Python."""
 import logging
 
 from .measurement.info import DataType  # noqa F401, declaring API

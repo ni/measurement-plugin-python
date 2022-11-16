@@ -1,7 +1,7 @@
 THIRD-PARTY SOFTWARE NOTICES AND INFORMATION
 Do Not Translate or Localize
 
-MeasurementLink™ Services Python Support uses third party material from the projects listed below.
+MeasurementLink™ Services for Python uses third party material from the projects listed below.
 
 ****** gRPC (https://github.com/grpc/grpc) ******
 
