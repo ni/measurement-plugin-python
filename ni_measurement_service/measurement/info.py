@@ -44,11 +44,13 @@ class ServiceInfo(NamedTuple):
     service_class: str
     description_url: str
 
+
 class TypeSpecialization(enum.Enum):
-    '''Represents the different type specializations for measurement parameters'''
+    """Enum that represents the type specializations for measurement parameters."""
 
     No_Type = ""
     Pin = "pin"
+
 
 class DataType(enum.Enum):
     """Enum that represents the supported data types."""
@@ -70,5 +72,3 @@ class DataType(enum.Enum):
     FloatArray1D = (type_pb2.Field.TYPE_FLOAT, True, TypeSpecialization.No_Type)
     DoubleArray1D = (type_pb2.Field.TYPE_DOUBLE, True, TypeSpecialization.No_Type)
     BooleanArray1D = (type_pb2.Field.TYPE_BOOL, True, TypeSpecialization.No_Type)
-
-

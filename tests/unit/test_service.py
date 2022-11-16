@@ -66,9 +66,13 @@ def test___measurement_service___add_pin_configuration__pin_configuration_added(
         and param.repeated == type.value[1]
         and param.default_value == default_value
         and param.annotations
-        == {"ni/type_specialization": TypeSpecialization.Pin.value, "ni/pin.instrument_type": instrument_type}
+        == {
+            "ni/type_specialization": TypeSpecialization.Pin.value,
+            "ni/pin.instrument_type": instrument_type,
+        }
         for param in measurement_service.configuration_parameter_list
     )
+
 
 @pytest.mark.parametrize(
     "display_name,type,default_value",
@@ -91,17 +95,14 @@ def test___measurement_service___add_non_pin_configuration__pin_type_annotations
     """Test to validate the configuration decorator."""
     measurement_service = MeasurementService(None, None)
 
-    measurement_service.configuration(
-        display_name, type, default_value
-    )(_fake_measurement_function)
+    measurement_service.configuration(display_name, type, default_value)(_fake_measurement_function)
 
     assert any(
         param.display_name == display_name
         and param.type == type.value[0]
         and param.repeated == type.value[1]
         and param.default_value == default_value
-        and param.annotations
-        != {"ni/type_specialization": TypeSpecialization.Pin.value}
+        and param.annotations != {"ni/type_specialization": TypeSpecialization.Pin.value}
         for param in measurement_service.configuration_parameter_list
     )
 

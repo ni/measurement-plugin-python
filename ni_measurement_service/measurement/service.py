@@ -9,12 +9,14 @@ import grpc
 
 from ni_measurement_service._internal import grpc_servicer
 from ni_measurement_service._internal.discovery_client import DiscoveryClient
-from ni_measurement_service._internal.parameter import \
-    metadata as parameter_metadata
+from ni_measurement_service._internal.parameter import metadata as parameter_metadata
 from ni_measurement_service._internal.service_manager import GrpcService
-from ni_measurement_service.measurement.info import (DataType, MeasurementInfo,
-                                                     ServiceInfo,
-                                                     TypeSpecialization)
+from ni_measurement_service.measurement.info import (
+    DataType,
+    MeasurementInfo,
+    ServiceInfo,
+    TypeSpecialization,
+)
 
 
 class MeasurementContext:
@@ -263,8 +265,10 @@ class MeasurementService:
         )
         return self
 
-    def _get_annotations(self, type_specialization: TypeSpecialization, instrument_type: str) -> Dict[str, str]:
-        annotations = {}
+    def _get_annotations(
+        self, type_specialization: TypeSpecialization, instrument_type: str
+    ) -> Dict[str, str]:
+        annotations: Dict[str, str] = {}
         if type_specialization == TypeSpecialization.No_Type:
             return annotations
 
