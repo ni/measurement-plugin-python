@@ -136,10 +136,12 @@ def measure(
                 )
             if any((session.is_done() for session in sessions)):
                 break
+            remaining_time = max(stop_time - time.time(), 0.0)
+            sleep_time = min(remaining_time, 100e-3)
             if is_simulated:
-                time.sleep(100e-3)
+                time.sleep(sleep_time)
             else:
-                sessions[0].wait_until_done(hightime.timedelta(milliseconds=100))
+                sessions[0].wait_until_done(hightime.timedelta(seconds=sleep_time))
 
         if abort_when_done:
             logging.info("Aborting generation")
