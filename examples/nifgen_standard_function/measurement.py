@@ -111,7 +111,7 @@ def measure(
         )
 
         sessions = [
-            stack.enter_context(_create_session(session_info.resource_name))
+            stack.enter_context(_create_nifgen_session(session_info))
             for session_info in reservation.session_info
         ]
 
@@ -148,7 +148,9 @@ def measure(
     return ()
 
 
-def _create_session(resource_name: str) -> nifgen.Session:
+def _create_nifgen_session(
+    session_info: nims.session_management.SessionInformation,
+) -> nifgen.Session:
     session_kwargs = {}
     if service_options.use_grpc_device:
         session_grpc_address = service_options.grpc_device_address
@@ -162,13 +164,18 @@ def _create_session(resource_name: str) -> nifgen.Session:
             session_grpc_channel = measurement_service.channel_pool.get_channel(
                 target=session_grpc_address
             )
+        # Assumption: the pin map specifies one NI-FGEN session per instrument. If the pin map
+        # specified an NI-FGEN session per channel, the session name would need to include the
+        # channel name(s).
         session_kwargs["_grpc_options"] = nifgen.GrpcSessionOptions(
             session_grpc_channel,
-            session_name=resource_name,
+            session_name=session_info.resource_name,
             initialization_behavior=nifgen.SessionInitializationBehavior.AUTO,
         )
 
-    return nifgen.Session(resource_name=resource_name, **session_kwargs)
+    return nifgen.Session(
+        session_info.resource_name, session_info.channel_list, **session_kwargs
+    )
 
 
 @click.command
