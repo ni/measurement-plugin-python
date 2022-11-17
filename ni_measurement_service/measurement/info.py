@@ -48,27 +48,27 @@ class ServiceInfo(NamedTuple):
 class TypeSpecialization(enum.Enum):
     """Enum that represents the type specializations for measurement parameters."""
 
-    No_Type = ""
+    NoType = ""
     Pin = "pin"
 
 
 class DataType(enum.Enum):
     """Enum that represents the supported data types."""
 
-    Int32 = (type_pb2.Field.TYPE_INT32, False, TypeSpecialization.No_Type)
-    Int64 = (type_pb2.Field.TYPE_INT64, False, TypeSpecialization.No_Type)
-    UInt32 = (type_pb2.Field.TYPE_UINT32, False, TypeSpecialization.No_Type)
-    UInt64 = (type_pb2.Field.TYPE_UINT64, False, TypeSpecialization.No_Type)
-    Float = (type_pb2.Field.TYPE_FLOAT, False, TypeSpecialization.No_Type)
-    Double = (type_pb2.Field.TYPE_DOUBLE, False, TypeSpecialization.No_Type)
-    Boolean = (type_pb2.Field.TYPE_BOOL, False, TypeSpecialization.No_Type)
-    String = (type_pb2.Field.TYPE_STRING, False, TypeSpecialization.No_Type)
+    Int32 = (type_pb2.Field.TYPE_INT32, False, TypeSpecialization.NoType)
+    Int64 = (type_pb2.Field.TYPE_INT64, False, TypeSpecialization.NoType)
+    UInt32 = (type_pb2.Field.TYPE_UINT32, False, TypeSpecialization.NoType)
+    UInt64 = (type_pb2.Field.TYPE_UINT64, False, TypeSpecialization.NoType)
+    Float = (type_pb2.Field.TYPE_FLOAT, False, TypeSpecialization.NoType)
+    Double = (type_pb2.Field.TYPE_DOUBLE, False, TypeSpecialization.NoType)
+    Boolean = (type_pb2.Field.TYPE_BOOL, False, TypeSpecialization.NoType)
+    String = (type_pb2.Field.TYPE_STRING, False, TypeSpecialization.NoType)
     Pin = (type_pb2.Field.TYPE_STRING, False, TypeSpecialization.Pin)
 
-    Int32Array1D = (type_pb2.Field.TYPE_INT32, True, TypeSpecialization.No_Type)
-    Int64Array1D = (type_pb2.Field.TYPE_INT64, True, TypeSpecialization.No_Type)
-    UInt32Array1D = (type_pb2.Field.TYPE_UINT32, True, TypeSpecialization.No_Type)
-    UInt64Array1D = (type_pb2.Field.TYPE_UINT64, True, TypeSpecialization.No_Type)
-    FloatArray1D = (type_pb2.Field.TYPE_FLOAT, True, TypeSpecialization.No_Type)
-    DoubleArray1D = (type_pb2.Field.TYPE_DOUBLE, True, TypeSpecialization.No_Type)
-    BooleanArray1D = (type_pb2.Field.TYPE_BOOL, True, TypeSpecialization.No_Type)
+    Int32Array1D = (type_pb2.Field.TYPE_INT32, True, TypeSpecialization.NoType)
+    Int64Array1D = (type_pb2.Field.TYPE_INT64, True, TypeSpecialization.NoType)
+    UInt32Array1D = (type_pb2.Field.TYPE_UINT32, True, TypeSpecialization.NoType)
+    UInt64Array1D = (type_pb2.Field.TYPE_UINT64, True, TypeSpecialization.NoType)
+    FloatArray1D = (type_pb2.Field.TYPE_FLOAT, True, TypeSpecialization.NoType)
+    DoubleArray1D = (type_pb2.Field.TYPE_DOUBLE, True, TypeSpecialization.NoType)
+    BooleanArray1D = (type_pb2.Field.TYPE_BOOL, True, TypeSpecialization.NoType)

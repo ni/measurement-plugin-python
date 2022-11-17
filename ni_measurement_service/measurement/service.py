@@ -269,7 +269,7 @@ class MeasurementService:
         self, type_specialization: TypeSpecialization, instrument_type: str
     ) -> Dict[str, str]:
         annotations: Dict[str, str] = {}
-        if type_specialization == TypeSpecialization.No_Type:
+        if type_specialization == TypeSpecialization.NoType:
             return annotations
 
         annotations["ni/type_specialization"] = type_specialization.value

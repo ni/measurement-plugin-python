@@ -24,7 +24,7 @@ def test___measurement_service___register_measurement_method___method_registered
         ("Float", DataType.Float, 0.100),
         ("Double1DArray", DataType.DoubleArray1D, [1.009, -1.0009]),
         ("Int32", DataType.Int32, -8799),
-        ("Int44", DataType.Int64, -999),
+        ("Int64", DataType.Int64, -999),
         ("UInt32", DataType.UInt32, 3994),
         ("UInt44", DataType.UInt64, 3456),
         ("UInt44", DataType.UInt64, False),
@@ -83,7 +83,7 @@ def test___measurement_service___add_pin_configuration__pin_configuration_added(
         ("Float", DataType.Float, 0.100),
         ("Double1DArray", DataType.DoubleArray1D, [1.009, -1.0009]),
         ("Int32", DataType.Int32, -8799),
-        ("Int44", DataType.Int64, -999),
+        ("Int64", DataType.Int64, -999),
         ("UInt32", DataType.UInt32, 3994),
         ("UInt44", DataType.UInt64, 3456),
         ("UInt44", DataType.UInt64, False),
@@ -97,12 +97,8 @@ def test___measurement_service___add_non_pin_configuration__pin_type_annotations
 
     measurement_service.configuration(display_name, type, default_value)(_fake_measurement_function)
 
-    assert any(
-        param.display_name == display_name
-        and param.type == type.value[0]
-        and param.repeated == type.value[1]
-        and param.default_value == default_value
-        and param.annotations != {"ni/type_specialization": TypeSpecialization.Pin.value}
+    assert all(
+        param.annotations.get("ni/type_specializaation") != TypeSpecialization.Pin.value
         for param in measurement_service.configuration_parameter_list
     )
 
@@ -116,7 +112,7 @@ def test___measurement_service___add_non_pin_configuration__pin_type_annotations
         ("Float", DataType.Float, 1),
         ("Double1DArray", DataType.DoubleArray1D, ""),
         ("Int32", DataType.Int32, 1.0),
-        ("Int44", DataType.Int64, 1.0),
+        ("Int64", DataType.Int64, 1.0),
         ("UInt32", DataType.UInt32, [1.009, -1.0009]),
         ("UInt44", DataType.UInt64, ""),
         ("PinType", DataType.Pin, 1.0),
@@ -143,7 +139,7 @@ def test___measurement_service___add_configuration_with_mismatch_default_value__
         ("Float", DataType.Float),
         ("Double1DArray", DataType.DoubleArray1D),
         ("Int32", DataType.Int32),
-        ("Int44", DataType.Int64),
+        ("Int64", DataType.Int64),
         ("UInt32", DataType.UInt32),
         ("UInt44", DataType.UInt64),
         ("UInt44", DataType.UInt64),
