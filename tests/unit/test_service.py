@@ -97,8 +97,8 @@ def test___measurement_service___add_non_pin_configuration__pin_type_annotations
 
     measurement_service.configuration(display_name, type, default_value)(_fake_measurement_function)
 
-    assert all(
-        param.annotations.get("ni/type_specializaation") != TypeSpecialization.Pin.value
+    assert not all(
+        param.annotations.get("ni/type_specializaation") == TypeSpecialization.Pin.value
         for param in measurement_service.configuration_parameter_list
     )
 
