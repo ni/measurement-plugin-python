@@ -5,22 +5,19 @@ import logging
 import pathlib
 import sys
 import time
-from typing import List, NamedTuple, Tuple
+from typing import NamedTuple, Tuple
 
 import click
-import hightime
 import grpc
+import hightime
 import nifgen
 
 import ni_measurement_service as nims
 
-
 measurement_info = nims.MeasurementInfo(
     display_name="NI-FGEN Standard Function (Py)",
     version="0.1.0.0",
-    ui_file_paths=[
-        pathlib.Path(__file__).resolve().parent / "NIFgenStandardFunction.measui"
-    ],
+    ui_file_paths=[pathlib.Path(__file__).resolve().parent / "NIFgenStandardFunction.measui"],
 )
 
 service_info = nims.ServiceInfo(
@@ -177,9 +174,7 @@ def _create_nifgen_session(
             initialization_behavior=nifgen.SessionInitializationBehavior.AUTO,
         )
 
-    return nifgen.Session(
-        session_info.resource_name, session_info.channel_list, **session_kwargs
-    )
+    return nifgen.Session(session_info.resource_name, session_info.channel_list, **session_kwargs)
 
 
 @click.command
