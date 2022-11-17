@@ -124,6 +124,7 @@ def measure(
 
             session.initiate()
 
+        is_simulated = sessions[0].simulate
         stop_time = time.time() + duration
         while True:
             if time.time() >= stop_time:
@@ -138,7 +139,10 @@ def measure(
                 )
             if any((session.is_done() for session in sessions)):
                 break
-            sessions[0].wait_until_done(hightime.timedelta(milliseconds=100))
+            if is_simulated:
+                time.sleep(100e-3)
+            else:
+                sessions[0].wait_until_done(hightime.timedelta(milliseconds=100))
 
         if abort_when_done:
             logging.info("Aborting generation")
