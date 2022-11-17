@@ -1,4 +1,4 @@
-"""National Instruments Framework for hosting Python Measurement Services."""
+"""MeasurementLink Support for Python."""
 import logging
 
 from .measurement.info import DataType  # noqa F401, declaring API
