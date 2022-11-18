@@ -29,19 +29,19 @@ service_info = nims.ServiceInfo(
     description_url="https://www.ni.com/measurementservices/nidcpowersourcedcvoltage.html",
 )
 
-dc_measurement_service = nims.MeasurementService(measurement_info, service_info)
+measurement_service = nims.MeasurementService(measurement_info, service_info)
 service_options = ServiceOptions(use_grpc_device=False, grpc_device_address="")
 
 
-@dc_measurement_service.register_measurement
-@dc_measurement_service.configuration("pin_name", nims.DataType.Pin, "Pin1")
-@dc_measurement_service.configuration("voltage_level", nims.DataType.Double, 6.0)
-@dc_measurement_service.configuration("voltage_level_range", nims.DataType.Double, 6.0)
-@dc_measurement_service.configuration("current_limit", nims.DataType.Double, 0.01)
-@dc_measurement_service.configuration("current_limit_range", nims.DataType.Double, 0.01)
-@dc_measurement_service.configuration("source_delay", nims.DataType.Double, 0.0)
-@dc_measurement_service.output("voltage_measurement", nims.DataType.Double)
-@dc_measurement_service.output("current_measurement", nims.DataType.Double)
+@measurement_service.register_measurement
+@measurement_service.configuration("pin_name", nims.DataType.Pin, "Pin1")
+@measurement_service.configuration("voltage_level", nims.DataType.Double, 6.0)
+@measurement_service.configuration("voltage_level_range", nims.DataType.Double, 6.0)
+@measurement_service.configuration("current_limit", nims.DataType.Double, 0.01)
+@measurement_service.configuration("current_limit_range", nims.DataType.Double, 0.01)
+@measurement_service.configuration("source_delay", nims.DataType.Double, 0.0)
+@measurement_service.output("voltage_measurement", nims.DataType.Double)
+@measurement_service.output("current_measurement", nims.DataType.Double)
 def measure(
     pin_name,
     voltage_level,
@@ -54,7 +54,7 @@ def measure(
     logging.info("Executing measurement: pin_name=%s voltage_level=%g", pin_name, voltage_level)
 
     session_management_client = nims.session_management.Client(
-        grpc_channel=dc_measurement_service.get_channel(
+        grpc_channel=measurement_service.get_channel(
             provided_interface=nims.session_management.GRPC_SERVICE_INTERFACE_NAME,
             service_class=nims.session_management.GRPC_SERVICE_CLASS,
         )
@@ -63,7 +63,7 @@ def measure(
     with contextlib.ExitStack() as stack:
         reservation = stack.enter_context(
             session_management_client.reserve_sessions(
-                context=dc_measurement_service.context.pin_map_context,
+                context=measurement_service.context.pin_map_context,
                 pin_names=[pin_name],
                 instrument_type_id="niDCPower",
                 timeout=-1,
@@ -89,8 +89,8 @@ def measure(
                 pending_cancellation = True
                 session_to_abort.abort()
 
-        dc_measurement_service.context.add_cancel_callback(cancel_callback)
-        time_remaining = dc_measurement_service.context.time_remaining
+        measurement_service.context.add_cancel_callback(cancel_callback)
+        time_remaining = measurement_service.context.time_remaining
 
         session.source_mode = nidcpower.SourceMode.SINGLE_POINT
         session.output_function = nidcpower.OutputFunction.DC_VOLTAGE
@@ -105,11 +105,11 @@ def measure(
             deadline = time.time() + time_remaining
             while True:
                 if time.time() > deadline:
-                    dc_measurement_service.context.abort(
+                    measurement_service.context.abort(
                         grpc.StatusCode.DEADLINE_EXCEEDED, "deadline exceeded"
                     )
                 if pending_cancellation:
-                    dc_measurement_service.context.abort(
+                    measurement_service.context.abort(
                         grpc.StatusCode.CANCELLED, "client requested cancellation"
                     )
                 try:
@@ -145,12 +145,12 @@ def _create_nidcpower_session(
         session_grpc_address = service_options.grpc_device_address
 
         if not session_grpc_address:
-            session_grpc_channel = dc_measurement_service.get_channel(
+            session_grpc_channel = measurement_service.get_channel(
                 provided_interface=nidcpower.GRPC_SERVICE_INTERFACE_NAME,
                 service_class="ni.measurementlink.v1.grpcdeviceserver",
             )
         else:
-            session_grpc_channel = dc_measurement_service.channel_pool.get_channel(
+            session_grpc_channel = measurement_service.channel_pool.get_channel(
                 target=session_grpc_address
             )
         session_kwargs["_grpc_options"] = nidcpower.GrpcSessionOptions(
@@ -196,7 +196,7 @@ def main(verbose: int, use_grpc_device: bool, grpc_device_address: str):
         use_grpc_device=use_grpc_device, grpc_device_address=grpc_device_address
     )
 
-    with dc_measurement_service.host_service():
+    with measurement_service.host_service():
         input("Press enter to close the measurement service.\n")
 
 
