@@ -1,4 +1,4 @@
-"""Generate a standard function waveform using an NI-FGEN instrument."""
+"""Generate a standard function waveform using an NI waveform generator."""
 
 import contextlib
 import logging
@@ -64,7 +64,7 @@ def measure(
     duration: float,
     abort_when_done: bool,
 ) -> Tuple:
-    """Generate a standard function waveform using an NI-FGEN instrument."""
+    """Generate a standard function waveform using an NI waveform generator."""
     logging.info(
         "Starting generation: pin_name=%s waveform_type=%s frequency=%g amplitude=%g",
         pin_name,
