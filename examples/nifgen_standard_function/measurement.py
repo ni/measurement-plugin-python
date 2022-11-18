@@ -119,6 +119,9 @@ def measure(
             channels = session.channels[session_info.channel_list]
             channels.configure_standard_waveform(waveform_enum, amplitude, frequency)
 
+            if abort_when_done:
+                stack.enter_context(session.initiate())
+            else:
             session.initiate()
 
         is_simulated = sessions[0].simulate
@@ -142,11 +145,6 @@ def measure(
                 time.sleep(sleep_time)
             else:
                 sessions[0].wait_until_done(hightime.timedelta(seconds=sleep_time))
-
-        if abort_when_done:
-            logging.info("Aborting generation")
-            for session in sessions:
-                session.abort()
 
     return ()
 
