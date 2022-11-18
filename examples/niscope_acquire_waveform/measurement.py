@@ -9,7 +9,6 @@ from typing import Dict, NamedTuple, Tuple, TypeVar
 
 import click
 import grpc
-import hightime
 import niscope
 
 import ni_measurement_service as nims
