@@ -197,7 +197,7 @@ def _create_nifgen_session(
     help="NI gRPC Device Server address (e.g. localhost:31763). If unspecified, use the discovery service to resolve the address.",
 )
 def main(verbose: int, use_grpc_device: bool, grpc_device_address: str):
-    """Host the DC Measurement (Screen UI) service."""
+    """Generate a standard function waveform using an NI waveform generator."""
     if verbose > 1:
         level = logging.DEBUG
     elif verbose == 1:
