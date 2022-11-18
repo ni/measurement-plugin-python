@@ -122,14 +122,15 @@ def measure(
             if abort_when_done:
                 stack.enter_context(session.initiate())
             else:
-            session.initiate()
+                session.initiate()
 
         is_simulated = sessions[0].simulate
+        deadline = time.time() + measurement_service.context.time_remaining
         stop_time = time.time() + duration
         while True:
             if time.time() >= stop_time:
                 break
-            if measurement_service.context.time_remaining <= 0:
+            if time.time() > deadline:
                 measurement_service.context.abort(
                     grpc.StatusCode.DEADLINE_EXCEEDED, "Deadline exceeded."
                 )
