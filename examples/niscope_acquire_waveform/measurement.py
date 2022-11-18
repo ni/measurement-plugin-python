@@ -244,7 +244,7 @@ def _str_to_enum(mapping: Dict[str, _T], value: str) -> _T:
     help="NI gRPC Device Server address (e.g. localhost:31763). If unspecified, use the discovery service to resolve the address.",
 )
 def main(verbose: int, use_grpc_device: bool, grpc_device_address: str):
-    """Host the DC Measurement (Screen UI) service."""
+    """Acquire a waveform using an NI oscilloscope."""
     if verbose > 1:
         level = logging.DEBUG
     elif verbose == 1:
