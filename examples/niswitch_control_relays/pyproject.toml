@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "niswitch_control_relays"
+version = "0.5.0"
+description = "Control relays on NI switches."
+authors = ["National Instruments"]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+# Uncomment to use prerelease dependencies.
+niswitch = {path = "../../../nimi-python/generated/niswitch", develop = true}
+ni-measurement-service = {path = "../..", develop = true}
+# niswitch = "1.4.1"
+# ni-measurement-service = "*"
+click = ">=7.1.2"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
