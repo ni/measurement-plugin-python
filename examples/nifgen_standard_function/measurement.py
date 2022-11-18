@@ -11,9 +11,9 @@ import click
 import grpc
 import hightime
 import nifgen
+from _helpers import ServiceOptions, str_to_enum
 
 import ni_measurement_service as nims
-from _helpers import ServiceOptions, str_to_enum
 
 measurement_info = nims.MeasurementInfo(
     display_name="NI-FGEN Standard Function (Py)",

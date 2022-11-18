@@ -17,6 +17,7 @@ T = TypeVar("T")
 
 
 def str_to_enum(mapping: Dict[str, T], value: str) -> T:
+    """Convert a string to an enum (with improved error reporting)."""
     try:
         return mapping[value]
     except KeyError as e:
