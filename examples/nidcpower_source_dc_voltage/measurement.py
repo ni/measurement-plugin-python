@@ -1,20 +1,17 @@
-"""User Measurement.
-
-User can Import driver and 3rd Party Packages based on requirements.
-
-"""
+"""Source and measure a DC voltage with an NI SMU."""
 
 import contextlib
 import logging
 import pathlib
 import sys
 import time
-from typing import List, NamedTuple
+from typing import List
 
 import click
 import grpc
 import hightime
 import nidcpower
+from _helpers import ServiceOptions
 
 import ni_measurement_service as nims
 
@@ -22,38 +19,29 @@ import ni_measurement_service as nims
 NIDCPOWER_WAIT_FOR_EVENT_TIMEOUT_ERROR_CODE = -1074116059
 
 measurement_info = nims.MeasurementInfo(
-    display_name="DCMeasurement(Py)",
+    display_name="NI-DCPower Source DC Voltage (Py)",
     version="0.1.0.0",
-    ui_file_paths=[pathlib.Path(__file__).resolve().parent / "DCMeasurement.measui"],
+    ui_file_paths=[pathlib.Path(__file__).resolve().parent / "NIDCPowerSourceDCVoltage.measui"],
 )
 
 service_info = nims.ServiceInfo(
-    service_class="ni.examples.DCMeasurement_Python",
-    description_url="https://www.ni.com/measurementservices/dcmeasurement.html",
+    service_class="ni.examples.NIDCPowerSourceDCVoltage_Python",
+    description_url="https://www.ni.com/measurementservices/nidcpowersourcedcvoltage.html",
 )
 
 dc_measurement_service = nims.MeasurementService(measurement_info, service_info)
-
-
-class ServiceOptions(NamedTuple):
-    """Service options specified on the command line."""
-
-    use_grpc_device: bool
-    grpc_device_address: str
-
-
 service_options = ServiceOptions(use_grpc_device=False, grpc_device_address="")
 
 
 @dc_measurement_service.register_measurement
-@dc_measurement_service.configuration("Pin name", nims.DataType.Pin, "Pin1")
-@dc_measurement_service.configuration("Voltage level(V)", nims.DataType.Float, 6.0)
-@dc_measurement_service.configuration("Voltage level range(V)", nims.DataType.Float, 6.0)
-@dc_measurement_service.configuration("Current limit(A)", nims.DataType.Float, 0.01)
-@dc_measurement_service.configuration("Current limit range(A)", nims.DataType.Float, 0.01)
-@dc_measurement_service.configuration("Source delay(s)", nims.DataType.Float, 0.0)
-@dc_measurement_service.output("Voltage Measurement(V)", nims.DataType.Float)
-@dc_measurement_service.output("Current Measurement(A)", nims.DataType.Float)
+@dc_measurement_service.configuration("pin_name", nims.DataType.Pin, "Pin1")
+@dc_measurement_service.configuration("voltage_level", nims.DataType.Double, 6.0)
+@dc_measurement_service.configuration("voltage_level_range", nims.DataType.Double, 6.0)
+@dc_measurement_service.configuration("current_limit", nims.DataType.Double, 0.01)
+@dc_measurement_service.configuration("current_limit_range", nims.DataType.Double, 0.01)
+@dc_measurement_service.configuration("source_delay", nims.DataType.Double, 0.0)
+@dc_measurement_service.output("voltage_measurement", nims.DataType.Double)
+@dc_measurement_service.output("current_measurement", nims.DataType.Double)
 def measure(
     pin_name,
     voltage_level,
@@ -62,14 +50,7 @@ def measure(
     current_limit_range,
     source_delay,
 ):
-    """User Measurement API. Returns Voltage Measurement as the only output.
-
-    Returns
-    -------
-        Tuple of Output Variables, in the order configured in the metadata.py
-
-    """
-    # User Logic :
+    """Source and measure a DC voltage with an NI SMU."""
     logging.info("Executing measurement: pin_name=%s voltage_level=%g", pin_name, voltage_level)
 
     session_management_client = nims.session_management.Client(
@@ -89,30 +70,14 @@ def measure(
             )
         )
 
-        resource_name = reservation.session_info[0].resource_name
-
-        session_kwargs = {}
-        if service_options.use_grpc_device:
-            session_grpc_address = service_options.grpc_device_address
-
-            if not session_grpc_address:
-                session_grpc_channel = dc_measurement_service.get_channel(
-                    provided_interface=nidcpower.GRPC_SERVICE_INTERFACE_NAME,
-                    service_class="ni.measurementlink.v1.grpcdeviceserver",
-                )
-            else:
-                session_grpc_channel = dc_measurement_service.channel_pool.get_channel(
-                    target=session_grpc_address
-                )
-            session_kwargs["_grpc_options"] = nidcpower.GrpcSessionOptions(
-                session_grpc_channel,
-                session_name=resource_name,
-                initialization_behavior=nidcpower.SessionInitializationBehavior.AUTO,
+        if len(reservation.session_info) != 1:
+            measurement_service.context.abort(
+                grpc.StatusCode.INVALID_ARGUMENT,
+                f"Unsupported number of sessions: {len(reservation.session_info)}",
             )
 
-        session = stack.enter_context(
-            nidcpower.Session(resource_name=resource_name, **session_kwargs)
-        )
+        session_info = reservation.session_info[0]
+        session = stack.enter_context(_create_nidcpower_session(session_info))
 
         pending_cancellation = False
 
@@ -172,6 +137,31 @@ def measure(
     return (measured_value[0].voltage, measured_value[0].current)
 
 
+def _create_nidcpower_session(
+    session_info: nims.session_management.SessionInformation,
+) -> nidcpower.Session:
+    session_kwargs = {}
+    if service_options.use_grpc_device:
+        session_grpc_address = service_options.grpc_device_address
+
+        if not session_grpc_address:
+            session_grpc_channel = dc_measurement_service.get_channel(
+                provided_interface=nidcpower.GRPC_SERVICE_INTERFACE_NAME,
+                service_class="ni.measurementlink.v1.grpcdeviceserver",
+            )
+        else:
+            session_grpc_channel = dc_measurement_service.channel_pool.get_channel(
+                target=session_grpc_address
+            )
+        session_kwargs["_grpc_options"] = nidcpower.GrpcSessionOptions(
+            session_grpc_channel,
+            session_name=session_info.resource_name,
+            initialization_behavior=nidcpower.SessionInitializationBehavior.AUTO,
+        )
+
+    return nidcpower.Session(resource_name=session_info.resource_name, **session_kwargs)
+
+
 def _log_measured_values(measured_value, in_compliance):
     """Log the measured values."""
     logging.info("Voltage: %g V", measured_value[0].voltage)
@@ -192,7 +182,7 @@ def _log_measured_values(measured_value, in_compliance):
     help="NI gRPC Device Server address (e.g. localhost:31763). If unspecified, use the discovery service to resolve the address.",
 )
 def main(verbose: int, use_grpc_device: bool, grpc_device_address: str):
-    """Host the DC Measurement (Screen UI) service."""
+    """Source and measure a DC voltage with an NI SMU."""
     if verbose > 1:
         level = logging.DEBUG
     elif verbose == 1:
