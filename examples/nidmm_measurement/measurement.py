@@ -104,7 +104,9 @@ def measure(
         signal_out_of_range = False
 
         absolute_resolution = session.resolution_absolute
-        return (measured_value, signal_out_of_range, absolute_resolution)
+
+    logging.info("Completed measurement")
+    return (measured_value, signal_out_of_range, absolute_resolution)
 
 
 def _create_nidmm_session(
