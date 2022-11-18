@@ -4,12 +4,12 @@ import contextlib
 import logging
 import pathlib
 import sys
-import time
-from typing import Dict, NamedTuple, Tuple, TypeVar
+from typing import Tuple
 
 import click
 import grpc
 import nidmm
+from _helpers import ServiceOptions, str_to_enum
 
 import ni_measurement_service as nims
 
@@ -25,17 +25,7 @@ service_info = nims.ServiceInfo(
 )
 
 measurement_service = nims.MeasurementService(measurement_info, service_info)
-
-
-class ServiceOptions(NamedTuple):
-    """Service options specified on the command line."""
-
-    use_grpc_device: bool
-    grpc_device_address: str
-
-
 service_options = ServiceOptions(use_grpc_device=False, grpc_device_address="")
-
 
 FUNCTION_TO_ENUM = {
     "DC Volts": nidmm.Function.DC_VOLTS,
@@ -103,7 +93,7 @@ def measure(
         session_info = reservation.session_info[0]
         session = stack.enter_context(_create_nidmm_session(session_info))
         session.configure_measurement_digits(
-            _str_to_enum(FUNCTION_TO_ENUM, measurement_type),
+            str_to_enum(FUNCTION_TO_ENUM, measurement_type),
             range,
             resolution_digits,
         )
@@ -140,19 +130,6 @@ def _create_nidmm_session(
         )
 
     return nidmm.Session(session_info.resource_name, **session_kwargs)
-
-
-_T = TypeVar("_T")
-
-
-def _str_to_enum(mapping: Dict[str, _T], value: str) -> _T:
-    try:
-        return mapping[value]
-    except KeyError as e:
-        raise grpc.RpcError(
-            grpc.StatusCode.INVALID_ARGUMENT,
-            f'Unsupported enum value "{value}"',
-        ) from e
 
 
 @click.command
