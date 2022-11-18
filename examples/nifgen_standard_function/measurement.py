@@ -5,7 +5,7 @@ import logging
 import pathlib
 import sys
 import time
-from typing import NamedTuple, Tuple
+from typing import Tuple
 
 import click
 import grpc
@@ -13,6 +13,7 @@ import hightime
 import nifgen
 
 import ni_measurement_service as nims
+from _helpers import ServiceOptions, str_to_enum
 
 measurement_info = nims.MeasurementInfo(
     display_name="NI-FGEN Standard Function (Py)",
@@ -26,17 +27,7 @@ service_info = nims.ServiceInfo(
 )
 
 measurement_service = nims.MeasurementService(measurement_info, service_info)
-
-
-class ServiceOptions(NamedTuple):
-    """Service options specified on the command line."""
-
-    use_grpc_device: bool
-    grpc_device_address: str
-
-
 service_options = ServiceOptions(use_grpc_device=False, grpc_device_address="")
-
 
 WAVEFORM_TYPE_TO_ENUM = {
     "Sine": nifgen.Waveform.SINE,
@@ -72,14 +63,6 @@ def measure(
         frequency,
         amplitude,
     )
-
-    try:
-        waveform_enum = WAVEFORM_TYPE_TO_ENUM[waveform_type]
-    except KeyError as e:
-        raise grpc.RpcError(
-            grpc.StatusCode.INVALID_ARGUMENT,
-            f'Unsupported waveform type "{waveform_type}"',
-        ) from e
 
     pending_cancellation = False
 
@@ -117,7 +100,11 @@ def measure(
             session.output_mode = nifgen.OutputMode.FUNC
 
             channels = session.channels[session_info.channel_list]
-            channels.configure_standard_waveform(waveform_enum, amplitude, frequency)
+            channels.configure_standard_waveform(
+                str_to_enum(WAVEFORM_TYPE_TO_ENUM, waveform_type),
+                amplitude,
+                frequency,
+            )
 
             if abort_when_done:
                 stack.enter_context(session.initiate())
