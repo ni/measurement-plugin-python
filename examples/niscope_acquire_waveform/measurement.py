@@ -5,11 +5,12 @@ import logging
 import pathlib
 import sys
 import time
-from typing import Dict, NamedTuple, Tuple, TypeVar
+from typing import Tuple
 
 import click
 import grpc
 import niscope
+from _helpers import ServiceOptions, str_to_enum
 
 import ni_measurement_service as nims
 
@@ -25,17 +26,7 @@ service_info = nims.ServiceInfo(
 )
 
 measurement_service = nims.MeasurementService(measurement_info, service_info)
-
-
-class ServiceOptions(NamedTuple):
-    """Service options specified on the command line."""
-
-    use_grpc_device: bool
-    grpc_device_address: str
-
-
 service_options = ServiceOptions(use_grpc_device=False, grpc_device_address="")
-
 
 VERTICAL_COUPLING_TO_ENUM = {
     "AC": niscope.VerticalCoupling.AC,
@@ -141,7 +132,7 @@ def measure(
         session.channels[""].channel_enabled = False
         session.channels[channel_names].configure_vertical(
             vertical_range,
-            _str_to_enum(VERTICAL_COUPLING_TO_ENUM, vertical_coupling),
+            str_to_enum(VERTICAL_COUPLING_TO_ENUM, vertical_coupling),
         )
         session.channels[channel_names].configure_chan_characteristics(
             input_impedance, max_input_frequency=0.0
@@ -156,8 +147,8 @@ def measure(
         session.configure_trigger_edge(
             trigger_source,
             trigger_level,
-            _str_to_enum(TRIGGER_COUPLING_TO_ENUM, trigger_coupling),
-            _str_to_enum(TRIGGER_SLOPE_TO_ENUM, trigger_slope),
+            str_to_enum(TRIGGER_COUPLING_TO_ENUM, trigger_coupling),
+            str_to_enum(TRIGGER_SLOPE_TO_ENUM, trigger_slope),
         )
         session.trigger_modifier = (
             niscope.TriggerModifier.AUTO if auto_trigger else niscope.TriggerModifier.NO_TRIGGER_MOD
@@ -210,19 +201,6 @@ def _create_niscope_session(
         )
 
     return niscope.Session(session_info.resource_name, **session_kwargs)
-
-
-_T = TypeVar("_T")
-
-
-def _str_to_enum(mapping: Dict[str, _T], value: str) -> _T:
-    try:
-        return mapping[value]
-    except KeyError as e:
-        raise grpc.RpcError(
-            grpc.StatusCode.INVALID_ARGUMENT,
-            f'Unsupported enum value "{value}"',
-        ) from e
 
 
 @click.command
