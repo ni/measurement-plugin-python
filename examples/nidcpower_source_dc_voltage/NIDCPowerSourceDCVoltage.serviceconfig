@@ -1,0 +1,11 @@
+{
+  "services": [
+    {
+      "displayName": "NI-DCPower Source DC Voltage (Py)",
+      "serviceClass": "ni.examples.NIDCPowerSourceDCVoltage_Python",
+      "descriptionUrl": "https://www.ni.com/measurementservices/nidcpowersourcedcvoltage.html",
+      "providedInterfaces": [ "ni.measurementlink.measurement.v1.MeasurementService" ],
+      "path": "start.bat"
+    }
+  ]
+}
