@@ -1,12 +1,15 @@
 [tool.poetry]
-name = "dc_measurement_labviewui"
+name = "nidmm_measurement"
 version = "0.5.0"
-description = "Example Measurement that performs operations with DcPower Instrument. Linked to LabVIEW UI."
+description = "Perform a measurement using an NI DMM."
 authors = ["National Instruments"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
-nidcpower = "1.4.1"
+# Uncomment to use prerelease dependencies.
+# nidmm = {path = "../../../nimi-python/generated/nidmm", develop = true}
+# ni-measurement-service = {path = "../..", develop = true}
+nidmm = "1.4.1"
 ni-measurement-service = "*"
 click = ">=7.1.2"
 
