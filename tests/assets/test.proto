@@ -22,5 +22,12 @@ message MeasurementParameter{
     uint64 uint64_data=6;
     bool bool_data=7;
     string string_data =8;
-    repeated double double_array_data=9; 
+    repeated double double_array_data=9;
+    repeated float float_array_data =10;
+    repeated int32 int32_array_data = 11;
+    repeated uint32 uint32_array_data = 12;
+    repeated int64 int64_array_data = 13;
+    repeated uint64 uint64_array_data = 14;
+    repeated bool bool_array_data = 15;
+    repeated string string_array_data = 16;
 }
