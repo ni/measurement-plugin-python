@@ -1,11 +1,11 @@
-# Contributing to Measurement Services Support for Python
+# Contributing to MeasurementLink™ Support for Python
 
-Contributions to Measurement Services Support for Python are welcome from all!
+Contributions to MeasurementLink Support for Python are welcome from all!
 
-Measurement Services Support for Python is managed via [git](https://git-scm.com), with the canonical upstream
-repository hosted on [GitHub](https://github.com/ni/measurement-services-python/). The repo contains the necessary Python Measurement templates and examples to call into the Measurement Services.
+MeasurementLink Support for Python is managed via [git](https://git-scm.com), with the canonical upstream
+repository hosted on [GitHub](https://github.com/ni/measurement-services-python/). The repo contains templates and examples for developing MeasurementLink services in Python.
 
-Measurement Services Support for Python follows a pull-request model for development.  If you wish to
+MeasurementLink Support for Python follows a pull-request model for development.  If you wish to
 contribute, you will need to create a GitHub account, fork this project, push a
 branch with your changes to your project, and then submit a pull request.
 
@@ -30,7 +30,7 @@ See [GitHub's official documentation](https://help.github.com/articles/using-pul
 
 ## Clone Repo
 
-Clone the repo, this will pull the NI Measurement Service Framework components and related components.
+Clone the repo, this will pull the MeasurementLink Support for Python components and related components.
 
 ```cmd
 git clone https://github.com/ni/measurement-services-python.git
@@ -66,11 +66,12 @@ poetry add -D <name_of_dev_dependency>:<version>
 
 # Updating gRPC stubs when a .proto file is modified
 
-The `ni_measurement_service\_internal\stubs` directory contains the auto-generated python files based on measurement services related protobuf (.proto) files. The file needs to be replaced whenever there is a change to these .proto files:
+The `ni_measurement_service\_internal\stubs` directory contains the auto-generated python files based on MeasurementLink protobuf (.proto) files. The file needs to be replaced whenever there is a change to these .proto files:
 
-- ni/measurements/pin_map_context.proto
-- ni/measurements/discovery/v1/discovery_service.proto
-- ni/measurements/measurementservice/measurement_service.proto
+- ni/measurementlink/pin_map_context.proto
+- ni/measurementlink/discovery/v1/discovery_service.proto
+- ni/measurementlink/measurement/v1/measurement_service.proto
+- ni/measurementlink/sessionmanagement/v1/session_management_service.proto
 
 The latest .proto files are available in [Azure Repo](https://dev.azure.com/ni/DevCentral/_git/ASW?path=/Source/Protos). From the Azure Repo manually download and overwrite the proto files under the `ni_measurement_service\_internal\stubs\proto` folder.
 
@@ -151,4 +152,4 @@ Install and configure the `Python Test Explorer for Visual Studio Code` extensio
 (taken from [developercertificate.org](https://developercertificate.org/))
 
 See [LICENSE](https://github.com/ni/measurement-services-python/blob/master/LICENSE)
-for details about how Measurement Services Support for Python is licensed.
+for details about how MeasurementLink Support for Python is licensed.

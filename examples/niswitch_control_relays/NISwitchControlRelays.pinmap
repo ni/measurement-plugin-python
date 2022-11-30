@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<PinMap xmlns="http://www.ni.com/TestStand/SemiconductorModule/PinMap.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" schemaVersion="1.4">
+	<Instruments>
+		<NIRelayDriverModule name="RelayDriver1" numberOfControlLines="64" />
+	</Instruments>
+	<Pins></Pins>
+	<PinGroups></PinGroups>
+	<Relays>
+		<SiteRelay name="SiteRelay1" />
+		<SiteRelay name="SiteRelay2" />
+		<SystemRelay name="SystemRelay1" />
+		<SystemRelay name="SystemRelay2" />
+	</Relays>
+	<RelayGroups>
+		<RelayGroup name="AllSiteRelays">
+			<RelayReference relay="SiteRelay1" />
+			<RelayReference relay="SiteRelay2" />
+		</RelayGroup>
+		<RelayGroup name="AllSystemRelays">
+			<RelayReference relay="SystemRelay1" />
+			<RelayReference relay="SystemRelay2" />
+		</RelayGroup>
+	</RelayGroups>
+	<Sites>
+		<Site siteNumber="0" />
+	</Sites>
+	<Connections>
+		<RelayConnection relay="SiteRelay1" siteNumber="0" relayDriverModule="RelayDriver1" controlLine="K0" />
+		<RelayConnection relay="SiteRelay2" siteNumber="0" relayDriverModule="RelayDriver1" controlLine="K1" />
+		<SystemRelayConnection relay="SystemRelay1" relayDriverModule="RelayDriver1" controlLine="K2" />
+		<SystemRelayConnection relay="SystemRelay2" relayDriverModule="RelayDriver1" controlLine="K3" />
+	</Connections>
+</PinMap>

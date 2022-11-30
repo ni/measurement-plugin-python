@@ -2,12 +2,21 @@
 
 from __future__ import annotations
 
-from typing import Any, Callable
+from threading import Lock
+from typing import Any, Callable, Dict
+
+import grpc
 
 from ni_measurement_service._internal import grpc_servicer
+from ni_measurement_service._internal.discovery_client import DiscoveryClient
 from ni_measurement_service._internal.parameter import metadata as parameter_metadata
 from ni_measurement_service._internal.service_manager import GrpcService
-from ni_measurement_service.measurement.info import MeasurementInfo, ServiceInfo, DataType
+from ni_measurement_service.measurement.info import (
+    DataType,
+    MeasurementInfo,
+    ServiceInfo,
+    TypeSpecialization,
+)
 
 
 class MeasurementContext:
@@ -41,8 +50,57 @@ class MeasurementContext:
         grpc_servicer.measurement_service_context.get().abort(code, details)
 
 
+class GrpcChannelPool(object):
+    """Class that manages gRPC channel lifetimes."""
+
+    def __init__(self):
+        """Initialize the GrpcChannelPool object."""
+        self._lock: Lock = Lock()
+        self._channel_cache: Dict[str, grpc.Channel] = {}
+
+    def __enter__(self) -> GrpcChannelPool:
+        """Enter the runtime context of the GrpcChannelPool."""
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        """Exit the runtime context of the GrpcChannelPool."""
+        self.close()
+
+    def get_channel(self, target: str) -> grpc.Channel:
+        """Return a gRPC channel.
+
+        Args:
+        ----
+            target (str): The server address
+
+        """
+        new_channel = None
+        with self._lock:
+            if target not in self._channel_cache:
+                self._lock.release()
+                new_channel = grpc.insecure_channel(target)
+                self._lock.acquire()
+                if target not in self._channel_cache:
+                    self._channel_cache[target] = new_channel
+                    new_channel = None
+            channel = self._channel_cache[target]
+
+        # Close new_channel if it was not stored in _channel_cache.
+        if new_channel is not None:
+            new_channel.close()
+
+        return channel
+
+    def close(self) -> None:
+        """Close channels opened by get_channel()."""
+        with self._lock:
+            for channel in self._channel_cache.values():
+                channel.close()
+            self._channel_cache.clear()
+
+
 class MeasurementService:
-    """Class the supports registering and hosting a python function as a gRPC service.
+    """Class that supports registering and hosting a python function as a gRPC service.
 
     Attributes
     ----------
@@ -55,6 +113,13 @@ class MeasurementService:
         output_parameter_list (list): List of output parameters.
 
         measure_function (Callable): Registered measurement function.
+
+        context (MeasurementContext): Accessor for context-local state.
+
+        discovery_client (DiscoveryClient): Client for accessing the MeasurementLink discovery
+            service.
+
+        channel_pool (GrpcChannelPool): Pool of gRPC channels used by the service.
 
     """
 
@@ -74,24 +139,41 @@ class MeasurementService:
         self.output_parameter_list: list = []
         self.grpc_service = GrpcService()
         self.context: MeasurementContext = MeasurementContext()
+        self.discovery_client: DiscoveryClient = self.grpc_service.discovery_client
+        self.channel_pool: GrpcChannelPool = GrpcChannelPool()
 
     def register_measurement(self, measurement_function: Callable) -> Callable:
-        """Register the function as the measurement. Recommended to use as a decorator.
+        """Register a function as the measurement function for a measurement service.
 
-        Args
-        ----
-            func (Callable): Any Python Function.
+        To declare a measurement function, use this idiom:
 
-        Returns
-        -------
-            Callable: Python Function.
+        ```
+        @measurement_service.register_measurement
+        @measurement_service.configuration("Configuration 1", ...)
+        @measurement_service.configuration("Configuration 2", ...)
+        @measurement_service.output("Output 1", ...)
+        @measurement_service.output("Output 2", ...)
+        def measure(configuration1, configuration2):
+            ...
+            return (output1, output2)
+        ```
 
+        See also: :func:`.configuration`, :func:`.output`
         """
         self.measure_function = measurement_function
         return measurement_function
 
-    def configuration(self, display_name: str, type: DataType, default_value: Any) -> Callable:
-        """Add configuration parameter info for a measurement.Recommended to use as a decorator.
+    def configuration(
+        self, display_name: str, type: DataType, default_value: Any, *, instrument_type: str = ""
+    ) -> Callable:
+        """Add a configuration parameter to a measurement function.
+
+        This decorator maps the measurement service's configuration parameters
+        to Python positional parameters. To add multiple configuration parameters
+        to the same measurement function, use this decorator multiple times.
+        The order of decorator calls must match the order of positional parameters.
+
+        See also: :func:`.register_measurement`
 
         Args
         ----
@@ -101,15 +183,20 @@ class MeasurementService:
 
             default_value (Any): Default value of the configuration.
 
+            instrument_type (str): Optional.
+            Instrument type to be used to show instrument specific values to the configurations.
+            This is only supported when configuration type is DataType.Pin.
+
         Returns
         -------
             Callable: Callable that takes in Any Python Function
             and returns the same python function.
 
         """
-        grpc_field_type, repeated = type.value
+        grpc_field_type, repeated, type_specialization = type.value
+        annotations = self._get_annotations(type_specialization, instrument_type)
         parameter = parameter_metadata.ParameterMetadata(
-            display_name, grpc_field_type, repeated, default_value
+            display_name, grpc_field_type, repeated, default_value, annotations
         )
         parameter_metadata.validate_default_value_type(parameter)
         self.configuration_parameter_list.append(parameter)
@@ -120,7 +207,16 @@ class MeasurementService:
         return _configuration
 
     def output(self, display_name: str, type: DataType) -> Callable:
-        """Add output parameter info for a measurement.Recommended to use as a decorator.
+        """Add a output parameter to a measurement function.
+
+        This decorator maps the measurement service's output parameters to
+        the elements of the tuple returned by the measurement function.
+        To add multiple output parameters to the same measurement function,
+        use this decorator multiple times.
+        The order of decorator calls must match the order of elements
+        returned by the measurement fuction.
+
+        See also: :func:`.register_measurement`
 
         Args
         ----
@@ -134,9 +230,9 @@ class MeasurementService:
             returns the same python function.
 
         """
-        grpc_field_type, repeated = type.value
+        grpc_field_type, repeated, type_specialization = type.value
         parameter = parameter_metadata.ParameterMetadata(
-            display_name, grpc_field_type, repeated, None
+            display_name, grpc_field_type, repeated, default_value=None, annotations={}
         )
         self.output_parameter_list.append(parameter)
 
@@ -169,14 +265,54 @@ class MeasurementService:
         )
         return self
 
+    def _get_annotations(
+        self, type_specialization: TypeSpecialization, instrument_type: str
+    ) -> Dict[str, str]:
+        annotations: Dict[str, str] = {}
+        if type_specialization == TypeSpecialization.NoType:
+            return annotations
+
+        annotations["ni/type_specialization"] = type_specialization.value
+        if type_specialization == TypeSpecialization.Pin:
+            if instrument_type != "" or instrument_type is not None:
+                annotations["ni/pin.instrument_type"] = instrument_type
+
+        return annotations
+
     def close_service(self) -> None:
         """Close the Service after un-registering with discovery service and cleanups."""
         self.grpc_service.stop()
+        self.channel_pool.close()
 
     def __enter__(self) -> MeasurementService:
         """Enter the runtime context related to the measurement service."""
         return self
 
-    def __exit__(self, exc_type, exc_value, traceback) -> None:
+    def __exit__(self, exc_type, exc_value, traceback):
         """Exit the runtime context related to the measurement service."""
         self.close_service()
+
+    def get_channel(self, provided_interface: str, service_class: str = "") -> grpc.Channel:
+        """Return gRPC channel to specified service.
+
+        Args
+        ----
+            provided_interface (str): The gRPC Full Name of the service.
+
+            service_class (str): The service "class" that should be matched.
+
+        Returns
+        -------
+            grpc.Channel: A channel to the gRPC service.
+
+        Raises
+        ------
+            Exception: If service_class is not specified and there is more than one matching service
+                registered.
+
+        """
+        service_location = self.grpc_service.discovery_client.resolve_service(
+            provided_interface, service_class
+        )
+
+        return self.channel_pool.get_channel(target=service_location.insecure_address)

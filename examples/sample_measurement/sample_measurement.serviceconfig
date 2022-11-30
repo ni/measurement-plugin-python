@@ -4,8 +4,9 @@
       "displayName": "Sample Measurement (Python)",
       "serviceClass": "ni.examples.SampleMeasurement_Python",
       "descriptionUrl": "https://www.ni.com/measurementservices/samplemeasurement.html",
-      "providedInterfaces": [ "ni.measurements.v1.MeasurementService" ],
-      "path": "start.bat"
+      "providedInterfaces": [ "ni.measurementlink.measurement.v1.MeasurementService" ],
+      "path": "start.bat",
+      "attributes": [ "UserInterfaceType=MeasurementUI" ]
     }
   ]
 }

@@ -1,0 +1,11 @@
+{
+  "services": [
+    {
+      "displayName": "NI-SWITCH Control Relays (Py)",
+      "serviceClass": "ni.examples.NISwitchControlRelays_Python",
+      "descriptionUrl": "https://www.ni.com/measurementservices/niswitchcontrolrelays.html",
+      "providedInterfaces": [ "ni.measurementlink.measurement.v1.MeasurementService" ],
+      "path": "start.bat"
+    }
+  ]
+}

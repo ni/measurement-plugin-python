@@ -5,10 +5,8 @@ from examples.sample_measurement import measurement
 
 from ni_measurement_service._internal.discovery_client import DiscoveryClient
 from ni_measurement_service._internal.service_manager import GrpcService
-from ni_measurement_service._internal.stubs.ni.measurements.measurementservice import (
+from ni_measurement_service._internal.stubs.ni.measurementlink.measurement.v1 import (
     measurement_service_pb2,
-)
-from ni_measurement_service._internal.stubs.ni.measurements.measurementservice import (
     measurement_service_pb2_grpc,
 )
 from tests.utilities.fake_discovery_service import FakeDiscoveryServiceStub

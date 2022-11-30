@@ -28,9 +28,9 @@ def test___default_value_different_from_type___validate___raises_type_exception(
         default_value (Any): Default value of the parameter.
 
     """
-    grpc_field_type, repeated = type.value
+    grpc_field_type, repeated, type_specialization = type.value
     parameter_metadata = metadata.ParameterMetadata(
-        "test_display_name", grpc_field_type, repeated, default_value
+        "test_display_name", grpc_field_type, repeated, default_value, annotations={}
     )
 
     with pytest.raises(TypeError):
@@ -56,9 +56,9 @@ def test___default_value_same_as_type___validate___raises_no_exception(type, def
         default_value (Any): Default value of the parameter.
 
     """
-    grpc_field_type, repeated = DataType.Int32.value
+    grpc_field_type, repeated, type_specialization = DataType.Int32.value
     parameter_metadata = metadata.ParameterMetadata(
-        "test_display_name", grpc_field_type, repeated, 1
+        "test_display_name", grpc_field_type, repeated, 1, annotations={}
     )
 
     metadata.validate_default_value_type(parameter_metadata)  # implicitly assert does not throw

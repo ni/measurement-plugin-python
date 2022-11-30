@@ -9,14 +9,11 @@ import typing
 
 import grpc
 
-from ni_measurement_service._internal.stubs.ni.measurements.discovery.v1 import (
+from ni_measurement_service._internal.stubs.ni.measurementlink.discovery.v1 import (
     discovery_service_pb2,
-)
-from ni_measurement_service._internal.stubs.ni.measurements.discovery.v1 import (
     discovery_service_pb2_grpc,
 )
-from ni_measurement_service.measurement.info import MeasurementInfo
-from ni_measurement_service.measurement.info import ServiceInfo
+from ni_measurement_service.measurement.info import MeasurementInfo, ServiceInfo
 
 if sys.platform == "win32":
     import errno
@@ -26,9 +23,27 @@ if sys.platform == "win32":
     import winerror
 
 
-_PROVIDED_MEASUREMENT_SERVICE = "ni.measurements.v1.MeasurementService"
+_PROVIDED_MEASUREMENT_SERVICE = "ni.measurementlink.measurement.v1.MeasurementService"
 
 _logger = logging.getLogger(__name__)
+
+
+class ServiceLocation(typing.NamedTuple):
+    """Represents the location of a service."""
+
+    location: str
+    insecure_port: str
+    ssl_authenticated_port: str
+
+    @property
+    def insecure_address(self) -> str:
+        """Get the service's insecure address in the format host:port."""
+        return f"{self.location}:{self.insecure_port}"
+
+    @property
+    def ssl_authenticated_address(self) -> str:
+        """Get the service's SSL-authenticated address in the format host:port."""
+        return f"{self.location}:{self.ssl_authenticated_port}"
 
 
 class DiscoveryClient:
@@ -44,7 +59,7 @@ class DiscoveryClient:
     """
 
     def __init__(self, stub: discovery_service_pb2_grpc.DiscoveryServiceStub = None):
-        """Initialise the Discovery Client with provided registry service stub.
+        """Initialize the Discovery Client with provided registry service stub.
 
         Args:
         ----
@@ -158,6 +173,37 @@ class DiscoveryClient:
             return False
         return True
 
+    def resolve_service(self, provided_interface: str, service_class: str = "") -> ServiceLocation:
+        """Resolve the location of a service.
+
+        Given a description of a service, returns information that can be used to establish
+        communication with that service. If necessary, the service will be started by the
+        discovery service if it has not already been started.
+
+        Args:
+        ----
+            provided_interface: The gRPC Full Name of the service.
+            service_class: The service "class" that should be matched. If the value is not
+                specified and there is more than one matching service registered, an error
+                is returned.
+
+        Returns
+        -------
+            A ServiceLocation location object that represents the location of a service.
+
+        """
+        request = discovery_service_pb2.ResolveServiceRequest()
+        request.provided_interface = provided_interface
+        request.service_class = service_class
+
+        response: discovery_service_pb2.ServiceLocation = self.stub.ResolveService(request)
+
+        return ServiceLocation(
+            location=response.location,
+            insecure_port=response.insecure_port,
+            ssl_authenticated_port=response.ssl_authenticated_port,
+        )
+
 
 def _get_discovery_service_address() -> str:
     key_file_path = _get_key_file_path()
@@ -179,7 +225,7 @@ def _get_key_file_directory() -> pathlib.Path:
         return (
             pathlib.Path(os.environ["ProgramData"])
             / "National Instruments"
-            / "Measurement Framework"
+            / "MeasurementLink"
             / "Discovery"
             / version
         )

@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "nifgen_standard_function"
+version = "0.5.0"
+description = "Generate a standard function waveform using an NI oscilloscope."
+authors = ["National Instruments"]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+# Uncomment to use prerelease dependencies.
+# niscope = {path = "../../../nimi-python/generated/niscope", develop = true}
+# ni-measurement-service = {path = "../..", develop = true}
+niscope = "1.4.1"
+ni-measurement-service = "*"
+click = ">=7.1.2"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

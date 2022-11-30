@@ -15,11 +15,11 @@ _sym_db = _symbol_database.Default()
 
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='sample_measurement_test.proto',
-  package='ni.measurements.v1',
+  package='ni.measurementlink.measurement.tests.v1',
   syntax='proto3',
   serialized_options=b'\252\0024NationalInstruments.MeasurementServices.Measurements',
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x1dsample_measurement_test.proto\x12\x12ni.measurements.v1\"k\n\x1aSampleMeasurementParameter\x12\x10\n\x08\x66loat_in\x18\x01 \x01(\x02\x12\x17\n\x0f\x64ouble_array_in\x18\x02 \x03(\x01\x12\x0f\n\x07\x62ool_in\x18\x03 \x01(\x08\x12\x11\n\tstring_in\x18\x04 \x01(\tB7\xaa\x02\x34NationalInstruments.MeasurementServices.Measurementsb\x06proto3'
+  serialized_pb=b'\n\x1dsample_measurement_test.proto\x12\'ni.measurementlink.measurement.tests.v1\"k\n\x1aSampleMeasurementParameter\x12\x10\n\x08\x66loat_in\x18\x01 \x01(\x02\x12\x17\n\x0f\x64ouble_array_in\x18\x02 \x03(\x01\x12\x0f\n\x07\x62ool_in\x18\x03 \x01(\x08\x12\x11\n\tstring_in\x18\x04 \x01(\tB7\xaa\x02\x34NationalInstruments.MeasurementServices.Measurementsb\x06proto3'
 )
 
 
@@ -27,35 +27,35 @@ DESCRIPTOR = _descriptor.FileDescriptor(
 
 _SAMPLEMEASUREMENTPARAMETER = _descriptor.Descriptor(
   name='SampleMeasurementParameter',
-  full_name='ni.measurements.v1.SampleMeasurementParameter',
+  full_name='ni.measurementlink.measurement.tests.v1.SampleMeasurementParameter',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='float_in', full_name='ni.measurements.v1.SampleMeasurementParameter.float_in', index=0,
+      name='float_in', full_name='ni.measurementlink.measurement.tests.v1.SampleMeasurementParameter.float_in', index=0,
       number=1, type=2, cpp_type=6, label=1,
       has_default_value=False, default_value=float(0),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='double_array_in', full_name='ni.measurements.v1.SampleMeasurementParameter.double_array_in', index=1,
+      name='double_array_in', full_name='ni.measurementlink.measurement.tests.v1.SampleMeasurementParameter.double_array_in', index=1,
       number=2, type=1, cpp_type=5, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='bool_in', full_name='ni.measurements.v1.SampleMeasurementParameter.bool_in', index=2,
+      name='bool_in', full_name='ni.measurementlink.measurement.tests.v1.SampleMeasurementParameter.bool_in', index=2,
       number=3, type=8, cpp_type=7, label=1,
       has_default_value=False, default_value=False,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='string_in', full_name='ni.measurements.v1.SampleMeasurementParameter.string_in', index=3,
+      name='string_in', full_name='ni.measurementlink.measurement.tests.v1.SampleMeasurementParameter.string_in', index=3,
       number=4, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
@@ -73,8 +73,8 @@ _SAMPLEMEASUREMENTPARAMETER = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=53,
-  serialized_end=160,
+  serialized_start=74,
+  serialized_end=181,
 )
 
 DESCRIPTOR.message_types_by_name['SampleMeasurementParameter'] = _SAMPLEMEASUREMENTPARAMETER
@@ -83,7 +83,7 @@ _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 SampleMeasurementParameter = _reflection.GeneratedProtocolMessageType('SampleMeasurementParameter', (_message.Message,), {
   'DESCRIPTOR' : _SAMPLEMEASUREMENTPARAMETER,
   '__module__' : 'sample_measurement_test_pb2'
-  # @@protoc_insertion_point(class_scope:ni.measurements.v1.SampleMeasurementParameter)
+  # @@protoc_insertion_point(class_scope:ni.measurementlink.measurement.tests.v1.SampleMeasurementParameter)
   })
 _sym_db.RegisterMessage(SampleMeasurementParameter)
 

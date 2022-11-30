@@ -47,10 +47,15 @@ def measure(physical_channel, sample_rate, number_of_samples):
 
     """
     # User Logic :
-    print("Executing DAQmx Analog Input Measurement(Py)")
+    logging.info(
+        "Executing measurement: physical_channel=%s sample_rate=%g number_of_samples=%d",
+        physical_channel,
+        sample_rate,
+        number_of_samples,
+    )
 
     def cancel_callback():
-        print("Canceling DAQmx Analog Input Measurement(Py)")
+        logging.info("Canceling measurement")
         task_to_abort = task
         if task_to_abort is not None:
             task_to_abort.control(nidaqmx.constants.TaskMode.TASK_ABORT)
@@ -68,10 +73,21 @@ def measure(physical_channel, sample_rate, number_of_samples):
         voltage_values = task.read(number_of_samples_per_channel=number_of_samples, timeout=timeout)
         task = None  # Don't abort after this point
 
-    for voltage_value in voltage_values:
-        print("Voltage Value:", voltage_value)
-        print("---------------------------------")
+    _log_measured_values(voltage_values)
+    logging.info("Completed measurement")
     return (voltage_values,)
+
+
+def _log_measured_values(samples, max_samples_to_display=5):
+    """Log the measured values."""
+    if len(samples) > max_samples_to_display:
+        for index, value in enumerate(samples[0 : max_samples_to_display - 1]):
+            logging.info("Sample %d: %f", index, value)
+        logging.info("...")
+        logging.info("Sample %d: %f", len(samples) - 1, samples[-1])
+    else:
+        for index, value in enumerate(samples):
+            logging.info("Sample %d: %f", index, value)
 
 
 @click.command

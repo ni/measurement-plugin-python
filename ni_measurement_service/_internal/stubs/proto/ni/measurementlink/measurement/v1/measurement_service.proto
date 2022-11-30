@@ -1,0 +1,147 @@
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+syntax = "proto3";
+
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+package ni.measurementlink.measurement.v1;
+
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+import "google/protobuf/any.proto";
+import "google/protobuf/type.proto";
+import "ni/measurementlink/pin_map_context.proto";
+
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+option csharp_namespace = "NationalInstruments.MeasurementLink.Measurement.V1";
+option go_package = "measurementv1";
+option java_multiple_files = true;
+option java_outer_classname = "MeasurementServiceProto";
+option java_package = "com.ni.measurementlink.measurement.v1";
+option objc_class_prefix = "NIMM";
+option php_namespace = "NI\\MeasurementLink\\Measurement\\V1";
+option ruby_package = "NI::MeasurementLink::Measurement::V1";
+
+// Service that implements a measurement. Unlike other services, a MeasurementService is designed to be a plugin
+// where there can be multiple implementations of the service that provide different measurement capabilities.
+service MeasurementService {
+  // Returns information that describes the measurement.
+  rpc GetMetadata (GetMetadataRequest) returns (GetMetadataResponse);
+
+  // API used to perform a measurement.
+  rpc Measure (MeasureRequest) returns (MeasureResponse);
+}
+
+message GetMetadataRequest{}
+
+message GetMetadataResponse{
+  // Required. Specifies basic information about the measurement.
+  MeasurementDetails measurement_details = 1;
+
+  // Required. Specifies the signature of the measurement.
+  MeasurementSignature measurement_signature = 2;
+
+  // Optional. Specifies the user interfaces available for use with the measurement, if any.
+  repeated UserInterfaceDetails user_interface_details = 3;
+}
+
+message MeasureRequest{
+  // Required. Specifies the configuration to be used for the measurement. Each measurement will define its own set
+  // of required and optional parameters and generate errors as appropriate if the configuration does not conform
+  // to valid input ranges.
+  google.protobuf.Any configuration_parameters = 1;
+
+  // Optional. Specifies the pin map context for the measurement, if any. This field is optional in that callers
+  // may not always have a pin map context available to include in the request message. Each measurement will
+  // define if a valid pin map context is required in order to run or not and generate errors appropriately.
+  ni.measurementlink.PinMapContext pin_map_context = 2;
+}
+
+message MeasureResponse{
+  // Required. Includes the output results from running the measurement. This field is required in that all measurements
+  // should return a valid output message even if it is just an empty message with no fields. Each measurement will define
+  // which of its output fields are required and which are optional based on the configuration for the measurement.
+  google.protobuf.Any outputs = 1;
+}
+
+// Message that contains standard information reported by a measurement.
+message MeasurementDetails{
+  // Required. The user visible name of the measurement.
+  string display_name = 1;
+
+  // Optional. The current version of the measurement.
+  string version = 2;
+}
+
+// Message that defines the signature of a measurement.
+message MeasurementSignature{
+  // Required. The type name of the message used to define the measurement's configuration.
+  // This is the gRPC full name for the message.
+  string configuration_parameters_message_type = 1;
+
+  // Required. Defines the configuration parameters for the measurement.
+  repeated ConfigurationParameter configuration_parameters = 2;
+
+  // Optional. The default values to use for the configuration parameters. Caller can use these default values
+  // rather than specifying their own. These values should be supplied using the message type defined by
+  // configuration_parameters_message_type.
+  google.protobuf.Any configuration_defaults = 3;
+
+  // Required. The type name of the message used to define the measurement's outputs.
+  // This is the gRPC full name for the message.
+  string outputs_message_type = 4;
+
+  // Required. Defines the outputs for the measurement.
+  repeated Output outputs = 5;
+}
+
+// Contains measurement User Interface details.
+message UserInterfaceDetails{
+  // Optional. The URL to the file (such as .measui or .vi) providing a user interface for the measurement.
+  string file_url = 1;
+}
+
+// Message that defines a configuration parameter for the measurement.
+message ConfigurationParameter {
+  // Required. The field number for the configuration parameter as defined by the message indicated by
+  // MethodSignature.configuration_parameters_message_type.
+  int32 field_number = 1;
+
+  // Required. The data type for the configuration parameter.
+  google.protobuf.Field.Kind type = 2;
+
+  // Required. The name of the configuration parameter. When defining a user interface for the measurement, a control
+  // that matches this name will be used to supply a value to this configuration parameter.
+  string name = 3;
+
+  // Required. True if this configuration parameter represents repeated data and False if it represents a scalar value.
+  bool repeated = 4;
+
+  // Optional. Represents a set of annotations on the type.
+  // Well-known annotations:
+  // - Type specialization. The keys to other annotations will be read based on the value of `ni/type_specialization` annotation.
+  //   - Key: "ni/type_specialization"
+  //   - Common Values: "pin" ...    
+  // - For string parameter with ni/type_specialization annotation equals "pin"
+  //   - Key: "ni/pin.instrument_type"
+  //   - Common Values: "niDCPower", "niScope"...
+  map<string, string> annotations = 5;
+}
+
+// Message that defines an output of the measurement.
+message Output {
+  // Required. The field number for the output as defined by the message indicated by
+  // MethodSignature.outputs_message_type.
+  int32 field_number = 1;
+
+  // Required. The data type for the output.
+  google.protobuf.Field.Kind type = 2;
+
+  // Required. The name of the output. When defining a user interface for the measurement, an indicator
+  // that matches this name will be used to display the value for this output.
+  string name = 3;
+
+  // Required. True if this output represents repeated data and False if it represents a scalar value.
+  bool repeated = 4;
+}

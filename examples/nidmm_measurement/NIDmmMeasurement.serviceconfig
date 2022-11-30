@@ -1,0 +1,11 @@
+{
+  "services": [
+    {
+      "displayName": "NI-DMM Measurement (Py)",
+      "serviceClass": "ni.examples.NIDmmMeasurement_Python",
+      "descriptionUrl": "https://www.ni.com/measurementservices/nidmmmeasurement.html",
+      "providedInterfaces": [ "ni.measurementlink.measurement.v1.MeasurementService" ],
+      "path": "start.bat"
+    }
+  ]
+}

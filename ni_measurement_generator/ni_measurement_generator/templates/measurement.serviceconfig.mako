@@ -6,7 +6,7 @@
       "displayName": "${display_name}",
       "serviceClass": "${service_class}",
       "descriptionUrl": "${description}",
-      "providedInterfaces": [ "ni.measurements.v1.MeasurementService" ],
+      "providedInterfaces": [ "ni.measurementlink.measurement.v1.MeasurementService" ],
       "path": "start.bat"
     }
   ]

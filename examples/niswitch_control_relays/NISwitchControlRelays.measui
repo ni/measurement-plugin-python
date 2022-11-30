@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<SourceFile Checksum="4F3FB4CBDC5E2F572D8BD5E2B3D20565F1337B731FAF5DFC96F454B3821DC6A745AFA8C09FD7FAC6624815C584A871F1168AB7F1D9A0C83936CA53FDFC6CDD2A" Timestamp="1D8FB93A6FA1A79" xmlns="http://www.ni.com/PlatformFramework">
+	<SourceModelFeatureSet>
+		<ParsableNamespace AssemblyFileVersion="9.7.0.1849" FeatureSetName="Configuration Based Software Core" Name="http://www.ni.com/ConfigurationBasedSoftware.Core" OldestCompatibleVersion="6.3.0.49152" Version="6.3.0.49152" />
+		<ParsableNamespace AssemblyFileVersion="9.7.0.1849" FeatureSetName="LabVIEW Controls" Name="http://www.ni.com/Controls.LabVIEW.Design" OldestCompatibleVersion="8.1.0.49152" Version="8.1.0.49152" />
+		<ParsableNamespace AssemblyFileVersion="23.0.0.1849" FeatureSetName="InstrumentStudio Measurement UI" Name="http://www.ni.com/InstrumentFramework/ScreenDocument" OldestCompatibleVersion="22.1.0.1" Version="22.1.0.1" />
+		<ParsableNamespace AssemblyFileVersion="9.7.0.1849" FeatureSetName="Editor" Name="http://www.ni.com/PanelCommon" OldestCompatibleVersion="6.1.0.0" Version="6.1.0.49152" />
+		<ParsableNamespace AssemblyFileVersion="9.7.0.1849" FeatureSetName="Editor" Name="http://www.ni.com/PlatformFramework" OldestCompatibleVersion="8.1.0.49152" Version="8.1.0.49152" />
+		<ApplicationVersionInfo Build="23.0.0.1849" Name="MeasurementLink UI Editor" Version="23.0.0.1849" />
+	</SourceModelFeatureSet>
+	<Screen ClientId="{7fed05fb-fa1b-42d4-ad87-057cceb3a161}" DisplayName="NI-SWITCH Control Relays (Py)" Id="8aaad0184c14eef9bc37e28934c8983" ServiceClass="ni.examples.NISwitchControlRelays_Python" xmlns="http://www.ni.com/InstrumentFramework/ScreenDocument">
+		<ScreenSurface BackgroundColor="[SMSolidColorBrush]#ffffffff" Height="[float]160" Id="2f335a14de344add99fe42aefe8d1927" Left="[float]0" PanelSizeMode="Fixed" Top="[float]0" Width="[float]180" xmlns="http://www.ni.com/ConfigurationBasedSoftware.Core">
+			<ChannelStringControl AcceptsReturn="[bool]False" BaseName="[string]String" Channel="[string]{7fed05fb-fa1b-42d4-ad87-057cceb3a161}/Configuration/relay_names" Enabled="[bool]True" Height="[float]24" HorizontalScrollBarVisibility="[ScrollBarVisibility]Hidden" Id="ed7a56536e4c4a2788d1cd49a1812eda" IsLabelBoundToChannel="[bool]False" Label="[UIModel]895c5131f04c858236fda3f80a52c8" Left="[float]22" Text="[string]SiteRelay1" Top="[float]33" VerticalScrollBarVisibility="[ScrollBarVisibility]Auto" Width="[float]142" />
+			<Label Height="[float]16" Id="895c5131f04c858236fda3f80a52c8" LabelOwner="[UIModel]ed7a56536e4c4a2788d1cd49a1812eda" Left="[float]22" Text="[string]Relay names" Top="[float]13" Width="[float]66" xmlns="http://www.ni.com/PanelCommon" />
+			<ChannelSwitch BaseName="[string]Switch" Channel="[string]{7fed05fb-fa1b-42d4-ad87-057cceb3a161}/Configuration/close_relay" Enabled="[bool]True" FalseContent="[string]Open" Height="[float]50" Id="fb3b53a6ec4f4f198ec55b2878fb16b8" IsLabelBoundToChannel="[bool]False" Label="[UIModel]d6f215f36ae4f07833660e49972902e" Left="[float]22" MinHeight="[float]24" MinWidth="[float]12" Orientation="[SMOrientation]Vertical" Shape="[SwitchShape]Slider" Top="[float]92" TrueContent="[string]Close" Width="[float]63" />
+			<Label Height="[float]16" Id="d6f215f36ae4f07833660e49972902e" LabelOwner="[UIModel]fb3b53a6ec4f4f198ec55b2878fb16b8" Left="[float]22" Text="[string]Relay action" Top="[float]72" Width="[float]64" xmlns="http://www.ni.com/PanelCommon" />
+		</ScreenSurface>
+	</Screen>
+</SourceFile>

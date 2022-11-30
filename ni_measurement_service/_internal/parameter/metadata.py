@@ -1,5 +1,5 @@
 """Contains classes that represents metadata."""
-from typing import Any, NamedTuple
+from typing import Any, Dict, NamedTuple
 
 from google.protobuf import type_pb2
 
@@ -22,12 +22,15 @@ class ParameterMetadata(NamedTuple):
 
         default_value (Any): The default value of the parameter.
 
+        annotations (Dict[str,str]): Represents a set of annotations on the type.
+
     """
 
     display_name: str
     type: type_pb2.Field.Kind.ValueType
     repeated: bool
     default_value: Any
+    annotations: Dict[str, str]
 
 
 def validate_default_value_type(parameter_metadata: ParameterMetadata) -> None:

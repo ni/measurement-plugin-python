@@ -12,6 +12,7 @@ from black.mode import Mode
 
 
 STUBS_NAMESPACE = "ni_measurement_service._internal.stubs"
+PROTO_PARENT_NAMESPACE = "ni.measurementlink"
 STUBS_PATH = pathlib.Path(__file__).parent.parent / STUBS_NAMESPACE.replace(".", "/")
 PROTO_PATH = STUBS_PATH / "proto"
 PROTO_FILES = list(PROTO_PATH.rglob("*.proto"))
@@ -63,7 +64,8 @@ def fix_import_paths():
                 )
 
         data = data.replace(
-            "from ni.measurements".encode(), f"from {STUBS_NAMESPACE}.ni.measurements".encode()
+            f"from {PROTO_PARENT_NAMESPACE}".encode(),
+            f"from {STUBS_NAMESPACE}.{PROTO_PARENT_NAMESPACE}".encode(),
         )
         path.write_bytes(data)
 
