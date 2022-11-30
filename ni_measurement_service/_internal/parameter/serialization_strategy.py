@@ -30,7 +30,7 @@ def _scalar_encoder(encoder) -> Callable[[int], Callable]:
     return scalar_encoder
 
 
-def _vector_encoder(encoder) -> Callable[[int], Callable]:
+def _vector_encoder(encoder, is_packed=True) -> Callable[[int], Callable]:
     """Abstract Specific Encoder(Callable) as Vector Encoder Callable that takes in field index.
 
     Args
@@ -38,6 +38,7 @@ def _vector_encoder(encoder) -> Callable[[int], Callable]:
        encoder (Callable[[int, bool, bool], Callable]): Specific encoder(Callable) that takes in
        field_index, is_repeated, is_packed and returns the Low-level Encode Callable.
 
+       is_packed (bool, optional): Represents if the encoder supports packed type. Defaults to True.
     Returns
     -------
         Callable[[int],Callable]: Callable Encoder for 1D Array types that takes in
@@ -47,7 +48,6 @@ def _vector_encoder(encoder) -> Callable[[int], Callable]:
 
     def vector_encoder(field_index):
         is_repeated = True
-        is_packed = True
         return encoder(field_index, is_repeated, is_packed)
 
     return vector_encoder
@@ -77,7 +77,7 @@ def _scalar_decoder(decoder) -> Callable[[int, str], Callable]:
     return scalar_decoder
 
 
-def _vector_decoder(decoder) -> Callable[[int, str], Callable]:
+def _vector_decoder(decoder, is_packed=True) -> Callable[[int, str], Callable]:
     """Abstract Specific Decoder(Callable) as Vector Decoder Callable that takes in field index,key.
 
     Args
@@ -85,7 +85,8 @@ def _vector_decoder(decoder) -> Callable[[int, str], Callable]:
         decoder (Callable[[int, bool, bool], Callable]): Specific decoder(Callable) that takes in
         field_index, is_repeated, is_packed,  key, new_default and
         returns the Low-level Decode Callable.
-
+        
+        is_packed (bool, optional): Represents if the decoder supports packed type. Defaults to True.
     Returns
     -------
         Callable[[int,str],Callable]: Callable Decoder for 1D Array types that takes in
@@ -98,7 +99,6 @@ def _vector_decoder(decoder) -> Callable[[int, str], Callable]:
 
     def vector_decoder(field_index, key):
         is_repeated = True
-        is_packed = True
         return decoder(field_index, is_repeated, is_packed, key, _new_default)
 
     return vector_decoder
@@ -116,7 +116,7 @@ DoubleArrayEncoder = _vector_encoder(encoder.DoubleEncoder)
 IntArrayEncoder = _vector_encoder(encoder.Int32Encoder)
 UIntArrayEncoder = _vector_encoder(encoder.UInt32Encoder)
 BoolArrayEncoder = _vector_encoder(encoder.BoolEncoder)
-StringArrayEncoder = _vector_encoder(encoder.StringEncoder)
+StringArrayEncoder = _vector_encoder(encoder.StringEncoder, is_packed=False)
 
 
 FloatDecoder = _scalar_decoder(decoder.FloatDecoder)
@@ -135,7 +135,7 @@ UInt32ArrayDecoder = _vector_decoder(decoder.UInt32Decoder)
 Int64ArrayDecoder = _vector_decoder(decoder.Int64Decoder)
 UInt64ArrayDecoder = _vector_decoder(decoder.UInt64Decoder)
 BoolArrayDecoder = _vector_decoder(decoder.BoolDecoder)
-StringArrayDecoder = _vector_decoder(decoder.StringDecoder)
+StringArrayDecoder = _vector_decoder(decoder.StringDecoder, is_packed=False)
 
 
 class Context:
