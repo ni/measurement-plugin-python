@@ -39,6 +39,7 @@ def _vector_encoder(encoder, is_packed=True) -> Callable[[int], Callable]:
        field_index, is_repeated, is_packed and returns the Low-level Encode Callable.
 
        is_packed (bool, optional): Represents if the encoder supports packed type. Defaults to True.
+
     Returns
     -------
         Callable[[int],Callable]: Callable Encoder for 1D Array types that takes in
@@ -85,8 +86,10 @@ def _vector_decoder(decoder, is_packed=True) -> Callable[[int, str], Callable]:
         decoder (Callable[[int, bool, bool], Callable]): Specific decoder(Callable) that takes in
         field_index, is_repeated, is_packed,  key, new_default and
         returns the Low-level Decode Callable.
-        
-        is_packed (bool, optional): Represents if the decoder supports packed type. Defaults to True.
+
+        is_packed (bool, optional): Represents if the decoder supports packed type.
+        Defaults to True.
+
     Returns
     -------
         Callable[[int,str],Callable]: Callable Decoder for 1D Array types that takes in
