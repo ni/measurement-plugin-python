@@ -1,0 +1,11 @@
+{
+  "services": [
+    {
+      "displayName": "NI-FGEN Standard Function (Py)",
+      "serviceClass": "ni.examples.NIFgenStandardFunction_Python",
+      "descriptionUrl": "https://www.ni.com/measurementservices/nifgenstandardfunction.html",
+      "providedInterfaces": [ "ni.measurementlink.measurement.v1.MeasurementService" ],
+      "path": "start.bat"
+    }
+  ]
+}
