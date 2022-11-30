@@ -28,7 +28,7 @@ class PinMapContext(NamedTuple):
     """
 
     pin_map_id: str
-    sites: List[int]
+    sites: Optional[List[int]]
 
 
 class SessionInformation(NamedTuple):
