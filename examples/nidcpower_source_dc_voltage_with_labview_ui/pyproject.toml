@@ -1,7 +1,7 @@
 [tool.poetry]
-name = "dc_measurement_measurementUI"
+name = "nidcpower_source_dc_voltage_with_labview_ui"
 version = "0.5.0"
-description = "Example Measurement that performs operations with DcPower Instrument. Linked to Measurement UI."
+description = "Source and measure a DC voltage with an NI SMU. Provides a LabVIEW UI."
 authors = ["National Instruments"]
 
 [tool.poetry.dependencies]
