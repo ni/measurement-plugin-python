@@ -1,8 +1,4 @@
-"""User Measurement.
-
-User can Import driver and 3rd Party Packages based on requirements.
-
-"""
+"""Perform a finite analog input measurement with NI-DAQmx."""
 
 import logging
 import pathlib
@@ -14,39 +10,26 @@ import nidaqmx
 import ni_measurement_service as nims
 
 measurement_info = nims.MeasurementInfo(
-    display_name="DAQmx Analog Input Measurement(Py)",
+    display_name="NI-DAQmx Analog Input (Py)",
     version="0.1.0.0",
-    ui_file_paths=[pathlib.Path(__file__).resolve().parent / "DAQmxAnalogInputMeasurement.measui"],
+    ui_file_paths=[pathlib.Path(__file__).resolve().parent / "NIDAQmxAnalogInput.measui"],
 )
 
 service_info = nims.ServiceInfo(
-    service_class="ni.examples.DAQmx_Analog_Input_Measurement_Python",
-    description_url="https://www.ni.com/measurementservices/daqmxmeasurement.html",
+    service_class="ni.examples.NIDAQmxAnalogInput_Python",
+    description_url="https://www.ni.com/measurementlink/examples/nidaqmxanaloginput.html",
 )
 
-daqmx_analog_input_measurement_service = nims.MeasurementService(measurement_info, service_info)
+measurement_service = nims.MeasurementService(measurement_info, service_info)
 
 
-@daqmx_analog_input_measurement_service.register_measurement
-@daqmx_analog_input_measurement_service.configuration(
-    "Physical Channel", nims.DataType.String, "Dev1/ai0"
-)
-@daqmx_analog_input_measurement_service.configuration("Sample Rate", nims.DataType.Double, 1000.0)
-@daqmx_analog_input_measurement_service.configuration(
-    "Number of Samples", nims.DataType.UInt64, 100
-)
-@daqmx_analog_input_measurement_service.output(
-    "Voltage Measurements(V)", nims.DataType.DoubleArray1D
-)
+@measurement_service.register_measurement
+@measurement_service.configuration("physical_channel", nims.DataType.String, "Dev1/ai0")
+@measurement_service.configuration("sample_rate", nims.DataType.Double, 1000.0)
+@measurement_service.configuration("number_of_samples", nims.DataType.UInt64, 100)
+@measurement_service.output("acquired_samples", nims.DataType.DoubleArray1D)
 def measure(physical_channel, sample_rate, number_of_samples):
-    """User Measurement API. Returns Voltage Measurement as the only output.
-
-    Returns
-    -------
-        Tuple of Output Variables, in the order configured in the metadata.py
-
-    """
-    # User Logic :
+    """Perform a finite analog input measurement with NI-DAQmx."""
     logging.info(
         "Executing measurement: physical_channel=%s sample_rate=%g number_of_samples=%d",
         physical_channel,
@@ -60,8 +43,8 @@ def measure(physical_channel, sample_rate, number_of_samples):
         if task_to_abort is not None:
             task_to_abort.control(nidaqmx.constants.TaskMode.TASK_ABORT)
 
-    daqmx_analog_input_measurement_service.context.add_cancel_callback(cancel_callback)
-    time_remaining = daqmx_analog_input_measurement_service.context.time_remaining
+    measurement_service.context.add_cancel_callback(cancel_callback)
+    time_remaining = measurement_service.context.time_remaining
 
     timeout = min(time_remaining, 10.0)
     with nidaqmx.Task() as task:
@@ -95,7 +78,7 @@ def _log_measured_values(samples, max_samples_to_display=5):
     "-v", "--verbose", count=True, help="Enable verbose logging. Repeat to increase verbosity."
 )
 def main(verbose: int):
-    """Host the DAQmx Analog Input Measurement (Screen UI) service."""
+    """Perform a finite analog input measurement with NI-DAQmx."""
     if verbose > 1:
         level = logging.DEBUG
     elif verbose == 1:
@@ -104,7 +87,7 @@ def main(verbose: int):
         level = logging.WARNING
     logging.basicConfig(format="%(asctime)s %(levelname)s: %(message)s", level=level)
 
-    with daqmx_analog_input_measurement_service.host_service():
+    with measurement_service.host_service():
         input("Press enter to close the measurement service.\n")
 
 

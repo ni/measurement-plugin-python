@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<SourceFile Checksum="5DCA5D07AF4DC647DA6F93C4261CFD5D564F5EE22926EB4C96F37033018DBF7BE0B0B3A7BF37C356D61D458522B20E1C92601054896B4AC7F9B4860489562157" xmlns="http://www.ni.com/PlatformFramework">
+	<SourceModelFeatureSet>
+		<ParsableNamespace AssemblyFileVersion="23.0.0.2171" FeatureSetName="InstrumentStudio Measurement UI" Name="http://www.ni.com/InstrumentFramework/ScreenDocument" OldestCompatibleVersion="22.1.0.1" Version="22.1.0.1" />
+		<ParsableNamespace AssemblyFileVersion="9.7.0.2171" FeatureSetName="Editor" Name="http://www.ni.com/PlatformFramework" OldestCompatibleVersion="8.1.0.49152" Version="8.1.0.49152" />
+		<ParsableNamespace AssemblyFileVersion="9.7.0.2171" FeatureSetName="SystemDesigner" Name="http://www.ni.com/SystemDesigner/EnvoyManagement" OldestCompatibleVersion="5.0.0.0" Version="5.0.0.49152" />
+		<ParsableNamespace AssemblyFileVersion="9.7.0.2171" FeatureSetName="SystemDesigner" Name="http://www.ni.com/SystemDesigner/SystemDiagram" OldestCompatibleVersion="8.0.0.49152" Version="8.0.0.49152" />
+		<ParsableNamespace AssemblyFileVersion="9.7.0.2171" FeatureSetName="SystemDesigner" Name="http://www.ni.com/SystemDesigner/SystemModelCore" OldestCompatibleVersion="5.1.0.5" Version="5.2.0.49152" />
+		<ApplicationVersionInfo Build="23.0.0.2171" Name="MeasurementLink UI Editor" Version="23.0.0.2171" />
+	</SourceModelFeatureSet>
+	<Project xmlns="http://www.ni.com/PlatformFramework">
+		<EnvoyManagerRootEnvoy Id="91bcda54ca2d44728e1fadacc394016e" ModelDefinitionType="EnvoyManagerRootEnvoy" Name="RootEnvoy" />
+		<EmbeddedDefinitionReference Id="996d011bd1934b02a8dfc6d5e5a89be5" ModelDefinitionType="NationalInstruments.ProjectExplorer.Modeling.ProjectDataManager" Name="ProjectExplorer">
+			<ProjectExplorer />
+		</EmbeddedDefinitionReference>
+		<EmbeddedDefinitionReference Id="2eeb856ee34444e1a4cab4208186ecf5" ModelDefinitionType="NationalInstruments.SystemDesigner.SystemDiagram.SystemDiagramDefinition" Name="SystemDiagram">
+			<SystemDiagram Id="21c24b60a2fa4fc0a61b412c3484eaf2" SystemDiagramVersion="75" xmlns="http://www.ni.com/SystemDesigner/SystemDiagram">
+				<EnvoySuperimpositionContainer Id="75ef959f36344af79e96cdde6045ca5d" xmlns="http://www.ni.com/SystemDesigner/EnvoyManagement">
+					<MappingManager Id="c93a3eb46b744106b712f9aafe556252" xmlns="http://www.ni.com/SystemDesigner/SystemModelCore">
+						<Superimposition Id="da85de41098b4fc5911a22d5ec540058" Name="Root Superimposition" />
+					</MappingManager>
+				</EnvoySuperimpositionContainer>
+				<SystemDiagramRootDiagram Id="9ce0dfde6bd4970bac08304a67997de" />
+			</SystemDiagram>
+		</EmbeddedDefinitionReference>
+		<NameScopingEnvoy Id="2449b274942d4dd0960c503bd18f98b5" ModelDefinitionType="NullTarget" Name="NullTarget">
+			<NullTarget />
+		</NameScopingEnvoy>
+		<NameScopingEnvoy Id="ab6e3c571b8f4b21abeb510e0bda6520" ModelDefinitionType="DefaultTarget" Name="DefaultTarget">
+			<DefaultTarget />
+			<SourceFileReference Id="2c80fa9b822147cca4d37064ae04c0eb" ModelDefinitionType="{http://www.ni.com/InstrumentFramework/ScreenDocument}Screen" Name="NIDAQmxAnalogInput.measui" StoragePath="NIDAQmxAnalogInput.measui" />
+		</NameScopingEnvoy>
+	</Project>
+	<ProjectInformation xmlns="http://www.ni.com/PlatformFramework" />
+</SourceFile>

@@ -1,0 +1,11 @@
+{
+  "services": [
+    {
+      "displayName": "Sample Measurement (Py)",
+      "serviceClass": "ni.examples.SampleMeasurement_Python",
+      "descriptionUrl": "https://www.ni.com/measurementlink/examples/samplemeasurement.html",
+      "providedInterfaces": [ "ni.measurementlink.measurement.v1.MeasurementService" ],
+      "path": "start.bat"
+    }
+  ]
+}
