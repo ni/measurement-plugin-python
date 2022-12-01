@@ -24,13 +24,9 @@ measurement_service = nims.MeasurementService(measurement_info, service_info)
 
 
 @measurement_service.register_measurement
-@measurement_service.configuration(
-    "physical_channel", nims.DataType.String, "Dev1/ai0"
-)
+@measurement_service.configuration("physical_channel", nims.DataType.String, "Dev1/ai0")
 @measurement_service.configuration("sample_rate", nims.DataType.Double, 1000.0)
-@measurement_service.configuration(
-    "number_of_samples", nims.DataType.UInt64, 100
-)
+@measurement_service.configuration("number_of_samples", nims.DataType.UInt64, 100)
 @measurement_service.output("acquired_samples", nims.DataType.DoubleArray1D)
 def measure(physical_channel, sample_rate, number_of_samples):
     """Perform a finite analog input measurement with NI-DAQmx."""
