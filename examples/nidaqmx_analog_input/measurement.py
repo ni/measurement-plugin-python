@@ -16,22 +16,22 @@ measurement_info = nims.MeasurementInfo(
 )
 
 service_info = nims.ServiceInfo(
-    service_class="ni.examples.DAQmx_Analog_Input_Measurement_Python",
+    service_class="ni.examples.NIDAQmxAnalogInput_Python",
     description_url="https://www.ni.com/measurementlink/examples/nidaqmxanaloginput.html",
 )
 
-daqmx_analog_input_measurement_service = nims.MeasurementService(measurement_info, service_info)
+measurement_service = nims.MeasurementService(measurement_info, service_info)
 
 
-@daqmx_analog_input_measurement_service.register_measurement
-@daqmx_analog_input_measurement_service.configuration(
+@measurement_service.register_measurement
+@measurement_service.configuration(
     "physical_channel", nims.DataType.String, "Dev1/ai0"
 )
-@daqmx_analog_input_measurement_service.configuration("sample_rate", nims.DataType.Double, 1000.0)
-@daqmx_analog_input_measurement_service.configuration(
+@measurement_service.configuration("sample_rate", nims.DataType.Double, 1000.0)
+@measurement_service.configuration(
     "number_of_samples", nims.DataType.UInt64, 100
 )
-@daqmx_analog_input_measurement_service.output("acquired_samples", nims.DataType.DoubleArray1D)
+@measurement_service.output("acquired_samples", nims.DataType.DoubleArray1D)
 def measure(physical_channel, sample_rate, number_of_samples):
     """Perform a finite analog input measurement with NI-DAQmx."""
     logging.info(
@@ -47,8 +47,8 @@ def measure(physical_channel, sample_rate, number_of_samples):
         if task_to_abort is not None:
             task_to_abort.control(nidaqmx.constants.TaskMode.TASK_ABORT)
 
-    daqmx_analog_input_measurement_service.context.add_cancel_callback(cancel_callback)
-    time_remaining = daqmx_analog_input_measurement_service.context.time_remaining
+    measurement_service.context.add_cancel_callback(cancel_callback)
+    time_remaining = measurement_service.context.time_remaining
 
     timeout = min(time_remaining, 10.0)
     with nidaqmx.Task() as task:
@@ -91,7 +91,7 @@ def main(verbose: int):
         level = logging.WARNING
     logging.basicConfig(format="%(asctime)s %(levelname)s: %(message)s", level=level)
 
-    with daqmx_analog_input_measurement_service.host_service():
+    with measurement_service.host_service():
         input("Press enter to close the measurement service.\n")
 
 
