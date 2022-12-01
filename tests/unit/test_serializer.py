@@ -11,8 +11,42 @@ from tests.assets import test_pb2
 @pytest.mark.parametrize(
     "test_values",
     [
-        [2.0, 19.2, 3, 1, 2, 2, True, "TestString", [5.5, 3.3, 1]],
-        [-0.9999, -0.9999, -13, 1, 1000, 2, True, "////", [5.5, -13.3, 1, 0.0, -99.9999]],
+        [
+            2.0,
+            19.2,
+            3,
+            1,
+            2,
+            2,
+            True,
+            "TestString",
+            [5.5, 3.3, 1],
+            [5.5, 3.3, 1],
+            [1, 2, 3, 4],
+            [0, 1, 399],
+            [1, 2, 3, 4],
+            [0, 1, 399],
+            [True, False, True],
+            ["String1, String2"],
+        ],
+        [
+            -0.9999,
+            -0.9999,
+            -13,
+            1,
+            1000,
+            2,
+            True,
+            "////",
+            [5.5, -13.3, 1, 0.0, -99.9999],
+            [5.5, 3.3, 1],
+            [1, 2, 3, 4],
+            [0, 1, 399],
+            [1, 2, 3, 4],
+            [0, 1, 399],
+            [True, False, True],
+            ["String1, String2"],
+        ],
     ],
 )
 def test___serializer___serialize_parameter___successful_serialization(test_values):
@@ -24,7 +58,7 @@ def test___serializer___serialize_parameter___successful_serialization(test_valu
         This should match the "MeasurementParameter" message defined in test.proto.
 
     """
-    default_values = [2.0, 19.2, 3, 1, 2, 2, True, "TestString", [5.5, 3.3, 1]]
+    default_values = test_values
     parameter = _get_test_parameter_by_id(default_values)
 
     # Custom Serialization
@@ -36,8 +70,42 @@ def test___serializer___serialize_parameter___successful_serialization(test_valu
 @pytest.mark.parametrize(
     "default_values",
     [
-        [2.0, 19.2, 3, 1, 2, 2, True, "TestString", [5.5, 3.3, 1]],
-        [-0.9999, -0.9999, -13, 1, 1000, 2, True, "////", [5.5, -13.3, 1, 0.0, -99.9999]],
+        [
+            2.0,
+            19.2,
+            3,
+            1,
+            2,
+            2,
+            True,
+            "TestString",
+            [5.5, 3.3, 1],
+            [5.5, 3.3, 1],
+            [1, 2, 3, 4],
+            [0, 1, 399],
+            [1, 2, 3, 4],
+            [0, 1, 399],
+            [True, False, True],
+            ["String1, String2"],
+        ],
+        [
+            -0.9999,
+            -0.9999,
+            -13,
+            1,
+            1000,
+            2,
+            True,
+            "////",
+            [5.5, -13.3, 1, 0.0, -99.9999],
+            [5.5, 3.3, 1],
+            [1, 2, 3, 4],
+            [0, 1, 399],
+            [1, 2, 3, 4],
+            [0, 1, 399],
+            [True, False, True],
+            ["String1, String2"],
+        ],
     ],
 )
 def test___serializer___serialize_default_parameter___successful_serialization(default_values):
@@ -57,7 +125,29 @@ def test___serializer___serialize_default_parameter___successful_serialization(d
     _validate_serialized_bytes(custom_serialized_bytes, default_values)
 
 
-@pytest.mark.parametrize("values", [[2.0, 19.2, 3, 1, 2, 2, True, "TestString", [5.5, 3.3, 1.0]]])
+@pytest.mark.parametrize(
+    "values",
+    [
+        [
+            2.0,
+            19.2,
+            3,
+            1,
+            2,
+            2,
+            True,
+            "TestString",
+            [5.5, 3.3, 1.0],
+            [5.5, 3, 1],
+            [1, 2, 3, 4],
+            [0, 1, 399],
+            [1, 2, 3, 4],
+            [0, 1, 399],
+            [True, False, True],
+            ["String1", "String2"],
+        ]
+    ],
+)
 def test___serializer___deserialize_parameter___successful_deserialization(values):
     """Validates if the custom deserializer deserializes data same as protobuf deserialization."""
     parameter = _get_test_parameter_by_id(values)
@@ -147,6 +237,55 @@ def _get_test_parameter_by_id(default_values):
             default_value=default_values[8],
             annotations={},
         ),
+        10: ParameterMetadata(
+            display_name="float_array_data",
+            type=type_pb2.Field.TYPE_FLOAT,
+            repeated=True,
+            default_value=default_values[9],
+            annotations={},
+        ),
+        11: ParameterMetadata(
+            display_name="int32_array_data",
+            type=type_pb2.Field.TYPE_INT32,
+            repeated=True,
+            default_value=default_values[10],
+            annotations={},
+        ),
+        12: ParameterMetadata(
+            display_name="uint32_array_data",
+            type=type_pb2.Field.TYPE_UINT32,
+            repeated=True,
+            default_value=default_values[11],
+            annotations={},
+        ),
+        13: ParameterMetadata(
+            display_name="int64_array_data",
+            type=type_pb2.Field.TYPE_INT64,
+            repeated=True,
+            default_value=default_values[12],
+            annotations={},
+        ),
+        14: ParameterMetadata(
+            display_name="uint64_array_data",
+            type=type_pb2.Field.TYPE_UINT64,
+            repeated=True,
+            default_value=default_values[13],
+            annotations={},
+        ),
+        15: ParameterMetadata(
+            display_name="bool_array_data",
+            type=type_pb2.Field.TYPE_BOOL,
+            repeated=True,
+            default_value=default_values[14],
+            annotations={},
+        ),
+        16: ParameterMetadata(
+            display_name="string_array_data",
+            type=type_pb2.Field.TYPE_STRING,
+            repeated=True,
+            default_value=default_values[15],
+            annotations={},
+        ),
     }
     return parameter_by_id
 
@@ -162,4 +301,11 @@ def _get_test_grpc_message(test_values):
     parameter.bool_data = test_values[6]
     parameter.string_data = test_values[7]
     parameter.double_array_data.extend(test_values[8])
+    parameter.float_array_data.extend(test_values[9])
+    parameter.int32_array_data.extend(test_values[10])
+    parameter.uint32_array_data.extend(test_values[11])
+    parameter.int64_array_data.extend(test_values[12])
+    parameter.uint64_array_data.extend(test_values[13])
+    parameter.bool_array_data.extend(test_values[14])
+    parameter.string_array_data.extend(test_values[15])
     return parameter
