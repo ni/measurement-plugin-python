@@ -1,8 +1,4 @@
-"""User Measurement.
-
-User can Import driver and 3rd Party Packages based on requirements.
-
-"""
+"""Perform a finite analog input measurement with NI-DAQmx."""
 
 import logging
 import pathlib
@@ -39,14 +35,7 @@ daqmx_analog_input_measurement_service = nims.MeasurementService(measurement_inf
     "Voltage Measurements(V)", nims.DataType.DoubleArray1D
 )
 def measure(physical_channel, sample_rate, number_of_samples):
-    """User Measurement API. Returns Voltage Measurement as the only output.
-
-    Returns
-    -------
-        Tuple of Output Variables, in the order configured in the metadata.py
-
-    """
-    # User Logic :
+    """Perform a finite analog input measurement with NI-DAQmx."""
     logging.info(
         "Executing measurement: physical_channel=%s sample_rate=%g number_of_samples=%d",
         physical_channel,
@@ -95,7 +84,7 @@ def _log_measured_values(samples, max_samples_to_display=5):
     "-v", "--verbose", count=True, help="Enable verbose logging. Repeat to increase verbosity."
 )
 def main(verbose: int):
-    """Host the DAQmx Analog Input Measurement (Measurement UI) service."""
+    """Perform a finite analog input measurement with NI-DAQmx."""
     if verbose > 1:
         level = logging.DEBUG
     elif verbose == 1:
