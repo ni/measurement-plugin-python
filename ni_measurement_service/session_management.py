@@ -153,7 +153,7 @@ class Client(object):
             timeout (float): Timeout in seconds. Allowed values,
                 0 (non-blocking, fails immediately if resources cannot be reserved),
                 -1 or negative (infinite timeout), or
-                any  positive numeric value (wait for that number of second).
+                any positive numeric value (wait for that number of second).
 
         Returns
         -------
@@ -248,8 +248,15 @@ class Client(object):
         )
         self._client.UnregisterSessions(request)
 
-    def reserve_all_registered_sessions(self) -> Reservation:
+    def reserve_all_registered_sessions(self, timeout: Optional[float] = None) -> Reservation:
         """Reserves and gets all sessions currently registered in the Session Manager.
+
+        Args
+        ----
+            timeout (float): Timeout in seconds. Allowed values,
+                0 (non-blocking, fails immediately if resources cannot be reserved),
+                -1 or negative (infinite timeout), or
+                any positive numeric value (wait for that number of second).
 
         Returns
         -------
@@ -258,6 +265,12 @@ class Client(object):
 
         """
         request = session_management_service_pb2.ReserveAllRegisteredSessionsRequest()
+        if timeout is not None:
+            timeout_in_ms = round(timeout * 1000)
+            if timeout_in_ms < 0:
+                timeout_in_ms = -1
+            request.timeout_in_milliseconds = timeout_in_ms
+
         response: session_management_service_pb2.ReserveAllRegisteredSessionsResponse = (
             self._client.ReserveAllRegisteredSessions(request)
         )
