@@ -20,7 +20,7 @@ measurement_info = nims.MeasurementInfo(
 
 service_info = nims.ServiceInfo(
     service_class="ni.examples.NISwitchControlRelays_Python",
-    description_url="https://www.ni.com/measurementservices/niswitchcontrolrelays.html",
+    description_url="https://www.ni.com/measurementlink/examples/niswitchcontrolrelays.html",
 )
 
 measurement_service = nims.MeasurementService(measurement_info, service_info)

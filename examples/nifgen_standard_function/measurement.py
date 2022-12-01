@@ -23,7 +23,7 @@ measurement_info = nims.MeasurementInfo(
 
 service_info = nims.ServiceInfo(
     service_class="ni.examples.NIFgenStandardFunction_Python",
-    description_url="https://www.ni.com/measurementservices/nifgenstandardfunction.html",
+    description_url="https://www.ni.com/measurementlink/examples/nifgenstandardfunction.html",
 )
 
 measurement_service = nims.MeasurementService(measurement_info, service_info)

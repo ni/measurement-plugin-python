@@ -3,7 +3,7 @@
     {
       "displayName": "NI-SCOPE Acquire Waveform (Py)",
       "serviceClass": "ni.examples.NIScopeAcquireWaveform_Python",
-      "descriptionUrl": "https://www.ni.com/measurementservices/niscopeacquirewaveform.html",
+      "descriptionUrl": "https://www.ni.com/measurementlink/examples/niscopeacquirewaveform.html",
       "providedInterfaces": [ "ni.measurementlink.measurement.v1.MeasurementService" ],
       "path": "start.bat"
     }
