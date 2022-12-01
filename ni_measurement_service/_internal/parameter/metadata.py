@@ -64,6 +64,6 @@ def validate_default_value_type(parameter_metadata: ParameterMetadata) -> None:
         for element in default_value:
             if not isinstance(element, expected_element_type):
                 raise TypeError(
-                    f"Unexpected element of type {type(element)} in the default value for '{display_name}'. Expected element type: {expected_type}."
+                    f"Unexpected element of type {type(element)} in the default value for '{display_name}'. Expected element type: {expected_element_type}."
                 )
     return None
