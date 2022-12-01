@@ -119,7 +119,7 @@ def _get_serialized_measurement_signature(float_in, double_array_in, bool_in, st
 
 
 def _validate_metadata_response(get_metadata_response):
-    assert get_metadata_response.measurement_details.display_name == "SampleMeasurement"
+    assert get_metadata_response.measurement_details.display_name == "Sample Measurement (Py)"
     assert get_metadata_response.measurement_details.version == "0.1.0.0"
 
     assert (
