@@ -25,14 +25,14 @@ daqmx_analog_input_measurement_service = nims.MeasurementService(measurement_inf
 
 @daqmx_analog_input_measurement_service.register_measurement
 @daqmx_analog_input_measurement_service.configuration(
-    "Physical Channel", nims.DataType.String, "Dev1/ai0"
+    "physical_channel", nims.DataType.String, "Dev1/ai0"
 )
-@daqmx_analog_input_measurement_service.configuration("Sample Rate", nims.DataType.Double, 1000.0)
+@daqmx_analog_input_measurement_service.configuration("sample_rate", nims.DataType.Double, 1000.0)
 @daqmx_analog_input_measurement_service.configuration(
-    "Number of Samples", nims.DataType.UInt64, 100
+    "number_of_samples", nims.DataType.UInt64, 100
 )
 @daqmx_analog_input_measurement_service.output(
-    "Voltage Measurements(V)", nims.DataType.DoubleArray1D
+    "acquired_samples", nims.DataType.DoubleArray1D
 )
 def measure(physical_channel, sample_rate, number_of_samples):
     """Perform a finite analog input measurement with NI-DAQmx."""
