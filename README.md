@@ -39,7 +39,7 @@ MeasurementLink Support for Python (`ni-measurement-service`) is a python framew
 
 ## Examples
 
-The `examples` directory contains the below list of python measurement example projects:  
+The `examples` directory contains the following example projects:  
 
 1. `sample_measurement`: Performs a loopback measurement with various data types.
 2. `nidaqmx_analog_input`: Performs a finite analog input measurement with NI-DAQmx.
