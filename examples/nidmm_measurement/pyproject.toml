@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "nidmm_measurement"
 version = "0.5.0"
-description = "Perform a measurement using an NI DMM."
+description = "MeasurementLink example that performs a measurement using an NI DMM."
 authors = ["National Instruments"]
 
 [tool.poetry.dependencies]

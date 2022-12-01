@@ -41,10 +41,14 @@ MeasurementLink Support for Python (`ni-measurement-service`) is a python framew
 
 The `examples` directory contains the below list of python measurement example projects:  
 
-1. **Sample measurement**: Sample Measurement is a simple python-based example that has configurations defined for all supported data types. The measurement logic simply assigns the configuration values to respective output values.
-2. **DC Measurements**: Simple python measurement example that interacts with DCPower 4145 Instrument.
-    1. DC Measurement with Measurement UI
-    2. DC Measurement with LabVIEW UI
+1. `sample_measurement`: Performs a loopback measurement with various data types.
+2. `nidaqmx_analog_input`: Performs a finite analog input measurement with NI-DAQmx.
+3. `nidcpower_source_dc_voltage`: Sources and measures a DC voltage with an NI SMU. Provides a Measurement UI
+4. `nidcpower_source_dc_voltage_with_labview_ui`: Sources and measures a DC voltage with an NI SMU. Provides a LabVIEW UI
+5. `nidmm_measurement`: Performs a measurement using an NI DMM.
+6. `nifgen_standard_function`: Generates a standard function waveform using an NI waveform generator.
+7. `niscope_acquire_waveform`: Acquires a waveform using an NI oscilloscope.
+8. `niswitch_control_relays`: Controls relays using an NI relay driver (e.g. PXI-2567).
 
 ### Setting up the Example Measurements
 

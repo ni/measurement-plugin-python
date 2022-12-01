@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "nidaqmx_analog_input"
 version = "0.5.0"
-description = "Perform a finite analog input measurement with NI-DAQmx."
+description = "MeasurementLink example that performs a finite analog input measurement with NI-DAQmx."
 authors = ["National Instruments"]
 
 [tool.poetry.dependencies]

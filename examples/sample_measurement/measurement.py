@@ -1,8 +1,4 @@
-"""User Measurement.
-
-User can Import driver and 3Party Packages based on requirements.
-
-"""
+"""Perform a loopback measurement with various data types."""
 import logging
 import pathlib
 import sys
@@ -40,8 +36,7 @@ sample_measurement_service = nims.MeasurementService(measurement_info, service_i
 @sample_measurement_service.output("Bool out", nims.DataType.Boolean)
 @sample_measurement_service.output("String out", nims.DataType.String)
 def measure(float_input, double_array_input, bool_input, string_input):
-    """User Measurement."""
-    # User Logic :
+    """Perform a loopback measurement with various data types."""
     logging.info("Executing measurement")
 
     def cancel_callback():
@@ -63,7 +58,7 @@ def measure(float_input, double_array_input, bool_input, string_input):
     "-v", "--verbose", count=True, help="Enable verbose logging. Repeat to increase verbosity."
 )
 def main(verbose: int):
-    """Host the Sample Measurement service."""
+    """Perform a loopback measurement with various data types."""
     if verbose > 1:
         level = logging.DEBUG
     elif verbose == 1:
