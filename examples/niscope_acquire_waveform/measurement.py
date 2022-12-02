@@ -22,7 +22,7 @@ measurement_info = nims.MeasurementInfo(
 
 service_info = nims.ServiceInfo(
     service_class="ni.examples.NIScopeAcquireWaveform_Python",
-    description_url="https://www.ni.com/measurementlink/examples/niscopeacquirewaveform.html",
+    description_url="",
 )
 
 measurement_service = nims.MeasurementService(measurement_info, service_info)

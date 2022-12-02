@@ -3,7 +3,7 @@
     {
       "displayName": "NI-SWITCH Control Relays (Py)",
       "serviceClass": "ni.examples.NISwitchControlRelays_Python",
-      "descriptionUrl": "https://www.ni.com/measurementlink/examples/niswitchcontrolrelays.html",
+      "descriptionUrl": "",
       "providedInterfaces": [ "ni.measurementlink.measurement.v1.MeasurementService" ],
       "path": "start.bat"
     }

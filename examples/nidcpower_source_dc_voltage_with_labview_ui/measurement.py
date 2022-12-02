@@ -26,7 +26,7 @@ measurement_info = nims.MeasurementInfo(
 
 service_info = nims.ServiceInfo(
     service_class="ni.examples.NIDCPowerSourceDCVoltage_Python_LV",
-    description_url="https://www.ni.com/measurementlink/examples/nidcpowersourcedcvoltage.html",
+    description_url="",
 )
 
 measurement_service = nims.MeasurementService(measurement_info, service_info)
