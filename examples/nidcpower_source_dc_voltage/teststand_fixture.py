@@ -23,7 +23,7 @@ def update_pin_map(pin_map_id: str):
 
 
 def create_nidcpower_sessions(pin_map_id: str):
-    """Open and register all NI-DCPower session."""
+    """Create and register all NI-DCPower sessions."""
     with GrpcChannelPoolHelper() as grpc_channel_pool:
         session_management_client = nims.session_management.Client(
             grpc_channel=grpc_channel_pool.session_management_channel
@@ -37,7 +37,6 @@ def create_nidcpower_sessions(pin_map_id: str):
         ) as reservation:
 
             for session_info in reservation.session_info:
-
                 grpc_options = nidcpower.GrpcSessionOptions(
                     grpc_channel_pool.get_grpc_device_channel(
                         nidcpower.GRPC_SERVICE_INTERFACE_NAME
@@ -51,24 +50,26 @@ def create_nidcpower_sessions(pin_map_id: str):
                     resource_name=session_info.resource_name, _grpc_options=grpc_options
                 )
 
-                session_management_client.register_sessions([session_info])
+            session_management_client.register_sessions(reservation.session_info)
 
 
 def destroy_nidcpower_sessions():
-    """Close and unregister all NI-DCPower sessions."""
+    """Destroy and unregister all NI-DCPower sessions."""
     with GrpcChannelPoolHelper() as grpc_channel_pool:
         session_management_client = nims.session_management.Client(
             grpc_channel=grpc_channel_pool.session_management_channel
         )
 
         with session_management_client.reserve_all_registered_sessions(timeout=-1) as reservation:
+            nidcpower_sessions = [
+                session_info
+                for session_info in reservation.session_info
+                if session_info.instrument_type_id == "niDCPower"
+            ]
 
-            for session_info in reservation.session_info:
-                if session_info.instrument_type_id != "niDCPower":
-                    continue
+            session_management_client.unregister_sessions(nidcpower_sessions)
 
-                session_management_client.unregister_sessions([session_info])
-
+            for session_info in nidcpower_sessions:
                 grpc_options = nidcpower.GrpcSessionOptions(
                     grpc_channel_pool.get_grpc_device_channel(
                         nidcpower.GRPC_SERVICE_INTERFACE_NAME
