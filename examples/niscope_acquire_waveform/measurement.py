@@ -196,7 +196,7 @@ def _create_niscope_session(
             )
         session_kwargs["_grpc_options"] = niscope.GrpcSessionOptions(
             session_grpc_channel,
-            session_name=session_info.resource_name,
+            session_name=session_info.session_name,
             initialization_behavior=niscope.SessionInitializationBehavior.AUTO,
         )
 

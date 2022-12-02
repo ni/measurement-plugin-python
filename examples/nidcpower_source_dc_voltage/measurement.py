@@ -155,7 +155,7 @@ def _create_nidcpower_session(
             )
         session_kwargs["_grpc_options"] = nidcpower.GrpcSessionOptions(
             session_grpc_channel,
-            session_name=session_info.resource_name,
+            session_name=session_info.session_name,
             initialization_behavior=nidcpower.SessionInitializationBehavior.AUTO,
         )
 
