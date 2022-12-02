@@ -119,8 +119,8 @@ pip install ni-measurement-generator
     'SampleMeasurement' is the display name of your measurement service. Without the optional arguments,
     the other arguments are generated for you based on the display name.
 
-    2. Running `ni-measurement-generator` with optional arguments for `version`, `measurement-type`, `product-type`, `ui-file`,
-    `service-class`, `service-id`, and `description`:
+    2. Running `ni-measurement-generator` with optional arguments for `measurement-version`, `ui-file`,
+    `service-class`, and `description-url`:
 
     `ni-measurement-generator SampleMeasurement --measurement-version 0.1.0.0 --ui-file MeasurementUI.measui --service-class SampleMeasurement_Python --description-url https://www.example.com/SampleMeasurement.html`
 
