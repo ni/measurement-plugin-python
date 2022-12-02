@@ -58,9 +58,10 @@ def measure(float_input, double_array_input, bool_input, string_input, string_ar
     float_array_output = double_array_input
     bool_output = bool_input
     string_output = string_input
+    string_array_out = string_array_in
     logging.info("Completed measurement")
 
-    return (float_output, float_array_output, bool_output, string_output, string_array_in)
+    return (float_output, float_array_output, bool_output, string_output, string_array_out)
 
 
 @click.command
