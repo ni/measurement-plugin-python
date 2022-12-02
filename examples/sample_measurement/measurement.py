@@ -17,6 +17,7 @@ measurement_info = nims.MeasurementInfo(
     ui_file_paths=[
         pathlib.Path(__file__).resolve().parent / "SampleMeasurement.measui",
         pathlib.Path(__file__).resolve().parent / "SampleAllParameters.measui",
+        pathlib.Path(__file__).resolve().parent / "SampleMeasurement.vi",
     ],
 )
 
@@ -35,11 +36,15 @@ sample_measurement_service = nims.MeasurementService(measurement_info, service_i
 )
 @sample_measurement_service.configuration("Bool In", nims.DataType.Boolean, False)
 @sample_measurement_service.configuration("String In", nims.DataType.String, "sample string")
+@sample_measurement_service.configuration(
+    "String Array In", nims.DataType.StringArray1D, ["String1", "String2"]
+)
 @sample_measurement_service.output("Float out", nims.DataType.Float)
 @sample_measurement_service.output("Double Array out", nims.DataType.DoubleArray1D)
 @sample_measurement_service.output("Bool out", nims.DataType.Boolean)
 @sample_measurement_service.output("String out", nims.DataType.String)
-def measure(float_input, double_array_input, bool_input, string_input):
+@sample_measurement_service.output("String Array out", nims.DataType.StringArray1D)
+def measure(float_input, double_array_input, bool_input, string_input, string_array_in):
     """User Measurement."""
     # User Logic :
     logging.info("Executing measurement")
@@ -53,9 +58,10 @@ def measure(float_input, double_array_input, bool_input, string_input):
     float_array_output = double_array_input
     bool_output = bool_input
     string_output = string_input
+    string_array_out = string_array_in
     logging.info("Completed measurement")
 
-    return (float_output, float_array_output, bool_output, string_output)
+    return (float_output, float_array_output, bool_output, string_output, string_array_out)
 
 
 @click.command
