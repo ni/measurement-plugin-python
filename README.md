@@ -122,7 +122,7 @@ pip install ni-measurement-generator
     2. Running `ni-measurement-generator` with optional arguments for `version`, `measurement-type`, `product-type`, `ui-file`,
     `service-class`, `service-id`, and `description`:
 
-    `ni-measurement-generator SampleMeasurement 0.1.0.0 Measurement Product --ui-file MeasurementUI.measui --service-class SampleMeasurement_Python --service-id 00000000-0000-0000-0000-000000000000 --description-url https://www.example.com/SampleMeasurement.html`
+    `ni-measurement-generator SampleMeasurement --measurement-version 0.1.0.0 --ui-file MeasurementUI.measui --service-class SampleMeasurement_Python --description-url https://www.example.com/SampleMeasurement.html`
 
     3. Running `ni-measurement-generator` with optional argument for `directory-out`
 
