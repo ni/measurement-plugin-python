@@ -86,6 +86,7 @@ def _resolve_service_class(service_class, display_name):
 @click.option(
     "-d",
     "--description-url",
+    default="",
     help="Description URL that links to a web page containing information about the measurement.",
 )
 @click.option(
