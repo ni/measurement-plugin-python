@@ -15,16 +15,53 @@ GRPC_SERVICE_CLASS = "ni.measurementlink.sessionmanagement.v1.SessionManagementS
 
 
 class PinMapContext(NamedTuple):
-    """Container for the pin map and sites."""
+    """Container for the pin map and sites.
+
+    Attributes
+    ----------
+        pin_map_id (str): The resource id of the pin map in the Pin Map service that should be used
+            for the call.
+
+        sites (list): List of site numbers being used for the call. If None, use all sites in the
+            pin map.
+
+    """
 
     pin_map_id: str
     sites: List[int]
 
 
 class SessionInformation(NamedTuple):
-    """Container for the session information."""
+    """Container for the session information.
 
-    session: str
+    Attributes
+    ----------
+        session_name (str): Session identifier used to identify the session in the session
+            management service, as well as in driver services such as grpc-device.
+
+        resource_name (str): Resource name used to open this session in the driver.
+
+        channel_list (str): Channel list used for driver initialization and measurement methods.
+            This field is empty for any SessionInformation returned from
+            Client.reserve_all_registered_sessions.
+
+        instrument_type_id (str): Instrument type ID to identify which type of instrument the
+            session represents. Pin maps have built in instrument definitions using the following
+            NI driver based instrument type ids:
+                "niDCPower"
+                "niDigitalPattern"
+                "niScope"
+                "niDMM"
+                "niDAQmx".
+            For custom instruments the user defined instrument type id is defined in the pin map
+            file.
+
+        session_exists (bool): Indicates whether the session exists in the Session Manager. This
+            indicates whether the session has been created.
+
+    """
+
+    session_name: str
     resource_name: str
     channel_list: str
     instrument_type_id: str
@@ -61,7 +98,7 @@ class Reservation(object):
         """Return session information."""
         return [
             SessionInformation(
-                session=info.session.name,
+                session_name=info.session.name,
                 resource_name=info.resource_name,
                 channel_list=info.channel_list,
                 instrument_type_id=info.instrument_type_id,
@@ -175,7 +212,7 @@ class Client(object):
         request = session_management_service_pb2.RegisterSessionsRequest(
             sessions=(
                 session_management_service_pb2.SessionInformation(
-                    session=session_management_service_pb2.Session(name=info.session),
+                    session=session_management_service_pb2.Session(name=info.session_name),
                     resource_name=info.resource_name,
                     channel_list=info.channel_list,
                     instrument_type_id=info.instrument_type_id,
@@ -200,7 +237,7 @@ class Client(object):
         request = session_management_service_pb2.UnregisterSessionsRequest(
             sessions=(
                 session_management_service_pb2.SessionInformation(
-                    session=session_management_service_pb2.Session(name=info.session),
+                    session=session_management_service_pb2.Session(name=info.session_name),
                     resource_name=info.resource_name,
                     channel_list=info.channel_list,
                     instrument_type_id=info.instrument_type_id,
