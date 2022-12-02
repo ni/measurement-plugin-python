@@ -23,7 +23,7 @@ def test___command_line_args___create_measurement___render_without_exception(tmp
                 "--service-class",
                 "SampleMeasurement_Python",
                 "--description",
-                "description",
+                "https://www.example.com/SampleMeasurement.html",
                 "--directory-out",
                 temp_directory,
             ]
