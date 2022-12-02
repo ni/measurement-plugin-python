@@ -18,4 +18,5 @@ message SampleMeasurementParameter{
     repeated double double_array_in=2;
     bool bool_in=3;
     string string_in =4;
+    repeated string string_array_in =5;
 }
