@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=b'\252\0024NationalInstruments.MeasurementServices.Measurements',
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x1dsample_measurement_test.proto\x12\'ni.measurementlink.measurement.tests.v1\"k\n\x1aSampleMeasurementParameter\x12\x10\n\x08\x66loat_in\x18\x01 \x01(\x02\x12\x17\n\x0f\x64ouble_array_in\x18\x02 \x03(\x01\x12\x0f\n\x07\x62ool_in\x18\x03 \x01(\x08\x12\x11\n\tstring_in\x18\x04 \x01(\tB7\xaa\x02\x34NationalInstruments.MeasurementServices.Measurementsb\x06proto3'
+  serialized_pb=b'\n\x1dsample_measurement_test.proto\x12\'ni.measurementlink.measurement.tests.v1\"\x84\x01\n\x1aSampleMeasurementParameter\x12\x10\n\x08\x66loat_in\x18\x01 \x01(\x02\x12\x17\n\x0f\x64ouble_array_in\x18\x02 \x03(\x01\x12\x0f\n\x07\x62ool_in\x18\x03 \x01(\x08\x12\x11\n\tstring_in\x18\x04 \x01(\t\x12\x17\n\x0fstring_array_in\x18\x05 \x03(\tB7\xaa\x02\x34NationalInstruments.MeasurementServices.Measurementsb\x06proto3'
 )
 
 
@@ -61,6 +61,13 @@ _SAMPLEMEASUREMENTPARAMETER = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='string_array_in', full_name='ni.measurementlink.measurement.tests.v1.SampleMeasurementParameter.string_array_in', index=4,
+      number=5, type=9, cpp_type=9, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -73,8 +80,8 @@ _SAMPLEMEASUREMENTPARAMETER = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=74,
-  serialized_end=181,
+  serialized_start=75,
+  serialized_end=207,
 )
 
 DESCRIPTOR.message_types_by_name['SampleMeasurementParameter'] = _SAMPLEMEASUREMENTPARAMETER

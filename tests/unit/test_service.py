@@ -48,7 +48,10 @@ def test___measurement_service___add_configuration__configuration_added(
 
 @pytest.mark.parametrize(
     "display_name,type,default_value,instrument_type",
-    [("PinConfiguration", DataType.Pin, "Pin1", "test instrument")],
+    [
+        ("PinConfiguration", DataType.Pin, "Pin1", "test instrument"),
+        ("PinArrayConfiguration", DataType.PinArray1D, ["Pin1", "Pin2"], "test instrument 2"),
+    ],
 )
 def test___measurement_service___add_pin_configuration__pin_configuration_added(
     display_name, type, default_value, instrument_type
@@ -115,7 +118,8 @@ def test___measurement_service___add_non_pin_configuration__pin_type_annotations
         ("Int64", DataType.Int64, 1.0),
         ("UInt32", DataType.UInt32, [1.009, -1.0009]),
         ("UInt44", DataType.UInt64, ""),
-        ("PinType", DataType.Pin, 1.0),
+        ("Pin", DataType.Pin, 1.0),
+        ("Pin1DArray", DataType.PinArray1D, [1.009, -1.0009]),
     ],
 )
 def test___measurement_service___add_configuration_with_mismatch_default_value__raises_type_error(

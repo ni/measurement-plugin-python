@@ -73,3 +73,4 @@ class DataType(enum.Enum):
     DoubleArray1D = (type_pb2.Field.TYPE_DOUBLE, True, TypeSpecialization.NoType)
     BooleanArray1D = (type_pb2.Field.TYPE_BOOL, True, TypeSpecialization.NoType)
     StringArray1D = (type_pb2.Field.TYPE_STRING, True, TypeSpecialization.NoType)
+    PinArray1D = (type_pb2.Field.TYPE_STRING, True, TypeSpecialization.Pin)
