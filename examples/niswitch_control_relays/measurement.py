@@ -28,6 +28,7 @@ service_options = ServiceOptions(use_grpc_device=False, grpc_device_address="")
 
 
 @measurement_service.register_measurement
+# TODO: Make relay_names PinArray1D
 @measurement_service.configuration("relay_names", nims.DataType.Pin, "SiteRelay1")
 @measurement_service.configuration("close_relay", nims.DataType.Boolean, True)
 def measure(
