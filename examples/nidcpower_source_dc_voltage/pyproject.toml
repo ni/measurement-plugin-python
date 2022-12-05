@@ -7,10 +7,10 @@ authors = ["National Instruments"]
 [tool.poetry.dependencies]
 python = "^3.8"
 # Uncomment to use prerelease dependencies.
-nidcpower = {path = "../../../nimi-python/generated/nidcpower", develop = true}
-ni-measurement-service = {path = "../..", develop = true}
-#nidcpower = "1.4.1"
-#ni-measurement-service = "*"
+# nidcpower = {path = "../../../nimi-python/generated/nidcpower", develop = true}
+# ni-measurement-service = {path = "../..", develop = true}
+nidcpower = "1.4.1"
+ni-measurement-service = "*"
 click = ">=7.1.2"
 
 [tool.poetry.dev-dependencies]
