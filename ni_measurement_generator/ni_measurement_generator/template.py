@@ -85,8 +85,9 @@ def _resolve_service_class(service_class, display_name):
 )
 @click.option(
     "-d",
-    "--description",
-    help="Description URL that contains information about the measurement.",
+    "--description-url",
+    default="",
+    help="Description URL that links to a web page containing information about the measurement.",
 )
 @click.option(
     "-o",
@@ -98,7 +99,7 @@ def create_measurement(
     measurement_version,
     ui_file,
     service_class,
-    description,
+    description_url,
     directory_out,
 ):
     """Generate a Python measurement service from a template.
@@ -128,7 +129,7 @@ def create_measurement(
         ui_file=ui_file,
         ui_file_type=ui_file_type,
         service_class=service_class,
-        description=description,
+        description_url=description_url,
     )
     _create_file(
         "measurement.serviceconfig.mako",
@@ -136,7 +137,7 @@ def create_measurement(
         directory_out,
         display_name=display_name,
         service_class=service_class,
-        description=description,
+        description_url=description_url,
         ui_file_type=ui_file_type,
     )
     if ui_file_type == "MeasurementUI":

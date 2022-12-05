@@ -1,4 +1,4 @@
-<%page args="display_name, version, ui_file, ui_file_type, service_class, description"/>\
+<%page args="display_name, version, ui_file, ui_file_type, service_class, description_url"/>\
 \
 """A default measurement with an array in and out."""
 import logging
@@ -16,7 +16,7 @@ measurement_info = nims.MeasurementInfo(
 
 service_info = nims.ServiceInfo(
     service_class="${service_class}",
-    description_url="${description}",
+    description_url="${description_url}",
 )
 
 measurement_service = nims.MeasurementService(measurement_info, service_info)

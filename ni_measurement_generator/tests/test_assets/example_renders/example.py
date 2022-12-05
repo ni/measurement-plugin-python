@@ -14,7 +14,7 @@ measurement_info = nims.MeasurementInfo(
 
 service_info = nims.ServiceInfo(
     service_class="SampleMeasurement_Python",
-    description_url="description",
+    description_url="https://www.example.com/SampleMeasurement.html",
 )
 
 measurement_service = nims.MeasurementService(measurement_info, service_info)

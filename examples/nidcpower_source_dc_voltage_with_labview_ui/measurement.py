@@ -26,7 +26,7 @@ measurement_info = nims.MeasurementInfo(
 
 service_info = nims.ServiceInfo(
     service_class="ni.examples.NIDCPowerSourceDCVoltage_Python_LV",
-    description_url="https://www.ni.com/measurementlink/examples/nidcpowersourcedcvoltage.html",
+    description_url="",
 )
 
 measurement_service = nims.MeasurementService(measurement_info, service_info)
@@ -155,7 +155,7 @@ def _create_nidcpower_session(
             )
         session_kwargs["_grpc_options"] = nidcpower.GrpcSessionOptions(
             session_grpc_channel,
-            session_name=session_info.resource_name,
+            session_name=session_info.session_name,
             initialization_behavior=nidcpower.SessionInitializationBehavior.AUTO,
         )
 
