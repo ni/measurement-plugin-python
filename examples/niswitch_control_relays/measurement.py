@@ -1,4 +1,4 @@
-"""Control relays on NI switches."""
+"""Control relays using an NI relay driver (e.g. PXI-2567)."""
 
 import contextlib
 import logging
@@ -20,7 +20,7 @@ measurement_info = nims.MeasurementInfo(
 
 service_info = nims.ServiceInfo(
     service_class="ni.examples.NISwitchControlRelays_Python",
-    description_url="https://www.ni.com/measurementlink/examples/niswitchcontrolrelays.html",
+    description_url="",
 )
 
 measurement_service = nims.MeasurementService(measurement_info, service_info)
@@ -34,7 +34,7 @@ def measure(
     relay_names: str,
     close_relays: bool,
 ) -> Tuple:
-    """Control relays on NI switches."""
+    """Control relays using an NI relay driver (e.g. PXI-2567)."""
     logging.info(
         "Controlling relays: relay_names=%s close_relay=%s",
         relay_names,
@@ -121,7 +121,7 @@ def _create_niswitch_session(
     help="NI gRPC Device Server address (e.g. localhost:31763). If unspecified, use the discovery service to resolve the address.",
 )
 def main(verbose: int, use_grpc_device: bool, grpc_device_address: str):
-    """Control relays on NI switches."""
+    """Control relays using an NI relay driver (e.g. PXI-2567)."""
     if verbose > 1:
         level = logging.DEBUG
     elif verbose == 1:

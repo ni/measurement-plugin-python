@@ -39,12 +39,16 @@ MeasurementLink Support for Python (`ni-measurement-service`) is a python framew
 
 ## Examples
 
-The `examples` directory contains the below list of python measurement example projects:  
+The `examples` directory contains the following example projects:  
 
-1. **Sample measurement**: Sample Measurement is a simple python-based example that has configurations defined for all supported data types. The measurement logic simply assigns the configuration values to respective output values.
-2. **DC Measurements**: Simple python measurement example that interacts with DCPower 4145 Instrument.
-    1. DC Measurement with Measurement UI
-    2. DC Measurement with LabVIEW UI
+1. `sample_measurement`: Performs a loopback measurement with various data types.
+2. `nidaqmx_analog_input`: Performs a finite analog input measurement with NI-DAQmx.
+3. `nidcpower_source_dc_voltage`: Sources and measures a DC voltage with an NI SMU. Provides a Measurement UI
+4. `nidcpower_source_dc_voltage_with_labview_ui`: Sources and measures a DC voltage with an NI SMU. Provides a LabVIEW UI
+5. `nidmm_measurement`: Performs a measurement using an NI DMM.
+6. `nifgen_standard_function`: Generates a standard function waveform using an NI waveform generator.
+7. `niscope_acquire_waveform`: Acquires a waveform using an NI oscilloscope.
+8. `niswitch_control_relays`: Controls relays using an NI relay driver (e.g. PXI-2567).
 
 ### Setting up the Example Measurements
 
@@ -115,10 +119,10 @@ pip install ni-measurement-generator
     'SampleMeasurement' is the display name of your measurement service. Without the optional arguments,
     the other arguments are generated for you based on the display name.
 
-    2. Running `ni-measurement-generator` with optional arguments for `version`, `measurement-type`, `product-type`, `ui-file`,
-    `service-class`, `service-id`, and `description`:
+    2. Running `ni-measurement-generator` with optional arguments for `measurement-version`, `ui-file`,
+    `service-class`, and `description-url`:
 
-    `ni-measurement-generator SampleMeasurement 0.1.0.0 Measurement Product --ui-file MeasurementUI.measui --service-class SampleMeasurement_Python --service-id 00000000-0000-0000-0000-000000000000 --description description`
+    `ni-measurement-generator SampleMeasurement --measurement-version 0.1.0.0 --ui-file MeasurementUI.measui --service-class SampleMeasurement_Python --description-url https://www.example.com/SampleMeasurement.html`
 
     3. Running `ni-measurement-generator` with optional argument for `directory-out`
 
