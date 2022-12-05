@@ -7546,7 +7546,7 @@
 								<Main classname='Objs' valueflags='4194304'>
 									<value lbound='[0]' ubound='[0]'>
 										<value>
-											<Step typename='NI_Measurement' xsi:type='_CustomStepType_' name='Measure source DC voltage'>
+											<Step typename='NI_Measurement' xsi:type='_CustomStepType_' name='Source DC voltage and measure voltage/current'>
 												<subprops>
 													<TS classname='Obj'>
 														<subprops>
@@ -8064,7 +8064,7 @@
 																					<value>Out</value>
 																				</Direction>
 																				<Log classname='Bool'>
-																					<value>false</value>
+																					<value>true</value>
 																				</Log>
 																				<Dimension classname='Num'>
 																					<value representation='UInt64'>0</value>
@@ -8094,7 +8094,7 @@
 																					<value>Out</value>
 																				</Direction>
 																				<Log classname='Bool'>
-																					<value>false</value>
+																					<value>true</value>
 																				</Log>
 																				<Dimension classname='Num'>
 																					<value representation='UInt64'>0</value>
