@@ -94,7 +94,7 @@ def _create_niswitch_session(
             )
         session_kwargs["_grpc_options"] = niswitch.GrpcSessionOptions(
             session_grpc_channel,
-            session_name=session_info.resource_name,
+            session_name=session_info.session_name,
             initialization_behavior=niswitch.SessionInitializationBehavior.AUTO,
         )
 

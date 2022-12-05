@@ -127,7 +127,7 @@ def _create_nidmm_session(
             )
         session_kwargs["_grpc_options"] = nidmm.GrpcSessionOptions(
             session_grpc_channel,
-            session_name=session_info.resource_name,
+            session_name=session_info.session_name,
             initialization_behavior=nidmm.SessionInitializationBehavior.AUTO,
         )
 

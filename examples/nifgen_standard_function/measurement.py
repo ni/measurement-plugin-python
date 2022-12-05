@@ -158,7 +158,7 @@ def _create_nifgen_session(
         # channel name(s).
         session_kwargs["_grpc_options"] = nifgen.GrpcSessionOptions(
             session_grpc_channel,
-            session_name=session_info.resource_name,
+            session_name=session_info.session_name,
             initialization_behavior=nifgen.SessionInitializationBehavior.AUTO,
         )
 
