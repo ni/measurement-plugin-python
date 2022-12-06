@@ -6,14 +6,14 @@ authors = ["National Instruments"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
-# Uncomment to use prerelease dependencies.
-# nifgen = {path = "../../../nimi-python/generated/nifgen", develop = true}
-# ni-measurement-service = {path = "../..", develop = true}
 nifgen = "1.4.1"
 ni-measurement-service = "*"
 click = ">=7.1.2"
 
 [tool.poetry.dev-dependencies]
+# Uncomment to use prerelease dependencies (requires poetry>=1.2).
+# nifgen = { git = "https://github.com/ni/nimi-python.git", subdirectory = "generated/nifgen"}
+# ni-measurement-service = {path = "../..", develop = true}
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

@@ -212,8 +212,8 @@ def _create_niscope_session(
     help="Enable verbose logging. Repeat to increase verbosity.",
 )
 @click.option(
-    "--use-grpc-device",
-    default=False,
+    "--use-grpc-device/--no-use-grpc-device",
+    default=True,
     is_flag=True,
     help="Use the NI gRPC Device Server.",
 )
