@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<SourceFile Checksum="2CFAB092AAFB3347C5575E4C591A685FBC50564E29AB9588A08B106AB0033844C6435A13543BCBE1313B60267929D570B8F18922E66D10BC330BD833CB8A103E" xmlns="http://www.ni.com/PlatformFramework">
+<SourceFile Checksum="2AFB8D39B5FD6BD2B8D6D21555B12ECCB06AFF011D0BC0C9BD5CE051320AF15E11D0053A0F120AE3C9A15285CD174F65350E5435AF8E74E71DC25B2F3A369D1C" xmlns="http://www.ni.com/PlatformFramework">
 	<SourceModelFeatureSet>
-		<ParsableNamespace AssemblyFileVersion="23.0.0.1849" FeatureSetName="Pin Map" Name="http://www.ni.com/InstrumentFramework/PinMap" OldestCompatibleVersion="21.3.0.0" Version="21.3.0.0" />
-		<ParsableNamespace AssemblyFileVersion="23.0.0.1849" FeatureSetName="InstrumentStudio Measurement UI" Name="http://www.ni.com/InstrumentFramework/ScreenDocument" OldestCompatibleVersion="22.1.0.1" Version="22.1.0.1" />
-		<ParsableNamespace AssemblyFileVersion="9.7.0.1849" FeatureSetName="Editor" Name="http://www.ni.com/PlatformFramework" OldestCompatibleVersion="8.1.0.49152" Version="8.1.0.49152" />
-		<ParsableNamespace AssemblyFileVersion="9.7.0.1849" FeatureSetName="SystemDesigner" Name="http://www.ni.com/SystemDesigner/EnvoyManagement" OldestCompatibleVersion="5.0.0.0" Version="5.0.0.49152" />
-		<ParsableNamespace AssemblyFileVersion="9.7.0.1849" FeatureSetName="SystemDesigner" Name="http://www.ni.com/SystemDesigner/SystemDiagram" OldestCompatibleVersion="8.0.0.49152" Version="8.0.0.49152" />
-		<ParsableNamespace AssemblyFileVersion="9.7.0.1849" FeatureSetName="SystemDesigner" Name="http://www.ni.com/SystemDesigner/SystemModelCore" OldestCompatibleVersion="5.1.0.5" Version="5.2.0.49152" />
-		<ApplicationVersionInfo Build="23.0.0.1849" Name="MeasurementLink UI Editor" Version="23.0.0.1849" />
+		<ParsableNamespace AssemblyFileVersion="23.0.0.2225" FeatureSetName="Pin Map" Name="http://www.ni.com/InstrumentFramework/PinMap" OldestCompatibleVersion="21.3.0.0" Version="21.3.0.0" />
+		<ParsableNamespace AssemblyFileVersion="23.0.0.2225" FeatureSetName="InstrumentStudio Measurement UI" Name="http://www.ni.com/InstrumentFramework/ScreenDocument" OldestCompatibleVersion="22.1.0.1" Version="22.1.0.1" />
+		<ParsableNamespace AssemblyFileVersion="9.7.0.2225" FeatureSetName="Editor" Name="http://www.ni.com/PlatformFramework" OldestCompatibleVersion="8.1.0.49152" Version="8.1.0.49152" />
+		<ParsableNamespace AssemblyFileVersion="9.7.0.2225" FeatureSetName="SystemDesigner" Name="http://www.ni.com/SystemDesigner/EnvoyManagement" OldestCompatibleVersion="5.0.0.0" Version="5.0.0.49152" />
+		<ParsableNamespace AssemblyFileVersion="9.7.0.2225" FeatureSetName="SystemDesigner" Name="http://www.ni.com/SystemDesigner/SystemDiagram" OldestCompatibleVersion="8.0.0.49152" Version="8.0.0.49152" />
+		<ParsableNamespace AssemblyFileVersion="9.7.0.2225" FeatureSetName="SystemDesigner" Name="http://www.ni.com/SystemDesigner/SystemModelCore" OldestCompatibleVersion="5.1.0.5" Version="5.2.0.49152" />
+		<ApplicationVersionInfo Build="23.0.0.2225" Name="MeasurementLink UI Editor" Version="23.0.0.2225" />
 	</SourceModelFeatureSet>
 	<Project xmlns="http://www.ni.com/PlatformFramework">
 		<EnvoyManagerRootEnvoy Id="be463a1023bd4d8c8d22ddb4fd3487a9" ModelDefinitionType="EnvoyManagerRootEnvoy" Name="RootEnvoy" />
@@ -29,8 +29,8 @@
 		</NameScopingEnvoy>
 		<NameScopingEnvoy Id="8a1540a79f81438a8407889bf4817e48" ModelDefinitionType="DefaultTarget" Name="DefaultTarget">
 			<DefaultTarget />
-			<FileReference Id="1c6eec2bd05d47d8a443f09165b58679" ModelDefinitionType="{http://www.ni.com/InstrumentFramework/PinMap}PinMapDefinition" Name="NISwitchControlRelay.pinmap" StoragePath="NISwitchControlRelay.pinmap" p4:IsActive="True" xmlns:p4="http://www.ni.com/InstrumentFramework/PinMap" />
-			<SourceFileReference Id="e06ed35ad90f47cbbf9e7eacfe9816b5" ModelDefinitionType="{http://www.ni.com/InstrumentFramework/ScreenDocument}Screen" Name="NISwitchControlRelay.measui" StoragePath="NISwitchControlRelay.measui" />
+			<SourceFileReference Id="ed5e93555f7044dfbef5ebcfe37fdf04" ModelDefinitionType="{http://www.ni.com/InstrumentFramework/ScreenDocument}Screen" Name="NISwitchControlRelays.measui" StoragePath="NISwitchControlRelays.measui" />
+			<FileReference Id="91ec00920dff4da997e3a16c2dd4c84c" ModelDefinitionType="{http://www.ni.com/InstrumentFramework/PinMap}PinMapDefinition" Name="NISwitchControlRelays.pinmap" StoragePath="NISwitchControlRelays.pinmap" p4:IsActive="True" xmlns:p4="http://www.ni.com/InstrumentFramework/PinMap" />
 		</NameScopingEnvoy>
 	</Project>
 	<ProjectInformation xmlns="http://www.ni.com/PlatformFramework" />
