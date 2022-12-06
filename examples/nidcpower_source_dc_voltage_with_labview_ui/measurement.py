@@ -174,7 +174,10 @@ def _log_measured_values(measured_value, in_compliance):
     "-v", "--verbose", count=True, help="Enable verbose logging. Repeat to increase verbosity."
 )
 @click.option(
-    "--use-grpc-device", default=False, is_flag=True, help="Use the NI gRPC Device Server."
+    "--use-grpc-device/--no-use-grpc-device",
+    default=True,
+    is_flag=True,
+    help="Use the NI gRPC Device Server.",
 )
 @click.option(
     "--grpc-device-address",
