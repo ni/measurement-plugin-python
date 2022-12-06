@@ -69,7 +69,7 @@ jobs:
       
       - name: Push changes to the Main branch
         if: ${{ startsWith(github.event.release.target_commitish, 'main') }}
-        uses: CasperWA/push-protected@v2.10.0
+        uses: CasperWA/push-protected@v2
         with:
           token: ${{ secrets.ADMIN_PAT }}
           branch: ${{ github.event.release.target_commitish }}  
