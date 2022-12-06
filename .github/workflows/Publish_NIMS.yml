@@ -8,8 +8,8 @@ concurrency: publish_to_pypi
 
 env:
   # Versions are also listed in PR.yml
-  POETRY_VERSION: 1.1.10
-  PYTHON_VERSION: 3.8
+  POETRY_VERSION: 1.2.2
+  PYTHON_VERSION: 3.9
 
 jobs:
   build:
@@ -20,18 +20,13 @@ jobs:
       - uses: actions/setup-python@v2
         with:
           python-version: ${{ env.PYTHON_VERSION }}
-      - uses: Gr1N/setup-poetry@v4
+      - uses: Gr1N/setup-poetry@v7
         with:
           poetry-version: ${{ env.POETRY_VERSION }}
-      # @TODO: This is a workaround for there not being a way to check the lock file
-      #   See: https://github.com/python-poetry/poetry/issues/453
+
       - name: Check for lock changes
-        run: |
-          PYTHONPATH="${PYTHONPATH}:${HOME}/.poetry/lib:${HOME}/.poetry/lib/poetry/_vendor/py${{ env.PYTHON_VERSION }}" \
-          python -c "from poetry.factory import Factory; \
-            locker = Factory().create_poetry('.').locker; \
-            exit(0) if locker.is_locked() and locker.is_fresh() else exit(1)" \
-            && echo 'OK'
+        run: poetry lock --check
+
       - uses: actions/cache@v2
         with:
           path: ~/.cache/pypoetry/virtualenvs
