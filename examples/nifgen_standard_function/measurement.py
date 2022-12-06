@@ -41,6 +41,7 @@ WAVEFORM_TYPE_TO_ENUM = {
 
 
 @measurement_service.register_measurement
+# TODO: Rename pin_name to pin_names and make it PinArray1D
 @measurement_service.configuration("pin_name", nims.DataType.Pin, "Pin1")
 @measurement_service.configuration("waveform_type", nims.DataType.String, "Sine")
 @measurement_service.configuration("frequency", nims.DataType.Double, 1.0e6)
