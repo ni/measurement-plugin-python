@@ -26,7 +26,6 @@ pywin32 = {version = "^303", platform = "win32"}
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
-nidcpower = ">=1.4.1"
 ni-python-styleguide = ">=0.1.9"
 grpcio-tools = "1.41.1"
 Sphinx = "^5.0.1"
