@@ -6,13 +6,13 @@ on:
       - main
 
 env:
-  POETRY_VERSION: 1.1.10
+  POETRY_VERSION: 1.2.2
 
 jobs:
   checks-nims:
     runs-on: ubuntu-latest
     env:
-      PYTHON_VERSION: 3.8 
+      PYTHON_VERSION: 3.9
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
@@ -21,17 +21,8 @@ jobs:
       - uses: Gr1N/setup-poetry@v4
         with:
           poetry-version: ${{ env.POETRY_VERSION }}
-      # @TODO: This is a workaround for there not being a way to check the lock file
-      #   See: https://github.com/python-poetry/poetry/issues/453
-      # We might need to make sure the Test dependencies(as of now - Style Guides)
       - name: Check for lock changes (measurement service)
-        run: |
-          PYTHONPATH="${PYTHONPATH}:${HOME}/.poetry/lib:${HOME}/.poetry/lib/poetry/_vendor/py${{ env.PYTHON_VERSION }}" \
-          python -c "from poetry.factory import Factory; \
-            locker = Factory().create_poetry('.').locker; \
-            lock_is_fresh = locker.is_locked() and locker.is_fresh(); \
-            print(\"\" if lock_is_fresh else \"Lock is stale, run 'poetry lock' to update the lock file.\"); \
-            exit(0) if lock_is_fresh else exit(1)"
+        run: poetry lock --check
       - uses: actions/cache@v2
         with:
           path: ~/.cache/pypoetry/virtualenvs
@@ -53,7 +44,7 @@ jobs:
       run:
         working-directory: ./ni_measurement_generator
     env:
-      PYTHON_VERSION: 3.8 
+      PYTHON_VERSION: 3.9
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
@@ -62,17 +53,8 @@ jobs:
       - uses: Gr1N/setup-poetry@v4
         with:
           poetry-version: ${{ env.POETRY_VERSION }}
-      # @TODO: This is a workaround for there not being a way to check the lock file
-      #   See: https://github.com/python-poetry/poetry/issues/453
-      # We might need to make sure the Test dependencies(as of now - Style Guides)
       - name: Check for lock changes (generator)
-        run: |
-          PYTHONPATH="${PYTHONPATH}:${HOME}/.poetry/lib:${HOME}/.poetry/lib/poetry/_vendor/py${{ env.PYTHON_VERSION }}" \
-          python -c "from poetry.factory import Factory; \
-            locker = Factory().create_poetry('.').locker; \
-            lock_is_fresh = locker.is_locked() and locker.is_fresh(); \
-            print(\"\" if lock_is_fresh else \"Lock is stale, run 'poetry lock' to update the lock file.\"); \
-            exit(0) if lock_is_fresh else exit(1)"
+        run: poetry lock --check
         working-directory: ./ni_measurement_generator
       - uses: actions/cache@v2
         with:
