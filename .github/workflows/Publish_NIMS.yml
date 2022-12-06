@@ -1,15 +1,8 @@
 name:  Update docs and Publish NIMS
 
-# Only trigger, when the NIMG workflow succeeded. Both "Publish NIMG" and "Publish NIMS" modify
-# main. So, there runs should be serialized. 
-# on:
-#   release:
-#     types: [released]
 on:
-  workflow_run:
-    workflows: ["Publish NIMG"]
-    types:
-      - completed
+  release:
+    types: [released]
 
 concurrency: publish_to_pypi
 
