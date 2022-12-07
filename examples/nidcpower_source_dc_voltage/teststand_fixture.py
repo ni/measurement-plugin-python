@@ -32,7 +32,7 @@ def create_nidcpower_sessions(pin_map_id: str):
         pin_map_context = nims.session_management.PinMapContext(pin_map_id=pin_map_id, sites=None)
         with session_management_client.reserve_sessions(
             context=pin_map_context,
-            instrument_type_id="niDCPower",
+            instrument_type_id=nims.session_management.INSTRUMENT_TYPE_NI_DCPOWER,
             timeout=-1,
         ) as reservation:
 
@@ -64,7 +64,8 @@ def destroy_nidcpower_sessions():
             nidcpower_sessions = [
                 session_info
                 for session_info in reservation.session_info
-                if session_info.instrument_type_id == "niDCPower"
+                if session_info.instrument_type_id
+                == nims.session_management.INSTRUMENT_TYPE_NI_DCPOWER
             ]
 
             session_management_client.unregister_sessions(nidcpower_sessions)

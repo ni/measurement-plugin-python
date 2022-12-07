@@ -65,7 +65,7 @@ def measure(
             session_management_client.reserve_sessions(
                 context=measurement_service.context.pin_map_context,
                 pin_names=[pin_name],
-                instrument_type_id="niDCPower",
+                instrument_type_id=nims.session_management.INSTRUMENT_TYPE_NI_DCPOWER,
                 timeout=-1,
             )
         )

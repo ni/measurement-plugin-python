@@ -111,7 +111,7 @@ def measure(
             session_management_client.reserve_sessions(
                 context=measurement_service.context.pin_map_context,
                 pin_names=pin_list,
-                instrument_type_id="niScope",
+                instrument_type_id=nims.session_management.INSTRUMENT_TYPE_NI_SCOPE,
                 timeout=-1,
             )
         )
