@@ -6289,7 +6289,7 @@
 																				<value>false</value>
 																			</UseAdapterSettingsForInterpreterSession>
 																			<InterpreterSessionScope classname='Num'>
-																				<value>3</value>
+																				<value>2</value>
 																			</InterpreterSessionScope>
 																			<PythonVersion classname='Str'>
 																				<value>3.9</value>
@@ -6734,7 +6734,7 @@
 																				<value>false</value>
 																			</UseAdapterSettingsForInterpreterSession>
 																			<InterpreterSessionScope classname='Num'>
-																				<value>3</value>
+																				<value>2</value>
 																			</InterpreterSessionScope>
 																			<PythonVersion classname='Str'>
 																				<value>3.9</value>
@@ -8493,7 +8493,7 @@
 																				<value>false</value>
 																			</UseAdapterSettingsForInterpreterSession>
 																			<InterpreterSessionScope classname='Num'>
-																				<value>3</value>
+																				<value>2</value>
 																			</InterpreterSessionScope>
 																			<PythonVersion classname='Str'>
 																				<value>3.9</value>
