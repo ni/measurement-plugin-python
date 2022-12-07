@@ -41,7 +41,7 @@ def create_nidcpower_sessions(pin_map_id: str):
                     grpc_channel_pool.get_grpc_device_channel(
                         nidcpower.GRPC_SERVICE_INTERFACE_NAME
                     ),
-                    session_name=session_info.session,
+                    session_name=session_info.session_name,
                     initialization_behavior=nidcpower.SessionInitializationBehavior.INITIALIZE_SERVER_SESSION,
                 )
 
@@ -74,7 +74,7 @@ def destroy_nidcpower_sessions():
                     grpc_channel_pool.get_grpc_device_channel(
                         nidcpower.GRPC_SERVICE_INTERFACE_NAME
                     ),
-                    session_name=session_info.session,
+                    session_name=session_info.session_name,
                     initialization_behavior=nidcpower.SessionInitializationBehavior.ATTACH_TO_SERVER_SESSION,
                 )
 
