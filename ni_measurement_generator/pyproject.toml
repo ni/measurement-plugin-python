@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "ni_measurement_generator"
 version = "0.8.7"
-description = "MeasurementLink code generator for Python"
+description = "MeasurementLink Code Generator for Python"
 authors = ["NI <opensource@ni.com>"]
 
 [tool.poetry.dependencies]
