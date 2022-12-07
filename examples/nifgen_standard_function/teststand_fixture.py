@@ -44,7 +44,11 @@ def create_nifgen_sessions(pin_map_id: str):
                 )
 
                 # Leave session open
-                nifgen.Session(resource_name=session_info.resource_name, _grpc_options=grpc_options)
+                nifgen.Session(
+                    resource_name=session_info.resource_name,
+                    channel_name=session_info.channel_list,
+                    _grpc_options=grpc_options,
+                )
 
             session_management_client.register_sessions(reservation.session_info)
 
@@ -74,6 +78,8 @@ def destroy_nifgen_sessions():
                 )
 
                 session = nifgen.Session(
-                    resource_name=session_info.resource_name, _grpc_options=grpc_options
+                    resource_name=session_info.resource_name,
+                    channel_name=session_info.channel_list,
+                    _grpc_options=grpc_options,
                 )
                 session.close()
