@@ -28,6 +28,8 @@ pywin32 = {version = "^303", platform = "win32"}
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
 ni-python-styleguide = ">=0.1.9"
+# When you update the grpcio-tools version, you should update the minimum grpcio version
+# and regenerate gRPC stubs.
 grpcio-tools = "1.41.1"
 Sphinx = "^5.0.1"
 sphinx-rtd-theme = "^1.0.0"
