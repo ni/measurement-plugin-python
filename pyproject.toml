@@ -12,7 +12,7 @@ exclude = '''
 [tool.poetry]
 name = "ni_measurement_service"
 version = "0.10.2"
-description = "Develop language agnostic measurement plugins reusable by both the Interactive Debugging/Validation and Test Automation workflow."
+description = "MeasurementLink Support for Python"
 authors = ["NI <opensource@ni.com>"]
 readme = "README.md" # apply the repo readme to the package as well
 repository = "https://github.com/ni/measurement-services-python/"
