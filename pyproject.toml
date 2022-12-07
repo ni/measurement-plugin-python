@@ -20,7 +20,9 @@ license = "MIT"
 
 [tool.poetry.dependencies]
 python = "^3.8"
-# Minimum grpcio version should be >= grpcio-tools version.
+# This package includes gRPC stubs that were generated with the version of grpcio-tools specified
+# below. Please keep the minimum grpcio version in sync with the grpcio-tools version. Otherwise,
+# the generated gRPC stubs may not work with the minimum grpcio version.
 grpcio = "^1.41.1"
 protobuf = "^3.20"
 pywin32 = {version = "^303", platform = "win32"}
