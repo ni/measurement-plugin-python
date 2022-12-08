@@ -43,6 +43,5 @@ Search open/closed issues before submitting. Someone may have reported the same 
 
 <!--- Include as many relevant details as possible about the environment you experienced the bug in -->
 
-* OS & Device: [e.g. MacOS, iOS, Windows, Linux] on [iPhone 7, PC]
-* Browser [e.g. Microsoft Edge, Google Chrome, Apple Safari, Mozilla FireFox]
+* OS & Device: [e.g. MacOS, Windows, Linux] on [Mac, PC]
 * Version [e.g. 1.8.0]
