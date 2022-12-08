@@ -19,6 +19,7 @@ Classes
 
    ni_measurement_service.measurement.info.MeasurementInfo
    ni_measurement_service.measurement.info.ServiceInfo
+   ni_measurement_service.measurement.info.TypeSpecialization
    ni_measurement_service.measurement.info.DataType
 
 
@@ -82,6 +83,23 @@ Classes
       
 
 
+.. py:class:: TypeSpecialization
+
+   Bases: :py:obj:`enum.Enum`
+
+   Enum that represents the type specializations for measurement parameters.
+
+   .. py:attribute:: NoType
+      :annotation: = 
+
+      
+
+   .. py:attribute:: Pin
+      :annotation: = pin
+
+      
+
+
 .. py:class:: DataType
 
    Bases: :py:obj:`enum.Enum`
@@ -128,6 +146,11 @@ Classes
 
       
 
+   .. py:attribute:: Pin
+      
+
+      
+
    .. py:attribute:: Int32Array1D
       
 
@@ -159,6 +182,16 @@ Classes
       
 
    .. py:attribute:: BooleanArray1D
+      
+
+      
+
+   .. py:attribute:: StringArray1D
+      
+
+      
+
+   .. py:attribute:: PinArray1D
       
 
       

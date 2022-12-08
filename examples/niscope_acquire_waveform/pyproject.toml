@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "nifgen_standard_function"
+name = "niscope_acquire_waveform"
 version = "0.5.0"
 description = "MeasurementLink example that acquires a waveform using an NI oscilloscope."
 authors = ["National Instruments"]
@@ -12,9 +12,9 @@ click = ">=7.1.2"
 
 [tool.poetry.dev-dependencies]
 # Uncomment to use prerelease dependencies (requires poetry>=1.2).
-# niscope = { git = "https://github.com/ni/nimi-python.git", subdirectory = "generated/niscope"}
+niscope = { git = "https://github.com/ni/nimi-python.git", subdirectory = "generated/niscope"}
 # ni-measurement-service = {path = "../..", develop = true}
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
+requires = ["poetry-core>=1.2.0"]
 build-backend = "poetry.core.masonry.api"

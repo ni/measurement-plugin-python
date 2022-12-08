@@ -1,0 +1,89 @@
+:py:mod:`ni_measurement_service._internal.stubs.ni.measurementlink.pinmap.v1.pin_map_service_pb2`
+=================================================================================================
+
+.. py:module:: ni_measurement_service._internal.stubs.ni.measurementlink.pinmap.v1.pin_map_service_pb2
+
+.. autoapi-nested-parse::
+
+   Generated protocol buffer code.
+
+
+
+Module Contents
+---------------
+
+.. py:data:: DESCRIPTOR
+   
+
+   
+
+.. py:data:: containing_type
+   
+
+   
+
+.. py:data:: containing_type
+   
+
+   
+
+.. py:data:: message_type
+   
+
+   
+
+.. py:data:: message_type
+   
+
+   
+
+.. py:data:: containing_type
+   
+
+   
+
+.. py:data:: message_type
+   
+
+   
+
+.. py:data:: PinMap
+   
+
+   
+
+.. py:data:: CreatePinMapFromXmlRequest
+   
+
+   
+
+.. py:data:: UpdatePinMapFromXmlRequest
+   
+
+   
+
+.. py:data:: GetPinMapRequest
+   
+
+   
+
+.. py:data:: QueryPinsRequest
+   
+
+   
+
+.. py:data:: QueryPinsResponse
+   
+
+   
+
+.. py:data:: QueryResourceAccessInformationRequest
+   
+
+   
+
+.. py:data:: QueryResourceAccessInformationResponse
+   
+
+   
+

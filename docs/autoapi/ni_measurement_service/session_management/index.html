@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ni_measurement_service.session_management &mdash; ni_measurement_service 0.11 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> ni_measurement_service
+          </a>
+              <div class="version">
+                0.11.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">ni_measurement_service</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active"><code class="xref py py-mod docutils literal notranslate"><span class="pre">ni_measurement_service.session_management</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/autoapi/ni_measurement_service/session_management/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-ni_measurement_service.session_management">
+<span id="ni-measurement-service-session-management"></span><h1><a class="reference internal" href="#module-ni_measurement_service.session_management" title="ni_measurement_service.session_management"><code class="xref py py-mod docutils literal notranslate"><span class="pre">ni_measurement_service.session_management</span></code></a><a class="headerlink" href="#module-ni_measurement_service.session_management" title="Permalink to this heading"></a></h1>
+<p>Contains methods related to managing driver sessions.</p>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this heading"></a></h2>
+<section id="classes">
+<h3>Classes<a class="headerlink" href="#classes" title="Permalink to this heading"></a></h3>
+<table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ni_measurement_service.session_management.PinMapContext" title="ni_measurement_service.session_management.PinMapContext"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PinMapContext</span></code></a></p></td>
+<td><p>Container for the pin map and sites.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ni_measurement_service.session_management.SessionInformation" title="ni_measurement_service.session_management.SessionInformation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SessionInformation</span></code></a></p></td>
+<td><p>Container for the session information.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ni_measurement_service.session_management.Reservation" title="ni_measurement_service.session_management.Reservation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Reservation</span></code></a></p></td>
+<td><p>Manage session reservation.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ni_measurement_service.session_management.Client" title="ni_measurement_service.session_management.Client"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Client</span></code></a></p></td>
+<td><p>Class that manages driver sessions.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="attributes">
+<h3>Attributes<a class="headerlink" href="#attributes" title="Permalink to this heading"></a></h3>
+<table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ni_measurement_service.session_management.GRPC_SERVICE_INTERFACE_NAME" title="ni_measurement_service.session_management.GRPC_SERVICE_INTERFACE_NAME"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GRPC_SERVICE_INTERFACE_NAME</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ni_measurement_service.session_management.GRPC_SERVICE_CLASS" title="ni_measurement_service.session_management.GRPC_SERVICE_CLASS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GRPC_SERVICE_CLASS</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ni_measurement_service.session_management.INSTRUMENT_TYPE_NONE" title="ni_measurement_service.session_management.INSTRUMENT_TYPE_NONE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">INSTRUMENT_TYPE_NONE</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ni_measurement_service.session_management.INSTRUMENT_TYPE_NI_DCPOWER" title="ni_measurement_service.session_management.INSTRUMENT_TYPE_NI_DCPOWER"><code class="xref py py-obj docutils literal notranslate"><span class="pre">INSTRUMENT_TYPE_NI_DCPOWER</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ni_measurement_service.session_management.INSTRUMENT_TYPE_NI_HSDIO" title="ni_measurement_service.session_management.INSTRUMENT_TYPE_NI_HSDIO"><code class="xref py py-obj docutils literal notranslate"><span class="pre">INSTRUMENT_TYPE_NI_HSDIO</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ni_measurement_service.session_management.INSTRUMENT_TYPE_NI_RFSA" title="ni_measurement_service.session_management.INSTRUMENT_TYPE_NI_RFSA"><code class="xref py py-obj docutils literal notranslate"><span class="pre">INSTRUMENT_TYPE_NI_RFSA</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ni_measurement_service.session_management.INSTRUMENT_TYPE_NI_RFMX" title="ni_measurement_service.session_management.INSTRUMENT_TYPE_NI_RFMX"><code class="xref py py-obj docutils literal notranslate"><span class="pre">INSTRUMENT_TYPE_NI_RFMX</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ni_measurement_service.session_management.INSTRUMENT_TYPE_NI_RFSG" title="ni_measurement_service.session_management.INSTRUMENT_TYPE_NI_RFSG"><code class="xref py py-obj docutils literal notranslate"><span class="pre">INSTRUMENT_TYPE_NI_RFSG</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ni_measurement_service.session_management.INSTRUMENT_TYPE_NI_RFPM" title="ni_measurement_service.session_management.INSTRUMENT_TYPE_NI_RFPM"><code class="xref py py-obj docutils literal notranslate"><span class="pre">INSTRUMENT_TYPE_NI_RFPM</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ni_measurement_service.session_management.INSTRUMENT_TYPE_NI_DMM" title="ni_measurement_service.session_management.INSTRUMENT_TYPE_NI_DMM"><code class="xref py py-obj docutils literal notranslate"><span class="pre">INSTRUMENT_TYPE_NI_DMM</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ni_measurement_service.session_management.INSTRUMENT_TYPE_NI_DIGITAL_PATTERN" title="ni_measurement_service.session_management.INSTRUMENT_TYPE_NI_DIGITAL_PATTERN"><code class="xref py py-obj docutils literal notranslate"><span class="pre">INSTRUMENT_TYPE_NI_DIGITAL_PATTERN</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ni_measurement_service.session_management.INSTRUMENT_TYPE_NI_SCOPE" title="ni_measurement_service.session_management.INSTRUMENT_TYPE_NI_SCOPE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">INSTRUMENT_TYPE_NI_SCOPE</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ni_measurement_service.session_management.INSTRUMENT_TYPE_NI_FGEN" title="ni_measurement_service.session_management.INSTRUMENT_TYPE_NI_FGEN"><code class="xref py py-obj docutils literal notranslate"><span class="pre">INSTRUMENT_TYPE_NI_FGEN</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ni_measurement_service.session_management.INSTRUMENT_TYPE_NI_DAQMX" title="ni_measurement_service.session_management.INSTRUMENT_TYPE_NI_DAQMX"><code class="xref py py-obj docutils literal notranslate"><span class="pre">INSTRUMENT_TYPE_NI_DAQMX</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ni_measurement_service.session_management.INSTRUMENT_TYPE_NI_RELAY_DRIVER" title="ni_measurement_service.session_management.INSTRUMENT_TYPE_NI_RELAY_DRIVER"><code class="xref py py-obj docutils literal notranslate"><span class="pre">INSTRUMENT_TYPE_NI_RELAY_DRIVER</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ni_measurement_service.session_management.INSTRUMENT_TYPE_NI_MODEL_BASED_INSTRUMENT" title="ni_measurement_service.session_management.INSTRUMENT_TYPE_NI_MODEL_BASED_INSTRUMENT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">INSTRUMENT_TYPE_NI_MODEL_BASED_INSTRUMENT</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ni_measurement_service.session_management.INSTRUMENT_TYPE_NI_SWITCH_EXECUTIVE_VIRTUAL_DEVICE" title="ni_measurement_service.session_management.INSTRUMENT_TYPE_NI_SWITCH_EXECUTIVE_VIRTUAL_DEVICE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">INSTRUMENT_TYPE_NI_SWITCH_EXECUTIVE_VIRTUAL_DEVICE</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py data">
+<dt class="sig sig-object py" id="ni_measurement_service.session_management.GRPC_SERVICE_INTERFACE_NAME">
+<span class="sig-prename descclassname"><span class="pre">ni_measurement_service.session_management.</span></span><span class="sig-name descname"><span class="pre">GRPC_SERVICE_INTERFACE_NAME</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">ni.measurementlink.sessionmanagement.v1.SessionManagementService</span></em><a class="headerlink" href="#ni_measurement_service.session_management.GRPC_SERVICE_INTERFACE_NAME" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="ni_measurement_service.session_management.GRPC_SERVICE_CLASS">
+<span class="sig-prename descclassname"><span class="pre">ni_measurement_service.session_management.</span></span><span class="sig-name descname"><span class="pre">GRPC_SERVICE_CLASS</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">ni.measurementlink.sessionmanagement.v1.SessionManagementService</span></em><a class="headerlink" href="#ni_measurement_service.session_management.GRPC_SERVICE_CLASS" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="ni_measurement_service.session_management.INSTRUMENT_TYPE_NONE">
+<span class="sig-prename descclassname"><span class="pre">ni_measurement_service.session_management.</span></span><span class="sig-name descname"><span class="pre">INSTRUMENT_TYPE_NONE</span></span><em class="property"><span class="w"> </span><span class="pre">=</span></em><a class="headerlink" href="#ni_measurement_service.session_management.INSTRUMENT_TYPE_NONE" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="ni_measurement_service.session_management.INSTRUMENT_TYPE_NI_DCPOWER">
+<span class="sig-prename descclassname"><span class="pre">ni_measurement_service.session_management.</span></span><span class="sig-name descname"><span class="pre">INSTRUMENT_TYPE_NI_DCPOWER</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">niDCPower</span></em><a class="headerlink" href="#ni_measurement_service.session_management.INSTRUMENT_TYPE_NI_DCPOWER" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="ni_measurement_service.session_management.INSTRUMENT_TYPE_NI_HSDIO">
+<span class="sig-prename descclassname"><span class="pre">ni_measurement_service.session_management.</span></span><span class="sig-name descname"><span class="pre">INSTRUMENT_TYPE_NI_HSDIO</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">niHSDIO</span></em><a class="headerlink" href="#ni_measurement_service.session_management.INSTRUMENT_TYPE_NI_HSDIO" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="ni_measurement_service.session_management.INSTRUMENT_TYPE_NI_RFSA">
+<span class="sig-prename descclassname"><span class="pre">ni_measurement_service.session_management.</span></span><span class="sig-name descname"><span class="pre">INSTRUMENT_TYPE_NI_RFSA</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">niRFSA</span></em><a class="headerlink" href="#ni_measurement_service.session_management.INSTRUMENT_TYPE_NI_RFSA" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="ni_measurement_service.session_management.INSTRUMENT_TYPE_NI_RFMX">
+<span class="sig-prename descclassname"><span class="pre">ni_measurement_service.session_management.</span></span><span class="sig-name descname"><span class="pre">INSTRUMENT_TYPE_NI_RFMX</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">niRFmx</span></em><a class="headerlink" href="#ni_measurement_service.session_management.INSTRUMENT_TYPE_NI_RFMX" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="ni_measurement_service.session_management.INSTRUMENT_TYPE_NI_RFSG">
+<span class="sig-prename descclassname"><span class="pre">ni_measurement_service.session_management.</span></span><span class="sig-name descname"><span class="pre">INSTRUMENT_TYPE_NI_RFSG</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">niRFSG</span></em><a class="headerlink" href="#ni_measurement_service.session_management.INSTRUMENT_TYPE_NI_RFSG" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="ni_measurement_service.session_management.INSTRUMENT_TYPE_NI_RFPM">
+<span class="sig-prename descclassname"><span class="pre">ni_measurement_service.session_management.</span></span><span class="sig-name descname"><span class="pre">INSTRUMENT_TYPE_NI_RFPM</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">niRFPM</span></em><a class="headerlink" href="#ni_measurement_service.session_management.INSTRUMENT_TYPE_NI_RFPM" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="ni_measurement_service.session_management.INSTRUMENT_TYPE_NI_DMM">
+<span class="sig-prename descclassname"><span class="pre">ni_measurement_service.session_management.</span></span><span class="sig-name descname"><span class="pre">INSTRUMENT_TYPE_NI_DMM</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">niDMM</span></em><a class="headerlink" href="#ni_measurement_service.session_management.INSTRUMENT_TYPE_NI_DMM" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="ni_measurement_service.session_management.INSTRUMENT_TYPE_NI_DIGITAL_PATTERN">
+<span class="sig-prename descclassname"><span class="pre">ni_measurement_service.session_management.</span></span><span class="sig-name descname"><span class="pre">INSTRUMENT_TYPE_NI_DIGITAL_PATTERN</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">niDigitalPattern</span></em><a class="headerlink" href="#ni_measurement_service.session_management.INSTRUMENT_TYPE_NI_DIGITAL_PATTERN" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="ni_measurement_service.session_management.INSTRUMENT_TYPE_NI_SCOPE">
+<span class="sig-prename descclassname"><span class="pre">ni_measurement_service.session_management.</span></span><span class="sig-name descname"><span class="pre">INSTRUMENT_TYPE_NI_SCOPE</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">niScope</span></em><a class="headerlink" href="#ni_measurement_service.session_management.INSTRUMENT_TYPE_NI_SCOPE" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="ni_measurement_service.session_management.INSTRUMENT_TYPE_NI_FGEN">
+<span class="sig-prename descclassname"><span class="pre">ni_measurement_service.session_management.</span></span><span class="sig-name descname"><span class="pre">INSTRUMENT_TYPE_NI_FGEN</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">niFGen</span></em><a class="headerlink" href="#ni_measurement_service.session_management.INSTRUMENT_TYPE_NI_FGEN" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="ni_measurement_service.session_management.INSTRUMENT_TYPE_NI_DAQMX">
+<span class="sig-prename descclassname"><span class="pre">ni_measurement_service.session_management.</span></span><span class="sig-name descname"><span class="pre">INSTRUMENT_TYPE_NI_DAQMX</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">niDAQmx</span></em><a class="headerlink" href="#ni_measurement_service.session_management.INSTRUMENT_TYPE_NI_DAQMX" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="ni_measurement_service.session_management.INSTRUMENT_TYPE_NI_RELAY_DRIVER">
+<span class="sig-prename descclassname"><span class="pre">ni_measurement_service.session_management.</span></span><span class="sig-name descname"><span class="pre">INSTRUMENT_TYPE_NI_RELAY_DRIVER</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">niRelayDriver</span></em><a class="headerlink" href="#ni_measurement_service.session_management.INSTRUMENT_TYPE_NI_RELAY_DRIVER" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="ni_measurement_service.session_management.INSTRUMENT_TYPE_NI_MODEL_BASED_INSTRUMENT">
+<span class="sig-prename descclassname"><span class="pre">ni_measurement_service.session_management.</span></span><span class="sig-name descname"><span class="pre">INSTRUMENT_TYPE_NI_MODEL_BASED_INSTRUMENT</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">niModelBasedInstrument</span></em><a class="headerlink" href="#ni_measurement_service.session_management.INSTRUMENT_TYPE_NI_MODEL_BASED_INSTRUMENT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="ni_measurement_service.session_management.INSTRUMENT_TYPE_NI_SWITCH_EXECUTIVE_VIRTUAL_DEVICE">
+<span class="sig-prename descclassname"><span class="pre">ni_measurement_service.session_management.</span></span><span class="sig-name descname"><span class="pre">INSTRUMENT_TYPE_NI_SWITCH_EXECUTIVE_VIRTUAL_DEVICE</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">niSwitchExecutiveVirtualDevice</span></em><a class="headerlink" href="#ni_measurement_service.session_management.INSTRUMENT_TYPE_NI_SWITCH_EXECUTIVE_VIRTUAL_DEVICE" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="ni_measurement_service.session_management.PinMapContext">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ni_measurement_service.session_management.</span></span><span class="sig-name descname"><span class="pre">PinMapContext</span></span><a class="reference internal" href="../../../_modules/ni_measurement_service/session_management.html#PinMapContext"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurement_service.session_management.PinMapContext" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">NamedTuple</span></code></p>
+<p>Container for the pin map and sites.</p>
+<section id="id1">
+<h4>Attributes<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h4>
+<blockquote>
+<div><dl class="simple">
+<dt>pin_map_id (str): The resource id of the pin map in the Pin Map service that should be used</dt><dd><p>for the call.</p>
+</dd>
+<dt>sites (list): List of site numbers being used for the call. If None, use all sites in the</dt><dd><p>pin map.</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ni_measurement_service.session_management.PinMapContext.pin_map_id">
+<span class="sig-name descname"><span class="pre">pin_map_id</span></span><em class="property"><span class="w"> </span><span class="pre">:str</span></em><a class="headerlink" href="#ni_measurement_service.session_management.PinMapContext.pin_map_id" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ni_measurement_service.session_management.PinMapContext.sites">
+<span class="sig-name descname"><span class="pre">sites</span></span><em class="property"><span class="w"> </span><span class="pre">:Optional[List[int]]</span></em><a class="headerlink" href="#ni_measurement_service.session_management.PinMapContext.sites" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="ni_measurement_service.session_management.SessionInformation">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ni_measurement_service.session_management.</span></span><span class="sig-name descname"><span class="pre">SessionInformation</span></span><a class="reference internal" href="../../../_modules/ni_measurement_service/session_management.html#SessionInformation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurement_service.session_management.SessionInformation" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">NamedTuple</span></code></p>
+<p>Container for the session information.</p>
+<section id="id2">
+<h4>Attributes<a class="headerlink" href="#id2" title="Permalink to this heading"></a></h4>
+<blockquote>
+<div><dl class="simple">
+<dt>session_name (str): Session identifier used to identify the session in the session</dt><dd><p>management service, as well as in driver services such as grpc-device.</p>
+</dd>
+</dl>
+<p>resource_name (str): Resource name used to open this session in the driver.</p>
+<dl>
+<dt>channel_list (str): Channel list used for driver initialization and measurement methods.</dt><dd><p>This field is empty for any SessionInformation returned from
+Client.reserve_all_registered_sessions.</p>
+</dd>
+<dt>instrument_type_id (str): Instrument type ID to identify which type of instrument the</dt><dd><p>session represents. Pin maps have built in instrument definitions using the following
+NI driver based instrument type ids:</p>
+<blockquote>
+<div><p>“niDCPower”
+“niDigitalPattern”
+“niScope”
+“niDMM”
+“niDAQmx”.</p>
+</div></blockquote>
+<p>For custom instruments the user defined instrument type id is defined in the pin map
+file.</p>
+</dd>
+<dt>session_exists (bool): Indicates whether the session exists in the Session Manager. This</dt><dd><p>indicates whether the session has been created.</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ni_measurement_service.session_management.SessionInformation.session_name">
+<span class="sig-name descname"><span class="pre">session_name</span></span><em class="property"><span class="w"> </span><span class="pre">:str</span></em><a class="headerlink" href="#ni_measurement_service.session_management.SessionInformation.session_name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ni_measurement_service.session_management.SessionInformation.resource_name">
+<span class="sig-name descname"><span class="pre">resource_name</span></span><em class="property"><span class="w"> </span><span class="pre">:str</span></em><a class="headerlink" href="#ni_measurement_service.session_management.SessionInformation.resource_name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ni_measurement_service.session_management.SessionInformation.channel_list">
+<span class="sig-name descname"><span class="pre">channel_list</span></span><em class="property"><span class="w"> </span><span class="pre">:str</span></em><a class="headerlink" href="#ni_measurement_service.session_management.SessionInformation.channel_list" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ni_measurement_service.session_management.SessionInformation.instrument_type_id">
+<span class="sig-name descname"><span class="pre">instrument_type_id</span></span><em class="property"><span class="w"> </span><span class="pre">:str</span></em><a class="headerlink" href="#ni_measurement_service.session_management.SessionInformation.instrument_type_id" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ni_measurement_service.session_management.SessionInformation.session_exists">
+<span class="sig-name descname"><span class="pre">session_exists</span></span><em class="property"><span class="w"> </span><span class="pre">:bool</span></em><a class="headerlink" href="#ni_measurement_service.session_management.SessionInformation.session_exists" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="ni_measurement_service.session_management.Reservation">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ni_measurement_service.session_management.</span></span><span class="sig-name descname"><span class="pre">Reservation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">session_manager</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session_info</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/ni_measurement_service/session_management.html#Reservation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurement_service.session_management.Reservation" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Manage session reservation.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="ni_measurement_service.session_management.Reservation.__enter__">
+<span class="sig-name descname"><span class="pre">__enter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/ni_measurement_service/session_management.html#Reservation.__enter__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurement_service.session_management.Reservation.__enter__" title="Permalink to this definition"></a></dt>
+<dd><p>Context management protocol. Returns self.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ni_measurement_service.session_management.Reservation.__exit__">
+<span class="sig-name descname"><span class="pre">__exit__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">exc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/ni_measurement_service/session_management.html#Reservation.__exit__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurement_service.session_management.Reservation.__exit__" title="Permalink to this definition"></a></dt>
+<dd><p>Context management protocol. Calls unreserve().</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ni_measurement_service.session_management.Reservation.unreserve">
+<span class="sig-name descname"><span class="pre">unreserve</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/ni_measurement_service/session_management.html#Reservation.unreserve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurement_service.session_management.Reservation.unreserve" title="Permalink to this definition"></a></dt>
+<dd><p>Unreserve sessions.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ni_measurement_service.session_management.Reservation.session_info">
+<span class="sig-name descname"><span class="pre">session_info</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ni_measurement_service.session_management.Reservation.session_info" title="Permalink to this definition"></a></dt>
+<dd><p>Return session information.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="ni_measurement_service.session_management.Client">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ni_measurement_service.session_management.</span></span><span class="sig-name descname"><span class="pre">Client</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grpc_channel</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/ni_measurement_service/session_management.html#Client"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurement_service.session_management.Client" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class that manages driver sessions.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="ni_measurement_service.session_management.Client.reserve_sessions">
+<span class="sig-name descname"><span class="pre">reserve_sessions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pin_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instrument_type_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/ni_measurement_service/session_management.html#Client.reserve_sessions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurement_service.session_management.Client.reserve_sessions" title="Permalink to this definition"></a></dt>
+<dd><p>Reserve session(s).</p>
+<p>Reserve session(s) for the given pins, sites, and instrument type ID and returns the
+information needed to create or access the session.</p>
+<section id="args">
+<h4>Args<a class="headerlink" href="#args" title="Permalink to this heading"></a></h4>
+<blockquote>
+<div><dl>
+<dt>context (PinMapContext): Includes the pin map ID for the pin map in the Pin Map Service,</dt><dd><p>as well as the list of sites for the measurement.</p>
+</dd>
+<dt>pin_names (Iterable[str]): List of pin names or pin group names to use for the</dt><dd><p>measurement. If unspecified, reserve sessions for all pins in the registered pin map
+resource.</p>
+</dd>
+<dt>instrument_type_id (str): Instrument type ID for the measurement. If unspecified,</dt><dd><p>reserve sessions for all instrument types connected in the registered pin map
+resource. Pin maps have built in instrument definitions using the following NI
+driver based instrument type ids:</p>
+<blockquote>
+<div><p>“niDCPower”
+“niDigitalPattern”
+“niScope”
+“niDMM”
+“niDAQmx”.</p>
+</div></blockquote>
+<p>For custom instruments the user defined instrument type id is defined in the pin
+map file.</p>
+</dd>
+<dt>timeout (float): Timeout in seconds. Allowed values,</dt><dd><p>0 (non-blocking, fails immediately if resources cannot be reserved),
+-1 or negative (infinite timeout), or
+any positive numeric value (wait for that number of second).</p>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+<section id="returns">
+<h4>Returns<a class="headerlink" href="#returns" title="Permalink to this heading"></a></h4>
+<blockquote>
+<div><p>Reservation: Context manager that can be used with a with-statement to unreserve the
+sessions.</p>
+</div></blockquote>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ni_measurement_service.session_management.Client.register_sessions">
+<span class="sig-name descname"><span class="pre">register_sessions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">session_info</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/ni_measurement_service/session_management.html#Client.register_sessions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurement_service.session_management.Client.register_sessions" title="Permalink to this definition"></a></dt>
+<dd><p>Register the sessions with the Session Manager.</p>
+<p>Indicates that the sessions are open and will need to be closed later.</p>
+<section id="id3">
+<h4>Args:<a class="headerlink" href="#id3" title="Permalink to this heading"></a></h4>
+<blockquote>
+<div><p>session_info (Iterable[SessionInformation]): Sessions to register with the session
+management service to track as the sessions are open.</p>
+</div></blockquote>
+</section>
+<section id="raises">
+<h4>Raises<a class="headerlink" href="#raises" title="Permalink to this heading"></a></h4>
+<blockquote>
+<div><p>Exception: If a session by the same name is already registered.</p>
+</div></blockquote>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ni_measurement_service.session_management.Client.unregister_sessions">
+<span class="sig-name descname"><span class="pre">unregister_sessions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">session_info</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/ni_measurement_service/session_management.html#Client.unregister_sessions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurement_service.session_management.Client.unregister_sessions" title="Permalink to this definition"></a></dt>
+<dd><p>Unregisters the sessions from the Session Manager.</p>
+<p>Indicates that the sessions have been closed and will need to be reopened before they can be
+used again.</p>
+<section id="id4">
+<h4>Args:<a class="headerlink" href="#id4" title="Permalink to this heading"></a></h4>
+<blockquote>
+<div><p>session_info (Iterable[SessionInformation]): Sessions to be registered.</p>
+</div></blockquote>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ni_measurement_service.session_management.Client.reserve_all_registered_sessions">
+<span class="sig-name descname"><span class="pre">reserve_all_registered_sessions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/ni_measurement_service/session_management.html#Client.reserve_all_registered_sessions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurement_service.session_management.Client.reserve_all_registered_sessions" title="Permalink to this definition"></a></dt>
+<dd><p>Reserves and gets all sessions currently registered in the Session Manager.</p>
+<section id="id5">
+<h4>Args<a class="headerlink" href="#id5" title="Permalink to this heading"></a></h4>
+<blockquote>
+<div><dl class="simple">
+<dt>timeout (float): Timeout in seconds. Allowed values,</dt><dd><p>0 (non-blocking, fails immediately if resources cannot be reserved),
+-1 or negative (infinite timeout), or
+any positive numeric value (wait for that number of second).</p>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+<section id="id6">
+<h4>Returns<a class="headerlink" href="#id6" title="Permalink to this heading"></a></h4>
+<blockquote>
+<div><p>Reservation: Context manager that can be used with a with-statement to unreserve the
+sessions.</p>
+</div></blockquote>
+</section>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, National Instruments.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

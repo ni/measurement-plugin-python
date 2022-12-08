@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ni_measurement_service._internal.discovery_client &mdash; ni_measurement_service 0.10 documentation</title>
+  <title>ni_measurement_service._internal.discovery_client &mdash; ni_measurement_service 0.11 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
@@ -31,7 +31,7 @@
             <a href="../../../../index.html" class="icon icon-home"> ni_measurement_service
           </a>
               <div class="version">
-                0.10.2
+                0.11.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
@@ -58,8 +58,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li><code class="xref py py-mod docutils literal notranslate"><span class="pre">ni_measurement_service._internal.discovery_client</span></code></li>
+      <li><a href="../../../../index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active"><code class="xref py py-mod docutils literal notranslate"><span class="pre">ni_measurement_service._internal.discovery_client</span></code></li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../../../_sources/autoapi/ni_measurement_service/_internal/discovery_client/index.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -82,11 +82,48 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#ni_measurement_service._internal.discovery_client.DiscoveryClient" title="ni_measurement_service._internal.discovery_client.DiscoveryClient"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DiscoveryClient</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ni_measurement_service._internal.discovery_client.ServiceLocation" title="ni_measurement_service._internal.discovery_client.ServiceLocation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ServiceLocation</span></code></a></p></td>
+<td><p>Represents the location of a service.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ni_measurement_service._internal.discovery_client.DiscoveryClient" title="ni_measurement_service._internal.discovery_client.DiscoveryClient"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DiscoveryClient</span></code></a></p></td>
 <td><p>Class that contains APIs need to interact with discovery service.</p></td>
 </tr>
 </tbody>
 </table>
+<dl class="py class">
+<dt class="sig sig-object py" id="ni_measurement_service._internal.discovery_client.ServiceLocation">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ni_measurement_service._internal.discovery_client.</span></span><span class="sig-name descname"><span class="pre">ServiceLocation</span></span><a class="reference internal" href="../../../../_modules/ni_measurement_service/_internal/discovery_client.html#ServiceLocation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurement_service._internal.discovery_client.ServiceLocation" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">NamedTuple</span></code></p>
+<p>Represents the location of a service.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ni_measurement_service._internal.discovery_client.ServiceLocation.location">
+<span class="sig-name descname"><span class="pre">location</span></span><em class="property"><span class="w"> </span><span class="pre">:str</span></em><a class="headerlink" href="#ni_measurement_service._internal.discovery_client.ServiceLocation.location" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ni_measurement_service._internal.discovery_client.ServiceLocation.insecure_port">
+<span class="sig-name descname"><span class="pre">insecure_port</span></span><em class="property"><span class="w"> </span><span class="pre">:str</span></em><a class="headerlink" href="#ni_measurement_service._internal.discovery_client.ServiceLocation.insecure_port" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ni_measurement_service._internal.discovery_client.ServiceLocation.ssl_authenticated_port">
+<span class="sig-name descname"><span class="pre">ssl_authenticated_port</span></span><em class="property"><span class="w"> </span><span class="pre">:str</span></em><a class="headerlink" href="#ni_measurement_service._internal.discovery_client.ServiceLocation.ssl_authenticated_port" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ni_measurement_service._internal.discovery_client.ServiceLocation.insecure_address">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">insecure_address</span></span><a class="headerlink" href="#ni_measurement_service._internal.discovery_client.ServiceLocation.insecure_address" title="Permalink to this definition"></a></dt>
+<dd><p>Get the service’s insecure address in the format host:port.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ni_measurement_service._internal.discovery_client.ServiceLocation.ssl_authenticated_address">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ssl_authenticated_address</span></span><a class="headerlink" href="#ni_measurement_service._internal.discovery_client.ServiceLocation.ssl_authenticated_address" title="Permalink to this definition"></a></dt>
+<dd><p>Get the service’s SSL-authenticated address in the format host:port.</p>
+</dd></dl>
+
+</dd></dl>
+
 <dl class="py class">
 <dt class="sig sig-object py" id="ni_measurement_service._internal.discovery_client.DiscoveryClient">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ni_measurement_service._internal.discovery_client.</span></span><span class="sig-name descname"><span class="pre">DiscoveryClient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/ni_measurement_service/_internal/discovery_client.html#DiscoveryClient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurement_service._internal.discovery_client.DiscoveryClient" title="Permalink to this definition"></a></dt>
@@ -133,6 +170,32 @@ service.</p>
 <h5>Returns<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h5>
 <blockquote>
 <div><p>bool: Boolean to represent if the un-registration is successful.</p>
+</div></blockquote>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ni_measurement_service._internal.discovery_client.DiscoveryClient.resolve_service">
+<span class="sig-name descname"><span class="pre">resolve_service</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">provided_interface</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">service_class</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/ni_measurement_service/_internal/discovery_client.html#DiscoveryClient.resolve_service"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurement_service._internal.discovery_client.DiscoveryClient.resolve_service" title="Permalink to this definition"></a></dt>
+<dd><p>Resolve the location of a service.</p>
+<p>Given a description of a service, returns information that can be used to establish
+communication with that service. If necessary, the service will be started by the
+discovery service if it has not already been started.</p>
+<section id="id2">
+<h5>Args:<a class="headerlink" href="#id2" title="Permalink to this heading"></a></h5>
+<blockquote>
+<div><p>provided_interface: The gRPC Full Name of the service.
+service_class: The service “class” that should be matched. If the value is not</p>
+<blockquote>
+<div><p>specified and there is more than one matching service registered, an error
+is returned.</p>
+</div></blockquote>
+</div></blockquote>
+</section>
+<section id="id3">
+<h5>Returns<a class="headerlink" href="#id3" title="Permalink to this heading"></a></h5>
+<blockquote>
+<div><p>A ServiceLocation location object that represents the location of a service.</p>
 </div></blockquote>
 </section>
 </dd></dl>

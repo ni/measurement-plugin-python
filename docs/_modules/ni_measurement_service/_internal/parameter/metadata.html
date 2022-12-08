@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ni_measurement_service._internal.parameter.metadata &mdash; ni_measurement_service 0.10 documentation</title>
+  <title>ni_measurement_service._internal.parameter.metadata &mdash; ni_measurement_service 0.11 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
@@ -30,7 +30,7 @@
             <a href="../../../../index.html" class="icon icon-home"> ni_measurement_service
           </a>
               <div class="version">
-                0.10.2
+                0.11.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
@@ -57,9 +57,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../../index.html">Module code</a> &raquo;</li>
-      <li>ni_measurement_service._internal.parameter.metadata</li>
+      <li><a href="../../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ni_measurement_service._internal.parameter.metadata</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -70,7 +70,7 @@
              
   <h1>Source code for ni_measurement_service._internal.parameter.metadata</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Contains classes that represents metadata.&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">NamedTuple</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">NamedTuple</span>
 
 <span class="kn">from</span> <span class="nn">google.protobuf</span> <span class="kn">import</span> <span class="n">type_pb2</span>
 
@@ -93,12 +93,15 @@
 
 <span class="sd">        default_value (Any): The default value of the parameter.</span>
 
+<span class="sd">        annotations (Dict[str,str]): Represents a set of annotations on the type.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">display_name</span><span class="p">:</span> <span class="nb">str</span>
     <span class="nb">type</span><span class="p">:</span> <span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">Kind</span><span class="o">.</span><span class="n">ValueType</span>
     <span class="n">repeated</span><span class="p">:</span> <span class="nb">bool</span>
-    <span class="n">default_value</span><span class="p">:</span> <span class="n">Any</span></div>
+    <span class="n">default_value</span><span class="p">:</span> <span class="n">Any</span>
+    <span class="n">annotations</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="validate_default_value_type"><a class="viewcode-back" href="../../../../autoapi/ni_measurement_service/_internal/parameter/metadata/index.html#ni_measurement_service._internal.parameter.metadata.validate_default_value_type">[docs]</a><span class="k">def</span> <span class="nf">validate_default_value_type</span><span class="p">(</span><span class="n">parameter_metadata</span><span class="p">:</span> <span class="n">ParameterMetadata</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -132,7 +135,7 @@
         <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">default_value</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="n">expected_element_type</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;Unexpected element of type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">element</span><span class="p">)</span><span class="si">}</span><span class="s2"> in the default value for &#39;</span><span class="si">{</span><span class="n">display_name</span><span class="si">}</span><span class="s2">&#39;. Expected element type: </span><span class="si">{</span><span class="n">expected_type</span><span class="si">}</span><span class="s2">.&quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;Unexpected element of type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">element</span><span class="p">)</span><span class="si">}</span><span class="s2"> in the default value for &#39;</span><span class="si">{</span><span class="n">display_name</span><span class="si">}</span><span class="s2">&#39;. Expected element type: </span><span class="si">{</span><span class="n">expected_element_type</span><span class="si">}</span><span class="s2">.&quot;</span>
                 <span class="p">)</span>
     <span class="k">return</span> <span class="kc">None</span></div>
 </pre></div>

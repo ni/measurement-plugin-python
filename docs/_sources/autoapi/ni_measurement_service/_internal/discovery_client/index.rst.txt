@@ -17,8 +17,43 @@ Classes
 
 .. autoapisummary::
 
+   ni_measurement_service._internal.discovery_client.ServiceLocation
    ni_measurement_service._internal.discovery_client.DiscoveryClient
 
+
+
+
+.. py:class:: ServiceLocation
+
+   Bases: :py:obj:`NamedTuple`
+
+   Represents the location of a service.
+
+   .. py:attribute:: location
+      :annotation: :str
+
+      
+
+   .. py:attribute:: insecure_port
+      :annotation: :str
+
+      
+
+   .. py:attribute:: ssl_authenticated_port
+      :annotation: :str
+
+      
+
+   .. py:method:: insecure_address()
+      :property:
+
+      Get the service's insecure address in the format host:port.
+
+
+   .. py:method:: ssl_authenticated_address()
+      :property:
+
+      Get the service's SSL-authenticated address in the format host:port.
 
 
 
@@ -67,6 +102,27 @@ Classes
       Returns
       -------
           bool: Boolean to represent if the un-registration is successful.
+
+
+
+   .. py:method:: resolve_service(provided_interface, service_class = '')
+
+      Resolve the location of a service.
+
+      Given a description of a service, returns information that can be used to establish
+      communication with that service. If necessary, the service will be started by the
+      discovery service if it has not already been started.
+
+      Args:
+      ----
+          provided_interface: The gRPC Full Name of the service.
+          service_class: The service "class" that should be matched. If the value is not
+              specified and there is more than one matching service registered, an error
+              is returned.
+
+      Returns
+      -------
+          A ServiceLocation location object that represents the location of a service.
 
 
 

@@ -81,7 +81,7 @@ Attributes
 
 .. py:class:: MeasurementServiceServicer(measurement_info, configuration_parameter_list, output_parameter_list, measure_function)
 
-   Bases: :py:obj:`ni_measurement_service._internal.stubs.ni.measurements.measurementservice.measurement_service_pb2_grpc.MeasurementServiceServicer`
+   Bases: :py:obj:`ni_measurement_service._internal.stubs.ni.measurementlink.measurement.v1.measurement_service_pb2_grpc.MeasurementServiceServicer`
 
    Implementation of the Measurement Service's gRPC base class.
 

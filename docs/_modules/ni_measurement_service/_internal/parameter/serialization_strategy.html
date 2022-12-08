@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ni_measurement_service._internal.parameter.serialization_strategy &mdash; ni_measurement_service 0.10 documentation</title>
+  <title>ni_measurement_service._internal.parameter.serialization_strategy &mdash; ni_measurement_service 0.11 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
@@ -30,7 +30,7 @@
             <a href="../../../../index.html" class="icon icon-home"> ni_measurement_service
           </a>
               <div class="version">
-                0.10.2
+                0.11.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
@@ -57,9 +57,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../../index.html">Module code</a> &raquo;</li>
-      <li>ni_measurement_service._internal.parameter.serialization_strategy</li>
+      <li><a href="../../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ni_measurement_service._internal.parameter.serialization_strategy</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -101,13 +101,15 @@
     <span class="k">return</span> <span class="n">scalar_encoder</span>
 
 
-<span class="k">def</span> <span class="nf">_vector_encoder</span><span class="p">(</span><span class="n">encoder</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">int</span><span class="p">],</span> <span class="n">Callable</span><span class="p">]:</span>
+<span class="k">def</span> <span class="nf">_vector_encoder</span><span class="p">(</span><span class="n">encoder</span><span class="p">,</span> <span class="n">is_packed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">int</span><span class="p">],</span> <span class="n">Callable</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;Abstract Specific Encoder(Callable) as Vector Encoder Callable that takes in field index.</span>
 
 <span class="sd">    Args</span>
 <span class="sd">    ----</span>
 <span class="sd">       encoder (Callable[[int, bool, bool], Callable]): Specific encoder(Callable) that takes in</span>
 <span class="sd">       field_index, is_repeated, is_packed and returns the Low-level Encode Callable.</span>
+
+<span class="sd">       is_packed (bool, optional): Represents if the encoder supports packed type. Defaults to True.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -118,7 +120,6 @@
 
     <span class="k">def</span> <span class="nf">vector_encoder</span><span class="p">(</span><span class="n">field_index</span><span class="p">):</span>
         <span class="n">is_repeated</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="n">is_packed</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">return</span> <span class="n">encoder</span><span class="p">(</span><span class="n">field_index</span><span class="p">,</span> <span class="n">is_repeated</span><span class="p">,</span> <span class="n">is_packed</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">vector_encoder</span>
@@ -148,7 +149,7 @@
     <span class="k">return</span> <span class="n">scalar_decoder</span>
 
 
-<span class="k">def</span> <span class="nf">_vector_decoder</span><span class="p">(</span><span class="n">decoder</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">Callable</span><span class="p">]:</span>
+<span class="k">def</span> <span class="nf">_vector_decoder</span><span class="p">(</span><span class="n">decoder</span><span class="p">,</span> <span class="n">is_packed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">Callable</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;Abstract Specific Decoder(Callable) as Vector Decoder Callable that takes in field index,key.</span>
 
 <span class="sd">    Args</span>
@@ -156,6 +157,9 @@
 <span class="sd">        decoder (Callable[[int, bool, bool], Callable]): Specific decoder(Callable) that takes in</span>
 <span class="sd">        field_index, is_repeated, is_packed,  key, new_default and</span>
 <span class="sd">        returns the Low-level Decode Callable.</span>
+
+<span class="sd">        is_packed (bool, optional): Represents if the decoder supports packed type.</span>
+<span class="sd">        Defaults to True.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -169,7 +173,6 @@
 
     <span class="k">def</span> <span class="nf">vector_decoder</span><span class="p">(</span><span class="n">field_index</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
         <span class="n">is_repeated</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="n">is_packed</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">return</span> <span class="n">decoder</span><span class="p">(</span><span class="n">field_index</span><span class="p">,</span> <span class="n">is_repeated</span><span class="p">,</span> <span class="n">is_packed</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">_new_default</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">vector_decoder</span>
@@ -187,7 +190,7 @@
 <span class="n">IntArrayEncoder</span> <span class="o">=</span> <span class="n">_vector_encoder</span><span class="p">(</span><span class="n">encoder</span><span class="o">.</span><span class="n">Int32Encoder</span><span class="p">)</span>
 <span class="n">UIntArrayEncoder</span> <span class="o">=</span> <span class="n">_vector_encoder</span><span class="p">(</span><span class="n">encoder</span><span class="o">.</span><span class="n">UInt32Encoder</span><span class="p">)</span>
 <span class="n">BoolArrayEncoder</span> <span class="o">=</span> <span class="n">_vector_encoder</span><span class="p">(</span><span class="n">encoder</span><span class="o">.</span><span class="n">BoolEncoder</span><span class="p">)</span>
-<span class="n">StringArrayEncoder</span> <span class="o">=</span> <span class="n">_vector_encoder</span><span class="p">(</span><span class="n">encoder</span><span class="o">.</span><span class="n">StringEncoder</span><span class="p">)</span>
+<span class="n">StringArrayEncoder</span> <span class="o">=</span> <span class="n">_vector_encoder</span><span class="p">(</span><span class="n">encoder</span><span class="o">.</span><span class="n">StringEncoder</span><span class="p">,</span> <span class="n">is_packed</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
 
 <span class="n">FloatDecoder</span> <span class="o">=</span> <span class="n">_scalar_decoder</span><span class="p">(</span><span class="n">decoder</span><span class="o">.</span><span class="n">FloatDecoder</span><span class="p">)</span>
@@ -206,7 +209,7 @@
 <span class="n">Int64ArrayDecoder</span> <span class="o">=</span> <span class="n">_vector_decoder</span><span class="p">(</span><span class="n">decoder</span><span class="o">.</span><span class="n">Int64Decoder</span><span class="p">)</span>
 <span class="n">UInt64ArrayDecoder</span> <span class="o">=</span> <span class="n">_vector_decoder</span><span class="p">(</span><span class="n">decoder</span><span class="o">.</span><span class="n">UInt64Decoder</span><span class="p">)</span>
 <span class="n">BoolArrayDecoder</span> <span class="o">=</span> <span class="n">_vector_decoder</span><span class="p">(</span><span class="n">decoder</span><span class="o">.</span><span class="n">BoolDecoder</span><span class="p">)</span>
-<span class="n">StringArrayDecoder</span> <span class="o">=</span> <span class="n">_vector_decoder</span><span class="p">(</span><span class="n">decoder</span><span class="o">.</span><span class="n">StringDecoder</span><span class="p">)</span>
+<span class="n">StringArrayDecoder</span> <span class="o">=</span> <span class="n">_vector_decoder</span><span class="p">(</span><span class="n">decoder</span><span class="o">.</span><span class="n">StringDecoder</span><span class="p">,</span> <span class="n">is_packed</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="Context"><a class="viewcode-back" href="../../../../autoapi/ni_measurement_service/_internal/parameter/serialization_strategy/index.html#ni_measurement_service._internal.parameter.serialization_strategy.Context">[docs]</a><span class="k">class</span> <span class="nc">Context</span><span class="p">:</span>
