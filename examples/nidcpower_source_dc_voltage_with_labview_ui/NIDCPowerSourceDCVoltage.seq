@@ -6266,7 +6266,7 @@
 													<Measurement classname='Obj'>
 														<subprops>
 															<Name classname='Str'>
-																<value>ni.examples.NIDCPowerSourceDCVoltage_Python</value>
+																<value>ni.examples.NIDCPowerSourceDCVoltage_Python_LV</value>
 															</Name>
 															<Parameters classname='Objs'>
 																<value lbound='[0]' ubound='[7]'>
@@ -6493,7 +6493,7 @@
 																					<value>Out</value>
 																				</Direction>
 																				<Log classname='Bool'>
-																					<value>true</value>
+																					<value>false</value>
 																				</Log>
 																				<Dimension classname='Num'>
 																					<value representation='UInt64'>0</value>
@@ -6523,7 +6523,7 @@
 																					<value>Out</value>
 																				</Direction>
 																				<Log classname='Bool'>
-																					<value>true</value>
+																					<value>false</value>
 																				</Log>
 																				<Dimension classname='Num'>
 																					<value representation='UInt64'>0</value>

@@ -5975,7 +5975,7 @@
 								<Main classname='Objs' valueflags='4194304'>
 									<value lbound='[0]' ubound='[0]'>
 										<value>
-											<Step typename='NI_Measurement' xsi:type='_CustomStepType_' name='Source DC voltage and measure voltage/current'>
+											<Step typename='NI_Measurement' xsi:type='_CustomStepType_' name='Acquire a waveform using an NI oscilloscope'>
 												<subprops>
 													<TS classname='Obj'>
 														<subprops>
@@ -6266,10 +6266,10 @@
 													<Measurement classname='Obj'>
 														<subprops>
 															<Name classname='Str'>
-																<value>ni.examples.NIDCPowerSourceDCVoltage_Python</value>
+																<value>ni.examples.NIScopeAcquireWaveform_Python</value>
 															</Name>
 															<Parameters classname='Objs'>
-																<value lbound='[0]' ubound='[7]'>
+																<value lbound='[0]' ubound='[15]'>
 																	<elemproto>
 																		<_NAME_IN_ATTRIBUTE_ name='' classname='Obj'>
 																			<subprops>
@@ -6304,10 +6304,10 @@
 																		<Obj typename='NI_MeasurementParameter' name=''>
 																			<subprops>
 																				<Name classname='Str'>
-																					<value>pin_name</value>
+																					<value>pin_names</value>
 																				</Name>
 																				<ArgumentValue classname='ExprValue'>
-																					<value>"Pin1"</value>
+																					<value>"Pin1,Pin2,Pin3,Pin4"</value>
 																				</ArgumentValue>
 																				<Direction classname='Str'>
 																					<value>In</value>
@@ -6334,10 +6334,10 @@
 																		<Obj typename='NI_MeasurementParameter' name=''>
 																			<subprops>
 																				<Name classname='Str'>
-																					<value>voltage_level</value>
+																					<value>vertical_range</value>
 																				</Name>
 																				<ArgumentValue classname='ExprValue'>
-																					<value>6</value>
+																					<value>5</value>
 																				</ArgumentValue>
 																				<Direction classname='Str'>
 																					<value>In</value>
@@ -6364,10 +6364,10 @@
 																		<Obj typename='NI_MeasurementParameter' name=''>
 																			<subprops>
 																				<Name classname='Str'>
-																					<value>voltage_level_range</value>
+																					<value>vertical_coupling</value>
 																				</Name>
 																				<ArgumentValue classname='ExprValue'>
-																					<value>6</value>
+																					<value>"DC"</value>
 																				</ArgumentValue>
 																				<Direction classname='Str'>
 																					<value>In</value>
@@ -6379,7 +6379,7 @@
 																					<value representation='UInt64'>0</value>
 																				</Dimension>
 																				<Type classname='Str'>
-																					<value>TypeDouble</value>
+																					<value>TypeString</value>
 																				</Type>
 																				<ID classname='Num'>
 																					<value representation='Int64'>3</value>
@@ -6394,10 +6394,10 @@
 																		<Obj typename='NI_MeasurementParameter' name=''>
 																			<subprops>
 																				<Name classname='Str'>
-																					<value>current_limit</value>
+																					<value>input_impedance</value>
 																				</Name>
 																				<ArgumentValue classname='ExprValue'>
-																					<value>0.01</value>
+																					<value>1000000</value>
 																				</ArgumentValue>
 																				<Direction classname='Str'>
 																					<value>In</value>
@@ -6424,10 +6424,10 @@
 																		<Obj typename='NI_MeasurementParameter' name=''>
 																			<subprops>
 																				<Name classname='Str'>
-																					<value>current_limit_range</value>
+																					<value>min_sample_rate</value>
 																				</Name>
 																				<ArgumentValue classname='ExprValue'>
-																					<value>0.01</value>
+																					<value>10000000</value>
 																				</ArgumentValue>
 																				<Direction classname='Str'>
 																					<value>In</value>
@@ -6454,10 +6454,10 @@
 																		<Obj typename='NI_MeasurementParameter' name=''>
 																			<subprops>
 																				<Name classname='Str'>
-																					<value>source_delay</value>
+																					<value>min_record_length</value>
 																				</Name>
 																				<ArgumentValue classname='ExprValue'>
-																					<value>0</value>
+																					<value>40000i64</value>
 																				</ArgumentValue>
 																				<Direction classname='Str'>
 																					<value>In</value>
@@ -6469,7 +6469,7 @@
 																					<value representation='UInt64'>0</value>
 																				</Dimension>
 																				<Type classname='Str'>
-																					<value>TypeDouble</value>
+																					<value>TypeInt32</value>
 																				</Type>
 																				<ID classname='Num'>
 																					<value representation='Int64'>6</value>
@@ -6484,7 +6484,187 @@
 																		<Obj typename='NI_MeasurementParameter' name=''>
 																			<subprops>
 																				<Name classname='Str'>
-																					<value>voltage_measurement</value>
+																					<value>trigger_source</value>
+																				</Name>
+																				<ArgumentValue classname='ExprValue'>
+																					<value>"Pin1"</value>
+																				</ArgumentValue>
+																				<Direction classname='Str'>
+																					<value>In</value>
+																				</Direction>
+																				<Log classname='Bool'>
+																					<value>false</value>
+																				</Log>
+																				<Dimension classname='Num'>
+																					<value representation='UInt64'>0</value>
+																				</Dimension>
+																				<Type classname='Str'>
+																					<value>TypeString</value>
+																				</Type>
+																				<ID classname='Num'>
+																					<value representation='Int64'>7</value>
+																				</ID>
+																				<TypeSpecialization classname='Str'>
+																					<value>Pin</value>
+																				</TypeSpecialization>
+																			</subprops>
+																		</Obj>
+																	</value>
+																	<value>
+																		<Obj typename='NI_MeasurementParameter' name=''>
+																			<subprops>
+																				<Name classname='Str'>
+																					<value>trigger_level</value>
+																				</Name>
+																				<ArgumentValue classname='ExprValue'>
+																					<value>0.5</value>
+																				</ArgumentValue>
+																				<Direction classname='Str'>
+																					<value>In</value>
+																				</Direction>
+																				<Log classname='Bool'>
+																					<value>false</value>
+																				</Log>
+																				<Dimension classname='Num'>
+																					<value representation='UInt64'>0</value>
+																				</Dimension>
+																				<Type classname='Str'>
+																					<value>TypeDouble</value>
+																				</Type>
+																				<ID classname='Num'>
+																					<value representation='Int64'>8</value>
+																				</ID>
+																				<TypeSpecialization classname='Str'>
+																					<value>None</value>
+																				</TypeSpecialization>
+																			</subprops>
+																		</Obj>
+																	</value>
+																	<value>
+																		<Obj typename='NI_MeasurementParameter' name=''>
+																			<subprops>
+																				<Name classname='Str'>
+																					<value>trigger_slope</value>
+																				</Name>
+																				<ArgumentValue classname='ExprValue'>
+																					<value>"Positive"</value>
+																				</ArgumentValue>
+																				<Direction classname='Str'>
+																					<value>In</value>
+																				</Direction>
+																				<Log classname='Bool'>
+																					<value>false</value>
+																				</Log>
+																				<Dimension classname='Num'>
+																					<value representation='UInt64'>0</value>
+																				</Dimension>
+																				<Type classname='Str'>
+																					<value>TypeString</value>
+																				</Type>
+																				<ID classname='Num'>
+																					<value representation='Int64'>9</value>
+																				</ID>
+																				<TypeSpecialization classname='Str'>
+																					<value>None</value>
+																				</TypeSpecialization>
+																			</subprops>
+																		</Obj>
+																	</value>
+																	<value>
+																		<Obj typename='NI_MeasurementParameter' name=''>
+																			<subprops>
+																				<Name classname='Str'>
+																					<value>auto_trigger</value>
+																				</Name>
+																				<ArgumentValue classname='ExprValue'>
+																					<value>False</value>
+																				</ArgumentValue>
+																				<Direction classname='Str'>
+																					<value>In</value>
+																				</Direction>
+																				<Log classname='Bool'>
+																					<value>false</value>
+																				</Log>
+																				<Dimension classname='Num'>
+																					<value representation='UInt64'>0</value>
+																				</Dimension>
+																				<Type classname='Str'>
+																					<value>TypeBool</value>
+																				</Type>
+																				<ID classname='Num'>
+																					<value representation='Int64'>10</value>
+																				</ID>
+																				<TypeSpecialization classname='Str'>
+																					<value>None</value>
+																				</TypeSpecialization>
+																			</subprops>
+																		</Obj>
+																	</value>
+																	<value>
+																		<Obj typename='NI_MeasurementParameter' name=''>
+																			<subprops>
+																				<Name classname='Str'>
+																					<value>trigger_coupling</value>
+																				</Name>
+																				<ArgumentValue classname='ExprValue'>
+																					<value>"DC"</value>
+																				</ArgumentValue>
+																				<Direction classname='Str'>
+																					<value>In</value>
+																				</Direction>
+																				<Log classname='Bool'>
+																					<value>false</value>
+																				</Log>
+																				<Dimension classname='Num'>
+																					<value representation='UInt64'>0</value>
+																				</Dimension>
+																				<Type classname='Str'>
+																					<value>TypeString</value>
+																				</Type>
+																				<ID classname='Num'>
+																					<value representation='Int64'>11</value>
+																				</ID>
+																				<TypeSpecialization classname='Str'>
+																					<value>None</value>
+																				</TypeSpecialization>
+																			</subprops>
+																		</Obj>
+																	</value>
+																	<value>
+																		<Obj typename='NI_MeasurementParameter' name=''>
+																			<subprops>
+																				<Name classname='Str'>
+																					<value>timeout</value>
+																				</Name>
+																				<ArgumentValue classname='ExprValue'>
+																					<value>5</value>
+																				</ArgumentValue>
+																				<Direction classname='Str'>
+																					<value>In</value>
+																				</Direction>
+																				<Log classname='Bool'>
+																					<value>false</value>
+																				</Log>
+																				<Dimension classname='Num'>
+																					<value representation='UInt64'>0</value>
+																				</Dimension>
+																				<Type classname='Str'>
+																					<value>TypeDouble</value>
+																				</Type>
+																				<ID classname='Num'>
+																					<value representation='Int64'>12</value>
+																				</ID>
+																				<TypeSpecialization classname='Str'>
+																					<value>None</value>
+																				</TypeSpecialization>
+																			</subprops>
+																		</Obj>
+																	</value>
+																	<value>
+																		<Obj typename='NI_MeasurementParameter' name=''>
+																			<subprops>
+																				<Name classname='Str'>
+																					<value>waveform0</value>
 																				</Name>
 																				<ArgumentValue classname='ExprValue'>
 																					<value/>
@@ -6496,7 +6676,7 @@
 																					<value>true</value>
 																				</Log>
 																				<Dimension classname='Num'>
-																					<value representation='UInt64'>0</value>
+																					<value representation='UInt64'>1</value>
 																				</Dimension>
 																				<Type classname='Str'>
 																					<value>TypeDouble</value>
@@ -6514,7 +6694,7 @@
 																		<Obj typename='NI_MeasurementParameter' name=''>
 																			<subprops>
 																				<Name classname='Str'>
-																					<value>current_measurement</value>
+																					<value>waveform1</value>
 																				</Name>
 																				<ArgumentValue classname='ExprValue'>
 																					<value/>
@@ -6526,13 +6706,73 @@
 																					<value>true</value>
 																				</Log>
 																				<Dimension classname='Num'>
-																					<value representation='UInt64'>0</value>
+																					<value representation='UInt64'>1</value>
 																				</Dimension>
 																				<Type classname='Str'>
 																					<value>TypeDouble</value>
 																				</Type>
 																				<ID classname='Num'>
 																					<value representation='Int64'>2</value>
+																				</ID>
+																				<TypeSpecialization classname='Str'>
+																					<value>None</value>
+																				</TypeSpecialization>
+																			</subprops>
+																		</Obj>
+																	</value>
+																	<value>
+																		<Obj typename='NI_MeasurementParameter' name=''>
+																			<subprops>
+																				<Name classname='Str'>
+																					<value>waveform2</value>
+																				</Name>
+																				<ArgumentValue classname='ExprValue'>
+																					<value/>
+																				</ArgumentValue>
+																				<Direction classname='Str'>
+																					<value>Out</value>
+																				</Direction>
+																				<Log classname='Bool'>
+																					<value>true</value>
+																				</Log>
+																				<Dimension classname='Num'>
+																					<value representation='UInt64'>1</value>
+																				</Dimension>
+																				<Type classname='Str'>
+																					<value>TypeDouble</value>
+																				</Type>
+																				<ID classname='Num'>
+																					<value representation='Int64'>3</value>
+																				</ID>
+																				<TypeSpecialization classname='Str'>
+																					<value>None</value>
+																				</TypeSpecialization>
+																			</subprops>
+																		</Obj>
+																	</value>
+																	<value>
+																		<Obj typename='NI_MeasurementParameter' name=''>
+																			<subprops>
+																				<Name classname='Str'>
+																					<value>waveform3</value>
+																				</Name>
+																				<ArgumentValue classname='ExprValue'>
+																					<value/>
+																				</ArgumentValue>
+																				<Direction classname='Str'>
+																					<value>Out</value>
+																				</Direction>
+																				<Log classname='Bool'>
+																					<value>true</value>
+																				</Log>
+																				<Dimension classname='Num'>
+																					<value representation='UInt64'>1</value>
+																				</Dimension>
+																				<Type classname='Str'>
+																					<value>TypeDouble</value>
+																				</Type>
+																				<ID classname='Num'>
+																					<value representation='Int64'>4</value>
 																				</ID>
 																				<TypeSpecialization classname='Str'>
 																					<value>None</value>
@@ -7379,7 +7619,7 @@
 											</Step>
 										</value>
 										<value>
-											<Step typename='Action' xsi:type='Action' name='Create and register NI-DCPower Sessions'>
+											<Step typename='Action' xsi:type='Action' name='Create and register NI-Scope Sessions'>
 												<subprops>
 													<TS classname='Obj'>
 														<subprops>
@@ -7427,7 +7667,7 @@
 																				<value/>
 																			</ClassInstanceLocation>
 																			<FunctionOrAttributeName classname='Str'>
-																				<value>create_nidcpower_sessions</value>
+																				<value>create_niscope_sessions</value>
 																			</FunctionOrAttributeName>
 																			<Parameters classname='Objs'>
 																				<value lbound='[0]' ubound='[1]'>
@@ -8505,7 +8745,7 @@
 											</Step>
 										</value>
 										<value>
-											<Step typename='Action' xsi:type='Action' name='Destroy and unregister NI-DCPower sessions'>
+											<Step typename='Action' xsi:type='Action' name='Destroy and unregister NI-Scope Sessions'>
 												<subprops>
 													<TS classname='Obj'>
 														<subprops>
@@ -8553,7 +8793,7 @@
 																				<value/>
 																			</ClassInstanceLocation>
 																			<FunctionOrAttributeName classname='Str'>
-																				<value>destroy_nidcpower_sessions</value>
+																				<value>destroy_niscope_sessions</value>
 																			</FunctionOrAttributeName>
 																			<Parameters classname='Objs'>
 																				<value lbound='[0]' ubound='[0]'>
@@ -8984,7 +9224,7 @@
 								<value>false</value>
 							</EnableMonitoring>
 							<PinMapFileName classname='Str'>
-								<value>NIDCPowerSourceDCVoltage.pinmap</value>
+								<value>NIScopeAcquireWaveform.pinmap</value>
 							</PinMapFileName>
 							<PinMapPath typename='Path' xsi:type='Path' classname='PathValue'>
 								<value/>
