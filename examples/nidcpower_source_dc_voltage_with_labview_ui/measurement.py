@@ -21,7 +21,9 @@ NIDCPOWER_WAIT_FOR_EVENT_TIMEOUT_ERROR_CODE = -1074116059
 measurement_info = nims.MeasurementInfo(
     display_name="NI-DCPower Source DC Voltage (Py, LV)",
     version="0.1.0.0",
-    ui_file_paths=[pathlib.Path(__file__).resolve().parent / "NIDCPowerSourceDCVoltageUI.vi"],
+    ui_file_paths=[
+        pathlib.Path(__file__).resolve().parent / "NIDCPowerSourceDCVoltageUI.vi"
+    ],
 )
 
 service_info = nims.ServiceInfo(
@@ -43,15 +45,17 @@ service_options = ServiceOptions(use_grpc_device=False, grpc_device_address="")
 @measurement_service.output("voltage_measurement", nims.DataType.Double)
 @measurement_service.output("current_measurement", nims.DataType.Double)
 def measure(
-    pin_names : Iterable[str],
-    voltage_level : float,
-    voltage_level_range : float,
-    current_limit : float,
-    current_limit_range : float,
-    source_delay : float,
+    pin_names: Iterable[str],
+    voltage_level: float,
+    voltage_level_range: float,
+    current_limit: float,
+    current_limit_range: float,
+    source_delay: float,
 ):
     """Source and measure a DC voltage with an NI SMU."""
-    logging.info("Executing measurement: pin_name=%s voltage_level=%g", pin_names, voltage_level)
+    logging.info(
+        "Executing measurement: pin_name=%s voltage_level=%g", pin_names, voltage_level
+    )
 
     session_management_client = nims.session_management.Client(
         grpc_channel=measurement_service.get_channel(
@@ -113,7 +117,9 @@ def measure(
                         grpc.StatusCode.CANCELLED, "client requested cancellation"
                     )
                 try:
-                    session.wait_for_event(nidcpower.enums.Event.SOURCE_COMPLETE, timeout=0.1)
+                    session.wait_for_event(
+                        nidcpower.enums.Event.SOURCE_COMPLETE, timeout=0.1
+                    )
                     break
                 except nidcpower.DriverError as e:
                     """
@@ -171,7 +177,10 @@ def _log_measured_values(measured_value, in_compliance):
 
 @click.command
 @click.option(
-    "-v", "--verbose", count=True, help="Enable verbose logging. Repeat to increase verbosity."
+    "-v",
+    "--verbose",
+    count=True,
+    help="Enable verbose logging. Repeat to increase verbosity.",
 )
 @click.option(
     "--use-grpc-device/--no-use-grpc-device",
