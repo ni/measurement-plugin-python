@@ -382,20 +382,20 @@ types-protobuf = ">=3.19.12"
 
 [[package]]
 name = "ni-python-styleguide"
-version = "0.1.13"
+version = "0.2.0"
 description = "NI's internal and external Python linter rules and plugins"
 category = "dev"
 optional = false
-python-versions = ">=3.6.2"
+python-versions = ">=3.7,<4.0"
 
 [package.dependencies]
-black = ">=21.10b0"
+black = ">=22.3,<22.10.0 || >22.10.0"
 click = ">=7.1.2"
 flake8 = ">=3.8,<4.0"
 flake8-black = ">=0.2.1"
 flake8-docstrings = ">=1.5.0"
 flake8-import-order = ">=0.18.1"
-isort = {version = ">=5.10", markers = "python_version >= \"3.6\" and python_version < \"4\""}
+isort = ">=5.10"
 pep8-naming = ">=0.11.1"
 toml = ">=0.10.1"
 
@@ -1214,8 +1214,8 @@ mypy-protobuf = [
     {file = "mypy_protobuf-3.3.0-py3-none-any.whl", hash = "sha256:15604f6943b16c05db646903261e3b3e775cf7f7990b7c37b03d043a907b650d"},
 ]
 ni-python-styleguide = [
-    {file = "ni-python-styleguide-0.1.13.tar.gz", hash = "sha256:e087e702d98593d96d541cbc7fa2fbe0d0928d9faf7e41c1da9c1c9f7002165f"},
-    {file = "ni_python_styleguide-0.1.13-py3-none-any.whl", hash = "sha256:632b659138c2d79e8df0ec06f5b620cb8eaf28896aa59f253b2af5b31893db11"},
+    {file = "ni-python-styleguide-0.2.0.tar.gz", hash = "sha256:24bc374412ff8b9ab14a5c31276b5afc366aa7534fd470d8735325450f4ada3e"},
+    {file = "ni_python_styleguide-0.2.0-py3-none-any.whl", hash = "sha256:49daf035e754038dc993444527e7836ea3bbe47db0dc035096d62b9d179e6221"},
 ]
 packaging = [
     {file = "packaging-22.0-py3-none-any.whl", hash = "sha256:957e2148ba0e1a3b282772e791ef1d8083648bc131c8ab0c1feba110ce1146c3"},
