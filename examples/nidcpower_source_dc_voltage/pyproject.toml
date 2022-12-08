@@ -12,9 +12,9 @@ click = ">=7.1.2"
 
 [tool.poetry.dev-dependencies]
 # Uncomment to use prerelease dependencies (requires poetry>=1.2).
-# nidcpower = { git = "https://github.com/ni/nimi-python.git", subdirectory = "generated/nidcpower"}
+nidcpower = { git = "https://github.com/ni/nimi-python.git", subdirectory = "generated/nidcpower"}
 # ni-measurement-service = {path = "../..", develop = true}
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
+requires = ["poetry-core>=1.2.0"]
 build-backend = "poetry.core.masonry.api"
