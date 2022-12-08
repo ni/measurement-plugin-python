@@ -1,6 +1,6 @@
-"""Functions to set up and tear down sessions of NI-DCPower devices in NI TestStand."""
+"""Functions to set up and tear down sessions of NI-Switch devices in NI TestStand."""
 
-import nidcpower
+import niswitch
 from _helpers import GrpcChannelPoolHelper, PinMapClient
 
 import ni_measurement_service as nims
@@ -22,8 +22,8 @@ def update_pin_map(pin_map_id: str):
         pin_map_client.update_pin_map(pin_map_id)
 
 
-def create_nidcpower_sessions(pin_map_id: str):
-    """Create and register all NI-DCPower sessions."""
+def create_niswitch_sessions(pin_map_id: str):
+    """Create and register all NI-Switch sessions."""
     with GrpcChannelPoolHelper() as grpc_channel_pool:
         session_management_client = nims.session_management.Client(
             grpc_channel=grpc_channel_pool.session_management_channel
@@ -32,54 +32,50 @@ def create_nidcpower_sessions(pin_map_id: str):
         pin_map_context = nims.session_management.PinMapContext(pin_map_id=pin_map_id, sites=None)
         with session_management_client.reserve_sessions(
             context=pin_map_context,
-            instrument_type_id=nims.session_management.INSTRUMENT_TYPE_NI_DCPOWER,
+            instrument_type_id=nims.session_management.INSTRUMENT_TYPE_NI_RELAY_DRIVER,
             timeout=-1,
         ) as reservation:
 
             for session_info in reservation.session_info:
-                grpc_options = nidcpower.GrpcSessionOptions(
-                    grpc_channel_pool.get_grpc_device_channel(
-                        nidcpower.GRPC_SERVICE_INTERFACE_NAME
-                    ),
+                grpc_options = niswitch.GrpcSessionOptions(
+                    grpc_channel_pool.get_grpc_device_channel(niswitch.GRPC_SERVICE_INTERFACE_NAME),
                     session_name=session_info.session_name,
-                    initialization_behavior=nidcpower.SessionInitializationBehavior.INITIALIZE_SERVER_SESSION,
+                    initialization_behavior=niswitch.SessionInitializationBehavior.INITIALIZE_SERVER_SESSION,
                 )
 
                 # Leave session open
-                nidcpower.Session(
+                niswitch.Session(
                     resource_name=session_info.resource_name, _grpc_options=grpc_options
                 )
 
             session_management_client.register_sessions(reservation.session_info)
 
 
-def destroy_nidcpower_sessions():
-    """Destroy and unregister all NI-DCPower sessions."""
+def destroy_niswitch_sessions():
+    """Destroy and unregister all NI-Switch sessions."""
     with GrpcChannelPoolHelper() as grpc_channel_pool:
         session_management_client = nims.session_management.Client(
             grpc_channel=grpc_channel_pool.session_management_channel
         )
 
         with session_management_client.reserve_all_registered_sessions(timeout=-1) as reservation:
-            nidcpower_sessions = [
+            niswitch_sessions = [
                 session_info
                 for session_info in reservation.session_info
                 if session_info.instrument_type_id
-                == nims.session_management.INSTRUMENT_TYPE_NI_DCPOWER
+                == nims.session_management.INSTRUMENT_TYPE_NI_RELAY_DRIVER
             ]
 
-            session_management_client.unregister_sessions(nidcpower_sessions)
+            session_management_client.unregister_sessions(niswitch_sessions)
 
-            for session_info in nidcpower_sessions:
-                grpc_options = nidcpower.GrpcSessionOptions(
-                    grpc_channel_pool.get_grpc_device_channel(
-                        nidcpower.GRPC_SERVICE_INTERFACE_NAME
-                    ),
+            for session_info in niswitch_sessions:
+                grpc_options = niswitch.GrpcSessionOptions(
+                    grpc_channel_pool.get_grpc_device_channel(niswitch.GRPC_SERVICE_INTERFACE_NAME),
                     session_name=session_info.session_name,
-                    initialization_behavior=nidcpower.SessionInitializationBehavior.ATTACH_TO_SERVER_SESSION,
+                    initialization_behavior=niswitch.SessionInitializationBehavior.ATTACH_TO_SERVER_SESSION,
                 )
 
-                session = nidcpower.Session(
+                session = niswitch.Session(
                     resource_name=session_info.resource_name, _grpc_options=grpc_options
                 )
                 session.close()
