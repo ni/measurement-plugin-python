@@ -49,6 +49,8 @@ Functions
 
        default_value (Any): The default value of the parameter.
 
+       annotations (Dict[str,str]): Represents a set of annotations on the type.
+
 
    .. py:attribute:: display_name
       :annotation: :str
@@ -67,6 +69,11 @@ Functions
 
    .. py:attribute:: default_value
       :annotation: :Any
+
+      
+
+   .. py:attribute:: annotations
+      :annotation: :Dict[str, str]
 
       
 

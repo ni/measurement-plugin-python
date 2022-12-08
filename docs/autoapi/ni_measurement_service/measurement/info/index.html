@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ni_measurement_service.measurement.info &mdash; ni_measurement_service 0.10 documentation</title>
+  <title>ni_measurement_service.measurement.info &mdash; ni_measurement_service 0.11 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
@@ -31,7 +31,7 @@
             <a href="../../../../index.html" class="icon icon-home"> ni_measurement_service
           </a>
               <div class="version">
-                0.10.2
+                0.11.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
@@ -58,8 +58,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li><code class="xref py py-mod docutils literal notranslate"><span class="pre">ni_measurement_service.measurement.info</span></code></li>
+      <li><a href="../../../../index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active"><code class="xref py py-mod docutils literal notranslate"><span class="pre">ni_measurement_service.measurement.info</span></code></li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../../../_sources/autoapi/ni_measurement_service/measurement/info/index.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -88,7 +88,10 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#ni_measurement_service.measurement.info.ServiceInfo" title="ni_measurement_service.measurement.info.ServiceInfo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ServiceInfo</span></code></a></p></td>
 <td><p>Class the represents the service information.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#ni_measurement_service.measurement.info.DataType" title="ni_measurement_service.measurement.info.DataType"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataType</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ni_measurement_service.measurement.info.TypeSpecialization" title="ni_measurement_service.measurement.info.TypeSpecialization"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TypeSpecialization</span></code></a></p></td>
+<td><p>Enum that represents the type specializations for measurement parameters.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ni_measurement_service.measurement.info.DataType" title="ni_measurement_service.measurement.info.DataType"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataType</span></code></a></p></td>
 <td><p>Enum that represents the supported data types.</p></td>
 </tr>
 </tbody>
@@ -151,6 +154,23 @@ For e.g., different version of measurement can come under same service class.</p
 </dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="ni_measurement_service.measurement.info.TypeSpecialization">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ni_measurement_service.measurement.info.</span></span><span class="sig-name descname"><span class="pre">TypeSpecialization</span></span><a class="reference internal" href="../../../../_modules/ni_measurement_service/measurement/info.html#TypeSpecialization"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurement_service.measurement.info.TypeSpecialization" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">enum.Enum</span></code></p>
+<p>Enum that represents the type specializations for measurement parameters.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ni_measurement_service.measurement.info.TypeSpecialization.NoType">
+<span class="sig-name descname"><span class="pre">NoType</span></span><em class="property"><span class="w"> </span><span class="pre">=</span></em><a class="headerlink" href="#ni_measurement_service.measurement.info.TypeSpecialization.NoType" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ni_measurement_service.measurement.info.TypeSpecialization.Pin">
+<span class="sig-name descname"><span class="pre">Pin</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">pin</span></em><a class="headerlink" href="#ni_measurement_service.measurement.info.TypeSpecialization.Pin" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="ni_measurement_service.measurement.info.DataType">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ni_measurement_service.measurement.info.</span></span><span class="sig-name descname"><span class="pre">DataType</span></span><a class="reference internal" href="../../../../_modules/ni_measurement_service/measurement/info.html#DataType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurement_service.measurement.info.DataType" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">enum.Enum</span></code></p>
@@ -196,6 +216,11 @@ For e.g., different version of measurement can come under same service class.</p
 <dd></dd></dl>
 
 <dl class="py attribute">
+<dt class="sig sig-object py" id="ni_measurement_service.measurement.info.DataType.Pin">
+<span class="sig-name descname"><span class="pre">Pin</span></span><a class="headerlink" href="#ni_measurement_service.measurement.info.DataType.Pin" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
 <dt class="sig sig-object py" id="ni_measurement_service.measurement.info.DataType.Int32Array1D">
 <span class="sig-name descname"><span class="pre">Int32Array1D</span></span><a class="headerlink" href="#ni_measurement_service.measurement.info.DataType.Int32Array1D" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
@@ -228,6 +253,16 @@ For e.g., different version of measurement can come under same service class.</p
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ni_measurement_service.measurement.info.DataType.BooleanArray1D">
 <span class="sig-name descname"><span class="pre">BooleanArray1D</span></span><a class="headerlink" href="#ni_measurement_service.measurement.info.DataType.BooleanArray1D" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ni_measurement_service.measurement.info.DataType.StringArray1D">
+<span class="sig-name descname"><span class="pre">StringArray1D</span></span><a class="headerlink" href="#ni_measurement_service.measurement.info.DataType.StringArray1D" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ni_measurement_service.measurement.info.DataType.PinArray1D">
+<span class="sig-name descname"><span class="pre">PinArray1D</span></span><a class="headerlink" href="#ni_measurement_service.measurement.info.DataType.PinArray1D" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>

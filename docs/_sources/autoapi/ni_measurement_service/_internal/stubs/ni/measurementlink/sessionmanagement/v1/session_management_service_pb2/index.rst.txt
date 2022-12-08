@@ -1,0 +1,114 @@
+:py:mod:`ni_measurement_service._internal.stubs.ni.measurementlink.sessionmanagement.v1.session_management_service_pb2`
+=======================================================================================================================
+
+.. py:module:: ni_measurement_service._internal.stubs.ni.measurementlink.sessionmanagement.v1.session_management_service_pb2
+
+.. autoapi-nested-parse::
+
+   Generated protocol buffer code.
+
+
+
+Module Contents
+---------------
+
+.. py:data:: DESCRIPTOR
+   
+
+   
+
+.. py:data:: message_type
+   
+
+   
+
+.. py:data:: message_type
+   
+
+   
+
+.. py:data:: message_type
+   
+
+   
+
+.. py:data:: message_type
+   
+
+   
+
+.. py:data:: message_type
+   
+
+   
+
+.. py:data:: message_type
+   
+
+   
+
+.. py:data:: message_type
+   
+
+   
+
+.. py:data:: Session
+   
+
+   
+
+.. py:data:: SessionInformation
+   
+
+   
+
+.. py:data:: ReserveSessionsRequest
+   
+
+   
+
+.. py:data:: ReserveSessionsResponse
+   
+
+   
+
+.. py:data:: UnreserveSessionsRequest
+   
+
+   
+
+.. py:data:: UnreserveSessionsResponse
+   
+
+   
+
+.. py:data:: RegisterSessionsRequest
+   
+
+   
+
+.. py:data:: RegisterSessionsResponse
+   
+
+   
+
+.. py:data:: UnregisterSessionsRequest
+   
+
+   
+
+.. py:data:: UnregisterSessionsResponse
+   
+
+   
+
+.. py:data:: ReserveAllRegisteredSessionsRequest
+   
+
+   
+
+.. py:data:: ReserveAllRegisteredSessionsResponse
+   
+
+   
+

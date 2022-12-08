@@ -1,0 +1,120 @@
+:py:mod:`ni_measurement_service._internal.stubs.ni.measurementlink.pinmap.v1.pin_map_service_pb2_grpc`
+======================================================================================================
+
+.. py:module:: ni_measurement_service._internal.stubs.ni.measurementlink.pinmap.v1.pin_map_service_pb2_grpc
+
+.. autoapi-nested-parse::
+
+   Client and server classes corresponding to protobuf-defined services.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   ni_measurement_service._internal.stubs.ni.measurementlink.pinmap.v1.pin_map_service_pb2_grpc.PinMapServiceStub
+   ni_measurement_service._internal.stubs.ni.measurementlink.pinmap.v1.pin_map_service_pb2_grpc.PinMapServiceServicer
+   ni_measurement_service._internal.stubs.ni.measurementlink.pinmap.v1.pin_map_service_pb2_grpc.PinMapService
+
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   ni_measurement_service._internal.stubs.ni.measurementlink.pinmap.v1.pin_map_service_pb2_grpc.add_PinMapServiceServicer_to_server
+
+
+
+.. py:class:: PinMapServiceStub(channel)
+
+   Bases: :py:obj:`object`
+
+   Service to keep track of pin map resources.
+
+
+.. py:class:: PinMapServiceServicer
+
+   Bases: :py:obj:`object`
+
+   Service to keep track of pin map resources.
+
+   .. py:method:: CreatePinMapFromXml(request, context)
+
+      Registers pin map with the PinMapService and returns a pin map resource.
+      Status Codes for errors:
+      - INVALID_ARGUMENT: Pin map id is empty or has whitespace, or pin map xml string is not valid
+      - ALREADY_EXISTS: Pin map resource with the specified pin map id already exists
+
+
+   .. py:method:: UpdatePinMapFromXml(request, context)
+
+      Updates registered pin map contents and returns it.
+      Creates and registers a pin map if a pin map resource for the specified pin map id is not found.
+      Status Codes for errors:
+      - INVALID_ARGUMENT: Pin map xml string is not valid
+
+
+   .. py:method:: GetPinMap(request, context)
+
+      Get registered pin map resource.
+      Status Codes for errors:
+      - NOT_FOUND: Pin map resource for the specified pin map id is not found
+
+
+   .. py:method:: QueryPins(request, context)
+
+      Returns list of pins from the registered pin map resource.
+      Status Codes for errors:
+      - NOT_FOUND: Pin map resource for the specified pin map id is not found
+
+
+   .. py:method:: QueryResourceAccessInformation(request, context)
+
+      Get instrument resource names, channels, and instrument type for the specified sites, pins or pin groups, relays or relay groups, instrument type in the registered pin map resource.
+      Status Codes for errors:
+      - NOT_FOUND:
+      - Pin map resource for the specified pin map id is not found.
+      - Specified site number is not in the valid range for the registered pin map.
+      - INVALID_ARGUMENT:
+      - Specified pin or relay is not present in the registered pin map resource.
+      - Empty string specified for a pin or relay name.
+
+
+
+.. py:function:: add_PinMapServiceServicer_to_server(servicer, server)
+
+
+.. py:class:: PinMapService
+
+   Bases: :py:obj:`object`
+
+   Service to keep track of pin map resources.
+
+   .. py:method:: CreatePinMapFromXml(request, target, options=(), channel_credentials=None, call_credentials=None, insecure=False, compression=None, wait_for_ready=None, timeout=None, metadata=None)
+      :staticmethod:
+
+
+   .. py:method:: UpdatePinMapFromXml(request, target, options=(), channel_credentials=None, call_credentials=None, insecure=False, compression=None, wait_for_ready=None, timeout=None, metadata=None)
+      :staticmethod:
+
+
+   .. py:method:: GetPinMap(request, target, options=(), channel_credentials=None, call_credentials=None, insecure=False, compression=None, wait_for_ready=None, timeout=None, metadata=None)
+      :staticmethod:
+
+
+   .. py:method:: QueryPins(request, target, options=(), channel_credentials=None, call_credentials=None, insecure=False, compression=None, wait_for_ready=None, timeout=None, metadata=None)
+      :staticmethod:
+
+
+   .. py:method:: QueryResourceAccessInformation(request, target, options=(), channel_credentials=None, call_credentials=None, insecure=False, compression=None, wait_for_ready=None, timeout=None, metadata=None)
+      :staticmethod:
+
+
+

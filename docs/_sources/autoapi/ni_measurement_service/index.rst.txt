@@ -5,7 +5,7 @@
 
 .. autoapi-nested-parse::
 
-   National Instruments Framework for hosting Python Measurement Services.
+   MeasurementLink Support for Python.
 
 
 
@@ -16,6 +16,15 @@ Subpackages
    :maxdepth: 3
 
    measurement/index.rst
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   session_management/index.rst
 
 
 Package Contents
@@ -80,6 +89,11 @@ Classes
 
       
 
+   .. py:attribute:: Pin
+      
+
+      
+
    .. py:attribute:: Int32Array1D
       
 
@@ -111,6 +125,16 @@ Classes
       
 
    .. py:attribute:: BooleanArray1D
+      
+
+      
+
+   .. py:attribute:: StringArray1D
+      
+
+      
+
+   .. py:attribute:: PinArray1D
       
 
       
@@ -176,7 +200,7 @@ Classes
 
 .. py:class:: MeasurementService(measurement_info, service_info)
 
-   Class the supports registering and hosting a python function as a gRPC service.
+   Class that supports registering and hosting a python function as a gRPC service.
 
    Attributes
    ----------
@@ -190,24 +214,44 @@ Classes
 
        measure_function (Callable): Registered measurement function.
 
+       context (MeasurementContext): Accessor for context-local state.
+
+       discovery_client (DiscoveryClient): Client for accessing the MeasurementLink discovery
+           service.
+
+       channel_pool (GrpcChannelPool): Pool of gRPC channels used by the service.
+
 
    .. py:method:: register_measurement(measurement_function)
 
-      Register the function as the measurement. Recommended to use as a decorator.
+      Register a function as the measurement function for a measurement service.
 
-      Args
-      ----
-          func (Callable): Any Python Function.
+      To declare a measurement function, use this idiom:
 
-      Returns
-      -------
-          Callable: Python Function.
+      ```
+      @measurement_service.register_measurement
+      @measurement_service.configuration("Configuration 1", ...)
+      @measurement_service.configuration("Configuration 2", ...)
+      @measurement_service.output("Output 1", ...)
+      @measurement_service.output("Output 2", ...)
+      def measure(configuration1, configuration2):
+          ...
+          return (output1, output2)
+      ```
+
+      See also: :func:`.configuration`, :func:`.output`
 
 
+   .. py:method:: configuration(display_name, type, default_value, *, instrument_type = '')
 
-   .. py:method:: configuration(display_name, type, default_value)
+      Add a configuration parameter to a measurement function.
 
-      Add configuration parameter info for a measurement.Recommended to use as a decorator.
+      This decorator maps the measurement service's configuration parameters
+      to Python positional parameters. To add multiple configuration parameters
+      to the same measurement function, use this decorator multiple times.
+      The order of decorator calls must match the order of positional parameters.
+
+      See also: :func:`.register_measurement`
 
       Args
       ----
@@ -216,6 +260,10 @@ Classes
           type (DataType): Data type of the configuration.
 
           default_value (Any): Default value of the configuration.
+
+          instrument_type (str): Optional.
+          Instrument type to be used to show instrument specific values to the configurations.
+          This is only supported when configuration type is DataType.Pin.
 
       Returns
       -------
@@ -226,7 +274,16 @@ Classes
 
    .. py:method:: output(display_name, type)
 
-      Add output parameter info for a measurement.Recommended to use as a decorator.
+      Add a output parameter to a measurement function.
+
+      This decorator maps the measurement service's output parameters to
+      the elements of the tuple returned by the measurement function.
+      To add multiple output parameters to the same measurement function,
+      use this decorator multiple times.
+      The order of decorator calls must match the order of elements
+      returned by the measurement fuction.
+
+      See also: :func:`.register_measurement`
 
       Args
       ----
@@ -269,6 +326,27 @@ Classes
    .. py:method:: __exit__(exc_type, exc_value, traceback)
 
       Exit the runtime context related to the measurement service.
+
+
+   .. py:method:: get_channel(provided_interface, service_class = '')
+
+      Return gRPC channel to specified service.
+
+      Args
+      ----
+          provided_interface (str): The gRPC Full Name of the service.
+
+          service_class (str): The service "class" that should be matched.
+
+      Returns
+      -------
+          grpc.Channel: A channel to the gRPC service.
+
+      Raises
+      ------
+          Exception: If service_class is not specified and there is more than one matching service
+              registered.
+
 
 
 

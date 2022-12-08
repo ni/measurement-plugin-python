@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ni_measurement_service.measurement.info &mdash; ni_measurement_service 0.10 documentation</title>
+  <title>ni_measurement_service.measurement.info &mdash; ni_measurement_service 0.11 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
@@ -30,7 +30,7 @@
             <a href="../../../index.html" class="icon icon-home"> ni_measurement_service
           </a>
               <div class="version">
-                0.10.2
+                0.11.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -57,9 +57,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../index.html">Module code</a> &raquo;</li>
-      <li>ni_measurement_service.measurement.info</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ni_measurement_service.measurement.info</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -116,25 +116,35 @@
     <span class="n">description_url</span><span class="p">:</span> <span class="nb">str</span></div>
 
 
+<div class="viewcode-block" id="TypeSpecialization"><a class="viewcode-back" href="../../../autoapi/ni_measurement_service/measurement/info/index.html#ni_measurement_service.TypeSpecialization">[docs]</a><span class="k">class</span> <span class="nc">TypeSpecialization</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Enum that represents the type specializations for measurement parameters.&quot;&quot;&quot;</span>
+
+    <span class="n">NoType</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">Pin</span> <span class="o">=</span> <span class="s2">&quot;pin&quot;</span></div>
+
+
 <div class="viewcode-block" id="DataType"><a class="viewcode-back" href="../../../autoapi/ni_measurement_service/measurement/info/index.html#ni_measurement_service.DataType">[docs]</a><span class="k">class</span> <span class="nc">DataType</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Enum that represents the supported data types.&quot;&quot;&quot;</span>
 
-    <span class="n">Int32</span> <span class="o">=</span> <span class="p">(</span><span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">TYPE_INT32</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
-    <span class="n">Int64</span> <span class="o">=</span> <span class="p">(</span><span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">TYPE_INT64</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
-    <span class="n">UInt32</span> <span class="o">=</span> <span class="p">(</span><span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">TYPE_UINT32</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
-    <span class="n">UInt64</span> <span class="o">=</span> <span class="p">(</span><span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">TYPE_UINT64</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
-    <span class="n">Float</span> <span class="o">=</span> <span class="p">(</span><span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">TYPE_FLOAT</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
-    <span class="n">Double</span> <span class="o">=</span> <span class="p">(</span><span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">TYPE_DOUBLE</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
-    <span class="n">Boolean</span> <span class="o">=</span> <span class="p">(</span><span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">TYPE_BOOL</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
-    <span class="n">String</span> <span class="o">=</span> <span class="p">(</span><span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">TYPE_STRING</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+    <span class="n">Int32</span> <span class="o">=</span> <span class="p">(</span><span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">TYPE_INT32</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">TypeSpecialization</span><span class="o">.</span><span class="n">NoType</span><span class="p">)</span>
+    <span class="n">Int64</span> <span class="o">=</span> <span class="p">(</span><span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">TYPE_INT64</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">TypeSpecialization</span><span class="o">.</span><span class="n">NoType</span><span class="p">)</span>
+    <span class="n">UInt32</span> <span class="o">=</span> <span class="p">(</span><span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">TYPE_UINT32</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">TypeSpecialization</span><span class="o">.</span><span class="n">NoType</span><span class="p">)</span>
+    <span class="n">UInt64</span> <span class="o">=</span> <span class="p">(</span><span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">TYPE_UINT64</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">TypeSpecialization</span><span class="o">.</span><span class="n">NoType</span><span class="p">)</span>
+    <span class="n">Float</span> <span class="o">=</span> <span class="p">(</span><span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">TYPE_FLOAT</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">TypeSpecialization</span><span class="o">.</span><span class="n">NoType</span><span class="p">)</span>
+    <span class="n">Double</span> <span class="o">=</span> <span class="p">(</span><span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">TYPE_DOUBLE</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">TypeSpecialization</span><span class="o">.</span><span class="n">NoType</span><span class="p">)</span>
+    <span class="n">Boolean</span> <span class="o">=</span> <span class="p">(</span><span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">TYPE_BOOL</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">TypeSpecialization</span><span class="o">.</span><span class="n">NoType</span><span class="p">)</span>
+    <span class="n">String</span> <span class="o">=</span> <span class="p">(</span><span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">TYPE_STRING</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">TypeSpecialization</span><span class="o">.</span><span class="n">NoType</span><span class="p">)</span>
+    <span class="n">Pin</span> <span class="o">=</span> <span class="p">(</span><span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">TYPE_STRING</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">TypeSpecialization</span><span class="o">.</span><span class="n">Pin</span><span class="p">)</span>
 
-    <span class="n">Int32Array1D</span> <span class="o">=</span> <span class="p">(</span><span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">TYPE_INT32</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
-    <span class="n">Int64Array1D</span> <span class="o">=</span> <span class="p">(</span><span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">TYPE_INT64</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
-    <span class="n">UInt32Array1D</span> <span class="o">=</span> <span class="p">(</span><span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">TYPE_UINT32</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
-    <span class="n">UInt64Array1D</span> <span class="o">=</span> <span class="p">(</span><span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">TYPE_UINT64</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
-    <span class="n">FloatArray1D</span> <span class="o">=</span> <span class="p">(</span><span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">TYPE_FLOAT</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
-    <span class="n">DoubleArray1D</span> <span class="o">=</span> <span class="p">(</span><span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">TYPE_DOUBLE</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
-    <span class="n">BooleanArray1D</span> <span class="o">=</span> <span class="p">(</span><span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">TYPE_BOOL</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span></div>
+    <span class="n">Int32Array1D</span> <span class="o">=</span> <span class="p">(</span><span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">TYPE_INT32</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">TypeSpecialization</span><span class="o">.</span><span class="n">NoType</span><span class="p">)</span>
+    <span class="n">Int64Array1D</span> <span class="o">=</span> <span class="p">(</span><span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">TYPE_INT64</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">TypeSpecialization</span><span class="o">.</span><span class="n">NoType</span><span class="p">)</span>
+    <span class="n">UInt32Array1D</span> <span class="o">=</span> <span class="p">(</span><span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">TYPE_UINT32</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">TypeSpecialization</span><span class="o">.</span><span class="n">NoType</span><span class="p">)</span>
+    <span class="n">UInt64Array1D</span> <span class="o">=</span> <span class="p">(</span><span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">TYPE_UINT64</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">TypeSpecialization</span><span class="o">.</span><span class="n">NoType</span><span class="p">)</span>
+    <span class="n">FloatArray1D</span> <span class="o">=</span> <span class="p">(</span><span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">TYPE_FLOAT</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">TypeSpecialization</span><span class="o">.</span><span class="n">NoType</span><span class="p">)</span>
+    <span class="n">DoubleArray1D</span> <span class="o">=</span> <span class="p">(</span><span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">TYPE_DOUBLE</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">TypeSpecialization</span><span class="o">.</span><span class="n">NoType</span><span class="p">)</span>
+    <span class="n">BooleanArray1D</span> <span class="o">=</span> <span class="p">(</span><span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">TYPE_BOOL</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">TypeSpecialization</span><span class="o">.</span><span class="n">NoType</span><span class="p">)</span>
+    <span class="n">StringArray1D</span> <span class="o">=</span> <span class="p">(</span><span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">TYPE_STRING</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">TypeSpecialization</span><span class="o">.</span><span class="n">NoType</span><span class="p">)</span>
+    <span class="n">PinArray1D</span> <span class="o">=</span> <span class="p">(</span><span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">TYPE_STRING</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">TypeSpecialization</span><span class="o">.</span><span class="n">Pin</span><span class="p">)</span></div>
 </pre></div>
 
            </div>

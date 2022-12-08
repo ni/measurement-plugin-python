@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ni_measurement_service._internal.grpc_servicer &mdash; ni_measurement_service 0.10 documentation</title>
+  <title>ni_measurement_service._internal.grpc_servicer &mdash; ni_measurement_service 0.11 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
@@ -30,7 +30,7 @@
             <a href="../../../index.html" class="icon icon-home"> ni_measurement_service
           </a>
               <div class="version">
-                0.10.2
+                0.11.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -57,9 +57,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../index.html">Module code</a> &raquo;</li>
-      <li>ni_measurement_service._internal.grpc_servicer</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ni_measurement_service._internal.grpc_servicer</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -84,11 +84,9 @@
 
 <span class="kn">from</span> <span class="nn">ni_measurement_service._internal.parameter</span> <span class="kn">import</span> <span class="n">serializer</span>
 <span class="kn">from</span> <span class="nn">ni_measurement_service._internal.parameter.metadata</span> <span class="kn">import</span> <span class="n">ParameterMetadata</span>
-<span class="kn">from</span> <span class="nn">ni_measurement_service._internal.stubs.ni.measurements</span> <span class="kn">import</span> <span class="n">pin_map_context_pb2</span>
-<span class="kn">from</span> <span class="nn">ni_measurement_service._internal.stubs.ni.measurements.measurementservice</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">ni_measurement_service._internal.stubs.ni.measurementlink</span> <span class="kn">import</span> <span class="n">pin_map_context_pb2</span>
+<span class="kn">from</span> <span class="nn">ni_measurement_service._internal.stubs.ni.measurementlink.measurement.v1</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">measurement_service_pb2</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="kn">from</span> <span class="nn">ni_measurement_service._internal.stubs.ni.measurements.measurementservice</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">measurement_service_pb2_grpc</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">ni_measurement_service.measurement.info</span> <span class="kn">import</span> <span class="n">MeasurementInfo</span>
@@ -209,8 +207,8 @@
 
         <span class="c1"># Measurement Parameters</span>
         <span class="n">measurement_signature</span> <span class="o">=</span> <span class="n">measurement_service_pb2</span><span class="o">.</span><span class="n">MeasurementSignature</span><span class="p">(</span>
-            <span class="n">configuration_parameters_message_type</span><span class="o">=</span><span class="s2">&quot;ni.measurements.v1.MeasurementConfigurations&quot;</span><span class="p">,</span>
-            <span class="n">outputs_message_type</span><span class="o">=</span><span class="s2">&quot;ni.measurements.v1.MeasurementOutputs&quot;</span><span class="p">,</span>
+            <span class="n">configuration_parameters_message_type</span><span class="o">=</span><span class="s2">&quot;ni.measurementlink.measurement.v1.MeasurementConfigurations&quot;</span><span class="p">,</span>
+            <span class="n">outputs_message_type</span><span class="o">=</span><span class="s2">&quot;ni.measurementlink.measurement.v1.MeasurementOutputs&quot;</span><span class="p">,</span>
         <span class="p">)</span>
 
         <span class="c1"># Configurations</span>
@@ -220,6 +218,7 @@
             <span class="n">configuration_parameter</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">configuration_metadata</span><span class="o">.</span><span class="n">display_name</span>
             <span class="n">configuration_parameter</span><span class="o">.</span><span class="n">repeated</span> <span class="o">=</span> <span class="n">configuration_metadata</span><span class="o">.</span><span class="n">repeated</span>
             <span class="n">configuration_parameter</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">configuration_metadata</span><span class="o">.</span><span class="n">type</span>
+            <span class="n">configuration_parameter</span><span class="o">.</span><span class="n">annotations</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">configuration_metadata</span><span class="o">.</span><span class="n">annotations</span><span class="p">)</span>
             <span class="n">measurement_signature</span><span class="o">.</span><span class="n">configuration_parameters</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">configuration_parameter</span><span class="p">)</span>
 
         <span class="c1"># Configuration Defaults</span>
