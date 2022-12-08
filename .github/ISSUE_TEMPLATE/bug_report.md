@@ -44,4 +44,6 @@ Search open/closed issues before submitting. Someone may have reported the same 
 <!--- Include as many relevant details as possible about the environment you experienced the bug in -->
 
 * OS & Device: [e.g. MacOS, Windows, Linux] on [Mac, PC]
-* Version [e.g. 1.8.0]
+* `ni-measurement-service` version [e.g. 0.12.3]
+* MeasurementLink version [e.g. 23.0.0d123]
+* Python version [e.g. 3.9]
