@@ -34,7 +34,7 @@ service_options = ServiceOptions(use_grpc_device=False, grpc_device_address="")
 
 
 @measurement_service.register_measurement
-@measurement_service.configuration("pin_name", nims.DataType.PinArray1D, ["Pin1"])
+@measurement_service.configuration("pin_names", nims.DataType.PinArray1D, ["Pin1"])
 @measurement_service.configuration("voltage_level", nims.DataType.Double, 6.0)
 @measurement_service.configuration("voltage_level_range", nims.DataType.Double, 6.0)
 @measurement_service.configuration("current_limit", nims.DataType.Double, 0.01)
@@ -43,7 +43,7 @@ service_options = ServiceOptions(use_grpc_device=False, grpc_device_address="")
 @measurement_service.output("voltage_measurement", nims.DataType.Double)
 @measurement_service.output("current_measurement", nims.DataType.Double)
 def measure(
-    pin_name : Iterable[str],
+    pin_names : Iterable[str],
     voltage_level : float,
     voltage_level_range : float,
     current_limit : float,
@@ -51,7 +51,7 @@ def measure(
     source_delay : float,
 ):
     """Source and measure a DC voltage with an NI SMU."""
-    logging.info("Executing measurement: pin_name=%s voltage_level=%g", pin_name, voltage_level)
+    logging.info("Executing measurement: pin_name=%s voltage_level=%g", pin_names, voltage_level)
 
     session_management_client = nims.session_management.Client(
         grpc_channel=measurement_service.get_channel(
@@ -64,7 +64,7 @@ def measure(
         reservation = stack.enter_context(
             session_management_client.reserve_sessions(
                 context=measurement_service.context.pin_map_context,
-                pin_names=pin_name,
+                pin_names=pin_names,
                 instrument_type_id="niDCPower",
                 timeout=-1,
             )
