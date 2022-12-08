@@ -8,8 +8,8 @@ concurrency: publish_to_pypi
 
 env:
   # Versions are also listed in PR.yml
-  POETRY_VERSION: '1.2.2'
-  PYTHON_VERSION: '3.9'
+  POETRY_VERSION: 1.2.2
+  PYTHON_VERSION: 3.9
 
 jobs:
   build:

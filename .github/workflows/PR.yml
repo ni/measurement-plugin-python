@@ -6,13 +6,13 @@ on:
       - main
 
 env:
-  POETRY_VERSION: '1.2.2'
+  POETRY_VERSION: 1.2.2
 
 jobs:
   checks-nims:
     runs-on: ubuntu-latest
     env:
-      PYTHON_VERSION: '3.9'
+      PYTHON_VERSION: 3.9
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
@@ -44,7 +44,7 @@ jobs:
       run:
         working-directory: ./ni_measurement_generator
     env:
-      PYTHON_VERSION: '3.9'
+      PYTHON_VERSION: 3.9
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
@@ -70,7 +70,7 @@ jobs:
     strategy:
       matrix:
         os: [macos-latest, windows-latest, ubuntu-latest]
-        python-version: ['3.8', '3.9', '3.10']
+        python-version: [3.8, 3.9, '3.10']
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
