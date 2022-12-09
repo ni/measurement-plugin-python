@@ -62,6 +62,8 @@ jobs:
         with:
           path: ~/.cache/pypoetry/virtualenvs
           key: ${{ runner.os }}-poetry-${{ hashFiles('poetry.lock') }}
+      - name: HACK - Remove grpcio from Poetry cache
+        run: poetry cache clear pypi:gprcio:1.51.0
       - name: Install the Package
         run: poetry install -vvv
       - name: Lint the Code
