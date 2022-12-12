@@ -1699,7 +1699,7 @@
 			</NI_MeasurementParameter>
 		</typedef>
 		<typedef alwayssavetype='false' additionaltypeflags='0' typelistordernum='20'>
-			<NI_Measurement classname='StepType' isroottypedef='true' typecategory='1' timestamp='1669042104' typeversion='21.0.5.7' typelastmodversion='21.0.0.49156' typeminprodversion='21.0.0.0' typeflags='2'>
+			<NI_Measurement classname='StepType' isroottypedef='true' typecategory='1' timestamp='1670627442' typeversion='21.0.5.8' typelastmodversion='21.0.0.49156' typeminprodversion='21.0.0.0' typeflags='2'>
 				<subprops>
 					<DescriptionFormat typename='Expression' xsi:type='Expression' classname='ExprValue' flagsforinstances='4718616' instanceoverrideflags='4718616' valueflags='4194328' structureflags='524288'>
 						<value>ResStr("MEASUREMENT_STEP_TYPE", "MEASUREMENT_DESCRIPTION_NAME")</value>
@@ -1975,7 +1975,7 @@
 															</value>
 														</Calls>
 														<AssemblyPath classname='PathValue'>
-															<value>NationalInstruments.MeasurementServices.TestStandMeasurementClient.dll</value>
+															<value>NationalInstruments.MeasurementLink.TestStandMeasurementClient.dll</value>
 														</AssemblyPath>
 														<AssemblyStrongName classname='Str'>
 															<value/>
@@ -2586,7 +2586,7 @@
 															</value>
 														</Calls>
 														<AssemblyPath classname='PathValue'>
-															<value>NationalInstruments.MeasurementServices.TestStandMeasurementClient.dll</value>
+															<value>NationalInstruments.MeasurementLink.TestStandMeasurementClient.dll</value>
 														</AssemblyPath>
 														<AssemblyStrongName classname='Str'>
 															<value/>
@@ -3313,7 +3313,7 @@
 						<subprops>
 							<EditPanels classname='Strs'>
 								<value lbound='[0]' ubound='[0]'>
-									<value arrayindex='[0]'>NationalInstruments.MeasurementServices.TestStandMeasurementClient.dll|NationalInstruments.MeasurementServices.MeasurementStepPanelInfo</value>
+									<value arrayindex='[0]'>NationalInstruments.MeasurementLink.TestStandMeasurementClient.dll|NationalInstruments.MeasurementServices.MeasurementStepPanelInfo</value>
 								</value>
 							</EditPanels>
 						</subprops>
@@ -6304,10 +6304,10 @@
 																		<Obj typename='NI_MeasurementParameter' name=''>
 																			<subprops>
 																				<Name classname='Str'>
-																					<value>pin_name</value>
+																					<value>pin_names</value>
 																				</Name>
 																				<ArgumentValue classname='ExprValue'>
-																					<value>"Pin1"</value>
+																					<value>{"Pin1"}</value>
 																				</ArgumentValue>
 																				<Direction classname='Str'>
 																					<value>In</value>
@@ -6316,7 +6316,7 @@
 																					<value>false</value>
 																				</Log>
 																				<Dimension classname='Num'>
-																					<value representation='UInt64'>0</value>
+																					<value representation='UInt64'>1</value>
 																				</Dimension>
 																				<Type classname='Str'>
 																					<value>TypeString</value>
