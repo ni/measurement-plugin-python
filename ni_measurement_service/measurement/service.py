@@ -166,6 +166,7 @@ class MeasurementService:
     def configuration(
         self, display_name: str, type: DataType, default_value: Any, *, instrument_type: str = ""
     ) -> Callable:
+
         """Add a configuration parameter to a measurement function.
 
         This decorator maps the measurement service's configuration parameters
@@ -184,9 +185,17 @@ class MeasurementService:
             default_value (Any): Default value of the configuration.
 
             instrument_type (str): Optional.
-            Instrument type to be used to show instrument specific values to the configurations.
-            This is only supported when configuration type is DataType.Pin.
-
+            Filter pins by instrument type. This is only supported when configuration type
+            is DataType.Pin. Pin maps have built in instrument definitions using the following
+            NI driver based instrument types:
+                "niDCPower"
+                "niDigitalPattern"
+                "niScope"
+                "niDMM"
+                "niDAQmx"
+                "niFGen".
+            For custom instruments the user defined instrument type id is defined in the 
+            pin map file.
         Returns
         -------
             Callable: Callable that takes in Any Python Function

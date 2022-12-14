@@ -34,7 +34,9 @@ service_options = ServiceOptions(use_grpc_device=False, grpc_device_address="")
 
 
 @measurement_service.register_measurement
-@measurement_service.configuration("pin_name", nims.DataType.Pin, "Pin1", instrument_type="niDCPower")
+@measurement_service.configuration(
+    "pin_name", nims.DataType.Pin, "Pin1", instrument_type="niDCPower"
+)
 @measurement_service.configuration("voltage_level", nims.DataType.Double, 6.0)
 @measurement_service.configuration("voltage_level_range", nims.DataType.Double, 6.0)
 @measurement_service.configuration("current_limit", nims.DataType.Double, 0.01)
