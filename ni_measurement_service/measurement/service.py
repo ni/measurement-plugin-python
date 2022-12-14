@@ -166,7 +166,6 @@ class MeasurementService:
     def configuration(
         self, display_name: str, type: DataType, default_value: Any, *, instrument_type: str = ""
     ) -> Callable:
-
         """Add a configuration parameter to a measurement function.
 
         This decorator maps the measurement service's configuration parameters
@@ -194,8 +193,9 @@ class MeasurementService:
                 "niDMM"
                 "niDAQmx"
                 "niFGen".
-            For custom instruments the user defined instrument type id is defined in the 
+            For custom instruments the user defined instrument type id is defined in the
             pin map file.
+
         Returns
         -------
             Callable: Callable that takes in Any Python Function
