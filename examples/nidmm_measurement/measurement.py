@@ -45,7 +45,7 @@ FUNCTION_TO_ENUM = {
 
 
 @measurement_service.register_measurement
-@measurement_service.configuration("pin_name", nims.DataType.Pin, "Pin1")
+@measurement_service.configuration("pin_name", nims.DataType.Pin, "Pin1", instrument_type="niDMM")
 @measurement_service.configuration("measurement_type", nims.DataType.String, "DC Volts")
 @measurement_service.configuration("range", nims.DataType.Double, 10.0)
 @measurement_service.configuration("resolution_digits", nims.DataType.Double, 5.5)
