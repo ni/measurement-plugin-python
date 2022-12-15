@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """Install all example services."""
 
+import os
 import pathlib
 import shutil
 import subprocess
-import os
 
 EXAMPLES_PATH = pathlib.Path(__file__).parent.parent / "examples"
 SERVICES_PATH = (
