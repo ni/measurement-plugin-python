@@ -185,14 +185,10 @@ class MeasurementService:
 
             instrument_type (str): Optional.
             Filter pins by instrument type. This is only supported when configuration type
-            is DataType.Pin. Pin maps have built in instrument definitions using the following
-            NI driver based instrument types:
-                "niDCPower"
-                "niDigitalPattern"
-                "niScope"
-                "niDMM"
-                "niDAQmx"
-                "niFGen".
+            is DataType.Pin. Pin maps have built in instrument definitions using the
+            NI driver based instrument type ids. These can be found as constants
+            in `nims.session_management`. For example, for an NI DCPower instrument
+            the instrument type is `nims.session_management.INSTRUMENT_TYPE_NI_DCPOWER`.
             For custom instruments the user defined instrument type id is defined in the
             pin map file.
 
