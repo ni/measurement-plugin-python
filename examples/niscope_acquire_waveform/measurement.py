@@ -50,7 +50,12 @@ TRIGGER_SLOPE_TO_ENUM = {
 
 @measurement_service.register_measurement
 # TODO: Make pin_names PinArray1D
-@measurement_service.configuration("pin_names", nims.DataType.Pin, "Pin1,Pin2,Pin3,Pin4")
+@measurement_service.configuration(
+    "pin_names",
+    nims.DataType.Pin,
+    "Pin1,Pin2,Pin3,Pin4",
+    instrument_type=nims.session_management.INSTRUMENT_TYPE_NI_SCOPE,
+)
 @measurement_service.configuration("vertical_range", nims.DataType.Double, 5.0)
 @measurement_service.configuration("vertical_coupling", nims.DataType.String, "DC")
 @measurement_service.configuration("input_impedance", nims.DataType.Double, 1e6)
