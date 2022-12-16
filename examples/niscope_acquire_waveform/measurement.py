@@ -92,7 +92,7 @@ def measure(
 ) -> Tuple:
     """Acquire a waveform using an NI oscilloscope."""
     logging.info(
-        "Starting acquisition: pin_names=%s vertical_range=%g trigger_source=%s trigger_level=%g",
+        "Starting acquisition: pin_or_relay_names=%s vertical_range=%g trigger_source=%s trigger_level=%g",
         pin_names,
         vertical_range,
         trigger_source,
@@ -120,7 +120,7 @@ def measure(
         reservation = stack.enter_context(
             session_management_client.reserve_sessions(
                 context=measurement_service.context.pin_map_context,
-                pin_names=pin_list,
+                pin_or_relay_names=pin_list,
                 instrument_type_id=nims.session_management.INSTRUMENT_TYPE_NI_SCOPE,
                 timeout=-1,
             )

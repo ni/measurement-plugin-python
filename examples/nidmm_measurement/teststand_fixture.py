@@ -56,16 +56,12 @@ def destroy_nidmm_sessions():
             grpc_channel=grpc_channel_pool.session_management_channel
         )
 
-        with session_management_client.reserve_all_registered_sessions(timeout=-1) as reservation:
-            nidmm_sessions = [
-                session_info
-                for session_info in reservation.session_info
-                if session_info.instrument_type_id == nims.session_management.INSTRUMENT_TYPE_NI_DMM
-            ]
+        with session_management_client.reserve_all_registered_sessions(
+            instrument_type_id=nims.session_management.INSTRUMENT_TYPE_NI_DMM, timeout=-1
+        ) as reservation:
+            session_management_client.unregister_sessions(reservation.session_info)
 
-            session_management_client.unregister_sessions(nidmm_sessions)
-
-            for session_info in nidmm_sessions:
+            for session_info in reservation.session_info:
                 grpc_options = nidmm.GrpcSessionOptions(
                     grpc_channel_pool.get_grpc_device_channel(nidmm.GRPC_SERVICE_INTERFACE_NAME),
                     session_name=session_info.session_name,

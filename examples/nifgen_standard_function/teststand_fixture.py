@@ -60,17 +60,12 @@ def destroy_nifgen_sessions():
             grpc_channel=grpc_channel_pool.session_management_channel
         )
 
-        with session_management_client.reserve_all_registered_sessions(timeout=-1) as reservation:
-            nifgen_sessions = [
-                session_info
-                for session_info in reservation.session_info
-                if session_info.instrument_type_id
-                == nims.session_management.INSTRUMENT_TYPE_NI_FGEN
-            ]
+        with session_management_client.reserve_all_registered_sessions(
+            instrument_type_id=nims.session_management.INSTRUMENT_TYPE_NI_FGEN, timeout=-1
+        ) as reservation:
+            session_management_client.unregister_sessions(reservation.session_info)
 
-            session_management_client.unregister_sessions(nifgen_sessions)
-
-            for session_info in nifgen_sessions:
+            for session_info in reservation.session_info:
                 grpc_options = nifgen.GrpcSessionOptions(
                     grpc_channel_pool.get_grpc_device_channel(nifgen.GRPC_SERVICE_INTERFACE_NAME),
                     session_name=session_info.session_name,
