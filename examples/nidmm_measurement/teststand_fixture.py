@@ -44,7 +44,7 @@ def create_nidmm_sessions(pin_map_id: str):
                 )
 
                 # Leave session open
-                nidmm.Session(resource_name=session_info.resource_name, _grpc_options=grpc_options)
+                nidmm.Session(resource_name=session_info.resource_name, grpc_options=grpc_options)
 
             session_management_client.register_sessions(reservation.session_info)
 
@@ -73,6 +73,6 @@ def destroy_nidmm_sessions():
                 )
 
                 session = nidmm.Session(
-                    resource_name=session_info.resource_name, _grpc_options=grpc_options
+                    resource_name=session_info.resource_name, grpc_options=grpc_options
                 )
                 session.close()

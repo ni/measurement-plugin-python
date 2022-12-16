@@ -130,7 +130,7 @@ def _create_nidmm_session(
             session_grpc_channel = measurement_service.channel_pool.get_channel(
                 target=session_grpc_address
             )
-        session_kwargs["_grpc_options"] = nidmm.GrpcSessionOptions(
+        session_kwargs["grpc_options"] = nidmm.GrpcSessionOptions(
             session_grpc_channel,
             session_name=session_info.session_name,
             initialization_behavior=nidmm.SessionInitializationBehavior.AUTO,

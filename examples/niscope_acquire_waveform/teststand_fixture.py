@@ -44,9 +44,7 @@ def create_niscope_sessions(pin_map_id: str):
                 )
 
                 # Leave session open
-                niscope.Session(
-                    resource_name=session_info.resource_name, _grpc_options=grpc_options
-                )
+                niscope.Session(resource_name=session_info.resource_name, grpc_options=grpc_options)
 
             session_management_client.register_sessions(reservation.session_info)
 
@@ -76,6 +74,6 @@ def destroy_niscope_sessions():
                 )
 
                 session = niscope.Session(
-                    resource_name=session_info.resource_name, _grpc_options=grpc_options
+                    resource_name=session_info.resource_name, grpc_options=grpc_options
                 )
                 session.close()
