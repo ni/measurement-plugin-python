@@ -9,6 +9,7 @@ from ni_measurement_service._internal.stubs.ni.measurementlink.sessionmanagement
     session_management_service_pb2,
     session_management_service_pb2_grpc,
 )
+from ni_measurement_service._internal.stubs.nidevice_grpc import session_pb2
 
 GRPC_SERVICE_INTERFACE_NAME = "ni.measurementlink.sessionmanagement.v1.SessionManagementService"
 GRPC_SERVICE_CLASS = "ni.measurementlink.sessionmanagement.v1.SessionManagementService"
@@ -70,7 +71,9 @@ class SessionInformation(NamedTuple):
                 "niDigitalPattern"
                 "niScope"
                 "niDMM"
-                "niDAQmx".
+                "niDAQmx"
+                "niFGen"
+                "niRelayDriver"
             For custom instruments the user defined instrument type id is defined in the pin map
             file.
 
@@ -138,7 +141,7 @@ class Client(object):
     def reserve_sessions(
         self,
         context: PinMapContext,
-        pin_names: Optional[Iterable[str]] = None,
+        pin_or_relay_names: Optional[Iterable[str]] = None,
         instrument_type_id: Optional[str] = None,
         timeout: Optional[float] = None,
     ) -> Reservation:
@@ -152,9 +155,9 @@ class Client(object):
             context (PinMapContext): Includes the pin map ID for the pin map in the Pin Map Service,
                 as well as the list of sites for the measurement.
 
-            pin_names (Iterable[str]): List of pin names or pin group names to use for the
-                measurement. If unspecified, reserve sessions for all pins in the registered pin map
-                resource.
+            pin_or_relay_names (Iterable[str]): List of pins, pin groups, relays, or relay groups to
+                use for the measurement. If unspecified, reserve sessions for all pins and relays in
+                the registered pin map resource.
 
             instrument_type_id (str): Instrument type ID for the measurement. If unspecified,
                 reserve sessions for all instrument types connected in the registered pin map
@@ -164,7 +167,9 @@ class Client(object):
                     "niDigitalPattern"
                     "niScope"
                     "niDMM"
-                    "niDAQmx".
+                    "niDAQmx"
+                    "niFGen"
+                    "niRelayDriver"
                 For custom instruments the user defined instrument type id is defined in the pin
                 map file.
 
@@ -188,8 +193,8 @@ class Client(object):
         )
         if instrument_type_id is not None:
             request.instrument_type_id = instrument_type_id
-        if pin_names is not None:
-            request.pin_names.extend(pin_names)
+        if pin_or_relay_names is not None:
+            request.pin_or_relay_names.extend(pin_or_relay_names)
         if timeout is not None:
             timeout_in_ms = round(timeout * 1000)
             if timeout_in_ms < 0:
@@ -230,7 +235,7 @@ class Client(object):
         request = session_management_service_pb2.RegisterSessionsRequest(
             sessions=(
                 session_management_service_pb2.SessionInformation(
-                    session=session_management_service_pb2.Session(name=info.session_name),
+                    session=session_pb2.Session(name=info.session_name),
                     resource_name=info.resource_name,
                     channel_list=info.channel_list,
                     instrument_type_id=info.instrument_type_id,
@@ -255,7 +260,7 @@ class Client(object):
         request = session_management_service_pb2.UnregisterSessionsRequest(
             sessions=(
                 session_management_service_pb2.SessionInformation(
-                    session=session_management_service_pb2.Session(name=info.session_name),
+                    session=session_pb2.Session(name=info.session_name),
                     resource_name=info.resource_name,
                     channel_list=info.channel_list,
                     instrument_type_id=info.instrument_type_id,
@@ -266,11 +271,27 @@ class Client(object):
         )
         self._client.UnregisterSessions(request)
 
-    def reserve_all_registered_sessions(self, timeout: Optional[float] = None) -> Reservation:
+    def reserve_all_registered_sessions(
+        self, instrument_type_id: Optional[str] = None, timeout: Optional[float] = None
+    ) -> Reservation:
         """Reserves and gets all sessions currently registered in the Session Manager.
 
         Args
         ----
+            instrument_type_id (str): Instrument type ID for the measurement. If unspecified,
+                reserve sessions for all instrument types connected in the registered pin map
+                resource. Pin maps have built in instrument definitions using the following NI
+                driver based instrument type ids:
+                    "niDCPower"
+                    "niDigitalPattern"
+                    "niScope"
+                    "niDMM"
+                    "niDAQmx"
+                    "niFGen"
+                    "niRelayDriver"
+                For custom instruments the user defined instrument type id is defined in the pin
+                map file.
+
             timeout (float): Timeout in seconds. Allowed values,
                 0 (non-blocking, fails immediately if resources cannot be reserved),
                 -1 or negative (infinite timeout), or
@@ -283,6 +304,8 @@ class Client(object):
 
         """
         request = session_management_service_pb2.ReserveAllRegisteredSessionsRequest()
+        if instrument_type_id is not None:
+            request.instrument_type_id = instrument_type_id
         if timeout is not None:
             timeout_in_ms = round(timeout * 1000)
             if timeout_in_ms < 0:
