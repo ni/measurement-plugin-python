@@ -17,7 +17,7 @@ SERVICES_PATH = (
 
 def main():
     """Install all example services."""
-    _deactivate_venv()
+    clean_env = _get_clean_env()
     for example_path in EXAMPLES_PATH.iterdir():
         if not (example_path / "pyproject.toml").exists():
             continue
@@ -35,7 +35,7 @@ def main():
             shutil.rmtree(venv_dir)
 
         print(f"Installing dependencies")
-        subprocess.run(["poetry", "-v", "install"], check=True, cwd=example_path)
+        subprocess.run(["poetry", "-v", "install"], check=True, cwd=example_path, env=clean_env)
 
         install_path = SERVICES_PATH / example_path.name
         if install_path.is_dir():
@@ -48,20 +48,20 @@ def main():
         print("")
 
 
-def _deactivate_venv():
-    """Deactivate the current venv.
+def _get_clean_env():
+    """Get a clean environment with no venv activated.
 
     This is a workaround for https://github.com/python-poetry/poetry/issues/4055
     Option to force Poetry to create a virtual environment, even if a virtual env is active
 
     """
-    if "VIRTUAL_ENV" in os.environ:
+    env = os.environ.copy()
+    if env.pop("VIRTUAL_ENV", None) is not None:
         for var in os.environ.keys():
-            if var.startswith("_OLD_VIRTUAL_"):
-                original_var = var.replace("_OLD_VIRTUAL_", "")
-                os.environ[original_var] = os.environ[var]
-                del os.environ[var]
-        del os.environ["VIRTUAL_ENV"]
+            value = env.pop(f"_OLD_VIRTUAL_{var}", None)
+            if value is not None:
+                env[var] = value
+    return env
 
 
 if __name__ == "__main__":
