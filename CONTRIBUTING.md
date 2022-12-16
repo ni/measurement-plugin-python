@@ -73,6 +73,8 @@ The `ni_measurement_service\_internal\stubs` directory contains the auto-generat
 - ni/measurementlink/measurement/v1/measurement_service.proto
 - ni/measurementlink/pinmap/v1/pin_map_service.proto
 - ni/measurementlink/sessionmanagement/v1/session_management_service.proto
+- nidevice_grpc/README.md
+- nidevice_grpc/session.proto
 
 The latest .proto files are available in [Azure Repo](https://dev.azure.com/ni/DevCentral/_git/ASW?path=/Source/Protos). From the Azure Repo manually download and overwrite the proto files under the `ni_measurement_service\_internal\stubs\proto` folder.
 
