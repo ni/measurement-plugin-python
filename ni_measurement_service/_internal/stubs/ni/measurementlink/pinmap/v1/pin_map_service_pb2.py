@@ -18,7 +18,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
     syntax="proto3",
     serialized_options=b"\n com.ni.measurementlink.pinmap.v1B\022PinMapServiceProtoP\001Z\010pinmapv1\242\002\004NIMP\252\002-NationalInstruments.MeasurementLink.PinMap.V1\312\002\034NI\\MeasurementLink\\PinMap\\V1\352\002\037NI::MeasurementLink::PinMap::V1",
     create_key=_descriptor._internal_create_key,
-    serialized_pb=b'\n2ni/measurementlink/pinmap/v1/pin_map_service.proto\x12\x1cni.measurementlink.pinmap.v1"\x1c\n\x06PinMap\x12\x12\n\npin_map_id\x18\x01 \x01(\t"E\n\x1a\x43reatePinMapFromXmlRequest\x12\x12\n\npin_map_id\x18\x01 \x01(\t\x12\x13\n\x0bpin_map_xml\x18\x02 \x01(\t"E\n\x1aUpdatePinMapFromXmlRequest\x12\x12\n\npin_map_id\x18\x01 \x01(\t\x12\x13\n\x0bpin_map_xml\x18\x02 \x01(\t"&\n\x10GetPinMapRequest\x12\x12\n\npin_map_id\x18\x01 \x01(\t"B\n\x10QueryPinsRequest\x12\x12\n\npin_map_id\x18\x01 \x01(\t\x12\x1a\n\x12instrument_type_id\x18\x02 \x01(\t"\xda\x02\n\x11QueryPinsResponse\x12K\n\x04pins\x18\x01 \x03(\x0b\x32=.ni.measurementlink.pinmap.v1.QueryPinsResponse.PinDefinition\x12V\n\npin_groups\x18\x02 \x03(\x0b\x32\x42.ni.measurementlink.pinmap.v1.QueryPinsResponse.PinGroupDefinition\x1a<\n\rPinDefinition\x12\x14\n\x0c\x64isplay_name\x18\x01 \x01(\t\x12\x15\n\ris_system_pin\x18\x02 \x01(\x08\x1a\x62\n\x12PinGroupDefinition\x12\x14\n\x0c\x64isplay_name\x18\x01 \x01(\t\x12\x1f\n\x17pin_or_group_references\x18\x02 \x03(\t\x12\x15\n\rresolved_pins\x18\x03 \x03(\t"\x82\x01\n%QueryResourceAccessInformationRequest\x12\x12\n\npin_map_id\x18\x01 \x01(\t\x12\r\n\x05sites\x18\x02 \x03(\x05\x12\x1a\n\x12pin_or_relay_names\x18\x03 \x03(\t\x12\x1a\n\x12instrument_type_id\x18\x04 \x01(\t"\x94\x02\n&QueryResourceAccessInformationResponse\x12\x83\x01\n\x1bresource_access_information\x18\x01 \x03(\x0b\x32^.ni.measurementlink.pinmap.v1.QueryResourceAccessInformationResponse.ResourceAccessInformation\x1a\x64\n\x19ResourceAccessInformation\x12\x15\n\rresource_name\x18\x01 \x01(\t\x12\x14\n\x0c\x63hannel_list\x18\x02 \x01(\t\x12\x1a\n\x12instrument_type_id\x18\x03 \x01(\t2\xfc\x04\n\rPinMapService\x12u\n\x13\x43reatePinMapFromXml\x12\x38.ni.measurementlink.pinmap.v1.CreatePinMapFromXmlRequest\x1a$.ni.measurementlink.pinmap.v1.PinMap\x12u\n\x13UpdatePinMapFromXml\x12\x38.ni.measurementlink.pinmap.v1.UpdatePinMapFromXmlRequest\x1a$.ni.measurementlink.pinmap.v1.PinMap\x12\x61\n\tGetPinMap\x12..ni.measurementlink.pinmap.v1.GetPinMapRequest\x1a$.ni.measurementlink.pinmap.v1.PinMap\x12l\n\tQueryPins\x12..ni.measurementlink.pinmap.v1.QueryPinsRequest\x1a/.ni.measurementlink.pinmap.v1.QueryPinsResponse\x12\xab\x01\n\x1eQueryResourceAccessInformation\x12\x43.ni.measurementlink.pinmap.v1.QueryResourceAccessInformationRequest\x1a\x44.ni.measurementlink.pinmap.v1.QueryResourceAccessInformationResponseB\xba\x01\n com.ni.measurementlink.pinmap.v1B\x12PinMapServiceProtoP\x01Z\x08pinmapv1\xa2\x02\x04NIMP\xaa\x02-NationalInstruments.MeasurementLink.PinMap.V1\xca\x02\x1cNI\\MeasurementLink\\PinMap\\V1\xea\x02\x1fNI::MeasurementLink::PinMap::V1b\x06proto3',
+    serialized_pb=b'\n2ni/measurementlink/pinmap/v1/pin_map_service.proto\x12\x1cni.measurementlink.pinmap.v1"\x1c\n\x06PinMap\x12\x12\n\npin_map_id\x18\x01 \x01(\t"E\n\x1a\x43reatePinMapFromXmlRequest\x12\x12\n\npin_map_id\x18\x01 \x01(\t\x12\x13\n\x0bpin_map_xml\x18\x02 \x01(\t"E\n\x1aUpdatePinMapFromXmlRequest\x12\x12\n\npin_map_id\x18\x01 \x01(\t\x12\x13\n\x0bpin_map_xml\x18\x02 \x01(\t"&\n\x10GetPinMapRequest\x12\x12\n\npin_map_id\x18\x01 \x01(\t"B\n\x10QueryPinsRequest\x12\x12\n\npin_map_id\x18\x01 \x01(\t\x12\x1a\n\x12instrument_type_id\x18\x02 \x01(\t"\x94\x01\n\x11QueryPinsResponse\x12\x39\n\x04pins\x18\x01 \x03(\x0b\x32+.ni.measurementlink.pinmap.v1.PinDefinition\x12\x44\n\npin_groups\x18\x02 \x03(\x0b\x32\x30.ni.measurementlink.pinmap.v1.PinGroupDefinition"<\n\rPinDefinition\x12\x14\n\x0c\x64isplay_name\x18\x01 \x01(\t\x12\x15\n\ris_system_pin\x18\x02 \x01(\x08"b\n\x12PinGroupDefinition\x12\x14\n\x0c\x64isplay_name\x18\x01 \x01(\t\x12\x1f\n\x17pin_or_group_references\x18\x02 \x03(\t\x12\x15\n\rresolved_pins\x18\x03 \x03(\t"(\n\x12QueryRelaysRequest\x12\x12\n\npin_map_id\x18\x01 \x01(\t"\x9e\x01\n\x13QueryRelaysResponse\x12=\n\x06relays\x18\x01 \x03(\x0b\x32-.ni.measurementlink.pinmap.v1.RelayDefinition\x12H\n\x0crelay_groups\x18\x02 \x03(\x0b\x32\x32.ni.measurementlink.pinmap.v1.RelayGroupDefinition"@\n\x0fRelayDefinition\x12\x14\n\x0c\x64isplay_name\x18\x01 \x01(\t\x12\x17\n\x0fis_system_relay\x18\x02 \x01(\x08"h\n\x14RelayGroupDefinition\x12\x14\n\x0c\x64isplay_name\x18\x01 \x01(\t\x12!\n\x19relay_or_group_references\x18\x02 \x03(\t\x12\x17\n\x0fresolved_relays\x18\x03 \x03(\t"\x82\x01\n%QueryResourceAccessInformationRequest\x12\x12\n\npin_map_id\x18\x01 \x01(\t\x12\r\n\x05sites\x18\x02 \x03(\x05\x12\x1a\n\x12pin_or_relay_names\x18\x03 \x03(\t\x12\x1a\n\x12instrument_type_id\x18\x04 \x01(\t"\x86\x01\n&QueryResourceAccessInformationResponse\x12\\\n\x1bresource_access_information\x18\x01 \x03(\x0b\x32\x37.ni.measurementlink.pinmap.v1.ResourceAccessInformation"\xac\x01\n\x19ResourceAccessInformation\x12\x15\n\rresource_name\x18\x01 \x01(\t\x12\x14\n\x0c\x63hannel_list\x18\x02 \x01(\t\x12\x1a\n\x12instrument_type_id\x18\x03 \x01(\t\x12\x46\n\x10\x63hannel_mappings\x18\x04 \x03(\x0b\x32,.ni.measurementlink.pinmap.v1.ChannelMapping"J\n\x0e\x43hannelMapping\x12\x19\n\x11pin_or_relay_name\x18\x01 \x01(\t\x12\x0c\n\x04site\x18\x02 \x01(\x05\x12\x0f\n\x07\x63hannel\x18\x03 \x01(\t2\xf0\x05\n\rPinMapService\x12u\n\x13\x43reatePinMapFromXml\x12\x38.ni.measurementlink.pinmap.v1.CreatePinMapFromXmlRequest\x1a$.ni.measurementlink.pinmap.v1.PinMap\x12u\n\x13UpdatePinMapFromXml\x12\x38.ni.measurementlink.pinmap.v1.UpdatePinMapFromXmlRequest\x1a$.ni.measurementlink.pinmap.v1.PinMap\x12\x61\n\tGetPinMap\x12..ni.measurementlink.pinmap.v1.GetPinMapRequest\x1a$.ni.measurementlink.pinmap.v1.PinMap\x12l\n\tQueryPins\x12..ni.measurementlink.pinmap.v1.QueryPinsRequest\x1a/.ni.measurementlink.pinmap.v1.QueryPinsResponse\x12r\n\x0bQueryRelays\x12\x30.ni.measurementlink.pinmap.v1.QueryRelaysRequest\x1a\x31.ni.measurementlink.pinmap.v1.QueryRelaysResponse\x12\xab\x01\n\x1eQueryResourceAccessInformation\x12\x43.ni.measurementlink.pinmap.v1.QueryResourceAccessInformationRequest\x1a\x44.ni.measurementlink.pinmap.v1.QueryResourceAccessInformationResponseB\xba\x01\n com.ni.measurementlink.pinmap.v1B\x12PinMapServiceProtoP\x01Z\x08pinmapv1\xa2\x02\x04NIMP\xaa\x02-NationalInstruments.MeasurementLink.PinMap.V1\xca\x02\x1cNI\\MeasurementLink\\PinMap\\V1\xea\x02\x1fNI::MeasurementLink::PinMap::V1b\x06proto3',
 )
 
 
@@ -284,143 +284,6 @@ _QUERYPINSREQUEST = _descriptor.Descriptor(
 )
 
 
-_QUERYPINSRESPONSE_PINDEFINITION = _descriptor.Descriptor(
-    name="PinDefinition",
-    full_name="ni.measurementlink.pinmap.v1.QueryPinsResponse.PinDefinition",
-    filename=None,
-    file=DESCRIPTOR,
-    containing_type=None,
-    create_key=_descriptor._internal_create_key,
-    fields=[
-        _descriptor.FieldDescriptor(
-            name="display_name",
-            full_name="ni.measurementlink.pinmap.v1.QueryPinsResponse.PinDefinition.display_name",
-            index=0,
-            number=1,
-            type=9,
-            cpp_type=9,
-            label=1,
-            has_default_value=False,
-            default_value=b"".decode("utf-8"),
-            message_type=None,
-            enum_type=None,
-            containing_type=None,
-            is_extension=False,
-            extension_scope=None,
-            serialized_options=None,
-            file=DESCRIPTOR,
-            create_key=_descriptor._internal_create_key,
-        ),
-        _descriptor.FieldDescriptor(
-            name="is_system_pin",
-            full_name="ni.measurementlink.pinmap.v1.QueryPinsResponse.PinDefinition.is_system_pin",
-            index=1,
-            number=2,
-            type=8,
-            cpp_type=7,
-            label=1,
-            has_default_value=False,
-            default_value=False,
-            message_type=None,
-            enum_type=None,
-            containing_type=None,
-            is_extension=False,
-            extension_scope=None,
-            serialized_options=None,
-            file=DESCRIPTOR,
-            create_key=_descriptor._internal_create_key,
-        ),
-    ],
-    extensions=[],
-    nested_types=[],
-    enum_types=[],
-    serialized_options=None,
-    is_extendable=False,
-    syntax="proto3",
-    extension_ranges=[],
-    oneofs=[],
-    serialized_start=551,
-    serialized_end=611,
-)
-
-_QUERYPINSRESPONSE_PINGROUPDEFINITION = _descriptor.Descriptor(
-    name="PinGroupDefinition",
-    full_name="ni.measurementlink.pinmap.v1.QueryPinsResponse.PinGroupDefinition",
-    filename=None,
-    file=DESCRIPTOR,
-    containing_type=None,
-    create_key=_descriptor._internal_create_key,
-    fields=[
-        _descriptor.FieldDescriptor(
-            name="display_name",
-            full_name="ni.measurementlink.pinmap.v1.QueryPinsResponse.PinGroupDefinition.display_name",
-            index=0,
-            number=1,
-            type=9,
-            cpp_type=9,
-            label=1,
-            has_default_value=False,
-            default_value=b"".decode("utf-8"),
-            message_type=None,
-            enum_type=None,
-            containing_type=None,
-            is_extension=False,
-            extension_scope=None,
-            serialized_options=None,
-            file=DESCRIPTOR,
-            create_key=_descriptor._internal_create_key,
-        ),
-        _descriptor.FieldDescriptor(
-            name="pin_or_group_references",
-            full_name="ni.measurementlink.pinmap.v1.QueryPinsResponse.PinGroupDefinition.pin_or_group_references",
-            index=1,
-            number=2,
-            type=9,
-            cpp_type=9,
-            label=3,
-            has_default_value=False,
-            default_value=[],
-            message_type=None,
-            enum_type=None,
-            containing_type=None,
-            is_extension=False,
-            extension_scope=None,
-            serialized_options=None,
-            file=DESCRIPTOR,
-            create_key=_descriptor._internal_create_key,
-        ),
-        _descriptor.FieldDescriptor(
-            name="resolved_pins",
-            full_name="ni.measurementlink.pinmap.v1.QueryPinsResponse.PinGroupDefinition.resolved_pins",
-            index=2,
-            number=3,
-            type=9,
-            cpp_type=9,
-            label=3,
-            has_default_value=False,
-            default_value=[],
-            message_type=None,
-            enum_type=None,
-            containing_type=None,
-            is_extension=False,
-            extension_scope=None,
-            serialized_options=None,
-            file=DESCRIPTOR,
-            create_key=_descriptor._internal_create_key,
-        ),
-    ],
-    extensions=[],
-    nested_types=[],
-    enum_types=[],
-    serialized_options=None,
-    is_extendable=False,
-    syntax="proto3",
-    extension_ranges=[],
-    oneofs=[],
-    serialized_start=613,
-    serialized_end=711,
-)
-
 _QUERYPINSRESPONSE = _descriptor.Descriptor(
     name="QueryPinsResponse",
     full_name="ni.measurementlink.pinmap.v1.QueryPinsResponse",
@@ -469,10 +332,7 @@ _QUERYPINSRESPONSE = _descriptor.Descriptor(
         ),
     ],
     extensions=[],
-    nested_types=[
-        _QUERYPINSRESPONSE_PINDEFINITION,
-        _QUERYPINSRESPONSE_PINGROUPDEFINITION,
-    ],
+    nested_types=[],
     enum_types=[],
     serialized_options=None,
     is_extendable=False,
@@ -480,7 +340,386 @@ _QUERYPINSRESPONSE = _descriptor.Descriptor(
     extension_ranges=[],
     oneofs=[],
     serialized_start=365,
-    serialized_end=711,
+    serialized_end=513,
+)
+
+
+_PINDEFINITION = _descriptor.Descriptor(
+    name="PinDefinition",
+    full_name="ni.measurementlink.pinmap.v1.PinDefinition",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    create_key=_descriptor._internal_create_key,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="display_name",
+            full_name="ni.measurementlink.pinmap.v1.PinDefinition.display_name",
+            index=0,
+            number=1,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=b"".decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
+        ),
+        _descriptor.FieldDescriptor(
+            name="is_system_pin",
+            full_name="ni.measurementlink.pinmap.v1.PinDefinition.is_system_pin",
+            index=1,
+            number=2,
+            type=8,
+            cpp_type=7,
+            label=1,
+            has_default_value=False,
+            default_value=False,
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    serialized_options=None,
+    is_extendable=False,
+    syntax="proto3",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=515,
+    serialized_end=575,
+)
+
+
+_PINGROUPDEFINITION = _descriptor.Descriptor(
+    name="PinGroupDefinition",
+    full_name="ni.measurementlink.pinmap.v1.PinGroupDefinition",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    create_key=_descriptor._internal_create_key,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="display_name",
+            full_name="ni.measurementlink.pinmap.v1.PinGroupDefinition.display_name",
+            index=0,
+            number=1,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=b"".decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
+        ),
+        _descriptor.FieldDescriptor(
+            name="pin_or_group_references",
+            full_name="ni.measurementlink.pinmap.v1.PinGroupDefinition.pin_or_group_references",
+            index=1,
+            number=2,
+            type=9,
+            cpp_type=9,
+            label=3,
+            has_default_value=False,
+            default_value=[],
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
+        ),
+        _descriptor.FieldDescriptor(
+            name="resolved_pins",
+            full_name="ni.measurementlink.pinmap.v1.PinGroupDefinition.resolved_pins",
+            index=2,
+            number=3,
+            type=9,
+            cpp_type=9,
+            label=3,
+            has_default_value=False,
+            default_value=[],
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    serialized_options=None,
+    is_extendable=False,
+    syntax="proto3",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=577,
+    serialized_end=675,
+)
+
+
+_QUERYRELAYSREQUEST = _descriptor.Descriptor(
+    name="QueryRelaysRequest",
+    full_name="ni.measurementlink.pinmap.v1.QueryRelaysRequest",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    create_key=_descriptor._internal_create_key,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="pin_map_id",
+            full_name="ni.measurementlink.pinmap.v1.QueryRelaysRequest.pin_map_id",
+            index=0,
+            number=1,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=b"".decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    serialized_options=None,
+    is_extendable=False,
+    syntax="proto3",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=677,
+    serialized_end=717,
+)
+
+
+_QUERYRELAYSRESPONSE = _descriptor.Descriptor(
+    name="QueryRelaysResponse",
+    full_name="ni.measurementlink.pinmap.v1.QueryRelaysResponse",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    create_key=_descriptor._internal_create_key,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="relays",
+            full_name="ni.measurementlink.pinmap.v1.QueryRelaysResponse.relays",
+            index=0,
+            number=1,
+            type=11,
+            cpp_type=10,
+            label=3,
+            has_default_value=False,
+            default_value=[],
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
+        ),
+        _descriptor.FieldDescriptor(
+            name="relay_groups",
+            full_name="ni.measurementlink.pinmap.v1.QueryRelaysResponse.relay_groups",
+            index=1,
+            number=2,
+            type=11,
+            cpp_type=10,
+            label=3,
+            has_default_value=False,
+            default_value=[],
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    serialized_options=None,
+    is_extendable=False,
+    syntax="proto3",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=720,
+    serialized_end=878,
+)
+
+
+_RELAYDEFINITION = _descriptor.Descriptor(
+    name="RelayDefinition",
+    full_name="ni.measurementlink.pinmap.v1.RelayDefinition",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    create_key=_descriptor._internal_create_key,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="display_name",
+            full_name="ni.measurementlink.pinmap.v1.RelayDefinition.display_name",
+            index=0,
+            number=1,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=b"".decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
+        ),
+        _descriptor.FieldDescriptor(
+            name="is_system_relay",
+            full_name="ni.measurementlink.pinmap.v1.RelayDefinition.is_system_relay",
+            index=1,
+            number=2,
+            type=8,
+            cpp_type=7,
+            label=1,
+            has_default_value=False,
+            default_value=False,
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    serialized_options=None,
+    is_extendable=False,
+    syntax="proto3",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=880,
+    serialized_end=944,
+)
+
+
+_RELAYGROUPDEFINITION = _descriptor.Descriptor(
+    name="RelayGroupDefinition",
+    full_name="ni.measurementlink.pinmap.v1.RelayGroupDefinition",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    create_key=_descriptor._internal_create_key,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="display_name",
+            full_name="ni.measurementlink.pinmap.v1.RelayGroupDefinition.display_name",
+            index=0,
+            number=1,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=b"".decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
+        ),
+        _descriptor.FieldDescriptor(
+            name="relay_or_group_references",
+            full_name="ni.measurementlink.pinmap.v1.RelayGroupDefinition.relay_or_group_references",
+            index=1,
+            number=2,
+            type=9,
+            cpp_type=9,
+            label=3,
+            has_default_value=False,
+            default_value=[],
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
+        ),
+        _descriptor.FieldDescriptor(
+            name="resolved_relays",
+            full_name="ni.measurementlink.pinmap.v1.RelayGroupDefinition.resolved_relays",
+            index=2,
+            number=3,
+            type=9,
+            cpp_type=9,
+            label=3,
+            has_default_value=False,
+            default_value=[],
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    serialized_options=None,
+    is_extendable=False,
+    syntax="proto3",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=946,
+    serialized_end=1050,
 )
 
 
@@ -577,88 +816,10 @@ _QUERYRESOURCEACCESSINFORMATIONREQUEST = _descriptor.Descriptor(
     syntax="proto3",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=714,
-    serialized_end=844,
+    serialized_start=1053,
+    serialized_end=1183,
 )
 
-
-_QUERYRESOURCEACCESSINFORMATIONRESPONSE_RESOURCEACCESSINFORMATION = _descriptor.Descriptor(
-    name="ResourceAccessInformation",
-    full_name="ni.measurementlink.pinmap.v1.QueryResourceAccessInformationResponse.ResourceAccessInformation",
-    filename=None,
-    file=DESCRIPTOR,
-    containing_type=None,
-    create_key=_descriptor._internal_create_key,
-    fields=[
-        _descriptor.FieldDescriptor(
-            name="resource_name",
-            full_name="ni.measurementlink.pinmap.v1.QueryResourceAccessInformationResponse.ResourceAccessInformation.resource_name",
-            index=0,
-            number=1,
-            type=9,
-            cpp_type=9,
-            label=1,
-            has_default_value=False,
-            default_value=b"".decode("utf-8"),
-            message_type=None,
-            enum_type=None,
-            containing_type=None,
-            is_extension=False,
-            extension_scope=None,
-            serialized_options=None,
-            file=DESCRIPTOR,
-            create_key=_descriptor._internal_create_key,
-        ),
-        _descriptor.FieldDescriptor(
-            name="channel_list",
-            full_name="ni.measurementlink.pinmap.v1.QueryResourceAccessInformationResponse.ResourceAccessInformation.channel_list",
-            index=1,
-            number=2,
-            type=9,
-            cpp_type=9,
-            label=1,
-            has_default_value=False,
-            default_value=b"".decode("utf-8"),
-            message_type=None,
-            enum_type=None,
-            containing_type=None,
-            is_extension=False,
-            extension_scope=None,
-            serialized_options=None,
-            file=DESCRIPTOR,
-            create_key=_descriptor._internal_create_key,
-        ),
-        _descriptor.FieldDescriptor(
-            name="instrument_type_id",
-            full_name="ni.measurementlink.pinmap.v1.QueryResourceAccessInformationResponse.ResourceAccessInformation.instrument_type_id",
-            index=2,
-            number=3,
-            type=9,
-            cpp_type=9,
-            label=1,
-            has_default_value=False,
-            default_value=b"".decode("utf-8"),
-            message_type=None,
-            enum_type=None,
-            containing_type=None,
-            is_extension=False,
-            extension_scope=None,
-            serialized_options=None,
-            file=DESCRIPTOR,
-            create_key=_descriptor._internal_create_key,
-        ),
-    ],
-    extensions=[],
-    nested_types=[],
-    enum_types=[],
-    serialized_options=None,
-    is_extendable=False,
-    syntax="proto3",
-    extension_ranges=[],
-    oneofs=[],
-    serialized_start=1023,
-    serialized_end=1123,
-)
 
 _QUERYRESOURCEACCESSINFORMATIONRESPONSE = _descriptor.Descriptor(
     name="QueryResourceAccessInformationResponse",
@@ -689,41 +850,222 @@ _QUERYRESOURCEACCESSINFORMATIONRESPONSE = _descriptor.Descriptor(
         ),
     ],
     extensions=[],
-    nested_types=[
-        _QUERYRESOURCEACCESSINFORMATIONRESPONSE_RESOURCEACCESSINFORMATION,
-    ],
+    nested_types=[],
     enum_types=[],
     serialized_options=None,
     is_extendable=False,
     syntax="proto3",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=847,
-    serialized_end=1123,
+    serialized_start=1186,
+    serialized_end=1320,
 )
 
-_QUERYPINSRESPONSE_PINDEFINITION.containing_type = _QUERYPINSRESPONSE
-_QUERYPINSRESPONSE_PINGROUPDEFINITION.containing_type = _QUERYPINSRESPONSE
-_QUERYPINSRESPONSE.fields_by_name["pins"].message_type = _QUERYPINSRESPONSE_PINDEFINITION
-_QUERYPINSRESPONSE.fields_by_name["pin_groups"].message_type = _QUERYPINSRESPONSE_PINGROUPDEFINITION
-_QUERYRESOURCEACCESSINFORMATIONRESPONSE_RESOURCEACCESSINFORMATION.containing_type = (
-    _QUERYRESOURCEACCESSINFORMATIONRESPONSE
+
+_RESOURCEACCESSINFORMATION = _descriptor.Descriptor(
+    name="ResourceAccessInformation",
+    full_name="ni.measurementlink.pinmap.v1.ResourceAccessInformation",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    create_key=_descriptor._internal_create_key,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="resource_name",
+            full_name="ni.measurementlink.pinmap.v1.ResourceAccessInformation.resource_name",
+            index=0,
+            number=1,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=b"".decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
+        ),
+        _descriptor.FieldDescriptor(
+            name="channel_list",
+            full_name="ni.measurementlink.pinmap.v1.ResourceAccessInformation.channel_list",
+            index=1,
+            number=2,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=b"".decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
+        ),
+        _descriptor.FieldDescriptor(
+            name="instrument_type_id",
+            full_name="ni.measurementlink.pinmap.v1.ResourceAccessInformation.instrument_type_id",
+            index=2,
+            number=3,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=b"".decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
+        ),
+        _descriptor.FieldDescriptor(
+            name="channel_mappings",
+            full_name="ni.measurementlink.pinmap.v1.ResourceAccessInformation.channel_mappings",
+            index=3,
+            number=4,
+            type=11,
+            cpp_type=10,
+            label=3,
+            has_default_value=False,
+            default_value=[],
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    serialized_options=None,
+    is_extendable=False,
+    syntax="proto3",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=1323,
+    serialized_end=1495,
 )
+
+
+_CHANNELMAPPING = _descriptor.Descriptor(
+    name="ChannelMapping",
+    full_name="ni.measurementlink.pinmap.v1.ChannelMapping",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    create_key=_descriptor._internal_create_key,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="pin_or_relay_name",
+            full_name="ni.measurementlink.pinmap.v1.ChannelMapping.pin_or_relay_name",
+            index=0,
+            number=1,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=b"".decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
+        ),
+        _descriptor.FieldDescriptor(
+            name="site",
+            full_name="ni.measurementlink.pinmap.v1.ChannelMapping.site",
+            index=1,
+            number=2,
+            type=5,
+            cpp_type=1,
+            label=1,
+            has_default_value=False,
+            default_value=0,
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
+        ),
+        _descriptor.FieldDescriptor(
+            name="channel",
+            full_name="ni.measurementlink.pinmap.v1.ChannelMapping.channel",
+            index=2,
+            number=3,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=b"".decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    serialized_options=None,
+    is_extendable=False,
+    syntax="proto3",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=1497,
+    serialized_end=1571,
+)
+
+_QUERYPINSRESPONSE.fields_by_name["pins"].message_type = _PINDEFINITION
+_QUERYPINSRESPONSE.fields_by_name["pin_groups"].message_type = _PINGROUPDEFINITION
+_QUERYRELAYSRESPONSE.fields_by_name["relays"].message_type = _RELAYDEFINITION
+_QUERYRELAYSRESPONSE.fields_by_name["relay_groups"].message_type = _RELAYGROUPDEFINITION
 _QUERYRESOURCEACCESSINFORMATIONRESPONSE.fields_by_name[
     "resource_access_information"
-].message_type = _QUERYRESOURCEACCESSINFORMATIONRESPONSE_RESOURCEACCESSINFORMATION
+].message_type = _RESOURCEACCESSINFORMATION
+_RESOURCEACCESSINFORMATION.fields_by_name["channel_mappings"].message_type = _CHANNELMAPPING
 DESCRIPTOR.message_types_by_name["PinMap"] = _PINMAP
 DESCRIPTOR.message_types_by_name["CreatePinMapFromXmlRequest"] = _CREATEPINMAPFROMXMLREQUEST
 DESCRIPTOR.message_types_by_name["UpdatePinMapFromXmlRequest"] = _UPDATEPINMAPFROMXMLREQUEST
 DESCRIPTOR.message_types_by_name["GetPinMapRequest"] = _GETPINMAPREQUEST
 DESCRIPTOR.message_types_by_name["QueryPinsRequest"] = _QUERYPINSREQUEST
 DESCRIPTOR.message_types_by_name["QueryPinsResponse"] = _QUERYPINSRESPONSE
+DESCRIPTOR.message_types_by_name["PinDefinition"] = _PINDEFINITION
+DESCRIPTOR.message_types_by_name["PinGroupDefinition"] = _PINGROUPDEFINITION
+DESCRIPTOR.message_types_by_name["QueryRelaysRequest"] = _QUERYRELAYSREQUEST
+DESCRIPTOR.message_types_by_name["QueryRelaysResponse"] = _QUERYRELAYSRESPONSE
+DESCRIPTOR.message_types_by_name["RelayDefinition"] = _RELAYDEFINITION
+DESCRIPTOR.message_types_by_name["RelayGroupDefinition"] = _RELAYGROUPDEFINITION
 DESCRIPTOR.message_types_by_name[
     "QueryResourceAccessInformationRequest"
 ] = _QUERYRESOURCEACCESSINFORMATIONREQUEST
 DESCRIPTOR.message_types_by_name[
     "QueryResourceAccessInformationResponse"
 ] = _QUERYRESOURCEACCESSINFORMATIONRESPONSE
+DESCRIPTOR.message_types_by_name["ResourceAccessInformation"] = _RESOURCEACCESSINFORMATION
+DESCRIPTOR.message_types_by_name["ChannelMapping"] = _CHANNELMAPPING
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 PinMap = _reflection.GeneratedProtocolMessageType(
@@ -785,32 +1127,78 @@ QueryPinsResponse = _reflection.GeneratedProtocolMessageType(
     "QueryPinsResponse",
     (_message.Message,),
     {
-        "PinDefinition": _reflection.GeneratedProtocolMessageType(
-            "PinDefinition",
-            (_message.Message,),
-            {
-                "DESCRIPTOR": _QUERYPINSRESPONSE_PINDEFINITION,
-                "__module__": "ni.measurementlink.pinmap.v1.pin_map_service_pb2"
-                # @@protoc_insertion_point(class_scope:ni.measurementlink.pinmap.v1.QueryPinsResponse.PinDefinition)
-            },
-        ),
-        "PinGroupDefinition": _reflection.GeneratedProtocolMessageType(
-            "PinGroupDefinition",
-            (_message.Message,),
-            {
-                "DESCRIPTOR": _QUERYPINSRESPONSE_PINGROUPDEFINITION,
-                "__module__": "ni.measurementlink.pinmap.v1.pin_map_service_pb2"
-                # @@protoc_insertion_point(class_scope:ni.measurementlink.pinmap.v1.QueryPinsResponse.PinGroupDefinition)
-            },
-        ),
         "DESCRIPTOR": _QUERYPINSRESPONSE,
         "__module__": "ni.measurementlink.pinmap.v1.pin_map_service_pb2"
         # @@protoc_insertion_point(class_scope:ni.measurementlink.pinmap.v1.QueryPinsResponse)
     },
 )
 _sym_db.RegisterMessage(QueryPinsResponse)
-_sym_db.RegisterMessage(QueryPinsResponse.PinDefinition)
-_sym_db.RegisterMessage(QueryPinsResponse.PinGroupDefinition)
+
+PinDefinition = _reflection.GeneratedProtocolMessageType(
+    "PinDefinition",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _PINDEFINITION,
+        "__module__": "ni.measurementlink.pinmap.v1.pin_map_service_pb2"
+        # @@protoc_insertion_point(class_scope:ni.measurementlink.pinmap.v1.PinDefinition)
+    },
+)
+_sym_db.RegisterMessage(PinDefinition)
+
+PinGroupDefinition = _reflection.GeneratedProtocolMessageType(
+    "PinGroupDefinition",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _PINGROUPDEFINITION,
+        "__module__": "ni.measurementlink.pinmap.v1.pin_map_service_pb2"
+        # @@protoc_insertion_point(class_scope:ni.measurementlink.pinmap.v1.PinGroupDefinition)
+    },
+)
+_sym_db.RegisterMessage(PinGroupDefinition)
+
+QueryRelaysRequest = _reflection.GeneratedProtocolMessageType(
+    "QueryRelaysRequest",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _QUERYRELAYSREQUEST,
+        "__module__": "ni.measurementlink.pinmap.v1.pin_map_service_pb2"
+        # @@protoc_insertion_point(class_scope:ni.measurementlink.pinmap.v1.QueryRelaysRequest)
+    },
+)
+_sym_db.RegisterMessage(QueryRelaysRequest)
+
+QueryRelaysResponse = _reflection.GeneratedProtocolMessageType(
+    "QueryRelaysResponse",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _QUERYRELAYSRESPONSE,
+        "__module__": "ni.measurementlink.pinmap.v1.pin_map_service_pb2"
+        # @@protoc_insertion_point(class_scope:ni.measurementlink.pinmap.v1.QueryRelaysResponse)
+    },
+)
+_sym_db.RegisterMessage(QueryRelaysResponse)
+
+RelayDefinition = _reflection.GeneratedProtocolMessageType(
+    "RelayDefinition",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _RELAYDEFINITION,
+        "__module__": "ni.measurementlink.pinmap.v1.pin_map_service_pb2"
+        # @@protoc_insertion_point(class_scope:ni.measurementlink.pinmap.v1.RelayDefinition)
+    },
+)
+_sym_db.RegisterMessage(RelayDefinition)
+
+RelayGroupDefinition = _reflection.GeneratedProtocolMessageType(
+    "RelayGroupDefinition",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _RELAYGROUPDEFINITION,
+        "__module__": "ni.measurementlink.pinmap.v1.pin_map_service_pb2"
+        # @@protoc_insertion_point(class_scope:ni.measurementlink.pinmap.v1.RelayGroupDefinition)
+    },
+)
+_sym_db.RegisterMessage(RelayGroupDefinition)
 
 QueryResourceAccessInformationRequest = _reflection.GeneratedProtocolMessageType(
     "QueryResourceAccessInformationRequest",
@@ -827,22 +1215,34 @@ QueryResourceAccessInformationResponse = _reflection.GeneratedProtocolMessageTyp
     "QueryResourceAccessInformationResponse",
     (_message.Message,),
     {
-        "ResourceAccessInformation": _reflection.GeneratedProtocolMessageType(
-            "ResourceAccessInformation",
-            (_message.Message,),
-            {
-                "DESCRIPTOR": _QUERYRESOURCEACCESSINFORMATIONRESPONSE_RESOURCEACCESSINFORMATION,
-                "__module__": "ni.measurementlink.pinmap.v1.pin_map_service_pb2"
-                # @@protoc_insertion_point(class_scope:ni.measurementlink.pinmap.v1.QueryResourceAccessInformationResponse.ResourceAccessInformation)
-            },
-        ),
         "DESCRIPTOR": _QUERYRESOURCEACCESSINFORMATIONRESPONSE,
         "__module__": "ni.measurementlink.pinmap.v1.pin_map_service_pb2"
         # @@protoc_insertion_point(class_scope:ni.measurementlink.pinmap.v1.QueryResourceAccessInformationResponse)
     },
 )
 _sym_db.RegisterMessage(QueryResourceAccessInformationResponse)
-_sym_db.RegisterMessage(QueryResourceAccessInformationResponse.ResourceAccessInformation)
+
+ResourceAccessInformation = _reflection.GeneratedProtocolMessageType(
+    "ResourceAccessInformation",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _RESOURCEACCESSINFORMATION,
+        "__module__": "ni.measurementlink.pinmap.v1.pin_map_service_pb2"
+        # @@protoc_insertion_point(class_scope:ni.measurementlink.pinmap.v1.ResourceAccessInformation)
+    },
+)
+_sym_db.RegisterMessage(ResourceAccessInformation)
+
+ChannelMapping = _reflection.GeneratedProtocolMessageType(
+    "ChannelMapping",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _CHANNELMAPPING,
+        "__module__": "ni.measurementlink.pinmap.v1.pin_map_service_pb2"
+        # @@protoc_insertion_point(class_scope:ni.measurementlink.pinmap.v1.ChannelMapping)
+    },
+)
+_sym_db.RegisterMessage(ChannelMapping)
 
 
 DESCRIPTOR._options = None
@@ -854,8 +1254,8 @@ _PINMAPSERVICE = _descriptor.ServiceDescriptor(
     index=0,
     serialized_options=None,
     create_key=_descriptor._internal_create_key,
-    serialized_start=1126,
-    serialized_end=1762,
+    serialized_start=1574,
+    serialized_end=2326,
     methods=[
         _descriptor.MethodDescriptor(
             name="CreatePinMapFromXml",
@@ -898,9 +1298,19 @@ _PINMAPSERVICE = _descriptor.ServiceDescriptor(
             create_key=_descriptor._internal_create_key,
         ),
         _descriptor.MethodDescriptor(
+            name="QueryRelays",
+            full_name="ni.measurementlink.pinmap.v1.PinMapService.QueryRelays",
+            index=4,
+            containing_service=None,
+            input_type=_QUERYRELAYSREQUEST,
+            output_type=_QUERYRELAYSRESPONSE,
+            serialized_options=None,
+            create_key=_descriptor._internal_create_key,
+        ),
+        _descriptor.MethodDescriptor(
             name="QueryResourceAccessInformation",
             full_name="ni.measurementlink.pinmap.v1.PinMapService.QueryResourceAccessInformation",
-            index=4,
+            index=5,
             containing_service=None,
             input_type=_QUERYRESOURCEACCESSINFORMATIONREQUEST,
             output_type=_QUERYRESOURCEACCESSINFORMATIONRESPONSE,

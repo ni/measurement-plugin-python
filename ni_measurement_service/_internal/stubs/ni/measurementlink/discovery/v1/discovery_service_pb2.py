@@ -18,7 +18,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
     syntax="proto3",
     serialized_options=b'\n#com.ni.measurementlink.discovery.v1B\025DiscoveryServiceProtoP\001Z\013discoveryv1\242\002\004NIMD\252\0020NationalInstruments.MeasurementLink.Discovery.V1\312\002\037NI\\MeasurementLink\\Discovery\\V1\352\002"NI::MeasurementLink::Discovery::V1',
     create_key=_descriptor._internal_create_key,
-    serialized_pb=b'\n7ni/measurementlink/discovery/v1/discovery_service.proto\x12\x1fni.measurementlink.discovery.v1"\x8a\x01\n\x11ServiceDescriptor\x12\x14\n\x0c\x64isplay_name\x18\x01 \x01(\t\x12\x17\n\x0f\x64\x65scription_url\x18\x02 \x01(\t\x12\x1b\n\x13provided_interfaces\x18\x03 \x03(\t\x12\x15\n\rservice_class\x18\x04 \x01(\t\x12\x12\n\nattributes\x18\x05 \x03(\t"Z\n\x0fServiceLocation\x12\x10\n\x08location\x18\x01 \x01(\t\x12\x15\n\rinsecure_port\x18\x02 \x01(\t\x12\x1e\n\x16ssl_authenticated_port\x18\x03 \x01(\t"\xad\x01\n\x16RegisterServiceRequest\x12O\n\x13service_description\x18\x01 \x01(\x0b\x32\x32.ni.measurementlink.discovery.v1.ServiceDescriptor\x12\x42\n\x08location\x18\x02 \x01(\x0b\x32\x30.ni.measurementlink.discovery.v1.ServiceLocation"2\n\x17RegisterServiceResponse\x12\x17\n\x0fregistration_id\x18\x01 \x01(\t"3\n\x18UnregisterServiceRequest\x12\x17\n\x0fregistration_id\x18\x01 \x01(\t"\x1b\n\x19UnregisterServiceResponse"6\n\x18\x45numerateServicesRequest\x12\x1a\n\x12provided_interface\x18\x01 \x01(\t"k\n\x19\x45numerateServicesResponse\x12N\n\x12\x61vailable_services\x18\x01 \x03(\x0b\x32\x32.ni.measurementlink.discovery.v1.ServiceDescriptor"J\n\x15ResolveServiceRequest\x12\x1a\n\x12provided_interface\x18\x01 \x01(\t\x12\x15\n\rservice_class\x18\x02 \x01(\t2\xaf\x04\n\x10\x44iscoveryService\x12\x84\x01\n\x0fRegisterService\x12\x37.ni.measurementlink.discovery.v1.RegisterServiceRequest\x1a\x38.ni.measurementlink.discovery.v1.RegisterServiceResponse\x12\x8a\x01\n\x11UnregisterService\x12\x39.ni.measurementlink.discovery.v1.UnregisterServiceRequest\x1a:.ni.measurementlink.discovery.v1.UnregisterServiceResponse\x12\x8a\x01\n\x11\x45numerateServices\x12\x39.ni.measurementlink.discovery.v1.EnumerateServicesRequest\x1a:.ni.measurementlink.discovery.v1.EnumerateServicesResponse\x12z\n\x0eResolveService\x12\x36.ni.measurementlink.discovery.v1.ResolveServiceRequest\x1a\x30.ni.measurementlink.discovery.v1.ServiceLocationB\xcc\x01\n#com.ni.measurementlink.discovery.v1B\x15\x44iscoveryServiceProtoP\x01Z\x0b\x64iscoveryv1\xa2\x02\x04NIMD\xaa\x02\x30NationalInstruments.MeasurementLink.Discovery.V1\xca\x02\x1fNI\\MeasurementLink\\Discovery\\V1\xea\x02"NI::MeasurementLink::Discovery::V1b\x06proto3',
+    serialized_pb=b'\n7ni/measurementlink/discovery/v1/discovery_service.proto\x12\x1fni.measurementlink.discovery.v1"v\n\x11ServiceDescriptor\x12\x14\n\x0c\x64isplay_name\x18\x01 \x01(\t\x12\x17\n\x0f\x64\x65scription_url\x18\x02 \x01(\t\x12\x1b\n\x13provided_interfaces\x18\x03 \x03(\t\x12\x15\n\rservice_class\x18\x04 \x01(\t"Z\n\x0fServiceLocation\x12\x10\n\x08location\x18\x01 \x01(\t\x12\x15\n\rinsecure_port\x18\x02 \x01(\t\x12\x1e\n\x16ssl_authenticated_port\x18\x03 \x01(\t"\xad\x01\n\x16RegisterServiceRequest\x12O\n\x13service_description\x18\x01 \x01(\x0b\x32\x32.ni.measurementlink.discovery.v1.ServiceDescriptor\x12\x42\n\x08location\x18\x02 \x01(\x0b\x32\x30.ni.measurementlink.discovery.v1.ServiceLocation"2\n\x17RegisterServiceResponse\x12\x17\n\x0fregistration_id\x18\x01 \x01(\t"3\n\x18UnregisterServiceRequest\x12\x17\n\x0fregistration_id\x18\x01 \x01(\t"\x1b\n\x19UnregisterServiceResponse"6\n\x18\x45numerateServicesRequest\x12\x1a\n\x12provided_interface\x18\x01 \x01(\t"k\n\x19\x45numerateServicesResponse\x12N\n\x12\x61vailable_services\x18\x01 \x03(\x0b\x32\x32.ni.measurementlink.discovery.v1.ServiceDescriptor"J\n\x15ResolveServiceRequest\x12\x1a\n\x12provided_interface\x18\x01 \x01(\t\x12\x15\n\rservice_class\x18\x02 \x01(\t2\xaf\x04\n\x10\x44iscoveryService\x12\x84\x01\n\x0fRegisterService\x12\x37.ni.measurementlink.discovery.v1.RegisterServiceRequest\x1a\x38.ni.measurementlink.discovery.v1.RegisterServiceResponse\x12\x8a\x01\n\x11UnregisterService\x12\x39.ni.measurementlink.discovery.v1.UnregisterServiceRequest\x1a:.ni.measurementlink.discovery.v1.UnregisterServiceResponse\x12\x8a\x01\n\x11\x45numerateServices\x12\x39.ni.measurementlink.discovery.v1.EnumerateServicesRequest\x1a:.ni.measurementlink.discovery.v1.EnumerateServicesResponse\x12z\n\x0eResolveService\x12\x36.ni.measurementlink.discovery.v1.ResolveServiceRequest\x1a\x30.ni.measurementlink.discovery.v1.ServiceLocationB\xcc\x01\n#com.ni.measurementlink.discovery.v1B\x15\x44iscoveryServiceProtoP\x01Z\x0b\x64iscoveryv1\xa2\x02\x04NIMD\xaa\x02\x30NationalInstruments.MeasurementLink.Discovery.V1\xca\x02\x1fNI\\MeasurementLink\\Discovery\\V1\xea\x02"NI::MeasurementLink::Discovery::V1b\x06proto3',
 )
 
 
@@ -106,25 +106,6 @@ _SERVICEDESCRIPTOR = _descriptor.Descriptor(
             file=DESCRIPTOR,
             create_key=_descriptor._internal_create_key,
         ),
-        _descriptor.FieldDescriptor(
-            name="attributes",
-            full_name="ni.measurementlink.discovery.v1.ServiceDescriptor.attributes",
-            index=4,
-            number=5,
-            type=9,
-            cpp_type=9,
-            label=3,
-            has_default_value=False,
-            default_value=[],
-            message_type=None,
-            enum_type=None,
-            containing_type=None,
-            is_extension=False,
-            extension_scope=None,
-            serialized_options=None,
-            file=DESCRIPTOR,
-            create_key=_descriptor._internal_create_key,
-        ),
     ],
     extensions=[],
     nested_types=[],
@@ -134,8 +115,8 @@ _SERVICEDESCRIPTOR = _descriptor.Descriptor(
     syntax="proto3",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=93,
-    serialized_end=231,
+    serialized_start=92,
+    serialized_end=210,
 )
 
 
@@ -213,8 +194,8 @@ _SERVICELOCATION = _descriptor.Descriptor(
     syntax="proto3",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=233,
-    serialized_end=323,
+    serialized_start=212,
+    serialized_end=302,
 )
 
 
@@ -273,8 +254,8 @@ _REGISTERSERVICEREQUEST = _descriptor.Descriptor(
     syntax="proto3",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=326,
-    serialized_end=499,
+    serialized_start=305,
+    serialized_end=478,
 )
 
 
@@ -314,8 +295,8 @@ _REGISTERSERVICERESPONSE = _descriptor.Descriptor(
     syntax="proto3",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=501,
-    serialized_end=551,
+    serialized_start=480,
+    serialized_end=530,
 )
 
 
@@ -355,8 +336,8 @@ _UNREGISTERSERVICEREQUEST = _descriptor.Descriptor(
     syntax="proto3",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=553,
-    serialized_end=604,
+    serialized_start=532,
+    serialized_end=583,
 )
 
 
@@ -376,8 +357,8 @@ _UNREGISTERSERVICERESPONSE = _descriptor.Descriptor(
     syntax="proto3",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=606,
-    serialized_end=633,
+    serialized_start=585,
+    serialized_end=612,
 )
 
 
@@ -417,8 +398,8 @@ _ENUMERATESERVICESREQUEST = _descriptor.Descriptor(
     syntax="proto3",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=635,
-    serialized_end=689,
+    serialized_start=614,
+    serialized_end=668,
 )
 
 
@@ -458,8 +439,8 @@ _ENUMERATESERVICESRESPONSE = _descriptor.Descriptor(
     syntax="proto3",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=691,
-    serialized_end=798,
+    serialized_start=670,
+    serialized_end=777,
 )
 
 
@@ -518,8 +499,8 @@ _RESOLVESERVICEREQUEST = _descriptor.Descriptor(
     syntax="proto3",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=800,
-    serialized_end=874,
+    serialized_start=779,
+    serialized_end=853,
 )
 
 _REGISTERSERVICEREQUEST.fields_by_name["service_description"].message_type = _SERVICEDESCRIPTOR
@@ -645,8 +626,8 @@ _DISCOVERYSERVICE = _descriptor.ServiceDescriptor(
     index=0,
     serialized_options=None,
     create_key=_descriptor._internal_create_key,
-    serialized_start=877,
-    serialized_end=1436,
+    serialized_start=856,
+    serialized_end=1415,
     methods=[
         _descriptor.MethodDescriptor(
             name="RegisterService",

@@ -15,6 +15,9 @@ _sym_db = _symbol_database.Default()
 from ni_measurement_service._internal.stubs.ni.measurementlink import (
     pin_map_context_pb2 as ni_dot_measurementlink_dot_pin__map__context__pb2,
 )
+from ni_measurement_service._internal.stubs.nidevice_grpc import (
+    session_pb2 as nidevice__grpc_dot_session__pb2,
+)
 
 
 DESCRIPTOR = _descriptor.FileDescriptor(
@@ -23,51 +26,11 @@ DESCRIPTOR = _descriptor.FileDescriptor(
     syntax="proto3",
     serialized_options=b"\n+com.ni.measurementlink.sessionmanagement.v1B\026SessionManagementProtoP\001Z\023sessionmanagementv1\242\002\004NIMS\252\0028NationalInstruments.MeasurementLink.SessionManagement.V1\312\002'NI\\MeasurementLink\\SessionManagement\\V1\352\002*NI::MeasurementLink::SessionManagement::V1",
     create_key=_descriptor._internal_create_key,
-    serialized_pb=b'\nHni/measurementlink/sessionmanagement/v1/session_management_service.proto\x12\'ni.measurementlink.sessionmanagement.v1\x1a(ni/measurementlink/pin_map_context.proto"\x17\n\x07Session\x12\x0c\n\x04name\x18\x01 \x01(\t"\xb8\x01\n\x12SessionInformation\x12\x41\n\x07session\x18\x01 \x01(\x0b\x32\x30.ni.measurementlink.sessionmanagement.v1.Session\x12\x15\n\rresource_name\x18\x02 \x01(\t\x12\x14\n\x0c\x63hannel_list\x18\x03 \x01(\t\x12\x1a\n\x12instrument_type_id\x18\x04 \x01(\t\x12\x16\n\x0esession_exists\x18\x05 \x01(\x08"\xa4\x01\n\x16ReserveSessionsRequest\x12:\n\x0fpin_map_context\x18\x01 \x01(\x0b\x32!.ni.measurementlink.PinMapContext\x12\x11\n\tpin_names\x18\x02 \x03(\t\x12\x1a\n\x12instrument_type_id\x18\x03 \x01(\t\x12\x1f\n\x17timeout_in_milliseconds\x18\x04 \x01(\x05"h\n\x17ReserveSessionsResponse\x12M\n\x08sessions\x18\x01 \x03(\x0b\x32;.ni.measurementlink.sessionmanagement.v1.SessionInformation"i\n\x18UnreserveSessionsRequest\x12M\n\x08sessions\x18\x01 \x03(\x0b\x32;.ni.measurementlink.sessionmanagement.v1.SessionInformation"\x1b\n\x19UnreserveSessionsResponse"h\n\x17RegisterSessionsRequest\x12M\n\x08sessions\x18\x01 \x03(\x0b\x32;.ni.measurementlink.sessionmanagement.v1.SessionInformation"\x1a\n\x18RegisterSessionsResponse"j\n\x19UnregisterSessionsRequest\x12M\n\x08sessions\x18\x01 \x03(\x0b\x32;.ni.measurementlink.sessionmanagement.v1.SessionInformation"\x1c\n\x1aUnregisterSessionsResponse"F\n#ReserveAllRegisteredSessionsRequest\x12\x1f\n\x17timeout_in_milliseconds\x18\x01 \x01(\x05"u\n$ReserveAllRegisteredSessionsResponse\x12M\n\x08sessions\x18\x01 \x03(\x0b\x32;.ni.measurementlink.sessionmanagement.v1.SessionInformation2\xc6\x06\n\x18SessionManagementService\x12\x94\x01\n\x0fReserveSessions\x12?.ni.measurementlink.sessionmanagement.v1.ReserveSessionsRequest\x1a@.ni.measurementlink.sessionmanagement.v1.ReserveSessionsResponse\x12\x9a\x01\n\x11UnreserveSessions\x12\x41.ni.measurementlink.sessionmanagement.v1.UnreserveSessionsRequest\x1a\x42.ni.measurementlink.sessionmanagement.v1.UnreserveSessionsResponse\x12\x97\x01\n\x10RegisterSessions\x12@.ni.measurementlink.sessionmanagement.v1.RegisterSessionsRequest\x1a\x41.ni.measurementlink.sessionmanagement.v1.RegisterSessionsResponse\x12\x9d\x01\n\x12UnregisterSessions\x12\x42.ni.measurementlink.sessionmanagement.v1.UnregisterSessionsRequest\x1a\x43.ni.measurementlink.sessionmanagement.v1.UnregisterSessionsResponse\x12\xbb\x01\n\x1cReserveAllRegisteredSessions\x12L.ni.measurementlink.sessionmanagement.v1.ReserveAllRegisteredSessionsRequest\x1aM.ni.measurementlink.sessionmanagement.v1.ReserveAllRegisteredSessionsResponseB\xf5\x01\n+com.ni.measurementlink.sessionmanagement.v1B\x16SessionManagementProtoP\x01Z\x13sessionmanagementv1\xa2\x02\x04NIMS\xaa\x02\x38NationalInstruments.MeasurementLink.SessionManagement.V1\xca\x02\'NI\\MeasurementLink\\SessionManagement\\V1\xea\x02*NI::MeasurementLink::SessionManagement::V1b\x06proto3',
+    serialized_pb=b'\nHni/measurementlink/sessionmanagement/v1/session_management_service.proto\x12\'ni.measurementlink.sessionmanagement.v1\x1a(ni/measurementlink/pin_map_context.proto\x1a\x1bnidevice_grpc/session.proto"\xf1\x01\n\x12SessionInformation\x12\'\n\x07session\x18\x01 \x01(\x0b\x32\x16.nidevice_grpc.Session\x12\x15\n\rresource_name\x18\x02 \x01(\t\x12\x14\n\x0c\x63hannel_list\x18\x03 \x01(\t\x12\x1a\n\x12instrument_type_id\x18\x04 \x01(\t\x12\x16\n\x0esession_exists\x18\x05 \x01(\x08\x12Q\n\x10\x63hannel_mappings\x18\x06 \x03(\x0b\x32\x37.ni.measurementlink.sessionmanagement.v1.ChannelMapping"J\n\x0e\x43hannelMapping\x12\x19\n\x11pin_or_relay_name\x18\x01 \x01(\t\x12\x0c\n\x04site\x18\x02 \x01(\x05\x12\x0f\n\x07\x63hannel\x18\x03 \x01(\t"\xad\x01\n\x16ReserveSessionsRequest\x12:\n\x0fpin_map_context\x18\x01 \x01(\x0b\x32!.ni.measurementlink.PinMapContext\x12\x1a\n\x12pin_or_relay_names\x18\x02 \x03(\t\x12\x1a\n\x12instrument_type_id\x18\x03 \x01(\t\x12\x1f\n\x17timeout_in_milliseconds\x18\x04 \x01(\x05"h\n\x17ReserveSessionsResponse\x12M\n\x08sessions\x18\x01 \x03(\x0b\x32;.ni.measurementlink.sessionmanagement.v1.SessionInformation"i\n\x18UnreserveSessionsRequest\x12M\n\x08sessions\x18\x01 \x03(\x0b\x32;.ni.measurementlink.sessionmanagement.v1.SessionInformation"\x1b\n\x19UnreserveSessionsResponse"h\n\x17RegisterSessionsRequest\x12M\n\x08sessions\x18\x01 \x03(\x0b\x32;.ni.measurementlink.sessionmanagement.v1.SessionInformation"\x1a\n\x18RegisterSessionsResponse"j\n\x19UnregisterSessionsRequest\x12M\n\x08sessions\x18\x01 \x03(\x0b\x32;.ni.measurementlink.sessionmanagement.v1.SessionInformation"\x1c\n\x1aUnregisterSessionsResponse"b\n#ReserveAllRegisteredSessionsRequest\x12\x1f\n\x17timeout_in_milliseconds\x18\x01 \x01(\x05\x12\x1a\n\x12instrument_type_id\x18\x02 \x01(\t"u\n$ReserveAllRegisteredSessionsResponse\x12M\n\x08sessions\x18\x01 \x03(\x0b\x32;.ni.measurementlink.sessionmanagement.v1.SessionInformation2\xc6\x06\n\x18SessionManagementService\x12\x94\x01\n\x0fReserveSessions\x12?.ni.measurementlink.sessionmanagement.v1.ReserveSessionsRequest\x1a@.ni.measurementlink.sessionmanagement.v1.ReserveSessionsResponse\x12\x9a\x01\n\x11UnreserveSessions\x12\x41.ni.measurementlink.sessionmanagement.v1.UnreserveSessionsRequest\x1a\x42.ni.measurementlink.sessionmanagement.v1.UnreserveSessionsResponse\x12\x97\x01\n\x10RegisterSessions\x12@.ni.measurementlink.sessionmanagement.v1.RegisterSessionsRequest\x1a\x41.ni.measurementlink.sessionmanagement.v1.RegisterSessionsResponse\x12\x9d\x01\n\x12UnregisterSessions\x12\x42.ni.measurementlink.sessionmanagement.v1.UnregisterSessionsRequest\x1a\x43.ni.measurementlink.sessionmanagement.v1.UnregisterSessionsResponse\x12\xbb\x01\n\x1cReserveAllRegisteredSessions\x12L.ni.measurementlink.sessionmanagement.v1.ReserveAllRegisteredSessionsRequest\x1aM.ni.measurementlink.sessionmanagement.v1.ReserveAllRegisteredSessionsResponseB\xf5\x01\n+com.ni.measurementlink.sessionmanagement.v1B\x16SessionManagementProtoP\x01Z\x13sessionmanagementv1\xa2\x02\x04NIMS\xaa\x02\x38NationalInstruments.MeasurementLink.SessionManagement.V1\xca\x02\'NI\\MeasurementLink\\SessionManagement\\V1\xea\x02*NI::MeasurementLink::SessionManagement::V1b\x06proto3',
     dependencies=[
         ni_dot_measurementlink_dot_pin__map__context__pb2.DESCRIPTOR,
+        nidevice__grpc_dot_session__pb2.DESCRIPTOR,
     ],
-)
-
-
-_SESSION = _descriptor.Descriptor(
-    name="Session",
-    full_name="ni.measurementlink.sessionmanagement.v1.Session",
-    filename=None,
-    file=DESCRIPTOR,
-    containing_type=None,
-    create_key=_descriptor._internal_create_key,
-    fields=[
-        _descriptor.FieldDescriptor(
-            name="name",
-            full_name="ni.measurementlink.sessionmanagement.v1.Session.name",
-            index=0,
-            number=1,
-            type=9,
-            cpp_type=9,
-            label=1,
-            has_default_value=False,
-            default_value=b"".decode("utf-8"),
-            message_type=None,
-            enum_type=None,
-            containing_type=None,
-            is_extension=False,
-            extension_scope=None,
-            serialized_options=None,
-            file=DESCRIPTOR,
-            create_key=_descriptor._internal_create_key,
-        ),
-    ],
-    extensions=[],
-    nested_types=[],
-    enum_types=[],
-    serialized_options=None,
-    is_extendable=False,
-    syntax="proto3",
-    extension_ranges=[],
-    oneofs=[],
-    serialized_start=159,
-    serialized_end=182,
 )
 
 
@@ -174,6 +137,25 @@ _SESSIONINFORMATION = _descriptor.Descriptor(
             file=DESCRIPTOR,
             create_key=_descriptor._internal_create_key,
         ),
+        _descriptor.FieldDescriptor(
+            name="channel_mappings",
+            full_name="ni.measurementlink.sessionmanagement.v1.SessionInformation.channel_mappings",
+            index=5,
+            number=6,
+            type=11,
+            cpp_type=10,
+            label=3,
+            has_default_value=False,
+            default_value=[],
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
+        ),
     ],
     extensions=[],
     nested_types=[],
@@ -183,8 +165,87 @@ _SESSIONINFORMATION = _descriptor.Descriptor(
     syntax="proto3",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=185,
-    serialized_end=369,
+    serialized_start=189,
+    serialized_end=430,
+)
+
+
+_CHANNELMAPPING = _descriptor.Descriptor(
+    name="ChannelMapping",
+    full_name="ni.measurementlink.sessionmanagement.v1.ChannelMapping",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    create_key=_descriptor._internal_create_key,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="pin_or_relay_name",
+            full_name="ni.measurementlink.sessionmanagement.v1.ChannelMapping.pin_or_relay_name",
+            index=0,
+            number=1,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=b"".decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
+        ),
+        _descriptor.FieldDescriptor(
+            name="site",
+            full_name="ni.measurementlink.sessionmanagement.v1.ChannelMapping.site",
+            index=1,
+            number=2,
+            type=5,
+            cpp_type=1,
+            label=1,
+            has_default_value=False,
+            default_value=0,
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
+        ),
+        _descriptor.FieldDescriptor(
+            name="channel",
+            full_name="ni.measurementlink.sessionmanagement.v1.ChannelMapping.channel",
+            index=2,
+            number=3,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=b"".decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    serialized_options=None,
+    is_extendable=False,
+    syntax="proto3",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=432,
+    serialized_end=506,
 )
 
 
@@ -216,8 +277,8 @@ _RESERVESESSIONSREQUEST = _descriptor.Descriptor(
             create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
-            name="pin_names",
-            full_name="ni.measurementlink.sessionmanagement.v1.ReserveSessionsRequest.pin_names",
+            name="pin_or_relay_names",
+            full_name="ni.measurementlink.sessionmanagement.v1.ReserveSessionsRequest.pin_or_relay_names",
             index=1,
             number=2,
             type=9,
@@ -281,8 +342,8 @@ _RESERVESESSIONSREQUEST = _descriptor.Descriptor(
     syntax="proto3",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=372,
-    serialized_end=536,
+    serialized_start=509,
+    serialized_end=682,
 )
 
 
@@ -322,8 +383,8 @@ _RESERVESESSIONSRESPONSE = _descriptor.Descriptor(
     syntax="proto3",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=538,
-    serialized_end=642,
+    serialized_start=684,
+    serialized_end=788,
 )
 
 
@@ -363,8 +424,8 @@ _UNRESERVESESSIONSREQUEST = _descriptor.Descriptor(
     syntax="proto3",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=644,
-    serialized_end=749,
+    serialized_start=790,
+    serialized_end=895,
 )
 
 
@@ -384,8 +445,8 @@ _UNRESERVESESSIONSRESPONSE = _descriptor.Descriptor(
     syntax="proto3",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=751,
-    serialized_end=778,
+    serialized_start=897,
+    serialized_end=924,
 )
 
 
@@ -425,8 +486,8 @@ _REGISTERSESSIONSREQUEST = _descriptor.Descriptor(
     syntax="proto3",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=780,
-    serialized_end=884,
+    serialized_start=926,
+    serialized_end=1030,
 )
 
 
@@ -446,8 +507,8 @@ _REGISTERSESSIONSRESPONSE = _descriptor.Descriptor(
     syntax="proto3",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=886,
-    serialized_end=912,
+    serialized_start=1032,
+    serialized_end=1058,
 )
 
 
@@ -487,8 +548,8 @@ _UNREGISTERSESSIONSREQUEST = _descriptor.Descriptor(
     syntax="proto3",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=914,
-    serialized_end=1020,
+    serialized_start=1060,
+    serialized_end=1166,
 )
 
 
@@ -508,8 +569,8 @@ _UNREGISTERSESSIONSRESPONSE = _descriptor.Descriptor(
     syntax="proto3",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=1022,
-    serialized_end=1050,
+    serialized_start=1168,
+    serialized_end=1196,
 )
 
 
@@ -540,6 +601,25 @@ _RESERVEALLREGISTEREDSESSIONSREQUEST = _descriptor.Descriptor(
             file=DESCRIPTOR,
             create_key=_descriptor._internal_create_key,
         ),
+        _descriptor.FieldDescriptor(
+            name="instrument_type_id",
+            full_name="ni.measurementlink.sessionmanagement.v1.ReserveAllRegisteredSessionsRequest.instrument_type_id",
+            index=1,
+            number=2,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=b"".decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
+        ),
     ],
     extensions=[],
     nested_types=[],
@@ -549,8 +629,8 @@ _RESERVEALLREGISTEREDSESSIONSREQUEST = _descriptor.Descriptor(
     syntax="proto3",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=1052,
-    serialized_end=1122,
+    serialized_start=1198,
+    serialized_end=1296,
 )
 
 
@@ -590,11 +670,14 @@ _RESERVEALLREGISTEREDSESSIONSRESPONSE = _descriptor.Descriptor(
     syntax="proto3",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=1124,
-    serialized_end=1241,
+    serialized_start=1298,
+    serialized_end=1415,
 )
 
-_SESSIONINFORMATION.fields_by_name["session"].message_type = _SESSION
+_SESSIONINFORMATION.fields_by_name[
+    "session"
+].message_type = nidevice__grpc_dot_session__pb2._SESSION
+_SESSIONINFORMATION.fields_by_name["channel_mappings"].message_type = _CHANNELMAPPING
 _RESERVESESSIONSREQUEST.fields_by_name[
     "pin_map_context"
 ].message_type = ni_dot_measurementlink_dot_pin__map__context__pb2._PINMAPCONTEXT
@@ -603,8 +686,8 @@ _UNRESERVESESSIONSREQUEST.fields_by_name["sessions"].message_type = _SESSIONINFO
 _REGISTERSESSIONSREQUEST.fields_by_name["sessions"].message_type = _SESSIONINFORMATION
 _UNREGISTERSESSIONSREQUEST.fields_by_name["sessions"].message_type = _SESSIONINFORMATION
 _RESERVEALLREGISTEREDSESSIONSRESPONSE.fields_by_name["sessions"].message_type = _SESSIONINFORMATION
-DESCRIPTOR.message_types_by_name["Session"] = _SESSION
 DESCRIPTOR.message_types_by_name["SessionInformation"] = _SESSIONINFORMATION
+DESCRIPTOR.message_types_by_name["ChannelMapping"] = _CHANNELMAPPING
 DESCRIPTOR.message_types_by_name["ReserveSessionsRequest"] = _RESERVESESSIONSREQUEST
 DESCRIPTOR.message_types_by_name["ReserveSessionsResponse"] = _RESERVESESSIONSRESPONSE
 DESCRIPTOR.message_types_by_name["UnreserveSessionsRequest"] = _UNRESERVESESSIONSREQUEST
@@ -621,17 +704,6 @@ DESCRIPTOR.message_types_by_name[
 ] = _RESERVEALLREGISTEREDSESSIONSRESPONSE
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
-Session = _reflection.GeneratedProtocolMessageType(
-    "Session",
-    (_message.Message,),
-    {
-        "DESCRIPTOR": _SESSION,
-        "__module__": "ni.measurementlink.sessionmanagement.v1.session_management_service_pb2"
-        # @@protoc_insertion_point(class_scope:ni.measurementlink.sessionmanagement.v1.Session)
-    },
-)
-_sym_db.RegisterMessage(Session)
-
 SessionInformation = _reflection.GeneratedProtocolMessageType(
     "SessionInformation",
     (_message.Message,),
@@ -642,6 +714,17 @@ SessionInformation = _reflection.GeneratedProtocolMessageType(
     },
 )
 _sym_db.RegisterMessage(SessionInformation)
+
+ChannelMapping = _reflection.GeneratedProtocolMessageType(
+    "ChannelMapping",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _CHANNELMAPPING,
+        "__module__": "ni.measurementlink.sessionmanagement.v1.session_management_service_pb2"
+        # @@protoc_insertion_point(class_scope:ni.measurementlink.sessionmanagement.v1.ChannelMapping)
+    },
+)
+_sym_db.RegisterMessage(ChannelMapping)
 
 ReserveSessionsRequest = _reflection.GeneratedProtocolMessageType(
     "ReserveSessionsRequest",
@@ -763,8 +846,8 @@ _SESSIONMANAGEMENTSERVICE = _descriptor.ServiceDescriptor(
     index=0,
     serialized_options=None,
     create_key=_descriptor._internal_create_key,
-    serialized_start=1244,
-    serialized_end=2082,
+    serialized_start=1418,
+    serialized_end=2256,
     methods=[
         _descriptor.MethodDescriptor(
             name="ReserveSessions",
