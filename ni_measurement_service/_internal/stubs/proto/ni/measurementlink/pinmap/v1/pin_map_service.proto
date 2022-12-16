@@ -35,6 +35,11 @@ service PinMapService {
     // - NOT_FOUND: Pin map resource for the specified pin map id is not found
     rpc QueryPins(QueryPinsRequest) returns (QueryPinsResponse);
 
+    // Returns list of relays from the registered pin map resource.
+    // Status Codes for errors:
+    // - NOT_FOUND: Pin map resource for the specified pin map id is not found
+    rpc QueryRelays(QueryRelaysRequest) returns (QueryRelaysResponse);
+
     // Get instrument resource names, channels, and instrument type for the specified sites, pins or pin groups, relays or relay groups, instrument type in the registered pin map resource.
     // Status Codes for errors:
     // - NOT_FOUND:
@@ -97,25 +102,57 @@ message QueryPinsResponse {
     // When an instrument type id filter is specified, a pin group will only be included
     // in the response if all pins in the pin group match the instrument type.
     repeated PinGroupDefinition pin_groups = 2;
+}
 
-    message PinDefinition {
-        // Name of the dut pin.
-        string display_name = 1;
+message PinDefinition {
+    // Name of the dut pin.
+    string display_name = 1;
 
-        // A boolean that indicates a system pin when 'true', or DUT pin when 'false'.
-        bool is_system_pin = 2;
-    }
+    // A boolean that indicates a System pin when 'true', or DUT pin when 'false'.
+    bool is_system_pin = 2;
+}
 
-    message PinGroupDefinition {
-        // Name of the pin group.
-        string display_name = 1;
+message PinGroupDefinition {
+    // Name of the pin group.
+    string display_name = 1;
 
-        // List of other pins or pin groups within this pin group.
-        repeated string pin_or_group_references = 2;
+    // List of other pins or pin groups within this pin group.
+    repeated string pin_or_group_references = 2;
 
-        // Distinct union of pins within this pin group, including those within nested pin groups.
-        repeated string resolved_pins = 3;
-    }
+    // Distinct union of pins within this pin group, including those within nested pin groups.
+    repeated string resolved_pins = 3;
+}
+
+message QueryRelaysRequest {
+    // Required. The resource id of the registered pin map resource.
+    string pin_map_id = 1;
+}
+
+message QueryRelaysResponse {
+    // List of relays on the registered pin map resource. This list includes both Site relays and System relays.
+    repeated RelayDefinition relays = 1;
+
+    // List of relay groups on the registered pin map resource.
+    repeated RelayGroupDefinition relay_groups = 2;
+}
+
+message RelayDefinition {
+    // Name of the relay.
+    string display_name = 1;
+
+    // A boolean that indicates a System relay when 'true', or Site relay when 'false'.
+    bool is_system_relay = 2;
+}
+
+message RelayGroupDefinition {
+    // Name of the relay group.
+    string display_name = 1;
+
+    // List of other relays or relay groups within this relay group.
+    repeated string relay_or_group_references = 2;
+
+    // Distinct union of relays within this relay group, including those within nested relay groups.
+    repeated string resolved_relays = 3;
 }
 
 message QueryResourceAccessInformationRequest {
@@ -144,30 +181,46 @@ message QueryResourceAccessInformationRequest {
 message QueryResourceAccessInformationResponse {
     // List of ResourceAccessInformation objects with instrument resource names and channels.
     repeated ResourceAccessInformation resource_access_information = 1;
+}
 
-    message ResourceAccessInformation {
-        // Name of the instrument resource.
-        // This string is used for initializing the driver session.
-        string resource_name = 1;
+message ResourceAccessInformation {
+    // Name of the instrument resource.
+    // This string is used for initializing the driver session.
+    string resource_name = 1;
 
-        // Channels on the instrument resource.
-        // This string is used by various driver API methods such as Read, Fetch etc., and driver initialization for some instruments.
-        // For a resource that represents a group of instruments or channels in the pin map, the channel list is a comma separated list of fully qualified channels in the format <instrument_name>/<channel>, e.g. "DCPower1/0, DCPower1/2, DCPower2/0".
-        // For a resource that represents a single instrument in the pin map that is not part of a group, the channel list is a comma separated list of channels, e.g. "0, 1, 2".
-        // For NI-Digital Pattern devices, the channel list is a comma separated list of pins in the format <site_number>/<pin>, e.g. "site0/PinA, site1/PinB".
-        // For a resource that represents a relay driver, the channel list is a comma separated list of NISwitch relay names, e.g. "K0, K1, K2".
-        string channel_list = 2;
+    // Channels on the instrument resource.
+    // This string is used by various driver API methods such as Read, Fetch etc., and driver initialization for some instruments.
+    // For a resource that represents a group of instruments or channels in the pin map, the channel list is a comma separated list of fully qualified channels in the format <instrument_name>/<channel>, e.g. "DCPower1/0, DCPower1/2, DCPower2/0".
+    // For a resource that represents a single instrument in the pin map that is not part of a group, the channel list is a comma separated list of channels, e.g. "0, 1, 2".
+    // For NI-Digital Pattern devices, the channel list is a comma separated list of pins in the format <site_number>/<pin>, e.g. "site0/PinA, site1/PinB".
+    // For a resource that represents a relay driver, the channel list is a comma separated list of NISwitch relay names, e.g. "K0, K1, K2".
+    string channel_list = 2;
 
-        // The instrument type of the instrument resource.
-        // Pin maps have built in instrument definitions using the following NI driver based instrument type ids:
-        //      "niDCPower"
-        //      "niDigitalPattern"
-        //      "niScope"
-        //      "niDMM"
-        //      "niDAQmx"
-        //      "niFGen"
-        //      "niRelayDriver"
-        // For custom instruments the user defined instrument type id is defined in the pin map file.
-        string instrument_type_id = 3;
-    }
+    // The instrument type of the instrument resource.
+    // Pin maps have built in instrument definitions using the following NI driver based instrument type ids:
+    //      "niDCPower"
+    //      "niDigitalPattern"
+    //      "niScope"
+    //      "niDMM"
+    //      "niDAQmx"
+    //      "niFGen"
+    //      "niRelayDriver"
+    // For custom instruments the user defined instrument type id is defined in the pin map file.
+    string instrument_type_id = 3;
+
+    // List of site and pin/relay mappings that correspond to each channel in the channel_list.
+    // Each item contains a mapping corresponding to a channel in this instrument resource, in the order of the channel_list.
+    repeated ChannelMapping channel_mappings = 4;
+}
+
+message ChannelMapping {
+    // The pin or relay that is mapped to a channel.
+    string pin_or_relay_name = 1;
+
+    // The site on which the pin or relay is mapped to a channel.
+    // For system pins/relays the site number is -1 since they do not belong to a specific site.
+    int32 site = 2;
+
+    // The channel to which the pin or relay is mapped on this site.
+    string channel = 3;
 }
