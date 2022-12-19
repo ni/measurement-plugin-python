@@ -59,9 +59,7 @@ def generate_python_files(
     grpc_tools.protoc.main(arguments)
 
 
-def fix_import_paths(
-    stubs_path: pathlib.Path, stubs_namespace: str, proto_parent_namespace: str
-):
+def fix_import_paths(stubs_path: pathlib.Path, stubs_namespace: str, proto_parent_namespace: str):
     """Fix import paths of generated files."""
     print("Fixing import paths")
     grpc_codegened_file_paths = list(stubs_path.rglob("*pb2*py"))
