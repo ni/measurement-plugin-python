@@ -17,11 +17,15 @@ STUBS_PATH = pathlib.Path(__file__).parent.parent / STUBS_NAMESPACE.replace(".",
 PROTO_PATH = STUBS_PATH / "proto"
 PROTO_FILES = list(PROTO_PATH.rglob("*.proto"))
 
+TEST_STUBS_PATH = pathlib.Path(__file__).parent.parent / "tests" / "assets"
+TEST_PROTO_PATH = TEST_STUBS_PATH
+TEST_PROTO_FILES = list(TEST_PROTO_PATH.rglob("*.proto"))
 
 def main():
     """Generate and fixup gRPC Python stubs."""
     remove_generated_files()
     generate_python_files()
+    generate_test_python_files()
     fix_import_paths()
     add_init_files()
     blacken_code()
@@ -45,6 +49,21 @@ def generate_python_files():
         f"--grpc_python_out={str(STUBS_PATH)}",
     ]
     arguments += [str(path.relative_to(PROTO_PATH)).replace("\\", "/") for path in PROTO_FILES]
+
+    grpc_tools.protoc.main(arguments)
+
+
+def generate_test_python_files():
+    """Generate test python files from .proto files with protoc."""
+    arguments = [
+        "protoc",
+        f"--proto_path={str(TEST_PROTO_PATH)}",
+        f"--proto_path={pkg_resources.resource_filename('grpc_tools', '_proto')}",
+        f"--python_out={str(TEST_STUBS_PATH)}",
+        f"--mypy_out={str(TEST_STUBS_PATH)}",
+        f"--grpc_python_out={str(TEST_STUBS_PATH)}",
+    ]
+    arguments += [str(path.relative_to(TEST_PROTO_PATH)).replace("\\", "/") for path in TEST_PROTO_FILES]
 
     grpc_tools.protoc.main(arguments)
 
