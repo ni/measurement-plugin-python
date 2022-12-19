@@ -42,9 +42,10 @@ tomlkit = "^0.11.0"
 sphinx-click = "^4.1.0"
 pytest-cov = "^3.0.0"
 mypy = "^0.961"
-mypy-protobuf = "^3.0"
-types-protobuf = "^3.20"
+mypy-protobuf = "^3.4"
+types-protobuf = "^4.21"
 typed-ast = "*"
+types-pkg-resources = "*"
 mako = "*"
 
 [build-system]
