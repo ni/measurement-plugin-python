@@ -3,7 +3,9 @@
 isort:skip_file
 """
 import builtins
+import collections.abc
 import google.protobuf.descriptor
+import google.protobuf.internal.containers
 import google.protobuf.internal.enum_type_wrapper
 import google.protobuf.message
 import sys
@@ -45,12 +47,249 @@ class Session(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
     NAME_FIELD_NUMBER: builtins.int
+    ID_FIELD_NUMBER: builtins.int
     name: builtins.str
+    id: builtins.int
     def __init__(
         self,
         *,
         name: builtins.str = ...,
+        id: builtins.int = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing_extensions.Literal["name", b"name"]) -> None: ...
+    def HasField(
+        self,
+        field_name: typing_extensions.Literal["id", b"id", "name", b"name", "session", b"session"],
+    ) -> builtins.bool: ...
+    def ClearField(
+        self,
+        field_name: typing_extensions.Literal["id", b"id", "name", b"name", "session", b"session"],
+    ) -> None: ...
+    def WhichOneof(
+        self, oneof_group: typing_extensions.Literal["session", b"session"]
+    ) -> typing_extensions.Literal["name", "id"] | None: ...
 
 global___Session = Session
+
+@typing_extensions.final
+class DeviceProperties(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    NAME_FIELD_NUMBER: builtins.int
+    MODEL_FIELD_NUMBER: builtins.int
+    VENDOR_FIELD_NUMBER: builtins.int
+    SERIAL_NUMBER_FIELD_NUMBER: builtins.int
+    PRODUCT_ID_FIELD_NUMBER: builtins.int
+    name: builtins.str
+    model: builtins.str
+    vendor: builtins.str
+    serial_number: builtins.str
+    product_id: builtins.int
+    def __init__(
+        self,
+        *,
+        name: builtins.str = ...,
+        model: builtins.str = ...,
+        vendor: builtins.str = ...,
+        serial_number: builtins.str = ...,
+        product_id: builtins.int = ...,
+    ) -> None: ...
+    def ClearField(
+        self,
+        field_name: typing_extensions.Literal[
+            "model",
+            b"model",
+            "name",
+            b"name",
+            "product_id",
+            b"product_id",
+            "serial_number",
+            b"serial_number",
+            "vendor",
+            b"vendor",
+        ],
+    ) -> None: ...
+
+global___DeviceProperties = DeviceProperties
+
+@typing_extensions.final
+class EnumerateDevicesRequest(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    def __init__(
+        self,
+    ) -> None: ...
+
+global___EnumerateDevicesRequest = EnumerateDevicesRequest
+
+@typing_extensions.final
+class EnumerateDevicesResponse(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    DEVICES_FIELD_NUMBER: builtins.int
+    @property
+    def devices(
+        self,
+    ) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[
+        global___DeviceProperties
+    ]: ...
+    def __init__(
+        self,
+        *,
+        devices: collections.abc.Iterable[global___DeviceProperties] | None = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["devices", b"devices"]) -> None: ...
+
+global___EnumerateDevicesResponse = EnumerateDevicesResponse
+
+@typing_extensions.final
+class ReserveRequest(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    RESERVATION_ID_FIELD_NUMBER: builtins.int
+    CLIENT_ID_FIELD_NUMBER: builtins.int
+    reservation_id: builtins.str
+    """client defined string representing a set of reservable resources"""
+    client_id: builtins.str
+    """client defined identifier for a specific client"""
+    def __init__(
+        self,
+        *,
+        reservation_id: builtins.str = ...,
+        client_id: builtins.str = ...,
+    ) -> None: ...
+    def ClearField(
+        self,
+        field_name: typing_extensions.Literal[
+            "client_id", b"client_id", "reservation_id", b"reservation_id"
+        ],
+    ) -> None: ...
+
+global___ReserveRequest = ReserveRequest
+
+@typing_extensions.final
+class ReserveResponse(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    IS_RESERVED_FIELD_NUMBER: builtins.int
+    is_reserved: builtins.bool
+    def __init__(
+        self,
+        *,
+        is_reserved: builtins.bool = ...,
+    ) -> None: ...
+    def ClearField(
+        self, field_name: typing_extensions.Literal["is_reserved", b"is_reserved"]
+    ) -> None: ...
+
+global___ReserveResponse = ReserveResponse
+
+@typing_extensions.final
+class IsReservedByClientRequest(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    RESERVATION_ID_FIELD_NUMBER: builtins.int
+    CLIENT_ID_FIELD_NUMBER: builtins.int
+    reservation_id: builtins.str
+    """client defined string representing a set of reservable resources"""
+    client_id: builtins.str
+    """client defined identifier for a specific client"""
+    def __init__(
+        self,
+        *,
+        reservation_id: builtins.str = ...,
+        client_id: builtins.str = ...,
+    ) -> None: ...
+    def ClearField(
+        self,
+        field_name: typing_extensions.Literal[
+            "client_id", b"client_id", "reservation_id", b"reservation_id"
+        ],
+    ) -> None: ...
+
+global___IsReservedByClientRequest = IsReservedByClientRequest
+
+@typing_extensions.final
+class IsReservedByClientResponse(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    IS_RESERVED_FIELD_NUMBER: builtins.int
+    is_reserved: builtins.bool
+    def __init__(
+        self,
+        *,
+        is_reserved: builtins.bool = ...,
+    ) -> None: ...
+    def ClearField(
+        self, field_name: typing_extensions.Literal["is_reserved", b"is_reserved"]
+    ) -> None: ...
+
+global___IsReservedByClientResponse = IsReservedByClientResponse
+
+@typing_extensions.final
+class UnreserveRequest(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    RESERVATION_ID_FIELD_NUMBER: builtins.int
+    CLIENT_ID_FIELD_NUMBER: builtins.int
+    reservation_id: builtins.str
+    """client defined string representing a set of reservable resources"""
+    client_id: builtins.str
+    """client defined identifier for a specific client"""
+    def __init__(
+        self,
+        *,
+        reservation_id: builtins.str = ...,
+        client_id: builtins.str = ...,
+    ) -> None: ...
+    def ClearField(
+        self,
+        field_name: typing_extensions.Literal[
+            "client_id", b"client_id", "reservation_id", b"reservation_id"
+        ],
+    ) -> None: ...
+
+global___UnreserveRequest = UnreserveRequest
+
+@typing_extensions.final
+class UnreserveResponse(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    IS_UNRESERVED_FIELD_NUMBER: builtins.int
+    is_unreserved: builtins.bool
+    def __init__(
+        self,
+        *,
+        is_unreserved: builtins.bool = ...,
+    ) -> None: ...
+    def ClearField(
+        self, field_name: typing_extensions.Literal["is_unreserved", b"is_unreserved"]
+    ) -> None: ...
+
+global___UnreserveResponse = UnreserveResponse
+
+@typing_extensions.final
+class ResetServerRequest(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    def __init__(
+        self,
+    ) -> None: ...
+
+global___ResetServerRequest = ResetServerRequest
+
+@typing_extensions.final
+class ResetServerResponse(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    IS_SERVER_RESET_FIELD_NUMBER: builtins.int
+    is_server_reset: builtins.bool
+    def __init__(
+        self,
+        *,
+        is_server_reset: builtins.bool = ...,
+    ) -> None: ...
+    def ClearField(
+        self, field_name: typing_extensions.Literal["is_server_reset", b"is_server_reset"]
+    ) -> None: ...
+
+global___ResetServerResponse = ResetServerResponse
