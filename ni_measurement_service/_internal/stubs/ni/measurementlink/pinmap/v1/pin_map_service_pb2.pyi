@@ -16,6 +16,7 @@ else:
 
 DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
 
+@typing_extensions.final
 class PinMap(google.protobuf.message.Message):
     """Pin map resource type."""
 
@@ -35,6 +36,7 @@ class PinMap(google.protobuf.message.Message):
 
 global___PinMap = PinMap
 
+@typing_extensions.final
 class CreatePinMapFromXmlRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -59,6 +61,7 @@ class CreatePinMapFromXmlRequest(google.protobuf.message.Message):
 
 global___CreatePinMapFromXmlRequest = CreatePinMapFromXmlRequest
 
+@typing_extensions.final
 class UpdatePinMapFromXmlRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -83,6 +86,7 @@ class UpdatePinMapFromXmlRequest(google.protobuf.message.Message):
 
 global___UpdatePinMapFromXmlRequest = UpdatePinMapFromXmlRequest
 
+@typing_extensions.final
 class GetPinMapRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -100,6 +104,7 @@ class GetPinMapRequest(google.protobuf.message.Message):
 
 global___GetPinMapRequest = GetPinMapRequest
 
+@typing_extensions.final
 class QueryPinsRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -133,9 +138,11 @@ class QueryPinsRequest(google.protobuf.message.Message):
 
 global___QueryPinsRequest = QueryPinsRequest
 
+@typing_extensions.final
 class QueryPinsResponse(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
+    @typing_extensions.final
     class PinDefinition(google.protobuf.message.Message):
         DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -158,6 +165,7 @@ class QueryPinsResponse(google.protobuf.message.Message):
             ],
         ) -> None: ...
 
+    @typing_extensions.final
     class PinGroupDefinition(google.protobuf.message.Message):
         DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -227,6 +235,7 @@ class QueryPinsResponse(google.protobuf.message.Message):
 
 global___QueryPinsResponse = QueryPinsResponse
 
+@typing_extensions.final
 class QueryResourceAccessInformationRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -282,9 +291,11 @@ class QueryResourceAccessInformationRequest(google.protobuf.message.Message):
 
 global___QueryResourceAccessInformationRequest = QueryResourceAccessInformationRequest
 
+@typing_extensions.final
 class QueryResourceAccessInformationResponse(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
+    @typing_extensions.final
     class ResourceAccessInformation(google.protobuf.message.Message):
         DESCRIPTOR: google.protobuf.descriptor.Descriptor
 

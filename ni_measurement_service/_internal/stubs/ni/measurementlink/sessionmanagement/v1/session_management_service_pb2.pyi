@@ -17,6 +17,7 @@ else:
 
 DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
 
+@typing_extensions.final
 class Session(google.protobuf.message.Message):
     """Session identification information. Used to reference a specific session in NI grpc-device or in any other driver session management system."""
 
@@ -34,6 +35,7 @@ class Session(google.protobuf.message.Message):
 
 global___Session = Session
 
+@typing_extensions.final
 class SessionInformation(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -101,6 +103,7 @@ class SessionInformation(google.protobuf.message.Message):
 
 global___SessionInformation = SessionInformation
 
+@typing_extensions.final
 class ReserveSessionsRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -157,6 +160,7 @@ class ReserveSessionsRequest(google.protobuf.message.Message):
 
 global___ReserveSessionsRequest = ReserveSessionsRequest
 
+@typing_extensions.final
 class ReserveSessionsResponse(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -181,6 +185,7 @@ class ReserveSessionsResponse(google.protobuf.message.Message):
 
 global___ReserveSessionsResponse = ReserveSessionsResponse
 
+@typing_extensions.final
 class UnreserveSessionsRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -203,6 +208,7 @@ class UnreserveSessionsRequest(google.protobuf.message.Message):
 
 global___UnreserveSessionsRequest = UnreserveSessionsRequest
 
+@typing_extensions.final
 class UnreserveSessionsResponse(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -212,6 +218,7 @@ class UnreserveSessionsResponse(google.protobuf.message.Message):
 
 global___UnreserveSessionsResponse = UnreserveSessionsResponse
 
+@typing_extensions.final
 class RegisterSessionsRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -234,6 +241,7 @@ class RegisterSessionsRequest(google.protobuf.message.Message):
 
 global___RegisterSessionsRequest = RegisterSessionsRequest
 
+@typing_extensions.final
 class RegisterSessionsResponse(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -243,6 +251,7 @@ class RegisterSessionsResponse(google.protobuf.message.Message):
 
 global___RegisterSessionsResponse = RegisterSessionsResponse
 
+@typing_extensions.final
 class UnregisterSessionsRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -265,6 +274,7 @@ class UnregisterSessionsRequest(google.protobuf.message.Message):
 
 global___UnregisterSessionsRequest = UnregisterSessionsRequest
 
+@typing_extensions.final
 class UnregisterSessionsResponse(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -274,6 +284,7 @@ class UnregisterSessionsResponse(google.protobuf.message.Message):
 
 global___UnregisterSessionsResponse = UnregisterSessionsResponse
 
+@typing_extensions.final
 class ReserveAllRegisteredSessionsRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -296,6 +307,7 @@ class ReserveAllRegisteredSessionsRequest(google.protobuf.message.Message):
 
 global___ReserveAllRegisteredSessionsRequest = ReserveAllRegisteredSessionsRequest
 
+@typing_extensions.final
 class ReserveAllRegisteredSessionsResponse(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
