@@ -1362,15 +1362,27 @@ files = [
 ]
 
 [[package]]
+name = "types-pkg-resources"
+version = "0.1.3"
+description = "Typing stubs for pkg_resources"
+category = "dev"
+optional = false
+python-versions = "*"
+files = [
+    {file = "types-pkg_resources-0.1.3.tar.gz", hash = "sha256:834a9b8d3dbea343562fd99d5d3359a726f6bf9d3733bccd2b4f3096fbab9dae"},
+    {file = "types_pkg_resources-0.1.3-py2.py3-none-any.whl", hash = "sha256:0cb9972cee992249f93fff1a491bf2dc3ce674e5a1926e27d4f0866f7d9b6d9c"},
+]
+
+[[package]]
 name = "types-protobuf"
-version = "3.20.4.6"
+version = "4.21.0.2"
 description = "Typing stubs for protobuf"
 category = "dev"
 optional = false
 python-versions = "*"
 files = [
-    {file = "types-protobuf-3.20.4.6.tar.gz", hash = "sha256:ba27443c592bbec1629dd69494a24c84461c63f0d3b7d648ce258aaae9680965"},
-    {file = "types_protobuf-3.20.4.6-py3-none-any.whl", hash = "sha256:ab2d315ba82246b83d28f8797c98dc0fe1dd5cfd187909e56faf87239aedaae3"},
+    {file = "types-protobuf-4.21.0.2.tar.gz", hash = "sha256:7df483d34ad3fcb1fa7fff1073560d596c9ac1f419cfa851b220c9a93386c998"},
+    {file = "types_protobuf-4.21.0.2-py3-none-any.whl", hash = "sha256:aeefcf39d637016998b3c7b699750847071b555f7c2e0c9873d42ab6103d1a39"},
 ]
 
 [[package]]
@@ -1519,4 +1531,4 @@ testing = ["flake8 (<5)", "func-timeout", "jaraco.functools", "jaraco.itertools"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "da348a2c911ffe42a2d3c3a7df810c703891e1a95b3341c1fd23aec6a41b1454"
+content-hash = "7346c0a4716cdec6683d0ce462bf02f9787f9cbb72d80caee5008dc9759edf14"
