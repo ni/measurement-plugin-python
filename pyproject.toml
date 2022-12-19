@@ -23,8 +23,8 @@ python = "^3.8"
 # This package includes gRPC stubs that were generated with the version of grpcio-tools specified
 # below. Please keep the minimum grpcio version in sync with the grpcio-tools version. Otherwise,
 # the generated gRPC stubs may not work with the minimum grpcio version.
-grpcio = "^1.41.1"
-protobuf = "^3.20"
+grpcio = "^1.49.1"
+protobuf = "^4.21"
 pywin32 = {version = "^303", platform = "win32"}
 
 [tool.poetry.dev-dependencies]
@@ -32,7 +32,7 @@ pytest = "^5.2"
 ni-python-styleguide = ">=0.1.9"
 # When you update the grpcio-tools version, you should update the minimum grpcio version
 # and regenerate gRPC stubs.
-grpcio-tools = "1.41.1"
+grpcio-tools = "1.49.1"
 Sphinx = "^5.0.1"
 sphinx-rtd-theme = "^1.0.0"
 sphinx-autoapi = "^1.8.4"
