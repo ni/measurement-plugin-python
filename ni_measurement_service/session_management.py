@@ -65,17 +65,9 @@ class SessionInformation(NamedTuple):
             Client.reserve_all_registered_sessions.
 
         instrument_type_id (str): Instrument type ID to identify which type of instrument the
-            session represents. Pin maps have built in instrument definitions using the following
-            NI driver based instrument type ids:
-                "niDCPower"
-                "niDigitalPattern"
-                "niScope"
-                "niDMM"
-                "niDAQmx"
-                "niFGen"
-                "niRelayDriver"
-            For custom instruments the user defined instrument type id is defined in the pin map
-            file.
+            session represents. Pin maps have built in instrument definitions using the instrument
+            type id constants such as `INSTRUMENT_TYPE_NI_DCPOWER`. For custom instruments, the 
+            user defined instrument type id is defined in the pin map file.
 
         session_exists (bool): Indicates whether the session exists in the Session Manager. This
             indicates whether the session has been created.
