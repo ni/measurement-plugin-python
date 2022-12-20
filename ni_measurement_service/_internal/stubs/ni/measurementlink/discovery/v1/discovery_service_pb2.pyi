@@ -18,6 +18,7 @@ else:
 
 DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
 
+@typing_extensions.final
 class ServiceDescriptor(google.protobuf.message.Message):
     """Description of a registered service. This information can be used to display information to the user
     about the service when services are being developed for a plugin architecture
@@ -77,6 +78,7 @@ class ServiceDescriptor(google.protobuf.message.Message):
 
 global___ServiceDescriptor = ServiceDescriptor
 
+@typing_extensions.final
 class ServiceLocation(google.protobuf.message.Message):
     """Represents the location of a service. The location generally includes the IP address and port number for the service
     which can be used to establish communication with the service.
@@ -118,6 +120,7 @@ class ServiceLocation(google.protobuf.message.Message):
 
 global___ServiceLocation = ServiceLocation
 
+@typing_extensions.final
 class RegisterServiceRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -150,6 +153,7 @@ class RegisterServiceRequest(google.protobuf.message.Message):
 
 global___RegisterServiceRequest = RegisterServiceRequest
 
+@typing_extensions.final
 class RegisterServiceResponse(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -167,6 +171,7 @@ class RegisterServiceResponse(google.protobuf.message.Message):
 
 global___RegisterServiceResponse = RegisterServiceResponse
 
+@typing_extensions.final
 class UnregisterServiceRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -184,6 +189,7 @@ class UnregisterServiceRequest(google.protobuf.message.Message):
 
 global___UnregisterServiceRequest = UnregisterServiceRequest
 
+@typing_extensions.final
 class UnregisterServiceResponse(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -193,6 +199,7 @@ class UnregisterServiceResponse(google.protobuf.message.Message):
 
 global___UnregisterServiceResponse = UnregisterServiceResponse
 
+@typing_extensions.final
 class EnumerateServicesRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -212,6 +219,7 @@ class EnumerateServicesRequest(google.protobuf.message.Message):
 
 global___EnumerateServicesRequest = EnumerateServicesRequest
 
+@typing_extensions.final
 class EnumerateServicesResponse(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -234,6 +242,7 @@ class EnumerateServicesResponse(google.protobuf.message.Message):
 
 global___EnumerateServicesResponse = EnumerateServicesResponse
 
+@typing_extensions.final
 class ResolveServiceRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 

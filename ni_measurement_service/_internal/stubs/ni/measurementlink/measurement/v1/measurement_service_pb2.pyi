@@ -21,6 +21,7 @@ else:
 
 DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
 
+@typing_extensions.final
 class GetMetadataRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -30,6 +31,7 @@ class GetMetadataRequest(google.protobuf.message.Message):
 
 global___GetMetadataRequest = GetMetadataRequest
 
+@typing_extensions.final
 class GetMetadataResponse(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -80,6 +82,7 @@ class GetMetadataResponse(google.protobuf.message.Message):
 
 global___GetMetadataResponse = GetMetadataResponse
 
+@typing_extensions.final
 class MeasureRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -124,6 +127,7 @@ class MeasureRequest(google.protobuf.message.Message):
 
 global___MeasureRequest = MeasureRequest
 
+@typing_extensions.final
 class MeasureResponse(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -146,6 +150,7 @@ class MeasureResponse(google.protobuf.message.Message):
 
 global___MeasureResponse = MeasureResponse
 
+@typing_extensions.final
 class MeasurementDetails(google.protobuf.message.Message):
     """Message that contains standard information reported by a measurement."""
 
@@ -172,6 +177,7 @@ class MeasurementDetails(google.protobuf.message.Message):
 
 global___MeasurementDetails = MeasurementDetails
 
+@typing_extensions.final
 class MeasurementSignature(google.protobuf.message.Message):
     """Message that defines the signature of a measurement."""
 
@@ -240,6 +246,7 @@ class MeasurementSignature(google.protobuf.message.Message):
 
 global___MeasurementSignature = MeasurementSignature
 
+@typing_extensions.final
 class UserInterfaceDetails(google.protobuf.message.Message):
     """Contains measurement User Interface details."""
 
@@ -259,11 +266,13 @@ class UserInterfaceDetails(google.protobuf.message.Message):
 
 global___UserInterfaceDetails = UserInterfaceDetails
 
+@typing_extensions.final
 class ConfigurationParameter(google.protobuf.message.Message):
     """Message that defines a configuration parameter for the measurement."""
 
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
+    @typing_extensions.final
     class AnnotationsEntry(google.protobuf.message.Message):
         DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -338,6 +347,7 @@ class ConfigurationParameter(google.protobuf.message.Message):
 
 global___ConfigurationParameter = ConfigurationParameter
 
+@typing_extensions.final
 class Output(google.protobuf.message.Message):
     """Message that defines an output of the measurement."""
 
