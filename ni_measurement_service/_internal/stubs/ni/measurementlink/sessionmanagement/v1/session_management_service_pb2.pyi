@@ -8,6 +8,7 @@ import google.protobuf.descriptor
 import google.protobuf.internal.containers
 import google.protobuf.message
 import ni.measurementlink.pin_map_context_pb2
+import session_pb2
 import sys
 
 if sys.version_info >= (3, 8):
@@ -17,23 +18,7 @@ else:
 
 DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
 
-class Session(google.protobuf.message.Message):
-    """Session identification information. Used to reference a specific session in NI grpc-device or in any other driver session management system."""
-
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
-
-    NAME_FIELD_NUMBER: builtins.int
-    name: builtins.str
-    """Required. Session name to uniquely identify the session in NI grpc-device or other drivers."""
-    def __init__(
-        self,
-        *,
-        name: builtins.str = ...,
-    ) -> None: ...
-    def ClearField(self, field_name: typing_extensions.Literal["name", b"name"]) -> None: ...
-
-global___Session = Session
-
+@typing_extensions.final
 class SessionInformation(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -42,8 +27,9 @@ class SessionInformation(google.protobuf.message.Message):
     CHANNEL_LIST_FIELD_NUMBER: builtins.int
     INSTRUMENT_TYPE_ID_FIELD_NUMBER: builtins.int
     SESSION_EXISTS_FIELD_NUMBER: builtins.int
+    CHANNEL_MAPPINGS_FIELD_NUMBER: builtins.int
     @property
-    def session(self) -> global___Session:
+    def session(self) -> session_pb2.Session:
         """Session identifier used to identify the session in the session management service, as well as in driver services such as grpc-device.
         This field is readonly.
         """
@@ -63,7 +49,9 @@ class SessionInformation(google.protobuf.message.Message):
          "niDigitalPattern"
          "niScope"
          "niDMM"
-         "niDAQmx".
+         "niDAQmx"
+         "niFGen"
+         "niRelayDriver"
     For custom instruments the user defined instrument type id is defined in the pin map file.
     This field is readonly.
     """
@@ -71,14 +59,26 @@ class SessionInformation(google.protobuf.message.Message):
     """Indicates whether the session exists in the Session Manager. This indicates whether the session has been created.
     This field is readonly.
     """
+    @property
+    def channel_mappings(
+        self,
+    ) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[
+        global___ChannelMapping
+    ]:
+        """List of site and pin/relay mappings that correspond to each channel in the channel_list.
+        Each item contains a mapping corresponding to a channel in this instrument resource, in the order of the channel_list.
+        This field is empty for any SessionInformation returned from ReserveAllRegisteredSessions.
+        This field is readonly.
+        """
     def __init__(
         self,
         *,
-        session: global___Session | None = ...,
+        session: session_pb2.Session | None = ...,
         resource_name: builtins.str = ...,
         channel_list: builtins.str = ...,
         instrument_type_id: builtins.str = ...,
         session_exists: builtins.bool = ...,
+        channel_mappings: collections.abc.Iterable[global___ChannelMapping] | None = ...,
     ) -> None: ...
     def HasField(
         self, field_name: typing_extensions.Literal["session", b"session"]
@@ -88,6 +88,8 @@ class SessionInformation(google.protobuf.message.Message):
         field_name: typing_extensions.Literal[
             "channel_list",
             b"channel_list",
+            "channel_mappings",
+            b"channel_mappings",
             "instrument_type_id",
             b"instrument_type_id",
             "resource_name",
@@ -101,21 +103,53 @@ class SessionInformation(google.protobuf.message.Message):
 
 global___SessionInformation = SessionInformation
 
+@typing_extensions.final
+class ChannelMapping(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    PIN_OR_RELAY_NAME_FIELD_NUMBER: builtins.int
+    SITE_FIELD_NUMBER: builtins.int
+    CHANNEL_FIELD_NUMBER: builtins.int
+    pin_or_relay_name: builtins.str
+    """The pin or relay that is mapped to a channel."""
+    site: builtins.int
+    """The site on which the pin or relay is mapped to a channel.
+    For system pins/relays the site number is -1 since they do not belong to a specific site.
+    """
+    channel: builtins.str
+    """The channel to which the pin or relay is mapped on this site."""
+    def __init__(
+        self,
+        *,
+        pin_or_relay_name: builtins.str = ...,
+        site: builtins.int = ...,
+        channel: builtins.str = ...,
+    ) -> None: ...
+    def ClearField(
+        self,
+        field_name: typing_extensions.Literal[
+            "channel", b"channel", "pin_or_relay_name", b"pin_or_relay_name", "site", b"site"
+        ],
+    ) -> None: ...
+
+global___ChannelMapping = ChannelMapping
+
+@typing_extensions.final
 class ReserveSessionsRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
     PIN_MAP_CONTEXT_FIELD_NUMBER: builtins.int
-    PIN_NAMES_FIELD_NUMBER: builtins.int
+    PIN_OR_RELAY_NAMES_FIELD_NUMBER: builtins.int
     INSTRUMENT_TYPE_ID_FIELD_NUMBER: builtins.int
     TIMEOUT_IN_MILLISECONDS_FIELD_NUMBER: builtins.int
     @property
     def pin_map_context(self) -> ni.measurementlink.pin_map_context_pb2.PinMapContext:
         """Required. Includes the pin map ID for the pin map in the Pin Map Service, as well as the list of sites for the measurement."""
     @property
-    def pin_names(
+    def pin_or_relay_names(
         self,
     ) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]:
-        """Optional. List of pin names or pin group names to use for the measurement. If unspecified, reserve sessions for all pins in the registered pin map resource."""
+        """Optional. List of pins, pin groups, relays, or relay groups to use for the measurement. If unspecified, reserve sessions for all pins and relays in the registered pin map resource."""
     instrument_type_id: builtins.str
     """Optional. Instrument type ID for the measurement. If unspecified, reserve sessions for all instrument types connected in the registered pin map resource.
     Pin maps have built in instrument definitions using the following NI driver based instrument type ids:
@@ -123,7 +157,9 @@ class ReserveSessionsRequest(google.protobuf.message.Message):
          "niDigitalPattern"
          "niScope"
          "niDMM"
-         "niDAQmx".
+         "niDAQmx"
+         "niFGen"
+         "niRelayDriver"
     For custom instruments the user defined instrument type id is defined in the pin map file.
     """
     timeout_in_milliseconds: builtins.int
@@ -134,7 +170,7 @@ class ReserveSessionsRequest(google.protobuf.message.Message):
         self,
         *,
         pin_map_context: ni.measurementlink.pin_map_context_pb2.PinMapContext | None = ...,
-        pin_names: collections.abc.Iterable[builtins.str] | None = ...,
+        pin_or_relay_names: collections.abc.Iterable[builtins.str] | None = ...,
         instrument_type_id: builtins.str = ...,
         timeout_in_milliseconds: builtins.int = ...,
     ) -> None: ...
@@ -148,8 +184,8 @@ class ReserveSessionsRequest(google.protobuf.message.Message):
             b"instrument_type_id",
             "pin_map_context",
             b"pin_map_context",
-            "pin_names",
-            b"pin_names",
+            "pin_or_relay_names",
+            b"pin_or_relay_names",
             "timeout_in_milliseconds",
             b"timeout_in_milliseconds",
         ],
@@ -157,6 +193,7 @@ class ReserveSessionsRequest(google.protobuf.message.Message):
 
 global___ReserveSessionsRequest = ReserveSessionsRequest
 
+@typing_extensions.final
 class ReserveSessionsResponse(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -181,6 +218,7 @@ class ReserveSessionsResponse(google.protobuf.message.Message):
 
 global___ReserveSessionsResponse = ReserveSessionsResponse
 
+@typing_extensions.final
 class UnreserveSessionsRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -203,6 +241,7 @@ class UnreserveSessionsRequest(google.protobuf.message.Message):
 
 global___UnreserveSessionsRequest = UnreserveSessionsRequest
 
+@typing_extensions.final
 class UnreserveSessionsResponse(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -212,6 +251,7 @@ class UnreserveSessionsResponse(google.protobuf.message.Message):
 
 global___UnreserveSessionsResponse = UnreserveSessionsResponse
 
+@typing_extensions.final
 class RegisterSessionsRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -234,6 +274,7 @@ class RegisterSessionsRequest(google.protobuf.message.Message):
 
 global___RegisterSessionsRequest = RegisterSessionsRequest
 
+@typing_extensions.final
 class RegisterSessionsResponse(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -243,6 +284,7 @@ class RegisterSessionsResponse(google.protobuf.message.Message):
 
 global___RegisterSessionsResponse = RegisterSessionsResponse
 
+@typing_extensions.final
 class UnregisterSessionsRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -265,6 +307,7 @@ class UnregisterSessionsRequest(google.protobuf.message.Message):
 
 global___UnregisterSessionsRequest = UnregisterSessionsRequest
 
+@typing_extensions.final
 class UnregisterSessionsResponse(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -274,28 +317,47 @@ class UnregisterSessionsResponse(google.protobuf.message.Message):
 
 global___UnregisterSessionsResponse = UnregisterSessionsResponse
 
+@typing_extensions.final
 class ReserveAllRegisteredSessionsRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
     TIMEOUT_IN_MILLISECONDS_FIELD_NUMBER: builtins.int
+    INSTRUMENT_TYPE_ID_FIELD_NUMBER: builtins.int
     timeout_in_milliseconds: builtins.int
     """Optional. Timeout for the reservation request.
     Allowed values: 0 (non-blocking, fails immediately if resources cannot be reserved), -1 (infinite timeout), or any other positive numeric value (wait for that number of milliseconds)
+    """
+    instrument_type_id: builtins.str
+    """Optional. Instrument type ID of the registered sessions to reserve. If unspecified, reserve sessions for all instrument types connected in the registered pin map resource.
+    Pin maps have built in instrument definitions using the following NI driver based instrument type ids:
+         "niDCPower"
+         "niDigitalPattern"
+         "niScope"
+         "niDMM"
+         "niDAQmx"
+         "niFGen"
+         "niRelayDriver"
+    For custom instruments the user defined instrument type id is defined in the pin map file.
     """
     def __init__(
         self,
         *,
         timeout_in_milliseconds: builtins.int = ...,
+        instrument_type_id: builtins.str = ...,
     ) -> None: ...
     def ClearField(
         self,
         field_name: typing_extensions.Literal[
-            "timeout_in_milliseconds", b"timeout_in_milliseconds"
+            "instrument_type_id",
+            b"instrument_type_id",
+            "timeout_in_milliseconds",
+            b"timeout_in_milliseconds",
         ],
     ) -> None: ...
 
 global___ReserveAllRegisteredSessionsRequest = ReserveAllRegisteredSessionsRequest
 
+@typing_extensions.final
 class ReserveAllRegisteredSessionsResponse(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 

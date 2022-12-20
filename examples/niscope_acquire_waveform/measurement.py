@@ -50,13 +50,23 @@ TRIGGER_SLOPE_TO_ENUM = {
 
 @measurement_service.register_measurement
 # TODO: Make pin_names PinArray1D
-@measurement_service.configuration("pin_names", nims.DataType.Pin, "Pin1,Pin2,Pin3,Pin4")
+@measurement_service.configuration(
+    "pin_names",
+    nims.DataType.Pin,
+    "Pin1,Pin2,Pin3,Pin4",
+    instrument_type=nims.session_management.INSTRUMENT_TYPE_NI_SCOPE,
+)
 @measurement_service.configuration("vertical_range", nims.DataType.Double, 5.0)
 @measurement_service.configuration("vertical_coupling", nims.DataType.String, "DC")
 @measurement_service.configuration("input_impedance", nims.DataType.Double, 1e6)
 @measurement_service.configuration("min_sample_rate", nims.DataType.Double, 10e6)
 @measurement_service.configuration("min_record_length", nims.DataType.Int32, 40000)
-@measurement_service.configuration("trigger_source", nims.DataType.Pin, "Pin1")
+@measurement_service.configuration(
+    "trigger_source",
+    nims.DataType.Pin,
+    "Pin1",
+    instrument_type=nims.session_management.INSTRUMENT_TYPE_NI_SCOPE,
+)
 @measurement_service.configuration("trigger_level", nims.DataType.Double, 0.5)
 @measurement_service.configuration("trigger_slope", nims.DataType.String, "Positive")
 @measurement_service.configuration("auto_trigger", nims.DataType.Boolean, False)
@@ -82,7 +92,7 @@ def measure(
 ) -> Tuple:
     """Acquire a waveform using an NI oscilloscope."""
     logging.info(
-        "Starting acquisition: pin_names=%s vertical_range=%g trigger_source=%s trigger_level=%g",
+        "Starting acquisition: pin_or_relay_names=%s vertical_range=%g trigger_source=%s trigger_level=%g",
         pin_names,
         vertical_range,
         trigger_source,
@@ -110,7 +120,7 @@ def measure(
         reservation = stack.enter_context(
             session_management_client.reserve_sessions(
                 context=measurement_service.context.pin_map_context,
-                pin_names=pin_list,
+                pin_or_relay_names=pin_list,
                 instrument_type_id=nims.session_management.INSTRUMENT_TYPE_NI_SCOPE,
                 timeout=-1,
             )
@@ -195,7 +205,7 @@ def _create_niscope_session(
             session_grpc_channel = measurement_service.channel_pool.get_channel(
                 target=session_grpc_address
             )
-        session_kwargs["_grpc_options"] = niscope.GrpcSessionOptions(
+        session_kwargs["grpc_options"] = niscope.GrpcSessionOptions(
             session_grpc_channel,
             session_name=session_info.session_name,
             initialization_behavior=niscope.SessionInitializationBehavior.AUTO,

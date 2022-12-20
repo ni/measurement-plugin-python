@@ -45,7 +45,12 @@ FUNCTION_TO_ENUM = {
 
 
 @measurement_service.register_measurement
-@measurement_service.configuration("pin_name", nims.DataType.Pin, "Pin1")
+@measurement_service.configuration(
+    "pin_name",
+    nims.DataType.Pin,
+    "Pin1",
+    instrument_type=nims.session_management.INSTRUMENT_TYPE_NI_DMM,
+)
 @measurement_service.configuration("measurement_type", nims.DataType.String, "DC Volts")
 @measurement_service.configuration("range", nims.DataType.Double, 10.0)
 @measurement_service.configuration("resolution_digits", nims.DataType.Double, 5.5)
@@ -78,7 +83,7 @@ def measure(
         reservation = stack.enter_context(
             session_management_client.reserve_sessions(
                 context=measurement_service.context.pin_map_context,
-                pin_names=[pin_name],
+                pin_or_relay_names=[pin_name],
                 instrument_type_id=nims.session_management.INSTRUMENT_TYPE_NI_DMM,
                 timeout=-1,
             )
@@ -125,7 +130,7 @@ def _create_nidmm_session(
             session_grpc_channel = measurement_service.channel_pool.get_channel(
                 target=session_grpc_address
             )
-        session_kwargs["_grpc_options"] = nidmm.GrpcSessionOptions(
+        session_kwargs["grpc_options"] = nidmm.GrpcSessionOptions(
             session_grpc_channel,
             session_name=session_info.session_name,
             initialization_behavior=nidmm.SessionInitializationBehavior.AUTO,

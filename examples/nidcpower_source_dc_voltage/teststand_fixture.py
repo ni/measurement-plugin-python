@@ -47,7 +47,7 @@ def create_nidcpower_sessions(pin_map_id: str):
 
                 # Leave session open
                 nidcpower.Session(
-                    resource_name=session_info.resource_name, _grpc_options=grpc_options
+                    resource_name=session_info.resource_name, grpc_options=grpc_options
                 )
 
             session_management_client.register_sessions(reservation.session_info)
@@ -60,17 +60,12 @@ def destroy_nidcpower_sessions():
             grpc_channel=grpc_channel_pool.session_management_channel
         )
 
-        with session_management_client.reserve_all_registered_sessions(timeout=-1) as reservation:
-            nidcpower_sessions = [
-                session_info
-                for session_info in reservation.session_info
-                if session_info.instrument_type_id
-                == nims.session_management.INSTRUMENT_TYPE_NI_DCPOWER
-            ]
+        with session_management_client.reserve_all_registered_sessions(
+            instrument_type_id=nims.session_management.INSTRUMENT_TYPE_NI_DCPOWER, timeout=-1
+        ) as reservation:
+            session_management_client.unregister_sessions(reservation.session_info)
 
-            session_management_client.unregister_sessions(nidcpower_sessions)
-
-            for session_info in nidcpower_sessions:
+            for session_info in reservation.session_info:
                 grpc_options = nidcpower.GrpcSessionOptions(
                     grpc_channel_pool.get_grpc_device_channel(
                         nidcpower.GRPC_SERVICE_INTERFACE_NAME
@@ -80,6 +75,6 @@ def destroy_nidcpower_sessions():
                 )
 
                 session = nidcpower.Session(
-                    resource_name=session_info.resource_name, _grpc_options=grpc_options
+                    resource_name=session_info.resource_name, grpc_options=grpc_options
                 )
                 session.close()

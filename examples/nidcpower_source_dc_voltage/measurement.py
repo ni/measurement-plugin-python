@@ -34,7 +34,12 @@ service_options = ServiceOptions(use_grpc_device=False, grpc_device_address="")
 
 
 @measurement_service.register_measurement
-@measurement_service.configuration("pin_name", nims.DataType.Pin, "Pin1")
+@measurement_service.configuration(
+    "pin_name",
+    nims.DataType.Pin,
+    "Pin1",
+    instrument_type=nims.session_management.INSTRUMENT_TYPE_NI_DCPOWER,
+)
 @measurement_service.configuration("voltage_level", nims.DataType.Double, 6.0)
 @measurement_service.configuration("voltage_level_range", nims.DataType.Double, 6.0)
 @measurement_service.configuration("current_limit", nims.DataType.Double, 0.01)
@@ -64,7 +69,7 @@ def measure(
         reservation = stack.enter_context(
             session_management_client.reserve_sessions(
                 context=measurement_service.context.pin_map_context,
-                pin_names=[pin_name],
+                pin_or_relay_names=[pin_name],
                 instrument_type_id=nims.session_management.INSTRUMENT_TYPE_NI_DCPOWER,
                 timeout=-1,
             )
@@ -153,7 +158,7 @@ def _create_nidcpower_session(
             session_grpc_channel = measurement_service.channel_pool.get_channel(
                 target=session_grpc_address
             )
-        session_kwargs["_grpc_options"] = nidcpower.GrpcSessionOptions(
+        session_kwargs["grpc_options"] = nidcpower.GrpcSessionOptions(
             session_grpc_channel,
             session_name=session_info.session_name,
             initialization_behavior=nidcpower.SessionInitializationBehavior.AUTO,

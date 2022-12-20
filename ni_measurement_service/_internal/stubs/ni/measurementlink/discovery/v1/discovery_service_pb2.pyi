@@ -18,6 +18,7 @@ else:
 
 DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
 
+@typing_extensions.final
 class ServiceDescriptor(google.protobuf.message.Message):
     """Description of a registered service. This information can be used to display information to the user
     about the service when services are being developed for a plugin architecture
@@ -29,7 +30,6 @@ class ServiceDescriptor(google.protobuf.message.Message):
     DESCRIPTION_URL_FIELD_NUMBER: builtins.int
     PROVIDED_INTERFACES_FIELD_NUMBER: builtins.int
     SERVICE_CLASS_FIELD_NUMBER: builtins.int
-    ATTRIBUTES_FIELD_NUMBER: builtins.int
     display_name: builtins.str
     """Required. The user visible name of the service."""
     description_url: builtins.str
@@ -45,11 +45,6 @@ class ServiceDescriptor(google.protobuf.message.Message):
     """Required. The "class" of a service. The value of this field should be unique for a given interface in provided_interfaces.
     In effect, the .proto service declaration defines the interface, and this field defines a class or concrete type of the interface.
     """
-    @property
-    def attributes(
-        self,
-    ) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]:
-        """Optional. Attributes that define additional metadata about the service. There are currently no system defined attributes."""
     def __init__(
         self,
         *,
@@ -57,13 +52,10 @@ class ServiceDescriptor(google.protobuf.message.Message):
         description_url: builtins.str = ...,
         provided_interfaces: collections.abc.Iterable[builtins.str] | None = ...,
         service_class: builtins.str = ...,
-        attributes: collections.abc.Iterable[builtins.str] | None = ...,
     ) -> None: ...
     def ClearField(
         self,
         field_name: typing_extensions.Literal[
-            "attributes",
-            b"attributes",
             "description_url",
             b"description_url",
             "display_name",
@@ -77,6 +69,7 @@ class ServiceDescriptor(google.protobuf.message.Message):
 
 global___ServiceDescriptor = ServiceDescriptor
 
+@typing_extensions.final
 class ServiceLocation(google.protobuf.message.Message):
     """Represents the location of a service. The location generally includes the IP address and port number for the service
     which can be used to establish communication with the service.
@@ -118,6 +111,7 @@ class ServiceLocation(google.protobuf.message.Message):
 
 global___ServiceLocation = ServiceLocation
 
+@typing_extensions.final
 class RegisterServiceRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -150,6 +144,7 @@ class RegisterServiceRequest(google.protobuf.message.Message):
 
 global___RegisterServiceRequest = RegisterServiceRequest
 
+@typing_extensions.final
 class RegisterServiceResponse(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -167,6 +162,7 @@ class RegisterServiceResponse(google.protobuf.message.Message):
 
 global___RegisterServiceResponse = RegisterServiceResponse
 
+@typing_extensions.final
 class UnregisterServiceRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -184,6 +180,7 @@ class UnregisterServiceRequest(google.protobuf.message.Message):
 
 global___UnregisterServiceRequest = UnregisterServiceRequest
 
+@typing_extensions.final
 class UnregisterServiceResponse(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -193,6 +190,7 @@ class UnregisterServiceResponse(google.protobuf.message.Message):
 
 global___UnregisterServiceResponse = UnregisterServiceResponse
 
+@typing_extensions.final
 class EnumerateServicesRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -212,6 +210,7 @@ class EnumerateServicesRequest(google.protobuf.message.Message):
 
 global___EnumerateServicesRequest = EnumerateServicesRequest
 
+@typing_extensions.final
 class EnumerateServicesResponse(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -234,6 +233,7 @@ class EnumerateServicesResponse(google.protobuf.message.Message):
 
 global___EnumerateServicesResponse = EnumerateServicesResponse
 
+@typing_extensions.final
 class ResolveServiceRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 

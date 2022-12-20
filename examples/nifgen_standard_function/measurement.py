@@ -42,7 +42,12 @@ WAVEFORM_TYPE_TO_ENUM = {
 
 @measurement_service.register_measurement
 # TODO: Rename pin_name to pin_names and make it PinArray1D
-@measurement_service.configuration("pin_name", nims.DataType.Pin, "Pin1")
+@measurement_service.configuration(
+    "pin_name",
+    nims.DataType.Pin,
+    "Pin1",
+    instrument_type=nims.session_management.INSTRUMENT_TYPE_NI_FGEN,
+)
 @measurement_service.configuration("waveform_type", nims.DataType.String, "Sine")
 @measurement_service.configuration("frequency", nims.DataType.Double, 1.0e6)
 @measurement_service.configuration("amplitude", nims.DataType.Double, 2.0)
@@ -85,7 +90,7 @@ def measure(
         reservation = stack.enter_context(
             session_management_client.reserve_sessions(
                 context=measurement_service.context.pin_map_context,
-                pin_names=[pin_name],
+                pin_or_relay_names=[pin_name],
                 instrument_type_id=nims.session_management.INSTRUMENT_TYPE_NI_FGEN,
                 timeout=-1,
             )
@@ -157,7 +162,7 @@ def _create_nifgen_session(
         # Assumption: the pin map specifies one NI-FGEN session per instrument. If the pin map
         # specified an NI-FGEN session per channel, the session name would need to include the
         # channel name(s).
-        session_kwargs["_grpc_options"] = nifgen.GrpcSessionOptions(
+        session_kwargs["grpc_options"] = nifgen.GrpcSessionOptions(
             session_grpc_channel,
             session_name=session_info.session_name,
             initialization_behavior=nifgen.SessionInitializationBehavior.AUTO,

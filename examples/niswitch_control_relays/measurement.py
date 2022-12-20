@@ -53,7 +53,7 @@ def measure(
         reservation = stack.enter_context(
             session_management_client.reserve_sessions(
                 context=measurement_service.context.pin_map_context,
-                pin_names=relay_list,
+                pin_or_relay_names=relay_list,
                 instrument_type_id=nims.session_management.INSTRUMENT_TYPE_NI_RELAY_DRIVER,
                 timeout=-1,
             )
@@ -92,7 +92,7 @@ def _create_niswitch_session(
             session_grpc_channel = measurement_service.channel_pool.get_channel(
                 target=session_grpc_address
             )
-        session_kwargs["_grpc_options"] = niswitch.GrpcSessionOptions(
+        session_kwargs["grpc_options"] = niswitch.GrpcSessionOptions(
             session_grpc_channel,
             session_name=session_info.session_name,
             initialization_behavior=niswitch.SessionInitializationBehavior.AUTO,

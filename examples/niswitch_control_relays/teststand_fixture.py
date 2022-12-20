@@ -45,7 +45,7 @@ def create_niswitch_sessions(pin_map_id: str):
 
                 # Leave session open
                 niswitch.Session(
-                    resource_name=session_info.resource_name, _grpc_options=grpc_options
+                    resource_name=session_info.resource_name, grpc_options=grpc_options
                 )
 
             session_management_client.register_sessions(reservation.session_info)
@@ -58,17 +58,12 @@ def destroy_niswitch_sessions():
             grpc_channel=grpc_channel_pool.session_management_channel
         )
 
-        with session_management_client.reserve_all_registered_sessions(timeout=-1) as reservation:
-            niswitch_sessions = [
-                session_info
-                for session_info in reservation.session_info
-                if session_info.instrument_type_id
-                == nims.session_management.INSTRUMENT_TYPE_NI_RELAY_DRIVER
-            ]
+        with session_management_client.reserve_all_registered_sessions(
+            instrument_type_id=nims.session_management.INSTRUMENT_TYPE_NI_RELAY_DRIVER, timeout=-1
+        ) as reservation:
+            session_management_client.unregister_sessions(reservation.session_info)
 
-            session_management_client.unregister_sessions(niswitch_sessions)
-
-            for session_info in niswitch_sessions:
+            for session_info in reservation.session_info:
                 grpc_options = niswitch.GrpcSessionOptions(
                     grpc_channel_pool.get_grpc_device_channel(niswitch.GRPC_SERVICE_INTERFACE_NAME),
                     session_name=session_info.session_name,
@@ -76,6 +71,6 @@ def destroy_niswitch_sessions():
                 )
 
                 session = niswitch.Session(
-                    resource_name=session_info.resource_name, _grpc_options=grpc_options
+                    resource_name=session_info.resource_name, grpc_options=grpc_options
                 )
                 session.close()

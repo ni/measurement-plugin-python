@@ -184,8 +184,13 @@ class MeasurementService:
             default_value (Any): Default value of the configuration.
 
             instrument_type (str): Optional.
-            Instrument type to be used to show instrument specific values to the configurations.
-            This is only supported when configuration type is DataType.Pin.
+            Filter pins by instrument type. This is only supported when configuration type
+            is DataType.Pin. Pin maps have built in instrument definitions using the
+            NI driver based instrument type ids. These can be found as constants
+            in `nims.session_management`. For example, for an NI DCPower instrument
+            the instrument type is `nims.session_management.INSTRUMENT_TYPE_NI_DCPOWER`.
+            For custom instruments the user defined instrument type id is defined in the
+            pin map file.
 
         Returns
         -------
