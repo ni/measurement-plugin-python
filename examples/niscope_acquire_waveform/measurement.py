@@ -52,8 +52,8 @@ TRIGGER_SLOPE_TO_ENUM = {
 # TODO: Make pin_names PinArray1D
 @measurement_service.configuration(
     "pin_names",
-    nims.DataType.Pin,
-    "Pin1,Pin2,Pin3,Pin4",
+    nims.DataType.PinArray1D,
+    ["Pin1", "Pin2", "Pin3", "Pin4"],
     instrument_type=nims.session_management.INSTRUMENT_TYPE_NI_SCOPE,
 )
 @measurement_service.configuration("vertical_range", nims.DataType.Double, 5.0)
@@ -116,11 +116,10 @@ def measure(
     )
 
     with contextlib.ExitStack() as stack:
-        pin_list = [p.strip() for p in pin_names.split(",")]
         reservation = stack.enter_context(
             session_management_client.reserve_sessions(
                 context=measurement_service.context.pin_map_context,
-                pin_or_relay_names=pin_list,
+                pin_or_relay_names=pin_names,
                 instrument_type_id=nims.session_management.INSTRUMENT_TYPE_NI_SCOPE,
                 timeout=-1,
             )
@@ -135,7 +134,7 @@ def measure(
         session_info = reservation.session_info[0]
         channel_names = session_info.channel_list
         channel_list = [c.strip() for c in channel_names.split(",")]
-        pin_to_channel = dict(zip(pin_list, channel_list))
+        pin_to_channel = dict(zip(pin_names, channel_list))
         if trigger_source in pin_to_channel:
             trigger_source = pin_to_channel[trigger_source]
 
