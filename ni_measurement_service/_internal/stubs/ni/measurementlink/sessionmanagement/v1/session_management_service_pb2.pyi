@@ -8,7 +8,7 @@ import google.protobuf.descriptor
 import google.protobuf.internal.containers
 import google.protobuf.message
 import ni.measurementlink.pin_map_context_pb2
-import nidevice_grpc.session_pb2
+import session_pb2
 import sys
 
 if sys.version_info >= (3, 8):
@@ -29,7 +29,7 @@ class SessionInformation(google.protobuf.message.Message):
     SESSION_EXISTS_FIELD_NUMBER: builtins.int
     CHANNEL_MAPPINGS_FIELD_NUMBER: builtins.int
     @property
-    def session(self) -> nidevice_grpc.session_pb2.Session:
+    def session(self) -> session_pb2.Session:
         """Session identifier used to identify the session in the session management service, as well as in driver services such as grpc-device.
         This field is readonly.
         """
@@ -73,7 +73,7 @@ class SessionInformation(google.protobuf.message.Message):
     def __init__(
         self,
         *,
-        session: nidevice_grpc.session_pb2.Session | None = ...,
+        session: session_pb2.Session | None = ...,
         resource_name: builtins.str = ...,
         channel_list: builtins.str = ...,
         instrument_type_id: builtins.str = ...,
