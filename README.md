@@ -31,8 +31,8 @@ MeasurementLink Support for Python (`ni-measurement-service`) is a python framew
 ## Dependencies
 
 - Python >= 3.8 [(3.9 recommended)](https://www.python.org/downloads/release/python-3913/)
-- [grpcio >= 1.41.1, < 2.x](https://pypi.org/project/grpcio/1.41.1/)
-- [protobuf >= 3.20, < 4.x](https://pypi.org/project/protobuf/3.20.0/)
+- [grpcio >= 1.49.1, < 2.x](https://pypi.org/project/grpcio/1.49.1/)
+- [protobuf >= 4.21, < 5.x](https://pypi.org/project/protobuf/4.21.0/)
 - [pywin32 >= 303 (Only for Windows)](https://pypi.org/project/pywin32/303/)
 
 ---
