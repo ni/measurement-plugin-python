@@ -36,6 +36,11 @@ class PinMapServiceStub(object):
             request_serializer=ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.QueryPinsRequest.SerializeToString,
             response_deserializer=ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.QueryPinsResponse.FromString,
         )
+        self.QueryRelays = channel.unary_unary(
+            "/ni.measurementlink.pinmap.v1.PinMapService/QueryRelays",
+            request_serializer=ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.QueryRelaysRequest.SerializeToString,
+            response_deserializer=ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.QueryRelaysResponse.FromString,
+        )
         self.QueryResourceAccessInformation = channel.unary_unary(
             "/ni.measurementlink.pinmap.v1.PinMapService/QueryResourceAccessInformation",
             request_serializer=ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.QueryResourceAccessInformationRequest.SerializeToString,
@@ -84,6 +89,15 @@ class PinMapServiceServicer(object):
         context.set_details("Method not implemented!")
         raise NotImplementedError("Method not implemented!")
 
+    def QueryRelays(self, request, context):
+        """Returns list of relays from the registered pin map resource.
+        Status Codes for errors:
+        - NOT_FOUND: Pin map resource for the specified pin map id is not found
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
+
     def QueryResourceAccessInformation(self, request, context):
         """Get instrument resource names, channels, and instrument type for the specified sites, pins or pin groups, relays or relay groups, instrument type in the registered pin map resource.
         Status Codes for errors:
@@ -120,6 +134,11 @@ def add_PinMapServiceServicer_to_server(servicer, server):
             servicer.QueryPins,
             request_deserializer=ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.QueryPinsRequest.FromString,
             response_serializer=ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.QueryPinsResponse.SerializeToString,
+        ),
+        "QueryRelays": grpc.unary_unary_rpc_method_handler(
+            servicer.QueryRelays,
+            request_deserializer=ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.QueryRelaysRequest.FromString,
+            response_serializer=ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.QueryRelaysResponse.SerializeToString,
         ),
         "QueryResourceAccessInformation": grpc.unary_unary_rpc_method_handler(
             servicer.QueryResourceAccessInformation,
@@ -243,6 +262,35 @@ class PinMapService(object):
             "/ni.measurementlink.pinmap.v1.PinMapService/QueryPins",
             ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.QueryPinsRequest.SerializeToString,
             ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.QueryPinsResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
+
+    @staticmethod
+    def QueryRelays(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            "/ni.measurementlink.pinmap.v1.PinMapService/QueryRelays",
+            ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.QueryRelaysRequest.SerializeToString,
+            ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.QueryRelaysResponse.FromString,
             options,
             channel_credentials,
             insecure,

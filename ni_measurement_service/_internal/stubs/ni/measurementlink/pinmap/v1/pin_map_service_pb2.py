@@ -13,7 +13,7 @@ _sym_db = _symbol_database.Default()
 
 
 DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(
-    b'\n2ni/measurementlink/pinmap/v1/pin_map_service.proto\x12\x1cni.measurementlink.pinmap.v1"\x1c\n\x06PinMap\x12\x12\n\npin_map_id\x18\x01 \x01(\t"E\n\x1a\x43reatePinMapFromXmlRequest\x12\x12\n\npin_map_id\x18\x01 \x01(\t\x12\x13\n\x0bpin_map_xml\x18\x02 \x01(\t"E\n\x1aUpdatePinMapFromXmlRequest\x12\x12\n\npin_map_id\x18\x01 \x01(\t\x12\x13\n\x0bpin_map_xml\x18\x02 \x01(\t"&\n\x10GetPinMapRequest\x12\x12\n\npin_map_id\x18\x01 \x01(\t"B\n\x10QueryPinsRequest\x12\x12\n\npin_map_id\x18\x01 \x01(\t\x12\x1a\n\x12instrument_type_id\x18\x02 \x01(\t"\xda\x02\n\x11QueryPinsResponse\x12K\n\x04pins\x18\x01 \x03(\x0b\x32=.ni.measurementlink.pinmap.v1.QueryPinsResponse.PinDefinition\x12V\n\npin_groups\x18\x02 \x03(\x0b\x32\x42.ni.measurementlink.pinmap.v1.QueryPinsResponse.PinGroupDefinition\x1a<\n\rPinDefinition\x12\x14\n\x0c\x64isplay_name\x18\x01 \x01(\t\x12\x15\n\ris_system_pin\x18\x02 \x01(\x08\x1a\x62\n\x12PinGroupDefinition\x12\x14\n\x0c\x64isplay_name\x18\x01 \x01(\t\x12\x1f\n\x17pin_or_group_references\x18\x02 \x03(\t\x12\x15\n\rresolved_pins\x18\x03 \x03(\t"\x82\x01\n%QueryResourceAccessInformationRequest\x12\x12\n\npin_map_id\x18\x01 \x01(\t\x12\r\n\x05sites\x18\x02 \x03(\x05\x12\x1a\n\x12pin_or_relay_names\x18\x03 \x03(\t\x12\x1a\n\x12instrument_type_id\x18\x04 \x01(\t"\x94\x02\n&QueryResourceAccessInformationResponse\x12\x83\x01\n\x1bresource_access_information\x18\x01 \x03(\x0b\x32^.ni.measurementlink.pinmap.v1.QueryResourceAccessInformationResponse.ResourceAccessInformation\x1a\x64\n\x19ResourceAccessInformation\x12\x15\n\rresource_name\x18\x01 \x01(\t\x12\x14\n\x0c\x63hannel_list\x18\x02 \x01(\t\x12\x1a\n\x12instrument_type_id\x18\x03 \x01(\t2\xfc\x04\n\rPinMapService\x12u\n\x13\x43reatePinMapFromXml\x12\x38.ni.measurementlink.pinmap.v1.CreatePinMapFromXmlRequest\x1a$.ni.measurementlink.pinmap.v1.PinMap\x12u\n\x13UpdatePinMapFromXml\x12\x38.ni.measurementlink.pinmap.v1.UpdatePinMapFromXmlRequest\x1a$.ni.measurementlink.pinmap.v1.PinMap\x12\x61\n\tGetPinMap\x12..ni.measurementlink.pinmap.v1.GetPinMapRequest\x1a$.ni.measurementlink.pinmap.v1.PinMap\x12l\n\tQueryPins\x12..ni.measurementlink.pinmap.v1.QueryPinsRequest\x1a/.ni.measurementlink.pinmap.v1.QueryPinsResponse\x12\xab\x01\n\x1eQueryResourceAccessInformation\x12\x43.ni.measurementlink.pinmap.v1.QueryResourceAccessInformationRequest\x1a\x44.ni.measurementlink.pinmap.v1.QueryResourceAccessInformationResponseB\xba\x01\n com.ni.measurementlink.pinmap.v1B\x12PinMapServiceProtoP\x01Z\x08pinmapv1\xa2\x02\x04NIMP\xaa\x02-NationalInstruments.MeasurementLink.PinMap.V1\xca\x02\x1cNI\\MeasurementLink\\PinMap\\V1\xea\x02\x1fNI::MeasurementLink::PinMap::V1b\x06proto3'
+    b'\n2ni/measurementlink/pinmap/v1/pin_map_service.proto\x12\x1cni.measurementlink.pinmap.v1"\x1c\n\x06PinMap\x12\x12\n\npin_map_id\x18\x01 \x01(\t"E\n\x1a\x43reatePinMapFromXmlRequest\x12\x12\n\npin_map_id\x18\x01 \x01(\t\x12\x13\n\x0bpin_map_xml\x18\x02 \x01(\t"E\n\x1aUpdatePinMapFromXmlRequest\x12\x12\n\npin_map_id\x18\x01 \x01(\t\x12\x13\n\x0bpin_map_xml\x18\x02 \x01(\t"&\n\x10GetPinMapRequest\x12\x12\n\npin_map_id\x18\x01 \x01(\t"B\n\x10QueryPinsRequest\x12\x12\n\npin_map_id\x18\x01 \x01(\t\x12\x1a\n\x12instrument_type_id\x18\x02 \x01(\t"\x94\x01\n\x11QueryPinsResponse\x12\x39\n\x04pins\x18\x01 \x03(\x0b\x32+.ni.measurementlink.pinmap.v1.PinDefinition\x12\x44\n\npin_groups\x18\x02 \x03(\x0b\x32\x30.ni.measurementlink.pinmap.v1.PinGroupDefinition"<\n\rPinDefinition\x12\x14\n\x0c\x64isplay_name\x18\x01 \x01(\t\x12\x15\n\ris_system_pin\x18\x02 \x01(\x08"b\n\x12PinGroupDefinition\x12\x14\n\x0c\x64isplay_name\x18\x01 \x01(\t\x12\x1f\n\x17pin_or_group_references\x18\x02 \x03(\t\x12\x15\n\rresolved_pins\x18\x03 \x03(\t"(\n\x12QueryRelaysRequest\x12\x12\n\npin_map_id\x18\x01 \x01(\t"\x9e\x01\n\x13QueryRelaysResponse\x12=\n\x06relays\x18\x01 \x03(\x0b\x32-.ni.measurementlink.pinmap.v1.RelayDefinition\x12H\n\x0crelay_groups\x18\x02 \x03(\x0b\x32\x32.ni.measurementlink.pinmap.v1.RelayGroupDefinition"@\n\x0fRelayDefinition\x12\x14\n\x0c\x64isplay_name\x18\x01 \x01(\t\x12\x17\n\x0fis_system_relay\x18\x02 \x01(\x08"h\n\x14RelayGroupDefinition\x12\x14\n\x0c\x64isplay_name\x18\x01 \x01(\t\x12!\n\x19relay_or_group_references\x18\x02 \x03(\t\x12\x17\n\x0fresolved_relays\x18\x03 \x03(\t"\x82\x01\n%QueryResourceAccessInformationRequest\x12\x12\n\npin_map_id\x18\x01 \x01(\t\x12\r\n\x05sites\x18\x02 \x03(\x05\x12\x1a\n\x12pin_or_relay_names\x18\x03 \x03(\t\x12\x1a\n\x12instrument_type_id\x18\x04 \x01(\t"\x86\x01\n&QueryResourceAccessInformationResponse\x12\\\n\x1bresource_access_information\x18\x01 \x03(\x0b\x32\x37.ni.measurementlink.pinmap.v1.ResourceAccessInformation"\xac\x01\n\x19ResourceAccessInformation\x12\x15\n\rresource_name\x18\x01 \x01(\t\x12\x14\n\x0c\x63hannel_list\x18\x02 \x01(\t\x12\x1a\n\x12instrument_type_id\x18\x03 \x01(\t\x12\x46\n\x10\x63hannel_mappings\x18\x04 \x03(\x0b\x32,.ni.measurementlink.pinmap.v1.ChannelMapping"J\n\x0e\x43hannelMapping\x12\x19\n\x11pin_or_relay_name\x18\x01 \x01(\t\x12\x0c\n\x04site\x18\x02 \x01(\x05\x12\x0f\n\x07\x63hannel\x18\x03 \x01(\t2\xf0\x05\n\rPinMapService\x12u\n\x13\x43reatePinMapFromXml\x12\x38.ni.measurementlink.pinmap.v1.CreatePinMapFromXmlRequest\x1a$.ni.measurementlink.pinmap.v1.PinMap\x12u\n\x13UpdatePinMapFromXml\x12\x38.ni.measurementlink.pinmap.v1.UpdatePinMapFromXmlRequest\x1a$.ni.measurementlink.pinmap.v1.PinMap\x12\x61\n\tGetPinMap\x12..ni.measurementlink.pinmap.v1.GetPinMapRequest\x1a$.ni.measurementlink.pinmap.v1.PinMap\x12l\n\tQueryPins\x12..ni.measurementlink.pinmap.v1.QueryPinsRequest\x1a/.ni.measurementlink.pinmap.v1.QueryPinsResponse\x12r\n\x0bQueryRelays\x12\x30.ni.measurementlink.pinmap.v1.QueryRelaysRequest\x1a\x31.ni.measurementlink.pinmap.v1.QueryRelaysResponse\x12\xab\x01\n\x1eQueryResourceAccessInformation\x12\x43.ni.measurementlink.pinmap.v1.QueryResourceAccessInformationRequest\x1a\x44.ni.measurementlink.pinmap.v1.QueryResourceAccessInformationResponseB\xba\x01\n com.ni.measurementlink.pinmap.v1B\x12PinMapServiceProtoP\x01Z\x08pinmapv1\xa2\x02\x04NIMP\xaa\x02-NationalInstruments.MeasurementLink.PinMap.V1\xca\x02\x1cNI\\MeasurementLink\\PinMap\\V1\xea\x02\x1fNI::MeasurementLink::PinMap::V1b\x06proto3'
 )
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
@@ -35,17 +35,27 @@ if _descriptor._USE_C_DESCRIPTORS == False:
     _QUERYPINSREQUEST._serialized_start = 296
     _QUERYPINSREQUEST._serialized_end = 362
     _QUERYPINSRESPONSE._serialized_start = 365
-    _QUERYPINSRESPONSE._serialized_end = 711
-    _QUERYPINSRESPONSE_PINDEFINITION._serialized_start = 551
-    _QUERYPINSRESPONSE_PINDEFINITION._serialized_end = 611
-    _QUERYPINSRESPONSE_PINGROUPDEFINITION._serialized_start = 613
-    _QUERYPINSRESPONSE_PINGROUPDEFINITION._serialized_end = 711
-    _QUERYRESOURCEACCESSINFORMATIONREQUEST._serialized_start = 714
-    _QUERYRESOURCEACCESSINFORMATIONREQUEST._serialized_end = 844
-    _QUERYRESOURCEACCESSINFORMATIONRESPONSE._serialized_start = 847
-    _QUERYRESOURCEACCESSINFORMATIONRESPONSE._serialized_end = 1123
-    _QUERYRESOURCEACCESSINFORMATIONRESPONSE_RESOURCEACCESSINFORMATION._serialized_start = 1023
-    _QUERYRESOURCEACCESSINFORMATIONRESPONSE_RESOURCEACCESSINFORMATION._serialized_end = 1123
-    _PINMAPSERVICE._serialized_start = 1126
-    _PINMAPSERVICE._serialized_end = 1762
+    _QUERYPINSRESPONSE._serialized_end = 513
+    _PINDEFINITION._serialized_start = 515
+    _PINDEFINITION._serialized_end = 575
+    _PINGROUPDEFINITION._serialized_start = 577
+    _PINGROUPDEFINITION._serialized_end = 675
+    _QUERYRELAYSREQUEST._serialized_start = 677
+    _QUERYRELAYSREQUEST._serialized_end = 717
+    _QUERYRELAYSRESPONSE._serialized_start = 720
+    _QUERYRELAYSRESPONSE._serialized_end = 878
+    _RELAYDEFINITION._serialized_start = 880
+    _RELAYDEFINITION._serialized_end = 944
+    _RELAYGROUPDEFINITION._serialized_start = 946
+    _RELAYGROUPDEFINITION._serialized_end = 1050
+    _QUERYRESOURCEACCESSINFORMATIONREQUEST._serialized_start = 1053
+    _QUERYRESOURCEACCESSINFORMATIONREQUEST._serialized_end = 1183
+    _QUERYRESOURCEACCESSINFORMATIONRESPONSE._serialized_start = 1186
+    _QUERYRESOURCEACCESSINFORMATIONRESPONSE._serialized_end = 1320
+    _RESOURCEACCESSINFORMATION._serialized_start = 1323
+    _RESOURCEACCESSINFORMATION._serialized_end = 1495
+    _CHANNELMAPPING._serialized_start = 1497
+    _CHANNELMAPPING._serialized_end = 1571
+    _PINMAPSERVICE._serialized_start = 1574
+    _PINMAPSERVICE._serialized_end = 2326
 # @@protoc_insertion_point(module_scope)

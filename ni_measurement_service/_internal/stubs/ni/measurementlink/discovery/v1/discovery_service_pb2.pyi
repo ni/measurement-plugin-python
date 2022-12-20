@@ -30,7 +30,6 @@ class ServiceDescriptor(google.protobuf.message.Message):
     DESCRIPTION_URL_FIELD_NUMBER: builtins.int
     PROVIDED_INTERFACES_FIELD_NUMBER: builtins.int
     SERVICE_CLASS_FIELD_NUMBER: builtins.int
-    ATTRIBUTES_FIELD_NUMBER: builtins.int
     display_name: builtins.str
     """Required. The user visible name of the service."""
     description_url: builtins.str
@@ -46,11 +45,6 @@ class ServiceDescriptor(google.protobuf.message.Message):
     """Required. The "class" of a service. The value of this field should be unique for a given interface in provided_interfaces.
     In effect, the .proto service declaration defines the interface, and this field defines a class or concrete type of the interface.
     """
-    @property
-    def attributes(
-        self,
-    ) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]:
-        """Optional. Attributes that define additional metadata about the service. There are currently no system defined attributes."""
     def __init__(
         self,
         *,
@@ -58,13 +52,10 @@ class ServiceDescriptor(google.protobuf.message.Message):
         description_url: builtins.str = ...,
         provided_interfaces: collections.abc.Iterable[builtins.str] | None = ...,
         service_class: builtins.str = ...,
-        attributes: collections.abc.Iterable[builtins.str] | None = ...,
     ) -> None: ...
     def ClearField(
         self,
         field_name: typing_extensions.Literal[
-            "attributes",
-            b"attributes",
             "description_url",
             b"description_url",
             "display_name",

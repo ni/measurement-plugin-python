@@ -56,17 +56,12 @@ def destroy_niscope_sessions():
             grpc_channel=grpc_channel_pool.session_management_channel
         )
 
-        with session_management_client.reserve_all_registered_sessions(timeout=-1) as reservation:
-            niscope_sessions = [
-                session_info
-                for session_info in reservation.session_info
-                if session_info.instrument_type_id
-                == nims.session_management.INSTRUMENT_TYPE_NI_SCOPE
-            ]
+        with session_management_client.reserve_all_registered_sessions(
+            instrument_type_id=nims.session_management.INSTRUMENT_TYPE_NI_SCOPE, timeout=-1
+        ) as reservation:
+            session_management_client.unregister_sessions(reservation.session_info)
 
-            session_management_client.unregister_sessions(niscope_sessions)
-
-            for session_info in niscope_sessions:
+            for session_info in reservation.session_info:
                 grpc_options = niscope.GrpcSessionOptions(
                     grpc_channel_pool.get_grpc_device_channel(niscope.GRPC_SERVICE_INTERFACE_NAME),
                     session_name=session_info.session_name,

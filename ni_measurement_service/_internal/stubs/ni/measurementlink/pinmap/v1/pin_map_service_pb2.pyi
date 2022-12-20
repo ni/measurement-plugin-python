@@ -142,81 +142,20 @@ global___QueryPinsRequest = QueryPinsRequest
 class QueryPinsResponse(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
-    @typing_extensions.final
-    class PinDefinition(google.protobuf.message.Message):
-        DESCRIPTOR: google.protobuf.descriptor.Descriptor
-
-        DISPLAY_NAME_FIELD_NUMBER: builtins.int
-        IS_SYSTEM_PIN_FIELD_NUMBER: builtins.int
-        display_name: builtins.str
-        """Name of the dut pin."""
-        is_system_pin: builtins.bool
-        """A boolean that indicates a system pin when 'true', or DUT pin when 'false'."""
-        def __init__(
-            self,
-            *,
-            display_name: builtins.str = ...,
-            is_system_pin: builtins.bool = ...,
-        ) -> None: ...
-        def ClearField(
-            self,
-            field_name: typing_extensions.Literal[
-                "display_name", b"display_name", "is_system_pin", b"is_system_pin"
-            ],
-        ) -> None: ...
-
-    @typing_extensions.final
-    class PinGroupDefinition(google.protobuf.message.Message):
-        DESCRIPTOR: google.protobuf.descriptor.Descriptor
-
-        DISPLAY_NAME_FIELD_NUMBER: builtins.int
-        PIN_OR_GROUP_REFERENCES_FIELD_NUMBER: builtins.int
-        RESOLVED_PINS_FIELD_NUMBER: builtins.int
-        display_name: builtins.str
-        """Name of the pin group."""
-        @property
-        def pin_or_group_references(
-            self,
-        ) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]:
-            """List of other pins or pin groups within this pin group."""
-        @property
-        def resolved_pins(
-            self,
-        ) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]:
-            """Distinct union of pins within this pin group, including those within nested pin groups."""
-        def __init__(
-            self,
-            *,
-            display_name: builtins.str = ...,
-            pin_or_group_references: collections.abc.Iterable[builtins.str] | None = ...,
-            resolved_pins: collections.abc.Iterable[builtins.str] | None = ...,
-        ) -> None: ...
-        def ClearField(
-            self,
-            field_name: typing_extensions.Literal[
-                "display_name",
-                b"display_name",
-                "pin_or_group_references",
-                b"pin_or_group_references",
-                "resolved_pins",
-                b"resolved_pins",
-            ],
-        ) -> None: ...
-
     PINS_FIELD_NUMBER: builtins.int
     PIN_GROUPS_FIELD_NUMBER: builtins.int
     @property
     def pins(
         self,
     ) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[
-        global___QueryPinsResponse.PinDefinition
+        global___PinDefinition
     ]:
         """List of pins on the registered pin map resource. This list includes both DUT and System pins."""
     @property
     def pin_groups(
         self,
     ) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[
-        global___QueryPinsResponse.PinGroupDefinition
+        global___PinGroupDefinition
     ]:
         """List of pin groups on the registered pin map resource.
         When an instrument type id filter is specified, a pin group will only be included
@@ -225,15 +164,195 @@ class QueryPinsResponse(google.protobuf.message.Message):
     def __init__(
         self,
         *,
-        pins: collections.abc.Iterable[global___QueryPinsResponse.PinDefinition] | None = ...,
-        pin_groups: collections.abc.Iterable[global___QueryPinsResponse.PinGroupDefinition]
-        | None = ...,
+        pins: collections.abc.Iterable[global___PinDefinition] | None = ...,
+        pin_groups: collections.abc.Iterable[global___PinGroupDefinition] | None = ...,
     ) -> None: ...
     def ClearField(
         self, field_name: typing_extensions.Literal["pin_groups", b"pin_groups", "pins", b"pins"]
     ) -> None: ...
 
 global___QueryPinsResponse = QueryPinsResponse
+
+@typing_extensions.final
+class PinDefinition(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    DISPLAY_NAME_FIELD_NUMBER: builtins.int
+    IS_SYSTEM_PIN_FIELD_NUMBER: builtins.int
+    display_name: builtins.str
+    """Name of the dut pin."""
+    is_system_pin: builtins.bool
+    """A boolean that indicates a System pin when 'true', or DUT pin when 'false'."""
+    def __init__(
+        self,
+        *,
+        display_name: builtins.str = ...,
+        is_system_pin: builtins.bool = ...,
+    ) -> None: ...
+    def ClearField(
+        self,
+        field_name: typing_extensions.Literal[
+            "display_name", b"display_name", "is_system_pin", b"is_system_pin"
+        ],
+    ) -> None: ...
+
+global___PinDefinition = PinDefinition
+
+@typing_extensions.final
+class PinGroupDefinition(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    DISPLAY_NAME_FIELD_NUMBER: builtins.int
+    PIN_OR_GROUP_REFERENCES_FIELD_NUMBER: builtins.int
+    RESOLVED_PINS_FIELD_NUMBER: builtins.int
+    display_name: builtins.str
+    """Name of the pin group."""
+    @property
+    def pin_or_group_references(
+        self,
+    ) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]:
+        """List of other pins or pin groups within this pin group."""
+    @property
+    def resolved_pins(
+        self,
+    ) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]:
+        """Distinct union of pins within this pin group, including those within nested pin groups."""
+    def __init__(
+        self,
+        *,
+        display_name: builtins.str = ...,
+        pin_or_group_references: collections.abc.Iterable[builtins.str] | None = ...,
+        resolved_pins: collections.abc.Iterable[builtins.str] | None = ...,
+    ) -> None: ...
+    def ClearField(
+        self,
+        field_name: typing_extensions.Literal[
+            "display_name",
+            b"display_name",
+            "pin_or_group_references",
+            b"pin_or_group_references",
+            "resolved_pins",
+            b"resolved_pins",
+        ],
+    ) -> None: ...
+
+global___PinGroupDefinition = PinGroupDefinition
+
+@typing_extensions.final
+class QueryRelaysRequest(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    PIN_MAP_ID_FIELD_NUMBER: builtins.int
+    pin_map_id: builtins.str
+    """Required. The resource id of the registered pin map resource."""
+    def __init__(
+        self,
+        *,
+        pin_map_id: builtins.str = ...,
+    ) -> None: ...
+    def ClearField(
+        self, field_name: typing_extensions.Literal["pin_map_id", b"pin_map_id"]
+    ) -> None: ...
+
+global___QueryRelaysRequest = QueryRelaysRequest
+
+@typing_extensions.final
+class QueryRelaysResponse(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    RELAYS_FIELD_NUMBER: builtins.int
+    RELAY_GROUPS_FIELD_NUMBER: builtins.int
+    @property
+    def relays(
+        self,
+    ) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[
+        global___RelayDefinition
+    ]:
+        """List of relays on the registered pin map resource. This list includes both Site relays and System relays."""
+    @property
+    def relay_groups(
+        self,
+    ) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[
+        global___RelayGroupDefinition
+    ]:
+        """List of relay groups on the registered pin map resource."""
+    def __init__(
+        self,
+        *,
+        relays: collections.abc.Iterable[global___RelayDefinition] | None = ...,
+        relay_groups: collections.abc.Iterable[global___RelayGroupDefinition] | None = ...,
+    ) -> None: ...
+    def ClearField(
+        self,
+        field_name: typing_extensions.Literal["relay_groups", b"relay_groups", "relays", b"relays"],
+    ) -> None: ...
+
+global___QueryRelaysResponse = QueryRelaysResponse
+
+@typing_extensions.final
+class RelayDefinition(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    DISPLAY_NAME_FIELD_NUMBER: builtins.int
+    IS_SYSTEM_RELAY_FIELD_NUMBER: builtins.int
+    display_name: builtins.str
+    """Name of the relay."""
+    is_system_relay: builtins.bool
+    """A boolean that indicates a System relay when 'true', or Site relay when 'false'."""
+    def __init__(
+        self,
+        *,
+        display_name: builtins.str = ...,
+        is_system_relay: builtins.bool = ...,
+    ) -> None: ...
+    def ClearField(
+        self,
+        field_name: typing_extensions.Literal[
+            "display_name", b"display_name", "is_system_relay", b"is_system_relay"
+        ],
+    ) -> None: ...
+
+global___RelayDefinition = RelayDefinition
+
+@typing_extensions.final
+class RelayGroupDefinition(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    DISPLAY_NAME_FIELD_NUMBER: builtins.int
+    RELAY_OR_GROUP_REFERENCES_FIELD_NUMBER: builtins.int
+    RESOLVED_RELAYS_FIELD_NUMBER: builtins.int
+    display_name: builtins.str
+    """Name of the relay group."""
+    @property
+    def relay_or_group_references(
+        self,
+    ) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]:
+        """List of other relays or relay groups within this relay group."""
+    @property
+    def resolved_relays(
+        self,
+    ) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]:
+        """Distinct union of relays within this relay group, including those within nested relay groups."""
+    def __init__(
+        self,
+        *,
+        display_name: builtins.str = ...,
+        relay_or_group_references: collections.abc.Iterable[builtins.str] | None = ...,
+        resolved_relays: collections.abc.Iterable[builtins.str] | None = ...,
+    ) -> None: ...
+    def ClearField(
+        self,
+        field_name: typing_extensions.Literal[
+            "display_name",
+            b"display_name",
+            "relay_or_group_references",
+            b"relay_or_group_references",
+            "resolved_relays",
+            b"resolved_relays",
+        ],
+    ) -> None: ...
+
+global___RelayGroupDefinition = RelayGroupDefinition
 
 @typing_extensions.final
 class QueryResourceAccessInformationRequest(google.protobuf.message.Message):
@@ -295,70 +414,18 @@ global___QueryResourceAccessInformationRequest = QueryResourceAccessInformationR
 class QueryResourceAccessInformationResponse(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
-    @typing_extensions.final
-    class ResourceAccessInformation(google.protobuf.message.Message):
-        DESCRIPTOR: google.protobuf.descriptor.Descriptor
-
-        RESOURCE_NAME_FIELD_NUMBER: builtins.int
-        CHANNEL_LIST_FIELD_NUMBER: builtins.int
-        INSTRUMENT_TYPE_ID_FIELD_NUMBER: builtins.int
-        resource_name: builtins.str
-        """Name of the instrument resource.
-        This string is used for initializing the driver session.
-        """
-        channel_list: builtins.str
-        """Channels on the instrument resource.
-        This string is used by various driver API methods such as Read, Fetch etc., and driver initialization for some instruments.
-        For a resource that represents a group of instruments or channels in the pin map, the channel list is a comma separated list of fully qualified channels in the format <instrument_name>/<channel>, e.g. "DCPower1/0, DCPower1/2, DCPower2/0".
-        For a resource that represents a single instrument in the pin map that is not part of a group, the channel list is a comma separated list of channels, e.g. "0, 1, 2".
-        For NI-Digital Pattern devices, the channel list is a comma separated list of pins in the format <site_number>/<pin>, e.g. "site0/PinA, site1/PinB".
-        For a resource that represents a relay driver, the channel list is a comma separated list of NISwitch relay names, e.g. "K0, K1, K2".
-        """
-        instrument_type_id: builtins.str
-        """The instrument type of the instrument resource.
-        Pin maps have built in instrument definitions using the following NI driver based instrument type ids:
-             "niDCPower"
-             "niDigitalPattern"
-             "niScope"
-             "niDMM"
-             "niDAQmx"
-             "niFGen"
-             "niRelayDriver"
-        For custom instruments the user defined instrument type id is defined in the pin map file.
-        """
-        def __init__(
-            self,
-            *,
-            resource_name: builtins.str = ...,
-            channel_list: builtins.str = ...,
-            instrument_type_id: builtins.str = ...,
-        ) -> None: ...
-        def ClearField(
-            self,
-            field_name: typing_extensions.Literal[
-                "channel_list",
-                b"channel_list",
-                "instrument_type_id",
-                b"instrument_type_id",
-                "resource_name",
-                b"resource_name",
-            ],
-        ) -> None: ...
-
     RESOURCE_ACCESS_INFORMATION_FIELD_NUMBER: builtins.int
     @property
     def resource_access_information(
         self,
     ) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[
-        global___QueryResourceAccessInformationResponse.ResourceAccessInformation
+        global___ResourceAccessInformation
     ]:
         """List of ResourceAccessInformation objects with instrument resource names and channels."""
     def __init__(
         self,
         *,
-        resource_access_information: collections.abc.Iterable[
-            global___QueryResourceAccessInformationResponse.ResourceAccessInformation
-        ]
+        resource_access_information: collections.abc.Iterable[global___ResourceAccessInformation]
         | None = ...,
     ) -> None: ...
     def ClearField(
@@ -369,3 +436,99 @@ class QueryResourceAccessInformationResponse(google.protobuf.message.Message):
     ) -> None: ...
 
 global___QueryResourceAccessInformationResponse = QueryResourceAccessInformationResponse
+
+@typing_extensions.final
+class ResourceAccessInformation(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    RESOURCE_NAME_FIELD_NUMBER: builtins.int
+    CHANNEL_LIST_FIELD_NUMBER: builtins.int
+    INSTRUMENT_TYPE_ID_FIELD_NUMBER: builtins.int
+    CHANNEL_MAPPINGS_FIELD_NUMBER: builtins.int
+    resource_name: builtins.str
+    """Name of the instrument resource.
+    This string is used for initializing the driver session.
+    """
+    channel_list: builtins.str
+    """Channels on the instrument resource.
+    This string is used by various driver API methods such as Read, Fetch etc., and driver initialization for some instruments.
+    For a resource that represents a group of instruments or channels in the pin map, the channel list is a comma separated list of fully qualified channels in the format <instrument_name>/<channel>, e.g. "DCPower1/0, DCPower1/2, DCPower2/0".
+    For a resource that represents a single instrument in the pin map that is not part of a group, the channel list is a comma separated list of channels, e.g. "0, 1, 2".
+    For NI-Digital Pattern devices, the channel list is a comma separated list of pins in the format <site_number>/<pin>, e.g. "site0/PinA, site1/PinB".
+    For a resource that represents a relay driver, the channel list is a comma separated list of NISwitch relay names, e.g. "K0, K1, K2".
+    """
+    instrument_type_id: builtins.str
+    """The instrument type of the instrument resource.
+    Pin maps have built in instrument definitions using the following NI driver based instrument type ids:
+         "niDCPower"
+         "niDigitalPattern"
+         "niScope"
+         "niDMM"
+         "niDAQmx"
+         "niFGen"
+         "niRelayDriver"
+    For custom instruments the user defined instrument type id is defined in the pin map file.
+    """
+    @property
+    def channel_mappings(
+        self,
+    ) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[
+        global___ChannelMapping
+    ]:
+        """List of site and pin/relay mappings that correspond to each channel in the channel_list.
+        Each item contains a mapping corresponding to a channel in this instrument resource, in the order of the channel_list.
+        """
+    def __init__(
+        self,
+        *,
+        resource_name: builtins.str = ...,
+        channel_list: builtins.str = ...,
+        instrument_type_id: builtins.str = ...,
+        channel_mappings: collections.abc.Iterable[global___ChannelMapping] | None = ...,
+    ) -> None: ...
+    def ClearField(
+        self,
+        field_name: typing_extensions.Literal[
+            "channel_list",
+            b"channel_list",
+            "channel_mappings",
+            b"channel_mappings",
+            "instrument_type_id",
+            b"instrument_type_id",
+            "resource_name",
+            b"resource_name",
+        ],
+    ) -> None: ...
+
+global___ResourceAccessInformation = ResourceAccessInformation
+
+@typing_extensions.final
+class ChannelMapping(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    PIN_OR_RELAY_NAME_FIELD_NUMBER: builtins.int
+    SITE_FIELD_NUMBER: builtins.int
+    CHANNEL_FIELD_NUMBER: builtins.int
+    pin_or_relay_name: builtins.str
+    """The pin or relay that is mapped to a channel."""
+    site: builtins.int
+    """The site on which the pin or relay is mapped to a channel.
+    For system pins/relays the site number is -1 since they do not belong to a specific site.
+    """
+    channel: builtins.str
+    """The channel to which the pin or relay is mapped on this site."""
+    def __init__(
+        self,
+        *,
+        pin_or_relay_name: builtins.str = ...,
+        site: builtins.int = ...,
+        channel: builtins.str = ...,
+    ) -> None: ...
+    def ClearField(
+        self,
+        field_name: typing_extensions.Literal[
+            "channel", b"channel", "pin_or_relay_name", b"pin_or_relay_name", "site", b"site"
+        ],
+    ) -> None: ...
+
+global___ChannelMapping = ChannelMapping

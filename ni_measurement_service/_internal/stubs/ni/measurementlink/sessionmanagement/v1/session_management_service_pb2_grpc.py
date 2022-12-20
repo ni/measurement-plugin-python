@@ -47,21 +47,27 @@ class SessionManagementServiceServicer(object):
     """Service to keep track of open sessions used by measurement services, and to allow measurement services to access sessions by pin and site."""
 
     def ReserveSessions(self, request, context):
-        """Reserve session(s) for the given pins, sites, and instrument type ID and returns the information needed to create or access the session.
+        """Reserve session(s) for the given pins or relays, sites, and instrument type ID and returns the information needed to create or access the session.
         (Will be implemented in AB#2046548) Also reserves the session so other processes cannot access it with a ReserveSessions() call.
         Status Codes for errors:
         - INVALID_ARGUMENT:
         - Pin Map Context references a site number that is not defined in the pin map
-        - Pin name does not match any pin names or pin group names in the pin map
+        - Pin or relay name does not match any pin, pin group, relay, or relay group names in the pin map
+        - Timeout specified is less than -1.
         - NOT_FOUND:
         - Pin Map Context has a pin map ID that does not match any pin maps registered with the Pin Map Service.
+        - UNAVAILABLE:
+        - Session(s) were already reserved and didn't become available before the specified timeout expired.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details("Method not implemented!")
         raise NotImplementedError("Method not implemented!")
 
     def UnreserveSessions(self, request, context):
-        """Unreserves sessions so they can be accessed by other clients."""
+        """Unreserves sessions so they can be accessed by other clients.
+        - RESOURCE_EXHAUSTED:
+        - Error occurred while unreserving sessions.
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details("Method not implemented!")
         raise NotImplementedError("Method not implemented!")
@@ -85,7 +91,12 @@ class SessionManagementServiceServicer(object):
         raise NotImplementedError("Method not implemented!")
 
     def ReserveAllRegisteredSessions(self, request, context):
-        """Reserves and gets all sessions currently registered with this service."""
+        """Reserves and gets all sessions currently registered with this service.
+        - INVALID_ARGUMENT:
+        - Timeout specified is less than -1.
+        - UNAVAILABLE:
+        - Session(s) were already reserved and didn't become available before the specified timeout expired.
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details("Method not implemented!")
         raise NotImplementedError("Method not implemented!")

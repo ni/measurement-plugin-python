@@ -67,9 +67,6 @@ message ServiceDescriptor {
   // Required. The "class" of a service. The value of this field should be unique for a given interface in provided_interfaces.
   // In effect, the .proto service declaration defines the interface, and this field defines a class or concrete type of the interface.
   string service_class = 4;
-
-  // Optional. Attributes that define additional metadata about the service. There are currently no system defined attributes.
-  repeated string attributes = 5;
 }
 
 // Represents the location of a service. The location generally includes the IP address and port number for the service
