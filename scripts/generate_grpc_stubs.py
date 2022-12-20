@@ -81,11 +81,10 @@ def fix_import_paths(
     for path in grpc_codegened_file_paths:
         print(f"Processing {path}")
         data = path.read_bytes()
-        if path.parent == stubs_path:
-            for name in imports_to_fix:
-                data = data.replace(
-                    f"import {name}".encode(), f"from {stubs_namespace} import {name}".encode()
-                )
+        for name in imports_to_fix:
+            data = data.replace(
+                f"import {name}".encode(), f"from {stubs_namespace} import {name}".encode()
+            )
 
         for namespace in proto_parent_namespaces:
             data = data.replace(

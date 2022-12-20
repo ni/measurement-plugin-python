@@ -3,7 +3,7 @@ syntax = "proto3";
 package ni.measurementlink.sessionmanagement.v1;
 
 import "ni/measurementlink/pin_map_context.proto";
-import "nidevice_grpc/session.proto";
+import "session.proto";
 
 option csharp_namespace = "NationalInstruments.MeasurementLink.SessionManagement.V1";
 option go_package = "sessionmanagementv1";
