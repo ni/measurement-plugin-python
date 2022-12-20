@@ -47,7 +47,7 @@ def create_nidcpower_sessions(pin_map_id: str):
 
                 # Leave session open
                 nidcpower.Session(
-                    resource_name=session_info.resource_name, _grpc_options=grpc_options
+                    resource_name=session_info.resource_name, grpc_options=grpc_options
                 )
 
             session_management_client.register_sessions(reservation.session_info)
@@ -75,6 +75,6 @@ def destroy_nidcpower_sessions():
                 )
 
                 session = nidcpower.Session(
-                    resource_name=session_info.resource_name, _grpc_options=grpc_options
+                    resource_name=session_info.resource_name, grpc_options=grpc_options
                 )
                 session.close()

@@ -162,7 +162,7 @@ def _create_nifgen_session(
         # Assumption: the pin map specifies one NI-FGEN session per instrument. If the pin map
         # specified an NI-FGEN session per channel, the session name would need to include the
         # channel name(s).
-        session_kwargs["_grpc_options"] = nifgen.GrpcSessionOptions(
+        session_kwargs["grpc_options"] = nifgen.GrpcSessionOptions(
             session_grpc_channel,
             session_name=session_info.session_name,
             initialization_behavior=nifgen.SessionInitializationBehavior.AUTO,

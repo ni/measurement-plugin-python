@@ -25,7 +25,7 @@ class _SessionInitializationBehaviorEnumTypeWrapper(
         _SessionInitializationBehavior.ValueType
     ],
     builtins.type,
-):  # noqa: F821
+):
     DESCRIPTOR: google.protobuf.descriptor.EnumDescriptor
     SESSION_INITIALIZATION_BEHAVIOR_UNSPECIFIED: _SessionInitializationBehavior.ValueType  # 0
     SESSION_INITIALIZATION_BEHAVIOR_INITIALIZE_NEW: _SessionInitializationBehavior.ValueType  # 1
@@ -40,6 +40,7 @@ SESSION_INITIALIZATION_BEHAVIOR_INITIALIZE_NEW: SessionInitializationBehavior.Va
 SESSION_INITIALIZATION_BEHAVIOR_ATTACH_TO_EXISTING: SessionInitializationBehavior.ValueType  # 2
 global___SessionInitializationBehavior = SessionInitializationBehavior
 
+@typing_extensions.final
 class Session(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 

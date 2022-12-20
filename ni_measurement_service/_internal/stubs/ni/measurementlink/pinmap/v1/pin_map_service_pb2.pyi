@@ -16,6 +16,7 @@ else:
 
 DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
 
+@typing_extensions.final
 class PinMap(google.protobuf.message.Message):
     """Pin map resource type."""
 
@@ -35,6 +36,7 @@ class PinMap(google.protobuf.message.Message):
 
 global___PinMap = PinMap
 
+@typing_extensions.final
 class CreatePinMapFromXmlRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -59,6 +61,7 @@ class CreatePinMapFromXmlRequest(google.protobuf.message.Message):
 
 global___CreatePinMapFromXmlRequest = CreatePinMapFromXmlRequest
 
+@typing_extensions.final
 class UpdatePinMapFromXmlRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -83,6 +86,7 @@ class UpdatePinMapFromXmlRequest(google.protobuf.message.Message):
 
 global___UpdatePinMapFromXmlRequest = UpdatePinMapFromXmlRequest
 
+@typing_extensions.final
 class GetPinMapRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -100,6 +104,7 @@ class GetPinMapRequest(google.protobuf.message.Message):
 
 global___GetPinMapRequest = GetPinMapRequest
 
+@typing_extensions.final
 class QueryPinsRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -133,6 +138,7 @@ class QueryPinsRequest(google.protobuf.message.Message):
 
 global___QueryPinsRequest = QueryPinsRequest
 
+@typing_extensions.final
 class QueryPinsResponse(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -167,6 +173,7 @@ class QueryPinsResponse(google.protobuf.message.Message):
 
 global___QueryPinsResponse = QueryPinsResponse
 
+@typing_extensions.final
 class PinDefinition(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -191,6 +198,7 @@ class PinDefinition(google.protobuf.message.Message):
 
 global___PinDefinition = PinDefinition
 
+@typing_extensions.final
 class PinGroupDefinition(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -230,6 +238,7 @@ class PinGroupDefinition(google.protobuf.message.Message):
 
 global___PinGroupDefinition = PinGroupDefinition
 
+@typing_extensions.final
 class QueryRelaysRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -247,6 +256,7 @@ class QueryRelaysRequest(google.protobuf.message.Message):
 
 global___QueryRelaysRequest = QueryRelaysRequest
 
+@typing_extensions.final
 class QueryRelaysResponse(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -279,6 +289,7 @@ class QueryRelaysResponse(google.protobuf.message.Message):
 
 global___QueryRelaysResponse = QueryRelaysResponse
 
+@typing_extensions.final
 class RelayDefinition(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -303,6 +314,7 @@ class RelayDefinition(google.protobuf.message.Message):
 
 global___RelayDefinition = RelayDefinition
 
+@typing_extensions.final
 class RelayGroupDefinition(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -342,6 +354,7 @@ class RelayGroupDefinition(google.protobuf.message.Message):
 
 global___RelayGroupDefinition = RelayGroupDefinition
 
+@typing_extensions.final
 class QueryResourceAccessInformationRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -397,6 +410,7 @@ class QueryResourceAccessInformationRequest(google.protobuf.message.Message):
 
 global___QueryResourceAccessInformationRequest = QueryResourceAccessInformationRequest
 
+@typing_extensions.final
 class QueryResourceAccessInformationResponse(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -423,6 +437,7 @@ class QueryResourceAccessInformationResponse(google.protobuf.message.Message):
 
 global___QueryResourceAccessInformationResponse = QueryResourceAccessInformationResponse
 
+@typing_extensions.final
 class ResourceAccessInformation(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -487,6 +502,7 @@ class ResourceAccessInformation(google.protobuf.message.Message):
 
 global___ResourceAccessInformation = ResourceAccessInformation
 
+@typing_extensions.final
 class ChannelMapping(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
