@@ -4,12 +4,12 @@ from typing import Iterable, List, NamedTuple, Optional
 
 import grpc
 
+from ni_measurement_service._internal.stubs import session_pb2
 from ni_measurement_service._internal.stubs.ni.measurementlink import pin_map_context_pb2
 from ni_measurement_service._internal.stubs.ni.measurementlink.sessionmanagement.v1 import (
     session_management_service_pb2,
     session_management_service_pb2_grpc,
 )
-from ni_measurement_service._internal.stubs import session_pb2
 
 GRPC_SERVICE_INTERFACE_NAME = "ni.measurementlink.sessionmanagement.v1.SessionManagementService"
 GRPC_SERVICE_CLASS = "ni.measurementlink.sessionmanagement.v1.SessionManagementService"
