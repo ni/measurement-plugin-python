@@ -49,7 +49,6 @@ TRIGGER_SLOPE_TO_ENUM = {
 
 
 @measurement_service.register_measurement
-# TODO: Make pin_names PinArray1D
 @measurement_service.configuration(
     "pin_names",
     nims.DataType.PinArray1D,
