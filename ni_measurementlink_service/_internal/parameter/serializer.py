@@ -6,8 +6,8 @@ from typing import Any, Dict, List
 
 from google.protobuf.internal import encoder
 
-from ni_measurement_service._internal.parameter import serialization_strategy
-from ni_measurement_service._internal.parameter.metadata import ParameterMetadata
+from ni_measurementlink_service._internal.parameter import serialization_strategy
+from ni_measurementlink_service._internal.parameter.metadata import ParameterMetadata
 
 
 _GRPC_WIRE_TYPE_BIT_WIDTH = 3

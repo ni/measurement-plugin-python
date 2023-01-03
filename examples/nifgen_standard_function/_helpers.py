@@ -6,13 +6,13 @@ from typing import Dict, NamedTuple, TypeVar
 
 import grpc
 
-from ni_measurement_service import session_management
-from ni_measurement_service._internal.discovery_client import DiscoveryClient
-from ni_measurement_service._internal.stubs.ni.measurementlink.pinmap.v1 import (
+from ni_measurementlink_service import session_management
+from ni_measurementlink_service._internal.discovery_client import DiscoveryClient
+from ni_measurementlink_service._internal.stubs.ni.measurementlink.pinmap.v1 import (
     pin_map_service_pb2,
     pin_map_service_pb2_grpc,
 )
-from ni_measurement_service.measurement.service import GrpcChannelPool
+from ni_measurementlink_service.measurement.service import GrpcChannelPool
 
 
 class ServiceOptions(NamedTuple):

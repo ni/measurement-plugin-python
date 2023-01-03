@@ -1,8 +1,8 @@
 """Contains tests to validate metadata.py."""
 import pytest
 
-from ni_measurement_service._internal.parameter import metadata
-from ni_measurement_service.measurement.info import DataType
+from ni_measurementlink_service._internal.parameter import metadata
+from ni_measurementlink_service.measurement.info import DataType
 
 
 @pytest.mark.parametrize(

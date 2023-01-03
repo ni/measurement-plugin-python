@@ -3,7 +3,7 @@ from typing import Any, Dict, NamedTuple
 
 from google.protobuf import type_pb2
 
-from ni_measurement_service._internal.parameter.serialization_strategy import Context
+from ni_measurementlink_service._internal.parameter.serialization_strategy import Context
 
 
 class ParameterMetadata(NamedTuple):

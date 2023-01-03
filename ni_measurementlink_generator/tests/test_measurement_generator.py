@@ -3,7 +3,7 @@ import pathlib
 
 import pytest
 
-from ni_measurement_generator import template
+from ni_measurementlink_generator import template
 
 test_assets_path = pathlib.Path(__file__).parent / "test_assets"
 

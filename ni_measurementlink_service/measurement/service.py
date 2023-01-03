@@ -7,11 +7,11 @@ from typing import Any, Callable, Dict
 
 import grpc
 
-from ni_measurement_service._internal import grpc_servicer
-from ni_measurement_service._internal.discovery_client import DiscoveryClient
-from ni_measurement_service._internal.parameter import metadata as parameter_metadata
-from ni_measurement_service._internal.service_manager import GrpcService
-from ni_measurement_service.measurement.info import (
+from ni_measurementlink_service._internal import grpc_servicer
+from ni_measurementlink_service._internal.discovery_client import DiscoveryClient
+from ni_measurementlink_service._internal.parameter import metadata as parameter_metadata
+from ni_measurementlink_service._internal.service_manager import GrpcService
+from ni_measurementlink_service.measurement.info import (
     DataType,
     MeasurementInfo,
     ServiceInfo,

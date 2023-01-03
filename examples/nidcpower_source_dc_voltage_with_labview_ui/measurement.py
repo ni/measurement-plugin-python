@@ -13,7 +13,7 @@ import hightime
 import nidcpower
 from _helpers import ServiceOptions
 
-import ni_measurement_service as nims
+import ni_measurementlink_service as nims
 
 
 NIDCPOWER_WAIT_FOR_EVENT_TIMEOUT_ERROR_CODE = -1074116059

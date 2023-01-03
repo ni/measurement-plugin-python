@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-from ni_measurement_service._internal.stubs.ni.measurementlink.sessionmanagement.v1 import (
+from ni_measurementlink_service._internal.stubs.ni.measurementlink.sessionmanagement.v1 import (
     session_management_service_pb2 as ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2,
 )
 

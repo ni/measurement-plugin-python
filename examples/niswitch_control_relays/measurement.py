@@ -10,7 +10,7 @@ import click
 import niswitch
 from _helpers import ServiceOptions
 
-import ni_measurement_service as nims
+import ni_measurementlink_service as nims
 
 measurement_info = nims.MeasurementInfo(
     display_name="NI-SWITCH Control Relays (Py)",

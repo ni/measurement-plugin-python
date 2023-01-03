@@ -9,11 +9,11 @@ import typing
 
 import grpc
 
-from ni_measurement_service._internal.stubs.ni.measurementlink.discovery.v1 import (
+from ni_measurementlink_service._internal.stubs.ni.measurementlink.discovery.v1 import (
     discovery_service_pb2,
     discovery_service_pb2_grpc,
 )
-from ni_measurement_service.measurement.info import MeasurementInfo, ServiceInfo
+from ni_measurementlink_service.measurement.info import MeasurementInfo, ServiceInfo
 
 if sys.platform == "win32":
     import errno

@@ -3,7 +3,7 @@
 import nidmm
 from _helpers import GrpcChannelPoolHelper, PinMapClient
 
-import ni_measurement_service as nims
+import ni_measurementlink_service as nims
 
 
 def update_pin_map(pin_map_id: str):

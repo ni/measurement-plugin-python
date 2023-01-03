@@ -11,14 +11,14 @@ from typing import List
 import grpc
 from google.protobuf import any_pb2
 
-from ni_measurement_service._internal.parameter import serializer
-from ni_measurement_service._internal.parameter.metadata import ParameterMetadata
-from ni_measurement_service._internal.stubs.ni.measurementlink import pin_map_context_pb2
-from ni_measurement_service._internal.stubs.ni.measurementlink.measurement.v1 import (
+from ni_measurementlink_service._internal.parameter import serializer
+from ni_measurementlink_service._internal.parameter.metadata import ParameterMetadata
+from ni_measurementlink_service._internal.stubs.ni.measurementlink import pin_map_context_pb2
+from ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v1 import (
     measurement_service_pb2,
     measurement_service_pb2_grpc,
 )
-from ni_measurement_service.measurement.info import MeasurementInfo
+from ni_measurementlink_service.measurement.info import MeasurementInfo
 
 
 class MeasurementServiceContext:

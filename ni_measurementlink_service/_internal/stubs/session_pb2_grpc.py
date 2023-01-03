@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-from ni_measurement_service._internal.stubs import session_pb2 as session__pb2
+from ni_measurementlink_service._internal.stubs import session_pb2 as session__pb2
 
 
 class SessionUtilitiesStub(object):

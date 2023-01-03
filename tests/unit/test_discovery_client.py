@@ -1,7 +1,7 @@
 """Contains tests to validate the discovery_client.py.
 """
-from ni_measurement_service._internal import discovery_client
-from ni_measurement_service.measurement.info import ServiceInfo, MeasurementInfo
+from ni_measurementlink_service._internal import discovery_client
+from ni_measurementlink_service.measurement.info import ServiceInfo, MeasurementInfo
 from tests.utilities.fake_discovery_service import (
     FakeDiscoveryServiceStub,
     FakeDiscoveryServiceStubError,
