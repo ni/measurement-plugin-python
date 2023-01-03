@@ -7,13 +7,13 @@ authors = ["National Instruments"]
 [tool.poetry.dependencies]
 python = "^3.8"
 nidcpower = ">=1.4.3"
-ni-measurement-service = "*"
+ni-measurementlink-service = "*"
 click = ">=7.1.2"
 
 [tool.poetry.dev-dependencies]
 # Uncomment to use prerelease dependencies (requires poetry>=1.2).
 # nidcpower = { git = "https://github.com/ni/nimi-python.git", subdirectory = "generated/nidcpower"}
-# ni-measurement-service = {path = "../..", develop = true}
+# ni-measurementlink-service = {path = "../..", develop = true}
 
 [build-system]
 requires = ["poetry-core>=1.2.0"]
