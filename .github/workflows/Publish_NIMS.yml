@@ -37,7 +37,7 @@ jobs:
 
       - name: Setup NIMG
         run: poetry install
-        working-directory: ./ni_measurement_generator
+        working-directory: ./ni_measurementlink_generator
 
       - name: Lint NIMS, NIMG, and examples
         run: poetry run ni-python-styleguide lint
@@ -54,7 +54,7 @@ jobs:
       - name: Update NIMG package version based on tag name.
         run: |
           poetry version ${{ steps.vars.outputs.tag }}
-        working-directory: ./ni_measurement_generator
+        working-directory: ./ni_measurementlink_generator
 
       - name: Update API Reference Documents(Generated using Sphinx)
         run: |
@@ -89,7 +89,7 @@ jobs:
         if: ${{ startsWith(github.event.release.target_commitish, 'main') }}
         run: |
           poetry publish --build --username __token__ --password ${{ secrets.PYPI_TOKEN }}
-        working-directory: ./ni_measurement_generator
+        working-directory: ./ni_measurementlink_generator
 
       - uses: actions/upload-artifact@v3
         with:
