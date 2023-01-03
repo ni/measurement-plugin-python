@@ -15,7 +15,7 @@ version = "0.11.1"
 description = "MeasurementLink Support for Python"
 authors = ["NI <opensource@ni.com>"]
 readme = "README.md" # apply the repo readme to the package as well
-repository = "https://github.com/ni/measurement-services-python/"
+repository = "https://github.com/ni/measurementlink-python/"
 license = "MIT"
 
 [tool.poetry.dependencies]

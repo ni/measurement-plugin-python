@@ -60,7 +60,7 @@ The example measurements shared are *poetry-based* projects. Follow the below st
 
     ``` cmd
     cd <path_of_example_measurement>
-    REM Example: cd "..\measurement-services-python\examples\dc_measurement"
+    REM Example: cd "..\measurementlink-python\examples\dc_measurement"
     ```
 
 3. Run `poetry install`. This command creates/updates the .venv and installs all the dependencies(including `ni-measurementlink-service` package) needed for the Example into `.venv`
@@ -238,7 +238,7 @@ pyinstaller --onefile --console --add-data "<path_of_the_UI_File>;." --paths .ve
 
 ## API References
 
-[Click here](https://ni.github.io/measurement-services-python/) to view the API reference documentation.
+[Click here](https://ni.github.io/measurementlink-python/) to view the API reference documentation.
 
 ## Appendix: Managing Measurement as Python Package(Project)
 
