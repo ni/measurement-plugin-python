@@ -32,17 +32,17 @@ jobs:
       - name: Lint the Code
         run: poetry run ni-python-styleguide lint
       - name: MyPy Static Analysis 
-        run:  poetry run mypy -p ni_measurement_service --show-error-codes -v
+        run:  poetry run mypy -p ni_measurementlink_service --show-error-codes -v
       - name: MyPy Static Analysis on examples 
         run:  poetry run mypy -p examples --show-error-codes -v
-      - name: MyPy Static Analysis ni_measurement_generator
-        run:  poetry run mypy -p ni_measurement_generator --show-error-codes -v
+      - name: MyPy Static Analysis ni_measurementlink_generator
+        run:  poetry run mypy -p ni_measurementlink_generator --show-error-codes -v
         
   checks-nimg:
     runs-on: ubuntu-latest
     defaults: # in theory this sets the working-dir for all steps in this job
       run:
-        working-directory: ./ni_measurement_generator
+        working-directory: ./ni_measurementlink_generator
     env:
       PYTHON_VERSION: 3.9
     steps:
@@ -55,7 +55,7 @@ jobs:
           poetry-version: ${{ env.POETRY_VERSION }}
       - name: Check for lock changes (generator)
         run: poetry lock --check
-        working-directory: ./ni_measurement_generator
+        working-directory: ./ni_measurementlink_generator
       - uses: actions/cache@v2
         with:
           path: ~/.cache/pypoetry/virtualenvs
@@ -87,10 +87,10 @@ jobs:
       - name: Install the Package (measurement service).
         run: poetry install -vvv
       - name: Run tests and Code coverage summary (measurement service).
-        run: poetry run pytest ./tests -v --cov=ni_measurement_service
+        run: poetry run pytest ./tests -v --cov=ni_measurementlink_service
       - name: Install the Package (generator).
         run: poetry install -vvv
-        working-directory: ./ni_measurement_generator
+        working-directory: ./ni_measurementlink_generator
       - name: Run tests and Code coverage summary (generator).
         run: poetry run pytest -v
-        working-directory: ./ni_measurement_generator
+        working-directory: ./ni_measurementlink_generator

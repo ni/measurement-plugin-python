@@ -4,7 +4,7 @@ import pathlib
 import sys
 
 import click
-import ni_measurement_service as nims
+import ni_measurementlink_service as nims
 
 measurement_info = nims.MeasurementInfo(
     display_name="SampleMeasurement",
