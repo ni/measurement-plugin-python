@@ -18,13 +18,13 @@
   - [Appendix: Managing Measurement as Python Package(Project)](#appendix-managing-measurement-as-python-packageproject)
     - [Create and Manage Python Measurement Package using poetry](#create-and-manage-python-measurement-package-using-poetry)
     - [Create and Manage Python Measurement Package using venv](#create-and-manage-python-measurement-package-using-venv)
-    - [Create and Manage Python Measurement Package by directly installing `ni-measurement-service` as a system-level package](#create-and-manage-python-measurement-package-by-directly-installing-ni-measurement-service-as-a-system-level-package)
+    - [Create and Manage Python Measurement Package by directly installing `ni-measurementlink-service` as a system-level package](#create-and-manage-python-measurement-package-by-directly-installing-ni-measurementlink-service-as-a-system-level-package)
 
 ---
 
 ## Introduction
 
-MeasurementLink Support for Python (`ni-measurement-service`) is a python framework that enables measurement developers to quickly create python measurements and run them as a service (gRPC).
+MeasurementLink Support for Python (`ni-measurementlink-service`) is a python framework that enables measurement developers to quickly create python measurements and run them as a service (gRPC).
 
 ---
 
@@ -63,7 +63,7 @@ The example measurements shared are *poetry-based* projects. Follow the below st
     REM Example: cd "..\measurement-services-python\examples\dc_measurement"
     ```
 
-3. Run `poetry install`. This command creates/updates the .venv and installs all the dependencies(including `ni-measurement-service` package) needed for the Example into `.venv`
+3. Run `poetry install`. This command creates/updates the .venv and installs all the dependencies(including `ni-measurementlink-service` package) needed for the Example into `.venv`
 
     ``` cmd
     poetry install
@@ -92,41 +92,41 @@ Make sure the system has the recommended python version is installed. Install Me
 
 ``` cmd
 REM Activate the required virtual environment if any.
-pip install ni-measurement-service
+pip install ni-measurementlink-service
 ```
 
 Check if you have installed the expected version of MeasurementLink Support for Python installed by running the below command:
 
 ```cmd
-pip show ni-measurement-service
+pip show ni-measurementlink-service
 ```
 
 ### Developing a minimal python measurement
 
-1. Install the `ni-measurement-generator` package.
+1. Install the `ni-measurementlink-generator` package.
 
 ``` cmd
 REM Activate the required virtual environment if any.
-pip install ni-measurement-generator
+pip install ni-measurementlink-generator
 ```
 
-2. Run the `ni-measurement-generator` tool. Use command line arguments to specify the `display-name` and optionally the `version`, `measurement-type`, and `product-type`.
+2. Run the `ni-measurementlink-generator` tool. Use command line arguments to specify the `display-name` and optionally the `version`, `measurement-type`, and `product-type`.
 
-    1. Running `ni-measurement-generator` without optional arguments:
+    1. Running `ni-measurementlink-generator` without optional arguments:
 
-    `ni-measurement-generator SampleMeasurement`
+    `ni-measurementlink-generator SampleMeasurement`
 
     'SampleMeasurement' is the display name of your measurement service. Without the optional arguments,
     the other arguments are generated for you based on the display name.
 
-    2. Running `ni-measurement-generator` with optional arguments for `measurement-version`, `ui-file`,
+    2. Running `ni-measurementlink-generator` with optional arguments for `measurement-version`, `ui-file`,
     `service-class`, and `description-url`:
 
-    `ni-measurement-generator SampleMeasurement --measurement-version 0.1.0.0 --ui-file MeasurementUI.measui --service-class SampleMeasurement_Python --description-url https://www.example.com/SampleMeasurement.html`
+    `ni-measurementlink-generator SampleMeasurement --measurement-version 0.1.0.0 --ui-file MeasurementUI.measui --service-class SampleMeasurement_Python --description-url https://www.example.com/SampleMeasurement.html`
 
-    3. Running `ni-measurement-generator` with optional argument for `directory-out`
+    3. Running `ni-measurementlink-generator` with optional argument for `directory-out`
 
-    `ni-measurement-generator SampleMeasurement --directory-out <new_path_for_created_files>`
+    `ni-measurementlink-generator SampleMeasurement --directory-out <new_path_for_created_files>`
 
     If no output directory is specified, the files will
     be placed in a new folder under the current directory
@@ -265,7 +265,7 @@ Note: Once we have the template support for Python measurement, the approach to 
 
     2. Install the `poetry` using the installation steps given in <https://python-poetry.org/docs/#installation>.
 
-2. Create a new python project and add `ni-measurement-service` as a dependency to the project.
+2. Create a new python project and add `ni-measurementlink-service` as a dependency to the project.
 
     1. Open a command prompt, and change the working directory to the directory of your choice where you want to create the project.
 
@@ -279,11 +279,11 @@ Note: Once we have the template support for Python measurement, the approach to 
         poetry new <name_of_the_project>
         ```
 
-    3. Add the `ni-measurement-service` package as a dependency using the [poetry add command](https://python-poetry.org/docs/cli/#add).
+    3. Add the `ni-measurementlink-service` package as a dependency using the [poetry add command](https://python-poetry.org/docs/cli/#add).
 
         ``` cmd
         cd <name_of_the_project>
-        poetry add ni-measurement-service
+        poetry add ni-measurementlink-service
         ```
 
     4. The virtual environment will be auto-created by poetry.
@@ -322,10 +322,10 @@ For detailed info on managing projects using poetry [refer to the official docum
     python -m pip install -U pip
     ```
 
-5. Install the `ni-measurement-service` package into the virtual environment.
+5. Install the `ni-measurementlink-service` package into the virtual environment.
 
     ``` cmd
-    pip install ni-measurement-service
+    pip install ni-measurementlink-service
     ```
 
 6. Create measurement modules as described in ["Developing a minimal python measurement"](#developing-a-minimal-python-measurement)
@@ -337,14 +337,14 @@ For detailed info on managing projects using poetry [refer to the official docum
 
 For detailed info on managing projects with a virtual environment [refer to the official documentation](https://docs.python.org/3/tutorial/venv.html).
 
-### Create and Manage Python Measurement Package by directly installing `ni-measurement-service` as a system-level package
+### Create and Manage Python Measurement Package by directly installing `ni-measurementlink-service` as a system-level package
 
-Measurement developers can also install `ni-measurement-service` as a system package if necessary.
+Measurement developers can also install `ni-measurementlink-service` as a system package if necessary.
 
-1. Install the `ni-measurement-service` package from the command prompt
+1. Install the `ni-measurementlink-service` package from the command prompt
 
     ``` cmd
-    pip install ni-measurement-service
+    pip install ni-measurementlink-service
     ```
 
 2. Create measurement modules as described in ["Developing a minimal python measurement"](#developing-a-minimal-python-measurement)

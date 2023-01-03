@@ -100,9 +100,9 @@ Running this command from the repo's root directory will generate the tar.gz fil
 
 # Testing
 
-`ni-measurement-service` includes tests under the directory `tests\` that exercises the python and grpc modules. The GitHub CI run these tests for PRs targeting the main branch. It is recommended that during development you run the tests locally before creating a PR.
+`ni-measurementlink-service` includes tests under the directory `tests\` that exercises the python and grpc modules. The GitHub CI run these tests for PRs targeting the main branch. It is recommended that during development you run the tests locally before creating a PR.
 
-In order to run the `ni-measurement-service` tests locally:
+In order to run the `ni-measurementlink-service` tests locally:
 
 ## Using Command Line
 
@@ -110,7 +110,7 @@ In order to run the `ni-measurement-service` tests locally:
 2. Execute the command `poetry run pytest -v` to run the tests, from the repo's root directory.
 
     ``` ps
-    (.venv) PS D:\TAF\measurement-services-python> poetry run pytest -v
+    (.venv) PS D:\TAF\measurementlink-python> poetry run pytest -v
     ```
 
 ## Using VS code Test Explorer extension(UI)
