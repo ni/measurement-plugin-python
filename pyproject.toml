@@ -10,7 +10,7 @@ exclude = '''
 '''
 
 [tool.poetry]
-name = "ni_measurement_service"
+name = "ni_measurementlink_service"
 version = "0.11.1"
 description = "MeasurementLink Support for Python"
 authors = ["NI <opensource@ni.com>"]
