@@ -44,7 +44,6 @@ pytest-cov = "^3.0.0"
 mypy = "^0.961"
 mypy-protobuf = "^3.4"
 types-protobuf = "^4.21"
-typed-ast = "*"
 types-pkg-resources = "*"
 mako = "*"
 
