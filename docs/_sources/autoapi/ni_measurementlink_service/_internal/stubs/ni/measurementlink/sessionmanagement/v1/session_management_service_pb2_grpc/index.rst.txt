@@ -1,0 +1,124 @@
+:py:mod:`ni_measurementlink_service._internal.stubs.ni.measurementlink.sessionmanagement.v1.session_management_service_pb2_grpc`
+================================================================================================================================
+
+.. py:module:: ni_measurementlink_service._internal.stubs.ni.measurementlink.sessionmanagement.v1.session_management_service_pb2_grpc
+
+.. autoapi-nested-parse::
+
+   Client and server classes corresponding to protobuf-defined services.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   ni_measurementlink_service._internal.stubs.ni.measurementlink.sessionmanagement.v1.session_management_service_pb2_grpc.SessionManagementServiceStub
+   ni_measurementlink_service._internal.stubs.ni.measurementlink.sessionmanagement.v1.session_management_service_pb2_grpc.SessionManagementServiceServicer
+   ni_measurementlink_service._internal.stubs.ni.measurementlink.sessionmanagement.v1.session_management_service_pb2_grpc.SessionManagementService
+
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   ni_measurementlink_service._internal.stubs.ni.measurementlink.sessionmanagement.v1.session_management_service_pb2_grpc.add_SessionManagementServiceServicer_to_server
+
+
+
+.. py:class:: SessionManagementServiceStub(channel)
+
+   Bases: :py:obj:`object`
+
+   Service to keep track of open sessions used by measurement services, and to allow measurement services to access sessions by pin and site.
+
+
+.. py:class:: SessionManagementServiceServicer
+
+   Bases: :py:obj:`object`
+
+   Service to keep track of open sessions used by measurement services, and to allow measurement services to access sessions by pin and site.
+
+   .. py:method:: ReserveSessions(request, context)
+
+      Reserve session(s) for the given pins or relays, sites, and instrument type ID and returns the information needed to create or access the session.
+      (Will be implemented in AB#2046548) Also reserves the session so other processes cannot access it with a ReserveSessions() call.
+      Status Codes for errors:
+      - INVALID_ARGUMENT:
+      - Pin Map Context references a site number that is not defined in the pin map
+      - Pin or relay name does not match any pin, pin group, relay, or relay group names in the pin map
+      - Timeout specified is less than -1.
+      - NOT_FOUND:
+      - Pin Map Context has a pin map ID that does not match any pin maps registered with the Pin Map Service.
+      - UNAVAILABLE:
+      - Session(s) were already reserved and didn't become available before the specified timeout expired.
+
+
+   .. py:method:: UnreserveSessions(request, context)
+
+      Unreserves sessions so they can be accessed by other clients.
+      - RESOURCE_EXHAUSTED:
+      - Error occurred while unreserving sessions.
+
+
+   .. py:method:: RegisterSessions(request, context)
+
+      Registers the sessions with this service. Indicates that the sessions are open and will need to be closed later.
+      Status Codes for errors:
+      - ALREADY_EXISTS:
+      - Session by the same name is already registered.
+      - INVALID_ARGUMENT:
+      - Session names list has an empty string.
+
+
+   .. py:method:: UnregisterSessions(request, context)
+
+      Unregisters the sessions with this service. Indicates that the sessions have been closed and will need to be reopened before they can be used again.
+
+
+   .. py:method:: ReserveAllRegisteredSessions(request, context)
+
+      Reserves and gets all sessions currently registered with this service.
+      - INVALID_ARGUMENT:
+      - Timeout specified is less than -1.
+      - UNAVAILABLE:
+      - Session(s) were already reserved and didn't become available before the specified timeout expired.
+
+
+
+.. py:function:: add_SessionManagementServiceServicer_to_server(servicer, server)
+
+
+.. py:class:: SessionManagementService
+
+   Bases: :py:obj:`object`
+
+   Service to keep track of open sessions used by measurement services, and to allow measurement services to access sessions by pin and site.
+
+   .. py:method:: ReserveSessions(request, target, options=(), channel_credentials=None, call_credentials=None, insecure=False, compression=None, wait_for_ready=None, timeout=None, metadata=None)
+      :staticmethod:
+
+
+   .. py:method:: UnreserveSessions(request, target, options=(), channel_credentials=None, call_credentials=None, insecure=False, compression=None, wait_for_ready=None, timeout=None, metadata=None)
+      :staticmethod:
+
+
+   .. py:method:: RegisterSessions(request, target, options=(), channel_credentials=None, call_credentials=None, insecure=False, compression=None, wait_for_ready=None, timeout=None, metadata=None)
+      :staticmethod:
+
+
+   .. py:method:: UnregisterSessions(request, target, options=(), channel_credentials=None, call_credentials=None, insecure=False, compression=None, wait_for_ready=None, timeout=None, metadata=None)
+      :staticmethod:
+
+
+   .. py:method:: ReserveAllRegisteredSessions(request, target, options=(), channel_credentials=None, call_credentials=None, insecure=False, compression=None, wait_for_ready=None, timeout=None, metadata=None)
+      :staticmethod:
+
+
+

@@ -1,0 +1,19 @@
+:py:mod:`ni_measurementlink_service._internal.stubs.ni.measurementlink.pin_map_context_pb2`
+===========================================================================================
+
+.. py:module:: ni_measurementlink_service._internal.stubs.ni.measurementlink.pin_map_context_pb2
+
+.. autoapi-nested-parse::
+
+   Generated protocol buffer code.
+
+
+
+Module Contents
+---------------
+
+.. py:data:: DESCRIPTOR
+   
+
+   
+

@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ni_measurementlink_service._internal.discovery_client &mdash; ni_measurementlink_service 0.12 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../index.html" class="icon icon-home"> ni_measurementlink_service
+          </a>
+              <div class="version">
+                0.12.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">ni_measurementlink_service</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active"><code class="xref py py-mod docutils literal notranslate"><span class="pre">ni_measurementlink_service._internal.discovery_client</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../_sources/autoapi/ni_measurementlink_service/_internal/discovery_client/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-ni_measurementlink_service._internal.discovery_client">
+<span id="ni-measurementlink-service-internal-discovery-client"></span><h1><a class="reference internal" href="#module-ni_measurementlink_service._internal.discovery_client" title="ni_measurementlink_service._internal.discovery_client"><code class="xref py py-mod docutils literal notranslate"><span class="pre">ni_measurementlink_service._internal.discovery_client</span></code></a><a class="headerlink" href="#module-ni_measurementlink_service._internal.discovery_client" title="Permalink to this heading"></a></h1>
+<p>Contains API to register and un-register measurement service with discovery service.</p>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this heading"></a></h2>
+<section id="classes">
+<h3>Classes<a class="headerlink" href="#classes" title="Permalink to this heading"></a></h3>
+<table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ni_measurementlink_service._internal.discovery_client.ServiceLocation" title="ni_measurementlink_service._internal.discovery_client.ServiceLocation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ServiceLocation</span></code></a></p></td>
+<td><p>Represents the location of a service.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ni_measurementlink_service._internal.discovery_client.DiscoveryClient" title="ni_measurementlink_service._internal.discovery_client.DiscoveryClient"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DiscoveryClient</span></code></a></p></td>
+<td><p>Class that contains APIs need to interact with discovery service.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py class">
+<dt class="sig sig-object py" id="ni_measurementlink_service._internal.discovery_client.ServiceLocation">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ni_measurementlink_service._internal.discovery_client.</span></span><span class="sig-name descname"><span class="pre">ServiceLocation</span></span><a class="reference internal" href="../../../../_modules/ni_measurementlink_service/_internal/discovery_client.html#ServiceLocation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service._internal.discovery_client.ServiceLocation" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">NamedTuple</span></code></p>
+<p>Represents the location of a service.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ni_measurementlink_service._internal.discovery_client.ServiceLocation.location">
+<span class="sig-name descname"><span class="pre">location</span></span><em class="property"><span class="w"> </span><span class="pre">:str</span></em><a class="headerlink" href="#ni_measurementlink_service._internal.discovery_client.ServiceLocation.location" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ni_measurementlink_service._internal.discovery_client.ServiceLocation.insecure_port">
+<span class="sig-name descname"><span class="pre">insecure_port</span></span><em class="property"><span class="w"> </span><span class="pre">:str</span></em><a class="headerlink" href="#ni_measurementlink_service._internal.discovery_client.ServiceLocation.insecure_port" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ni_measurementlink_service._internal.discovery_client.ServiceLocation.ssl_authenticated_port">
+<span class="sig-name descname"><span class="pre">ssl_authenticated_port</span></span><em class="property"><span class="w"> </span><span class="pre">:str</span></em><a class="headerlink" href="#ni_measurementlink_service._internal.discovery_client.ServiceLocation.ssl_authenticated_port" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ni_measurementlink_service._internal.discovery_client.ServiceLocation.insecure_address">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">insecure_address</span></span><a class="headerlink" href="#ni_measurementlink_service._internal.discovery_client.ServiceLocation.insecure_address" title="Permalink to this definition"></a></dt>
+<dd><p>Get the service’s insecure address in the format host:port.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ni_measurementlink_service._internal.discovery_client.ServiceLocation.ssl_authenticated_address">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ssl_authenticated_address</span></span><a class="headerlink" href="#ni_measurementlink_service._internal.discovery_client.ServiceLocation.ssl_authenticated_address" title="Permalink to this definition"></a></dt>
+<dd><p>Get the service’s SSL-authenticated address in the format host:port.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="ni_measurementlink_service._internal.discovery_client.DiscoveryClient">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ni_measurementlink_service._internal.discovery_client.</span></span><span class="sig-name descname"><span class="pre">DiscoveryClient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/ni_measurementlink_service/_internal/discovery_client.html#DiscoveryClient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service._internal.discovery_client.DiscoveryClient" title="Permalink to this definition"></a></dt>
+<dd><p>Class that contains APIs need to interact with discovery service.</p>
+<section id="attributes">
+<h4>Attributes<a class="headerlink" href="#attributes" title="Permalink to this heading"></a></h4>
+<blockquote>
+<div><p>stub (DiscoveryServiceStub): The gRPC stub used to interact with the discovery
+service.</p>
+<p>registration_id(string): The ID from discovery service upon successful registration.</p>
+</div></blockquote>
+<dl class="py method">
+<dt class="sig sig-object py" id="ni_measurementlink_service._internal.discovery_client.DiscoveryClient.stub">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stub</span></span><a class="headerlink" href="#ni_measurementlink_service._internal.discovery_client.DiscoveryClient.stub" title="Permalink to this definition"></a></dt>
+<dd><p>Get the gRPC stub used to interact with the discovery service.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ni_measurementlink_service._internal.discovery_client.DiscoveryClient.register_measurement_service">
+<span class="sig-name descname"><span class="pre">register_measurement_service</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">service_port</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">service_info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">measurement_info</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/ni_measurementlink_service/_internal/discovery_client.html#DiscoveryClient.register_measurement_service"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service._internal.discovery_client.DiscoveryClient.register_measurement_service" title="Permalink to this definition"></a></dt>
+<dd><p>Register the measurement service with the discovery service.</p>
+<section id="args">
+<h5>Args:<a class="headerlink" href="#args" title="Permalink to this heading"></a></h5>
+<blockquote>
+<div><p>service_port (str): Port Number of the measurement service.</p>
+<p>service_info (ServiceInfo): Service Info.</p>
+<p>display_name (str): Display name of the service.</p>
+</div></blockquote>
+</section>
+<section id="returns">
+<h5>Returns<a class="headerlink" href="#returns" title="Permalink to this heading"></a></h5>
+<blockquote>
+<div><p>bool: Boolean to represent if the registration is successful.</p>
+</div></blockquote>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ni_measurementlink_service._internal.discovery_client.DiscoveryClient.unregister_service">
+<span class="sig-name descname"><span class="pre">unregister_service</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/ni_measurementlink_service/_internal/discovery_client.html#DiscoveryClient.unregister_service"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service._internal.discovery_client.DiscoveryClient.unregister_service" title="Permalink to this definition"></a></dt>
+<dd><p>Un-registers the measurement service from the discovery service.</p>
+<p>Should be called before the service is closed.</p>
+<section id="id1">
+<h5>Returns<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h5>
+<blockquote>
+<div><p>bool: Boolean to represent if the un-registration is successful.</p>
+</div></blockquote>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ni_measurementlink_service._internal.discovery_client.DiscoveryClient.resolve_service">
+<span class="sig-name descname"><span class="pre">resolve_service</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">provided_interface</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">service_class</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/ni_measurementlink_service/_internal/discovery_client.html#DiscoveryClient.resolve_service"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service._internal.discovery_client.DiscoveryClient.resolve_service" title="Permalink to this definition"></a></dt>
+<dd><p>Resolve the location of a service.</p>
+<p>Given a description of a service, returns information that can be used to establish
+communication with that service. If necessary, the service will be started by the
+discovery service if it has not already been started.</p>
+<section id="id2">
+<h5>Args:<a class="headerlink" href="#id2" title="Permalink to this heading"></a></h5>
+<blockquote>
+<div><p>provided_interface: The gRPC Full Name of the service.
+service_class: The service “class” that should be matched. If the value is not</p>
+<blockquote>
+<div><p>specified and there is more than one matching service registered, an error
+is returned.</p>
+</div></blockquote>
+</div></blockquote>
+</section>
+<section id="id3">
+<h5>Returns<a class="headerlink" href="#id3" title="Permalink to this heading"></a></h5>
+<blockquote>
+<div><p>A ServiceLocation location object that represents the location of a service.</p>
+</div></blockquote>
+</section>
+</dd></dl>
+
+</section>
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, National Instruments.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

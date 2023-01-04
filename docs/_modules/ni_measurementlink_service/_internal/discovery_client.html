@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ni_measurementlink_service._internal.discovery_client &mdash; ni_measurementlink_service 0.12 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> ni_measurementlink_service
+          </a>
+              <div class="version">
+                0.12.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../autoapi/index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">ni_measurementlink_service</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ni_measurementlink_service._internal.discovery_client</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ni_measurementlink_service._internal.discovery_client</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot; Contains API to register and un-register measurement service with discovery service.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">pathlib</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">typing</span>
+
+<span class="kn">import</span> <span class="nn">grpc</span>
+
+<span class="kn">from</span> <span class="nn">ni_measurementlink_service._internal.stubs.ni.measurementlink.discovery.v1</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">discovery_service_pb2</span><span class="p">,</span>
+    <span class="n">discovery_service_pb2_grpc</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">ni_measurementlink_service.measurement.info</span> <span class="kn">import</span> <span class="n">MeasurementInfo</span><span class="p">,</span> <span class="n">ServiceInfo</span>
+
+<span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span> <span class="o">==</span> <span class="s2">&quot;win32&quot;</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">errno</span>
+    <span class="kn">import</span> <span class="nn">msvcrt</span>
+    <span class="kn">import</span> <span class="nn">win32con</span>
+    <span class="kn">import</span> <span class="nn">win32file</span>
+    <span class="kn">import</span> <span class="nn">winerror</span>
+
+
+<span class="n">_PROVIDED_MEASUREMENT_SERVICE</span> <span class="o">=</span> <span class="s2">&quot;ni.measurementlink.measurement.v1.MeasurementService&quot;</span>
+
+<span class="n">_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="ServiceLocation"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/_internal/discovery_client/index.html#ni_measurementlink_service._internal.discovery_client.ServiceLocation">[docs]</a><span class="k">class</span> <span class="nc">ServiceLocation</span><span class="p">(</span><span class="n">typing</span><span class="o">.</span><span class="n">NamedTuple</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Represents the location of a service.&quot;&quot;&quot;</span>
+
+    <span class="n">location</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">insecure_port</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">ssl_authenticated_port</span><span class="p">:</span> <span class="nb">str</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">insecure_address</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Get the service&#39;s insecure address in the format host:port.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">insecure_port</span><span class="si">}</span><span class="s2">&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">ssl_authenticated_address</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Get the service&#39;s SSL-authenticated address in the format host:port.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ssl_authenticated_port</span><span class="si">}</span><span class="s2">&quot;</span></div>
+
+
+<div class="viewcode-block" id="DiscoveryClient"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/_internal/discovery_client/index.html#ni_measurementlink_service._internal.discovery_client.DiscoveryClient">[docs]</a><span class="k">class</span> <span class="nc">DiscoveryClient</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Class that contains APIs need to interact with discovery service.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">        stub (DiscoveryServiceStub): The gRPC stub used to interact with the discovery</span>
+<span class="sd">        service.</span>
+
+<span class="sd">        registration_id(string): The ID from discovery service upon successful registration.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stub</span><span class="p">:</span> <span class="n">discovery_service_pb2_grpc</span><span class="o">.</span><span class="n">DiscoveryServiceStub</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initialize the Discovery Client with provided registry service stub.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">        ----</span>
+<span class="sd">            stub (DiscoveryServiceStub, optional): The gRPC stub to interact with discovery</span>
+<span class="sd">            service. Defaults to None.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_stub</span> <span class="o">=</span> <span class="n">stub</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">registration_id</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">stub</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">discovery_service_pb2_grpc</span><span class="o">.</span><span class="n">DiscoveryServiceStub</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Get the gRPC stub used to interact with the discovery service.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stub</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">address</span> <span class="o">=</span> <span class="n">_get_discovery_service_address</span><span class="p">()</span>
+            <span class="n">channel</span> <span class="o">=</span> <span class="n">grpc</span><span class="o">.</span><span class="n">insecure_channel</span><span class="p">(</span><span class="n">address</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_stub</span> <span class="o">=</span> <span class="n">discovery_service_pb2_grpc</span><span class="o">.</span><span class="n">DiscoveryServiceStub</span><span class="p">(</span><span class="n">channel</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stub</span>
+
+<div class="viewcode-block" id="DiscoveryClient.register_measurement_service"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/_internal/discovery_client/index.html#ni_measurementlink_service._internal.discovery_client.DiscoveryClient.register_measurement_service">[docs]</a>    <span class="k">def</span> <span class="nf">register_measurement_service</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">service_port</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">service_info</span><span class="p">:</span> <span class="n">ServiceInfo</span><span class="p">,</span> <span class="n">measurement_info</span><span class="p">:</span> <span class="n">MeasurementInfo</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Register the measurement service with the discovery service.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">        ----</span>
+<span class="sd">            service_port (str): Port Number of the measurement service.</span>
+
+<span class="sd">            service_info (ServiceInfo): Service Info.</span>
+
+<span class="sd">            display_name (str): Display name of the service.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">            bool: Boolean to represent if the registration is successful.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+
+            <span class="c1"># Service Location</span>
+            <span class="n">service_location</span> <span class="o">=</span> <span class="n">discovery_service_pb2</span><span class="o">.</span><span class="n">ServiceLocation</span><span class="p">()</span>
+            <span class="n">service_location</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="s2">&quot;localhost&quot;</span>
+            <span class="n">service_location</span><span class="o">.</span><span class="n">insecure_port</span> <span class="o">=</span> <span class="n">service_port</span>
+            <span class="c1"># Service Descriptor</span>
+            <span class="n">service_descriptor</span> <span class="o">=</span> <span class="n">discovery_service_pb2</span><span class="o">.</span><span class="n">ServiceDescriptor</span><span class="p">()</span>
+            <span class="n">service_descriptor</span><span class="o">.</span><span class="n">display_name</span> <span class="o">=</span> <span class="n">measurement_info</span><span class="o">.</span><span class="n">display_name</span>
+            <span class="n">service_descriptor</span><span class="o">.</span><span class="n">service_class</span> <span class="o">=</span> <span class="n">service_info</span><span class="o">.</span><span class="n">service_class</span>
+            <span class="n">service_descriptor</span><span class="o">.</span><span class="n">description_url</span> <span class="o">=</span> <span class="n">service_info</span><span class="o">.</span><span class="n">description_url</span>
+            <span class="n">service_descriptor</span><span class="o">.</span><span class="n">provided_interfaces</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_PROVIDED_MEASUREMENT_SERVICE</span><span class="p">)</span>
+
+            <span class="c1"># Registration Request Creation</span>
+            <span class="n">request</span> <span class="o">=</span> <span class="n">discovery_service_pb2</span><span class="o">.</span><span class="n">RegisterServiceRequest</span><span class="p">(</span>
+                <span class="n">location</span><span class="o">=</span><span class="n">service_location</span><span class="p">,</span> <span class="n">service_description</span><span class="o">=</span><span class="n">service_descriptor</span>
+            <span class="p">)</span>
+            <span class="c1"># Registration RPC Call</span>
+            <span class="n">register_response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stub</span><span class="o">.</span><span class="n">RegisterService</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">registration_id</span> <span class="o">=</span> <span class="n">register_response</span><span class="o">.</span><span class="n">registration_id</span>
+            <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Successfully registered with discovery service.&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">grpc</span><span class="o">.</span><span class="n">RpcError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">code</span><span class="p">()</span> <span class="o">==</span> <span class="n">grpc</span><span class="o">.</span><span class="n">StatusCode</span><span class="o">.</span><span class="n">UNAVAILABLE</span><span class="p">:</span>
+                <span class="n">_logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                    <span class="s2">&quot;Unable to register with discovery service. Possible reason: discovery service not available.&quot;</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">_logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Error in registering with discovery service.&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+            <span class="n">_logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="s2">&quot;Unable to register with discovery service. Possible reason: discovery service not running.&quot;</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="n">_logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Error in registering with discovery service.&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="DiscoveryClient.unregister_service"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/_internal/discovery_client/index.html#ni_measurementlink_service._internal.discovery_client.DiscoveryClient.unregister_service">[docs]</a>    <span class="k">def</span> <span class="nf">unregister_service</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Un-registers the measurement service from the discovery service.</span>
+
+<span class="sd">        Should be called before the service is closed.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">            bool: Boolean to represent if the un-registration is successful.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">registration_id</span><span class="p">:</span>
+                <span class="c1"># Un-registration Request Creation</span>
+                <span class="n">request</span> <span class="o">=</span> <span class="n">discovery_service_pb2</span><span class="o">.</span><span class="n">UnregisterServiceRequest</span><span class="p">(</span>
+                    <span class="n">registration_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">registration_id</span>
+                <span class="p">)</span>
+                <span class="c1"># Un-registration RPC Call</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">stub</span><span class="o">.</span><span class="n">UnregisterService</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+                <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Successfully unregistered with discovery service.&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Not registered with discovery service.&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">grpc</span><span class="o">.</span><span class="n">RpcError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">code</span><span class="p">()</span> <span class="o">==</span> <span class="n">grpc</span><span class="o">.</span><span class="n">StatusCode</span><span class="o">.</span><span class="n">UNAVAILABLE</span><span class="p">:</span>
+                <span class="n">_logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                    <span class="s2">&quot;Unable to unregister with discovery service. Possible reason: discovery service not available.&quot;</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">_logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Error in unregistering with discovery service.&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+            <span class="n">_logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="s2">&quot;Unable to unregister with discovery service. Possible reason: discovery service not running.&quot;</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="n">_logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Error in unregistering with discovery service.&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="DiscoveryClient.resolve_service"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/_internal/discovery_client/index.html#ni_measurementlink_service._internal.discovery_client.DiscoveryClient.resolve_service">[docs]</a>    <span class="k">def</span> <span class="nf">resolve_service</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">provided_interface</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">service_class</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ServiceLocation</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Resolve the location of a service.</span>
+
+<span class="sd">        Given a description of a service, returns information that can be used to establish</span>
+<span class="sd">        communication with that service. If necessary, the service will be started by the</span>
+<span class="sd">        discovery service if it has not already been started.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">        ----</span>
+<span class="sd">            provided_interface: The gRPC Full Name of the service.</span>
+<span class="sd">            service_class: The service &quot;class&quot; that should be matched. If the value is not</span>
+<span class="sd">                specified and there is more than one matching service registered, an error</span>
+<span class="sd">                is returned.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">            A ServiceLocation location object that represents the location of a service.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">discovery_service_pb2</span><span class="o">.</span><span class="n">ResolveServiceRequest</span><span class="p">()</span>
+        <span class="n">request</span><span class="o">.</span><span class="n">provided_interface</span> <span class="o">=</span> <span class="n">provided_interface</span>
+        <span class="n">request</span><span class="o">.</span><span class="n">service_class</span> <span class="o">=</span> <span class="n">service_class</span>
+
+        <span class="n">response</span><span class="p">:</span> <span class="n">discovery_service_pb2</span><span class="o">.</span><span class="n">ServiceLocation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stub</span><span class="o">.</span><span class="n">ResolveService</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">ServiceLocation</span><span class="p">(</span>
+            <span class="n">location</span><span class="o">=</span><span class="n">response</span><span class="o">.</span><span class="n">location</span><span class="p">,</span>
+            <span class="n">insecure_port</span><span class="o">=</span><span class="n">response</span><span class="o">.</span><span class="n">insecure_port</span><span class="p">,</span>
+            <span class="n">ssl_authenticated_port</span><span class="o">=</span><span class="n">response</span><span class="o">.</span><span class="n">ssl_authenticated_port</span><span class="p">,</span>
+        <span class="p">)</span></div></div>
+
+
+<span class="k">def</span> <span class="nf">_get_discovery_service_address</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="n">key_file_path</span> <span class="o">=</span> <span class="n">_get_key_file_path</span><span class="p">()</span>
+    <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Discovery service key file path: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">key_file_path</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">_open_key_file</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">key_file_path</span><span class="p">))</span> <span class="k">as</span> <span class="n">key_file</span><span class="p">:</span>
+        <span class="n">key_json</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">key_file</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">&quot;localhost:&quot;</span> <span class="o">+</span> <span class="n">key_json</span><span class="p">[</span><span class="s2">&quot;InsecurePort&quot;</span><span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">_get_key_file_path</span><span class="p">(</span><span class="n">cluster_id</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">cluster_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">_get_key_file_directory</span><span class="p">()</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;DiscoveryService_</span><span class="si">{</span><span class="n">cluster_id</span><span class="si">}</span><span class="s2">.json&quot;</span>
+    <span class="k">return</span> <span class="n">_get_key_file_directory</span><span class="p">()</span> <span class="o">/</span> <span class="s2">&quot;DiscoveryService.json&quot;</span>
+
+
+<span class="k">def</span> <span class="nf">_get_key_file_directory</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">:</span>
+    <span class="n">version</span> <span class="o">=</span> <span class="n">discovery_service_pb2</span><span class="o">.</span><span class="n">DESCRIPTOR</span><span class="o">.</span><span class="n">package</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span> <span class="o">==</span> <span class="s2">&quot;win32&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;ProgramData&quot;</span><span class="p">])</span>
+            <span class="o">/</span> <span class="s2">&quot;National Instruments&quot;</span>
+            <span class="o">/</span> <span class="s2">&quot;MeasurementLink&quot;</span>
+            <span class="o">/</span> <span class="s2">&quot;Discovery&quot;</span>
+            <span class="o">/</span> <span class="n">version</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Platform not supported&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_open_key_file</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">TextIO</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span> <span class="o">==</span> <span class="s2">&quot;win32&quot;</span><span class="p">:</span>
+        <span class="c1"># Use the Win32 API to specify the share mode. Otherwise, opening the file throws</span>
+        <span class="c1"># PermissionError due to a sharing violation. This is a workaround for</span>
+        <span class="c1"># https://github.com/python/cpython/issues/59449</span>
+        <span class="c1"># (Support for opening files with FILE_SHARE_DELETE on Windows).</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">win32_file_handle</span> <span class="o">=</span> <span class="n">win32file</span><span class="o">.</span><span class="n">CreateFile</span><span class="p">(</span>
+                <span class="n">path</span><span class="p">,</span>
+                <span class="n">win32file</span><span class="o">.</span><span class="n">GENERIC_READ</span><span class="p">,</span>
+                <span class="n">win32file</span><span class="o">.</span><span class="n">FILE_SHARE_READ</span>
+                <span class="o">|</span> <span class="n">win32file</span><span class="o">.</span><span class="n">FILE_SHARE_WRITE</span>
+                <span class="o">|</span> <span class="n">win32file</span><span class="o">.</span><span class="n">FILE_SHARE_DELETE</span><span class="p">,</span>
+                <span class="kc">None</span><span class="p">,</span>
+                <span class="n">win32con</span><span class="o">.</span><span class="n">OPEN_EXISTING</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="kc">None</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="n">win32file</span><span class="o">.</span><span class="n">error</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">winerror</span> <span class="o">==</span> <span class="n">winerror</span><span class="o">.</span><span class="n">ERROR_FILE_NOT_FOUND</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="n">errno</span><span class="o">.</span><span class="n">ENOENT</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">strerror</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
+            <span class="k">elif</span> <span class="p">(</span>
+                <span class="n">e</span><span class="o">.</span><span class="n">winerror</span> <span class="o">==</span> <span class="n">winerror</span><span class="o">.</span><span class="n">ERROR_ACCESS_DENIED</span>
+                <span class="ow">or</span> <span class="n">e</span><span class="o">.</span><span class="n">winerror</span> <span class="o">==</span> <span class="n">winerror</span><span class="o">.</span><span class="n">ERROR_SHARING_VIOLATION</span>
+            <span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">PermissionError</span><span class="p">(</span><span class="n">errno</span><span class="o">.</span><span class="n">EACCES</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">strerror</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
+            <span class="k">raise</span>
+
+        <span class="c1"># The CRT file descriptor takes ownership of the Win32 file handle.</span>
+        <span class="c1"># os.O_TEXT is unnecessary because Python handles newline conversion.</span>
+        <span class="n">crt_file_descriptor</span> <span class="o">=</span> <span class="n">msvcrt</span><span class="o">.</span><span class="n">open_osfhandle</span><span class="p">(</span><span class="n">win32_file_handle</span><span class="o">.</span><span class="n">handle</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">O_RDONLY</span><span class="p">)</span>
+        <span class="n">win32_file_handle</span><span class="o">.</span><span class="n">Detach</span><span class="p">()</span>
+
+        <span class="c1"># The Python file object takes ownership of the CRT file descriptor. Closing the Python</span>
+        <span class="c1"># file object closes the underlying Win32 file handle.</span>
+        <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">fdopen</span><span class="p">(</span><span class="n">crt_file_descriptor</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8-sig&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, National Instruments.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

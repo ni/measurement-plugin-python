@@ -1,0 +1,199 @@
+:py:mod:`ni_measurementlink_service.measurement.info`
+=====================================================
+
+.. py:module:: ni_measurementlink_service.measurement.info
+
+.. autoapi-nested-parse::
+
+   Contains classes and enums to represent measurement metadata.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   ni_measurementlink_service.measurement.info.MeasurementInfo
+   ni_measurementlink_service.measurement.info.ServiceInfo
+   ni_measurementlink_service.measurement.info.TypeSpecialization
+   ni_measurementlink_service.measurement.info.DataType
+
+
+
+
+.. py:class:: MeasurementInfo
+
+   Bases: :py:obj:`NamedTuple`
+
+   Class that represents the measurement information.
+
+   Attributes
+   ----------
+       display_name (str): The measurement display name for client to display to user.
+
+       version (str): The measurement version that helps to
+       maintain versions of a measurement in future.
+
+       ui_file_paths (list): Absolute paths of the UI file(s) linked to the measurement.
+
+
+   .. py:attribute:: display_name
+      :annotation: :str
+
+      
+
+   .. py:attribute:: version
+      :annotation: :str
+
+      
+
+   .. py:attribute:: ui_file_paths
+      :annotation: :List[pathlib.Path]
+
+      
+
+
+.. py:class:: ServiceInfo
+
+   Bases: :py:obj:`NamedTuple`
+
+   Class the represents the service information.
+
+   Attributes
+   ----------
+       service_class (str): Service class that the measurement belongs to.
+       Measurements under same service class expected to perform same logic.
+       For e.g., different version of measurement can come under same service class.
+
+       description_url (str): Description URL of the measurement.
+
+
+   .. py:attribute:: service_class
+      :annotation: :str
+
+      
+
+   .. py:attribute:: description_url
+      :annotation: :str
+
+      
+
+
+.. py:class:: TypeSpecialization
+
+   Bases: :py:obj:`enum.Enum`
+
+   Enum that represents the type specializations for measurement parameters.
+
+   .. py:attribute:: NoType
+      :annotation: = 
+
+      
+
+   .. py:attribute:: Pin
+      :annotation: = pin
+
+      
+
+
+.. py:class:: DataType
+
+   Bases: :py:obj:`enum.Enum`
+
+   Enum that represents the supported data types.
+
+   .. py:attribute:: Int32
+      
+
+      
+
+   .. py:attribute:: Int64
+      
+
+      
+
+   .. py:attribute:: UInt32
+      
+
+      
+
+   .. py:attribute:: UInt64
+      
+
+      
+
+   .. py:attribute:: Float
+      
+
+      
+
+   .. py:attribute:: Double
+      
+
+      
+
+   .. py:attribute:: Boolean
+      
+
+      
+
+   .. py:attribute:: String
+      
+
+      
+
+   .. py:attribute:: Pin
+      
+
+      
+
+   .. py:attribute:: Int32Array1D
+      
+
+      
+
+   .. py:attribute:: Int64Array1D
+      
+
+      
+
+   .. py:attribute:: UInt32Array1D
+      
+
+      
+
+   .. py:attribute:: UInt64Array1D
+      
+
+      
+
+   .. py:attribute:: FloatArray1D
+      
+
+      
+
+   .. py:attribute:: DoubleArray1D
+      
+
+      
+
+   .. py:attribute:: BooleanArray1D
+      
+
+      
+
+   .. py:attribute:: StringArray1D
+      
+
+      
+
+   .. py:attribute:: PinArray1D
+      
+
+      
+
+

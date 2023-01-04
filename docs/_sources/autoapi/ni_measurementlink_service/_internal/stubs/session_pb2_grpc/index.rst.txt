@@ -1,0 +1,104 @@
+:py:mod:`ni_measurementlink_service._internal.stubs.session_pb2_grpc`
+=====================================================================
+
+.. py:module:: ni_measurementlink_service._internal.stubs.session_pb2_grpc
+
+.. autoapi-nested-parse::
+
+   Client and server classes corresponding to protobuf-defined services.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   ni_measurementlink_service._internal.stubs.session_pb2_grpc.SessionUtilitiesStub
+   ni_measurementlink_service._internal.stubs.session_pb2_grpc.SessionUtilitiesServicer
+   ni_measurementlink_service._internal.stubs.session_pb2_grpc.SessionUtilities
+
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   ni_measurementlink_service._internal.stubs.session_pb2_grpc.add_SessionUtilitiesServicer_to_server
+
+
+
+.. py:class:: SessionUtilitiesStub(channel)
+
+   Bases: :py:obj:`object`
+
+   Missing associated documentation comment in .proto file.
+
+
+.. py:class:: SessionUtilitiesServicer
+
+   Bases: :py:obj:`object`
+
+   Missing associated documentation comment in .proto file.
+
+   .. py:method:: EnumerateDevices(request, context)
+
+      Provides a list of devices or chassis connected to server under localhost
+
+
+   .. py:method:: Reserve(request, context)
+
+      Reserve a set of client defined resources for exclusive use
+
+
+   .. py:method:: IsReservedByClient(request, context)
+
+      Determines if a set of client defined resources is currently reserved by a
+      specific client
+
+
+   .. py:method:: Unreserve(request, context)
+
+      Unreserves a previously reserved resource
+
+
+   .. py:method:: ResetServer(request, context)
+
+      Resets the server to a default state with no open sessions
+
+
+
+.. py:function:: add_SessionUtilitiesServicer_to_server(servicer, server)
+
+
+.. py:class:: SessionUtilities
+
+   Bases: :py:obj:`object`
+
+   Missing associated documentation comment in .proto file.
+
+   .. py:method:: EnumerateDevices(request, target, options=(), channel_credentials=None, call_credentials=None, insecure=False, compression=None, wait_for_ready=None, timeout=None, metadata=None)
+      :staticmethod:
+
+
+   .. py:method:: Reserve(request, target, options=(), channel_credentials=None, call_credentials=None, insecure=False, compression=None, wait_for_ready=None, timeout=None, metadata=None)
+      :staticmethod:
+
+
+   .. py:method:: IsReservedByClient(request, target, options=(), channel_credentials=None, call_credentials=None, insecure=False, compression=None, wait_for_ready=None, timeout=None, metadata=None)
+      :staticmethod:
+
+
+   .. py:method:: Unreserve(request, target, options=(), channel_credentials=None, call_credentials=None, insecure=False, compression=None, wait_for_ready=None, timeout=None, metadata=None)
+      :staticmethod:
+
+
+   .. py:method:: ResetServer(request, target, options=(), channel_credentials=None, call_credentials=None, insecure=False, compression=None, wait_for_ready=None, timeout=None, metadata=None)
+      :staticmethod:
+
+
+

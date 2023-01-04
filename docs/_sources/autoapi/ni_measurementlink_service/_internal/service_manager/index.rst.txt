@@ -1,0 +1,57 @@
+:py:mod:`ni_measurementlink_service._internal.service_manager`
+==============================================================
+
+.. py:module:: ni_measurementlink_service._internal.service_manager
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   ni_measurementlink_service._internal.service_manager.GrpcService
+
+
+
+
+.. py:class:: GrpcService(discovery_client = None)
+
+   Class that manages hosting the measurement as service and closing service.
+
+   Attributes
+   ----------
+       discovery_client (DiscoveryClient, optional): Instance of Discovery Client.
+       Defaults to None.
+
+
+   .. py:method:: start(measurement_info, service_info, configuration_parameter_list, output_parameter_list, measure_function)
+
+      Host a gRPC service with the registered measurement method.
+
+      Args:
+      ----
+          measurement_info (MeasurementInfo): Measurement info
+
+          service_info (ServiceInfo): Service info
+
+          configuration_parameter_list (List): List of configuration parameters.
+
+          output_parameter_list (List): List of output parameters.
+
+          measure_function (Callable): Registered measurement function.
+
+      Returns
+      -------
+          int: The port number of the server
+
+
+
+   .. py:method:: stop()
+
+      Close the Service after un-registering with discovery service and cleanups.
+
+
+
