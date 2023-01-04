@@ -3,7 +3,7 @@
 Contributions to MeasurementLink Support for Python are welcome from all!
 
 MeasurementLink Support for Python is managed via [git](https://git-scm.com), with the canonical upstream
-repository hosted on [GitHub](https://github.com/ni/measurement-services-python/). The repo contains templates and examples for developing MeasurementLink services in Python.
+repository hosted on [GitHub](https://github.com/ni/measurementlink-python/). The repo contains templates and examples for developing MeasurementLink services in Python.
 
 MeasurementLink Support for Python follows a pull-request model for development.  If you wish to
 contribute, you will need to create a GitHub account, fork this project, push a
@@ -33,7 +33,7 @@ See [GitHub's official documentation](https://help.github.com/articles/using-pul
 Clone the repo, this will pull the MeasurementLink Support for Python components and related components.
 
 ```cmd
-git clone https://github.com/ni/measurement-services-python.git
+git clone https://github.com/ni/measurementlink-python.git
 ```
 
 ## Initializing the repo with .venv
@@ -52,7 +52,7 @@ poetry init
 
 # Adding dependencies
 
-Add dependency package for `ni_measurement_service`  using [poetry add](https://python-poetry.org/docs/cli/#add) command.
+Add dependency package for `ni_measurementlink_service`  using [poetry add](https://python-poetry.org/docs/cli/#add) command.
 
 ```cmd
 poetry add <name_of_dependency>:<version>
@@ -66,7 +66,7 @@ poetry add -D <name_of_dev_dependency>:<version>
 
 # Updating gRPC stubs when a .proto file is modified
 
-The `ni_measurement_service\_internal\stubs` directory contains the auto-generated python files based on MeasurementLink protobuf (.proto) files. The file needs to be replaced whenever there is a change to these .proto files:
+The `ni_measurementlink_service\_internal\stubs` directory contains the auto-generated python files based on MeasurementLink protobuf (.proto) files. The file needs to be replaced whenever there is a change to these .proto files:
 
 - ni/measurementlink/pin_map_context.proto
 - ni/measurementlink/discovery/v1/discovery_service.proto
@@ -76,7 +76,7 @@ The `ni_measurement_service\_internal\stubs` directory contains the auto-generat
 - nidevice_grpc/README.md
 - nidevice_grpc/session.proto
 
-The latest .proto files are available in [Azure Repo](https://dev.azure.com/ni/DevCentral/_git/ASW?path=/Source/Protos). From the Azure Repo manually download and overwrite the proto files under the `ni_measurement_service\_internal\stubs\proto` folder.
+The latest .proto files are available in [Azure Repo](https://dev.azure.com/ni/DevCentral/_git/ASW?path=/Source/Protos). From the Azure Repo manually download and overwrite the proto files under the `ni_measurementlink_service\_internal\stubs\proto` folder.
 
 Run `poetry run python scripts/generate_grpc_stubs.py`. This generates the required *.py file for the listed proto files. The required `grpcio-tools` package is already added as a development dependency in pyproject.toml.
 
@@ -96,13 +96,13 @@ poetry run ni-python-styleguide fix
 poetry build
 ```
 
-Running this command from the repo's root directory will generate the tar.gz file and .whl file of ni_measurement_service package to the `dist` directory.
+Running this command from the repo's root directory will generate the tar.gz file and .whl file of ni_measurementlink_service package to the `dist` directory.
 
 # Testing
 
-`ni-measurement-service` includes tests under the directory `tests\` that exercises the python and grpc modules. The GitHub CI run these tests for PRs targeting the main branch. It is recommended that during development you run the tests locally before creating a PR.
+`ni-measurementlink-service` includes tests under the directory `tests\` that exercises the python and grpc modules. The GitHub CI run these tests for PRs targeting the main branch. It is recommended that during development you run the tests locally before creating a PR.
 
-In order to run the `ni-measurement-service` tests locally:
+In order to run the `ni-measurementlink-service` tests locally:
 
 ## Using Command Line
 
@@ -110,7 +110,7 @@ In order to run the `ni-measurement-service` tests locally:
 2. Execute the command `poetry run pytest -v` to run the tests, from the repo's root directory.
 
     ``` ps
-    (.venv) PS D:\TAF\measurement-services-python> poetry run pytest -v
+    (.venv) PS D:\TAF\measurementlink-python> poetry run pytest -v
     ```
 
 ## Using VS code Test Explorer extension(UI)
@@ -121,8 +121,8 @@ Install and configure the `Python Test Explorer for Visual Studio Code` extensio
 
 - Install the required dependency by running `poetry install`
 - Activate the virtual environment if not already activated : `.venv\Scripts\activate`
-- Run the command `pytest --cov=ni_measurement_service`, from the repo's root directory **to get the summary of test coverage** in the console.
-- Run the command `pytest --cov-report html:cov_html --cov=ni_measurement_service`, from the repo's root directory **to generate detailed HTML based coverage report**. Upon running, the coverage reports will be created under `<repo_root>\cov_html` directory.
+- Run the command `pytest --cov=ni_measurementlink_service`, from the repo's root directory **to get the summary of test coverage** in the console.
+- Run the command `pytest --cov-report html:cov_html --cov=ni_measurementlink_service`, from the repo's root directory **to generate detailed HTML based coverage report**. Upon running, the coverage reports will be created under `<repo_root>\cov_html` directory.
 
 # Developer Certificate of Origin (DCO)
 
@@ -154,5 +154,5 @@ Install and configure the `Python Test Explorer for Visual Studio Code` extensio
 
 (taken from [developercertificate.org](https://developercertificate.org/))
 
-See [LICENSE](https://github.com/ni/measurement-services-python/blob/master/LICENSE)
+See [LICENSE](https://github.com/ni/measurementlink-python/blob/master/LICENSE)
 for details about how MeasurementLink Support for Python is licensed.

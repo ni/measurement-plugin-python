@@ -12,7 +12,7 @@ import pkg_resources
 from black.mode import Mode
 
 
-STUBS_NAMESPACE = "ni_measurement_service._internal.stubs"
+STUBS_NAMESPACE = "ni_measurementlink_service._internal.stubs"
 PROTO_PARENT_NAMESPACES = ["ni.measurementlink", "nidevice_grpc"]
 STUBS_PATH = pathlib.Path(__file__).parent.parent / STUBS_NAMESPACE.replace(".", "/")
 PROTO_PATH = STUBS_PATH / "proto"

@@ -1,9 +1,9 @@
 """Tests to validated user facing decorators in service.py."""
 import pytest
 
-from ni_measurement_service.measurement.info import DataType
-from ni_measurement_service.measurement.info import TypeSpecialization
-from ni_measurement_service.measurement.service import MeasurementService
+from ni_measurementlink_service.measurement.info import DataType
+from ni_measurementlink_service.measurement.info import TypeSpecialization
+from ni_measurementlink_service.measurement.service import MeasurementService
 
 
 def test___measurement_service___register_measurement_method___method_registered():

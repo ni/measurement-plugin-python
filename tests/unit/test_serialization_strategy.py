@@ -2,7 +2,7 @@
 import pytest
 from google.protobuf import type_pb2
 
-from ni_measurement_service._internal.parameter import serialization_strategy
+from ni_measurementlink_service._internal.parameter import serialization_strategy
 
 
 @pytest.mark.parametrize(

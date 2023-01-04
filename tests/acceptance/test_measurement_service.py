@@ -9,7 +9,7 @@ import pytest
 from examples.sample_measurement import measurement
 from google.protobuf import any_pb2
 
-from ni_measurement_service._internal.stubs.ni.measurementlink.measurement.v1 import (
+from ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v1 import (
     measurement_service_pb2,
     measurement_service_pb2_grpc,
 )

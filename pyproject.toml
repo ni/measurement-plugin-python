@@ -10,12 +10,12 @@ exclude = '''
 '''
 
 [tool.poetry]
-name = "ni_measurement_service"
+name = "ni_measurementlink_service"
 version = "0.11.1"
 description = "MeasurementLink Support for Python"
 authors = ["NI <opensource@ni.com>"]
 readme = "README.md" # apply the repo readme to the package as well
-repository = "https://github.com/ni/measurement-services-python/"
+repository = "https://github.com/ni/measurementlink-python/"
 license = "MIT"
 
 [tool.poetry.dependencies]
@@ -52,7 +52,7 @@ requires = ["poetry-core>=1.2.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.ni-python-styleguide]
-extend_exclude = "*_pb2_grpc.py,*_pb2.py,venv,ni_measurement_generator/*"
+extend_exclude = "*_pb2_grpc.py,*_pb2.py,venv,ni_measurementlink_generator/*"
 
 [tool.pytest.ini_options]
 testpaths = [

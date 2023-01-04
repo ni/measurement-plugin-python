@@ -12,7 +12,7 @@ import grpc
 import niscope
 from _helpers import ServiceOptions, str_to_enum
 
-import ni_measurement_service as nims
+import ni_measurementlink_service as nims
 
 measurement_info = nims.MeasurementInfo(
     display_name="NI-SCOPE Acquire Waveform (Py)",
