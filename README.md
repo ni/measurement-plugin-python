@@ -41,7 +41,7 @@ MeasurementLink Support for Python (`ni-measurementlink-service`) is a python fr
 
 ### Enable Win32 Long Paths
 
-By default, Windows has a path length limit of 260 characters. NI recommends enabling support for long paths when developing and deploying measurement services. 
+By default, Windows has a path length limit of 260 characters. NI recommends enabling support for long paths when developing and deploying Python measurement services. 
 
 There are three ways to do this:
 - When installing Python using the Python for Windows installer, click `Disable path length limit` at the end of the installation.
@@ -258,7 +258,7 @@ pyinstaller --onefile --console --add-data "<path_of_the_UI_File>;." --paths .ve
 
 ## Troubleshooting
 
-### "File not found" or "No such file or directory" when copying or running a measurement service
+### "File not found" or "No such file or directory" errors when copying or running a measurement service
 
 If copying or running a measurement service produces "File not found" or "No such file or directory" errors, make sure to [enable Win32 long paths](#enable-win32-long-paths). If you are unable to enable Win32 long paths, consider deploying the measurement service to a directory with a shorter path.
 
