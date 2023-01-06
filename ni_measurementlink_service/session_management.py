@@ -1,13 +1,21 @@
 """Contains methods related to managing driver sessions."""
 from functools import cached_property
-from typing import Iterable, List, NamedTuple, Optional
+from typing import Iterable
+from typing import List
+from typing import NamedTuple
+from typing import Optional
+from typing import int
 
 import grpc
 
 from ni_measurementlink_service._internal.stubs import session_pb2
-from ni_measurementlink_service._internal.stubs.ni.measurementlink import pin_map_context_pb2
+from ni_measurementlink_service._internal.stubs.ni.measurementlink import (
+    pin_map_context_pb2,
+)
 from ni_measurementlink_service._internal.stubs.ni.measurementlink.sessionmanagement.v1 import (
     session_management_service_pb2,
+)
+from ni_measurementlink_service._internal.stubs.ni.measurementlink.sessionmanagement.v1 import (
     session_management_service_pb2_grpc,
 )
 
@@ -48,6 +56,24 @@ class PinMapContext(NamedTuple):
 
     pin_map_id: str
     sites: Optional[List[int]]
+
+
+class ChannelMapping(NamedTuple):
+    """Mapping of each channel to the pin and site it is connected to.
+
+    Attributes
+    ----------
+        pin_or_relay_name (str): The pin or relay that is mapped to a channel.
+
+        site (int): The site on which the pin or relay is mapped to a channel.
+            For system pins/relays the site number is -1 since they do not belong to a specific site.
+
+        channel (str): The channel to which the pin or relay is mapped on this site.
+    """
+
+    pin_or_relay_name: str
+    site: int
+    channel: str
 
 
 class SessionInformation(NamedTuple):
