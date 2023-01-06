@@ -6269,7 +6269,7 @@
 																<value>ni.examples.NIDCPowerSourceDCVoltage_Python_LV</value>
 															</Name>
 															<Parameters classname='Objs'>
-																<value lbound='[0]' ubound='[7]'>
+																<value lbound='[0]' ubound='[10]'>
 																	<elemproto>
 																		<_NAME_IN_ATTRIBUTE_ name='' classname='Obj'>
 																			<subprops>
@@ -6313,7 +6313,7 @@
 																					<value>In</value>
 																				</Direction>
 																				<Log classname='Bool'>
-																					<value>false</value>
+																					<value>true</value>
 																				</Log>
 																				<Dimension classname='Num'>
 																					<value representation='UInt64'>1</value>
@@ -6343,7 +6343,7 @@
 																					<value>In</value>
 																				</Direction>
 																				<Log classname='Bool'>
-																					<value>false</value>
+																					<value>true</value>
 																				</Log>
 																				<Dimension classname='Num'>
 																					<value representation='UInt64'>0</value>
@@ -6373,7 +6373,7 @@
 																					<value>In</value>
 																				</Direction>
 																				<Log classname='Bool'>
-																					<value>false</value>
+																					<value>true</value>
 																				</Log>
 																				<Dimension classname='Num'>
 																					<value representation='UInt64'>0</value>
@@ -6403,7 +6403,7 @@
 																					<value>In</value>
 																				</Direction>
 																				<Log classname='Bool'>
-																					<value>false</value>
+																					<value>true</value>
 																				</Log>
 																				<Dimension classname='Num'>
 																					<value representation='UInt64'>0</value>
@@ -6433,7 +6433,7 @@
 																					<value>In</value>
 																				</Direction>
 																				<Log classname='Bool'>
-																					<value>false</value>
+																					<value>true</value>
 																				</Log>
 																				<Dimension classname='Num'>
 																					<value representation='UInt64'>0</value>
@@ -6463,7 +6463,7 @@
 																					<value>In</value>
 																				</Direction>
 																				<Log classname='Bool'>
-																					<value>false</value>
+																					<value>true</value>
 																				</Log>
 																				<Dimension classname='Num'>
 																					<value representation='UInt64'>0</value>
@@ -6484,7 +6484,7 @@
 																		<Obj typename='NI_MeasurementParameter' name=''>
 																			<subprops>
 																				<Name classname='Str'>
-																					<value>voltage_measurement</value>
+																					<value>measurement_sites</value>
 																				</Name>
 																				<ArgumentValue classname='ExprValue'>
 																					<value/>
@@ -6493,13 +6493,13 @@
 																					<value>Out</value>
 																				</Direction>
 																				<Log classname='Bool'>
-																					<value>false</value>
+																					<value>true</value>
 																				</Log>
 																				<Dimension classname='Num'>
-																					<value representation='UInt64'>0</value>
+																					<value representation='UInt64'>1</value>
 																				</Dimension>
 																				<Type classname='Str'>
-																					<value>TypeDouble</value>
+																					<value>TypeInt32</value>
 																				</Type>
 																				<ID classname='Num'>
 																					<value representation='Int64'>1</value>
@@ -6514,7 +6514,7 @@
 																		<Obj typename='NI_MeasurementParameter' name=''>
 																			<subprops>
 																				<Name classname='Str'>
-																					<value>current_measurement</value>
+																					<value>measurement_pin_names</value>
 																				</Name>
 																				<ArgumentValue classname='ExprValue'>
 																					<value/>
@@ -6523,16 +6523,106 @@
 																					<value>Out</value>
 																				</Direction>
 																				<Log classname='Bool'>
-																					<value>false</value>
+																					<value>true</value>
 																				</Log>
 																				<Dimension classname='Num'>
-																					<value representation='UInt64'>0</value>
+																					<value representation='UInt64'>1</value>
+																				</Dimension>
+																				<Type classname='Str'>
+																					<value>TypeString</value>
+																				</Type>
+																				<ID classname='Num'>
+																					<value representation='Int64'>2</value>
+																				</ID>
+																				<TypeSpecialization classname='Str'>
+																					<value>None</value>
+																				</TypeSpecialization>
+																			</subprops>
+																		</Obj>
+																	</value>
+																	<value>
+																		<Obj typename='NI_MeasurementParameter' name=''>
+																			<subprops>
+																				<Name classname='Str'>
+																					<value>voltage_measurements</value>
+																				</Name>
+																				<ArgumentValue classname='ExprValue'>
+																					<value/>
+																				</ArgumentValue>
+																				<Direction classname='Str'>
+																					<value>Out</value>
+																				</Direction>
+																				<Log classname='Bool'>
+																					<value>true</value>
+																				</Log>
+																				<Dimension classname='Num'>
+																					<value representation='UInt64'>1</value>
 																				</Dimension>
 																				<Type classname='Str'>
 																					<value>TypeDouble</value>
 																				</Type>
 																				<ID classname='Num'>
-																					<value representation='Int64'>2</value>
+																					<value representation='Int64'>3</value>
+																				</ID>
+																				<TypeSpecialization classname='Str'>
+																					<value>None</value>
+																				</TypeSpecialization>
+																			</subprops>
+																		</Obj>
+																	</value>
+																	<value>
+																		<Obj typename='NI_MeasurementParameter' name=''>
+																			<subprops>
+																				<Name classname='Str'>
+																					<value>current_measurements</value>
+																				</Name>
+																				<ArgumentValue classname='ExprValue'>
+																					<value/>
+																				</ArgumentValue>
+																				<Direction classname='Str'>
+																					<value>Out</value>
+																				</Direction>
+																				<Log classname='Bool'>
+																					<value>true</value>
+																				</Log>
+																				<Dimension classname='Num'>
+																					<value representation='UInt64'>1</value>
+																				</Dimension>
+																				<Type classname='Str'>
+																					<value>TypeDouble</value>
+																				</Type>
+																				<ID classname='Num'>
+																					<value representation='Int64'>4</value>
+																				</ID>
+																				<TypeSpecialization classname='Str'>
+																					<value>None</value>
+																				</TypeSpecialization>
+																			</subprops>
+																		</Obj>
+																	</value>
+																	<value>
+																		<Obj typename='NI_MeasurementParameter' name=''>
+																			<subprops>
+																				<Name classname='Str'>
+																					<value>in_compliance</value>
+																				</Name>
+																				<ArgumentValue classname='ExprValue'>
+																					<value/>
+																				</ArgumentValue>
+																				<Direction classname='Str'>
+																					<value>Out</value>
+																				</Direction>
+																				<Log classname='Bool'>
+																					<value>true</value>
+																				</Log>
+																				<Dimension classname='Num'>
+																					<value representation='UInt64'>1</value>
+																				</Dimension>
+																				<Type classname='Str'>
+																					<value>TypeBool</value>
+																				</Type>
+																				<ID classname='Num'>
+																					<value representation='Int64'>5</value>
 																				</ID>
 																				<TypeSpecialization classname='Str'>
 																					<value>None</value>
