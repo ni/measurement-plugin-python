@@ -50,6 +50,7 @@ class TypeSpecialization(enum.Enum):
 
     NoType = ""
     Pin = "pin"
+    Path = "path"
 
 
 class DataType(enum.Enum):
@@ -64,6 +65,7 @@ class DataType(enum.Enum):
     Boolean = (type_pb2.Field.TYPE_BOOL, False, TypeSpecialization.NoType)
     String = (type_pb2.Field.TYPE_STRING, False, TypeSpecialization.NoType)
     Pin = (type_pb2.Field.TYPE_STRING, False, TypeSpecialization.Pin)
+    Path = (type_pb2.Field.TYPE_STRING, False, TypeSpecialization.Path)
 
     Int32Array1D = (type_pb2.Field.TYPE_INT32, True, TypeSpecialization.NoType)
     Int64Array1D = (type_pb2.Field.TYPE_INT64, True, TypeSpecialization.NoType)
@@ -74,3 +76,4 @@ class DataType(enum.Enum):
     BooleanArray1D = (type_pb2.Field.TYPE_BOOL, True, TypeSpecialization.NoType)
     StringArray1D = (type_pb2.Field.TYPE_STRING, True, TypeSpecialization.NoType)
     PinArray1D = (type_pb2.Field.TYPE_STRING, True, TypeSpecialization.Pin)
+    PathArray1D = (type_pb2.Field.TYPE_STRING, True, TypeSpecialization.Path)

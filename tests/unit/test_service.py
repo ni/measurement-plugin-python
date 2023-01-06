@@ -120,6 +120,8 @@ def test___measurement_service___add_non_pin_configuration__pin_type_annotations
         ("UInt44", DataType.UInt64, ""),
         ("Pin", DataType.Pin, 1.0),
         ("Pin1DArray", DataType.PinArray1D, [1.009, -1.0009]),
+        ("Path", DataType.Path, 1.0),
+        ("Path1DArray", DataType.PathArray1D, [1.009, -1.0009]),
     ],
 )
 def test___measurement_service___add_configuration_with_mismatch_default_value__raises_type_error(
