@@ -65,9 +65,10 @@ class ChannelMapping(NamedTuple):
         pin_or_relay_name (str): The pin or relay that is mapped to a channel.
 
         site (int): The site on which the pin or relay is mapped to a channel.
-            For system pins/relays the site number is -1 since they do not belong to a specific site.
+            For system pins/relays the site number is -1 as they do not belong to a specific site.
 
         channel (str): The channel to which the pin or relay is mapped on this site.
+
     """
 
     pin_or_relay_name: str
@@ -96,6 +97,12 @@ class SessionInformation(NamedTuple):
 
         session_exists (bool): Indicates whether the session exists in the Session Manager. This
             indicates whether the session has been created.
+
+        channel_mappings (Iterable[ChannelMapping]): List of site and pin/relay mappings that
+            correspond to each channel in the channel_list. Each item contains a mapping
+            for a channel in this instrument resource, in the order of the channel_list.
+            This field is empty for any SessionInformation returned from
+            Client.reserve_all_registered_sessions.
 
     """
 
