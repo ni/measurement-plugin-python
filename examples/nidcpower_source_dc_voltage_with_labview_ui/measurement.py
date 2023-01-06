@@ -45,8 +45,11 @@ service_options = ServiceOptions(use_grpc_device=False, grpc_device_address="")
 @measurement_service.configuration("current_limit", nims.DataType.Double, 0.01)
 @measurement_service.configuration("current_limit_range", nims.DataType.Double, 0.01)
 @measurement_service.configuration("source_delay", nims.DataType.Double, 0.0)
-@measurement_service.output("voltage_measurement", nims.DataType.Double)
-@measurement_service.output("current_measurement", nims.DataType.Double)
+@measurement_service.output("measurement_sites", nims.DataType.Int32Array1D)
+@measurement_service.output("measurement_pin_names", nims.DataType.StringArray1D)
+@measurement_service.output("voltage_measurements", nims.DataType.DoubleArray1D)
+@measurement_service.output("current_measurements", nims.DataType.DoubleArray1D)
+@measurement_service.output("in_compliance", nims.DataType.BooleanArray1D)
 def measure(
     pin_names: Iterable[str],
     voltage_level: float,
@@ -56,7 +59,7 @@ def measure(
     source_delay: float,
 ):
     """Source and measure a DC voltage with an NI SMU."""
-    logging.info("Executing measurement: pin_name=%s voltage_level=%g", pin_names, voltage_level)
+    logging.info("Executing measurement: pin_names=%s voltage_level=%g", pin_names, voltage_level)
 
     session_management_client = nims.session_management.Client(
         grpc_channel=measurement_service.get_channel(
@@ -83,6 +86,8 @@ def measure(
 
         session_info = reservation.session_info[0]
         session = stack.enter_context(_create_nidcpower_session(session_info))
+        channels = session.channels[session_info.channel_list]
+        channel_mappings = session_info.channel_mappings
 
         pending_cancellation = False
 
@@ -97,16 +102,16 @@ def measure(
         measurement_service.context.add_cancel_callback(cancel_callback)
         time_remaining = measurement_service.context.time_remaining
 
-        session.source_mode = nidcpower.SourceMode.SINGLE_POINT
-        session.output_function = nidcpower.OutputFunction.DC_VOLTAGE
-        session.current_limit = current_limit
-        session.voltage_level_range = voltage_level_range
-        session.current_limit_range = current_limit_range
-        session.source_delay = hightime.timedelta(seconds=source_delay)
-        session.voltage_level = voltage_level
-        measured_value: List[nidcpower.Measurement] = []
-        in_compliance = False
-        with session.initiate():
+        channels.source_mode = nidcpower.SourceMode.SINGLE_POINT
+        channels.output_function = nidcpower.OutputFunction.DC_VOLTAGE
+        channels.current_limit = current_limit
+        channels.voltage_level_range = voltage_level_range
+        channels.current_limit_range = current_limit_range
+        channels.source_delay = hightime.timedelta(seconds=source_delay)
+        channels.voltage_level = voltage_level
+        # The Measurement named tuple doesn't support type annotations: https://github.com/ni/nimi-python/issues/1885
+        measured_values = []
+        with channels.initiate():
             deadline = time.time() + time_remaining
             while True:
                 if time.time() > deadline:
@@ -118,7 +123,7 @@ def measure(
                         grpc.StatusCode.CANCELLED, "client requested cancellation"
                     )
                 try:
-                    session.wait_for_event(nidcpower.enums.Event.SOURCE_COMPLETE, timeout=0.1)
+                    channels.wait_for_event(nidcpower.enums.Event.SOURCE_COMPLETE, timeout=0.1)
                     break
                 except nidcpower.DriverError as e:
                     """
@@ -132,14 +137,23 @@ def measure(
                         pass
                     else:
                         raise
-            channel = session.get_channel_names("0")
-            measured_value = session.channels[channel].measure_multiple()
-            in_compliance = session.channels[channel].query_in_compliance()
+
+            measured_values = channels.measure_multiple()
+            for index, mapping in enumerate(channel_mappings):
+                measured_values[index] = measured_values[index]._replace(
+                    in_compliance=session.channels[mapping.channel].query_in_compliance()
+                )
         session = None  # Don't abort after this point
 
-    _log_measured_values(measured_value, in_compliance)
+    _log_measured_values(channel_mappings, measured_values)
     logging.info("Completed measurement")
-    return (measured_value[0].voltage, measured_value[0].current)
+    return (
+        [c.site for c in channel_mappings],
+        [c.pin_or_relay_name for c in channel_mappings],
+        [m.voltage for m in measured_values],
+        [m.current for m in measured_values],
+        [m.in_compliance for m in measured_values],
+    )
 
 
 def _create_nidcpower_session(
@@ -167,19 +181,21 @@ def _create_nidcpower_session(
     return nidcpower.Session(resource_name=session_info.resource_name, **session_kwargs)
 
 
-def _log_measured_values(measured_value, in_compliance):
+def _log_measured_values(
+    channel_mappings: Iterable[nims.session_management.ChannelMapping],
+    measured_values: Iterable,
+):
     """Log the measured values."""
-    logging.info("Voltage: %g V", measured_value[0].voltage)
-    logging.info("Current: %g A", measured_value[0].current)
-    logging.info("In compliance: %s", str(in_compliance))
+    for channel_mapping, measurement in zip(channel_mappings, measured_values):
+        logging.info("site%s/%s:", channel_mapping.site, channel_mapping.pin_or_relay_name)
+        logging.info("  Voltage: %g V", measurement.voltage)
+        logging.info("  Current: %g A", measurement.current)
+        logging.info("  In compliance: %s", str(measurement.in_compliance))
 
 
 @click.command
 @click.option(
-    "-v",
-    "--verbose",
-    count=True,
-    help="Enable verbose logging. Repeat to increase verbosity.",
+    "-v", "--verbose", count=True, help="Enable verbose logging. Repeat to increase verbosity."
 )
 @click.option(
     "--use-grpc-device/--no-use-grpc-device",
