@@ -105,6 +105,7 @@ class SessionInformation(NamedTuple):
     channel_list: str
     instrument_type_id: str
     session_exists: bool
+    channel_mappings: Iterable[ChannelMapping]
 
 
 class Reservation(object):
@@ -142,6 +143,14 @@ class Reservation(object):
                 channel_list=info.channel_list,
                 instrument_type_id=info.instrument_type_id,
                 session_exists=info.session_exists,
+                channel_mappings=[
+                    ChannelMapping(
+                        pin_or_relay_name=channel_mapping.pin_or_relay_name,
+                        site=channel_mapping.site,
+                        channel=channel_mapping.channel,
+                    )
+                    for channel_mapping in info.channel_mappings
+                ],
             )
             for info in self._session_info
         ]
@@ -258,6 +267,14 @@ class Client(object):
                     channel_list=info.channel_list,
                     instrument_type_id=info.instrument_type_id,
                     session_exists=info.session_exists,
+                    channel_mappings=[
+                        session_management_service_pb2.ChannelMapping(
+                            pin_or_relay_name=channel_mapping.pin_or_relay_name,
+                            site=channel_mapping.site,
+                            channel=channel_mapping.channel,
+                        )
+                        for channel_mapping in info.channel_mappings
+                    ],
                 )
                 for info in session_info
             )
@@ -283,6 +300,14 @@ class Client(object):
                     channel_list=info.channel_list,
                     instrument_type_id=info.instrument_type_id,
                     session_exists=info.session_exists,
+                    channel_mappings=[
+                        session_management_service_pb2.ChannelMapping(
+                            pin_or_relay_name=channel_mapping.pin_or_relay_name,
+                            site=channel_mapping.site,
+                            channel=channel_mapping.channel,
+                        )
+                        for channel_mapping in info.channel_mappings
+                    ],
                 )
                 for info in session_info
             )
