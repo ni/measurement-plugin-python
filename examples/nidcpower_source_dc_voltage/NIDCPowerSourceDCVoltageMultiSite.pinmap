@@ -12,9 +12,12 @@
 	<PinGroups></PinGroups>
 	<Sites>
 		<Site siteNumber="0" />
+		<Site siteNumber="1" />
 	</Sites>
 	<Connections>
 		<Connection pin="Pin1" siteNumber="0" instrument="DCPower1" channel="0" />
+		<Connection pin="Pin1" siteNumber="1" instrument="DCPower1" channel="2" />
 		<Connection pin="Pin2" siteNumber="0" instrument="DCPower1" channel="1" />
+		<Connection pin="Pin2" siteNumber="1" instrument="DCPower1" channel="3" />
 	</Connections>
 </PinMap>
