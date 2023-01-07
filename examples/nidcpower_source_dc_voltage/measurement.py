@@ -149,8 +149,8 @@ def measure(
     _log_measured_values(channel_mappings, measured_values)
     logging.info("Completed measurement")
     return (
-        [c.site for c in channel_mappings],
-        [c.pin_or_relay_name for c in channel_mappings],
+        [m.site for m in channel_mappings],
+        [m.pin_or_relay_name for m in channel_mappings],
         [m.voltage for m in measured_values],
         [m.current for m in measured_values],
         [m.in_compliance for m in measured_values],
@@ -187,8 +187,8 @@ def _log_measured_values(
     measured_values: Iterable,
 ):
     """Log the measured values."""
-    for channel_mapping, measurement in zip(channel_mappings, measured_values):
-        logging.info("site%s/%s:", channel_mapping.site, channel_mapping.pin_or_relay_name)
+    for mapping, measurement in zip(channel_mappings, measured_values):
+        logging.info("site%s/%s:", mapping.site, mapping.pin_or_relay_name)
         logging.info("  Voltage: %g V", measurement.voltage)
         logging.info("  Current: %g A", measurement.current)
         logging.info("  In compliance: %s", str(measurement.in_compliance))
