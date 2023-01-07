@@ -5,7 +5,7 @@ import logging
 import pathlib
 import sys
 import time
-from typing import Iterable, List
+from typing import Iterable
 
 import click
 import grpc
@@ -109,7 +109,8 @@ def measure(
         channels.current_limit_range = current_limit_range
         channels.source_delay = hightime.timedelta(seconds=source_delay)
         channels.voltage_level = voltage_level
-        # The Measurement named tuple doesn't support type annotations: https://github.com/ni/nimi-python/issues/1885
+        # The Measurement named tuple doesn't support type annotations:
+        # https://github.com/ni/nimi-python/issues/1885
         measured_values = []
         with channels.initiate():
             deadline = time.time() + time_remaining
