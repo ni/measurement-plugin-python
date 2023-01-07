@@ -132,8 +132,9 @@ def measure(
 
         session_info = reservation.session_info[0]
         channel_names = session_info.channel_list
-        channel_list = [c.strip() for c in channel_names.split(",")]
-        pin_to_channel = dict(zip(pin_names, channel_list))
+        pin_to_channel = {
+            mapping.pin_or_relay_name: mapping.channel for mapping in session_info.channel_mappings
+        }
         if trigger_source in pin_to_channel:
             trigger_source = pin_to_channel[trigger_source]
 
