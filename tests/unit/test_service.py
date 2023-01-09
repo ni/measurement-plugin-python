@@ -26,8 +26,10 @@ def test___measurement_service___register_measurement_method___method_registered
         ("Int32", DataType.Int32, -8799),
         ("Int64", DataType.Int64, -999),
         ("UInt32", DataType.UInt32, 3994),
-        ("UInt44", DataType.UInt64, 3456),
-        ("UInt44", DataType.UInt64, False),
+        ("UInt64", DataType.UInt64, 3456),
+        ("UInt64", DataType.UInt64, False),
+        ("PathConfiguration", DataType.Path, "c:\\some path"),
+        ("PathConfiguration", DataType.PathArray1D, ["c:\\some path", "c:\\other\\path"]),
     ],
 )
 def test___measurement_service___add_configuration__configuration_added(
