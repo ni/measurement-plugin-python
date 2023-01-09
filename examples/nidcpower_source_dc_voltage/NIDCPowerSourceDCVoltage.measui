@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<SourceFile Checksum="76B4A5CB9EAC25BF548B7DF865F11D879C1752E986B998C13E4CBCA030AC4B8B05655D9E95EFE15161259F176B28E41F486EA3DA192E498F29878CD7E907606D" Timestamp="1D9221F9D23C073" xmlns="http://www.ni.com/PlatformFramework">
+<SourceFile Checksum="65D69495B0F07487493AEBE5FE19EF489277670B796EF4B0E435D2A9279457FAD2800A93DE35C00C9CF3B4E3B661B41CBB351665F2BC549C22BFB92B42BFAEAC" Timestamp="1D92452F487A09B" xmlns="http://www.ni.com/PlatformFramework">
 	<SourceModelFeatureSet>
 		<ParsableNamespace AssemblyFileVersion="9.7.0.49209" FeatureSetName="Configuration Based Software Core" Name="http://www.ni.com/ConfigurationBasedSoftware.Core" OldestCompatibleVersion="6.3.0.49152" Version="6.3.0.49152" />
 		<ParsableNamespace AssemblyFileVersion="9.7.0.49209" FeatureSetName="LabVIEW Controls" Name="http://www.ni.com/Controls.LabVIEW.Design" OldestCompatibleVersion="8.1.0.49152" Version="8.1.0.49152" />
@@ -36,7 +36,7 @@
 			</ScreenSurfaceCanvas>
 			<Label Height="[float]16" Id="2f53b6c7f87b41879b8d84f4fb87c844" LabelOwner="[UIModel]4b93ed01d79049dc8d2c3ef426384b35" Left="[float]40" Text="[string]Configuration" Top="[float]80" Width="[float]73" xmlns="http://www.ni.com/PanelCommon" />
 			<Label Height="[float]16" Id="82dfa849cb640f9bdcd4d7c1256e976" LabelOwner="[UIModel]3507d01be4bc4a26abc81ac1e2385674" Left="[float]280" Text="[string]Results" Top="[float]80" Width="[float]37" xmlns="http://www.ni.com/PanelCommon" />
-			<ChannelPinSelector AllowUndefinedValues="[bool]True" BaseName="[string]Pin" Channel="[string]{5f88d1ec-4b12-4bf9-b28f-707b534a0575}/Configuration/pin_names" DataType="[Type]String" Enabled="[bool]True" Height="[float]24" Id="40b7c7768512477fb2d939ac81f1bb10" IsLabelBoundToChannel="[bool]False" Label="[UIModel]2104dc3428074997846caee906febdd6" Left="[float]40" MultipleSelectionMode="[MultipleSelectionModes]List" SelectedResource="[NI_Core_DataValues_TagRefnum]Pin1,Pin2" Top="[float]36" Width="[float]200" xmlns="http://www.ni.com/InstrumentFramework/ScreenDocument" />
+			<ChannelPinSelector AllowUndefinedValues="[bool]True" BaseName="[string]Pin" Channel="[string]{5f88d1ec-4b12-4bf9-b28f-707b534a0575}/Configuration/pin_names" DataType="[Type]String" Enabled="[bool]True" Height="[float]24" Id="40b7c7768512477fb2d939ac81f1bb10" IsLabelBoundToChannel="[bool]False" Label="[UIModel]2104dc3428074997846caee906febdd6" Left="[float]40" MultipleSelectionMode="[MultipleSelectionModes]List" SelectedResource="[NI_Core_DataValues_TagRefnum]Pin1" Top="[float]36" Width="[float]200" xmlns="http://www.ni.com/InstrumentFramework/ScreenDocument" />
 			<Label Height="[float]16" Id="2104dc3428074997846caee906febdd6" LabelOwner="[UIModel]40b7c7768512477fb2d939ac81f1bb10" Left="[float]40" Text="[string]Pin name" Top="[float]16" Width="[float]49" xmlns="http://www.ni.com/PanelCommon" />
 		</ScreenSurface>
 	</Screen>
