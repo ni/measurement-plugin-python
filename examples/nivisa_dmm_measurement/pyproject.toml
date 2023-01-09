@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "nivisa_dmm_measurement"
+version = "0.5.0"
+description = "MeasurementLink example that performs a DMM measurement using NI-VISA and an NI Instrument Simulator v2.0."
+authors = ["National Instruments"]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+ni-measurementlink-service = "*"
+PyVISA = "^1.13.0"
+PyVISA-sim = "^0.5.1"
+click = ">=7.1.2"
+
+[tool.poetry.dev-dependencies]
+# Uncomment to use prerelease dependencies (requires poetry>=1.2).
+ni-measurementlink-service = {path = "../..", develop = true}
+
+[build-system]
+requires = ["poetry-core>=1.2.0"]
+build-backend = "poetry.core.masonry.api"
