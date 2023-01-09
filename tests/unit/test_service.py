@@ -119,9 +119,7 @@ def test___measurement_service___add_path_configuration__path_configuration_adde
     """Test to validate the configuration decorator."""
     measurement_service = MeasurementService(None, None)
 
-    measurement_service.configuration(
-        display_name, type, default_value
-    )(_fake_measurement_function)
+    measurement_service.configuration(display_name, type, default_value)(_fake_measurement_function)
 
     assert any(
         param.display_name == display_name
