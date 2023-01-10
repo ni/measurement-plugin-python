@@ -18,8 +18,10 @@ from ni_measurementlink_service.measurement.service import GrpcChannelPool
 class ServiceOptions(NamedTuple):
     """Service options specified on the command line."""
 
-    use_grpc_device: bool
-    grpc_device_address: str
+    use_grpc_device: bool = False
+    grpc_device_address: str = ""
+
+    use_simulation: bool = False
 
 
 T = TypeVar("T")
