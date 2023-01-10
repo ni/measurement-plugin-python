@@ -30,6 +30,7 @@ measurement_service = nims.MeasurementService(measurement_info, service_info)
 service_options = ServiceOptions()
 
 INSTRUMENT_TYPE = "Instrument Simulator v2.0 DMM"
+SIMULATION_YAML_PATH = pathlib.Path(__file__).resolve().parent / "NIInstrumentSimulatorV2_0.yaml"
 
 FUNCTION_TO_ENUM = {
     "DC Volts": "VOLT:DC",
@@ -45,7 +46,9 @@ RESOLUTION_VALUE = {
 
 
 @measurement_service.register_measurement
-@measurement_service.configuration("pin_name", nims.DataType.Pin, "Pin1", instrument_type=INSTRUMENT_TYPE)
+@measurement_service.configuration(
+    "pin_name", nims.DataType.Pin, "Pin1", instrument_type=INSTRUMENT_TYPE
+)
 @measurement_service.configuration("measurement_type", nims.DataType.String, "DC Volts")
 @measurement_service.configuration("range", nims.DataType.Double, 1.0)
 @measurement_service.configuration("resolution_digits", nims.DataType.Double, 3.5)
@@ -88,25 +91,28 @@ def measure(
                 f"Unsupported number of sessions: {len(reservation.session_info)}",
             )
 
-        if service_options.use_simulation:
-            simulation_yaml_path = pathlib.Path(__file__).resolve().parent / "NIInstrumentSimulatorV2_0.yaml"
-            visa_library = f"{simulation_yaml_path}@sim"
-        else:
-            visa_library = ""
-        resource_manager = pyvisa.ResourceManager(visa_library)
+        resource_manager = pyvisa.ResourceManager(
+            f"{SIMULATION_YAML_PATH}@sim" if service_options.use_simulation else ""
+        )
 
         session_info = reservation.session_info[0]
-        session = stack.enter_context(resource_manager.open_resource(session_info.resource_name))
-        assert isinstance(session, pyvisa.resources.MessageBasedResource)
-        session.read_termination = "\n"
-        session.write_termination = "\n"
+        session = stack.enter_context(
+            _create_visa_session(resource_manager, session_info.resource_name)
+        )
 
         instr_id = session.query("*IDN?")
         logging.info("Instrument: %s", instr_id)
 
         if resolution_digits not in RESOLUTION_VALUE:
             raise RuntimeError(f"Unsupported resolution: {resolution_digits}")
-        session.write("CONF:%s %.g,%.g" % (str_to_enum(FUNCTION_TO_ENUM, measurement_type), range, RESOLUTION_VALUE[resolution_digits]))
+        session.write(
+            "CONF:%s %.g,%.g"
+            % (
+                str_to_enum(FUNCTION_TO_ENUM, measurement_type),
+                range,
+                RESOLUTION_VALUE[resolution_digits],
+            )
+        )
         _query_error(session)
 
         response = session.query("READ?")
@@ -115,6 +121,17 @@ def measure(
 
     logging.info("Completed measurement")
     return (measured_value,)
+
+
+def _create_visa_session(
+    resource_manager: pyvisa.ResourceManager, resource_name: str
+) -> pyvisa.resources.MessageBasedResource:
+    session = resource_manager.open_resource(resource_name)
+    assert isinstance(session, pyvisa.resources.MessageBasedResource)
+    # The NI Instrument Simulator hardware accepts either \r\n or \n but the simulation YAML needs the newlines to match.
+    session.read_termination = "\n"
+    session.write_termination = "\n"
+    return session
 
 
 def _query_error(session: pyvisa.resources.MessageBasedResource):
@@ -149,9 +166,7 @@ def main(verbose: int, use_simulation: bool):
     logging.basicConfig(format="%(asctime)s %(levelname)s: %(message)s", level=level)
 
     global service_options
-    service_options = ServiceOptions(
-        use_simulation=use_simulation
-    )
+    service_options = ServiceOptions(use_simulation=use_simulation)
 
     with measurement_service.host_service():
         input("Press enter to close the measurement service.\n")
