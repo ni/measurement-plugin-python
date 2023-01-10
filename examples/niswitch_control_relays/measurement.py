@@ -24,7 +24,7 @@ service_info = nims.ServiceInfo(
 )
 
 measurement_service = nims.MeasurementService(measurement_info, service_info)
-service_options = ServiceOptions(use_grpc_device=False, grpc_device_address="")
+service_options = ServiceOptions()
 
 
 @measurement_service.register_measurement
