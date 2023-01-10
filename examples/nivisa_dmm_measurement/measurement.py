@@ -11,7 +11,7 @@ import grpc
 import pyvisa
 import pyvisa.resources
 import pyvisa.typing
-from _helpers import str_to_enum
+from _helpers import ServiceOptions, str_to_enum
 
 import ni_measurementlink_service as nims
 
@@ -27,6 +27,7 @@ service_info = nims.ServiceInfo(
 )
 
 measurement_service = nims.MeasurementService(measurement_info, service_info)
+service_options = ServiceOptions()
 
 INSTRUMENT_TYPE = "Instrument Simulator v2.0 DMM"
 
@@ -87,21 +88,30 @@ def measure(
                 f"Unsupported number of sessions: {len(reservation.session_info)}",
             )
 
-        resource_manager = pyvisa.ResourceManager()
+        if service_options.use_simulation:
+            simulation_yaml_path = pathlib.Path(__file__).resolve().parent / "NIInstrumentSimulatorV2_0.yaml"
+            visa_library = f"{simulation_yaml_path}@sim"
+        else:
+            visa_library = ""
+        resource_manager = pyvisa.ResourceManager(visa_library)
 
         session_info = reservation.session_info[0]
         session = stack.enter_context(resource_manager.open_resource(session_info.resource_name))
         assert isinstance(session, pyvisa.resources.MessageBasedResource)
+        session.read_termination = "\n"
+        session.write_termination = "\n"
 
         instr_id = session.query("*IDN?")
-        logging.info("Instrument id: %s", instr_id)
+        logging.info("Instrument: %s", instr_id)
 
-        session.write("CONF:%s %.g,%.g;" % (str_to_enum(FUNCTION_TO_ENUM, measurement_type), range, RESOLUTION_VALUE[resolution_digits]))
-        _query_error()
+        if resolution_digits not in RESOLUTION_VALUE:
+            raise RuntimeError(f"Unsupported resolution: {resolution_digits}")
+        session.write("CONF:%s %.g,%.g" % (str_to_enum(FUNCTION_TO_ENUM, measurement_type), range, RESOLUTION_VALUE[resolution_digits]))
+        _query_error(session)
 
         response = session.query("READ?")
         measured_value = float(response)
-        _query_error()
+        _query_error(session)
 
     logging.info("Completed measurement")
     return (measured_value,)
@@ -109,11 +119,10 @@ def measure(
 
 def _query_error(session: pyvisa.resources.MessageBasedResource):
     response = session.query("SYST:ERR?")
-    number, description = response.split(",")
-    if int(number) != 0:
-        logging.error("Instrument error: %s", response)
-        assert description[0] == '"' and description[-1] == '"'
-        raise RuntimeError("Instrument error %s: %s" % (number, description[1:-1]))
+    fields = response.split(",", maxsplit=1)
+    assert len(fields) >= 1
+    if int(fields[0]) != 0:
+        raise RuntimeError("Instrument error %s: %s" % (fields[0], fields[1]))
 
 
 @click.command
@@ -123,7 +132,13 @@ def _query_error(session: pyvisa.resources.MessageBasedResource):
     count=True,
     help="Enable verbose logging. Repeat to increase verbosity.",
 )
-def main(verbose: int):
+@click.option(
+    "--use-simulation/--no-use-simulation",
+    default=False,
+    is_flag=True,
+    help="Use simulated instruments.",
+)
+def main(verbose: int, use_simulation: bool):
     """Perform a DMM measurement using NI-VISA and an NI Instrument Simulator v2.0."""
     if verbose > 1:
         level = logging.DEBUG
@@ -132,6 +147,11 @@ def main(verbose: int):
     else:
         level = logging.WARNING
     logging.basicConfig(format="%(asctime)s %(levelname)s: %(message)s", level=level)
+
+    global service_options
+    service_options = ServiceOptions(
+        use_simulation=use_simulation
+    )
 
     with measurement_service.host_service():
         input("Press enter to close the measurement service.\n")
