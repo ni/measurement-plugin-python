@@ -29,7 +29,7 @@ service_info = nims.ServiceInfo(
 measurement_service = nims.MeasurementService(measurement_info, service_info)
 service_options = ServiceOptions()
 
-INSTRUMENT_TYPE = "Instrument Simulator v2.0 DMM"
+INSTRUMENT_TYPE_DMM_SIMULATOR = "DigitalMultimeterSimulator"
 SIMULATION_YAML_PATH = pathlib.Path(__file__).resolve().parent / "NIInstrumentSimulatorV2_0.yaml"
 
 FUNCTION_TO_ENUM = {
@@ -37,7 +37,7 @@ FUNCTION_TO_ENUM = {
     "AC Volts": "VOLT:AC",
 }
 
-RESOLUTION_VALUE = {
+RESOLUTION_DIGITS_TO_VALUE = {
     3.5: 0.001,
     4.5: 0.0001,
     5.5: 1e-5,
@@ -47,7 +47,7 @@ RESOLUTION_VALUE = {
 
 @measurement_service.register_measurement
 @measurement_service.configuration(
-    "pin_name", nims.DataType.Pin, "Pin1", instrument_type=INSTRUMENT_TYPE
+    "pin_name", nims.DataType.Pin, "Pin1", instrument_type=INSTRUMENT_TYPE_DMM_SIMULATOR
 )
 @measurement_service.configuration("measurement_type", nims.DataType.String, "DC Volts")
 @measurement_service.configuration("range", nims.DataType.Double, 1.0)
@@ -80,7 +80,7 @@ def measure(
             session_management_client.reserve_sessions(
                 context=measurement_service.context.pin_map_context,
                 pin_or_relay_names=[pin_name],
-                instrument_type_id=INSTRUMENT_TYPE,
+                instrument_type_id=INSTRUMENT_TYPE_DMM_SIMULATOR,
                 timeout=-1,
             )
         )
@@ -100,19 +100,16 @@ def measure(
             _create_visa_session(resource_manager, session_info.resource_name)
         )
 
-        instr_id = session.query("*IDN?")
-        logging.info("Instrument: %s", instr_id)
+        instrument_id = session.query("*IDN?")
+        logging.info("Instrument: %s", instrument_id)
 
-        if resolution_digits not in RESOLUTION_VALUE:
-            raise RuntimeError(f"Unsupported resolution: {resolution_digits}")
-        session.write(
-            "CONF:%s %.g,%.g"
-            % (
-                str_to_enum(FUNCTION_TO_ENUM, measurement_type),
-                range,
-                RESOLUTION_VALUE[resolution_digits],
+        function_enum = str_to_enum(FUNCTION_TO_ENUM, measurement_type)
+        if resolution_digits not in RESOLUTION_DIGITS_TO_VALUE:
+            raise grpc.RpcError(
+                grpc.StatusCode.INVALID_ARGUMENT, f"Unsupported resolution: {resolution_digits}"
             )
-        )
+        resolution_value = RESOLUTION_DIGITS_TO_VALUE[resolution_digits]
+        session.write("CONF:%s %.g,%.g" % (function_enum, range, resolution_value))
         _query_error(session)
 
         response = session.query("READ?")
@@ -128,7 +125,8 @@ def _create_visa_session(
 ) -> pyvisa.resources.MessageBasedResource:
     session = resource_manager.open_resource(resource_name)
     assert isinstance(session, pyvisa.resources.MessageBasedResource)
-    # The NI Instrument Simulator hardware accepts either \r\n or \n but the simulation YAML needs the newlines to match.
+    # The NI Instrument Simulator hardware accepts either \r\n or \n but the simulation YAML needs
+    # the newlines to match.
     session.read_termination = "\n"
     session.write_termination = "\n"
     return session
@@ -139,7 +137,7 @@ def _query_error(session: pyvisa.resources.MessageBasedResource):
     fields = response.split(",", maxsplit=1)
     assert len(fields) >= 1
     if int(fields[0]) != 0:
-        raise RuntimeError("Instrument error %s: %s" % (fields[0], fields[1]))
+        raise RuntimeError("Instrument returned error %s: %s" % (fields[0], fields[1]))
 
 
 @click.command
