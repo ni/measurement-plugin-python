@@ -1,22 +1,24 @@
 """Contains test to validate service_manager.py."""
+from typing import cast
+
 import grpc
 import pytest
 from examples.sample_measurement import measurement
 
 from ni_measurementlink_service._internal.discovery_client import DiscoveryClient
 from ni_measurementlink_service._internal.service_manager import GrpcService
+from ni_measurementlink_service._internal.stubs.ni.measurementlink.discovery.v1.discovery_service_pb2_grpc import (
+    DiscoveryServiceStub,
+)
 from ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v1 import (
     measurement_service_pb2,
     measurement_service_pb2_grpc,
 )
 from tests.utilities.fake_discovery_service import FakeDiscoveryServiceStub
-from tests.utilities.fake_discovery_service import FakeDiscoveryServiceStubError
 
 
-def test___grpc_service___start_service___service_hosted():
+def test___grpc_service___start_service___service_hosted(grpc_service: GrpcService):
     """Test to validate if measurement service is started."""
-    grpc_service = GrpcService(DiscoveryClient(FakeDiscoveryServiceStub()))
-
     port_number = grpc_service.start(
         measurement.measurement_info,
         measurement.service_info,
@@ -28,10 +30,10 @@ def test___grpc_service___start_service___service_hosted():
     _validate_if_service_running_by_making_rpc(port_number)
 
 
-def test___grpc_service_without_discovery_service___start_service___service_hosted():
+def test___grpc_service_without_discovery_service___start_service___service_hosted(
+    grpc_service: GrpcService,
+):
     """Test to validate if measurement service start when the discovery service not available."""
-    grpc_service = GrpcService(DiscoveryClient(FakeDiscoveryServiceStubError()))
-
     port_number = grpc_service.start(
         measurement.measurement_info,
         measurement.service_info,
@@ -43,9 +45,8 @@ def test___grpc_service_without_discovery_service___start_service___service_host
     _validate_if_service_running_by_making_rpc(port_number)
 
 
-def test___grpc_service_started___stop_service___service_stopped():
+def test___grpc_service_started___stop_service___service_stopped(grpc_service: GrpcService):
     """Test to validate if measurement service is stopped."""
-    grpc_service = GrpcService(DiscoveryClient(FakeDiscoveryServiceStub()))
     port_number = grpc_service.start(
         measurement.measurement_info,
         measurement.service_info,
@@ -58,6 +59,24 @@ def test___grpc_service_started___stop_service___service_stopped():
 
     with pytest.raises(Exception):
         _validate_if_service_running_by_making_rpc(port_number)
+
+
+@pytest.fixture
+def grpc_service(discovery_client: DiscoveryClient) -> GrpcService:
+    """Create a GrpcService."""
+    return GrpcService(discovery_client)
+
+
+@pytest.fixture
+def discovery_client(discovery_service_stub: FakeDiscoveryServiceStub) -> DiscoveryClient:
+    """Create a DiscoveryClient."""
+    return DiscoveryClient(cast(DiscoveryServiceStub, discovery_service_stub))
+
+
+@pytest.fixture
+def discovery_service_stub() -> FakeDiscoveryServiceStub:
+    """Create a FakeDiscoveryServiceStub."""
+    return FakeDiscoveryServiceStub()
 
 
 def _validate_if_service_running_by_making_rpc(port_number):

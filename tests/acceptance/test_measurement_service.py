@@ -77,12 +77,12 @@ def test___measurement_service___measure_with_large_array___returns_output(doubl
     assert measure_response.outputs.value == serialized_parameter
 
 
-def _host_service() -> int:
+def _host_service() -> str:
     measurement.sample_measurement_service.host_service()
-    return str(measurement.sample_measurement_service.grpc_service.port)
+    return measurement.sample_measurement_service.grpc_service.port
 
 
-def _create_channel(port):
+def _create_channel(port: str):
     return grpc.insecure_channel(
         "localhost:" + port,
         options=[

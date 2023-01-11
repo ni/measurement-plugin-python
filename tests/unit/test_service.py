@@ -1,14 +1,26 @@
 """Tests to validated user facing decorators in service.py."""
 import pytest
 
-from ni_measurementlink_service.measurement.info import DataType
-from ni_measurementlink_service.measurement.info import TypeSpecialization
+from ni_measurementlink_service.measurement.info import (
+    DataType,
+    MeasurementInfo,
+    ServiceInfo,
+    TypeSpecialization,
+)
 from ni_measurementlink_service.measurement.service import MeasurementService
+
+
+_TEST_SERVICE_INFO = ServiceInfo("TestServiceClass", "TestUrl")
+_TEST_MEASUREMENT_INFO = MeasurementInfo(
+    display_name="TestMeasurement",
+    version="1.0.0.0",
+    ui_file_paths=[],
+)
 
 
 def test___measurement_service___register_measurement_method___method_registered():
     """Test to validate register_measurement decorator."""
-    measurement_service = MeasurementService(None, None)
+    measurement_service = MeasurementService(_TEST_MEASUREMENT_INFO, _TEST_SERVICE_INFO)
 
     measurement_service.register_measurement(_fake_measurement_function)
 
@@ -34,7 +46,7 @@ def test___measurement_service___add_configuration__configuration_added(
     display_name, type, default_value
 ):
     """Test to validate the configuration decorator."""
-    measurement_service = MeasurementService(None, None)
+    measurement_service = MeasurementService(_TEST_MEASUREMENT_INFO, _TEST_SERVICE_INFO)
 
     measurement_service.configuration(display_name, type, default_value)(_fake_measurement_function)
     assert any(
@@ -57,7 +69,7 @@ def test___measurement_service___add_pin_configuration__pin_configuration_added(
     display_name, type, default_value, instrument_type
 ):
     """Test to validate the configuration decorator."""
-    measurement_service = MeasurementService(None, None)
+    measurement_service = MeasurementService(_TEST_MEASUREMENT_INFO, _TEST_SERVICE_INFO)
 
     measurement_service.configuration(
         display_name, type, default_value, instrument_type=instrument_type
@@ -96,7 +108,7 @@ def test___measurement_service___add_non_pin_configuration__pin_type_annotations
     display_name, type, default_value
 ):
     """Test to validate the configuration decorator."""
-    measurement_service = MeasurementService(None, None)
+    measurement_service = MeasurementService(_TEST_MEASUREMENT_INFO, _TEST_SERVICE_INFO)
 
     measurement_service.configuration(display_name, type, default_value)(_fake_measurement_function)
 
@@ -117,7 +129,7 @@ def test___measurement_service___add_path_configuration__path_configuration_adde
     display_name, type, default_value
 ):
     """Test to validate the configuration decorator."""
-    measurement_service = MeasurementService(None, None)
+    measurement_service = MeasurementService(_TEST_MEASUREMENT_INFO, _TEST_SERVICE_INFO)
 
     measurement_service.configuration(display_name, type, default_value)(_fake_measurement_function)
 
@@ -152,7 +164,7 @@ def test___measurement_service___add_non_path_configuration__path_type_annotatio
     display_name, type, default_value
 ):
     """Test to validate the configuration decorator."""
-    measurement_service = MeasurementService(None, None)
+    measurement_service = MeasurementService(_TEST_MEASUREMENT_INFO, _TEST_SERVICE_INFO)
 
     measurement_service.configuration(display_name, type, default_value)(_fake_measurement_function)
 
@@ -184,7 +196,7 @@ def test___measurement_service___add_configuration_with_mismatch_default_value__
     display_name, type, default_value
 ):
     """Test to validate the configuration decorator with default value mismatch."""
-    measurement_service = MeasurementService(None, None)
+    measurement_service = MeasurementService(_TEST_MEASUREMENT_INFO, _TEST_SERVICE_INFO)
 
     with pytest.raises(TypeError):
         measurement_service.configuration(display_name, type, default_value)(
@@ -209,7 +221,7 @@ def test___measurement_service___add_configuration_with_mismatch_default_value__
 )
 def test___measurement_service___add_output__output_added(display_name, type):
     """Test to validate the output decorator."""
-    measurement_service = MeasurementService(None, None)
+    measurement_service = MeasurementService(_TEST_MEASUREMENT_INFO, _TEST_SERVICE_INFO)
 
     measurement_service.output(display_name, type)(_fake_measurement_function)
 
