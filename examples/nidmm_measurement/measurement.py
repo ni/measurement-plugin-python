@@ -2,6 +2,7 @@
 
 import contextlib
 import logging
+import math
 import pathlib
 import sys
 from typing import Tuple
@@ -103,14 +104,15 @@ def measure(
             resolution_digits,
         )
         measured_value = session.read()
-
-        # TODO: https://github.com/ni/nimi-python/issues/1869
-        # NI-DMM: IsOverRange and IsUnderRange are not supported
-        signal_out_of_range = False
-
+        signal_out_of_range = math.isnan(measured_value) or math.isinf(measured_value)
         absolute_resolution = session.resolution_absolute
 
-    logging.info("Completed measurement")
+    logging.info(
+        "Completed measurement: measured_value=%g signal_out_of_range=%s absolute_resolution=%g",
+        measured_value,
+        signal_out_of_range,
+        absolute_resolution,
+    )
     return (measured_value, signal_out_of_range, absolute_resolution)
 
 
