@@ -1,6 +1,6 @@
 """Contains methods related to managing driver sessions."""
 from functools import cached_property
-from typing import Iterable, List, NamedTuple, Optional
+from typing import Iterable, List, NamedTuple, Optional, TypeVar
 
 import grpc
 
@@ -107,6 +107,10 @@ class SessionInformation(NamedTuple):
     channel_mappings: Iterable[ChannelMapping]
 
 
+# Eventually, this can be replaced with typing.Self (Python >= 3.11).
+_TReservation = TypeVar("_TReservation", bound="Reservation")
+
+
 class Reservation(object):
     """Manage session reservation."""
 
@@ -119,7 +123,7 @@ class Reservation(object):
         self._session_manager = session_manager
         self._session_info = session_info
 
-    def __enter__(self):
+    def __enter__(self: _TReservation) -> _TReservation:
         """Context management protocol. Returns self."""
         return self
 
