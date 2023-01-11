@@ -43,7 +43,10 @@ def test___measurement_service___register_measurement_method___method_registered
     ],
 )
 def test___measurement_service___add_configuration__configuration_added(
-    measurement_service: MeasurementService, display_name: str, type: DataType, default_value: object
+    measurement_service: MeasurementService,
+    display_name: str,
+    type: DataType,
+    default_value: object,
 ):
     """Test to validate the configuration decorator."""
     measurement_service.configuration(display_name, type, default_value)(_fake_measurement_function)
@@ -106,7 +109,10 @@ def test___measurement_service___add_pin_configuration__pin_configuration_added(
     ],
 )
 def test___measurement_service___add_non_pin_configuration__pin_type_annotations_not_added(
-    measurement_service: MeasurementService, display_name: str, type: DataType, default_value: object
+    measurement_service: MeasurementService,
+    display_name: str,
+    type: DataType,
+    default_value: object,
 ):
     """Test to validate the configuration decorator."""
     measurement_service.configuration(display_name, type, default_value)(_fake_measurement_function)
@@ -125,7 +131,10 @@ def test___measurement_service___add_non_pin_configuration__pin_type_annotations
     ],
 )
 def test___measurement_service___add_path_configuration__path_configuration_added(
-    measurement_service: MeasurementService, display_name: str, type: DataType, default_value: object
+    measurement_service: MeasurementService,
+    display_name: str,
+    type: DataType,
+    default_value: object,
 ):
     """Test to validate the configuration decorator."""
     measurement_service.configuration(display_name, type, default_value)(_fake_measurement_function)
@@ -158,7 +167,10 @@ def test___measurement_service___add_path_configuration__path_configuration_adde
     ],
 )
 def test___measurement_service___add_non_path_configuration__path_type_annotations_not_added(
-    measurement_service: MeasurementService, display_name: str, type: DataType, default_value: object
+    measurement_service: MeasurementService,
+    display_name: str,
+    type: DataType,
+    default_value: object,
 ):
     """Test to validate the configuration decorator."""
     measurement_service.configuration(display_name, type, default_value)(_fake_measurement_function)
@@ -188,7 +200,10 @@ def test___measurement_service___add_non_path_configuration__path_type_annotatio
     ],
 )
 def test___measurement_service___add_configuration_with_mismatch_default_value__raises_type_error(
-    measurement_service: MeasurementService, display_name: str, type: DataType, default_value: object
+    measurement_service: MeasurementService,
+    display_name: str,
+    type: DataType,
+    default_value: object,
 ):
     """Test to validate the configuration decorator with default value mismatch."""
     with pytest.raises(TypeError):
