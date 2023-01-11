@@ -9,6 +9,7 @@ python = "^3.8"
 niscope = ">=1.4.3"
 ni-measurementlink-service = "*"
 click = ">=7.1.2"
+grpcio = "*"
 
 [tool.poetry.dev-dependencies]
 # Uncomment to use prerelease dependencies (requires poetry>=1.2).
