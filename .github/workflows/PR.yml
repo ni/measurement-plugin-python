@@ -35,8 +35,13 @@ jobs:
         run: poetry run ni-python-styleguide lint
       - name: MyPy Static Analysis 
         run:  poetry run mypy -p ni_measurementlink_service --show-error-codes -v
-      - name: MyPy Static Analysis on examples 
-        run:  poetry run mypy -p examples --show-error-codes -v
+      - name: MyPy Static Analysis on examples
+        # `mypy -p examples` doesn't import _helpers.py correctly, so check one example directory at a time.
+        run: |
+          for example in examples/*/; do 
+            echo Analyzing $example
+            poetry run mypy $example --show-error-codes -v
+          done
       - name: MyPy Static Analysis ni_measurementlink_generator
         run:  poetry run mypy -p ni_measurementlink_generator --show-error-codes -v
         
