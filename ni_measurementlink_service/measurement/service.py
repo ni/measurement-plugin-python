@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from threading import Lock
-from typing import Any, Callable, Dict
+from typing import Any, Callable, Dict, TypeVar
 
 import grpc
 
@@ -50,6 +50,11 @@ class MeasurementContext:
         grpc_servicer.measurement_service_context.get().abort(code, details)
 
 
+# Eventually, these can be replaced with typing.Self (Python >= 3.11).
+_TGrpcChannelPool = TypeVar("_TGrpcChannelPool", bound="GrpcChannelPool")
+_TMeasurementService = TypeVar("_TMeasurementService", bound="MeasurementService")
+
+
 class GrpcChannelPool(object):
     """Class that manages gRPC channel lifetimes."""
 
@@ -58,7 +63,7 @@ class GrpcChannelPool(object):
         self._lock: Lock = Lock()
         self._channel_cache: Dict[str, grpc.Channel] = {}
 
-    def __enter__(self) -> GrpcChannelPool:
+    def __enter__(self: _TGrpcChannelPool) -> _TGrpcChannelPool:
         """Enter the runtime context of the GrpcChannelPool."""
         return self
 
@@ -289,7 +294,7 @@ class MeasurementService:
         self.grpc_service.stop()
         self.channel_pool.close()
 
-    def __enter__(self) -> MeasurementService:
+    def __enter__(self: _TMeasurementService) -> _TMeasurementService:
         """Enter the runtime context related to the measurement service."""
         return self
 
