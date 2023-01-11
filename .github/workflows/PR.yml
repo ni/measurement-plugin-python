@@ -39,6 +39,7 @@ jobs:
         # `mypy -p examples` doesn't import _helpers.py correctly, so check one example directory at a time.
         run: |
           for example in examples/*/; do 
+            echo Analyzing $example
             poetry run mypy $example --show-error-codes -v
           done
       - name: MyPy Static Analysis ni_measurementlink_generator
