@@ -61,7 +61,7 @@ def measure(
     pin_name: str,
     measurement_type: str,
     range: float,
-    resolution_digits: str,
+    resolution_digits: float,
 ) -> Tuple:
     """Perform a measurement using an NI DMM."""
     logging.info(

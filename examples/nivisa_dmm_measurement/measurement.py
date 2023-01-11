@@ -38,10 +38,10 @@ FUNCTION_TO_ENUM = {
 }
 
 RESOLUTION_DIGITS_TO_VALUE = {
-    3.5: 0.001,
-    4.5: 0.0001,
-    5.5: 1e-5,
-    6.5: 1e-6,
+    "3.5": 0.001,
+    "4.5": 0.0001,
+    "5.5": 1e-5,
+    "6.5": 1e-6,
 }
 
 
@@ -57,7 +57,7 @@ def measure(
     pin_name: str,
     measurement_type: str,
     range: float,
-    resolution_digits: str,
+    resolution_digits: float,
 ) -> Tuple:
     """Perform a DMM measurement using NI-VISA and an NI Instrument Simulator v2.0."""
     logging.info(
@@ -104,11 +104,7 @@ def measure(
         logging.info("Instrument: %s", instrument_id)
 
         function_enum = str_to_enum(FUNCTION_TO_ENUM, measurement_type)
-        if resolution_digits not in RESOLUTION_DIGITS_TO_VALUE:
-            raise grpc.RpcError(
-                grpc.StatusCode.INVALID_ARGUMENT, f"Unsupported resolution: {resolution_digits}"
-            )
-        resolution_value = RESOLUTION_DIGITS_TO_VALUE[resolution_digits]
+        resolution_value = str_to_enum(RESOLUTION_DIGITS_TO_VALUE, str(resolution_digits))
         session.write("CONF:%s %.g,%.g" % (function_enum, range, resolution_value))
         _query_error(session)
 
