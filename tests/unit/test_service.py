@@ -1,4 +1,6 @@
 """Tests to validated user facing decorators in service.py."""
+from typing import Any
+
 import pytest
 
 from ni_measurementlink_service.measurement.info import (
@@ -18,10 +20,10 @@ _TEST_MEASUREMENT_INFO = MeasurementInfo(
 )
 
 
-def test___measurement_service___register_measurement_method___method_registered():
+def test___measurement_service___register_measurement_method___method_registered(
+    measurement_service: MeasurementService,
+):
     """Test to validate register_measurement decorator."""
-    measurement_service = MeasurementService(_TEST_MEASUREMENT_INFO, _TEST_SERVICE_INFO)
-
     measurement_service.register_measurement(_fake_measurement_function)
 
     measurement_service.measure_function == _fake_measurement_function
@@ -43,12 +45,11 @@ def test___measurement_service___register_measurement_method___method_registered
     ],
 )
 def test___measurement_service___add_configuration__configuration_added(
-    display_name, type, default_value
+    measurement_service: MeasurementService, display_name: str, type: DataType, default_value: Any
 ):
     """Test to validate the configuration decorator."""
-    measurement_service = MeasurementService(_TEST_MEASUREMENT_INFO, _TEST_SERVICE_INFO)
-
     measurement_service.configuration(display_name, type, default_value)(_fake_measurement_function)
+
     assert any(
         param.display_name == display_name
         and param.type == type.value[0]
@@ -66,11 +67,13 @@ def test___measurement_service___add_configuration__configuration_added(
     ],
 )
 def test___measurement_service___add_pin_configuration__pin_configuration_added(
-    display_name, type, default_value, instrument_type
+    measurement_service: MeasurementService,
+    display_name: str,
+    type: DataType,
+    default_value: Any,
+    instrument_type: str,
 ):
     """Test to validate the configuration decorator."""
-    measurement_service = MeasurementService(_TEST_MEASUREMENT_INFO, _TEST_SERVICE_INFO)
-
     measurement_service.configuration(
         display_name, type, default_value, instrument_type=instrument_type
     )(_fake_measurement_function)
@@ -105,11 +108,9 @@ def test___measurement_service___add_pin_configuration__pin_configuration_added(
     ],
 )
 def test___measurement_service___add_non_pin_configuration__pin_type_annotations_not_added(
-    display_name, type, default_value
+    measurement_service: MeasurementService, display_name: str, type: DataType, default_value: Any
 ):
     """Test to validate the configuration decorator."""
-    measurement_service = MeasurementService(_TEST_MEASUREMENT_INFO, _TEST_SERVICE_INFO)
-
     measurement_service.configuration(display_name, type, default_value)(_fake_measurement_function)
 
     assert not all(
@@ -126,11 +127,9 @@ def test___measurement_service___add_non_pin_configuration__pin_type_annotations
     ],
 )
 def test___measurement_service___add_path_configuration__path_configuration_added(
-    display_name, type, default_value
+    measurement_service: MeasurementService, display_name: str, type: DataType, default_value: Any
 ):
     """Test to validate the configuration decorator."""
-    measurement_service = MeasurementService(_TEST_MEASUREMENT_INFO, _TEST_SERVICE_INFO)
-
     measurement_service.configuration(display_name, type, default_value)(_fake_measurement_function)
 
     assert any(
@@ -161,11 +160,9 @@ def test___measurement_service___add_path_configuration__path_configuration_adde
     ],
 )
 def test___measurement_service___add_non_path_configuration__path_type_annotations_not_added(
-    display_name, type, default_value
+    measurement_service: MeasurementService, display_name: str, type: DataType, default_value: Any
 ):
     """Test to validate the configuration decorator."""
-    measurement_service = MeasurementService(_TEST_MEASUREMENT_INFO, _TEST_SERVICE_INFO)
-
     measurement_service.configuration(display_name, type, default_value)(_fake_measurement_function)
 
     assert not all(
@@ -193,11 +190,9 @@ def test___measurement_service___add_non_path_configuration__path_type_annotatio
     ],
 )
 def test___measurement_service___add_configuration_with_mismatch_default_value__raises_type_error(
-    display_name, type, default_value
+    measurement_service: MeasurementService, display_name: str, type: DataType, default_value: Any
 ):
     """Test to validate the configuration decorator with default value mismatch."""
-    measurement_service = MeasurementService(_TEST_MEASUREMENT_INFO, _TEST_SERVICE_INFO)
-
     with pytest.raises(TypeError):
         measurement_service.configuration(display_name, type, default_value)(
             _fake_measurement_function
@@ -219,10 +214,10 @@ def test___measurement_service___add_configuration_with_mismatch_default_value__
         ("UInt44", DataType.UInt64),
     ],
 )
-def test___measurement_service___add_output__output_added(display_name, type):
+def test___measurement_service___add_output__output_added(
+    measurement_service: MeasurementService, display_name: str, type: DataType
+):
     """Test to validate the output decorator."""
-    measurement_service = MeasurementService(_TEST_MEASUREMENT_INFO, _TEST_SERVICE_INFO)
-
     measurement_service.output(display_name, type)(_fake_measurement_function)
 
     assert any(
@@ -235,3 +230,9 @@ def test___measurement_service___add_output__output_added(display_name, type):
 
 def _fake_measurement_function():
     pass
+
+
+@pytest.fixture
+def measurement_service() -> MeasurementService:
+    """Create a MeasurementService."""
+    return MeasurementService(_TEST_MEASUREMENT_INFO, _TEST_SERVICE_INFO)
