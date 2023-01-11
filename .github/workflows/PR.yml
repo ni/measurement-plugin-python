@@ -33,17 +33,19 @@ jobs:
         run: poetry install -vvv
       - name: Lint the Code
         run: poetry run ni-python-styleguide lint
-      - name: MyPy Static Analysis 
+      - name: Mypy static analysis (ni-measurementlink-service)
         run:  poetry run mypy -p ni_measurementlink_service --show-error-codes -v
-      - name: MyPy Static Analysis on examples
+      - name: Mypy static analysis (examples)
         # `mypy -p examples` doesn't import _helpers.py correctly, so check one example directory at a time.
         run: |
           for example in examples/*/; do 
             echo Analyzing $example
             poetry run mypy $example --show-error-codes -v
           done
-      - name: MyPy Static Analysis ni_measurementlink_generator
+      - name: Mypy static analysis (ni-measurementlink-generator)
         run:  poetry run mypy -p ni_measurementlink_generator --show-error-codes -v
+      - name: Mypy static analysis (tests)
+        run:  poetry run mypy tests --show-error-codes -v
         
   checks-nimg:
     runs-on: ubuntu-latest
