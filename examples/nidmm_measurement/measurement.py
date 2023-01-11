@@ -107,7 +107,12 @@ def measure(
         signal_out_of_range = math.isnan(measured_value) or math.isinf(measured_value)
         absolute_resolution = session.resolution_absolute
 
-    logging.info("Completed measurement")
+    logging.info(
+        "Completed measurement: measured_value=%g signal_out_of_range=%s absolute_resolution=%g",
+        measured_value,
+        signal_out_of_range,
+        absolute_resolution,
+    )
     return (measured_value, signal_out_of_range, absolute_resolution)
 
 
