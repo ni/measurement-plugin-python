@@ -6,9 +6,10 @@ devices:
         q: "\n"
         r: "\n"
     dialogues:
+      - q: "*CLS"
       - q: "*IDN?"
-        r: "National Instruments,Waveform Generator Simulator (Mock),00000000,2.0.1"
-      - q: "*RST?"
+        r: "National Instruments,Waveform Generator Simulator (simulated with pyvisa-sim),00000000,2.0.1"
+      - q: "*RST"
     error:
       error_queue:
         - q: 'SYST:ERR?'
@@ -21,9 +22,10 @@ devices:
         q: "\n"
         r: "\n"
     dialogues:
+      - q: "*CLS"
       - q: "*IDN?"
-        r: "National Instruments,Oscilloscope Simulator (Mock),00000000,2.0.1"
-      - q: "*RST?"
+        r: "National Instruments,Oscilloscope Simulator (simulated with pyvisa-sim),00000000,2.0.1"
+      - q: "*RST"
     error:
       error_queue:
         - q: 'SYST:ERR?'
@@ -36,9 +38,10 @@ devices:
         q: "\n"
         r: "\n"
     dialogues:
+      - q: "*CLS"
       - q: "*IDN?"
-        r: "National Instruments,Digital Multimeter Simulator (Mock),00000000,2.0.1"
-      - q: "*RST?"
+        r: "National Instruments,Digital Multimeter Simulator (simulated with pyvisa-sim),00000000,2.0.1"
+      - q: "*RST"
       - q: "READ?"
         r: "1.23456"
     error:

@@ -8,10 +8,15 @@ from typing import Tuple
 
 import click
 import grpc
-import pyvisa
-import pyvisa.resources
-import pyvisa.typing
 from _helpers import ServiceOptions, str_to_enum
+from _visa_helpers import (
+    INSTRUMENT_TYPE_DMM_SIMULATOR,
+    create_visa_resource_manager,
+    create_visa_session,
+    check_instrument_error,
+    log_instrument_id,
+    reset_instrument,
+)
 
 import ni_measurementlink_service as nims
 
@@ -29,8 +34,6 @@ service_info = nims.ServiceInfo(
 measurement_service = nims.MeasurementService(measurement_info, service_info)
 service_options = ServiceOptions()
 
-INSTRUMENT_TYPE_DMM_SIMULATOR = "DigitalMultimeterSimulator"
-SIMULATION_YAML_PATH = pathlib.Path(__file__).resolve().parent / "NIInstrumentSimulatorV2_0.yaml"
 
 FUNCTION_TO_ENUM = {
     "DC Volts": "VOLT:DC",
@@ -91,49 +94,30 @@ def measure(
                 f"Unsupported number of sessions: {len(reservation.session_info)}",
             )
 
-        resource_manager = pyvisa.ResourceManager(
-            f"{SIMULATION_YAML_PATH}@sim" if service_options.use_simulation else ""
-        )
-
+        resource_manager = create_visa_resource_manager(service_options.use_simulation)
         session_info = reservation.session_info[0]
         session = stack.enter_context(
-            _create_visa_session(resource_manager, session_info.resource_name)
+            create_visa_session(resource_manager, session_info.resource_name)
         )
 
-        instrument_id = session.query("*IDN?")
-        logging.info("Instrument: %s", instrument_id)
+        log_instrument_id(session)
+
+        # When this measurement is called from outside of TestStand (session_exists == False),
+        # reset the instrument to a known state. In TestStand, ProcessSetup resets the instrument.
+        if not session_info.session_exists:
+            reset_instrument(session)
 
         function_enum = str_to_enum(FUNCTION_TO_ENUM, measurement_type)
         resolution_value = str_to_enum(RESOLUTION_DIGITS_TO_VALUE, str(resolution_digits))
         session.write("CONF:%s %.g,%.g" % (function_enum, range, resolution_value))
-        _query_error(session)
+        check_instrument_error(session)
 
         response = session.query("READ?")
+        check_instrument_error(session)
         measured_value = float(response)
-        _query_error(session)
 
-    logging.info("Completed measurement")
+    logging.info("Completed measurement: measured_value=%g", measured_value)
     return (measured_value,)
-
-
-def _create_visa_session(
-    resource_manager: pyvisa.ResourceManager, resource_name: str
-) -> pyvisa.resources.MessageBasedResource:
-    session = resource_manager.open_resource(resource_name)
-    assert isinstance(session, pyvisa.resources.MessageBasedResource)
-    # The NI Instrument Simulator hardware accepts either \r\n or \n but the simulation YAML needs
-    # the newlines to match.
-    session.read_termination = "\n"
-    session.write_termination = "\n"
-    return session
-
-
-def _query_error(session: pyvisa.resources.MessageBasedResource):
-    response = session.query("SYST:ERR?")
-    fields = response.split(",", maxsplit=1)
-    assert len(fields) >= 1
-    if int(fields[0]) != 0:
-        raise RuntimeError("Instrument returned error %s: %s" % (fields[0], fields[1]))
 
 
 @click.command
