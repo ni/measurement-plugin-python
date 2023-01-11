@@ -25,7 +25,7 @@ service_info = nims.ServiceInfo(
 )
 
 measurement_service = nims.MeasurementService(measurement_info, service_info)
-service_options = ServiceOptions(use_grpc_device=False, grpc_device_address="")
+service_options = ServiceOptions()
 
 FUNCTION_TO_ENUM = {
     "DC Volts": nidmm.Function.DC_VOLTS,
@@ -61,7 +61,7 @@ def measure(
     pin_name: str,
     measurement_type: str,
     range: float,
-    resolution_digits: str,
+    resolution_digits: float,
 ) -> Tuple:
     """Perform a measurement using an NI DMM."""
     logging.info(
