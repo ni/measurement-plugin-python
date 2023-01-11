@@ -10,10 +10,11 @@ ni-measurementlink-service = "*"
 PyVISA = "^1.13.0"
 PyVISA-sim = "^0.5.1"
 click = ">=7.1.2"
+grpcio = "*"
 
 [tool.poetry.dev-dependencies]
 # Uncomment to use prerelease dependencies (requires poetry>=1.2).
-ni-measurementlink-service = {path = "../..", develop = true}
+# ni-measurementlink-service = {path = "../..", develop = true}
 
 [build-system]
 requires = ["poetry-core>=1.2.0"]
