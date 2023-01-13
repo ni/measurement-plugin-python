@@ -210,7 +210,10 @@ def _get_discovery_service_address() -> str:
     _logger.debug("Discovery service key file path: %s", key_file_path)
     with _open_key_file(str(key_file_path)) as key_file:
         key_json = json.load(key_file)
-        return "localhost:" + key_json["InsecurePort"]
+        # Hack: the discovery service doesn't listen on IPv6 yet, so explicitly connect to the
+        # IPv4 address instead of localhost. Otherwise, gRPC tries to connect to the IPv6
+        # address and fails, which causes a delay.
+        return "127.0.0.1:" + key_json["InsecurePort"]
 
 
 def _get_key_file_path(cluster_id: typing.Optional[str] = None) -> pathlib.Path:
