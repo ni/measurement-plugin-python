@@ -15,6 +15,9 @@ from _helpers import ServiceOptions, str_to_enum
 
 import ni_measurementlink_service as nims
 
+NIFGEN_WAIT_UNTIL_DONE_TIMEOUT_ERROR_CODE = -1074098044
+NIFGEN_MAXIMUM_TIME_EXCEEDED_ERROR_CODE = -1074118637
+
 measurement_info = nims.MeasurementInfo(
     display_name="NI-FGEN Standard Function (Py)",
     version="0.1.0.0",
@@ -138,7 +141,22 @@ def measure(
             if is_simulated:
                 time.sleep(sleep_time)
             else:
-                sessions[0].wait_until_done(hightime.timedelta(seconds=sleep_time))
+                try:
+                    sessions[0].wait_until_done(hightime.timedelta(seconds=sleep_time))
+                except nifgen.Error as e:
+                    """
+                    There is no native way to support cancellation when generating a waveform.
+                    To support cancellation, we will be calling wait_until_done
+                    until it succeeds or we have gone past the specified timeout. wait_until_done
+                    will throw an exception if it times out, which is why we are catching
+                    and doing nothing.
+                    """
+                    if e.code == NIFGEN_WAIT_UNTIL_DONE_TIMEOUT_ERROR_CODE:
+                        pass
+                    elif e.code == NIFGEN_MAXIMUM_TIME_EXCEEDED_ERROR_CODE:
+                        pass
+                    else:
+                        raise
 
     return ()
 
