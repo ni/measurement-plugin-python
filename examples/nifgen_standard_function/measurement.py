@@ -11,8 +11,7 @@ import click
 import grpc
 import hightime
 import nifgen
-from _helpers import ServiceOptions
-from _helpers import str_to_enum
+from _helpers import ServiceOptions, str_to_enum
 
 import ni_measurementlink_service as nims
 
