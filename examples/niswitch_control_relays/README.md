@@ -21,3 +21,7 @@ This is a MeasurementLink example that controls relays using an NI relay driver
 ### Required Hardware
 
 This example requires an NI relay driver (e.g. PXI-2567).
+
+To simulate an NI relay driver in software: open `NI MAX`, right-click `Devices and Interfaces`,
+select `Create New...`, and select `Simulated NI-DAQmx Device or Modular Instrument`.
+Relay drivers are in the `Switches` category.

@@ -20,3 +20,6 @@ measurement with NI-DAQmx.
 
 This example requires a DAQmx device that supports AI voltage measurements (e.g.
 PCIe-6363 or other X Series device).
+
+To simulate a DAQmx device in software: open `NI MAX`, right-click `Devices and Interfaces`,
+select `Create New...`, and select `Simulated NI-DAQmx Device or Modular Instrument`.

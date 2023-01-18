@@ -24,3 +24,7 @@ This is a MeasurementLink example that sources and measures a DC voltage with an
 ### Required Hardware
 
 This example requires an NI SMU that is supported by NI-DCPower (e.g. PXIe-4141).
+
+To simulate an NI SMU in software: open `NI MAX`, right-click `Devices and Interfaces`,
+select `Create New...`, and select `Simulated NI-DAQmx Device or Modular Instrument`.
+SMUs are in the `Power Supplies` category.

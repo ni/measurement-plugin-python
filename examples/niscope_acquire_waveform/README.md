@@ -22,3 +22,7 @@ This is a MeasurementLink example that acquires a waveform using an NI oscillosc
 ### Required Hardware
 
 This example requires an NI oscilloscope (e.g. PXIe-5162 (4CH)).
+
+To simulate an NI oscilloscope in software: open `NI MAX`, right-click `Devices and Interfaces`,
+select `Create New...`, and select `Simulated NI-DAQmx Device or Modular Instrument`.
+Oscilloscopes are in the `High Speed Digitizers` category.
