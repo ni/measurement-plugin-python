@@ -1,4 +1,4 @@
-## NI-VISA DMM Measurement
+## Sample Measurement
 
 This is a MeasurementLink example that performs a loopback measurement with
 various data types.
