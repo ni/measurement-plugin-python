@@ -11,12 +11,13 @@ import click
 import grpc
 import hightime
 import nifgen
-from _helpers import ServiceOptions, str_to_enum
+from _helpers import ServiceOptions
+from _helpers import str_to_enum
 
 import ni_measurementlink_service as nims
 
-NIFGEN_WAIT_UNTIL_DONE_TIMEOUT_ERROR_CODE = -1074098044
-NIFGEN_MAXIMUM_TIME_EXCEEDED_ERROR_CODE = -1074118637
+NIFGEN_OPERATION_TIMED_OUT_ERROR_CODE = -1074098044
+NIFGEN_MAX_TIME_EXCEEDED_ERROR_CODE = -1074118637
 
 measurement_info = nims.MeasurementInfo(
     display_name="NI-FGEN Standard Function (Py)",
@@ -151,9 +152,10 @@ def measure(
                     will throw an exception if it times out, which is why we are catching
                     and doing nothing.
                     """
-                    if e.code == NIFGEN_WAIT_UNTIL_DONE_TIMEOUT_ERROR_CODE:
-                        pass
-                    elif e.code == NIFGEN_MAXIMUM_TIME_EXCEEDED_ERROR_CODE:
+                    if (
+                        e.code == NIFGEN_OPERATION_TIMED_OUT_ERROR_CODE
+                        or e.code == NIFGEN_MAX_TIME_EXCEEDED_ERROR_CODE
+                    ):
                         pass
                     else:
                         raise
