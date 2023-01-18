@@ -12,8 +12,10 @@ using an NI waveform generator.
   - Outputs the same waveform configuration on all selected pin/site combinations
   - Does not synchronize waveforms
 - Includes InstrumentStudio and MeasurementLink UI Editor project files
-- Includes a TestStand sequence
-- Uses the MeasurementLink session management service and NI gRPC Device Server
+- Includes a TestStand sequence showing how to configure the pin map, register
+  instrument sessions with the session management service, and run a measurement
+- Uses the NI gRPC Device Server to allow sharing instrument sessions with other
+  measurement services when running measurements from TestStand
 
 ### Required Driver Software
 

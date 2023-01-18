@@ -9,9 +9,10 @@ and an NI Instrument Simulator v2.0.
 - Uses the open-source `PyVISA-sim` package to simulate instruments in software
 - Pin-aware, supporting a custom instrument type and a single session/pin/site
 - Includes InstrumentStudio and MeasurementLink UI Editor project files
-- Includes a TestStand sequence
-- Uses the MeasurementLink session management service
-- Does not use the NI gRPC Device Server
+- Includes a TestStand sequence showing how to configure the pin map, register
+  instrument resources with the session management service, and run a measurement
+- Demonstrates how to share instrument resources with other measurement services
+  when running measurements from TestStand, without using NI gRPC Device Server
 
 ### Required Driver Software
 
@@ -44,3 +45,29 @@ To use NI Instrument Simulator hardware:
     serial configuration), use the `Instrument Simulator Wizard` included with
     the NI Instrument Simulator software.
 
+### Session Management
+
+This example has a slightly different approach to session management than the
+examples for NI PXI modular instruments. 
+
+The examples for NI PXI modular instruments use the NI gRPC Device Server to
+share a single driver session between multiple operating system processes. When running
+measurements outside of TestStand, each measurement re-initalizes the
+instrument. When running measurements in TestStand, the `ProcessSetup` callback
+initializes the instrument once per sequence execution, which avoids
+the overhead of re-initializing the instrument for each measurement.
+
+This VISA example does not use NI gRPC Device Server. The measurement logic and
+TestStand code module open and close VISA driver sessions as needed in multiple
+operating system processes. However, the instrument initialization behavior is
+the same as before: outside of TestStand, each measurement re-initializes the
+instrument; in TestStand, the `ProcessSetup` callback initalizes the instrument
+once per sequence execution. This approach works for VISA because multiple
+processes (TestStand, multiple measurement services) can connect to the same
+instrument without resetting any instrument state.
+
+In both cases, the `ProcessSetup` callback registers the instrument with the
+session management service, the measurement logic uses the session management
+service to reserve and unreserve the instrument, and the `ProcessCleanup`
+callback unregisters the instrument with the session management service. This
+ensures that only one measurement at a time has access to the instrument.
