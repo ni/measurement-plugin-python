@@ -11,9 +11,8 @@ from _visa_helpers import (
 
 import ni_measurementlink_service as nims
 
-# If you don't have NI Instrument Simulator v2.0 hardware, you can simulate it in software by
-# setting this constant to True and running measurement.py --use-simulation.
-USE_SIMULATION = False
+# To use NI Instrument Simulator v2.0 hardware, set this to False.
+USE_SIMULATION = True
 
 
 def update_pin_map(pin_map_id: str):

@@ -47,6 +47,10 @@ RESOLUTION_DIGITS_TO_VALUE = {
     "6.5": 1e-6,
 }
 
+# To use NI Instrument Simulator v2.0 hardware, set this to False or specify
+# --no-use-simulation on the command line.
+USE_SIMULATION = True
+
 
 @measurement_service.register_measurement
 @measurement_service.configuration(
@@ -129,7 +133,7 @@ def measure(
 )
 @click.option(
     "--use-simulation/--no-use-simulation",
-    default=False,
+    default=USE_SIMULATION,
     is_flag=True,
     help="Use simulated instruments.",
 )
