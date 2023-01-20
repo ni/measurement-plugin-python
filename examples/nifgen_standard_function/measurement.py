@@ -138,7 +138,7 @@ def measure(
             else:
                 try:
                     sessions[0].wait_until_done(hightime.timedelta(seconds=sleep_time))
-                except nifgen.Error as e:
+                except nifgen.errors.DriverError as e:
                     """
                     There is no native way to support cancellation when generating a waveform.
                     To support cancellation, we will be calling wait_until_done

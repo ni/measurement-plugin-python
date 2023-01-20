@@ -127,7 +127,7 @@ def measure(
                 try:
                     channels.wait_for_event(nidcpower.enums.Event.SOURCE_COMPLETE, timeout=0.1)
                     break
-                except nidcpower.Error as e:
+                except nidcpower.errors.DriverError as e:
                     """
                     There is no native way to support cancellation when taking a DCPower
                     measurement. To support cancellation, we will be calling WaitForEvent
