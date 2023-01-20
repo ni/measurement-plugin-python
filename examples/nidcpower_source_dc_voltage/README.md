@@ -13,7 +13,7 @@ This is a MeasurementLink example that sources and measures a DC voltage with an
 - Includes InstrumentStudio and MeasurementLink UI Editor project files
 - Includes multiple UI files. Note: InstrumentStudio only displays the 1st UI file.
   To change the UI file used for the example, simply switch the order of the
-  `ui_file_paths` array in measurement.py
+  `ui_file_paths` array in `measurement.py`
 - Includes a TestStand sequence showing how to configure the pin map, register
   instrument sessions with the session management service, and run a measurement
 - Uses the NI gRPC Device Server to allow sharing instrument sessions with other
