@@ -55,14 +55,12 @@ WAVEFORM_TYPE_TO_ENUM = {
 @measurement_service.configuration("frequency", nims.DataType.Double, 1.0e6)
 @measurement_service.configuration("amplitude", nims.DataType.Double, 2.0)
 @measurement_service.configuration("duration", nims.DataType.Double, 10.0)
-@measurement_service.configuration("abort_when_done", nims.DataType.Boolean, True)
 def measure(
     pin_name: str,
     waveform_type: str,
     frequency: float,
     amplitude: float,
     duration: float,
-    abort_when_done: bool,
 ) -> Tuple:
     """Generate a standard function waveform using an NI waveform generator."""
     logging.info(
@@ -115,10 +113,7 @@ def measure(
                 frequency,
             )
 
-            if abort_when_done:
-                stack.enter_context(session.initiate())
-            else:
-                session.initiate()
+            stack.enter_context(session.initiate())
 
         is_simulated = sessions[0].simulate
         deadline = time.time() + measurement_service.context.time_remaining
