@@ -21,7 +21,10 @@ NIDCPOWER_WAIT_FOR_EVENT_TIMEOUT_ERROR_CODE = -1074116059
 measurement_info = nims.MeasurementInfo(
     display_name="NI-DCPower Source DC Voltage (Py)",
     version="0.1.0.0",
-    ui_file_paths=[pathlib.Path(__file__).resolve().parent / "NIDCPowerSourceDCVoltage.measui"],
+    ui_file_paths=[
+        pathlib.Path(__file__).resolve().parent / "NIDCPowerSourceDCVoltage.measui",
+        pathlib.Path(__file__).resolve().parent / "NIDCPowerSourceDCVoltageUI.vi",
+    ],
 )
 
 service_info = nims.ServiceInfo(
