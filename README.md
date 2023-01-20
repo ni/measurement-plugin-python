@@ -57,7 +57,7 @@ There are three ways to do this:
 
 The `examples` directory contains the following example projects:  
 
-- `sample_measurement`: Performs a loopback measurement with various data types.
+- `sample_measurement`: Performs a loopback measurement with various data types. Provides a Measurement UI and a LabVIEW UI.
 - `nidaqmx_analog_input`: Performs a finite analog input measurement with NI-DAQmx.
 - `nidcpower_source_dc_voltage`: Sources and measures a DC voltage with an NI SMU. Provides a Measurement UI and a LabVIEW UI.
 - `nidmm_measurement`: Performs a measurement using an NI DMM.
