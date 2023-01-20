@@ -57,15 +57,14 @@ There are three ways to do this:
 
 The `examples` directory contains the following example projects:  
 
-- `sample_measurement`: Performs a loopback measurement with various data types.
+- `sample_measurement`: Performs a loopback measurement with various data types. Provides a Measurement UI and a LabVIEW UI.
 - `nidaqmx_analog_input`: Performs a finite analog input measurement with NI-DAQmx.
-- `nidcpower_source_dc_voltage`: Sources and measures a DC voltage with an NI SMU. Provides a Measurement UI
-- `nidcpower_source_dc_voltage_with_labview_ui`: Sources and measures a DC voltage with an NI SMU. Provides a LabVIEW UI
+- `nidcpower_source_dc_voltage`: Sources and measures a DC voltage with an NI SMU. Provides a Measurement UI and a LabVIEW UI.
 - `nidmm_measurement`: Performs a measurement using an NI DMM.
 - `nifgen_standard_function`: Generates a standard function waveform using an NI waveform generator.
 - `niscope_acquire_waveform`: Acquires a waveform using an NI oscilloscope.
 - `niswitch_control_relays`: Controls relays using an NI relay driver (e.g. PXI-2567).
-- `nivisa_dmm_measurement`: Performs a DMM measurement using NI-VISA and an NI Instrument Simulator v2.0. 
+- `nivisa_dmm_measurement`: Performs a DMM measurement using NI-VISA and an NI Instrument Simulator v2.0.
 
 For more details about a specific example, see the `README.md` file included with the example.
 
