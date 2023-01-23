@@ -94,6 +94,11 @@ Classes
 
       
 
+   .. py:attribute:: Path
+      
+
+      
+
    .. py:attribute:: Int32Array1D
       
 
@@ -135,6 +140,11 @@ Classes
       
 
    .. py:attribute:: PinArray1D
+      
+
+      
+
+   .. py:attribute:: PathArray1D
       
 
       

@@ -30,7 +30,7 @@
             <a href="../../index.html" class="icon icon-home"> ni_measurementlink_service
           </a>
               <div class="version">
-                0.12.0
+                0.12.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -71,7 +71,7 @@
   <h1>Source code for ni_measurementlink_service.session_management</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Contains methods related to managing driver sessions.&quot;&quot;&quot;</span>
 <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">cached_property</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">NamedTuple</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">NamedTuple</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">TypeVar</span>
 
 <span class="kn">import</span> <span class="nn">grpc</span>
 
@@ -121,6 +121,25 @@
     <span class="n">sites</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span></div>
 
 
+<div class="viewcode-block" id="ChannelMapping"><a class="viewcode-back" href="../../autoapi/ni_measurementlink_service/session_management/index.html#ni_measurementlink_service.session_management.ChannelMapping">[docs]</a><span class="k">class</span> <span class="nc">ChannelMapping</span><span class="p">(</span><span class="n">NamedTuple</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Mapping of each channel to the pin and site it is connected to.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">        pin_or_relay_name (str): The pin or relay that is mapped to a channel.</span>
+
+<span class="sd">        site (int): The site on which the pin or relay is mapped to a channel.</span>
+<span class="sd">            For system pins/relays the site number is -1 as they do not belong to a specific site.</span>
+
+<span class="sd">        channel (str): The channel to which the pin or relay is mapped on this site.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">pin_or_relay_name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">site</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">channel</span><span class="p">:</span> <span class="nb">str</span></div>
+
+
 <div class="viewcode-block" id="SessionInformation"><a class="viewcode-back" href="../../autoapi/ni_measurementlink_service/session_management/index.html#ni_measurementlink_service.session_management.SessionInformation">[docs]</a><span class="k">class</span> <span class="nc">SessionInformation</span><span class="p">(</span><span class="n">NamedTuple</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Container for the session information.</span>
 
@@ -143,13 +162,24 @@
 <span class="sd">        session_exists (bool): Indicates whether the session exists in the Session Manager. This</span>
 <span class="sd">            indicates whether the session has been created.</span>
 
+<span class="sd">        channel_mappings (Iterable[ChannelMapping]): List of site and pin/relay mappings that</span>
+<span class="sd">            correspond to each channel in the channel_list. Each item contains a mapping</span>
+<span class="sd">            for a channel in this instrument resource, in the order of the channel_list.</span>
+<span class="sd">            This field is empty for any SessionInformation returned from</span>
+<span class="sd">            Client.reserve_all_registered_sessions.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">session_name</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">resource_name</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">channel_list</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">instrument_type_id</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">session_exists</span><span class="p">:</span> <span class="nb">bool</span></div>
+    <span class="n">session_exists</span><span class="p">:</span> <span class="nb">bool</span>
+    <span class="n">channel_mappings</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">ChannelMapping</span><span class="p">]</span></div>
+
+
+<span class="c1"># Eventually, this can be replaced with typing.Self (Python &gt;= 3.11).</span>
+<span class="n">_TReservation</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">&quot;_TReservation&quot;</span><span class="p">,</span> <span class="n">bound</span><span class="o">=</span><span class="s2">&quot;Reservation&quot;</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="Reservation"><a class="viewcode-back" href="../../autoapi/ni_measurementlink_service/session_management/index.html#ni_measurementlink_service.session_management.Reservation">[docs]</a><span class="k">class</span> <span class="nc">Reservation</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -164,7 +194,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_session_manager</span> <span class="o">=</span> <span class="n">session_manager</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_session_info</span> <span class="o">=</span> <span class="n">session_info</span>
 
-<div class="viewcode-block" id="Reservation.__enter__"><a class="viewcode-back" href="../../autoapi/ni_measurementlink_service/session_management/index.html#ni_measurementlink_service.session_management.Reservation.__enter__">[docs]</a>    <span class="k">def</span> <span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Reservation.__enter__"><a class="viewcode-back" href="../../autoapi/ni_measurementlink_service/session_management/index.html#ni_measurementlink_service.session_management.Reservation.__enter__">[docs]</a>    <span class="k">def</span> <span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="n">_TReservation</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_TReservation</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Context management protocol. Returns self.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
@@ -187,6 +217,14 @@
                 <span class="n">channel_list</span><span class="o">=</span><span class="n">info</span><span class="o">.</span><span class="n">channel_list</span><span class="p">,</span>
                 <span class="n">instrument_type_id</span><span class="o">=</span><span class="n">info</span><span class="o">.</span><span class="n">instrument_type_id</span><span class="p">,</span>
                 <span class="n">session_exists</span><span class="o">=</span><span class="n">info</span><span class="o">.</span><span class="n">session_exists</span><span class="p">,</span>
+                <span class="n">channel_mappings</span><span class="o">=</span><span class="p">[</span>
+                    <span class="n">ChannelMapping</span><span class="p">(</span>
+                        <span class="n">pin_or_relay_name</span><span class="o">=</span><span class="n">channel_mapping</span><span class="o">.</span><span class="n">pin_or_relay_name</span><span class="p">,</span>
+                        <span class="n">site</span><span class="o">=</span><span class="n">channel_mapping</span><span class="o">.</span><span class="n">site</span><span class="p">,</span>
+                        <span class="n">channel</span><span class="o">=</span><span class="n">channel_mapping</span><span class="o">.</span><span class="n">channel</span><span class="p">,</span>
+                    <span class="p">)</span>
+                    <span class="k">for</span> <span class="n">channel_mapping</span> <span class="ow">in</span> <span class="n">info</span><span class="o">.</span><span class="n">channel_mappings</span>
+                <span class="p">],</span>
             <span class="p">)</span>
             <span class="k">for</span> <span class="n">info</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session_info</span>
         <span class="p">]</span></div>
@@ -303,6 +341,14 @@
                     <span class="n">channel_list</span><span class="o">=</span><span class="n">info</span><span class="o">.</span><span class="n">channel_list</span><span class="p">,</span>
                     <span class="n">instrument_type_id</span><span class="o">=</span><span class="n">info</span><span class="o">.</span><span class="n">instrument_type_id</span><span class="p">,</span>
                     <span class="n">session_exists</span><span class="o">=</span><span class="n">info</span><span class="o">.</span><span class="n">session_exists</span><span class="p">,</span>
+                    <span class="n">channel_mappings</span><span class="o">=</span><span class="p">[</span>
+                        <span class="n">session_management_service_pb2</span><span class="o">.</span><span class="n">ChannelMapping</span><span class="p">(</span>
+                            <span class="n">pin_or_relay_name</span><span class="o">=</span><span class="n">channel_mapping</span><span class="o">.</span><span class="n">pin_or_relay_name</span><span class="p">,</span>
+                            <span class="n">site</span><span class="o">=</span><span class="n">channel_mapping</span><span class="o">.</span><span class="n">site</span><span class="p">,</span>
+                            <span class="n">channel</span><span class="o">=</span><span class="n">channel_mapping</span><span class="o">.</span><span class="n">channel</span><span class="p">,</span>
+                        <span class="p">)</span>
+                        <span class="k">for</span> <span class="n">channel_mapping</span> <span class="ow">in</span> <span class="n">info</span><span class="o">.</span><span class="n">channel_mappings</span>
+                    <span class="p">],</span>
                 <span class="p">)</span>
                 <span class="k">for</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">session_info</span>
             <span class="p">)</span>
@@ -328,6 +374,14 @@
                     <span class="n">channel_list</span><span class="o">=</span><span class="n">info</span><span class="o">.</span><span class="n">channel_list</span><span class="p">,</span>
                     <span class="n">instrument_type_id</span><span class="o">=</span><span class="n">info</span><span class="o">.</span><span class="n">instrument_type_id</span><span class="p">,</span>
                     <span class="n">session_exists</span><span class="o">=</span><span class="n">info</span><span class="o">.</span><span class="n">session_exists</span><span class="p">,</span>
+                    <span class="n">channel_mappings</span><span class="o">=</span><span class="p">[</span>
+                        <span class="n">session_management_service_pb2</span><span class="o">.</span><span class="n">ChannelMapping</span><span class="p">(</span>
+                            <span class="n">pin_or_relay_name</span><span class="o">=</span><span class="n">channel_mapping</span><span class="o">.</span><span class="n">pin_or_relay_name</span><span class="p">,</span>
+                            <span class="n">site</span><span class="o">=</span><span class="n">channel_mapping</span><span class="o">.</span><span class="n">site</span><span class="p">,</span>
+                            <span class="n">channel</span><span class="o">=</span><span class="n">channel_mapping</span><span class="o">.</span><span class="n">channel</span><span class="p">,</span>
+                        <span class="p">)</span>
+                        <span class="k">for</span> <span class="n">channel_mapping</span> <span class="ow">in</span> <span class="n">info</span><span class="o">.</span><span class="n">channel_mappings</span>
+                    <span class="p">],</span>
                 <span class="p">)</span>
                 <span class="k">for</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">session_info</span>
             <span class="p">)</span>
