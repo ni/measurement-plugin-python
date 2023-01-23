@@ -17,6 +17,7 @@ import ni_measurementlink_service as nims
 
 
 NIDCPOWER_WAIT_FOR_EVENT_TIMEOUT_ERROR_CODE = -1074116059
+NIDCPOWER_TIMEOUT_EXCEEDED_ERROR_CODE = -1074097933
 
 measurement_info = nims.MeasurementInfo(
     display_name="NI-DCPower Source DC Voltage (Py)",
@@ -129,7 +130,7 @@ def measure(
                 try:
                     channels.wait_for_event(nidcpower.enums.Event.SOURCE_COMPLETE, timeout=0.1)
                     break
-                except nidcpower.DriverError as e:
+                except nidcpower.errors.DriverError as e:
                     """
                     There is no native way to support cancellation when taking a DCPower
                     measurement. To support cancellation, we will be calling WaitForEvent
@@ -137,7 +138,10 @@ def measure(
                     will throw an exception if it times out, which is why we are catching
                     and doing nothing.
                     """
-                    if e.code == NIDCPOWER_WAIT_FOR_EVENT_TIMEOUT_ERROR_CODE:
+                    if (
+                        e.code == NIDCPOWER_WAIT_FOR_EVENT_TIMEOUT_ERROR_CODE
+                        or e.code == NIDCPOWER_TIMEOUT_EXCEEDED_ERROR_CODE
+                    ):
                         pass
                     else:
                         raise
