@@ -10,6 +10,7 @@ on:
 
 jobs:
   alert:
+    if: ${{ !github.event.issue.pull_request }}
     runs-on: ubuntu-latest
     steps:
       - name: Choose work item type
