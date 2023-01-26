@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 from threading import Lock
-from typing import Any, Callable, Dict, TypeVar
+from typing import Any, Callable, Dict, TypeVar, List
+import json
+from os import path
 
 import grpc
 
@@ -128,18 +130,35 @@ class MeasurementService:
 
     """
 
-    def __init__(self, measurement_info: MeasurementInfo, service_info: ServiceInfo) -> None:
-        """Initialize the Measurement Service object with measurement info and service info.
+    def __init__( self, service_config_path: str, version: str, ui_file_paths: List[str]) -> None:
+        """Initialize the Measurement Service object with the .serviceconfig file, version, and UI file paths.
 
         Args:
         ----
-            measurement_info (MeasurementInfo): Measurement Info
+            service_config_path (str): Measurement Info
 
-            service_info (ServiceInfo): Service Info
+            version (str): Version of the measurement service.
+
+            ui_file_paths (List[str]): Service Info
 
         """
-        self.measurement_info: MeasurementInfo = measurement_info
-        self.service_info: ServiceInfo = service_info
+        if not path.exists(service_config_path):
+            raise Exception(f"File does not exist. {service_config_path}")
+
+        with open(service_config_path) as service_config_file:
+            service_config = json.load(service_config_file)
+
+        self.measurement_info = MeasurementInfo(
+            display_name=service_config["services"][0]["displayName"],
+            version=version,
+            ui_file_paths=ui_file_paths,
+        )
+
+        self.service_info = ServiceInfo(
+            service_class=service_config["services"][0]["serviceClass"],
+            description_url=service_config["services"][0]["descriptionUrl"],
+        )
+
         self.configuration_parameter_list: list = []
         self.output_parameter_list: list = []
         self.grpc_service = GrpcService()
@@ -326,3 +345,4 @@ class MeasurementService:
         )
 
         return self.channel_pool.get_channel(target=service_location.insecure_address)
+        

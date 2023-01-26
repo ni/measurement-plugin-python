@@ -14,18 +14,12 @@ from _helpers import ServiceOptions, str_to_enum
 
 import ni_measurementlink_service as nims
 
-measurement_info = nims.MeasurementInfo(
-    display_name="NI-DMM Measurement (Py)",
+parent_directory = pathlib.Path(__file__).resolve().parent
+measurement_service = nims.MeasurementService(
+    service_config_path=parent_directory / "NIDmmMeasurement.serviceconfig",
     version="0.1.0.0",
-    ui_file_paths=[pathlib.Path(__file__).resolve().parent / "NIDmmMeasurement.measui"],
+    ui_file_paths=[parent_directory / "NIDmmMeasurement.measui"]
 )
-
-service_info = nims.ServiceInfo(
-    service_class="ni.examples.NIDmmMeasurement_Python",
-    description_url="",
-)
-
-measurement_service = nims.MeasurementService(measurement_info, service_info)
 service_options = ServiceOptions()
 
 FUNCTION_TO_ENUM = {
