@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
+import json
 from threading import Lock
 from typing import Any, Callable, Dict, TypeVar, List
-import json
 from os import path
 
 import grpc
@@ -130,7 +130,12 @@ class MeasurementService:
 
     """
 
-    def __init__( self, service_config_path: str, version: str, ui_file_paths: List[str]) -> None:
+    def __init__( 
+        self, 
+        service_config_path: str, 
+        version: str, 
+        ui_file_paths: List[str]
+        ) -> None:
         """Initialize the Measurement Service object with the .serviceconfig file, version, and UI file paths.
 
         Args:
@@ -345,4 +350,3 @@ class MeasurementService:
         )
 
         return self.channel_pool.get_channel(target=service_location.insecure_address)
-        
