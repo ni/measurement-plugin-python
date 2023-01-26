@@ -3,9 +3,9 @@
 from __future__ import annotations
 
 import json
+from os import path
 from threading import Lock
 from typing import Any, Callable, Dict, TypeVar, List
-from os import path
 
 import grpc
 
@@ -136,7 +136,8 @@ class MeasurementService:
         version: str, 
         ui_file_paths: List[str]
         ) -> None:
-        """Initialize the Measurement Service object with the .serviceconfig file, version, and UI file paths.
+        """Initialize the Measurement Service object with the 
+        .serviceconfig file, version, and UI file paths.
 
         Args:
         ----
