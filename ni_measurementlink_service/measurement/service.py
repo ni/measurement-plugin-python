@@ -130,22 +130,29 @@ class MeasurementService:
 
     """
 
-    def __init__( 
-        self, 
-        service_config_path: str, 
-        version: str, 
-        ui_file_paths: List[str]
+    def __init__(
+        self,
+        service_config_path: str,
+        version: str,
+        ui_file_paths: List[str],
+        service_class: str = None
         ) -> None:
-        """Initialize the Measurement Service object with the 
-        .serviceconfig file, version, and UI file paths.
+        """Initialize the Measurement Service object.
+
+        Uses the specified .serviceconfig file, version, and UI file paths
+        to initialize a Measurement Service object.
 
         Args:
         ----
-            service_config_path (str): Measurement Info
+            service_config_path (str): Path to the .serviceconfig file.
 
             version (str): Version of the measurement service.
 
-            ui_file_paths (List[str]): Service Info
+            ui_file_paths (List[str]): List of paths to supported UIs.
+
+            service_class (str): The service class from the .serviceconfig to use.
+            Default value is None, which will use the first service in the 
+            .serviceconfig file.
 
         """
         if not path.exists(service_config_path):
@@ -154,16 +161,28 @@ class MeasurementService:
         with open(service_config_path) as service_config_file:
             service_config = json.load(service_config_file)
 
-        self.measurement_info = MeasurementInfo(
-            display_name=service_config["services"][0]["displayName"],
-            version=version,
-            ui_file_paths=ui_file_paths,
-        )
+        service_found = False
+        for service in service_config["services"]:
+            if (
+                service_class is None
+                or service["serviceClass"] == service
+            ):
+                service_found = True
+                self.measurement_info = MeasurementInfo(
+                    display_name=service["displayName"],
+                    version=version,
+                    ui_file_paths=ui_file_paths,
+                )
 
-        self.service_info = ServiceInfo(
-            service_class=service_config["services"][0]["serviceClass"],
-            description_url=service_config["services"][0]["descriptionUrl"],
-        )
+                self.service_info = ServiceInfo(
+                    service_class=service["serviceClass"],
+                    description_url=service["descriptionUrl"],
+                )
+
+                break
+
+        if not service_found:
+            raise Exception(f"Service class '{service_class}' not found in '{service_config_file}'")
 
         self.configuration_parameter_list: list = []
         self.output_parameter_list: list = []
