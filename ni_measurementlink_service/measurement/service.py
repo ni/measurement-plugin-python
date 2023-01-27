@@ -136,7 +136,7 @@ class MeasurementService:
         version: str,
         ui_file_paths: List[str],
         service_class: str = None,
-        ) -> None:
+    ) -> None:
         """Initialize the Measurement Service object.
 
         Uses the specified .serviceconfig file, version, and UI file paths
@@ -151,7 +151,7 @@ class MeasurementService:
             ui_file_paths (List[str]): List of paths to supported UIs.
 
             service_class (str): The service class from the .serviceconfig to use.
-            Default value is None, which will use the first service in the 
+            Default value is None, which will use the first service in the
             .serviceconfig file.
 
         """
@@ -161,11 +161,11 @@ class MeasurementService:
         with open(service_config_path) as service_config_file:
             service_config = json.load(service_config_file)
 
-        try: 
+        try:
             service = next(
-                s for s in service_config["services"] 
-                if service_class is None 
-                or s["serviceClass"] == service_class
+                s
+                for s in service_config["services"]
+                if service_class is None or s["serviceClass"] == service_class
             )
             self.measurement_info = MeasurementInfo(
                 display_name=service["displayName"],
@@ -178,7 +178,9 @@ class MeasurementService:
                 description_url=service["descriptionUrl"],
             )
         except StopIteration:
-            raise RuntimeError(f"Service class '{service_class}' not found in '{service_config_file}'")
+            raise RuntimeError(
+                f"Service class '{service_class}' not found in '{service_config_file}'"
+            )
 
         self.configuration_parameter_list: list = []
         self.output_parameter_list: list = []
