@@ -16,6 +16,7 @@ measurement_service = nims.MeasurementService(
         parent_directory / "SampleAllParameters.measui",
         parent_directory / "SampleMeasurement.vi",
     ],
+)
 
 
 @sample_measurement_service.register_measurement

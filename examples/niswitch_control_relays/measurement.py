@@ -20,6 +20,7 @@ measurement_service = nims.MeasurementService(
 )
 service_options = ServiceOptions()
 
+
 @measurement_service.register_measurement
 @measurement_service.configuration("relay_names", nims.DataType.String, "SiteRelay1")
 @measurement_service.configuration("close_relay", nims.DataType.Boolean, True)

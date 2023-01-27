@@ -15,7 +15,7 @@ measurement_service = nims.MeasurementService(
     version="0.1.0.0",
     ui_file_paths=[parent_directory / "NIDAQmxAnalogInput.measui"],
 )
-service_options = ServiceOptions()
+
 
 @measurement_service.register_measurement
 @measurement_service.configuration("physical_channel", nims.DataType.String, "Dev1/ai0")
