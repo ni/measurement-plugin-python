@@ -134,7 +134,7 @@ class MeasurementService:
         self,
         service_config_path: str,
         version: str,
-        ui_file_paths: List[str],
+        ui_file_paths: List[Path],
         service_class: str = None,
     ) -> None:
         """Initialize the Measurement Service object.
@@ -148,7 +148,7 @@ class MeasurementService:
 
             version (str): Version of the measurement service.
 
-            ui_file_paths (List[str]): List of paths to supported UIs.
+            ui_file_paths (List[Path]): List of paths to supported UIs.
 
             service_class (str): The service class from the .serviceconfig to use.
             Default value is None, which will use the first service in the
