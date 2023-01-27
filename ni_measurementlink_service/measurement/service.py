@@ -162,19 +162,16 @@ class MeasurementService:
         with open(service_config_path) as service_config_file:
             service_config = json.load(service_config_file)
 
-        services = list(
-            filter(
-                lambda s: service_class is None or s["serviceClass"] == service_class,
-                service_config["services"],
-            ),
-        )
-
-        if not services:
+        if service_class is None:
+            service = next(iter(service_config["services"]), None)
+        else:
+            service = next(
+                (s for s in service_config["services"] if s["serviceClass"] == service_class), None
+            )
+        if not service:
             raise RuntimeError(
                 f"Service class '{service_class}' not found in '{service_config_file}'"
             )
-
-        service = services[0]
 
         self.measurement_info = MeasurementInfo(
             display_name=service["displayName"],
