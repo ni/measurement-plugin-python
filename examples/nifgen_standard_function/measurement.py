@@ -18,18 +18,12 @@ import ni_measurementlink_service as nims
 NIFGEN_OPERATION_TIMED_OUT_ERROR_CODE = -1074098044
 NIFGEN_MAX_TIME_EXCEEDED_ERROR_CODE = -1074118637
 
-measurement_info = nims.MeasurementInfo(
-    display_name="NI-FGEN Standard Function (Py)",
+parent_directory = pathlib.Path(__file__).resolve().parent
+measurement_service = nims.MeasurementService(
+    service_config_path=parent_directory / "NIFgenStandardFunction.serviceconfig",
     version="0.1.0.0",
-    ui_file_paths=[pathlib.Path(__file__).resolve().parent / "NIFgenStandardFunction.measui"],
+    ui_file_paths=[parent_directory / "NIFgenStandardFunction.measui"],
 )
-
-service_info = nims.ServiceInfo(
-    service_class="ni.examples.NIFgenStandardFunction_Python",
-    description_url="",
-)
-
-measurement_service = nims.MeasurementService(measurement_info, service_info)
 service_options = ServiceOptions()
 
 WAVEFORM_TYPE_TO_ENUM = {

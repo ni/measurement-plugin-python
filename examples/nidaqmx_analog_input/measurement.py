@@ -9,19 +9,13 @@ import nidaqmx
 
 import ni_measurementlink_service as nims
 
-measurement_info = nims.MeasurementInfo(
-    display_name="NI-DAQmx Analog Input (Py)",
+parent_directory = pathlib.Path(__file__).resolve().parent
+measurement_service = nims.MeasurementService(
+    service_config_path=parent_directory / "NIDAQmxAnalogInput.serviceconfig",
     version="0.1.0.0",
-    ui_file_paths=[pathlib.Path(__file__).resolve().parent / "NIDAQmxAnalogInput.measui"],
+    ui_file_paths=[parent_directory / "NIDAQmxAnalogInput.measui"],
 )
-
-service_info = nims.ServiceInfo(
-    service_class="ni.examples.NIDAQmxAnalogInput_Python",
-    description_url="",
-)
-
-measurement_service = nims.MeasurementService(measurement_info, service_info)
-
+service_options = ServiceOptions()
 
 @measurement_service.register_measurement
 @measurement_service.configuration("physical_channel", nims.DataType.String, "Dev1/ai0")
