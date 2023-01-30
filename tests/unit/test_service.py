@@ -240,9 +240,9 @@ def _fake_measurement_function():
 @pytest.fixture
 def measurement_service() -> MeasurementService:
     """Create a MeasurementService."""
-    assets_directory = pathlib.Path(__file__).resolve().parent.parent
+    assets_directory = pathlib.Path(__file__).resolve().parent.parent / "assets"
     return MeasurementService(
-        service_config_path=assets_directory / "assets" / "example.serviceconfig",
+        service_config_path=assets_directory / "example.serviceconfig",
         version="1.0.0.0",
         ui_file_paths=[],
     )
