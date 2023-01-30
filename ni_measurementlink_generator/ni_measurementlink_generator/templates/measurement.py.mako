@@ -15,6 +15,7 @@ measurement_service = nims.MeasurementService(
     ui_file_paths=[service_directory / "${ui_file}"],
 )
 
+
 @measurement_service.register_measurement
 @measurement_service.configuration("Array in", nims.DataType.DoubleArray1D, [0.0])
 @measurement_service.output("Array out", nims.DataType.DoubleArray1D)
