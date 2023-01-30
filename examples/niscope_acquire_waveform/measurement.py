@@ -14,11 +14,11 @@ from _helpers import ServiceOptions, str_to_enum
 
 import ni_measurementlink_service as nims
 
-parent_directory = pathlib.Path(__file__).resolve().parent
+service_directory = pathlib.Path(__file__).resolve().parent
 measurement_service = nims.MeasurementService(
-    service_config_path=parent_directory / "NIScopeAcquireWaveform.serviceconfig",
+    service_config_path=service_directory / "NIScopeAcquireWaveform.serviceconfig",
     version="0.1.0.0",
-    ui_file_paths=[parent_directory / "NIScopeAcquireWaveform.measui"],
+    ui_file_paths=[service_directory / "NIScopeAcquireWaveform.measui"],
 )
 service_options = ServiceOptions()
 

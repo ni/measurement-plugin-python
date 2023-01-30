@@ -18,11 +18,11 @@ import ni_measurementlink_service as nims
 NIFGEN_OPERATION_TIMED_OUT_ERROR_CODE = -1074098044
 NIFGEN_MAX_TIME_EXCEEDED_ERROR_CODE = -1074118637
 
-parent_directory = pathlib.Path(__file__).resolve().parent
+service_directory = pathlib.Path(__file__).resolve().parent
 measurement_service = nims.MeasurementService(
-    service_config_path=parent_directory / "NIFgenStandardFunction.serviceconfig",
+    service_config_path=service_directory / "NIFgenStandardFunction.serviceconfig",
     version="0.1.0.0",
-    ui_file_paths=[parent_directory / "NIFgenStandardFunction.measui"],
+    ui_file_paths=[service_directory / "NIFgenStandardFunction.measui"],
 )
 service_options = ServiceOptions()
 

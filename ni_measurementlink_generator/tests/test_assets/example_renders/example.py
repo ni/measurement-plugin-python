@@ -6,11 +6,11 @@ import sys
 import click
 import ni_measurementlink_service as nims
 
-parent_directory = pathlib.Path(__file__).resolve().parent
+service_directory = pathlib.Path(__file__).resolve().parent
 measurement_service = nims.MeasurementService(
-    service_config_path=parent_directory / "example.serviceconfig",
+    service_config_path=service_directory / "example.serviceconfig",
     version="0.1.0.0",
-    ui_file_paths=[parent_directory / "MeasurementUI.measui"],
+    ui_file_paths=[service_directory / "MeasurementUI.measui"],
 )
 
 

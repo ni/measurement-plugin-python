@@ -9,11 +9,11 @@ import nidaqmx
 
 import ni_measurementlink_service as nims
 
-parent_directory = pathlib.Path(__file__).resolve().parent
+service_directory = pathlib.Path(__file__).resolve().parent
 measurement_service = nims.MeasurementService(
-    service_config_path=parent_directory / "NIDAQmxAnalogInput.serviceconfig",
+    service_config_path=service_directory / "NIDAQmxAnalogInput.serviceconfig",
     version="0.1.0.0",
-    ui_file_paths=[parent_directory / "NIDAQmxAnalogInput.measui"],
+    ui_file_paths=[service_directory / "NIDAQmxAnalogInput.measui"],
 )
 
 
