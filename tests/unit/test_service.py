@@ -1,11 +1,10 @@
 """Tests to validated user facing decorators in service.py."""
 import pathlib
+
 import pytest
 
 from ni_measurementlink_service.measurement.info import (
     DataType,
-    MeasurementInfo,
-    ServiceInfo,
     TypeSpecialization,
 )
 from ni_measurementlink_service.measurement.service import MeasurementService
