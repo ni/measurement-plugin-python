@@ -133,7 +133,7 @@ class MeasurementService:
 
     def __init__(
         self,
-        service_config_path: str,
+        service_config_path: Path,
         version: str,
         ui_file_paths: List[Path],
         service_class: str = None,
@@ -145,7 +145,7 @@ class MeasurementService:
 
         Args:
         ----
-            service_config_path (str): Path to the .serviceconfig file.
+            service_config_path (Path): Path to the .serviceconfig file.
 
             version (str): Version of the measurement service.
 
