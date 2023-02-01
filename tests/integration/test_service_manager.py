@@ -20,8 +20,8 @@ from tests.utilities.fake_discovery_service import FakeDiscoveryServiceStub
 def test___grpc_service___start_service___service_hosted(grpc_service: GrpcService):
     """Test to validate if measurement service is started."""
     port_number = grpc_service.start(
-        measurement.measurement_info,
-        measurement.service_info,
+        measurement.sample_measurement_service.measurement_info,
+        measurement.sample_measurement_service.service_info,
         measurement.sample_measurement_service.configuration_parameter_list,
         measurement.sample_measurement_service.output_parameter_list,
         measurement.sample_measurement_service.measure_function,
@@ -35,8 +35,8 @@ def test___grpc_service_without_discovery_service___start_service___service_host
 ):
     """Test to validate if measurement service start when the discovery service not available."""
     port_number = grpc_service.start(
-        measurement.measurement_info,
-        measurement.service_info,
+        measurement.sample_measurement_service.measurement_info,
+        measurement.sample_measurement_service.service_info,
         measurement.sample_measurement_service.configuration_parameter_list,
         measurement.sample_measurement_service.output_parameter_list,
         measurement.sample_measurement_service.measure_function,
@@ -48,8 +48,8 @@ def test___grpc_service_without_discovery_service___start_service___service_host
 def test___grpc_service_started___stop_service___service_stopped(grpc_service: GrpcService):
     """Test to validate if measurement service is stopped."""
     port_number = grpc_service.start(
-        measurement.measurement_info,
-        measurement.service_info,
+        measurement.sample_measurement_service.measurement_info,
+        measurement.sample_measurement_service.service_info,
         measurement.sample_measurement_service.configuration_parameter_list,
         measurement.sample_measurement_service.output_parameter_list,
         measurement.sample_measurement_service.measure_function,

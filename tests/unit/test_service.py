@@ -1,21 +1,13 @@
 """Tests to validated user facing decorators in service.py."""
+import pathlib
+
 import pytest
 
 from ni_measurementlink_service.measurement.info import (
     DataType,
-    MeasurementInfo,
-    ServiceInfo,
     TypeSpecialization,
 )
 from ni_measurementlink_service.measurement.service import MeasurementService
-
-
-_TEST_SERVICE_INFO = ServiceInfo("TestServiceClass", "TestUrl")
-_TEST_MEASUREMENT_INFO = MeasurementInfo(
-    display_name="TestMeasurement",
-    version="1.0.0.0",
-    ui_file_paths=[],
-)
 
 
 def test___measurement_service___register_measurement_method___method_registered(
@@ -248,4 +240,9 @@ def _fake_measurement_function():
 @pytest.fixture
 def measurement_service() -> MeasurementService:
     """Create a MeasurementService."""
-    return MeasurementService(_TEST_MEASUREMENT_INFO, _TEST_SERVICE_INFO)
+    assets_directory = pathlib.Path(__file__).resolve().parent.parent / "assets"
+    return MeasurementService(
+        service_config_path=assets_directory / "example.serviceconfig",
+        version="1.0.0.0",
+        ui_file_paths=[],
+    )

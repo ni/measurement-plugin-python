@@ -2,8 +2,11 @@
 
 from __future__ import annotations
 
+import json
+from os import path
+from pathlib import Path
 from threading import Lock
-from typing import Any, Callable, Dict, TypeVar
+from typing import Any, Callable, Dict, TypeVar, List
 
 import grpc
 
@@ -128,18 +131,59 @@ class MeasurementService:
 
     """
 
-    def __init__(self, measurement_info: MeasurementInfo, service_info: ServiceInfo) -> None:
-        """Initialize the Measurement Service object with measurement info and service info.
+    def __init__(
+        self,
+        service_config_path: Path,
+        version: str,
+        ui_file_paths: List[Path],
+        service_class: str = None,
+    ) -> None:
+        """Initialize the Measurement Service object.
+
+        Uses the specified .serviceconfig file, version, and UI file paths
+        to initialize a Measurement Service object.
 
         Args:
         ----
-            measurement_info (MeasurementInfo): Measurement Info
+            service_config_path (Path): Path to the .serviceconfig file.
 
-            service_info (ServiceInfo): Service Info
+            version (str): Version of the measurement service.
+
+            ui_file_paths (List[Path]): List of paths to supported UIs.
+
+            service_class (str): The service class from the .serviceconfig to use.
+            Default value is None, which will use the first service in the
+            .serviceconfig file.
 
         """
-        self.measurement_info: MeasurementInfo = measurement_info
-        self.service_info: ServiceInfo = service_info
+        if not path.exists(service_config_path):
+            raise RuntimeError(f"File does not exist. {service_config_path}")
+
+        with open(service_config_path) as service_config_file:
+            service_config = json.load(service_config_file)
+
+        if service_class is None:
+            service = next(iter(service_config["services"]), None)
+        else:
+            service = next(
+                (s for s in service_config["services"] if s["serviceClass"] == service_class), None
+            )
+        if not service:
+            raise RuntimeError(
+                f"Service class '{service_class}' not found in '{service_config_file}'"
+            )
+
+        self.measurement_info = MeasurementInfo(
+            display_name=service["displayName"],
+            version=version,
+            ui_file_paths=ui_file_paths,
+        )
+
+        self.service_info = ServiceInfo(
+            service_class=service["serviceClass"],
+            description_url=service["descriptionUrl"],
+        )
+
         self.configuration_parameter_list: list = []
         self.output_parameter_list: list = []
         self.grpc_service = GrpcService()

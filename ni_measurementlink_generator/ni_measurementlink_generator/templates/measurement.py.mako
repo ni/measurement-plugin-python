@@ -8,18 +8,12 @@ import sys
 import click
 import ni_measurementlink_service as nims
 
-measurement_info = nims.MeasurementInfo(
-    display_name="${display_name}",
-    version="${version}",
-    ui_file_paths=[pathlib.Path(__file__).resolve().parent / "${ui_file}"],
+service_directory = pathlib.Path(__file__).resolve().parent
+measurement_service = nims.MeasurementService(
+    service_config_path=service_directory / "${display_name}.serviceconfig",
+    version="0.1.0.0",
+    ui_file_paths=[service_directory / "${ui_file}"],
 )
-
-service_info = nims.ServiceInfo(
-    service_class="${service_class}",
-    description_url="${description_url}",
-)
-
-measurement_service = nims.MeasurementService(measurement_info, service_info)
 
 
 @measurement_service.register_measurement

@@ -19,21 +19,15 @@ import ni_measurementlink_service as nims
 NIDCPOWER_WAIT_FOR_EVENT_TIMEOUT_ERROR_CODE = -1074116059
 NIDCPOWER_TIMEOUT_EXCEEDED_ERROR_CODE = -1074097933
 
-measurement_info = nims.MeasurementInfo(
-    display_name="NI-DCPower Source DC Voltage (Py)",
+service_directory = pathlib.Path(__file__).resolve().parent
+measurement_service = nims.MeasurementService(
+    service_config_path=service_directory / "NIDCPowerSourceDCVoltage.serviceconfig",
     version="0.1.0.0",
     ui_file_paths=[
-        pathlib.Path(__file__).resolve().parent / "NIDCPowerSourceDCVoltage.measui",
-        pathlib.Path(__file__).resolve().parent / "NIDCPowerSourceDCVoltageUI.vi",
+        service_directory / "NIDCPowerSourceDCVoltage.measui",
+        service_directory / "NIDCPowerSourceDCVoltageUI.vi",
     ],
 )
-
-service_info = nims.ServiceInfo(
-    service_class="ni.examples.NIDCPowerSourceDCVoltage_Python",
-    description_url="",
-)
-
-measurement_service = nims.MeasurementService(measurement_info, service_info)
 service_options = ServiceOptions()
 
 

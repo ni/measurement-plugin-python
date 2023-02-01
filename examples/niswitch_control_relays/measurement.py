@@ -12,18 +12,12 @@ from _helpers import ServiceOptions
 
 import ni_measurementlink_service as nims
 
-measurement_info = nims.MeasurementInfo(
-    display_name="NI-SWITCH Control Relays (Py)",
+service_directory = pathlib.Path(__file__).resolve().parent
+measurement_service = nims.MeasurementService(
+    service_config_path=service_directory / "NISwitchControlRelays.serviceconfig",
     version="0.1.0.0",
-    ui_file_paths=[pathlib.Path(__file__).resolve().parent / "NISwitchControlRelays.measui"],
+    ui_file_paths=[service_directory / "NISwitchControlRelays.measui"],
 )
-
-service_info = nims.ServiceInfo(
-    service_class="ni.examples.NISwitchControlRelays_Python",
-    description_url="",
-)
-
-measurement_service = nims.MeasurementService(measurement_info, service_info)
 service_options = ServiceOptions()
 
 

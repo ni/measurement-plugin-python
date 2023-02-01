@@ -20,18 +20,12 @@ from _visa_helpers import (
 
 import ni_measurementlink_service as nims
 
-measurement_info = nims.MeasurementInfo(
-    display_name="NI-VISA DMM Measurement (Py)",
+service_directory = pathlib.Path(__file__).resolve().parent
+measurement_service = nims.MeasurementService(
+    service_config_path=service_directory / "NIVisaDmmMeasurement.serviceconfig",
     version="0.1.0.0",
-    ui_file_paths=[pathlib.Path(__file__).resolve().parent / "NIVisaDmmMeasurement.measui"],
+    ui_file_paths=[service_directory / "NIVisaDmmMeasurement.measui"],
 )
-
-service_info = nims.ServiceInfo(
-    service_class="ni.examples.NIVisaDmmMeasurement_Python",
-    description_url="",
-)
-
-measurement_service = nims.MeasurementService(measurement_info, service_info)
 service_options = ServiceOptions()
 
 
