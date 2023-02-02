@@ -49,7 +49,7 @@ def measure(
                 context=measurement_service.context.pin_map_context,
                 pin_or_relay_names=relay_list,
                 instrument_type_id=nims.session_management.INSTRUMENT_TYPE_NI_RELAY_DRIVER,
-                timeout=60000,
+                timeout=60,
             )
         )
 

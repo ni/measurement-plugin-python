@@ -1,13 +1,12 @@
 """Functions to set up and tear down NI-VISA DMM sessions in NI TestStand."""
 
-from _helpers import GrpcChannelPoolHelper, PinMapClient
-from _visa_helpers import (
-    INSTRUMENT_TYPE_DMM_SIMULATOR,
-    create_visa_resource_manager,
-    create_visa_session,
-    log_instrument_id,
-    reset_instrument,
-)
+from _helpers import GrpcChannelPoolHelper
+from _helpers import PinMapClient
+from _visa_helpers import INSTRUMENT_TYPE_DMM_SIMULATOR
+from _visa_helpers import create_visa_resource_manager
+from _visa_helpers import create_visa_session
+from _visa_helpers import log_instrument_id
+from _visa_helpers import reset_instrument
 
 import ni_measurementlink_service as nims
 
@@ -40,9 +39,7 @@ def create_nivisa_dmm_sessions(pin_map_id: str):
 
         pin_map_context = nims.session_management.PinMapContext(pin_map_id=pin_map_id, sites=None)
         with session_management_client.reserve_sessions(
-            context=pin_map_context,
-            instrument_type_id=INSTRUMENT_TYPE_DMM_SIMULATOR,
-            timeout=0
+            context=pin_map_context, instrument_type_id=INSTRUMENT_TYPE_DMM_SIMULATOR, timeout=0
         ) as reservation:
             resource_manager = create_visa_resource_manager(USE_SIMULATION)
 
