@@ -33,7 +33,7 @@ def create_niscope_sessions(pin_map_id: str):
         with session_management_client.reserve_sessions(
             context=pin_map_context,
             instrument_type_id=nims.session_management.INSTRUMENT_TYPE_NI_SCOPE,
-            timeout=-1,
+            timeout=0,
         ) as reservation:
 
             for session_info in reservation.session_info:
@@ -57,7 +57,7 @@ def destroy_niscope_sessions():
         )
 
         with session_management_client.reserve_all_registered_sessions(
-            instrument_type_id=nims.session_management.INSTRUMENT_TYPE_NI_SCOPE, timeout=-1
+            instrument_type_id=nims.session_management.INSTRUMENT_TYPE_NI_SCOPE, timeout=0
         ) as reservation:
             session_management_client.unregister_sessions(reservation.session_info)
 

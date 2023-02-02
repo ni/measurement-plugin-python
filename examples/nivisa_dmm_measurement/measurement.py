@@ -82,7 +82,7 @@ def measure(
                 context=measurement_service.context.pin_map_context,
                 pin_or_relay_names=[pin_name],
                 instrument_type_id=INSTRUMENT_TYPE_DMM_SIMULATOR,
-                timeout=-1,
+                timeout=60000,
             )
         )
 
