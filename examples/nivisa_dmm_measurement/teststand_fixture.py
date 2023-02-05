@@ -40,7 +40,10 @@ def create_nivisa_dmm_sessions(pin_map_id: str):
 
         pin_map_context = nims.session_management.PinMapContext(pin_map_id=pin_map_id, sites=None)
         with session_management_client.reserve_sessions(
-            context=pin_map_context, instrument_type_id=INSTRUMENT_TYPE_DMM_SIMULATOR, timeout=0
+            context=pin_map_context,
+            instrument_type_id=INSTRUMENT_TYPE_DMM_SIMULATOR,
+            # This code module sets up the sessions, so error immediately if they are in use.
+            timeout=0,
         ) as reservation:
             resource_manager = create_visa_resource_manager(USE_SIMULATION)
 
@@ -60,6 +63,8 @@ def destroy_nivisa_dmm_sessions():
         )
 
         with session_management_client.reserve_all_registered_sessions(
-            instrument_type_id=INSTRUMENT_TYPE_DMM_SIMULATOR, timeout=0
+            instrument_type_id=INSTRUMENT_TYPE_DMM_SIMULATOR,
+            # This code module sets up the sessions, so error immediately if they are in use.
+            timeout=0,
         ) as reservation:
             session_management_client.unregister_sessions(reservation.session_info)

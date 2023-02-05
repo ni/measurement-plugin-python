@@ -11,9 +11,9 @@ import grpc
 from _helpers import ServiceOptions, str_to_enum
 from _visa_helpers import (
     INSTRUMENT_TYPE_DMM_SIMULATOR,
+    check_instrument_error,
     create_visa_resource_manager,
     create_visa_session,
-    check_instrument_error,
     log_instrument_id,
     reset_instrument,
 )
@@ -82,6 +82,9 @@ def measure(
                 context=measurement_service.context.pin_map_context,
                 pin_or_relay_names=[pin_name],
                 instrument_type_id=INSTRUMENT_TYPE_DMM_SIMULATOR,
+                # If another measurement is using the session, wait for it to complete.
+                # Specify a timeout to aid in debugging missed unreserve calls.
+                # Long measurements may require a longer timeout.
                 timeout=60,
             )
         )
