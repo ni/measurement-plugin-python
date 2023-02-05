@@ -1,12 +1,13 @@
 """Functions to set up and tear down NI-VISA DMM sessions in NI TestStand."""
 
-from _helpers import GrpcChannelPoolHelper
-from _helpers import PinMapClient
-from _visa_helpers import INSTRUMENT_TYPE_DMM_SIMULATOR
-from _visa_helpers import create_visa_resource_manager
-from _visa_helpers import create_visa_session
-from _visa_helpers import log_instrument_id
-from _visa_helpers import reset_instrument
+from _helpers import GrpcChannelPoolHelper, PinMapClient
+from _visa_helpers import (
+    INSTRUMENT_TYPE_DMM_SIMULATOR,
+    create_visa_resource_manager,
+    create_visa_session,
+    log_instrument_id,
+    reset_instrument,
+)
 
 import ni_measurementlink_service as nims
 

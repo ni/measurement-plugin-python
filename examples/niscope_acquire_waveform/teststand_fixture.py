@@ -35,7 +35,6 @@ def create_niscope_sessions(pin_map_id: str):
             instrument_type_id=nims.session_management.INSTRUMENT_TYPE_NI_SCOPE,
             timeout=0,
         ) as reservation:
-
             for session_info in reservation.session_info:
                 grpc_options = niscope.GrpcSessionOptions(
                     grpc_channel_pool.get_grpc_device_channel(niscope.GRPC_SERVICE_INTERFACE_NAME),

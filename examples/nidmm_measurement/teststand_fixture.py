@@ -35,7 +35,6 @@ def create_nidmm_sessions(pin_map_id: str):
             instrument_type_id=nims.session_management.INSTRUMENT_TYPE_NI_DMM,
             timeout=0,
         ) as reservation:
-
             for session_info in reservation.session_info:
                 grpc_options = nidmm.GrpcSessionOptions(
                     grpc_channel_pool.get_grpc_device_channel(nidmm.GRPC_SERVICE_INTERFACE_NAME),
