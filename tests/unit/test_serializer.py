@@ -52,7 +52,6 @@ def test___serializer___serialize_parameter___successful_serialization(test_valu
     """Validates if the custom serializer serializes data same as protobuf serialization.
 
     Args:
-    ----
         test_values (List): List of values to be serialized.
         This should match the "MeasurementParameter" message defined in test.proto.
 
@@ -111,7 +110,6 @@ def test___serializer___serialize_default_parameter___successful_serialization(d
     """Validates if the custom serializer serializes default values same as protobuf serialization.
 
     Args:
-    ----
         default_values (List): Default values to be serialized.
         This should match the "MeasurementParameter" message defined in test.proto.
 

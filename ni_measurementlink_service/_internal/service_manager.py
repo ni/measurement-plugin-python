@@ -31,7 +31,6 @@ class GrpcService:
         """Initialize Service Manager.
 
         Args:
-        ----
             discovery_client (DiscoveryClient, optional): Instance of Discovery Client.
             Defaults to None.
 

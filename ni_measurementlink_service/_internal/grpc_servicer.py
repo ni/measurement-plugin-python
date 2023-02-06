@@ -99,7 +99,6 @@ class MeasurementServiceServicer(measurement_service_pb2_grpc.MeasurementService
         """Initialize the Measurement Service Servicer.
 
         Args:
-        ----
             measurement_info (MeasurementInfo): Measurement info
 
             configuration_parameter_list (List): List of configuration parameters.

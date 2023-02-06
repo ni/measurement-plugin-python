@@ -293,7 +293,6 @@ class Client(object):
         used again.
 
         Args:
-        ----
             session_info (Iterable[SessionInformation]): Sessions to be registered.
 
         """

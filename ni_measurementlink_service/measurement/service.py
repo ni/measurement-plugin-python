@@ -80,7 +80,6 @@ class GrpcChannelPool(object):
         """Return a gRPC channel.
 
         Args:
-        ----
             target (str): The server address
 
         """
@@ -146,7 +145,6 @@ class MeasurementService:
         to initialize a Measurement Service object.
 
         Args:
-        ----
             service_config_path (Path): Path to the .serviceconfig file.
 
             version (str): Version of the measurement service.

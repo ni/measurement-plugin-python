@@ -24,7 +24,6 @@ def test___serialization_strategy___get_encoder___returns_expected_encoder(
     """Validate if proper encoder is returned.
 
     Args:
-    ----
         type (type_pb2.Field.): gRPC type.
         is_repeated (bool): Represents if the parameter is array or scalar. True if array.
         expected_encoder (Callable): Callable expected to be returned for the type and is_repeated.
@@ -54,7 +53,6 @@ def test___serialization_strategy___get_decoder___returns_expected_decoder(
     """Validate if proper decoder is returned.
 
     Args:
-    ----
         type (type_pb2.Field.): gRPC type.
         is_repeated (bool): Represents if the parameter is array or scalar. True if array.
         expected_decoder (Callable): Callable expected to be returned for the type and is_repeated.
@@ -84,7 +82,6 @@ def test___serialization_strategy___get_default_value___returns_type_defaults(
     """Validate if the type default is returned.
 
     Args:
-    ----
         type (type_pb2.Field.): gRPC type.
         is_repeated (bool): Represents if the parameter is array or scalar. True if array.
         expected_default_value (Callable): Type default value.

@@ -63,7 +63,6 @@ class DiscoveryClient:
         """Initialize the Discovery Client with provided registry service stub.
 
         Args:
-        ----
             stub (DiscoveryServiceStub, optional): The gRPC stub to interact with discovery
             service. Defaults to None.
 

@@ -23,7 +23,6 @@ def test___default_value_different_from_type___validate___raises_type_exception(
     """Tests if exceptions are raised when the default value provided is not matching the type.
 
     Args:
-    ----
         type (DataType): Type of the parameter.
         default_value (Any): Default value of the parameter.
 
@@ -51,7 +50,6 @@ def test___default_value_same_as_type___validate___raises_no_exception(type, def
     """Tests if no exceptions are raised when the default value provided is matching the type.
 
     Args:
-    ----
         type (DataType): Type of the parameter.
         default_value (Any): Default value of the parameter.
 
