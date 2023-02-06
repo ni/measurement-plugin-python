@@ -15,7 +15,6 @@ from ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v
 )
 from tests.assets import sample_measurement_test_pb2
 
-
 EXPECTED_PARAMETER_COUNT = 5
 EXPECTED_UI_FILE_COUNT = 3
 
@@ -95,7 +94,6 @@ def _create_channel(port: str):
 def _get_sample_measurement_measure_request(
     float_in, double_array_in, bool_in, string_in, string_array_in
 ):
-
     request = measurement_service_pb2.MeasureRequest(
         configuration_parameters=_get_configuration_parameters(
             float_in, double_array_in, bool_in, string_in, string_array_in

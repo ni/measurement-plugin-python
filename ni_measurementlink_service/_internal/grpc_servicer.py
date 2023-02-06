@@ -3,17 +3,16 @@
 import inspect
 import pathlib
 from contextvars import ContextVar
-from typing import Any
-from typing import Callable
-from typing import Dict
-from typing import List
+from typing import Any, Callable, Dict, List
 
 import grpc
 from google.protobuf import any_pb2
 
 from ni_measurementlink_service._internal.parameter import serializer
 from ni_measurementlink_service._internal.parameter.metadata import ParameterMetadata
-from ni_measurementlink_service._internal.stubs.ni.measurementlink import pin_map_context_pb2
+from ni_measurementlink_service._internal.stubs.ni.measurementlink import (
+    pin_map_context_pb2,
+)
 from ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v1 import (
     measurement_service_pb2,
     measurement_service_pb2_grpc,
