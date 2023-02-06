@@ -21,7 +21,6 @@ def update_pin_map(pin_map_id: str):
     Create and register a pin map if a pin map resource for the specified pin map id is not found.
 
     Args:
-    ----
         pin_map_id (str): The resource id of the pin map to register as a pin map resource. By
             convention, the pin_map_id is the .pinmap file path.
 

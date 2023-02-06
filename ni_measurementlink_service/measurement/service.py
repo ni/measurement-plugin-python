@@ -6,13 +6,15 @@ import json
 from os import path
 from pathlib import Path
 from threading import Lock
-from typing import Any, Callable, Dict, TypeVar, List
+from typing import Any, Callable, Dict, List, TypeVar
 
 import grpc
 
 from ni_measurementlink_service._internal import grpc_servicer
 from ni_measurementlink_service._internal.discovery_client import DiscoveryClient
-from ni_measurementlink_service._internal.parameter import metadata as parameter_metadata
+from ni_measurementlink_service._internal.parameter import (
+    metadata as parameter_metadata,
+)
 from ni_measurementlink_service._internal.service_manager import GrpcService
 from ni_measurementlink_service.measurement.info import (
     DataType,
@@ -78,7 +80,6 @@ class GrpcChannelPool(object):
         """Return a gRPC channel.
 
         Args:
-        ----
             target (str): The server address
 
         """
@@ -144,7 +145,6 @@ class MeasurementService:
         to initialize a Measurement Service object.
 
         Args:
-        ----
             service_config_path (Path): Path to the .serviceconfig file.
 
             version (str): Version of the measurement service.

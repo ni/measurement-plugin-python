@@ -55,7 +55,6 @@ class PinMapClient(object):
         found.
 
         Args:
-        ----
             pin_map_id (str): The resource id of the pin map to register as a pin map resource. By
                 convention, the pin map id is the .pinmap file path.
 
@@ -100,7 +99,6 @@ class GrpcChannelPoolHelper(GrpcChannelPool):
         """Return gRPC channel to specified NI gRPC Device service.
 
         Args:
-        ----
             provided_interface (str): The gRPC Full Name of the service.
 
         """

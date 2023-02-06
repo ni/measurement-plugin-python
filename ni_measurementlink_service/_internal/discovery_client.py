@@ -18,6 +18,7 @@ from ni_measurementlink_service.measurement.info import MeasurementInfo, Service
 if sys.platform == "win32":
     import errno
     import msvcrt
+
     import win32con
     import win32file
     import winerror
@@ -62,7 +63,6 @@ class DiscoveryClient:
         """Initialize the Discovery Client with provided registry service stub.
 
         Args:
-        ----
             stub (DiscoveryServiceStub, optional): The gRPC stub to interact with discovery
             service. Defaults to None.
 
@@ -98,7 +98,6 @@ class DiscoveryClient:
 
         """
         try:
-
             # Service Location
             service_location = discovery_service_pb2.ServiceLocation()
             service_location.location = "localhost"
