@@ -40,7 +40,7 @@ pywin32 = {version = "^303", platform = "win32"}
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.5"
-ni-python-styleguide = ">=0.4.0"
+ni-python-styleguide = ">=0.1.9"
 # When you update the grpcio-tools version, you should update the minimum grpcio version
 # and regenerate gRPC stubs.
 grpcio-tools = "1.49.1"

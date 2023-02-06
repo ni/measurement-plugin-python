@@ -1,6 +1,7 @@
 """Contains tests to validate serializer.py."""
 import pytest
-from google.protobuf import any_pb2, type_pb2
+from google.protobuf import any_pb2
+from google.protobuf import type_pb2
 
 from ni_measurementlink_service._internal.parameter import serializer
 from ni_measurementlink_service._internal.parameter.metadata import ParameterMetadata

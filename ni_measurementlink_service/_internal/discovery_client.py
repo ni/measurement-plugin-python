@@ -18,7 +18,6 @@ from ni_measurementlink_service.measurement.info import MeasurementInfo, Service
 if sys.platform == "win32":
     import errno
     import msvcrt
-
     import win32con
     import win32file
     import winerror
@@ -99,6 +98,7 @@ class DiscoveryClient:
 
         """
         try:
+
             # Service Location
             service_location = discovery_service_pb2.ServiceLocation()
             service_location.location = "localhost"
