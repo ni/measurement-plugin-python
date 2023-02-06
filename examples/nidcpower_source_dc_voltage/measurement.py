@@ -15,7 +15,6 @@ from _helpers import ServiceOptions
 
 import ni_measurementlink_service as nims
 
-
 NIDCPOWER_WAIT_FOR_EVENT_TIMEOUT_ERROR_CODE = -1074116059
 NIDCPOWER_TIMEOUT_EXCEEDED_ERROR_CODE = -1074097933
 
@@ -72,7 +71,10 @@ def measure(
                 context=measurement_service.context.pin_map_context,
                 pin_or_relay_names=pin_names,
                 instrument_type_id=nims.session_management.INSTRUMENT_TYPE_NI_DCPOWER,
-                timeout=-1,
+                # If another measurement is using the session, wait for it to complete.
+                # Specify a timeout to aid in debugging missed unreserve calls.
+                # Long measurements may require a longer timeout.
+                timeout=60,
             )
         )
 

@@ -33,9 +33,9 @@ def create_nidcpower_sessions(pin_map_id: str):
         with session_management_client.reserve_sessions(
             context=pin_map_context,
             instrument_type_id=nims.session_management.INSTRUMENT_TYPE_NI_DCPOWER,
-            timeout=-1,
+            # This code module sets up the sessions, so error immediately if they are in use.
+            timeout=0,
         ) as reservation:
-
             for session_info in reservation.session_info:
                 grpc_options = nidcpower.GrpcSessionOptions(
                     grpc_channel_pool.get_grpc_device_channel(
@@ -61,7 +61,9 @@ def destroy_nidcpower_sessions():
         )
 
         with session_management_client.reserve_all_registered_sessions(
-            instrument_type_id=nims.session_management.INSTRUMENT_TYPE_NI_DCPOWER, timeout=-1
+            instrument_type_id=nims.session_management.INSTRUMENT_TYPE_NI_DCPOWER,
+            # This code module sets up the sessions, so error immediately if they are in use.
+            timeout=0,
         ) as reservation:
             session_management_client.unregister_sessions(reservation.session_info)
 

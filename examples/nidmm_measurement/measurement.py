@@ -80,7 +80,10 @@ def measure(
                 context=measurement_service.context.pin_map_context,
                 pin_or_relay_names=[pin_name],
                 instrument_type_id=nims.session_management.INSTRUMENT_TYPE_NI_DMM,
-                timeout=-1,
+                # If another measurement is using the session, wait for it to complete.
+                # Specify a timeout to aid in debugging missed unreserve calls.
+                # Long measurements may require a longer timeout.
+                timeout=60,
             )
         )
 
