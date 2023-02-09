@@ -30,3 +30,7 @@ This example requires an NI SMU that is supported by NI-DCPower (e.g. PXIe-4141)
 To simulate an NI SMU in software: open `NI MAX`, right-click `Devices and Interfaces`,
 select `Create New...`, and select `Simulated NI-DAQmx Device or Modular Instrument`.
 SMUs are in the `Power Supplies` category.
+
+### Note
+
+- In order to run the measurement with `NIDCPowerSourceDCVoltageMultiSite.pinmap`, it is required to have an NI SMU with 4 or more channels.
