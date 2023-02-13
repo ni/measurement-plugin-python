@@ -35,6 +35,9 @@ The example measurements shared are *poetry-based* projects. Follow the below st
     - If you get a "command not found" error during `poetry install`, make sure that you added the Poetry path to the system path. Refer to [https://python-poetry.org/docs/#installing-with-the-official-installer/Add-poetry-to-your-path](https://python-poetry.org/docs/#installing-with-the-official-installer:~:text=Add%20Poetry%20to%20your%20PATH)
     ![PoetryInstallFail](../PoetryInstallFail.png)
 
+> **Note**
+> You can also run [`install_examples.py`](../scripts/install_examples.py) to set up all of the example measurements and install them into `C:\ProgramData\National Instruments\MeasurementLink\Services`.
+
 ### Executing the Example Measurements
 
 1. Start the discovery service if not already started.
