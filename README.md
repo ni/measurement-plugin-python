@@ -171,7 +171,8 @@ Refer to the [Static Registration of measurements section]() for the detailed st
 
 To Statically register the examples provided, the user can copy the example directory with the service config file with the startup batch file, to the search paths and follow the [Setting up the Example Measurements](#setting-up-the-example-measurements) section to set up the measurements.
 
-Note: The startup batch file can be modified accordingly if the user wants to run with a custom python distribution or virtual environment
+> **Note**
+> The startup batch file can be modified accordingly in order to run with a custom python distribution or virtual environment.
 
 ### Create a batch file that runs a python measurement
 
@@ -236,8 +237,6 @@ Measurement and its related files can be maintained as a python package. The bas
     - The path of this file is configured by `ui_file_path` in `measurement_info` variable definition in Measurement Python Module(.py file).
 
 Python communities have different ways of managing a python package and its dependencies. It is up to the measurement developer, on how they wanted to maintain the package and dependencies. Measurement developers can choose from a few common approaches discussed below based on their requirements.
-
-Note: Once we have the template support for Python measurement, the approach to managing the python measurement package(project) will be streamlined and simplified.
 
 ### Create and Manage Python Measurement Package using poetry
 
