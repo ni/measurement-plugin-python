@@ -16,18 +16,18 @@ For more details about a specific example, see the `README.md` file included wit
 
 ### Setting up the Example Measurements
 
-The example measurements shared are *poetry-based* projects. Follow the below steps to set up the example measurement:
+The example measurements are *Poetry-based* projects. Follow the steps below to set up an example measurement:
 
 1. Install `poetry`. Refer to <https://python-poetry.org/docs/#installation> for information on installing poetry.
 
-2. Open a command prompt, and change the working directory to the directory of the example measurement you want to work with.
+2. Open a command prompt and change the working directory to the directory of the example measurement you want to work with.
 
     ``` cmd
     cd <path_of_example_measurement>
     REM Example: cd "..\measurementlink-python\examples\dc_measurement"
     ```
 
-3. Run `poetry install`. This command creates/updates the .venv and installs all the dependencies(including `ni-measurementlink-service` package) needed for the Example into `.venv`
+3. Run `poetry install`. This command creates/updates the virtual environment (`.venv`) and installs the needed dependencies (including `ni-measurementlink-service` package) into the virtual environment.
 
     ``` cmd
     poetry install

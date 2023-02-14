@@ -53,7 +53,7 @@ There are three ways to do this:
 
 ## Examples
 
-The [`examples`](https://github.com/ni/measurementlink-python/tree/main/examples/) directory contains example measurement services. See the [README.md](https://github.com/ni/measurementlink-python/tree/main/examples/README.md) file there for more information.
+The [`examples`](https://github.com/ni/measurementlink-python/tree/main/examples/) directory contains example measurement services. See the [README.md](https://github.com/ni/measurementlink-python/tree/main/examples/README.md) file for more information.
 
 ---
 
