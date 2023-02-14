@@ -13,16 +13,16 @@
     - [Create a batch file that runs a python measurement](#create-a-batch-file-that-runs-a-python-measurement)
     - [Create Executable for Python Scripts](#create-executable-for-python-scripts)
   - [API References](#api-references)
-  - [Appendix: Managing Measurement as Python Package(Project)](#appendix-managing-measurement-as-python-packageproject)
-    - [Create and Manage Python Measurement Package using poetry](#create-and-manage-python-measurement-package-using-poetry)
-    - [Create and Manage Python Measurement Package using venv](#create-and-manage-python-measurement-package-using-venv)
+  - [Appendix: Managing Measurement as Python Package (Project)](#appendix-managing-measurement-as-python-package-project)
+    - [Create and Manage Python Measurement Package using Poetry](#create-and-manage-python-measurement-package-using-poetry)
+    - [Create and Manage Python Measurement Package using `venv`](#create-and-manage-python-measurement-package-using-venv)
     - [Create and Manage Python Measurement Package by directly installing `ni-measurementlink-service` as a system-level package](#create-and-manage-python-measurement-package-by-directly-installing-ni-measurementlink-service-as-a-system-level-package)
 
 ---
 
 ## Introduction
 
-MeasurementLink Support for Python (`ni-measurementlink-service`) is a python framework that enables measurement developers to quickly create python measurements and run them as a service (gRPC).
+MeasurementLink Support for Python (`ni-measurementlink-service`) is a Python framework that enables measurement developers to quickly create Python measurements and run them as a service (gRPC).
 
 ---
 
@@ -63,7 +63,7 @@ This section provides instructions to develop custom measurement services in Pyt
 
 ### Installation
 
-Make sure the system has the recommended python version is installed. Install MeasurementLink Support for Python using [pip](https://pip.pypa.io/).
+Make sure the system has the recommended Python version is installed. Install MeasurementLink Support for Python using [pip](https://pip.pypa.io/).
 
 ``` cmd
 REM Activate the required virtual environment if any.
@@ -76,7 +76,7 @@ Check if you have installed the expected version of MeasurementLink Support for 
 pip show ni-measurementlink-service
 ```
 
-### Developing a minimal python measurement
+### Developing a minimal Python measurement
 
 1. Install the `ni-measurementlink-generator` package.
 
@@ -107,7 +107,7 @@ pip install ni-measurementlink-generator
     be placed in a new folder under the current directory
     named after the display name without spaces.
 
-3. To customize the created measurement, provide metadata of the measurement's configuration(input parameters) and outputs(output parameters) in `measurement.py`.
+3. To customize the created measurement, provide metadata of the measurement's configuration (input parameters) and outputs (output parameters) in `measurement.py`.
     1. Use the `configuration()` decorator to provide metadata about the configurations.**The order of the configuration decorator must match with the order of the parameters defined in the function signature.**
 
         ``` python
@@ -140,7 +140,7 @@ pip install ni-measurementlink-generator
 
 1. Start the discovery service if not already started.
 
-2. (Optional)Activate related virtual environments. Measurement developers can skip this step if they are not using any [virtual environments](#create-and-manage-python-measurement-package-using-venv) or [poetry-based projects.](#create-and-manage-python-measurement-package-using-poetry)
+2. (Optional) Activate related virtual environments. Measurement developers can skip this step if they are not using any [virtual environments](#create-and-manage-python-measurement-package-using-venv) or [poetry-based projects.](#create-and-manage-python-measurement-package-using-poetry)
 
     ```cmd
     .venv\scripts\activate
@@ -153,11 +153,11 @@ pip install ni-measurementlink-generator
         Set-ExecutionPolicy RemoteSigned 
         ```
 
-3. [Run](https://code.visualstudio.com/docs/python/python-tutorial#_run-hello-world)/[Debug](https://code.visualstudio.com/docs/python/debugging#_basic-debugging) the measurement python file.
+3. [Run](https://code.visualstudio.com/docs/python/python-tutorial#_run-hello-world)/[Debug](https://code.visualstudio.com/docs/python/debugging#_basic-debugging) the measurement Python file.
 
 4. To stop the running measurement service, press `Enter` in the terminal to properly close the service.
 
-5. (Optional)After the usage of measurement, deactivate the virtual environment. Measurement developers can skip this step if they are not using any [virtual environments](#create-and-manage-python-measurement-package-using-venv) or [poetry-based projects.](#create-and-manage-python-measurement-package-using-poetry)
+5. (Optional) After the usage of measurement, deactivate the virtual environment. Measurement developers can skip this step if they are not using any [virtual environments](#create-and-manage-python-measurement-package-using-venv) or [poetry-based projects.](#create-and-manage-python-measurement-package-using-poetry)
 
     ```cmd
     deactivate
@@ -179,7 +179,7 @@ To statically register a measurement service with the MeasurementLink discovery 
 
 Once your measurement service is statically registered, the MeasurementLink discovery service makes it visible in supported NI applications.
 
-### Create a batch file that runs a python measurement
+### Create a batch file that runs a Python measurement
 
 The batch file used for static registration is responsible for starting the Python Scripts.
 
@@ -227,30 +227,31 @@ pyinstaller --onefile --console --add-data "<path_of_the_UI_File>;." --paths .ve
 
 If copying or running a measurement service produces "File not found" or "No such file or directory" errors, make sure to [enable Win32 long paths](#enable-win32-long-paths). If you are unable to enable Win32 long paths, consider deploying the measurement service to a directory with a shorter path.
 
-## Appendix: Managing Measurement as Python Package(Project)
+## Appendix: Managing Measurement as Python Package (Project)
 
-Measurement and its related files can be maintained as a python package. The basic components of any Python Measurement Package are:
+Measurement and its related files can be maintained as a Python package. The basic components of any Python measurement package are:
 
-1. Measurement Python Module(.py file)
+1. Measurement Python module (`.py` file)
     - This file contains all the details related to the measurement and also contains the logic for the measurement execution.
     - This file is run to start the measurement as a service.
 
 2. UI File
-    - UI file for the Measurement. Types of supported UI files are:
-        - Measurement UI(.measui): created using the **Measurement UI Editor application**.
-        - LabVIEW UI(.vi)
-    - The path of this file is configured by `ui_file_path` in `measurement_info` variable definition in Measurement Python Module(.py file).
+    - UI file for the measurement. Types of supported UI files are:
+        - Measurement UI (`.measui`): created using the **Measurement UI Editor application**.
+        - LabVIEW UI (`.vi`)
+    - The path of this file is configured by `ui_file_path` in `measurement_info` variable definition in measurement Python module (`.py`).
 
-Python communities have different ways of managing a python package and its dependencies. It is up to the measurement developer, on how they wanted to maintain the package and dependencies. Measurement developers can choose from a few common approaches discussed below based on their requirements.
+Python communities have different ways of managing Python packages and their dependencies. It is up to the measurement developer to decide how to maintain the package and dependencies. Measurement developers can choose from a few common approaches discussed below based on their requirements.
 
-### Create and Manage Python Measurement Package using poetry
+### Create and Manage Python Measurement Package using Poetry
 
-1. Setting up Poetry(One-time setup)
-    1. Make sure the system has the recommended python version installed.
+1. Install `poetry` (one-time setup)
 
-    2. Install the `poetry` using the installation steps given in <https://python-poetry.org/docs/#installation>.
+    1. Make sure the system has the recommended Python version installed.
 
-2. Create a new python project and add `ni-measurementlink-service` as a dependency to the project.
+    2. Install `poetry` using the installation steps given in <https://python-poetry.org/docs/#installation>.
+
+2. Create a new Python project and add `ni-measurementlink-service` as a dependency to the project.
 
     1. Open a command prompt, and change the working directory to the directory of your choice where you want to create the project.
 
@@ -258,13 +259,13 @@ Python communities have different ways of managing a python package and its depe
         cd <path_of_directory_of_your_choice>
         ```
 
-    2. Create a python package(project) using the poetry new command. Poetry will create boilerplate files and folders that are commonly needed for a python project.
+    2. Create a Python package (project) using the `poetry new` command. Poetry will create boilerplate files and folders that are commonly needed for a Python project.
 
         ``` cmd
         poetry new <name_of_the_project>
         ```
 
-    3. Add the `ni-measurementlink-service` package as a dependency using the [poetry add command](https://python-poetry.org/docs/cli/#add).
+    3. Add the `ni-measurementlink-service` package as a dependency using the [`poetry add`](https://python-poetry.org/docs/cli/#add) command.
 
         ``` cmd
         cd <name_of_the_project>
@@ -273,7 +274,7 @@ Python communities have different ways of managing a python package and its depe
 
     4. The virtual environment will be auto-created by poetry.
 
-    5. Create measurement modules as described in ["Developing a minimal python measurement"](#developing-a-minimal-python-measurement)
+    5. Create measurement modules as described in ["Developing a minimal Python measurement"](#developing-a-minimal-python-measurement)
         - Any additional dependencies required by measurement can be added using [add command](https://python-poetry.org/docs/cli/#add).
 
             ``` cmd
@@ -282,9 +283,9 @@ Python communities have different ways of managing a python package and its depe
 
 For detailed info on managing projects using poetry [refer to the official documentation](https://python-poetry.org/docs/cli/).
 
-### Create and Manage Python Measurement Package using venv
+### Create and Manage Python Measurement Package using `venv`
 
-1. Make sure the system has the recommended python version installed.
+1. Make sure the system has the recommended Python version installed.
 
 2. Open a command prompt, and change the working directory to the directory of your choice where you want to create a project.
 
@@ -313,14 +314,14 @@ For detailed info on managing projects using poetry [refer to the official docum
     pip install ni-measurementlink-service
     ```
 
-6. Create measurement modules as described in ["Developing a minimal python measurement"](#developing-a-minimal-python-measurement)
+6. Create measurement modules as described in ["Developing a minimal Python measurement"](#developing-a-minimal-python-measurement)
     - Any additional dependencies required by measurement can be added pip install.
 
         ``` cmd
         pip install <dependency_package_name>
         ```
 
-For detailed info on managing projects with a virtual environment [refer to the official documentation](https://docs.python.org/3/tutorial/venv.html).
+For detailed info on managing projects with a virtual environment, refer to the [official documentation](https://docs.python.org/3/tutorial/venv.html).
 
 ### Create and Manage Python Measurement Package by directly installing `ni-measurementlink-service` as a system-level package
 
@@ -332,6 +333,6 @@ Measurement developers can also install `ni-measurementlink-service` as a system
     pip install ni-measurementlink-service
     ```
 
-2. Create measurement modules as described in ["Developing a minimal python measurement"](#developing-a-minimal-python-measurement)
+2. Create measurement modules as described in ["Developing a minimal Python measurement"](#developing-a-minimal-python-measurement)
 
 ---
