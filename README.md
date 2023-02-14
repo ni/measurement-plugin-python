@@ -5,8 +5,6 @@
   - [Abbreviations](#abbreviations)
   - [Dependencies](#dependencies)
   - [Examples](#examples)
-    - [Setting up the Example Measurements](#setting-up-the-example-measurements)
-    - [Executing the Example Measurements](#executing-the-example-measurements)
   - [Developing Measurements: Quick Start](#developing-measurements-quick-start)
     - [Installation](#installation)
     - [Developing a minimal python measurement](#developing-a-minimal-python-measurement)
@@ -55,48 +53,7 @@ There are three ways to do this:
 
 ## Examples
 
-The `examples` directory contains the following example projects:  
-
-- `sample_measurement`: Performs a loopback measurement with various data types. Provides a Measurement UI and a LabVIEW UI.
-- `nidaqmx_analog_input`: Performs a finite analog input measurement with NI-DAQmx.
-- `nidcpower_source_dc_voltage`: Sources and measures a DC voltage with an NI SMU. Provides a Measurement UI and a LabVIEW UI.
-- `nidmm_measurement`: Performs a measurement using an NI DMM.
-- `nifgen_standard_function`: Generates a standard function waveform using an NI waveform generator.
-- `niscope_acquire_waveform`: Acquires a waveform using an NI oscilloscope.
-- `niswitch_control_relays`: Controls relays using an NI relay driver (e.g. PXI-2567).
-- `nivisa_dmm_measurement`: Performs a DMM measurement using NI-VISA and an NI Instrument Simulator v2.0.
-
-For more details about a specific example, see the `README.md` file included with the example.
-
-### Setting up the Example Measurements
-
-The example measurements shared are *poetry-based* projects. Follow the below steps to  for setting up the example measurement:
-
-1. Install `poetry`. Refer to <https://python-poetry.org/docs/#installation> for information on installing poetry.
-
-2. Open a command prompt, and change the working directory to the directory of the example measurement you want to work with.
-
-    ``` cmd
-    cd <path_of_example_measurement>
-    REM Example: cd "..\measurementlink-python\examples\dc_measurement"
-    ```
-
-3. Run `poetry install`. This command creates/updates the .venv and installs all the dependencies(including `ni-measurementlink-service` package) needed for the Example into `.venv`
-
-    ``` cmd
-    poetry install
-    ```
-    - If you get a "command not found" error during `poetry install`, make sure that you added the Poetry path to the system path. Refer to [https://python-poetry.org/docs/#installing-with-the-official-installer/Add-poetry-to-your-path](https://python-poetry.org/docs/#installing-with-the-official-installer:~:text=Add%20Poetry%20to%20your%20PATH)
-    ![PoetryInstallFail](PoetryInstallFail.png)
-
-### Executing the Example Measurements
-
-1. Start the discovery service if not already started.
-2. Use `poetry run` to run the measurement service:
-
-    ``` cmd
-    poetry run python measurement.py
-    ```
+The [`examples`](https://github.com/ni/measurementlink-python/tree/main/examples/) directory contains example measurement services. See the [README.md](https://github.com/ni/measurementlink-python/tree/main/examples/README.md) file for more information.
 
 ---
 
@@ -210,11 +167,17 @@ pip install ni-measurementlink-generator
 
 ## Static Registration of Python Measurements
 
-Refer to the [Static Registration of measurements section]() for the detailed steps needed to statically register a measurement.
+The MeasurementLink discovery service provides a registry of other services, and can discover and activate other services on the system. These features allow the discovery service to distinguish, manage, and describe measurement services on the system.
 
-To Statically register the examples provided, the user can copy the example directory with the service config file with the startup batch file, to the search paths and follow the [Setting up the Example Measurements](#setting-up-the-example-measurements) section to set up the measurements.
+To statically register a measurement service with the MeasurementLink discovery service, do the following:
 
-Note: The startup batch file can be modified accordingly if the user wants to run with a custom python distribution or virtual environment
+1. Create a [startup batch file](#create-a-batch-file-that-runs-a-python-measurement) or [executable](#create-executable-for-python-scripts) for the measurement service.
+
+2. Edit the measurement service's `.serviceconfig` file and set the `path` value to the filename of the startup batch file or executable.
+
+3. Copy the measurement service's directory (including the `.venv` subdirectory if present, `.serviceconfig` file, and startup batch file) to a subdirectory of `C:\ProgramData\National Instruments\MeasurementLink\Services`. 
+
+Once your measurement service is statically registered, the MeasurementLink discovery service makes it visible in supported NI applications.
 
 ### Create a batch file that runs a python measurement
 
@@ -279,8 +242,6 @@ Measurement and its related files can be maintained as a python package. The bas
     - The path of this file is configured by `ui_file_path` in `measurement_info` variable definition in Measurement Python Module(.py file).
 
 Python communities have different ways of managing a python package and its dependencies. It is up to the measurement developer, on how they wanted to maintain the package and dependencies. Measurement developers can choose from a few common approaches discussed below based on their requirements.
-
-Note: Once we have the template support for Python measurement, the approach to managing the python measurement package(project) will be streamlined and simplified.
 
 ### Create and Manage Python Measurement Package using poetry
 
