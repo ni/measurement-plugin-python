@@ -18,7 +18,7 @@ For more details about a specific example, see the `README.md` file included wit
 
 The example measurements are *Poetry-based* projects. Follow the steps below to set up an example measurement:
 
-1. Install `poetry`. Refer to <https://python-poetry.org/docs/#installation> for information on installing poetry.
+1. Install `poetry`. Refer to <https://python-poetry.org/docs/#installation> for information on installing Poetry.
 
 2. Open a command prompt and change the working directory to the directory of the example measurement you want to work with.
 

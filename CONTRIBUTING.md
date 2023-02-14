@@ -23,10 +23,10 @@ See [GitHub's official documentation](https://help.github.com/articles/using-pul
 
 ## Prerequisites
 
-- Install the [Visual Studio Code](https://code.visualstudio.com/download).
+- (Optional) Install [Visual Studio Code](https://code.visualstudio.com/download).
 - Install Git.
 - Install [Poetry](https://python-poetry.org/docs/#installation).
-- Install Python and add it to the PATH. (Recommended Version:3.8)
+- Install Python and add it to the `PATH`. For the recommended Python version, see [Dependencies](README.md#dependencies).
 
 ## Clone Repo
 
@@ -38,21 +38,21 @@ git clone https://github.com/ni/measurementlink-python.git
 
 ## Initializing the repo with .venv
 
-From the root directory of the repo, initialize the project using the [poetry install](https://python-poetry.org/docs/cli/#install) command. This will set up a .venv with all the required dependencies based on poetry.lock file and pyproject.toml.
+From the root directory of the repo, initialize the project using the [`poetry install`](https://python-poetry.org/docs/cli/#install) command. This will set up a virtual environment (`.venv`) with the required dependencies based on the `poetry.lock` file and `pyproject.toml`.
 
 ```cmd
-poetry init 
+poetry install 
 ```
 
 ## Ensure that the `./.venv` virtual environment is activated
 
 - In the command prompt: `poetry shell`
-- In the vscode ([link](https://code.visualstudio.com/docs/python/environments#_select-and-activate-an-environment))
-- ALTERNATIVE: run commands with `poetry run`. i.e., `poetry run python measurement.py`
+- In VS Code ([link](https://code.visualstudio.com/docs/python/environments#_select-and-activate-an-environment))
+- Alternative: run commands with `poetry run`. i.e., `poetry run python measurement.py`
 
 # Adding dependencies
 
-Add dependency package for `ni_measurementlink_service`  using [poetry add](https://python-poetry.org/docs/cli/#add) command.
+Add dependency package for `ni_measurementlink_service`  using the [`poetry add`](https://python-poetry.org/docs/cli/#add) command.
 
 ```cmd
 poetry add <name_of_dependency>:<version>
@@ -66,7 +66,7 @@ poetry add -D <name_of_dev_dependency>:<version>
 
 # Updating gRPC stubs when a .proto file is modified
 
-The `ni_measurementlink_service\_internal\stubs` directory contains the auto-generated python files based on MeasurementLink protobuf (.proto) files. The file needs to be replaced whenever there is a change to these .proto files:
+The `ni_measurementlink_service\_internal\stubs` directory contains the auto-generated Python files based on MeasurementLink protobuf (`.proto`) files. The file needs to be replaced whenever there is a change to these `.proto` files:
 
 - ni/measurementlink/pin_map_context.proto
 - ni/measurementlink/discovery/v1/discovery_service.proto
@@ -76,9 +76,9 @@ The `ni_measurementlink_service\_internal\stubs` directory contains the auto-gen
 - nidevice_grpc/README.md
 - nidevice_grpc/session.proto
 
-The latest .proto files are available in [Azure Repo](https://dev.azure.com/ni/DevCentral/_git/ASW?path=/Source/Protos). From the Azure Repo manually download and overwrite the proto files under the `ni_measurementlink_service\_internal\stubs\proto` folder.
+The latest .proto files are available in [Azure Repo](https://dev.azure.com/ni/DevCentral/_git/ASW?path=/Source/Protos). From the Azure Repo manually download and overwrite the `.proto` files under the `ni_measurementlink_service\_internal\stubs\proto` folder.
 
-Run `poetry run python scripts/generate_grpc_stubs.py`. This generates the required *.py file for the listed proto files. The required `grpcio-tools` package is already added as a development dependency in pyproject.toml.
+Run `poetry run python scripts/generate_grpc_stubs.py`. This generates the required `.py` files for the listed `.proto` files. The required `grpcio-tools` package is already added as a development dependency in pyproject.toml.
 
 # Lint and Build Code
 
@@ -100,7 +100,7 @@ Running this command from the repo's root directory will generate the tar.gz fil
 
 # Testing
 
-`ni-measurementlink-service` includes tests under the directory `tests\` that exercises the python and grpc modules. The GitHub CI run these tests for PRs targeting the main branch. It is recommended that during development you run the tests locally before creating a PR.
+`ni-measurementlink-service` includes regression tests under the `tests/` directory. The GitHub CI runs these tests for PRs targeting the main branch. It is recommended that during development you run the tests locally before creating a PR.
 
 In order to run the `ni-measurementlink-service` tests locally:
 
@@ -113,7 +113,7 @@ In order to run the `ni-measurementlink-service` tests locally:
     (.venv) PS D:\TAF\measurementlink-python> poetry run pytest -v
     ```
 
-## Using VS code Test Explorer extension(UI)
+## Using VS Code Test Explorer extension (UI)
 
 Install and configure the `Python Test Explorer for Visual Studio Code` extension to execute/debug the tests using UI. For more details related to the extension, refer [here](https://marketplace.visualstudio.com/items?itemName=LittleFoxTeam.vscode-python-test-adapter).
 
