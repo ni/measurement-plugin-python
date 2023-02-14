@@ -167,12 +167,17 @@ pip install ni-measurementlink-generator
 
 ## Static Registration of Python Measurements
 
-Refer to the [Static Registration of measurements section]() for the detailed steps needed to statically register a measurement.
+The MeasurementLink discovery service provides a registry of other services, and can discover and activate other services on the system. These features allow the discovery service to distinguish, manage, and describe measurement services on the system.
 
-To Statically register the examples provided, the user can copy the example directory with the service config file with the startup batch file, to the search paths and follow the [Setting up the Example Measurements](#setting-up-the-example-measurements) section to set up the measurements.
+To statically register a measurement service with the MeasurementLink discovery service, do the following:
 
-> **Note**
-> The startup batch file can be modified accordingly in order to run with a custom python distribution or virtual environment.
+1. Create a [startup batch file](#create-a-batch-file-that-runs-a-python-measurement) or [executable](#create-executable-for-python-scripts) for the measurement service.
+
+2. Edit the measurement service's `.serviceconfig` file and set the `path` value to the filename of the startup batch file or executable.
+
+3. Copy the measurement service's directory (including the `.venv` subdirectory if present, `.serviceconfig` file, and startup batch file) to a subdirectory of `C:\ProgramData\National Instruments\MeasurementLink\Services`. 
+
+Once your measurement service is statically registered, the MeasurementLink discovery service makes it visible in supported NI applications.
 
 ### Create a batch file that runs a python measurement
 

@@ -1,5 +1,5 @@
 
-# Examples
+# Example Measurements
 
 This directory contains the following example projects:  
 
@@ -16,7 +16,7 @@ For more details about a specific example, see the `README.md` file included wit
 
 ### Setting up the Example Measurements
 
-The example measurements shared are *poetry-based* projects. Follow the below steps to  for setting up the example measurement:
+The example measurements shared are *poetry-based* projects. Follow the below steps to set up the example measurement:
 
 1. Install `poetry`. Refer to <https://python-poetry.org/docs/#installation> for information on installing poetry.
 
@@ -35,9 +35,6 @@ The example measurements shared are *poetry-based* projects. Follow the below st
     - If you get a "command not found" error during `poetry install`, make sure that you added the Poetry path to the system path. Refer to [https://python-poetry.org/docs/#installing-with-the-official-installer/Add-poetry-to-your-path](https://python-poetry.org/docs/#installing-with-the-official-installer:~:text=Add%20Poetry%20to%20your%20PATH)
     ![PoetryInstallFail](../PoetryInstallFail.png)
 
-> **Note**
-> You can also run [`install_examples.py`](../scripts/install_examples.py) to set up all of the example measurements and install them into `C:\ProgramData\National Instruments\MeasurementLink\Services`.
-
 ### Executing the Example Measurements
 
 1. Start the discovery service if not already started.
@@ -46,3 +43,14 @@ The example measurements shared are *poetry-based* projects. Follow the below st
     ``` cmd
     poetry run python measurement.py
     ```
+
+### Static Registration of Example Measurements
+
+To statically register an example measurement service with the MeasurementLink discovery service, do the following:
+
+1. Copy the example measurement's directory (including the `.venv` subdirectory, `.serviceconfig` file, and startup batch file) to a subdirectory of `C:\ProgramData\National Instruments\MeasurementLink\Services`.
+
+Once the example measurement service is statically registered, the MeasurementLink discovery service makes it visible in supported NI applications.
+
+> **Note**
+> To set up and statically register all of the example measurements, run [`install_examples.py`](../scripts/install_examples.py).
