@@ -355,10 +355,8 @@ Attributes
       Indicates that the sessions have been closed and will need to be reopened before they can be
       used again.
 
-      Args:
-      ----
-          session_info (Iterable[SessionInformation]): Sessions to be registered.
-
+      :param session_info: Sessions to be registered.
+      :type session_info: Iterable[SessionInformation]
 
 
    .. py:method:: reserve_all_registered_sessions(instrument_type_id = None, timeout = None)

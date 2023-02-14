@@ -30,7 +30,7 @@
             <a href="../../../../index.html" class="icon icon-home"> ni_measurementlink_service
           </a>
               <div class="version">
-                0.12.1
+                0.12.2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
@@ -79,7 +79,7 @@
 
 
 <span class="k">def</span> <span class="nf">_scalar_encoder</span><span class="p">(</span><span class="n">encoder</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">int</span><span class="p">],</span> <span class="n">Callable</span><span class="p">]:</span>
-    <span class="sd">&quot;&quot;&quot;Abstract Specific Encoder(Callable) as Scalar Encoder Callable that takes in field index.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Abstract Specific Encoder(Callable) as Scalar Encoder Callable that takes in field index.</span>
 
 <span class="sd">    Args</span>
 <span class="sd">    ----</span>
@@ -102,7 +102,7 @@
 
 
 <span class="k">def</span> <span class="nf">_vector_encoder</span><span class="p">(</span><span class="n">encoder</span><span class="p">,</span> <span class="n">is_packed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">int</span><span class="p">],</span> <span class="n">Callable</span><span class="p">]:</span>
-    <span class="sd">&quot;&quot;&quot;Abstract Specific Encoder(Callable) as Vector Encoder Callable that takes in field index.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Abstract Specific Encoder(Callable) as Vector Encoder Callable that takes in field index.</span>
 
 <span class="sd">    Args</span>
 <span class="sd">    ----</span>
@@ -126,7 +126,7 @@
 
 
 <span class="k">def</span> <span class="nf">_scalar_decoder</span><span class="p">(</span><span class="n">decoder</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">Callable</span><span class="p">]:</span>
-    <span class="sd">&quot;&quot;&quot;Abstract Specific Decoder(Callable) as Scalar Decoder Callable that takes in field index,key.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Abstract Specific Decoder(Callable) as Scalar Decoder Callable that takes in field index,key.</span>
 
 <span class="sd">    Args</span>
 <span class="sd">    ----</span>
@@ -150,7 +150,7 @@
 
 
 <span class="k">def</span> <span class="nf">_vector_decoder</span><span class="p">(</span><span class="n">decoder</span><span class="p">,</span> <span class="n">is_packed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">Callable</span><span class="p">]:</span>
-    <span class="sd">&quot;&quot;&quot;Abstract Specific Decoder(Callable) as Vector Decoder Callable that takes in field index,key.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Abstract Specific Decoder(Callable) as Vector Decoder Callable that takes in field index,key.</span>
 
 <span class="sd">    Args</span>
 <span class="sd">    ----</span>
@@ -213,7 +213,7 @@
 
 
 <div class="viewcode-block" id="Context"><a class="viewcode-back" href="../../../../autoapi/ni_measurementlink_service/_internal/parameter/serialization_strategy/index.html#ni_measurementlink_service._internal.parameter.serialization_strategy.Context">[docs]</a><span class="k">class</span> <span class="nc">Context</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Strategy context.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Strategy context.&quot;&quot;&quot;</span>
 
     <span class="n">_FIELD_TYPE_TO_ENCODER_MAPPING</span> <span class="o">=</span> <span class="p">{</span>
         <span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">TYPE_FLOAT</span><span class="p">:</span> <span class="p">(</span><span class="n">FloatEncoder</span><span class="p">,</span> <span class="n">FloatArrayEncoder</span><span class="p">),</span>
@@ -252,7 +252,7 @@
     <span class="k">def</span> <span class="nf">get_encoder</span><span class="p">(</span>
         <span class="nb">type</span><span class="p">:</span> <span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">Kind</span><span class="o">.</span><span class="n">ValueType</span><span class="p">,</span> <span class="n">repeated</span><span class="p">:</span> <span class="nb">bool</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">int</span><span class="p">],</span> <span class="n">Callable</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Get the Scalar Encoder or Vector Encoder for the specified type based on repeated bool.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the Scalar Encoder or Vector Encoder for the specified type based on repeated bool.</span>
 
 <span class="sd">        Args</span>
 <span class="sd">        ----</span>
@@ -280,7 +280,7 @@
     <span class="k">def</span> <span class="nf">get_decoder</span><span class="p">(</span>
         <span class="nb">type</span><span class="p">:</span> <span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">Kind</span><span class="o">.</span><span class="n">ValueType</span><span class="p">,</span> <span class="n">repeated</span><span class="p">:</span> <span class="nb">bool</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">Callable</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Get the Scalar Decoder or Vector Decoder for the specified type based on repeated bool.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the Scalar Decoder or Vector Decoder for the specified type based on repeated bool.</span>
 
 <span class="sd">        Args</span>
 <span class="sd">        ----</span>
@@ -306,7 +306,7 @@
 
 <div class="viewcode-block" id="Context.get_type_default"><a class="viewcode-back" href="../../../../autoapi/ni_measurementlink_service/_internal/parameter/serialization_strategy/index.html#ni_measurementlink_service._internal.parameter.serialization_strategy.Context.get_type_default">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_type_default</span><span class="p">(</span><span class="nb">type</span><span class="p">:</span> <span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">Kind</span><span class="o">.</span><span class="n">ValueType</span><span class="p">,</span> <span class="n">repeated</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Get the Type default.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the Type default.</span>
 
 <span class="sd">        Args</span>
 <span class="sd">        ----</span>

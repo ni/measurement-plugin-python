@@ -31,7 +31,7 @@
             <a href="../../../index.html" class="icon icon-home"> ni_measurementlink_service
           </a>
               <div class="version">
-                0.12.1
+                0.12.2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -478,20 +478,19 @@ management service to track as the sessions are open.</p>
 <dd><p>Unregisters the sessions from the Session Manager.</p>
 <p>Indicates that the sessions have been closed and will need to be reopened before they can be
 used again.</p>
-<section id="id5">
-<h4>Args:<a class="headerlink" href="#id5" title="Permalink to this heading"></a></h4>
-<blockquote>
-<div><p>session_info (Iterable[SessionInformation]): Sessions to be registered.</p>
-</div></blockquote>
-</section>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>session_info</strong> (<em>Iterable</em><em>[</em><a class="reference internal" href="#ni_measurementlink_service.session_management.SessionInformation" title="ni_measurementlink_service.session_management.SessionInformation"><em>SessionInformation</em></a><em>]</em>) – Sessions to be registered.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ni_measurementlink_service.session_management.Client.reserve_all_registered_sessions">
 <span class="sig-name descname"><span class="pre">reserve_all_registered_sessions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instrument_type_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/ni_measurementlink_service/session_management.html#Client.reserve_all_registered_sessions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service.session_management.Client.reserve_all_registered_sessions" title="Permalink to this definition"></a></dt>
 <dd><p>Reserves and gets all sessions currently registered in the Session Manager.</p>
-<section id="id6">
-<h4>Args<a class="headerlink" href="#id6" title="Permalink to this heading"></a></h4>
+<section id="id5">
+<h4>Args<a class="headerlink" href="#id5" title="Permalink to this heading"></a></h4>
 <blockquote>
 <div><dl>
 <dt>instrument_type_id (str): Instrument type ID for the measurement. If unspecified,</dt><dd><p>reserve sessions for all instrument types connected in the registered pin map
@@ -516,8 +515,8 @@ any positive numeric value (wait for that number of second).</p>
 </dl>
 </div></blockquote>
 </section>
-<section id="id7">
-<h4>Returns<a class="headerlink" href="#id7" title="Permalink to this heading"></a></h4>
+<section id="id6">
+<h4>Returns<a class="headerlink" href="#id6" title="Permalink to this heading"></a></h4>
 <blockquote>
 <div><p>Reservation: Context manager that can be used with a with-statement to unreserve the
 sessions.</p>

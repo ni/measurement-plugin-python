@@ -30,7 +30,7 @@
             <a href="../../index.html" class="icon icon-home"> ni_measurementlink_service
           </a>
               <div class="version">
-                0.12.1
+                0.12.2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -76,7 +76,9 @@
 <span class="kn">import</span> <span class="nn">grpc</span>
 
 <span class="kn">from</span> <span class="nn">ni_measurementlink_service._internal.stubs</span> <span class="kn">import</span> <span class="n">session_pb2</span>
-<span class="kn">from</span> <span class="nn">ni_measurementlink_service._internal.stubs.ni.measurementlink</span> <span class="kn">import</span> <span class="n">pin_map_context_pb2</span>
+<span class="kn">from</span> <span class="nn">ni_measurementlink_service._internal.stubs.ni.measurementlink</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">pin_map_context_pb2</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">ni_measurementlink_service._internal.stubs.ni.measurementlink.sessionmanagement.v1</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">session_management_service_pb2</span><span class="p">,</span>
     <span class="n">session_management_service_pb2_grpc</span><span class="p">,</span>
@@ -105,7 +107,7 @@
 
 
 <div class="viewcode-block" id="PinMapContext"><a class="viewcode-back" href="../../autoapi/ni_measurementlink_service/session_management/index.html#ni_measurementlink_service.session_management.PinMapContext">[docs]</a><span class="k">class</span> <span class="nc">PinMapContext</span><span class="p">(</span><span class="n">NamedTuple</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Container for the pin map and sites.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Container for the pin map and sites.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
@@ -122,7 +124,7 @@
 
 
 <div class="viewcode-block" id="ChannelMapping"><a class="viewcode-back" href="../../autoapi/ni_measurementlink_service/session_management/index.html#ni_measurementlink_service.session_management.ChannelMapping">[docs]</a><span class="k">class</span> <span class="nc">ChannelMapping</span><span class="p">(</span><span class="n">NamedTuple</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Mapping of each channel to the pin and site it is connected to.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Mapping of each channel to the pin and site it is connected to.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
@@ -141,7 +143,7 @@
 
 
 <div class="viewcode-block" id="SessionInformation"><a class="viewcode-back" href="../../autoapi/ni_measurementlink_service/session_management/index.html#ni_measurementlink_service.session_management.SessionInformation">[docs]</a><span class="k">class</span> <span class="nc">SessionInformation</span><span class="p">(</span><span class="n">NamedTuple</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Container for the session information.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Container for the session information.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
@@ -183,33 +185,33 @@
 
 
 <div class="viewcode-block" id="Reservation"><a class="viewcode-back" href="../../autoapi/ni_measurementlink_service/session_management/index.html#ni_measurementlink_service.session_management.Reservation">[docs]</a><span class="k">class</span> <span class="nc">Reservation</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Manage session reservation.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Manage session reservation.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">session_manager</span><span class="p">:</span> <span class="s2">&quot;Client&quot;</span><span class="p">,</span>
         <span class="n">session_info</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">session_management_service_pb2</span><span class="o">.</span><span class="n">SessionInformation</span><span class="p">],</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Initialize reservation object.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize reservation object.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_session_manager</span> <span class="o">=</span> <span class="n">session_manager</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_session_info</span> <span class="o">=</span> <span class="n">session_info</span>
 
 <div class="viewcode-block" id="Reservation.__enter__"><a class="viewcode-back" href="../../autoapi/ni_measurementlink_service/session_management/index.html#ni_measurementlink_service.session_management.Reservation.__enter__">[docs]</a>    <span class="k">def</span> <span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="n">_TReservation</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_TReservation</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Context management protocol. Returns self.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Context management protocol. Returns self.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
 <div class="viewcode-block" id="Reservation.__exit__"><a class="viewcode-back" href="../../autoapi/ni_measurementlink_service/session_management/index.html#ni_measurementlink_service.session_management.Reservation.__exit__">[docs]</a>    <span class="k">def</span> <span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">exc</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Context management protocol. Calls unreserve().&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Context management protocol. Calls unreserve().&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">unreserve</span><span class="p">()</span>
         <span class="k">return</span> <span class="kc">False</span></div>
 
 <div class="viewcode-block" id="Reservation.unreserve"><a class="viewcode-back" href="../../autoapi/ni_measurementlink_service/session_management/index.html#ni_measurementlink_service.session_management.Reservation.unreserve">[docs]</a>    <span class="k">def</span> <span class="nf">unreserve</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Unreserve sessions.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Unreserve sessions.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_session_manager</span><span class="o">.</span><span class="n">_unreserve_sessions</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_session_info</span><span class="p">)</span></div>
 
     <span class="nd">@cached_property</span>
     <span class="k">def</span> <span class="nf">session_info</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">SessionInformation</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Return session information.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return session information.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">[</span>
             <span class="n">SessionInformation</span><span class="p">(</span>
                 <span class="n">session_name</span><span class="o">=</span><span class="n">info</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
@@ -231,10 +233,10 @@
 
 
 <div class="viewcode-block" id="Client"><a class="viewcode-back" href="../../autoapi/ni_measurementlink_service/session_management/index.html#ni_measurementlink_service.session_management.Client">[docs]</a><span class="k">class</span> <span class="nc">Client</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Class that manages driver sessions.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class that manages driver sessions.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">grpc_channel</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">Channel</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Initialize session manangement client.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize session manangement client.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="p">:</span> <span class="n">session_management_service_pb2_grpc</span><span class="o">.</span><span class="n">SessionManagementServiceStub</span> <span class="o">=</span> <span class="p">(</span>
             <span class="n">session_management_service_pb2_grpc</span><span class="o">.</span><span class="n">SessionManagementServiceStub</span><span class="p">(</span><span class="n">grpc_channel</span><span class="p">)</span>
         <span class="p">)</span>
@@ -246,7 +248,7 @@
         <span class="n">instrument_type_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">timeout</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Reservation</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Reserve session(s).</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Reserve session(s).</span>
 
 <span class="sd">        Reserve session(s) for the given pins, sites, and instrument type ID and returns the</span>
 <span class="sd">        information needed to create or access the session.</span>
@@ -314,12 +316,12 @@
     <span class="k">def</span> <span class="nf">_unreserve_sessions</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">session_info</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">session_management_service_pb2</span><span class="o">.</span><span class="n">SessionInformation</span><span class="p">]</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Unreserves sessions so they can be accessed by other clients.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Unreserves sessions so they can be accessed by other clients.&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">session_management_service_pb2</span><span class="o">.</span><span class="n">UnreserveSessionsRequest</span><span class="p">(</span><span class="n">sessions</span><span class="o">=</span><span class="n">session_info</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">UnreserveSessions</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Client.register_sessions"><a class="viewcode-back" href="../../autoapi/ni_measurementlink_service/session_management/index.html#ni_measurementlink_service.session_management.Client.register_sessions">[docs]</a>    <span class="k">def</span> <span class="nf">register_sessions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session_info</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">SessionInformation</span><span class="p">]):</span>
-        <span class="sd">&quot;&quot;&quot;Register the sessions with the Session Manager.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Register the sessions with the Session Manager.</span>
 
 <span class="sd">        Indicates that the sessions are open and will need to be closed later.</span>
 
@@ -356,13 +358,12 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">RegisterSessions</span><span class="p">(</span><span class="n">request</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Client.unregister_sessions"><a class="viewcode-back" href="../../autoapi/ni_measurementlink_service/session_management/index.html#ni_measurementlink_service.session_management.Client.unregister_sessions">[docs]</a>    <span class="k">def</span> <span class="nf">unregister_sessions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session_info</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">SessionInformation</span><span class="p">]):</span>
-        <span class="sd">&quot;&quot;&quot;Unregisters the sessions from the Session Manager.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Unregisters the sessions from the Session Manager.</span>
 
 <span class="sd">        Indicates that the sessions have been closed and will need to be reopened before they can be</span>
 <span class="sd">        used again.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">        ----</span>
 <span class="sd">            session_info (Iterable[SessionInformation]): Sessions to be registered.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -391,7 +392,7 @@
 <div class="viewcode-block" id="Client.reserve_all_registered_sessions"><a class="viewcode-back" href="../../autoapi/ni_measurementlink_service/session_management/index.html#ni_measurementlink_service.session_management.Client.reserve_all_registered_sessions">[docs]</a>    <span class="k">def</span> <span class="nf">reserve_all_registered_sessions</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">instrument_type_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Reservation</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Reserves and gets all sessions currently registered in the Session Manager.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Reserves and gets all sessions currently registered in the Session Manager.</span>
 
 <span class="sd">        Args</span>
 <span class="sd">        ----</span>

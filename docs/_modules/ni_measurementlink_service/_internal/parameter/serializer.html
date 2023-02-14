@@ -30,7 +30,7 @@
             <a href="../../../../index.html" class="icon icon-home"> ni_measurementlink_service
           </a>
               <div class="version">
-                0.12.1
+                0.12.2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
@@ -87,7 +87,7 @@
 <div class="viewcode-block" id="deserialize_parameters"><a class="viewcode-back" href="../../../../autoapi/ni_measurementlink_service/_internal/parameter/serializer/index.html#ni_measurementlink_service._internal.parameter.serializer.deserialize_parameters">[docs]</a><span class="k">def</span> <span class="nf">deserialize_parameters</span><span class="p">(</span>
     <span class="n">parameter_metadata_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">ParameterMetadata</span><span class="p">],</span> <span class="n">parameter_bytes</span><span class="p">:</span> <span class="n">Bytes</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-    <span class="sd">&quot;&quot;&quot;Deserialize the bytes of the parameter based on the metadata.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Deserialize the bytes of the parameter based on the metadata.</span>
 
 <span class="sd">    Args</span>
 <span class="sd">    ----</span>
@@ -115,7 +115,7 @@
 <div class="viewcode-block" id="serialize_parameters"><a class="viewcode-back" href="../../../../autoapi/ni_measurementlink_service/_internal/parameter/serializer/index.html#ni_measurementlink_service._internal.parameter.serializer.serialize_parameters">[docs]</a><span class="k">def</span> <span class="nf">serialize_parameters</span><span class="p">(</span>
     <span class="n">parameter_metadata_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">ParameterMetadata</span><span class="p">],</span> <span class="n">parameter_value</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Serialize the parameter values in same order based on the metadata_dict.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Serialize the parameter values in same order based on the metadata_dict.</span>
 
 <span class="sd">    Args</span>
 <span class="sd">    ----</span>
@@ -147,7 +147,7 @@
 
 
 <div class="viewcode-block" id="serialize_default_values"><a class="viewcode-back" href="../../../../autoapi/ni_measurementlink_service/_internal/parameter/serializer/index.html#ni_measurementlink_service._internal.parameter.serializer.serialize_default_values">[docs]</a><span class="k">def</span> <span class="nf">serialize_default_values</span><span class="p">(</span><span class="n">parameter_metadata_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">ParameterMetadata</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Serialize the Default values in the Metadata.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Serialize the Default values in the Metadata.</span>
 
 <span class="sd">    Args</span>
 <span class="sd">    -----</span>
@@ -166,7 +166,7 @@
 
 
 <span class="k">def</span> <span class="nf">_get_field_index</span><span class="p">(</span><span class="n">parameter_bytes</span><span class="p">,</span> <span class="n">tag_position</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Get the Filed Index based on the tag&#39;s position.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the Filed Index based on the tag&#39;s position.</span>
 
 <span class="sd">    The tag Position should be the index of the TagValue in the ByteArray for valid field index.</span>
 
@@ -187,7 +187,7 @@
 <span class="k">def</span> <span class="nf">_get_overlapping_parameters</span><span class="p">(</span>
     <span class="n">parameter_metadata_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">ParameterMetadata</span><span class="p">],</span> <span class="n">parameter_bytes</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-    <span class="sd">&quot;&quot;&quot;Get the parameters present in both `parameter_metadata_dict` and `parameter_bytes`.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the parameters present in both `parameter_metadata_dict` and `parameter_bytes`.</span>
 
 <span class="sd">    Args</span>
 <span class="sd">    ----</span>
@@ -233,7 +233,7 @@
 <span class="k">def</span> <span class="nf">_get_missing_parameters</span><span class="p">(</span>
     <span class="n">parameter_metadata_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">ParameterMetadata</span><span class="p">],</span> <span class="n">parameter_by_id</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-    <span class="sd">&quot;&quot;&quot;Get the Parameters defined in `parameter_metadata_dict` but not in `parameter_by_id`.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the Parameters defined in `parameter_metadata_dict` but not in `parameter_by_id`.</span>
 
 <span class="sd">    Args</span>
 <span class="sd">    ----</span>

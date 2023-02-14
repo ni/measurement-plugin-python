@@ -30,7 +30,7 @@
             <a href="../../../../../../../../index.html" class="icon icon-home"> ni_measurementlink_service
           </a>
               <div class="version">
-                0.12.1
+                0.12.2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../../../../../search.html" method="get">
@@ -79,10 +79,10 @@
 
 
 <div class="viewcode-block" id="SessionManagementServiceStub"><a class="viewcode-back" href="../../../../../../../../autoapi/ni_measurementlink_service/_internal/stubs/ni/measurementlink/sessionmanagement/v1/session_management_service_pb2_grpc/index.html#ni_measurementlink_service._internal.stubs.ni.measurementlink.sessionmanagement.v1.session_management_service_pb2_grpc.SessionManagementServiceStub">[docs]</a><span class="k">class</span> <span class="nc">SessionManagementServiceStub</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Service to keep track of open sessions used by measurement services, and to allow measurement services to access sessions by pin and site.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Service to keep track of open sessions used by measurement services, and to allow measurement services to access sessions by pin and site.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Constructor.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            channel: A grpc.Channel.</span>
@@ -115,10 +115,10 @@
 
 
 <div class="viewcode-block" id="SessionManagementServiceServicer"><a class="viewcode-back" href="../../../../../../../../autoapi/ni_measurementlink_service/_internal/stubs/ni/measurementlink/sessionmanagement/v1/session_management_service_pb2_grpc/index.html#ni_measurementlink_service._internal.stubs.ni.measurementlink.sessionmanagement.v1.session_management_service_pb2_grpc.SessionManagementServiceServicer">[docs]</a><span class="k">class</span> <span class="nc">SessionManagementServiceServicer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Service to keep track of open sessions used by measurement services, and to allow measurement services to access sessions by pin and site.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Service to keep track of open sessions used by measurement services, and to allow measurement services to access sessions by pin and site.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="SessionManagementServiceServicer.ReserveSessions"><a class="viewcode-back" href="../../../../../../../../autoapi/ni_measurementlink_service/_internal/stubs/ni/measurementlink/sessionmanagement/v1/session_management_service_pb2_grpc/index.html#ni_measurementlink_service._internal.stubs.ni.measurementlink.sessionmanagement.v1.session_management_service_pb2_grpc.SessionManagementServiceServicer.ReserveSessions">[docs]</a>    <span class="k">def</span> <span class="nf">ReserveSessions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Reserve session(s) for the given pins or relays, sites, and instrument type ID and returns the information needed to create or access the session.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Reserve session(s) for the given pins or relays, sites, and instrument type ID and returns the information needed to create or access the session.</span>
 <span class="sd">        (Will be implemented in AB#2046548) Also reserves the session so other processes cannot access it with a ReserveSessions() call.</span>
 <span class="sd">        Status Codes for errors:</span>
 <span class="sd">        - INVALID_ARGUMENT:</span>
@@ -135,7 +135,7 @@
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Method not implemented!&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="SessionManagementServiceServicer.UnreserveSessions"><a class="viewcode-back" href="../../../../../../../../autoapi/ni_measurementlink_service/_internal/stubs/ni/measurementlink/sessionmanagement/v1/session_management_service_pb2_grpc/index.html#ni_measurementlink_service._internal.stubs.ni.measurementlink.sessionmanagement.v1.session_management_service_pb2_grpc.SessionManagementServiceServicer.UnreserveSessions">[docs]</a>    <span class="k">def</span> <span class="nf">UnreserveSessions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Unreserves sessions so they can be accessed by other clients.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Unreserves sessions so they can be accessed by other clients.</span>
 <span class="sd">        - RESOURCE_EXHAUSTED:</span>
 <span class="sd">        - Error occurred while unreserving sessions.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -144,7 +144,7 @@
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Method not implemented!&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="SessionManagementServiceServicer.RegisterSessions"><a class="viewcode-back" href="../../../../../../../../autoapi/ni_measurementlink_service/_internal/stubs/ni/measurementlink/sessionmanagement/v1/session_management_service_pb2_grpc/index.html#ni_measurementlink_service._internal.stubs.ni.measurementlink.sessionmanagement.v1.session_management_service_pb2_grpc.SessionManagementServiceServicer.RegisterSessions">[docs]</a>    <span class="k">def</span> <span class="nf">RegisterSessions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Registers the sessions with this service. Indicates that the sessions are open and will need to be closed later.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Registers the sessions with this service. Indicates that the sessions are open and will need to be closed later.</span>
 <span class="sd">        Status Codes for errors:</span>
 <span class="sd">        - ALREADY_EXISTS:</span>
 <span class="sd">        - Session by the same name is already registered.</span>
@@ -156,13 +156,13 @@
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Method not implemented!&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="SessionManagementServiceServicer.UnregisterSessions"><a class="viewcode-back" href="../../../../../../../../autoapi/ni_measurementlink_service/_internal/stubs/ni/measurementlink/sessionmanagement/v1/session_management_service_pb2_grpc/index.html#ni_measurementlink_service._internal.stubs.ni.measurementlink.sessionmanagement.v1.session_management_service_pb2_grpc.SessionManagementServiceServicer.UnregisterSessions">[docs]</a>    <span class="k">def</span> <span class="nf">UnregisterSessions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Unregisters the sessions with this service. Indicates that the sessions have been closed and will need to be reopened before they can be used again.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Unregisters the sessions with this service. Indicates that the sessions have been closed and will need to be reopened before they can be used again.&quot;&quot;&quot;</span>
         <span class="n">context</span><span class="o">.</span><span class="n">set_code</span><span class="p">(</span><span class="n">grpc</span><span class="o">.</span><span class="n">StatusCode</span><span class="o">.</span><span class="n">UNIMPLEMENTED</span><span class="p">)</span>
         <span class="n">context</span><span class="o">.</span><span class="n">set_details</span><span class="p">(</span><span class="s2">&quot;Method not implemented!&quot;</span><span class="p">)</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Method not implemented!&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="SessionManagementServiceServicer.ReserveAllRegisteredSessions"><a class="viewcode-back" href="../../../../../../../../autoapi/ni_measurementlink_service/_internal/stubs/ni/measurementlink/sessionmanagement/v1/session_management_service_pb2_grpc/index.html#ni_measurementlink_service._internal.stubs.ni.measurementlink.sessionmanagement.v1.session_management_service_pb2_grpc.SessionManagementServiceServicer.ReserveAllRegisteredSessions">[docs]</a>    <span class="k">def</span> <span class="nf">ReserveAllRegisteredSessions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Reserves and gets all sessions currently registered with this service.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Reserves and gets all sessions currently registered with this service.</span>
 <span class="sd">        - INVALID_ARGUMENT:</span>
 <span class="sd">        - Timeout specified is less than -1.</span>
 <span class="sd">        - UNAVAILABLE:</span>
@@ -209,7 +209,7 @@
 
 <span class="c1"># This class is part of an EXPERIMENTAL API.</span>
 <div class="viewcode-block" id="SessionManagementService"><a class="viewcode-back" href="../../../../../../../../autoapi/ni_measurementlink_service/_internal/stubs/ni/measurementlink/sessionmanagement/v1/session_management_service_pb2_grpc/index.html#ni_measurementlink_service._internal.stubs.ni.measurementlink.sessionmanagement.v1.session_management_service_pb2_grpc.SessionManagementService">[docs]</a><span class="k">class</span> <span class="nc">SessionManagementService</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Service to keep track of open sessions used by measurement services, and to allow measurement services to access sessions by pin and site.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Service to keep track of open sessions used by measurement services, and to allow measurement services to access sessions by pin and site.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="SessionManagementService.ReserveSessions"><a class="viewcode-back" href="../../../../../../../../autoapi/ni_measurementlink_service/_internal/stubs/ni/measurementlink/sessionmanagement/v1/session_management_service_pb2_grpc/index.html#ni_measurementlink_service._internal.stubs.ni.measurementlink.sessionmanagement.v1.session_management_service_pb2_grpc.SessionManagementService.ReserveSessions">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">ReserveSessions</span><span class="p">(</span>

@@ -30,7 +30,7 @@
             <a href="../../../../../../../../index.html" class="icon icon-home"> ni_measurementlink_service
           </a>
               <div class="version">
-                0.12.1
+                0.12.2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../../../../../search.html" method="get">
@@ -79,12 +79,12 @@
 
 
 <div class="viewcode-block" id="MeasurementServiceStub"><a class="viewcode-back" href="../../../../../../../../autoapi/ni_measurementlink_service/_internal/stubs/ni/measurementlink/measurement/v1/measurement_service_pb2_grpc/index.html#ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v1.measurement_service_pb2_grpc.MeasurementServiceStub">[docs]</a><span class="k">class</span> <span class="nc">MeasurementServiceStub</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Service that implements a measurement. Unlike other services, a MeasurementService is designed to be a plugin</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Service that implements a measurement. Unlike other services, a MeasurementService is designed to be a plugin</span>
 <span class="sd">    where there can be multiple implementations of the service that provide different measurement capabilities.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Constructor.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            channel: A grpc.Channel.</span>
@@ -102,18 +102,18 @@
 
 
 <div class="viewcode-block" id="MeasurementServiceServicer"><a class="viewcode-back" href="../../../../../../../../autoapi/ni_measurementlink_service/_internal/stubs/ni/measurementlink/measurement/v1/measurement_service_pb2_grpc/index.html#ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v1.measurement_service_pb2_grpc.MeasurementServiceServicer">[docs]</a><span class="k">class</span> <span class="nc">MeasurementServiceServicer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Service that implements a measurement. Unlike other services, a MeasurementService is designed to be a plugin</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Service that implements a measurement. Unlike other services, a MeasurementService is designed to be a plugin</span>
 <span class="sd">    where there can be multiple implementations of the service that provide different measurement capabilities.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="MeasurementServiceServicer.GetMetadata"><a class="viewcode-back" href="../../../../../../../../autoapi/ni_measurementlink_service/_internal/stubs/ni/measurementlink/measurement/v1/measurement_service_pb2_grpc/index.html#ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v1.measurement_service_pb2_grpc.MeasurementServiceServicer.GetMetadata">[docs]</a>    <span class="k">def</span> <span class="nf">GetMetadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns information that describes the measurement.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns information that describes the measurement.&quot;&quot;&quot;</span>
         <span class="n">context</span><span class="o">.</span><span class="n">set_code</span><span class="p">(</span><span class="n">grpc</span><span class="o">.</span><span class="n">StatusCode</span><span class="o">.</span><span class="n">UNIMPLEMENTED</span><span class="p">)</span>
         <span class="n">context</span><span class="o">.</span><span class="n">set_details</span><span class="p">(</span><span class="s2">&quot;Method not implemented!&quot;</span><span class="p">)</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Method not implemented!&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="MeasurementServiceServicer.Measure"><a class="viewcode-back" href="../../../../../../../../autoapi/ni_measurementlink_service/_internal/stubs/ni/measurementlink/measurement/v1/measurement_service_pb2_grpc/index.html#ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v1.measurement_service_pb2_grpc.MeasurementServiceServicer.Measure">[docs]</a>    <span class="k">def</span> <span class="nf">Measure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;API used to perform a measurement.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;API used to perform a measurement.&quot;&quot;&quot;</span>
         <span class="n">context</span><span class="o">.</span><span class="n">set_code</span><span class="p">(</span><span class="n">grpc</span><span class="o">.</span><span class="n">StatusCode</span><span class="o">.</span><span class="n">UNIMPLEMENTED</span><span class="p">)</span>
         <span class="n">context</span><span class="o">.</span><span class="n">set_details</span><span class="p">(</span><span class="s2">&quot;Method not implemented!&quot;</span><span class="p">)</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Method not implemented!&quot;</span><span class="p">)</span></div></div>
@@ -140,7 +140,7 @@
 
 <span class="c1"># This class is part of an EXPERIMENTAL API.</span>
 <div class="viewcode-block" id="MeasurementService"><a class="viewcode-back" href="../../../../../../../../autoapi/ni_measurementlink_service/_internal/stubs/ni/measurementlink/measurement/v1/measurement_service_pb2_grpc/index.html#ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v1.measurement_service_pb2_grpc.MeasurementService">[docs]</a><span class="k">class</span> <span class="nc">MeasurementService</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Service that implements a measurement. Unlike other services, a MeasurementService is designed to be a plugin</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Service that implements a measurement. Unlike other services, a MeasurementService is designed to be a plugin</span>
 <span class="sd">    where there can be multiple implementations of the service that provide different measurement capabilities.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 

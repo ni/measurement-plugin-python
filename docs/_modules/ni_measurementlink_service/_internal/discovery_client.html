@@ -30,7 +30,7 @@
             <a href="../../../index.html" class="icon icon-home"> ni_measurementlink_service
           </a>
               <div class="version">
-                0.12.1
+                0.12.2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -89,6 +89,7 @@
 <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span> <span class="o">==</span> <span class="s2">&quot;win32&quot;</span><span class="p">:</span>
     <span class="kn">import</span> <span class="nn">errno</span>
     <span class="kn">import</span> <span class="nn">msvcrt</span>
+
     <span class="kn">import</span> <span class="nn">win32con</span>
     <span class="kn">import</span> <span class="nn">win32file</span>
     <span class="kn">import</span> <span class="nn">winerror</span>
@@ -100,7 +101,7 @@
 
 
 <div class="viewcode-block" id="ServiceLocation"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/_internal/discovery_client/index.html#ni_measurementlink_service._internal.discovery_client.ServiceLocation">[docs]</a><span class="k">class</span> <span class="nc">ServiceLocation</span><span class="p">(</span><span class="n">typing</span><span class="o">.</span><span class="n">NamedTuple</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Represents the location of a service.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Represents the location of a service.&quot;&quot;&quot;</span>
 
     <span class="n">location</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">insecure_port</span><span class="p">:</span> <span class="nb">str</span>
@@ -108,17 +109,17 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">insecure_address</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Get the service&#39;s insecure address in the format host:port.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the service&#39;s insecure address in the format host:port.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">insecure_port</span><span class="si">}</span><span class="s2">&quot;</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">ssl_authenticated_address</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Get the service&#39;s SSL-authenticated address in the format host:port.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the service&#39;s SSL-authenticated address in the format host:port.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ssl_authenticated_port</span><span class="si">}</span><span class="s2">&quot;</span></div>
 
 
 <div class="viewcode-block" id="DiscoveryClient"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/_internal/discovery_client/index.html#ni_measurementlink_service._internal.discovery_client.DiscoveryClient">[docs]</a><span class="k">class</span> <span class="nc">DiscoveryClient</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Class that contains APIs need to interact with discovery service.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class that contains APIs need to interact with discovery service.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
@@ -130,10 +131,9 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stub</span><span class="p">:</span> <span class="n">discovery_service_pb2_grpc</span><span class="o">.</span><span class="n">DiscoveryServiceStub</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Initialize the Discovery Client with provided registry service stub.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the Discovery Client with provided registry service stub.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">        ----</span>
 <span class="sd">            stub (DiscoveryServiceStub, optional): The gRPC stub to interact with discovery</span>
 <span class="sd">            service. Defaults to None.</span>
 
@@ -143,7 +143,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">stub</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">discovery_service_pb2_grpc</span><span class="o">.</span><span class="n">DiscoveryServiceStub</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Get the gRPC stub used to interact with the discovery service.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the gRPC stub used to interact with the discovery service.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stub</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">address</span> <span class="o">=</span> <span class="n">_get_discovery_service_address</span><span class="p">()</span>
             <span class="n">channel</span> <span class="o">=</span> <span class="n">grpc</span><span class="o">.</span><span class="n">insecure_channel</span><span class="p">(</span><span class="n">address</span><span class="p">)</span>
@@ -153,7 +153,7 @@
 <div class="viewcode-block" id="DiscoveryClient.register_measurement_service"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/_internal/discovery_client/index.html#ni_measurementlink_service._internal.discovery_client.DiscoveryClient.register_measurement_service">[docs]</a>    <span class="k">def</span> <span class="nf">register_measurement_service</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">service_port</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">service_info</span><span class="p">:</span> <span class="n">ServiceInfo</span><span class="p">,</span> <span class="n">measurement_info</span><span class="p">:</span> <span class="n">MeasurementInfo</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Register the measurement service with the discovery service.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Register the measurement service with the discovery service.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">        ----</span>
@@ -169,7 +169,6 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
-
             <span class="c1"># Service Location</span>
             <span class="n">service_location</span> <span class="o">=</span> <span class="n">discovery_service_pb2</span><span class="o">.</span><span class="n">ServiceLocation</span><span class="p">()</span>
             <span class="n">service_location</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="s2">&quot;localhost&quot;</span>
@@ -207,7 +206,7 @@
         <span class="k">return</span> <span class="kc">True</span></div>
 
 <div class="viewcode-block" id="DiscoveryClient.unregister_service"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/_internal/discovery_client/index.html#ni_measurementlink_service._internal.discovery_client.DiscoveryClient.unregister_service">[docs]</a>    <span class="k">def</span> <span class="nf">unregister_service</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Un-registers the measurement service from the discovery service.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Un-registers the measurement service from the discovery service.</span>
 
 <span class="sd">        Should be called before the service is closed.</span>
 
@@ -245,7 +244,7 @@
         <span class="k">return</span> <span class="kc">True</span></div>
 
 <div class="viewcode-block" id="DiscoveryClient.resolve_service"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/_internal/discovery_client/index.html#ni_measurementlink_service._internal.discovery_client.DiscoveryClient.resolve_service">[docs]</a>    <span class="k">def</span> <span class="nf">resolve_service</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">provided_interface</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">service_class</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ServiceLocation</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Resolve the location of a service.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Resolve the location of a service.</span>
 
 <span class="sd">        Given a description of a service, returns information that can be used to establish</span>
 <span class="sd">        communication with that service. If necessary, the service will be started by the</span>

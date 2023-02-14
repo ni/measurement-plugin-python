@@ -208,7 +208,7 @@ Classes
       
 
 
-.. py:class:: MeasurementService(measurement_info, service_info)
+.. py:class:: MeasurementService(service_config_path, version, ui_file_paths, service_class = None)
 
    Class that supports registering and hosting a python function as a gRPC service.
 
