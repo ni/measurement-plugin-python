@@ -237,7 +237,7 @@ Measurement and its related files can be maintained as a Python package. The bas
 
 2. UI File
     - UI file for the measurement. Types of supported UI files are:
-        - Measurement UI (`.measui`): created using the **Measurement UI Editor application**.
+        - Measurement UI (`.measui`): created using the **MeasurementLink UI Editor** application.
         - LabVIEW UI (`.vi`)
     - The path of this file is configured by `ui_file_path` in `measurement_info` variable definition in measurement Python module (`.py`).
 
