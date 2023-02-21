@@ -7,7 +7,7 @@ authors = ["National Instruments"]
 [tool.poetry.dependencies]
 python = "^3.8"
 nifgen = ">=1.4.3"
-ni-measurementlink-service = "*"
+ni-measurementlink-service = "^1.0.0"
 click = ">=7.1.2"
 grpcio = "*"
 

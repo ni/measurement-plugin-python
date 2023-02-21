@@ -6,7 +6,7 @@ authors = ["National Instruments"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
-ni-measurementlink-service = "*"
+ni-measurementlink-service = "^1.0.0"
 PyVISA = "^1.13.0"
 PyVISA-sim = "^0.5.1"
 click = ">=7.1.2"
