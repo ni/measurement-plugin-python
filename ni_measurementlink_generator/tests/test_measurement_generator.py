@@ -15,7 +15,7 @@ def test___command_line_args___create_measurement___render_without_exception(tmp
     with pytest.raises(SystemExit):
         template.create_measurement(
             [
-                "SampleMeasurement",
+                "Sample Measurement",
                 "--measurement-version",
                 "1.0.0.0",
                 "--ui-file",

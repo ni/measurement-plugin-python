@@ -113,6 +113,7 @@ def create_measurement(
     display_name_for_filenames = re.sub(r"\s+", "", display_name)
     ui_file = _resolve_ui_file(ui_file, display_name_for_filenames)
     ui_file_type = _get_ui_type(ui_file)
+    serviceconfig_file = f"{display_name_for_filenames}.serviceconfig"
     if directory_out is None:
         directory_out = pathlib.Path.cwd() / display_name_for_filenames
     else:
@@ -130,10 +131,11 @@ def create_measurement(
         ui_file_type=ui_file_type,
         service_class=service_class,
         description_url=description_url,
+        serviceconfig_file=serviceconfig_file,
     )
     _create_file(
         "measurement.serviceconfig.mako",
-        f"{display_name_for_filenames}.serviceconfig",
+        serviceconfig_file,
         directory_out,
         display_name=display_name,
         service_class=service_class,
@@ -143,7 +145,7 @@ def create_measurement(
     if ui_file_type == "MeasurementUI":
         _create_file(
             "measurement.measui.mako",
-            f"{ui_file}",
+            ui_file,
             directory_out,
             display_name=display_name,
             service_class=service_class,

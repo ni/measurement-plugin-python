@@ -1,4 +1,4 @@
-<%page args="display_name, version, ui_file, ui_file_type, service_class, description_url"/>\
+<%page args="display_name, version, ui_file, ui_file_type, service_class, description_url, serviceconfig_file"/>\
 \
 """A default measurement with an array in and out."""
 import logging
@@ -10,7 +10,7 @@ import ni_measurementlink_service as nims
 
 service_directory = pathlib.Path(__file__).resolve().parent
 measurement_service = nims.MeasurementService(
-    service_config_path=service_directory / "${display_name}.serviceconfig",
+    service_config_path=service_directory / "${serviceconfig_file}",
     version="0.1.0.0",
     ui_file_paths=[service_directory / "${ui_file}"],
 )
@@ -33,7 +33,7 @@ def measure(array_input):
     help="Enable verbose logging. Repeat to increase verbosity.",
 )
 def main(verbose: int):
-    """Host the Sample Measurement service."""
+    """Host the ${display_name} service."""
     if verbose > 1:
         level = logging.DEBUG
     elif verbose == 1:
