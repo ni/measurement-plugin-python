@@ -17,7 +17,7 @@ def test___command_line_args___create_measurement___render_without_exception(tmp
             [
                 "Sample Measurement",
                 "--measurement-version",
-                "1.0.0.0",
+                "1.2.3.4",
                 "--ui-file",
                 "MeasurementUI.measui",
                 "--service-class",
