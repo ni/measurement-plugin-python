@@ -62,5 +62,9 @@ exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 #
 html_theme = "sphinx_rtd_theme"
 
+html_theme_options = {
+    'navigation_depth': -1,
+}
+
 # Napoleon settings
 napoleon_numpy_docstring = False
