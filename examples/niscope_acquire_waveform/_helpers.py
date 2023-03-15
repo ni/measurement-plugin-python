@@ -39,7 +39,7 @@ def str_to_enum(mapping: Dict[str, T], value: str) -> T:
         ) from e
 
 
-class PinMapClient(object):
+class PinMapClient:
     """Class that communicates with the pin map service."""
 
     def __init__(self, *, grpc_channel: grpc.Channel):

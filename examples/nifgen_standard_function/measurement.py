@@ -126,7 +126,7 @@ def measure(
                 measurement_service.context.abort(
                     grpc.StatusCode.CANCELLED, "Client requested cancellation."
                 )
-            if any((session.is_done() for session in sessions)):
+            if any(session.is_done() for session in sessions):
                 break
             remaining_time = max(stop_time - time.time(), 0.0)
             sleep_time = min(remaining_time, 100e-3)

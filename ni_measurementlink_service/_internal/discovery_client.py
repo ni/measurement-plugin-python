@@ -269,4 +269,4 @@ def _open_key_file(path: str) -> typing.TextIO:
         # file object closes the underlying Win32 file handle.
         return os.fdopen(crt_file_descriptor, "r", encoding="utf-8-sig")
     else:
-        return open(path, "r")
+        return open(path)

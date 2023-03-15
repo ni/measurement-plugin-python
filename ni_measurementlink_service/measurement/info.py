@@ -25,7 +25,7 @@ class MeasurementInfo(NamedTuple):
 
     display_name: str
     version: str
-    ui_file_paths: typing.List[Path]
+    ui_file_paths: list[Path]
 
 
 class ServiceInfo(NamedTuple):

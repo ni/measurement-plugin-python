@@ -60,13 +60,13 @@ _TGrpcChannelPool = TypeVar("_TGrpcChannelPool", bound="GrpcChannelPool")
 _TMeasurementService = TypeVar("_TMeasurementService", bound="MeasurementService")
 
 
-class GrpcChannelPool(object):
+class GrpcChannelPool:
     """Class that manages gRPC channel lifetimes."""
 
     def __init__(self):
         """Initialize the GrpcChannelPool object."""
         self._lock: Lock = Lock()
-        self._channel_cache: Dict[str, grpc.Channel] = {}
+        self._channel_cache: dict[str, grpc.Channel] = {}
 
     def __enter__(self: _TGrpcChannelPool) -> _TGrpcChannelPool:
         """Enter the runtime context of the GrpcChannelPool."""
@@ -136,7 +136,7 @@ class MeasurementService:
         self,
         service_config_path: Path,
         version: str,
-        ui_file_paths: List[Path],
+        ui_file_paths: list[Path],
         service_class: str = None,
     ) -> None:
         """Initialize the Measurement Service object.
@@ -321,8 +321,8 @@ class MeasurementService:
 
     def _get_annotations(
         self, type_specialization: TypeSpecialization, instrument_type: str
-    ) -> Dict[str, str]:
-        annotations: Dict[str, str] = {}
+    ) -> dict[str, str]:
+        annotations: dict[str, str] = {}
         if type_specialization == TypeSpecialization.NoType:
             return annotations
 

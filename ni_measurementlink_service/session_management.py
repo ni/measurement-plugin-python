@@ -113,7 +113,7 @@ class SessionInformation(NamedTuple):
 _TReservation = TypeVar("_TReservation", bound="Reservation")
 
 
-class Reservation(object):
+class Reservation:
     """Manage session reservation."""
 
     def __init__(
@@ -161,7 +161,7 @@ class Reservation(object):
         ]
 
 
-class Client(object):
+class Client:
     """Class that manages driver sessions."""
 
     def __init__(self, *, grpc_channel: grpc.Channel):

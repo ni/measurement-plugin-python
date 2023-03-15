@@ -10,7 +10,7 @@ from mako.template import Template
 def _render_template(template_name: str, **template_args) -> str:
     file_path = str(pathlib.Path(__file__).parent / "templates" / template_name)
 
-    with open(file_path, "r") as file:
+    with open(file_path) as file:
         file_contents = file.read()
     template = Template(file_contents)
     try:

@@ -174,7 +174,7 @@ class Context:
         type_pb2.Field.TYPE_UINT32: int(),
         type_pb2.Field.TYPE_UINT64: int(),
         type_pb2.Field.TYPE_BOOL: bool(),
-        type_pb2.Field.TYPE_STRING: str(),
+        type_pb2.Field.TYPE_STRING: '',
     }
 
     @staticmethod
