@@ -1,8 +1,19 @@
 repos:
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+    -   id: check-json
+    -   id: check-toml
+    -   id: check-yaml
+    -   id: trailing-whitespace
+        exclude: '^docs/|^ni_measurementlink_service/_internal/stubs/|\.seq$'
 -   repo: https://github.com/asottile/pyupgrade
     rev: v3.3.1
     hooks:
     -   id: pyupgrade
         args: [--keep-percent-format, --py38-plus]
-        files: '^examples/|^ni_measurementlink_generator|^ni_measurementlink_service/|^scripts/|^tests/'
-        exclude: '^ni_measurementlink_service/_internal/stubs/|_pb2.py$'
+        exclude: '^ni_measurementlink_service/_internal/stubs/|_pb2\.py$|_pb2_grpc\.py$'
+#-   repo: https://github.com/ni/python-styleguide/
+#    rev: v0.4.1
+#    hooks:
+#    -   id: ni-python-styleguide
