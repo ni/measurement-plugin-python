@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 import enum
-import typing
 from pathlib import Path
 from typing import NamedTuple
 

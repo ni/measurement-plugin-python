@@ -3,8 +3,7 @@
 from typing import Any, Callable
 
 from google.protobuf import type_pb2
-from google.protobuf.internal import decoder
-from google.protobuf.internal import encoder
+from google.protobuf.internal import decoder, encoder
 
 
 def _scalar_encoder(encoder) -> Callable[[int], Callable]:
@@ -174,7 +173,7 @@ class Context:
         type_pb2.Field.TYPE_UINT32: int(),
         type_pb2.Field.TYPE_UINT64: int(),
         type_pb2.Field.TYPE_BOOL: bool(),
-        type_pb2.Field.TYPE_STRING: '',
+        type_pb2.Field.TYPE_STRING: "",
     }
 
     @staticmethod
