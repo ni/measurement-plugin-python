@@ -44,6 +44,16 @@ From the root directory of the repo, initialize the project using the [`poetry i
 poetry install
 ```
 
+## Enable Git `pre-commit` Hooks
+
+This repo uses [pre-commit](https://pre-commit.com/) to automatically run
+`ni-python-styleguide` and other checks when you commit changes to the code.
+Install the `pre-commit` hook scripts in your local copy of the repo by running:
+
+```cmd
+poetry run pre-commit install
+```
+
 ## Ensure that the `./.venv` virtual environment is activated
 
 - In the command prompt: `poetry shell`
