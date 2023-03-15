@@ -1,0 +1,8 @@
+repos:
+-   repo: https://github.com/asottile/pyupgrade
+    rev: v3.3.1
+    hooks:
+    -   id: pyupgrade
+        args: [--keep-percent-format, --py38-plus]
+        files: '^examples/|^ni_measurementlink_generator|^ni_measurementlink_service/|^scripts/|^tests/'
+        exclude: '^ni_measurementlink_service/_internal/stubs/|_pb2.py$'
