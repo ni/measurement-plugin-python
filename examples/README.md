@@ -1,7 +1,7 @@
 
 # Example Measurements
 
-This directory contains the following example projects:  
+This directory contains the following example projects:
 
 - `sample_measurement`: Performs a loopback measurement with various data types. Provides a Measurement UI and a LabVIEW UI.
 - `nidaqmx_analog_input`: Performs a finite analog input measurement with NI-DAQmx.

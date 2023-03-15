@@ -5,7 +5,7 @@ on:
     # Omit "labeled" and "unlabeled" to work around https://github.com/danhellem/github-actions-issue-to-work-item/issues/70
     types:
       [opened, edited, deleted, closed, reopened, assigned]
-  issue_comment: 
+  issue_comment:
     types: [created, edited, deleted]
 
 jobs:

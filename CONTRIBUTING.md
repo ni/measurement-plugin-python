@@ -41,7 +41,7 @@ git clone https://github.com/ni/measurementlink-python.git
 From the root directory of the repo, initialize the project using the [`poetry install`](https://python-poetry.org/docs/cli/#install) command. This will set up a virtual environment (`.venv`) with the required dependencies based on the `poetry.lock` file and `pyproject.toml`.
 
 ```cmd
-poetry install 
+poetry install
 ```
 
 ## Ensure that the `./.venv` virtual environment is activated

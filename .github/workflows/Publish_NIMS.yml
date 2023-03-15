@@ -14,7 +14,7 @@ env:
 jobs:
   build:
     name: Update API reference docs and Publish NIMS Package to PyPI
-    runs-on : ubuntu-latest 
+    runs-on : ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
@@ -50,7 +50,7 @@ jobs:
       - name: Update NIMS package version based on tag name.
         run: |
           poetry version ${{ steps.vars.outputs.tag }}
-      
+
       - name: Update NIMG package version based on tag name.
         run: |
           poetry version ${{ steps.vars.outputs.tag }}
@@ -60,7 +60,7 @@ jobs:
         run: |
           rm -rf docs
           mkdir -p docs
-          touch docs/.nojekyll         
+          touch docs/.nojekyll
           poetry run sphinx-build _docs_source docs -b html
 
       - name: Commit file changes.
@@ -70,13 +70,13 @@ jobs:
           git config --local user.name "GitHub Action"
           git add .
           git commit -m "Promote NIMS package version and update Sphinx generated files in _docs" -a
-      
+
       - name: Push changes to the Main branch
         if: ${{ startsWith(github.event.release.target_commitish, 'main') }}
         uses: CasperWA/push-protected@v2
         with:
           token: ${{ secrets.ADMIN_PAT }}
-          branch: ${{ github.event.release.target_commitish }}  
+          branch: ${{ github.event.release.target_commitish }}
           unprotect_reviews: true
 
       # To Test the Publish use : poetry publish --build --username __token__ --password ${{ secrets.TEST_PYPI_TOKEN }} -r test-pypi
@@ -84,7 +84,7 @@ jobs:
         if: ${{ startsWith(github.event.release.target_commitish, 'main') }}
         run: |
           poetry publish --build --username __token__ --password ${{ secrets.PYPI_TOKEN }}
-        
+
       - name: Build NIMG Python package and publish to PyPI
         if: ${{ startsWith(github.event.release.target_commitish, 'main') }}
         run: |

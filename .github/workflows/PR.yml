@@ -38,7 +38,7 @@ jobs:
       - name: Mypy static analysis (examples)
         # `mypy -p examples` doesn't import _helpers.py correctly, so check one example directory at a time.
         run: |
-          for example in examples/*/; do 
+          for example in examples/*/; do
             echo Analyzing $example
             poetry run mypy $example --show-error-codes -v
           done
@@ -46,7 +46,7 @@ jobs:
         run:  poetry run mypy -p ni_measurementlink_generator --show-error-codes -v
       - name: Mypy static analysis (tests)
         run:  poetry run mypy tests --show-error-codes -v
-        
+
   checks-nimg:
     runs-on: ubuntu-latest
     defaults: # in theory this sets the working-dir for all steps in this job

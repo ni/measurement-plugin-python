@@ -45,7 +45,7 @@ MeasurementLink Support for Python (`ni-measurementlink-service`) is a Python fr
 
 ### Enable Win32 Long Paths
 
-By default, Windows has a path length limit of 260 characters. NI recommends enabling support for long paths when developing and deploying Python measurement services. 
+By default, Windows has a path length limit of 260 characters. NI recommends enabling support for long paths when developing and deploying Python measurement services.
 
 There are three ways to do this:
 - When installing Python using the Python for Windows installer, click `Disable path length limit` at the end of the installation.
@@ -156,7 +156,7 @@ pip install ni-measurementlink-generator
     - If you face an access issue when trying to activate, retry after allowing scripts to run as Administrator by executing the below command in Windows PowerShell:
 
         ```cmd
-        Set-ExecutionPolicy RemoteSigned 
+        Set-ExecutionPolicy RemoteSigned
         ```
 
 3. [Run](https://code.visualstudio.com/docs/python/python-tutorial#_run-hello-world)/[Debug](https://code.visualstudio.com/docs/python/debugging#_basic-debugging) the measurement Python file.
@@ -181,7 +181,7 @@ To statically register a measurement service with the MeasurementLink discovery 
 
 2. Edit the measurement service's `.serviceconfig` file and set the `path` value to the filename of the startup batch file or executable.
 
-3. Copy the measurement service's directory (including the `.venv` subdirectory if present, `.serviceconfig` file, and startup batch file) to a subdirectory of `C:\ProgramData\National Instruments\MeasurementLink\Services`. 
+3. Copy the measurement service's directory (including the `.venv` subdirectory if present, `.serviceconfig` file, and startup batch file) to a subdirectory of `C:\ProgramData\National Instruments\MeasurementLink\Services`.
 
 Once your measurement service is statically registered, the MeasurementLink discovery service makes it visible in supported NI applications.
 
@@ -209,7 +209,7 @@ Examples to start the fictitious file named `foo_measurement.py`:
     REM Windows
     .\.venv\Scripts\python.exe foo_measurement.py
 
-    REM Linux 
+    REM Linux
     .venv/bin/python foo_measurement.py
     ```
 

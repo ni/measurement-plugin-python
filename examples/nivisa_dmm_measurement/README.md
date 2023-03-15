@@ -1,7 +1,7 @@
 ## NI-VISA DMM Measurement
 
 This is a MeasurementLink example that performs a DMM measurement using NI-VISA
-and an NI Instrument Simulator v2.0. 
+and an NI Instrument Simulator v2.0.
 
 ### Features
 
@@ -28,12 +28,12 @@ this example directly performs low-level, device-specific commands and queries.
 By default, this example does not require hardware; it uses PyVISA-sim to
 simulate the instrument in software.
 [`NIInstrumentSimulatorV2_0.yaml`](./NIInstrumentSimulatorV2_0.yaml) defines the
-behavior of the simulated instrument. 
+behavior of the simulated instrument.
 
 To use NI Instrument Simulator hardware:
 - Disable software simulation by setting `USE_SIMULATION = False` in both
   [`measurement.py`](./measurement.py) and
-  [`teststand_fixture.py`](./teststand_fixture.py). 
+  [`teststand_fixture.py`](./teststand_fixture.py).
 - Connect the NI Instrument Simulator over GPIB or serial.
 - By default, the pin map included with this example uses the resource name
   `GPIB0::3::INSTR`, which matches the NI Instrument Simulator's factory default
@@ -48,7 +48,7 @@ To use NI Instrument Simulator hardware:
 ### Session Management
 
 This example has a slightly different approach to session management than the
-examples for NI PXI modular instruments. 
+examples for NI PXI modular instruments.
 
 The examples for NI PXI modular instruments use the NI gRPC Device Server to
 share a single driver session between multiple operating system processes. When running
