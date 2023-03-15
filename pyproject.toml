@@ -57,6 +57,7 @@ mypy-protobuf = "^3.4"
 types-protobuf = "^4.21"
 types-pkg-resources = "*"
 mako = "*"
+pre-commit = ">=2.21.0"
 
 [build-system]
 requires = ["poetry-core>=1.2.0"]
