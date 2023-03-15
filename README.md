@@ -2,8 +2,8 @@
 
 - [MeasurementLink™ Support for Python](#measurementlink--support-for-python)
   - [Introduction](#introduction)
-  - [Abbreviations](#abbreviations)
   - [Dependencies](#dependencies)
+  - [Documentation](#documentation)
   - [Examples](#examples)
   - [Developing Measurements: Quick Start](#developing-measurements-quick-start)
     - [Installation](#installation)
@@ -12,7 +12,6 @@
   - [Static Registration of Python Measurements](#static-registration-of-python-measurements)
     - [Create a batch file that runs a python measurement](#create-a-batch-file-that-runs-a-python-measurement)
     - [Create Executable for Python Scripts](#create-executable-for-python-scripts)
-  - [API References](#api-references)
   - [Appendix: Managing Measurement as Python Package (Project)](#appendix-managing-measurement-as-python-package-project)
     - [Create and Manage Python Measurement Package using Poetry](#create-and-manage-python-measurement-package-using-poetry)
     - [Create and Manage Python Measurement Package using `venv`](#create-and-manage-python-measurement-package-using-venv)
@@ -32,6 +31,13 @@ MeasurementLink Support for Python (`ni-measurementlink-service`) is a Python fr
 - [grpcio >= 1.49.1, < 2.x](https://pypi.org/project/grpcio/1.49.1/)
 - [protobuf >= 4.21, < 5.x](https://pypi.org/project/protobuf/4.21.0/)
 - [pywin32 >= 303 (Only for Windows)](https://pypi.org/project/pywin32/303/)
+
+---
+
+## Documentation
+
+- [MeasurementLink Manual](https://www.ni.com/docs/en-US/bundle/measurementlink)
+- [API Reference](https://ni.github.io/measurementlink-python/)
 
 ---
 
@@ -216,10 +222,6 @@ Typical Pyinstaller command to build executable.
 ```cmd
 pyinstaller --onefile --console --add-data "<path_of_the_UI_File>;." --paths .venv\Lib\site-packages\ <path_of_the_measurement_script>
 ```
-
-## API References
-
-[Click here](https://ni.github.io/measurementlink-python/) to view the API reference documentation.
 
 ## Troubleshooting
 
