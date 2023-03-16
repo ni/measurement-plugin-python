@@ -39,7 +39,7 @@ protobuf = "^4.21"
 pywin32 = {version = "^303", platform = "win32"}
 
 [tool.poetry.dev-dependencies]
-pytest = "^6.2.5"
+pytest = ">=7.2.0"
 ni-python-styleguide = ">=0.4.0"
 # When you update the grpcio-tools version, you should update the minimum grpcio version
 # and regenerate gRPC stubs.
@@ -51,9 +51,9 @@ m2r2 = "^0.3.2"
 toml = "^0.10.2"
 tomlkit = "^0.11.0"
 sphinx-click = "^4.1.0"
-pytest-cov = "^3.0.0"
-mypy = "^0.961"
-mypy-protobuf = "^3.4"
+pytest-cov = ">=3.0.0"
+mypy = ">=1.0"
+mypy-protobuf = ">=3.4"
 types-protobuf = "^4.21"
 types-pkg-resources = "*"
 mako = "*"
