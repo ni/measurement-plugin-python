@@ -6,6 +6,7 @@ import os
 import pathlib
 import sys
 import typing
+from typing import Optional
 
 import grpc
 
@@ -59,7 +60,7 @@ class DiscoveryClient:
 
     """
 
-    def __init__(self, stub: discovery_service_pb2_grpc.DiscoveryServiceStub = None):
+    def __init__(self, stub: Optional[discovery_service_pb2_grpc.DiscoveryServiceStub] = None):
         """Initialize the Discovery Client with provided registry service stub.
 
         Args:
@@ -212,7 +213,7 @@ def _get_discovery_service_address() -> str:
         return "localhost:" + key_json["InsecurePort"]
 
 
-def _get_key_file_path(cluster_id: typing.Optional[str] = None) -> pathlib.Path:
+def _get_key_file_path(cluster_id: Optional[str] = None) -> pathlib.Path:
     if cluster_id is not None:
         return _get_key_file_directory() / f"DiscoveryService_{cluster_id}.json"
     return _get_key_file_directory() / "DiscoveryService.json"

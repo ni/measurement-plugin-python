@@ -6,7 +6,7 @@ import json
 from os import path
 from pathlib import Path
 from threading import Lock
-from typing import Any, Callable, Dict, List, TypeVar
+from typing import Any, Callable, Dict, List, Optional, TypeVar
 
 import grpc
 
@@ -137,7 +137,7 @@ class MeasurementService:
         service_config_path: Path,
         version: str,
         ui_file_paths: List[Path],
-        service_class: str = None,
+        service_class: Optional[str] = None,
     ) -> None:
         """Initialize the Measurement Service object.
 
