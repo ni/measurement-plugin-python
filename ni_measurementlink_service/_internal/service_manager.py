@@ -1,5 +1,5 @@
 import logging
-from typing import Callable, List
+from typing import Callable, List, Optional
 
 import grpc
 from grpc.framework.foundation import logging_pool
@@ -27,7 +27,7 @@ class GrpcService:
 
     """
 
-    def __init__(self, discovery_client: DiscoveryClient = None) -> None:
+    def __init__(self, discovery_client: Optional[DiscoveryClient] = None) -> None:
         """Initialize Service Manager.
 
         Args:
