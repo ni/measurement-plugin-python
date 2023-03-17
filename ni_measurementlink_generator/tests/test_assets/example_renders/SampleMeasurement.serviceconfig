@@ -1,7 +1,7 @@
 {
   "services": [
     {
-      "displayName": "SampleMeasurement",
+      "displayName": "Sample Measurement",
       "serviceClass": "SampleMeasurement_Python",
       "descriptionUrl": "https://www.example.com/SampleMeasurement.html",
       "providedInterfaces": [ "ni.measurementlink.measurement.v1.MeasurementService" ],

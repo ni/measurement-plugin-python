@@ -15,9 +15,9 @@ def test___command_line_args___create_measurement___render_without_exception(tmp
     with pytest.raises(SystemExit):
         template.create_measurement(
             [
-                "SampleMeasurement",
+                "Sample Measurement",
                 "--measurement-version",
-                "1.0.0.0",
+                "1.2.3.4",
                 "--ui-file",
                 "MeasurementUI.measui",
                 "--service-class",
@@ -31,18 +31,12 @@ def test___command_line_args___create_measurement___render_without_exception(tmp
 
     golden_path = test_assets_path / "example_renders"
 
-    _assert_equal(
-        golden_path / "example.py",
-        temp_directory / "measurement.py",
-    )
-    _assert_equal(
-        golden_path / "example.serviceconfig",
-        temp_directory / "SampleMeasurement.serviceconfig",
-    )
-    _assert_equal(
-        golden_path / "example.bat",
-        temp_directory / "start.bat",
-    )
+    filenames = ["measurement.py", "SampleMeasurement.serviceconfig", "start.bat"]
+    for filename in filenames:
+        _assert_equal(
+            golden_path / filename,
+            temp_directory / filename,
+        )
 
 
 def _assert_equal(expected_path: pathlib.Path, result_path: pathlib.Path):
