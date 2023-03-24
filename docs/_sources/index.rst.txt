@@ -1,7 +1,9 @@
-NI Measurement Service
+NI MeasurementLink
 ----------------------
 .. toctree::
    :maxdepth: 3
+
+   autoapi/index
 
 Indices and tables
 ------------------

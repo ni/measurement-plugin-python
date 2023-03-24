@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ni_measurementlink_service.session_management &mdash; ni_measurementlink_service 1.0 documentation</title>
@@ -20,7 +20,8 @@
         <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
-    <link rel="search" title="Search" href="../../../search.html" /> 
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="prev" title="ni_measurementlink_service.measurement.service" href="../measurement/service/index.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -28,21 +29,130 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> ni_measurementlink_service
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            ni_measurementlink_service
           </a>
               <div class="version">
-                1.0.0
+                1.0.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../index.html">API Reference</a></li>
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">ni_measurementlink_service</span></code></a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../index.html#subpackages">Subpackages</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../index.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">ni_measurementlink_service.session_management</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#module-contents">Module Contents</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#classes">Classes</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#attributes">Attributes</a><ul>
+<li class="toctree-l7"><a class="reference internal" href="#ni_measurementlink_service.session_management.GRPC_SERVICE_INTERFACE_NAME"><code class="docutils literal notranslate"><span class="pre">GRPC_SERVICE_INTERFACE_NAME</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="#ni_measurementlink_service.session_management.GRPC_SERVICE_CLASS"><code class="docutils literal notranslate"><span class="pre">GRPC_SERVICE_CLASS</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="#ni_measurementlink_service.session_management.INSTRUMENT_TYPE_NONE"><code class="docutils literal notranslate"><span class="pre">INSTRUMENT_TYPE_NONE</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="#ni_measurementlink_service.session_management.INSTRUMENT_TYPE_NI_DCPOWER"><code class="docutils literal notranslate"><span class="pre">INSTRUMENT_TYPE_NI_DCPOWER</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="#ni_measurementlink_service.session_management.INSTRUMENT_TYPE_NI_HSDIO"><code class="docutils literal notranslate"><span class="pre">INSTRUMENT_TYPE_NI_HSDIO</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="#ni_measurementlink_service.session_management.INSTRUMENT_TYPE_NI_RFSA"><code class="docutils literal notranslate"><span class="pre">INSTRUMENT_TYPE_NI_RFSA</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="#ni_measurementlink_service.session_management.INSTRUMENT_TYPE_NI_RFMX"><code class="docutils literal notranslate"><span class="pre">INSTRUMENT_TYPE_NI_RFMX</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="#ni_measurementlink_service.session_management.INSTRUMENT_TYPE_NI_RFSG"><code class="docutils literal notranslate"><span class="pre">INSTRUMENT_TYPE_NI_RFSG</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="#ni_measurementlink_service.session_management.INSTRUMENT_TYPE_NI_RFPM"><code class="docutils literal notranslate"><span class="pre">INSTRUMENT_TYPE_NI_RFPM</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="#ni_measurementlink_service.session_management.INSTRUMENT_TYPE_NI_DMM"><code class="docutils literal notranslate"><span class="pre">INSTRUMENT_TYPE_NI_DMM</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="#ni_measurementlink_service.session_management.INSTRUMENT_TYPE_NI_DIGITAL_PATTERN"><code class="docutils literal notranslate"><span class="pre">INSTRUMENT_TYPE_NI_DIGITAL_PATTERN</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="#ni_measurementlink_service.session_management.INSTRUMENT_TYPE_NI_SCOPE"><code class="docutils literal notranslate"><span class="pre">INSTRUMENT_TYPE_NI_SCOPE</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="#ni_measurementlink_service.session_management.INSTRUMENT_TYPE_NI_FGEN"><code class="docutils literal notranslate"><span class="pre">INSTRUMENT_TYPE_NI_FGEN</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="#ni_measurementlink_service.session_management.INSTRUMENT_TYPE_NI_DAQMX"><code class="docutils literal notranslate"><span class="pre">INSTRUMENT_TYPE_NI_DAQMX</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="#ni_measurementlink_service.session_management.INSTRUMENT_TYPE_NI_RELAY_DRIVER"><code class="docutils literal notranslate"><span class="pre">INSTRUMENT_TYPE_NI_RELAY_DRIVER</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="#ni_measurementlink_service.session_management.INSTRUMENT_TYPE_NI_MODEL_BASED_INSTRUMENT"><code class="docutils literal notranslate"><span class="pre">INSTRUMENT_TYPE_NI_MODEL_BASED_INSTRUMENT</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="#ni_measurementlink_service.session_management.INSTRUMENT_TYPE_NI_SWITCH_EXECUTIVE_VIRTUAL_DEVICE"><code class="docutils literal notranslate"><span class="pre">INSTRUMENT_TYPE_NI_SWITCH_EXECUTIVE_VIRTUAL_DEVICE</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="#ni_measurementlink_service.session_management.PinMapContext"><code class="docutils literal notranslate"><span class="pre">PinMapContext</span></code></a><ul>
+<li class="toctree-l8"><a class="reference internal" href="#ni_measurementlink_service.session_management.PinMapContext.pin_map_id"><code class="docutils literal notranslate"><span class="pre">PinMapContext.pin_map_id</span></code></a></li>
+<li class="toctree-l8"><a class="reference internal" href="#ni_measurementlink_service.session_management.PinMapContext.sites"><code class="docutils literal notranslate"><span class="pre">PinMapContext.sites</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l7"><a class="reference internal" href="#ni_measurementlink_service.session_management.ChannelMapping"><code class="docutils literal notranslate"><span class="pre">ChannelMapping</span></code></a><ul>
+<li class="toctree-l8"><a class="reference internal" href="#ni_measurementlink_service.session_management.ChannelMapping.pin_or_relay_name"><code class="docutils literal notranslate"><span class="pre">ChannelMapping.pin_or_relay_name</span></code></a></li>
+<li class="toctree-l8"><a class="reference internal" href="#ni_measurementlink_service.session_management.ChannelMapping.site"><code class="docutils literal notranslate"><span class="pre">ChannelMapping.site</span></code></a></li>
+<li class="toctree-l8"><a class="reference internal" href="#ni_measurementlink_service.session_management.ChannelMapping.channel"><code class="docutils literal notranslate"><span class="pre">ChannelMapping.channel</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l7"><a class="reference internal" href="#ni_measurementlink_service.session_management.SessionInformation"><code class="docutils literal notranslate"><span class="pre">SessionInformation</span></code></a><ul>
+<li class="toctree-l8"><a class="reference internal" href="#ni_measurementlink_service.session_management.SessionInformation.session_name"><code class="docutils literal notranslate"><span class="pre">SessionInformation.session_name</span></code></a></li>
+<li class="toctree-l8"><a class="reference internal" href="#ni_measurementlink_service.session_management.SessionInformation.resource_name"><code class="docutils literal notranslate"><span class="pre">SessionInformation.resource_name</span></code></a></li>
+<li class="toctree-l8"><a class="reference internal" href="#ni_measurementlink_service.session_management.SessionInformation.channel_list"><code class="docutils literal notranslate"><span class="pre">SessionInformation.channel_list</span></code></a></li>
+<li class="toctree-l8"><a class="reference internal" href="#ni_measurementlink_service.session_management.SessionInformation.instrument_type_id"><code class="docutils literal notranslate"><span class="pre">SessionInformation.instrument_type_id</span></code></a></li>
+<li class="toctree-l8"><a class="reference internal" href="#ni_measurementlink_service.session_management.SessionInformation.session_exists"><code class="docutils literal notranslate"><span class="pre">SessionInformation.session_exists</span></code></a></li>
+<li class="toctree-l8"><a class="reference internal" href="#ni_measurementlink_service.session_management.SessionInformation.channel_mappings"><code class="docutils literal notranslate"><span class="pre">SessionInformation.channel_mappings</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l7"><a class="reference internal" href="#ni_measurementlink_service.session_management.Reservation"><code class="docutils literal notranslate"><span class="pre">Reservation</span></code></a><ul>
+<li class="toctree-l8"><a class="reference internal" href="#ni_measurementlink_service.session_management.Reservation.__enter__"><code class="docutils literal notranslate"><span class="pre">Reservation.__enter__()</span></code></a></li>
+<li class="toctree-l8"><a class="reference internal" href="#ni_measurementlink_service.session_management.Reservation.__exit__"><code class="docutils literal notranslate"><span class="pre">Reservation.__exit__()</span></code></a></li>
+<li class="toctree-l8"><a class="reference internal" href="#ni_measurementlink_service.session_management.Reservation.unreserve"><code class="docutils literal notranslate"><span class="pre">Reservation.unreserve()</span></code></a></li>
+<li class="toctree-l8"><a class="reference internal" href="#ni_measurementlink_service.session_management.Reservation.session_info"><code class="docutils literal notranslate"><span class="pre">Reservation.session_info()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l7"><a class="reference internal" href="#ni_measurementlink_service.session_management.Client"><code class="docutils literal notranslate"><span class="pre">Client</span></code></a><ul>
+<li class="toctree-l8"><a class="reference internal" href="#ni_measurementlink_service.session_management.Client.reserve_sessions"><code class="docutils literal notranslate"><span class="pre">Client.reserve_sessions()</span></code></a></li>
+<li class="toctree-l8"><a class="reference internal" href="#ni_measurementlink_service.session_management.Client.register_sessions"><code class="docutils literal notranslate"><span class="pre">Client.register_sessions()</span></code></a></li>
+<li class="toctree-l8"><a class="reference internal" href="#ni_measurementlink_service.session_management.Client.unregister_sessions"><code class="docutils literal notranslate"><span class="pre">Client.unregister_sessions()</span></code></a></li>
+<li class="toctree-l8"><a class="reference internal" href="#ni_measurementlink_service.session_management.Client.reserve_all_registered_sessions"><code class="docutils literal notranslate"><span class="pre">Client.reserve_all_registered_sessions()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l7"><a class="reference internal" href="#ni_measurementlink_service.session_management.GRPC_SERVICE_INTERFACE_NAME">GRPC_SERVICE_INTERFACE_NAME</a></li>
+<li class="toctree-l7"><a class="reference internal" href="#ni_measurementlink_service.session_management.GRPC_SERVICE_CLASS">GRPC_SERVICE_CLASS</a></li>
+<li class="toctree-l7"><a class="reference internal" href="#ni_measurementlink_service.session_management.INSTRUMENT_TYPE_NONE">INSTRUMENT_TYPE_NONE</a></li>
+<li class="toctree-l7"><a class="reference internal" href="#ni_measurementlink_service.session_management.INSTRUMENT_TYPE_NI_DCPOWER">INSTRUMENT_TYPE_NI_DCPOWER</a></li>
+<li class="toctree-l7"><a class="reference internal" href="#ni_measurementlink_service.session_management.INSTRUMENT_TYPE_NI_HSDIO">INSTRUMENT_TYPE_NI_HSDIO</a></li>
+<li class="toctree-l7"><a class="reference internal" href="#ni_measurementlink_service.session_management.INSTRUMENT_TYPE_NI_RFSA">INSTRUMENT_TYPE_NI_RFSA</a></li>
+<li class="toctree-l7"><a class="reference internal" href="#ni_measurementlink_service.session_management.INSTRUMENT_TYPE_NI_RFMX">INSTRUMENT_TYPE_NI_RFMX</a></li>
+<li class="toctree-l7"><a class="reference internal" href="#ni_measurementlink_service.session_management.INSTRUMENT_TYPE_NI_RFSG">INSTRUMENT_TYPE_NI_RFSG</a></li>
+<li class="toctree-l7"><a class="reference internal" href="#ni_measurementlink_service.session_management.INSTRUMENT_TYPE_NI_RFPM">INSTRUMENT_TYPE_NI_RFPM</a></li>
+<li class="toctree-l7"><a class="reference internal" href="#ni_measurementlink_service.session_management.INSTRUMENT_TYPE_NI_DMM">INSTRUMENT_TYPE_NI_DMM</a></li>
+<li class="toctree-l7"><a class="reference internal" href="#ni_measurementlink_service.session_management.INSTRUMENT_TYPE_NI_DIGITAL_PATTERN">INSTRUMENT_TYPE_NI_DIGITAL_PATTERN</a></li>
+<li class="toctree-l7"><a class="reference internal" href="#ni_measurementlink_service.session_management.INSTRUMENT_TYPE_NI_SCOPE">INSTRUMENT_TYPE_NI_SCOPE</a></li>
+<li class="toctree-l7"><a class="reference internal" href="#ni_measurementlink_service.session_management.INSTRUMENT_TYPE_NI_FGEN">INSTRUMENT_TYPE_NI_FGEN</a></li>
+<li class="toctree-l7"><a class="reference internal" href="#ni_measurementlink_service.session_management.INSTRUMENT_TYPE_NI_DAQMX">INSTRUMENT_TYPE_NI_DAQMX</a></li>
+<li class="toctree-l7"><a class="reference internal" href="#ni_measurementlink_service.session_management.INSTRUMENT_TYPE_NI_RELAY_DRIVER">INSTRUMENT_TYPE_NI_RELAY_DRIVER</a></li>
+<li class="toctree-l7"><a class="reference internal" href="#ni_measurementlink_service.session_management.INSTRUMENT_TYPE_NI_MODEL_BASED_INSTRUMENT">INSTRUMENT_TYPE_NI_MODEL_BASED_INSTRUMENT</a></li>
+<li class="toctree-l7"><a class="reference internal" href="#ni_measurementlink_service.session_management.INSTRUMENT_TYPE_NI_SWITCH_EXECUTIVE_VIRTUAL_DEVICE">INSTRUMENT_TYPE_NI_SWITCH_EXECUTIVE_VIRTUAL_DEVICE</a></li>
+<li class="toctree-l7"><a class="reference internal" href="#ni_measurementlink_service.session_management.PinMapContext">PinMapContext</a></li>
+<li class="toctree-l7"><a class="reference internal" href="#ni_measurementlink_service.session_management.ChannelMapping">ChannelMapping</a></li>
+<li class="toctree-l7"><a class="reference internal" href="#ni_measurementlink_service.session_management.SessionInformation">SessionInformation</a></li>
+<li class="toctree-l7"><a class="reference internal" href="#ni_measurementlink_service.session_management.Reservation">Reservation</a><ul>
+<li class="toctree-l8"><a class="reference internal" href="#ni_measurementlink_service.session_management.Reservation.__enter__">__enter__</a></li>
+<li class="toctree-l8"><a class="reference internal" href="#ni_measurementlink_service.session_management.Reservation.__exit__">__exit__</a></li>
+<li class="toctree-l8"><a class="reference internal" href="#ni_measurementlink_service.session_management.Reservation.unreserve">unreserve</a></li>
+<li class="toctree-l8"><a class="reference internal" href="#ni_measurementlink_service.session_management.Reservation.session_info">session_info</a></li>
+</ul>
+</li>
+<li class="toctree-l7"><a class="reference internal" href="#ni_measurementlink_service.session_management.Client">Client</a><ul>
+<li class="toctree-l8"><a class="reference internal" href="#ni_measurementlink_service.session_management.Client.reserve_sessions">reserve_sessions</a></li>
+<li class="toctree-l8"><a class="reference internal" href="#ni_measurementlink_service.session_management.Client.register_sessions">register_sessions</a></li>
+<li class="toctree-l8"><a class="reference internal" href="#ni_measurementlink_service.session_management.Client.unregister_sessions">unregister_sessions</a></li>
+<li class="toctree-l8"><a class="reference internal" href="#ni_measurementlink_service.session_management.Client.reserve_all_registered_sessions">reserve_all_registered_sessions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../index.html#package-contents">Package Contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 
         </div>
@@ -58,7 +168,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">API Reference</a></li>
+          <li class="breadcrumb-item"><a href="../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">ni_measurementlink_service</span></code></a></li>
       <li class="breadcrumb-item active"><code class="xref py py-mod docutils literal notranslate"><span class="pre">ni_measurementlink_service.session_management</span></code></li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../../_sources/autoapi/ni_measurementlink_service/session_management/index.rst.txt" rel="nofollow"> View page source</a>
@@ -77,10 +189,6 @@
 <section id="classes">
 <h3>Classes<a class="headerlink" href="#classes" title="Permalink to this heading"></a></h3>
 <table class="autosummary longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#ni_measurementlink_service.session_management.PinMapContext" title="ni_measurementlink_service.session_management.PinMapContext"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PinMapContext</span></code></a></p></td>
 <td><p>Container for the pin map and sites.</p></td>
@@ -103,10 +211,6 @@
 <section id="attributes">
 <h3>Attributes<a class="headerlink" href="#attributes" title="Permalink to this heading"></a></h3>
 <table class="autosummary longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#ni_measurementlink_service.session_management.GRPC_SERVICE_INTERFACE_NAME" title="ni_measurementlink_service.session_management.GRPC_SERVICE_INTERFACE_NAME"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GRPC_SERVICE_INTERFACE_NAME</span></code></a></p></td>
 <td><p></p></td>
@@ -479,7 +583,7 @@ management service to track as the sessions are open.</p>
 <p>Indicates that the sessions have been closed and will need to be reopened before they can be
 used again.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>session_info</strong> (<em>Iterable</em><em>[</em><a class="reference internal" href="#ni_measurementlink_service.session_management.SessionInformation" title="ni_measurementlink_service.session_management.SessionInformation"><em>SessionInformation</em></a><em>]</em>) – Sessions to be registered.</p>
 </dd>
 </dl>
@@ -533,7 +637,9 @@ sessions.</p>
 
            </div>
           </div>
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../measurement/service/index.html" class="btn btn-neutral float-left" title="ni_measurementlink_service.measurement.service" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
 
   <hr/>
 

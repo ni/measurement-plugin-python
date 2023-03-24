@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ni_measurementlink_service.measurement.info &mdash; ni_measurementlink_service 1.0 documentation</title>
@@ -20,7 +20,9 @@
         <script src="../../../../_static/sphinx_highlight.js"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
-    <link rel="search" title="Search" href="../../../../search.html" /> 
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="ni_measurementlink_service.measurement.service" href="../service/index.html" />
+    <link rel="prev" title="ni_measurementlink_service.measurement" href="../index.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -28,21 +30,122 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../../index.html" class="icon icon-home"> ni_measurementlink_service
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            ni_measurementlink_service
           </a>
               <div class="version">
-                1.0.0
+                1.0.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../index.html">API Reference</a></li>
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../index.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">ni_measurementlink_service</span></code></a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../../index.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">ni_measurementlink_service.measurement</span></code></a><ul class="current">
+<li class="toctree-l5 current"><a class="reference internal" href="../index.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l6 current"><a class="current reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">ni_measurementlink_service.measurement.info</span></code></a><ul>
+<li class="toctree-l7"><a class="reference internal" href="#module-contents">Module Contents</a><ul>
+<li class="toctree-l8"><a class="reference internal" href="#classes">Classes</a><ul>
+<li class="toctree-l9"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.MeasurementInfo"><code class="docutils literal notranslate"><span class="pre">MeasurementInfo</span></code></a><ul>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.MeasurementInfo.display_name"><code class="docutils literal notranslate"><span class="pre">MeasurementInfo.display_name</span></code></a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.MeasurementInfo.version"><code class="docutils literal notranslate"><span class="pre">MeasurementInfo.version</span></code></a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.MeasurementInfo.ui_file_paths"><code class="docutils literal notranslate"><span class="pre">MeasurementInfo.ui_file_paths</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l9"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.ServiceInfo"><code class="docutils literal notranslate"><span class="pre">ServiceInfo</span></code></a><ul>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.ServiceInfo.service_class"><code class="docutils literal notranslate"><span class="pre">ServiceInfo.service_class</span></code></a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.ServiceInfo.description_url"><code class="docutils literal notranslate"><span class="pre">ServiceInfo.description_url</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l9"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.TypeSpecialization"><code class="docutils literal notranslate"><span class="pre">TypeSpecialization</span></code></a><ul>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.TypeSpecialization.NoType"><code class="docutils literal notranslate"><span class="pre">TypeSpecialization.NoType</span></code></a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.TypeSpecialization.Pin"><code class="docutils literal notranslate"><span class="pre">TypeSpecialization.Pin</span></code></a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.TypeSpecialization.Path"><code class="docutils literal notranslate"><span class="pre">TypeSpecialization.Path</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l9"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType"><code class="docutils literal notranslate"><span class="pre">DataType</span></code></a><ul>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.Int32"><code class="docutils literal notranslate"><span class="pre">DataType.Int32</span></code></a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.Int64"><code class="docutils literal notranslate"><span class="pre">DataType.Int64</span></code></a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.UInt32"><code class="docutils literal notranslate"><span class="pre">DataType.UInt32</span></code></a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.UInt64"><code class="docutils literal notranslate"><span class="pre">DataType.UInt64</span></code></a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.Float"><code class="docutils literal notranslate"><span class="pre">DataType.Float</span></code></a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.Double"><code class="docutils literal notranslate"><span class="pre">DataType.Double</span></code></a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.Boolean"><code class="docutils literal notranslate"><span class="pre">DataType.Boolean</span></code></a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.String"><code class="docutils literal notranslate"><span class="pre">DataType.String</span></code></a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.Pin"><code class="docutils literal notranslate"><span class="pre">DataType.Pin</span></code></a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.Path"><code class="docutils literal notranslate"><span class="pre">DataType.Path</span></code></a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.Int32Array1D"><code class="docutils literal notranslate"><span class="pre">DataType.Int32Array1D</span></code></a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.Int64Array1D"><code class="docutils literal notranslate"><span class="pre">DataType.Int64Array1D</span></code></a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.UInt32Array1D"><code class="docutils literal notranslate"><span class="pre">DataType.UInt32Array1D</span></code></a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.UInt64Array1D"><code class="docutils literal notranslate"><span class="pre">DataType.UInt64Array1D</span></code></a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.FloatArray1D"><code class="docutils literal notranslate"><span class="pre">DataType.FloatArray1D</span></code></a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.DoubleArray1D"><code class="docutils literal notranslate"><span class="pre">DataType.DoubleArray1D</span></code></a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.BooleanArray1D"><code class="docutils literal notranslate"><span class="pre">DataType.BooleanArray1D</span></code></a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.StringArray1D"><code class="docutils literal notranslate"><span class="pre">DataType.StringArray1D</span></code></a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.PinArray1D"><code class="docutils literal notranslate"><span class="pre">DataType.PinArray1D</span></code></a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.PathArray1D"><code class="docutils literal notranslate"><span class="pre">DataType.PathArray1D</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l9"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.MeasurementInfo">MeasurementInfo</a></li>
+<li class="toctree-l9"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.ServiceInfo">ServiceInfo</a></li>
+<li class="toctree-l9"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.TypeSpecialization">TypeSpecialization</a><ul>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.TypeSpecialization.NoType">NoType</a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.TypeSpecialization.Pin">Pin</a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.TypeSpecialization.Path">Path</a></li>
+</ul>
+</li>
+<li class="toctree-l9"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType">DataType</a><ul>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.Int32">Int32</a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.Int64">Int64</a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.UInt32">UInt32</a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.UInt64">UInt64</a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.Float">Float</a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.Double">Double</a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.Boolean">Boolean</a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.String">String</a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.Pin">Pin</a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.Path">Path</a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.Int32Array1D">Int32Array1D</a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.Int64Array1D">Int64Array1D</a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.UInt32Array1D">UInt32Array1D</a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.UInt64Array1D">UInt64Array1D</a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.FloatArray1D">FloatArray1D</a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.DoubleArray1D">DoubleArray1D</a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.BooleanArray1D">BooleanArray1D</a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.StringArray1D">StringArray1D</a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.PinArray1D">PinArray1D</a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.PathArray1D">PathArray1D</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l6"><a class="reference internal" href="../service/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">ni_measurementlink_service.measurement.service</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../index.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../index.html#package-contents">Package Contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 
         </div>
@@ -58,7 +161,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../../index.html" class="icon icon-home"></a></li>
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">API Reference</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">ni_measurementlink_service</span></code></a></li>
+          <li class="breadcrumb-item"><a href="../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">ni_measurementlink_service.measurement</span></code></a></li>
       <li class="breadcrumb-item active"><code class="xref py py-mod docutils literal notranslate"><span class="pre">ni_measurementlink_service.measurement.info</span></code></li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../../../_sources/autoapi/ni_measurementlink_service/measurement/info/index.rst.txt" rel="nofollow"> View page source</a>
@@ -77,10 +183,6 @@
 <section id="classes">
 <h3>Classes<a class="headerlink" href="#classes" title="Permalink to this heading"></a></h3>
 <table class="autosummary longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#ni_measurementlink_service.measurement.info.MeasurementInfo" title="ni_measurementlink_service.measurement.info.MeasurementInfo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MeasurementInfo</span></code></a></p></td>
 <td><p>Class that represents the measurement information.</p></td>
@@ -289,7 +391,10 @@ For e.g., different version of measurement can come under same service class.</p
 
            </div>
           </div>
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../index.html" class="btn btn-neutral float-left" title="ni_measurementlink_service.measurement" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../service/index.html" class="btn btn-neutral float-right" title="ni_measurementlink_service.measurement.service" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 

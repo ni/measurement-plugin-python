@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ni_measurementlink_service.measurement.service &mdash; ni_measurementlink_service 1.0 documentation</title>
@@ -20,7 +20,9 @@
         <script src="../../../../_static/sphinx_highlight.js"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
-    <link rel="search" title="Search" href="../../../../search.html" /> 
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="ni_measurementlink_service.session_management" href="../../session_management/index.html" />
+    <link rel="prev" title="ni_measurementlink_service.measurement.info" href="../info/index.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -28,21 +30,95 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../../index.html" class="icon icon-home"> ni_measurementlink_service
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            ni_measurementlink_service
           </a>
               <div class="version">
-                1.0.0
+                1.0.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../index.html">API Reference</a></li>
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../index.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">ni_measurementlink_service</span></code></a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../../index.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">ni_measurementlink_service.measurement</span></code></a><ul class="current">
+<li class="toctree-l5 current"><a class="reference internal" href="../index.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l6"><a class="reference internal" href="../info/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">ni_measurementlink_service.measurement.info</span></code></a></li>
+<li class="toctree-l6 current"><a class="current reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">ni_measurementlink_service.measurement.service</span></code></a><ul>
+<li class="toctree-l7"><a class="reference internal" href="#module-contents">Module Contents</a><ul>
+<li class="toctree-l8"><a class="reference internal" href="#classes">Classes</a><ul>
+<li class="toctree-l9"><a class="reference internal" href="#ni_measurementlink_service.measurement.service.MeasurementContext"><code class="docutils literal notranslate"><span class="pre">MeasurementContext</span></code></a><ul>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.service.MeasurementContext.grpc_context"><code class="docutils literal notranslate"><span class="pre">MeasurementContext.grpc_context()</span></code></a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.service.MeasurementContext.pin_map_context"><code class="docutils literal notranslate"><span class="pre">MeasurementContext.pin_map_context()</span></code></a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.service.MeasurementContext.add_cancel_callback"><code class="docutils literal notranslate"><span class="pre">MeasurementContext.add_cancel_callback()</span></code></a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.service.MeasurementContext.cancel"><code class="docutils literal notranslate"><span class="pre">MeasurementContext.cancel()</span></code></a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.service.MeasurementContext.time_remaining"><code class="docutils literal notranslate"><span class="pre">MeasurementContext.time_remaining()</span></code></a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.service.MeasurementContext.abort"><code class="docutils literal notranslate"><span class="pre">MeasurementContext.abort()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l9"><a class="reference internal" href="#ni_measurementlink_service.measurement.service.GrpcChannelPool"><code class="docutils literal notranslate"><span class="pre">GrpcChannelPool</span></code></a><ul>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.service.GrpcChannelPool.__enter__"><code class="docutils literal notranslate"><span class="pre">GrpcChannelPool.__enter__()</span></code></a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.service.GrpcChannelPool.__exit__"><code class="docutils literal notranslate"><span class="pre">GrpcChannelPool.__exit__()</span></code></a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.service.GrpcChannelPool.get_channel"><code class="docutils literal notranslate"><span class="pre">GrpcChannelPool.get_channel()</span></code></a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.service.GrpcChannelPool.close"><code class="docutils literal notranslate"><span class="pre">GrpcChannelPool.close()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l9"><a class="reference internal" href="#ni_measurementlink_service.measurement.service.MeasurementService"><code class="docutils literal notranslate"><span class="pre">MeasurementService</span></code></a><ul>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.service.MeasurementService.register_measurement"><code class="docutils literal notranslate"><span class="pre">MeasurementService.register_measurement()</span></code></a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.service.MeasurementService.configuration"><code class="docutils literal notranslate"><span class="pre">MeasurementService.configuration()</span></code></a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.service.MeasurementService.output"><code class="docutils literal notranslate"><span class="pre">MeasurementService.output()</span></code></a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.service.MeasurementService.host_service"><code class="docutils literal notranslate"><span class="pre">MeasurementService.host_service()</span></code></a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.service.MeasurementService.close_service"><code class="docutils literal notranslate"><span class="pre">MeasurementService.close_service()</span></code></a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.service.MeasurementService.__enter__"><code class="docutils literal notranslate"><span class="pre">MeasurementService.__enter__()</span></code></a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.service.MeasurementService.__exit__"><code class="docutils literal notranslate"><span class="pre">MeasurementService.__exit__()</span></code></a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.service.MeasurementService.get_channel"><code class="docutils literal notranslate"><span class="pre">MeasurementService.get_channel()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l9"><a class="reference internal" href="#ni_measurementlink_service.measurement.service.MeasurementContext">MeasurementContext</a><ul>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.service.MeasurementContext.grpc_context">grpc_context</a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.service.MeasurementContext.pin_map_context">pin_map_context</a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.service.MeasurementContext.add_cancel_callback">add_cancel_callback</a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.service.MeasurementContext.cancel">cancel</a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.service.MeasurementContext.time_remaining">time_remaining</a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.service.MeasurementContext.abort">abort</a></li>
+</ul>
+</li>
+<li class="toctree-l9"><a class="reference internal" href="#ni_measurementlink_service.measurement.service.GrpcChannelPool">GrpcChannelPool</a><ul>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.service.GrpcChannelPool.__enter__">__enter__</a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.service.GrpcChannelPool.__exit__">__exit__</a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.service.GrpcChannelPool.get_channel">get_channel</a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.service.GrpcChannelPool.close">close</a></li>
+</ul>
+</li>
+<li class="toctree-l9"><a class="reference internal" href="#ni_measurementlink_service.measurement.service.MeasurementService">MeasurementService</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../index.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../index.html#package-contents">Package Contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 
         </div>
@@ -58,7 +134,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../../index.html" class="icon icon-home"></a></li>
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">API Reference</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">ni_measurementlink_service</span></code></a></li>
+          <li class="breadcrumb-item"><a href="../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">ni_measurementlink_service.measurement</span></code></a></li>
       <li class="breadcrumb-item active"><code class="xref py py-mod docutils literal notranslate"><span class="pre">ni_measurementlink_service.measurement.service</span></code></li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../../../_sources/autoapi/ni_measurementlink_service/measurement/service/index.rst.txt" rel="nofollow"> View page source</a>
@@ -77,10 +156,6 @@
 <section id="classes">
 <h3>Classes<a class="headerlink" href="#classes" title="Permalink to this heading"></a></h3>
 <table class="autosummary longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#ni_measurementlink_service.measurement.service.MeasurementContext" title="ni_measurementlink_service.measurement.service.MeasurementContext"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MeasurementContext</span></code></a></p></td>
 <td><p>Proxy for the Measurement Service's context-local state.</p></td>
@@ -157,7 +232,7 @@
 <span class="sig-name descname"><span class="pre">get_channel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/ni_measurementlink_service/measurement/service.html#GrpcChannelPool.get_channel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service.measurement.service.GrpcChannelPool.get_channel" title="Permalink to this definition"></a></dt>
 <dd><p>Return a gRPC channel.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>target</strong> (<em>str</em>) – The server address</p>
 </dd>
 </dl>
@@ -346,7 +421,10 @@ the service.</p>
 
            </div>
           </div>
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../info/index.html" class="btn btn-neutral float-left" title="ni_measurementlink_service.measurement.info" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../../session_management/index.html" class="btn btn-neutral float-right" title="ni_measurementlink_service.session_management" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 

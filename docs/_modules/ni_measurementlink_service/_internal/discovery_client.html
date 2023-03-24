@@ -27,14 +27,18 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> ni_measurementlink_service
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            ni_measurementlink_service
           </a>
               <div class="version">
-                1.0.0
+                1.0.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -57,7 +61,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
       <li class="breadcrumb-item active">ni_measurementlink_service._internal.discovery_client</li>
       <li class="wy-breadcrumbs-aside">
@@ -77,6 +81,7 @@
 <span class="kn">import</span> <span class="nn">pathlib</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">typing</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
 
 <span class="kn">import</span> <span class="nn">grpc</span>
 
@@ -130,7 +135,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stub</span><span class="p">:</span> <span class="n">discovery_service_pb2_grpc</span><span class="o">.</span><span class="n">DiscoveryServiceStub</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stub</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">discovery_service_pb2_grpc</span><span class="o">.</span><span class="n">DiscoveryServiceStub</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the Discovery Client with provided registry service stub.</span>
 
 <span class="sd">        Args:</span>
@@ -283,7 +288,7 @@
         <span class="k">return</span> <span class="s2">&quot;localhost:&quot;</span> <span class="o">+</span> <span class="n">key_json</span><span class="p">[</span><span class="s2">&quot;InsecurePort&quot;</span><span class="p">]</span>
 
 
-<span class="k">def</span> <span class="nf">_get_key_file_path</span><span class="p">(</span><span class="n">cluster_id</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">_get_key_file_path</span><span class="p">(</span><span class="n">cluster_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">:</span>
     <span class="k">if</span> <span class="n">cluster_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">_get_key_file_directory</span><span class="p">()</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;DiscoveryService_</span><span class="si">{</span><span class="n">cluster_id</span><span class="si">}</span><span class="s2">.json&quot;</span>
     <span class="k">return</span> <span class="n">_get_key_file_directory</span><span class="p">()</span> <span class="o">/</span> <span class="s2">&quot;DiscoveryService.json&quot;</span>
