@@ -24,19 +24,6 @@ def main():
 
         print(f"{example_path.name}:")
 
-        poetry_lock = example_path / "poetry.lock"
-        if poetry_lock.exists():
-            print(f"Deleting lock file {poetry_lock}")
-            poetry_lock.unlink()
-
-        venv_dir = example_path / ".venv"
-        if venv_dir.is_dir():
-            print(f"Deleting virtualenv {venv_dir}")
-            shutil.rmtree(venv_dir)
-
-        print(f"Installing dependencies")
-        subprocess.run(["poetry", "-v", "install"], check=True, cwd=example_path, env=clean_env)
-
         install_path = SERVICES_PATH / example_path.name
         if install_path.is_dir():
             print(f"Deleting example from {install_path}")
@@ -44,6 +31,19 @@ def main():
 
         print(f"Installing example into {install_path}")
         shutil.copytree(example_path, install_path)
+
+        poetry_lock = install_path / "poetry.lock"
+        if poetry_lock.exists():
+            print(f"Deleting lock file {poetry_lock}")
+            poetry_lock.unlink()
+
+        venv_dir = install_path / ".venv"
+        if venv_dir.is_dir():
+            print(f"Deleting virtualenv {venv_dir}")
+            shutil.rmtree(venv_dir)
+
+        print(f"Installing dependencies")
+        subprocess.run(["poetry", "-v", "install"], check=True, cwd=install_path, env=clean_env)
 
         print("")
 
