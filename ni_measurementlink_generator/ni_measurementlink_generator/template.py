@@ -26,7 +26,7 @@ def _create_file(template_name: str, file_name: str, directory_out, **template_a
 
     output = _render_template(template_name, **template_args)
 
-    with output_file.open("w") as fout:
+    with output_file.open("w",encoding='UTF-8') as fout:
         fout.write(output)
 
     return ""
