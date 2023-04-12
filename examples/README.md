@@ -48,8 +48,9 @@ The example measurements are *Poetry-based* projects. Follow the steps below to 
 
 To statically register an example measurement service with the MeasurementLink discovery service, do the following:
 
-1. Copy the example measurement's directory (do not copy the `.venv` subdirectory - it must be re-created in the new location), `.serviceconfig` file, and startup batch file to a subdirectory of `C:\ProgramData\National Instruments\MeasurementLink\Services`.
-2. Open a command prompt to the new example directory under `C:\ProgramData` and run `poetry install`.
+1. Copy the example measurement's directory (including the `.serviceconfig` file and startup batch file) to a subdirectory of `C:\ProgramData\National Instruments\MeasurementLink\Services`.
+2. NOTE: Do not copy the `.venv` subdirectory &mdash; the virtual environment must be re-created in the new location.
+3. Create a virtual environment in the new location. Open a command prompt to the new example directory under `C:\ProgramData` and run `poetry install`.
 
     ``` cmd
     cd <path_of_example_measurement>

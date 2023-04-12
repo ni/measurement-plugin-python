@@ -30,7 +30,7 @@ def main():
             shutil.rmtree(install_path)
 
         print(f"Installing example into {install_path}")
-        shutil.copytree(example_path, install_path)
+        shutil.copytree(example_path, install_path, ignore=shutil.ignore_patterns('.venv'))
 
         poetry_lock = install_path / "poetry.lock"
         if poetry_lock.exists():
