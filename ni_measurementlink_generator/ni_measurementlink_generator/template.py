@@ -7,18 +7,16 @@ from mako import exceptions
 from mako.template import Template
 
 
-def _render_template(template_name: str, **template_args) -> str:
+def _render_template(template_name: str, **template_args) -> bytes:
     file_path = str(pathlib.Path(__file__).parent / "templates" / template_name)
 
-    with open(file_path, "r") as file:
-        file_contents = file.read()
-    template = Template(file_contents)
+    template = Template(filename=file_path, input_encoding="utf-8", output_encoding="utf-8")
     try:
         return template.render(**template_args)
     except:  # noqa: E722
         print(exceptions.text_error_template().render())
 
-    return ""
+    return b""
 
 
 def _create_file(template_name: str, file_name: str, directory_out, **template_args) -> str:
@@ -26,7 +24,7 @@ def _create_file(template_name: str, file_name: str, directory_out, **template_a
 
     output = _render_template(template_name, **template_args)
 
-    with output_file.open("w") as fout:
+    with output_file.open("wb") as fout:
         fout.write(output)
 
     return ""
