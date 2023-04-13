@@ -2,12 +2,11 @@
 import logging
 import pathlib
 import re
-from typing import Optional, Union
+from typing import Optional
 
 import click
 from mako import exceptions
 from mako.template import Template
-
 
 _logger = logging.getLogger(__name__)
 
@@ -20,7 +19,9 @@ def _render_template(template_name: str, **template_args) -> bytes:
         return template.render(**template_args)
     except Exception as e:
         _logger.error(exceptions.text_error_template().render())
-        raise click.ClickException(f"An error occurred while rendering template \"{template_name}\".") from e
+        raise click.ClickException(
+            f'An error occurred while rendering template "{template_name}".'
+        ) from e
 
 
 def _create_file(template_name: str, file_name: str, directory_out: pathlib.Path, **template_args):
@@ -39,7 +40,9 @@ def _check_version(ctx: click.Context, param: click.Parameter, version: str) -> 
     raise click.BadParameter(f"Invalid version '{version}'.")
 
 
-def _check_ui_file(ctx: click.Context, param: click.Parameter, ui_file: Optional[str]) -> Optional[str]:
+def _check_ui_file(
+    ctx: click.Context, param: click.Parameter, ui_file: Optional[str]
+) -> Optional[str]:
     if ui_file is not None:
         _ = _get_ui_type(ui_file)
     return ui_file
