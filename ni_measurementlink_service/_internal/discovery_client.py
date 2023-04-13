@@ -25,7 +25,10 @@ if sys.platform == "win32":
     import winerror
 
 
-_PROVIDED_MEASUREMENT_SERVICE = "ni.measurementlink.measurement.v1.MeasurementService"
+_PROVIDED_MEASUREMENT_SERVICES = [
+    "ni.measurementlink.measurement.v1.MeasurementService",
+    "ni.measurementlink.measurement.v2.MeasurementService",
+]
 
 _logger = logging.getLogger(__name__)
 
@@ -108,7 +111,7 @@ class DiscoveryClient:
             service_descriptor.display_name = measurement_info.display_name
             service_descriptor.service_class = service_info.service_class
             service_descriptor.description_url = service_info.description_url
-            service_descriptor.provided_interfaces.append(_PROVIDED_MEASUREMENT_SERVICE)
+            service_descriptor.provided_interfaces.extend(_PROVIDED_MEASUREMENT_SERVICES)
 
             # Registration Request Creation
             request = discovery_service_pb2.RegisterServiceRequest(

@@ -6,7 +6,7 @@ import pytest
 
 from ni_measurementlink_service._internal.discovery_client import (
     DiscoveryClient,
-    _PROVIDED_MEASUREMENT_SERVICE,
+    _PROVIDED_MEASUREMENT_SERVICES,
 )
 from ni_measurementlink_service._internal.stubs.ni.measurementlink.discovery.v1.discovery_service_pb2_grpc import (
     DiscoveryServiceStub,
@@ -91,4 +91,4 @@ def _validate_grpc_request(request):
     assert request.service_description.service_class == _TEST_SERVICE_INFO.service_class
     assert request.service_description.description_url == _TEST_SERVICE_INFO.description_url
     assert request.service_description.display_name == _TEST_MEASUREMENT_INFO.display_name
-    assert _PROVIDED_MEASUREMENT_SERVICE in request.service_description.provided_interfaces
+    assert all(service_interface in request.service_description.provided_interfaces for service_interface in _PROVIDED_MEASUREMENT_SERVICES)
