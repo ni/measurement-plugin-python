@@ -10,7 +10,7 @@ from mako.template import Template
 def _render_template(template_name: str, **template_args) -> str:
     file_path = str(pathlib.Path(__file__).parent / "templates" / template_name)
 
-    with open(file_path, "r", encoding='UTF-8') as file:
+    with open(file_path, "r", encoding="utf-8") as file:
         file_contents = file.read()
     template = Template(file_contents)
     try:
@@ -26,7 +26,7 @@ def _create_file(template_name: str, file_name: str, directory_out, **template_a
 
     output = _render_template(template_name, **template_args)
 
-    with output_file.open("w", encoding='UTF-8') as fout:
+    with output_file.open("w", encoding="utf-8") as fout:
         fout.write(output)
 
     return ""
