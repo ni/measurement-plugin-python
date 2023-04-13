@@ -353,7 +353,7 @@ class MeasurementServiceServicerV2(measurement_service_v2_pb2_grpc.MeasurementSe
         output_any = any_pb2.Any()
         output_any.value = output_bytestring
         return_value = measurement_service_v2_pb2.MeasureResponse(outputs=output_any)
-        return return_value
+        yield return_value
 
     def _get_mapping_by_parameter_name(
         self, mapping_by_id: Dict[int, Any], measure_function: Callable[[], None]
