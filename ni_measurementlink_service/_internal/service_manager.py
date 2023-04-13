@@ -6,11 +6,15 @@ from grpc.framework.foundation import logging_pool
 
 from ni_measurementlink_service._internal.discovery_client import DiscoveryClient
 from ni_measurementlink_service._internal.grpc_servicer import (
-    MeasurementServiceServicer,
+    MeasurementServiceServicerV1,
+    MeasurementServiceServicerV2,
 )
 from ni_measurementlink_service._internal.parameter.metadata import ParameterMetadata
 from ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v1 import (
-    measurement_service_pb2_grpc,
+    measurement_service_pb2_grpc as v1_measurement_service_pb2_grpc,
+)
+from ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v2 import (
+    measurement_service_pb2_grpc as v2_measurement_service_pb2_grpc,
 )
 from ni_measurementlink_service.measurement.info import MeasurementInfo, ServiceInfo
 
@@ -76,14 +80,23 @@ class GrpcService:
                 ("grpc.max_send_message_length", -1),
             ],
         )
-        self.servicer = MeasurementServiceServicer(
+        servicer_v1 = MeasurementServiceServicerV1(
             measurement_info,
             configuration_parameter_list,
             output_parameter_list,
             measure_function,
         )
-        measurement_service_pb2_grpc.add_MeasurementServiceServicer_to_server(
-            self.servicer, self.server
+        v1_measurement_service_pb2_grpc.add_MeasurementServiceServicer_to_server(
+            servicer_v1, self.server
+        )
+        servicer_v2 = MeasurementServiceServicerV2(
+            measurement_info,
+            configuration_parameter_list,
+            output_parameter_list,
+            measure_function,
+        )
+        v2_measurement_service_pb2_grpc.add_MeasurementServiceServicer_to_server(
+            servicer_v2, self.server
         )
         port = str(self.server.add_insecure_port("[::]:0"))
         self.server.start()
