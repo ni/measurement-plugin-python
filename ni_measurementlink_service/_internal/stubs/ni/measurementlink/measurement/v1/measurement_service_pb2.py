@@ -28,7 +28,6 @@ _builder.BuildTopDescriptorsAndMessages(
     DESCRIPTOR, "ni.measurementlink.measurement.v1.measurement_service_pb2", globals()
 )
 if _descriptor._USE_C_DESCRIPTORS == False:
-
     DESCRIPTOR._options = None
     DESCRIPTOR._serialized_options = b"\n%com.ni.measurementlink.measurement.v1B\027MeasurementServiceProtoP\001Z\rmeasurementv1\242\002\004NIMM\252\0022NationalInstruments.MeasurementLink.Measurement.V1\312\002!NI\\MeasurementLink\\Measurement\\V1\352\002$NI::MeasurementLink::Measurement::V1"
     _CONFIGURATIONPARAMETER_ANNOTATIONSENTRY._options = None
