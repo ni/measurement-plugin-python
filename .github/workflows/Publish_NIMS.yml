@@ -56,6 +56,9 @@ jobs:
           poetry version ${{ steps.vars.outputs.tag }}
         working-directory: ./ni_measurementlink_generator
 
+      - name: Setup NIMS with docs
+        run: poetry install --with docs
+
       - name: Update API Reference Documents(Generated using Sphinx)
         run: |
           rm -rf docs
