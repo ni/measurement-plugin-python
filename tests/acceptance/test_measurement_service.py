@@ -10,8 +10,12 @@ from examples.sample_measurement import measurement
 from google.protobuf import any_pb2
 
 from ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v1 import (
-    measurement_service_pb2,
-    measurement_service_pb2_grpc,
+    measurement_service_pb2 as measurement_service_v1_pb2,
+    measurement_service_pb2_grpc as measurement_service_v1_pb2_grpc,
+)
+from ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v2 import (
+    measurement_service_pb2 as measurement_service_v2_pb2,
+    measurement_service_pb2_grpc as measurement_service_v2_pb2_grpc,
 )
 from tests.assets import sample_measurement_test_pb2
 
@@ -19,13 +23,24 @@ EXPECTED_PARAMETER_COUNT = 5
 EXPECTED_UI_FILE_COUNT = 3
 
 
-def test___measurement_service___get_metadata_rpc_call___returns_metadata():
+def test___measurement_service___get_metadata_v1_rpc_call___returns_metadata():
     """End to End Test to validate GetMetadata RPC call with Sample Measurement."""
     measurement_service_port = _host_service()
 
     with _create_channel(measurement_service_port) as channel:
-        stub = measurement_service_pb2_grpc.MeasurementServiceStub(channel)
-        get_metadata_response = stub.GetMetadata(measurement_service_pb2.GetMetadataRequest())
+        stub = measurement_service_v1_pb2_grpc.MeasurementServiceStub(channel)
+        get_metadata_response = stub.GetMetadata(measurement_service_v1_pb2.GetMetadataRequest())
+
+    _validate_metadata_response(get_metadata_response)
+
+
+def test___measurement_service___get_metadata_v2_rpc_call___returns_metadata():
+    """End to End Test to validate GetMetadata RPC call with Sample Measurement."""
+    measurement_service_port = _host_service()
+
+    with _create_channel(measurement_service_port) as channel:
+        stub = measurement_service_v2_pb2_grpc.MeasurementServiceStub(channel)
+        get_metadata_response = stub.GetMetadata(measurement_service_v2_pb2.GetMetadataRequest())
 
     _validate_metadata_response(get_metadata_response)
 
@@ -34,15 +49,15 @@ def test___measurement_service___get_metadata_rpc_call___returns_metadata():
     "float_in,double_array_in,bool_in,string_in, string_array_in",
     [(0.9, [1.0, 23.56], True, "InputString", ["", "TestString1", "#$%!@<*(&^~`"])],
 )
-def test___measurement_service___measure_rpc_call___returns_output(
+def test___measurement_service___measure_v1_rpc_call___returns_output(
     float_in, double_array_in, bool_in, string_in, string_array_in
 ):
     """End to End Test to validate Measure RPC call with Sample Measurement."""
     measurement_service_port = _host_service()
 
     with _create_channel(measurement_service_port) as channel:
-        stub = measurement_service_pb2_grpc.MeasurementServiceStub(channel)
-        request = _get_sample_measurement_measure_request(
+        stub = measurement_service_v1_pb2_grpc.MeasurementServiceStub(channel)
+        request = _get_sample_measurement_measure_request_v1(
             float_in, double_array_in, bool_in, string_in, string_array_in
         )
         measure_response = stub.Measure(request)
@@ -53,8 +68,33 @@ def test___measurement_service___measure_rpc_call___returns_output(
     assert measure_response.outputs.value == serialized_parameter
 
 
+@pytest.mark.parametrize(
+    "float_in,double_array_in,bool_in,string_in, string_array_in",
+    [(0.9, [1.0, 23.56], True, "InputString", ["", "TestString1", "#$%!@<*(&^~`"])],
+)
+def test___measurement_service___measure_v2_rpc_call___returns_output(
+    float_in, double_array_in, bool_in, string_in, string_array_in
+):
+    """End to End Test to validate Measure RPC call with Sample Measurement."""
+    measurement_service_port = _host_service()
+
+    with _create_channel(measurement_service_port) as channel:
+        stub = measurement_service_v2_pb2_grpc.MeasurementServiceStub(channel)
+        request = _get_sample_measurement_measure_request_v1(
+            float_in, double_array_in, bool_in, string_in, string_array_in
+        )
+        response_iterator = stub.Measure(request)
+        responses = [response for response in response_iterator]
+
+    serialized_parameter = _get_serialized_measurement_signature(
+        float_in, double_array_in, bool_in, string_in, string_array_in
+    )
+    assert len(responses) == 1
+    assert responses[0].outputs.value == serialized_parameter
+
+
 @pytest.mark.parametrize("double_array_len", [10000, 100000, 1000000, 10000000])  # up to 80 MB
-def test___measurement_service___measure_with_large_array___returns_output(double_array_len):
+def test___measurement_service___measure_v1_with_large_array___returns_output(double_array_len):
     """End to End Test to validate Measure RPC call with Sample Measurement."""
     measurement_service_port = _host_service()
     float_in = 1.23
@@ -64,8 +104,8 @@ def test___measurement_service___measure_with_large_array___returns_output(doubl
     string_array_in = ["", "TestString1", "#$%!@<*(&^~`"]
 
     with _create_channel(measurement_service_port) as channel:
-        stub = measurement_service_pb2_grpc.MeasurementServiceStub(channel)
-        request = _get_sample_measurement_measure_request(
+        stub = measurement_service_v1_pb2_grpc.MeasurementServiceStub(channel)
+        request = _get_sample_measurement_measure_request_v1(
             float_in, double_array_in, bool_in, string_in, string_array_in
         )
         measure_response = stub.Measure(request)
@@ -91,10 +131,21 @@ def _create_channel(port: str):
     )
 
 
-def _get_sample_measurement_measure_request(
+def _get_sample_measurement_measure_request_v1(
     float_in, double_array_in, bool_in, string_in, string_array_in
 ):
-    request = measurement_service_pb2.MeasureRequest(
+    request = measurement_service_v1_pb2.MeasureRequest(
+        configuration_parameters=_get_configuration_parameters(
+            float_in, double_array_in, bool_in, string_in, string_array_in
+        )
+    )
+    return request
+
+
+def _get_sample_measurement_measure_request_v2(
+    float_in, double_array_in, bool_in, string_in, string_array_in
+):
+    request = measurement_service_v2_pb2.MeasureRequest(
         configuration_parameters=_get_configuration_parameters(
             float_in, double_array_in, bool_in, string_in, string_array_in
         )
