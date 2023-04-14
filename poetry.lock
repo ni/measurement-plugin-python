@@ -290,22 +290,6 @@ docutils = "*"
 mistune = "0.8.4"
 
 [[package]]
-name = "mako"
-version = "1.2.4"
-description = "A super-fast templating language that borrows the best ideas from the existing templating languages."
-category = "dev"
-optional = false
-python-versions = ">=3.7"
-
-[package.dependencies]
-MarkupSafe = ">=0.9.2"
-
-[package.extras]
-babel = ["Babel"]
-lingua = ["lingua"]
-testing = ["pytest"]
-
-[[package]]
 name = "markupsafe"
 version = "2.1.2"
 description = "Safely add untrusted strings to HTML/XML markup."
@@ -489,7 +473,7 @@ plugins = ["importlib-metadata"]
 
 [[package]]
 name = "pytest"
-version = "7.3.0"
+version = "7.3.1"
 description = "pytest: simple powerful testing with Python"
 category = "dev"
 optional = false
@@ -847,7 +831,7 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "8cc578df3c0ea8cc35e94841f1199ba2facd5343ba3855b5bb2a373eb0f8b552"
+content-hash = "0134cbb43ebaad3ece23a4dc94b3fdce6d0f790c0a77e04704a4399c1bc1b60b"
 
 [metadata.files]
 alabaster = [
@@ -1215,10 +1199,6 @@ m2r2 = [
     {file = "m2r2-0.3.2-py3-none-any.whl", hash = "sha256:d3684086b61b4bebe2307f15189495360f05a123c9bda2a66462649b7ca236aa"},
     {file = "m2r2-0.3.2.tar.gz", hash = "sha256:ccd95b052dcd1ac7442ecb3111262b2001c10e4119b459c34c93ac7a5c2c7868"},
 ]
-mako = [
-    {file = "Mako-1.2.4-py3-none-any.whl", hash = "sha256:c97c79c018b9165ac9922ae4f32da095ffd3c4e6872b45eded42926deea46818"},
-    {file = "Mako-1.2.4.tar.gz", hash = "sha256:d60a3903dc3bb01a18ad6a89cdbe2e4eadc69c0bc8ef1e3773ba53d44c3f7a34"},
-]
 markupsafe = [
     {file = "MarkupSafe-2.1.2-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:665a36ae6f8f20a4676b53224e33d456a6f5a72657d9c83c2aa00765072f31f7"},
     {file = "MarkupSafe-2.1.2-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:340bea174e9761308703ae988e982005aedf427de816d1afe98147668cc03036"},
@@ -1371,8 +1351,8 @@ pygments = [
     {file = "Pygments-2.15.0.tar.gz", hash = "sha256:f7e36cffc4c517fbc252861b9a6e4644ca0e5abadf9a113c72d1358ad09b9500"},
 ]
 pytest = [
-    {file = "pytest-7.3.0-py3-none-any.whl", hash = "sha256:933051fa1bfbd38a21e73c3960cebdad4cf59483ddba7696c48509727e17f201"},
-    {file = "pytest-7.3.0.tar.gz", hash = "sha256:58ecc27ebf0ea643ebfdf7fb1249335da761a00c9f955bcd922349bcb68ee57d"},
+    {file = "pytest-7.3.1-py3-none-any.whl", hash = "sha256:3799fa815351fea3a5e96ac7e503a96fa51cc9942c3753cda7651b93c1cfa362"},
+    {file = "pytest-7.3.1.tar.gz", hash = "sha256:434afafd78b1d78ed0addf160ad2b77a30d35d4bdf8af234fe621919d9ed15e3"},
 ]
 pytest-cov = [
     {file = "pytest-cov-4.0.0.tar.gz", hash = "sha256:996b79efde6433cdbd0088872dbc5fb3ed7fe1578b68cdbba634f14bb8dd0470"},
