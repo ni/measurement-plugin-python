@@ -3,7 +3,6 @@
 import contextlib
 import logging
 import pathlib
-import sys
 from typing import Tuple
 
 import click
@@ -139,7 +138,7 @@ def measure(
     is_flag=True,
     help="Use simulated instruments.",
 )
-def main(verbose: int, use_simulation: bool):
+def main(verbose: int, use_simulation: bool) -> None:
     """Perform a DMM measurement using NI-VISA and an NI Instrument Simulator v2.0."""
     if verbose > 1:
         level = logging.DEBUG
@@ -157,4 +156,4 @@ def main(verbose: int, use_simulation: bool):
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    main()
