@@ -12,6 +12,9 @@ click = ">=7.1.2"
 
 [tool.poetry.group.dev.dependencies]
 mypy = ">=1.0"
+# Uncomment to use prerelease dependencies (requires poetry>=1.2).
+# nidaqmx = { git = "https://github.com/ni/nidaqmx-python.git" }
+# ni-measurementlink-service = {path = "../..", develop = true}
 
 [build-system]
 requires = ["poetry-core>=1.2.0"]
