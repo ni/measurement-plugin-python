@@ -12,6 +12,7 @@ click = ">=7.1.2"
 grpcio = "*"
 
 [tool.poetry.group.dev.dependencies]
+mypy = ">=1.0"
 # Uncomment to use prerelease dependencies (requires poetry>=1.2).
 # nidmm = { git = "https://github.com/ni/nimi-python.git", subdirectory = "generated/nidmm"}
 # ni-measurementlink-service = {path = "../..", develop = true}
@@ -19,3 +20,11 @@ grpcio = "*"
 [build-system]
 requires = ["poetry-core>=1.2.0"]
 build-backend = "poetry.core.masonry.api"
+
+[[tool.mypy.overrides]]
+module = [
+    "grpc.*",
+    "ni_measurementlink_service.*", # TODO: remove after release
+    "nidmm.*",
+]
+ignore_missing_imports = true
