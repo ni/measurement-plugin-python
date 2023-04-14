@@ -8,6 +8,7 @@ from typing import Tuple
 
 import click
 import grpc
+import pyvisa.resources
 from _helpers import ServiceOptions, str_to_enum
 from _visa_helpers import (
     INSTRUMENT_TYPE_DMM_SIMULATOR,
@@ -100,6 +101,10 @@ def measure(
         session = stack.enter_context(
             create_visa_session(resource_manager, session_info.resource_name)
         )
+
+        # Work around https://github.com/pyvisa/pyvisa/issues/739 - Type annotation for Resource
+        # context manager implicitly upcasts derived class to base class
+        assert isinstance(session, pyvisa.resources.MessageBasedResource)
 
         log_instrument_id(session)
 
