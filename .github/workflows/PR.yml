@@ -33,17 +33,6 @@ jobs:
         run: poetry run ni-python-styleguide lint
       - name: Mypy static analysis (ni-measurementlink-service)
         run:  poetry run mypy -p ni_measurementlink_service
-      - name: Mypy static analysis (examples)
-        run: |
-          # Install each example's dependencies so mypy can see their types.
-          for example in examples/*/; do
-            pushd $example
-            echo Installing $example
-            poetry install -v
-            echo Analyzing $example
-            poetry run mypy .
-            popd
-          done
       - name: Mypy static analysis (tests)
         run:  poetry run mypy tests
         
@@ -75,6 +64,42 @@ jobs:
         run: poetry run ni-python-styleguide lint
       - name: Mypy static analysis (ni-measurementlink-generator)
         run:  poetry run mypy -p ni_measurementlink_generator
+
+  checks-examples:
+    runs-on: ubuntu-latest
+    env:
+      PYTHON_VERSION: 3.9
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - uses: Gr1N/setup-poetry@v8
+        with:
+          poetry-version: ${{ env.POETRY_VERSION }}
+      - uses: actions/cache@v2
+        with:
+          path: ~/.cache/pypoetry/virtualenvs
+          key: ${{ runner.os }}-poetry-${{ hashFiles('poetry.lock') }}
+      # Install each example's dependencies so mypy can see their types.
+      - name: Install examples
+        run: |
+          for example in examples/*/; do
+            echo "::group::$example"
+            pushd $example
+            poetry install -v
+            popd
+            echo "::endgroup::"
+          done
+      - name: Mypy static analysis (examples)
+        run: |
+          for example in examples/*/; do
+            echo "::group::$example"
+            pushd $example
+            poetry run mypy .
+            popd
+            echo "::endgroup::"
+          done
 
   tests:
     runs-on: ${{ matrix.os }}
