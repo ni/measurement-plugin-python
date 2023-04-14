@@ -11,7 +11,7 @@ ni-measurementlink-service = "^1.0.0"
 click = ">=7.1.2"
 grpcio = "*"
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 # Uncomment to use prerelease dependencies (requires poetry>=1.2).
 # nifgen = { git = "https://github.com/ni/nimi-python.git", subdirectory = "generated/nifgen"}
 # ni-measurementlink-service = {path = "../..", develop = true}

@@ -12,7 +12,7 @@ PyVISA-sim = "^0.5.1"
 click = ">=7.1.2"
 grpcio = "*"
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 # Uncomment to use prerelease dependencies (requires poetry>=1.2).
 # ni-measurementlink-service = {path = "../..", develop = true}
 
