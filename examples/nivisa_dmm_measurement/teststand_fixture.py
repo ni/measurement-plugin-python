@@ -1,5 +1,6 @@
 """Functions to set up and tear down NI-VISA DMM sessions in NI TestStand."""
 
+import pyvisa.resources
 from _helpers import GrpcChannelPoolHelper, PinMapClient
 from _visa_helpers import (
     INSTRUMENT_TYPE_DMM_SIMULATOR,
@@ -15,7 +16,7 @@ import ni_measurementlink_service as nims
 USE_SIMULATION = True
 
 
-def update_pin_map(pin_map_id: str):
+def update_pin_map(pin_map_id: str) -> None:
     """Update registered pin map contents.
 
     Create and register a pin map if a pin map resource for the specified pin map id is not found.
@@ -30,7 +31,7 @@ def update_pin_map(pin_map_id: str):
         pin_map_client.update_pin_map(pin_map_id)
 
 
-def create_nivisa_dmm_sessions(pin_map_id: str):
+def create_nivisa_dmm_sessions(pin_map_id: str) -> None:
     """Create and register all NI-VISA DMM sessions."""
     with GrpcChannelPoolHelper() as grpc_channel_pool:
         session_management_client = nims.session_management.Client(
@@ -48,13 +49,16 @@ def create_nivisa_dmm_sessions(pin_map_id: str):
 
             for session_info in reservation.session_info:
                 with create_visa_session(resource_manager, session_info.resource_name) as session:
+                    # Work around https://github.com/pyvisa/pyvisa/issues/739 - Type annotation
+                    # for Resource context manager implicitly upcasts derived class to base class
+                    assert isinstance(session, pyvisa.resources.MessageBasedResource)
                     log_instrument_id(session)
                     reset_instrument(session)
 
             session_management_client.register_sessions(reservation.session_info)
 
 
-def destroy_nivisa_dmm_sessions():
+def destroy_nivisa_dmm_sessions() -> None:
     """Destroy and unregister all NI-VISA DMM sessions."""
     with GrpcChannelPoolHelper() as grpc_channel_pool:
         session_management_client = nims.session_management.Client(

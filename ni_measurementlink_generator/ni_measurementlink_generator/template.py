@@ -118,7 +118,7 @@ def create_measurement(
     description_url: str,
     directory_out: Optional[str],
     verbose: bool,
-):
+) -> None:
     """Generate a Python measurement service from a template.
 
     You can use this to get started writing your own MeasurementLink services.

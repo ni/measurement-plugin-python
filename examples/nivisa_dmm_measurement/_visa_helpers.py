@@ -19,7 +19,7 @@ SIMULATION_YAML_PATH = pathlib.Path(__file__).resolve().parent / "NIInstrumentSi
 
 def create_visa_resource_manager(
     use_simulation: bool, simulation_yaml_path: pathlib.Path = SIMULATION_YAML_PATH
-):
+) -> pyvisa.ResourceManager:
     """Create a real or simulated VISA resource manager."""
     visa_library = f"{simulation_yaml_path}@sim" if use_simulation else ""
     return pyvisa.ResourceManager(visa_library)
@@ -38,7 +38,7 @@ def create_visa_session(
     return session
 
 
-def check_instrument_error(session: pyvisa.resources.MessageBasedResource):
+def check_instrument_error(session: pyvisa.resources.MessageBasedResource) -> None:
     """Query the instrument's error queue."""
     response = session.query("SYST:ERR?")
     fields = response.split(",", maxsplit=1)
@@ -47,13 +47,13 @@ def check_instrument_error(session: pyvisa.resources.MessageBasedResource):
         raise RuntimeError("Instrument returned error %s: %s" % (fields[0], fields[1]))
 
 
-def log_instrument_id(session: pyvisa.resources.MessageBasedResource):
+def log_instrument_id(session: pyvisa.resources.MessageBasedResource) -> None:
     """Log the instrument's identification string."""
     instrument_id = session.query("*IDN?")
     logging.info("Instrument: %s", instrument_id)
 
 
-def reset_instrument(session: pyvisa.resources.MessageBasedResource):
+def reset_instrument(session: pyvisa.resources.MessageBasedResource) -> None:
     """Reset the instrument to a known state."""
     session.write("*CLS")
     session.write("*RST")

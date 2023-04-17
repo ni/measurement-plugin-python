@@ -3,7 +3,6 @@
 import contextlib
 import logging
 import pathlib
-import sys
 import time
 from typing import Tuple
 
@@ -228,7 +227,7 @@ def _create_niscope_session(
     default="",
     help="NI gRPC Device Server address (e.g. localhost:31763). If unspecified, use the discovery service to resolve the address.",
 )
-def main(verbose: int, use_grpc_device: bool, grpc_device_address: str):
+def main(verbose: int, use_grpc_device: bool, grpc_device_address: str) -> None:
     """Acquire a waveform using an NI oscilloscope."""
     if verbose > 1:
         level = logging.DEBUG
@@ -248,4 +247,4 @@ def main(verbose: int, use_grpc_device: bool, grpc_device_address: str):
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    main()

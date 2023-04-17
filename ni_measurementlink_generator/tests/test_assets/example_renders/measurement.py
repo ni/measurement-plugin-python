@@ -1,7 +1,6 @@
 """A default measurement with an array in and out."""
 import logging
 import pathlib
-import sys
 
 import click
 import ni_measurementlink_service as nims
@@ -30,7 +29,7 @@ def measure(array_input):
     count=True,
     help="Enable verbose logging. Repeat to increase verbosity.",
 )
-def main(verbose: int):
+def main(verbose: int) -> None:
     """Host the Sample Measurement service."""
     if verbose > 1:
         level = logging.DEBUG
@@ -46,4 +45,3 @@ def main(verbose: int):
 
 if __name__ == "__main__":
     main()
-    sys.exit(0)

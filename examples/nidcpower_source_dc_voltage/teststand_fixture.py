@@ -6,7 +6,7 @@ from _helpers import GrpcChannelPoolHelper, PinMapClient
 import ni_measurementlink_service as nims
 
 
-def update_pin_map(pin_map_id: str):
+def update_pin_map(pin_map_id: str) -> None:
     """Update registered pin map contents.
 
     Create and register a pin map if a pin map resource for the specified pin map id is not found.
@@ -22,7 +22,7 @@ def update_pin_map(pin_map_id: str):
         pin_map_client.update_pin_map(pin_map_id)
 
 
-def create_nidcpower_sessions(pin_map_id: str):
+def create_nidcpower_sessions(pin_map_id: str) -> None:
     """Create and register all NI-DCPower sessions."""
     with GrpcChannelPoolHelper() as grpc_channel_pool:
         session_management_client = nims.session_management.Client(
@@ -53,7 +53,7 @@ def create_nidcpower_sessions(pin_map_id: str):
             session_management_client.register_sessions(reservation.session_info)
 
 
-def destroy_nidcpower_sessions():
+def destroy_nidcpower_sessions() -> None:
     """Destroy and unregister all NI-DCPower sessions."""
     with GrpcChannelPoolHelper() as grpc_channel_pool:
         session_management_client = nims.session_management.Client(

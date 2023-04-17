@@ -21,36 +21,26 @@ jobs:
       - uses: Gr1N/setup-poetry@v8
         with:
           poetry-version: ${{ env.POETRY_VERSION }}
-      - name: Check for lock changes (measurement service)
+      - name: Check for lock changes (ni-measurementlink-service)
         run: poetry lock --check
       - uses: actions/cache@v2
         with:
           path: ~/.cache/pypoetry/virtualenvs
           key: ${{ runner.os }}-poetry-${{ hashFiles('poetry.lock') }}
-      - name: HACK - Remove grpcio from Poetry cache
-        run: poetry cache clear pypi:gprcio:1.51.0
-      - name: Install the Package
-        run: poetry install -vvv
-      - name: Lint the Code
+      - name: Install ni-measurementlink-service
+        run: poetry install -v
+      - name: Lint ni-measurementlink-service
         run: poetry run ni-python-styleguide lint
       - name: Mypy static analysis (ni-measurementlink-service)
-        run:  poetry run mypy -p ni_measurementlink_service --show-error-codes -v
-      - name: Mypy static analysis (examples)
-        # `mypy -p examples` doesn't import _helpers.py correctly, so check one example directory at a time.
-        run: |
-          for example in examples/*/; do 
-            echo Analyzing $example
-            poetry run mypy $example --show-error-codes -v
-          done
-      - name: Mypy static analysis (ni-measurementlink-generator)
-        run:  poetry run mypy -p ni_measurementlink_generator --show-error-codes -v
+        run:  poetry run mypy -p ni_measurementlink_service
       - name: Mypy static analysis (tests)
-        run:  poetry run mypy tests --show-error-codes -v
+        run:  poetry run mypy tests
         
   checks-nimg:
     runs-on: ubuntu-latest
-    defaults: # in theory this sets the working-dir for all steps in this job
+    defaults:
       run:
+        # Set the working-directory for all steps in this job.
         working-directory: ./ni_measurementlink_generator
     env:
       PYTHON_VERSION: 3.9
@@ -62,19 +52,54 @@ jobs:
       - uses: Gr1N/setup-poetry@v8
         with:
           poetry-version: ${{ env.POETRY_VERSION }}
-      - name: Check for lock changes (generator)
+      - name: Check for lock changes (ni-measurementlink-generator)
         run: poetry lock --check
-        working-directory: ./ni_measurementlink_generator
       - uses: actions/cache@v2
         with:
           path: ~/.cache/pypoetry/virtualenvs
           key: ${{ runner.os }}-poetry-${{ hashFiles('poetry.lock') }}
-      - name: HACK - Remove grpcio from Poetry cache
-        run: poetry cache clear pypi:gprcio:1.51.0
-      - name: Install the Package
-        run: poetry install -vvv
-      - name: Lint the Code
+      - name: Install ni-measurementlink-generator
+        run: poetry install -v
+      - name: Lint ni-measurementlink-generator
         run: poetry run ni-python-styleguide lint
+      - name: Mypy static analysis (ni-measurementlink-generator)
+        run:  poetry run mypy -p ni_measurementlink_generator
+
+  checks-examples:
+    runs-on: ubuntu-latest
+    env:
+      PYTHON_VERSION: 3.9
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - uses: Gr1N/setup-poetry@v8
+        with:
+          poetry-version: ${{ env.POETRY_VERSION }}
+      - uses: actions/cache@v2
+        with:
+          path: ~/.cache/pypoetry/virtualenvs
+          key: ${{ runner.os }}-poetry-${{ hashFiles('poetry.lock') }}
+      # Install each example's dependencies so mypy can see their types.
+      - name: Install examples
+        run: |
+          for example in examples/*/; do
+            echo "::group::$example"
+            pushd $example
+            poetry install -v
+            popd
+            echo "::endgroup::"
+          done
+      - name: Mypy static analysis (examples)
+        run: |
+          for example in examples/*/; do
+            echo "::group::$example"
+            pushd $example
+            poetry run mypy .
+            popd
+            echo "::endgroup::"
+          done
 
   tests:
     runs-on: ${{ matrix.os }}
@@ -95,13 +120,13 @@ jobs:
         with:
           path: ~/.cache/pypoetry/virtualenvs
           key: ${{ runner.os }}-poetry-${{ hashFiles('poetry.lock') }}
-      - name: Install the Package (measurement service).
-        run: poetry install -vvv
-      - name: Run tests and Code coverage summary (measurement service).
+      - name: Install ni-measurementlink-service
+        run: poetry install -v
+      - name: Run tests and code coverage (ni-measurementlink-service)
         run: poetry run pytest ./tests -v --cov=ni_measurementlink_service
-      - name: Install the Package (generator).
-        run: poetry install -vvv
+      - name: Install ni-measurementlink-generator
+        run: poetry install -v
         working-directory: ./ni_measurementlink_generator
-      - name: Run tests and Code coverage summary (generator).
-        run: poetry run pytest -v
+      - name: Run tests and code coverage (ni-measurementlink-generator)
+        run: poetry run pytest -v --cov=ni_measurementlink_generator
         working-directory: ./ni_measurementlink_generator
