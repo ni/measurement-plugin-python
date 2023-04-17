@@ -23,7 +23,7 @@ build-backend = "poetry.core.masonry.api"
 [[tool.mypy.overrides]]
 module = [
     "grpc.*",
-    "ni_measurementlink_service.*", # TODO: remove after release
+    "ni_measurementlink_service.*", # TODO: remove after 1.0.2 is released with py.typed marker
     "nidaqmx.*",
 ]
 ignore_missing_imports = true
