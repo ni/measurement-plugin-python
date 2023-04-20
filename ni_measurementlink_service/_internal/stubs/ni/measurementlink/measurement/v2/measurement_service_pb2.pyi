@@ -315,10 +315,15 @@ class ConfigurationParameter(google.protobuf.message.Message):
         Well-known annotations:
         - Type specialization. The keys to other annotations will be read based on the value of `ni/type_specialization` annotation.
           - Key: "ni/type_specialization"
-          - Common Values: "pin" ...
+          - Common Values: "pin", "path", "enum", ...
         - For string parameter with ni/type_specialization annotation equals "pin"
           - Key: "ni/pin.instrument_type"
           - Common Values: "niDCPower", "niScope"...
+        - For string parameter with ni/type_specialization annotation equals "enum"
+          - Key: "ni/enum.values"
+          - Expected format: JSON dictionary string"
+          - Example: "{\\"RED\\":0, \\"GREEN\\":25, \\"BLUE\\":5}"
+          - Note that enum annotations only apply to TYPE_ENUM parameters and not TYPE_STRING parameters.
         """
     def __init__(
         self,
@@ -394,15 +399,6 @@ class Output(google.protobuf.message.Message):
     ) -> google.protobuf.internal.containers.ScalarMap[builtins.str, builtins.str]:
         """Optional. Represents a set of annotations on the type.
         See documentation for ConfigurationParameter annotations for more details and examples.
-        Note that enum annotations only apply to TYPE_ENUM parameters and not TYPE_STRING parameters.
-        Well-known annotations:
-        - Type specialization. The keys to other annotations will be read based on the value of `ni/type_specialization` annotation.
-          - Key: "ni/type_specialization"
-          - Common Values: "enum" ...
-        - For string parameter with ni/type_specialization annotation equals "enum"
-          - Key: "ni/enum.values"
-          - Expected format: JSON dictionary string"
-          - Example: "{\\"RED\\":0, \\"GREEN\\":25, \\"BLUE\\":5}"
         """
     def __init__(
         self,
