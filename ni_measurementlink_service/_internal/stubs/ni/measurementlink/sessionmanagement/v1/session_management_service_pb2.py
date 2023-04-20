@@ -27,7 +27,6 @@ _builder.BuildTopDescriptorsAndMessages(
     DESCRIPTOR, "ni.measurementlink.sessionmanagement.v1.session_management_service_pb2", globals()
 )
 if _descriptor._USE_C_DESCRIPTORS == False:
-
     DESCRIPTOR._options = None
     DESCRIPTOR._serialized_options = b"\n+com.ni.measurementlink.sessionmanagement.v1B\026SessionManagementProtoP\001Z\023sessionmanagementv1\242\002\004NIMS\252\0028NationalInstruments.MeasurementLink.SessionManagement.V1\312\002'NI\\MeasurementLink\\SessionManagement\\V1\352\002*NI::MeasurementLink::SessionManagement::V1"
     _SESSIONINFORMATION._serialized_start = 175
