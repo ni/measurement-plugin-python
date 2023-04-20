@@ -21,7 +21,6 @@ _builder.BuildTopDescriptorsAndMessages(
     DESCRIPTOR, "ni.measurementlink.pin_map_context_pb2", globals()
 )
 if _descriptor._USE_C_DESCRIPTORS == False:
-
     DESCRIPTOR._options = None
     DESCRIPTOR._serialized_options = b"\n\026com.ni.measurementlinkB\022PinMapContextProtoP\001Z\017pinmapcontextv1\242\002\003NIM\252\002#NationalInstruments.MeasurementLink\312\002\022NI\\MeasurementLink\352\002\023NI::MeasurementLink"
     _PINMAPCONTEXT._serialized_start = 64
