@@ -123,14 +123,15 @@ message ConfigurationParameter {
   // - Type specialization. The keys to other annotations will be read based on the value of `ni/type_specialization` annotation.
   //   - Key: "ni/type_specialization"
   //   - Common Values: "pin", "path", "enum", ...
+  //   - "pin" and "path" parameters require the type field to be TYPE_STRING.
+  //   - "enum" parameters requires the type field to be TYPE_ENUM.
   // - For string parameter with ni/type_specialization annotation equals "pin"
   //   - Key: "ni/pin.instrument_type"
   //   - Common Values: "niDCPower", "niScope"...
-  // - For string parameter with ni/type_specialization annotation equals "enum"
+  // - For enum parameter with ni/type_specialization annotation equals "enum"
   //   - Key: "ni/enum.values"
   //   - Expected format: JSON dictionary string"
   //   - Example: "{\"RED\":0, \"GREEN\":25, \"BLUE\":5}"
-  //   - Note that enum annotations only apply to TYPE_ENUM parameters and not TYPE_STRING parameters.
   map<string, string> annotations = 5;
 }
 
