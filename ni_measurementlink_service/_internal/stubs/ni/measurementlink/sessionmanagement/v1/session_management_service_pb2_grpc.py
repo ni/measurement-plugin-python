@@ -2,13 +2,12 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-from ni_measurementlink_service._internal.stubs.ni.measurementlink.sessionmanagement.v1 import (
-    session_management_service_pb2 as ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2,
-)
+from ni_measurementlink_service._internal.stubs.ni.measurementlink.sessionmanagement.v1 import session_management_service_pb2 as ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2
 
 
 class SessionManagementServiceStub(object):
-    """Service to keep track of open sessions used by measurement services, and to allow measurement services to access sessions by pin and site."""
+    """Service to keep track of open sessions used by measurement services, and to allow measurement services to access sessions by pin and site.
+    """
 
     def __init__(self, channel):
         """Constructor.
@@ -17,34 +16,35 @@ class SessionManagementServiceStub(object):
             channel: A grpc.Channel.
         """
         self.ReserveSessions = channel.unary_unary(
-            "/ni.measurementlink.sessionmanagement.v1.SessionManagementService/ReserveSessions",
-            request_serializer=ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.ReserveSessionsRequest.SerializeToString,
-            response_deserializer=ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.ReserveSessionsResponse.FromString,
-        )
+                '/ni.measurementlink.sessionmanagement.v1.SessionManagementService/ReserveSessions',
+                request_serializer=ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.ReserveSessionsRequest.SerializeToString,
+                response_deserializer=ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.ReserveSessionsResponse.FromString,
+                )
         self.UnreserveSessions = channel.unary_unary(
-            "/ni.measurementlink.sessionmanagement.v1.SessionManagementService/UnreserveSessions",
-            request_serializer=ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.UnreserveSessionsRequest.SerializeToString,
-            response_deserializer=ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.UnreserveSessionsResponse.FromString,
-        )
+                '/ni.measurementlink.sessionmanagement.v1.SessionManagementService/UnreserveSessions',
+                request_serializer=ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.UnreserveSessionsRequest.SerializeToString,
+                response_deserializer=ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.UnreserveSessionsResponse.FromString,
+                )
         self.RegisterSessions = channel.unary_unary(
-            "/ni.measurementlink.sessionmanagement.v1.SessionManagementService/RegisterSessions",
-            request_serializer=ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.RegisterSessionsRequest.SerializeToString,
-            response_deserializer=ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.RegisterSessionsResponse.FromString,
-        )
+                '/ni.measurementlink.sessionmanagement.v1.SessionManagementService/RegisterSessions',
+                request_serializer=ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.RegisterSessionsRequest.SerializeToString,
+                response_deserializer=ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.RegisterSessionsResponse.FromString,
+                )
         self.UnregisterSessions = channel.unary_unary(
-            "/ni.measurementlink.sessionmanagement.v1.SessionManagementService/UnregisterSessions",
-            request_serializer=ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.UnregisterSessionsRequest.SerializeToString,
-            response_deserializer=ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.UnregisterSessionsResponse.FromString,
-        )
+                '/ni.measurementlink.sessionmanagement.v1.SessionManagementService/UnregisterSessions',
+                request_serializer=ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.UnregisterSessionsRequest.SerializeToString,
+                response_deserializer=ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.UnregisterSessionsResponse.FromString,
+                )
         self.ReserveAllRegisteredSessions = channel.unary_unary(
-            "/ni.measurementlink.sessionmanagement.v1.SessionManagementService/ReserveAllRegisteredSessions",
-            request_serializer=ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.ReserveAllRegisteredSessionsRequest.SerializeToString,
-            response_deserializer=ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.ReserveAllRegisteredSessionsResponse.FromString,
-        )
+                '/ni.measurementlink.sessionmanagement.v1.SessionManagementService/ReserveAllRegisteredSessions',
+                request_serializer=ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.ReserveAllRegisteredSessionsRequest.SerializeToString,
+                response_deserializer=ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.ReserveAllRegisteredSessionsResponse.FromString,
+                )
 
 
 class SessionManagementServiceServicer(object):
-    """Service to keep track of open sessions used by measurement services, and to allow measurement services to access sessions by pin and site."""
+    """Service to keep track of open sessions used by measurement services, and to allow measurement services to access sessions by pin and site.
+    """
 
     def ReserveSessions(self, request, context):
         """Reserve session(s) for the given pins or relays, sites, and instrument type ID and returns the information needed to create or access the session.
@@ -60,8 +60,8 @@ class SessionManagementServiceServicer(object):
         - Session(s) were already reserved and didn't become available before the specified timeout expired.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details("Method not implemented!")
-        raise NotImplementedError("Method not implemented!")
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
 
     def UnreserveSessions(self, request, context):
         """Unreserves sessions so they can be accessed by other clients.
@@ -69,8 +69,8 @@ class SessionManagementServiceServicer(object):
         - Error occurred while unreserving sessions.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details("Method not implemented!")
-        raise NotImplementedError("Method not implemented!")
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
 
     def RegisterSessions(self, request, context):
         """Registers the sessions with this service. Indicates that the sessions are open and will need to be closed later.
@@ -81,14 +81,15 @@ class SessionManagementServiceServicer(object):
         - Session names list has an empty string.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details("Method not implemented!")
-        raise NotImplementedError("Method not implemented!")
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
 
     def UnregisterSessions(self, request, context):
-        """Unregisters the sessions with this service. Indicates that the sessions have been closed and will need to be reopened before they can be used again."""
+        """Unregisters the sessions with this service. Indicates that the sessions have been closed and will need to be reopened before they can be used again.
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details("Method not implemented!")
-        raise NotImplementedError("Method not implemented!")
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
 
     def ReserveAllRegisteredSessions(self, request, context):
         """Reserves and gets all sessions currently registered with this service.
@@ -98,189 +99,129 @@ class SessionManagementServiceServicer(object):
         - Session(s) were already reserved and didn't become available before the specified timeout expired.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details("Method not implemented!")
-        raise NotImplementedError("Method not implemented!")
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
 
 
 def add_SessionManagementServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
-        "ReserveSessions": grpc.unary_unary_rpc_method_handler(
-            servicer.ReserveSessions,
-            request_deserializer=ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.ReserveSessionsRequest.FromString,
-            response_serializer=ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.ReserveSessionsResponse.SerializeToString,
-        ),
-        "UnreserveSessions": grpc.unary_unary_rpc_method_handler(
-            servicer.UnreserveSessions,
-            request_deserializer=ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.UnreserveSessionsRequest.FromString,
-            response_serializer=ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.UnreserveSessionsResponse.SerializeToString,
-        ),
-        "RegisterSessions": grpc.unary_unary_rpc_method_handler(
-            servicer.RegisterSessions,
-            request_deserializer=ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.RegisterSessionsRequest.FromString,
-            response_serializer=ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.RegisterSessionsResponse.SerializeToString,
-        ),
-        "UnregisterSessions": grpc.unary_unary_rpc_method_handler(
-            servicer.UnregisterSessions,
-            request_deserializer=ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.UnregisterSessionsRequest.FromString,
-            response_serializer=ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.UnregisterSessionsResponse.SerializeToString,
-        ),
-        "ReserveAllRegisteredSessions": grpc.unary_unary_rpc_method_handler(
-            servicer.ReserveAllRegisteredSessions,
-            request_deserializer=ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.ReserveAllRegisteredSessionsRequest.FromString,
-            response_serializer=ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.ReserveAllRegisteredSessionsResponse.SerializeToString,
-        ),
+            'ReserveSessions': grpc.unary_unary_rpc_method_handler(
+                    servicer.ReserveSessions,
+                    request_deserializer=ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.ReserveSessionsRequest.FromString,
+                    response_serializer=ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.ReserveSessionsResponse.SerializeToString,
+            ),
+            'UnreserveSessions': grpc.unary_unary_rpc_method_handler(
+                    servicer.UnreserveSessions,
+                    request_deserializer=ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.UnreserveSessionsRequest.FromString,
+                    response_serializer=ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.UnreserveSessionsResponse.SerializeToString,
+            ),
+            'RegisterSessions': grpc.unary_unary_rpc_method_handler(
+                    servicer.RegisterSessions,
+                    request_deserializer=ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.RegisterSessionsRequest.FromString,
+                    response_serializer=ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.RegisterSessionsResponse.SerializeToString,
+            ),
+            'UnregisterSessions': grpc.unary_unary_rpc_method_handler(
+                    servicer.UnregisterSessions,
+                    request_deserializer=ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.UnregisterSessionsRequest.FromString,
+                    response_serializer=ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.UnregisterSessionsResponse.SerializeToString,
+            ),
+            'ReserveAllRegisteredSessions': grpc.unary_unary_rpc_method_handler(
+                    servicer.ReserveAllRegisteredSessions,
+                    request_deserializer=ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.ReserveAllRegisteredSessionsRequest.FromString,
+                    response_serializer=ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.ReserveAllRegisteredSessionsResponse.SerializeToString,
+            ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-        "ni.measurementlink.sessionmanagement.v1.SessionManagementService", rpc_method_handlers
-    )
+            'ni.measurementlink.sessionmanagement.v1.SessionManagementService', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
 
 
-# This class is part of an EXPERIMENTAL API.
+ # This class is part of an EXPERIMENTAL API.
 class SessionManagementService(object):
-    """Service to keep track of open sessions used by measurement services, and to allow measurement services to access sessions by pin and site."""
+    """Service to keep track of open sessions used by measurement services, and to allow measurement services to access sessions by pin and site.
+    """
 
     @staticmethod
-    def ReserveSessions(
-        request,
-        target,
-        options=(),
-        channel_credentials=None,
-        call_credentials=None,
-        insecure=False,
-        compression=None,
-        wait_for_ready=None,
-        timeout=None,
-        metadata=None,
-    ):
-        return grpc.experimental.unary_unary(
-            request,
+    def ReserveSessions(request,
             target,
-            "/ni.measurementlink.sessionmanagement.v1.SessionManagementService/ReserveSessions",
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ni.measurementlink.sessionmanagement.v1.SessionManagementService/ReserveSessions',
             ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.ReserveSessionsRequest.SerializeToString,
             ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.ReserveSessionsResponse.FromString,
-            options,
-            channel_credentials,
-            insecure,
-            call_credentials,
-            compression,
-            wait_for_ready,
-            timeout,
-            metadata,
-        )
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
-    def UnreserveSessions(
-        request,
-        target,
-        options=(),
-        channel_credentials=None,
-        call_credentials=None,
-        insecure=False,
-        compression=None,
-        wait_for_ready=None,
-        timeout=None,
-        metadata=None,
-    ):
-        return grpc.experimental.unary_unary(
-            request,
+    def UnreserveSessions(request,
             target,
-            "/ni.measurementlink.sessionmanagement.v1.SessionManagementService/UnreserveSessions",
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ni.measurementlink.sessionmanagement.v1.SessionManagementService/UnreserveSessions',
             ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.UnreserveSessionsRequest.SerializeToString,
             ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.UnreserveSessionsResponse.FromString,
-            options,
-            channel_credentials,
-            insecure,
-            call_credentials,
-            compression,
-            wait_for_ready,
-            timeout,
-            metadata,
-        )
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
-    def RegisterSessions(
-        request,
-        target,
-        options=(),
-        channel_credentials=None,
-        call_credentials=None,
-        insecure=False,
-        compression=None,
-        wait_for_ready=None,
-        timeout=None,
-        metadata=None,
-    ):
-        return grpc.experimental.unary_unary(
-            request,
+    def RegisterSessions(request,
             target,
-            "/ni.measurementlink.sessionmanagement.v1.SessionManagementService/RegisterSessions",
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ni.measurementlink.sessionmanagement.v1.SessionManagementService/RegisterSessions',
             ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.RegisterSessionsRequest.SerializeToString,
             ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.RegisterSessionsResponse.FromString,
-            options,
-            channel_credentials,
-            insecure,
-            call_credentials,
-            compression,
-            wait_for_ready,
-            timeout,
-            metadata,
-        )
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
-    def UnregisterSessions(
-        request,
-        target,
-        options=(),
-        channel_credentials=None,
-        call_credentials=None,
-        insecure=False,
-        compression=None,
-        wait_for_ready=None,
-        timeout=None,
-        metadata=None,
-    ):
-        return grpc.experimental.unary_unary(
-            request,
+    def UnregisterSessions(request,
             target,
-            "/ni.measurementlink.sessionmanagement.v1.SessionManagementService/UnregisterSessions",
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ni.measurementlink.sessionmanagement.v1.SessionManagementService/UnregisterSessions',
             ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.UnregisterSessionsRequest.SerializeToString,
             ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.UnregisterSessionsResponse.FromString,
-            options,
-            channel_credentials,
-            insecure,
-            call_credentials,
-            compression,
-            wait_for_ready,
-            timeout,
-            metadata,
-        )
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
-    def ReserveAllRegisteredSessions(
-        request,
-        target,
-        options=(),
-        channel_credentials=None,
-        call_credentials=None,
-        insecure=False,
-        compression=None,
-        wait_for_ready=None,
-        timeout=None,
-        metadata=None,
-    ):
-        return grpc.experimental.unary_unary(
-            request,
+    def ReserveAllRegisteredSessions(request,
             target,
-            "/ni.measurementlink.sessionmanagement.v1.SessionManagementService/ReserveAllRegisteredSessions",
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ni.measurementlink.sessionmanagement.v1.SessionManagementService/ReserveAllRegisteredSessions',
             ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.ReserveAllRegisteredSessionsRequest.SerializeToString,
             ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.ReserveAllRegisteredSessionsResponse.FromString,
-            options,
-            channel_credentials,
-            insecure,
-            call_credentials,
-            compression,
-            wait_for_ready,
-            timeout,
-            metadata,
-        )
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
