@@ -5,6 +5,7 @@ from _helpers import GrpcChannelPoolHelper, PinMapClient, TestStandSupport
 
 import ni_measurementlink_service as nims
 
+
 def update_pin_map(pin_map_path: str, sequence_context) -> str:
     """Update registered pin map contents.
 
@@ -17,7 +18,6 @@ def update_pin_map(pin_map_path: str, sequence_context) -> str:
             The sequence context object from the TestStand sequence execution.
 
     """
-    
     teststand_support = TestStandSupport(sequence_context)
     pin_map_full_path = teststand_support.get_file_path(pin_map_path)
 
@@ -27,6 +27,7 @@ def update_pin_map(pin_map_path: str, sequence_context) -> str:
 
     teststand_support.set_pin_map_id_to_temporary_variable(pin_map_id)
     return pin_map_id
+
 
 def create_nidcpower_sessions(pin_map_id: str) -> None:
     """Create and register all NI-DCPower sessions."""
