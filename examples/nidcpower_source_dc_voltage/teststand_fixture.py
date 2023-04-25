@@ -1,26 +1,32 @@
 """Functions to set up and tear down sessions of NI-DCPower devices in NI TestStand."""
 
 import nidcpower
-from _helpers import GrpcChannelPoolHelper, PinMapClient
+from _helpers import GrpcChannelPoolHelper, PinMapClient, TestStandSupport
 
 import ni_measurementlink_service as nims
 
-
-def update_pin_map(pin_map_id: str) -> None:
+def update_pin_map(pin_map_path: str, sequence_context) -> str:
     """Update registered pin map contents.
 
     Create and register a pin map if a pin map resource for the specified pin map id is not found.
 
     Args:
-        pin_map_id (str):
-            The resource id of the pin map to register as a pin map resource. By
-            convention, the pin_map_id is the .pinmap file path.
+        pin_map_path (str):
+            The path of the pin map to register as a pin map resource.
+        sequence_context:
+            The sequence context object from the TestStand sequence execution.
 
     """
+    
+    teststand_support = TestStandSupport(sequence_context)
+    pin_map_full_path = teststand_support.get_file_path(pin_map_path)
+
     with GrpcChannelPoolHelper() as grpc_channel_pool:
         pin_map_client = PinMapClient(grpc_channel=grpc_channel_pool.pin_map_channel)
-        pin_map_client.update_pin_map(pin_map_id)
+        pin_map_id = pin_map_client.update_pin_map(pin_map_full_path)
 
+    teststand_support.set_pin_map_id_to_temporary_variable(pin_map_id)
+    return pin_map_id
 
 def create_nidcpower_sessions(pin_map_id: str) -> None:
     """Create and register all NI-DCPower sessions."""

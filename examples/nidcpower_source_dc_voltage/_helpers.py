@@ -26,7 +26,6 @@ class ServiceOptions(NamedTuple):
 
 T = TypeVar("T")
 
-
 def str_to_enum(mapping: Dict[str, T], value: str) -> T:
     """Convert a string to an enum (with improved error reporting)."""
     try:
@@ -38,7 +37,6 @@ def str_to_enum(mapping: Dict[str, T], value: str) -> T:
             f'Unsupported enum value "{value}"',
         ) from e
 
-
 class PinMapClient(object):
     """Class that communicates with the pin map service."""
 
@@ -48,14 +46,14 @@ class PinMapClient(object):
             pin_map_service_pb2_grpc.PinMapServiceStub(grpc_channel)
         )
 
-    def update_pin_map(self, pin_map_id: str) -> None:
+    def update_pin_map(self, pin_map_id: str) -> str:
         """Update registered pin map contents.
 
         Create and register a pin map if a pin map resource for the specified pin map id is not
         found.
 
         Args:
-            pin_map_id (str): The resource id of the pin map to register as a pin map resource. By
+            pin_map_id (str): The file path of the pin map to register as a pin map resource. By
                 convention, the pin map id is the .pinmap file path.
 
         """
@@ -64,7 +62,7 @@ class PinMapClient(object):
             pin_map_id=pin_map_id, pin_map_xml=pin_map_path.read_text(encoding="utf-8")
         )
         response: pin_map_service_pb2.PinMap = self._client.UpdatePinMapFromXml(request)
-        assert response.pin_map_id == pin_map_id
+        return response.pin_map_id
 
 
 class GrpcChannelPoolHelper(GrpcChannelPool):
@@ -108,3 +106,40 @@ class GrpcChannelPoolHelper(GrpcChannelPool):
                 service_class="ni.measurementlink.v1.grpcdeviceserver",
             ).insecure_address
         )
+
+class TestStandSupport(object):
+    """Class that communicates with TestStand."""
+
+    def __init__(self, sequence_context) -> None:
+        """Initialize the TestStandSupport object.
+        
+        Args:
+            sequence_context:
+                The sequence context object from the TestStand sequence execution.
+
+        """
+
+        self._sequence_context = sequence_context
+
+    def set_pin_map_id_to_temporary_variable(self, pin_map_id: str) -> None:
+        """Set the pin map ID to the MeasurementLink.PinmapId temporary variable.
+        
+        Args:
+            pin_map_id (str):
+                The resource ID of the pin map that is registered to the pin map service.
+
+        """
+
+        self._sequence_context.Engine.TemporaryGlobals.SetValString("NI.MeasurementLink.PinMapId", 0x1, pin_map_id)
+
+    def get_file_path(self, file_name: str) -> str:
+        """Return the full path of the input file name by searching for it in the TestStand search directories.
+        
+        Args:
+            file_name (str):
+                Name of the file to be found from the TestStand search diectories.
+        
+        """
+
+        (_, file_path, _, _, _) = self._sequence_context.Engine.FindFileEx(file_name)
+        return file_path
