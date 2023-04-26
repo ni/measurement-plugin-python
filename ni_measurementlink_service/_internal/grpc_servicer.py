@@ -14,12 +14,12 @@ from ni_measurementlink_service._internal.stubs.ni.measurementlink import (
     pin_map_context_pb2,
 )
 from ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v1 import (
-    measurement_service_pb2 as measurement_service_v1_pb2,
-    measurement_service_pb2_grpc as measurement_service_v1_pb2_grpc,
+    measurement_service_pb2 as v1_measurement_service_pb2,
+    measurement_service_pb2_grpc as v1_measurement_service_pb2_grpc,
 )
 from ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v2 import (
-    measurement_service_pb2 as measurement_service_v2_pb2,
-    measurement_service_pb2_grpc as measurement_service_v2_pb2_grpc,
+    measurement_service_pb2 as v2_measurement_service_pb2,
+    measurement_service_pb2_grpc as v2_measurement_service_pb2_grpc,
 )
 from ni_measurementlink_service.measurement.info import MeasurementInfo
 
@@ -78,7 +78,7 @@ measurement_service_context: ContextVar[MeasurementServiceContext] = ContextVar(
 )
 
 
-class MeasurementServiceServicerV1(measurement_service_v1_pb2_grpc.MeasurementServiceServicer):
+class MeasurementServiceServicerV1(v1_measurement_service_pb2_grpc.MeasurementServiceServicer):
     """Implementation of the Measurement Service's gRPC base class.
 
     Attributes
@@ -132,19 +132,19 @@ class MeasurementServiceServicerV1(measurement_service_v1_pb2_grpc.MeasurementSe
     def GetMetadata(self, request, context):  # noqa N802:inherited method names-autogen baseclass
         """RPC API to get complete metadata."""
         # measurement details
-        measurement_details = measurement_service_v1_pb2.MeasurementDetails()
+        measurement_details = v1_measurement_service_pb2.MeasurementDetails()
         measurement_details.display_name = self.measurement_info.display_name
         measurement_details.version = self.measurement_info.version
 
         # Measurement Parameters
-        measurement_signature = measurement_service_v1_pb2.MeasurementSignature(
+        measurement_signature = v1_measurement_service_pb2.MeasurementSignature(
             configuration_parameters_message_type="ni.measurementlink.measurement.v1.MeasurementConfigurations",
             outputs_message_type="ni.measurementlink.measurement.v1.MeasurementOutputs",
         )
 
         # Configurations
         for field_number, configuration_metadata in self.configuration_metadata.items():
-            configuration_parameter = measurement_service_v1_pb2.ConfigurationParameter()
+            configuration_parameter = v1_measurement_service_pb2.ConfigurationParameter()
             configuration_parameter.field_number = field_number
             configuration_parameter.name = configuration_metadata.display_name
             configuration_parameter.repeated = configuration_metadata.repeated
@@ -159,7 +159,7 @@ class MeasurementServiceServicerV1(measurement_service_v1_pb2_grpc.MeasurementSe
 
         # Output Parameters Metadata
         for field_number, output_metadata in self.output_metadata.items():
-            output_parameter = measurement_service_v1_pb2.Output()
+            output_parameter = v1_measurement_service_pb2.Output()
             output_parameter.field_number = field_number
             output_parameter.name = output_metadata.display_name
             output_parameter.type = output_metadata.type
@@ -167,7 +167,7 @@ class MeasurementServiceServicerV1(measurement_service_v1_pb2_grpc.MeasurementSe
             measurement_signature.outputs.append(output_parameter)
 
         # Sending back Response
-        metadata_response = measurement_service_v1_pb2.GetMetadataResponse(
+        metadata_response = v1_measurement_service_pb2.GetMetadataResponse(
             measurement_details=measurement_details,
             measurement_signature=measurement_signature,
             user_interface_details=None,
@@ -175,7 +175,7 @@ class MeasurementServiceServicerV1(measurement_service_v1_pb2_grpc.MeasurementSe
 
         # User Interface details - Framed relative to the metadata python File
         for ui_file_path in self.measurement_info.ui_file_paths:
-            ui_details = measurement_service_v1_pb2.UserInterfaceDetails()
+            ui_details = v1_measurement_service_pb2.UserInterfaceDetails()
             ui_details.file_url = pathlib.Path(ui_file_path).as_uri()
             metadata_response.user_interface_details.append(ui_details)
 
@@ -202,7 +202,7 @@ class MeasurementServiceServicerV1(measurement_service_v1_pb2_grpc.MeasurementSe
         # Frame the response and send back.
         output_any = any_pb2.Any()
         output_any.value = output_bytestring
-        return_value = measurement_service_v1_pb2.MeasureResponse(outputs=output_any)
+        return_value = v1_measurement_service_pb2.MeasureResponse(outputs=output_any)
         return return_value
 
     def _get_mapping_by_parameter_name(
@@ -228,7 +228,7 @@ class MeasurementServiceServicerV1(measurement_service_v1_pb2_grpc.MeasurementSe
         return mapping_by_variable_name
 
 
-class MeasurementServiceServicerV2(measurement_service_v2_pb2_grpc.MeasurementServiceServicer):
+class MeasurementServiceServicerV2(v2_measurement_service_pb2_grpc.MeasurementServiceServicer):
     """Implementation of the Measurement Service's gRPC base class.
 
     Attributes
@@ -282,19 +282,19 @@ class MeasurementServiceServicerV2(measurement_service_v2_pb2_grpc.MeasurementSe
     def GetMetadata(self, request, context):  # noqa N802:inherited method names-autogen baseclass
         """RPC API to get complete metadata."""
         # measurement details
-        measurement_details = measurement_service_v2_pb2.MeasurementDetails()
+        measurement_details = v2_measurement_service_pb2.MeasurementDetails()
         measurement_details.display_name = self.measurement_info.display_name
         measurement_details.version = self.measurement_info.version
 
         # Measurement Parameters
-        measurement_signature = measurement_service_v2_pb2.MeasurementSignature(
+        measurement_signature = v2_measurement_service_pb2.MeasurementSignature(
             configuration_parameters_message_type="ni.measurementlink.measurement.v1.MeasurementConfigurations",
             outputs_message_type="ni.measurementlink.measurement.v1.MeasurementOutputs",
         )
 
         # Configurations
         for field_number, configuration_metadata in self.configuration_metadata.items():
-            configuration_parameter = measurement_service_v2_pb2.ConfigurationParameter()
+            configuration_parameter = v2_measurement_service_pb2.ConfigurationParameter()
             configuration_parameter.field_number = field_number
             configuration_parameter.name = configuration_metadata.display_name
             configuration_parameter.repeated = configuration_metadata.repeated
@@ -309,7 +309,7 @@ class MeasurementServiceServicerV2(measurement_service_v2_pb2_grpc.MeasurementSe
 
         # Output Parameters Metadata
         for field_number, output_metadata in self.output_metadata.items():
-            output_parameter = measurement_service_v2_pb2.Output()
+            output_parameter = v2_measurement_service_pb2.Output()
             output_parameter.field_number = field_number
             output_parameter.name = output_metadata.display_name
             output_parameter.type = output_metadata.type
@@ -317,7 +317,7 @@ class MeasurementServiceServicerV2(measurement_service_v2_pb2_grpc.MeasurementSe
             measurement_signature.outputs.append(output_parameter)
 
         # Sending back Response
-        metadata_response = measurement_service_v2_pb2.GetMetadataResponse(
+        metadata_response = v2_measurement_service_pb2.GetMetadataResponse(
             measurement_details=measurement_details,
             measurement_signature=measurement_signature,
             user_interface_details=None,
@@ -325,7 +325,7 @@ class MeasurementServiceServicerV2(measurement_service_v2_pb2_grpc.MeasurementSe
 
         # User Interface details - Framed relative to the metadata python File
         for ui_file_path in self.measurement_info.ui_file_paths:
-            ui_details = measurement_service_v2_pb2.UserInterfaceDetails()
+            ui_details = v2_measurement_service_pb2.UserInterfaceDetails()
             ui_details.file_url = pathlib.Path(ui_file_path).as_uri()
             metadata_response.user_interface_details.append(ui_details)
 
@@ -352,7 +352,7 @@ class MeasurementServiceServicerV2(measurement_service_v2_pb2_grpc.MeasurementSe
         # Frame the response and send back.
         output_any = any_pb2.Any()
         output_any.value = output_bytestring
-        return_value = measurement_service_v2_pb2.MeasureResponse(outputs=output_any)
+        return_value = v2_measurement_service_pb2.MeasureResponse(outputs=output_any)
         yield return_value
 
     def _get_mapping_by_parameter_name(

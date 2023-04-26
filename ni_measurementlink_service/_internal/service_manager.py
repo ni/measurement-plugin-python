@@ -10,10 +10,10 @@ from ni_measurementlink_service._internal.grpc_servicer import (
 )
 from ni_measurementlink_service._internal.parameter.metadata import ParameterMetadata
 from ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v1 import (
-    measurement_service_pb2_grpc as measurement_service_v1_pb2_grpc,
+    measurement_service_pb2_grpc as v1_measurement_service_pb2_grpc,
 )
 from ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v2 import (
-    measurement_service_pb2_grpc as measurement_service_v2_pb2_grpc,
+    measurement_service_pb2_grpc as v2_measurement_service_pb2_grpc,
 )
 from ni_measurementlink_service.measurement.info import MeasurementInfo, ServiceInfo
 
@@ -85,7 +85,7 @@ class GrpcService:
             output_parameter_list,
             measure_function,
         )
-        measurement_service_v1_pb2_grpc.add_MeasurementServiceServicer_to_server(
+        v1_measurement_service_pb2_grpc.add_MeasurementServiceServicer_to_server(
             servicer_v1, self.server
         )   
         servicer_v2 = MeasurementServiceServicerV2(
@@ -94,7 +94,7 @@ class GrpcService:
             output_parameter_list,
             measure_function,
         )
-        measurement_service_v2_pb2_grpc.add_MeasurementServiceServicer_to_server(
+        v2_measurement_service_pb2_grpc.add_MeasurementServiceServicer_to_server(
             servicer_v2, self.server
         )
         port = str(self.server.add_insecure_port("[::]:0"))

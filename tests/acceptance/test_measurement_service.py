@@ -10,12 +10,12 @@ from examples.sample_measurement import measurement
 from google.protobuf import any_pb2
 
 from ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v1 import (
-    measurement_service_pb2 as measurement_service_v1_pb2,
-    measurement_service_pb2_grpc as measurement_service_v1_pb2_grpc,
+    measurement_service_pb2 as v1_measurement_service_pb2,
+    measurement_service_pb2_grpc as v1_measurement_service_pb2_grpc,
 )
 from ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v2 import (
-    measurement_service_pb2 as measurement_service_v2_pb2,
-    measurement_service_pb2_grpc as measurement_service_v2_pb2_grpc,
+    measurement_service_pb2 as v2_measurement_service_pb2,
+    measurement_service_pb2_grpc as v2_measurement_service_pb2_grpc,
 )
 from tests.assets import sample_measurement_test_pb2
 
@@ -28,8 +28,8 @@ def test___measurement_service___get_metadata_v1_rpc_call___returns_metadata():
     measurement_service_port = _host_service()
 
     with _create_channel(measurement_service_port) as channel:
-        stub = measurement_service_v1_pb2_grpc.MeasurementServiceStub(channel)
-        get_metadata_response = stub.GetMetadata(measurement_service_v1_pb2.GetMetadataRequest())
+        stub = v1_measurement_service_pb2_grpc.MeasurementServiceStub(channel)
+        get_metadata_response = stub.GetMetadata(v1_measurement_service_pb2.GetMetadataRequest())
 
     _validate_metadata_response(get_metadata_response)
 
@@ -39,8 +39,8 @@ def test___measurement_service___get_metadata_v2_rpc_call___returns_metadata():
     measurement_service_port = _host_service()
 
     with _create_channel(measurement_service_port) as channel:
-        stub = measurement_service_v2_pb2_grpc.MeasurementServiceStub(channel)
-        get_metadata_response = stub.GetMetadata(measurement_service_v2_pb2.GetMetadataRequest())
+        stub = v2_measurement_service_pb2_grpc.MeasurementServiceStub(channel)
+        get_metadata_response = stub.GetMetadata(v2_measurement_service_pb2.GetMetadataRequest())
 
     _validate_metadata_response(get_metadata_response)
 
@@ -56,7 +56,7 @@ def test___measurement_service___measure_v1_rpc_call___returns_output(
     measurement_service_port = _host_service()
 
     with _create_channel(measurement_service_port) as channel:
-        stub = measurement_service_v1_pb2_grpc.MeasurementServiceStub(channel)
+        stub = v1_measurement_service_pb2_grpc.MeasurementServiceStub(channel)
         request = _get_sample_measurement_measure_request_v1(
             float_in, double_array_in, bool_in, string_in, string_array_in
         )
@@ -79,7 +79,7 @@ def test___measurement_service___measure_v2_rpc_call___returns_output(
     measurement_service_port = _host_service()
 
     with _create_channel(measurement_service_port) as channel:
-        stub = measurement_service_v2_pb2_grpc.MeasurementServiceStub(channel)
+        stub = v2_measurement_service_pb2_grpc.MeasurementServiceStub(channel)
         request = _get_sample_measurement_measure_request_v1(
             float_in, double_array_in, bool_in, string_in, string_array_in
         )
@@ -104,7 +104,7 @@ def test___measurement_service___measure_v1_with_large_array___returns_output(do
     string_array_in = ["", "TestString1", "#$%!@<*(&^~`"]
 
     with _create_channel(measurement_service_port) as channel:
-        stub = measurement_service_v1_pb2_grpc.MeasurementServiceStub(channel)
+        stub = v1_measurement_service_pb2_grpc.MeasurementServiceStub(channel)
         request = _get_sample_measurement_measure_request_v1(
             float_in, double_array_in, bool_in, string_in, string_array_in
         )
@@ -134,7 +134,7 @@ def _create_channel(port: str):
 def _get_sample_measurement_measure_request_v1(
     float_in, double_array_in, bool_in, string_in, string_array_in
 ):
-    request = measurement_service_v1_pb2.MeasureRequest(
+    request = v1_measurement_service_pb2.MeasureRequest(
         configuration_parameters=_get_configuration_parameters(
             float_in, double_array_in, bool_in, string_in, string_array_in
         )
@@ -145,7 +145,7 @@ def _get_sample_measurement_measure_request_v1(
 def _get_sample_measurement_measure_request_v2(
     float_in, double_array_in, bool_in, string_in, string_array_in
 ):
-    request = measurement_service_v2_pb2.MeasureRequest(
+    request = v2_measurement_service_pb2.MeasureRequest(
         configuration_parameters=_get_configuration_parameters(
             float_in, double_array_in, bool_in, string_in, string_array_in
         )
