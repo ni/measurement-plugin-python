@@ -6,7 +6,8 @@ from grpc.framework.foundation import logging_pool
 
 from ni_measurementlink_service._internal.discovery_client import DiscoveryClient
 from ni_measurementlink_service._internal.grpc_servicer import (
-    MeasurementServiceServicerV1, MeasurementServiceServicerV2,
+    MeasurementServiceServicerV1,
+    MeasurementServiceServicerV2,
 )
 from ni_measurementlink_service._internal.parameter.metadata import ParameterMetadata
 from ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v1 import (
@@ -87,7 +88,7 @@ class GrpcService:
         )
         v1_measurement_service_pb2_grpc.add_MeasurementServiceServicer_to_server(
             servicer_v1, self.server
-        )   
+        )
         servicer_v2 = MeasurementServiceServicerV2(
             measurement_info,
             configuration_parameter_list,
