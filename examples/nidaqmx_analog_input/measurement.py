@@ -2,7 +2,6 @@
 
 import logging
 import pathlib
-import sys
 
 import click
 import nidaqmx
@@ -71,7 +70,7 @@ def _log_measured_values(samples, max_samples_to_display=5):
 @click.option(
     "-v", "--verbose", count=True, help="Enable verbose logging. Repeat to increase verbosity."
 )
-def main(verbose: int):
+def main(verbose: int) -> None:
     """Perform a finite analog input measurement with NI-DAQmx."""
     if verbose > 1:
         level = logging.DEBUG
@@ -86,4 +85,4 @@ def main(verbose: int):
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    main()

@@ -1,7 +1,6 @@
 """Perform a loopback measurement with various data types."""
 import logging
 import pathlib
-import sys
 
 import click
 
@@ -57,7 +56,7 @@ def measure(float_input, double_array_input, bool_input, string_input, string_ar
 @click.option(
     "-v", "--verbose", count=True, help="Enable verbose logging. Repeat to increase verbosity."
 )
-def main(verbose: int):
+def main(verbose: int) -> None:
     """Perform a loopback measurement with various data types."""
     if verbose > 1:
         level = logging.DEBUG
@@ -72,4 +71,4 @@ def main(verbose: int):
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    main()

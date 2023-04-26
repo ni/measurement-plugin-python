@@ -3,11 +3,11 @@
 import contextlib
 import logging
 import pathlib
-import sys
 from typing import Tuple
 
 import click
 import grpc
+import pyvisa.resources
 from _helpers import ServiceOptions, str_to_enum
 from _visa_helpers import (
     INSTRUMENT_TYPE_DMM_SIMULATOR,
@@ -101,6 +101,10 @@ def measure(
             create_visa_session(resource_manager, session_info.resource_name)
         )
 
+        # Work around https://github.com/pyvisa/pyvisa/issues/739 - Type annotation for Resource
+        # context manager implicitly upcasts derived class to base class
+        assert isinstance(session, pyvisa.resources.MessageBasedResource)
+
         log_instrument_id(session)
 
         # When this measurement is called from outside of TestStand (session_exists == False),
@@ -134,7 +138,7 @@ def measure(
     is_flag=True,
     help="Use simulated instruments.",
 )
-def main(verbose: int, use_simulation: bool):
+def main(verbose: int, use_simulation: bool) -> None:
     """Perform a DMM measurement using NI-VISA and an NI Instrument Simulator v2.0."""
     if verbose > 1:
         level = logging.DEBUG
@@ -152,4 +156,4 @@ def main(verbose: int, use_simulation: bool):
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    main()
