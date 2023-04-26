@@ -78,6 +78,29 @@ measurement_service_context: ContextVar[MeasurementServiceContext] = ContextVar(
 )
 
 
+def _get_mapping_by_parameter_name(
+    mapping_by_id: Dict[int, Any], measure_function: Callable[[], None]
+) -> Dict[str, Any]:
+    """Transform the mapping by id to mapping by parameter names of the measurement function.
+
+    Args
+    ----
+        mapping_by_id (Dict[int, Any]): Mapping by ID
+
+        measure_function (callable): Function from which the parameter names are extracted.
+
+    Returns
+    -------
+        Dict[str, Any]: Mapping by Parameters names based on the measurement function.
+
+    """
+    signature = inspect.signature(measure_function)
+    mapping_by_variable_name = {}
+    for i, parameter in enumerate(signature.parameters.values(), start=1):
+        mapping_by_variable_name[parameter.name] = mapping_by_id[i]
+    return mapping_by_variable_name
+
+
 class MeasurementServiceServicerV1(v1_measurement_service_pb2_grpc.MeasurementServiceServicer):
     """Implementation of the Measurement Service's gRPC base class.
 
@@ -187,7 +210,7 @@ class MeasurementServiceServicerV1(v1_measurement_service_pb2_grpc.MeasurementSe
         mapping_by_id = serializer.deserialize_parameters(self.configuration_metadata, byte_string)
 
         # Calling the registered measurement
-        mapping_by_variable_name = self._get_mapping_by_parameter_name(
+        mapping_by_variable_name = _get_mapping_by_parameter_name(
             mapping_by_id, self.measure_function
         )
         token = measurement_service_context.set(
@@ -204,28 +227,6 @@ class MeasurementServiceServicerV1(v1_measurement_service_pb2_grpc.MeasurementSe
         output_any.value = output_bytestring
         return_value = v1_measurement_service_pb2.MeasureResponse(outputs=output_any)
         return return_value
-
-    def _get_mapping_by_parameter_name(
-        self, mapping_by_id: Dict[int, Any], measure_function: Callable[[], None]
-    ) -> Dict[str, Any]:
-        """Transform the mapping by id to mapping by parameter names of the measurement function.
-
-        Args
-        ----
-            mapping_by_id (Dict[int, Any]): Mapping by ID
-
-            measure_function (callable): Function from which the parameter names are extracted.
-
-        Returns
-        -------
-            Dict[str, Any]: Mapping by Parameters names based on the measurement function.
-
-        """
-        signature = inspect.signature(measure_function)
-        mapping_by_variable_name = {}
-        for i, parameter in enumerate(signature.parameters.values(), start=1):
-            mapping_by_variable_name[parameter.name] = mapping_by_id[i]
-        return mapping_by_variable_name
 
 
 class MeasurementServiceServicerV2(v2_measurement_service_pb2_grpc.MeasurementServiceServicer):
@@ -337,7 +338,7 @@ class MeasurementServiceServicerV2(v2_measurement_service_pb2_grpc.MeasurementSe
         mapping_by_id = serializer.deserialize_parameters(self.configuration_metadata, byte_string)
 
         # Calling the registered measurement
-        mapping_by_variable_name = self._get_mapping_by_parameter_name(
+        mapping_by_variable_name = _get_mapping_by_parameter_name(
             mapping_by_id, self.measure_function
         )
         token = measurement_service_context.set(
@@ -354,25 +355,3 @@ class MeasurementServiceServicerV2(v2_measurement_service_pb2_grpc.MeasurementSe
         output_any.value = output_bytestring
         return_value = v2_measurement_service_pb2.MeasureResponse(outputs=output_any)
         yield return_value
-
-    def _get_mapping_by_parameter_name(
-        self, mapping_by_id: Dict[int, Any], measure_function: Callable[[], None]
-    ) -> Dict[str, Any]:
-        """Transform the mapping by id to mapping by parameter names of the measurement function.
-
-        Args
-        ----
-            mapping_by_id (Dict[int, Any]): Mapping by ID
-
-            measure_function (callable): Function from which the parameter names are extracted.
-
-        Returns
-        -------
-            Dict[str, Any]: Mapping by Parameters names based on the measurement function.
-
-        """
-        signature = inspect.signature(measure_function)
-        mapping_by_variable_name = {}
-        for i, parameter in enumerate(signature.parameters.values(), start=1):
-            mapping_by_variable_name[parameter.name] = mapping_by_id[i]
-        return mapping_by_variable_name
