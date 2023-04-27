@@ -48,20 +48,23 @@ class PinMapClient(object):
             pin_map_service_pb2_grpc.PinMapServiceStub(grpc_channel)
         )
 
-    def update_pin_map(self, pin_map_id: str) -> str:
+    def update_pin_map(self, pin_map_path: str) -> str:
         """Update registered pin map contents.
 
         Create and register a pin map if a pin map resource for the specified pin map id is not
         found.
 
         Args:
-            pin_map_id (str): The file path of the pin map to register as a pin map resource. By
+            pin_map_path (str): The file path of the pin map to register as a pin map resource. By
                 convention, the pin map id is the .pinmap file path.
 
+        Returns:            
+            str: Specifies the registered pin map id.
+
         """
-        pin_map_path = pathlib.Path(pin_map_id)
+        pin_map_purepath = pathlib.Path(pin_map_path)
         request = pin_map_service_pb2.UpdatePinMapFromXmlRequest(
-            pin_map_id=pin_map_id, pin_map_xml=pin_map_path.read_text(encoding="utf-8")
+            pin_map_id=pin_map_path, pin_map_xml=pin_map_purepath.read_text(encoding="utf-8")
         )
         response: pin_map_service_pb2.PinMap = self._client.UpdatePinMapFromXml(request)
         return response.pin_map_id
@@ -123,7 +126,7 @@ class TestStandSupport(object):
         """
         self._sequence_context = sequence_context
 
-    def set_pin_map_id_to_temporary_variable(self, pin_map_id: str) -> None:
+    def set_active_pin_map_id(self, pin_map_id: str) -> None:
         """Set the pin map ID to the MeasurementLink.PinmapId temporary variable.
 
         Args:
@@ -135,24 +138,26 @@ class TestStandSupport(object):
             "NI.MeasurementLink.PinMapId", 0x1, pin_map_id
         )
 
-    def get_file_path(self, file_name: str) -> str:
+    def get_file_path(self, file_path: str) -> str:
         """Return the full path of the input file if it is found in TestStand search directories.
 
         Args:
-            file_name (str):
-                Name of the file to be found from the TestStand search diectories.
+            file_path (str):
+                Name of the file to be found from the TestStand search directories.
+            
+        Returns:
+            str: Specifies Absolute Path of the file.
 
         """
         sequence_file = self._sequence_context.SequenceFile
-        (_, file_path, _, _, _) = self._sequence_context.Engine.FindFileEx(file_name, searchContext=sequence_file)
-        return file_path
+        (_, abs_file_path, _, _, _) = self._sequence_context.Engine.FindFileEx(file_path, searchContext=sequence_file)
+        return abs_file_path
 
     def get_pin_map_id_temporary_variable(self) -> str:
         """Get the pin map ID stored in MeasurementLink.PinmapId temporary variable.
 
-        returns:
-            pin_map_id (str):
-                The resource ID of the pin map that is registered to the pin map service.
+        Returns:
+            str: The resource ID of the pin map that is registered to the pin map service.
 
         """
         return self._sequence_context.Engine.TemporaryGlobals.GetValString(

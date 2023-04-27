@@ -19,13 +19,13 @@ def update_pin_map(pin_map_path: str, sequence_context) -> str:
 
     """
     teststand_support = TestStandSupport(sequence_context)
-    pin_map_full_path = teststand_support.get_file_path(pin_map_path)
+    pin_map_abs_path = teststand_support.get_file_path(pin_map_path)
 
     with GrpcChannelPoolHelper() as grpc_channel_pool:
         pin_map_client = PinMapClient(grpc_channel=grpc_channel_pool.pin_map_channel)
-        pin_map_id = pin_map_client.update_pin_map(pin_map_full_path)
+        pin_map_id = pin_map_client.update_pin_map(pin_map_abs_path)
 
-    teststand_support.set_pin_map_id_to_temporary_variable(pin_map_id)
+    teststand_support.set_active_pin_map_id(pin_map_id)
     return pin_map_id
 
 
