@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "long_running_measurement"
+version = "0.5.0"
+description = "MeasurementLink example that performs a long running measurement."
+authors = ["National Instruments"]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+ni-measurementlink-service = "^1.0.0"
+click = ">=7.1.2"
+
+[tool.poetry.group.dev.dependencies]
+mypy = ">=1.0"
+# Uncomment to use prerelease dependencies (requires poetry>=1.2).
+ni-measurementlink-service = {path = "../..", develop = true}
+
+[build-system]
+requires = ["poetry-core>=1.2.0"]
+build-backend = "poetry.core.masonry.api"
+
+[[tool.mypy.overrides]]
+module = [
+    "grpc.*",
+    "ni_measurementlink_service.*", # TODO: remove after 1.0.2 is released with py.typed marker
+]
+ignore_missing_imports = true

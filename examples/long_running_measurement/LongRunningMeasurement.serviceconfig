@@ -1,0 +1,14 @@
+{
+  "services": [
+    {
+      "displayName": "Long Running Measurement (Py)",
+      "serviceClass": "ni.examples.LongRunningMeasurement_Python",
+      "descriptionUrl": "",
+      "providedInterfaces": [
+        "ni.measurementlink.measurement.v1.MeasurementService",
+        "ni.measurementlink.measurement.v2.MeasurementService"
+      ],
+      "path": "start.bat"
+    }
+  ]
+}
