@@ -29,12 +29,15 @@ def update_pin_map(pin_map_path: str, sequence_context) -> str:
     return pin_map_id
 
 
-def create_nidcpower_sessions(pin_map_id: str) -> None:
+def create_nidcpower_sessions(sequence_context) -> None:
     """Create and register all NI-DCPower sessions."""
     with GrpcChannelPoolHelper() as grpc_channel_pool:
         session_management_client = nims.session_management.Client(
             grpc_channel=grpc_channel_pool.session_management_channel
         )
+
+        teststand_support = TestStandSupport(sequence_context)
+        pin_map_id = teststand_support.get_pin_map_id_temporary_variable()
 
         pin_map_context = nims.session_management.PinMapContext(pin_map_id=pin_map_id, sites=None)
         with session_management_client.reserve_sessions(

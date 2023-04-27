@@ -145,3 +145,15 @@ class TestStandSupport(object):
         """
         (_, file_path, _, _, _) = self._sequence_context.Engine.FindFileEx(file_name)
         return file_path
+
+    def get_pin_map_id_temporary_variable(self) -> str:
+        """Get the pin map ID stored in MeasurementLink.PinmapId temporary variable.
+
+        returns:
+            pin_map_id (str):
+                The resource ID of the pin map that is registered to the pin map service.
+
+        """
+        return self._sequence_context.Engine.TemporaryGlobals.GetValString(
+            "NI.MeasurementLink.PinMapId", 0x0
+        )
