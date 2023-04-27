@@ -2,6 +2,7 @@
 import logging
 import pathlib
 import re
+import shutil
 from typing import Optional
 
 import click
@@ -72,6 +73,14 @@ def _resolve_service_class(service_class: str, display_name: str) -> str:
         return f"{display_name}_Python"
     else:
         return service_class
+
+
+def _copy_folder(source_path, dest):
+    shutil.copytree(source_path, dest, dirs_exist_ok=True)
+
+
+def _copy_file(source_path, dest):
+    shutil.copy(source_path, dest)
 
 
 @click.command()
@@ -182,3 +191,7 @@ def create_measurement(
             ui_file=ui_file,
         )
     _create_file("start.bat.mako", "start.bat", directory_out_path)
+    internal_folder_path = pathlib.Path(__file__).parent / "templates" / "internal"
+    _copy_folder(internal_folder_path, directory_out_path / "internal")
+    helpers_file_path = pathlib.Path(__file__).parent / "templates" / "_helpers.py"
+    _copy_file(helpers_file_path, directory_out_path)
