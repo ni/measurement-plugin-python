@@ -143,7 +143,8 @@ class TestStandSupport(object):
                 Name of the file to be found from the TestStand search diectories.
 
         """
-        (_, file_path, _, _, _) = self._sequence_context.Engine.FindFileEx(file_name)
+        sequence_file = self._sequence_context.SequenceFile
+        (_, file_path, _, _, _) = self._sequence_context.Engine.FindFileEx(file_name, searchContext=sequence_file)
         return file_path
 
     def get_pin_map_id_temporary_variable(self) -> str:
