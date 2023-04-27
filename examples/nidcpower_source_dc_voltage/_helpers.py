@@ -2,7 +2,7 @@
 
 import logging
 import pathlib
-from typing import Any, Dict, NamedTuple, TypeVar
+from typing import Dict, NamedTuple, TypeVar
 
 import grpc
 
@@ -58,7 +58,7 @@ class PinMapClient(object):
             pin_map_path (str): The file path of the pin map to register as a pin map resource. By
                 convention, the pin map id is the .pinmap file path.
 
-        Returns:            
+        Returns:
             str: Specifies the registered pin map id.
 
         """
@@ -116,7 +116,7 @@ class GrpcChannelPoolHelper(GrpcChannelPool):
 class TestStandSupport(object):
     """Class that communicates with TestStand."""
 
-    def __init__(self, sequence_context) -> Any:
+    def __init__(self, sequence_context) -> None:
         """Initialize the TestStandSupport object.
 
         Args:
@@ -144,13 +144,15 @@ class TestStandSupport(object):
         Args:
             file_path (str):
                 Name of the file to be found from the TestStand search directories.
-            
+
         Returns:
             str: Specifies Absolute Path of the file.
 
         """
         sequence_file = self._sequence_context.SequenceFile
-        (_, abs_file_path, _, _, _) = self._sequence_context.Engine.FindFileEx(file_path, searchContext=sequence_file)
+        (_, abs_file_path, _, _, _) = self._sequence_context.Engine.FindFileEx(
+            file_path, searchContext=sequence_file
+        )
         return abs_file_path
 
     def get_pin_map_id_temporary_variable(self) -> str:
