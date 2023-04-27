@@ -1,9 +1,10 @@
 """Contains Measurement Service Implementation class and method to host the service.
 """
+import collections.abc
 import inspect
 import pathlib
 from contextvars import ContextVar
-from typing import Any, Callable, Dict, List
+from typing import Any, Callable, Dict, Generator, List
 
 import grpc
 from google.protobuf import any_pb2
@@ -101,6 +102,17 @@ def _get_mapping_by_parameter_name(
     return mapping_by_variable_name
 
 
+def _serialize_outputs(output_metadata: Dict[int, ParameterMetadata], outputs: Any) -> any_pb2.Any:
+    if isinstance(outputs, collections.abc.Sequence):
+        return any_pb2.Any(value=serializer.serialize_parameters(output_metadata, outputs))
+    elif outputs is None:
+        raise ValueError(f"Measurement function returned None")
+    else:
+        raise TypeError(
+            f"Measurement function returned value with unsupported type: {type(outputs)}"
+        )
+
+
 class MeasurementServiceServicerV1(v1_measurement_service_pb2_grpc.MeasurementServiceServicer):
     """Implementation of the Measurement Service's gRPC base class.
 
@@ -152,7 +164,9 @@ class MeasurementServiceServicerV1(v1_measurement_service_pb2_grpc.MeasurementSe
         self.measurement_info: MeasurementInfo = measurement_info
         self.measure_function = measure_function
 
-    def GetMetadata(self, request, context):  # noqa: N802 - function name should be lowercase
+    def GetMetadata(  # noqa: N802 - function name should be lowercase
+        self, request: v1_measurement_service_pb2.GetMetadataRequest, context: grpc.ServicerContext
+    ) -> v1_measurement_service_pb2.GetMetadataResponse:
         """RPC API to get complete metadata."""
         # measurement details
         measurement_details = v1_measurement_service_pb2.MeasurementDetails()
@@ -204,10 +218,13 @@ class MeasurementServiceServicerV1(v1_measurement_service_pb2_grpc.MeasurementSe
 
         return metadata_response
 
-    def Measure(self, request, context):  # noqa: N802 - function name should be lowercase
+    def Measure(  # noqa: N802 - function name should be lowercase
+        self, request: v1_measurement_service_pb2.MeasureRequest, context: grpc.ServicerContext
+    ) -> v1_measurement_service_pb2.MeasureResponse:
         """RPC API that Executes the registered measurement method."""
-        byte_string = request.configuration_parameters.value
-        mapping_by_id = serializer.deserialize_parameters(self.configuration_metadata, byte_string)
+        mapping_by_id = serializer.deserialize_parameters(
+            self.configuration_metadata, request.configuration_parameters.value
+        )
 
         # Calling the registered measurement
         mapping_by_variable_name = _get_mapping_by_parameter_name(
@@ -217,16 +234,16 @@ class MeasurementServiceServicerV1(v1_measurement_service_pb2_grpc.MeasurementSe
             MeasurementServiceContext(context, request.pin_map_context)
         )
         try:
-            output_value = self.measure_function(**mapping_by_variable_name)
+            return_value = self.measure_function(**mapping_by_variable_name)
+            return self._serialize_response(return_value)
         finally:
             measurement_service_context.get().mark_complete()
             measurement_service_context.reset(token)
-        output_bytestring = serializer.serialize_parameters(self.output_metadata, output_value)
-        # Frame the response and send back.
-        output_any = any_pb2.Any()
-        output_any.value = output_bytestring
-        return_value = v1_measurement_service_pb2.MeasureResponse(outputs=output_any)
-        return return_value
+
+    def _serialize_response(self, outputs: Any) -> v1_measurement_service_pb2.MeasureResponse:
+        return v1_measurement_service_pb2.MeasureResponse(
+            outputs=_serialize_outputs(self.output_metadata, outputs)
+        )
 
 
 class MeasurementServiceServicerV2(v2_measurement_service_pb2_grpc.MeasurementServiceServicer):
@@ -280,7 +297,9 @@ class MeasurementServiceServicerV2(v2_measurement_service_pb2_grpc.MeasurementSe
         self.measurement_info: MeasurementInfo = measurement_info
         self.measure_function = measure_function
 
-    def GetMetadata(self, request, context):  # noqa N802:inherited method names-autogen baseclass
+    def GetMetadata(  # noqa: N802 - function name should be lowercase
+        self, request: v2_measurement_service_pb2.GetMetadataRequest, context: grpc.ServicerContext
+    ) -> v2_measurement_service_pb2.GetMetadataResponse:
         """RPC API to get complete metadata."""
         # measurement details
         measurement_details = v2_measurement_service_pb2.MeasurementDetails()
@@ -332,10 +351,13 @@ class MeasurementServiceServicerV2(v2_measurement_service_pb2_grpc.MeasurementSe
 
         return metadata_response
 
-    def Measure(self, request, context):  # noqa N802:inherited method names-autogen baseclass
+    def Measure(  # noqa: N802 - function name should be lowercase
+        self, request: v2_measurement_service_pb2.MeasureRequest, context: grpc.ServicerContext
+    ) -> Generator[v2_measurement_service_pb2.MeasureResponse, None, None]:
         """RPC API that Executes the registered measurement method."""
-        byte_string = request.configuration_parameters.value
-        mapping_by_id = serializer.deserialize_parameters(self.configuration_metadata, byte_string)
+        mapping_by_id = serializer.deserialize_parameters(
+            self.configuration_metadata, request.configuration_parameters.value
+        )
 
         # Calling the registered measurement
         mapping_by_variable_name = _get_mapping_by_parameter_name(
@@ -345,13 +367,13 @@ class MeasurementServiceServicerV2(v2_measurement_service_pb2_grpc.MeasurementSe
             MeasurementServiceContext(context, request.pin_map_context)
         )
         try:
-            output_value = self.measure_function(**mapping_by_variable_name)
+            return_value = self.measure_function(**mapping_by_variable_name)
+            yield self._serialize_response(return_value)
         finally:
             measurement_service_context.get().mark_complete()
             measurement_service_context.reset(token)
-        output_bytestring = serializer.serialize_parameters(self.output_metadata, output_value)
-        # Frame the response and send back.
-        output_any = any_pb2.Any()
-        output_any.value = output_bytestring
-        return_value = v2_measurement_service_pb2.MeasureResponse(outputs=output_any)
-        yield return_value
+
+    def _serialize_response(self, outputs: Any) -> v2_measurement_service_pb2.MeasureResponse:
+        return v2_measurement_service_pb2.MeasureResponse(
+            outputs=_serialize_outputs(self.output_metadata, outputs)
+        )
