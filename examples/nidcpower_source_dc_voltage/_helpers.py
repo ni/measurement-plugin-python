@@ -2,7 +2,7 @@
 
 import logging
 import pathlib
-from typing import Dict, NamedTuple, TypeVar
+from typing import Any, Dict, NamedTuple, TypeVar
 
 import grpc
 
@@ -116,12 +116,12 @@ class GrpcChannelPoolHelper(GrpcChannelPool):
 class TestStandSupport(object):
     """Class that communicates with TestStand."""
 
-    def __init__(self, sequence_context) -> None:
+    def __init__(self, sequence_context) -> Any:
         """Initialize the TestStandSupport object.
 
         Args:
             sequence_context:
-                The sequence context object from the TestStand sequence execution.
+                The sequence context COM object from the TestStand sequence execution.
 
         """
         self._sequence_context = sequence_context
