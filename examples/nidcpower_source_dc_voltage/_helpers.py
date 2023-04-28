@@ -126,8 +126,18 @@ class TestStandSupport(object):
         """
         self._sequence_context = sequence_context
 
+    def get_active_pin_map_id(self) -> str:
+        """Get the active pin map id from the NI.MeasurementLink.PinMapId temporary global variable.
+
+        Returns:
+            The resource id of the pin map that is registered to the pin map service.
+        """
+        return self._sequence_context.Engine.TemporaryGlobals.GetValString(
+            "NI.MeasurementLink.PinMapId", 0x0
+        )
+
     def set_active_pin_map_id(self, pin_map_id: str) -> None:
-        """Set the pin map ID to the MeasurementLink.PinmapId temporary variable.
+        """Set the NI.MeasurementLink.PinMapId temporary global variable to the specified id.
 
         Args:
             pin_map_id:
@@ -137,8 +147,8 @@ class TestStandSupport(object):
             "NI.MeasurementLink.PinMapId", 0x1, pin_map_id
         )
 
-    def get_file_path(self, file_path: str) -> str:
-        """Return the full path of the input file if it is found in TestStand search directories.
+    def resolve_file_path(self, file_path: str) -> str:
+        """Resolve the absolute path to a file using the TestStand search directories.
 
         Args:
             file_path:
@@ -146,20 +156,10 @@ class TestStandSupport(object):
                 searches the TestStand search directories for it.
 
         Returns:
-            An absolute path to the file.
+            The absolute path to the file.
         """
         sequence_file = self._sequence_context.SequenceFile
         (_, abs_file_path, _, _, _) = self._sequence_context.Engine.FindFileEx(
             file_path, searchContext=sequence_file
         )
         return abs_file_path
-
-    def get_pin_map_id_temporary_variable(self) -> str:
-        """Get the pin map id stored in MeasurementLink.PinmapId temporary variable.
-
-        Returns:
-            The resource id of the pin map that is registered to the pin map service.
-        """
-        return self._sequence_context.Engine.TemporaryGlobals.GetValString(
-            "NI.MeasurementLink.PinMapId", 0x0
-        )

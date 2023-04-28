@@ -20,7 +20,7 @@ def update_pin_map(pin_map_path: str, sequence_context: Any) -> str:
             (Dynamically typed.)
     """
     teststand_support = TestStandSupport(sequence_context)
-    pin_map_abs_path = teststand_support.get_file_path(pin_map_path)
+    pin_map_abs_path = teststand_support.resolve_file_path(pin_map_path)
 
     with GrpcChannelPoolHelper() as grpc_channel_pool:
         pin_map_client = PinMapClient(grpc_channel=grpc_channel_pool.pin_map_channel)
@@ -44,7 +44,7 @@ def create_nidcpower_sessions(sequence_context: Any) -> None:
         )
 
         teststand_support = TestStandSupport(sequence_context)
-        pin_map_id = teststand_support.get_pin_map_id_temporary_variable()
+        pin_map_id = teststand_support.get_active_pin_map_id()
 
         pin_map_context = nims.session_management.PinMapContext(pin_map_id=pin_map_id, sites=None)
         with session_management_client.reserve_sessions(
