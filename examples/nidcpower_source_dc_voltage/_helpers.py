@@ -2,7 +2,7 @@
 
 import logging
 import pathlib
-from typing import Dict, NamedTuple, TypeVar
+from typing import Any, Dict, NamedTuple, TypeVar
 
 import grpc
 
@@ -116,13 +116,13 @@ class GrpcChannelPoolHelper(GrpcChannelPool):
 class TestStandSupport(object):
     """Class that communicates with TestStand."""
 
-    def __init__(self, sequence_context) -> None:
+    def __init__(self, sequence_context: Any) -> None:
         """Initialize the TestStandSupport object.
 
         Args:
             sequence_context:
-                The sequence context COM object from the TestStand sequence execution.
-
+                The SequenceContext COM object from the TestStand sequence execution.
+                (Dynamically typed.)
         """
         self._sequence_context = sequence_context
 
@@ -130,9 +130,8 @@ class TestStandSupport(object):
         """Set the pin map ID to the MeasurementLink.PinmapId temporary variable.
 
         Args:
-            pin_map_id (str):
-                The resource ID of the pin map that is registered to the pin map service.
-
+            pin_map_id:
+                The resource id of the pin map that is registered to the pin map service.
         """
         self._sequence_context.Engine.TemporaryGlobals.SetValString(
             "NI.MeasurementLink.PinMapId", 0x1, pin_map_id
@@ -142,12 +141,12 @@ class TestStandSupport(object):
         """Return the full path of the input file if it is found in TestStand search directories.
 
         Args:
-            file_path (str):
-                Name of the file to be found from the TestStand search directories.
+            file_path:
+                An absolute or relative path to the file. If this is a relative path, this function
+                searches the TestStand search directories for it.
 
         Returns:
-            str: Specifies Absolute Path of the file.
-
+            An absolute path to the file.
         """
         sequence_file = self._sequence_context.SequenceFile
         (_, abs_file_path, _, _, _) = self._sequence_context.Engine.FindFileEx(
@@ -156,11 +155,10 @@ class TestStandSupport(object):
         return abs_file_path
 
     def get_pin_map_id_temporary_variable(self) -> str:
-        """Get the pin map ID stored in MeasurementLink.PinmapId temporary variable.
+        """Get the pin map id stored in MeasurementLink.PinmapId temporary variable.
 
         Returns:
-            str: The resource ID of the pin map that is registered to the pin map service.
-
+            The resource id of the pin map that is registered to the pin map service.
         """
         return self._sequence_context.Engine.TemporaryGlobals.GetValString(
             "NI.MeasurementLink.PinMapId", 0x0

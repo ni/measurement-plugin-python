@@ -1,4 +1,5 @@
 """Functions to set up and tear down sessions of NI-DCPower devices in NI TestStand."""
+from typing import Any
 
 import nidcpower
 from _helpers import GrpcChannelPoolHelper, PinMapClient, TestStandSupport
@@ -6,17 +7,17 @@ from _helpers import GrpcChannelPoolHelper, PinMapClient, TestStandSupport
 import ni_measurementlink_service as nims
 
 
-def update_pin_map(pin_map_path: str, sequence_context) -> str:
+def update_pin_map(pin_map_path: str, sequence_context: Any) -> str:
     """Update registered pin map contents.
 
     Create and register a pin map if a pin map resource for the specified pin map id is not found.
 
     Args:
-        pin_map_path (str):
-            The path of the pin map to register as a pin map resource.
+        pin_map_path:
+            An absolute or relative path to the pin map file.
         sequence_context:
-            The sequence context object from the TestStand sequence execution.
-
+            The SequenceContext COM object from the TestStand sequence execution.
+            (Dynamically typed.)
     """
     teststand_support = TestStandSupport(sequence_context)
     pin_map_abs_path = teststand_support.get_file_path(pin_map_path)
@@ -29,8 +30,14 @@ def update_pin_map(pin_map_path: str, sequence_context) -> str:
     return pin_map_id
 
 
-def create_nidcpower_sessions(sequence_context) -> None:
-    """Create and register all NI-DCPower sessions."""
+def create_nidcpower_sessions(sequence_context: Any) -> None:
+    """Create and register all NI-DCPower sessions.
+
+    Args:
+        sequence_context:
+            The SequenceContext COM object from the TestStand sequence execution.
+            (Dynamically typed.)
+    """
     with GrpcChannelPoolHelper() as grpc_channel_pool:
         session_management_client = nims.session_management.Client(
             grpc_channel=grpc_channel_pool.session_management_channel
