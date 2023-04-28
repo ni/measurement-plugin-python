@@ -55,16 +55,15 @@ class PinMapClient(object):
         found.
 
         Args:
-            pin_map_path (str): The file path of the pin map to register as a pin map resource. By
-                convention, the pin map id is the .pinmap file path.
+            pin_map_path: The file path of the pin map to register as a pin map resource.
 
         Returns:
-            str: Specifies the registered pin map id.
-
+            The resource id of the pin map that is registered to the pin map service.
         """
-        pin_map_purepath = pathlib.Path(pin_map_path)
+        pin_map_path_obj = pathlib.Path(pin_map_path)
+        # By convention, the pin map id is the .pinmap file path.
         request = pin_map_service_pb2.UpdatePinMapFromXmlRequest(
-            pin_map_id=pin_map_path, pin_map_xml=pin_map_purepath.read_text(encoding="utf-8")
+            pin_map_id=pin_map_path, pin_map_xml=pin_map_path_obj.read_text(encoding="utf-8")
         )
         response: pin_map_service_pb2.PinMap = self._client.UpdatePinMapFromXml(request)
         return response.pin_map_id
