@@ -158,8 +158,16 @@ class TestStandSupport(object):
         Returns:
             The absolute path to the file.
         """
-        sequence_file = self._sequence_context.SequenceFile
-        (_, abs_file_path, _, _, _) = self._sequence_context.Engine.FindFileEx(
-            file_path, searchContext=sequence_file
+        if pathlib.Path(file_path).is_absolute():
+            return file_path
+        (_, absolute_path, _, _, user_canceled) = self._sequence_context.Engine.FindFileEx(
+            fileToFind=file_path,
+            absolutePath=None,
+            srchDirType=None,
+            searchDirectoryIndex=None,
+            userCancelled=None,  # Must match spelling used by TestStand
+            searchContext=self._sequence_context.SequenceFile,
         )
-        return abs_file_path
+        if user_canceled:
+            raise RuntimeError("File lookup canceled by user.")
+        return absolute_path
