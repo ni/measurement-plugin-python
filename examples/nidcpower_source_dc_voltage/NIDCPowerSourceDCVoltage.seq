@@ -4941,7 +4941,7 @@
 																	<PythonCall classname='CPythonCall'>
 																		<subprops>
 																			<UseAdapterSettingsForInterpreterSession classname='Bool'>
-																				<value>true</value>
+																				<value>false</value>
 																			</UseAdapterSettingsForInterpreterSession>
 																			<InterpreterSessionScope classname='Num'>
 																				<value>2</value>
