@@ -2,7 +2,7 @@
 from typing import Any
 
 import nidcpower
-from _helpers import GrpcChannelPoolHelper, PinMapClient, TestStandSupport
+from nidcpower_source_dc_voltage._helpers import GrpcChannelPoolHelper, PinMapClient, TestStandSupport
 
 import ni_measurementlink_service as nims
 

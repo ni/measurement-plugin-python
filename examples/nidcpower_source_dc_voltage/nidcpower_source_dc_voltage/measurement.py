@@ -10,7 +10,7 @@ import click
 import grpc
 import hightime
 import nidcpower
-from _helpers import ServiceOptions
+from nidcpower_source_dc_voltage._helpers import ServiceOptions
 
 import ni_measurementlink_service as nims
 
