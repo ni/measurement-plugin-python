@@ -9,7 +9,6 @@ test_assets_path = pathlib.Path(__file__).parent / "test_assets"
 
 
 def test___command_line_args___create_measurement___render_without_exception(tmpdir):
-    """Given example command line args when create_measurement assert renders without exceptions."""
     temp_directory = pathlib.Path(tmpdir.mkdir("measurement_files"))
 
     with pytest.raises(SystemExit):

@@ -29,7 +29,6 @@ _TEST_MEASUREMENT_INFO = MeasurementInfo(
 def test___discovery_service_available___register_service___registration_success(
     discovery_client: DiscoveryClient, discovery_service_stub: FakeDiscoveryServiceStub
 ):
-    """Test the successful registration when the discovery service is available."""
     registration_success_flag = discovery_client.register_measurement_service(
         _TEST_SERVICE_PORT, _TEST_SERVICE_INFO, _TEST_MEASUREMENT_INFO
     )
@@ -41,7 +40,6 @@ def test___discovery_service_available___register_service___registration_success
 def test___discovery_service_available___unregister_registered_service___unregistration_success(
     discovery_client: DiscoveryClient,
 ):
-    """Test the successful un-registration of registered service."""
     discovery_client.register_measurement_service(
         _TEST_SERVICE_PORT, _TEST_SERVICE_INFO, _TEST_MEASUREMENT_INFO
     )
@@ -54,7 +52,6 @@ def test___discovery_service_available___unregister_registered_service___unregis
 def test___discovery_service_available___unregister_non_registered_service___unregistration_failure(
     discovery_client: DiscoveryClient,
 ):
-    """Test the unsuccessful un-registration of non-registered service."""
     unregistration_success_flag = discovery_client.unregister_service()
 
     assert ~unregistration_success_flag  # False
@@ -63,7 +60,6 @@ def test___discovery_service_available___unregister_non_registered_service___unr
 def test___discovery_service_unavailable___register_service_registration_failure(
     discovery_client: DiscoveryClient,
 ):
-    """Test the unsuccessful registration when discovery service is not available."""
     discovery_client.register_measurement_service(
         _TEST_SERVICE_PORT, _TEST_SERVICE_INFO, _TEST_MEASUREMENT_INFO
     )

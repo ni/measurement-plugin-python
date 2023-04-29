@@ -20,13 +20,6 @@ from ni_measurementlink_service.measurement.info import DataType
 def test___default_value_different_from_type___validate___raises_type_exception(
     type, default_value
 ):
-    """Tests if exceptions are raised when the default value provided is not matching the type.
-
-    Args:
-        type (DataType): Type of the parameter.
-        default_value (Any): Default value of the parameter.
-
-    """
     grpc_field_type, repeated, type_specialization = type.value
     parameter_metadata = metadata.ParameterMetadata(
         "test_display_name", grpc_field_type, repeated, default_value, annotations={}
@@ -47,13 +40,6 @@ def test___default_value_different_from_type___validate___raises_type_exception(
     ],
 )
 def test___default_value_same_as_type___validate___raises_no_exception(type, default_value):
-    """Tests if no exceptions are raised when the default value provided is matching the type.
-
-    Args:
-        type (DataType): Type of the parameter.
-        default_value (Any): Default value of the parameter.
-
-    """
     grpc_field_type, repeated, type_specialization = DataType.Int32.value
     parameter_metadata = metadata.ParameterMetadata(
         "test_display_name", grpc_field_type, repeated, 1, annotations={}
