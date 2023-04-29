@@ -125,7 +125,7 @@ class MeasurementServiceServicer(measurement_service_pb2_grpc.MeasurementService
         self.measurement_info: MeasurementInfo = measurement_info
         self.measure_function = measure_function
 
-    def GetMetadata(self, request, context):
+    def GetMetadata(self, request, context):  # noqa: N802 - function name should be lowercase
         """RPC API to get complete metadata."""
         # measurement details
         measurement_details = measurement_service_pb2.MeasurementDetails()
@@ -177,7 +177,7 @@ class MeasurementServiceServicer(measurement_service_pb2_grpc.MeasurementService
 
         return metadata_response
 
-    def Measure(self, request, context):
+    def Measure(self, request, context):  # noqa: N802 - function name should be lowercase
         """RPC API that Executes the registered measurement method."""
         byte_string = request.configuration_parameters.value
         mapping_by_id = serializer.deserialize_parameters(self.configuration_metadata, byte_string)
