@@ -44,7 +44,7 @@ def create_niscope_sessions(sequence_context: Any) -> None:
 
         teststand_support = TestStandSupport(sequence_context)
         pin_map_id = teststand_support.get_active_pin_map_id()
-        
+
         pin_map_context = nims.session_management.PinMapContext(pin_map_id=pin_map_id, sites=None)
         with session_management_client.reserve_sessions(
             context=pin_map_context,
