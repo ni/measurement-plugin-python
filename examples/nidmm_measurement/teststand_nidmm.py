@@ -1,32 +1,27 @@
-"""Functions to set up and tear down sessions of NI-DMM devices in NI TestStand."""
+"""TestStand code module for setting up NI-DMM sessions with MeasurementLink."""
+from typing import Any
 
 import nidmm
-from _helpers import GrpcChannelPoolHelper, PinMapClient
+from _helpers import GrpcChannelPoolHelper, TestStandSupport
 
 import ni_measurementlink_service as nims
 
 
-def update_pin_map(pin_map_id: str) -> None:
-    """Update registered pin map contents.
-
-    Create and register a pin map if a pin map resource for the specified pin map id is not found.
-
+def create_nidmm_sessions(sequence_context: Any) -> None:
+    """Create and register all NI-DMM sessions.
+        
     Args:
-        pin_map_id (str): The resource id of the pin map to register as a pin map resource. By
-            convention, the pin_map_id is the .pinmap file path.
-
+        sequence_context:
+            The SequenceContext COM object from the TestStand sequence execution.
+            (Dynamically typed.)
     """
-    with GrpcChannelPoolHelper() as grpc_channel_pool:
-        pin_map_client = PinMapClient(grpc_channel=grpc_channel_pool.pin_map_channel)
-        pin_map_client.update_pin_map(pin_map_id)
-
-
-def create_nidmm_sessions(pin_map_id: str) -> None:
-    """Create and register all NI-DMM sessions."""
     with GrpcChannelPoolHelper() as grpc_channel_pool:
         session_management_client = nims.session_management.Client(
             grpc_channel=grpc_channel_pool.session_management_channel
         )
+
+        teststand_support = TestStandSupport(sequence_context)
+        pin_map_id = teststand_support.get_active_pin_map_id()
 
         pin_map_context = nims.session_management.PinMapContext(pin_map_id=pin_map_id, sites=None)
         with session_management_client.reserve_sessions(
