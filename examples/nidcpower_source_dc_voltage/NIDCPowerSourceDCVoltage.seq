@@ -4959,7 +4959,7 @@
 																				<value>true</value>
 																			</CreateIfInterpreterDoesNotExist>
 																			<ModulePath classname='PathValue'>
-																				<value>teststand_fixture.py</value>
+																				<value>teststand_pin_map.py</value>
 																			</ModulePath>
 																			<OperationType classname='Num'>
 																				<value>1</value>
@@ -5452,7 +5452,7 @@
 																				<value>true</value>
 																			</CreateIfInterpreterDoesNotExist>
 																			<ModulePath classname='PathValue'>
-																				<value>teststand_fixture.py</value>
+																				<value>teststand_nidcpower.py</value>
 																			</ModulePath>
 																			<OperationType classname='Num'>
 																				<value>1</value>
@@ -6196,7 +6196,7 @@
 																				<value>true</value>
 																			</CreateIfInterpreterDoesNotExist>
 																			<ModulePath classname='PathValue'>
-																				<value>teststand_fixture.py</value>
+																				<value>teststand_nidcpower.py</value>
 																			</ModulePath>
 																			<OperationType classname='Num'>
 																				<value>1</value>
