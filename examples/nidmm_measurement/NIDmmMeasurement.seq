@@ -4237,7 +4237,7 @@
 	<Data classname='SequenceFileData' valueflags='4194304'>
 		<subprops>
 			<Seq classname='Objs' valueflags='4194304'>
-				<value lbound='[0]' ubound='[2]'>
+				<value lbound='[0]' ubound='[0]'>
 					<value>
 						<Sequence name='MainSequence'>
 							<subprops>
@@ -4801,93 +4801,6 @@
 									</value>
 								</Main>
 								<Setup classname='Objs' valueflags='4194304'>
-									<value lbound='[0]' ubound='[]'/>
-								</Setup>
-								<Cleanup classname='Objs' valueflags='4194304'>
-									<value lbound='[0]' ubound='[]'/>
-								</Cleanup>
-								<RecordResults classname='Bool' valueflags='4194312'>
-									<value>true</value>
-								</RecordResults>
-								<RTS classname='Obj' valueflags='4456456'>
-									<subprops>
-										<Type classname='Num' valueflags='4194304'>
-											<value>0</value>
-										</Type>
-										<OptimizeNonReentrantCalls classname='Bool' valueflags='4194304'>
-											<value>true</value>
-										</OptimizeNonReentrantCalls>
-										<EPNameExpr classname='Str' valueflags='4194304'>
-											<value>"Unnamed Entry Point"</value>
-										</EPNameExpr>
-										<EPEnabledExpr classname='Str' valueflags='4194304'>
-											<value>True</value>
-										</EPEnabledExpr>
-										<EPMenuHint classname='Str' valueflags='4194304'>
-											<value/>
-										</EPMenuHint>
-										<EPIgnoreClient classname='Bool' valueflags='4194304'>
-											<value>false</value>
-										</EPIgnoreClient>
-										<EPInitiallyHidden classname='Bool' valueflags='4194304'>
-											<value>false</value>
-										</EPInitiallyHidden>
-										<EPCheckToSaveTitledFile classname='Bool' valueflags='4194304'>
-											<value>true</value>
-										</EPCheckToSaveTitledFile>
-										<ShowEPAlways classname='Bool' valueflags='4194304'>
-											<value>false</value>
-										</ShowEPAlways>
-										<ShowEPForFileWin classname='Bool' valueflags='4194304'>
-											<value>true</value>
-										</ShowEPForFileWin>
-										<ShowEPForExeWin classname='Bool' valueflags='4194304'>
-											<value>false</value>
-										</ShowEPForExeWin>
-										<ShowEPForEditorOnly classname='Bool' valueflags='4194304'>
-											<value>false</value>
-										</ShowEPForEditorOnly>
-										<AllowIntExeOfEP classname='Bool' valueflags='4194304'>
-											<value>false</value>
-										</AllowIntExeOfEP>
-										<CopyStepsOnOverriding classname='Bool' valueflags='4194304'>
-											<value>true</value>
-										</CopyStepsOnOverriding>
-										<Priority classname='Num' valueflags='4194304'>
-											<value>2953567917</value>
-										</Priority>
-									</subprops>
-								</RTS>
-								<Requirements classname='Obj' valueflags='4456456'>
-									<subprops>
-										<Links classname='Strs' valueflags='71303168'>
-											<value lbound='[0]' ubound='[]'/>
-										</Links>
-									</subprops>
-								</Requirements>
-								<FailureAction classname='Num' valueflags='4194312'>
-									<value>2</value>
-								</FailureAction>
-							</subprops>
-						</Sequence>
-					</value>
-					<value>
-						<Sequence name='ProcessSetup'>
-							<comment>Test UUTs and Single Pass call this callback in their setup step group. It is empty in the model file.  Override this in the client file to perform an action before any code in the model executes.</comment>
-							<subprops>
-								<Parameters classname='Obj' valueflags='4456448'/>
-								<Locals classname='Obj' valueflags='4194304'>
-									<subprops>
-										<ResultList classname='Objs'>
-											<value lbound='[0]' ubound='[]'>
-												<elemproto>
-													<_NAME_IN_ATTRIBUTE_ name='' classname='TEResult'/>
-												</elemproto>
-											</value>
-										</ResultList>
-									</subprops>
-								</Locals>
-								<Main classname='Objs' valueflags='4194304'>
 									<value lbound='[0]' ubound='[3]'>
 										<value>
 											<Step typename='Statement' xsi:type='Statement' name='Get absolute path to pinmap file'>
@@ -5236,7 +5149,7 @@
 																				<value>update_pin_map</value>
 																			</FunctionOrAttributeName>
 																			<Parameters classname='Objs'>
-																				<value lbound='[0]' ubound='[1]'>
+																				<value lbound='[0]' ubound='[2]'>
 																					<elemproto>
 																						<_NAME_IN_ATTRIBUTE_ name='' classname='CPythonParameter' structureflags='0'/>
 																					</elemproto>
@@ -5292,7 +5205,7 @@
 																						<CPythonParameter typename='NI_PythonParameter' xsi:type='NI_PythonParameter' name=''>
 																							<subprops>
 																								<Name classname='Str'>
-																									<value>pin_map_id</value>
+																									<value>pin_map_path</value>
 																								</Name>
 																								<Type classname='Num'>
 																									<value>7</value>
@@ -5314,7 +5227,55 @@
 																													<value>8192</value>
 																												</Flags>
 																												<CheckedState classname='Num'>
+																													<value>2</value>
+																												</CheckedState>
+																											</subprops>
+																										</Input>
+																										<Output classname='PythonParameterResult'>
+																											<subprops>
+																												<Condition classname='ExprValue'>
+																													<value/>
+																												</Condition>
+																												<Flags classname='Num'>
+																													<value>8192</value>
+																												</Flags>
+																												<CheckedState classname='Num'>
 																													<value>1</value>
+																												</CheckedState>
+																											</subprops>
+																										</Output>
+																									</subprops>
+																								</AdditionalResults>
+																							</subprops>
+																						</CPythonParameter>
+																					</value>
+																					<value>
+																						<CPythonParameter typename='NI_PythonParameter' xsi:type='NI_PythonParameter' name=''>
+																							<subprops>
+																								<Name classname='Str'>
+																									<value>sequence_context</value>
+																								</Name>
+																								<Type classname='Num'>
+																									<value>7</value>
+																								</Type>
+																								<ArgumentValue classname='ExprValue'>
+																									<value>ThisContext</value>
+																								</ArgumentValue>
+																								<ArgumentDisplayValue classname='ExprValue'>
+																									<value/>
+																								</ArgumentDisplayValue>
+																								<AdditionalResults classname='Obj'>
+																									<subprops>
+																										<Input classname='PythonParameterResult'>
+																											<subprops>
+																												<Condition classname='ExprValue'>
+																													<value/>
+																												</Condition>
+																												<Flags classname='Num'>
+																													<value>8192</value>
+																												</Flags>
+																												<CheckedState classname='Num'>
+																													<value>2</value>
 																												</CheckedState>
 																											</subprops>
 																										</Input>
@@ -5737,13 +5698,13 @@
 																						<CPythonParameter typename='NI_PythonParameter' xsi:type='NI_PythonParameter' name=''>
 																							<subprops>
 																								<Name classname='Str'>
-																									<value>pin_map_id</value>
+																									<value>sequence_context</value>
 																								</Name>
 																								<Type classname='Num'>
 																									<value>7</value>
 																								</Type>
 																								<ArgumentValue classname='ExprValue'>
-																									<value>FileGlobals.MeasurementLink.PinMapPath</value>
+																									<value>ThisContext</value>
 																								</ArgumentValue>
 																								<ArgumentDisplayValue classname='ExprValue'>
 																									<value/>
@@ -5759,7 +5720,7 @@
 																													<value>8192</value>
 																												</Flags>
 																												<CheckedState classname='Num'>
-																													<value>1</value>
+																													<value>2</value>
 																												</CheckedState>
 																											</subprops>
 																										</Input>
@@ -6370,95 +6331,8 @@
 											</Step>
 										</value>
 									</value>
-								</Main>
-								<Setup classname='Objs' valueflags='4194304'>
-									<value lbound='[0]' ubound='[]'/>
 								</Setup>
 								<Cleanup classname='Objs' valueflags='4194304'>
-									<value lbound='[0]' ubound='[]'/>
-								</Cleanup>
-								<RecordResults classname='Bool' valueflags='4194312'>
-									<value>false</value>
-								</RecordResults>
-								<RTS classname='Obj' valueflags='4456456'>
-									<subprops>
-										<Type classname='Num' valueflags='4194304'>
-											<value>0</value>
-										</Type>
-										<OptimizeNonReentrantCalls classname='Bool' valueflags='4194304'>
-											<value>true</value>
-										</OptimizeNonReentrantCalls>
-										<EPNameExpr classname='Str' valueflags='4194304'>
-											<value>"Unnamed Entry Point"</value>
-										</EPNameExpr>
-										<EPEnabledExpr classname='Str' valueflags='4194304'>
-											<value>True</value>
-										</EPEnabledExpr>
-										<EPMenuHint classname='Str' valueflags='4194304'>
-											<value/>
-										</EPMenuHint>
-										<EPIgnoreClient classname='Bool' valueflags='4194304'>
-											<value>false</value>
-										</EPIgnoreClient>
-										<EPInitiallyHidden classname='Bool' valueflags='4194304'>
-											<value>false</value>
-										</EPInitiallyHidden>
-										<EPCheckToSaveTitledFile classname='Bool' valueflags='4194304'>
-											<value>true</value>
-										</EPCheckToSaveTitledFile>
-										<ShowEPAlways classname='Bool' valueflags='4194304'>
-											<value>false</value>
-										</ShowEPAlways>
-										<ShowEPForFileWin classname='Bool' valueflags='4194304'>
-											<value>true</value>
-										</ShowEPForFileWin>
-										<ShowEPForExeWin classname='Bool' valueflags='4194304'>
-											<value>false</value>
-										</ShowEPForExeWin>
-										<ShowEPForEditorOnly classname='Bool' valueflags='4194304'>
-											<value>false</value>
-										</ShowEPForEditorOnly>
-										<CopyStepsOnOverriding classname='Bool' valueflags='4194304'>
-											<value>true</value>
-										</CopyStepsOnOverriding>
-										<Priority classname='Num' valueflags='4194304'>
-											<value>2953567917</value>
-										</Priority>
-										<AllowIntExeOfEP classname='Bool' valueflags='4194304'>
-											<value>false</value>
-										</AllowIntExeOfEP>
-									</subprops>
-								</RTS>
-								<Requirements classname='Obj' valueflags='4456456'>
-									<subprops>
-										<Links classname='Strs' valueflags='71303168'>
-											<value lbound='[0]' ubound='[]'/>
-										</Links>
-									</subprops>
-								</Requirements>
-								<FailureAction classname='Num' valueflags='4194312'>
-									<value>2</value>
-								</FailureAction>
-							</subprops>
-						</Sequence>
-					</value>
-					<value>
-						<Sequence name='ProcessCleanup'>
-							<comment>Test UUTs and Single Pass call this callback in their cleanup step group. It is empty in the model file.  Override this in the client file to perform an action after all code in the model executes and just before the execution completes.</comment>
-							<subprops>
-								<Parameters classname='Obj' valueflags='4456448'/>
-								<Locals classname='Obj' valueflags='4194304'>
-									<subprops>
-										<ResultList classname='Objs'>
-											<value lbound='[0]' ubound='[]'>
-												<elemproto>
-													<_NAME_IN_ATTRIBUTE_ name='' classname='TEResult'/>
-												</elemproto>
-											</value>
-										</ResultList>
-									</subprops>
-								</Locals>
-								<Main classname='Objs' valueflags='4194304'>
 									<value lbound='[0]' ubound='[1]'>
 										<value>
 											<Step typename='Statement' xsi:type='Statement' name='Unregister active PinMapId'>
@@ -7153,15 +7027,9 @@
 											</Step>
 										</value>
 									</value>
-								</Main>
-								<Setup classname='Objs' valueflags='4194304'>
-									<value lbound='[0]' ubound='[]'/>
-								</Setup>
-								<Cleanup classname='Objs' valueflags='4194304'>
-									<value lbound='[0]' ubound='[]'/>
 								</Cleanup>
 								<RecordResults classname='Bool' valueflags='4194312'>
-									<value>false</value>
+									<value>true</value>
 								</RecordResults>
 								<RTS classname='Obj' valueflags='4456456'>
 									<subprops>
@@ -7201,15 +7069,15 @@
 										<ShowEPForEditorOnly classname='Bool' valueflags='4194304'>
 											<value>false</value>
 										</ShowEPForEditorOnly>
+										<AllowIntExeOfEP classname='Bool' valueflags='4194304'>
+											<value>false</value>
+										</AllowIntExeOfEP>
 										<CopyStepsOnOverriding classname='Bool' valueflags='4194304'>
 											<value>true</value>
 										</CopyStepsOnOverriding>
 										<Priority classname='Num' valueflags='4194304'>
 											<value>2953567917</value>
 										</Priority>
-										<AllowIntExeOfEP classname='Bool' valueflags='4194304'>
-											<value>false</value>
-										</AllowIntExeOfEP>
 									</subprops>
 								</RTS>
 								<Requirements classname='Obj' valueflags='4456456'>
