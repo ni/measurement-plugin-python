@@ -1,0 +1,33 @@
+[tool.poetry]
+name = "multiple_measurements"
+version = "0.5.0"
+description = "MeasurementLink example demonstrating how to interact with multiple measurement services from TestStand."
+authors = ["National Instruments"]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+nidcpower = ">=1.4.3"
+nidmm = ">=1.4.3"
+ni-measurementlink-service = "^1.0.0"
+click = ">=7.1.2"
+grpcio = "*"
+
+[tool.poetry.group.dev.dependencies]
+mypy = ">=1.0"
+# Uncomment to use prerelease dependencies (requires poetry>=1.2).
+# nidcpower = { git = "https://github.com/ni/nimi-python.git", subdirectory = "generated/nidcpower"}
+# nidmm = { git = "https://github.com/ni/nimi-python.git", subdirectory = "generated/nidmm"}
+# ni-measurementlink-service = {path = "../..", develop = true}
+
+[build-system]
+requires = ["poetry-core>=1.2.0"]
+build-backend = "poetry.core.masonry.api"
+
+[[tool.mypy.overrides]]
+module = [
+    "grpc.*",
+    "ni_measurementlink_service.*", # TODO: remove after 1.0.2 is released with py.typed marker
+    "nidcpower.*",
+    "nidmm.*",
+]
+ignore_missing_imports = true
