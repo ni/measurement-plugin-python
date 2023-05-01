@@ -1,0 +1,11 @@
+{
+  "services": [
+    {
+      "displayName": "NI-Digital SPI (Py)",
+      "serviceClass": "ni.examples.NIDigitalSPI_Python",
+      "descriptionUrl": "",
+      "providedInterfaces": [ "ni.measurementlink.measurement.v1.MeasurementService" ],
+      "path": "start.bat"
+    }
+  ]
+}
