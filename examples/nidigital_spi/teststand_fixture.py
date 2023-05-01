@@ -61,7 +61,7 @@ def create_nidigital_sessions(sequence_context: Any) -> None:
             session_management_client.register_sessions(reservation.session_info)
 
 
-def load_nidigital_pin_map(pin_map_path: str, sequence_context: Any) -> str:
+def load_nidigital_pin_map(pin_map_path: str, sequence_context: Any) -> None:
     """Load the pin map into the registered NI-Digital sessions.
 
     Args:
@@ -92,7 +92,7 @@ def load_nidigital_specifications_levels_and_timing(
     levels_file_paths: Iterable[str],
     timing_file_paths: Iterable[str],
     sequence_context: Any,
-) -> str:
+) -> None:
     """Load specifications, levels, and timing files into NI-Digital sessions.
 
     Args:
@@ -131,7 +131,7 @@ def load_nidigital_specifications_levels_and_timing(
 def load_nidigital_patterns(
     pattern_file_paths: Iterable[str],
     sequence_context: Any,
-) -> str:
+) -> None:
     """Load specifications, levels, and timing files into NI-Digital sessions.
 
     Args:
