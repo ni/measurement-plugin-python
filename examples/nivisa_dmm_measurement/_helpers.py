@@ -2,7 +2,7 @@
 
 import logging
 import pathlib
-from typing import Dict, NamedTuple, TypeVar
+from typing import Any, Dict, NamedTuple, TypeVar
 
 import grpc
 
@@ -48,23 +48,25 @@ class PinMapClient(object):
             pin_map_service_pb2_grpc.PinMapServiceStub(grpc_channel)
         )
 
-    def update_pin_map(self, pin_map_id: str) -> None:
+    def update_pin_map(self, pin_map_path: str) -> str:
         """Update registered pin map contents.
 
         Create and register a pin map if a pin map resource for the specified pin map id is not
         found.
 
         Args:
-            pin_map_id (str): The resource id of the pin map to register as a pin map resource. By
-                convention, the pin map id is the .pinmap file path.
+            pin_map_path: The file path of the pin map to register as a pin map resource.
 
+        Returns:
+            The resource id of the pin map that is registered to the pin map service.
         """
-        pin_map_path = pathlib.Path(pin_map_id)
+        pin_map_path_obj = pathlib.Path(pin_map_path)
+        # By convention, the pin map id is the .pinmap file path.
         request = pin_map_service_pb2.UpdatePinMapFromXmlRequest(
-            pin_map_id=pin_map_id, pin_map_xml=pin_map_path.read_text(encoding="utf-8")
+            pin_map_id=pin_map_path, pin_map_xml=pin_map_path_obj.read_text(encoding="utf-8")
         )
         response: pin_map_service_pb2.PinMap = self._client.UpdatePinMapFromXml(request)
-        assert response.pin_map_id == pin_map_id
+        return response.pin_map_id
 
 
 class GrpcChannelPoolHelper(GrpcChannelPool):
@@ -108,3 +110,63 @@ class GrpcChannelPoolHelper(GrpcChannelPool):
                 service_class="ni.measurementlink.v1.grpcdeviceserver",
             ).insecure_address
         )
+
+
+class TestStandSupport(object):
+    """Class that communicates with TestStand."""
+
+    def __init__(self, sequence_context: Any) -> None:
+        """Initialize the TestStandSupport object.
+
+        Args:
+            sequence_context:
+                The SequenceContext COM object from the TestStand sequence execution.
+                (Dynamically typed.)
+        """
+        self._sequence_context = sequence_context
+
+    def get_active_pin_map_id(self) -> str:
+        """Get the active pin map id from the NI.MeasurementLink.PinMapId temporary global variable.
+
+        Returns:
+            The resource id of the pin map that is registered to the pin map service.
+        """
+        return self._sequence_context.Engine.TemporaryGlobals.GetValString(
+            "NI.MeasurementLink.PinMapId", 0x0
+        )
+
+    def set_active_pin_map_id(self, pin_map_id: str) -> None:
+        """Set the NI.MeasurementLink.PinMapId temporary global variable to the specified id.
+
+        Args:
+            pin_map_id:
+                The resource id of the pin map that is registered to the pin map service.
+        """
+        self._sequence_context.Engine.TemporaryGlobals.SetValString(
+            "NI.MeasurementLink.PinMapId", 0x1, pin_map_id
+        )
+
+    def resolve_file_path(self, file_path: str) -> str:
+        """Resolve the absolute path to a file using the TestStand search directories.
+
+        Args:
+            file_path:
+                An absolute or relative path to the file. If this is a relative path, this function
+                searches the TestStand search directories for it.
+
+        Returns:
+            The absolute path to the file.
+        """
+        if pathlib.Path(file_path).is_absolute():
+            return file_path
+        (_, absolute_path, _, _, user_canceled) = self._sequence_context.Engine.FindFileEx(
+            fileToFind=file_path,
+            absolutePath=None,
+            srchDirType=None,
+            searchDirectoryIndex=None,
+            userCancelled=None,  # Must match spelling used by TestStand
+            searchContext=self._sequence_context.SequenceFile,
+        )
+        if user_canceled:
+            raise RuntimeError("File lookup canceled by user.")
+        return absolute_path
