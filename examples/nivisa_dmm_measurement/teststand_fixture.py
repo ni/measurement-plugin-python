@@ -16,6 +16,7 @@ import ni_measurementlink_service as nims
 # To use NI Instrument Simulator v2.0 hardware, set this to False.
 USE_SIMULATION = True
 
+
 def update_pin_map(pin_map_path: str, sequence_context: Any) -> None:
     """Update registered pin map contents.
 
