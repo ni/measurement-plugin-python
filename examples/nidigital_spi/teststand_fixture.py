@@ -1,5 +1,4 @@
 """Functions to set up and tear down sessions of NI Digital Pattern instruments in NI TestStand."""
-import pathlib
 from typing import Any, Iterable
 
 import nidigital
@@ -9,8 +8,6 @@ import ni_measurementlink_service as nims
 from ni_measurementlink_service.session_management import (
     INSTRUMENT_TYPE_NI_DIGITAL_PATTERN,
 )
-
-service_directory = pathlib.Path(__file__).resolve().parent
 
 
 def update_pin_map(pin_map_path: str, sequence_context: Any) -> str:
@@ -55,8 +52,8 @@ def create_nidigital_sessions(sequence_context: Any) -> None:
             session_management_client, pin_map_id, INSTRUMENT_TYPE_NI_DIGITAL_PATTERN
         ) as reservation:
             for session_info in reservation.session_info:
-                session = _create_new_nidigital_session(grpc_channel_pool, session_info)
                 # Leave session open.
+                _ = _create_new_nidigital_session(grpc_channel_pool, session_info)
 
             session_management_client.register_sessions(reservation.session_info)
 
@@ -100,7 +97,7 @@ def load_nidigital_specifications_levels_and_timing(
             Absolute or relative paths to the specifications files.
         levels_file_paths:
             Absolute or relative paths to the levels files.
-        timings_file_paths:
+        timing_file_paths:
             Absolute or relative paths to the timing files.
         sequence_context:
             The SequenceContext COM object from the TestStand sequence execution.
