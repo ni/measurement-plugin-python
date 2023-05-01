@@ -5,6 +5,9 @@ from _helpers import GrpcChannelPoolHelper, PinMapClient
 
 import ni_measurementlink_service as nims
 
+# To use a physical NI oscilloscope instrument, set this to False.
+USE_SIMULATION = True
+
 
 def update_pin_map(pin_map_id: str) -> None:
     """Update registered pin map contents.
@@ -36,6 +39,11 @@ def create_niscope_sessions(pin_map_id: str) -> None:
             timeout=0,
         ) as reservation:
             for session_info in reservation.session_info:
+                options = {}
+                if USE_SIMULATION:
+                    options["simulate"] = True
+                    options["driver_setup"] = {"Model": "5162 (4CH)"}
+
                 grpc_options = niscope.GrpcSessionOptions(
                     grpc_channel_pool.get_grpc_device_channel(niscope.GRPC_SERVICE_INTERFACE_NAME),
                     session_name=session_info.session_name,
@@ -43,7 +51,11 @@ def create_niscope_sessions(pin_map_id: str) -> None:
                 )
 
                 # Leave session open
-                niscope.Session(resource_name=session_info.resource_name, grpc_options=grpc_options)
+                niscope.Session(
+                    resource_name=session_info.resource_name,
+                    options=options,
+                    grpc_options=grpc_options,
+                )
 
             session_management_client.register_sessions(reservation.session_info)
 

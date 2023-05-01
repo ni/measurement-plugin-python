@@ -12,10 +12,15 @@ from _helpers import (
     configure_logging,
     get_service_options,
     grpc_device_options,
+    use_simulation_option,
     verbosity_option,
 )
 
 import ni_measurementlink_service as nims
+
+# To use a physical NI relay driver instrument, set this to False or specify
+# --no-use-simulation on the command line.
+USE_SIMULATION = True
 
 service_directory = pathlib.Path(__file__).resolve().parent
 measurement_service = nims.MeasurementService(
@@ -81,6 +86,11 @@ def measure(
 def _create_niswitch_session(
     session_info: nims.session_management.SessionInformation,
 ) -> niswitch.Session:
+    options = {}
+    if service_options.use_simulation:
+        options["simulate"] = True
+        options["driver_setup"] = {"Model": "2567"}
+
     session_kwargs = {}
     if service_options.use_grpc_device:
         session_grpc_address = service_options.grpc_device_address
@@ -101,12 +111,13 @@ def _create_niswitch_session(
         )
 
     # This uses the topology configured in MAX.
-    return niswitch.Session(session_info.resource_name, **session_kwargs)
+    return niswitch.Session(session_info.resource_name, options=options, **session_kwargs)
 
 
 @click.command
 @verbosity_option
 @grpc_device_options
+@use_simulation_option(default=USE_SIMULATION)
 def main(verbosity: int, **kwargs) -> None:
     """Control relays using an NI relay driver (e.g. PXI-2567)."""
     configure_logging(verbosity)

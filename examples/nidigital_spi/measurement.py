@@ -14,9 +14,14 @@ from _helpers import (
     get_service_options,
     grpc_device_options,
     verbosity_option,
+    use_simulation_option,
 )
 
 import ni_measurementlink_service as nims
+
+# To use a physical NI Digital Pattern instrument, set this to False or specify
+# --no-use-simulation on the command line.
+USE_SIMULATION = True
 
 service_directory = pathlib.Path(__file__).resolve().parent
 measurement_service = nims.MeasurementService(
@@ -116,6 +121,11 @@ def measure(
 def _create_nidigital_session(
     session_info: nims.session_management.SessionInformation,
 ) -> nidigital.Session:
+    options = {}
+    if service_options.use_simulation:
+        options["simulate"] = True
+        options["driver_setup"] = {"Model": "6570"}
+
     session_kwargs = {}
     if service_options.use_grpc_device:
         session_grpc_address = service_options.grpc_device_address
@@ -135,7 +145,7 @@ def _create_nidigital_session(
             initialization_behavior=nidigital.SessionInitializationBehavior.AUTO,
         )
 
-    return nidigital.Session(session_info.resource_name, **session_kwargs)
+    return nidigital.Session(session_info.resource_name, options=options, **session_kwargs)
 
 
 def _resolve_relative_path(
@@ -152,6 +162,7 @@ def _resolve_relative_path(
 @click.command
 @verbosity_option
 @grpc_device_options
+@use_simulation_option(default=USE_SIMULATION)
 def main(verbosity: int, **kwargs) -> None:
     """Test a SPI device using an NI Digital Pattern instrument."""
     configure_logging(verbosity)

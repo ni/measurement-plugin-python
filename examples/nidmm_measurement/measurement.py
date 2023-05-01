@@ -16,9 +16,14 @@ from _helpers import (
     grpc_device_options,
     str_to_enum,
     verbosity_option,
+    use_simulation_option,
 )
 
 import ni_measurementlink_service as nims
+
+# To use a physical NI DMM instrument, set this to False or specify
+# --no-use-simulation on the command line.
+USE_SIMULATION = True
 
 service_directory = pathlib.Path(__file__).resolve().parent
 measurement_service = nims.MeasurementService(
@@ -27,6 +32,7 @@ measurement_service = nims.MeasurementService(
     ui_file_paths=[service_directory / "NIDmmMeasurement.measui"],
 )
 service_options = ServiceOptions()
+
 
 FUNCTION_TO_ENUM = {
     "DC Volts": nidmm.Function.DC_VOLTS,
@@ -122,6 +128,11 @@ def measure(
 def _create_nidmm_session(
     session_info: nims.session_management.SessionInformation,
 ) -> nidmm.Session:
+    options = {}
+    if service_options.use_simulation:
+        options["simulate"] = True
+        options["driver_setup"] = {"Model": "4081"}
+
     session_kwargs = {}
     if service_options.use_grpc_device:
         session_grpc_address = service_options.grpc_device_address
@@ -141,12 +152,13 @@ def _create_nidmm_session(
             initialization_behavior=nidmm.SessionInitializationBehavior.AUTO,
         )
 
-    return nidmm.Session(session_info.resource_name, **session_kwargs)
+    return nidmm.Session(session_info.resource_name, options=options, **session_kwargs)
 
 
 @click.command
 @verbosity_option
 @grpc_device_options
+@use_simulation_option(default=USE_SIMULATION)
 def main(verbosity: int, **kwargs) -> None:
     """Perform a measurement using an NI DMM."""
     configure_logging(verbosity)

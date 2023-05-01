@@ -5,6 +5,9 @@ from _helpers import GrpcChannelPoolHelper, PinMapClient
 
 import ni_measurementlink_service as nims
 
+# To use a physical NI waveform generator instrument, set this to False.
+USE_SIMULATION = True
+
 
 def update_pin_map(pin_map_id: str) -> None:
     """Update registered pin map contents.
@@ -36,6 +39,11 @@ def create_nifgen_sessions(pin_map_id: str) -> None:
             timeout=0,
         ) as reservation:
             for session_info in reservation.session_info:
+                options = {}
+                if USE_SIMULATION:
+                    options["simulate"] = True
+                    options["driver_setup"] = {"Model": "5423 (2CH)"}
+
                 grpc_options = nifgen.GrpcSessionOptions(
                     grpc_channel_pool.get_grpc_device_channel(nifgen.GRPC_SERVICE_INTERFACE_NAME),
                     session_name=session_info.session_name,

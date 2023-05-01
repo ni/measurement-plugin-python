@@ -24,3 +24,6 @@ using an NI waveform generator.
 ### Required Hardware
 
 This example requires an NI waveform generator (e.g. PXIe-5423 (2CH)).
+
+By default, this example uses a simulated instrument. To use a physical instrument, edit
+`measurement.py` and `teststand_fixture.py` to specify `USE_SIMULATION = False`.

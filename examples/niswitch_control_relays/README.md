@@ -22,6 +22,5 @@ This is a MeasurementLink example that controls relays using an NI relay driver
 
 This example requires an NI relay driver (e.g. PXI-2567).
 
-To simulate an NI relay driver in software: open `NI MAX`, right-click `Devices and Interfaces`,
-select `Create New...`, and select `Simulated NI-DAQmx Device or Modular Instrument`.
-Relay drivers are in the `Switches` category.
+By default, this example uses a simulated instrument. To use a physical instrument, edit
+`measurement.py` and `teststand_fixture.py` to specify `USE_SIMULATION = False`.

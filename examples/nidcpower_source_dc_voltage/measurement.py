@@ -16,9 +16,14 @@ from _helpers import (
     get_service_options,
     grpc_device_options,
     verbosity_option,
+    use_simulation_option,
 )
 
 import ni_measurementlink_service as nims
+
+# To use a physical NI SMU instrument, set this to False or specify
+# --no-use-simulation on the command line.
+USE_SIMULATION = True
 
 NIDCPOWER_WAIT_FOR_EVENT_TIMEOUT_ERROR_CODE = -1074116059
 NIDCPOWER_TIMEOUT_EXCEEDED_ERROR_CODE = -1074097933
@@ -168,6 +173,11 @@ def measure(
 def _create_nidcpower_session(
     session_info: nims.session_management.SessionInformation,
 ) -> nidcpower.Session:
+    options = {}
+    if service_options.use_simulation:
+        options["simulate"] = True
+        options["driver_setup"] = {"Model": "4141"}
+
     session_kwargs = {}
     if service_options.use_grpc_device:
         session_grpc_address = service_options.grpc_device_address
@@ -205,6 +215,7 @@ def _log_measured_values(
 @click.command
 @verbosity_option
 @grpc_device_options
+@use_simulation_option(default=USE_SIMULATION)
 def main(verbosity: int, **kwargs) -> None:
     """Source and measure a DC voltage with an NI SMU."""
     configure_logging(verbosity)

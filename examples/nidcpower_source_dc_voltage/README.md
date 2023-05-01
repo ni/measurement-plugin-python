@@ -27,10 +27,9 @@ This is a MeasurementLink example that sources and measures a DC voltage with an
 
 This example requires an NI SMU that is supported by NI-DCPower (e.g. PXIe-4141).
 
-To simulate an NI SMU in software: open `NI MAX`, right-click `Devices and Interfaces`,
-select `Create New...`, and select `Simulated NI-DAQmx Device or Modular Instrument`.
-SMUs are in the `Power Supplies` category.
+By default, this example uses a simulated instrument. To use a physical instrument, edit
+`measurement.py` and `teststand_fixture.py` to specify `USE_SIMULATION = False`.
 
-### Note
-
-- In order to run the measurement with `NIDCPowerSourceDCVoltageMultiSite.pinmap`, it is required to have an NI SMU with 4 or more channels.
+> **Note**
+> The multi-site pin map, `NIDCPowerSourceDCVoltageMultiSite.pinmap`, requires an
+> NI SMU with 4 or more channels.

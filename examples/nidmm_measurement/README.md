@@ -18,8 +18,7 @@ This is a MeasurementLink example that performs a measurement using an NI DMM.
 
 ### Required Hardware
 
-This example requires an NI DMM (e.g. PXI-4072).
+This example requires an NI DMM (e.g. PXIe-4081).
 
-To simulate an NI DMM in software: open `NI MAX`, right-click `Devices and Interfaces`,
-select `Create New...`, and select `Simulated NI-DAQmx Device or Modular Instrument`.
-DMMs are in the `Digital Multimeters` category.
+By default, this example uses a simulated instrument. To use a physical instrument, edit
+`measurement.py` and `teststand_fixture.py` to specify `USE_SIMULATION = False`.

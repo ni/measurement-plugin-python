@@ -5,6 +5,9 @@ from _helpers import GrpcChannelPoolHelper, PinMapClient
 
 import ni_measurementlink_service as nims
 
+# To use a physical NI relay driver instrument, set this to False.
+USE_SIMULATION = True
+
 
 def update_pin_map(pin_map_id: str) -> None:
     """Update registered pin map contents.
@@ -36,6 +39,11 @@ def create_niswitch_sessions(pin_map_id: str) -> None:
             timeout=0,
         ) as reservation:
             for session_info in reservation.session_info:
+                options = {}
+                if service_options.use_simulation:
+                    options["simulate"] = True
+                    options["driver_setup"] = {"Model": "2567"}
+
                 grpc_options = niswitch.GrpcSessionOptions(
                     grpc_channel_pool.get_grpc_device_channel(niswitch.GRPC_SERVICE_INTERFACE_NAME),
                     session_name=session_info.session_name,
@@ -44,7 +52,9 @@ def create_niswitch_sessions(pin_map_id: str) -> None:
 
                 # Leave session open
                 niswitch.Session(
-                    resource_name=session_info.resource_name, grpc_options=grpc_options
+                    resource_name=session_info.resource_name,
+                    options=options,
+                    grpc_options=grpc_options,
                 )
 
             session_management_client.register_sessions(reservation.session_info)
