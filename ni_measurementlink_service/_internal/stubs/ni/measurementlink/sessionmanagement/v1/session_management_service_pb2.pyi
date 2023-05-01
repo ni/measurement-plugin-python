@@ -60,11 +60,7 @@ class SessionInformation(google.protobuf.message.Message):
     This field is readonly.
     """
     @property
-    def channel_mappings(
-        self,
-    ) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[
-        global___ChannelMapping
-    ]:
+    def channel_mappings(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___ChannelMapping]:
         """List of site and pin/relay mappings that correspond to each channel in the channel_list.
         Each item contains a mapping corresponding to a channel in this instrument resource, in the order of the channel_list.
         This field is empty for any SessionInformation returned from ReserveAllRegisteredSessions.
@@ -80,26 +76,8 @@ class SessionInformation(google.protobuf.message.Message):
         session_exists: builtins.bool = ...,
         channel_mappings: collections.abc.Iterable[global___ChannelMapping] | None = ...,
     ) -> None: ...
-    def HasField(
-        self, field_name: typing_extensions.Literal["session", b"session"]
-    ) -> builtins.bool: ...
-    def ClearField(
-        self,
-        field_name: typing_extensions.Literal[
-            "channel_list",
-            b"channel_list",
-            "channel_mappings",
-            b"channel_mappings",
-            "instrument_type_id",
-            b"instrument_type_id",
-            "resource_name",
-            b"resource_name",
-            "session",
-            b"session",
-            "session_exists",
-            b"session_exists",
-        ],
-    ) -> None: ...
+    def HasField(self, field_name: typing_extensions.Literal["session", b"session"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing_extensions.Literal["channel_list", b"channel_list", "channel_mappings", b"channel_mappings", "instrument_type_id", b"instrument_type_id", "resource_name", b"resource_name", "session", b"session", "session_exists", b"session_exists"]) -> None: ...
 
 global___SessionInformation = SessionInformation
 
@@ -125,12 +103,7 @@ class ChannelMapping(google.protobuf.message.Message):
         site: builtins.int = ...,
         channel: builtins.str = ...,
     ) -> None: ...
-    def ClearField(
-        self,
-        field_name: typing_extensions.Literal[
-            "channel", b"channel", "pin_or_relay_name", b"pin_or_relay_name", "site", b"site"
-        ],
-    ) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["channel", b"channel", "pin_or_relay_name", b"pin_or_relay_name", "site", b"site"]) -> None: ...
 
 global___ChannelMapping = ChannelMapping
 
@@ -146,9 +119,7 @@ class ReserveSessionsRequest(google.protobuf.message.Message):
     def pin_map_context(self) -> ni.measurementlink.pin_map_context_pb2.PinMapContext:
         """Required. Includes the pin map ID for the pin map in the Pin Map Service, as well as the list of sites for the measurement."""
     @property
-    def pin_or_relay_names(
-        self,
-    ) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]:
+    def pin_or_relay_names(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]:
         """Optional. List of pins, pin groups, relays, or relay groups to use for the measurement. If unspecified, reserve sessions for all pins and relays in the registered pin map resource."""
     instrument_type_id: builtins.str
     """Optional. Instrument type ID for the measurement. If unspecified, reserve sessions for all instrument types connected in the registered pin map resource.
@@ -174,22 +145,8 @@ class ReserveSessionsRequest(google.protobuf.message.Message):
         instrument_type_id: builtins.str = ...,
         timeout_in_milliseconds: builtins.int = ...,
     ) -> None: ...
-    def HasField(
-        self, field_name: typing_extensions.Literal["pin_map_context", b"pin_map_context"]
-    ) -> builtins.bool: ...
-    def ClearField(
-        self,
-        field_name: typing_extensions.Literal[
-            "instrument_type_id",
-            b"instrument_type_id",
-            "pin_map_context",
-            b"pin_map_context",
-            "pin_or_relay_names",
-            b"pin_or_relay_names",
-            "timeout_in_milliseconds",
-            b"timeout_in_milliseconds",
-        ],
-    ) -> None: ...
+    def HasField(self, field_name: typing_extensions.Literal["pin_map_context", b"pin_map_context"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing_extensions.Literal["instrument_type_id", b"instrument_type_id", "pin_map_context", b"pin_map_context", "pin_or_relay_names", b"pin_or_relay_names", "timeout_in_milliseconds", b"timeout_in_milliseconds"]) -> None: ...
 
 global___ReserveSessionsRequest = ReserveSessionsRequest
 
@@ -199,11 +156,7 @@ class ReserveSessionsResponse(google.protobuf.message.Message):
 
     SESSIONS_FIELD_NUMBER: builtins.int
     @property
-    def sessions(
-        self,
-    ) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[
-        global___SessionInformation
-    ]:
+    def sessions(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___SessionInformation]:
         """List of information needed to create or use each session for the given pin, site, and instrument type ID.
         This field is readonly.
         """
@@ -212,9 +165,7 @@ class ReserveSessionsResponse(google.protobuf.message.Message):
         *,
         sessions: collections.abc.Iterable[global___SessionInformation] | None = ...,
     ) -> None: ...
-    def ClearField(
-        self, field_name: typing_extensions.Literal["sessions", b"sessions"]
-    ) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["sessions", b"sessions"]) -> None: ...
 
 global___ReserveSessionsResponse = ReserveSessionsResponse
 
@@ -224,20 +175,14 @@ class UnreserveSessionsRequest(google.protobuf.message.Message):
 
     SESSIONS_FIELD_NUMBER: builtins.int
     @property
-    def sessions(
-        self,
-    ) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[
-        global___SessionInformation
-    ]:
+    def sessions(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___SessionInformation]:
         """Required. List of information of sessions to be unreserved in the session management service."""
     def __init__(
         self,
         *,
         sessions: collections.abc.Iterable[global___SessionInformation] | None = ...,
     ) -> None: ...
-    def ClearField(
-        self, field_name: typing_extensions.Literal["sessions", b"sessions"]
-    ) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["sessions", b"sessions"]) -> None: ...
 
 global___UnreserveSessionsRequest = UnreserveSessionsRequest
 
@@ -257,20 +202,14 @@ class RegisterSessionsRequest(google.protobuf.message.Message):
 
     SESSIONS_FIELD_NUMBER: builtins.int
     @property
-    def sessions(
-        self,
-    ) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[
-        global___SessionInformation
-    ]:
+    def sessions(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___SessionInformation]:
         """Required. List of sessions to register with the session management service to track as the sessions are open."""
     def __init__(
         self,
         *,
         sessions: collections.abc.Iterable[global___SessionInformation] | None = ...,
     ) -> None: ...
-    def ClearField(
-        self, field_name: typing_extensions.Literal["sessions", b"sessions"]
-    ) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["sessions", b"sessions"]) -> None: ...
 
 global___RegisterSessionsRequest = RegisterSessionsRequest
 
@@ -290,20 +229,14 @@ class UnregisterSessionsRequest(google.protobuf.message.Message):
 
     SESSIONS_FIELD_NUMBER: builtins.int
     @property
-    def sessions(
-        self,
-    ) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[
-        global___SessionInformation
-    ]:
+    def sessions(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___SessionInformation]:
         """Required. List of sessions to unregister with the session management service to mark them as sessions were closed."""
     def __init__(
         self,
         *,
         sessions: collections.abc.Iterable[global___SessionInformation] | None = ...,
     ) -> None: ...
-    def ClearField(
-        self, field_name: typing_extensions.Literal["sessions", b"sessions"]
-    ) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["sessions", b"sessions"]) -> None: ...
 
 global___UnregisterSessionsRequest = UnregisterSessionsRequest
 
@@ -345,15 +278,7 @@ class ReserveAllRegisteredSessionsRequest(google.protobuf.message.Message):
         timeout_in_milliseconds: builtins.int = ...,
         instrument_type_id: builtins.str = ...,
     ) -> None: ...
-    def ClearField(
-        self,
-        field_name: typing_extensions.Literal[
-            "instrument_type_id",
-            b"instrument_type_id",
-            "timeout_in_milliseconds",
-            b"timeout_in_milliseconds",
-        ],
-    ) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["instrument_type_id", b"instrument_type_id", "timeout_in_milliseconds", b"timeout_in_milliseconds"]) -> None: ...
 
 global___ReserveAllRegisteredSessionsRequest = ReserveAllRegisteredSessionsRequest
 
@@ -363,19 +288,13 @@ class ReserveAllRegisteredSessionsResponse(google.protobuf.message.Message):
 
     SESSIONS_FIELD_NUMBER: builtins.int
     @property
-    def sessions(
-        self,
-    ) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[
-        global___SessionInformation
-    ]:
+    def sessions(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___SessionInformation]:
         """Sessions currently registered in the session management service."""
     def __init__(
         self,
         *,
         sessions: collections.abc.Iterable[global___SessionInformation] | None = ...,
     ) -> None: ...
-    def ClearField(
-        self, field_name: typing_extensions.Literal["sessions", b"sessions"]
-    ) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["sessions", b"sessions"]) -> None: ...
 
 global___ReserveAllRegisteredSessionsResponse = ReserveAllRegisteredSessionsResponse

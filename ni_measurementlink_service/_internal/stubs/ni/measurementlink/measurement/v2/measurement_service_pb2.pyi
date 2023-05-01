@@ -239,10 +239,16 @@ class ConfigurationParameter(google.protobuf.message.Message):
         Well-known annotations:
         - Type specialization. The keys to other annotations will be read based on the value of `ni/type_specialization` annotation.
           - Key: "ni/type_specialization"
-          - Common Values: "pin" ...    
+          - Common Values: "pin", "path", "enum", ...
+          - "pin" and "path" parameters require the type field to be TYPE_STRING.
+          - "enum" parameters requires the type field to be TYPE_ENUM.
         - For string parameter with ni/type_specialization annotation equals "pin"
           - Key: "ni/pin.instrument_type"
           - Common Values: "niDCPower", "niScope"...
+        - For enum parameter with ni/type_specialization annotation equals "enum"
+          - Key: "ni/enum.values"
+          - Expected format: JSON dictionary string"
+          - Example: "{\\"RED\\":0, \\"GREEN\\":25, \\"BLUE\\":5}"
         """
     def __init__(
         self,
@@ -263,10 +269,27 @@ class Output(google.protobuf.message.Message):
 
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
+    @typing_extensions.final
+    class AnnotationsEntry(google.protobuf.message.Message):
+        DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+        KEY_FIELD_NUMBER: builtins.int
+        VALUE_FIELD_NUMBER: builtins.int
+        key: builtins.str
+        value: builtins.str
+        def __init__(
+            self,
+            *,
+            key: builtins.str = ...,
+            value: builtins.str = ...,
+        ) -> None: ...
+        def ClearField(self, field_name: typing_extensions.Literal["key", b"key", "value", b"value"]) -> None: ...
+
     FIELD_NUMBER_FIELD_NUMBER: builtins.int
     TYPE_FIELD_NUMBER: builtins.int
     NAME_FIELD_NUMBER: builtins.int
     REPEATED_FIELD_NUMBER: builtins.int
+    ANNOTATIONS_FIELD_NUMBER: builtins.int
     field_number: builtins.int
     """Required. The field number for the output as defined by the message indicated by
     MethodSignature.outputs_message_type.
@@ -279,6 +302,11 @@ class Output(google.protobuf.message.Message):
     """
     repeated: builtins.bool
     """Required. True if this output represents repeated data and False if it represents a scalar value."""
+    @property
+    def annotations(self) -> google.protobuf.internal.containers.ScalarMap[builtins.str, builtins.str]:
+        """Optional. Represents a set of annotations on the type.
+        See documentation for ConfigurationParameter annotations for more details and examples.
+        """
     def __init__(
         self,
         *,
@@ -286,7 +314,8 @@ class Output(google.protobuf.message.Message):
         type: google.protobuf.type_pb2.Field.Kind.ValueType = ...,
         name: builtins.str = ...,
         repeated: builtins.bool = ...,
+        annotations: collections.abc.Mapping[builtins.str, builtins.str] | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing_extensions.Literal["field_number", b"field_number", "name", b"name", "repeated", b"repeated", "type", b"type"]) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["annotations", b"annotations", "field_number", b"field_number", "name", b"name", "repeated", b"repeated", "type", b"type"]) -> None: ...
 
 global___Output = Output

@@ -2,13 +2,12 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-from ni_measurementlink_service._internal.stubs.ni.measurementlink.pinmap.v1 import (
-    pin_map_service_pb2 as ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2,
-)
+from ni_measurementlink_service._internal.stubs.ni.measurementlink.pinmap.v1 import pin_map_service_pb2 as ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2
 
 
 class PinMapServiceStub(object):
-    """Service to keep track of pin map resources."""
+    """Service to keep track of pin map resources.
+    """
 
     def __init__(self, channel):
         """Constructor.
@@ -17,39 +16,40 @@ class PinMapServiceStub(object):
             channel: A grpc.Channel.
         """
         self.CreatePinMapFromXml = channel.unary_unary(
-            "/ni.measurementlink.pinmap.v1.PinMapService/CreatePinMapFromXml",
-            request_serializer=ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.CreatePinMapFromXmlRequest.SerializeToString,
-            response_deserializer=ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.PinMap.FromString,
-        )
+                '/ni.measurementlink.pinmap.v1.PinMapService/CreatePinMapFromXml',
+                request_serializer=ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.CreatePinMapFromXmlRequest.SerializeToString,
+                response_deserializer=ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.PinMap.FromString,
+                )
         self.UpdatePinMapFromXml = channel.unary_unary(
-            "/ni.measurementlink.pinmap.v1.PinMapService/UpdatePinMapFromXml",
-            request_serializer=ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.UpdatePinMapFromXmlRequest.SerializeToString,
-            response_deserializer=ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.PinMap.FromString,
-        )
+                '/ni.measurementlink.pinmap.v1.PinMapService/UpdatePinMapFromXml',
+                request_serializer=ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.UpdatePinMapFromXmlRequest.SerializeToString,
+                response_deserializer=ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.PinMap.FromString,
+                )
         self.GetPinMap = channel.unary_unary(
-            "/ni.measurementlink.pinmap.v1.PinMapService/GetPinMap",
-            request_serializer=ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.GetPinMapRequest.SerializeToString,
-            response_deserializer=ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.PinMap.FromString,
-        )
+                '/ni.measurementlink.pinmap.v1.PinMapService/GetPinMap',
+                request_serializer=ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.GetPinMapRequest.SerializeToString,
+                response_deserializer=ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.PinMap.FromString,
+                )
         self.QueryPins = channel.unary_unary(
-            "/ni.measurementlink.pinmap.v1.PinMapService/QueryPins",
-            request_serializer=ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.QueryPinsRequest.SerializeToString,
-            response_deserializer=ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.QueryPinsResponse.FromString,
-        )
+                '/ni.measurementlink.pinmap.v1.PinMapService/QueryPins',
+                request_serializer=ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.QueryPinsRequest.SerializeToString,
+                response_deserializer=ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.QueryPinsResponse.FromString,
+                )
         self.QueryRelays = channel.unary_unary(
-            "/ni.measurementlink.pinmap.v1.PinMapService/QueryRelays",
-            request_serializer=ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.QueryRelaysRequest.SerializeToString,
-            response_deserializer=ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.QueryRelaysResponse.FromString,
-        )
+                '/ni.measurementlink.pinmap.v1.PinMapService/QueryRelays',
+                request_serializer=ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.QueryRelaysRequest.SerializeToString,
+                response_deserializer=ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.QueryRelaysResponse.FromString,
+                )
         self.QueryResourceAccessInformation = channel.unary_unary(
-            "/ni.measurementlink.pinmap.v1.PinMapService/QueryResourceAccessInformation",
-            request_serializer=ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.QueryResourceAccessInformationRequest.SerializeToString,
-            response_deserializer=ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.QueryResourceAccessInformationResponse.FromString,
-        )
+                '/ni.measurementlink.pinmap.v1.PinMapService/QueryResourceAccessInformation',
+                request_serializer=ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.QueryResourceAccessInformationRequest.SerializeToString,
+                response_deserializer=ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.QueryResourceAccessInformationResponse.FromString,
+                )
 
 
 class PinMapServiceServicer(object):
-    """Service to keep track of pin map resources."""
+    """Service to keep track of pin map resources.
+    """
 
     def CreatePinMapFromXml(self, request, context):
         """Registers pin map with the PinMapService and returns a pin map resource.
@@ -58,8 +58,8 @@ class PinMapServiceServicer(object):
         - ALREADY_EXISTS: Pin map resource with the specified pin map id already exists
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details("Method not implemented!")
-        raise NotImplementedError("Method not implemented!")
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
 
     def UpdatePinMapFromXml(self, request, context):
         """Updates registered pin map contents and returns it.
@@ -68,8 +68,8 @@ class PinMapServiceServicer(object):
         - INVALID_ARGUMENT: Pin map xml string is not valid
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details("Method not implemented!")
-        raise NotImplementedError("Method not implemented!")
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
 
     def GetPinMap(self, request, context):
         """Get registered pin map resource.
@@ -77,8 +77,8 @@ class PinMapServiceServicer(object):
         - NOT_FOUND: Pin map resource for the specified pin map id is not found
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details("Method not implemented!")
-        raise NotImplementedError("Method not implemented!")
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
 
     def QueryPins(self, request, context):
         """Returns list of pins from the registered pin map resource.
@@ -86,8 +86,8 @@ class PinMapServiceServicer(object):
         - NOT_FOUND: Pin map resource for the specified pin map id is not found
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details("Method not implemented!")
-        raise NotImplementedError("Method not implemented!")
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
 
     def QueryRelays(self, request, context):
         """Returns list of relays from the registered pin map resource.
@@ -95,8 +95,8 @@ class PinMapServiceServicer(object):
         - NOT_FOUND: Pin map resource for the specified pin map id is not found
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details("Method not implemented!")
-        raise NotImplementedError("Method not implemented!")
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
 
     def QueryResourceAccessInformation(self, request, context):
         """Get instrument resource names, channels, and instrument type for the specified sites, pins or pin groups, relays or relay groups, instrument type in the registered pin map resource.
@@ -109,223 +109,151 @@ class PinMapServiceServicer(object):
         - Empty string specified for a pin or relay name.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details("Method not implemented!")
-        raise NotImplementedError("Method not implemented!")
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
 
 
 def add_PinMapServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
-        "CreatePinMapFromXml": grpc.unary_unary_rpc_method_handler(
-            servicer.CreatePinMapFromXml,
-            request_deserializer=ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.CreatePinMapFromXmlRequest.FromString,
-            response_serializer=ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.PinMap.SerializeToString,
-        ),
-        "UpdatePinMapFromXml": grpc.unary_unary_rpc_method_handler(
-            servicer.UpdatePinMapFromXml,
-            request_deserializer=ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.UpdatePinMapFromXmlRequest.FromString,
-            response_serializer=ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.PinMap.SerializeToString,
-        ),
-        "GetPinMap": grpc.unary_unary_rpc_method_handler(
-            servicer.GetPinMap,
-            request_deserializer=ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.GetPinMapRequest.FromString,
-            response_serializer=ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.PinMap.SerializeToString,
-        ),
-        "QueryPins": grpc.unary_unary_rpc_method_handler(
-            servicer.QueryPins,
-            request_deserializer=ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.QueryPinsRequest.FromString,
-            response_serializer=ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.QueryPinsResponse.SerializeToString,
-        ),
-        "QueryRelays": grpc.unary_unary_rpc_method_handler(
-            servicer.QueryRelays,
-            request_deserializer=ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.QueryRelaysRequest.FromString,
-            response_serializer=ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.QueryRelaysResponse.SerializeToString,
-        ),
-        "QueryResourceAccessInformation": grpc.unary_unary_rpc_method_handler(
-            servicer.QueryResourceAccessInformation,
-            request_deserializer=ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.QueryResourceAccessInformationRequest.FromString,
-            response_serializer=ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.QueryResourceAccessInformationResponse.SerializeToString,
-        ),
+            'CreatePinMapFromXml': grpc.unary_unary_rpc_method_handler(
+                    servicer.CreatePinMapFromXml,
+                    request_deserializer=ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.CreatePinMapFromXmlRequest.FromString,
+                    response_serializer=ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.PinMap.SerializeToString,
+            ),
+            'UpdatePinMapFromXml': grpc.unary_unary_rpc_method_handler(
+                    servicer.UpdatePinMapFromXml,
+                    request_deserializer=ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.UpdatePinMapFromXmlRequest.FromString,
+                    response_serializer=ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.PinMap.SerializeToString,
+            ),
+            'GetPinMap': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetPinMap,
+                    request_deserializer=ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.GetPinMapRequest.FromString,
+                    response_serializer=ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.PinMap.SerializeToString,
+            ),
+            'QueryPins': grpc.unary_unary_rpc_method_handler(
+                    servicer.QueryPins,
+                    request_deserializer=ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.QueryPinsRequest.FromString,
+                    response_serializer=ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.QueryPinsResponse.SerializeToString,
+            ),
+            'QueryRelays': grpc.unary_unary_rpc_method_handler(
+                    servicer.QueryRelays,
+                    request_deserializer=ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.QueryRelaysRequest.FromString,
+                    response_serializer=ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.QueryRelaysResponse.SerializeToString,
+            ),
+            'QueryResourceAccessInformation': grpc.unary_unary_rpc_method_handler(
+                    servicer.QueryResourceAccessInformation,
+                    request_deserializer=ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.QueryResourceAccessInformationRequest.FromString,
+                    response_serializer=ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.QueryResourceAccessInformationResponse.SerializeToString,
+            ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-        "ni.measurementlink.pinmap.v1.PinMapService", rpc_method_handlers
-    )
+            'ni.measurementlink.pinmap.v1.PinMapService', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
 
 
-# This class is part of an EXPERIMENTAL API.
+ # This class is part of an EXPERIMENTAL API.
 class PinMapService(object):
-    """Service to keep track of pin map resources."""
+    """Service to keep track of pin map resources.
+    """
 
     @staticmethod
-    def CreatePinMapFromXml(
-        request,
-        target,
-        options=(),
-        channel_credentials=None,
-        call_credentials=None,
-        insecure=False,
-        compression=None,
-        wait_for_ready=None,
-        timeout=None,
-        metadata=None,
-    ):
-        return grpc.experimental.unary_unary(
-            request,
+    def CreatePinMapFromXml(request,
             target,
-            "/ni.measurementlink.pinmap.v1.PinMapService/CreatePinMapFromXml",
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ni.measurementlink.pinmap.v1.PinMapService/CreatePinMapFromXml',
             ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.CreatePinMapFromXmlRequest.SerializeToString,
             ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.PinMap.FromString,
-            options,
-            channel_credentials,
-            insecure,
-            call_credentials,
-            compression,
-            wait_for_ready,
-            timeout,
-            metadata,
-        )
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
-    def UpdatePinMapFromXml(
-        request,
-        target,
-        options=(),
-        channel_credentials=None,
-        call_credentials=None,
-        insecure=False,
-        compression=None,
-        wait_for_ready=None,
-        timeout=None,
-        metadata=None,
-    ):
-        return grpc.experimental.unary_unary(
-            request,
+    def UpdatePinMapFromXml(request,
             target,
-            "/ni.measurementlink.pinmap.v1.PinMapService/UpdatePinMapFromXml",
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ni.measurementlink.pinmap.v1.PinMapService/UpdatePinMapFromXml',
             ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.UpdatePinMapFromXmlRequest.SerializeToString,
             ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.PinMap.FromString,
-            options,
-            channel_credentials,
-            insecure,
-            call_credentials,
-            compression,
-            wait_for_ready,
-            timeout,
-            metadata,
-        )
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
-    def GetPinMap(
-        request,
-        target,
-        options=(),
-        channel_credentials=None,
-        call_credentials=None,
-        insecure=False,
-        compression=None,
-        wait_for_ready=None,
-        timeout=None,
-        metadata=None,
-    ):
-        return grpc.experimental.unary_unary(
-            request,
+    def GetPinMap(request,
             target,
-            "/ni.measurementlink.pinmap.v1.PinMapService/GetPinMap",
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ni.measurementlink.pinmap.v1.PinMapService/GetPinMap',
             ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.GetPinMapRequest.SerializeToString,
             ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.PinMap.FromString,
-            options,
-            channel_credentials,
-            insecure,
-            call_credentials,
-            compression,
-            wait_for_ready,
-            timeout,
-            metadata,
-        )
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
-    def QueryPins(
-        request,
-        target,
-        options=(),
-        channel_credentials=None,
-        call_credentials=None,
-        insecure=False,
-        compression=None,
-        wait_for_ready=None,
-        timeout=None,
-        metadata=None,
-    ):
-        return grpc.experimental.unary_unary(
-            request,
+    def QueryPins(request,
             target,
-            "/ni.measurementlink.pinmap.v1.PinMapService/QueryPins",
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ni.measurementlink.pinmap.v1.PinMapService/QueryPins',
             ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.QueryPinsRequest.SerializeToString,
             ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.QueryPinsResponse.FromString,
-            options,
-            channel_credentials,
-            insecure,
-            call_credentials,
-            compression,
-            wait_for_ready,
-            timeout,
-            metadata,
-        )
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
-    def QueryRelays(
-        request,
-        target,
-        options=(),
-        channel_credentials=None,
-        call_credentials=None,
-        insecure=False,
-        compression=None,
-        wait_for_ready=None,
-        timeout=None,
-        metadata=None,
-    ):
-        return grpc.experimental.unary_unary(
-            request,
+    def QueryRelays(request,
             target,
-            "/ni.measurementlink.pinmap.v1.PinMapService/QueryRelays",
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ni.measurementlink.pinmap.v1.PinMapService/QueryRelays',
             ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.QueryRelaysRequest.SerializeToString,
             ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.QueryRelaysResponse.FromString,
-            options,
-            channel_credentials,
-            insecure,
-            call_credentials,
-            compression,
-            wait_for_ready,
-            timeout,
-            metadata,
-        )
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
-    def QueryResourceAccessInformation(
-        request,
-        target,
-        options=(),
-        channel_credentials=None,
-        call_credentials=None,
-        insecure=False,
-        compression=None,
-        wait_for_ready=None,
-        timeout=None,
-        metadata=None,
-    ):
-        return grpc.experimental.unary_unary(
-            request,
+    def QueryResourceAccessInformation(request,
             target,
-            "/ni.measurementlink.pinmap.v1.PinMapService/QueryResourceAccessInformation",
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ni.measurementlink.pinmap.v1.PinMapService/QueryResourceAccessInformation',
             ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.QueryResourceAccessInformationRequest.SerializeToString,
             ni_dot_measurementlink_dot_pinmap_dot_v1_dot_pin__map__service__pb2.QueryResourceAccessInformationResponse.FromString,
-            options,
-            channel_credentials,
-            insecure,
-            call_credentials,
-            compression,
-            wait_for_ready,
-            timeout,
-            metadata,
-        )
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
