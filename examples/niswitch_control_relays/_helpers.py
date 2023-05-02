@@ -193,34 +193,36 @@ def configure_logging(verbosity: int):
     logging.basicConfig(format="%(asctime)s %(levelname)s: %(message)s", level=level)
 
 
-# Shared command line option decorators
-verbosity_option = click.option(
-    "-v",
-    "--verbose",
-    "verbosity",
-    count=True,
-    help="Enable verbose logging. Repeat to increase verbosity.",
-)
-use_grpc_device_option = click.option(
-    "--use-grpc-device/--no-use-grpc-device",
-    default=True,
-    is_flag=True,
-    help="Use the NI gRPC Device Server.",
-)
-grpc_device_address_option = click.option(
-    "--grpc-device-address",
-    default="",
-    help="NI gRPC Device Server address (e.g. localhost:31763). If unspecified, use the discovery service to resolve the address.",
-)
+def verbosity_option(func: Callable) -> Callable:
+    """Decorator for --verbose command line option."""
+    option = click.option(
+        "-v",
+        "--verbose",
+        "verbosity",
+        count=True,
+        help="Enable verbose logging. Repeat to increase verbosity.",
+    )
+    return option(func)
 
 
 def grpc_device_options(func: Callable) -> Callable:
-    """Shared NI gRPC Device Server command line options."""
+    """Decorator for NI gRPC Device Server command line options."""
+    use_grpc_device_option = click.option(
+        "--use-grpc-device/--no-use-grpc-device",
+        default=True,
+        is_flag=True,
+        help="Use the NI gRPC Device Server.",
+    )
+    grpc_device_address_option = click.option(
+        "--grpc-device-address",
+        default="",
+        help="NI gRPC Device Server address (e.g. localhost:31763). If unspecified, use the discovery service to resolve the address.",
+    )
     return grpc_device_address_option(use_grpc_device_option(func))
 
 
 def use_simulation_option(default: bool) -> Callable:
-    """Shared --use-simulation option."""
+    """Decorator for --use-simulation command line option."""
     return click.option(
         "--use-simulation/--no-use-simulation",
         default=default,
