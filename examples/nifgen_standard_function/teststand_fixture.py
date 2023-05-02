@@ -70,6 +70,7 @@ def create_nifgen_sessions(sequence_context: Any) -> None:
                 nifgen.Session(
                     resource_name=session_info.resource_name,
                     channel_name=session_info.channel_list,
+                    options=options,
                     grpc_options=grpc_options,
                 )
 

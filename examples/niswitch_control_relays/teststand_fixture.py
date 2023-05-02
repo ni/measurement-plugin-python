@@ -56,23 +56,21 @@ def create_niswitch_sessions(sequence_context: Any) -> None:
             timeout=0,
         ) as reservation:
             for session_info in reservation.session_info:
-                options = {}
-                if service_options.use_simulation:
-                    options["simulate"] = True
-                    options["driver_setup"] = {"Model": "2567"}
+                resource_name = session_info.resource_name
+                session_kwargs = {}
+                if USE_SIMULATION:
+                    resource_name = ""
+                    session_kwargs["simulate"] = True
+                    session_kwargs["topology"] = "2567/Independent"
 
-                grpc_options = niswitch.GrpcSessionOptions(
+                session_kwargs["grpc_options"] = niswitch.GrpcSessionOptions(
                     grpc_channel_pool.get_grpc_device_channel(niswitch.GRPC_SERVICE_INTERFACE_NAME),
                     session_name=session_info.session_name,
                     initialization_behavior=niswitch.SessionInitializationBehavior.INITIALIZE_SERVER_SESSION,
                 )
 
                 # Leave session open
-                niswitch.Session(
-                    resource_name=session_info.resource_name,
-                    options=options,
-                    grpc_options=grpc_options,
-                )
+                niswitch.Session(resource_name, **session_kwargs)
 
             session_management_client.register_sessions(reservation.session_info)
 

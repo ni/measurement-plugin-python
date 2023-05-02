@@ -86,12 +86,13 @@ def measure(
 def _create_niswitch_session(
     session_info: nims.session_management.SessionInformation,
 ) -> niswitch.Session:
-    options = {}
-    if service_options.use_simulation:
-        options["simulate"] = True
-        options["driver_setup"] = {"Model": "2567"}
-
+    resource_name = session_info.resource_name
     session_kwargs = {}
+    if service_options.use_simulation:
+        resource_name = ""
+        session_kwargs["simulate"] = True
+        session_kwargs["topology"] = "2567/Independent"
+
     if service_options.use_grpc_device:
         session_grpc_address = service_options.grpc_device_address
 
@@ -111,7 +112,7 @@ def _create_niswitch_session(
         )
 
     # This uses the topology configured in MAX.
-    return niswitch.Session(session_info.resource_name, options=options, **session_kwargs)
+    return niswitch.Session(resource_name, **session_kwargs)
 
 
 @click.command

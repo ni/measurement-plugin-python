@@ -15,8 +15,8 @@ from _helpers import (
     configure_logging,
     get_service_options,
     grpc_device_options,
-    verbosity_option,
     use_simulation_option,
+    verbosity_option,
 )
 
 import ni_measurementlink_service as nims
@@ -197,7 +197,9 @@ def _create_nidcpower_session(
             initialization_behavior=nidcpower.SessionInitializationBehavior.AUTO,
         )
 
-    return nidcpower.Session(resource_name=session_info.resource_name, **session_kwargs)
+    return nidcpower.Session(
+        resource_name=session_info.resource_name, options=options, **session_kwargs
+    )
 
 
 def _log_measured_values(
