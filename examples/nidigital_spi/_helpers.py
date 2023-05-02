@@ -2,8 +2,9 @@
 
 import logging
 import pathlib
-from typing import Any, Dict, NamedTuple, TypeVar
+from typing import Any, Callable, Dict, NamedTuple, Optional, TypeVar
 
+import click
 import grpc
 
 from ni_measurementlink_service import session_management
@@ -22,6 +23,15 @@ class ServiceOptions(NamedTuple):
     grpc_device_address: str = ""
 
     use_simulation: bool = False
+
+
+def get_service_options(**kwargs) -> ServiceOptions:
+    """Get service options from keyword arguments."""
+    return ServiceOptions(
+        use_grpc_device=kwargs.get("use_grpc_device", False),
+        grpc_device_address=kwargs.get("grpc_device_address", ""),
+        use_simulation=kwargs.get("use_simulation", False),
+    )
 
 
 T = TypeVar("T")
@@ -170,3 +180,50 @@ class TestStandSupport(object):
         if user_canceled:
             raise RuntimeError("File lookup canceled by user.")
         return absolute_path
+
+
+def configure_logging(verbosity: int):
+    """Configure logging for this process."""
+    if verbosity > 1:
+        level = logging.DEBUG
+    elif verbosity == 1:
+        level = logging.INFO
+    else:
+        level = logging.WARNING
+    logging.basicConfig(format="%(asctime)s %(levelname)s: %(message)s", level=level)
+
+
+# Shared command line option decorators
+verbosity_option = click.option(
+    "-v",
+    "--verbose",
+    "verbosity",
+    count=True,
+    help="Enable verbose logging. Repeat to increase verbosity.",
+)
+use_grpc_device_option = click.option(
+    "--use-grpc-device/--no-use-grpc-device",
+    default=True,
+    is_flag=True,
+    help="Use the NI gRPC Device Server.",
+)
+grpc_device_address_option = click.option(
+    "--grpc-device-address",
+    default="",
+    help="NI gRPC Device Server address (e.g. localhost:31763). If unspecified, use the discovery service to resolve the address.",
+)
+
+
+def grpc_device_options(func: Callable) -> Callable:
+    """Shared NI gRPC Device Server command line options."""
+    return grpc_device_address_option(use_grpc_device_option(func))
+
+
+def use_simulation_option(default: bool) -> Callable:
+    """Shared --use-simulation option."""
+    return click.option(
+        "--use-simulation/--no-use-simulation",
+        default=default,
+        is_flag=True,
+        help="Use simulated instruments.",
+    )

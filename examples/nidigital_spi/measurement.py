@@ -8,7 +8,13 @@ from typing import Iterable, Tuple, Union
 import click
 import grpc
 import nidigital
-from _helpers import ServiceOptions
+from _helpers import (
+    ServiceOptions,
+    configure_logging,
+    get_service_options,
+    grpc_device_options,
+    verbosity_option,
+)
 
 import ni_measurementlink_service as nims
 
@@ -144,37 +150,13 @@ def _resolve_relative_path(
 
 
 @click.command
-@click.option(
-    "-v",
-    "--verbose",
-    count=True,
-    help="Enable verbose logging. Repeat to increase verbosity.",
-)
-@click.option(
-    "--use-grpc-device/--no-use-grpc-device",
-    default=True,
-    is_flag=True,
-    help="Use the NI gRPC Device Server.",
-)
-@click.option(
-    "--grpc-device-address",
-    default="",
-    help="NI gRPC Device Server address (e.g. localhost:31763). If unspecified, use the discovery service to resolve the address.",
-)
-def main(verbose: int, use_grpc_device: bool, grpc_device_address: str) -> None:
+@verbosity_option
+@grpc_device_options
+def main(verbosity: int, **kwargs) -> None:
     """Test a SPI device using an NI Digital Pattern instrument."""
-    if verbose > 1:
-        level = logging.DEBUG
-    elif verbose == 1:
-        level = logging.INFO
-    else:
-        level = logging.WARNING
-    logging.basicConfig(format="%(asctime)s %(levelname)s: %(message)s", level=level)
-
+    configure_logging(verbosity)
     global service_options
-    service_options = ServiceOptions(
-        use_grpc_device=use_grpc_device, grpc_device_address=grpc_device_address
-    )
+    service_options = get_service_options(**kwargs)
 
     with measurement_service.host_service():
         input("Press enter to close the measurement service.\n")

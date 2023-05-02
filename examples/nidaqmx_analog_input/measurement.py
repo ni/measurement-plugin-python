@@ -5,6 +5,7 @@ import pathlib
 
 import click
 import nidaqmx
+from _helpers import configure_logging, verbosity_option
 
 import ni_measurementlink_service as nims
 
@@ -67,18 +68,10 @@ def _log_measured_values(samples, max_samples_to_display=5):
 
 
 @click.command
-@click.option(
-    "-v", "--verbose", count=True, help="Enable verbose logging. Repeat to increase verbosity."
-)
-def main(verbose: int) -> None:
+@verbosity_option
+def main(verbosity: int) -> None:
     """Perform a finite analog input measurement with NI-DAQmx."""
-    if verbose > 1:
-        level = logging.DEBUG
-    elif verbose == 1:
-        level = logging.INFO
-    else:
-        level = logging.WARNING
-    logging.basicConfig(format="%(asctime)s %(levelname)s: %(message)s", level=level)
+    configure_logging(verbosity)
 
     with measurement_service.host_service():
         input("Press enter to close the measurement service.\n")
