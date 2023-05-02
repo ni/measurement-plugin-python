@@ -193,19 +193,21 @@ def configure_logging(verbosity: int):
     logging.basicConfig(format="%(asctime)s %(levelname)s: %(message)s", level=level)
 
 
-def verbosity_option(func: Callable) -> Callable:
+F = TypeVar("F", bound=Callable)
+
+
+def verbosity_option(func: F) -> F:
     """Decorator for --verbose command line option."""
-    option = click.option(
+    return click.option(
         "-v",
         "--verbose",
         "verbosity",
         count=True,
         help="Enable verbose logging. Repeat to increase verbosity.",
-    )
-    return option(func)
+    )(func)
 
 
-def grpc_device_options(func: Callable) -> Callable:
+def grpc_device_options(func: F) -> F:
     """Decorator for NI gRPC Device Server command line options."""
     use_grpc_device_option = click.option(
         "--use-grpc-device/--no-use-grpc-device",
@@ -221,7 +223,7 @@ def grpc_device_options(func: Callable) -> Callable:
     return grpc_device_address_option(use_grpc_device_option(func))
 
 
-def use_simulation_option(default: bool) -> Callable:
+def use_simulation_option(default: bool) -> Callable[[F], F]:
     """Decorator for --use-simulation command line option."""
     return click.option(
         "--use-simulation/--no-use-simulation",
