@@ -2,7 +2,7 @@
 
 import logging
 import pathlib
-from typing import Any, Callable, Dict, NamedTuple, Optional, TypeVar
+from typing import Any, Callable, Dict, NamedTuple, TypeVar
 
 import click
 import grpc
