@@ -54,20 +54,29 @@ def measure(float_input, double_array_input, bool_input, string_input, string_ar
 
 @click.command
 @click.option(
-    "-v", "--verbose", count=True, help="Enable verbose logging. Repeat to increase verbosity."
+    "-v",
+    "--verbose",
+    "verbosity",
+    count=True,
+    help="Enable verbose logging. Repeat to increase verbosity.",
 )
-def main(verbose: int) -> None:
+def main(verbosity: int) -> None:
     """Perform a loopback measurement with various data types."""
-    if verbose > 1:
+    _configure_logging(verbosity)
+
+    with sample_measurement_service.host_service():
+        input("Press enter to close the measurement service.\n")
+
+
+def _configure_logging(verbosity: int):
+    """Configure logging for this process."""
+    if verbosity > 1:
         level = logging.DEBUG
-    elif verbose == 1:
+    elif verbosity == 1:
         level = logging.INFO
     else:
         level = logging.WARNING
     logging.basicConfig(format="%(asctime)s %(levelname)s: %(message)s", level=level)
-
-    with sample_measurement_service.host_service():
-        input("Press enter to close the measurement service.\n")
 
 
 if __name__ == "__main__":

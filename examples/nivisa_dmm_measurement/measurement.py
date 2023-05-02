@@ -8,7 +8,14 @@ from typing import Tuple
 import click
 import grpc
 import pyvisa.resources
-from _helpers import ServiceOptions, str_to_enum
+from _helpers import (
+    ServiceOptions,
+    configure_logging,
+    get_service_options,
+    str_to_enum,
+    use_simulation_option,
+    verbosity_option,
+)
 from _visa_helpers import (
     INSTRUMENT_TYPE_DMM_SIMULATOR,
     check_instrument_error,
@@ -126,30 +133,13 @@ def measure(
 
 
 @click.command
-@click.option(
-    "-v",
-    "--verbose",
-    count=True,
-    help="Enable verbose logging. Repeat to increase verbosity.",
-)
-@click.option(
-    "--use-simulation/--no-use-simulation",
-    default=USE_SIMULATION,
-    is_flag=True,
-    help="Use simulated instruments.",
-)
-def main(verbose: int, use_simulation: bool) -> None:
+@verbosity_option
+@use_simulation_option(default=USE_SIMULATION)
+def main(verbosity: int, **kwargs) -> None:
     """Perform a DMM measurement using NI-VISA and an NI Instrument Simulator v2.0."""
-    if verbose > 1:
-        level = logging.DEBUG
-    elif verbose == 1:
-        level = logging.INFO
-    else:
-        level = logging.WARNING
-    logging.basicConfig(format="%(asctime)s %(levelname)s: %(message)s", level=level)
-
+    configure_logging(verbosity)
     global service_options
-    service_options = ServiceOptions(use_simulation=use_simulation)
+    service_options = get_service_options(**kwargs)
 
     with measurement_service.host_service():
         input("Press enter to close the measurement service.\n")
