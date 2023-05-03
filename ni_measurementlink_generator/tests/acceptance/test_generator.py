@@ -1,4 +1,3 @@
-"""Tests to validate the python measurement generator."""
 import pathlib
 
 import pytest
