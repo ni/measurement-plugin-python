@@ -49,13 +49,6 @@ from tests.assets import test_pb2
     ],
 )
 def test___serializer___serialize_parameter___successful_serialization(test_values):
-    """Validates if the custom serializer serializes data same as protobuf serialization.
-
-    Args:
-        test_values (List): List of values to be serialized.
-        This should match the "MeasurementParameter" message defined in test.proto.
-
-    """
     default_values = test_values
     parameter = _get_test_parameter_by_id(default_values)
 
@@ -107,13 +100,6 @@ def test___serializer___serialize_parameter___successful_serialization(test_valu
     ],
 )
 def test___serializer___serialize_default_parameter___successful_serialization(default_values):
-    """Validates if the custom serializer serializes default values same as protobuf serialization.
-
-    Args:
-        default_values (List): Default values to be serialized.
-        This should match the "MeasurementParameter" message defined in test.proto.
-
-    """
     parameter = _get_test_parameter_by_id(default_values)
 
     # Custom Serialization
@@ -146,7 +132,6 @@ def test___serializer___serialize_default_parameter___successful_serialization(d
     ],
 )
 def test___serializer___deserialize_parameter___successful_deserialization(values):
-    """Validates if the custom deserializer deserializes data same as protobuf deserialization."""
     parameter = _get_test_parameter_by_id(values)
     grpc_serialized_data = _get_grpc_serialized_data(values)
 

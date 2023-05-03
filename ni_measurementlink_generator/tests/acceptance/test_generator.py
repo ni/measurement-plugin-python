@@ -1,16 +1,14 @@
-"""Tests to validate the python measurement generator."""
 import pathlib
 
 import pytest
 
 from ni_measurementlink_generator import template
 
-test_assets_path = pathlib.Path(__file__).parent / "test_assets"
 
-
-def test___command_line_args___create_measurement___render_without_exception(tmpdir):
-    """Given example command line args when create_measurement assert renders without exceptions."""
-    temp_directory = pathlib.Path(tmpdir.mkdir("measurement_files"))
+def test___command_line_args___create_measurement___render_without_exception(
+    test_assets_directory: pathlib.Path, tmp_path_factory: pytest.TempPathFactory
+):
+    temp_directory = tmp_path_factory.mktemp("measurement_files")
 
     with pytest.raises(SystemExit):
         template.create_measurement(
@@ -29,7 +27,7 @@ def test___command_line_args___create_measurement___render_without_exception(tmp
             ]
         )
 
-    golden_path = test_assets_path / "example_renders"
+    golden_path = test_assets_directory / "example_renders"
 
     filenames = ["measurement.py", "SampleMeasurement.serviceconfig", "start.bat"]
     for filename in filenames:

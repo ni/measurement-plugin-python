@@ -20,7 +20,6 @@ EXPECTED_UI_FILE_COUNT = 3
 
 
 def test___measurement_service___get_metadata_rpc_call___returns_metadata():
-    """End to End Test to validate GetMetadata RPC call with Sample Measurement."""
     measurement_service_port = _host_service()
 
     with _create_channel(measurement_service_port) as channel:
@@ -37,7 +36,6 @@ def test___measurement_service___get_metadata_rpc_call___returns_metadata():
 def test___measurement_service___measure_rpc_call___returns_output(
     float_in, double_array_in, bool_in, string_in, string_array_in
 ):
-    """End to End Test to validate Measure RPC call with Sample Measurement."""
     measurement_service_port = _host_service()
 
     with _create_channel(measurement_service_port) as channel:
@@ -55,7 +53,6 @@ def test___measurement_service___measure_rpc_call___returns_output(
 
 @pytest.mark.parametrize("double_array_len", [10000, 100000, 1000000, 10000000])  # up to 80 MB
 def test___measurement_service___measure_with_large_array___returns_output(double_array_len):
-    """End to End Test to validate Measure RPC call with Sample Measurement."""
     measurement_service_port = _host_service()
     float_in = 1.23
     double_array_in = [random.random() for i in range(double_array_len)]
