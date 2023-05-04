@@ -3,10 +3,7 @@ import pathlib
 
 import pytest
 
-from ni_measurementlink_service.measurement.info import (
-    DataType,
-    TypeSpecialization,
-)
+from ni_measurementlink_service.measurement.info import DataType, TypeSpecialization
 from ni_measurementlink_service.measurement.service import MeasurementService
 
 
@@ -40,7 +37,6 @@ def test___measurement_service___add_configuration__configuration_added(
     type: DataType,
     default_value: object,
 ):
-    """Test to validate the configuration decorator."""
     measurement_service.configuration(display_name, type, default_value)(_fake_measurement_function)
 
     assert any(
@@ -66,7 +62,6 @@ def test___measurement_service___add_pin_configuration__pin_configuration_added(
     default_value: object,
     instrument_type: str,
 ):
-    """Test to validate the configuration decorator."""
     measurement_service.configuration(
         display_name, type, default_value, instrument_type=instrument_type
     )(_fake_measurement_function)
@@ -106,7 +101,6 @@ def test___measurement_service___add_non_pin_configuration__pin_type_annotations
     type: DataType,
     default_value: object,
 ):
-    """Test to validate the configuration decorator."""
     measurement_service.configuration(display_name, type, default_value)(_fake_measurement_function)
 
     assert not all(
@@ -128,7 +122,6 @@ def test___measurement_service___add_path_configuration__path_configuration_adde
     type: DataType,
     default_value: object,
 ):
-    """Test to validate the configuration decorator."""
     measurement_service.configuration(display_name, type, default_value)(_fake_measurement_function)
 
     assert any(
@@ -197,7 +190,6 @@ def test___measurement_service___add_configuration_with_mismatch_default_value__
     type: DataType,
     default_value: object,
 ):
-    """Test to validate the configuration decorator with default value mismatch."""
     with pytest.raises(TypeError):
         measurement_service.configuration(display_name, type, default_value)(
             _fake_measurement_function
@@ -222,7 +214,6 @@ def test___measurement_service___add_configuration_with_mismatch_default_value__
 def test___measurement_service___add_output__output_added(
     measurement_service: MeasurementService, display_name: str, type: DataType
 ):
-    """Test to validate the output decorator."""
     measurement_service.output(display_name, type)(_fake_measurement_function)
 
     assert any(

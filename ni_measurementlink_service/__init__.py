@@ -1,12 +1,17 @@
 """MeasurementLink Support for Python."""
 import logging
 
-from .measurement.info import DataType  # noqa F401, declaring API
-from .measurement.info import MeasurementInfo  # noqa F401, declaring API
-from .measurement.info import ServiceInfo  # noqa F401, declaring API
-from .measurement.service import MeasurementService  # noqa F401, declaring API
-
-from ni_measurementlink_service import session_management  # noqa F401, declaring API
+from ni_measurementlink_service import (  # noqa: F401 - imported but unused
+    session_management,
+)
+from ni_measurementlink_service.measurement.info import (  # noqa: F401 - imported but unused
+    DataType,
+    MeasurementInfo,
+    ServiceInfo,
+)
+from ni_measurementlink_service.measurement.service import (  # noqa: F401 - imported but unused
+    MeasurementService,
+)
 
 _logger = logging.getLogger(__name__)
 _logger.addHandler(logging.NullHandler())

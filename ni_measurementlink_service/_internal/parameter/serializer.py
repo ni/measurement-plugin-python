@@ -1,20 +1,18 @@
 """Parameter Serializer."""
 
-from ast import Bytes
 from io import BytesIO
-from typing import Any, Dict, List
+from typing import Any, Dict, Sequence
 
 from google.protobuf.internal import encoder
 
 from ni_measurementlink_service._internal.parameter import serialization_strategy
 from ni_measurementlink_service._internal.parameter.metadata import ParameterMetadata
 
-
 _GRPC_WIRE_TYPE_BIT_WIDTH = 3
 
 
 def deserialize_parameters(
-    parameter_metadata_dict: Dict[int, ParameterMetadata], parameter_bytes: Bytes
+    parameter_metadata_dict: Dict[int, ParameterMetadata], parameter_bytes: bytes
 ) -> Dict[int, Any]:
     """Deserialize the bytes of the parameter based on the metadata.
 
@@ -22,7 +20,7 @@ def deserialize_parameters(
     ----
         parameter_metadata_dict (Dict[int, ParameterMetadata]): Parameter metadata by ID.
 
-        parameter_bytes (bytes): Bytes of Parameter that need to be deserialized.
+        parameter_bytes (bytes): Byte string to deserialize.
 
     Returns
     -------
@@ -42,7 +40,8 @@ def deserialize_parameters(
 
 
 def serialize_parameters(
-    parameter_metadata_dict: Dict[int, ParameterMetadata], parameter_value: List[Any]
+    parameter_metadata_dict: Dict[int, ParameterMetadata],
+    parameter_values: Sequence[Any],
 ) -> bytes:
     """Serialize the parameter values in same order based on the metadata_dict.
 
@@ -50,15 +49,15 @@ def serialize_parameters(
     ----
         parameter_metadata_dict (Dict[int, ParameterMetadata]): Parameter metadata by ID.
 
-        parameter_value (List[Any]): List of Parameter values that need to be serialized.
+        parameter_value (Sequence[Any]): Parameter values to serialize.
 
     Returns
     -------
-        Bytes: Serialized Bytes of Parameter Values.
+        bytes: Serialized byte string containing parameter values.
 
     """
     serialize_buffer = BytesIO()  # inner_encoder updates the serialize_buffer
-    for i, parameter in enumerate(parameter_value):
+    for i, parameter in enumerate(parameter_values):
         parameter_metadata = parameter_metadata_dict[i + 1]
         encoder = serialization_strategy.Context.get_encoder(
             parameter_metadata.type,
@@ -84,7 +83,7 @@ def serialize_default_values(parameter_metadata_dict: Dict[int, ParameterMetadat
 
     Returns
     -------
-        bytes: Serialized Bytes of default value.
+        bytes: Serialized byte string containing default values.
 
     """
     default_value_parameter_array = list()
@@ -94,14 +93,14 @@ def serialize_default_values(parameter_metadata_dict: Dict[int, ParameterMetadat
     return serialize_parameters(parameter_metadata_dict, default_value_parameter_array)
 
 
-def _get_field_index(parameter_bytes, tag_position: int):
+def _get_field_index(parameter_bytes: bytes, tag_position: int):
     """Get the Filed Index based on the tag's position.
 
     The tag Position should be the index of the TagValue in the ByteArray for valid field index.
 
     Args
     ----
-        parameter_bytes (Bytes): Serialized Bytes
+        parameter_bytes (bytes): Serialized bytes
 
         tag_position (int): Tag position
 
@@ -114,7 +113,7 @@ def _get_field_index(parameter_bytes, tag_position: int):
 
 
 def _get_overlapping_parameters(
-    parameter_metadata_dict: Dict[int, ParameterMetadata], parameter_bytes
+    parameter_metadata_dict: Dict[int, ParameterMetadata], parameter_bytes: bytes
 ) -> Dict[int, Any]:
     """Get the parameters present in both `parameter_metadata_dict` and `parameter_bytes`.
 
@@ -122,7 +121,7 @@ def _get_overlapping_parameters(
     ----
         parameter_metadata_dict (Dict[int, ParameterMetadata]): Parameter metadata by ID.
 
-        parameter_bytes (bytes): Bytes of Parameter that need to be deserialized.
+        parameter_bytes (bytes): bytes of Parameter that need to be deserialized.
 
     Raises
     ------
@@ -133,9 +132,8 @@ def _get_overlapping_parameters(
         Dict[int, Any]: Overlapping Parameters by ID.
 
     """
-    overlapping_parameters_by_id: Dict[
-        int, Any
-    ] = {}  # inner_decoder update the overlapping_parameters
+    # inner_decoder update the overlapping_parameters
+    overlapping_parameters_by_id: Dict[int, Any] = {}
     position = 0
     while position < len(parameter_bytes):
         field_index = _get_field_index(parameter_bytes, position)
