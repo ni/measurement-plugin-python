@@ -1,6 +1,7 @@
 """Contains Measurement Service Implementation class and method to host the service.
 """
 import collections.abc
+import contextlib
 import inspect
 import pathlib
 from contextvars import ContextVar
@@ -235,7 +236,18 @@ class MeasurementServiceServicerV1(v1_measurement_service_pb2_grpc.MeasurementSe
         )
         try:
             return_value = self.measure_function(**mapping_by_variable_name)
-            return self._serialize_response(return_value)
+            if isinstance(return_value, collections.abc.Generator):
+                with contextlib.closing(return_value) as output_iter:
+                    outputs = None
+                    try:
+                        while True:
+                            outputs = next(output_iter)
+                    except StopIteration as e:
+                        if e.value is not None:
+                            outputs = e.value
+                    return self._serialize_response(outputs)
+            else:
+                return self._serialize_response(return_value)
         finally:
             measurement_service_context.get().mark_complete()
             measurement_service_context.reset(token)
@@ -368,7 +380,17 @@ class MeasurementServiceServicerV2(v2_measurement_service_pb2_grpc.MeasurementSe
         )
         try:
             return_value = self.measure_function(**mapping_by_variable_name)
-            yield self._serialize_response(return_value)
+            if isinstance(return_value, collections.abc.Generator):
+                with contextlib.closing(return_value) as output_iter:
+                    try:
+                        while True:
+                            outputs = next(output_iter)
+                            yield self._serialize_response(outputs)
+                    except StopIteration as e:
+                        if e.value is not None:
+                            yield self._serialize_response(e.value)
+            else:
+                yield self._serialize_response(return_value)
         finally:
             measurement_service_context.get().mark_complete()
             measurement_service_context.reset(token)
