@@ -239,7 +239,8 @@ def create_driver_session(
     measurement_service: MeasurementService,
     pin_names: Iterable[str],
     instrument_type_module: Any,
-    service_options: ServiceOptions
+    service_options: ServiceOptions,
+    instrument_type_id: str
 ) -> Tuple[Any, List[session_management.SessionInformation]]:
     """Create and register driver sessions."""
     session_management_client = nims.session_management.Client(
@@ -253,7 +254,7 @@ def create_driver_session(
         reservation = stack.enter_context(reserve_session(
             session_management_client,
             measurement_service.context.pin_map_context,
-            session_management.INSTRUMENT_TYPE_NI_DCPOWER,
+            instrument_type_id,
             pin_names,
         ))
 
