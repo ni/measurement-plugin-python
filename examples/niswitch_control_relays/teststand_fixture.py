@@ -1,10 +1,13 @@
 """Functions to set up and tear down sessions of NI-Switch devices in NI TestStand."""
-from typing import Any
+from typing import Any, Dict
 
 import niswitch
 from _helpers import GrpcChannelPoolHelper, PinMapClient, TestStandSupport
 
 import ni_measurementlink_service as nims
+
+# To use a physical NI relay driver instrument, set this to False.
+USE_SIMULATION = True
 
 
 def update_pin_map(pin_map_path: str, sequence_context: Any) -> None:
@@ -53,16 +56,21 @@ def create_niswitch_sessions(sequence_context: Any) -> None:
             timeout=0,
         ) as reservation:
             for session_info in reservation.session_info:
-                grpc_options = niswitch.GrpcSessionOptions(
+                resource_name = session_info.resource_name
+                session_kwargs: Dict[str, Any] = {}
+                if USE_SIMULATION:
+                    resource_name = ""
+                    session_kwargs["simulate"] = True
+                    session_kwargs["topology"] = "2567/Independent"
+
+                session_kwargs["grpc_options"] = niswitch.GrpcSessionOptions(
                     grpc_channel_pool.get_grpc_device_channel(niswitch.GRPC_SERVICE_INTERFACE_NAME),
                     session_name=session_info.session_name,
                     initialization_behavior=niswitch.SessionInitializationBehavior.INITIALIZE_SERVER_SESSION,
                 )
 
                 # Leave session open
-                niswitch.Session(
-                    resource_name=session_info.resource_name, grpc_options=grpc_options
-                )
+                niswitch.Session(resource_name, **session_kwargs)
 
             session_management_client.register_sessions(reservation.session_info)
 

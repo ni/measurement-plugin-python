@@ -24,3 +24,6 @@ This is a MeasurementLink example that tests an SPI device using an NI Digital P
 ### Required Hardware
 
 This example requires an NI Digital Pattern instrument (e.g. PXIe-6570).
+
+By default, this example uses a simulated instrument. To use a physical instrument, edit
+`measurement.py` and `teststand_fixture.py` to specify `USE_SIMULATION = False`.

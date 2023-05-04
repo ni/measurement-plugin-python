@@ -1,10 +1,13 @@
 """Functions to set up and tear down sessions of NI-DCPower devices in NI TestStand."""
-from typing import Any
+from typing import Any, Dict
 
 import nidcpower
 from _helpers import GrpcChannelPoolHelper, PinMapClient, TestStandSupport
 
 import ni_measurementlink_service as nims
+
+# To use a physical NI SMU instrument, set this to False.
+USE_SIMULATION = True
 
 
 def update_pin_map(pin_map_path: str, sequence_context: Any) -> str:
@@ -54,6 +57,11 @@ def create_nidcpower_sessions(sequence_context: Any) -> None:
             timeout=0,
         ) as reservation:
             for session_info in reservation.session_info:
+                options: Dict[str, Any] = {}
+                if USE_SIMULATION:
+                    options["simulate"] = True
+                    options["driver_setup"] = {"Model": "4141"}
+
                 grpc_options = nidcpower.GrpcSessionOptions(
                     grpc_channel_pool.get_grpc_device_channel(
                         nidcpower.GRPC_SERVICE_INTERFACE_NAME
@@ -64,7 +72,9 @@ def create_nidcpower_sessions(sequence_context: Any) -> None:
 
                 # Leave session open
                 nidcpower.Session(
-                    resource_name=session_info.resource_name, grpc_options=grpc_options
+                    resource_name=session_info.resource_name,
+                    options=options,
+                    grpc_options=grpc_options,
                 )
 
             session_management_client.register_sessions(reservation.session_info)
