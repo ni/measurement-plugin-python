@@ -282,6 +282,7 @@ def create_session(
     measurement_service: Optional[MeasurementService] = None,
 ) -> Any:
     session_kwargs = {}
+    # To support teststand_fixture functions since they dont have service options
     if service_options is None:
         with GrpcChannelPoolHelper() as grpc_channel_pool:
             grpc_options = instrument_type_module.GrpcSessionOptions(
@@ -292,6 +293,7 @@ def create_session(
                     initialization_behavior=instrument_type_module.SessionInitializationBehavior.INITIALIZE_SERVER_SESSION,
                 )
             return instrument_type_module.Session(resource_name=session_info.resource_name, grpc_options=grpc_options)
+        
     if service_options.use_grpc_device:
         session_grpc_address = service_options.grpc_device_address
 
