@@ -4,7 +4,7 @@ import contextlib
 import logging
 import pathlib
 import time
-from typing import Iterable
+from typing import Any, Dict, Iterable
 
 import click
 import grpc
@@ -173,7 +173,7 @@ def measure(
 def _create_nidcpower_session(
     session_info: nims.session_management.SessionInformation,
 ) -> nidcpower.Session:
-    options = {}
+    options: Dict[str, Any] = {}
     if service_options.use_simulation:
         options["simulate"] = True
         options["driver_setup"] = {"Model": "4141"}

@@ -4,7 +4,7 @@ import contextlib
 import logging
 import pathlib
 import time
-from typing import Tuple
+from typing import Any, Dict, Tuple
 
 import click
 import grpc
@@ -199,7 +199,7 @@ def measure(
 def _create_niscope_session(
     session_info: nims.session_management.SessionInformation,
 ) -> niscope.Session:
-    options = {}
+    options: Dict[str, Any] = {}
     if service_options.use_simulation:
         options["simulate"] = True
         options["driver_setup"] = {"Model": "5162 (4CH)"}

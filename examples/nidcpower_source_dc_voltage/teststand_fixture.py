@@ -1,5 +1,5 @@
 """Functions to set up and tear down sessions of NI-DCPower devices in NI TestStand."""
-from typing import Any
+from typing import Any, Dict
 
 import nidcpower
 from _helpers import GrpcChannelPoolHelper, PinMapClient, TestStandSupport
@@ -57,7 +57,7 @@ def create_nidcpower_sessions(sequence_context: Any) -> None:
             timeout=0,
         ) as reservation:
             for session_info in reservation.session_info:
-                options = {}
+                options: Dict[str, Any] = {}
                 if USE_SIMULATION:
                     options["simulate"] = True
                     options["driver_setup"] = {"Model": "4141"}

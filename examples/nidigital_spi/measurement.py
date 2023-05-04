@@ -3,7 +3,7 @@
 import contextlib
 import logging
 import pathlib
-from typing import Iterable, Tuple, Union
+from typing import Any, Dict, Iterable, Tuple, Union
 
 import click
 import grpc
@@ -121,7 +121,7 @@ def measure(
 def _create_nidigital_session(
     session_info: nims.session_management.SessionInformation,
 ) -> nidigital.Session:
-    options = {}
+    options: Dict[str, Any] = {}
     if service_options.use_simulation:
         options["simulate"] = True
         options["driver_setup"] = {"Model": "6570"}

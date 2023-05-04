@@ -1,5 +1,5 @@
 """Functions to set up and tear down sessions of NI Digital Pattern instruments in NI TestStand."""
-from typing import Any, Iterable
+from typing import Any, Dict, Iterable
 
 import nidigital
 from _helpers import GrpcChannelPoolHelper, PinMapClient, TestStandSupport
@@ -196,7 +196,7 @@ def _create_nidigital_session(
     session_info: nims.session_management.SessionInformation,
     initialization_behavior=nidigital.SessionInitializationBehavior.AUTO,
 ) -> nidigital.Session:
-    options = {}
+    options: Dict[str, Any] = {}
     if USE_SIMULATION:
         options["simulate"] = True
         options["driver_setup"] = {"Model": "6570"}
