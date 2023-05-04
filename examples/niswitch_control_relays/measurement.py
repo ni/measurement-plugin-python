@@ -3,7 +3,7 @@
 import contextlib
 import logging
 import pathlib
-from typing import Tuple
+from typing import Any, Dict, Tuple
 
 import click
 import niswitch
@@ -87,7 +87,7 @@ def _create_niswitch_session(
     session_info: nims.session_management.SessionInformation,
 ) -> niswitch.Session:
     resource_name = session_info.resource_name
-    session_kwargs = {}
+    session_kwargs: Dict[str, Any] = {}
     if service_options.use_simulation:
         resource_name = ""
         session_kwargs["simulate"] = True

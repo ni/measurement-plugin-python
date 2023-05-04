@@ -178,7 +178,7 @@ def _create_nidcpower_session(
         options["simulate"] = True
         options["driver_setup"] = {"Model": "4141"}
 
-    session_kwargs = {}
+    session_kwargs: Dict[str, Any] = {}
     if service_options.use_grpc_device:
         session_grpc_address = service_options.grpc_device_address
 

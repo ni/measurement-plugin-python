@@ -1,5 +1,5 @@
 """Functions to set up and tear down sessions of NI-Switch devices in NI TestStand."""
-from typing import Any
+from typing import Any, Dict
 
 import niswitch
 from _helpers import GrpcChannelPoolHelper, PinMapClient, TestStandSupport
@@ -57,7 +57,7 @@ def create_niswitch_sessions(sequence_context: Any) -> None:
         ) as reservation:
             for session_info in reservation.session_info:
                 resource_name = session_info.resource_name
-                session_kwargs = {}
+                session_kwargs: Dict[str, Any] = {}
                 if USE_SIMULATION:
                     resource_name = ""
                     session_kwargs["simulate"] = True

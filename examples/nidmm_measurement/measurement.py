@@ -133,7 +133,7 @@ def _create_nidmm_session(
         options["simulate"] = True
         options["driver_setup"] = {"Model": "4081"}
 
-    session_kwargs = {}
+    session_kwargs: Dict[str, Any] = {}
     if service_options.use_grpc_device:
         session_grpc_address = service_options.grpc_device_address
 
