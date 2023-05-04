@@ -1,14 +1,15 @@
 """Source and measure a DC voltage with an NI SMU."""
 
-import contextlib
 import logging
 import pathlib
 import time
 from typing import Iterable
 
+
 import click
 import grpc
 import hightime
+import ni_measurementlink_service as nims
 import nidcpower
 from _helpers import (
     ServiceOptions,
@@ -19,7 +20,6 @@ from _helpers import (
     create_driver_session,
 )
 
-import ni_measurementlink_service as nims
 
 NIDCPOWER_WAIT_FOR_EVENT_TIMEOUT_ERROR_CODE = -1074116059
 NIDCPOWER_TIMEOUT_EXCEEDED_ERROR_CODE = -1074097933
@@ -144,31 +144,6 @@ def measure(
         [m.current for m in measured_values],
         [m.in_compliance for m in measured_values],
     )
-
-
-def _create_nidcpower_session(
-    session_info: nims.session_management.SessionInformation,
-) -> nidcpower.Session:
-    session_kwargs = {}
-    if service_options.use_grpc_device:
-        session_grpc_address = service_options.grpc_device_address
-
-        if not session_grpc_address:
-            session_grpc_channel = measurement_service.get_channel(
-                provided_interface=nidcpower.GRPC_SERVICE_INTERFACE_NAME,
-                service_class="ni.measurementlink.v1.grpcdeviceserver",
-            )
-        else:
-            session_grpc_channel = measurement_service.channel_pool.get_channel(
-                target=session_grpc_address
-            )
-        session_kwargs["grpc_options"] = nidcpower.GrpcSessionOptions(
-            session_grpc_channel,
-            session_name=session_info.session_name,
-            initialization_behavior=nidcpower.SessionInitializationBehavior.AUTO,
-        )
-
-    return nidcpower.Session(resource_name=session_info.resource_name, **session_kwargs)
 
 
 def _log_measured_values(

@@ -1,9 +1,15 @@
 """Functions to set up and tear down sessions of NI-DCPower devices in NI TestStand."""
 from typing import Any
 
-import nidcpower
-from _helpers import GrpcChannelPoolHelper, PinMapClient, TestStandSupport, reserve_session, create_session
 import ni_measurementlink_service as nims
+import nidcpower
+from _helpers import (
+    GrpcChannelPoolHelper,
+    PinMapClient,
+    TestStandSupport,
+    reserve_session,
+    create_session,
+)
 
 
 def update_pin_map(pin_map_path: str, sequence_context: Any) -> str:
@@ -50,6 +56,7 @@ def create_nidcpower_sessions(sequence_context: Any) -> None:
             session_management_client,
             pin_map_context,
             nims.session_management.INSTRUMENT_TYPE_NI_DCPOWER,
+            timeout=0
         ) as reservation:
             for session_info in reservation.session_info:
                 create_session(session_info, instrument_type_module=nidcpower)
