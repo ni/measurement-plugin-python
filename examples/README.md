@@ -5,8 +5,8 @@
 
 Example measurements are available in the `examples` directory of the `measurementlink-python` Git repository. (That's this directory.) You can download the examples by cloning the Git repository or downloading the appropriate source code zip file.
 
-> **Note**
-> The `main` branch on GitHub is under active development. Example measurements in the `main` branch may require unreleased versions of InstrumentStudio and MeasurementLink, due to new features and `.measui` format changes.
+> **Warning**
+> Example measurements in the `main` branch of the Git repository may require unreleased versions of InstrumentStudio and MeasurementLink, due to new features and `.measui` format changes.
 
 Download the appropriate examples for the MeasurementLink version that you are using:
 - MeasurementLink 2023 Q1: [[repository]](https://github.com/ni/measurementlink-python/tree/releases/1.0/examples) [[zip file]](https://github.com/ni/measurementlink-python/releases/tag/1.0.1)
