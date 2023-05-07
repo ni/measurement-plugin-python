@@ -11,6 +11,7 @@ This directory contains the following example projects:
 - `niscope_acquire_waveform`: Acquires a waveform using an NI oscilloscope.
 - `niswitch_control_relays`: Controls relays using an NI relay driver (e.g. PXI-2567).
 - `nivisa_dmm_measurement`: Performs a DMM measurement using NI-VISA and an NI Instrument Simulator v2.0.
+- `ui_progress_updates`: Generates random numbers for several seconds, updating the UI to show progress.
 
 For more details about a specific example, see the `README.md` file included with the example.
 
