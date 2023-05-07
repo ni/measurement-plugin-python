@@ -71,9 +71,9 @@ build-backend = "poetry.core.masonry.api"
 extend_exclude = "*_pb2_grpc.py,*_pb2.py,venv,ni_measurementlink_generator/*"
 
 [tool.pytest.ini_options]
-testpaths = [
-    "tests"
-]
+addopts = "--doctest-modules --strict-markers"
+filterwarnings = ["always::ImportWarning", "always::ResourceWarning"]
+testpaths = ["tests"]
 
 [tool.mypy]
 exclude = ["stubs"]

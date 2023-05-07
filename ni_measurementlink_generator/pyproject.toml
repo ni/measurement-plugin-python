@@ -49,3 +49,8 @@ warn_unused_ignores = true
 [[tool.mypy.overrides]]
 module = "mako.*"
 ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+addopts = "--doctest-modules --ignore tests/test_assets --strict-markers"
+filterwarnings = ["always::ImportWarning", "always::ResourceWarning"]
+testpaths = ["tests"]
