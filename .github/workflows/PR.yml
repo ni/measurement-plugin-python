@@ -4,6 +4,7 @@ on:
   pull_request:
     branches:
       - main
+      - 'releases/**'
 
 env:
   POETRY_VERSION: 1.2.2
