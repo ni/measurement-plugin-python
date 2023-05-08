@@ -67,7 +67,7 @@ jobs:
           poetry run sphinx-build _docs_source docs -b html
 
       - name: Commit file changes.
-        if: ${{ startsWith(github.event.release.target_commitish, 'main') }}
+        if: ${{ startsWith(github.event.release.target_commitish, 'main') || startsWith(github.event.release.target_commitish, 'releases/') }}
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
@@ -75,7 +75,7 @@ jobs:
           git commit -m "Promote NIMS package version and update Sphinx generated files in _docs" -a
       
       - name: Push changes to the Main branch
-        if: ${{ startsWith(github.event.release.target_commitish, 'main') }}
+        if: ${{ startsWith(github.event.release.target_commitish, 'main') || startsWith(github.event.release.target_commitish, 'releases/') }}
         uses: CasperWA/push-protected@v2
         with:
           token: ${{ secrets.ADMIN_PAT }}
@@ -84,12 +84,12 @@ jobs:
 
       # To Test the Publish use : poetry publish --build --username __token__ --password ${{ secrets.TEST_PYPI_TOKEN }} -r test-pypi
       - name: Build NIMS Python package and publish to PyPI
-        if: ${{ startsWith(github.event.release.target_commitish, 'main') }}
+        if: ${{ startsWith(github.event.release.target_commitish, 'main') || startsWith(github.event.release.target_commitish, 'releases/') }}
         run: |
           poetry publish --build --username __token__ --password ${{ secrets.PYPI_TOKEN }}
         
       - name: Build NIMG Python package and publish to PyPI
-        if: ${{ startsWith(github.event.release.target_commitish, 'main') }}
+        if: ${{ startsWith(github.event.release.target_commitish, 'main') || startsWith(github.event.release.target_commitish, 'releases/') }}
         run: |
           poetry publish --build --username __token__ --password ${{ secrets.PYPI_TOKEN }}
         working-directory: ./ni_measurementlink_generator
