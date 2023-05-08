@@ -8,14 +8,14 @@ import sys
 import click
 import grpc
 import nidaqmx
-
-import ni_measurementlink_service as nims
+from _helpers import ServiceOptions
 from nidaqmx.grpc_session_options import (
     GrpcSessionOptions,
     GRPC_SERVICE_INTERFACE_NAME,
     SessionInitializationBehavior,
 )
-from _helpers import ServiceOptions
+
+import ni_measurementlink_service as nims
 
 service_directory = pathlib.Path(__file__).resolve().parent
 measurement_service = nims.MeasurementService(
