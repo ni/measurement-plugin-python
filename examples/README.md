@@ -1,20 +1,18 @@
 
 ## Example Measurements
 
-### Downloading the Example Measurements
+These are example measurements for MeasurementLink 2023 Q3 or later.
 
-Example measurements are available in the `examples` directory of the `measurementlink-python` Git repository. (That's this directory.) You can download the examples by cloning the Git repository or downloading the appropriate source code zip file.
+If you are using a previous version of MeasurementLink, download the appropriate examples:
 
-> **Warning**
-> Example measurements in the `main` branch of the Git repository may require unreleased versions of InstrumentStudio and MeasurementLink, due to new features and `.measui` format changes.
+- MeasurementLink 2023 Q1: [measurementlink-python-examples-1.0.1.zip](https://github.com/ni/measurementlink-python/releases/download/1.0.1/measurementlink-python-examples-1.0.1.zip)
+- MeasurementLink 2023 Q2: [measurementlink-python-examples-1.0.1.zip](https://github.com/ni/measurementlink-python/releases/download/1.0.1/measurementlink-python-examples-1.0.1.zip)
 
-Download the appropriate examples for the MeasurementLink version that you are using:
-- MeasurementLink 2023 Q1: [[repository]](https://github.com/ni/measurementlink-python/tree/releases/1.0/examples) [[zip file]](https://github.com/ni/measurementlink-python/releases/tag/1.0.1)
-- MeasurementLink 2023 Q2: [[repository]](https://github.com/ni/measurementlink-python/tree/releases/1.0/examples) [[zip file]](https://github.com/ni/measurementlink-python/releases/tag/1.0.1)
+For best results, use the example measurements corresponding to the version of MeasurementLink
+that you are using. Newer examples may demonstrate features that are not available in older
+versions of MeasurementLink.
 
 ### Available Example Measurements
-
-This directory contains the following example projects:  
 
 - `sample_measurement`: Performs a loopback measurement with various data types. Provides a Measurement UI and a LabVIEW UI.
 - `nidaqmx_analog_input`: Performs a finite analog input measurement with NI-DAQmx.
