@@ -39,11 +39,13 @@ Functions
    Service to keep track of open sessions used by measurement services, and to allow measurement services to access sessions by pin and site.
 
 
+
 .. py:class:: SessionManagementServiceServicer
 
    Bases: :py:obj:`object`
 
    Service to keep track of open sessions used by measurement services, and to allow measurement services to access sessions by pin and site.
+
 
    .. py:method:: ReserveSessions(request, context)
 
@@ -82,6 +84,7 @@ Functions
       Unregisters the sessions with this service. Indicates that the sessions have been closed and will need to be reopened before they can be used again.
 
 
+
    .. py:method:: ReserveAllRegisteredSessions(request, context)
 
       Reserves and gets all sessions currently registered with this service.
@@ -100,6 +103,7 @@ Functions
    Bases: :py:obj:`object`
 
    Service to keep track of open sessions used by measurement services, and to allow measurement services to access sessions by pin and site.
+
 
    .. py:method:: ReserveSessions(request, target, options=(), channel_credentials=None, call_credentials=None, insecure=False, compression=None, wait_for_ready=None, timeout=None, metadata=None)
       :staticmethod:

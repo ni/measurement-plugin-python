@@ -65,6 +65,7 @@ Functions
       Unregisters a service instance with the discovery service.
 
 
+
    .. py:method:: EnumerateServices(request, context)
 
       Enumerate all services which implement a specific service interface.

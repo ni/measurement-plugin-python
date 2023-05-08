@@ -32,7 +32,7 @@ Functions
    ----
        parameter_metadata_dict (Dict[int, ParameterMetadata]): Parameter metadata by ID.
 
-       parameter_bytes (bytes): Bytes of Parameter that need to be deserialized.
+       parameter_bytes (bytes): Byte string to deserialize.
 
    Returns
    -------
@@ -40,7 +40,7 @@ Functions
 
 
 
-.. py:function:: serialize_parameters(parameter_metadata_dict, parameter_value)
+.. py:function:: serialize_parameters(parameter_metadata_dict, parameter_values)
 
    Serialize the parameter values in same order based on the metadata_dict.
 
@@ -48,11 +48,11 @@ Functions
    ----
        parameter_metadata_dict (Dict[int, ParameterMetadata]): Parameter metadata by ID.
 
-       parameter_value (List[Any]): List of Parameter values that need to be serialized.
+       parameter_value (Sequence[Any]): Parameter values to serialize.
 
    Returns
    -------
-       Bytes: Serialized Bytes of Parameter Values.
+       bytes: Serialized byte string containing parameter values.
 
 
 
@@ -66,7 +66,7 @@ Functions
 
    Returns
    -------
-       bytes: Serialized Bytes of default value.
+       bytes: Serialized byte string containing default values.
 
 
 

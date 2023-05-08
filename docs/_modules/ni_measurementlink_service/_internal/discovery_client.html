@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ni_measurementlink_service._internal.discovery_client &mdash; ni_measurementlink_service 1.0 documentation</title>
+  <title>ni_measurementlink_service._internal.discovery_client &mdash; ni_measurementlink_service 1.1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
@@ -34,7 +34,7 @@
             ni_measurementlink_service
           </a>
               <div class="version">
-                1.0.1
+                1.1.0-dev0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -100,7 +100,10 @@
     <span class="kn">import</span> <span class="nn">winerror</span>
 
 
-<span class="n">_PROVIDED_MEASUREMENT_SERVICE</span> <span class="o">=</span> <span class="s2">&quot;ni.measurementlink.measurement.v1.MeasurementService&quot;</span>
+<span class="n">_PROVIDED_MEASUREMENT_SERVICES</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;ni.measurementlink.measurement.v1.MeasurementService&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ni.measurementlink.measurement.v2.MeasurementService&quot;</span><span class="p">,</span>
+<span class="p">]</span>
 
 <span class="n">_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
@@ -183,7 +186,7 @@
             <span class="n">service_descriptor</span><span class="o">.</span><span class="n">display_name</span> <span class="o">=</span> <span class="n">measurement_info</span><span class="o">.</span><span class="n">display_name</span>
             <span class="n">service_descriptor</span><span class="o">.</span><span class="n">service_class</span> <span class="o">=</span> <span class="n">service_info</span><span class="o">.</span><span class="n">service_class</span>
             <span class="n">service_descriptor</span><span class="o">.</span><span class="n">description_url</span> <span class="o">=</span> <span class="n">service_info</span><span class="o">.</span><span class="n">description_url</span>
-            <span class="n">service_descriptor</span><span class="o">.</span><span class="n">provided_interfaces</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_PROVIDED_MEASUREMENT_SERVICE</span><span class="p">)</span>
+            <span class="n">service_descriptor</span><span class="o">.</span><span class="n">provided_interfaces</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">_PROVIDED_MEASUREMENT_SERVICES</span><span class="p">)</span>
 
             <span class="c1"># Registration Request Creation</span>
             <span class="n">request</span> <span class="o">=</span> <span class="n">discovery_service_pb2</span><span class="o">.</span><span class="n">RegisterServiceRequest</span><span class="p">(</span>

@@ -18,7 +18,8 @@ Classes
 .. autoapisummary::
 
    ni_measurementlink_service._internal.grpc_servicer.MeasurementServiceContext
-   ni_measurementlink_service._internal.grpc_servicer.MeasurementServiceServicer
+   ni_measurementlink_service._internal.grpc_servicer.MeasurementServiceServicerV1
+   ni_measurementlink_service._internal.grpc_servicer.MeasurementServiceServicerV2
 
 
 
@@ -79,9 +80,37 @@ Attributes
 
    
 
-.. py:class:: MeasurementServiceServicer(measurement_info, configuration_parameter_list, output_parameter_list, measure_function)
+.. py:class:: MeasurementServiceServicerV1(measurement_info, configuration_parameter_list, output_parameter_list, measure_function)
 
    Bases: :py:obj:`ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v1.measurement_service_pb2_grpc.MeasurementServiceServicer`
+
+   Implementation of the Measurement Service's gRPC base class.
+
+   Attributes
+   ----------
+       measurement_info (MeasurementInfo): Measurement info
+
+       configuration_parameter_list (List): List of configuration parameters.
+
+       output_parameter_list (List): List of output parameters.
+
+       measure_function (Callable): Registered measurement function.
+
+
+   .. py:method:: GetMetadata(request, context)
+
+      RPC API to get complete metadata.
+
+
+   .. py:method:: Measure(request, context)
+
+      RPC API that Executes the registered measurement method.
+
+
+
+.. py:class:: MeasurementServiceServicerV2(measurement_info, configuration_parameter_list, output_parameter_list, measure_function)
+
+   Bases: :py:obj:`ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v2.measurement_service_pb2_grpc.MeasurementServiceServicer`
 
    Implementation of the Measurement Service's gRPC base class.
 
