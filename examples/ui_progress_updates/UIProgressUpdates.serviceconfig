@@ -1,0 +1,14 @@
+{
+  "services": [
+    {
+      "displayName": "UI Progress Updates (Py)",
+      "serviceClass": "ni.examples.UIProgressUpdates_Python",
+      "descriptionUrl": "",
+      "providedInterfaces": [
+        "ni.measurementlink.measurement.v1.MeasurementService",
+        "ni.measurementlink.measurement.v2.MeasurementService"
+      ],
+      "path": "start.bat"
+    }
+  ]
+}
