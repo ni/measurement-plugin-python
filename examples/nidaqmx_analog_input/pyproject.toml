@@ -6,14 +6,13 @@ authors = ["National Instruments"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
-nidaqmx = ">=0.6.3"
 ni-measurementlink-service = "^1.0.0"
 click = ">=7.1.2"
 
 [tool.poetry.group.dev.dependencies]
 mypy = ">=1.0"
 # Uncomment to use prerelease dependencies (requires poetry>=1.2).
-# nidaqmx = { git = "https://github.com/ni/nidaqmx-python.git" }
+nidaqmx = { git = "https://github.com/ni/nidaqmx-python.git" }
 # ni-measurementlink-service = {path = "../..", develop = true}
 
 [build-system]
