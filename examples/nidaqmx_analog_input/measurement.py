@@ -8,12 +8,19 @@ import sys
 import click
 import grpc
 import nidaqmx
-from _helpers import ServiceOptions
+from _helpers import (
+    ServiceOptions,
+    configure_logging,
+    get_service_options,
+    grpc_device_options,
+    verbosity_option,
+)
 from nidaqmx.grpc_session_options import (
     GrpcSessionOptions,
     GRPC_SERVICE_INTERFACE_NAME,
     SessionInitializationBehavior,
 )
+from nidaqmx.constants import TaskMode
 
 import ni_measurementlink_service as nims
 
@@ -69,28 +76,19 @@ def measure(physical_channel, sample_rate, number_of_samples):
             )
         session_info = reservation.session_info[0]
         task = stack.enter_context(_create_nidaqmx_task(session_info))
-        channel_mappings = session_info.channel_mappings
-        pending_cancellation = False
 
         def cancel_callback():
             logging.info("Canceling measurement")
-            session_to_abort = task
             task_to_abort = task
             if task_to_abort is not None:
-                nonlocal pending_cancellation
-                pending_cancellation = True
-                session_to_abort.abort()
+                task_to_abort.control(TaskMode.TASK_ABORT)
 
         measurement_service.context.add_cancel_callback(cancel_callback)
         time_remaining = measurement_service.context.time_remaining
 
         timeout = min(time_remaining, 10.0)
-        channel = next(
-            channel_mapping.channel
-            for channel_mapping in channel_mappings
-            if channel_mapping.pin_or_relay_name == physical_channel
-        )
-        task.ai_channels.add_ai_voltage_chan(channel, min_val=0, max_val=5)
+        if not session_info.session_exists:
+            task.ai_channels.add_ai_voltage_chan(session_info.channel_list)
         task.timing.cfg_samp_clk_timing(
             rate=sample_rate,
             samps_per_chan=number_of_samples,
@@ -108,6 +106,7 @@ def measure(physical_channel, sample_rate, number_of_samples):
 def _create_nidaqmx_task(
     session_info: nims.session_management.SessionInformation,
 ) -> nidaqmx.Task:
+    session_kwargs = {}
     if service_options.use_grpc_device:
         session_grpc_address = service_options.grpc_device_address
 
@@ -120,14 +119,14 @@ def _create_nidaqmx_task(
             session_grpc_channel = measurement_service.channel_pool.get_channel(
                 target=session_grpc_address
             )
-        grpc_session_options = GrpcSessionOptions(
+        session_kwargs["grpc_options"] = GrpcSessionOptions(
             session_grpc_channel,
             session_name=session_info.session_name,
             initialization_behavior=SessionInitializationBehavior.AUTO,
         )
 
     return nidaqmx.Task(
-        new_task_name=session_info.resource_name, grpc_options=grpc_session_options
+        new_task_name=session_info.session_name, **session_kwargs
     )
 
 
@@ -144,39 +143,17 @@ def _log_measured_values(samples, max_samples_to_display=5):
 
 
 @click.command
-@click.option(
-    "-v",
-    "--verbose",
-    count=True,
-    help="Enable verbose logging. Repeat to increase verbosity.",
-)
-@click.option(
-    "--use-grpc-device/--no-use-grpc-device",
-    default=True,
-    is_flag=True,
-    help="Use the NI gRPC Device Server.",
-)
-@click.option(
-    "--grpc-device-address",
-    default="",
-    help="NI gRPC Device Server address (e.g. localhost:31763). If unspecified, use the discovery service to resolve the address.",
-)
-def main(verbose: int, use_grpc_device: bool, grpc_device_address: str):
+@verbosity_option
+@grpc_device_options
+def main(verbosity: int, **kwargs):
     """Perform a finite analog input measurement with NI-DAQmx."""
-    if verbose > 1:
-        level = logging.DEBUG
-    elif verbose == 1:
-        level = logging.INFO
-    else:
-        level = logging.WARNING
-    logging.basicConfig(format="%(asctime)s %(levelname)s: %(message)s", level=level)
+    configure_logging(verbosity)
     global service_options
-    service_options = ServiceOptions(
-        use_grpc_device=use_grpc_device, grpc_device_address=grpc_device_address
-    )
+    service_options = get_service_options(**kwargs)
+
     with measurement_service.host_service():
         input("Press enter to close the measurement service.\n")
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    main()

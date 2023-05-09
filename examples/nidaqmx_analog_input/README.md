@@ -6,11 +6,17 @@ measurement with NI-DAQmx.
 ### Features
 
 - Uses the `nidaqmx-python` package to access NI-DAQmx from Python
-- Demonstrates how to cancel a running measurement using the driver API's
-  asynchronous abort/cancel function
 - Includes InstrumentStudio and MeasurementLink UI Editor project files
-- Not pin-aware
-- Does not use the MeasurementLink session management service or NI gRPC Device Server
+- Pin-aware, supporting one session, one pin, and one selected site
+- Uses the NI gRPC Device Server to allow sharing instrument sessions with other
+  measurement services when running measurements from TestStand
+- Includes a TestStand sequence showing how to configure the pin map, register
+  instrument sessions with the session management service, and run a measurement
+  - For the sake of simplicity, the TestStand sequence handles pin map and session
+    registration and unregistration in the `Setup` and `Cleanup` sections of the main
+    sequence. For **Test UUTs** and batch process model use cases, these steps should
+    be moved to the `ProcessSetup` and `ProcessCleanup` callbacks.
+- Uses the NI gRPC Device Server to allow sharing instrument sessions with other measurement services when running measurements from TestStand.
 
 ### Required Driver Software
 

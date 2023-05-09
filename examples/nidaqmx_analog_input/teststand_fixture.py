@@ -47,6 +47,7 @@ def create_nidaqmx_tasks(sequence_context: Any) -> None:
         session_management_client = nims.session_management.Client(
             grpc_channel=grpc_channel_pool.session_management_channel
         )
+        session_kwargs = {}
 
         teststand_support = TestStandSupport(sequence_context)
         pin_map_id = teststand_support.get_active_pin_map_id()
@@ -61,7 +62,7 @@ def create_nidaqmx_tasks(sequence_context: Any) -> None:
             timeout=0,
         ) as reservation:
             for session_info in reservation.session_info:
-                grpc_options = GrpcSessionOptions(
+                session_kwargs["grpc_options"] = GrpcSessionOptions(
                     grpc_channel_pool.get_grpc_device_channel(
                         GRPC_SERVICE_INTERFACE_NAME
                     ),
@@ -70,9 +71,10 @@ def create_nidaqmx_tasks(sequence_context: Any) -> None:
                 )
 
                 # Leave session open
-                nidaqmx.Task(
-                    new_task_name=session_info.resource_name, grpc_options=grpc_options
+                task = nidaqmx.Task(
+                    new_task_name=session_info.session_name, **session_kwargs
                 )
+                task.ai_channels.add_ai_voltage_chan(session_info.channel_list)
 
             session_management_client.register_sessions(reservation.session_info)
 
@@ -101,6 +103,6 @@ def destroy_nidaqmx_tasks() -> None:
                 )
 
                 task = nidaqmx.Task(
-                    new_task_name=session_info.resource_name, grpc_options=grpc_options
+                    new_task_name=session_info.session_name, grpc_options=grpc_options
                 )
                 task.close()

@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PinMap xmlns="http://www.ni.com/TestStand/SemiconductorModule/PinMap.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" schemaVersion="1.1">
 	<Instruments>
-		<NIDAQmxTask name="tsVoltageTester1" taskType="AnalogInput" channelList="tsVoltageTester1/ai0,tsVoltageTester1/ai1" />
+		<NIDAQmxTask name="dev1" taskType="AnalogInput" channelList="dev1/ai0,dev/ai1" />
 	</Instruments>
 	<Pins>
 		<DUTPin name="Pin1" />
@@ -11,6 +11,6 @@
 		<Site siteNumber="0" />
 	</Sites>
 	<Connections>
-		<Connection pin="Pin1" siteNumber="0" instrument="tsVoltageTester1" channel="tsVoltageTester1/ai0" />
+		<Connection pin="Pin1" siteNumber="0" instrument="dev1" channel="dev1/ai0" />
 	</Connections>
 </PinMap>
