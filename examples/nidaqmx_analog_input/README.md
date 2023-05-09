@@ -6,8 +6,8 @@ measurement with NI-DAQmx.
 ### Features
 
 - Uses the `nidaqmx-python` package to access NI-DAQmx from Python
-- Includes InstrumentStudio and MeasurementLink UI Editor project files
 - Pin-aware, supporting one session, one pin, and one selected site
+- Includes InstrumentStudio and MeasurementLink UI Editor project files
 - Uses the NI gRPC Device Server to allow sharing instrument sessions with other
   measurement services when running measurements from TestStand
 - Includes a TestStand sequence showing how to configure the pin map, register
