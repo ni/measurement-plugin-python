@@ -15,12 +15,6 @@ from _helpers import (
     grpc_device_options,
     verbosity_option,
 )
-from nidaqmx.grpc_session_options import (
-    GrpcSessionOptions,
-    GRPC_SERVICE_INTERFACE_NAME,
-    SessionInitializationBehavior,
-)
-from nidaqmx.constants import TaskMode
 
 import ni_measurementlink_service as nims
 
@@ -81,7 +75,7 @@ def measure(pin_name, sample_rate, number_of_samples):
             logging.info("Canceling measurement")
             task_to_abort = task
             if task_to_abort is not None:
-                task_to_abort.control(TaskMode.TASK_ABORT)
+                task_to_abort.control(nidaqmx.TaskMode.TASK_ABORT)
 
         measurement_service.context.add_cancel_callback(cancel_callback)
         time_remaining = measurement_service.context.time_remaining
@@ -112,17 +106,17 @@ def _create_nidaqmx_task(
 
         if not session_grpc_address:
             session_grpc_channel = measurement_service.get_channel(
-                provided_interface=GRPC_SERVICE_INTERFACE_NAME,
+                provided_interface=nidaqmx.GRPC_SERVICE_INTERFACE_NAME,
                 service_class="ni.measurementlink.v1.grpcdeviceserver",
             )
         else:
             session_grpc_channel = measurement_service.channel_pool.get_channel(
                 target=session_grpc_address
             )
-        session_kwargs["grpc_options"] = GrpcSessionOptions(
+        session_kwargs["grpc_options"] = nidaqmx.GrpcSessionOptions(
             session_grpc_channel,
             session_name=session_info.session_name,
-            initialization_behavior=SessionInitializationBehavior.AUTO,
+            initialization_behavior=nidaqmx.SessionInitializationBehavior.AUTO,
         )
 
     return nidaqmx.Task(

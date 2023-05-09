@@ -3,11 +3,6 @@ from typing import Any
 
 import nidaqmx
 from _helpers import GrpcChannelPoolHelper, PinMapClient, TestStandSupport
-from nidaqmx.grpc_session_options import (
-    GrpcSessionOptions,
-    GRPC_SERVICE_INTERFACE_NAME,
-    SessionInitializationBehavior,
-)
 
 import ni_measurementlink_service as nims
 
@@ -62,12 +57,12 @@ def create_nidaqmx_tasks(sequence_context: Any) -> None:
             timeout=0,
         ) as reservation:
             for session_info in reservation.session_info:
-                session_kwargs["grpc_options"] = GrpcSessionOptions(
+                session_kwargs["grpc_options"] = nidaqmx.GrpcSessionOptions(
                     grpc_channel_pool.get_grpc_device_channel(
-                        GRPC_SERVICE_INTERFACE_NAME
+                        nidaqmx.GRPC_SERVICE_INTERFACE_NAME
                     ),
                     session_name=session_info.session_name,
-                    initialization_behavior=SessionInitializationBehavior.INITIALIZE_SERVER_SESSION,
+                    initialization_behavior=nidaqmx.SessionInitializationBehavior.INITIALIZE_SERVER_SESSION,
                 )
 
                 # Leave session open
@@ -94,12 +89,12 @@ def destroy_nidaqmx_tasks() -> None:
             session_management_client.unregister_sessions(reservation.session_info)
 
             for session_info in reservation.session_info:
-                grpc_options = GrpcSessionOptions(
+                grpc_options = nidaqmx.GrpcSessionOptions(
                     grpc_channel_pool.get_grpc_device_channel(
-                        GRPC_SERVICE_INTERFACE_NAME
+                        nidaqmx.GRPC_SERVICE_INTERFACE_NAME
                     ),
                     session_name=session_info.session_name,
-                    initialization_behavior=SessionInitializationBehavior.ATTACH_TO_SERVER_SESSION,
+                    initialization_behavior=nidaqmx.SessionInitializationBehavior.ATTACH_TO_SERVER_SESSION,
                 )
 
                 task = nidaqmx.Task(
