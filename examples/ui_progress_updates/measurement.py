@@ -50,17 +50,11 @@ def measure(time_in_seconds: float) -> Generator[Outputs, None, Outputs]:
     stop_len = int(time_in_seconds * RANDOM_NUMBERS_PER_SECOND)
     update_number = 1
     while len(random_numbers) < stop_len:
+        update_time = time.monotonic()
+        elapsed_time_in_seconds = update_time - start_time
+
         status = f"Update: {update_number}"
         update_number += 1
-
-        # Delay for the UI update interval and check for cancellation.
-        if cancellation_event.wait(UI_UPDATE_INTERVAL_IN_SECONDS):
-            logging.info("Canceling measurement")
-            measurement_service.context.abort(
-                grpc.StatusCode.CANCELLED, "Client requested cancellation."
-            )
-
-        elapsed_time_in_seconds = time.monotonic() - start_time
 
         desired_len = int(elapsed_time_in_seconds * RANDOM_NUMBERS_PER_SECOND)
         desired_len = max(0, min(desired_len, stop_len))
@@ -69,6 +63,14 @@ def measure(time_in_seconds: float) -> Generator[Outputs, None, Outputs]:
         # Use yield to send incremental updates to an interactive client such as
         # InstrumentStudio.
         yield (elapsed_time_in_seconds, random_numbers, status)
+
+        # Delay for the remaining portion of the UI update interval and check for cancellation.
+        delay = max(0.0, UI_UPDATE_INTERVAL_IN_SECONDS - (time.monotonic() - update_time))
+        if cancellation_event.wait(delay):
+            logging.info("Canceling measurement")
+            measurement_service.context.abort(
+                grpc.StatusCode.CANCELLED, "Client requested cancellation."
+            )
 
     # Non-interactive clients such as TestStand only use the measurement's final
     # update. You may use either yield or return to send the final update.
