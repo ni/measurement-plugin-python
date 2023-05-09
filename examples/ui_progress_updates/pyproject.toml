@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "ui_progress_updates"
 version = "0.5.0"
-description = "MeasurementLink example that generates random numbers for several seconds, updating the UI to show progress."
+description = "MeasurementLink example that generates random numbers and updates the measurement UI to show progress."
 authors = ["National Instruments"]
 
 [tool.poetry.dependencies]

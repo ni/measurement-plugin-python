@@ -1,7 +1,7 @@
 ## UI Progress Updates
 
-This is a MeasurementLink example that generates random numbers for several
-seconds, updating the UI to show progress.
+This is a MeasurementLink example that generates random numbers and updates the measurement UI to
+show progress.
 
 ### Features
 
@@ -10,8 +10,7 @@ seconds, updating the UI to show progress.
 > With older versions of MeasurementLink, this example only updates the UI at the end of the
 > measurement.
 
-- Demonstrates how to update the measurement's output indicators while the
-  measurement is running.
+- Demonstrates how to update the measurement UI while the measurement is running.
 - Demonstrates cancellation tokens and deadlines.
 
 ### Required Driver Software

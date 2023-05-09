@@ -1,4 +1,4 @@
-"""Generates random numbers for several seconds, updating the UI to show progress."""
+"""Generates random numbers and updates the measurement UI to show progress."""
 import logging
 import pathlib
 import random
@@ -32,7 +32,7 @@ Outputs = Tuple[float, List[float], str]
 @measurement_service.output("random_numbers", nims.DataType.DoubleArray1D)
 @measurement_service.output("status", nims.DataType.String)
 def measure(time_in_seconds: float) -> Generator[Outputs, None, Outputs]:
-    """Generates random numbers for several seconds, updating the UI to show progress."""
+    """Generates random numbers and updates the measurement UI to show progress."""
     logging.info("Executing measurement: time_in_seconds=%d", time_in_seconds)
     cancellation_event = threading.Event()
     measurement_service.context.add_cancel_callback(cancellation_event.set)
@@ -92,7 +92,7 @@ def _generate_random_numbers(count: int) -> Generator[float, None, None]:
     help="Enable verbose logging. Repeat to increase verbosity.",
 )
 def main(verbosity: int) -> None:
-    """Generates random numbers for several seconds, updating the UI to show progress."""
+    """Generates random numbers and updates the measurement UI to show progress."""
     _configure_logging(verbosity)
 
     with measurement_service.host_service():
