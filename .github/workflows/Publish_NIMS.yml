@@ -2,7 +2,7 @@ name:  Update docs and Publish NIMS
 
 on:
   release:
-    types: [released]
+    types: [published]
 
 concurrency: publish_to_pypi
 
@@ -67,15 +67,15 @@ jobs:
           poetry run sphinx-build _docs_source docs -b html
 
       - name: Commit file changes.
-        if: ${{ startsWith(github.event.release.target_commitish, 'main') }}
+        if: ${{ startsWith(github.event.release.target_commitish, 'main') || startsWith(github.event.release.target_commitish, 'releases/') }}
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add .
           git commit -m "Promote NIMS package version and update Sphinx generated files in _docs" -a
       
-      - name: Push changes to the Main branch
-        if: ${{ startsWith(github.event.release.target_commitish, 'main') }}
+      - name: Push changes to the appropriate branch
+        if: ${{ startsWith(github.event.release.target_commitish, 'main') || startsWith(github.event.release.target_commitish, 'releases/') }}
         uses: CasperWA/push-protected@v2
         with:
           token: ${{ secrets.ADMIN_PAT }}
@@ -84,15 +84,35 @@ jobs:
 
       # To Test the Publish use : poetry publish --build --username __token__ --password ${{ secrets.TEST_PYPI_TOKEN }} -r test-pypi
       - name: Build NIMS Python package and publish to PyPI
-        if: ${{ startsWith(github.event.release.target_commitish, 'main') }}
+        if: ${{ startsWith(github.event.release.target_commitish, 'main') || startsWith(github.event.release.target_commitish, 'releases/') }}
         run: |
           poetry publish --build --username __token__ --password ${{ secrets.PYPI_TOKEN }}
         
       - name: Build NIMG Python package and publish to PyPI
-        if: ${{ startsWith(github.event.release.target_commitish, 'main') }}
+        if: ${{ startsWith(github.event.release.target_commitish, 'main') || startsWith(github.event.release.target_commitish, 'releases/') }}
         run: |
           poetry publish --build --username __token__ --password ${{ secrets.PYPI_TOKEN }}
         working-directory: ./ni_measurementlink_generator
+
+      - name: Create archives of the examples
+        env:
+          EXAMPLE_ARCHIVE: measurementlink-python-examples-${{ steps.vars.outputs.tag }} 
+        run: |
+          # Use --prefix for the tarball but not the zip file. Windows zip tools often create a directory automatically.
+          git archive -o dist/${EXAMPLE_ARCHIVE}.zip ${GITHUB_REF}:examples/
+          git archive -o dist/${EXAMPLE_ARCHIVE}.tar.gz --prefix ${EXAMPLE_ARCHIVE}/ ${GITHUB_REF}:examples/
+
+      - name: Upload release assets
+        if: ${{ startsWith(github.event.release.target_commitish, 'main') || startsWith(github.event.release.target_commitish, 'releases/') }}
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "dist/measurementlink-python-examples-*"
+          allowUpdates: true
+          omitBodyDuringUpdate: true
+          omitDraftDuringUpdate: true
+          omitNameDuringUpdate: true
+          omitPrereleaseDuringUpdate: true
+          updateOnlyUnreleased: true
 
       - uses: actions/upload-artifact@v3
         with:

@@ -5,17 +5,14 @@ from typing import cast
 import pytest
 
 from ni_measurementlink_service._internal.discovery_client import (
+    _PROVIDED_MEASUREMENT_SERVICES,
     DiscoveryClient,
-    _PROVIDED_MEASUREMENT_SERVICE,
 )
 from ni_measurementlink_service._internal.stubs.ni.measurementlink.discovery.v1.discovery_service_pb2_grpc import (
     DiscoveryServiceStub,
 )
-from ni_measurementlink_service.measurement.info import ServiceInfo, MeasurementInfo
-from tests.utilities.fake_discovery_service import (
-    FakeDiscoveryServiceStub,
-)
-
+from ni_measurementlink_service.measurement.info import MeasurementInfo, ServiceInfo
+from tests.utilities.fake_discovery_service import FakeDiscoveryServiceStub
 
 _TEST_SERVICE_PORT = "9999"
 _TEST_SERVICE_INFO = ServiceInfo("TestServiceClass", "TestUrl")
@@ -87,4 +84,6 @@ def _validate_grpc_request(request):
     assert request.service_description.service_class == _TEST_SERVICE_INFO.service_class
     assert request.service_description.description_url == _TEST_SERVICE_INFO.description_url
     assert request.service_description.display_name == _TEST_MEASUREMENT_INFO.display_name
-    assert _PROVIDED_MEASUREMENT_SERVICE in request.service_description.provided_interfaces
+    assert set(request.service_description.provided_interfaces) >= set(
+        _PROVIDED_MEASUREMENT_SERVICES
+    )

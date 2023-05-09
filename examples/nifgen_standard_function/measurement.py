@@ -4,7 +4,7 @@ import contextlib
 import logging
 import pathlib
 import time
-from typing import Tuple
+from typing import Any, Dict, Tuple
 
 import click
 import grpc
@@ -16,10 +16,15 @@ from _helpers import (
     get_service_options,
     grpc_device_options,
     str_to_enum,
+    use_simulation_option,
     verbosity_option,
 )
 
 import ni_measurementlink_service as nims
+
+# To use a physical NI waveform generator instrument, set this to False or specify
+# --no-use-simulation on the command line.
+USE_SIMULATION = True
 
 NIFGEN_OPERATION_TIMED_OUT_ERROR_CODE = -1074098044
 NIFGEN_MAX_TIME_EXCEEDED_ERROR_CODE = -1074118637
@@ -163,7 +168,12 @@ def measure(
 def _create_nifgen_session(
     session_info: nims.session_management.SessionInformation,
 ) -> nifgen.Session:
-    session_kwargs = {}
+    options: Dict[str, Any] = {}
+    if service_options.use_simulation:
+        options["simulate"] = True
+        options["driver_setup"] = {"Model": "5423 (2CH)"}
+
+    session_kwargs: Dict[str, Any] = {}
     if service_options.use_grpc_device:
         session_grpc_address = service_options.grpc_device_address
 
@@ -185,12 +195,15 @@ def _create_nifgen_session(
             initialization_behavior=nifgen.SessionInitializationBehavior.AUTO,
         )
 
-    return nifgen.Session(session_info.resource_name, session_info.channel_list, **session_kwargs)
+    return nifgen.Session(
+        session_info.resource_name, session_info.channel_list, options=options, **session_kwargs
+    )
 
 
 @click.command
 @verbosity_option
 @grpc_device_options
+@use_simulation_option(default=USE_SIMULATION)
 def main(verbosity: int, **kwargs) -> None:
     """Generate a standard function waveform using an NI waveform generator."""
     configure_logging(verbosity)

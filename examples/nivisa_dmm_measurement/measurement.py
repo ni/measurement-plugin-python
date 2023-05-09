@@ -27,6 +27,11 @@ from _visa_helpers import (
 
 import ni_measurementlink_service as nims
 
+# To use NI Instrument Simulator v2.0 hardware, set this to False or specify
+# --no-use-simulation on the command line.
+USE_SIMULATION = True
+
+
 service_directory = pathlib.Path(__file__).resolve().parent
 measurement_service = nims.MeasurementService(
     service_config_path=service_directory / "NIVisaDmmMeasurement.serviceconfig",
@@ -47,10 +52,6 @@ RESOLUTION_DIGITS_TO_VALUE = {
     "5.5": 1e-5,
     "6.5": 1e-6,
 }
-
-# To use NI Instrument Simulator v2.0 hardware, set this to False or specify
-# --no-use-simulation on the command line.
-USE_SIMULATION = True
 
 
 @measurement_service.register_measurement

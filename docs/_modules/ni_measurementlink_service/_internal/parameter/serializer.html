@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ni_measurementlink_service._internal.parameter.serializer &mdash; ni_measurementlink_service 1.0 documentation</title>
+  <title>ni_measurementlink_service._internal.parameter.serializer &mdash; ni_measurementlink_service 1.1 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
@@ -34,7 +34,7 @@
             ni_measurementlink_service
           </a>
               <div class="version">
-                1.0.1
+                1.1.0-dev0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
@@ -75,21 +75,19 @@
   <h1>Source code for ni_measurementlink_service._internal.parameter.serializer</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Parameter Serializer.&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">ast</span> <span class="kn">import</span> <span class="n">Bytes</span>
 <span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">BytesIO</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Sequence</span>
 
 <span class="kn">from</span> <span class="nn">google.protobuf.internal</span> <span class="kn">import</span> <span class="n">encoder</span>
 
 <span class="kn">from</span> <span class="nn">ni_measurementlink_service._internal.parameter</span> <span class="kn">import</span> <span class="n">serialization_strategy</span>
 <span class="kn">from</span> <span class="nn">ni_measurementlink_service._internal.parameter.metadata</span> <span class="kn">import</span> <span class="n">ParameterMetadata</span>
 
-
 <span class="n">_GRPC_WIRE_TYPE_BIT_WIDTH</span> <span class="o">=</span> <span class="mi">3</span>
 
 
 <div class="viewcode-block" id="deserialize_parameters"><a class="viewcode-back" href="../../../../autoapi/ni_measurementlink_service/_internal/parameter/serializer/index.html#ni_measurementlink_service._internal.parameter.serializer.deserialize_parameters">[docs]</a><span class="k">def</span> <span class="nf">deserialize_parameters</span><span class="p">(</span>
-    <span class="n">parameter_metadata_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">ParameterMetadata</span><span class="p">],</span> <span class="n">parameter_bytes</span><span class="p">:</span> <span class="n">Bytes</span>
+    <span class="n">parameter_metadata_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">ParameterMetadata</span><span class="p">],</span> <span class="n">parameter_bytes</span><span class="p">:</span> <span class="nb">bytes</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Deserialize the bytes of the parameter based on the metadata.</span>
 
@@ -97,7 +95,7 @@
 <span class="sd">    ----</span>
 <span class="sd">        parameter_metadata_dict (Dict[int, ParameterMetadata]): Parameter metadata by ID.</span>
 
-<span class="sd">        parameter_bytes (bytes): Bytes of Parameter that need to be deserialized.</span>
+<span class="sd">        parameter_bytes (bytes): Byte string to deserialize.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -117,7 +115,8 @@
 
 
 <div class="viewcode-block" id="serialize_parameters"><a class="viewcode-back" href="../../../../autoapi/ni_measurementlink_service/_internal/parameter/serializer/index.html#ni_measurementlink_service._internal.parameter.serializer.serialize_parameters">[docs]</a><span class="k">def</span> <span class="nf">serialize_parameters</span><span class="p">(</span>
-    <span class="n">parameter_metadata_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">ParameterMetadata</span><span class="p">],</span> <span class="n">parameter_value</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span>
+    <span class="n">parameter_metadata_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">ParameterMetadata</span><span class="p">],</span>
+    <span class="n">parameter_values</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Serialize the parameter values in same order based on the metadata_dict.</span>
 
@@ -125,15 +124,15 @@
 <span class="sd">    ----</span>
 <span class="sd">        parameter_metadata_dict (Dict[int, ParameterMetadata]): Parameter metadata by ID.</span>
 
-<span class="sd">        parameter_value (List[Any]): List of Parameter values that need to be serialized.</span>
+<span class="sd">        parameter_value (Sequence[Any]): Parameter values to serialize.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">        Bytes: Serialized Bytes of Parameter Values.</span>
+<span class="sd">        bytes: Serialized byte string containing parameter values.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">serialize_buffer</span> <span class="o">=</span> <span class="n">BytesIO</span><span class="p">()</span>  <span class="c1"># inner_encoder updates the serialize_buffer</span>
-    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">parameter</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">parameter_value</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">parameter</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">parameter_values</span><span class="p">):</span>
         <span class="n">parameter_metadata</span> <span class="o">=</span> <span class="n">parameter_metadata_dict</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
         <span class="n">encoder</span> <span class="o">=</span> <span class="n">serialization_strategy</span><span class="o">.</span><span class="n">Context</span><span class="o">.</span><span class="n">get_encoder</span><span class="p">(</span>
             <span class="n">parameter_metadata</span><span class="o">.</span><span class="n">type</span><span class="p">,</span>
@@ -159,7 +158,7 @@
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">        bytes: Serialized Bytes of default value.</span>
+<span class="sd">        bytes: Serialized byte string containing default values.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">default_value_parameter_array</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
@@ -169,14 +168,14 @@
     <span class="k">return</span> <span class="n">serialize_parameters</span><span class="p">(</span><span class="n">parameter_metadata_dict</span><span class="p">,</span> <span class="n">default_value_parameter_array</span><span class="p">)</span></div>
 
 
-<span class="k">def</span> <span class="nf">_get_field_index</span><span class="p">(</span><span class="n">parameter_bytes</span><span class="p">,</span> <span class="n">tag_position</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_get_field_index</span><span class="p">(</span><span class="n">parameter_bytes</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">tag_position</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the Filed Index based on the tag&#39;s position.</span>
 
 <span class="sd">    The tag Position should be the index of the TagValue in the ByteArray for valid field index.</span>
 
 <span class="sd">    Args</span>
 <span class="sd">    ----</span>
-<span class="sd">        parameter_bytes (Bytes): Serialized Bytes</span>
+<span class="sd">        parameter_bytes (bytes): Serialized bytes</span>
 
 <span class="sd">        tag_position (int): Tag position</span>
 
@@ -189,7 +188,7 @@
 
 
 <span class="k">def</span> <span class="nf">_get_overlapping_parameters</span><span class="p">(</span>
-    <span class="n">parameter_metadata_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">ParameterMetadata</span><span class="p">],</span> <span class="n">parameter_bytes</span>
+    <span class="n">parameter_metadata_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">ParameterMetadata</span><span class="p">],</span> <span class="n">parameter_bytes</span><span class="p">:</span> <span class="nb">bytes</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the parameters present in both `parameter_metadata_dict` and `parameter_bytes`.</span>
 
@@ -197,7 +196,7 @@
 <span class="sd">    ----</span>
 <span class="sd">        parameter_metadata_dict (Dict[int, ParameterMetadata]): Parameter metadata by ID.</span>
 
-<span class="sd">        parameter_bytes (bytes): Bytes of Parameter that need to be deserialized.</span>
+<span class="sd">        parameter_bytes (bytes): bytes of Parameter that need to be deserialized.</span>
 
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
@@ -208,9 +207,8 @@
 <span class="sd">        Dict[int, Any]: Overlapping Parameters by ID.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">overlapping_parameters_by_id</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span>
-        <span class="nb">int</span><span class="p">,</span> <span class="n">Any</span>
-    <span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># inner_decoder update the overlapping_parameters</span>
+    <span class="c1"># inner_decoder update the overlapping_parameters</span>
+    <span class="n">overlapping_parameters_by_id</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="n">position</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="k">while</span> <span class="n">position</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">parameter_bytes</span><span class="p">):</span>
         <span class="n">field_index</span> <span class="o">=</span> <span class="n">_get_field_index</span><span class="p">(</span><span class="n">parameter_bytes</span><span class="p">,</span> <span class="n">position</span><span class="p">)</span>

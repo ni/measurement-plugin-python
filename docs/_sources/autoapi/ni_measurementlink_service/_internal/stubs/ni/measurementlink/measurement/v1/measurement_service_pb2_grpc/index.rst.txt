@@ -52,9 +52,11 @@ Functions
       Returns information that describes the measurement.
 
 
+
    .. py:method:: Measure(request, context)
 
       API used to perform a measurement.
+
 
 
 

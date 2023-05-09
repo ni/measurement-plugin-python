@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ni_measurementlink_generator"
-version = "1.0.1"
+version = "1.1.0-dev0"
 description = "MeasurementLink Code Generator for Python"
 authors = ["NI <opensource@ni.com>"]
 readme = "README.md"
@@ -49,3 +49,8 @@ warn_unused_ignores = true
 [[tool.mypy.overrides]]
 module = "mako.*"
 ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+addopts = "--doctest-modules --ignore tests/test_assets --strict-markers"
+filterwarnings = ["always::ImportWarning", "always::ResourceWarning"]
+testpaths = ["tests"]

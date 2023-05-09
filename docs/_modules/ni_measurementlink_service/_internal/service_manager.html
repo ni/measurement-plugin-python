@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ni_measurementlink_service._internal.service_manager &mdash; ni_measurementlink_service 1.0 documentation</title>
+  <title>ni_measurementlink_service._internal.service_manager &mdash; ni_measurementlink_service 1.1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
@@ -34,7 +34,7 @@
             ni_measurementlink_service
           </a>
               <div class="version">
-                1.0.1
+                1.1.0-dev0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -81,11 +81,15 @@
 
 <span class="kn">from</span> <span class="nn">ni_measurementlink_service._internal.discovery_client</span> <span class="kn">import</span> <span class="n">DiscoveryClient</span>
 <span class="kn">from</span> <span class="nn">ni_measurementlink_service._internal.grpc_servicer</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">MeasurementServiceServicer</span><span class="p">,</span>
+    <span class="n">MeasurementServiceServicerV1</span><span class="p">,</span>
+    <span class="n">MeasurementServiceServicerV2</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">ni_measurementlink_service._internal.parameter.metadata</span> <span class="kn">import</span> <span class="n">ParameterMetadata</span>
 <span class="kn">from</span> <span class="nn">ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v1</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">measurement_service_pb2_grpc</span><span class="p">,</span>
+    <span class="n">measurement_service_pb2_grpc</span> <span class="k">as</span> <span class="n">v1_measurement_service_pb2_grpc</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v2</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">measurement_service_pb2_grpc</span> <span class="k">as</span> <span class="n">v2_measurement_service_pb2_grpc</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">ni_measurementlink_service.measurement.info</span> <span class="kn">import</span> <span class="n">MeasurementInfo</span><span class="p">,</span> <span class="n">ServiceInfo</span>
 
@@ -151,14 +155,23 @@
                 <span class="p">(</span><span class="s2">&quot;grpc.max_send_message_length&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
             <span class="p">],</span>
         <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">servicer</span> <span class="o">=</span> <span class="n">MeasurementServiceServicer</span><span class="p">(</span>
+        <span class="n">servicer_v1</span> <span class="o">=</span> <span class="n">MeasurementServiceServicerV1</span><span class="p">(</span>
             <span class="n">measurement_info</span><span class="p">,</span>
             <span class="n">configuration_parameter_list</span><span class="p">,</span>
             <span class="n">output_parameter_list</span><span class="p">,</span>
             <span class="n">measure_function</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="n">measurement_service_pb2_grpc</span><span class="o">.</span><span class="n">add_MeasurementServiceServicer_to_server</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">servicer</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">server</span>
+        <span class="n">v1_measurement_service_pb2_grpc</span><span class="o">.</span><span class="n">add_MeasurementServiceServicer_to_server</span><span class="p">(</span>
+            <span class="n">servicer_v1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">server</span>
+        <span class="p">)</span>
+        <span class="n">servicer_v2</span> <span class="o">=</span> <span class="n">MeasurementServiceServicerV2</span><span class="p">(</span>
+            <span class="n">measurement_info</span><span class="p">,</span>
+            <span class="n">configuration_parameter_list</span><span class="p">,</span>
+            <span class="n">output_parameter_list</span><span class="p">,</span>
+            <span class="n">measure_function</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">v2_measurement_service_pb2_grpc</span><span class="o">.</span><span class="n">add_MeasurementServiceServicer_to_server</span><span class="p">(</span>
+            <span class="n">servicer_v2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">server</span>
         <span class="p">)</span>
         <span class="n">port</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">add_insecure_port</span><span class="p">(</span><span class="s2">&quot;[::]:0&quot;</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>

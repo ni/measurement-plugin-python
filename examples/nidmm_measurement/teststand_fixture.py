@@ -1,10 +1,13 @@
 """Functions to set up and tear down sessions of NI-DMM devices in NI TestStand."""
-from typing import Any
+from typing import Any, Dict
 
 import nidmm
 from _helpers import GrpcChannelPoolHelper, PinMapClient, TestStandSupport
 
 import ni_measurementlink_service as nims
+
+# To use a physical NI DMM instrument, set this to False.
+USE_SIMULATION = True
 
 
 def update_pin_map(pin_map_path: str, sequence_context: Any) -> None:
@@ -52,6 +55,11 @@ def create_nidmm_sessions(sequence_context: Any) -> None:
             timeout=0,
         ) as reservation:
             for session_info in reservation.session_info:
+                options: Dict[str, Any] = {}
+                if USE_SIMULATION:
+                    options["simulate"] = True
+                    options["driver_setup"] = {"Model": "4081"}
+
                 grpc_options = nidmm.GrpcSessionOptions(
                     grpc_channel_pool.get_grpc_device_channel(nidmm.GRPC_SERVICE_INTERFACE_NAME),
                     session_name=session_info.session_name,
@@ -59,7 +67,11 @@ def create_nidmm_sessions(sequence_context: Any) -> None:
                 )
 
                 # Leave session open
-                nidmm.Session(resource_name=session_info.resource_name, grpc_options=grpc_options)
+                nidmm.Session(
+                    resource_name=session_info.resource_name,
+                    options=options,
+                    grpc_options=grpc_options,
+                )
 
             session_management_client.register_sessions(reservation.session_info)
 

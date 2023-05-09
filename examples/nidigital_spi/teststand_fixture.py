@@ -1,5 +1,5 @@
 """Functions to set up and tear down sessions of NI Digital Pattern instruments in NI TestStand."""
-from typing import Any, Iterable
+from typing import Any, Dict, Iterable
 
 import nidigital
 from _helpers import GrpcChannelPoolHelper, PinMapClient, TestStandSupport
@@ -8,6 +8,9 @@ import ni_measurementlink_service as nims
 from ni_measurementlink_service.session_management import (
     INSTRUMENT_TYPE_NI_DIGITAL_PATTERN,
 )
+
+# To use a physical NI Digital Pattern instrument, set this to False.
+USE_SIMULATION = True
 
 
 def update_pin_map(pin_map_path: str, sequence_context: Any) -> str:
@@ -193,6 +196,11 @@ def _create_nidigital_session(
     session_info: nims.session_management.SessionInformation,
     initialization_behavior=nidigital.SessionInitializationBehavior.AUTO,
 ) -> nidigital.Session:
+    options: Dict[str, Any] = {}
+    if USE_SIMULATION:
+        options["simulate"] = True
+        options["driver_setup"] = {"Model": "6570"}
+
     grpc_channel = grpc_channel_pool.get_grpc_device_channel(nidigital.GRPC_SERVICE_INTERFACE_NAME)
     grpc_options = nidigital.GrpcSessionOptions(
         grpc_channel,
@@ -200,7 +208,9 @@ def _create_nidigital_session(
         initialization_behavior=initialization_behavior,
     )
 
-    return nidigital.Session(resource_name=session_info.resource_name, grpc_options=grpc_options)
+    return nidigital.Session(
+        resource_name=session_info.resource_name, options=options, grpc_options=grpc_options
+    )
 
 
 def _create_new_nidigital_session(

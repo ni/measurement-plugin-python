@@ -50,9 +50,11 @@ Functions
       Provides a list of devices or chassis connected to server under localhost
 
 
+
    .. py:method:: Reserve(request, context)
 
       Reserve a set of client defined resources for exclusive use
+
 
 
    .. py:method:: IsReservedByClient(request, context)
@@ -66,9 +68,11 @@ Functions
       Unreserves a previously reserved resource
 
 
+
    .. py:method:: ResetServer(request, context)
 
       Resets the server to a default state with no open sessions
+
 
 
 

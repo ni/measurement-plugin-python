@@ -4,7 +4,7 @@ import contextlib
 import logging
 import pathlib
 import time
-from typing import Tuple
+from typing import Any, Dict, Tuple
 
 import click
 import grpc
@@ -15,10 +15,15 @@ from _helpers import (
     get_service_options,
     grpc_device_options,
     str_to_enum,
+    use_simulation_option,
     verbosity_option,
 )
 
 import ni_measurementlink_service as nims
+
+# To use a physical NI oscilloscope instrument, set this to False or specify
+# --no-use-simulation on the command line.
+USE_SIMULATION = True
 
 service_directory = pathlib.Path(__file__).resolve().parent
 measurement_service = nims.MeasurementService(
@@ -194,7 +199,12 @@ def measure(
 def _create_niscope_session(
     session_info: nims.session_management.SessionInformation,
 ) -> niscope.Session:
-    session_kwargs = {}
+    options: Dict[str, Any] = {}
+    if service_options.use_simulation:
+        options["simulate"] = True
+        options["driver_setup"] = {"Model": "5162 (4CH)"}
+
+    session_kwargs: Dict[str, Any] = {}
     if service_options.use_grpc_device:
         session_grpc_address = service_options.grpc_device_address
 
@@ -213,12 +223,13 @@ def _create_niscope_session(
             initialization_behavior=niscope.SessionInitializationBehavior.AUTO,
         )
 
-    return niscope.Session(session_info.resource_name, **session_kwargs)
+    return niscope.Session(session_info.resource_name, options=options, **session_kwargs)
 
 
 @click.command
 @verbosity_option
 @grpc_device_options
+@use_simulation_option(default=USE_SIMULATION)
 def main(verbosity: int, **kwargs) -> None:
     """Acquire a waveform using an NI oscilloscope."""
     configure_logging(verbosity)

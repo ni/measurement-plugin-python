@@ -16,5 +16,6 @@ Subpackages
    :maxdepth: 3
 
    v1/index.rst
+   v2/index.rst
 
 

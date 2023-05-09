@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ni_measurementlink_service._internal.stubs.session_pb2_grpc &mdash; ni_measurementlink_service 1.0 documentation</title>
+  <title>ni_measurementlink_service._internal.stubs.session_pb2_grpc &mdash; ni_measurementlink_service 1.1 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
@@ -34,7 +34,7 @@
             ni_measurementlink_service
           </a>
               <div class="version">
-                1.0.1
+                1.1.0-dev0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
@@ -90,250 +90,193 @@
 <span class="sd">            channel: A grpc.Channel.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">EnumerateDevices</span> <span class="o">=</span> <span class="n">channel</span><span class="o">.</span><span class="n">unary_unary</span><span class="p">(</span>
-            <span class="s2">&quot;/nidevice_grpc.SessionUtilities/EnumerateDevices&quot;</span><span class="p">,</span>
-            <span class="n">request_serializer</span><span class="o">=</span><span class="n">session__pb2</span><span class="o">.</span><span class="n">EnumerateDevicesRequest</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
-            <span class="n">response_deserializer</span><span class="o">=</span><span class="n">session__pb2</span><span class="o">.</span><span class="n">EnumerateDevicesResponse</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
-        <span class="p">)</span>
+                <span class="s1">&#39;/nidevice_grpc.SessionUtilities/EnumerateDevices&#39;</span><span class="p">,</span>
+                <span class="n">request_serializer</span><span class="o">=</span><span class="n">session__pb2</span><span class="o">.</span><span class="n">EnumerateDevicesRequest</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
+                <span class="n">response_deserializer</span><span class="o">=</span><span class="n">session__pb2</span><span class="o">.</span><span class="n">EnumerateDevicesResponse</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
+                <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">Reserve</span> <span class="o">=</span> <span class="n">channel</span><span class="o">.</span><span class="n">unary_unary</span><span class="p">(</span>
-            <span class="s2">&quot;/nidevice_grpc.SessionUtilities/Reserve&quot;</span><span class="p">,</span>
-            <span class="n">request_serializer</span><span class="o">=</span><span class="n">session__pb2</span><span class="o">.</span><span class="n">ReserveRequest</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
-            <span class="n">response_deserializer</span><span class="o">=</span><span class="n">session__pb2</span><span class="o">.</span><span class="n">ReserveResponse</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
-        <span class="p">)</span>
+                <span class="s1">&#39;/nidevice_grpc.SessionUtilities/Reserve&#39;</span><span class="p">,</span>
+                <span class="n">request_serializer</span><span class="o">=</span><span class="n">session__pb2</span><span class="o">.</span><span class="n">ReserveRequest</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
+                <span class="n">response_deserializer</span><span class="o">=</span><span class="n">session__pb2</span><span class="o">.</span><span class="n">ReserveResponse</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
+                <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">IsReservedByClient</span> <span class="o">=</span> <span class="n">channel</span><span class="o">.</span><span class="n">unary_unary</span><span class="p">(</span>
-            <span class="s2">&quot;/nidevice_grpc.SessionUtilities/IsReservedByClient&quot;</span><span class="p">,</span>
-            <span class="n">request_serializer</span><span class="o">=</span><span class="n">session__pb2</span><span class="o">.</span><span class="n">IsReservedByClientRequest</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
-            <span class="n">response_deserializer</span><span class="o">=</span><span class="n">session__pb2</span><span class="o">.</span><span class="n">IsReservedByClientResponse</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
-        <span class="p">)</span>
+                <span class="s1">&#39;/nidevice_grpc.SessionUtilities/IsReservedByClient&#39;</span><span class="p">,</span>
+                <span class="n">request_serializer</span><span class="o">=</span><span class="n">session__pb2</span><span class="o">.</span><span class="n">IsReservedByClientRequest</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
+                <span class="n">response_deserializer</span><span class="o">=</span><span class="n">session__pb2</span><span class="o">.</span><span class="n">IsReservedByClientResponse</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
+                <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">Unreserve</span> <span class="o">=</span> <span class="n">channel</span><span class="o">.</span><span class="n">unary_unary</span><span class="p">(</span>
-            <span class="s2">&quot;/nidevice_grpc.SessionUtilities/Unreserve&quot;</span><span class="p">,</span>
-            <span class="n">request_serializer</span><span class="o">=</span><span class="n">session__pb2</span><span class="o">.</span><span class="n">UnreserveRequest</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
-            <span class="n">response_deserializer</span><span class="o">=</span><span class="n">session__pb2</span><span class="o">.</span><span class="n">UnreserveResponse</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
-        <span class="p">)</span>
+                <span class="s1">&#39;/nidevice_grpc.SessionUtilities/Unreserve&#39;</span><span class="p">,</span>
+                <span class="n">request_serializer</span><span class="o">=</span><span class="n">session__pb2</span><span class="o">.</span><span class="n">UnreserveRequest</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
+                <span class="n">response_deserializer</span><span class="o">=</span><span class="n">session__pb2</span><span class="o">.</span><span class="n">UnreserveResponse</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
+                <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ResetServer</span> <span class="o">=</span> <span class="n">channel</span><span class="o">.</span><span class="n">unary_unary</span><span class="p">(</span>
-            <span class="s2">&quot;/nidevice_grpc.SessionUtilities/ResetServer&quot;</span><span class="p">,</span>
-            <span class="n">request_serializer</span><span class="o">=</span><span class="n">session__pb2</span><span class="o">.</span><span class="n">ResetServerRequest</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
-            <span class="n">response_deserializer</span><span class="o">=</span><span class="n">session__pb2</span><span class="o">.</span><span class="n">ResetServerResponse</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
-        <span class="p">)</span></div>
+                <span class="s1">&#39;/nidevice_grpc.SessionUtilities/ResetServer&#39;</span><span class="p">,</span>
+                <span class="n">request_serializer</span><span class="o">=</span><span class="n">session__pb2</span><span class="o">.</span><span class="n">ResetServerRequest</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
+                <span class="n">response_deserializer</span><span class="o">=</span><span class="n">session__pb2</span><span class="o">.</span><span class="n">ResetServerResponse</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
+                <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="SessionUtilitiesServicer"><a class="viewcode-back" href="../../../../autoapi/ni_measurementlink_service/_internal/stubs/session_pb2_grpc/index.html#ni_measurementlink_service._internal.stubs.session_pb2_grpc.SessionUtilitiesServicer">[docs]</a><span class="k">class</span> <span class="nc">SessionUtilitiesServicer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Missing associated documentation comment in .proto file.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="SessionUtilitiesServicer.EnumerateDevices"><a class="viewcode-back" href="../../../../autoapi/ni_measurementlink_service/_internal/stubs/session_pb2_grpc/index.html#ni_measurementlink_service._internal.stubs.session_pb2_grpc.SessionUtilitiesServicer.EnumerateDevices">[docs]</a>    <span class="k">def</span> <span class="nf">EnumerateDevices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Provides a list of devices or chassis connected to server under localhost&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Provides a list of devices or chassis connected to server under localhost</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">context</span><span class="o">.</span><span class="n">set_code</span><span class="p">(</span><span class="n">grpc</span><span class="o">.</span><span class="n">StatusCode</span><span class="o">.</span><span class="n">UNIMPLEMENTED</span><span class="p">)</span>
-        <span class="n">context</span><span class="o">.</span><span class="n">set_details</span><span class="p">(</span><span class="s2">&quot;Method not implemented!&quot;</span><span class="p">)</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Method not implemented!&quot;</span><span class="p">)</span></div>
+        <span class="n">context</span><span class="o">.</span><span class="n">set_details</span><span class="p">(</span><span class="s1">&#39;Method not implemented!&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Method not implemented!&#39;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="SessionUtilitiesServicer.Reserve"><a class="viewcode-back" href="../../../../autoapi/ni_measurementlink_service/_internal/stubs/session_pb2_grpc/index.html#ni_measurementlink_service._internal.stubs.session_pb2_grpc.SessionUtilitiesServicer.Reserve">[docs]</a>    <span class="k">def</span> <span class="nf">Reserve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Reserve a set of client defined resources for exclusive use&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Reserve a set of client defined resources for exclusive use</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">context</span><span class="o">.</span><span class="n">set_code</span><span class="p">(</span><span class="n">grpc</span><span class="o">.</span><span class="n">StatusCode</span><span class="o">.</span><span class="n">UNIMPLEMENTED</span><span class="p">)</span>
-        <span class="n">context</span><span class="o">.</span><span class="n">set_details</span><span class="p">(</span><span class="s2">&quot;Method not implemented!&quot;</span><span class="p">)</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Method not implemented!&quot;</span><span class="p">)</span></div>
+        <span class="n">context</span><span class="o">.</span><span class="n">set_details</span><span class="p">(</span><span class="s1">&#39;Method not implemented!&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Method not implemented!&#39;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="SessionUtilitiesServicer.IsReservedByClient"><a class="viewcode-back" href="../../../../autoapi/ni_measurementlink_service/_internal/stubs/session_pb2_grpc/index.html#ni_measurementlink_service._internal.stubs.session_pb2_grpc.SessionUtilitiesServicer.IsReservedByClient">[docs]</a>    <span class="k">def</span> <span class="nf">IsReservedByClient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Determines if a set of client defined resources is currently reserved by a</span>
 <span class="sd">        specific client</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">context</span><span class="o">.</span><span class="n">set_code</span><span class="p">(</span><span class="n">grpc</span><span class="o">.</span><span class="n">StatusCode</span><span class="o">.</span><span class="n">UNIMPLEMENTED</span><span class="p">)</span>
-        <span class="n">context</span><span class="o">.</span><span class="n">set_details</span><span class="p">(</span><span class="s2">&quot;Method not implemented!&quot;</span><span class="p">)</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Method not implemented!&quot;</span><span class="p">)</span></div>
+        <span class="n">context</span><span class="o">.</span><span class="n">set_details</span><span class="p">(</span><span class="s1">&#39;Method not implemented!&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Method not implemented!&#39;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="SessionUtilitiesServicer.Unreserve"><a class="viewcode-back" href="../../../../autoapi/ni_measurementlink_service/_internal/stubs/session_pb2_grpc/index.html#ni_measurementlink_service._internal.stubs.session_pb2_grpc.SessionUtilitiesServicer.Unreserve">[docs]</a>    <span class="k">def</span> <span class="nf">Unreserve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Unreserves a previously reserved resource&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Unreserves a previously reserved resource</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">context</span><span class="o">.</span><span class="n">set_code</span><span class="p">(</span><span class="n">grpc</span><span class="o">.</span><span class="n">StatusCode</span><span class="o">.</span><span class="n">UNIMPLEMENTED</span><span class="p">)</span>
-        <span class="n">context</span><span class="o">.</span><span class="n">set_details</span><span class="p">(</span><span class="s2">&quot;Method not implemented!&quot;</span><span class="p">)</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Method not implemented!&quot;</span><span class="p">)</span></div>
+        <span class="n">context</span><span class="o">.</span><span class="n">set_details</span><span class="p">(</span><span class="s1">&#39;Method not implemented!&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Method not implemented!&#39;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="SessionUtilitiesServicer.ResetServer"><a class="viewcode-back" href="../../../../autoapi/ni_measurementlink_service/_internal/stubs/session_pb2_grpc/index.html#ni_measurementlink_service._internal.stubs.session_pb2_grpc.SessionUtilitiesServicer.ResetServer">[docs]</a>    <span class="k">def</span> <span class="nf">ResetServer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Resets the server to a default state with no open sessions&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Resets the server to a default state with no open sessions</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">context</span><span class="o">.</span><span class="n">set_code</span><span class="p">(</span><span class="n">grpc</span><span class="o">.</span><span class="n">StatusCode</span><span class="o">.</span><span class="n">UNIMPLEMENTED</span><span class="p">)</span>
-        <span class="n">context</span><span class="o">.</span><span class="n">set_details</span><span class="p">(</span><span class="s2">&quot;Method not implemented!&quot;</span><span class="p">)</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Method not implemented!&quot;</span><span class="p">)</span></div></div>
+        <span class="n">context</span><span class="o">.</span><span class="n">set_details</span><span class="p">(</span><span class="s1">&#39;Method not implemented!&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Method not implemented!&#39;</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="add_SessionUtilitiesServicer_to_server"><a class="viewcode-back" href="../../../../autoapi/ni_measurementlink_service/_internal/stubs/session_pb2_grpc/index.html#ni_measurementlink_service._internal.stubs.session_pb2_grpc.add_SessionUtilitiesServicer_to_server">[docs]</a><span class="k">def</span> <span class="nf">add_SessionUtilitiesServicer_to_server</span><span class="p">(</span><span class="n">servicer</span><span class="p">,</span> <span class="n">server</span><span class="p">):</span>
     <span class="n">rpc_method_handlers</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;EnumerateDevices&quot;</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">unary_unary_rpc_method_handler</span><span class="p">(</span>
-            <span class="n">servicer</span><span class="o">.</span><span class="n">EnumerateDevices</span><span class="p">,</span>
-            <span class="n">request_deserializer</span><span class="o">=</span><span class="n">session__pb2</span><span class="o">.</span><span class="n">EnumerateDevicesRequest</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
-            <span class="n">response_serializer</span><span class="o">=</span><span class="n">session__pb2</span><span class="o">.</span><span class="n">EnumerateDevicesResponse</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
-        <span class="p">),</span>
-        <span class="s2">&quot;Reserve&quot;</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">unary_unary_rpc_method_handler</span><span class="p">(</span>
-            <span class="n">servicer</span><span class="o">.</span><span class="n">Reserve</span><span class="p">,</span>
-            <span class="n">request_deserializer</span><span class="o">=</span><span class="n">session__pb2</span><span class="o">.</span><span class="n">ReserveRequest</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
-            <span class="n">response_serializer</span><span class="o">=</span><span class="n">session__pb2</span><span class="o">.</span><span class="n">ReserveResponse</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
-        <span class="p">),</span>
-        <span class="s2">&quot;IsReservedByClient&quot;</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">unary_unary_rpc_method_handler</span><span class="p">(</span>
-            <span class="n">servicer</span><span class="o">.</span><span class="n">IsReservedByClient</span><span class="p">,</span>
-            <span class="n">request_deserializer</span><span class="o">=</span><span class="n">session__pb2</span><span class="o">.</span><span class="n">IsReservedByClientRequest</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
-            <span class="n">response_serializer</span><span class="o">=</span><span class="n">session__pb2</span><span class="o">.</span><span class="n">IsReservedByClientResponse</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
-        <span class="p">),</span>
-        <span class="s2">&quot;Unreserve&quot;</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">unary_unary_rpc_method_handler</span><span class="p">(</span>
-            <span class="n">servicer</span><span class="o">.</span><span class="n">Unreserve</span><span class="p">,</span>
-            <span class="n">request_deserializer</span><span class="o">=</span><span class="n">session__pb2</span><span class="o">.</span><span class="n">UnreserveRequest</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
-            <span class="n">response_serializer</span><span class="o">=</span><span class="n">session__pb2</span><span class="o">.</span><span class="n">UnreserveResponse</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
-        <span class="p">),</span>
-        <span class="s2">&quot;ResetServer&quot;</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">unary_unary_rpc_method_handler</span><span class="p">(</span>
-            <span class="n">servicer</span><span class="o">.</span><span class="n">ResetServer</span><span class="p">,</span>
-            <span class="n">request_deserializer</span><span class="o">=</span><span class="n">session__pb2</span><span class="o">.</span><span class="n">ResetServerRequest</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
-            <span class="n">response_serializer</span><span class="o">=</span><span class="n">session__pb2</span><span class="o">.</span><span class="n">ResetServerResponse</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
-        <span class="p">),</span>
+            <span class="s1">&#39;EnumerateDevices&#39;</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">unary_unary_rpc_method_handler</span><span class="p">(</span>
+                    <span class="n">servicer</span><span class="o">.</span><span class="n">EnumerateDevices</span><span class="p">,</span>
+                    <span class="n">request_deserializer</span><span class="o">=</span><span class="n">session__pb2</span><span class="o">.</span><span class="n">EnumerateDevicesRequest</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
+                    <span class="n">response_serializer</span><span class="o">=</span><span class="n">session__pb2</span><span class="o">.</span><span class="n">EnumerateDevicesResponse</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="s1">&#39;Reserve&#39;</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">unary_unary_rpc_method_handler</span><span class="p">(</span>
+                    <span class="n">servicer</span><span class="o">.</span><span class="n">Reserve</span><span class="p">,</span>
+                    <span class="n">request_deserializer</span><span class="o">=</span><span class="n">session__pb2</span><span class="o">.</span><span class="n">ReserveRequest</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
+                    <span class="n">response_serializer</span><span class="o">=</span><span class="n">session__pb2</span><span class="o">.</span><span class="n">ReserveResponse</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="s1">&#39;IsReservedByClient&#39;</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">unary_unary_rpc_method_handler</span><span class="p">(</span>
+                    <span class="n">servicer</span><span class="o">.</span><span class="n">IsReservedByClient</span><span class="p">,</span>
+                    <span class="n">request_deserializer</span><span class="o">=</span><span class="n">session__pb2</span><span class="o">.</span><span class="n">IsReservedByClientRequest</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
+                    <span class="n">response_serializer</span><span class="o">=</span><span class="n">session__pb2</span><span class="o">.</span><span class="n">IsReservedByClientResponse</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="s1">&#39;Unreserve&#39;</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">unary_unary_rpc_method_handler</span><span class="p">(</span>
+                    <span class="n">servicer</span><span class="o">.</span><span class="n">Unreserve</span><span class="p">,</span>
+                    <span class="n">request_deserializer</span><span class="o">=</span><span class="n">session__pb2</span><span class="o">.</span><span class="n">UnreserveRequest</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
+                    <span class="n">response_serializer</span><span class="o">=</span><span class="n">session__pb2</span><span class="o">.</span><span class="n">UnreserveResponse</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="s1">&#39;ResetServer&#39;</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">unary_unary_rpc_method_handler</span><span class="p">(</span>
+                    <span class="n">servicer</span><span class="o">.</span><span class="n">ResetServer</span><span class="p">,</span>
+                    <span class="n">request_deserializer</span><span class="o">=</span><span class="n">session__pb2</span><span class="o">.</span><span class="n">ResetServerRequest</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
+                    <span class="n">response_serializer</span><span class="o">=</span><span class="n">session__pb2</span><span class="o">.</span><span class="n">ResetServerResponse</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
+            <span class="p">),</span>
     <span class="p">}</span>
     <span class="n">generic_handler</span> <span class="o">=</span> <span class="n">grpc</span><span class="o">.</span><span class="n">method_handlers_generic_handler</span><span class="p">(</span>
-        <span class="s2">&quot;nidevice_grpc.SessionUtilities&quot;</span><span class="p">,</span> <span class="n">rpc_method_handlers</span>
-    <span class="p">)</span>
+            <span class="s1">&#39;nidevice_grpc.SessionUtilities&#39;</span><span class="p">,</span> <span class="n">rpc_method_handlers</span><span class="p">)</span>
     <span class="n">server</span><span class="o">.</span><span class="n">add_generic_rpc_handlers</span><span class="p">((</span><span class="n">generic_handler</span><span class="p">,))</span></div>
 
 
-<span class="c1"># This class is part of an EXPERIMENTAL API.</span>
+ <span class="c1"># This class is part of an EXPERIMENTAL API.</span>
 <div class="viewcode-block" id="SessionUtilities"><a class="viewcode-back" href="../../../../autoapi/ni_measurementlink_service/_internal/stubs/session_pb2_grpc/index.html#ni_measurementlink_service._internal.stubs.session_pb2_grpc.SessionUtilities">[docs]</a><span class="k">class</span> <span class="nc">SessionUtilities</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Missing associated documentation comment in .proto file.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="SessionUtilities.EnumerateDevices"><a class="viewcode-back" href="../../../../autoapi/ni_measurementlink_service/_internal/stubs/session_pb2_grpc/index.html#ni_measurementlink_service._internal.stubs.session_pb2_grpc.SessionUtilities.EnumerateDevices">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">EnumerateDevices</span><span class="p">(</span>
-        <span class="n">request</span><span class="p">,</span>
-        <span class="n">target</span><span class="p">,</span>
-        <span class="n">options</span><span class="o">=</span><span class="p">(),</span>
-        <span class="n">channel_credentials</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">call_credentials</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">insecure</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">compression</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">wait_for_ready</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">metadata</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="p">):</span>
-        <span class="k">return</span> <span class="n">grpc</span><span class="o">.</span><span class="n">experimental</span><span class="o">.</span><span class="n">unary_unary</span><span class="p">(</span>
-            <span class="n">request</span><span class="p">,</span>
+    <span class="k">def</span> <span class="nf">EnumerateDevices</span><span class="p">(</span><span class="n">request</span><span class="p">,</span>
             <span class="n">target</span><span class="p">,</span>
-            <span class="s2">&quot;/nidevice_grpc.SessionUtilities/EnumerateDevices&quot;</span><span class="p">,</span>
+            <span class="n">options</span><span class="o">=</span><span class="p">(),</span>
+            <span class="n">channel_credentials</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">call_credentials</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">insecure</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">compression</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">wait_for_ready</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">metadata</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">grpc</span><span class="o">.</span><span class="n">experimental</span><span class="o">.</span><span class="n">unary_unary</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="s1">&#39;/nidevice_grpc.SessionUtilities/EnumerateDevices&#39;</span><span class="p">,</span>
             <span class="n">session__pb2</span><span class="o">.</span><span class="n">EnumerateDevicesRequest</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
             <span class="n">session__pb2</span><span class="o">.</span><span class="n">EnumerateDevicesResponse</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
-            <span class="n">options</span><span class="p">,</span>
-            <span class="n">channel_credentials</span><span class="p">,</span>
-            <span class="n">insecure</span><span class="p">,</span>
-            <span class="n">call_credentials</span><span class="p">,</span>
-            <span class="n">compression</span><span class="p">,</span>
-            <span class="n">wait_for_ready</span><span class="p">,</span>
-            <span class="n">timeout</span><span class="p">,</span>
-            <span class="n">metadata</span><span class="p">,</span>
-        <span class="p">)</span></div>
+            <span class="n">options</span><span class="p">,</span> <span class="n">channel_credentials</span><span class="p">,</span>
+            <span class="n">insecure</span><span class="p">,</span> <span class="n">call_credentials</span><span class="p">,</span> <span class="n">compression</span><span class="p">,</span> <span class="n">wait_for_ready</span><span class="p">,</span> <span class="n">timeout</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="SessionUtilities.Reserve"><a class="viewcode-back" href="../../../../autoapi/ni_measurementlink_service/_internal/stubs/session_pb2_grpc/index.html#ni_measurementlink_service._internal.stubs.session_pb2_grpc.SessionUtilities.Reserve">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">Reserve</span><span class="p">(</span>
-        <span class="n">request</span><span class="p">,</span>
-        <span class="n">target</span><span class="p">,</span>
-        <span class="n">options</span><span class="o">=</span><span class="p">(),</span>
-        <span class="n">channel_credentials</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">call_credentials</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">insecure</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">compression</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">wait_for_ready</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">metadata</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="p">):</span>
-        <span class="k">return</span> <span class="n">grpc</span><span class="o">.</span><span class="n">experimental</span><span class="o">.</span><span class="n">unary_unary</span><span class="p">(</span>
-            <span class="n">request</span><span class="p">,</span>
+    <span class="k">def</span> <span class="nf">Reserve</span><span class="p">(</span><span class="n">request</span><span class="p">,</span>
             <span class="n">target</span><span class="p">,</span>
-            <span class="s2">&quot;/nidevice_grpc.SessionUtilities/Reserve&quot;</span><span class="p">,</span>
+            <span class="n">options</span><span class="o">=</span><span class="p">(),</span>
+            <span class="n">channel_credentials</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">call_credentials</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">insecure</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">compression</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">wait_for_ready</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">metadata</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">grpc</span><span class="o">.</span><span class="n">experimental</span><span class="o">.</span><span class="n">unary_unary</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="s1">&#39;/nidevice_grpc.SessionUtilities/Reserve&#39;</span><span class="p">,</span>
             <span class="n">session__pb2</span><span class="o">.</span><span class="n">ReserveRequest</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
             <span class="n">session__pb2</span><span class="o">.</span><span class="n">ReserveResponse</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
-            <span class="n">options</span><span class="p">,</span>
-            <span class="n">channel_credentials</span><span class="p">,</span>
-            <span class="n">insecure</span><span class="p">,</span>
-            <span class="n">call_credentials</span><span class="p">,</span>
-            <span class="n">compression</span><span class="p">,</span>
-            <span class="n">wait_for_ready</span><span class="p">,</span>
-            <span class="n">timeout</span><span class="p">,</span>
-            <span class="n">metadata</span><span class="p">,</span>
-        <span class="p">)</span></div>
+            <span class="n">options</span><span class="p">,</span> <span class="n">channel_credentials</span><span class="p">,</span>
+            <span class="n">insecure</span><span class="p">,</span> <span class="n">call_credentials</span><span class="p">,</span> <span class="n">compression</span><span class="p">,</span> <span class="n">wait_for_ready</span><span class="p">,</span> <span class="n">timeout</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="SessionUtilities.IsReservedByClient"><a class="viewcode-back" href="../../../../autoapi/ni_measurementlink_service/_internal/stubs/session_pb2_grpc/index.html#ni_measurementlink_service._internal.stubs.session_pb2_grpc.SessionUtilities.IsReservedByClient">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">IsReservedByClient</span><span class="p">(</span>
-        <span class="n">request</span><span class="p">,</span>
-        <span class="n">target</span><span class="p">,</span>
-        <span class="n">options</span><span class="o">=</span><span class="p">(),</span>
-        <span class="n">channel_credentials</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">call_credentials</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">insecure</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">compression</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">wait_for_ready</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">metadata</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="p">):</span>
-        <span class="k">return</span> <span class="n">grpc</span><span class="o">.</span><span class="n">experimental</span><span class="o">.</span><span class="n">unary_unary</span><span class="p">(</span>
-            <span class="n">request</span><span class="p">,</span>
+    <span class="k">def</span> <span class="nf">IsReservedByClient</span><span class="p">(</span><span class="n">request</span><span class="p">,</span>
             <span class="n">target</span><span class="p">,</span>
-            <span class="s2">&quot;/nidevice_grpc.SessionUtilities/IsReservedByClient&quot;</span><span class="p">,</span>
+            <span class="n">options</span><span class="o">=</span><span class="p">(),</span>
+            <span class="n">channel_credentials</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">call_credentials</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">insecure</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">compression</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">wait_for_ready</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">metadata</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">grpc</span><span class="o">.</span><span class="n">experimental</span><span class="o">.</span><span class="n">unary_unary</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="s1">&#39;/nidevice_grpc.SessionUtilities/IsReservedByClient&#39;</span><span class="p">,</span>
             <span class="n">session__pb2</span><span class="o">.</span><span class="n">IsReservedByClientRequest</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
             <span class="n">session__pb2</span><span class="o">.</span><span class="n">IsReservedByClientResponse</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
-            <span class="n">options</span><span class="p">,</span>
-            <span class="n">channel_credentials</span><span class="p">,</span>
-            <span class="n">insecure</span><span class="p">,</span>
-            <span class="n">call_credentials</span><span class="p">,</span>
-            <span class="n">compression</span><span class="p">,</span>
-            <span class="n">wait_for_ready</span><span class="p">,</span>
-            <span class="n">timeout</span><span class="p">,</span>
-            <span class="n">metadata</span><span class="p">,</span>
-        <span class="p">)</span></div>
+            <span class="n">options</span><span class="p">,</span> <span class="n">channel_credentials</span><span class="p">,</span>
+            <span class="n">insecure</span><span class="p">,</span> <span class="n">call_credentials</span><span class="p">,</span> <span class="n">compression</span><span class="p">,</span> <span class="n">wait_for_ready</span><span class="p">,</span> <span class="n">timeout</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="SessionUtilities.Unreserve"><a class="viewcode-back" href="../../../../autoapi/ni_measurementlink_service/_internal/stubs/session_pb2_grpc/index.html#ni_measurementlink_service._internal.stubs.session_pb2_grpc.SessionUtilities.Unreserve">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">Unreserve</span><span class="p">(</span>
-        <span class="n">request</span><span class="p">,</span>
-        <span class="n">target</span><span class="p">,</span>
-        <span class="n">options</span><span class="o">=</span><span class="p">(),</span>
-        <span class="n">channel_credentials</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">call_credentials</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">insecure</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">compression</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">wait_for_ready</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">metadata</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="p">):</span>
-        <span class="k">return</span> <span class="n">grpc</span><span class="o">.</span><span class="n">experimental</span><span class="o">.</span><span class="n">unary_unary</span><span class="p">(</span>
-            <span class="n">request</span><span class="p">,</span>
+    <span class="k">def</span> <span class="nf">Unreserve</span><span class="p">(</span><span class="n">request</span><span class="p">,</span>
             <span class="n">target</span><span class="p">,</span>
-            <span class="s2">&quot;/nidevice_grpc.SessionUtilities/Unreserve&quot;</span><span class="p">,</span>
+            <span class="n">options</span><span class="o">=</span><span class="p">(),</span>
+            <span class="n">channel_credentials</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">call_credentials</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">insecure</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">compression</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">wait_for_ready</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">metadata</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">grpc</span><span class="o">.</span><span class="n">experimental</span><span class="o">.</span><span class="n">unary_unary</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="s1">&#39;/nidevice_grpc.SessionUtilities/Unreserve&#39;</span><span class="p">,</span>
             <span class="n">session__pb2</span><span class="o">.</span><span class="n">UnreserveRequest</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
             <span class="n">session__pb2</span><span class="o">.</span><span class="n">UnreserveResponse</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
-            <span class="n">options</span><span class="p">,</span>
-            <span class="n">channel_credentials</span><span class="p">,</span>
-            <span class="n">insecure</span><span class="p">,</span>
-            <span class="n">call_credentials</span><span class="p">,</span>
-            <span class="n">compression</span><span class="p">,</span>
-            <span class="n">wait_for_ready</span><span class="p">,</span>
-            <span class="n">timeout</span><span class="p">,</span>
-            <span class="n">metadata</span><span class="p">,</span>
-        <span class="p">)</span></div>
+            <span class="n">options</span><span class="p">,</span> <span class="n">channel_credentials</span><span class="p">,</span>
+            <span class="n">insecure</span><span class="p">,</span> <span class="n">call_credentials</span><span class="p">,</span> <span class="n">compression</span><span class="p">,</span> <span class="n">wait_for_ready</span><span class="p">,</span> <span class="n">timeout</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="SessionUtilities.ResetServer"><a class="viewcode-back" href="../../../../autoapi/ni_measurementlink_service/_internal/stubs/session_pb2_grpc/index.html#ni_measurementlink_service._internal.stubs.session_pb2_grpc.SessionUtilities.ResetServer">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">ResetServer</span><span class="p">(</span>
-        <span class="n">request</span><span class="p">,</span>
-        <span class="n">target</span><span class="p">,</span>
-        <span class="n">options</span><span class="o">=</span><span class="p">(),</span>
-        <span class="n">channel_credentials</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">call_credentials</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">insecure</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">compression</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">wait_for_ready</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">metadata</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="p">):</span>
-        <span class="k">return</span> <span class="n">grpc</span><span class="o">.</span><span class="n">experimental</span><span class="o">.</span><span class="n">unary_unary</span><span class="p">(</span>
-            <span class="n">request</span><span class="p">,</span>
+    <span class="k">def</span> <span class="nf">ResetServer</span><span class="p">(</span><span class="n">request</span><span class="p">,</span>
             <span class="n">target</span><span class="p">,</span>
-            <span class="s2">&quot;/nidevice_grpc.SessionUtilities/ResetServer&quot;</span><span class="p">,</span>
+            <span class="n">options</span><span class="o">=</span><span class="p">(),</span>
+            <span class="n">channel_credentials</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">call_credentials</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">insecure</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">compression</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">wait_for_ready</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">metadata</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">grpc</span><span class="o">.</span><span class="n">experimental</span><span class="o">.</span><span class="n">unary_unary</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="s1">&#39;/nidevice_grpc.SessionUtilities/ResetServer&#39;</span><span class="p">,</span>
             <span class="n">session__pb2</span><span class="o">.</span><span class="n">ResetServerRequest</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
             <span class="n">session__pb2</span><span class="o">.</span><span class="n">ResetServerResponse</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
-            <span class="n">options</span><span class="p">,</span>
-            <span class="n">channel_credentials</span><span class="p">,</span>
-            <span class="n">insecure</span><span class="p">,</span>
-            <span class="n">call_credentials</span><span class="p">,</span>
-            <span class="n">compression</span><span class="p">,</span>
-            <span class="n">wait_for_ready</span><span class="p">,</span>
-            <span class="n">timeout</span><span class="p">,</span>
-            <span class="n">metadata</span><span class="p">,</span>
-        <span class="p">)</span></div></div>
+            <span class="n">options</span><span class="p">,</span> <span class="n">channel_credentials</span><span class="p">,</span>
+            <span class="n">insecure</span><span class="p">,</span> <span class="n">call_credentials</span><span class="p">,</span> <span class="n">compression</span><span class="p">,</span> <span class="n">wait_for_ready</span><span class="p">,</span> <span class="n">timeout</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>

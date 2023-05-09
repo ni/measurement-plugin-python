@@ -1,10 +1,13 @@
 """Functions to set up and tear down sessions of NI-FGEN devices in NI TestStand."""
-from typing import Any
+from typing import Any, Dict
 
 import nifgen
 from _helpers import GrpcChannelPoolHelper, PinMapClient, TestStandSupport
 
 import ni_measurementlink_service as nims
+
+# To use a physical NI waveform generator instrument, set this to False.
+USE_SIMULATION = True
 
 
 def update_pin_map(pin_map_path: str, sequence_context: Any) -> None:
@@ -52,6 +55,11 @@ def create_nifgen_sessions(sequence_context: Any) -> None:
             timeout=0,
         ) as reservation:
             for session_info in reservation.session_info:
+                options: Dict[str, Any] = {}
+                if USE_SIMULATION:
+                    options["simulate"] = True
+                    options["driver_setup"] = {"Model": "5423 (2CH)"}
+
                 grpc_options = nifgen.GrpcSessionOptions(
                     grpc_channel_pool.get_grpc_device_channel(nifgen.GRPC_SERVICE_INTERFACE_NAME),
                     session_name=session_info.session_name,
@@ -62,6 +70,7 @@ def create_nifgen_sessions(sequence_context: Any) -> None:
                 nifgen.Session(
                     resource_name=session_info.resource_name,
                     channel_name=session_info.channel_list,
+                    options=options,
                     grpc_options=grpc_options,
                 )
 
