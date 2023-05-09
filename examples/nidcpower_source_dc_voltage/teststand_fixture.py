@@ -6,13 +6,9 @@ from _helpers import (
     GrpcChannelPoolHelper,
     PinMapClient,
     TestStandSupport,
-    reserve_session,
-    create_session,
 )
+from _nidcpower_helpers import reserve_session, create_session
 import ni_measurementlink_service as nims
-
-# To use a physical NI SMU instrument, set this to False.
-USE_SIMULATION = True
 
 
 def update_pin_map(pin_map_path: str, sequence_context: Any) -> str:
@@ -62,7 +58,7 @@ def create_nidcpower_sessions(sequence_context: Any) -> None:
             timeout=0
         ) as reservation:
             for session_info in reservation.session_info:
-                create_session(session_info, instrument_type_module=nidcpower)
+                create_session(session_info, instrument_type_module=nidcpower, grpc_channel_pool=grpc_channel_pool)
 
             session_management_client.register_sessions(reservation.session_info)
 

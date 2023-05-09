@@ -15,16 +15,11 @@ from _helpers import (
     configure_logging,
     get_service_options,
     grpc_device_options,
-    use_simulation_option,
     verbosity_option,
-    create_driver_session,
 )
-
+from _nidcpower_helpers import create_driver_session, use_simulation_option, USE_SIMULATION
 import ni_measurementlink_service as nims
 
-# To use a physical NI SMU instrument, set this to False or specify
-# --no-use-simulation on the command line.
-USE_SIMULATION = True
 
 NIDCPOWER_WAIT_FOR_EVENT_TIMEOUT_ERROR_CODE = -1074116059
 NIDCPOWER_TIMEOUT_EXCEEDED_ERROR_CODE = -1074097933
@@ -73,7 +68,6 @@ def measure(
         measurement_service,
         pin_names,
         nidcpower,
-        service_options,
         instrument_type_id=nims.session_management.INSTRUMENT_TYPE_NI_DCPOWER,
     )
     session_info = reserved_session_info[0]

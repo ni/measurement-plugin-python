@@ -1,20 +1,18 @@
 """Helper classes and functions for MeasurementLink examples."""
 
-import contextlib
 import logging
 import pathlib
-from typing import Any, Callable, Dict, Iterable, List, NamedTuple, Optional, Tuple, TypeVar
+from typing import Any, Callable, Dict, NamedTuple, TypeVar
 
 import click
 import grpc
-import ni_measurementlink_service as nims
 from ni_measurementlink_service import session_management
 from ni_measurementlink_service._internal.discovery_client import DiscoveryClient
 from ni_measurementlink_service._internal.stubs.ni.measurementlink.pinmap.v1 import (
     pin_map_service_pb2,
     pin_map_service_pb2_grpc,
 )
-from ni_measurementlink_service.measurement.service import GrpcChannelPool, MeasurementService
+from ni_measurementlink_service.measurement.service import GrpcChannelPool
 
 
 class ServiceOptions(NamedTuple):
@@ -223,120 +221,3 @@ def grpc_device_options(func: F) -> F:
     )
     return grpc_device_address_option(use_grpc_device_option(func))
 
-
-def use_simulation_option(default: bool) -> Callable[[F], F]:
-    """Decorator for --use-simulation command line option."""
-    return click.option(
-        "--use-simulation/--no-use-simulation",
-        default=default,
-        is_flag=True,
-        help="Use simulated instruments.",
-    )
-
-
-def create_driver_session(
-    measurement_service: MeasurementService,
-    pin_names: Iterable[str],
-    instrument_type_module: Any,
-    service_options: ServiceOptions,
-    instrument_type_id: str,
-) -> Tuple[Any, List[session_management.SessionInformation]]:
-    """Create and reserve driver sessions."""
-    session_management_client = nims.session_management.Client(
-        grpc_channel=measurement_service.get_channel(
-            provided_interface=nims.session_management.GRPC_SERVICE_INTERFACE_NAME,
-            service_class=nims.session_management.GRPC_SERVICE_CLASS,
-        )
-    )
-
-    with contextlib.ExitStack() as stack:
-        reservation = stack.enter_context(
-            reserve_session(
-                session_management_client,
-                measurement_service.context.pin_map_context,
-                instrument_type_id,
-                timeout=60,
-                pin_names=pin_names,
-            )
-        )
-
-        if len(reservation.session_info) != 1:
-            measurement_service.context.abort(
-                grpc.StatusCode.INVALID_ARGUMENT,
-                f"Unsupported number of sessions: {len(reservation.session_info)}",
-            )
-
-        # Leave session open.
-        session = stack.enter_context(
-            create_session(
-                reservation.session_info[0],
-                instrument_type_module,
-                service_options,
-                measurement_service,
-            )
-        )
-
-    return (session, reservation.session_info)
-
-
-def create_session(
-    session_info: session_management.SessionInformation,
-    instrument_type_module,
-    service_options: Optional[ServiceOptions] = None,
-    measurement_service: Optional[MeasurementService] = None,
-) -> Any:
-    """Create driver session based on the instrument type and reserved session."""
-    session_kwargs = {}
-    # To support teststand_fixture functions since they dont have service options
-    if service_options is None:
-        with GrpcChannelPoolHelper() as grpc_channel_pool:
-            grpc_options = instrument_type_module.GrpcSessionOptions(
-                grpc_channel_pool.get_grpc_device_channel(
-                    instrument_type_module.GRPC_SERVICE_INTERFACE_NAME
-                ),
-                session_name=session_info.session_name,
-                initialization_behavior=instrument_type_module.SessionInitializationBehavior.INITIALIZE_SERVER_SESSION,
-            )
-            return instrument_type_module.Session(
-                resource_name=session_info.resource_name, grpc_options=grpc_options
-            )
-
-    if service_options.use_grpc_device:
-        session_grpc_address = service_options.grpc_device_address
-
-        if not session_grpc_address:
-            session_grpc_channel = measurement_service.get_channel(
-                provided_interface=instrument_type_module.GRPC_SERVICE_INTERFACE_NAME,
-                service_class="ni.measurementlink.v1.grpcdeviceserver",
-            )
-        else:
-            session_grpc_channel = measurement_service.channel_pool.get_channel(
-                target=session_grpc_address
-            )
-        session_kwargs["grpc_options"] = instrument_type_module.GrpcSessionOptions(
-            session_grpc_channel,
-            session_name=session_info.session_name,
-            initialization_behavior=instrument_type_module.SessionInitializationBehavior.AUTO,
-        )
-    return instrument_type_module.Session(
-        resource_name=session_info.resource_name, **session_kwargs
-    )
-
-
-def reserve_session(
-    session_management_client: session_management.Client,
-    pin_map_context: session_management.PinMapContext,
-    instrument_type_id: str,
-    timeout: int,
-    pin_names: Optional[Iterable[str]] = None,
-) -> session_management.Reservation:
-    """Reserve the session based on the instrument type id."""
-    return session_management_client.reserve_sessions(
-        context=pin_map_context,
-        pin_or_relay_names=pin_names,
-        instrument_type_id=instrument_type_id,
-        # If another measurement is using the session, wait for it to complete.
-        # Specify a timeout to aid in debugging missed unreserve calls.
-        # Long measurements may require a longer timeout.
-        timeout=timeout,
-    )
