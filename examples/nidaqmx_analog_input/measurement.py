@@ -80,10 +80,11 @@ def measure(pin_name, sample_rate, number_of_samples):
 
         time_remaining = measurement_service.context.time_remaining
         timeout = min(time_remaining, 10.0)
-        
+
         task = stack.enter_context(_create_nidaqmx_task(session_info))
         if not session_info.session_exists:
             task.ai_channels.add_ai_voltage_chan(session_info.channel_list)
+
         task.timing.cfg_samp_clk_timing(
             rate=sample_rate,
             samps_per_chan=number_of_samples,
@@ -120,9 +121,7 @@ def _create_nidaqmx_task(
             initialization_behavior=nidaqmx.SessionInitializationBehavior.AUTO,
         )
 
-    return nidaqmx.Task(
-        new_task_name=session_info.session_name, **session_kwargs
-    )
+    return nidaqmx.Task(new_task_name=session_info.session_name, **session_kwargs)
 
 
 def _log_measured_values(samples, max_samples_to_display=5):
