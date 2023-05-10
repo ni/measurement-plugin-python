@@ -17,7 +17,7 @@ from _helpers import (
     grpc_device_options,
     verbosity_option,
 )
-from _nidcpower_helpers import create_driver_session, use_simulation_option, USE_SIMULATION
+from _nidcpower_helpers import create_nidcpower_session, use_simulation_option, USE_SIMULATION
 import ni_measurementlink_service as nims
 
 
@@ -64,11 +64,9 @@ def measure(
     """Source and measure a DC voltage with an NI SMU."""
     logging.info("Executing measurement: pin_names=%s voltage_level=%g", pin_names, voltage_level)
 
-    [session, reserved_session_info] = create_driver_session(
+    session, reserved_session_info = create_nidcpower_session(
         measurement_service,
         pin_names,
-        nidcpower,
-        instrument_type_id=nims.session_management.INSTRUMENT_TYPE_NI_DCPOWER,
     )
     session_info = reserved_session_info[0]
     channels = session.channels[session_info.channel_list]
