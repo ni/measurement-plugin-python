@@ -3,7 +3,7 @@
 import contextlib
 import logging
 import pathlib
-import sys
+from typing import Optional
 
 import click
 import grpc
@@ -69,18 +69,19 @@ def measure(pin_name, sample_rate, number_of_samples):
                 f"Unsupported number of sessions: {len(reservation.session_info)}",
             )
         session_info = reservation.session_info[0]
-        task = stack.enter_context(_create_nidaqmx_task(session_info))
 
-        def cancel_callback():
+        def cancel_callback(task: Optional[nidaqmx.Task] = None):
             logging.info("Canceling measurement")
             task_to_abort = task
             if task_to_abort is not None:
                 task_to_abort.control(nidaqmx.TaskMode.TASK_ABORT)
 
         measurement_service.context.add_cancel_callback(cancel_callback)
-        time_remaining = measurement_service.context.time_remaining
 
+        time_remaining = measurement_service.context.time_remaining
         timeout = min(time_remaining, 10.0)
+        
+        task = stack.enter_context(_create_nidaqmx_task(session_info))
         if not session_info.session_exists:
             task.ai_channels.add_ai_voltage_chan(session_info.channel_list)
         task.timing.cfg_samp_clk_timing(
