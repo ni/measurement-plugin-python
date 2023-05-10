@@ -6,6 +6,7 @@ from typing import Any, Callable, Dict, NamedTuple, TypeVar
 
 import click
 import grpc
+
 from ni_measurementlink_service import session_management
 from ni_measurementlink_service._internal.discovery_client import DiscoveryClient
 from ni_measurementlink_service._internal.stubs.ni.measurementlink.pinmap.v1 import (
@@ -220,4 +221,3 @@ def grpc_device_options(func: F) -> F:
         help="NI gRPC Device Server address (e.g. localhost:31763). If unspecified, use the discovery service to resolve the address.",
     )
     return grpc_device_address_option(use_grpc_device_option(func))
-

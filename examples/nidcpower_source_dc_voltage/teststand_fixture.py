@@ -1,5 +1,5 @@
 """Functions to set up and tear down sessions of NI-DCPower devices in NI TestStand."""
-from typing import Any, Dict
+from typing import Any
 
 import nidcpower
 from _helpers import (
@@ -8,6 +8,7 @@ from _helpers import (
     TestStandSupport,
 )
 from _nidcpower_helpers import reserve_session, create_session
+
 import ni_measurementlink_service as nims
 
 

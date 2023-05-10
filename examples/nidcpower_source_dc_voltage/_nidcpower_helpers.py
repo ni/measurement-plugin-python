@@ -1,10 +1,11 @@
 """nidcpower Helper classes and functions for MeasurementLink examples."""
 
 from typing import Any, Callable, Dict, Iterable, List, Optional, Tuple, TypeVar
-import click
 
-import nidcpower
+import click
 import grpc
+import nidcpower
+
 import ni_measurementlink_service as nims
 from ni_measurementlink_service import session_management
 from ni_measurementlink_service.measurement.service import MeasurementService
