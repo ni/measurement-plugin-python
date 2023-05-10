@@ -8,6 +8,7 @@ from typing import Optional
 import click
 import grpc
 import nidaqmx
+from nidaqmx.constants import TaskMode
 from _helpers import (
     ServiceOptions,
     configure_logging,
@@ -74,7 +75,7 @@ def measure(pin_name, sample_rate, number_of_samples):
             logging.info("Canceling measurement")
             task_to_abort = task
             if task_to_abort is not None:
-                task_to_abort.control(nidaqmx.TaskMode.TASK_ABORT)
+                task_to_abort.control(TaskMode.TASK_ABORT)
 
         measurement_service.context.add_cancel_callback(cancel_callback)
 
