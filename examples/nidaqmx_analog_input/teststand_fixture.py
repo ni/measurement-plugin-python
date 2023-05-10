@@ -1,10 +1,14 @@
 """Functions to set up and tear down sessions of NI-Scope devices in NI TestStand."""
 from typing import Any
 
+import ni_measurementlink_service as nims
 import nidaqmx
 from _helpers import GrpcChannelPoolHelper, PinMapClient, TestStandSupport
-
-import ni_measurementlink_service as nims
+from nidaqmx.grpc_session_options import (
+    GRPC_SERVICE_INTERFACE_NAME,
+    GrpcSessionOptions,
+    SessionInitializationBehavior,
+)
 
 
 def update_pin_map(pin_map_path: str, sequence_context: Any) -> str:
@@ -47,9 +51,7 @@ def create_nidaqmx_tasks(sequence_context: Any) -> None:
         teststand_support = TestStandSupport(sequence_context)
         pin_map_id = teststand_support.get_active_pin_map_id()
 
-        pin_map_context = nims.session_management.PinMapContext(
-            pin_map_id=pin_map_id, sites=None
-        )
+        pin_map_context = nims.session_management.PinMapContext(pin_map_id=pin_map_id, sites=None)
         with session_management_client.reserve_sessions(
             context=pin_map_context,
             instrument_type_id=nims.session_management.INSTRUMENT_TYPE_NI_DAQMX,
@@ -57,18 +59,14 @@ def create_nidaqmx_tasks(sequence_context: Any) -> None:
             timeout=0,
         ) as reservation:
             for session_info in reservation.session_info:
-                session_kwargs["grpc_options"] = nidaqmx.GrpcSessionOptions(
-                    grpc_channel_pool.get_grpc_device_channel(
-                        nidaqmx.GRPC_SERVICE_INTERFACE_NAME
-                    ),
+                session_kwargs["grpc_options"] = GrpcSessionOptions(
+                    grpc_channel_pool.get_grpc_device_channel(GRPC_SERVICE_INTERFACE_NAME),
                     session_name=session_info.session_name,
-                    initialization_behavior=nidaqmx.SessionInitializationBehavior.INITIALIZE_SERVER_SESSION,
+                    initialization_behavior=SessionInitializationBehavior.INITIALIZE_SERVER_SESSION,
                 )
 
                 # Leave session open
-                task = nidaqmx.Task(
-                    new_task_name=session_info.session_name, **session_kwargs
-                )
+                task = nidaqmx.Task(new_task_name=session_info.session_name, **session_kwargs)
                 task.ai_channels.add_ai_voltage_chan(session_info.channel_list)
 
             session_management_client.register_sessions(reservation.session_info)
@@ -89,12 +87,10 @@ def destroy_nidaqmx_tasks() -> None:
             session_management_client.unregister_sessions(reservation.session_info)
 
             for session_info in reservation.session_info:
-                grpc_options = nidaqmx.GrpcSessionOptions(
-                    grpc_channel_pool.get_grpc_device_channel(
-                        nidaqmx.GRPC_SERVICE_INTERFACE_NAME
-                    ),
+                grpc_options = GrpcSessionOptions(
+                    grpc_channel_pool.get_grpc_device_channel(GRPC_SERVICE_INTERFACE_NAME),
                     session_name=session_info.session_name,
-                    initialization_behavior=nidaqmx.SessionInitializationBehavior.ATTACH_TO_SERVER_SESSION,
+                    initialization_behavior=SessionInitializationBehavior.ATTACH_TO_SERVER_SESSION,
                 )
 
                 task = nidaqmx.Task(
