@@ -7,6 +7,7 @@ from typing import Optional
 
 import click
 import grpc
+import ni_measurementlink_service as nims
 import nidaqmx
 from _helpers import (
     ServiceOptions,
@@ -16,8 +17,6 @@ from _helpers import (
     verbosity_option,
 )
 from nidaqmx.constants import TaskMode
-
-import ni_measurementlink_service as nims
 
 service_directory = pathlib.Path(__file__).resolve().parent
 measurement_service = nims.MeasurementService(
@@ -90,9 +89,7 @@ def measure(pin_name, sample_rate, number_of_samples):
         )
 
         timeout = min(measurement_service.context.time_remaining, 10.0)
-        voltage_values = task.read(
-            number_of_samples_per_channel=number_of_samples, timeout=timeout
-        )
+        voltage_values = task.read(number_of_samples_per_channel=number_of_samples, timeout=timeout)
         task = None  # Don't abort after this point
 
     _log_measured_values(voltage_values)

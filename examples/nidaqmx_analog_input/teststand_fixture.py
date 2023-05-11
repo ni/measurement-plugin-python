@@ -1,6 +1,7 @@
 """Functions to set up and tear down sessions of NI-Scope devices in NI TestStand."""
 from typing import Any
 
+import ni_measurementlink_service as nims
 import nidaqmx
 from _helpers import GrpcChannelPoolHelper, PinMapClient, TestStandSupport
 from nidaqmx.grpc_session_options import (
@@ -8,8 +9,6 @@ from nidaqmx.grpc_session_options import (
     GrpcSessionOptions,
     SessionInitializationBehavior,
 )
-
-import ni_measurementlink_service as nims
 
 
 def update_pin_map(pin_map_path: str, sequence_context: Any) -> str:
