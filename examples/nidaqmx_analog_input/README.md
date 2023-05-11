@@ -18,6 +18,10 @@ measurement with NI-DAQmx.
     be moved to the `ProcessSetup` and `ProcessCleanup` callbacks.
 - Uses the NI gRPC Device Server to allow sharing instrument sessions with other measurement services when running measurements from TestStand.
 
+> **Note**
+>
+> Running this measurement requires MeasurementLink 2023 Q3 or later.
+
 ### Required Driver Software
 
 - NI-DAQmx

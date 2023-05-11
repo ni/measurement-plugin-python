@@ -6,7 +6,7 @@ authors = ["National Instruments"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
-nidaqmx = { version = ">=0.8.0-dev0", allow-prereleases = true }
+nidaqmx = { version = ">=0.8.0-dev0", extras = ["grpc"], allow-prereleases = true }
 ni-measurementlink-service = "^1.0.0"
 click = ">=7.1.2"
 

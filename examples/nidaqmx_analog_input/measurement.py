@@ -70,17 +70,15 @@ def measure(pin_name, sample_rate, number_of_samples):
                 f"Unsupported number of sessions: {len(reservation.session_info)}",
             )
         session_info = reservation.session_info[0]
+        task: Optional[nidaqmx.Task] = None
 
-        def cancel_callback(task: Optional[nidaqmx.Task] = None):
+        def cancel_callback():
             logging.info("Canceling measurement")
             task_to_abort = task
             if task_to_abort is not None:
                 task_to_abort.control(TaskMode.TASK_ABORT)
 
         measurement_service.context.add_cancel_callback(cancel_callback)
-
-        time_remaining = measurement_service.context.time_remaining
-        timeout = min(time_remaining, 10.0)
 
         task = stack.enter_context(_create_nidaqmx_task(session_info))
         if not session_info.session_exists:
@@ -90,7 +88,11 @@ def measure(pin_name, sample_rate, number_of_samples):
             rate=sample_rate,
             samps_per_chan=number_of_samples,
         )
-        voltage_values = task.read(number_of_samples_per_channel=number_of_samples, timeout=timeout)
+
+        timeout = min(measurement_service.context.time_remaining, 10.0)
+        voltage_values = task.read(
+            number_of_samples_per_channel=number_of_samples, timeout=timeout
+        )
         task = None  # Don't abort after this point
 
     _log_measured_values(voltage_values)
