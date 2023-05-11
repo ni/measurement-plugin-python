@@ -7,7 +7,7 @@ from typing import Optional
 
 import click
 import grpc
-import ni_measurementlink_service as nims
+
 import nidaqmx
 from _helpers import (
     ServiceOptions,
@@ -17,6 +17,8 @@ from _helpers import (
     verbosity_option,
 )
 from nidaqmx.constants import TaskMode
+
+import ni_measurementlink_service as nims
 
 service_directory = pathlib.Path(__file__).resolve().parent
 measurement_service = nims.MeasurementService(
