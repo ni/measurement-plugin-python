@@ -7,7 +7,6 @@ from typing import Optional
 
 import click
 import grpc
-
 import nidaqmx
 from _helpers import (
     ServiceOptions,
