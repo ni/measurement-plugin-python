@@ -6,14 +6,15 @@ authors = ["National Instruments"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
-nidaqmx = ">=0.6.3"
+nidaqmx = { version = ">=0.8.0-dev0", extras = ["grpc"], allow-prereleases = true }
 ni-measurementlink-service = "^1.0.0"
 click = ">=7.1.2"
 
 [tool.poetry.group.dev.dependencies]
 mypy = ">=1.0"
 # Uncomment to use prerelease dependencies (requires poetry>=1.2).
-# nidaqmx = { git = "https://github.com/ni/nidaqmx-python.git" }
+# TODO: Comment out once a prerelease is built.
+nidaqmx = { git = "https://github.com/ni/nidaqmx-python.git", branch = "master", extras = ["grpc"]}
 # ni-measurementlink-service = {path = "../..", develop = true}
 
 [build-system]
