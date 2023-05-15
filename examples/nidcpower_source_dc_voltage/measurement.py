@@ -12,11 +12,14 @@ import nidcpower
 from _helpers import (
     ServiceOptions,
     configure_logging,
+    create_session_management_client,
     get_service_options,
+    get_grpc_device_channel,
     grpc_device_options,
+    use_simulation_option,
     verbosity_option,
 )
-from _nidcpower_helpers import create_nidcpower_session, use_simulation_option, USE_SIMULATION
+from _nidcpower_helpers import create_nidcpower_session, reserve_session, USE_SIMULATION
 
 import ni_measurementlink_service as nims
 
@@ -63,11 +66,29 @@ def measure(
     """Source and measure a DC voltage with an NI SMU."""
     logging.info("Executing measurement: pin_names=%s voltage_level=%g", pin_names, voltage_level)
 
-    session, reserved_session_info = create_nidcpower_session(
-        measurement_service,
-        pin_names,
+    session_management_client = create_session_management_client(measurement_service)
+
+    reservation = reserve_session(
+        session_management_client,
+        measurement_service.context.pin_map_context,
+        timeout=60,
+        pin_names=pin_names,
     )
-    session_info = reserved_session_info[0]
+
+    if len(reservation.session_info) != 1:
+        measurement_service.context.abort(
+            grpc.StatusCode.INVALID_ARGUMENT,
+            f"Unsupported number of sessions: {len(reservation.session_info)}",
+        )
+
+    session_grpc_channel = get_grpc_device_channel(measurement_service, nidcpower)
+    
+    session = create_nidcpower_session(
+        reservation.session_info[0],
+        session_grpc_channel,
+    )
+
+    session_info = reservation.session_info[0]
     channels = session.channels[session_info.channel_list]
     channel_mappings = session_info.channel_mappings
 

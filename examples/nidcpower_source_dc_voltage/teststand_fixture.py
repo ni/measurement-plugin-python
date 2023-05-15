@@ -7,7 +7,7 @@ from _helpers import (
     PinMapClient,
     TestStandSupport,
 )
-from _nidcpower_helpers import reserve_session, create_session
+from _nidcpower_helpers import reserve_session, create_nidcpower_session
 
 import ni_measurementlink_service as nims
 
@@ -57,7 +57,7 @@ def create_nidcpower_sessions(sequence_context: Any) -> None:
                 grpc_channel = grpc_channel_pool.get_grpc_device_channel(
                     nidcpower.GRPC_SERVICE_INTERFACE_NAME
                 )
-                create_session(session_info, grpc_channel)
+                create_nidcpower_session(session_info, grpc_channel)
 
             session_management_client.register_sessions(reservation.session_info)
 

@@ -7,13 +7,14 @@ from typing import Any, Callable, Dict, NamedTuple, TypeVar
 import click
 import grpc
 
+import ni_measurementlink_service as nims
 from ni_measurementlink_service import session_management
 from ni_measurementlink_service._internal.discovery_client import DiscoveryClient
 from ni_measurementlink_service._internal.stubs.ni.measurementlink.pinmap.v1 import (
     pin_map_service_pb2,
     pin_map_service_pb2_grpc,
 )
-from ni_measurementlink_service.measurement.service import GrpcChannelPool
+from ni_measurementlink_service.measurement.service import GrpcChannelPool, MeasurementService
 
 
 class ServiceOptions(NamedTuple):
@@ -221,3 +222,30 @@ def grpc_device_options(func: F) -> F:
         help="NI gRPC Device Server address (e.g. localhost:31763). If unspecified, use the discovery service to resolve the address.",
     )
     return grpc_device_address_option(use_grpc_device_option(func))
+
+
+def use_simulation_option(default: bool) -> Callable[[F], F]:
+    """Decorator for --use-simulation command line option."""
+    return click.option(
+        "--use-simulation/--no-use-simulation",
+        default=default,
+        is_flag=True,
+        help="Use simulated instruments.",
+    )
+
+
+def get_grpc_device_channel(measurement_service: MeasurementService, driver_module) -> grpc.Channel:
+    """Returns driver specific grpc device channel."""
+    return measurement_service.get_channel(
+        provided_interface=getattr(driver_module, "GRPC_SERVICE_INTERFACE_NAME"),
+        service_class="ni.measurementlink.v1.grpcdeviceserver",
+    )
+
+def create_session_management_client(measurement_service: MeasurementService):
+    """Return created session management client."""
+    return nims.session_management.Client(
+        grpc_channel=measurement_service.get_channel(
+            provided_interface=nims.session_management.GRPC_SERVICE_INTERFACE_NAME,
+            service_class=nims.session_management.GRPC_SERVICE_CLASS,
+        )
+    )
