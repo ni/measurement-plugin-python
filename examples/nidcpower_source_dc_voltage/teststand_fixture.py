@@ -1,15 +1,14 @@
 """Functions to set up and tear down sessions of NI-DCPower devices in NI TestStand."""
 from typing import Any
 
+import ni_measurementlink_service as nims
 import nidcpower
 from _helpers import (
     GrpcChannelPoolHelper,
     PinMapClient,
     TestStandSupport,
 )
-from _nidcpower_helpers import reserve_session, create_nidcpower_session
-
-import ni_measurementlink_service as nims
+from _nidcpower_helpers import reserve_session, create_session
 
 
 def update_pin_map(pin_map_path: str, sequence_context: Any) -> str:
@@ -52,12 +51,17 @@ def create_nidcpower_sessions(sequence_context: Any) -> None:
         pin_map_id = teststand_support.get_active_pin_map_id()
 
         pin_map_context = nims.session_management.PinMapContext(pin_map_id=pin_map_id, sites=None)
-        with reserve_session(session_management_client, pin_map_context, timeout=0) as reservation:
+        with reserve_session(
+            session_management_client,
+            pin_map_context,
+            # This code module sets up the sessions, so error immediately if they are in use.
+            timeout=0,
+        ) as reservation:
             for session_info in reservation.session_info:
-                grpc_channel = grpc_channel_pool.get_grpc_device_channel(
+                grpc_device_channel = grpc_channel_pool.get_grpc_device_channel(
                     nidcpower.GRPC_SERVICE_INTERFACE_NAME
                 )
-                create_nidcpower_session(session_info, grpc_channel)
+                create_session(session_info, grpc_device_channel)
 
             session_management_client.register_sessions(reservation.session_info)
 
