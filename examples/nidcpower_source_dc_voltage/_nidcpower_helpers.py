@@ -3,8 +3,9 @@
 from typing import Any, Dict, Iterable, Optional
 
 import grpc
-import ni_measurementlink_service as nims
 import nidcpower
+
+import ni_measurementlink_service as nims
 
 # To use a physical NI SMU instrument, set this to False or specify
 # --no-use-simulation on the command line.
