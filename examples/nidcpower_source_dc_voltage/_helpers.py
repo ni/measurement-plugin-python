@@ -2,11 +2,11 @@
 
 import logging
 import pathlib
+import types
 from typing import Any, Callable, Dict, NamedTuple, TypeVar
 
 import click
 import grpc
-
 import ni_measurementlink_service as nims
 from ni_measurementlink_service import session_management
 from ni_measurementlink_service._internal.discovery_client import DiscoveryClient
@@ -234,14 +234,19 @@ def use_simulation_option(default: bool) -> Callable[[F], F]:
     )
 
 
-def get_grpc_device_channel(measurement_service: MeasurementService, driver_module) -> grpc.Channel:
+def get_grpc_device_channel(
+    measurement_service: MeasurementService, driver_module: types.ModuleType
+) -> grpc.Channel:
     """Returns driver specific grpc device channel."""
     return measurement_service.get_channel(
         provided_interface=getattr(driver_module, "GRPC_SERVICE_INTERFACE_NAME"),
         service_class="ni.measurementlink.v1.grpcdeviceserver",
     )
 
-def create_session_management_client(measurement_service: MeasurementService):
+
+def create_session_management_client(
+    measurement_service: MeasurementService,
+) -> nims.session_management.Client:
     """Return created session management client."""
     return nims.session_management.Client(
         grpc_channel=measurement_service.get_channel(
