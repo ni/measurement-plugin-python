@@ -16,7 +16,7 @@ def create_session(
     session_info: nims.session_management.SessionInformation,
     session_grpc_channel: grpc.Channel,
 ) -> nidcpower.Session:
-    """Create driver session based on the instrument type and reserved session."""
+    """Create driver session based on reserved session and grpc channel."""
     options: Dict[str, Any] = {}
     if USE_SIMULATION:
         options["simulate"] = True
@@ -41,7 +41,8 @@ def reserve_session(
     pin_names: Optional[Iterable[str]] = None,
     timeout: Optional[float] = None,
 ) -> nims.session_management.Reservation:
-    """Reserve the session based on the instrument type id."""
+    """Reserve session(s) for the given pins and returns the
+        information needed to create or access the session."""
     return session_management_client.reserve_sessions(
         context=pin_map_context,
         pin_or_relay_names=pin_names,
