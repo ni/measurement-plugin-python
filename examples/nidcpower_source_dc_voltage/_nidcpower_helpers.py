@@ -41,8 +41,11 @@ def reserve_session(
     pin_names: Optional[Iterable[str]] = None,
     timeout: Optional[float] = None,
 ) -> nims.session_management.Reservation:
-    """Reserve session(s) for the given pins and returns the
-        information needed to create or access the session."""
+    """Reserve session(s).
+
+    Reserve session(s) for the given pins and returns the
+    information needed to create or access the session.
+    """
     return session_management_client.reserve_sessions(
         context=pin_map_context,
         pin_or_relay_names=pin_names,
