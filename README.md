@@ -59,7 +59,17 @@ There are three ways to do this:
 
 ## Examples
 
-The [`examples`](https://github.com/ni/measurementlink-python/tree/main/examples/) directory contains example measurement services. See the [README.md](https://github.com/ni/measurementlink-python/tree/main/examples/README.md) file for more information.
+The `examples` directory contains example measurements for MeasurementLink 2023 Q3 or later. If
+you are using a previous version of MeasurementLink, download the appropriate examples:
+
+- MeasurementLink 2023 Q1: [measurementlink-python-examples-1.0.1.zip](https://github.com/ni/measurementlink-python/releases/download/1.0.1/measurementlink-python-examples-1.0.1.zip)
+- MeasurementLink 2023 Q2: [measurementlink-python-examples-1.0.1.zip](https://github.com/ni/measurementlink-python/releases/download/1.0.1/measurementlink-python-examples-1.0.1.zip)
+
+For more information on setting up and running the example measurements, see the included `README.md` file.
+
+For best results, use the example measurements corresponding to the version of MeasurementLink
+that you are using. Newer examples may demonstrate features that are not available in older
+versions of MeasurementLink.
 
 ---
 

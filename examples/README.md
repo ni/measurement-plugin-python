@@ -1,7 +1,18 @@
 
-# Example Measurements
+## Example Measurements
 
-This directory contains the following example projects:  
+These are example measurements for MeasurementLink 2023 Q3 or later.
+
+If you are using a previous version of MeasurementLink, download the appropriate examples:
+
+- MeasurementLink 2023 Q1: [measurementlink-python-examples-1.0.1.zip](https://github.com/ni/measurementlink-python/releases/download/1.0.1/measurementlink-python-examples-1.0.1.zip)
+- MeasurementLink 2023 Q2: [measurementlink-python-examples-1.0.1.zip](https://github.com/ni/measurementlink-python/releases/download/1.0.1/measurementlink-python-examples-1.0.1.zip)
+
+For best results, use the example measurements corresponding to the version of MeasurementLink
+that you are using. Newer examples may demonstrate features that are not available in older
+versions of MeasurementLink.
+
+### Available Example Measurements
 
 - `sample_measurement`: Performs a loopback measurement with various data types. Provides a Measurement UI and a LabVIEW UI.
 - `nidaqmx_analog_input`: Performs a finite analog input measurement with NI-DAQmx.
@@ -34,7 +45,6 @@ The example measurements are *Poetry-based* projects. Follow the steps below to 
     poetry install
     ```
     - If you get a "command not found" error during `poetry install`, make sure that you added the Poetry path to the system path. Refer to [https://python-poetry.org/docs/#installing-with-the-official-installer/Add-poetry-to-your-path](https://python-poetry.org/docs/#installing-with-the-official-installer:~:text=Add%20Poetry%20to%20your%20PATH)
-    ![PoetryInstallFail](../PoetryInstallFail.png)
 
 ### Executing the Example Measurements
 
