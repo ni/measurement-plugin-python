@@ -82,15 +82,12 @@ def destroy_nidcpower_sessions() -> None:
             session_management_client.unregister_sessions(reservation.session_info)
 
             for session_info in reservation.session_info:
-                grpc_options = nidcpower.GrpcSessionOptions(
-                    grpc_channel_pool.get_grpc_device_channel(
-                        nidcpower.GRPC_SERVICE_INTERFACE_NAME
-                    ),
-                    session_name=session_info.session_name,
-                    initialization_behavior=nidcpower.SessionInitializationBehavior.ATTACH_TO_SERVER_SESSION,
+                grpc_device_channel = grpc_channel_pool.get_grpc_device_channel(
+                    nidcpower.GRPC_SERVICE_INTERFACE_NAME
                 )
-
-                session = nidcpower.Session(
-                    resource_name=session_info.resource_name, grpc_options=grpc_options
+                session = create_session(
+                    session_info,
+                    grpc_device_channel,
+                    initialization_behavior=nidcpower.SessionInitializationBehavior.ATTACH_TO_SERVER_SESSION,
                 )
                 session.close()

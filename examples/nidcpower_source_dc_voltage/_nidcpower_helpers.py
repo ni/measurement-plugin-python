@@ -15,6 +15,9 @@ USE_SIMULATION = True
 def create_session(
     session_info: nims.session_management.SessionInformation,
     session_grpc_channel: grpc.Channel,
+    initialization_behavior: Optional[
+        nidcpower.SessionInitializationBehavior
+    ] = nidcpower.SessionInitializationBehavior.AUTO,
 ) -> nidcpower.Session:
     """Create driver session based on reserved session and grpc channel."""
     options: Dict[str, Any] = {}
@@ -27,7 +30,7 @@ def create_session(
     session_kwargs["grpc_options"] = nidcpower.GrpcSessionOptions(
         session_grpc_channel,
         session_name=session_info.session_name,
-        initialization_behavior=nidcpower.SessionInitializationBehavior.AUTO,
+        initialization_behavior=initialization_behavior,
     )
 
     return nidcpower.Session(
