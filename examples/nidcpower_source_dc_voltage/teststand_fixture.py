@@ -2,12 +2,8 @@
 from typing import Any
 
 import nidcpower
-from _helpers import (
-    GrpcChannelPoolHelper,
-    PinMapClient,
-    TestStandSupport,
-)
-from _nidcpower_helpers import reserve_session, create_session
+from _helpers import GrpcChannelPoolHelper, PinMapClient, TestStandSupport
+from _nidcpower_helpers import create_session, reserve_session
 
 import ni_measurementlink_service as nims
 
@@ -64,8 +60,9 @@ def create_nidcpower_sessions(sequence_context: Any) -> None:
                 )
                 create_session(
                     session_info,
-                    grpc_device_channel, 
-                    initialization_behavior=nidcpower.SessionInitializationBehavior.INITIALIZE_SERVER_SESSION)
+                    grpc_device_channel,
+                    initialization_behavior=nidcpower.SessionInitializationBehavior.INITIALIZE_SERVER_SESSION,
+                )
 
             session_management_client.register_sessions(reservation.session_info)
 
