@@ -62,7 +62,10 @@ def create_nidcpower_sessions(sequence_context: Any) -> None:
                 grpc_device_channel = grpc_channel_pool.get_grpc_device_channel(
                     nidcpower.GRPC_SERVICE_INTERFACE_NAME
                 )
-                create_session(session_info, grpc_device_channel)
+                create_session(
+                    session_info,
+                    grpc_device_channel, 
+                    initialization_behavior=nidcpower.SessionInitializationBehavior.INITIALIZE_SERVER_SESSION)
 
             session_management_client.register_sessions(reservation.session_info)
 
