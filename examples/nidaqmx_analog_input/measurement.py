@@ -120,7 +120,7 @@ def _create_nidaqmx_task(
             initialization_behavior=nidaqmx.SessionInitializationBehavior.AUTO,
         )
 
-    return nidaqmx.Task(new_task_name=session_info.session_name, **session_kwargs)
+    return nidaqmx.Task(new_task_name=session_info.resource_name, **session_kwargs)
 
 
 def _log_measured_values(samples, max_samples_to_display=5):

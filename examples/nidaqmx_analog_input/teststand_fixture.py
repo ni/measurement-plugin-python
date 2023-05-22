@@ -67,7 +67,7 @@ def create_nidaqmx_tasks(sequence_context: Any) -> None:
                 )
 
                 # Leave session open
-                task = nidaqmx.Task(new_task_name=session_info.session_name, **session_kwargs)
+                task = nidaqmx.Task(new_task_name=session_info.resource_name, **session_kwargs)
                 task.ai_channels.add_ai_voltage_chan(session_info.channel_list)
 
             session_management_client.register_sessions(reservation.session_info)
@@ -95,6 +95,6 @@ def destroy_nidaqmx_tasks() -> None:
                 )
 
                 task = nidaqmx.Task(
-                    new_task_name=session_info.session_name, grpc_options=grpc_options
+                    new_task_name=session_info.resource_name, grpc_options=grpc_options
                 )
                 task.close()
