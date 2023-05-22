@@ -243,7 +243,7 @@ def _fake_measurement_function():
         ("example.v2.serviceconfig", ["ni.measurementlink.measurement.v2.MeasurementService"]),
     ],
 )
-def test__measurement_service__create_measurement_service__service_info_populated_by_serviceconfig(
+def test___service_config___create_measurement_service___service_info_matches_service_config(
     test_assets_directory: str, service_config: str, provided_interfaces: List[str]
 ):
     measurement_service = MeasurementService(
