@@ -1,5 +1,4 @@
 """Tests to validated user facing decorators in service.py."""
-import pathlib
 from typing import List
 
 import pytest
