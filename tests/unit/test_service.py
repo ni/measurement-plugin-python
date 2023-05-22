@@ -244,11 +244,10 @@ def _fake_measurement_function():
     ],
 )
 def test__measurement_service__create_measurement_service__service_info_populated_by_serviceconfig(
-    service_config: str, provided_interfaces: List[str]
+    test_assets_directory: str, service_config: str, provided_interfaces: List[str]
 ):
-    assets_directory = pathlib.Path(__file__).resolve().parent.parent / "assets"
     measurement_service = MeasurementService(
-        service_config_path=assets_directory / service_config,
+        service_config_path=test_assets_directory / service_config,
         version="1.0.0.0",
         ui_file_paths=[],
     )
@@ -262,11 +261,10 @@ def test__measurement_service__create_measurement_service__service_info_populate
 
 
 @pytest.fixture
-def measurement_service() -> MeasurementService:
+def measurement_service(test_assets_directory: str) -> MeasurementService:
     """Create a MeasurementService."""
-    assets_directory = pathlib.Path(__file__).resolve().parent.parent / "assets"
     return MeasurementService(
-        service_config_path=assets_directory / "example.serviceconfig",
+        service_config_path=test_assets_directory / "example.serviceconfig",
         version="1.0.0.0",
         ui_file_paths=[],
     )
