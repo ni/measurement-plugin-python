@@ -244,7 +244,7 @@ def _fake_measurement_function():
     ],
 )
 def test___service_config___create_measurement_service___service_info_matches_service_config(
-    test_assets_directory: str, service_config: str, provided_interfaces: List[str]
+    test_assets_directory: pathlib.Path, service_config: str, provided_interfaces: List[str]
 ):
     measurement_service = MeasurementService(
         service_config_path=test_assets_directory / service_config,
