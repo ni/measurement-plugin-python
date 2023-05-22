@@ -19,7 +19,7 @@ _PROVIDED_MEASUREMENT_SERVICES = [
 ]
 
 _TEST_SERVICE_PORT = "9999"
-_TEST_SERVICE_INFO = ServiceInfo("TestServiceClass", _PROVIDED_MEASUREMENT_SERVICES, "TestUrl")
+_TEST_SERVICE_INFO = ServiceInfo("TestServiceClass", "TestUrl", _PROVIDED_MEASUREMENT_SERVICES)
 _TEST_MEASUREMENT_INFO = MeasurementInfo(
     display_name="TestMeasurement",
     version="1.0.0.0",
