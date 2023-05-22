@@ -239,8 +239,8 @@ def _fake_measurement_function():
                 "ni.measurementlink.measurement.v2.MeasurementService",
             ],
         ),
-        ("examples.v1.serviceconfig", ["ni.measurementlink.measurement.v1.MeasurementService"]),
-        ("examples.v2.serviceconfig", ["ni.measurementlink.measurement.v2.MeasurementService"]),
+        ("example.v1.serviceconfig", ["ni.measurementlink.measurement.v1.MeasurementService"]),
+        ("example.v2.serviceconfig", ["ni.measurementlink.measurement.v2.MeasurementService"]),
     ],
 )
 def test__measurement_service__create_measurement_service__service_info_populated_by_serviceconfig(
