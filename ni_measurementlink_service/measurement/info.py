@@ -42,13 +42,13 @@ class ServiceInfo(NamedTuple):
 
         provided_interfaces (List[str]): List of interfaces the service provides.
         For e.g., ni.measurementlink.measurement.v2.MeasurementService.
-        Defaults to "ni.measuremenlink.measurement.v1.MeasurementService".
+        Defaults to ["ni.measurementlink.measurement.v1.MeasurementService"].
 
     """
 
     service_class: str
     description_url: str
-    provided_interfaces: typing.List[str] = ["ni.measuremenlink.measurement.v1.MeasurementService"]
+    provided_interfaces: typing.List[str] = ["ni.measurementlink.measurement.v1.MeasurementService"]
 
 
 class TypeSpecialization(enum.Enum):

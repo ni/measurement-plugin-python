@@ -1,4 +1,5 @@
 """Tests to validated user facing decorators in service.py."""
+import pathlib
 from typing import List
 
 import pytest
@@ -260,7 +261,7 @@ def test___service_config___create_measurement_service___service_info_matches_se
 
 
 @pytest.fixture
-def measurement_service(test_assets_directory: str) -> MeasurementService:
+def measurement_service(test_assets_directory: pathlib.Path) -> MeasurementService:
     """Create a MeasurementService."""
     return MeasurementService(
         service_config_path=test_assets_directory / "example.serviceconfig",
