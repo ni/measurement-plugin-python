@@ -181,6 +181,7 @@ class MeasurementService:
 
         self.service_info = ServiceInfo(
             service_class=service["serviceClass"],
+            provided_interfaces=service["providedInterfaces"],
             description_url=service["descriptionUrl"],
         )
 

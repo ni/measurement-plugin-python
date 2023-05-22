@@ -5,7 +5,6 @@ from typing import cast
 import pytest
 
 from ni_measurementlink_service._internal.discovery_client import (
-    _PROVIDED_MEASUREMENT_SERVICES,
     DiscoveryClient,
 )
 from ni_measurementlink_service._internal.stubs.ni.measurementlink.discovery.v1.discovery_service_pb2_grpc import (
@@ -14,8 +13,13 @@ from ni_measurementlink_service._internal.stubs.ni.measurementlink.discovery.v1.
 from ni_measurementlink_service.measurement.info import MeasurementInfo, ServiceInfo
 from tests.utilities.fake_discovery_service import FakeDiscoveryServiceStub
 
+_PROVIDED_MEASUREMENT_SERVICES = [
+    "ni.measurementlink.measurement.v1.MeasurementService",
+    "ni.measurementlink.measurement.v2.MeasurementService",
+]
+
 _TEST_SERVICE_PORT = "9999"
-_TEST_SERVICE_INFO = ServiceInfo("TestServiceClass", "TestUrl")
+_TEST_SERVICE_INFO = ServiceInfo("TestServiceClass", _PROVIDED_MEASUREMENT_SERVICES, "TestUrl")
 _TEST_MEASUREMENT_INFO = MeasurementInfo(
     display_name="TestMeasurement",
     version="1.0.0.0",

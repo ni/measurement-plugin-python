@@ -3,6 +3,7 @@ import pathlib
 
 import pytest
 
+from typing import List
 from ni_measurementlink_service.measurement.info import DataType, TypeSpecialization
 from ni_measurementlink_service.measurement.service import MeasurementService
 
@@ -227,6 +228,30 @@ def test___measurement_service___add_output__output_added(
 def _fake_measurement_function():
     pass
 
+@pytest.mark.parametrize(
+    "service_config,provided_interfaces",
+    [
+        ("example.serviceconfig", [
+            "ni.measurementlink.measurement.v1.MeasurementService",
+            "ni.measurementlink.measurement.v2.MeasurementService"
+        ]),
+        ("examples.v1.serviceconfig", ["ni.measurementlink.measurement.v1.MeasurementService"]),
+        ("examples.v2.serviceconfig", ["ni.measurementlink.measurement.v2.MeasurementService"])
+    ]
+)
+def test__measurement_service__create_measurement_service__service_info_populated_by_serviceconfig(
+    service_config: str, provided_interfaces: List[str]
+):
+    assets_directory = pathlib.Path(__file__).resolve().parent.parent / "assets"
+    measurement_service = MeasurementService(
+        service_config_path=assets_directory / service_config,
+        version="1.0.0.0",
+        ui_file_paths=[],
+    )
+
+    assert measurement_service.service_info.service_class == "SampleMeasurement_Python"
+    assert set(measurement_service.service_info.provided_interfaces) >= set(provided_interfaces) 
+    assert measurement_service.service_info.description_url == "https://www.example.com/SampleMeasurement.html"
 
 @pytest.fixture
 def measurement_service() -> MeasurementService:

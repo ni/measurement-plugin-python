@@ -37,11 +37,15 @@ class ServiceInfo(NamedTuple):
         Measurements under same service class expected to perform same logic.
         For e.g., different version of measurement can come under same service class.
 
+        provided_interfaces (List[str]): List of interfaces the service provides.
+        For e.g., ni.measurementlink.measurement.v2.MeasurementService
+
         description_url (str): Description URL of the measurement.
 
     """
 
     service_class: str
+    provided_interfaces: List[str]
     description_url: str
 
 
