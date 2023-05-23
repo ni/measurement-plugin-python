@@ -13,6 +13,7 @@ grpcio = "*"
 
 [tool.poetry.group.dev.dependencies]
 mypy = ">=1.0"
+grpc-stubs = "*"
 # Uncomment to use prerelease dependencies (requires poetry>=1.2).
 # niswitch = { git = "https://github.com/ni/nimi-python.git", subdirectory = "generated/niswitch"}
 # ni-measurementlink-service = {path = "../..", develop = true}
@@ -23,7 +24,6 @@ build-backend = "poetry.core.masonry.api"
 
 [[tool.mypy.overrides]]
 module = [
-    "grpc.*",
     "ni_measurementlink_service.*", # TODO: remove after 1.0.2 is released with py.typed marker
     "niswitch.*",
 ]

@@ -11,6 +11,7 @@ click = ">=7.1.2"
 
 [tool.poetry.group.dev.dependencies]
 mypy = ">=1.0"
+grpc-stubs = "*"
 # Uncomment to use prerelease dependencies (requires poetry>=1.2).
 # ni-measurementlink-service = {path = "../..", develop = true}
 
@@ -20,7 +21,6 @@ build-backend = "poetry.core.masonry.api"
 
 [[tool.mypy.overrides]]
 module = [
-    "grpc.*",
     "ni_measurementlink_service.*", # TODO: remove after 1.0.2 is released with py.typed marker
 ]
 ignore_missing_imports = true
