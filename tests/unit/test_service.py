@@ -1,5 +1,6 @@
 """Tests to validated user facing decorators in service.py."""
 import pathlib
+from typing import List
 
 import pytest
 
@@ -228,12 +229,42 @@ def _fake_measurement_function():
     pass
 
 
+@pytest.mark.parametrize(
+    "service_config,provided_interfaces",
+    [
+        (
+            "example.serviceconfig",
+            [
+                "ni.measurementlink.measurement.v1.MeasurementService",
+                "ni.measurementlink.measurement.v2.MeasurementService",
+            ],
+        ),
+        ("example.v1.serviceconfig", ["ni.measurementlink.measurement.v1.MeasurementService"]),
+        ("example.v2.serviceconfig", ["ni.measurementlink.measurement.v2.MeasurementService"]),
+    ],
+)
+def test___service_config___create_measurement_service___service_info_matches_service_config(
+    test_assets_directory: pathlib.Path, service_config: str, provided_interfaces: List[str]
+):
+    measurement_service = MeasurementService(
+        service_config_path=test_assets_directory / service_config,
+        version="1.0.0.0",
+        ui_file_paths=[],
+    )
+
+    assert measurement_service.service_info.service_class == "SampleMeasurement_Python"
+    assert set(measurement_service.service_info.provided_interfaces) >= set(provided_interfaces)
+    assert (
+        measurement_service.service_info.description_url
+        == "https://www.example.com/SampleMeasurement.html"
+    )
+
+
 @pytest.fixture
-def measurement_service() -> MeasurementService:
+def measurement_service(test_assets_directory: pathlib.Path) -> MeasurementService:
     """Create a MeasurementService."""
-    assets_directory = pathlib.Path(__file__).resolve().parent.parent / "assets"
     return MeasurementService(
-        service_config_path=assets_directory / "example.serviceconfig",
+        service_config_path=test_assets_directory / "example.serviceconfig",
         version="1.0.0.0",
         ui_file_paths=[],
     )

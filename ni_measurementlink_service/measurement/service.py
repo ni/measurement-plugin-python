@@ -182,6 +182,7 @@ class MeasurementService:
         self.service_info = ServiceInfo(
             service_class=service["serviceClass"],
             description_url=service["descriptionUrl"],
+            provided_interfaces=service["providedInterfaces"],
         )
 
         self.configuration_parameter_list: list = []
