@@ -50,7 +50,7 @@ mypy-protobuf = ">=3.4"
 types-protobuf = "^4.21"
 types-pkg-resources = "*"
 types-pywin32 = {version = ">=304", platform = "win32"}
-grpc-stubs = "^1.49.1"
+grpc-stubs = "^1.53"
 
 [tool.poetry.group.docs]
 optional = true
