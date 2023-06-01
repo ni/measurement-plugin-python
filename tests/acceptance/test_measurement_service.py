@@ -148,16 +148,8 @@ def measurement_service() -> Generator[MeasurementService, None, None]:
         yield service
 
 
-def _get_configuration_parameters(
-    float_in: float,
-    double_array_in: List[float],
-    bool_in: bool,
-    string_in: str,
-    string_array_in: List[str],
-) -> any_pb2.Any:
-    serialized_parameter = _get_serialized_measurement_signature(
-        float_in, double_array_in, bool_in, string_in, string_array_in
-    )
+def _get_configuration_parameters(*args, **kwargs) -> any_pb2.Any:
+    serialized_parameter = _get_serialized_measurement_signature(*args, **kwargs)
     config_params_any = any_pb2.Any()
     config_params_any.value = serialized_parameter
     return config_params_any

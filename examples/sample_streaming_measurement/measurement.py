@@ -47,7 +47,7 @@ def measure(
     data: List[int] = []
 
     response_interval_in_seconds = response_interval_in_ms / 1000.0
-    
+
     for index in range(0, num_responses):
         update_time = time.monotonic()
 

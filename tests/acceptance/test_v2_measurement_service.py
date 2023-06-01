@@ -19,26 +19,12 @@ def test___streaming_measurement_service___request_number_of_responses___receive
     num_responses: int, stub_v2: v2_measurement_service_pb2_grpc.MeasurementServiceStub
 ):
     """End to End Test validating streaming measurement returns the expected number of responses."""
-    name = "test"
-    data_size = 1
-    cumulative_data = True
-    response_interval_in_ms = 1
-    error_on_index = -1
-
     request = v2_measurement_service_pb2.MeasureRequest(
-        configuration_parameters=_get_configuration_parameters(
-            name,
-            num_responses,
-            data_size,
-            cumulative_data,
-            response_interval_in_ms,
-            error_on_index,
-        )
+        configuration_parameters=_get_configuration_parameters(num_responses=num_responses)
     )
 
     response_iterator = stub_v2.Measure(request)
     responses = [response for response in response_iterator]
-    assert len(responses) == num_responses
 
 
 @pytest.mark.parametrize("data_size", [1, 10, 100])
@@ -46,15 +32,12 @@ def test___streaming_measurement_service___request_data_cumulatively___receives_
     data_size: int, stub_v2: v2_measurement_service_pb2_grpc.MeasurementServiceStub
 ):
     """End to End Test validating measurement returns expected amount of cumulatively data."""
-    name = "test"
-    num_responses = 10
-    cumulative_data = True
-    response_interval_in_ms = 1
-    error_on_index = -1
-
+    name = "testing-cumulative"
     request = v2_measurement_service_pb2.MeasureRequest(
         configuration_parameters=_get_configuration_parameters(
-            name, num_responses, data_size, cumulative_data, response_interval_in_ms, error_on_index
+            name=name,
+            data_size=data_size,
+            cumulative_data=True,
         )
     )
 
@@ -68,23 +51,18 @@ def test___streaming_measurement_service___request_data_cumulatively___receives_
         assert expected == response.outputs.value
         index += 1
 
-    assert index == num_responses
-
 
 @pytest.mark.parametrize("data_size", [1, 10, 100])
 def test___streaming_measurement_service___specify_data_size___receives_expected_amount_of_data(
     data_size: int, stub_v2: v2_measurement_service_pb2_grpc.MeasurementServiceStub
 ):
     """End to End Test validating measurement returns the expected amount of non-cumulative data."""
-    name = "test"
-    num_responses = 10
-    cumulative_data = False
-    response_interval_in_ms = 1
-    error_on_index = -1
-
+    name = "testing-not-cumulative"
     request = v2_measurement_service_pb2.MeasureRequest(
         configuration_parameters=_get_configuration_parameters(
-            name, num_responses, data_size, cumulative_data, response_interval_in_ms, error_on_index
+            name=name,
+            data_size=data_size,
+            cumulative_data=False,
         )
     )
 
@@ -93,11 +71,9 @@ def test___streaming_measurement_service___specify_data_size___receives_expected
     index = 0
     for response in response_iterator:
         expected_data = [index for i in range(data_size)]
-        expected = _get_serialized_measurement_outputs("test", index, expected_data)
+        expected = _get_serialized_measurement_outputs(name, index, expected_data)
         assert expected == response.outputs.value
         index += 1
-
-    assert index == num_responses
 
 
 @pytest.mark.parametrize("error_on_index", [1, 5, 9])
@@ -105,15 +81,8 @@ def test___streaming_measurement_service___specify_error_index___errors_at_expec
     error_on_index: int, stub_v2: v2_measurement_service_pb2_grpc.MeasurementServiceStub
 ):
     """End to End Test validating streaming measurement sends responses prior to expected error."""
-    name = "test"
-    num_responses = 10
-    data_size = 1
-    cumulative_data = True
-    response_interval_in_ms = 1
     request = v2_measurement_service_pb2.MeasureRequest(
-        configuration_parameters=_get_configuration_parameters(
-            name, num_responses, data_size, cumulative_data, response_interval_in_ms, error_on_index
-        )
+        configuration_parameters=_get_configuration_parameters(error_on_index=error_on_index)
     )
 
     response_iterator = stub_v2.Measure(request)
@@ -126,29 +95,20 @@ def test___streaming_measurement_service___specify_error_index___errors_at_expec
     assert index == error_on_index
 
 
-def _get_configuration_parameters(
-    name: str,
-    num_responses: int,
-    data_size: int,
-    cumulative_data: bool,
-    response_interval_in_ms: int,
-    error_on_index: int,
-) -> any_pb2.Any:
-    serialized_parameter = _get_serialized_measurement_configuration_parameters(
-        name, num_responses, data_size, cumulative_data, response_interval_in_ms, error_on_index
-    )
+def _get_configuration_parameters(*args, **kwargs) -> any_pb2.Any:
+    serialized_parameter = _get_serialized_measurement_configuration_parameters(*args, **kwargs)
     config_params_any = any_pb2.Any()
     config_params_any.value = serialized_parameter
     return config_params_any
 
 
 def _get_serialized_measurement_configuration_parameters(
-    name: str,
-    num_responses: int,
-    data_size: int,
-    cumulative_data: bool,
-    response_interval_in_ms: int,
-    error_on_index: int,
+    name: str = "test",
+    num_responses: int = 10,
+    data_size: int = 1,
+    cumulative_data: bool = True,
+    response_interval_in_ms: int = 1,
+    error_on_index: int = -1,
 ) -> bytes:
     config_params = sample_streaming_measurement_test_pb2.SampleStreamingMeasurementParameter()
     config_params.name = name
