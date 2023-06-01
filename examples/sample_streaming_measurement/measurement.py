@@ -39,19 +39,14 @@ def measure(
     response_interval_in_ms: int,
     error_on_index: int,
 ) -> Generator[Outputs, None, Outputs]:
-    """
-    Returns the number of responses requested at the requested interval. Each response contains a name, index, and data which is populated based on the
-    data size requested and whether or not cumulative data has been requested. This measurement will error at the requested error index if greater than -1.
-    """
+    """Returns the number of responses requested at the requested interval."""
     logging.info("Executing measurement")
     cancellation_event = threading.Event()
     measurement_service.context.add_cancel_callback(cancellation_event.set)
 
     data: List[int] = []
 
-    start_time = time.monotonic()
     response_interval_in_seconds = response_interval_in_ms / 1000.0
-    update_number = 1
     index = 0
 
     for index in range(0, num_responses):
@@ -70,7 +65,7 @@ def measure(
 
         yield (name, index, data)
 
-        # Delay for the remaining portion of the requested response interval and check for cancellation.
+        # Delay for the remaining portion of the requested interval and check for cancellation.
         delay = max(0.0, response_interval_in_seconds - (time.monotonic() - update_time))
         if cancellation_event.wait(delay):
             logging.info("Canceling measurement")

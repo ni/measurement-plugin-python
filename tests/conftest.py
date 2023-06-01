@@ -6,11 +6,9 @@ import grpc
 import pytest
 
 from ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v1 import (
-    measurement_service_pb2 as v1_measurement_service_pb2,
     measurement_service_pb2_grpc as v1_measurement_service_pb2_grpc,
 )
 from ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v2 import (
-    measurement_service_pb2 as v2_measurement_service_pb2,
     measurement_service_pb2_grpc as v2_measurement_service_pb2_grpc,
 )
 from ni_measurementlink_service.measurement.service import MeasurementService

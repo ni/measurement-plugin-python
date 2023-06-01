@@ -1,4 +1,4 @@
-"""Tests to validate a v2 measurement service that streams data. Uses the UI Progress Updates Example."""
+"""Tests to validate a v2 measurement service that streams data."""
 from typing import Generator, List
 
 import grpc
@@ -18,7 +18,7 @@ from tests.assets import sample_streaming_measurement_test_pb2
 def test___streaming_measurement_service___request_number_of_responses___receives_responses(
     num_responses: int, stub_v2: v2_measurement_service_pb2_grpc.MeasurementServiceStub
 ):
-    """End to End Test to validate streaming measurement returns the expected number of responses."""
+    """End to End Test validating streaming measurement returns the expected number of responses."""
     name = "test"
     data_size = 1
     cumulative_data = True
@@ -45,7 +45,7 @@ def test___streaming_measurement_service___request_number_of_responses___receive
 def test___streaming_measurement_service___request_data_cumulatively___receives_expected_amount_of_data(
     data_size: int, stub_v2: v2_measurement_service_pb2_grpc.MeasurementServiceStub
 ):
-    """End to End Test to validate streaming measurement returns expected amount of data when data is sent cumulatively."""
+    """End to End Test validated streaming measurement returns expected amount of cumulatively data."""
     name = "test"
     num_responses = 10
     cumulative_data = True
@@ -75,7 +75,7 @@ def test___streaming_measurement_service___request_data_cumulatively___receives_
 def test___streaming_measurement_service___specify_data_size___receives_expected_amount_of_data(
     data_size: int, stub_v2: v2_measurement_service_pb2_grpc.MeasurementServiceStub
 ):
-    """End to End Test to validate streaming measurement returns the expected amount of data when data is not sent cumulatively."""
+    """End to End Test validating streaming measurement returns the expected amount of non-cumulative data."""
     name = "test"
     num_responses = 10
     cumulative_data = False
@@ -104,7 +104,7 @@ def test___streaming_measurement_service___specify_data_size___receives_expected
 def test___streaming_measurement_service___specify_error_index___errors_at_expected_response(
     error_on_index: int, stub_v2: v2_measurement_service_pb2_grpc.MeasurementServiceStub
 ):
-    """End to End Test to validate streaming measurement sends responses up to an expected index and then sends an error."""
+    """End to End Test validating streaming measurement sends responses prior to expected error."""
     name = "test"
     num_responses = 10
     data_size = 1

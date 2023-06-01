@@ -5,7 +5,6 @@ import urllib.request
 from os import path
 from typing import Generator, List, Union
 
-import grpc
 import pytest
 from examples.sample_measurement import measurement
 from google.protobuf import any_pb2
