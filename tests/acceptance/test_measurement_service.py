@@ -148,6 +148,7 @@ def measurement_service() -> Generator[MeasurementService, None, None]:
     with measurement.sample_measurement_service.host_service() as service:
         yield service
 
+
 def _get_configuration_parameters(
     float_in: float,
     double_array_in: List[float],

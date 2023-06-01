@@ -21,6 +21,7 @@ def test_assets_directory() -> pathlib.Path:
     """Gets path to test_assets directory."""
     return pathlib.Path(__file__).parent / "assets"
 
+
 @pytest.fixture
 def grpc_channel(measurement_service: MeasurementService) -> Generator[grpc.Channel, None, None]:
     """Test fixture that creates a gRPC channel."""
@@ -32,10 +33,12 @@ def grpc_channel(measurement_service: MeasurementService) -> Generator[grpc.Chan
     with grpc.insecure_channel(target, options) as channel:
         yield channel
 
+
 @pytest.fixture
 def stub_v1(grpc_channel: grpc.Channel) -> v1_measurement_service_pb2_grpc.MeasurementServiceStub:
     """Test fixture that creates a MeasurementService v1 stub."""
     return v1_measurement_service_pb2_grpc.MeasurementServiceStub(grpc_channel)
+
 
 @pytest.fixture
 def stub_v2(grpc_channel: grpc.Channel) -> v2_measurement_service_pb2_grpc.MeasurementServiceStub:

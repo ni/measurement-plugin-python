@@ -20,6 +20,7 @@ measurement_service = nims.MeasurementService(
 
 Outputs = Tuple[str, int, List[int]]
 
+
 @measurement_service.register_measurement
 @measurement_service.configuration("name", nims.DataType.String, "<Name>")
 @measurement_service.configuration("num_responses", nims.DataType.Int32, 10)
@@ -36,7 +37,7 @@ def measure(
     data_size: int,
     cumulative_data: bool,
     response_interval_in_ms: int,
-    error_on_index: int
+    error_on_index: int,
 ) -> Generator[Outputs, None, Outputs]:
     """
     Returns the number of responses requested at the requested interval. Each response contains a name, index, and data which is populated based on the
@@ -56,13 +57,13 @@ def measure(
     for index in range(0, num_responses):
         update_time = time.monotonic()
 
-        if (index == error_on_index):
+        if index == error_on_index:
             measurement_service.context.abort(
                 grpc.StatusCode.UNKNOWN,
                 f"Errored at requested index: {error_on_index}",
             )
 
-        if (not cumulative_data):
+        if not cumulative_data:
             data.clear()
 
         data.extend(index for i in range(data_size))
