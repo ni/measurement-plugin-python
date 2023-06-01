@@ -25,6 +25,7 @@ def test___streaming_measurement_service___request_number_of_responses___receive
 
     response_iterator = stub_v2.Measure(request)
     responses = [response for response in response_iterator]
+    assert len(responses) == num_responses
 
 
 @pytest.mark.parametrize("data_size", [1, 10, 100])
