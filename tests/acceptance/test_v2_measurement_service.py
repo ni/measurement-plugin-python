@@ -27,7 +27,7 @@ def test___streaming_measurement_service___request_number_of_responses___receive
 
     request = v2_measurement_service_pb2.MeasureRequest(
         configuration_parameters=_get_configuration_parameters(
-            "test",
+            name,
             num_responses,
             data_size,
             cumulative_data,
@@ -45,7 +45,7 @@ def test___streaming_measurement_service___request_number_of_responses___receive
 def test___streaming_measurement_service___request_data_cumulatively___receives_expected_amount_of_data(
     data_size: int, stub_v2: v2_measurement_service_pb2_grpc.MeasurementServiceStub
 ):
-    """End to End Test validated streaming measurement returns expected amount of cumulatively data."""
+    """End to End Test validating measurement returns expected amount of cumulatively data."""
     name = "test"
     num_responses = 10
     cumulative_data = True
@@ -75,7 +75,7 @@ def test___streaming_measurement_service___request_data_cumulatively___receives_
 def test___streaming_measurement_service___specify_data_size___receives_expected_amount_of_data(
     data_size: int, stub_v2: v2_measurement_service_pb2_grpc.MeasurementServiceStub
 ):
-    """End to End Test validating streaming measurement returns the expected amount of non-cumulative data."""
+    """End to End Test validating measurement returns the expected amount of non-cumulative data."""
     name = "test"
     num_responses = 10
     cumulative_data = False
