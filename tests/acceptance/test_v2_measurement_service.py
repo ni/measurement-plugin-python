@@ -88,7 +88,7 @@ def test___streaming_measurement_service___specify_error_index___errors_at_expec
     response_iterator = stub_v2.Measure(request)
 
     index = 0
-    with pytest.raises(grpc.RpcError):
+    with pytest.raises(grpc.RpcError, match=f"Errored at index {error_on_index}"):
         for response in response_iterator:
             index += 1
 
