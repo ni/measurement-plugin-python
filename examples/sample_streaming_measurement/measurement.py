@@ -78,8 +78,6 @@ def measure(
                 grpc.StatusCode.CANCELLED, "Client requested cancellation."
             )
 
-    # Non-interactive clients such as TestStand only use the measurement's final
-    # update. You may use either yield or return to send the final update.
     logging.info("Completed measurement")
 
 
