@@ -13,7 +13,7 @@ option csharp_namespace = "NationalInstruments.MeasurementServices.Measurements"
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
 
-message SampleMeasurementParameter{
+message SampleMeasurementParameter {
     float float_in = 1;
     repeated double double_array_in = 2;
     bool bool_in = 3;

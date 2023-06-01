@@ -38,7 +38,7 @@ def measure(
     cumulative_data: bool,
     response_interval_in_ms: int,
     error_on_index: int,
-) -> Generator[Outputs, None, Outputs]:
+) -> Generator[Outputs, None, None]:
     """Returns the number of responses requested at the requested interval."""
     logging.info("Executing measurement")
     cancellation_event = threading.Event()
@@ -47,15 +47,14 @@ def measure(
     data: List[int] = []
 
     response_interval_in_seconds = response_interval_in_ms / 1000.0
-    index = 0
-
+    
     for index in range(0, num_responses):
         update_time = time.monotonic()
 
         if index == error_on_index:
             measurement_service.context.abort(
                 grpc.StatusCode.UNKNOWN,
-                f"Errored at requested index: {error_on_index}",
+                f"Errored at index {error_on_index}",
             )
 
         if not cumulative_data:
