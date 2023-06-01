@@ -11,7 +11,7 @@ click = ">=7.1.2"
 
 [tool.poetry.group.dev.dependencies]
 mypy = ">=1.0"
-grpc-stubs = "*"
+grpc-stubs = "^1.53"
 # Uncomment to use prerelease dependencies (requires poetry>=1.2).
 # ni-measurementlink-service = {path = "../..", develop = true}
 
