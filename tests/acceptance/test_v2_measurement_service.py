@@ -60,7 +60,7 @@ def test___streaming_measurement_service___request_data_cumulatively___receives_
 
     response_iterator = stub_v2.Measure(request)
 
-    expected_data = []
+    expected_data: List[int] = []
     index = 0
     for response in response_iterator:
         expected_data.extend(index for i in range(data_size))
