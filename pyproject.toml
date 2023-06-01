@@ -50,6 +50,7 @@ mypy-protobuf = ">=3.4"
 types-protobuf = "^4.21"
 types-pkg-resources = "*"
 types-pywin32 = {version = ">=304", platform = "win32"}
+grpc-stubs = "^1.53"
 
 [tool.poetry.group.docs]
 optional = true
@@ -84,5 +85,5 @@ warn_redundant_casts = true
 warn_unused_ignores = true
 
 [[tool.mypy.overrides]]
-module = "grpc.*"
+module = ["grpc.framework.foundation.*"]
 ignore_missing_imports = true
