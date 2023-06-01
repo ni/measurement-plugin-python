@@ -1,0 +1,13 @@
+{
+  "services": [
+    {
+      "displayName": "Sample Streaming Measurement (Py)",
+      "serviceClass": "ni.examples.SampleStreamingMeasurement_Python",
+      "descriptionUrl": "",
+      "providedInterfaces": [
+        "ni.measurementlink.measurement.v2.MeasurementService"
+      ],
+      "path": "start.bat"
+    }
+  ]
+}

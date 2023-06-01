@@ -148,31 +148,6 @@ def measurement_service() -> Generator[MeasurementService, None, None]:
     with measurement.sample_measurement_service.host_service() as service:
         yield service
 
-
-@pytest.fixture
-def grpc_channel(measurement_service: MeasurementService) -> Generator[grpc.Channel, None, None]:
-    """Test fixture that creates a gRPC channel."""
-    target = f"localhost:{measurement_service.grpc_service.port}"
-    options = [
-        ("grpc.max_receive_message_length", -1),
-        ("grpc.max_send_message_length", -1),
-    ]
-    with grpc.insecure_channel(target, options) as channel:
-        yield channel
-
-
-@pytest.fixture
-def stub_v1(grpc_channel: grpc.Channel) -> v1_measurement_service_pb2_grpc.MeasurementServiceStub:
-    """Test fixture that creates a MeasurementService v1 stub."""
-    return v1_measurement_service_pb2_grpc.MeasurementServiceStub(grpc_channel)
-
-
-@pytest.fixture
-def stub_v2(grpc_channel: grpc.Channel) -> v2_measurement_service_pb2_grpc.MeasurementServiceStub:
-    """Test fixture that creates a MeasurementService v2 stub."""
-    return v2_measurement_service_pb2_grpc.MeasurementServiceStub(grpc_channel)
-
-
 def _get_configuration_parameters(
     float_in: float,
     double_array_in: List[float],

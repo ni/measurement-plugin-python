@@ -1,0 +1,204 @@
+"""Tests to validate a v2 measurement service that streams data. Uses the UI Progress Updates Example."""
+from typing import Generator, List
+
+import grpc
+import pytest
+from examples.sample_streaming_measurement import measurement
+from google.protobuf import any_pb2
+
+from ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v2 import (
+    measurement_service_pb2 as v2_measurement_service_pb2,
+    measurement_service_pb2_grpc as v2_measurement_service_pb2_grpc,
+)
+from ni_measurementlink_service.measurement.service import MeasurementService
+from tests.assets import sample_streaming_measurement_test_pb2
+
+
+@pytest.mark.parametrize("num_responses", [1, 10, 100])
+def test___streaming_measurement_service___request_number_of_responses___receives_responses(
+    num_responses: int,
+    stub_v2: v2_measurement_service_pb2_grpc.MeasurementServiceStub
+):
+    """End to End Test to validate streaming measurement returns the expected number of responses."""
+    name = "test"
+    data_size = 1
+    cumulative_data = True
+    response_interval_in_ms = 1
+    error_on_index = -1
+
+    request = v2_measurement_service_pb2.MeasureRequest(
+        configuration_parameters=_get_configuration_parameters(
+            "test",
+            num_responses,
+            data_size,
+            cumulative_data,
+            response_interval_in_ms,
+            error_on_index
+        )
+    )
+
+    response_iterator = stub_v2.Measure(request)
+    responses = [response for response in response_iterator]
+    assert len(responses) == num_responses
+
+@pytest.mark.parametrize("data_size", [1, 10, 100])
+def test___streaming_measurement_service___request_data_cumulatively___receives_expected_amount_of_data(
+    data_size: int,
+    stub_v2: v2_measurement_service_pb2_grpc.MeasurementServiceStub
+):
+    """End to End Test to validate streaming measurement returns expected amount of data when sending data cumulatively."""
+    name = "test"
+    num_responses = 10
+    cumulative_data = True
+    response_interval_in_ms = 1
+    error_on_index = -1
+
+    request = v2_measurement_service_pb2.MeasureRequest(
+        configuration_parameters=_get_configuration_parameters(
+            name,
+            num_responses,
+            data_size,
+            cumulative_data,
+            response_interval_in_ms,
+            error_on_index
+        )
+    )
+
+    response_iterator = stub_v2.Measure(request)
+
+    expected_data = []
+    index = 0
+    for response in response_iterator:
+        expected_data.extend(index for i in range(data_size))
+        expected = _get_serialized_measurement_output(name, index , expected_data)
+        assert expected == response.outputs.value
+        index += 1
+
+    assert index == num_responses
+
+@pytest.mark.parametrize("data_size", [1, 10, 100])
+def test___streaming_measurement_service___specify_data_size___receives_expected_amount_of_data(
+    data_size: int,
+    stub_v2: v2_measurement_service_pb2_grpc.MeasurementServiceStub
+):
+    """End to End Test to validate streaming measurement returns the expected amount of data when sending data that is not cumulative."""
+    name = "test"
+    num_responses = 10
+    cumulative_data = False
+    response_interval_in_ms = 1
+    error_on_index = -1
+
+    request = v2_measurement_service_pb2.MeasureRequest(
+        configuration_parameters=_get_configuration_parameters(
+            name,
+            num_responses,
+            data_size,
+            cumulative_data,
+            response_interval_in_ms,
+            error_on_index
+        )
+    )
+
+    response_iterator = stub_v2.Measure(request)
+
+    index = 0
+    for response in response_iterator:
+        expected_data = [index for i in range(data_size)]
+        expected = _get_serialized_measurement_output("test", index, expected_data)
+        assert expected == response.outputs.value
+        index += 1
+
+    assert index == num_responses
+
+@pytest.mark.parametrize("error_on_index", [1, 5, 9])
+def test___streaming_measurement_service___specify_error_index___errors_at_expected_response(
+    error_on_index: int,
+    stub_v2: v2_measurement_service_pb2_grpc.MeasurementServiceStub
+):
+    """End to End Test to validate streaming measurement sends responses up to an expected index and then sends an error."""
+    name = "test"
+    num_responses = 10
+    data_size = 1
+    cumulative_data = True
+    response_interval_in_ms = 1
+    request = v2_measurement_service_pb2.MeasureRequest(
+        configuration_parameters=_get_configuration_parameters(
+            name,
+            num_responses,
+            data_size,
+            cumulative_data,
+            response_interval_in_ms,
+            error_on_index
+        )
+    )
+
+    response_iterator = stub_v2.Measure(request)
+
+    index = 0
+    with pytest.raises(grpc.RpcError):
+        for response in response_iterator:
+                index += 1
+   
+    assert index == error_on_index
+
+def _get_configuration_parameters(
+    name: str,
+    num_responses: int,
+    data_size: int,
+    cumulative_data: bool,
+    response_interval_in_ms: int,
+    error_on_index: int
+) -> any_pb2.Any:
+    serialized_parameter = _get_serialized_measurement_signature(
+        name,
+        num_responses,
+        data_size,
+        cumulative_data,
+        response_interval_in_ms,
+        error_on_index
+    )
+    config_params_any = any_pb2.Any()
+    config_params_any.value = serialized_parameter
+    return config_params_any
+
+def _get_serialized_measurement_signature(
+    name: str,
+    num_responses: int,
+    data_size: int,
+    cumulative_data: bool,
+    response_interval_in_ms: int,
+    error_on_index: int
+) -> bytes:
+    config_params = sample_streaming_measurement_test_pb2.SampleStreamingMeasurementParameter()
+    config_params.name = name
+    config_params.num_responses = num_responses
+    config_params.data_size = data_size
+    config_params.cumulative_data = cumulative_data
+    config_params.response_interval_in_ms = response_interval_in_ms
+    config_params.error_on_index = error_on_index
+
+    temp_any = any_pb2.Any()
+    temp_any.Pack(config_params)
+    grpc_serialized_data = temp_any.value
+    return grpc_serialized_data
+
+def _get_serialized_measurement_output(
+    name: str,
+    index: int,
+    data: List[int],
+) -> bytes:
+    config_params = sample_streaming_measurement_test_pb2.SampleStreamingMeasurementOutput()
+    config_params.name = name
+    config_params.index = index
+    config_params.data.extend(data)
+
+    temp_any = any_pb2.Any()
+    temp_any.Pack(config_params)
+    grpc_serialized_data = temp_any.value
+    return grpc_serialized_data
+
+@pytest.fixture(scope="module")
+def measurement_service() -> Generator[MeasurementService, None, None]:
+    """Test fixture that creates and hosts a measurement service."""
+    with measurement.measurement_service.host_service() as service:
+        yield service
