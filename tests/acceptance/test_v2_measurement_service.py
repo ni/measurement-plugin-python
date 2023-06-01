@@ -64,7 +64,7 @@ def test___streaming_measurement_service___request_data_cumulatively___receives_
     index = 0
     for response in response_iterator:
         expected_data.extend(index for i in range(data_size))
-        expected = _get_serialized_measurement_output(name, index, expected_data)
+        expected = _get_serialized_measurement_outputs(name, index, expected_data)
         assert expected == response.outputs.value
         index += 1
 
@@ -93,7 +93,7 @@ def test___streaming_measurement_service___specify_data_size___receives_expected
     index = 0
     for response in response_iterator:
         expected_data = [index for i in range(data_size)]
-        expected = _get_serialized_measurement_output("test", index, expected_data)
+        expected = _get_serialized_measurement_outputs("test", index, expected_data)
         assert expected == response.outputs.value
         index += 1
 
@@ -134,7 +134,7 @@ def _get_configuration_parameters(
     response_interval_in_ms: int,
     error_on_index: int,
 ) -> any_pb2.Any:
-    serialized_parameter = _get_serialized_measurement_signature(
+    serialized_parameter = _get_serialized_measurement_configuration_parameters(
         name, num_responses, data_size, cumulative_data, response_interval_in_ms, error_on_index
     )
     config_params_any = any_pb2.Any()
@@ -142,7 +142,7 @@ def _get_configuration_parameters(
     return config_params_any
 
 
-def _get_serialized_measurement_signature(
+def _get_serialized_measurement_configuration_parameters(
     name: str,
     num_responses: int,
     data_size: int,
@@ -164,7 +164,7 @@ def _get_serialized_measurement_signature(
     return grpc_serialized_data
 
 
-def _get_serialized_measurement_output(
+def _get_serialized_measurement_outputs(
     name: str,
     index: int,
     data: List[int],
