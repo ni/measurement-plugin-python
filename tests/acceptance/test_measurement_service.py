@@ -77,7 +77,6 @@ def test___measurement_service_v2___measure___returns_output(
     string_array_in: List[str],
     stub_v2: v2_measurement_service_pb2_grpc.MeasurementServiceStub,
 ):
-    """End to End Test to validate Measure RPC call with Sample Measurement."""
     request = v2_measurement_service_pb2.MeasureRequest(
         configuration_parameters=_get_configuration_parameters(
             float_in, double_array_in, bool_in, string_in, string_array_in

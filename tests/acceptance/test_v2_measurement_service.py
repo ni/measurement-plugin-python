@@ -18,7 +18,6 @@ from tests.assets import sample_streaming_measurement_test_pb2
 def test___streaming_measurement_service___request_number_of_responses___receives_responses(
     num_responses: int, stub_v2: v2_measurement_service_pb2_grpc.MeasurementServiceStub
 ):
-    """End to End Test validating streaming measurement returns the expected number of responses."""
     request = v2_measurement_service_pb2.MeasureRequest(
         configuration_parameters=_get_configuration_parameters(num_responses=num_responses)
     )
@@ -32,7 +31,6 @@ def test___streaming_measurement_service___request_number_of_responses___receive
 def test___streaming_measurement_service___request_data_cumulatively___receives_expected_amount_of_data(
     data_size: int, stub_v2: v2_measurement_service_pb2_grpc.MeasurementServiceStub
 ):
-    """End to End Test validating measurement returns expected amount of cumulatively data."""
     name = "testing-cumulative"
     request = v2_measurement_service_pb2.MeasureRequest(
         configuration_parameters=_get_configuration_parameters(
@@ -57,7 +55,6 @@ def test___streaming_measurement_service___request_data_cumulatively___receives_
 def test___streaming_measurement_service___specify_data_size___receives_expected_amount_of_data(
     data_size: int, stub_v2: v2_measurement_service_pb2_grpc.MeasurementServiceStub
 ):
-    """End to End Test validating measurement returns the expected amount of non-cumulative data."""
     name = "testing-not-cumulative"
     request = v2_measurement_service_pb2.MeasureRequest(
         configuration_parameters=_get_configuration_parameters(
@@ -81,19 +78,17 @@ def test___streaming_measurement_service___specify_data_size___receives_expected
 def test___streaming_measurement_service___specify_error_index___errors_at_expected_response(
     error_on_index: int, stub_v2: v2_measurement_service_pb2_grpc.MeasurementServiceStub
 ):
-    """End to End Test validating streaming measurement sends responses prior to expected error."""
     request = v2_measurement_service_pb2.MeasureRequest(
         configuration_parameters=_get_configuration_parameters(error_on_index=error_on_index)
     )
 
     response_iterator = stub_v2.Measure(request)
 
-    index = 0
     with pytest.raises(grpc.RpcError, match=f"Errored at index {error_on_index}"):
-        for response in response_iterator:
-            index += 1
+        for index, response in enumerate(response_iterator):
+            pass
 
-    assert index == error_on_index
+    assert (index + 1) == error_on_index
 
 
 def _get_configuration_parameters(*args, **kwargs) -> any_pb2.Any:
