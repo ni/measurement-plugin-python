@@ -1,0 +1,60 @@
+"""Tests to validate that yield and return are both supported in v2 measurements."""
+from typing import Generator, List
+
+import grpc
+import pytest
+from examples.ui_progress_updates import measurement
+from google.protobuf import any_pb2
+
+from ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v2 import (
+    measurement_service_pb2 as v2_measurement_service_pb2,
+    measurement_service_pb2_grpc as v2_measurement_service_pb2_grpc,
+)
+from ni_measurementlink_service.measurement.service import MeasurementService
+from tests.assets import ui_progress_updates_test_pb2
+
+
+def test___measurement_utilizing_yield_and_return___call_measurement___receives_responses_from_yield_and_return(
+    stub_v2: v2_measurement_service_pb2_grpc.MeasurementServiceStub,
+):
+    request = v2_measurement_service_pb2.MeasureRequest(
+        configuration_parameters=_get_configuration_parameters()
+    )
+
+    response_iterator = stub_v2.Measure(request)
+    responses = [response for response in response_iterator]
+
+    for index, response in enumerate(responses):
+        output = ui_progress_updates_test_pb2.UIProgressUpdatesOutput()
+        output.ParseFromString(response.outputs.value)
+        if index + 1 == len(responses):
+            assert output.status == f"Total updates: {index + 1}"
+        else:
+            assert output.status == f"Update: {index + 1}"
+
+
+def _get_configuration_parameters(*args, **kwargs) -> any_pb2.Any:
+    serialized_parameter = _get_serialized_measurement_configuration_parameters(*args, **kwargs)
+    config_params_any = any_pb2.Any()
+    config_params_any.value = serialized_parameter
+    return config_params_any
+
+
+def _get_serialized_measurement_configuration_parameters(
+    time_in_seconds: float = 1.0,
+) -> bytes:
+    config_params = ui_progress_updates_test_pb2.UIProgressUpdatesParameter(
+        time_in_seconds=time_in_seconds
+    )
+
+    temp_any = any_pb2.Any()
+    temp_any.Pack(config_params)
+    grpc_serialized_data = temp_any.value
+    return grpc_serialized_data
+
+
+@pytest.fixture(scope="module")
+def measurement_service() -> Generator[MeasurementService, None, None]:
+    """Test fixture that creates and hosts a measurement service."""
+    with measurement.measurement_service.host_service() as service:
+        yield service
