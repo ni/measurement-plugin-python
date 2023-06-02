@@ -1,7 +1,6 @@
 """Tests to validate that yield and return are both supported in v2 measurements."""
-from typing import Generator, List
+from typing import Generator
 
-import grpc
 import pytest
 from examples.ui_progress_updates import measurement
 from google.protobuf import any_pb2
