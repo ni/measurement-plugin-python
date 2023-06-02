@@ -88,7 +88,6 @@ def test___streaming_measurement_service___specify_error_index___errors_at_expec
     with pytest.raises(grpc.RpcError, match=f"Errored at index {error_on_index}"):
         for index, response in enumerate(response_iterator):
             pass
-
     assert (index + 1) == error_on_index
 
 
