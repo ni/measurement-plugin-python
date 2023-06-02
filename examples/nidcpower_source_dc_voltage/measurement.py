@@ -1,10 +1,9 @@
 """Source and measure a DC voltage with an NI SMU."""
 
-import contextlib
 import logging
 import pathlib
 import time
-from typing import Any, Dict, Iterable
+from typing import Iterable
 
 import click
 import grpc
@@ -13,17 +12,17 @@ import nidcpower
 from _helpers import (
     ServiceOptions,
     configure_logging,
+    create_session_management_client,
     get_service_options,
+    get_grpc_device_channel,
     grpc_device_options,
     use_simulation_option,
     verbosity_option,
 )
+from _nidcpower_helpers import create_session, reserve_session, USE_SIMULATION
 
 import ni_measurementlink_service as nims
 
-# To use a physical NI SMU instrument, set this to False or specify
-# --no-use-simulation on the command line.
-USE_SIMULATION = True
 
 NIDCPOWER_WAIT_FOR_EVENT_TIMEOUT_ERROR_CODE = -1074116059
 NIDCPOWER_TIMEOUT_EXCEEDED_ERROR_CODE = -1074097933
@@ -68,26 +67,17 @@ def measure(
     """Source and measure a DC voltage with an NI SMU."""
     logging.info("Executing measurement: pin_names=%s voltage_level=%g", pin_names, voltage_level)
 
-    session_management_client = nims.session_management.Client(
-        grpc_channel=measurement_service.get_channel(
-            provided_interface=nims.session_management.GRPC_SERVICE_INTERFACE_NAME,
-            service_class=nims.session_management.GRPC_SERVICE_CLASS,
-        )
-    )
+    session_management_client = create_session_management_client(measurement_service)
 
-    with contextlib.ExitStack() as stack:
-        reservation = stack.enter_context(
-            session_management_client.reserve_sessions(
-                context=measurement_service.context.pin_map_context,
-                pin_or_relay_names=pin_names,
-                instrument_type_id=nims.session_management.INSTRUMENT_TYPE_NI_DCPOWER,
-                # If another measurement is using the session, wait for it to complete.
-                # Specify a timeout to aid in debugging missed unreserve calls.
-                # Long measurements may require a longer timeout.
-                timeout=60,
-            )
-        )
-
+    with reserve_session(
+        session_management_client,
+        measurement_service.context.pin_map_context,
+        pin_names=pin_names,
+        # If another measurement is using the session, wait for it to complete.
+        # Specify a timeout to aid in debugging missed unreserve calls.
+        # Long measurements may require a longer timeout.
+        timeout=60,
+    ) as reservation:
         if len(reservation.session_info) != 1:
             measurement_service.context.abort(
                 grpc.StatusCode.INVALID_ARGUMENT,
@@ -95,69 +85,73 @@ def measure(
             )
 
         session_info = reservation.session_info[0]
-        session = stack.enter_context(_create_nidcpower_session(session_info))
-        channels = session.channels[session_info.channel_list]
-        channel_mappings = session_info.channel_mappings
 
-        pending_cancellation = False
+        with create_session(
+            session_info,
+            get_grpc_device_channel(measurement_service, nidcpower),
+        ) as session:
+            channels = session.channels[session_info.channel_list]
+            channel_mappings = session_info.channel_mappings
 
-        def cancel_callback():
-            logging.info("Canceling measurement")
-            session_to_abort = session
-            if session_to_abort is not None:
-                nonlocal pending_cancellation
-                pending_cancellation = True
-                session_to_abort.abort()
+            pending_cancellation = False
 
-        measurement_service.context.add_cancel_callback(cancel_callback)
-        time_remaining = measurement_service.context.time_remaining
+            def cancel_callback():
+                logging.info("Canceling measurement")
+                session_to_abort = session
+                if session_to_abort is not None:
+                    nonlocal pending_cancellation
+                    pending_cancellation = True
+                    session_to_abort.abort()
 
-        channels.source_mode = nidcpower.SourceMode.SINGLE_POINT
-        channels.output_function = nidcpower.OutputFunction.DC_VOLTAGE
-        channels.current_limit = current_limit
-        channels.voltage_level_range = voltage_level_range
-        channels.current_limit_range = current_limit_range
-        channels.source_delay = hightime.timedelta(seconds=source_delay)
-        channels.voltage_level = voltage_level
-        # The Measurement named tuple doesn't support type annotations:
-        # https://github.com/ni/nimi-python/issues/1885
-        measured_values = []
-        with channels.initiate():
-            deadline = time.time() + time_remaining
-            while True:
-                if time.time() > deadline:
-                    measurement_service.context.abort(
-                        grpc.StatusCode.DEADLINE_EXCEEDED, "deadline exceeded"
+            measurement_service.context.add_cancel_callback(cancel_callback)
+            time_remaining = measurement_service.context.time_remaining
+
+            channels.source_mode = nidcpower.SourceMode.SINGLE_POINT
+            channels.output_function = nidcpower.OutputFunction.DC_VOLTAGE
+            channels.current_limit = current_limit
+            channels.voltage_level_range = voltage_level_range
+            channels.current_limit_range = current_limit_range
+            channels.source_delay = hightime.timedelta(seconds=source_delay)
+            channels.voltage_level = voltage_level
+            # The Measurement named tuple doesn't support type annotations:
+            # https://github.com/ni/nimi-python/issues/1885
+            measured_values = []
+            with channels.initiate():
+                deadline = time.time() + time_remaining
+                while True:
+                    if time.time() > deadline:
+                        measurement_service.context.abort(
+                            grpc.StatusCode.DEADLINE_EXCEEDED, "deadline exceeded"
+                        )
+                    if pending_cancellation:
+                        measurement_service.context.abort(
+                            grpc.StatusCode.CANCELLED, "client requested cancellation"
+                        )
+                    try:
+                        channels.wait_for_event(nidcpower.enums.Event.SOURCE_COMPLETE, timeout=0.1)
+                        break
+                    except nidcpower.errors.DriverError as e:
+                        """
+                        There is no native way to support cancellation when taking a DCPower
+                        measurement. To support cancellation, we will be calling WaitForEvent
+                        until it succeeds or we have gone past the specified timeout. WaitForEvent
+                        will throw an exception if it times out, which is why we are catching
+                        and doing nothing.
+                        """
+                        if (
+                            e.code == NIDCPOWER_WAIT_FOR_EVENT_TIMEOUT_ERROR_CODE
+                            or e.code == NIDCPOWER_TIMEOUT_EXCEEDED_ERROR_CODE
+                        ):
+                            pass
+                        else:
+                            raise
+
+                measured_values = channels.measure_multiple()
+                for index, mapping in enumerate(channel_mappings):
+                    measured_values[index] = measured_values[index]._replace(
+                        in_compliance=session.channels[mapping.channel].query_in_compliance()
                     )
-                if pending_cancellation:
-                    measurement_service.context.abort(
-                        grpc.StatusCode.CANCELLED, "client requested cancellation"
-                    )
-                try:
-                    channels.wait_for_event(nidcpower.enums.Event.SOURCE_COMPLETE, timeout=0.1)
-                    break
-                except nidcpower.errors.DriverError as e:
-                    """
-                    There is no native way to support cancellation when taking a DCPower
-                    measurement. To support cancellation, we will be calling WaitForEvent
-                    until it succeeds or we have gone past the specified timeout. WaitForEvent
-                    will throw an exception if it times out, which is why we are catching
-                    and doing nothing.
-                    """
-                    if (
-                        e.code == NIDCPOWER_WAIT_FOR_EVENT_TIMEOUT_ERROR_CODE
-                        or e.code == NIDCPOWER_TIMEOUT_EXCEEDED_ERROR_CODE
-                    ):
-                        pass
-                    else:
-                        raise
-
-            measured_values = channels.measure_multiple()
-            for index, mapping in enumerate(channel_mappings):
-                measured_values[index] = measured_values[index]._replace(
-                    in_compliance=session.channels[mapping.channel].query_in_compliance()
-                )
-        session = None  # Don't abort after this point
+            session = None  # Don't abort after this point
 
     _log_measured_values(channel_mappings, measured_values)
     logging.info("Completed measurement")
@@ -167,38 +161,6 @@ def measure(
         [m.voltage for m in measured_values],
         [m.current for m in measured_values],
         [m.in_compliance for m in measured_values],
-    )
-
-
-def _create_nidcpower_session(
-    session_info: nims.session_management.SessionInformation,
-) -> nidcpower.Session:
-    options: Dict[str, Any] = {}
-    if service_options.use_simulation:
-        options["simulate"] = True
-        options["driver_setup"] = {"Model": "4141"}
-
-    session_kwargs: Dict[str, Any] = {}
-    if service_options.use_grpc_device:
-        session_grpc_address = service_options.grpc_device_address
-
-        if not session_grpc_address:
-            session_grpc_channel = measurement_service.get_channel(
-                provided_interface=nidcpower.GRPC_SERVICE_INTERFACE_NAME,
-                service_class="ni.measurementlink.v1.grpcdeviceserver",
-            )
-        else:
-            session_grpc_channel = measurement_service.channel_pool.get_channel(
-                target=session_grpc_address
-            )
-        session_kwargs["grpc_options"] = nidcpower.GrpcSessionOptions(
-            session_grpc_channel,
-            session_name=session_info.session_name,
-            initialization_behavior=nidcpower.SessionInitializationBehavior.AUTO,
-        )
-
-    return nidcpower.Session(
-        resource_name=session_info.resource_name, options=options, **session_kwargs
     )
 
 

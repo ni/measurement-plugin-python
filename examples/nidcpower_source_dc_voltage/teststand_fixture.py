@@ -1,13 +1,11 @@
 """Functions to set up and tear down sessions of NI-DCPower devices in NI TestStand."""
-from typing import Any, Dict
+from typing import Any
 
 import nidcpower
 from _helpers import GrpcChannelPoolHelper, PinMapClient, TestStandSupport
+from _nidcpower_helpers import create_session, reserve_session
 
 import ni_measurementlink_service as nims
-
-# To use a physical NI SMU instrument, set this to False.
-USE_SIMULATION = True
 
 
 def update_pin_map(pin_map_path: str, sequence_context: Any) -> str:
@@ -50,31 +48,20 @@ def create_nidcpower_sessions(sequence_context: Any) -> None:
         pin_map_id = teststand_support.get_active_pin_map_id()
 
         pin_map_context = nims.session_management.PinMapContext(pin_map_id=pin_map_id, sites=None)
-        with session_management_client.reserve_sessions(
-            context=pin_map_context,
-            instrument_type_id=nims.session_management.INSTRUMENT_TYPE_NI_DCPOWER,
+        with reserve_session(
+            session_management_client,
+            pin_map_context,
             # This code module sets up the sessions, so error immediately if they are in use.
             timeout=0,
         ) as reservation:
             for session_info in reservation.session_info:
-                options: Dict[str, Any] = {}
-                if USE_SIMULATION:
-                    options["simulate"] = True
-                    options["driver_setup"] = {"Model": "4141"}
-
-                grpc_options = nidcpower.GrpcSessionOptions(
-                    grpc_channel_pool.get_grpc_device_channel(
-                        nidcpower.GRPC_SERVICE_INTERFACE_NAME
-                    ),
-                    session_name=session_info.session_name,
-                    initialization_behavior=nidcpower.SessionInitializationBehavior.INITIALIZE_SERVER_SESSION,
+                grpc_device_channel = grpc_channel_pool.get_grpc_device_channel(
+                    nidcpower.GRPC_SERVICE_INTERFACE_NAME
                 )
-
-                # Leave session open
-                nidcpower.Session(
-                    resource_name=session_info.resource_name,
-                    options=options,
-                    grpc_options=grpc_options,
+                create_session(
+                    session_info,
+                    grpc_device_channel,
+                    initialization_behavior=nidcpower.SessionInitializationBehavior.INITIALIZE_SERVER_SESSION,
                 )
 
             session_management_client.register_sessions(reservation.session_info)
@@ -95,15 +82,12 @@ def destroy_nidcpower_sessions() -> None:
             session_management_client.unregister_sessions(reservation.session_info)
 
             for session_info in reservation.session_info:
-                grpc_options = nidcpower.GrpcSessionOptions(
-                    grpc_channel_pool.get_grpc_device_channel(
-                        nidcpower.GRPC_SERVICE_INTERFACE_NAME
-                    ),
-                    session_name=session_info.session_name,
-                    initialization_behavior=nidcpower.SessionInitializationBehavior.ATTACH_TO_SERVER_SESSION,
+                grpc_device_channel = grpc_channel_pool.get_grpc_device_channel(
+                    nidcpower.GRPC_SERVICE_INTERFACE_NAME
                 )
-
-                session = nidcpower.Session(
-                    resource_name=session_info.resource_name, grpc_options=grpc_options
+                session = create_session(
+                    session_info,
+                    grpc_device_channel,
+                    initialization_behavior=nidcpower.SessionInitializationBehavior.ATTACH_TO_SERVER_SESSION,
                 )
                 session.close()
