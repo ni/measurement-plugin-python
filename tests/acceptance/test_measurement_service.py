@@ -5,7 +5,6 @@ import urllib.request
 from os import path
 from typing import Generator, List, Union
 
-import grpc
 import pytest
 from examples.sample_measurement import measurement
 from google.protobuf import any_pb2
@@ -78,7 +77,6 @@ def test___measurement_service_v2___measure___returns_output(
     string_array_in: List[str],
     stub_v2: v2_measurement_service_pb2_grpc.MeasurementServiceStub,
 ):
-    """End to End Test to validate Measure RPC call with Sample Measurement."""
     request = v2_measurement_service_pb2.MeasureRequest(
         configuration_parameters=_get_configuration_parameters(
             float_in, double_array_in, bool_in, string_in, string_array_in
@@ -149,40 +147,8 @@ def measurement_service() -> Generator[MeasurementService, None, None]:
         yield service
 
 
-@pytest.fixture
-def grpc_channel(measurement_service: MeasurementService) -> Generator[grpc.Channel, None, None]:
-    """Test fixture that creates a gRPC channel."""
-    target = f"localhost:{measurement_service.grpc_service.port}"
-    options = [
-        ("grpc.max_receive_message_length", -1),
-        ("grpc.max_send_message_length", -1),
-    ]
-    with grpc.insecure_channel(target, options) as channel:
-        yield channel
-
-
-@pytest.fixture
-def stub_v1(grpc_channel: grpc.Channel) -> v1_measurement_service_pb2_grpc.MeasurementServiceStub:
-    """Test fixture that creates a MeasurementService v1 stub."""
-    return v1_measurement_service_pb2_grpc.MeasurementServiceStub(grpc_channel)
-
-
-@pytest.fixture
-def stub_v2(grpc_channel: grpc.Channel) -> v2_measurement_service_pb2_grpc.MeasurementServiceStub:
-    """Test fixture that creates a MeasurementService v2 stub."""
-    return v2_measurement_service_pb2_grpc.MeasurementServiceStub(grpc_channel)
-
-
-def _get_configuration_parameters(
-    float_in: float,
-    double_array_in: List[float],
-    bool_in: bool,
-    string_in: str,
-    string_array_in: List[str],
-) -> any_pb2.Any:
-    serialized_parameter = _get_serialized_measurement_signature(
-        float_in, double_array_in, bool_in, string_in, string_array_in
-    )
+def _get_configuration_parameters(*args, **kwargs) -> any_pb2.Any:
+    serialized_parameter = _get_serialized_measurement_signature(*args, **kwargs)
     config_params_any = any_pb2.Any()
     config_params_any.value = serialized_parameter
     return config_params_any
