@@ -4967,7 +4967,7 @@
 																<value>None</value>
 															</WindowActivation>
 															<ResultOption classname='Num'>
-																<value>1</value>
+																<value>0</value>
 															</ResultOption>
 															<StepFCSeqF classname='Bool'>
 																<value>true</value>
@@ -5412,7 +5412,7 @@
 																<value>None</value>
 															</WindowActivation>
 															<ResultOption classname='Num'>
-																<value>1</value>
+																<value>0</value>
 															</ResultOption>
 															<StepFCSeqF classname='Bool'>
 																<value>true</value>
@@ -5711,7 +5711,7 @@
 																<value>None</value>
 															</WindowActivation>
 															<ResultOption classname='Num'>
-																<value>1</value>
+																<value>0</value>
 															</ResultOption>
 															<StepFCSeqF classname='Bool'>
 																<value>true</value>
@@ -6108,7 +6108,7 @@
 																<value>None</value>
 															</WindowActivation>
 															<ResultOption classname='Num'>
-																<value>1</value>
+																<value>0</value>
 															</ResultOption>
 															<StepFCSeqF classname='Bool'>
 																<value>true</value>
