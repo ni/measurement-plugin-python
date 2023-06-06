@@ -24,17 +24,20 @@ from ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v
     measurement_service_pb2_grpc as v2_measurement_service_pb2_grpc,
 )
 from ni_measurementlink_service.measurement.info import MeasurementInfo
+from ni_measurementlink_service.session_management import PinMapContext
 
 
 class MeasurementServiceContext:
     """Accessor for the Measurement Service's context-local state."""
 
     def __init__(
-        self, grpc_context: grpc.ServicerContext, pin_map_context: pin_map_context_pb2.PinMapContext
+        self,
+        grpc_context: grpc.ServicerContext,
+        pin_map_context: PinMapContext,
     ) -> None:
         """Initialize the Measurement Service Context."""
         self._grpc_context: grpc.ServicerContext = grpc_context
-        self._pin_map_context: pin_map_context_pb2.PinMapContext = pin_map_context
+        self._pin_map_context: PinMapContext = pin_map_context
         self._is_complete: bool = False
 
     def mark_complete(self) -> None:
@@ -47,7 +50,7 @@ class MeasurementServiceContext:
         return self._grpc_context
 
     @property
-    def pin_map_context(self) -> pin_map_context_pb2.PinMapContext:
+    def pin_map_context(self) -> PinMapContext:
         """Get the pin map context for the RPC."""
         return self._pin_map_context
 
@@ -78,6 +81,18 @@ class MeasurementServiceContext:
 measurement_service_context: ContextVar[MeasurementServiceContext] = ContextVar(
     "measurement_service_context"
 )
+
+
+def _convert_pin_map_context_from_grpc(
+    grpc_pin_map_context: pin_map_context_pb2.PinMapContext,
+) -> PinMapContext:
+    # The protobuf PinMapContext sites field is a RepeatedScalarContainer, not a list.
+    # Constructing a protobuf PinMapContext with sites=None sets sites to an empty
+    # RepeatedScalarContainer, not None.
+    return PinMapContext(
+        pin_map_id=grpc_pin_map_context.pin_map_id,
+        sites=list(grpc_pin_map_context.sites),
+    )
 
 
 def _get_mapping_by_parameter_name(
@@ -231,9 +246,8 @@ class MeasurementServiceServicerV1(v1_measurement_service_pb2_grpc.MeasurementSe
         mapping_by_variable_name = _get_mapping_by_parameter_name(
             mapping_by_id, self.measure_function
         )
-        token = measurement_service_context.set(
-            MeasurementServiceContext(context, request.pin_map_context)
-        )
+        pin_map_context = _convert_pin_map_context_from_grpc(request.pin_map_context)
+        token = measurement_service_context.set(MeasurementServiceContext(context, pin_map_context))
         try:
             return_value = self.measure_function(**mapping_by_variable_name)
             if isinstance(return_value, collections.abc.Generator):
@@ -375,9 +389,8 @@ class MeasurementServiceServicerV2(v2_measurement_service_pb2_grpc.MeasurementSe
         mapping_by_variable_name = _get_mapping_by_parameter_name(
             mapping_by_id, self.measure_function
         )
-        token = measurement_service_context.set(
-            MeasurementServiceContext(context, request.pin_map_context)
-        )
+        pin_map_context = _convert_pin_map_context_from_grpc(request.pin_map_context)
+        token = measurement_service_context.set(MeasurementServiceContext(context, pin_map_context))
         try:
             return_value = self.measure_function(**mapping_by_variable_name)
             if isinstance(return_value, collections.abc.Generator):

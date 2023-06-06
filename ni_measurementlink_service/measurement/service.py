@@ -16,15 +16,13 @@ from ni_measurementlink_service._internal.parameter import (
     metadata as parameter_metadata,
 )
 from ni_measurementlink_service._internal.service_manager import GrpcService
-from ni_measurementlink_service._internal.stubs.ni.measurementlink import (
-    pin_map_context_pb2,
-)
 from ni_measurementlink_service.measurement.info import (
     DataType,
     MeasurementInfo,
     ServiceInfo,
     TypeSpecialization,
 )
+from ni_measurementlink_service.session_management import PinMapContext
 
 
 class MeasurementContext:
@@ -36,7 +34,7 @@ class MeasurementContext:
         return grpc_servicer.measurement_service_context.get().grpc_context
 
     @property
-    def pin_map_context(self) -> pin_map_context_pb2.PinMapContext:
+    def pin_map_context(self) -> PinMapContext:
         """Get the pin map context for the RPC."""
         return grpc_servicer.measurement_service_context.get().pin_map_context
 
