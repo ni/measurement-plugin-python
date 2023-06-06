@@ -73,6 +73,12 @@ def fix_import_paths(
     print("Fixing import paths")
     grpc_codegened_file_paths = list(stubs_path.rglob("*pb2*py"))
     imports_to_fix = [path.stem for path in grpc_codegened_file_paths if path.parent == stubs_path]
+    imports_to_alias = [
+        ".".join(path.relative_to(stubs_path).with_suffix("").parts)
+        for path in grpc_codegened_file_paths
+        if path.stem not in imports_to_fix
+    ]
+    grpc_codegened_file_paths.extend(stubs_path.rglob("*pb2*pyi"))
     for path in grpc_codegened_file_paths:
         print(f"Processing {path}")
         data = path.read_bytes()
@@ -80,12 +86,22 @@ def fix_import_paths(
             data = data.replace(
                 f"import {name}".encode(), f"from {stubs_namespace} import {name}".encode()
             )
-
         for namespace in proto_parent_namespaces:
             data = data.replace(
                 f"from {namespace}".encode(),
                 f"from {stubs_namespace}.{namespace}".encode(),
             )
+        if path.suffix == ".pyi":
+            for name in imports_to_alias:
+                alias = name.replace(".", "_")
+                data = data.replace(
+                    f"import {name}\n".encode(),
+                    f"import {stubs_namespace}.{name} as {alias}\n".encode(),
+                )
+                data = data.replace(
+                    f"{name}.".encode(),
+                    f"{alias}.".encode(),
+                )
         path.write_bytes(data)
 
 
