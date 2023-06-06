@@ -16,6 +16,9 @@ from ni_measurementlink_service._internal.parameter import (
     metadata as parameter_metadata,
 )
 from ni_measurementlink_service._internal.service_manager import GrpcService
+from ni_measurementlink_service._internal.stubs.ni.measurementlink import (
+    pin_map_context_pb2,
+)
 from ni_measurementlink_service.measurement.info import (
     DataType,
     MeasurementInfo,
@@ -28,29 +31,29 @@ class MeasurementContext:
     """Proxy for the Measurement Service's context-local state."""
 
     @property
-    def grpc_context(self):
+    def grpc_context(self) -> grpc.ServicerContext:
         """Get the context for the RPC."""
         return grpc_servicer.measurement_service_context.get().grpc_context
 
     @property
-    def pin_map_context(self):
+    def pin_map_context(self) -> pin_map_context_pb2.PinMapContext:
         """Get the pin map context for the RPC."""
         return grpc_servicer.measurement_service_context.get().pin_map_context
 
-    def add_cancel_callback(self, cancel_callback: Callable):
+    def add_cancel_callback(self, cancel_callback: Callable) -> None:
         """Add a callback which is invoked when the RPC is canceled."""
         grpc_servicer.measurement_service_context.get().add_cancel_callback(cancel_callback)
 
-    def cancel(self):
+    def cancel(self) -> None:
         """Cancel the RPC."""
         grpc_servicer.measurement_service_context.get().cancel()
 
     @property
-    def time_remaining(self):
+    def time_remaining(self) -> float:
         """Get the time remaining for the RPC."""
         return grpc_servicer.measurement_service_context.get().time_remaining
 
-    def abort(self, code, details):
+    def abort(self, code: grpc.StatusCode, details: str) -> None:
         """Aborts the RPC."""
         grpc_servicer.measurement_service_context.get().abort(code, details)
 
