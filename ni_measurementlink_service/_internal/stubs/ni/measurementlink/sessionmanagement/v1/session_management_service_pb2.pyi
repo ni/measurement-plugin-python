@@ -7,8 +7,8 @@ import collections.abc
 import google.protobuf.descriptor
 import google.protobuf.internal.containers
 import google.protobuf.message
-import ni.measurementlink.pin_map_context_pb2
-import session_pb2
+import ni_measurementlink_service._internal.stubs.ni.measurementlink.pin_map_context_pb2 as ni_measurementlink_pin_map_context_pb2
+from ni_measurementlink_service._internal.stubs import session_pb2
 import sys
 
 if sys.version_info >= (3, 8):
@@ -116,7 +116,7 @@ class ReserveSessionsRequest(google.protobuf.message.Message):
     INSTRUMENT_TYPE_ID_FIELD_NUMBER: builtins.int
     TIMEOUT_IN_MILLISECONDS_FIELD_NUMBER: builtins.int
     @property
-    def pin_map_context(self) -> ni.measurementlink.pin_map_context_pb2.PinMapContext:
+    def pin_map_context(self) -> ni_measurementlink_pin_map_context_pb2.PinMapContext:
         """Required. Includes the pin map ID for the pin map in the Pin Map Service, as well as the list of sites for the measurement."""
     @property
     def pin_or_relay_names(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]:
@@ -140,7 +140,7 @@ class ReserveSessionsRequest(google.protobuf.message.Message):
     def __init__(
         self,
         *,
-        pin_map_context: ni.measurementlink.pin_map_context_pb2.PinMapContext | None = ...,
+        pin_map_context: ni_measurementlink_pin_map_context_pb2.PinMapContext | None = ...,
         pin_or_relay_names: collections.abc.Iterable[builtins.str] | None = ...,
         instrument_type_id: builtins.str = ...,
         timeout_in_milliseconds: builtins.int = ...,
