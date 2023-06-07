@@ -40,10 +40,10 @@ class PinMapContext(NamedTuple):
 
     Attributes
     ----------
-        pin_map_id (str): The resource id of the pin map in the Pin Map service that should be used
-            for the call.
+        pin_map_id: The resource id of the pin map in the Pin Map service that should be used for
+            the call.
 
-        sites (list): List of site numbers being used for the call. If None, use all sites in the
+        sites: List of site numbers being used for the call. If None or empty, use all sites in the
             pin map.
 
     """
