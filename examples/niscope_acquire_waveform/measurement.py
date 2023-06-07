@@ -4,7 +4,7 @@ import contextlib
 import logging
 import pathlib
 import time
-from typing import Any, Dict, Tuple
+from typing import Tuple
 
 import click
 import grpc
@@ -12,12 +12,15 @@ import niscope
 from _helpers import (
     ServiceOptions,
     configure_logging,
+    create_session_management_client,
+    get_grpc_device_channel,
     get_service_options,
     grpc_device_options,
     str_to_enum,
     use_simulation_option,
     verbosity_option,
 )
+from _niscope_helpers import _create_niscope_session
 
 import ni_measurementlink_service as nims
 
@@ -112,12 +115,7 @@ def measure(
 
     measurement_service.context.add_cancel_callback(cancel_callback)
 
-    session_management_client = nims.session_management.Client(
-        grpc_channel=measurement_service.get_channel(
-            provided_interface=nims.session_management.GRPC_SERVICE_INTERFACE_NAME,
-            service_class=nims.session_management.GRPC_SERVICE_CLASS,
-        )
-    )
+    session_management_client = create_session_management_client(measurement_service)
 
     with contextlib.ExitStack() as stack:
         reservation = stack.enter_context(
@@ -146,7 +144,8 @@ def measure(
         if trigger_source in pin_to_channel:
             trigger_source = pin_to_channel[trigger_source]
 
-        session = stack.enter_context(_create_niscope_session(session_info))
+        grpc_device_channel = get_grpc_device_channel(measurement_service, niscope)
+        session = stack.enter_context(_create_niscope_session(session_info, grpc_device_channel))
         session.channels[""].channel_enabled = False
         session.channels[channel_names].configure_vertical(
             vertical_range,
@@ -194,36 +193,6 @@ def measure(
             return tuple(w.samples for w in waveform_infos)
 
     return ()
-
-
-def _create_niscope_session(
-    session_info: nims.session_management.SessionInformation,
-) -> niscope.Session:
-    options: Dict[str, Any] = {}
-    if service_options.use_simulation:
-        options["simulate"] = True
-        options["driver_setup"] = {"Model": "5162 (4CH)"}
-
-    session_kwargs: Dict[str, Any] = {}
-    if service_options.use_grpc_device:
-        session_grpc_address = service_options.grpc_device_address
-
-        if not session_grpc_address:
-            session_grpc_channel = measurement_service.get_channel(
-                provided_interface=niscope.GRPC_SERVICE_INTERFACE_NAME,
-                service_class="ni.measurementlink.v1.grpcdeviceserver",
-            )
-        else:
-            session_grpc_channel = measurement_service.channel_pool.get_channel(
-                target=session_grpc_address
-            )
-        session_kwargs["grpc_options"] = niscope.GrpcSessionOptions(
-            session_grpc_channel,
-            session_name=session_info.session_name,
-            initialization_behavior=niscope.SessionInitializationBehavior.AUTO,
-        )
-
-    return niscope.Session(session_info.resource_name, options=options, **session_kwargs)
 
 
 @click.command
