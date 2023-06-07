@@ -14,7 +14,7 @@ USE_SIMULATION = True
 
 def _create_nidmm_session(
     session_info: nims.session_management.SessionInformation,
-    session_grpc_channel: grpc.Channel,
+    session_grpc_channel: grpc.Channel=None,
     initialization_behavior=nidmm.SessionInitializationBehavior.AUTO,
 ) -> nidmm.Session:
     options: Dict[str, Any] = {}
@@ -24,10 +24,11 @@ def _create_nidmm_session(
 
     session_kwargs: Dict[str, Any] = {}
 
-    session_kwargs["grpc_options"] = nidmm.GrpcSessionOptions(
-        session_grpc_channel,
-        session_name=session_info.session_name,
-        initialization_behavior=initialization_behavior,
-    )
+    if session_grpc_channel is not None:
+        session_kwargs["grpc_options"] = nidmm.GrpcSessionOptions(
+            session_grpc_channel,
+            session_name=session_info.session_name,
+            initialization_behavior=initialization_behavior,
+        )
 
     return nidmm.Session(session_info.resource_name, options=options, **session_kwargs)

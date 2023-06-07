@@ -12,6 +12,7 @@ from _helpers import (
     ServiceOptions,
     configure_logging,
     get_service_options,
+    create_session_management_client,
     str_to_enum,
     use_simulation_option,
     verbosity_option,
@@ -77,12 +78,7 @@ def measure(
         resolution_digits,
     )
 
-    session_management_client = nims.session_management.Client(
-        grpc_channel=measurement_service.get_channel(
-            provided_interface=nims.session_management.GRPC_SERVICE_INTERFACE_NAME,
-            service_class=nims.session_management.GRPC_SERVICE_CLASS,
-        )
-    )
+    session_management_client = create_session_management_client(measurement_service)
 
     with contextlib.ExitStack() as stack:
         reservation = stack.enter_context(
