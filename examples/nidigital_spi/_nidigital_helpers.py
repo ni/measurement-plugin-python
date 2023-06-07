@@ -14,7 +14,7 @@ USE_SIMULATION = True
 
 def _create_nidigital_session(
     session_info: nims.session_management.SessionInformation,
-    session_grpc_channel: grpc.Channel=None,
+    session_grpc_channel: grpc.Channel = None,
     initialization_behavior=nidigital.SessionInitializationBehavior.AUTO,
 ) -> nidigital.Session:
     options: Dict[str, Any] = {}
