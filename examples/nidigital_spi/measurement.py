@@ -104,8 +104,8 @@ def measure(
                 str(_resolve_relative_path(service_directory, pattern_file_path)),
             )
 
-        levels_file_name = _get_file_name_from_path(levels_file_path)
-        timing_file_name = _get_file_name_from_path(timing_file_path)
+        levels_file_name = pathlib.Path(levels_file_path).stem
+        timing_file_name = pathlib.Path(timing_file_path).stem
         selected_sites.apply_levels_and_timing(levels_file_name, timing_file_name)
         selected_sites.burst_pattern(start_label="SPI_Pattern")
         site_pass_fail = selected_sites.get_site_pass_fail()
@@ -155,11 +155,6 @@ def _resolve_relative_path(
         return file_path
     else:
         return (directory_path / file_path).resolve()
-
-
-def _get_file_name_from_path(file_path: Union[str, pathlib.PurePath]) -> str:
-    file_path = pathlib.PurePath(file_path)
-    return file_path.stem
 
 
 @click.command
