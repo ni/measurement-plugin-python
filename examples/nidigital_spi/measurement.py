@@ -150,17 +150,15 @@ def _create_nidigital_session(
 def _resolve_relative_path(
     directory_path: pathlib.Path, file_path: Union[str, pathlib.Path]
 ) -> pathlib.Path:
-    if not isinstance(file_path, pathlib.Path):
-        file_path = pathlib.Path(file_path)
+    file_path = pathlib.Path(file_path)
     if file_path.is_absolute():
         return file_path
     else:
         return (directory_path / file_path).resolve()
 
 
-def _get_file_name_from_path(file_path: Union[str, pathlib.Path]) -> str:
-    if not isinstance(file_path, pathlib.Path):
-        file_path = pathlib.Path(file_path)
+def _get_file_name_from_path(file_path: Union[str, pathlib.PurePath]) -> str:
+    file_path = pathlib.PurePath(file_path)
     return file_path.stem
 
 
