@@ -14,7 +14,7 @@ USE_SIMULATION = True
 
 def _create_nidmm_session(
     session_info: nims.session_management.SessionInformation,
-    session_grpc_channel: grpc.Channel=None,
+    session_grpc_channel: grpc.Channel = None,
     initialization_behavior=nidmm.SessionInitializationBehavior.AUTO,
 ) -> nidmm.Session:
     options: Dict[str, Any] = {}

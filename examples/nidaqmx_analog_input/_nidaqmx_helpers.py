@@ -8,7 +8,7 @@ import ni_measurementlink_service as nims
 
 def _create_nidaqmx_task(
     session_info: nims.session_management.SessionInformation,
-    session_grpc_channel: grpc.Channel=None,
+    session_grpc_channel: grpc.Channel = None,
     initialization_behavior=nidaqmx.SessionInitializationBehavior.AUTO,
 ) -> nidaqmx.Task:
     session_kwargs = {}
