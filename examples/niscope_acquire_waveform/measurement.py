@@ -1,6 +1,5 @@
 """Acquire a waveform using an NI oscilloscope."""
 
-import contextlib
 import logging
 import pathlib
 import time
@@ -20,7 +19,7 @@ from _helpers import (
     use_simulation_option,
     verbosity_option,
 )
-from _niscope_helpers import create_session, USE_SIMULATION
+from _niscope_helpers import USE_SIMULATION, create_session
 
 import ni_measurementlink_service as nims
 
@@ -113,19 +112,15 @@ def measure(
 
     session_management_client = create_session_management_client(measurement_service)
 
-    with contextlib.ExitStack() as stack:
-        reservation = stack.enter_context(
-            session_management_client.reserve_sessions(
-                context=measurement_service.context.pin_map_context,
-                pin_or_relay_names=pin_names,
-                instrument_type_id=nims.session_management.INSTRUMENT_TYPE_NI_SCOPE,
-                # If another measurement is using the session, wait for it to complete.
-                # Specify a timeout to aid in debugging missed unreserve calls.
-                # Long measurements may require a longer timeout.
-                timeout=60,
-            )
-        )
-
+    with session_management_client.reserve_sessions(
+        context=measurement_service.context.pin_map_context,
+        pin_or_relay_names=pin_names,
+        instrument_type_id=nims.session_management.INSTRUMENT_TYPE_NI_SCOPE,
+        # If another measurement is using the session, wait for it to complete.
+        # Specify a timeout to aid in debugging missed unreserve calls.
+        # Long measurements may require a longer timeout.
+        timeout=60,
+    ) as reservation:
         if len(reservation.session_info) != 1:
             measurement_service.context.abort(
                 grpc.StatusCode.INVALID_ARGUMENT,
@@ -141,52 +136,54 @@ def measure(
             trigger_source = pin_to_channel[trigger_source]
 
         grpc_device_channel = get_grpc_device_channel(measurement_service, niscope)
-        session = stack.enter_context(create_session(session_info, grpc_device_channel))
-        session.channels[""].channel_enabled = False
-        session.channels[channel_names].configure_vertical(
-            vertical_range,
-            str_to_enum(VERTICAL_COUPLING_TO_ENUM, vertical_coupling),
-        )
-        session.channels[channel_names].configure_chan_characteristics(
-            input_impedance, max_input_frequency=0.0
-        )
-        session.configure_horizontal_timing(
-            min_sample_rate,
-            min_record_length,
-            ref_position=50.0,
-            num_records=1,
-            enforce_realtime=True,
-        )
-        session.configure_trigger_edge(
-            trigger_source,
-            trigger_level,
-            str_to_enum(TRIGGER_COUPLING_TO_ENUM, trigger_coupling),
-            str_to_enum(TRIGGER_SLOPE_TO_ENUM, trigger_slope),
-        )
-        session.trigger_modifier = (
-            niscope.TriggerModifier.AUTO if auto_trigger else niscope.TriggerModifier.NO_TRIGGER_MOD
-        )
+        with create_session(session_info, grpc_device_channel) as session:
+            session.channels[""].channel_enabled = False
+            session.channels[channel_names].configure_vertical(
+                vertical_range,
+                str_to_enum(VERTICAL_COUPLING_TO_ENUM, vertical_coupling),
+            )
+            session.channels[channel_names].configure_chan_characteristics(
+                input_impedance, max_input_frequency=0.0
+            )
+            session.configure_horizontal_timing(
+                min_sample_rate,
+                min_record_length,
+                ref_position=50.0,
+                num_records=1,
+                enforce_realtime=True,
+            )
+            session.configure_trigger_edge(
+                trigger_source,
+                trigger_level,
+                str_to_enum(TRIGGER_COUPLING_TO_ENUM, trigger_coupling),
+                str_to_enum(TRIGGER_SLOPE_TO_ENUM, trigger_slope),
+            )
+            session.trigger_modifier = (
+                niscope.TriggerModifier.AUTO
+                if auto_trigger
+                else niscope.TriggerModifier.NO_TRIGGER_MOD
+            )
 
-        with session.initiate():
-            deadline = time.time() + min(measurement_service.context.time_remaining, timeout)
-            while True:
-                if time.time() > deadline:
-                    measurement_service.context.abort(
-                        grpc.StatusCode.DEADLINE_EXCEEDED, "Deadline exceeded."
-                    )
-                if pending_cancellation:
-                    measurement_service.context.abort(
-                        grpc.StatusCode.CANCELLED, "Client requested cancellation."
-                    )
-                status = session.acquisition_status()
-                if status == niscope.AcquisitionStatus.COMPLETE:
-                    break
-                remaining_time = max(deadline - time.time(), 0.0)
-                sleep_time = min(remaining_time, 10e-3)
-                time.sleep(sleep_time)
+            with session.initiate():
+                deadline = time.time() + min(measurement_service.context.time_remaining, timeout)
+                while True:
+                    if time.time() > deadline:
+                        measurement_service.context.abort(
+                            grpc.StatusCode.DEADLINE_EXCEEDED, "Deadline exceeded."
+                        )
+                    if pending_cancellation:
+                        measurement_service.context.abort(
+                            grpc.StatusCode.CANCELLED, "Client requested cancellation."
+                        )
+                    status = session.acquisition_status()
+                    if status == niscope.AcquisitionStatus.COMPLETE:
+                        break
+                    remaining_time = max(deadline - time.time(), 0.0)
+                    sleep_time = min(remaining_time, 10e-3)
+                    time.sleep(sleep_time)
 
-            waveform_infos = session.channels[channel_names].fetch()
-            return tuple(w.samples for w in waveform_infos)
+                waveform_infos = session.channels[channel_names].fetch()
+                return tuple(w.samples for w in waveform_infos)
 
     return ()
 

@@ -1,6 +1,5 @@
 """Perform a finite analog input measurement with NI-DAQmx."""
 
-import contextlib
 import logging
 import pathlib
 from typing import Optional
@@ -50,18 +49,15 @@ def measure(pin_name, sample_rate, number_of_samples):
         number_of_samples,
     )
     session_management_client = create_session_management_client(measurement_service)
-    with contextlib.ExitStack() as stack:
-        reservation = stack.enter_context(
-            session_management_client.reserve_sessions(
-                context=measurement_service.context.pin_map_context,
-                pin_or_relay_names=[pin_name],
-                instrument_type_id=nims.session_management.INSTRUMENT_TYPE_NI_DAQMX,
-                # If another measurement is using the session, wait for it to complete.
-                # Specify a timeout to aid in debugging missed unreserve calls.
-                # Long measurements may require a longer timeout.
-                timeout=60,
-            )
-        )
+    with session_management_client.reserve_sessions(
+        context=measurement_service.context.pin_map_context,
+        pin_or_relay_names=[pin_name],
+        instrument_type_id=nims.session_management.INSTRUMENT_TYPE_NI_DAQMX,
+        # If another measurement is using the session, wait for it to complete.
+        # Specify a timeout to aid in debugging missed unreserve calls.
+        # Long measurements may require a longer timeout.
+        timeout=60,
+    ) as reservation:
         if len(reservation.session_info) != 1:
             measurement_service.context.abort(
                 grpc.StatusCode.INVALID_ARGUMENT,
@@ -79,18 +75,20 @@ def measure(pin_name, sample_rate, number_of_samples):
         measurement_service.context.add_cancel_callback(cancel_callback)
 
         grpc_device_channel = get_grpc_device_channel(measurement_service, nidaqmx)
-        task = stack.enter_context(create_task(session_info, grpc_device_channel))
-        if not session_info.session_exists:
-            task.ai_channels.add_ai_voltage_chan(session_info.channel_list)
+        with create_task(session_info, grpc_device_channel) as task:
+            if not session_info.session_exists:
+                task.ai_channels.add_ai_voltage_chan(session_info.channel_list)
 
-        task.timing.cfg_samp_clk_timing(
-            rate=sample_rate,
-            samps_per_chan=number_of_samples,
-        )
+            task.timing.cfg_samp_clk_timing(
+                rate=sample_rate,
+                samps_per_chan=number_of_samples,
+            )
 
-        timeout = min(measurement_service.context.time_remaining, 10.0)
-        voltage_values = task.read(number_of_samples_per_channel=number_of_samples, timeout=timeout)
-        task = None  # Don't abort after this point
+            timeout = min(measurement_service.context.time_remaining, 10.0)
+            voltage_values = task.read(
+                number_of_samples_per_channel=number_of_samples, timeout=timeout
+            )
+            task = None  # Don't abort after this point
 
     _log_measured_values(voltage_values)
     logging.info("Completed measurement")
