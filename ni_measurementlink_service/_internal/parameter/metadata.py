@@ -1,5 +1,6 @@
 """Contains classes that represents metadata."""
 from typing import Any, Dict, NamedTuple
+from enum import Enum
 
 from google.protobuf import type_pb2
 
@@ -55,9 +56,10 @@ def validate_default_value_type(parameter_metadata: ParameterMetadata) -> None:
     )
 
     if not isinstance(default_value, expected_type):
-        raise TypeError(
-            f"Unexpected type {type(default_value)} in the default value for '{display_name}'. Expected type: {expected_type}."
-        )
+        if not issubclass(type(default_value), Enum):
+            raise TypeError(
+                f"Unexpected type {type(default_value)} in the default value for '{display_name}'. Expected type: {expected_type}."
+            )
 
     if parameter_metadata.repeated:
         expected_element_type = type(Context.get_type_default(parameter_metadata.type, False))

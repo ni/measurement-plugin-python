@@ -113,6 +113,7 @@ IntEncoder = _scalar_encoder(encoder.Int32Encoder)
 UIntEncoder = _scalar_encoder(encoder.UInt32Encoder)
 BoolEncoder = _scalar_encoder(encoder.BoolEncoder)
 StringEncoder = _scalar_encoder(encoder.StringEncoder)
+EnumEncoder = _scalar_encoder(encoder.Int32Encoder)
 
 FloatArrayEncoder = _vector_encoder(encoder.FloatEncoder)
 DoubleArrayEncoder = _vector_encoder(encoder.DoubleEncoder)
@@ -120,6 +121,7 @@ IntArrayEncoder = _vector_encoder(encoder.Int32Encoder)
 UIntArrayEncoder = _vector_encoder(encoder.UInt32Encoder)
 BoolArrayEncoder = _vector_encoder(encoder.BoolEncoder)
 StringArrayEncoder = _vector_encoder(encoder.StringEncoder, is_packed=False)
+EnumArrayEncoder = _vector_encoder(encoder.Int32Encoder)
 
 
 FloatDecoder = _scalar_decoder(decoder.FloatDecoder)
@@ -130,6 +132,7 @@ Int64Decoder = _scalar_decoder(decoder.Int64Decoder)
 UInt64Decoder = _scalar_decoder(decoder.UInt64Decoder)
 BoolDecoder = _scalar_decoder(decoder.BoolDecoder)
 StringDecoder = _scalar_decoder(decoder.StringDecoder)
+EnumDecoder = _scalar_decoder(decoder.Int32Decoder)
 
 FloatArrayDecoder = _vector_decoder(decoder.FloatDecoder)
 DoubleArrayDecoder = _vector_decoder(decoder.DoubleDecoder)
@@ -139,6 +142,7 @@ Int64ArrayDecoder = _vector_decoder(decoder.Int64Decoder)
 UInt64ArrayDecoder = _vector_decoder(decoder.UInt64Decoder)
 BoolArrayDecoder = _vector_decoder(decoder.BoolDecoder)
 StringArrayDecoder = _vector_decoder(decoder.StringDecoder, is_packed=False)
+EnumArrayDecoder = _vector_decoder(decoder.Int32Decoder)
 
 
 class Context:
@@ -153,7 +157,7 @@ class Context:
         type_pb2.Field.TYPE_UINT64: (UIntEncoder, UIntArrayEncoder),
         type_pb2.Field.TYPE_BOOL: (BoolEncoder, BoolArrayEncoder),
         type_pb2.Field.TYPE_STRING: (StringEncoder, StringArrayEncoder),
-        type_pb2.Field.TYPE_ENUM: (IntEncoder, IntArrayEncoder),
+        type_pb2.Field.TYPE_ENUM: (EnumEncoder, EnumArrayEncoder),
     }
 
     _FIELD_TYPE_TO_DECODER_MAPPING = {
@@ -165,7 +169,7 @@ class Context:
         type_pb2.Field.TYPE_UINT64: (UInt64Decoder, UInt64ArrayDecoder),
         type_pb2.Field.TYPE_BOOL: (BoolDecoder, BoolArrayDecoder),
         type_pb2.Field.TYPE_STRING: (StringDecoder, StringArrayDecoder),
-        type_pb2.Field.TYPE_ENUM: (Int32Decoder, Int32ArrayDecoder),
+        type_pb2.Field.TYPE_ENUM: (EnumDecoder, EnumArrayDecoder),
     }
 
     _TYPE_DEFAULT_MAPPING = {

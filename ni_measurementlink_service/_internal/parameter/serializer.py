@@ -7,6 +7,7 @@ from google.protobuf.internal import encoder
 
 from ni_measurementlink_service._internal.parameter import serialization_strategy
 from ni_measurementlink_service._internal.parameter.metadata import ParameterMetadata
+from ni_measurementlink_service.measurement.info import TypeSpecialization
 
 _GRPC_WIRE_TYPE_BIT_WIDTH = 3
 
@@ -67,6 +68,10 @@ def serialize_parameters(
             parameter_metadata.type,
             parameter_metadata.repeated,
         )
+        # Convert enum parameters to their underlying value.
+        if "ni/type_specialization" in parameter_metadata.annotations:
+            if parameter_metadata.annotations["ni/type_specialization"] == TypeSpecialization.Enum.value:
+                parameter = parameter.value
         # Skipping serialization if the value is None or if its a type default value.
         if parameter is not None and parameter != type_default_value:
             inner_encoder = encoder(i + 1)
