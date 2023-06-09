@@ -13,16 +13,15 @@ from _helpers import (
     ServiceOptions,
     configure_logging,
     create_session_management_client,
-    get_service_options,
     get_grpc_device_channel,
+    get_service_options,
     grpc_device_options,
     use_simulation_option,
     verbosity_option,
 )
-from _nidcpower_helpers import create_session, reserve_session, USE_SIMULATION
+from _nidcpower_helpers import USE_SIMULATION, create_session
 
 import ni_measurementlink_service as nims
-
 
 NIDCPOWER_WAIT_FOR_EVENT_TIMEOUT_ERROR_CODE = -1074116059
 NIDCPOWER_TIMEOUT_EXCEEDED_ERROR_CODE = -1074097933
@@ -69,10 +68,10 @@ def measure(
 
     session_management_client = create_session_management_client(measurement_service)
 
-    with reserve_session(
-        session_management_client,
-        measurement_service.context.pin_map_context,
-        pin_names=pin_names,
+    with session_management_client.reserve_sessions(
+        context=measurement_service.context.pin_map_context,
+        pin_or_relay_names=pin_names,
+        instrument_type_id=nims.session_management.INSTRUMENT_TYPE_NI_DCPOWER,
         # If another measurement is using the session, wait for it to complete.
         # Specify a timeout to aid in debugging missed unreserve calls.
         # Long measurements may require a longer timeout.
