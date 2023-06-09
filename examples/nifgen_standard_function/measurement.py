@@ -44,7 +44,7 @@ service_options = ServiceOptions()
     "Pin1",
     instrument_type=nims.session_management.INSTRUMENT_TYPE_NI_FGEN,
 )
-@measurement_service.configuration("waveform_type", nims.DataType.Enum, nifgen.Waveform.SINE.value, enum_type=nifgen.Waveform)
+@measurement_service.configuration("waveform_type", nims.DataType.Enum, nifgen.Waveform.SINE, enum_type=nifgen.Waveform)
 @measurement_service.configuration("frequency", nims.DataType.Double, 1.0e6)
 @measurement_service.configuration("amplitude", nims.DataType.Double, 2.0)
 @measurement_service.configuration("duration", nims.DataType.Double, 10.0)

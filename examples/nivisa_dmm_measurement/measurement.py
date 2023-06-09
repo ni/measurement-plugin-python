@@ -66,9 +66,9 @@ FUNCTION_TO_DISPLAY_VALUE = {
 @measurement_service.configuration(
     "pin_name", nims.DataType.Pin, "Pin1", instrument_type=INSTRUMENT_TYPE_DMM_SIMULATOR
 )
-@measurement_service.configuration("measurement_type", nims.DataType.Enum, Function.DCVolts.value, enum_type=Function)
+@measurement_service.configuration("measurement_type", nims.DataType.Enum, Function.DCVolts, enum_type=Function)
 @measurement_service.configuration("range", nims.DataType.Double, 1.0)
-@measurement_service.configuration("resolution_digits", nims.DataType.Enum, ResolutionDigits.ThreePointFive.value, enum_type=ResolutionDigits)
+@measurement_service.configuration("resolution_digits", nims.DataType.Enum, ResolutionDigits.ThreePointFive, enum_type=ResolutionDigits)
 @measurement_service.output("measured_value", nims.DataType.Double)
 def measure(
     pin_name: str,

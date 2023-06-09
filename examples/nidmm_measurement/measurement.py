@@ -39,7 +39,7 @@ service_options = ServiceOptions()
     "Pin1",
     instrument_type=nims.session_management.INSTRUMENT_TYPE_NI_DMM,
 )
-@measurement_service.configuration("measurement_type", nims.DataType.Enum, nidmm.Function.DC_VOLTS.value, enum_type=nidmm.Function)
+@measurement_service.configuration("measurement_type", nims.DataType.Enum, nidmm.Function.DC_VOLTS, enum_type=nidmm.Function)
 @measurement_service.configuration("range", nims.DataType.Double, 10.0)
 @measurement_service.configuration("resolution_digits", nims.DataType.Double, 5.5)
 @measurement_service.output("measured_value", nims.DataType.Double)

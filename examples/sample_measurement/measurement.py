@@ -31,7 +31,7 @@ class Color(Enum):
 )
 @sample_measurement_service.configuration("Bool In", nims.DataType.Boolean, False)
 @sample_measurement_service.configuration("String In", nims.DataType.String, "sample string")
-@sample_measurement_service.configuration("Enum In", nims.DataType.Enum, Color.BLUE.value, enum_type=Color)
+@sample_measurement_service.configuration("Enum In", nims.DataType.Enum, Color.BLUE, enum_type=Color)
 @sample_measurement_service.configuration(
     "String Array In", nims.DataType.StringArray1D, ["String1", "String2"]
 )
