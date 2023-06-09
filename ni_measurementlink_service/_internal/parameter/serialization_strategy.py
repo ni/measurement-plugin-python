@@ -153,6 +153,7 @@ class Context:
         type_pb2.Field.TYPE_UINT64: (UIntEncoder, UIntArrayEncoder),
         type_pb2.Field.TYPE_BOOL: (BoolEncoder, BoolArrayEncoder),
         type_pb2.Field.TYPE_STRING: (StringEncoder, StringArrayEncoder),
+        type_pb2.Field.TYPE_ENUM: (IntEncoder, IntArrayEncoder),
     }
 
     _FIELD_TYPE_TO_DECODER_MAPPING = {
@@ -164,6 +165,7 @@ class Context:
         type_pb2.Field.TYPE_UINT64: (UInt64Decoder, UInt64ArrayDecoder),
         type_pb2.Field.TYPE_BOOL: (BoolDecoder, BoolArrayDecoder),
         type_pb2.Field.TYPE_STRING: (StringDecoder, StringArrayDecoder),
+        type_pb2.Field.TYPE_ENUM: (Int32Decoder, Int32ArrayDecoder),
     }
 
     _TYPE_DEFAULT_MAPPING = {
@@ -175,6 +177,7 @@ class Context:
         type_pb2.Field.TYPE_UINT64: int(),
         type_pb2.Field.TYPE_BOOL: bool(),
         type_pb2.Field.TYPE_STRING: str(),
+        type_pb2.Field.TYPE_ENUM: int(),
     }
 
     @staticmethod
