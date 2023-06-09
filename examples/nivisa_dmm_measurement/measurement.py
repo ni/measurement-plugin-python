@@ -4,6 +4,7 @@ import contextlib
 import logging
 import pathlib
 from typing import Tuple
+from enum import Enum, auto
 
 import click
 import grpc
@@ -12,7 +13,6 @@ from _helpers import (
     ServiceOptions,
     configure_logging,
     get_service_options,
-    str_to_enum,
     use_simulation_option,
     verbosity_option,
 )
@@ -40,27 +40,35 @@ measurement_service = nims.MeasurementService(
 )
 service_options = ServiceOptions()
 
+class ResolutionDigits(Enum):
+    ThreePointFive = auto()
+    FourPointFive = auto()
+    FivePointFive = auto()
+    SixPointFive = auto()
 
-FUNCTION_TO_ENUM = {
-    "DC Volts": "VOLT:DC",
-    "AC Volts": "VOLT:AC",
+RESOLUTION_DIGITS_TO_DISPLAY_VALUE = {
+    ResolutionDigits.ThreePointFive: 0.001,
+    ResolutionDigits.FourPointFive: 0.0001,
+    ResolutionDigits.FivePointFive: 1e-5,
+    ResolutionDigits.SixPointFive: 1e-6,
 }
 
-RESOLUTION_DIGITS_TO_VALUE = {
-    "3.5": 0.001,
-    "4.5": 0.0001,
-    "5.5": 1e-5,
-    "6.5": 1e-6,
-}
+class Function(Enum):
+    DCVolts = auto()
+    ACVolts = auto()
 
+FUNCTION_TO_DISPLAY_VALUE = {
+    Function.DCVolts: "VOLT:DC",
+    Function.ACVolts: "VOLT:AC",
+}
 
 @measurement_service.register_measurement
 @measurement_service.configuration(
     "pin_name", nims.DataType.Pin, "Pin1", instrument_type=INSTRUMENT_TYPE_DMM_SIMULATOR
 )
-@measurement_service.configuration("measurement_type", nims.DataType.String, "DC Volts")
+@measurement_service.configuration("measurement_type", nims.DataType.Enum, Function.DCVolts.value, enum_type=Function)
 @measurement_service.configuration("range", nims.DataType.Double, 1.0)
-@measurement_service.configuration("resolution_digits", nims.DataType.Double, 3.5)
+@measurement_service.configuration("resolution_digits", nims.DataType.Enum, ResolutionDigits.ThreePointFive.value, enum_type=ResolutionDigits)
 @measurement_service.output("measured_value", nims.DataType.Double)
 def measure(
     pin_name: str,
@@ -120,9 +128,7 @@ def measure(
         if not session_info.session_exists:
             reset_instrument(session)
 
-        function_enum = str_to_enum(FUNCTION_TO_ENUM, measurement_type)
-        resolution_value = str_to_enum(RESOLUTION_DIGITS_TO_VALUE, str(resolution_digits))
-        session.write("CONF:%s %.g,%.g" % (function_enum, range, resolution_value))
+        session.write("CONF:%s %.g,%.g" % (FUNCTION_TO_DISPLAY_VALUE[measurement_type], range, RESOLUTION_DIGITS_TO_DISPLAY_VALUE[resolution_digits]))
         check_instrument_error(session)
 
         response = session.query("READ?")

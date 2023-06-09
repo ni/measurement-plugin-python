@@ -15,7 +15,6 @@ from _helpers import (
     configure_logging,
     get_service_options,
     grpc_device_options,
-    str_to_enum,
     use_simulation_option,
     verbosity_option,
 )
@@ -37,17 +36,6 @@ measurement_service = nims.MeasurementService(
 )
 service_options = ServiceOptions()
 
-WAVEFORM_TYPE_TO_ENUM = {
-    "Sine": nifgen.Waveform.SINE,
-    "Square": nifgen.Waveform.SQUARE,
-    "Triangle": nifgen.Waveform.TRIANGLE,
-    "Ramp Up": nifgen.Waveform.RAMP_UP,
-    "Ramp Down": nifgen.Waveform.RAMP_DOWN,
-    "DC": nifgen.Waveform.DC,
-    "Noise": nifgen.Waveform.NOISE,
-}
-
-
 @measurement_service.register_measurement
 # TODO: Rename pin_name to pin_names and make it PinArray1D
 @measurement_service.configuration(
@@ -56,13 +44,13 @@ WAVEFORM_TYPE_TO_ENUM = {
     "Pin1",
     instrument_type=nims.session_management.INSTRUMENT_TYPE_NI_FGEN,
 )
-@measurement_service.configuration("waveform_type", nims.DataType.String, "Sine")
+@measurement_service.configuration("waveform_type", nims.DataType.Enum, nifgen.Waveform.SINE.value, enum_type=nifgen.Waveform)
 @measurement_service.configuration("frequency", nims.DataType.Double, 1.0e6)
 @measurement_service.configuration("amplitude", nims.DataType.Double, 2.0)
 @measurement_service.configuration("duration", nims.DataType.Double, 10.0)
 def measure(
     pin_name: str,
-    waveform_type: str,
+    waveform_type: nifgen.Waveform,
     frequency: float,
     amplitude: float,
     duration: float,
@@ -116,7 +104,7 @@ def measure(
 
             channels = session.channels[session_info.channel_list]
             channels.configure_standard_waveform(
-                str_to_enum(WAVEFORM_TYPE_TO_ENUM, waveform_type),
+                waveform_type,
                 amplitude,
                 frequency,
             )
