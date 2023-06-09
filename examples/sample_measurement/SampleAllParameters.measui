@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<SourceFile Checksum="102310DB793F72451065ED19243688DF0B5789E74D84523F57C46CCA5913D42DE7EED535D53334F1D87FCE8B9149B57F8A106C3E9966225429298DE19313951A" Timestamp="1D9051CFC9CCD5B" xmlns="http://www.ni.com/PlatformFramework">
+<SourceFile Checksum="ECBCF84816F536DFE8E930A0DEB9892779DD53871DB8A3D88985B02E05588817EB16F453B2180E702A8A00AF69D850A1E9F0A11ED0CCC5737A0F83FB53F8A0BC" Timestamp="1D999746B58112C" xmlns="http://www.ni.com/PlatformFramework">
 	<SourceModelFeatureSet>
-		<ParsableNamespace AssemblyFileVersion="9.7.0.2171" FeatureSetName="Configuration Based Software Core" Name="http://www.ni.com/ConfigurationBasedSoftware.Core" OldestCompatibleVersion="6.3.0.49152" Version="6.3.0.49152" />
-		<ParsableNamespace AssemblyFileVersion="9.7.0.2171" FeatureSetName="LabVIEW Controls" Name="http://www.ni.com/Controls.LabVIEW.Design" OldestCompatibleVersion="8.1.0.49152" Version="8.1.0.49152" />
-		<ParsableNamespace AssemblyFileVersion="23.0.0.2171" FeatureSetName="InstrumentStudio Measurement UI" Name="http://www.ni.com/InstrumentFramework/ScreenDocument" OldestCompatibleVersion="22.1.0.1" Version="22.1.0.1" />
-		<ParsableNamespace AssemblyFileVersion="9.7.0.2171" FeatureSetName="Editor" Name="http://www.ni.com/PanelCommon" OldestCompatibleVersion="6.1.0.0" Version="6.1.0.49152" />
-		<ParsableNamespace AssemblyFileVersion="9.7.0.2171" FeatureSetName="Editor" Name="http://www.ni.com/PlatformFramework" OldestCompatibleVersion="8.1.0.49152" Version="8.1.0.49152" />
-		<ApplicationVersionInfo Build="23.0.0.2171" Name="MeasurementLink UI Editor" Version="23.0.0.2171" />
+		<ParsableNamespace AssemblyFileVersion="9.9.0.1550" FeatureSetName="Configuration Based Software Core" Name="http://www.ni.com/ConfigurationBasedSoftware.Core" OldestCompatibleVersion="6.3.0.49152" Version="9.8.1.49152" />
+		<ParsableNamespace AssemblyFileVersion="9.9.0.1550" FeatureSetName="LabVIEW Controls" Name="http://www.ni.com/Controls.LabVIEW.Design" OldestCompatibleVersion="8.1.0.49152" Version="8.1.0.49152" />
+		<ParsableNamespace AssemblyFileVersion="23.5.0.1550" FeatureSetName="InstrumentStudio Measurement UI" Name="http://www.ni.com/InstrumentFramework/ScreenDocument" OldestCompatibleVersion="22.1.0.1" Version="22.1.0.1" />
+		<ParsableNamespace AssemblyFileVersion="9.9.0.1550" FeatureSetName="Editor" Name="http://www.ni.com/PanelCommon" OldestCompatibleVersion="6.1.0.0" Version="6.1.0.49152" />
+		<ParsableNamespace AssemblyFileVersion="9.9.0.1550" FeatureSetName="Editor" Name="http://www.ni.com/PlatformFramework" OldestCompatibleVersion="8.1.0.49152" Version="8.1.0.49152" />
+		<ApplicationVersionInfo Build="23.5.0.1550" Name="MeasurementLink UI Editor" Version="23.5.0.1550" />
 	</SourceModelFeatureSet>
 	<Screen ClientId="{abd0ec1b-8a8a-46a1-9b11-1bcb569d1849}" DisplayName="Sample Measurement (Py)" Id="20c496a981bb4f73bea9d243756baab5" ServiceClass="ni.examples.SampleMeasurement_Python" xmlns="http://www.ni.com/InstrumentFramework/ScreenDocument">
 		<ScreenSurface BackgroundColor="[SMSolidColorBrush]#00ffffff" Height="[float]445" Id="c47bc3494c0244bab74b59853ae5087f" Left="[float]0" PanelSizeMode="Fixed" Top="[float]0" Width="[float]1094" xmlns="http://www.ni.com/ConfigurationBasedSoftware.Core">
@@ -69,6 +69,12 @@
 				<Label Id="5fdaffd604954eab8c40eece223bace6" LabelOwner="[UIModel]7791599dec5e40c98da2dc1dff8203f7" Left="[float]92" Text="[string]Reset" Top="[float]-18" Visible="[bool]False" xmlns="http://www.ni.com/PanelCommon" />
 			</ArrayGraphTools>
 			<Label Height="[float]16" Id="7d653a1b8e82474fa5957187f74dc876" LabelOwner="[UIModel]7a4e3733e44a4251a517215af2e6fb34" Left="[float]431" Text="[string]Double Array out" Top="[float]1" Width="[float]91" xmlns="http://www.ni.com/PanelCommon" />
+			<ChannelEnumSelector AdaptsToType="[bool]True" AllowNonSequentialValues="[bool]True" BaseName="[string]Enum" Channel="[string]{abd0ec1b-8a8a-46a1-9b11-1bcb569d1849}/Configuration/Enum In" Height="[float]24" Id="604b159420bd4525aa1b71300d41d9be" Label="[UIModel]6ecc1177484d4f099186d5680091578b" Left="[float]30" Top="[float]355" Width="[float]136" xmlns="http://www.ni.com/InstrumentFramework/ScreenDocument">
+				<RingSelectorInfo DisplayValue="[string]RED" IsEnabled="[bool]True" Value="[int]1" xmlns="http://www.ni.com/Controls.LabVIEW.Design" />
+				<RingSelectorInfo DisplayValue="[string]GREEN" IsEnabled="[bool]True" Value="[int]2" xmlns="http://www.ni.com/Controls.LabVIEW.Design" />
+				<RingSelectorInfo DisplayValue="[string]BLUE" IsEnabled="[bool]True" Value="[int]3" xmlns="http://www.ni.com/Controls.LabVIEW.Design" />
+			</ChannelEnumSelector>
+			<Label Height="[float]16" Id="6ecc1177484d4f099186d5680091578b" LabelOwner="[UIModel]604b159420bd4525aa1b71300d41d9be" Left="[float]30" Text="[string]Enum In" Top="[float]335" Width="[float]43" xmlns="http://www.ni.com/PanelCommon" />
 		</ScreenSurface>
 	</Screen>
 </SourceFile>
