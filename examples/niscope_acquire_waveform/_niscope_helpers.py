@@ -7,16 +7,17 @@ import niscope
 
 import ni_measurementlink_service as nims
 
-# To use a physical NI-SCOPE instrument, set this to False or specify
+# To use a physical NI oscilloscope instrument, set this to False or specify
 # --no-use-simulation on the command line.
 USE_SIMULATION = True
 
 
-def _create_niscope_session(
+def create_session(
     session_info: nims.session_management.SessionInformation,
     session_grpc_channel: grpc.Channel = None,
     initialization_behavior=niscope.SessionInitializationBehavior.AUTO,
 ) -> niscope.Session:
+    """Create driver session based on reserved session and grpc channel."""
     options: Dict[str, Any] = {}
     if USE_SIMULATION:
         options["simulate"] = True

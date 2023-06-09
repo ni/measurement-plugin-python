@@ -7,16 +7,17 @@ import niswitch
 
 import ni_measurementlink_service as nims
 
-# To use a physical NI-SWITCH instrument, set this to False or specify
+# To use a physical NI relay driver instrument, set this to False or specify
 # --no-use-simulation on the command line.
 USE_SIMULATION = True
 
 
-def _create_niswitch_session(
+def create_session(
     session_info: nims.session_management.SessionInformation,
     session_grpc_channel: grpc.Channel = None,
     initialization_behavior=niswitch.SessionInitializationBehavior.AUTO,
 ) -> niswitch.Session:
+    """Create driver session based on reserved session and grpc channel."""
     resource_name = session_info.resource_name
     session_kwargs: Dict[str, Any] = {}
     if USE_SIMULATION:

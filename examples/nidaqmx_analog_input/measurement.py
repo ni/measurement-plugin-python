@@ -17,7 +17,7 @@ from _helpers import (
     grpc_device_options,
     verbosity_option,
 )
-from _nidaqmx_helpers import _create_nidaqmx_task
+from _nidaqmx_helpers import create_task
 from nidaqmx.constants import TaskMode
 
 import ni_measurementlink_service as nims
@@ -79,7 +79,7 @@ def measure(pin_name, sample_rate, number_of_samples):
         measurement_service.context.add_cancel_callback(cancel_callback)
 
         grpc_device_channel = get_grpc_device_channel(measurement_service, nidaqmx)
-        task = stack.enter_context(_create_nidaqmx_task(session_info, grpc_device_channel))
+        task = stack.enter_context(create_task(session_info, grpc_device_channel))
         if not session_info.session_exists:
             task.ai_channels.add_ai_voltage_chan(session_info.channel_list)
 

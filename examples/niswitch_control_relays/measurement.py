@@ -17,13 +17,9 @@ from _helpers import (
     use_simulation_option,
     verbosity_option,
 )
-from _niswitch_helpers import _create_niswitch_session
+from _niswitch_helpers import USE_SIMULATION, create_session
 
 import ni_measurementlink_service as nims
-
-# To use a physical NI relay driver instrument, set this to False or specify
-# --no-use-simulation on the command line.
-USE_SIMULATION = True
 
 service_directory = pathlib.Path(__file__).resolve().parent
 measurement_service = nims.MeasurementService(
@@ -66,7 +62,7 @@ def measure(
 
         grpc_device_channel = get_grpc_device_channel(measurement_service, niswitch)
         sessions = [
-            stack.enter_context(_create_niswitch_session(session_info, grpc_device_channel))
+            stack.enter_context(create_session(session_info, grpc_device_channel))
             for session_info in reservation.session_info
         ]
 

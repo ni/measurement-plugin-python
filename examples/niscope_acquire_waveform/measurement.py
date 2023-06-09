@@ -20,13 +20,9 @@ from _helpers import (
     use_simulation_option,
     verbosity_option,
 )
-from _niscope_helpers import _create_niscope_session
+from _niscope_helpers import create_session, USE_SIMULATION
 
 import ni_measurementlink_service as nims
-
-# To use a physical NI oscilloscope instrument, set this to False or specify
-# --no-use-simulation on the command line.
-USE_SIMULATION = True
 
 service_directory = pathlib.Path(__file__).resolve().parent
 measurement_service = nims.MeasurementService(
@@ -145,7 +141,7 @@ def measure(
             trigger_source = pin_to_channel[trigger_source]
 
         grpc_device_channel = get_grpc_device_channel(measurement_service, niscope)
-        session = stack.enter_context(_create_niscope_session(session_info, grpc_device_channel))
+        session = stack.enter_context(create_session(session_info, grpc_device_channel))
         session.channels[""].channel_enabled = False
         session.channels[channel_names].configure_vertical(
             vertical_range,

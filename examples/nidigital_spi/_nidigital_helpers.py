@@ -7,16 +7,17 @@ import nidigital
 
 import ni_measurementlink_service as nims
 
-# To use a physical NI-DIGITAL instrument, set this to False or specify
+# To use a physical NI Digital Pattern instrument, set this to False or specify
 # --no-use-simulation on the command line.
 USE_SIMULATION = True
 
 
-def _create_nidigital_session(
+def create_session(
     session_info: nims.session_management.SessionInformation,
     session_grpc_channel: grpc.Channel = None,
     initialization_behavior=nidigital.SessionInitializationBehavior.AUTO,
 ) -> nidigital.Session:
+    """Create driver session based on reserved session and grpc channel."""
     options: Dict[str, Any] = {}
     if USE_SIMULATION:
         options["simulate"] = True

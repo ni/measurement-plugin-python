@@ -7,16 +7,17 @@ import nifgen
 
 import ni_measurementlink_service as nims
 
-# To use a physical NI-FGen instrument, set this to False or specify
+# To use a physical NI waveform generator instrument, set this to False or specify
 # --no-use-simulation on the command line.
 USE_SIMULATION = True
 
 
-def _create_nifgen_session(
+def create_session(
     session_info: nims.session_management.SessionInformation,
     session_grpc_channel: grpc.Channel = None,
     initialization_behavior=nifgen.SessionInitializationBehavior.AUTO,
 ) -> nifgen.Session:
+    """Create driver session based on reserved session and grpc channel."""
     options: Dict[str, Any] = {}
     if USE_SIMULATION:
         options["simulate"] = True

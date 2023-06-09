@@ -20,13 +20,9 @@ from _helpers import (
     use_simulation_option,
     verbosity_option,
 )
-from _nidmm_helpers import _create_nidmm_session
+from _nidmm_helpers import create_session, USE_SIMULATION
 
 import ni_measurementlink_service as nims
-
-# To use a physical NI DMM instrument, set this to False or specify
-# --no-use-simulation on the command line.
-USE_SIMULATION = True
 
 service_directory = pathlib.Path(__file__).resolve().parent
 measurement_service = nims.MeasurementService(
@@ -105,7 +101,7 @@ def measure(
 
         session_info = reservation.session_info[0]
         grpc_device_channel = get_grpc_device_channel(measurement_service, nidmm)
-        session = stack.enter_context(_create_nidmm_session(session_info, grpc_device_channel))
+        session = stack.enter_context(create_session(session_info, grpc_device_channel))
         session.configure_measurement_digits(
             str_to_enum(FUNCTION_TO_ENUM, measurement_type),
             range,

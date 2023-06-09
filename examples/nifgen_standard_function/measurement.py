@@ -21,13 +21,9 @@ from _helpers import (
     use_simulation_option,
     verbosity_option,
 )
-from _nifgen_helpers import _create_nifgen_session
+from _nifgen_helpers import create_session, USE_SIMULATION
 
 import ni_measurementlink_service as nims
-
-# To use a physical NI waveform generator instrument, set this to False or specify
-# --no-use-simulation on the command line.
-USE_SIMULATION = True
 
 NIFGEN_OPERATION_TIMED_OUT_ERROR_CODE = -1074098044
 NIFGEN_MAX_TIME_EXCEEDED_ERROR_CODE = -1074118637
@@ -105,7 +101,7 @@ def measure(
 
         grpc_device_channel = get_grpc_device_channel(measurement_service, nifgen)
         sessions = [
-            stack.enter_context(_create_nifgen_session(session_info, grpc_device_channel))
+            stack.enter_context(create_session(session_info, grpc_device_channel))
             for session_info in reservation.session_info
         ]
 

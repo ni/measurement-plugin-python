@@ -6,11 +6,12 @@ import nidaqmx
 import ni_measurementlink_service as nims
 
 
-def _create_nidaqmx_task(
+def create_task(
     session_info: nims.session_management.SessionInformation,
     session_grpc_channel: grpc.Channel = None,
     initialization_behavior=nidaqmx.SessionInitializationBehavior.AUTO,
 ) -> nidaqmx.Task:
+    """Create daqmx task based on reserved session and grpc channel."""
     session_kwargs = {}
 
     if session_grpc_channel is not None:
