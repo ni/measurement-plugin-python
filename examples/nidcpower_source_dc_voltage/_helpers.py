@@ -234,11 +234,15 @@ def use_simulation_option(default: bool) -> Callable[[F], F]:
         help="Use simulated instruments.",
     )
 
-
 def get_grpc_device_channel(
-    measurement_service: MeasurementService, driver_module: types.ModuleType
+    measurement_service: MeasurementService, 
+    driver_module: types.ModuleType,
+    service_options: ServiceOptions
 ) -> grpc.Channel:
     """Returns driver specific grpc device channel."""
+    if service_options.use_grpc_device and service_options.grpc_device_address:
+        return measurement_service.get_channel(service_options.grpc_device_address)
+    
     return measurement_service.get_channel(
         provided_interface=getattr(driver_module, "GRPC_SERVICE_INTERFACE_NAME"),
         service_class="ni.measurementlink.v1.grpcdeviceserver",

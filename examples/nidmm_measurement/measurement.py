@@ -95,7 +95,7 @@ def measure(
             )
 
         session_info = reservation.session_info[0]
-        grpc_device_channel = get_grpc_device_channel(measurement_service, nidmm)
+        grpc_device_channel = get_grpc_device_channel(measurement_service, nidmm, service_options)
         with create_session(session_info, grpc_device_channel) as session:
             session.configure_measurement_digits(
                 str_to_enum(FUNCTION_TO_ENUM, measurement_type),

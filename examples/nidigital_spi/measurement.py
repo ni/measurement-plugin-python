@@ -74,7 +74,7 @@ def measure(
             )
 
         session_info = reservation.session_info[0]
-        grpc_device_channel = get_grpc_device_channel(measurement_service, nidigital)
+        grpc_device_channel = get_grpc_device_channel(measurement_service, nidigital, service_options)
         with create_session(session_info, grpc_device_channel) as session:
             pin_map_context = measurement_service.context.pin_map_context
             selected_sites_string = ",".join(f"site{i}" for i in pin_map_context.sites)

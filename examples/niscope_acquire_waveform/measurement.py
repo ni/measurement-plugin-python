@@ -135,7 +135,7 @@ def measure(
         if trigger_source in pin_to_channel:
             trigger_source = pin_to_channel[trigger_source]
 
-        grpc_device_channel = get_grpc_device_channel(measurement_service, niscope)
+        grpc_device_channel = get_grpc_device_channel(measurement_service, niscope, service_options)
         with create_session(session_info, grpc_device_channel) as session:
             session.channels[""].channel_enabled = False
             session.channels[channel_names].configure_vertical(

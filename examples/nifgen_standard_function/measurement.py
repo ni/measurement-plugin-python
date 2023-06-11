@@ -99,7 +99,7 @@ def measure(
             )
         )
 
-        grpc_device_channel = get_grpc_device_channel(measurement_service, nifgen)
+        grpc_device_channel = get_grpc_device_channel(measurement_service, nifgen, service_options)
         sessions = [
             stack.enter_context(create_session(session_info, grpc_device_channel))
             for session_info in reservation.session_info

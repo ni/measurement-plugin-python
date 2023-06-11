@@ -84,10 +84,10 @@ def measure(
             )
 
         session_info = reservation.session_info[0]
-
+        grpc_device_channel = get_grpc_device_channel(measurement_service, nidcpower, service_options)
         with create_session(
             session_info,
-            get_grpc_device_channel(measurement_service, nidcpower),
+            grpc_device_channel,
         ) as session:
             channels = session.channels[session_info.channel_list]
             channel_mappings = session_info.channel_mappings
