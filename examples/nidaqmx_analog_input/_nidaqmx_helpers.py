@@ -1,5 +1,7 @@
 """nidaqmx Helper classes and functions for MeasurementLink examples."""
 
+from typing import Optional
+
 import grpc
 import nidaqmx
 
@@ -8,7 +10,7 @@ import ni_measurementlink_service as nims
 
 def create_task(
     session_info: nims.session_management.SessionInformation,
-    session_grpc_channel: grpc.Channel = None,
+    session_grpc_channel: Optional[grpc.Channel] = None,
     initialization_behavior=nidaqmx.SessionInitializationBehavior.AUTO,
 ) -> nidaqmx.Task:
     """Create daqmx task based on reserved session and grpc channel."""

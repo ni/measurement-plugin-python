@@ -1,6 +1,6 @@
 """nidmm Helper classes and functions for MeasurementLink examples."""
 
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 import grpc
 import nidmm
@@ -14,7 +14,7 @@ USE_SIMULATION = True
 
 def create_session(
     session_info: nims.session_management.SessionInformation,
-    session_grpc_channel: grpc.Channel = None,
+    session_grpc_channel: Optional[grpc.Channel] = None,
     initialization_behavior=nidmm.SessionInitializationBehavior.AUTO,
 ) -> nidmm.Session:
     """Create driver session based on reserved session and grpc channel."""
