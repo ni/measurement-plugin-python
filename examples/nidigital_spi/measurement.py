@@ -95,10 +95,9 @@ def measure(
                     str(_resolve_relative_path(service_directory, pattern_file_path)),
                 )
 
-            selected_sites.apply_levels_and_timing(
-                str(_resolve_relative_path(service_directory, levels_file_path)),
-                str(_resolve_relative_path(service_directory, timing_file_path)),
-            )
+            levels_file_name = pathlib.Path(levels_file_path).stem
+            timing_file_name = pathlib.Path(timing_file_path).stem
+            selected_sites.apply_levels_and_timing(levels_file_name, timing_file_name)
             selected_sites.burst_pattern(start_label="SPI_Pattern")
             site_pass_fail = selected_sites.get_site_pass_fail()
             passing_sites = [site for site, pass_fail in site_pass_fail.items() if pass_fail]
@@ -112,8 +111,7 @@ def measure(
 def _resolve_relative_path(
     directory_path: pathlib.Path, file_path: Union[str, pathlib.Path]
 ) -> pathlib.Path:
-    if not isinstance(file_path, pathlib.Path):
-        file_path = pathlib.Path(file_path)
+    file_path = pathlib.Path(file_path)
     if file_path.is_absolute():
         return file_path
     else:
