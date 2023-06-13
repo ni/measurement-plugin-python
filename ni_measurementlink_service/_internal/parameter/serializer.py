@@ -2,6 +2,8 @@
 
 from io import BytesIO
 from typing import Any, Dict, Sequence
+from enum import Enum
+import json
 
 from google.protobuf.internal import encoder
 
@@ -32,6 +34,12 @@ def deserialize_parameters(
     overlapping_parameter_by_id = _get_overlapping_parameters(
         parameter_metadata_dict, parameter_bytes
     )
+    
+    # Deserialization enum parameters to their user-defined type
+    _deserialize_enum_parameters(
+        parameter_metadata_dict, overlapping_parameter_by_id
+    )
+
     # Adding missing parameters with type defaults
     missing_parameters = _get_missing_parameters(
         parameter_metadata_dict, overlapping_parameter_by_id
@@ -185,3 +193,30 @@ def _get_missing_parameters(
                 value.type, value.repeated
             )
     return missing_parameters
+
+def _deserialize_enum_parameters(
+    parameter_metadata_dict: Dict[int, ParameterMetadata], parameter_by_id: Dict[int, Any]   
+):
+    """Converts all enums in parameter_by_id from their int representation to the user
+    defined enum using the enum annotations from the parameter metadata.
+
+    Args
+    ----
+        parameter_metadata_dict (Dict[int, ParameterMetadata]): Parameter metadata by id.
+
+        parameter_by_id (Dict[int, Any]): Parameters by ID to compare the metadata with.
+
+    """
+    for i, value in parameter_by_id.items():
+        parameter_metadata = parameter_metadata_dict[i]
+        if ("ni/type_specialization" in parameter_metadata.annotations and 
+            parameter_metadata.annotations["ni/type_specialization"] == TypeSpecialization.Enum.value and
+            "ni/enum.values" in parameter_metadata.annotations):
+            userEnumJson = parameter_metadata.annotations["ni/enum.values"]
+            if userEnumJson != "" and userEnumJson is not None:
+                enum_type = type(parameter_metadata.default_value)
+                userEnum = json.loads(userEnumJson.replace("'", "\""))
+                userEnumClass = Enum(enum_type.__name__, userEnum)
+                for enum in enum_type:
+                    if enum.value == value:
+                        parameter_by_id[i] = userEnumClass(value)
