@@ -88,7 +88,7 @@ def measure(
 
     with contextlib.ExitStack() as stack:
         reservation = stack.enter_context(
-            session_management_client.reserve_sessions(
+            session_management_client.reserve_session(
                 context=measurement_service.context.pin_map_context,
                 pin_or_relay_names=[pin_name],
                 instrument_type_id=nims.session_management.INSTRUMENT_TYPE_NI_DMM,
@@ -99,14 +99,7 @@ def measure(
             )
         )
 
-        if len(reservation.session_info) != 1:
-            measurement_service.context.abort(
-                grpc.StatusCode.INVALID_ARGUMENT,
-                f"Unsupported number of sessions: {len(reservation.session_info)}",
-            )
-
-        session_info = reservation.session_info[0]
-        session = stack.enter_context(_create_nidmm_session(session_info))
+        session = stack.enter_context(_create_nidmm_session(reservation.session_info))
         session.configure_measurement_digits(
             str_to_enum(FUNCTION_TO_ENUM, measurement_type),
             range,

@@ -132,21 +132,14 @@ def measure(
             )
         )
 
-        if len(reservation.session_info) != 1:
-            measurement_service.context.abort(
-                grpc.StatusCode.INVALID_ARGUMENT,
-                f"Unsupported number of sessions: {len(reservation.session_info)}",
-            )
-
-        session_info = reservation.session_info[0]
-        channel_names = session_info.channel_list
+        channel_names = reservation.session_info.channel_list
         pin_to_channel = {
-            mapping.pin_or_relay_name: mapping.channel for mapping in session_info.channel_mappings
+            mapping.pin_or_relay_name: mapping.channel for mapping in reservation.session_info.channel_mappings
         }
         if trigger_source in pin_to_channel:
             trigger_source = pin_to_channel[trigger_source]
 
-        session = stack.enter_context(_create_niscope_session(session_info))
+        session = stack.enter_context(_create_niscope_session(reservation.session_info))
         session.channels[""].channel_enabled = False
         session.channels[channel_names].configure_vertical(
             vertical_range,

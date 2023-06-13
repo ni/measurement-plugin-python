@@ -54,7 +54,7 @@ def create_nidcpower_sessions(sequence_context: Any) -> None:
             # This code module sets up the sessions, so error immediately if they are in use.
             timeout=0,
         ) as reservation:
-            for session_info in reservation.session_info:
+            for session_info in reservation.session_infos:
                 grpc_device_channel = grpc_channel_pool.get_grpc_device_channel(
                     nidcpower.GRPC_SERVICE_INTERFACE_NAME
                 )
@@ -64,7 +64,7 @@ def create_nidcpower_sessions(sequence_context: Any) -> None:
                     initialization_behavior=nidcpower.SessionInitializationBehavior.INITIALIZE_SERVER_SESSION,
                 )
 
-            session_management_client.register_sessions(reservation.session_info)
+            session_management_client.register_sessions(reservation.session_infos)
 
 
 def destroy_nidcpower_sessions() -> None:
@@ -79,9 +79,9 @@ def destroy_nidcpower_sessions() -> None:
             # This code module sets up the sessions, so error immediately if they are in use.
             timeout=0,
         ) as reservation:
-            session_management_client.unregister_sessions(reservation.session_info)
+            session_management_client.unregister_sessions(reservation.session_infos)
 
-            for session_info in reservation.session_info:
+            for session_info in reservation.session_infos:
                 grpc_device_channel = grpc_channel_pool.get_grpc_device_channel(
                     nidcpower.GRPC_SERVICE_INTERFACE_NAME
                 )

@@ -59,7 +59,7 @@ def create_nidaqmx_tasks(sequence_context: Any) -> None:
             # This code module sets up the sessions, so error immediately if they are in use.
             timeout=0,
         ) as reservation:
-            for session_info in reservation.session_info:
+            for session_info in reservation.session_infos:
                 session_kwargs["grpc_options"] = GrpcSessionOptions(
                     grpc_channel_pool.get_grpc_device_channel(GRPC_SERVICE_INTERFACE_NAME),
                     session_name=session_info.session_name,
@@ -70,7 +70,7 @@ def create_nidaqmx_tasks(sequence_context: Any) -> None:
                 task = nidaqmx.Task(new_task_name=session_info.session_name, **session_kwargs)
                 task.ai_channels.add_ai_voltage_chan(session_info.channel_list)
 
-            session_management_client.register_sessions(reservation.session_info)
+            session_management_client.register_sessions(reservation.session_infos)
 
 
 def destroy_nidaqmx_tasks() -> None:
@@ -85,9 +85,9 @@ def destroy_nidaqmx_tasks() -> None:
             # This code module sets up the sessions, so error immediately if they are in use.
             timeout=0,
         ) as reservation:
-            session_management_client.unregister_sessions(reservation.session_info)
+            session_management_client.unregister_sessions(reservation.session_infos)
 
-            for session_info in reservation.session_info:
+            for session_info in reservation.session_infos:
                 grpc_options = GrpcSessionOptions(
                     grpc_channel_pool.get_grpc_device_channel(GRPC_SERVICE_INTERFACE_NAME),
                     session_name=session_info.session_name,

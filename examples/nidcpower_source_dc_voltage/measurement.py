@@ -78,20 +78,12 @@ def measure(
         # Long measurements may require a longer timeout.
         timeout=60,
     ) as reservation:
-        if len(reservation.session_info) != 1:
-            measurement_service.context.abort(
-                grpc.StatusCode.INVALID_ARGUMENT,
-                f"Unsupported number of sessions: {len(reservation.session_info)}",
-            )
-
-        session_info = reservation.session_info[0]
-
         with create_session(
-            session_info,
+            reservation.session_info,
             get_grpc_device_channel(measurement_service, nidcpower),
         ) as session:
-            channels = session.channels[session_info.channel_list]
-            channel_mappings = session_info.channel_mappings
+            channels = session.channels[reservation.session_info.channel_list]
+            channel_mappings = reservation.session_info.channel_mappings
 
             pending_cancellation = False
 

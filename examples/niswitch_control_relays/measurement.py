@@ -68,10 +68,10 @@ def measure(
 
         sessions = [
             stack.enter_context(_create_niswitch_session(session_info))
-            for session_info in reservation.session_info
+            for session_info in reservation.session_infos
         ]
 
-        for session, session_info in zip(sessions, reservation.session_info):
+        for session, session_info in zip(sessions, reservation.session_infos):
             session.relay_control(
                 session_info.channel_list,
                 niswitch.RelayAction.CLOSE if close_relays else niswitch.RelayAction.OPEN,

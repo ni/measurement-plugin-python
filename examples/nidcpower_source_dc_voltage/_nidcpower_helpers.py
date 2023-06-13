@@ -43,7 +43,7 @@ def reserve_session(
     pin_map_context: nims.session_management.PinMapContext,
     pin_names: Optional[Iterable[str]] = None,
     timeout: Optional[float] = None,
-) -> nims.session_management.Reservation:
+) -> nims.session_management.MultiSessionReservation:
     """Reserve session(s).
 
     Reserve session(s) for the given pins and returns the

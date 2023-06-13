@@ -107,10 +107,10 @@ def measure(
 
         sessions = [
             stack.enter_context(_create_nifgen_session(session_info))
-            for session_info in reservation.session_info
+            for session_info in reservation.session_infos
         ]
 
-        for session, session_info in zip(sessions, reservation.session_info):
+        for session, session_info in zip(sessions, reservation.session_infos):
             # Output mode must be the same for all channels in the session.
             session.output_mode = nifgen.OutputMode.FUNC
 

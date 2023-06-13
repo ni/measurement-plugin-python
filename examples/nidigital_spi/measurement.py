@@ -67,7 +67,7 @@ def measure(
 
     with contextlib.ExitStack() as stack:
         reservation = stack.enter_context(
-            session_management_client.reserve_sessions(
+            session_management_client.reserve_session(
                 context=measurement_service.context.pin_map_context,
                 pin_or_relay_names=pin_names,
                 instrument_type_id=nims.session_management.INSTRUMENT_TYPE_NI_DIGITAL_PATTERN,
@@ -78,20 +78,13 @@ def measure(
             )
         )
 
-        if len(reservation.session_info) != 1:
-            measurement_service.context.abort(
-                grpc.StatusCode.INVALID_ARGUMENT,
-                f"Unsupported number of sessions: {len(reservation.session_info)}",
-            )
-
-        session_info = reservation.session_info[0]
-        session = stack.enter_context(_create_nidigital_session(session_info))
+        session = stack.enter_context(_create_nidigital_session(reservation.session_info))
 
         pin_map_context = measurement_service.context.pin_map_context
         selected_sites_string = ",".join(f"site{i}" for i in pin_map_context.sites or [])
         selected_sites = session.sites[selected_sites_string]
 
-        if not session_info.session_exists:
+        if not reservation.session_info.session_exists:
             # When running the measurement from TestStand, teststand_fixture.py should have
             # already loaded the pin map, specifications, levels, timing, and patterns.
             session.load_pin_map(pin_map_context.pin_map_id)

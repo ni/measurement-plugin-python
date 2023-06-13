@@ -86,7 +86,7 @@ def measure(
 
     with contextlib.ExitStack() as stack:
         reservation = stack.enter_context(
-            session_management_client.reserve_sessions(
+            session_management_client.reserve_session(
                 context=measurement_service.context.pin_map_context,
                 pin_or_relay_names=[pin_name],
                 instrument_type_id=INSTRUMENT_TYPE_DMM_SIMULATOR,
@@ -97,16 +97,9 @@ def measure(
             )
         )
 
-        if len(reservation.session_info) != 1:
-            measurement_service.context.abort(
-                grpc.StatusCode.INVALID_ARGUMENT,
-                f"Unsupported number of sessions: {len(reservation.session_info)}",
-            )
-
         resource_manager = create_visa_resource_manager(service_options.use_simulation)
-        session_info = reservation.session_info[0]
         session = stack.enter_context(
-            create_visa_session(resource_manager, session_info.resource_name)
+            create_visa_session(resource_manager, reservation.session_info.resource_name)
         )
 
         # Work around https://github.com/pyvisa/pyvisa/issues/739 - Type annotation for Resource
@@ -117,7 +110,7 @@ def measure(
 
         # When this measurement is called from outside of TestStand (session_exists == False),
         # reset the instrument to a known state. In TestStand, ProcessSetup resets the instrument.
-        if not session_info.session_exists:
+        if not reservation.session_info.session_exists:
             reset_instrument(session)
 
         function_enum = str_to_enum(FUNCTION_TO_ENUM, measurement_type)

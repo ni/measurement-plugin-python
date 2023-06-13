@@ -54,7 +54,7 @@ def create_nifgen_sessions(sequence_context: Any) -> None:
             # This code module sets up the sessions, so error immediately if they are in use.
             timeout=0,
         ) as reservation:
-            for session_info in reservation.session_info:
+            for session_info in reservation.session_infos:
                 options: Dict[str, Any] = {}
                 if USE_SIMULATION:
                     options["simulate"] = True
@@ -74,7 +74,7 @@ def create_nifgen_sessions(sequence_context: Any) -> None:
                     grpc_options=grpc_options,
                 )
 
-            session_management_client.register_sessions(reservation.session_info)
+            session_management_client.register_sessions(reservation.session_infos)
 
 
 def destroy_nifgen_sessions() -> None:
@@ -89,9 +89,9 @@ def destroy_nifgen_sessions() -> None:
             # This code module sets up the sessions, so error immediately if they are in use.
             timeout=0,
         ) as reservation:
-            session_management_client.unregister_sessions(reservation.session_info)
+            session_management_client.unregister_sessions(reservation.session_infos)
 
-            for session_info in reservation.session_info:
+            for session_info in reservation.session_infos:
                 grpc_options = nifgen.GrpcSessionOptions(
                     grpc_channel_pool.get_grpc_device_channel(nifgen.GRPC_SERVICE_INTERFACE_NAME),
                     session_name=session_info.session_name,

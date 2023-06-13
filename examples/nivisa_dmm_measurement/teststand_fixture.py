@@ -64,7 +64,7 @@ def create_nivisa_dmm_sessions(sequence_context: Any) -> None:
         ) as reservation:
             resource_manager = create_visa_resource_manager(USE_SIMULATION)
 
-            for session_info in reservation.session_info:
+            for session_info in reservation.session_infos:
                 with create_visa_session(resource_manager, session_info.resource_name) as session:
                     # Work around https://github.com/pyvisa/pyvisa/issues/739 - Type annotation
                     # for Resource context manager implicitly upcasts derived class to base class
@@ -72,7 +72,7 @@ def create_nivisa_dmm_sessions(sequence_context: Any) -> None:
                     log_instrument_id(session)
                     reset_instrument(session)
 
-            session_management_client.register_sessions(reservation.session_info)
+            session_management_client.register_sessions(reservation.session_infos)
 
 
 def destroy_nivisa_dmm_sessions() -> None:
@@ -87,4 +87,4 @@ def destroy_nivisa_dmm_sessions() -> None:
             # This code module sets up the sessions, so error immediately if they are in use.
             timeout=0,
         ) as reservation:
-            session_management_client.unregister_sessions(reservation.session_info)
+            session_management_client.unregister_sessions(reservation.session_infos)
