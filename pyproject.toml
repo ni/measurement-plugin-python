@@ -45,6 +45,7 @@ ni-python-styleguide = ">=0.4.1"
 # and regenerate gRPC stubs.
 grpcio-tools = "1.49.1"
 pytest-cov = ">=3.0.0"
+pytest-mock = ">=3.0"
 mypy = ">=1.0"
 mypy-protobuf = ">=3.4"
 types-protobuf = "^4.21"
