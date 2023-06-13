@@ -6,7 +6,7 @@ authors = ["National Instruments"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
-ni-measurementlink-service = "^1.0.0"
+ni-measurementlink-service = "^1.1.0-dev1"
 click = ">=7.1.2"
 
 [tool.poetry.group.dev.dependencies]
@@ -18,9 +18,3 @@ grpc-stubs = "^1.53"
 [build-system]
 requires = ["poetry-core>=1.2.0"]
 build-backend = "poetry.core.masonry.api"
-
-[[tool.mypy.overrides]]
-module = [
-    "ni_measurementlink_service.*", # TODO: remove after 1.0.2 is released with py.typed marker
-]
-ignore_missing_imports = true

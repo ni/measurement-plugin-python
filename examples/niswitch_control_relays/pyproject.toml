@@ -7,7 +7,7 @@ authors = ["National Instruments"]
 [tool.poetry.dependencies]
 python = "^3.8"
 niswitch = ">=1.4.3"
-ni-measurementlink-service = "^1.0.0"
+ni-measurementlink-service = "^1.1.0-dev1"
 click = ">=7.1.2"
 grpcio = "*"
 
@@ -24,7 +24,6 @@ build-backend = "poetry.core.masonry.api"
 
 [[tool.mypy.overrides]]
 module = [
-    "ni_measurementlink_service.*", # TODO: remove after 1.0.2 is released with py.typed marker
     "niswitch.*",
 ]
 ignore_missing_imports = true
