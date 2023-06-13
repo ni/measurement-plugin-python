@@ -1,10 +1,12 @@
 """Contains classes that represents metadata."""
 from typing import Any, Dict, NamedTuple
 from enum import Enum
+import json
 
 from google.protobuf import type_pb2
 
 from ni_measurementlink_service._internal.parameter.serialization_strategy import Context
+from ni_measurementlink_service.measurement.info import TypeSpecialization
 
 
 class ParameterMetadata(NamedTuple):
@@ -56,7 +58,18 @@ def validate_default_value_type(parameter_metadata: ParameterMetadata) -> None:
     )
 
     if not isinstance(default_value, expected_type):
-        if not issubclass(type(default_value), Enum):
+        if ("ni/type_specialization" in parameter_metadata.annotations and 
+            parameter_metadata.annotations["ni/type_specialization"] == TypeSpecialization.Enum.value and
+            "ni/enum.values" in parameter_metadata.annotations):
+            userEnumJson = parameter_metadata.annotations["ni/enum.values"]
+            userEnum = json.loads(userEnumJson.replace("'", "\""))
+            userEnumClass = Enum("UserDefinedEnum", userEnum)
+            if not (any(member.value == default_value.value for member in userEnumClass) and 
+                userEnumClass(default_value.value).name == default_value.name):
+                raise TypeError(
+                    f"The default value, `{default_value}`, for '{display_name}' is not valid. Expected values: `{userEnum}`."
+                )
+        else:
             raise TypeError(
                 f"Unexpected type {type(default_value)} in the default value for '{display_name}'. Expected type: {expected_type}."
             )
