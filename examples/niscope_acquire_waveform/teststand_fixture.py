@@ -3,6 +3,7 @@ from typing import Any, Dict
 
 import niscope
 from _helpers import GrpcChannelPoolHelper, PinMapClient, TestStandSupport
+from _niscope_helpers import create_session
 
 import ni_measurementlink_service as nims
 
@@ -56,22 +57,13 @@ def create_niscope_sessions(sequence_context: Any) -> None:
             timeout=0,
         ) as reservation:
             for session_info in reservation.session_info:
-                options: Dict[str, Any] = {}
-                if USE_SIMULATION:
-                    options["simulate"] = True
-                    options["driver_setup"] = {"Model": "5162 (4CH)"}
-
-                grpc_options = niscope.GrpcSessionOptions(
-                    grpc_channel_pool.get_grpc_device_channel(niscope.GRPC_SERVICE_INTERFACE_NAME),
-                    session_name=session_info.session_name,
-                    initialization_behavior=niscope.SessionInitializationBehavior.INITIALIZE_SERVER_SESSION,
+                grpc_device_channel = grpc_channel_pool.get_grpc_device_channel(
+                    niscope.GRPC_SERVICE_INTERFACE_NAME
                 )
-
-                # Leave session open
-                niscope.Session(
-                    resource_name=session_info.resource_name,
-                    options=options,
-                    grpc_options=grpc_options,
+                create_session(
+                    session_info,
+                    grpc_device_channel,
+                    initialization_behavior=niscope.SessionInitializationBehavior.INITIALIZE_SERVER_SESSION,
                 )
 
             session_management_client.register_sessions(reservation.session_info)
@@ -92,13 +84,13 @@ def destroy_niscope_sessions() -> None:
             session_management_client.unregister_sessions(reservation.session_info)
 
             for session_info in reservation.session_info:
-                grpc_options = niscope.GrpcSessionOptions(
-                    grpc_channel_pool.get_grpc_device_channel(niscope.GRPC_SERVICE_INTERFACE_NAME),
-                    session_name=session_info.session_name,
+                grpc_device_channel = grpc_channel_pool.get_grpc_device_channel(
+                    niscope.GRPC_SERVICE_INTERFACE_NAME
+                )
+                session = create_session(
+                    session_info,
+                    grpc_device_channel,
                     initialization_behavior=niscope.SessionInitializationBehavior.ATTACH_TO_SERVER_SESSION,
                 )
 
-                session = niscope.Session(
-                    resource_name=session_info.resource_name, grpc_options=grpc_options
-                )
                 session.close()

@@ -3,6 +3,7 @@ from typing import Any, Dict
 
 import nidmm
 from _helpers import GrpcChannelPoolHelper, PinMapClient, TestStandSupport
+from _nidmm_helpers import create_session
 
 import ni_measurementlink_service as nims
 
@@ -55,22 +56,13 @@ def create_nidmm_sessions(sequence_context: Any) -> None:
             timeout=0,
         ) as reservation:
             for session_info in reservation.session_info:
-                options: Dict[str, Any] = {}
-                if USE_SIMULATION:
-                    options["simulate"] = True
-                    options["driver_setup"] = {"Model": "4081"}
-
-                grpc_options = nidmm.GrpcSessionOptions(
-                    grpc_channel_pool.get_grpc_device_channel(nidmm.GRPC_SERVICE_INTERFACE_NAME),
-                    session_name=session_info.session_name,
-                    initialization_behavior=nidmm.SessionInitializationBehavior.INITIALIZE_SERVER_SESSION,
+                grpc_device_channel = grpc_channel_pool.get_grpc_device_channel(
+                    nidmm.GRPC_SERVICE_INTERFACE_NAME
                 )
-
-                # Leave session open
-                nidmm.Session(
-                    resource_name=session_info.resource_name,
-                    options=options,
-                    grpc_options=grpc_options,
+                create_session(
+                    session_info,
+                    grpc_device_channel,
+                    initialization_behavior=nidmm.SessionInitializationBehavior.INITIALIZE_SERVER_SESSION,
                 )
 
             session_management_client.register_sessions(reservation.session_info)
@@ -91,13 +83,12 @@ def destroy_nidmm_sessions() -> None:
             session_management_client.unregister_sessions(reservation.session_info)
 
             for session_info in reservation.session_info:
-                grpc_options = nidmm.GrpcSessionOptions(
-                    grpc_channel_pool.get_grpc_device_channel(nidmm.GRPC_SERVICE_INTERFACE_NAME),
-                    session_name=session_info.session_name,
-                    initialization_behavior=nidmm.SessionInitializationBehavior.ATTACH_TO_SERVER_SESSION,
+                grpc_device_channel = grpc_channel_pool.get_grpc_device_channel(
+                    nidmm.GRPC_SERVICE_INTERFACE_NAME
                 )
-
-                session = nidmm.Session(
-                    resource_name=session_info.resource_name, grpc_options=grpc_options
+                session = create_session(
+                    session_info,
+                    grpc_device_channel,
+                    initialization_behavior=nidmm.SessionInitializationBehavior.ATTACH_TO_SERVER_SESSION,
                 )
                 session.close()

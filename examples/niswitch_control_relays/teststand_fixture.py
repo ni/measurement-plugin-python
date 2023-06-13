@@ -3,6 +3,7 @@ from typing import Any, Dict
 
 import niswitch
 from _helpers import GrpcChannelPoolHelper, PinMapClient, TestStandSupport
+from _niswitch_helpers import create_session
 
 import ni_measurementlink_service as nims
 
@@ -56,21 +57,14 @@ def create_niswitch_sessions(sequence_context: Any) -> None:
             timeout=0,
         ) as reservation:
             for session_info in reservation.session_info:
-                resource_name = session_info.resource_name
-                session_kwargs: Dict[str, Any] = {}
-                if USE_SIMULATION:
-                    resource_name = ""
-                    session_kwargs["simulate"] = True
-                    session_kwargs["topology"] = "2567/Independent"
-
-                session_kwargs["grpc_options"] = niswitch.GrpcSessionOptions(
-                    grpc_channel_pool.get_grpc_device_channel(niswitch.GRPC_SERVICE_INTERFACE_NAME),
-                    session_name=session_info.session_name,
+                grpc_device_channel = grpc_channel_pool.get_grpc_device_channel(
+                    niswitch.GRPC_SERVICE_INTERFACE_NAME
+                )
+                create_session(
+                    session_info,
+                    grpc_device_channel,
                     initialization_behavior=niswitch.SessionInitializationBehavior.INITIALIZE_SERVER_SESSION,
                 )
-
-                # Leave session open
-                niswitch.Session(resource_name, **session_kwargs)
 
             session_management_client.register_sessions(reservation.session_info)
 
@@ -90,13 +84,13 @@ def destroy_niswitch_sessions() -> None:
             session_management_client.unregister_sessions(reservation.session_info)
 
             for session_info in reservation.session_info:
-                grpc_options = niswitch.GrpcSessionOptions(
-                    grpc_channel_pool.get_grpc_device_channel(niswitch.GRPC_SERVICE_INTERFACE_NAME),
-                    session_name=session_info.session_name,
+                grpc_device_channel = grpc_channel_pool.get_grpc_device_channel(
+                    niswitch.GRPC_SERVICE_INTERFACE_NAME
+                )
+                session = create_session(
+                    session_info,
+                    grpc_device_channel,
                     initialization_behavior=niswitch.SessionInitializationBehavior.ATTACH_TO_SERVER_SESSION,
                 )
 
-                session = niswitch.Session(
-                    resource_name=session_info.resource_name, grpc_options=grpc_options
-                )
                 session.close()
