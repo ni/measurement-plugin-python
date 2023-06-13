@@ -1,8 +1,21 @@
 """Contains methods related to managing driver sessions."""
+from __future__ import annotations
+
+import abc
+import warnings
 from functools import cached_property
-from typing import Iterable, List, NamedTuple, Optional, TypeVar
+from typing import (
+    Any,
+    Iterable,
+    List,
+    NamedTuple,
+    Optional,
+    Sequence,
+    TypeVar,
+)
 
 import grpc
+from deprecation import DeprecatedWarning, deprecated
 
 from ni_measurementlink_service._internal.stubs import session_pb2
 from ni_measurementlink_service._internal.stubs.ni.measurementlink import (
@@ -109,17 +122,67 @@ class SessionInformation(NamedTuple):
     channel_mappings: Iterable[ChannelMapping]
 
 
+def _convert_channel_mapping_from_grpc(
+    channel_mapping: session_management_service_pb2.ChannelMapping,
+) -> ChannelMapping:
+    return ChannelMapping(
+        pin_or_relay_name=channel_mapping.pin_or_relay_name,
+        site=channel_mapping.site,
+        channel=channel_mapping.channel,
+    )
+
+
+def _convert_channel_mapping_to_grpc(
+    channel_mapping: ChannelMapping,
+) -> session_management_service_pb2.ChannelMapping:
+    return session_management_service_pb2.ChannelMapping(
+        pin_or_relay_name=channel_mapping.pin_or_relay_name,
+        site=channel_mapping.site,
+        channel=channel_mapping.channel,
+    )
+
+
+def _convert_session_info_from_grpc(
+    session_info: session_management_service_pb2.SessionInformation,
+) -> SessionInformation:
+    return SessionInformation(
+        session_name=session_info.session.name,
+        resource_name=session_info.resource_name,
+        channel_list=session_info.channel_list,
+        instrument_type_id=session_info.instrument_type_id,
+        session_exists=session_info.session_exists,
+        channel_mappings=[
+            _convert_channel_mapping_from_grpc(m) for m in session_info.channel_mappings
+        ],
+    )
+
+
+def _convert_session_info_to_grpc(
+    session_info: SessionInformation,
+) -> session_management_service_pb2.SessionInformation:
+    return session_management_service_pb2.SessionInformation(
+        session=session_pb2.Session(name=session_info.session_name),
+        resource_name=session_info.resource_name,
+        channel_list=session_info.channel_list,
+        instrument_type_id=session_info.instrument_type_id,
+        session_exists=session_info.session_exists,
+        channel_mappings=[
+            _convert_channel_mapping_to_grpc(m) for m in session_info.channel_mappings
+        ],
+    )
+
+
 # Eventually, this can be replaced with typing.Self (Python >= 3.11).
-_TReservation = TypeVar("_TReservation", bound="Reservation")
+_TReservation = TypeVar("_TReservation", bound="BaseReservation")
 
 
-class Reservation(object):
-    """Manage session reservation."""
+class BaseReservation(abc.ABC):
+    """Manages session reservation."""
 
     def __init__(
         self,
-        session_manager: "Client",
-        session_info: Iterable[session_management_service_pb2.SessionInformation],
+        session_manager: Client,
+        session_info: Sequence[session_management_service_pb2.SessionInformation],
     ):
         """Initialize reservation object."""
         self._session_manager = session_manager
@@ -138,27 +201,46 @@ class Reservation(object):
         """Unreserve sessions."""
         self._session_manager._unreserve_sessions(self._session_info)
 
+
+class SingleSessionReservation(BaseReservation):
+    """Manages reservation for a single session."""
+
     @cached_property
+    def session_info(self) -> SessionInformation:
+        """Single session information object."""
+        assert len(self._session_info) == 1
+        return _convert_session_info_from_grpc(self._session_info[0])
+
+
+class MultiSessionReservation(BaseReservation):
+    """Manages reservation for multiple sessions."""
+
+    @property
+    @deprecated(deprecated_in="1.1.0", details="Use session_infos instead.")
     def session_info(self) -> List[SessionInformation]:
-        """Return session information."""
-        return [
-            SessionInformation(
-                session_name=info.session.name,
-                resource_name=info.resource_name,
-                channel_list=info.channel_list,
-                instrument_type_id=info.instrument_type_id,
-                session_exists=info.session_exists,
-                channel_mappings=[
-                    ChannelMapping(
-                        pin_or_relay_name=channel_mapping.pin_or_relay_name,
-                        site=channel_mapping.site,
-                        channel=channel_mapping.channel,
-                    )
-                    for channel_mapping in info.channel_mappings
-                ],
-            )
-            for info in self._session_info
-        ]
+        """Multiple session information objects."""
+        return self.session_infos
+
+    @cached_property
+    def session_infos(self) -> List[SessionInformation]:
+        """Multiple session information objects."""
+        return [_convert_session_info_from_grpc(info) for info in self._session_info]
+
+
+def __getattr__(name: str) -> Any:
+    if name == "Reservation":
+        warnings.warn(
+            DeprecatedWarning(
+                name,
+                deprecated_in="1.1.0",
+                removed_in=None,
+                details="Use MultiSessionReservation instead.",
+            ),
+            stacklevel=2,
+        )
+        return MultiSessionReservation
+    else:
+        raise AttributeError(f"module {__name__} has no attribute {name}")
 
 
 class Client(object):
@@ -170,16 +252,16 @@ class Client(object):
             session_management_service_pb2_grpc.SessionManagementServiceStub(grpc_channel)
         )
 
-    def reserve_sessions(
+    def reserve_session(
         self,
         context: PinMapContext,
         pin_or_relay_names: Optional[Iterable[str]] = None,
         instrument_type_id: Optional[str] = None,
         timeout: Optional[float] = None,
-    ) -> Reservation:
-        """Reserve session(s).
+    ) -> SingleSessionReservation:
+        """Reserve a single session.
 
-        Reserve session(s) for the given pins, sites, and instrument type ID and returns the
+        Reserve the session matching the given pins, sites, and instrument type ID and return the
         information needed to create or access the session.
 
         Args
@@ -212,10 +294,81 @@ class Client(object):
 
         Returns
         -------
-            Reservation: Context manager that can be used with a with-statement to unreserve the
-            sessions.
+            SingleSessionReservation: Context manager that can be used with a with-statement to
+            unreserve the session.
 
         """
+        session_info = self._reserve_sessions(
+            context, pin_or_relay_names, instrument_type_id, timeout
+        )
+        if len(session_info) == 0:
+            raise ValueError("No sessions reserved. Expected single session, got 0 sessions.")
+        elif len(session_info) > 1:
+            raise ValueError(
+                "Too many sessions reserved. Expected single session, got "
+                f"{len(session_info)} sessions."
+            )
+        else:
+            return SingleSessionReservation(session_manager=self, session_info=session_info)
+
+    def reserve_sessions(
+        self,
+        context: PinMapContext,
+        pin_or_relay_names: Optional[Iterable[str]] = None,
+        instrument_type_id: Optional[str] = None,
+        timeout: Optional[float] = None,
+    ) -> MultiSessionReservation:
+        """Reserve multiple sessions.
+
+        Reserve sessions matching the given pins, sites, and instrument type ID and return the
+        information needed to create or access the sessions.
+
+        Args
+        ----
+            context (PinMapContext): Includes the pin map ID for the pin map in the Pin Map Service,
+                as well as the list of sites for the measurement.
+
+            pin_or_relay_names (Iterable[str]): List of pins, pin groups, relays, or relay groups to
+                use for the measurement. If unspecified, reserve sessions for all pins and relays in
+                the registered pin map resource.
+
+            instrument_type_id (str): Instrument type ID for the measurement. If unspecified,
+                reserve sessions for all instrument types connected in the registered pin map
+                resource. Pin maps have built in instrument definitions using the following NI
+                driver based instrument type ids:
+                    "niDCPower"
+                    "niDigitalPattern"
+                    "niScope"
+                    "niDMM"
+                    "niDAQmx"
+                    "niFGen"
+                    "niRelayDriver"
+                For custom instruments the user defined instrument type id is defined in the pin
+                map file.
+
+            timeout (float): Timeout in seconds. Allowed values,
+                0 (non-blocking, fails immediately if resources cannot be reserved),
+                -1 or negative (infinite timeout), or
+                any positive numeric value (wait for that number of second).
+
+        Returns
+        -------
+            MultiSessionReservation: Context manager that can be used with a with-statement to
+            unreserve the sessions.
+
+        """
+        session_info = self._reserve_sessions(
+            context, pin_or_relay_names, instrument_type_id, timeout
+        )
+        return MultiSessionReservation(session_manager=self, session_info=session_info)
+
+    def _reserve_sessions(
+        self,
+        context: PinMapContext,
+        pin_or_relay_names: Optional[Iterable[str]] = None,
+        instrument_type_id: Optional[str] = None,
+        timeout: Optional[float] = None,
+    ) -> Sequence[session_management_service_pb2.SessionInformation]:
         pin_map_context = pin_map_context_pb2.PinMapContext(
             pin_map_id=context.pin_map_id, sites=context.sites
         )
@@ -237,10 +390,7 @@ class Client(object):
             self._client.ReserveSessions(request)
         )
 
-        return Reservation(
-            session_manager=self,
-            session_info=response.sessions,
-        )
+        return response.sessions
 
     def _unreserve_sessions(
         self, session_info: Iterable[session_management_service_pb2.SessionInformation]
@@ -320,7 +470,7 @@ class Client(object):
 
     def reserve_all_registered_sessions(
         self, instrument_type_id: Optional[str] = None, timeout: Optional[float] = None
-    ) -> Reservation:
+    ) -> MultiSessionReservation:
         """Reserves and gets all sessions currently registered in the Session Manager.
 
         Args
@@ -346,8 +496,8 @@ class Client(object):
 
         Returns
         -------
-            Reservation: Context manager that can be used with a with-statement to unreserve the
-            sessions.
+            MultiSessionReservation: Context manager that can be used with a with-statement to
+            unreserve the sessions.
 
         """
         request = session_management_service_pb2.ReserveAllRegisteredSessionsRequest()
@@ -362,4 +512,4 @@ class Client(object):
         response: session_management_service_pb2.ReserveAllRegisteredSessionsResponse = (
             self._client.ReserveAllRegisteredSessions(request)
         )
-        return Reservation(session_manager=self, session_info=response.sessions)
+        return MultiSessionReservation(session_manager=self, session_info=response.sessions)
