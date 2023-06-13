@@ -104,8 +104,8 @@ def measure(
             log_instrument_id(session)
 
             # When this measurement is called from outside of TestStand (session_exists == False),
-            # reset the instrument to a known state.
-            # In TestStand, ProcessSetup resets the instrument.
+            # reset the instrument to a known state. In TestStand, ProcessSetup resets the
+            # instrument.
             if not session_info.session_exists:
                 reset_instrument(session)
 
