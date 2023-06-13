@@ -3,7 +3,7 @@
 import logging
 import pathlib
 import types
-from typing import Any, Callable, Dict, NamedTuple, TypeVar, Union
+from typing import Any, Callable, Dict, NamedTuple, TypeVar, Optional
 
 import click
 import grpc
@@ -242,11 +242,11 @@ def get_grpc_device_channel(
     measurement_service: MeasurementService,
     driver_module: types.ModuleType,
     service_options: ServiceOptions,
-) -> Union[grpc.Channel, None]:
+) -> Optional[grpc.Channel]:
     """Returns driver specific grpc device channel."""
     if service_options.use_grpc_device:
         if service_options.grpc_device_address:
-            return measurement_service.get_channel(service_options.grpc_device_address)
+            return measurement_service.channel_pool.get_channel(service_options.grpc_device_address)
 
         return measurement_service.get_channel(
             provided_interface=getattr(driver_module, "GRPC_SERVICE_INTERFACE_NAME"),

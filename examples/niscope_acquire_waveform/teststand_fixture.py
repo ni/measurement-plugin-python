@@ -50,6 +50,9 @@ def create_niscope_sessions(sequence_context: Any) -> None:
         pin_map_id = teststand_support.get_active_pin_map_id()
 
         pin_map_context = nims.session_management.PinMapContext(pin_map_id=pin_map_id, sites=None)
+        grpc_device_channel = grpc_channel_pool.get_grpc_device_channel(
+            niscope.GRPC_SERVICE_INTERFACE_NAME
+        )
         with session_management_client.reserve_sessions(
             context=pin_map_context,
             instrument_type_id=nims.session_management.INSTRUMENT_TYPE_NI_SCOPE,
@@ -57,10 +60,8 @@ def create_niscope_sessions(sequence_context: Any) -> None:
             timeout=0,
         ) as reservation:
             for session_info in reservation.session_info:
-                grpc_device_channel = grpc_channel_pool.get_grpc_device_channel(
-                    niscope.GRPC_SERVICE_INTERFACE_NAME
-                )
-                create_session(
+                # Leave session open
+                _ = create_session(
                     session_info,
                     grpc_device_channel,
                     initialization_behavior=niscope.SessionInitializationBehavior.INITIALIZE_SERVER_SESSION,

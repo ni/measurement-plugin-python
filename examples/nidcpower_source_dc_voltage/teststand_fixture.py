@@ -46,8 +46,10 @@ def create_nidcpower_sessions(sequence_context: Any) -> None:
 
         teststand_support = TestStandSupport(sequence_context)
         pin_map_id = teststand_support.get_active_pin_map_id()
-
         pin_map_context = nims.session_management.PinMapContext(pin_map_id=pin_map_id, sites=None)
+        grpc_device_channel = grpc_channel_pool.get_grpc_device_channel(
+            nidcpower.GRPC_SERVICE_INTERFACE_NAME
+        )
         with session_management_client.reserve_sessions(
             context=pin_map_context,
             instrument_type_id=nims.session_management.INSTRUMENT_TYPE_NI_DCPOWER,
@@ -57,15 +59,12 @@ def create_nidcpower_sessions(sequence_context: Any) -> None:
             timeout=60,
         ) as reservation:
             for session_info in reservation.session_info:
-                grpc_device_channel = grpc_channel_pool.get_grpc_device_channel(
-                    nidcpower.GRPC_SERVICE_INTERFACE_NAME
-                )
-                create_session(
+                # Leave session open
+                _ = create_session(
                     session_info,
                     grpc_device_channel,
                     initialization_behavior=nidcpower.SessionInitializationBehavior.INITIALIZE_SERVER_SESSION,
                 )
-
             session_management_client.register_sessions(reservation.session_info)
 
 
