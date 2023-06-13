@@ -37,6 +37,7 @@ python = "^3.8"
 grpcio = "^1.49.1"
 protobuf = "^4.21"
 pywin32 = {version = ">=303", platform = "win32"}
+deprecation = ">=2.1"
 
 [tool.poetry.group.dev.dependencies]
 pytest = ">=7.2.0"
@@ -89,5 +90,9 @@ warn_redundant_casts = true
 warn_unused_ignores = true
 
 [[tool.mypy.overrides]]
-module = ["grpc.framework.foundation.*"]
+module = [
+  # https://github.com/briancurtin/deprecation/issues/56 - Add type information (PEP 561)
+  "deprecation.*",
+  "grpc.framework.foundation.*"
+]
 ignore_missing_imports = true
