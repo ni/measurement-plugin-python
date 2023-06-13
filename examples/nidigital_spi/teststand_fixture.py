@@ -1,5 +1,5 @@
 """Functions to set up and tear down sessions of NI Digital Pattern instruments in NI TestStand."""
-from typing import Any, Dict, Iterable
+from typing import Any, Iterable
 
 import nidigital
 from _helpers import GrpcChannelPoolHelper, PinMapClient, TestStandSupport

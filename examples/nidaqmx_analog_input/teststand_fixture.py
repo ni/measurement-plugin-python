@@ -4,11 +4,6 @@ from typing import Any
 import nidaqmx
 from _helpers import GrpcChannelPoolHelper, PinMapClient, TestStandSupport
 from _nidaqmx_helpers import create_task
-from nidaqmx.grpc_session_options import (
-    GRPC_SERVICE_INTERFACE_NAME,
-    GrpcSessionOptions,
-    SessionInitializationBehavior,
-)
 
 import ni_measurementlink_service as nims
 
@@ -48,8 +43,6 @@ def create_nidaqmx_tasks(sequence_context: Any) -> None:
         session_management_client = nims.session_management.Client(
             grpc_channel=grpc_channel_pool.session_management_channel
         )
-        session_kwargs = {}
-
         teststand_support = TestStandSupport(sequence_context)
         pin_map_id = teststand_support.get_active_pin_map_id()
 

@@ -1,5 +1,5 @@
 """Functions to set up and tear down sessions of NI-Scope devices in NI TestStand."""
-from typing import Any, Dict
+from typing import Any
 
 import niscope
 from _helpers import GrpcChannelPoolHelper, PinMapClient, TestStandSupport

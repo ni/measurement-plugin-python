@@ -1,5 +1,5 @@
 """Functions to set up and tear down sessions of NI-Switch devices in NI TestStand."""
-from typing import Any, Dict
+from typing import Any
 
 import niswitch
 from _helpers import GrpcChannelPoolHelper, PinMapClient, TestStandSupport
