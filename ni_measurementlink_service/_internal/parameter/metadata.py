@@ -55,24 +55,13 @@ def validate_default_value_type(parameter_metadata: ParameterMetadata) -> None:
     expected_type = type(
         Context.get_type_default(parameter_metadata.type, parameter_metadata.repeated)
     )
-
     has_enum_values_annotation, enum_values_annotation = try_get_enum_values_annotation(parameter_metadata)
-    if has_enum_values_annotation:
-        if not _is_default_enum_match_annotations(default_value, enum_values_annotation):
-            raise TypeError(
-                f"The default value, `{default_value}`, for '{display_name}' is not valid. Expected values: `{enum_values_annotation}`."
-            )
-    else:
-        if not isinstance(default_value, expected_type):
-            raise TypeError(
-                f"Unexpected type {type(default_value)} in the default value for '{display_name}'. Expected type: {expected_type}."
-            )
 
     if parameter_metadata.repeated:
         expected_element_type = type(Context.get_type_default(parameter_metadata.type, False))
         if has_enum_values_annotation:
             for element in default_value:
-                if not _is_default_enum_match_annotations(default_value, enum_values_annotation):
+                if not _is_default_enum_match_annotations(element, enum_values_annotation):
                     raise TypeError(
                         f"The default value, `{element}`, for '{display_name}' is not valid. Expected values: `{enum_values_annotation}`."
                     )
@@ -82,6 +71,17 @@ def validate_default_value_type(parameter_metadata: ParameterMetadata) -> None:
                     raise TypeError(
                         f"Unexpected element of type {type(element)} in the default value for '{display_name}'. Expected element type: {expected_element_type}."
                     )
+    else:
+        if has_enum_values_annotation:
+            if not _is_default_enum_match_annotations(default_value, enum_values_annotation):
+                raise TypeError(
+                    f"The default value, `{default_value}`, for '{display_name}' is not valid. Expected values: `{enum_values_annotation}`."
+                )
+        else:
+            if not isinstance(default_value, expected_type):
+                raise TypeError(
+                    f"Unexpected type {type(default_value)} in the default value for '{display_name}'. Expected type: {expected_type}."
+                )
     return None
 
 
