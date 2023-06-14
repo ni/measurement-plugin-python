@@ -211,10 +211,26 @@ def _deserialize_enum_parameters(
         parameter_metadata = parameter_metadata_dict[i]
         has_enum_values_annotation, enum_values_annotation = try_get_enum_values_annotation(parameter_metadata)
         if has_enum_values_annotation:
-            enum_type = type(parameter_metadata.default_value)
+            enum_type = _get_enum_type(parameter_metadata)
             userEnum = json.loads(enum_values_annotation.replace("'", "\""))
             userEnumClass = Enum(enum_type.__name__, userEnum)
-            for enum in enum_type:
-                if enum.value == value:
-                    parameter_by_id[i] = userEnumClass(value)
+            userEnumClass.__module__ = enum_type.__module__
+            if parameter_metadata.repeated:
+                for j, member_value in enumerate(value):
+                    for enum in enum_type:
+                        if enum.value == member_value:
+                            parameter_by_id[i][j] = userEnumClass(member_value)
+            else:
+                for enum in enum_type:
+                    if enum.value == value:
+                        parameter_by_id[i] = userEnumClass(value)
     return None
+
+def _get_enum_type(
+    parameter_metadata: ParameterMetadata
+) -> type:
+    if parameter_metadata.repeated and len(parameter_metadata.default_value) > 0:
+        return type(parameter_metadata.default_value[0])
+    else:
+        return type(parameter_metadata.default_value)
+    
