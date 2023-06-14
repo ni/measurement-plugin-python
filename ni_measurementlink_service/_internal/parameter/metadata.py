@@ -58,6 +58,10 @@ def validate_default_value_type(parameter_metadata: ParameterMetadata) -> None:
     has_enum_values_annotation, enum_values_annotation = try_get_enum_values_annotation(parameter_metadata)
 
     if parameter_metadata.repeated:
+        if not isinstance(default_value, expected_type):
+            raise TypeError(
+                f"Unexpected type {type(default_value)} in the default value for '{display_name}'. Expected type: {expected_type}."
+            )
         expected_element_type = type(Context.get_type_default(parameter_metadata.type, False))
         if has_enum_values_annotation:
             for element in default_value:
