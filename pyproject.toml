@@ -45,6 +45,7 @@ ni-python-styleguide = ">=0.4.1"
 # and regenerate gRPC stubs.
 grpcio-tools = "1.49.1"
 pytest-cov = ">=3.0.0"
+pytest-mock = ">=3.0"
 mypy = ">=1.0"
 mypy-protobuf = ">=3.4"
 types-protobuf = "^4.21"
@@ -77,7 +78,10 @@ filterwarnings = ["always::ImportWarning", "always::ResourceWarning"]
 testpaths = ["tests"]
 
 [tool.mypy]
-exclude = ["stubs"]
+exclude = [
+  # https://github.com/grpc/grpc/issues/27682 - module 'grpc' has no attribute 'experimental'
+  "stubs/.*_grpc\\.py$"
+]
 warn_unused_configs = true
 namespace_packages = true
 check_untyped_defs = true
