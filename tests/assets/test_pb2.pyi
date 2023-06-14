@@ -8,22 +8,42 @@ import builtins
 import collections.abc
 import google.protobuf.descriptor
 import google.protobuf.internal.containers
+import google.protobuf.internal.enum_type_wrapper
 import google.protobuf.message
 import sys
+import typing
 
-if sys.version_info >= (3, 8):
+if sys.version_info >= (3, 10):
     import typing as typing_extensions
 else:
     import typing_extensions
 
 DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
 
-@typing_extensions.final
-class MeasurementParameter(google.protobuf.message.Message):
+class _Color:
+    ValueType = typing.NewType("ValueType", builtins.int)
+    V: typing_extensions.TypeAlias = ValueType
+
+class _ColorEnumTypeWrapper(google.protobuf.internal.enum_type_wrapper._EnumTypeWrapper[_Color.ValueType], builtins.type):
+    DESCRIPTOR: google.protobuf.descriptor.EnumDescriptor
+    NONE: _Color.ValueType  # 0
+    RED: _Color.ValueType  # 1
+    GREEN: _Color.ValueType  # 2
+    BLUE: _Color.ValueType  # 3
+
+class Color(_Color, metaclass=_ColorEnumTypeWrapper):
     """---------------------------------------------------------------------
     ---------------------------------------------------------------------
     """
 
+NONE: Color.ValueType  # 0
+RED: Color.ValueType  # 1
+GREEN: Color.ValueType  # 2
+BLUE: Color.ValueType  # 3
+global___Color = Color
+
+@typing_extensions.final
+class MeasurementParameter(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
     FLOAT_DATA_FIELD_NUMBER: builtins.int
@@ -42,6 +62,8 @@ class MeasurementParameter(google.protobuf.message.Message):
     UINT64_ARRAY_DATA_FIELD_NUMBER: builtins.int
     BOOL_ARRAY_DATA_FIELD_NUMBER: builtins.int
     STRING_ARRAY_DATA_FIELD_NUMBER: builtins.int
+    ENUM_DATA_FIELD_NUMBER: builtins.int
+    ENUM_ARRAY_DATA_FIELD_NUMBER: builtins.int
     float_data: builtins.float
     double_data: builtins.float
     int32_data: builtins.int
@@ -66,6 +88,9 @@ class MeasurementParameter(google.protobuf.message.Message):
     def bool_array_data(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.bool]: ...
     @property
     def string_array_data(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]: ...
+    enum_data: global___Color.ValueType
+    @property
+    def enum_array_data(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[global___Color.ValueType]: ...
     def __init__(
         self,
         *,
@@ -85,7 +110,9 @@ class MeasurementParameter(google.protobuf.message.Message):
         uint64_array_data: collections.abc.Iterable[builtins.int] | None = ...,
         bool_array_data: collections.abc.Iterable[builtins.bool] | None = ...,
         string_array_data: collections.abc.Iterable[builtins.str] | None = ...,
+        enum_data: global___Color.ValueType = ...,
+        enum_array_data: collections.abc.Iterable[global___Color.ValueType] | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing_extensions.Literal["bool_array_data", b"bool_array_data", "bool_data", b"bool_data", "double_array_data", b"double_array_data", "double_data", b"double_data", "float_array_data", b"float_array_data", "float_data", b"float_data", "int32_array_data", b"int32_array_data", "int32_data", b"int32_data", "int64_array_data", b"int64_array_data", "int64_data", b"int64_data", "string_array_data", b"string_array_data", "string_data", b"string_data", "uint32_array_data", b"uint32_array_data", "uint32_data", b"uint32_data", "uint64_array_data", b"uint64_array_data", "uint64_data", b"uint64_data"]) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["bool_array_data", b"bool_array_data", "bool_data", b"bool_data", "double_array_data", b"double_array_data", "double_data", b"double_data", "enum_array_data", b"enum_array_data", "enum_data", b"enum_data", "float_array_data", b"float_array_data", "float_data", b"float_data", "int32_array_data", b"int32_array_data", "int32_data", b"int32_data", "int64_array_data", b"int64_array_data", "int64_data", b"int64_data", "string_array_data", b"string_array_data", "string_data", b"string_data", "uint32_array_data", b"uint32_array_data", "uint32_data", b"uint32_data", "uint64_array_data", b"uint64_array_data", "uint64_data", b"uint64_data"]) -> None: ...
 
 global___MeasurementParameter = MeasurementParameter

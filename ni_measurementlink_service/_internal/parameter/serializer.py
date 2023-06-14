@@ -80,7 +80,7 @@ def serialize_parameters(
         if "ni/type_specialization" in parameter_metadata.annotations:
             if parameter_metadata.annotations["ni/type_specialization"] == TypeSpecialization.Enum.value:
                 if parameter_metadata.repeated:
-                    parameter = map(lambda x: x.value, parameter)
+                    parameter = list(map(lambda x: x.value, parameter))
                 else:
                     parameter = parameter.value
         # Skipping serialization if the value is None or if its a type default value.

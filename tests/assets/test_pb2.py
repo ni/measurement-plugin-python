@@ -13,7 +13,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\ntest.proto\x12\'ni.measurementlink.measurement.tests.v1\"\x8c\x03\n\x14MeasurementParameter\x12\x12\n\nfloat_data\x18\x01 \x01(\x02\x12\x13\n\x0b\x64ouble_data\x18\x02 \x01(\x01\x12\x12\n\nint32_data\x18\x03 \x01(\x05\x12\x13\n\x0buint32_data\x18\x04 \x01(\r\x12\x12\n\nint64_data\x18\x05 \x01(\x03\x12\x13\n\x0buint64_data\x18\x06 \x01(\x04\x12\x11\n\tbool_data\x18\x07 \x01(\x08\x12\x13\n\x0bstring_data\x18\x08 \x01(\t\x12\x19\n\x11\x64ouble_array_data\x18\t \x03(\x01\x12\x18\n\x10\x66loat_array_data\x18\n \x03(\x02\x12\x18\n\x10int32_array_data\x18\x0b \x03(\x05\x12\x19\n\x11uint32_array_data\x18\x0c \x03(\r\x12\x18\n\x10int64_array_data\x18\r \x03(\x03\x12\x19\n\x11uint64_array_data\x18\x0e \x03(\x04\x12\x17\n\x0f\x62ool_array_data\x18\x0f \x03(\x08\x12\x19\n\x11string_array_data\x18\x10 \x03(\tB7\xaa\x02\x34NationalInstruments.MeasurementServices.Measurementsb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\ntest.proto\x12\'ni.measurementlink.measurement.tests.v1\"\x98\x04\n\x14MeasurementParameter\x12\x12\n\nfloat_data\x18\x01 \x01(\x02\x12\x13\n\x0b\x64ouble_data\x18\x02 \x01(\x01\x12\x12\n\nint32_data\x18\x03 \x01(\x05\x12\x13\n\x0buint32_data\x18\x04 \x01(\r\x12\x12\n\nint64_data\x18\x05 \x01(\x03\x12\x13\n\x0buint64_data\x18\x06 \x01(\x04\x12\x11\n\tbool_data\x18\x07 \x01(\x08\x12\x13\n\x0bstring_data\x18\x08 \x01(\t\x12\x19\n\x11\x64ouble_array_data\x18\t \x03(\x01\x12\x18\n\x10\x66loat_array_data\x18\n \x03(\x02\x12\x18\n\x10int32_array_data\x18\x0b \x03(\x05\x12\x19\n\x11uint32_array_data\x18\x0c \x03(\r\x12\x18\n\x10int64_array_data\x18\r \x03(\x03\x12\x19\n\x11uint64_array_data\x18\x0e \x03(\x04\x12\x17\n\x0f\x62ool_array_data\x18\x0f \x03(\x08\x12\x19\n\x11string_array_data\x18\x10 \x03(\t\x12\x41\n\tenum_data\x18\x11 \x01(\x0e\x32..ni.measurementlink.measurement.tests.v1.Color\x12G\n\x0f\x65num_array_data\x18\x12 \x03(\x0e\x32..ni.measurementlink.measurement.tests.v1.Color*/\n\x05\x43olor\x12\x08\n\x04NONE\x10\x00\x12\x07\n\x03RED\x10\x01\x12\t\n\x05GREEN\x10\x02\x12\x08\n\x04\x42LUE\x10\x03\x42\x37\xaa\x02\x34NationalInstruments.MeasurementServices.Measurementsb\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'test_pb2', globals())
@@ -21,6 +21,8 @@ if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
   DESCRIPTOR._serialized_options = b'\252\0024NationalInstruments.MeasurementServices.Measurements'
+  _COLOR._serialized_start=594
+  _COLOR._serialized_end=641
   _MEASUREMENTPARAMETER._serialized_start=56
-  _MEASUREMENTPARAMETER._serialized_end=452
+  _MEASUREMENTPARAMETER._serialized_end=592
 # @@protoc_insertion_point(module_scope)
