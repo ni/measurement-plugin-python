@@ -35,7 +35,6 @@ class ParameterMetadata(NamedTuple):
     default_value: Any
     annotations: Dict[str, str]
 
-
 def validate_default_value_type(parameter_metadata: ParameterMetadata) -> None:
     """Validate and raise exception if the default value does not match the type info.
 
@@ -57,31 +56,36 @@ def validate_default_value_type(parameter_metadata: ParameterMetadata) -> None:
         Context.get_type_default(parameter_metadata.type, parameter_metadata.repeated)
     )
 
-    if not isinstance(default_value, expected_type):
-        has_enum_values_annotation, enum_values_annotation = _try_get_enum_values_annotation(parameter_metadata)
-        if has_enum_values_annotation:
-            userEnum = json.loads(enum_values_annotation.replace("'", "\""))
-            userEnumClass = Enum("UserDefinedEnum", userEnum)
-            if ((not any(member.value == default_value.value for member in userEnumClass)) or 
-                (not userEnumClass(default_value.value).name == default_value.name)):
-                raise TypeError(
-                    f"The default value, `{default_value}`, for '{display_name}' is not valid. Expected values: `{userEnum}`."
-                )
-        else:
+    has_enum_values_annotation, enum_values_annotation = try_get_enum_values_annotation(parameter_metadata)
+    if has_enum_values_annotation:
+        if not _is_default_enum_match_annotations(default_value, enum_values_annotation):
+            raise TypeError(
+                f"The default value, `{default_value}`, for '{display_name}' is not valid. Expected values: `{enum_values_annotation}`."
+            )
+    else:
+        if not isinstance(default_value, expected_type):
             raise TypeError(
                 f"Unexpected type {type(default_value)} in the default value for '{display_name}'. Expected type: {expected_type}."
             )
 
     if parameter_metadata.repeated:
         expected_element_type = type(Context.get_type_default(parameter_metadata.type, False))
-        for element in default_value:
-            if not isinstance(element, expected_element_type):
-                raise TypeError(
-                    f"Unexpected element of type {type(element)} in the default value for '{display_name}'. Expected element type: {expected_element_type}."
-                )
+        if has_enum_values_annotation:
+            for element in default_value:
+                if not _is_default_enum_match_annotations(default_value, enum_values_annotation):
+                    raise TypeError(
+                        f"The default value, `{default_value}`, for '{display_name}' is not valid. Expected values: `{enum_values_annotation}`."
+                    )
+        else:
+            for element in default_value:
+                if not isinstance(element, expected_element_type):
+                    raise TypeError(
+                        f"Unexpected element of type {type(element)} in the default value for '{display_name}'. Expected element type: {expected_element_type}."
+                    )
     return None
 
-def _try_get_enum_values_annotation(parameter_metadata: ParameterMetadata)-> Tuple[bool, str]:
+
+def try_get_enum_values_annotation(parameter_metadata: ParameterMetadata)-> Tuple[bool, str]:
     if ("ni/type_specialization" in parameter_metadata.annotations and 
         parameter_metadata.annotations["ni/type_specialization"] == TypeSpecialization.Enum.value and
         "ni/enum.values" in parameter_metadata.annotations):
@@ -89,3 +93,14 @@ def _try_get_enum_values_annotation(parameter_metadata: ParameterMetadata)-> Tup
         if enum_values != "" and enum_values is not None:
             return True, enum_values
     return False, ""
+
+def _is_default_enum_match_annotations(default_value: Any, enum_values_annotation: str):
+        if not isinstance(default_value, Enum):
+            return False
+        userEnum = json.loads(enum_values_annotation.replace("'", "\""))
+        userEnumClass = Enum("UserDefinedEnum", userEnum)
+        if (any(member.value == default_value.value for member in userEnumClass) and 
+            userEnumClass(default_value.value).name == default_value.name):
+            return True
+        return False
+    
