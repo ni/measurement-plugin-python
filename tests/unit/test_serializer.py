@@ -7,10 +7,11 @@ from ni_measurementlink_service._internal.parameter import serializer
 from ni_measurementlink_service._internal.parameter.metadata import ParameterMetadata, TypeSpecialization
 from tests.assets import test_pb2
 
-class Color(Enum):
-    RED = 1
-    GREEN = 2
-    BLUE = 3
+class DifferentColor(Enum):
+    PURPLE = 0
+    ORANGE = 1
+    TEAL = 2
+    BROWN = 3
 
 @pytest.mark.parametrize(
     "test_values",
@@ -32,8 +33,8 @@ class Color(Enum):
             [0, 1, 399],
             [True, False, True],
             ["String1, String2"],
-            Color.BLUE,
-            [Color.GREEN, Color.RED],
+            DifferentColor.ORANGE,
+            [DifferentColor.TEAL, DifferentColor.BROWN],
         ],
         [
             -0.9999,
@@ -52,8 +53,8 @@ class Color(Enum):
             [0, 1, 399],
             [True, False, True],
             ["String1, String2"],
-            Color.BLUE,
-            [Color.GREEN, Color.RED],
+            DifferentColor.ORANGE,
+            [DifferentColor.TEAL, DifferentColor.BROWN],
         ],
     ],
 )
@@ -87,8 +88,8 @@ def test___serializer___serialize_parameter___successful_serialization(test_valu
             [0, 1, 399],
             [True, False, True],
             ["String1, String2"],
-            Color.BLUE,
-            [Color.GREEN, Color.RED],
+            DifferentColor.ORANGE,
+            [DifferentColor.TEAL, DifferentColor.BROWN],
         ],
         [
             -0.9999,
@@ -107,8 +108,8 @@ def test___serializer___serialize_parameter___successful_serialization(test_valu
             [0, 1, 399],
             [True, False, True],
             ["String1, String2"],
-            Color.BLUE,
-            [Color.GREEN, Color.RED],
+            DifferentColor.ORANGE,
+            [DifferentColor.TEAL, DifferentColor.BROWN],
         ],
     ],
 )
@@ -141,8 +142,8 @@ def test___serializer___serialize_default_parameter___successful_serialization(d
             [0, 1, 399],
             [True, False, True],
             ["String1", "String2"],
-            Color.BLUE,
-            [Color.GREEN, Color.RED],
+            DifferentColor.ORANGE,
+            [DifferentColor.TEAL, DifferentColor.BROWN],
         ]
     ],
 )
