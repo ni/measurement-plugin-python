@@ -74,7 +74,7 @@ def validate_default_value_type(parameter_metadata: ParameterMetadata) -> None:
             for element in default_value:
                 if not _is_default_enum_match_annotations(default_value, enum_values_annotation):
                     raise TypeError(
-                        f"The default value, `{default_value}`, for '{display_name}' is not valid. Expected values: `{enum_values_annotation}`."
+                        f"The default value, `{element}`, for '{display_name}' is not valid. Expected values: `{enum_values_annotation}`."
                     )
         else:
             for element in default_value:
