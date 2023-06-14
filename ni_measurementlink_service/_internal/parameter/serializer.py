@@ -209,14 +209,11 @@ def _deserialize_enum_parameters(
     """
     for i, value in parameter_by_id.items():
         parameter_metadata = parameter_metadata_dict[i]
-        if ("ni/type_specialization" in parameter_metadata.annotations and 
-            parameter_metadata.annotations["ni/type_specialization"] == TypeSpecialization.Enum.value and
-            "ni/enum.values" in parameter_metadata.annotations):
-            userEnumJson = parameter_metadata.annotations["ni/enum.values"]
-            if userEnumJson != "" and userEnumJson is not None:
-                enum_type = type(parameter_metadata.default_value)
-                userEnum = json.loads(userEnumJson.replace("'", "\""))
-                userEnumClass = Enum(enum_type.__name__, userEnum)
-                for enum in enum_type:
-                    if enum.value == value:
-                        parameter_by_id[i] = userEnumClass(value)
+        has_enum_values_annotation, enum_values_annotation = ParameterMetadata._try_get_enum_values_annotation(parameter_metadata)
+        if has_enum_values_annotation:
+            enum_type = type(parameter_metadata.default_value)
+            userEnum = json.loads(enum_values_annotation.replace("'", "\""))
+            userEnumClass = Enum(enum_type.__name__, userEnum)
+            for enum in enum_type:
+                if enum.value == value:
+                    parameter_by_id[i] = userEnumClass(value)

@@ -1,5 +1,5 @@
 """Contains classes that represents metadata."""
-from typing import Any, Dict, NamedTuple
+from typing import Any, Dict, NamedTuple, Tuple
 from enum import Enum
 import json
 
@@ -58,14 +58,12 @@ def validate_default_value_type(parameter_metadata: ParameterMetadata) -> None:
     )
 
     if not isinstance(default_value, expected_type):
-        if ("ni/type_specialization" in parameter_metadata.annotations and 
-            parameter_metadata.annotations["ni/type_specialization"] == TypeSpecialization.Enum.value and
-            "ni/enum.values" in parameter_metadata.annotations):
-            userEnumJson = parameter_metadata.annotations["ni/enum.values"]
-            userEnum = json.loads(userEnumJson.replace("'", "\""))
+        has_enum_values_annotation, enum_values_annotation = _try_get_enum_values_annotation(parameter_metadata)
+        if has_enum_values_annotation:
+            userEnum = json.loads(enum_values_annotation.replace("'", "\""))
             userEnumClass = Enum("UserDefinedEnum", userEnum)
-            if not (any(member.value == default_value.value for member in userEnumClass) and 
-                userEnumClass(default_value.value).name == default_value.name):
+            if ((not any(member.value == default_value.value for member in userEnumClass)) or 
+                (not userEnumClass(default_value.value).name == default_value.name)):
                 raise TypeError(
                     f"The default value, `{default_value}`, for '{display_name}' is not valid. Expected values: `{userEnum}`."
                 )
@@ -82,3 +80,12 @@ def validate_default_value_type(parameter_metadata: ParameterMetadata) -> None:
                     f"Unexpected element of type {type(element)} in the default value for '{display_name}'. Expected element type: {expected_element_type}."
                 )
     return None
+
+def _try_get_enum_values_annotation(parameter_metadata: ParameterMetadata)-> Tuple[bool, str]:
+    if ("ni/type_specialization" in parameter_metadata.annotations and 
+        parameter_metadata.annotations["ni/type_specialization"] == TypeSpecialization.Enum.value and
+        "ni/enum.values" in parameter_metadata.annotations):
+        enum_values = parameter_metadata.annotations["ni/enum.values"]
+        if enum_values != "" and enum_values is not None:
+            return True, enum_values
+    return False, ""
