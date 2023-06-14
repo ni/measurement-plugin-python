@@ -75,18 +75,16 @@ def destroy_nidmm_sessions() -> None:
         session_management_client = nims.session_management.Client(
             grpc_channel=grpc_channel_pool.session_management_channel
         )
-
+        grpc_device_channel = grpc_channel_pool.get_grpc_device_channel(
+            nidmm.GRPC_SERVICE_INTERFACE_NAME
+        )
         with session_management_client.reserve_all_registered_sessions(
             instrument_type_id=nims.session_management.INSTRUMENT_TYPE_NI_DMM,
             # This code module sets up the sessions, so error immediately if they are in use.
             timeout=0,
         ) as reservation:
             session_management_client.unregister_sessions(reservation.session_info)
-
             for session_info in reservation.session_info:
-                grpc_device_channel = grpc_channel_pool.get_grpc_device_channel(
-                    nidmm.GRPC_SERVICE_INTERFACE_NAME
-                )
                 session = create_session(
                     session_info,
                     grpc_device_channel,

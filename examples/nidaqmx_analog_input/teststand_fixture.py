@@ -47,6 +47,9 @@ def create_nidaqmx_tasks(sequence_context: Any) -> None:
         pin_map_id = teststand_support.get_active_pin_map_id()
 
         pin_map_context = nims.session_management.PinMapContext(pin_map_id=pin_map_id, sites=None)
+        grpc_device_channel = grpc_channel_pool.get_grpc_device_channel(
+            nidaqmx.GRPC_SERVICE_INTERFACE_NAME
+        )
         with session_management_client.reserve_sessions(
             context=pin_map_context,
             instrument_type_id=nims.session_management.INSTRUMENT_TYPE_NI_DAQMX,
@@ -54,9 +57,6 @@ def create_nidaqmx_tasks(sequence_context: Any) -> None:
             timeout=0,
         ) as reservation:
             for session_info in reservation.session_info:
-                grpc_device_channel = grpc_channel_pool.get_grpc_device_channel(
-                    nidaqmx.GRPC_SERVICE_INTERFACE_NAME
-                )
                 task = create_task(
                     session_info,
                     grpc_device_channel,
@@ -73,7 +73,9 @@ def destroy_nidaqmx_tasks() -> None:
         session_management_client = nims.session_management.Client(
             grpc_channel=grpc_channel_pool.session_management_channel
         )
-
+        grpc_device_channel = grpc_channel_pool.get_grpc_device_channel(
+            nidaqmx.GRPC_SERVICE_INTERFACE_NAME
+        )
         with session_management_client.reserve_all_registered_sessions(
             instrument_type_id=nims.session_management.INSTRUMENT_TYPE_NI_DAQMX,
             # This code module sets up the sessions, so error immediately if they are in use.
@@ -82,9 +84,6 @@ def destroy_nidaqmx_tasks() -> None:
             session_management_client.unregister_sessions(reservation.session_info)
 
             for session_info in reservation.session_info:
-                grpc_device_channel = grpc_channel_pool.get_grpc_device_channel(
-                    nidaqmx.GRPC_SERVICE_INTERFACE_NAME
-                )
                 task = create_task(
                     session_info,
                     grpc_device_channel,
