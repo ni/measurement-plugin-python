@@ -79,7 +79,10 @@ def serialize_parameters(
         # Convert enum parameters to their underlying value.
         if "ni/type_specialization" in parameter_metadata.annotations:
             if parameter_metadata.annotations["ni/type_specialization"] == TypeSpecialization.Enum.value:
-                parameter = parameter.value
+                if parameter_metadata.repeated:
+                    parameter = map(lambda x: x.value, parameter)
+                else:
+                    parameter = parameter.value
         # Skipping serialization if the value is None or if its a type default value.
         if parameter is not None and parameter != type_default_value:
             inner_encoder = encoder(i + 1)
