@@ -289,14 +289,14 @@ def _get_test_parameter_by_id(default_values):
             type=type_pb2.Field.TYPE_ENUM,
             repeated=False,
             default_value=default_values[16],
-            annotations={"ni/type_specialization": TypeSpecialization.Enum.value, "ni/enum.values": "{'RED': 1, 'GREEN': 2, 'BLUE': 3}"},
+            annotations={"ni/type_specialization": TypeSpecialization.Enum.value, "ni/enum.values": "{'PURPLE': 0, 'ORANGE': 1, 'TEAL': 2, 'BROWN': 3}"},
         ),
         18: ParameterMetadata(
             display_name="enum_array_data",
             type=type_pb2.Field.TYPE_ENUM,
             repeated=True,
             default_value=default_values[17],
-            annotations={"ni/type_specialization": TypeSpecialization.Enum.value, "ni/enum.values": "{'RED': 1, 'GREEN': 2, 'BLUE': 3}"},
+            annotations={"ni/type_specialization": TypeSpecialization.Enum.value, "ni/enum.values": "{'PURPLE': 0, 'ORANGE': 1, 'TEAL': 2, 'BROWN': 3}"},
         ),
     }
     return parameter_by_id
