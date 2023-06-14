@@ -1,6 +1,5 @@
 """Perform a DMM measurement using NI-VISA and an NI Instrument Simulator v2.0."""
 
-import contextlib
 import logging
 import pathlib
 from typing import Tuple
@@ -11,6 +10,7 @@ import pyvisa.resources
 from _helpers import (
     ServiceOptions,
     configure_logging,
+    create_session_management_client,
     get_service_options,
     str_to_enum,
     use_simulation_option,
@@ -77,26 +77,17 @@ def measure(
         resolution_digits,
     )
 
-    session_management_client = nims.session_management.Client(
-        grpc_channel=measurement_service.get_channel(
-            provided_interface=nims.session_management.GRPC_SERVICE_INTERFACE_NAME,
-            service_class=nims.session_management.GRPC_SERVICE_CLASS,
-        )
-    )
+    session_management_client = create_session_management_client(measurement_service)
 
-    with contextlib.ExitStack() as stack:
-        reservation = stack.enter_context(
-            session_management_client.reserve_sessions(
-                context=measurement_service.context.pin_map_context,
-                pin_or_relay_names=[pin_name],
-                instrument_type_id=INSTRUMENT_TYPE_DMM_SIMULATOR,
-                # If another measurement is using the session, wait for it to complete.
-                # Specify a timeout to aid in debugging missed unreserve calls.
-                # Long measurements may require a longer timeout.
-                timeout=60,
-            )
-        )
-
+    with session_management_client.reserve_sessions(
+        context=measurement_service.context.pin_map_context,
+        pin_or_relay_names=[pin_name],
+        instrument_type_id=INSTRUMENT_TYPE_DMM_SIMULATOR,
+        # If another measurement is using the session, wait for it to complete.
+        # Specify a timeout to aid in debugging missed unreserve calls.
+        # Long measurements may require a longer timeout.
+        timeout=60,
+    ) as reservation:
         if len(reservation.session_info) != 1:
             measurement_service.context.abort(
                 grpc.StatusCode.INVALID_ARGUMENT,
@@ -105,29 +96,27 @@ def measure(
 
         resource_manager = create_visa_resource_manager(service_options.use_simulation)
         session_info = reservation.session_info[0]
-        session = stack.enter_context(
-            create_visa_session(resource_manager, session_info.resource_name)
-        )
+        with create_visa_session(resource_manager, session_info.resource_name) as session:
+            # Work around https://github.com/pyvisa/pyvisa/issues/739 - Type annotation for Resource
+            # context manager implicitly upcasts derived class to base class
+            assert isinstance(session, pyvisa.resources.MessageBasedResource)
 
-        # Work around https://github.com/pyvisa/pyvisa/issues/739 - Type annotation for Resource
-        # context manager implicitly upcasts derived class to base class
-        assert isinstance(session, pyvisa.resources.MessageBasedResource)
+            log_instrument_id(session)
 
-        log_instrument_id(session)
+            # When this measurement is called from outside of TestStand (session_exists == False),
+            # reset the instrument to a known state. In TestStand, ProcessSetup resets the
+            # instrument.
+            if not session_info.session_exists:
+                reset_instrument(session)
 
-        # When this measurement is called from outside of TestStand (session_exists == False),
-        # reset the instrument to a known state. In TestStand, ProcessSetup resets the instrument.
-        if not session_info.session_exists:
-            reset_instrument(session)
+            function_enum = str_to_enum(FUNCTION_TO_ENUM, measurement_type)
+            resolution_value = str_to_enum(RESOLUTION_DIGITS_TO_VALUE, str(resolution_digits))
+            session.write("CONF:%s %.g,%.g" % (function_enum, range, resolution_value))
+            check_instrument_error(session)
 
-        function_enum = str_to_enum(FUNCTION_TO_ENUM, measurement_type)
-        resolution_value = str_to_enum(RESOLUTION_DIGITS_TO_VALUE, str(resolution_digits))
-        session.write("CONF:%s %.g,%.g" % (function_enum, range, resolution_value))
-        check_instrument_error(session)
-
-        response = session.query("READ?")
-        check_instrument_error(session)
-        measured_value = float(response)
+            response = session.query("READ?")
+            check_instrument_error(session)
+            measured_value = float(response)
 
     logging.info("Completed measurement: measured_value=%g", measured_value)
     return (measured_value,)

@@ -1,9 +1,8 @@
 """Test a SPI device using an NI Digital Pattern instrument."""
 
-import contextlib
 import logging
 import pathlib
-from typing import Any, Dict, Iterable, Tuple, Union
+from typing import Iterable, Tuple, Union
 
 import click
 import grpc
@@ -11,17 +10,16 @@ import nidigital
 from _helpers import (
     ServiceOptions,
     configure_logging,
+    create_session_management_client,
+    get_grpc_device_channel,
     get_service_options,
     grpc_device_options,
-    verbosity_option,
     use_simulation_option,
+    verbosity_option,
 )
+from _nidigital_helpers import USE_SIMULATION, create_session
 
 import ni_measurementlink_service as nims
-
-# To use a physical NI Digital Pattern instrument, set this to False or specify
-# --no-use-simulation on the command line.
-USE_SIMULATION = True
 
 service_directory = pathlib.Path(__file__).resolve().parent
 measurement_service = nims.MeasurementService(
@@ -58,26 +56,17 @@ def measure(
     """Test a SPI device using an NI Digital Pattern instrument."""
     logging.info("Starting test: pin_names=%s", pin_names)
 
-    session_management_client = nims.session_management.Client(
-        grpc_channel=measurement_service.get_channel(
-            provided_interface=nims.session_management.GRPC_SERVICE_INTERFACE_NAME,
-            service_class=nims.session_management.GRPC_SERVICE_CLASS,
-        )
-    )
+    session_management_client = create_session_management_client(measurement_service)
 
-    with contextlib.ExitStack() as stack:
-        reservation = stack.enter_context(
-            session_management_client.reserve_sessions(
-                context=measurement_service.context.pin_map_context,
-                pin_or_relay_names=pin_names,
-                instrument_type_id=nims.session_management.INSTRUMENT_TYPE_NI_DIGITAL_PATTERN,
-                # If another measurement is using the session, wait for it to complete.
-                # Specify a timeout to aid in debugging missed unreserve calls.
-                # Long measurements may require a longer timeout.
-                timeout=60,
-            )
-        )
-
+    with session_management_client.reserve_sessions(
+        context=measurement_service.context.pin_map_context,
+        pin_or_relay_names=pin_names,
+        instrument_type_id=nims.session_management.INSTRUMENT_TYPE_NI_DIGITAL_PATTERN,
+        # If another measurement is using the session, wait for it to complete.
+        # Specify a timeout to aid in debugging missed unreserve calls.
+        # Long measurements may require a longer timeout.
+        timeout=60,
+    ) as reservation:
         if len(reservation.session_info) != 1:
             measurement_service.context.abort(
                 grpc.StatusCode.INVALID_ARGUMENT,
@@ -85,66 +74,38 @@ def measure(
             )
 
         session_info = reservation.session_info[0]
-        session = stack.enter_context(_create_nidigital_session(session_info))
+        grpc_device_channel = get_grpc_device_channel(
+            measurement_service, nidigital, service_options
+        )
+        with create_session(session_info, grpc_device_channel) as session:
+            pin_map_context = measurement_service.context.pin_map_context
+            selected_sites_string = ",".join(f"site{i}" for i in pin_map_context.sites)
+            selected_sites = session.sites[selected_sites_string]
 
-        pin_map_context = measurement_service.context.pin_map_context
-        selected_sites_string = ",".join(f"site{i}" for i in pin_map_context.sites)
-        selected_sites = session.sites[selected_sites_string]
+            if not session_info.session_exists:
+                # When running the measurement from TestStand, teststand_fixture.py should have
+                # already loaded the pin map, specifications, levels, timing, and patterns.
+                session.load_pin_map(pin_map_context.pin_map_id)
+                session.load_specifications_levels_and_timing(
+                    str(_resolve_relative_path(service_directory, specifications_file_path)),
+                    str(_resolve_relative_path(service_directory, levels_file_path)),
+                    str(_resolve_relative_path(service_directory, timing_file_path)),
+                )
+                session.load_pattern(
+                    str(_resolve_relative_path(service_directory, pattern_file_path)),
+                )
 
-        if not session_info.session_exists:
-            # When running the measurement from TestStand, teststand_fixture.py should have
-            # already loaded the pin map, specifications, levels, timing, and patterns.
-            session.load_pin_map(pin_map_context.pin_map_id)
-            session.load_specifications_levels_and_timing(
-                str(_resolve_relative_path(service_directory, specifications_file_path)),
-                str(_resolve_relative_path(service_directory, levels_file_path)),
-                str(_resolve_relative_path(service_directory, timing_file_path)),
-            )
-            session.load_pattern(
-                str(_resolve_relative_path(service_directory, pattern_file_path)),
-            )
-
-        levels_file_name = pathlib.Path(levels_file_path).stem
-        timing_file_name = pathlib.Path(timing_file_path).stem
-        selected_sites.apply_levels_and_timing(levels_file_name, timing_file_name)
-        selected_sites.burst_pattern(start_label="SPI_Pattern")
-        site_pass_fail = selected_sites.get_site_pass_fail()
-        passing_sites = [site for site, pass_fail in site_pass_fail.items() if pass_fail]
-        failing_sites = [site for site, pass_fail in site_pass_fail.items() if not pass_fail]
-        session.selected_function = nidigital.SelectedFunction.DISCONNECT
+            levels_file_name = pathlib.Path(levels_file_path).stem
+            timing_file_name = pathlib.Path(timing_file_path).stem
+            selected_sites.apply_levels_and_timing(levels_file_name, timing_file_name)
+            selected_sites.burst_pattern(start_label="SPI_Pattern")
+            site_pass_fail = selected_sites.get_site_pass_fail()
+            passing_sites = [site for site, pass_fail in site_pass_fail.items() if pass_fail]
+            failing_sites = [site for site, pass_fail in site_pass_fail.items() if not pass_fail]
+            session.selected_function = nidigital.SelectedFunction.DISCONNECT
 
     logging.info("Completed test: passing_sites=%s failing_sites=%s", passing_sites, failing_sites)
     return (passing_sites, failing_sites)
-
-
-def _create_nidigital_session(
-    session_info: nims.session_management.SessionInformation,
-) -> nidigital.Session:
-    options: Dict[str, Any] = {}
-    if service_options.use_simulation:
-        options["simulate"] = True
-        options["driver_setup"] = {"Model": "6570"}
-
-    session_kwargs: Dict[str, Any] = {}
-    if service_options.use_grpc_device:
-        session_grpc_address = service_options.grpc_device_address
-
-        if not session_grpc_address:
-            session_grpc_channel = measurement_service.get_channel(
-                provided_interface=nidigital.GRPC_SERVICE_INTERFACE_NAME,
-                service_class="ni.measurementlink.v1.grpcdeviceserver",
-            )
-        else:
-            session_grpc_channel = measurement_service.channel_pool.get_channel(
-                target=session_grpc_address
-            )
-        session_kwargs["grpc_options"] = nidigital.GrpcSessionOptions(
-            session_grpc_channel,
-            session_name=session_info.session_name,
-            initialization_behavior=nidigital.SessionInitializationBehavior.AUTO,
-        )
-
-    return nidigital.Session(session_info.resource_name, options=options, **session_kwargs)
 
 
 def _resolve_relative_path(

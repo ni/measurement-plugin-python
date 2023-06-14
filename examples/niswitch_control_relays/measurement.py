@@ -3,24 +3,23 @@
 import contextlib
 import logging
 import pathlib
-from typing import Any, Dict, Tuple
+from typing import Tuple
 
 import click
 import niswitch
 from _helpers import (
     ServiceOptions,
     configure_logging,
+    create_session_management_client,
+    get_grpc_device_channel,
     get_service_options,
     grpc_device_options,
     use_simulation_option,
     verbosity_option,
 )
+from _niswitch_helpers import USE_SIMULATION, create_session
 
 import ni_measurementlink_service as nims
-
-# To use a physical NI relay driver instrument, set this to False or specify
-# --no-use-simulation on the command line.
-USE_SIMULATION = True
 
 service_directory = pathlib.Path(__file__).resolve().parent
 measurement_service = nims.MeasurementService(
@@ -45,12 +44,7 @@ def measure(
         close_relays,
     )
 
-    session_management_client = nims.session_management.Client(
-        grpc_channel=measurement_service.get_channel(
-            provided_interface=nims.session_management.GRPC_SERVICE_INTERFACE_NAME,
-            service_class=nims.session_management.GRPC_SERVICE_CLASS,
-        )
-    )
+    session_management_client = create_session_management_client(measurement_service)
 
     with contextlib.ExitStack() as stack:
         relay_list = [r.strip() for r in relay_names.split(",")]
@@ -66,8 +60,11 @@ def measure(
             )
         )
 
+        grpc_device_channel = get_grpc_device_channel(
+            measurement_service, niswitch, service_options
+        )
         sessions = [
-            stack.enter_context(_create_niswitch_session(session_info))
+            stack.enter_context(create_session(session_info, grpc_device_channel))
             for session_info in reservation.session_info
         ]
 
@@ -81,38 +78,6 @@ def measure(
 
     logging.info("Completed operation")
     return ()
-
-
-def _create_niswitch_session(
-    session_info: nims.session_management.SessionInformation,
-) -> niswitch.Session:
-    resource_name = session_info.resource_name
-    session_kwargs: Dict[str, Any] = {}
-    if service_options.use_simulation:
-        resource_name = ""
-        session_kwargs["simulate"] = True
-        session_kwargs["topology"] = "2567/Independent"
-
-    if service_options.use_grpc_device:
-        session_grpc_address = service_options.grpc_device_address
-
-        if not session_grpc_address:
-            session_grpc_channel = measurement_service.get_channel(
-                provided_interface=niswitch.GRPC_SERVICE_INTERFACE_NAME,
-                service_class="ni.measurementlink.v1.grpcdeviceserver",
-            )
-        else:
-            session_grpc_channel = measurement_service.channel_pool.get_channel(
-                target=session_grpc_address
-            )
-        session_kwargs["grpc_options"] = niswitch.GrpcSessionOptions(
-            session_grpc_channel,
-            session_name=session_info.session_name,
-            initialization_behavior=niswitch.SessionInitializationBehavior.AUTO,
-        )
-
-    # This uses the topology configured in MAX.
-    return niswitch.Session(resource_name, **session_kwargs)
 
 
 @click.command

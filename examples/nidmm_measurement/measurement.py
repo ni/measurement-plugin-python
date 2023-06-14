@@ -1,10 +1,9 @@
 """Perform a measurement using an NI DMM."""
 
-import contextlib
 import logging
 import math
 import pathlib
-from typing import Any, Dict, Tuple
+from typing import Tuple
 
 import click
 import grpc
@@ -12,18 +11,17 @@ import nidmm
 from _helpers import (
     ServiceOptions,
     configure_logging,
+    create_session_management_client,
+    get_grpc_device_channel,
     get_service_options,
     grpc_device_options,
     str_to_enum,
-    verbosity_option,
     use_simulation_option,
+    verbosity_option,
 )
+from _nidmm_helpers import USE_SIMULATION, create_session
 
 import ni_measurementlink_service as nims
-
-# To use a physical NI DMM instrument, set this to False or specify
-# --no-use-simulation on the command line.
-USE_SIMULATION = True
 
 service_directory = pathlib.Path(__file__).resolve().parent
 measurement_service = nims.MeasurementService(
@@ -79,26 +77,17 @@ def measure(
         resolution_digits,
     )
 
-    session_management_client = nims.session_management.Client(
-        grpc_channel=measurement_service.get_channel(
-            provided_interface=nims.session_management.GRPC_SERVICE_INTERFACE_NAME,
-            service_class=nims.session_management.GRPC_SERVICE_CLASS,
-        )
-    )
+    session_management_client = create_session_management_client(measurement_service)
 
-    with contextlib.ExitStack() as stack:
-        reservation = stack.enter_context(
-            session_management_client.reserve_sessions(
-                context=measurement_service.context.pin_map_context,
-                pin_or_relay_names=[pin_name],
-                instrument_type_id=nims.session_management.INSTRUMENT_TYPE_NI_DMM,
-                # If another measurement is using the session, wait for it to complete.
-                # Specify a timeout to aid in debugging missed unreserve calls.
-                # Long measurements may require a longer timeout.
-                timeout=60,
-            )
-        )
-
+    with session_management_client.reserve_sessions(
+        context=measurement_service.context.pin_map_context,
+        pin_or_relay_names=[pin_name],
+        instrument_type_id=nims.session_management.INSTRUMENT_TYPE_NI_DMM,
+        # If another measurement is using the session, wait for it to complete.
+        # Specify a timeout to aid in debugging missed unreserve calls.
+        # Long measurements may require a longer timeout.
+        timeout=60,
+    ) as reservation:
         if len(reservation.session_info) != 1:
             measurement_service.context.abort(
                 grpc.StatusCode.INVALID_ARGUMENT,
@@ -106,15 +95,16 @@ def measure(
             )
 
         session_info = reservation.session_info[0]
-        session = stack.enter_context(_create_nidmm_session(session_info))
-        session.configure_measurement_digits(
-            str_to_enum(FUNCTION_TO_ENUM, measurement_type),
-            range,
-            resolution_digits,
-        )
-        measured_value = session.read()
-        signal_out_of_range = math.isnan(measured_value) or math.isinf(measured_value)
-        absolute_resolution = session.resolution_absolute
+        grpc_device_channel = get_grpc_device_channel(measurement_service, nidmm, service_options)
+        with create_session(session_info, grpc_device_channel) as session:
+            session.configure_measurement_digits(
+                str_to_enum(FUNCTION_TO_ENUM, measurement_type),
+                range,
+                resolution_digits,
+            )
+            measured_value = session.read()
+            signal_out_of_range = math.isnan(measured_value) or math.isinf(measured_value)
+            absolute_resolution = session.resolution_absolute
 
     logging.info(
         "Completed measurement: measured_value=%g signal_out_of_range=%s absolute_resolution=%g",
@@ -123,36 +113,6 @@ def measure(
         absolute_resolution,
     )
     return (measured_value, signal_out_of_range, absolute_resolution)
-
-
-def _create_nidmm_session(
-    session_info: nims.session_management.SessionInformation,
-) -> nidmm.Session:
-    options: Dict[str, Any] = {}
-    if service_options.use_simulation:
-        options["simulate"] = True
-        options["driver_setup"] = {"Model": "4081"}
-
-    session_kwargs: Dict[str, Any] = {}
-    if service_options.use_grpc_device:
-        session_grpc_address = service_options.grpc_device_address
-
-        if not session_grpc_address:
-            session_grpc_channel = measurement_service.get_channel(
-                provided_interface=nidmm.GRPC_SERVICE_INTERFACE_NAME,
-                service_class="ni.measurementlink.v1.grpcdeviceserver",
-            )
-        else:
-            session_grpc_channel = measurement_service.channel_pool.get_channel(
-                target=session_grpc_address
-            )
-        session_kwargs["grpc_options"] = nidmm.GrpcSessionOptions(
-            session_grpc_channel,
-            session_name=session_info.session_name,
-            initialization_behavior=nidmm.SessionInitializationBehavior.AUTO,
-        )
-
-    return nidmm.Session(session_info.resource_name, options=options, **session_kwargs)
 
 
 @click.command

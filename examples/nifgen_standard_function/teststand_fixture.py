@@ -1,8 +1,9 @@
 """Functions to set up and tear down sessions of NI-FGEN devices in NI TestStand."""
-from typing import Any, Dict
+from typing import Any
 
 import nifgen
 from _helpers import GrpcChannelPoolHelper, PinMapClient, TestStandSupport
+from _nifgen_helpers import create_session
 
 import ni_measurementlink_service as nims
 
@@ -48,6 +49,9 @@ def create_nifgen_sessions(sequence_context: Any) -> None:
         teststand_support = TestStandSupport(sequence_context)
         pin_map_id = teststand_support.get_active_pin_map_id()
         pin_map_context = nims.session_management.PinMapContext(pin_map_id=pin_map_id, sites=None)
+        grpc_device_channel = grpc_channel_pool.get_grpc_device_channel(
+            nifgen.GRPC_SERVICE_INTERFACE_NAME
+        )
         with session_management_client.reserve_sessions(
             context=pin_map_context,
             instrument_type_id=nims.session_management.INSTRUMENT_TYPE_NI_FGEN,
@@ -55,23 +59,11 @@ def create_nifgen_sessions(sequence_context: Any) -> None:
             timeout=0,
         ) as reservation:
             for session_info in reservation.session_info:
-                options: Dict[str, Any] = {}
-                if USE_SIMULATION:
-                    options["simulate"] = True
-                    options["driver_setup"] = {"Model": "5423 (2CH)"}
-
-                grpc_options = nifgen.GrpcSessionOptions(
-                    grpc_channel_pool.get_grpc_device_channel(nifgen.GRPC_SERVICE_INTERFACE_NAME),
-                    session_name=session_info.session_name,
-                    initialization_behavior=nifgen.SessionInitializationBehavior.INITIALIZE_SERVER_SESSION,
-                )
-
                 # Leave session open
-                nifgen.Session(
-                    resource_name=session_info.resource_name,
-                    channel_name=session_info.channel_list,
-                    options=options,
-                    grpc_options=grpc_options,
+                _ = create_session(
+                    session_info,
+                    grpc_device_channel,
+                    initialization_behavior=nifgen.SessionInitializationBehavior.INITIALIZE_SERVER_SESSION,
                 )
 
             session_management_client.register_sessions(reservation.session_info)
@@ -83,24 +75,20 @@ def destroy_nifgen_sessions() -> None:
         session_management_client = nims.session_management.Client(
             grpc_channel=grpc_channel_pool.session_management_channel
         )
-
+        grpc_device_channel = grpc_channel_pool.get_grpc_device_channel(
+            nifgen.GRPC_SERVICE_INTERFACE_NAME
+        )
         with session_management_client.reserve_all_registered_sessions(
             instrument_type_id=nims.session_management.INSTRUMENT_TYPE_NI_FGEN,
             # This code module sets up the sessions, so error immediately if they are in use.
             timeout=0,
         ) as reservation:
             session_management_client.unregister_sessions(reservation.session_info)
-
             for session_info in reservation.session_info:
-                grpc_options = nifgen.GrpcSessionOptions(
-                    grpc_channel_pool.get_grpc_device_channel(nifgen.GRPC_SERVICE_INTERFACE_NAME),
-                    session_name=session_info.session_name,
+                session = create_session(
+                    session_info,
+                    grpc_device_channel,
                     initialization_behavior=nifgen.SessionInitializationBehavior.ATTACH_TO_SERVER_SESSION,
                 )
 
-                session = nifgen.Session(
-                    resource_name=session_info.resource_name,
-                    channel_name=session_info.channel_list,
-                    grpc_options=grpc_options,
-                )
                 session.close()
