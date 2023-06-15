@@ -8,12 +8,16 @@ from ni_measurementlink_service.measurement.info import DataType, TypeSpecializa
 
 
 class Color(Enum):
+    """Primary colors used for testing enum-typed config and output."""
+
     RED = 1
     GREEN = 2
     BLUE = 3
 
 
 class DifferentColor(Enum):
+    """Non-primary colors used for testing enum-typed config and output."""
+
     ORANGE = 1
     TEAL = 2
     BROWN = 3

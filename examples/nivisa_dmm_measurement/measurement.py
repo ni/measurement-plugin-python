@@ -42,6 +42,8 @@ service_options = ServiceOptions()
 
 
 class ResolutionDigits(Enum):
+    """The digits of resolution."""
+
     ThreePointFive = auto()
     FourPointFive = auto()
     FivePointFive = auto()
@@ -57,6 +59,8 @@ RESOLUTION_DIGITS_TO_DISPLAY_VALUE = {
 
 
 class Function(Enum):
+    """Function that represents the measurement type."""
+
     DCVolts = auto()
     ACVolts = auto()
 

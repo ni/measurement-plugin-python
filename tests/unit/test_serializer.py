@@ -13,6 +13,8 @@ from tests.assets import test_pb2
 
 
 class DifferentColor(Enum):
+    """Non-primary colors used for testing enum-typed config and output."""
+
     PURPLE = 0
     ORANGE = 1
     TEAL = 2

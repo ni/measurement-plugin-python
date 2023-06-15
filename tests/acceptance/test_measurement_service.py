@@ -26,6 +26,8 @@ EXPECTED_UI_FILE_COUNT = 3
 
 
 class Color(Enum):
+    """Primary colors used for example enum-typed config and output."""
+
     NONE = 0
     RED = 1
     GREEN = 2

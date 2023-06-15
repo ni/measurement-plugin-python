@@ -95,6 +95,18 @@ def validate_default_value_type(parameter_metadata: ParameterMetadata) -> None:
 
 
 def try_get_enum_values_annotation(parameter_metadata: ParameterMetadata) -> Tuple[bool, str]:
+    """Gets the value for the "ni/enum.values" annotation if it exists.
+
+    Args
+    ----
+        parameter_metadata (ParameterMetadata): Parameter metadata
+    Returns
+    -------
+        Tuple[bool, str]: A Tuple that contains both the value of
+        the "ni/enum.values" annotation and whether we were successful
+        in obtaining it.
+
+    """
     if (
         "ni/type_specialization" in parameter_metadata.annotations
         and parameter_metadata.annotations["ni/type_specialization"]
@@ -110,11 +122,11 @@ def try_get_enum_values_annotation(parameter_metadata: ParameterMetadata) -> Tup
 def _is_default_enum_match_annotations(default_value: Any, enum_values_annotation: str):
     if not isinstance(default_value, Enum):
         return False
-    userEnum = json.loads(enum_values_annotation.replace("'", '"'))
-    userEnumClass = Enum("UserDefinedEnum", userEnum)
+    user_enum = json.loads(enum_values_annotation.replace("'", '"'))
+    user_enum_class = Enum("UserDefinedEnum", user_enum)
     if (
-        any(member.value == default_value.value for member in userEnumClass)
-        and userEnumClass(default_value.value).name == default_value.name
+        any(member.value == default_value.value for member in user_enum_class)
+        and user_enum_class(default_value.value).name == default_value.name
     ):
         return True
     return False
