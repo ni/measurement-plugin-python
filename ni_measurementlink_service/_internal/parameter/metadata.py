@@ -100,6 +100,7 @@ def try_get_enum_values_annotation(parameter_metadata: ParameterMetadata) -> Tup
     Args
     ----
         parameter_metadata (ParameterMetadata): Parameter metadata
+
     Returns
     -------
         Tuple[bool, str]: A Tuple that contains both the value of

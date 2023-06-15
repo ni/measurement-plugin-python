@@ -202,17 +202,18 @@ def _get_missing_parameters(
 
 def _deserialize_enum_parameters(
     parameter_metadata_dict: Dict[int, ParameterMetadata], parameter_by_id: Dict[int, Any]
-) -> None:
+):
     """Converts all enums in `parameter_by_id` to the user defined enum type.
-
-    We do this by converting from their int representation using the information found
-    in the enum annotations from the parameter metadata.
 
     Args
     ----
         parameter_metadata_dict (Dict[int, ParameterMetadata]): Parameter metadata by id.
 
         parameter_by_id (Dict[int, Any]): Parameters by ID to compare the metadata with.
+
+    Returns
+    -------
+        None: No return value.
 
     """
     for i, value in parameter_by_id.items():
@@ -231,7 +232,6 @@ def _deserialize_enum_parameters(
                 for enum in enum_type:
                     if enum.value == value:
                         parameter_by_id[i] = enum
-    return None
 
 
 def _get_enum_type(parameter_metadata: ParameterMetadata) -> type:
