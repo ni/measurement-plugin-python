@@ -2,8 +2,8 @@
 
 import logging
 import pathlib
-from typing import Tuple
 from enum import Enum, auto
+from typing import Tuple
 
 import click
 import grpc
@@ -40,11 +40,13 @@ measurement_service = nims.MeasurementService(
 )
 service_options = ServiceOptions()
 
+
 class ResolutionDigits(Enum):
     ThreePointFive = auto()
     FourPointFive = auto()
     FivePointFive = auto()
     SixPointFive = auto()
+
 
 RESOLUTION_DIGITS_TO_DISPLAY_VALUE = {
     ResolutionDigits.ThreePointFive: 0.001,
@@ -53,22 +55,32 @@ RESOLUTION_DIGITS_TO_DISPLAY_VALUE = {
     ResolutionDigits.SixPointFive: 1e-6,
 }
 
+
 class Function(Enum):
     DCVolts = auto()
     ACVolts = auto()
+
 
 FUNCTION_TO_DISPLAY_VALUE = {
     Function.DCVolts: "VOLT:DC",
     Function.ACVolts: "VOLT:AC",
 }
 
+
 @measurement_service.register_measurement
 @measurement_service.configuration(
     "pin_name", nims.DataType.Pin, "Pin1", instrument_type=INSTRUMENT_TYPE_DMM_SIMULATOR
 )
-@measurement_service.configuration("measurement_type", nims.DataType.Enum, Function.DCVolts, enum_type=Function)
+@measurement_service.configuration(
+    "measurement_type", nims.DataType.Enum, Function.DCVolts, enum_type=Function
+)
 @measurement_service.configuration("range", nims.DataType.Double, 1.0)
-@measurement_service.configuration("resolution_digits", nims.DataType.Enum, ResolutionDigits.ThreePointFive, enum_type=ResolutionDigits)
+@measurement_service.configuration(
+    "resolution_digits",
+    nims.DataType.Enum,
+    ResolutionDigits.ThreePointFive,
+    enum_type=ResolutionDigits,
+)
 @measurement_service.output("measured_value", nims.DataType.Double)
 def measure(
     pin_name: str,

@@ -30,6 +30,7 @@ measurement_service = nims.MeasurementService(
 )
 service_options = ServiceOptions()
 
+
 @measurement_service.register_measurement
 @measurement_service.configuration(
     "pin_names",
@@ -38,7 +39,12 @@ service_options = ServiceOptions()
     instrument_type=nims.session_management.INSTRUMENT_TYPE_NI_SCOPE,
 )
 @measurement_service.configuration("vertical_range", nims.DataType.Double, 5.0)
-@measurement_service.configuration("vertical_coupling", nims.DataType.Enum, niscope.VerticalCoupling.DC, enum_type=niscope.VerticalCoupling)
+@measurement_service.configuration(
+    "vertical_coupling",
+    nims.DataType.Enum,
+    niscope.VerticalCoupling.DC,
+    enum_type=niscope.VerticalCoupling,
+)
 @measurement_service.configuration("input_impedance", nims.DataType.Double, 1e6)
 @measurement_service.configuration("min_sample_rate", nims.DataType.Double, 10e6)
 @measurement_service.configuration("min_record_length", nims.DataType.Int32, 40000)
@@ -49,9 +55,19 @@ service_options = ServiceOptions()
     instrument_type=nims.session_management.INSTRUMENT_TYPE_NI_SCOPE,
 )
 @measurement_service.configuration("trigger_level", nims.DataType.Double, 0.5)
-@measurement_service.configuration("trigger_slope", nims.DataType.Enum, niscope.TriggerSlope.POSITIVE, enum_type=niscope.TriggerSlope)
+@measurement_service.configuration(
+    "trigger_slope",
+    nims.DataType.Enum,
+    niscope.TriggerSlope.POSITIVE,
+    enum_type=niscope.TriggerSlope,
+)
 @measurement_service.configuration("auto_trigger", nims.DataType.Boolean, False)
-@measurement_service.configuration("trigger_coupling", nims.DataType.Enum, niscope.TriggerCoupling.DC, enum_type=niscope.TriggerCoupling)
+@measurement_service.configuration(
+    "trigger_coupling",
+    nims.DataType.Enum,
+    niscope.TriggerCoupling.DC,
+    enum_type=niscope.TriggerCoupling,
+)
 @measurement_service.configuration("timeout", nims.DataType.Double, 5.0)
 @measurement_service.output("waveform0", nims.DataType.DoubleArray1D)
 @measurement_service.output("waveform1", nims.DataType.DoubleArray1D)

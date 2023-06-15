@@ -2,9 +2,9 @@
 import random
 import urllib.parse
 import urllib.request
+from enum import Enum
 from os import path
 from typing import Generator, List, Union
-from enum import Enum
 
 import pytest
 from examples.sample_measurement import measurement
@@ -24,11 +24,13 @@ from tests.assets import sample_measurement_test_pb2
 EXPECTED_PARAMETER_COUNT = 6
 EXPECTED_UI_FILE_COUNT = 3
 
+
 class Color(Enum):
     NONE = 0
     RED = 1
     GREEN = 2
     BLUE = 3
+
 
 def test___measurement_service_v1___get_metadata___returns_metadata(
     stub_v1: v1_measurement_service_pb2_grpc.MeasurementServiceStub,

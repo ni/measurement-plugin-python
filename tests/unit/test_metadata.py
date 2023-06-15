@@ -1,19 +1,23 @@
 """Contains tests to validate metadata.py."""
-import pytest
 from enum import Enum
+
+import pytest
 
 from ni_measurementlink_service._internal.parameter import metadata
 from ni_measurementlink_service.measurement.info import DataType, TypeSpecialization
+
 
 class Color(Enum):
     RED = 1
     GREEN = 2
     BLUE = 3
 
+
 class DifferentColor(Enum):
     ORANGE = 1
     TEAL = 2
     BROWN = 3
+
 
 @pytest.mark.parametrize(
     "type,default_value,annotations",
@@ -25,10 +29,31 @@ class DifferentColor(Enum):
         (DataType.String, True, {}),
         (DataType.DoubleArray1D, 0.5, {}),
         (DataType.Double, 1, {}),
-        (DataType.Enum, 1, {"ni/type_specialization": TypeSpecialization.Enum.value, "ni/enum.values": "{'RED': 1, 'GREEN': 2, 'BLUE': 3}"}),
-        (DataType.Enum, DifferentColor.TEAL, {"ni/type_specialization": TypeSpecialization.Enum.value, "ni/enum.values": "{'RED': 1, 'GREEN': 2, 'BLUE': 3}"}),
+        (
+            DataType.Enum,
+            1,
+            {
+                "ni/type_specialization": TypeSpecialization.Enum.value,
+                "ni/enum.values": "{'RED': 1, 'GREEN': 2, 'BLUE': 3}",
+            },
+        ),
+        (
+            DataType.Enum,
+            DifferentColor.TEAL,
+            {
+                "ni/type_specialization": TypeSpecialization.Enum.value,
+                "ni/enum.values": "{'RED': 1, 'GREEN': 2, 'BLUE': 3}",
+            },
+        ),
         (DataType.EnumArray1D, 1, {}),
-        (DataType.EnumArray1D, [1, 2], {"ni/type_specialization": TypeSpecialization.Enum.value, "ni/enum.values": "{'RED': 1, 'GREEN': 2, 'BLUE': 3}"}),
+        (
+            DataType.EnumArray1D,
+            [1, 2],
+            {
+                "ni/type_specialization": TypeSpecialization.Enum.value,
+                "ni/enum.values": "{'RED': 1, 'GREEN': 2, 'BLUE': 3}",
+            },
+        ),
     ],
 )
 def test___default_value_different_from_type___validate___raises_type_exception(
@@ -51,11 +76,27 @@ def test___default_value_different_from_type___validate___raises_type_exception(
         (DataType.String, "string_default_value", {}),
         (DataType.DoubleArray1D, [0.5, 0.1], {}),
         (DataType.Double, 1.0, {}),
-        (DataType.Enum, Color.BLUE, {"ni/type_specialization": TypeSpecialization.Enum.value, "ni/enum.values": "{'RED': 1, 'GREEN': 2, 'BLUE': 3}"}),
-        (DataType.EnumArray1D, [Color.BLUE, Color.GREEN], {"ni/type_specialization": TypeSpecialization.Enum.value, "ni/enum.values": "{'RED': 1, 'GREEN': 2, 'BLUE': 3}"}),
+        (
+            DataType.Enum,
+            Color.BLUE,
+            {
+                "ni/type_specialization": TypeSpecialization.Enum.value,
+                "ni/enum.values": "{'RED': 1, 'GREEN': 2, 'BLUE': 3}",
+            },
+        ),
+        (
+            DataType.EnumArray1D,
+            [Color.BLUE, Color.GREEN],
+            {
+                "ni/type_specialization": TypeSpecialization.Enum.value,
+                "ni/enum.values": "{'RED': 1, 'GREEN': 2, 'BLUE': 3}",
+            },
+        ),
     ],
 )
-def test___default_value_same_as_type___validate___raises_no_exception(type, default_value, annotations):
+def test___default_value_same_as_type___validate___raises_no_exception(
+    type, default_value, annotations
+):
     grpc_field_type, repeated, type_specialization = type.value
     parameter_metadata = metadata.ParameterMetadata(
         "test_display_name", grpc_field_type, repeated, default_value, annotations

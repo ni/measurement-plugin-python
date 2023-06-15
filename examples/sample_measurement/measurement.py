@@ -1,12 +1,11 @@
 """Perform a loopback measurement with various data types."""
 import logging
 import pathlib
+from enum import Enum
 
 import click
 
 import ni_measurementlink_service as nims
-
-from enum import Enum
 
 service_directory = pathlib.Path(__file__).resolve().parent
 sample_measurement_service = nims.MeasurementService(
@@ -19,10 +18,12 @@ sample_measurement_service = nims.MeasurementService(
     ],
 )
 
+
 class Color(Enum):
     RED = 1
     GREEN = 2
     BLUE = 3
+
 
 @sample_measurement_service.register_measurement
 @sample_measurement_service.configuration("Float In", nims.DataType.Float, 0.06)
@@ -31,7 +32,9 @@ class Color(Enum):
 )
 @sample_measurement_service.configuration("Bool In", nims.DataType.Boolean, False)
 @sample_measurement_service.configuration("String In", nims.DataType.String, "sample string")
-@sample_measurement_service.configuration("Enum In", nims.DataType.Enum, Color.BLUE, enum_type=Color)
+@sample_measurement_service.configuration(
+    "Enum In", nims.DataType.Enum, Color.BLUE, enum_type=Color
+)
 @sample_measurement_service.configuration(
     "String Array In", nims.DataType.StringArray1D, ["String1", "String2"]
 )
@@ -58,7 +61,14 @@ def measure(float_input, double_array_input, bool_input, string_input, enum_inpu
     string_array_out = string_array_in
     logging.info("Completed measurement")
 
-    return (float_output, float_array_output, bool_output, string_output, enum_output, string_array_out)
+    return (
+        float_output,
+        float_array_output,
+        bool_output,
+        string_output,
+        enum_output,
+        string_array_out,
+    )
 
 
 @click.command

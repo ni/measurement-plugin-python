@@ -1,17 +1,23 @@
 """Contains tests to validate serializer.py."""
-import pytest
-from google.protobuf import any_pb2, type_pb2
 from enum import Enum
 
+import pytest
+from google.protobuf import any_pb2, type_pb2
+
 from ni_measurementlink_service._internal.parameter import serializer
-from ni_measurementlink_service._internal.parameter.metadata import ParameterMetadata, TypeSpecialization
+from ni_measurementlink_service._internal.parameter.metadata import (
+    ParameterMetadata,
+    TypeSpecialization,
+)
 from tests.assets import test_pb2
+
 
 class DifferentColor(Enum):
     PURPLE = 0
     ORANGE = 1
     TEAL = 2
     BROWN = 3
+
 
 @pytest.mark.parametrize(
     "test_values",
@@ -289,14 +295,20 @@ def _get_test_parameter_by_id(default_values):
             type=type_pb2.Field.TYPE_ENUM,
             repeated=False,
             default_value=default_values[16],
-            annotations={"ni/type_specialization": TypeSpecialization.Enum.value, "ni/enum.values": "{'PURPLE': 0, 'ORANGE': 1, 'TEAL': 2, 'BROWN': 3}"},
+            annotations={
+                "ni/type_specialization": TypeSpecialization.Enum.value,
+                "ni/enum.values": "{'PURPLE': 0, 'ORANGE': 1, 'TEAL': 2, 'BROWN': 3}",
+            },
         ),
         18: ParameterMetadata(
             display_name="enum_array_data",
             type=type_pb2.Field.TYPE_ENUM,
             repeated=True,
             default_value=default_values[17],
-            annotations={"ni/type_specialization": TypeSpecialization.Enum.value, "ni/enum.values": "{'PURPLE': 0, 'ORANGE': 1, 'TEAL': 2, 'BROWN': 3}"},
+            annotations={
+                "ni/type_specialization": TypeSpecialization.Enum.value,
+                "ni/enum.values": "{'PURPLE': 0, 'ORANGE': 1, 'TEAL': 2, 'BROWN': 3}",
+            },
         ),
     }
     return parameter_by_id

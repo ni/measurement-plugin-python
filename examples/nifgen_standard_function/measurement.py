@@ -20,7 +20,7 @@ from _helpers import (
     use_simulation_option,
     verbosity_option,
 )
-from _nifgen_helpers import create_session, USE_SIMULATION
+from _nifgen_helpers import USE_SIMULATION, create_session
 
 import ni_measurementlink_service as nims
 
@@ -35,6 +35,7 @@ measurement_service = nims.MeasurementService(
 )
 service_options = ServiceOptions()
 
+
 @measurement_service.register_measurement
 # TODO: Rename pin_name to pin_names and make it PinArray1D
 @measurement_service.configuration(
@@ -43,7 +44,9 @@ service_options = ServiceOptions()
     "Pin1",
     instrument_type=nims.session_management.INSTRUMENT_TYPE_NI_FGEN,
 )
-@measurement_service.configuration("waveform_type", nims.DataType.Enum, nifgen.Waveform.SINE, enum_type=nifgen.Waveform)
+@measurement_service.configuration(
+    "waveform_type", nims.DataType.Enum, nifgen.Waveform.SINE, enum_type=nifgen.Waveform
+)
 @measurement_service.configuration("frequency", nims.DataType.Double, 1.0e6)
 @measurement_service.configuration("amplitude", nims.DataType.Double, 2.0)
 @measurement_service.configuration("duration", nims.DataType.Double, 10.0)

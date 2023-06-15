@@ -3,10 +3,10 @@
 from __future__ import annotations
 
 import json
+from enum import Enum
 from os import path
 from pathlib import Path
 from threading import Lock
-from enum import Enum
 from typing import Any, Callable, Dict, List, Optional, Type, TypeVar
 
 import grpc
@@ -216,8 +216,13 @@ class MeasurementService:
         return measurement_function
 
     def configuration(
-        self, display_name: str, type: DataType, default_value: Any, *, 
-        instrument_type: str = "", enum_type: Type[Enum] = None
+        self,
+        display_name: str,
+        type: DataType,
+        default_value: Any,
+        *,
+        instrument_type: str = "",
+        enum_type: Type[Enum] = None,
     ) -> Callable:
         """Add a configuration parameter to a measurement function.
 
@@ -256,7 +261,9 @@ class MeasurementService:
 
         """
         grpc_field_type, repeated, type_specialization = type.value
-        annotations = self._get_annotations(type_specialization, instrument_type=instrument_type, enum_type=enum_type)
+        annotations = self._get_annotations(
+            type_specialization, instrument_type=instrument_type, enum_type=enum_type
+        )
         parameter = parameter_metadata.ParameterMetadata(
             display_name, grpc_field_type, repeated, default_value, annotations
         )
@@ -269,8 +276,7 @@ class MeasurementService:
         return _configuration
 
     def output(
-            self, display_name: str, type: DataType, *, 
-            enum_type: Type[Enum] = None
+        self, display_name: str, type: DataType, *, enum_type: Type[Enum] = None
     ) -> Callable:
         """Add an output parameter to a measurement function.
 
@@ -336,8 +342,11 @@ class MeasurementService:
         return self
 
     def _get_annotations(
-        self, type_specialization: TypeSpecialization, *,
-        instrument_type: str = "", enum_type: Type[Enum] = None
+        self,
+        type_specialization: TypeSpecialization,
+        *,
+        instrument_type: str = "",
+        enum_type: Type[Enum] = None,
     ) -> Dict[str, str]:
         annotations: Dict[str, str] = {}
         if type_specialization == TypeSpecialization.NoType:
@@ -352,6 +361,7 @@ class MeasurementService:
                 annotations["ni/enum.values"] = self._enum_to_annotations_value(enum_type)
 
         return annotations
+
     def _enum_to_annotations_value(self, enum_type: Type[Enum]) -> str:
         enum_values = {}
         for member in enum_type:

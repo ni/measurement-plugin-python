@@ -1,14 +1,17 @@
 """Parameter Serializer."""
 
+import json
+from enum import Enum
 from io import BytesIO
 from typing import Any, Dict, Sequence
-from enum import Enum
-import json
 
 from google.protobuf.internal import encoder
 
 from ni_measurementlink_service._internal.parameter import serialization_strategy
-from ni_measurementlink_service._internal.parameter.metadata import ParameterMetadata, try_get_enum_values_annotation
+from ni_measurementlink_service._internal.parameter.metadata import (
+    ParameterMetadata,
+    try_get_enum_values_annotation,
+)
 from ni_measurementlink_service.measurement.info import TypeSpecialization
 
 _GRPC_WIRE_TYPE_BIT_WIDTH = 3
@@ -34,11 +37,9 @@ def deserialize_parameters(
     overlapping_parameter_by_id = _get_overlapping_parameters(
         parameter_metadata_dict, parameter_bytes
     )
-    
+
     # Deserialization enum parameters to their user-defined type
-    _deserialize_enum_parameters(
-        parameter_metadata_dict, overlapping_parameter_by_id
-    )
+    _deserialize_enum_parameters(parameter_metadata_dict, overlapping_parameter_by_id)
 
     # Adding missing parameters with type defaults
     missing_parameters = _get_missing_parameters(
@@ -78,7 +79,10 @@ def serialize_parameters(
         )
         # Convert enum parameters to their underlying value.
         if "ni/type_specialization" in parameter_metadata.annotations:
-            if parameter_metadata.annotations["ni/type_specialization"] == TypeSpecialization.Enum.value:
+            if (
+                parameter_metadata.annotations["ni/type_specialization"]
+                == TypeSpecialization.Enum.value
+            ):
                 if parameter_metadata.repeated:
                     parameter = list(map(lambda x: x.value, parameter))
                 else:
@@ -197,8 +201,9 @@ def _get_missing_parameters(
             )
     return missing_parameters
 
+
 def _deserialize_enum_parameters(
-    parameter_metadata_dict: Dict[int, ParameterMetadata], parameter_by_id: Dict[int, Any]   
+    parameter_metadata_dict: Dict[int, ParameterMetadata], parameter_by_id: Dict[int, Any]
 ) -> None:
     """Converts all enums in parameter_by_id from their int representation to the user
     defined enum using the enum annotations from the parameter metadata.
@@ -212,7 +217,9 @@ def _deserialize_enum_parameters(
     """
     for i, value in parameter_by_id.items():
         parameter_metadata = parameter_metadata_dict[i]
-        has_enum_values_annotation, enum_values_annotation = try_get_enum_values_annotation(parameter_metadata)
+        has_enum_values_annotation, enum_values_annotation = try_get_enum_values_annotation(
+            parameter_metadata
+        )
         if has_enum_values_annotation:
             enum_type = _get_enum_type(parameter_metadata)
             if parameter_metadata.repeated:
@@ -226,11 +233,9 @@ def _deserialize_enum_parameters(
                         parameter_by_id[i] = enum
     return None
 
-def _get_enum_type(
-    parameter_metadata: ParameterMetadata
-) -> type:
+
+def _get_enum_type(parameter_metadata: ParameterMetadata) -> type:
     if parameter_metadata.repeated and len(parameter_metadata.default_value) > 0:
         return type(parameter_metadata.default_value[0])
     else:
         return type(parameter_metadata.default_value)
-    
