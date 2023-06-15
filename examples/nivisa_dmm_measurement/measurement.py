@@ -88,9 +88,9 @@ FUNCTION_TO_DISPLAY_VALUE = {
 @measurement_service.output("measured_value", nims.DataType.Double)
 def measure(
     pin_name: str,
-    measurement_type: str,
+    measurement_type: Function,
     range: float,
-    resolution_digits: float,
+    resolution_digits: ResolutionDigits,
 ) -> Tuple:
     """Perform a DMM measurement using NI-VISA and an NI Instrument Simulator v2.0."""
     logging.info(
