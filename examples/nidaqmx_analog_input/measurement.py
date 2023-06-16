@@ -1,6 +1,5 @@
 """Perform a finite analog input measurement with NI-DAQmx."""
 
-import contextlib
 import logging
 import pathlib
 from typing import Optional
@@ -11,10 +10,13 @@ import nidaqmx
 from _helpers import (
     ServiceOptions,
     configure_logging,
+    create_session_management_client,
+    get_grpc_device_channel,
     get_service_options,
     grpc_device_options,
     verbosity_option,
 )
+from _nidaqmx_helpers import create_task
 from nidaqmx.constants import TaskMode
 
 import ni_measurementlink_service as nims
@@ -46,24 +48,16 @@ def measure(pin_name, sample_rate, number_of_samples):
         sample_rate,
         number_of_samples,
     )
-    session_management_client = nims.session_management.Client(
-        grpc_channel=measurement_service.get_channel(
-            provided_interface=nims.session_management.GRPC_SERVICE_INTERFACE_NAME,
-            service_class=nims.session_management.GRPC_SERVICE_CLASS,
-        )
-    )
-    with contextlib.ExitStack() as stack:
-        reservation = stack.enter_context(
-            session_management_client.reserve_sessions(
-                context=measurement_service.context.pin_map_context,
-                pin_or_relay_names=[pin_name],
-                instrument_type_id=nims.session_management.INSTRUMENT_TYPE_NI_DAQMX,
-                # If another measurement is using the session, wait for it to complete.
-                # Specify a timeout to aid in debugging missed unreserve calls.
-                # Long measurements may require a longer timeout.
-                timeout=60,
-            )
-        )
+    session_management_client = create_session_management_client(measurement_service)
+    with session_management_client.reserve_sessions(
+        context=measurement_service.context.pin_map_context,
+        pin_or_relay_names=[pin_name],
+        instrument_type_id=nims.session_management.INSTRUMENT_TYPE_NI_DAQMX,
+        # If another measurement is using the session, wait for it to complete.
+        # Specify a timeout to aid in debugging missed unreserve calls.
+        # Long measurements may require a longer timeout.
+        timeout=60,
+    ) as reservation:
         if len(reservation.session_info) != 1:
             measurement_service.context.abort(
                 grpc.StatusCode.INVALID_ARGUMENT,
@@ -80,47 +74,25 @@ def measure(pin_name, sample_rate, number_of_samples):
 
         measurement_service.context.add_cancel_callback(cancel_callback)
 
-        task = stack.enter_context(_create_nidaqmx_task(session_info))
-        if not session_info.session_exists:
-            task.ai_channels.add_ai_voltage_chan(session_info.channel_list)
+        grpc_device_channel = get_grpc_device_channel(measurement_service, nidaqmx, service_options)
+        with create_task(session_info, grpc_device_channel) as task:
+            if not session_info.session_exists:
+                task.ai_channels.add_ai_voltage_chan(session_info.channel_list)
 
-        task.timing.cfg_samp_clk_timing(
-            rate=sample_rate,
-            samps_per_chan=number_of_samples,
-        )
+            task.timing.cfg_samp_clk_timing(
+                rate=sample_rate,
+                samps_per_chan=number_of_samples,
+            )
 
-        timeout = min(measurement_service.context.time_remaining, 10.0)
-        voltage_values = task.read(number_of_samples_per_channel=number_of_samples, timeout=timeout)
-        task = None  # Don't abort after this point
+            timeout = min(measurement_service.context.time_remaining, 10.0)
+            voltage_values = task.read(
+                number_of_samples_per_channel=number_of_samples, timeout=timeout
+            )
+            task = None  # Don't abort after this point
 
     _log_measured_values(voltage_values)
     logging.info("Completed measurement")
     return (voltage_values,)
-
-
-def _create_nidaqmx_task(
-    session_info: nims.session_management.SessionInformation,
-) -> nidaqmx.Task:
-    session_kwargs = {}
-    if service_options.use_grpc_device:
-        session_grpc_address = service_options.grpc_device_address
-
-        if not session_grpc_address:
-            session_grpc_channel = measurement_service.get_channel(
-                provided_interface=nidaqmx.GRPC_SERVICE_INTERFACE_NAME,
-                service_class="ni.measurementlink.v1.grpcdeviceserver",
-            )
-        else:
-            session_grpc_channel = measurement_service.channel_pool.get_channel(
-                target=session_grpc_address
-            )
-        session_kwargs["grpc_options"] = nidaqmx.GrpcSessionOptions(
-            session_grpc_channel,
-            session_name=session_info.session_name,
-            initialization_behavior=nidaqmx.SessionInitializationBehavior.AUTO,
-        )
-
-    return nidaqmx.Task(new_task_name=session_info.session_name, **session_kwargs)
 
 
 def _log_measured_values(samples, max_samples_to_display=5):
