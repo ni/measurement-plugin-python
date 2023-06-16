@@ -1,6 +1,7 @@
 """Tests to validated user facing decorators in service.py."""
 import pathlib
 from enum import Enum
+import typing
 from typing import List, Type
 
 import pytest
@@ -246,9 +247,10 @@ def test___measurement_service___add_output__output_added(
 def _fake_measurement_function():
     pass
 
+noAnnotations : typing.Dict[str, str] = {}
 
 @pytest.mark.parametrize(
-    "service_config,provided_interfaces",
+    "service_config,provided_interfaces,provided_annotations",
     [
         (
             "example.serviceconfig",
@@ -256,13 +258,31 @@ def _fake_measurement_function():
                 "ni.measurementlink.measurement.v1.MeasurementService",
                 "ni.measurementlink.measurement.v2.MeasurementService",
             ],
+            {
+                "ni/service.description": "Measure inrush current with a shorted load and validate results against configured limits.",
+                "ni/service.collection": "CurrentTests.Inrush",
+                "ni/service.tags": [ "powerup", "current" ]
+            }
         ),
-        ("example.v1.serviceconfig", ["ni.measurementlink.measurement.v1.MeasurementService"]),
-        ("example.v2.serviceconfig", ["ni.measurementlink.measurement.v2.MeasurementService"]),
+        ("example.v1.serviceconfig", ["ni.measurementlink.measurement.v1.MeasurementService"], noAnnotations),
+        ("example.v2.serviceconfig", ["ni.measurementlink.measurement.v2.MeasurementService"], noAnnotations),
+        ("example.v3.serviceconfig", ["ni.measurementlink.measurement.v2.MeasurementService"], { "ni/service.collection": "CurrentTests.Inrush" }),
+        ("example.v4.serviceconfig", ["ni.measurementlink.measurement.v2.MeasurementService"], { "ni/service.tags": [ "powerup", "current", "voltage" ]}),
+        ("example.v5.serviceconfig", ["ni.measurementlink.measurement.v2.MeasurementService"],
+            {
+                "ni/service.description": "Testing extra Client info",
+                "client/extra.NumberID" : "500",
+                "client/extra.Parts" : [ "A25898", "A25412" ],
+                "client/extra.GroupName" : {
+                    "SpeakerType": "true",
+                    "PhoneType": "false"
+                },
+            }
+        ),
     ],
 )
 def test___service_config___create_measurement_service___service_info_matches_service_config(
-    test_assets_directory: pathlib.Path, service_config: str, provided_interfaces: List[str]
+    test_assets_directory: pathlib.Path, service_config: str, provided_interfaces: List[str], provided_annotations: typing.Dict[str,str]
 ):
     measurement_service = MeasurementService(
         service_config_path=test_assets_directory / service_config,
@@ -276,7 +296,8 @@ def test___service_config___create_measurement_service___service_info_matches_se
         measurement_service.service_info.description_url
         == "https://www.example.com/SampleMeasurement.html"
     )
-
+    if (provided_annotations != {}):
+        assert set(measurement_service.service_info.annotations) == set(provided_annotations)
 
 @pytest.mark.parametrize(
     "display_name,type,default_value,enum_type",

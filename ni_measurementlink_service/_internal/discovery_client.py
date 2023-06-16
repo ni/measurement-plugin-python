@@ -107,6 +107,13 @@ class DiscoveryClient:
             service_descriptor.description_url = service_info.description_url
             service_descriptor.provided_interfaces.extend(service_info.provided_interfaces)
 
+            ServiceInfoAnnotations =  service_info.annotations
+            for keys in ServiceInfoAnnotations:
+                if isinstance(ServiceInfoAnnotations[keys], (int, float)):
+                    service_descriptor.annotations[keys] = str(ServiceInfoAnnotations[keys])
+                else:
+                    service_descriptor.annotations[keys] = ' '.join([str(elem) for elem in ServiceInfoAnnotations[keys]])
+
             # Registration Request Creation
             request = discovery_service_pb2.RegisterServiceRequest(
                 location=service_location, service_description=service_descriptor
@@ -127,8 +134,9 @@ class DiscoveryClient:
             _logger.error(
                 "Unable to register with discovery service. Possible reason: discovery service not running."
             )
-        except Exception:
+        except Exception as err:
             _logger.exception("Error in registering with discovery service.")
+            print(f"Unexpected {err=}, {type(err)=}")
             return False
         return True
 
