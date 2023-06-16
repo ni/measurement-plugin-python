@@ -3,7 +3,17 @@
 import logging
 import pathlib
 import types
-from typing import Any, Callable, Dict, Iterable, NamedTuple, Optional, TypeVar, Tuple, Union
+from typing import (
+    Any,
+    Callable,
+    Dict,
+    List,
+    NamedTuple,
+    Optional,
+    Tuple,
+    TypeVar,
+    Union,
+)
 
 import click
 import grpc
@@ -268,12 +278,14 @@ def create_session_management_client(
 
 
 def get_session_and_channel_for_pin(
-    session_info: Iterable[nims.session_management.SessionInformation],
+    session_info: List[nims.session_management.SessionInformation],
     pin: str,
     site: Optional[int] = None,
-) -> Tuple[int, Iterable[str]]:
+) -> Tuple[int, List[str]]:
     """Returns the session information based on the given pin names."""
-    session_and_channel_info = get_sessions_and_channels_for_pins(pins=[pin], site=site)
+    session_and_channel_info = get_sessions_and_channels_for_pins(
+        session_info=session_info, pins=[pin], site=site
+    )
 
     if len(session_and_channel_info) != 1:
         raise ValueError(f"Unsupported number of sessions for {pin}: {len(session_info)}")
@@ -281,17 +293,17 @@ def get_session_and_channel_for_pin(
 
 
 def get_sessions_and_channels_for_pins(
-    session_info: Iterable[nims.session_management.SessionInformation],
-    pins: Union[str, Iterable[str]],
+    session_info: List[nims.session_management.SessionInformation],
+    pins: Union[str, List[str]],
     site: Optional[int] = None,
-) -> Iterable[Tuple[int, Iterable[str]]]:
+) -> List[Tuple[int, List[str]]]:
     """Returns the session information based on the given pin names."""
     pin_names = [pins] if isinstance(pins, str) else pins
     session_and_channel_info = []
-    for session_index, session_info in enumerate(session_info):
+    for session_index, session_details in enumerate(session_info):
         channel_list = [
             mapping.channel
-            for mapping in session_info.channel_mappings
+            for mapping in session_details.channel_mappings
             if mapping.pin_or_relay_name in pin_names and (site is None or mapping.site == site)
         ]
         if len(channel_list) != 0:
