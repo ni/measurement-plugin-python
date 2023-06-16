@@ -76,11 +76,7 @@ def serialize_parameters(
             parameter_metadata.repeated,
         )
         # Convert enum parameters to their underlying value.
-        if "ni/type_specialization" in parameter_metadata.annotations:
-            if (
-                parameter_metadata.annotations["ni/type_specialization"]
-                == TypeSpecialization.Enum.value
-            ):
+        if parameter_metadata.annotations.get("ni/type_specialization") == TypeSpecialization.Enum.value:
                 if parameter_metadata.repeated:
                     parameter = list(map(lambda x: x.value, parameter))
                 else:
