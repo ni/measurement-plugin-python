@@ -38,7 +38,7 @@ class DifferentColor(Enum):
             1,
             {
                 "ni/type_specialization": TypeSpecialization.Enum.value,
-                "ni/enum.values": "{'RED': 1, 'GREEN': 2, 'BLUE': 3}",
+                "ni/enum.values": '{"RED": 1, "GREEN": 2, "BLUE": 3}',
             },
         ),
         (
@@ -46,7 +46,7 @@ class DifferentColor(Enum):
             DifferentColor.TEAL,
             {
                 "ni/type_specialization": TypeSpecialization.Enum.value,
-                "ni/enum.values": "{'RED': 1, 'GREEN': 2, 'BLUE': 3}",
+                "ni/enum.values": '{"RED": 1, "GREEN": 2, "BLUE": 3}',
             },
         ),
         (DataType.EnumArray1D, 1, {}),
@@ -55,7 +55,7 @@ class DifferentColor(Enum):
             [1, 2],
             {
                 "ni/type_specialization": TypeSpecialization.Enum.value,
-                "ni/enum.values": "{'RED': 1, 'GREEN': 2, 'BLUE': 3}",
+                "ni/enum.values": '{"RED": 1, "GREEN": 2, "BLUE": 3}',
             },
         ),
     ],
@@ -85,7 +85,7 @@ def test___default_value_different_from_type___validate___raises_type_exception(
             Color.BLUE,
             {
                 "ni/type_specialization": TypeSpecialization.Enum.value,
-                "ni/enum.values": "{'RED': 1, 'GREEN': 2, 'BLUE': 3}",
+                "ni/enum.values": '{"RED": 1, "GREEN": 2, "BLUE": 3}',
             },
         ),
         (
@@ -93,7 +93,7 @@ def test___default_value_different_from_type___validate___raises_type_exception(
             [Color.BLUE, Color.GREEN],
             {
                 "ni/type_specialization": TypeSpecialization.Enum.value,
-                "ni/enum.values": "{'RED': 1, 'GREEN': 2, 'BLUE': 3}",
+                "ni/enum.values": '{"RED": 1, "GREEN": 2, "BLUE": 3}',
             },
         ),
     ],

@@ -126,7 +126,7 @@ def _validate_default_value_type_for_repeated_type(
             f"Unexpected type {type(default_value)} in the default value for '{display_name}'. Expected type: {expected_type}."
         )
     if enum_values_annotation:
-        user_enum_dict = json.loads(enum_values_annotation.replace("'", '"'))
+        user_enum_dict = json.loads(enum_values_annotation)
         for element in default_value:
             if not _is_valid_enum_value(element, user_enum_dict):
                 raise TypeError(

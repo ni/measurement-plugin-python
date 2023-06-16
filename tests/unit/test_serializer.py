@@ -299,7 +299,7 @@ def _get_test_parameter_by_id(default_values):
             default_value=default_values[16],
             annotations={
                 "ni/type_specialization": TypeSpecialization.Enum.value,
-                "ni/enum.values": "{'PURPLE': 0, 'ORANGE': 1, 'TEAL': 2, 'BROWN': 3}",
+                "ni/enum.values": '{"PURPLE": 0, "ORANGE": 1, "TEAL": 2, "BROWN": 3}',
             },
         ),
         18: ParameterMetadata(
@@ -309,7 +309,7 @@ def _get_test_parameter_by_id(default_values):
             default_value=default_values[17],
             annotations={
                 "ni/type_specialization": TypeSpecialization.Enum.value,
-                "ni/enum.values": "{'PURPLE': 0, 'ORANGE': 1, 'TEAL': 2, 'BROWN': 3}",
+                "ni/enum.values": '{"PURPLE": 0, "ORANGE": 1, "TEAL": 2, "BROWN": 3}',
             },
         ),
     }
