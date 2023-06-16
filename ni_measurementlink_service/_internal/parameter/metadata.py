@@ -1,7 +1,7 @@
 """Contains classes that represents metadata."""
 import json
 from enum import Enum
-from typing import Any, Dict, NamedTuple, Tuple
+from typing import Any, Dict, NamedTuple
 
 from google.protobuf import type_pb2
 
@@ -106,7 +106,10 @@ def get_enum_values_annotation(parameter_metadata: ParameterMetadata) -> str:
         str: The value of "ni/enum.values" annotation
 
     """
-    if parameter_metadata.annotations.get("ni/type_specialization") == TypeSpecialization.Enum.value:
+    if (
+        parameter_metadata.annotations.get("ni/type_specialization")
+        == TypeSpecialization.Enum.value
+    ):
         return parameter_metadata.annotations.get("ni/enum.values", "")
     else:
         return ""

@@ -135,6 +135,7 @@ class MeasurementService:
     """
 
     class EmptyEnum(Enum):
+        """Empty enum used as default value."""
         pass
 
     def __init__(
