@@ -134,6 +134,9 @@ class MeasurementService:
 
     """
 
+    class EmptyEnum(Enum):
+        pass
+
     def __init__(
         self,
         service_config_path: Path,
@@ -222,7 +225,7 @@ class MeasurementService:
         default_value: Any,
         *,
         instrument_type: str = "",
-        enum_type: Type[Enum] = None,
+        enum_type: Type[Enum] = EmptyEnum,
     ) -> Callable:
         """Add a configuration parameter to a measurement function.
 
@@ -276,7 +279,7 @@ class MeasurementService:
         return _configuration
 
     def output(
-        self, display_name: str, type: DataType, *, enum_type: Type[Enum] = None
+        self, display_name: str, type: DataType, *, enum_type: Type[Enum] = EmptyEnum
     ) -> Callable:
         """Add an output parameter to a measurement function.
 
@@ -346,7 +349,7 @@ class MeasurementService:
         type_specialization: TypeSpecialization,
         *,
         instrument_type: str = "",
-        enum_type: Type[Enum] = None,
+        enum_type: Type[Enum] = EmptyEnum,
     ) -> Dict[str, str]:
         annotations: Dict[str, str] = {}
         if type_specialization == TypeSpecialization.NoType:

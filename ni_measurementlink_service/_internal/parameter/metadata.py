@@ -124,10 +124,7 @@ def _is_default_enum_match_annotations(default_value: Any, enum_values_annotatio
     if not isinstance(default_value, Enum):
         return False
     user_enum = json.loads(enum_values_annotation.replace("'", '"'))
-    user_enum_class = Enum("UserDefinedEnum", user_enum)
-    if (
-        any(member.value == default_value.value for member in user_enum_class)
-        and user_enum_class(default_value.value).name == default_value.name
-    ):
+    if (any(member == default_value.name for member in user_enum)
+        and user_enum[default_value.name] == default_value.value):
         return True
     return False
