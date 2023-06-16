@@ -247,6 +247,7 @@ def test___measurement_service___add_output__output_added(
 def _fake_measurement_function():
     pass
 
+noAnnotations : typing.Dict[str, str] = {}
 
 no_annotations: typing.Dict[str, str] = {}
 
