@@ -58,9 +58,7 @@ def validate_default_value_type(parameter_metadata: ParameterMetadata) -> None:
     expected_type = type(
         Context.get_type_default(parameter_metadata.type, parameter_metadata.repeated)
     )
-    has_enum_values_annotation, enum_values_annotation = try_get_enum_values_annotation(
-        parameter_metadata
-    )
+    enum_values_annotation = get_enum_values_annotation(parameter_metadata)
 
     if parameter_metadata.repeated:
         if not isinstance(default_value, expected_type):
@@ -68,11 +66,11 @@ def validate_default_value_type(parameter_metadata: ParameterMetadata) -> None:
                 f"Unexpected type {type(default_value)} in the default value for '{display_name}'. Expected type: {expected_type}."
             )
         expected_element_type = type(Context.get_type_default(parameter_metadata.type, False))
-        if has_enum_values_annotation:
+        if enum_values_annotation:
             for element in default_value:
-                if not _is_default_enum_match_annotations(element, enum_values_annotation):
+                if not _is_valid_enum_value(element, enum_values_annotation):
                     raise TypeError(
-                        f"The default value, `{element}`, for '{display_name}' is not valid. Expected values: `{enum_values_annotation}`."
+                        f"Invalid default value, `{element}`, for enum parameter '{display_name}'. Expected values: `{enum_values_annotation}`."
                     )
         else:
             for element in default_value:
@@ -81,10 +79,10 @@ def validate_default_value_type(parameter_metadata: ParameterMetadata) -> None:
                         f"Unexpected element of type {type(element)} in the default value for '{display_name}'. Expected element type: {expected_element_type}."
                     )
     else:
-        if has_enum_values_annotation:
-            if not _is_default_enum_match_annotations(default_value, enum_values_annotation):
+        if enum_values_annotation:
+            if not _is_valid_enum_value(default_value, enum_values_annotation):
                 raise TypeError(
-                    f"The default value, `{default_value}`, for '{display_name}' is not valid. Expected values: `{enum_values_annotation}`."
+                    f"Invalid default value, `{default_value}`, for enum parameter '{display_name}'. Expected values: `{enum_values_annotation}`."
                 )
         else:
             if not isinstance(default_value, expected_type):
@@ -94,7 +92,7 @@ def validate_default_value_type(parameter_metadata: ParameterMetadata) -> None:
     return None
 
 
-def try_get_enum_values_annotation(parameter_metadata: ParameterMetadata) -> Tuple[bool, str]:
+def get_enum_values_annotation(parameter_metadata: ParameterMetadata) -> str:
     """Gets the value for the "ni/enum.values" annotation if it exists.
 
     Args
@@ -103,28 +101,20 @@ def try_get_enum_values_annotation(parameter_metadata: ParameterMetadata) -> Tup
 
     Returns
     -------
-        Tuple[bool, str]: A Tuple that contains both the value of
-        the "ni/enum.values" annotation and whether we were successful
-        in obtaining it.
+        str: The value of "ni/enum.values" annotation
 
     """
-    if (
-        "ni/type_specialization" in parameter_metadata.annotations
-        and parameter_metadata.annotations["ni/type_specialization"]
-        == TypeSpecialization.Enum.value
-        and "ni/enum.values" in parameter_metadata.annotations
-    ):
-        enum_values = parameter_metadata.annotations["ni/enum.values"]
-        if enum_values != "" and enum_values is not None:
-            return True, enum_values
-    return False, ""
+    if parameter_metadata.annotations.get("ni/type_specialization") == TypeSpecialization.Enum.value:
+        return parameter_metadata.annotations.get("ni/enum.values", "")
+    else:
+        return ""
 
 
-def _is_default_enum_match_annotations(default_value: Any, enum_values_annotation: str):
-    if not isinstance(default_value, Enum):
+def _is_valid_enum_value(enum_value: Any, enum_values_annotation: str):
+    if not isinstance(enum_value, Enum):
         return False
     user_enum = json.loads(enum_values_annotation.replace("'", '"'))
-    if (any(member == default_value.name for member in user_enum)
-        and user_enum[default_value.name] == default_value.value):
+    if (any(member == enum_value.name for member in user_enum)
+        and user_enum[enum_value.name] == enum_value.value):
         return True
     return False

@@ -8,7 +8,7 @@ from google.protobuf.internal import encoder
 from ni_measurementlink_service._internal.parameter import serialization_strategy
 from ni_measurementlink_service._internal.parameter.metadata import (
     ParameterMetadata,
-    try_get_enum_values_annotation,
+    get_enum_values_annotation,
 )
 from ni_measurementlink_service.measurement.info import TypeSpecialization
 
@@ -218,10 +218,7 @@ def _deserialize_enum_parameters(
     """
     for i, value in parameter_by_id.items():
         parameter_metadata = parameter_metadata_dict[i]
-        has_enum_values_annotation, enum_values_annotation = try_get_enum_values_annotation(
-            parameter_metadata
-        )
-        if has_enum_values_annotation:
+        if get_enum_values_annotation(parameter_metadata):
             enum_type = _get_enum_type(parameter_metadata)
             if parameter_metadata.repeated:
                 for j, member_value in enumerate(value):

@@ -225,7 +225,7 @@ class MeasurementService:
         default_value: Any,
         *,
         instrument_type: str = "",
-        enum_type: Type[Enum] = EmptyEnum,
+        enum_type: Optional[Type[Enum]] = EmptyEnum,
     ) -> Callable:
         """Add a configuration parameter to a measurement function.
 
@@ -253,7 +253,7 @@ class MeasurementService:
             For custom instruments the user defined instrument type id is defined in the
             pin map file.
 
-            enum_type (Type[Enum]): Optional
+            enum_type (Optional[Type[Enum]]): Optional
             Defines the enum type associated with this configuration parameter. This is only
             supported when configuration type is DataType.Enum or DataType.EnumArray1D.
 
@@ -264,7 +264,7 @@ class MeasurementService:
 
         """
         grpc_field_type, repeated, type_specialization = type.value
-        annotations = self._get_annotations(
+        annotations = self._make_annotations_dict(
             type_specialization, instrument_type=instrument_type, enum_type=enum_type
         )
         parameter = parameter_metadata.ParameterMetadata(
@@ -279,7 +279,7 @@ class MeasurementService:
         return _configuration
 
     def output(
-        self, display_name: str, type: DataType, *, enum_type: Type[Enum] = EmptyEnum
+        self, display_name: str, type: DataType, *, enum_type: Optional[Type[Enum]] = EmptyEnum
     ) -> Callable:
         """Add an output parameter to a measurement function.
 
@@ -298,7 +298,7 @@ class MeasurementService:
 
             type (DataType): Data type of the output.
 
-            enum_type (Type[Enum]): Optional
+            enum_type (Optional[Type[Enum]]): Optional
             Defines the enum type associated with this configuration parameter. This is only
             supported when configuration type is DataType.Enum or DataType.EnumArray1D.
 
@@ -309,7 +309,7 @@ class MeasurementService:
 
         """
         grpc_field_type, repeated, type_specialization = type.value
-        annotations = self._get_annotations(type_specialization, enum_type=enum_type)
+        annotations = self._make_annotations_dict(type_specialization, enum_type=enum_type)
         parameter = parameter_metadata.ParameterMetadata(
             display_name, grpc_field_type, repeated, None, annotations
         )
@@ -344,12 +344,12 @@ class MeasurementService:
         )
         return self
 
-    def _get_annotations(
+    def _make_annotations_dict(
         self,
         type_specialization: TypeSpecialization,
         *,
         instrument_type: str = "",
-        enum_type: Type[Enum] = EmptyEnum,
+        enum_type: Optional[Type[Enum]] = EmptyEnum,
     ) -> Dict[str, str]:
         annotations: Dict[str, str] = {}
         if type_specialization == TypeSpecialization.NoType:
@@ -362,6 +362,8 @@ class MeasurementService:
         if type_specialization == TypeSpecialization.Enum:
             if enum_type is not None:
                 annotations["ni/enum.values"] = self._enum_to_annotations_value(enum_type)
+            else:
+                raise ValueError("enum_type is required for enum parameters.")
 
         return annotations
 
