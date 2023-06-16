@@ -198,7 +198,7 @@ def _get_missing_parameters(
 
 def _deserialize_enum_parameters(
     parameter_metadata_dict: Dict[int, ParameterMetadata], parameter_by_id: Dict[int, Any]
-):
+) -> None:
     """Converts all enums in `parameter_by_id` to the user defined enum type.
 
     Args
