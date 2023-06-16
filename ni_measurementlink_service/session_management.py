@@ -1,6 +1,6 @@
 """Contains methods related to managing driver sessions."""
 from functools import cached_property
-from typing import Iterable, List, NamedTuple, Optional, Tuple, TypeVar, Union
+from typing import Iterable, List, NamedTuple, Optional, TypeVar
 
 import grpc
 
@@ -137,36 +137,6 @@ class Reservation(object):
     def unreserve(self):
         """Unreserve sessions."""
         self._session_manager._unreserve_sessions(self._session_info)
-
-    def get_session_and_channel_for_pin(
-        self, pin: str, site: Optional[int] = None
-    ) -> Tuple[int, List[str]]:
-        """Returns the session information based on the given pin names."""
-        session_and_channel_info = self.get_sessions_and_channels_for_pins(pins=[pin], site=site)
-
-        if len(session_and_channel_info) != 1:
-            raise ValueError(f"Unsupported number of sessions: {len(self.session_info)}")
-        return session_and_channel_info[0]
-
-    def get_sessions_and_channels_for_pins(
-        self, pins: Union[str, List[str]], site: Optional[int] = None
-    ) -> List[Tuple[int, List[str]]]:
-        """Returns the session information based on the given pin names."""
-        pin_names = [pins] if isinstance(pins, str) else pins
-        session_and_channel_info = []
-        for session_index, session_info in enumerate(self.session_info):
-            channel_list = [
-                mapping.channel
-                for mapping in session_info.channel_mappings
-                if mapping.pin_or_relay_name in pin_names and (site is None or mapping.site == site)
-            ]
-            if len(channel_list) != 0:
-                session_and_channel_info.append((session_index, channel_list))
-
-        if len(session_and_channel_info) == 0:
-            raise KeyError(f"Pin(s) {pins} and site {site} not found")
-
-        return session_and_channel_info
 
     @cached_property
     def session_info(self) -> List[SessionInformation]:
