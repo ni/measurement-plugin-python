@@ -50,7 +50,6 @@ def validate_default_value_type(parameter_metadata: ParameterMetadata) -> None:
         TypeError: If default value does not match the Datatype.
 
     """
-    display_name = parameter_metadata.display_name
     default_value = parameter_metadata.default_value
     if default_value is None:
         return None
@@ -58,40 +57,87 @@ def validate_default_value_type(parameter_metadata: ParameterMetadata) -> None:
     expected_type = type(
         Context.get_type_default(parameter_metadata.type, parameter_metadata.repeated)
     )
+    display_name = parameter_metadata.display_name
     enum_values_annotation = get_enum_values_annotation(parameter_metadata)
 
     if parameter_metadata.repeated:
+        expected_element_type = type(Context.get_type_default(parameter_metadata.type, False))
+        _validate_default_value_type_for_repeated_type(
+            default_value,
+            expected_type,
+            expected_element_type,
+            enum_values_annotation,
+            display_name,
+        )
+    else:
+        _validate_default_value_type_for_basic_type(
+            default_value, expected_type, enum_values_annotation, display_name
+        )
+    return None
+
+
+def _validate_default_value_type_for_basic_type(
+    default_value: Any, expected_type: type, enum_values_annotation: str, display_name: str
+) -> None:
+    """Validate and raise exception if the default value does not match the type info.
+
+    Args
+    ----
+        parameter_metadata (ParameterMetadata): Parameter metadata
+
+    Raises
+    ------
+        TypeError: If default value does not match the Datatype.
+
+    """
+    if enum_values_annotation:
+        user_enum_dict = json.loads(enum_values_annotation.replace("'", '"'))
+        if not _is_valid_enum_value(default_value, user_enum_dict):
+            raise TypeError(
+                f"Invalid default value, `{default_value}`, for enum parameter '{display_name}'. Expected values: `{enum_values_annotation}`."
+            )
+    else:
         if not isinstance(default_value, expected_type):
             raise TypeError(
                 f"Unexpected type {type(default_value)} in the default value for '{display_name}'. Expected type: {expected_type}."
             )
-        expected_element_type = type(Context.get_type_default(parameter_metadata.type, False))
-        if enum_values_annotation:
-            user_enum_dict = json.loads(enum_values_annotation.replace("'", '"'))
-            for element in default_value:
-                if not _is_valid_enum_value(element, user_enum_dict):
-                    raise TypeError(
-                        f"Invalid default value, `{element}`, for enum parameter '{display_name}'. Expected values: `{enum_values_annotation}`."
-                    )
-        else:
-            for element in default_value:
-                if not isinstance(element, expected_element_type):
-                    raise TypeError(
-                        f"Unexpected element of type {type(element)} in the default value for '{display_name}'. Expected element type: {expected_element_type}."
-                    )
+
+
+def _validate_default_value_type_for_repeated_type(
+    default_value: Any,
+    expected_type: type,
+    expected_element_type: type,
+    enum_values_annotation: str,
+    display_name: str,
+) -> None:
+    """Validate and raise exception if the default value does not match the type info.
+
+    Args
+    ----
+        parameter_metadata (ParameterMetadata): Parameter metadata
+
+    Raises
+    ------
+        TypeError: If default value does not match the Datatype.
+
+    """
+    if not isinstance(default_value, expected_type):
+        raise TypeError(
+            f"Unexpected type {type(default_value)} in the default value for '{display_name}'. Expected type: {expected_type}."
+        )
+    if enum_values_annotation:
+        user_enum_dict = json.loads(enum_values_annotation.replace("'", '"'))
+        for element in default_value:
+            if not _is_valid_enum_value(element, user_enum_dict):
+                raise TypeError(
+                    f"Invalid default value, `{element}`, for enum parameter '{display_name}'. Expected values: `{enum_values_annotation}`."
+                )
     else:
-        if enum_values_annotation:
-            user_enum_dict = json.loads(enum_values_annotation.replace("'", '"'))
-            if not _is_valid_enum_value(default_value, user_enum_dict):
+        for element in default_value:
+            if not isinstance(element, expected_element_type):
                 raise TypeError(
-                    f"Invalid default value, `{default_value}`, for enum parameter '{display_name}'. Expected values: `{enum_values_annotation}`."
+                    f"Unexpected element of type {type(element)} in the default value for '{display_name}'. Expected element type: {expected_element_type}."
                 )
-        else:
-            if not isinstance(default_value, expected_type):
-                raise TypeError(
-                    f"Unexpected type {type(default_value)} in the default value for '{display_name}'. Expected type: {expected_type}."
-                )
-    return None
 
 
 def get_enum_values_annotation(parameter_metadata: ParameterMetadata) -> str:
@@ -115,7 +161,7 @@ def get_enum_values_annotation(parameter_metadata: ParameterMetadata) -> str:
         return ""
 
 
-def _is_valid_enum_value(enum_value: Any, user_enum: Dict[str, int]):
+def _is_valid_enum_value(enum_value: Any, user_enum: Dict[str, int]) -> bool:
     if not isinstance(enum_value, Enum):
         return False
     return enum_value.name in user_enum and user_enum[enum_value.name] == enum_value.value
