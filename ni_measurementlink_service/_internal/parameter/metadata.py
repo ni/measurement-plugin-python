@@ -67,8 +67,9 @@ def validate_default_value_type(parameter_metadata: ParameterMetadata) -> None:
             )
         expected_element_type = type(Context.get_type_default(parameter_metadata.type, False))
         if enum_values_annotation:
+            user_enum_dict = json.loads(enum_values_annotation.replace("'", '"'))
             for element in default_value:
-                if not _is_valid_enum_value(element, enum_values_annotation):
+                if not _is_valid_enum_value(element, user_enum_dict):
                     raise TypeError(
                         f"Invalid default value, `{element}`, for enum parameter '{display_name}'. Expected values: `{enum_values_annotation}`."
                     )
@@ -80,7 +81,8 @@ def validate_default_value_type(parameter_metadata: ParameterMetadata) -> None:
                     )
     else:
         if enum_values_annotation:
-            if not _is_valid_enum_value(default_value, enum_values_annotation):
+            user_enum_dict = json.loads(enum_values_annotation.replace("'", '"'))
+            if not _is_valid_enum_value(default_value, user_enum_dict):
                 raise TypeError(
                     f"Invalid default value, `{default_value}`, for enum parameter '{display_name}'. Expected values: `{enum_values_annotation}`."
                 )
@@ -110,10 +112,9 @@ def get_enum_values_annotation(parameter_metadata: ParameterMetadata) -> str:
         return ""
 
 
-def _is_valid_enum_value(enum_value: Any, enum_values_annotation: str):
+def _is_valid_enum_value(enum_value: Any, user_enum: Dict[str, int]):
     if not isinstance(enum_value, Enum):
         return False
-    user_enum = json.loads(enum_values_annotation.replace("'", '"'))
     if (any(member == enum_value.name for member in user_enum)
         and user_enum[enum_value.name] == enum_value.value):
         return True
