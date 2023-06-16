@@ -1,0 +1,20 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - 'releases/**'
+  workflow_call:
+  workflow_dispatch:
+
+jobs:
+  check_nims:
+    uses: ./.github/workflows/check_nims.yml
+  check_nimg:
+    uses: ./.github/workflows/check_nimg.yml
+  check_examples:
+    uses: ./.github/workflows/check_examples.yml
+  run_tests:
+    uses: ./.github/workflows/run_tests.yml
+    needs: [check_nims, check_nimg]

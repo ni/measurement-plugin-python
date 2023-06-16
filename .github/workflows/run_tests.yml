@@ -1,0 +1,38 @@
+name: Run tests
+
+on:
+  workflow_call:
+  workflow_dispatch:
+
+env:
+  POETRY_VERSION: 1.2.2
+
+jobs:
+  run_tests:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest, windows-latest, ubuntu-latest]
+        python-version: [3.8, 3.9, '3.10', 3.11]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - uses: Gr1N/setup-poetry@v8
+        with:
+          poetry-version: ${{ env.POETRY_VERSION }}
+      - uses: actions/cache@v2
+        with:
+          path: ~/.cache/pypoetry/virtualenvs
+          key: ${{ runner.os }}-poetry-${{ hashFiles('poetry.lock') }}
+      - name: Install ni-measurementlink-service
+        run: poetry install -v
+      - name: Run tests and code coverage (ni-measurementlink-service)
+        run: poetry run pytest ./tests -v --cov=ni_measurementlink_service
+      - name: Install ni-measurementlink-generator
+        run: poetry install -v
+        working-directory: ./ni_measurementlink_generator
+      - name: Run tests and code coverage (ni-measurementlink-generator)
+        run: poetry run pytest -v --cov=ni_measurementlink_generator
+        working-directory: ./ni_measurementlink_generator
