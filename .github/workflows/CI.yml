@@ -10,11 +10,15 @@ on:
 
 jobs:
   check_nims:
+    name: Check NIMS
     uses: ./.github/workflows/check_nims.yml
   check_nimg:
+    name: Check NIMG
     uses: ./.github/workflows/check_nimg.yml
   check_examples:
+    name: Check examples
     uses: ./.github/workflows/check_examples.yml
   run_tests:
+    name: Run tests
     uses: ./.github/workflows/run_tests.yml
     needs: [check_nims, check_nimg]
