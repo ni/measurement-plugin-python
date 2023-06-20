@@ -79,17 +79,8 @@ def validate_default_value_type(parameter_metadata: ParameterMetadata) -> None:
 def _validate_default_value_type_for_basic_type(
     default_value: Any, expected_type: type, enum_values_annotation: str, display_name: str
 ) -> None:
-    """Validate and raise exception if the default value does not match the type info.
+    """Validate and raise exception if the default value does not match the type info."""
 
-    Args
-    ----
-        parameter_metadata (ParameterMetadata): Parameter metadata
-
-    Raises
-    ------
-        TypeError: If default value does not match the Datatype.
-
-    """
     if enum_values_annotation:
         user_enum_dict = json.loads(enum_values_annotation.replace("'", '"'))
         if not _is_valid_enum_value(default_value, user_enum_dict):
@@ -110,17 +101,8 @@ def _validate_default_value_type_for_repeated_type(
     enum_values_annotation: str,
     display_name: str,
 ) -> None:
-    """Validate and raise exception if the default value does not match the type info.
-
-    Args
-    ----
-        parameter_metadata (ParameterMetadata): Parameter metadata
-
-    Raises
-    ------
-        TypeError: If default value does not match the Datatype.
-
-    """
+    """Validate and raise exception if the default value does not match the type info."""
+    
     if not isinstance(default_value, expected_type):
         raise TypeError(
             f"Unexpected type {type(default_value)} in the default value for '{display_name}'. Expected type: {expected_type}."
