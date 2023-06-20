@@ -1,7 +1,7 @@
 """Contains classes that represents metadata."""
 import json
 from enum import Enum
-from typing import Any, Dict, NamedTuple
+from typing import Any, Dict, Iterable, NamedTuple
 
 from google.protobuf import type_pb2
 
@@ -90,7 +90,7 @@ def _validate_default_value_type_for_scalar_type(
 
 
 def _validate_default_value_type_for_repeated_type(
-    default_value: Any,
+    default_value: Iterable[Any],
     expected_type: type,
     expected_element_type: type,
     enum_values_annotation: str,
