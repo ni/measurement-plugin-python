@@ -231,10 +231,9 @@ def _deserialize_enum_parameters(
                 try:
                     parameter_by_id[id] = enum_type(value)
                 except ValueError:
-                        raise TypeError(
-                            f"Unexpected value {member_value} is not valid for enum type '{enum_type.__name__}'."
-                        )
-
+                    raise TypeError(
+                        f"Unexpected value {member_value} is not valid for enum type '{enum_type.__name__}'."
+                    )
 
 
 def _get_enum_type(parameter_metadata: ParameterMetadata) -> type:

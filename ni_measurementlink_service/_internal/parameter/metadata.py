@@ -83,7 +83,9 @@ def _validate_default_value_type_for_scalar_type(
 
     if enum_values_annotation:
         user_enum_dict = json.loads(enum_values_annotation.replace("'", '"'))
-        _validate_default_value_type_for_enum_type(default_value, user_enum_dict, enum_values_annotation, display_name)
+        _validate_default_value_type_for_enum_type(
+            default_value, user_enum_dict, enum_values_annotation, display_name
+        )
     else:
         _validate_default_value_type_for_basic_type(default_value, expected_type, display_name)
 
@@ -105,10 +107,14 @@ def _validate_default_value_type_for_repeated_type(
     if enum_values_annotation:
         user_enum_dict = json.loads(enum_values_annotation)
         for element in default_value:
-            _validate_default_value_type_for_enum_type(element, user_enum_dict, enum_values_annotation, display_name)
+            _validate_default_value_type_for_enum_type(
+                element, user_enum_dict, enum_values_annotation, display_name
+            )
     else:
         for element in default_value:
-            _validate_default_value_type_for_basic_type(element, expected_element_type, display_name)
+            _validate_default_value_type_for_basic_type(
+                element, expected_element_type, display_name
+            )
 
 
 def _validate_default_value_type_for_basic_type(
@@ -120,6 +126,7 @@ def _validate_default_value_type_for_basic_type(
         raise TypeError(
             f"Unexpected type {type(default_value)} in the default value for '{display_name}'. Expected type: {expected_type}."
         )
+
 
 def _validate_default_value_type_for_enum_type(
     default_value: Any,

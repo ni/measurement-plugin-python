@@ -51,12 +51,7 @@ class ResolutionDigits(Enum):
     SixPointFive = auto()
 
 
-RESOLUTION_DIGITS_TO_VALUE = {
-    "3.5": 0.001,
-    "4.5": 0.0001,
-    "5.5": 1e-5,
-    "6.5": 1e-6
-}
+RESOLUTION_DIGITS_TO_VALUE = {"3.5": 0.001, "4.5": 0.0001, "5.5": 1e-5, "6.5": 1e-6}
 
 
 class Function(Enum):
