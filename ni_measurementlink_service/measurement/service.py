@@ -134,11 +134,6 @@ class MeasurementService:
 
     """
 
-    class EmptyEnum(Enum):
-        """Empty enum used as default value."""
-
-        pass
-
     def __init__(
         self,
         service_config_path: Path,
@@ -227,7 +222,7 @@ class MeasurementService:
         default_value: Any,
         *,
         instrument_type: str = "",
-        enum_type: Optional[Type[Enum]] = EmptyEnum,
+        enum_type: Optional[Type[Enum]] = None,
     ) -> Callable:
         """Add a configuration parameter to a measurement function.
 
@@ -246,7 +241,7 @@ class MeasurementService:
 
             default_value (Any): Default value of the configuration.
 
-            instrument_type (str): Optional.
+            instrument_type (Optional[str]):
             Filter pins by instrument type. This is only supported when configuration type
             is DataType.Pin. Pin maps have built in instrument definitions using the
             NI driver based instrument type ids. These can be found as constants
@@ -255,7 +250,7 @@ class MeasurementService:
             For custom instruments the user defined instrument type id is defined in the
             pin map file.
 
-            enum_type (Optional[Type[Enum]]): Optional
+            enum_type (Optional[Type[Enum]]):
             Defines the enum type associated with this configuration parameter. This is only
             supported when configuration type is DataType.Enum or DataType.EnumArray1D.
 
@@ -281,7 +276,7 @@ class MeasurementService:
         return _configuration
 
     def output(
-        self, display_name: str, type: DataType, *, enum_type: Optional[Type[Enum]] = EmptyEnum
+        self, display_name: str, type: DataType, *, enum_type: Optional[Type[Enum]] = None
     ) -> Callable:
         """Add an output parameter to a measurement function.
 
@@ -300,7 +295,7 @@ class MeasurementService:
 
             type (DataType): Data type of the output.
 
-            enum_type (Optional[Type[Enum]]): Optional
+            enum_type (Optional[Type[Enum]]):
             Defines the enum type associated with this configuration parameter. This is only
             supported when configuration type is DataType.Enum or DataType.EnumArray1D.
 
@@ -351,7 +346,7 @@ class MeasurementService:
         type_specialization: TypeSpecialization,
         *,
         instrument_type: str = "",
-        enum_type: Optional[Type[Enum]] = EmptyEnum,
+        enum_type: Optional[Type[Enum]] = None,
     ) -> Dict[str, str]:
         annotations: Dict[str, str] = {}
         if type_specialization == TypeSpecialization.NoType:
