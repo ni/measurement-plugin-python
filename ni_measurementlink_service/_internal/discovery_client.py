@@ -219,27 +219,27 @@ def _ensure_discovery_service_started(key_file_path: str):
     Check whether discovery service key file exists, if not start the discovery
     service.
 
-    """ 
+    """
     if _key_file_exists(key_file_path):
         return
-    
+
     exe_file_path = _get_discovery_service_location()
     _start_service(exe_file_path)
 
 
 def _get_discovery_service_location() -> str:
     """Gets the location of the discovery service process executable.
-    
+
     Returns:
     -------
-        exe_file_path: path to the discovery service exe which can be used 
+        exe_file_path: path to the discovery service exe which can be used
                 to activate the discovery service.
 
-    """ 
+    """
     registration_json_path = _get_registration_json_file_path()
     registration_json_obj = json.load(open(str(registration_json_path)))
     root_directory = pathlib.PurePath(registration_json_path).parent
-    exe_file_path = root_directory.joinpath(registration_json_obj['discovery']['path'])
+    exe_file_path = root_directory.joinpath(registration_json_obj["discovery"]["path"])
     return exe_file_path
 
 
@@ -258,10 +258,10 @@ def _key_file_exists(key_file_path) -> bool:
 
 
 def _start_service(exe_file_path):
-    """Starts the service at the specified path and wait for the service to get up and running.""" 
+    """Starts the service at the specified path and wait for the service to get up and running."""
     subprocess.Popen([exe_file_path], cwd=exe_file_path.parent)
     time.sleep(1)
-    
+
 
 def _get_key_file_path(cluster_id: Optional[str] = None) -> pathlib.Path:
     if cluster_id is not None:
