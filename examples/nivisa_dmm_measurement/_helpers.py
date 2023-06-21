@@ -3,7 +3,7 @@
 import logging
 import pathlib
 import types
-from typing import Any, Callable, Dict, NamedTuple, TypeVar
+from typing import Any, Callable, NamedTuple, TypeVar
 
 import click
 import grpc
@@ -37,6 +37,7 @@ def get_service_options(**kwargs) -> ServiceOptions:
 
 
 T = TypeVar("T")
+
 
 class PinMapClient(object):
     """Class that communicates with the pin map service."""

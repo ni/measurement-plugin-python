@@ -126,6 +126,7 @@ def measure(
     logging.info("Completed measurement: measured_value=%g", measured_value)
     return (measured_value,)
 
+
 @click.command
 @verbosity_option
 @use_simulation_option(default=USE_SIMULATION)
