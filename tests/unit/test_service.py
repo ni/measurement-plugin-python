@@ -8,6 +8,7 @@ import pytest
 from ni_measurementlink_service.measurement.info import DataType, TypeSpecialization
 from ni_measurementlink_service.measurement.service import MeasurementService
 
+
 class Color(Enum):
     """Primary colors used for testing enum-typed config and output."""
 
@@ -289,7 +290,7 @@ def test___measurement_service___add_configuration_with_invalid_enum_type__raise
     display_name: str,
     type: DataType,
     default_value: object,
-    enum_type: Type[Enum]
+    enum_type: Type[Enum],
 ):
     with pytest.raises(ValueError):
         measurement_service.configuration(display_name, type, default_value)(
