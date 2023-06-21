@@ -13,7 +13,6 @@ from _helpers import (
     configure_logging,
     create_session_management_client,
     get_service_options,
-    str_to_enum,
     use_simulation_option,
     verbosity_option,
 )
@@ -40,15 +39,6 @@ measurement_service = nims.MeasurementService(
     ui_file_paths=[service_directory / "NIVisaDmmMeasurement.measui"],
 )
 service_options = ServiceOptions()
-
-
-class ResolutionDigits(Enum):
-    """The digits of resolution."""
-
-    ThreePointFive = auto()
-    FourPointFive = auto()
-    FivePointFive = auto()
-    SixPointFive = auto()
 
 
 RESOLUTION_DIGITS_TO_VALUE = {"3.5": 0.001, "4.5": 0.0001, "5.5": 1e-5, "6.5": 1e-6}
@@ -81,7 +71,7 @@ def measure(
     pin_name: str,
     measurement_type: Function,
     range: float,
-    resolution_digits: ResolutionDigits,
+    resolution_digits: float,
 ) -> Tuple:
     """Perform a DMM measurement using NI-VISA and an NI Instrument Simulator v2.0."""
     logging.info(
@@ -125,7 +115,7 @@ def measure(
                 reset_instrument(session)
 
             function_enum = FUNCTION_TO_VALUE[measurement_type]
-            resolution_value = str_to_enum(RESOLUTION_DIGITS_TO_VALUE, str(resolution_digits))
+            resolution_value = RESOLUTION_DIGITS_TO_VALUE[str(resolution_digits)]
             session.write("CONF:%s %.g,%.g" % (function_enum, range, resolution_value))
             check_instrument_error(session)
 
@@ -135,7 +125,6 @@ def measure(
 
     logging.info("Completed measurement: measured_value=%g", measured_value)
     return (measured_value,)
-
 
 @click.command
 @verbosity_option
