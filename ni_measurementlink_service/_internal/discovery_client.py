@@ -4,7 +4,9 @@ import json
 import logging
 import os
 import pathlib
+import subprocess
 import sys
+import time
 import typing
 from typing import Optional
 
@@ -204,11 +206,45 @@ class DiscoveryClient:
 
 def _get_discovery_service_address() -> str:
     key_file_path = _get_key_file_path()
+    _ensure_discovery_service_started(key_file_path)
     _logger.debug("Discovery service key file path: %s", key_file_path)
     with _open_key_file(str(key_file_path)) as key_file:
         key_json = json.load(key_file)
         return "localhost:" + key_json["InsecurePort"]
 
+
+def _ensure_discovery_service_started(key_file_path: str):
+    if not _key_file_exists(key_file_path):
+        exe_file_path = _get_discovery_service_location()
+        _start_service(exe_file_path)
+
+
+def _get_discovery_service_location() -> str: 
+    registration_json_path = _get_registration_json_file_path()
+    registration_json_obj = json.load(open(str(registration_json_path)))
+    root_directory = pathlib.PurePath(registration_json_path).parent
+    exe_file_path = root_directory.joinpath(registration_json_obj['discovery']['path'])
+    return exe_file_path
+
+
+def _get_registration_json_file_path():
+    return (
+        pathlib.Path(os.environ["ProgramFiles"])
+        / "National Instruments"
+        / "Shared"
+        / "MeasurementLink"
+        / "MeasurementLinkServices.json"
+    )
+
+
+def _key_file_exists(key_file_path) -> bool:
+    return pathlib.Path(key_file_path).is_file()
+
+
+def _start_service(exe_file_path):
+    subprocess.Popen([exe_file_path], cwd=exe_file_path.parent)
+    time.sleep(1)
+    
 
 def _get_key_file_path(cluster_id: Optional[str] = None) -> pathlib.Path:
     if cluster_id is not None:
