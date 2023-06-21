@@ -16,7 +16,7 @@ from ni_measurementlink_service._internal.parameter import serialization_strateg
         (type_pb2.Field.TYPE_UINT64, False, serialization_strategy.UIntEncoder),
         (type_pb2.Field.TYPE_BOOL, False, serialization_strategy.BoolEncoder),
         (type_pb2.Field.TYPE_STRING, False, serialization_strategy.StringEncoder),
-        (type_pb2.Field.TYPE_ENUM, False, serialization_strategy.EnumEncoder),
+        (type_pb2.Field.TYPE_ENUM, False, serialization_strategy.IntEncoder),
     ],
 )
 def test___serialization_strategy___get_encoder___returns_expected_encoder(
@@ -38,7 +38,7 @@ def test___serialization_strategy___get_encoder___returns_expected_encoder(
         (type_pb2.Field.TYPE_UINT64, False, serialization_strategy.UInt64Decoder),
         (type_pb2.Field.TYPE_BOOL, False, serialization_strategy.BoolDecoder),
         (type_pb2.Field.TYPE_STRING, False, serialization_strategy.StringDecoder),
-        (type_pb2.Field.TYPE_ENUM, False, serialization_strategy.EnumDecoder),
+        (type_pb2.Field.TYPE_ENUM, False, serialization_strategy.Int32Decoder),
     ],
 )
 def test___serialization_strategy___get_decoder___returns_expected_decoder(
