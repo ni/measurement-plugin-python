@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<SourceFile Checksum="ECBCF84816F536DFE8E930A0DEB9892779DD53871DB8A3D88985B02E05588817EB16F453B2180E702A8A00AF69D850A1E9F0A11ED0CCC5737A0F83FB53F8A0BC" Timestamp="1D999746B58112C" xmlns="http://www.ni.com/PlatformFramework">
+<SourceFile Checksum="289F3717A5E060CF7B8A7A76D4EF88B55AD6AFC6D88787752C0619D5BCC3E3AF3BCBDEF6A71196F91AE93EE924886C622EEFA267AE33F7CE92234AD34A517AB4" Timestamp="1D9A47887470A1E" xmlns="http://www.ni.com/PlatformFramework">
 	<SourceModelFeatureSet>
 		<ParsableNamespace AssemblyFileVersion="9.9.0.1550" FeatureSetName="Configuration Based Software Core" Name="http://www.ni.com/ConfigurationBasedSoftware.Core" OldestCompatibleVersion="6.3.0.49152" Version="9.8.1.49152" />
 		<ParsableNamespace AssemblyFileVersion="9.9.0.1550" FeatureSetName="LabVIEW Controls" Name="http://www.ni.com/Controls.LabVIEW.Design" OldestCompatibleVersion="8.1.0.49152" Version="8.1.0.49152" />
@@ -69,7 +69,8 @@
 				<Label Id="5fdaffd604954eab8c40eece223bace6" LabelOwner="[UIModel]7791599dec5e40c98da2dc1dff8203f7" Left="[float]92" Text="[string]Reset" Top="[float]-18" Visible="[bool]False" xmlns="http://www.ni.com/PanelCommon" />
 			</ArrayGraphTools>
 			<Label Height="[float]16" Id="7d653a1b8e82474fa5957187f74dc876" LabelOwner="[UIModel]7a4e3733e44a4251a517215af2e6fb34" Left="[float]431" Text="[string]Double Array out" Top="[float]1" Width="[float]91" xmlns="http://www.ni.com/PanelCommon" />
-			<ChannelEnumSelector AdaptsToType="[bool]True" AllowNonSequentialValues="[bool]True" BaseName="[string]Enum" Channel="[string]{abd0ec1b-8a8a-46a1-9b11-1bcb569d1849}/Configuration/Enum In" Height="[float]24" Id="604b159420bd4525aa1b71300d41d9be" Label="[UIModel]6ecc1177484d4f099186d5680091578b" Left="[float]30" Top="[float]355" Width="[float]136" xmlns="http://www.ni.com/InstrumentFramework/ScreenDocument">
+			<ChannelEnumSelector AdaptsToType="[bool]True" AllowNonSequentialValues="[bool]True" BaseName="[string]Enum" Channel="[string]{abd0ec1b-8a8a-46a1-9b11-1bcb569d1849}/Configuration/Enum In" Height="[float]24" Id="604b159420bd4525aa1b71300d41d9be" Label="[UIModel]6ecc1177484d4f099186d5680091578b" Left="[float]30" Top="[float]355" Value="[int]0" Width="[float]136" xmlns="http://www.ni.com/InstrumentFramework/ScreenDocument">
+				<RingSelectorInfo DisplayValue="[string]NONE" IsEnabled="[bool]True" Value="[int]0" xmlns="http://www.ni.com/Controls.LabVIEW.Design" />
 				<RingSelectorInfo DisplayValue="[string]RED" IsEnabled="[bool]True" Value="[int]1" xmlns="http://www.ni.com/Controls.LabVIEW.Design" />
 				<RingSelectorInfo DisplayValue="[string]GREEN" IsEnabled="[bool]True" Value="[int]2" xmlns="http://www.ni.com/Controls.LabVIEW.Design" />
 				<RingSelectorInfo DisplayValue="[string]BLUE" IsEnabled="[bool]True" Value="[int]3" xmlns="http://www.ni.com/Controls.LabVIEW.Design" />

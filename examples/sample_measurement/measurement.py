@@ -22,6 +22,7 @@ sample_measurement_service = nims.MeasurementService(
 class Color(Enum):
     """Primary colors used for example enum-typed config and output."""
 
+    NONE = 0
     RED = 1
     GREEN = 2
     BLUE = 3

@@ -365,6 +365,8 @@ class MeasurementService:
         return annotations
 
     def _enum_to_annotations_value(self, enum_type: Type[Enum]) -> str:
+        if not any(member.value == 0 for member in enum_type):
+            raise ValueError("The enum does not have a value for 0.")
         enum_values = {}
         for member in enum_type:
             enum_values[member.name] = member.value

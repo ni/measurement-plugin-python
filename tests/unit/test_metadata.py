@@ -10,6 +10,7 @@ from ni_measurementlink_service.measurement.info import DataType, TypeSpecializa
 class Color(Enum):
     """Primary colors used for testing enum-typed config and output."""
 
+    NONE = 0
     RED = 1
     GREEN = 2
     BLUE = 3
@@ -18,6 +19,7 @@ class Color(Enum):
 class DifferentColor(Enum):
     """Non-primary colors used for testing enum-typed config and output."""
 
+    NONE = 0
     ORANGE = 1
     TEAL = 2
     BROWN = 3
@@ -38,7 +40,7 @@ class DifferentColor(Enum):
             1,
             {
                 "ni/type_specialization": TypeSpecialization.Enum.value,
-                "ni/enum.values": '{"RED": 1, "GREEN": 2, "BLUE": 3}',
+                "ni/enum.values": '{"NONE":0, "RED": 1, "GREEN": 2, "BLUE": 3}',
             },
         ),
         (
@@ -46,7 +48,7 @@ class DifferentColor(Enum):
             DifferentColor.TEAL,
             {
                 "ni/type_specialization": TypeSpecialization.Enum.value,
-                "ni/enum.values": '{"RED": 1, "GREEN": 2, "BLUE": 3}',
+                "ni/enum.values": '{"NONE":0, "RED": 1, "GREEN": 2, "BLUE": 3}',
             },
         ),
         (DataType.EnumArray1D, 1, {}),
@@ -55,7 +57,7 @@ class DifferentColor(Enum):
             [1, 2],
             {
                 "ni/type_specialization": TypeSpecialization.Enum.value,
-                "ni/enum.values": '{"RED": 1, "GREEN": 2, "BLUE": 3}',
+                "ni/enum.values": '{"NONE":0, "RED": 1, "GREEN": 2, "BLUE": 3}',
             },
         ),
     ],
@@ -85,7 +87,7 @@ def test___default_value_different_from_type___validate___raises_type_exception(
             Color.BLUE,
             {
                 "ni/type_specialization": TypeSpecialization.Enum.value,
-                "ni/enum.values": '{"RED": 1, "GREEN": 2, "BLUE": 3}',
+                "ni/enum.values": '{"NONE":0, "RED": 1, "GREEN": 2, "BLUE": 3}',
             },
         ),
         (
@@ -93,7 +95,7 @@ def test___default_value_different_from_type___validate___raises_type_exception(
             [Color.BLUE, Color.GREEN],
             {
                 "ni/type_specialization": TypeSpecialization.Enum.value,
-                "ni/enum.values": '{"RED": 1, "GREEN": 2, "BLUE": 3}',
+                "ni/enum.values": '{"NONE":0, "RED": 1, "GREEN": 2, "BLUE": 3}',
             },
         ),
     ],
