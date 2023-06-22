@@ -73,6 +73,7 @@ def _resolve_service_class(service_class: str, display_name: str) -> str:
     else:
         return service_class
 
+
 @click.command()
 @click.argument("display_name")
 @click.option(
@@ -133,7 +134,7 @@ def create_measurement(
     description_url: str,
     directory_out: Optional[str],
     annotations_description: Optional[str],
-    collection:  Optional[str],
+    collection: Optional[str],
     tags: Optional[str],
     verbose: bool,
 ) -> None:
@@ -193,9 +194,9 @@ def create_measurement(
         service_class=service_class,
         description_url=description_url,
         ui_file_type=ui_file_type,
-        annotations_description = annotations_description,
-        collection = collection,
-        tags = annotation_tags,
+        annotations_description=annotations_description,
+        collection=collection,
+        tags=annotation_tags,
     )
     if ui_file_type == "MeasurementUI":
         _create_file(

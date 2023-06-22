@@ -36,7 +36,8 @@ def test___command_line_args___create_measurement___render_without_exception(
             temp_directory / filename,
         )
 
-def test___command_line_args___create_measurement_withAnnotations___render_without_exception(
+
+def test___command_line_args___create_measurement_with_annotations___render_without_exception(
     test_assets_directory: pathlib.Path, tmp_path_factory: pytest.TempPathFactory
 ):
     temp_directory = tmp_path_factory.mktemp("measurement_files")
@@ -64,23 +65,25 @@ def test___command_line_args___create_measurement_withAnnotations___render_witho
                 "--tags",
                 "M2",
                 "--tags",
-                "M3"
+                "M3",
             ]
         )
 
     golden_path = test_assets_directory / "example_renders"
 
-    filenames = ["measurementWithAnnotations.py", "SampleMeasurementWithAnnotations.serviceconfig", "start.bat"]
+    filenames = [
+        "measurementWithAnnotations.py",
+        "SampleMeasurementWithAnnotations.serviceconfig",
+        "start.bat",
+    ]
     for filename in filenames:
         golden_file = golden_path / filename
         # We always generate only measurement.py
         if filename == "measurementWithAnnotations.py":
             filename = "measurement.py"
 
-        _assert_equal(
-            golden_file,
-            temp_directory / filename
-        )
+        _assert_equal(golden_file, temp_directory / filename)
+
 
 def _assert_equal(expected_path: pathlib.Path, result_path: pathlib.Path):
     expected = expected_path.read_text()
