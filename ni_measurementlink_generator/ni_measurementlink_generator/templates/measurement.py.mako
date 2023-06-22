@@ -6,6 +6,7 @@ import pathlib
 
 import click
 import ni_measurementlink_service as nims
+import _helpers
 
 service_directory = pathlib.Path(__file__).resolve().parent
 measurement_service = nims.MeasurementService(
