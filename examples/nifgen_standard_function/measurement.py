@@ -10,6 +10,7 @@ import click
 import grpc
 import hightime
 import nifgen
+from enum import Enum
 from _helpers import (
     ServiceOptions,
     configure_logging,
@@ -36,6 +37,20 @@ measurement_service = nims.MeasurementService(
 service_options = ServiceOptions()
 
 
+class Waveform(Enum):
+    """Wrapper enum that contains a zero value."""
+
+    NONE = 0
+    SINE = nifgen.Waveform.SINE.value
+    SQUARE = nifgen.Waveform.SQUARE.value
+    TRIANGLE = nifgen.Waveform.TRIANGLE.value
+    RAMP_UP = nifgen.Waveform.RAMP_UP.value
+    RAMP_DOWN = nifgen.Waveform.RAMP_DOWN.value
+    DC = nifgen.Waveform.DC.value
+    NOISE = nifgen.Waveform.NOISE.value
+    USER = nifgen.Waveform.USER.value
+
+
 @measurement_service.register_measurement
 # TODO: Rename pin_name to pin_names and make it PinArray1D
 @measurement_service.configuration(
@@ -45,14 +60,14 @@ service_options = ServiceOptions()
     instrument_type=nims.session_management.INSTRUMENT_TYPE_NI_FGEN,
 )
 @measurement_service.configuration(
-    "waveform_type", nims.DataType.Enum, nifgen.Waveform.SINE, enum_type=nifgen.Waveform
+    "waveform_type", nims.DataType.Enum, Waveform.SINE, enum_type=Waveform
 )
 @measurement_service.configuration("frequency", nims.DataType.Double, 1.0e6)
 @measurement_service.configuration("amplitude", nims.DataType.Double, 2.0)
 @measurement_service.configuration("duration", nims.DataType.Double, 10.0)
 def measure(
     pin_name: str,
-    waveform_type: nifgen.Waveform,
+    waveform_type: Waveform,
     frequency: float,
     amplitude: float,
     duration: float,
@@ -61,7 +76,7 @@ def measure(
     logging.info(
         "Starting generation: pin_name=%s waveform_type=%s frequency=%g amplitude=%g",
         pin_name,
-        waveform_type,
+        waveform_type if waveform_type != Waveform.NONE else Waveform.SINE,
         frequency,
         amplitude,
     )
