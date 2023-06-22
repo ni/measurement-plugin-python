@@ -285,7 +285,7 @@ def test___service_config___create_measurement_service___service_info_matches_se
         ("EnumConfiguration", DataType.Enum, ColorWithoutZeroValue.GREEN, ColorWithoutZeroValue),
     ],
 )
-def test___measurement_service___add_configuration_with_invalid_enum_type__raises_type_error(
+def test___measurement_service___add_configuration_with_invalid_enum_type___raises_type_error(
     measurement_service: MeasurementService,
     display_name: str,
     type: DataType,
