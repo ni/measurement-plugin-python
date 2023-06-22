@@ -180,7 +180,7 @@ class MeasurementService:
             version=version,
             ui_file_paths=ui_file_paths,
         )
-        service_annotations = Dict[str, str]
+        service_annotations: Dict[str, str] = {}
         if "annotations" in service:
             service_annotations = service["annotations"]
 
