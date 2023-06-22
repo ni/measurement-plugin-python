@@ -15,7 +15,6 @@ from _helpers import (
     get_grpc_device_channel,
     get_service_options,
     grpc_device_options,
-    str_to_enum,
     use_simulation_option,
     verbosity_option,
 )
@@ -32,23 +31,6 @@ measurement_service = nims.MeasurementService(
 service_options = ServiceOptions()
 
 
-FUNCTION_TO_ENUM = {
-    "DC Volts": nidmm.Function.DC_VOLTS,
-    "AC Volts": nidmm.Function.AC_VOLTS,
-    "DC Current": nidmm.Function.DC_CURRENT,
-    "AC Current": nidmm.Function.AC_CURRENT,
-    "2-wire Resistance": nidmm.Function.TWO_WIRE_RES,
-    "4-wire Resistance": nidmm.Function.FOUR_WIRE_RES,
-    "Diode": nidmm.Function.DIODE,
-    "Frequency": nidmm.Function.FREQ,
-    "Period": nidmm.Function.PERIOD,
-    "AC Volts DC Coupled": nidmm.Function.AC_VOLTS_DC_COUPLED,
-    "Capacitance": nidmm.Function.CAPACITANCE,
-    "Inductance": nidmm.Function.INDUCTANCE,
-    "Temperature": nidmm.Function.TEMPERATURE,
-}
-
-
 @measurement_service.register_measurement
 @measurement_service.configuration(
     "pin_name",
@@ -56,7 +38,9 @@ FUNCTION_TO_ENUM = {
     "Pin1",
     instrument_type=nims.session_management.INSTRUMENT_TYPE_NI_DMM,
 )
-@measurement_service.configuration("measurement_type", nims.DataType.String, "DC Volts")
+@measurement_service.configuration(
+    "measurement_type", nims.DataType.Enum, nidmm.Function.DC_VOLTS, enum_type=nidmm.Function
+)
 @measurement_service.configuration("range", nims.DataType.Double, 10.0)
 @measurement_service.configuration("resolution_digits", nims.DataType.Double, 5.5)
 @measurement_service.output("measured_value", nims.DataType.Double)
@@ -64,7 +48,7 @@ FUNCTION_TO_ENUM = {
 @measurement_service.output("absolute_resolution", nims.DataType.Double)
 def measure(
     pin_name: str,
-    measurement_type: str,
+    measurement_type: nidmm.Function,
     range: float,
     resolution_digits: float,
 ) -> Tuple:
@@ -98,7 +82,7 @@ def measure(
         grpc_device_channel = get_grpc_device_channel(measurement_service, nidmm, service_options)
         with create_session(session_info, grpc_device_channel) as session:
             session.configure_measurement_digits(
-                str_to_enum(FUNCTION_TO_ENUM, measurement_type),
+                measurement_type,
                 range,
                 resolution_digits,
             )

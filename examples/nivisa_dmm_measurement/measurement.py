@@ -2,6 +2,7 @@
 
 import logging
 import pathlib
+from enum import Enum, auto
 from typing import Tuple
 
 import click
@@ -12,7 +13,6 @@ from _helpers import (
     configure_logging,
     create_session_management_client,
     get_service_options,
-    str_to_enum,
     use_simulation_option,
     verbosity_option,
 )
@@ -41,16 +41,19 @@ measurement_service = nims.MeasurementService(
 service_options = ServiceOptions()
 
 
-FUNCTION_TO_ENUM = {
-    "DC Volts": "VOLT:DC",
-    "AC Volts": "VOLT:AC",
-}
+RESOLUTION_DIGITS_TO_VALUE = {"3.5": 0.001, "4.5": 0.0001, "5.5": 1e-5, "6.5": 1e-6}
 
-RESOLUTION_DIGITS_TO_VALUE = {
-    "3.5": 0.001,
-    "4.5": 0.0001,
-    "5.5": 1e-5,
-    "6.5": 1e-6,
+
+class Function(Enum):
+    """Function that represents the measurement type."""
+
+    DC_VOLTS = auto()
+    AC_VOLTS = auto()
+
+
+FUNCTION_TO_VALUE = {
+    Function.DC_VOLTS: "VOLT:DC",
+    Function.AC_VOLTS: "VOLT:AC",
 }
 
 
@@ -58,13 +61,15 @@ RESOLUTION_DIGITS_TO_VALUE = {
 @measurement_service.configuration(
     "pin_name", nims.DataType.Pin, "Pin1", instrument_type=INSTRUMENT_TYPE_DMM_SIMULATOR
 )
-@measurement_service.configuration("measurement_type", nims.DataType.String, "DC Volts")
+@measurement_service.configuration(
+    "measurement_type", nims.DataType.Enum, Function.DC_VOLTS, enum_type=Function
+)
 @measurement_service.configuration("range", nims.DataType.Double, 1.0)
 @measurement_service.configuration("resolution_digits", nims.DataType.Double, 3.5)
 @measurement_service.output("measured_value", nims.DataType.Double)
 def measure(
     pin_name: str,
-    measurement_type: str,
+    measurement_type: Function,
     range: float,
     resolution_digits: float,
 ) -> Tuple:
@@ -109,8 +114,8 @@ def measure(
             if not session_info.session_exists:
                 reset_instrument(session)
 
-            function_enum = str_to_enum(FUNCTION_TO_ENUM, measurement_type)
-            resolution_value = str_to_enum(RESOLUTION_DIGITS_TO_VALUE, str(resolution_digits))
+            function_enum = FUNCTION_TO_VALUE[measurement_type]
+            resolution_value = RESOLUTION_DIGITS_TO_VALUE[str(resolution_digits)]
             session.write("CONF:%s %.g,%.g" % (function_enum, range, resolution_value))
             check_instrument_error(session)
 

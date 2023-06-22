@@ -15,7 +15,6 @@ from _helpers import (
     get_grpc_device_channel,
     get_service_options,
     grpc_device_options,
-    str_to_enum,
     use_simulation_option,
     verbosity_option,
 )
@@ -31,25 +30,6 @@ measurement_service = nims.MeasurementService(
 )
 service_options = ServiceOptions()
 
-VERTICAL_COUPLING_TO_ENUM = {
-    "AC": niscope.VerticalCoupling.AC,
-    "DC": niscope.VerticalCoupling.DC,
-    "GND": niscope.VerticalCoupling.GND,
-}
-
-TRIGGER_COUPLING_TO_ENUM = {
-    "AC": niscope.TriggerCoupling.AC,
-    "DC": niscope.TriggerCoupling.DC,
-    "HF Reject": niscope.TriggerCoupling.HF_REJECT,
-    "LF Reject": niscope.TriggerCoupling.LF_REJECT,
-    "AC Plus HF Reject": niscope.TriggerCoupling.AC_PLUS_HF_REJECT,
-}
-
-TRIGGER_SLOPE_TO_ENUM = {
-    "Positive": niscope.TriggerSlope.POSITIVE,
-    "Negative": niscope.TriggerSlope.NEGATIVE,
-}
-
 
 @measurement_service.register_measurement
 @measurement_service.configuration(
@@ -59,7 +39,12 @@ TRIGGER_SLOPE_TO_ENUM = {
     instrument_type=nims.session_management.INSTRUMENT_TYPE_NI_SCOPE,
 )
 @measurement_service.configuration("vertical_range", nims.DataType.Double, 5.0)
-@measurement_service.configuration("vertical_coupling", nims.DataType.String, "DC")
+@measurement_service.configuration(
+    "vertical_coupling",
+    nims.DataType.Enum,
+    niscope.VerticalCoupling.DC,
+    enum_type=niscope.VerticalCoupling,
+)
 @measurement_service.configuration("input_impedance", nims.DataType.Double, 1e6)
 @measurement_service.configuration("min_sample_rate", nims.DataType.Double, 10e6)
 @measurement_service.configuration("min_record_length", nims.DataType.Int32, 40000)
@@ -70,9 +55,19 @@ TRIGGER_SLOPE_TO_ENUM = {
     instrument_type=nims.session_management.INSTRUMENT_TYPE_NI_SCOPE,
 )
 @measurement_service.configuration("trigger_level", nims.DataType.Double, 0.5)
-@measurement_service.configuration("trigger_slope", nims.DataType.String, "Positive")
+@measurement_service.configuration(
+    "trigger_slope",
+    nims.DataType.Enum,
+    niscope.TriggerSlope.POSITIVE,
+    enum_type=niscope.TriggerSlope,
+)
 @measurement_service.configuration("auto_trigger", nims.DataType.Boolean, False)
-@measurement_service.configuration("trigger_coupling", nims.DataType.String, "DC")
+@measurement_service.configuration(
+    "trigger_coupling",
+    nims.DataType.Enum,
+    niscope.TriggerCoupling.DC,
+    enum_type=niscope.TriggerCoupling,
+)
 @measurement_service.configuration("timeout", nims.DataType.Double, 5.0)
 @measurement_service.output("waveform0", nims.DataType.DoubleArray1D)
 @measurement_service.output("waveform1", nims.DataType.DoubleArray1D)
@@ -140,7 +135,7 @@ def measure(
             session.channels[""].channel_enabled = False
             session.channels[channel_names].configure_vertical(
                 vertical_range,
-                str_to_enum(VERTICAL_COUPLING_TO_ENUM, vertical_coupling),
+                vertical_coupling,
             )
             session.channels[channel_names].configure_chan_characteristics(
                 input_impedance, max_input_frequency=0.0
@@ -155,8 +150,8 @@ def measure(
             session.configure_trigger_edge(
                 trigger_source,
                 trigger_level,
-                str_to_enum(TRIGGER_COUPLING_TO_ENUM, trigger_coupling),
-                str_to_enum(TRIGGER_SLOPE_TO_ENUM, trigger_slope),
+                trigger_coupling,
+                trigger_slope,
             )
             session.trigger_modifier = (
                 niscope.TriggerModifier.AUTO
