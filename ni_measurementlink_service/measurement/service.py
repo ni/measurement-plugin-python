@@ -180,9 +180,9 @@ class MeasurementService:
             version=version,
             ui_file_paths=ui_file_paths,
         )
-        serviceAnnotations = Dict[str,str]
+        service_annotations = Dict[str, str]
         if "annotations" in service:
-            serviceAnnotations = service["annotations"]
+            service_annotations = service["annotations"]
 
         service_annotations_string = {
             key: json.dumps(value, separators=(",", ":"))

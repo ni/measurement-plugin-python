@@ -247,7 +247,9 @@ def test___measurement_service___add_output__output_added(
 def _fake_measurement_function():
     pass
 
-noAnnotations : typing.Dict[str, str] = {}
+
+no_annotations: typing.Dict[str, str] = {}
+
 
 no_annotations: typing.Dict[str, str] = {}
 
@@ -349,6 +351,7 @@ def test___measurement_service___add_configuration_with_invalid_enum_type___rais
         measurement_service.configuration(display_name, type, default_value)(
             _fake_measurement_function
         )
+
 
 
 @pytest.fixture

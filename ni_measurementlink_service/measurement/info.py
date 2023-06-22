@@ -55,6 +55,7 @@ class ServiceInfo(NamedTuple):
     annotations: Dict[str, str] = {}
 
 
+
 class TypeSpecialization(enum.Enum):
     """Enum that represents the type specializations for measurement parameters."""
 
