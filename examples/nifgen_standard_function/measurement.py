@@ -4,13 +4,13 @@ import contextlib
 import logging
 import pathlib
 import time
+from enum import Enum
 from typing import Tuple
 
 import click
 import grpc
 import hightime
 import nifgen
-from enum import Enum
 from _helpers import (
     ServiceOptions,
     configure_logging,

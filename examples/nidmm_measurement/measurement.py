@@ -3,12 +3,12 @@
 import logging
 import math
 import pathlib
+from enum import Enum
 from typing import Tuple
 
 import click
 import grpc
 import nidmm
-from enum import Enum
 from _helpers import (
     ServiceOptions,
     configure_logging,

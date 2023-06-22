@@ -2,7 +2,7 @@
 
 import logging
 import pathlib
-from enum import Enum, auto
+from enum import Enum
 from typing import Tuple
 
 import click
