@@ -73,7 +73,6 @@ def _resolve_service_class(service_class: str, display_name: str) -> str:
     else:
         return service_class
 
-
 @click.command()
 @click.argument("display_name")
 @click.option(
@@ -105,6 +104,22 @@ def _resolve_service_class(service_class: str, display_name: str) -> str:
     help="Output directory for measurement files. Default: '<current_directory>/<display_name>'",
 )
 @click.option(
+    "-a",
+    "--annotations-description",
+    help="Short description for the Measurement",
+)
+@click.option(
+    "-c",
+    "--collection",
+    help="The collection that this measurement belongs to.",
+)
+@click.option(
+    "-t",
+    "--tags",
+    multiple=True,
+    help="Add one or multiple tags for the measurement.",
+)
+@click.option(
     "-v",
     "--verbose",
     count=True,
@@ -117,6 +132,9 @@ def create_measurement(
     service_class: str,
     description_url: str,
     directory_out: Optional[str],
+    annotations_description: Optional[str],
+    collection:  Optional[str],
+    tags: Optional[str],
     verbose: bool,
 ) -> None:
     """Generate a Python measurement service from a template.
@@ -146,6 +164,15 @@ def create_measurement(
 
     directory_out_path.mkdir(exist_ok=True, parents=True)
 
+    if annotations_description is None:
+        annotations_description = ""
+    if collection is None:
+        collection = ""
+    annotation_tags = []
+    if tags is not None:
+        for n in tags:
+            annotation_tags.append(n)
+
     _create_file(
         "measurement.py.mako",
         "measurement.py",
@@ -166,6 +193,9 @@ def create_measurement(
         service_class=service_class,
         description_url=description_url,
         ui_file_type=ui_file_type,
+        annotations_description = annotations_description,
+        collection = collection,
+        tags = annotation_tags,
     )
     if ui_file_type == "MeasurementUI":
         _create_file(

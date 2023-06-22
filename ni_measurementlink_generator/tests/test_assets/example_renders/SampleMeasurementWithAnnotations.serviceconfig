@@ -1,15 +1,15 @@
 {
   "services": [
     {
-      "displayName": "Sample Measurement",
+      "displayName": "Sample Measurement With Annotations",
       "serviceClass": "SampleMeasurement_Python",
       "descriptionUrl": "https://www.example.com/SampleMeasurement.html",
       "providedInterfaces": [ "ni.measurementlink.measurement.v1.MeasurementService" ],
       "path": "start.bat",
       "annotations": {
-        "ni/service.description": "",
-        "ni/service.collection": "",
-        "ni/service.tags": []
+        "ni/service.description": "Measurement description",
+        "ni/service.collection": "Measurement collection",
+        "ni/service.tags": ['M1', 'M2', 'M3']
       }
     }
   ]
