@@ -113,7 +113,7 @@ class DiscoveryClient:
                     service_descriptor.annotations[keys] = str(service_info_annotations[keys])
                 else:
                     service_descriptor.annotations[keys] = " ".join(
-                        [str(elem) for elem in service_info_annotations[keys]]
+                        [str(elem) for elem in str(service_info_annotations[keys])]
                     )
 
             # Registration Request Creation

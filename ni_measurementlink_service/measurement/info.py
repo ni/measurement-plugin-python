@@ -43,7 +43,7 @@ class ServiceInfo(NamedTuple):
         For e.g., ni.measurementlink.measurement.v2.MeasurementService.
         Defaults to ["ni.measurementlink.measurement.v1.MeasurementService"].
 
-        annotations (Dict<str,str>): Dictionary that contains extra information of the measurement.
+        annotations (Dict<str,object>): Dictionary that contains extra information of the measurement.
         As default we added a (str) description, (str) collection and a (List[str]) list of tags.
         Feel free to add your own Annotations as needed.
 
@@ -52,7 +52,7 @@ class ServiceInfo(NamedTuple):
     service_class: str
     description_url: str
     provided_interfaces: List[str] = ["ni.measurementlink.measurement.v1.MeasurementService"]
-    annotations: Dict[str, str] = {}
+    annotations: Dict[str, object] = {}
 
 
 class TypeSpecialization(enum.Enum):
