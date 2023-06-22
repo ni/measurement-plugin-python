@@ -3,7 +3,7 @@
 import logging
 import pathlib
 import types
-from typing import Any, Callable, NamedTuple, TypeVar
+from typing import Any, Callable, NamedTuple, TypeVar, Optional
 
 import click
 import grpc
@@ -15,7 +15,10 @@ from ni_measurementlink_service._internal.stubs.ni.measurementlink.pinmap.v1 imp
     pin_map_service_pb2,
     pin_map_service_pb2_grpc,
 )
-from ni_measurementlink_service.measurement.service import GrpcChannelPool, MeasurementService
+from ni_measurementlink_service.measurement.service import (
+    GrpcChannelPool,
+    MeasurementService,
+)
 
 
 class ServiceOptions(NamedTuple):
@@ -224,13 +227,20 @@ def use_simulation_option(default: bool) -> Callable[[F], F]:
 
 
 def get_grpc_device_channel(
-    measurement_service: MeasurementService, driver_module: types.ModuleType
-) -> grpc.Channel:
+    measurement_service: MeasurementService,
+    driver_module: types.ModuleType,
+    service_options: ServiceOptions,
+) -> Optional[grpc.Channel]:
     """Returns driver specific grpc device channel."""
-    return measurement_service.get_channel(
-        provided_interface=getattr(driver_module, "GRPC_SERVICE_INTERFACE_NAME"),
-        service_class="ni.measurementlink.v1.grpcdeviceserver",
-    )
+    if service_options.use_grpc_device:
+        if service_options.grpc_device_address:
+            return measurement_service.channel_pool.get_channel(service_options.grpc_device_address)
+
+        return measurement_service.get_channel(
+            provided_interface=getattr(driver_module, "GRPC_SERVICE_INTERFACE_NAME"),
+            service_class="ni.measurementlink.v1.grpcdeviceserver",
+        )
+    return None
 
 
 def create_session_management_client(
