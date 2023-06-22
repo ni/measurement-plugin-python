@@ -77,7 +77,7 @@ def validate_default_value_type(parameter_metadata: ParameterMetadata) -> None:
 
 
 def _validate_default_value_type_for_scalar_type(
-    default_value: Any, expected_type: type, enum_values_annotation: str, display_name: str
+    default_value: object, expected_type: type, enum_values_annotation: str, display_name: str
 ) -> None:
     """Validate and raise exception if the default value does not match the type info."""
     if enum_values_annotation:
@@ -90,7 +90,7 @@ def _validate_default_value_type_for_scalar_type(
 
 
 def _validate_default_value_type_for_repeated_type(
-    default_value: Iterable[Any],
+    default_value: Iterable[object],
     expected_type: type,
     expected_element_type: type,
     enum_values_annotation: str,
@@ -116,7 +116,7 @@ def _validate_default_value_type_for_repeated_type(
 
 
 def _validate_default_value_type_for_basic_type(
-    default_value: Any,
+    default_value: object,
     expected_type: type,
     display_name: str,
 ) -> None:
@@ -127,7 +127,7 @@ def _validate_default_value_type_for_basic_type(
 
 
 def _validate_default_value_type_for_enum_type(
-    default_value: Any,
+    default_value: object,
     user_enum: Dict[str, int],
     enum_values_annotation: str,
     display_name: str,
@@ -159,7 +159,7 @@ def get_enum_values_annotation(parameter_metadata: ParameterMetadata) -> str:
         return ""
 
 
-def _is_valid_enum_value(enum_value: Any, user_enum: Dict[str, int]) -> bool:
+def _is_valid_enum_value(enum_value: object, user_enum: Dict[str, int]) -> bool:
     if not isinstance(enum_value, Enum):
         return False
     return enum_value.name in user_enum and user_enum[enum_value.name] == enum_value.value
