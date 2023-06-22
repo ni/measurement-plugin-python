@@ -81,7 +81,7 @@ def _validate_default_value_type_for_scalar_type(
 ) -> None:
     """Validate and raise exception if the default value does not match the type info."""
     if enum_values_annotation:
-        user_enum_dict = json.loads(enum_values_annotation.replace("'", '"'))
+        user_enum_dict = json.loads(enum_values_annotation)
         _validate_default_value_type_for_enum_type(
             default_value, user_enum_dict, enum_values_annotation, display_name
         )
