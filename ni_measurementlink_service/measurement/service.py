@@ -370,7 +370,7 @@ class MeasurementService:
         enum_values = {}
         for member in enum_type:
             enum_values[member.name] = member.value
-        return f"{enum_values}"
+        return json.dumps(enum_values)
 
     def close_service(self) -> None:
         """Close the Service after un-registering with discovery service and cleanups."""
