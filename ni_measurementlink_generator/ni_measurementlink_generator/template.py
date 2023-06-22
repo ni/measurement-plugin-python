@@ -3,6 +3,7 @@ import logging
 import pathlib
 import re
 from typing import Optional
+import shutil
 
 import click
 from mako import exceptions
@@ -182,3 +183,4 @@ def create_measurement(
             ui_file=ui_file,
         )
     _create_file("start.bat.mako", "start.bat", directory_out_path)
+    shutil.copy(str(pathlib.Path(__file__).parent/"_helpers.py"), directory_out_path)
