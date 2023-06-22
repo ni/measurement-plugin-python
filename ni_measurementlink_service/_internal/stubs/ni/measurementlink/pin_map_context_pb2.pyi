@@ -25,7 +25,9 @@ class PinMapContext(google.protobuf.message.Message):
     pin_map_id: builtins.str
     """Required. The resource id of the pin map in the Pin Map service that should be used for the call."""
     @property
-    def sites(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.int]:
+    def sites(
+        self,
+    ) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.int]:
         """Optional. List of site numbers being used for the call. If unspecified, use all sites in the pin map."""
     def __init__(
         self,
@@ -33,6 +35,8 @@ class PinMapContext(google.protobuf.message.Message):
         pin_map_id: builtins.str = ...,
         sites: collections.abc.Iterable[builtins.int] | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing_extensions.Literal["pin_map_id", b"pin_map_id", "sites", b"sites"]) -> None: ...
+    def ClearField(
+        self, field_name: typing_extensions.Literal["pin_map_id", b"pin_map_id", "sites", b"sites"]
+    ) -> None: ...
 
 global___PinMapContext = PinMapContext

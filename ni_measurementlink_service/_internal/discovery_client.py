@@ -107,12 +107,14 @@ class DiscoveryClient:
             service_descriptor.description_url = service_info.description_url
             service_descriptor.provided_interfaces.extend(service_info.provided_interfaces)
 
-            ServiceInfoAnnotations =  service_info.annotations
-            for keys in ServiceInfoAnnotations:
-                if isinstance(ServiceInfoAnnotations[keys], (int, float)):
-                    service_descriptor.annotations[keys] = str(ServiceInfoAnnotations[keys])
+            service_info_annotations = service_info.annotations
+            for keys in service_info_annotations:
+                if isinstance(service_info_annotations[keys], (int, float)):
+                    service_descriptor.annotations[keys] = str(service_info_annotations[keys])
                 else:
-                    service_descriptor.annotations[keys] = ' '.join([str(elem) for elem in ServiceInfoAnnotations[keys]])
+                    service_descriptor.annotations[keys] = " ".join(
+                        [str(elem) for elem in service_info_annotations[keys]]
+                    )
 
             # Registration Request Creation
             request = discovery_service_pb2.RegisterServiceRequest(

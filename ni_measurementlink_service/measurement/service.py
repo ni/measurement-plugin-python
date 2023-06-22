@@ -180,15 +180,15 @@ class MeasurementService:
             version=version,
             ui_file_paths=ui_file_paths,
         )
-        serviceAnnotations = Dict[str,str]
+        service_annotations = Dict[str, str]
         if "annotations" in service:
-            serviceAnnotations = service["annotations"]
+            service_annotations = service["annotations"]
 
         self.service_info = ServiceInfo(
             service_class=service["serviceClass"],
             description_url=service["descriptionUrl"],
             provided_interfaces=service["providedInterfaces"],
-            annotations=serviceAnnotations,
+            annotations=service_annotations,
         )
 
         self.configuration_parameter_list: list = []

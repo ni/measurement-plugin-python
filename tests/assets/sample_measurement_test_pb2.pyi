@@ -54,12 +54,16 @@ class SampleMeasurementParameter(google.protobuf.message.Message):
     STRING_ARRAY_IN_FIELD_NUMBER: builtins.int
     float_in: builtins.float
     @property
-    def double_array_in(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.float]: ...
+    def double_array_in(
+        self,
+    ) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.float]: ...
     bool_in: builtins.bool
     string_in: builtins.str
     enum_in: global___Color.ValueType
     @property
-    def string_array_in(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]: ...
+    def string_array_in(
+        self,
+    ) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]: ...
     def __init__(
         self,
         *,
@@ -70,6 +74,20 @@ class SampleMeasurementParameter(google.protobuf.message.Message):
         enum_in: global___Color.ValueType = ...,
         string_array_in: collections.abc.Iterable[builtins.str] | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing_extensions.Literal["bool_in", b"bool_in", "double_array_in", b"double_array_in", "enum_in", b"enum_in", "float_in", b"float_in", "string_array_in", b"string_array_in", "string_in", b"string_in"]) -> None: ...
+    def ClearField(
+        self,
+        field_name: typing_extensions.Literal[
+            "bool_in",
+            b"bool_in",
+            "double_array_in",
+            b"double_array_in",
+            "float_in",
+            b"float_in",
+            "string_array_in",
+            b"string_array_in",
+            "string_in",
+            b"string_in",
+        ],
+    ) -> None: ...
 
 global___SampleMeasurementParameter = SampleMeasurementParameter

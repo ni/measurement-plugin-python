@@ -19,17 +19,16 @@ _PROVIDED_MEASUREMENT_SERVICES = [
 _PROVIDED_ANNOTATIONS = {
     "ni/service.description": "Measure inrush current with a shorted load and validate results against configured limits.",
     "ni/service.collection": "CurrentTests.Inrush",
-    "ni/service.tags": [ "powerup", "current" ],
-    "client/extra.NumberID" : 500,
-    "client/extra.Parts" : [ "A25898", "A25412" ],
-    "client/extra.GroupName" : {
-            "SpeakerType": "true",
-            "PhoneType": "false"
-        }
+    "ni/service.tags": ["powerup", "current"],
+    "client/extra.NumberID": 500,
+    "client/extra.Parts": ["A25898", "A25412"],
+    "client/extra.GroupName": {"SpeakerType": "true", "PhoneType": "false"},
 }
 
 _TEST_SERVICE_PORT = "9999"
-_TEST_SERVICE_INFO = ServiceInfo("TestServiceClass", "TestUrl", _PROVIDED_MEASUREMENT_SERVICES, _PROVIDED_ANNOTATIONS)
+_TEST_SERVICE_INFO = ServiceInfo(
+    "TestServiceClass", "TestUrl", _PROVIDED_MEASUREMENT_SERVICES, _PROVIDED_ANNOTATIONS
+)
 _TEST_MEASUREMENT_INFO = MeasurementInfo(
     display_name="TestMeasurement",
     version="1.0.0.0",
@@ -99,7 +98,6 @@ def _validate_grpc_request(request):
     assert request.service_description.description_url == _TEST_SERVICE_INFO.description_url
     assert request.service_description.display_name == _TEST_MEASUREMENT_INFO.display_name
     assert set(request.service_description.provided_interfaces) == set(
-        _PROVIDED_MEASUREMENT_SERVICES)
-    assert set(request.service_description.annotations) == set(
-        _PROVIDED_ANNOTATIONS
+        _PROVIDED_MEASUREMENT_SERVICES
     )
+    assert set(request.service_description.annotations) == set(_PROVIDED_ANNOTATIONS)

@@ -45,17 +45,40 @@ class GetMetadataResponse(google.protobuf.message.Message):
     def measurement_signature(self) -> global___MeasurementSignature:
         """Required. Specifies the signature of the measurement."""
     @property
-    def user_interface_details(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___UserInterfaceDetails]:
+    def user_interface_details(
+        self,
+    ) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[
+        global___UserInterfaceDetails
+    ]:
         """Optional. Specifies the user interfaces available for use with the measurement, if any."""
     def __init__(
         self,
         *,
         measurement_details: global___MeasurementDetails | None = ...,
         measurement_signature: global___MeasurementSignature | None = ...,
-        user_interface_details: collections.abc.Iterable[global___UserInterfaceDetails] | None = ...,
+        user_interface_details: collections.abc.Iterable[global___UserInterfaceDetails]
+        | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing_extensions.Literal["measurement_details", b"measurement_details", "measurement_signature", b"measurement_signature"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing_extensions.Literal["measurement_details", b"measurement_details", "measurement_signature", b"measurement_signature", "user_interface_details", b"user_interface_details"]) -> None: ...
+    def HasField(
+        self,
+        field_name: typing_extensions.Literal[
+            "measurement_details",
+            b"measurement_details",
+            "measurement_signature",
+            b"measurement_signature",
+        ],
+    ) -> builtins.bool: ...
+    def ClearField(
+        self,
+        field_name: typing_extensions.Literal[
+            "measurement_details",
+            b"measurement_details",
+            "measurement_signature",
+            b"measurement_signature",
+            "user_interface_details",
+            b"user_interface_details",
+        ],
+    ) -> None: ...
 
 global___GetMetadataResponse = GetMetadataResponse
 
@@ -83,8 +106,24 @@ class MeasureRequest(google.protobuf.message.Message):
         configuration_parameters: google.protobuf.any_pb2.Any | None = ...,
         pin_map_context: ni_measurementlink_pin_map_context_pb2.PinMapContext | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing_extensions.Literal["configuration_parameters", b"configuration_parameters", "pin_map_context", b"pin_map_context"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing_extensions.Literal["configuration_parameters", b"configuration_parameters", "pin_map_context", b"pin_map_context"]) -> None: ...
+    def HasField(
+        self,
+        field_name: typing_extensions.Literal[
+            "configuration_parameters",
+            b"configuration_parameters",
+            "pin_map_context",
+            b"pin_map_context",
+        ],
+    ) -> builtins.bool: ...
+    def ClearField(
+        self,
+        field_name: typing_extensions.Literal[
+            "configuration_parameters",
+            b"configuration_parameters",
+            "pin_map_context",
+            b"pin_map_context",
+        ],
+    ) -> None: ...
 
 global___MeasureRequest = MeasureRequest
 
@@ -104,7 +143,9 @@ class MeasureResponse(google.protobuf.message.Message):
         *,
         outputs: google.protobuf.any_pb2.Any | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing_extensions.Literal["outputs", b"outputs"]) -> builtins.bool: ...
+    def HasField(
+        self, field_name: typing_extensions.Literal["outputs", b"outputs"]
+    ) -> builtins.bool: ...
     def ClearField(self, field_name: typing_extensions.Literal["outputs", b"outputs"]) -> None: ...
 
 global___MeasureResponse = MeasureResponse
@@ -127,7 +168,12 @@ class MeasurementDetails(google.protobuf.message.Message):
         display_name: builtins.str = ...,
         version: builtins.str = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing_extensions.Literal["display_name", b"display_name", "version", b"version"]) -> None: ...
+    def ClearField(
+        self,
+        field_name: typing_extensions.Literal[
+            "display_name", b"display_name", "version", b"version"
+        ],
+    ) -> None: ...
 
 global___MeasurementDetails = MeasurementDetails
 
@@ -147,7 +193,11 @@ class MeasurementSignature(google.protobuf.message.Message):
     This is the gRPC full name for the message.
     """
     @property
-    def configuration_parameters(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___ConfigurationParameter]:
+    def configuration_parameters(
+        self,
+    ) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[
+        global___ConfigurationParameter
+    ]:
         """Required. Defines the configuration parameters for the measurement."""
     @property
     def configuration_defaults(self) -> google.protobuf.any_pb2.Any:
@@ -160,19 +210,39 @@ class MeasurementSignature(google.protobuf.message.Message):
     This is the gRPC full name for the message.
     """
     @property
-    def outputs(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___Output]:
+    def outputs(
+        self,
+    ) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___Output]:
         """Required. Defines the outputs for the measurement."""
     def __init__(
         self,
         *,
         configuration_parameters_message_type: builtins.str = ...,
-        configuration_parameters: collections.abc.Iterable[global___ConfigurationParameter] | None = ...,
+        configuration_parameters: collections.abc.Iterable[global___ConfigurationParameter]
+        | None = ...,
         configuration_defaults: google.protobuf.any_pb2.Any | None = ...,
         outputs_message_type: builtins.str = ...,
         outputs: collections.abc.Iterable[global___Output] | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing_extensions.Literal["configuration_defaults", b"configuration_defaults"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing_extensions.Literal["configuration_defaults", b"configuration_defaults", "configuration_parameters", b"configuration_parameters", "configuration_parameters_message_type", b"configuration_parameters_message_type", "outputs", b"outputs", "outputs_message_type", b"outputs_message_type"]) -> None: ...
+    def HasField(
+        self,
+        field_name: typing_extensions.Literal["configuration_defaults", b"configuration_defaults"],
+    ) -> builtins.bool: ...
+    def ClearField(
+        self,
+        field_name: typing_extensions.Literal[
+            "configuration_defaults",
+            b"configuration_defaults",
+            "configuration_parameters",
+            b"configuration_parameters",
+            "configuration_parameters_message_type",
+            b"configuration_parameters_message_type",
+            "outputs",
+            b"outputs",
+            "outputs_message_type",
+            b"outputs_message_type",
+        ],
+    ) -> None: ...
 
 global___MeasurementSignature = MeasurementSignature
 
@@ -190,7 +260,9 @@ class UserInterfaceDetails(google.protobuf.message.Message):
         *,
         file_url: builtins.str = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing_extensions.Literal["file_url", b"file_url"]) -> None: ...
+    def ClearField(
+        self, field_name: typing_extensions.Literal["file_url", b"file_url"]
+    ) -> None: ...
 
 global___UserInterfaceDetails = UserInterfaceDetails
 
@@ -214,7 +286,9 @@ class ConfigurationParameter(google.protobuf.message.Message):
             key: builtins.str = ...,
             value: builtins.str = ...,
         ) -> None: ...
-        def ClearField(self, field_name: typing_extensions.Literal["key", b"key", "value", b"value"]) -> None: ...
+        def ClearField(
+            self, field_name: typing_extensions.Literal["key", b"key", "value", b"value"]
+        ) -> None: ...
 
     FIELD_NUMBER_FIELD_NUMBER: builtins.int
     TYPE_FIELD_NUMBER: builtins.int
@@ -234,7 +308,9 @@ class ConfigurationParameter(google.protobuf.message.Message):
     repeated: builtins.bool
     """Required. True if this configuration parameter represents repeated data and False if it represents a scalar value."""
     @property
-    def annotations(self) -> google.protobuf.internal.containers.ScalarMap[builtins.str, builtins.str]:
+    def annotations(
+        self,
+    ) -> google.protobuf.internal.containers.ScalarMap[builtins.str, builtins.str]:
         """Optional. Represents a set of annotations on the type.
         Well-known annotations:
         - Type specialization. The keys to other annotations will be read based on the value of `ni/type_specialization` annotation.
@@ -259,7 +335,21 @@ class ConfigurationParameter(google.protobuf.message.Message):
         repeated: builtins.bool = ...,
         annotations: collections.abc.Mapping[builtins.str, builtins.str] | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing_extensions.Literal["annotations", b"annotations", "field_number", b"field_number", "name", b"name", "repeated", b"repeated", "type", b"type"]) -> None: ...
+    def ClearField(
+        self,
+        field_name: typing_extensions.Literal[
+            "annotations",
+            b"annotations",
+            "field_number",
+            b"field_number",
+            "name",
+            b"name",
+            "repeated",
+            b"repeated",
+            "type",
+            b"type",
+        ],
+    ) -> None: ...
 
 global___ConfigurationParameter = ConfigurationParameter
 
@@ -283,7 +373,9 @@ class Output(google.protobuf.message.Message):
             key: builtins.str = ...,
             value: builtins.str = ...,
         ) -> None: ...
-        def ClearField(self, field_name: typing_extensions.Literal["key", b"key", "value", b"value"]) -> None: ...
+        def ClearField(
+            self, field_name: typing_extensions.Literal["key", b"key", "value", b"value"]
+        ) -> None: ...
 
     FIELD_NUMBER_FIELD_NUMBER: builtins.int
     TYPE_FIELD_NUMBER: builtins.int
@@ -303,7 +395,9 @@ class Output(google.protobuf.message.Message):
     repeated: builtins.bool
     """Required. True if this output represents repeated data and False if it represents a scalar value."""
     @property
-    def annotations(self) -> google.protobuf.internal.containers.ScalarMap[builtins.str, builtins.str]:
+    def annotations(
+        self,
+    ) -> google.protobuf.internal.containers.ScalarMap[builtins.str, builtins.str]:
         """Optional. Represents a set of annotations on the type.
         See documentation for ConfigurationParameter annotations for more details and examples.
         """
@@ -316,6 +410,20 @@ class Output(google.protobuf.message.Message):
         repeated: builtins.bool = ...,
         annotations: collections.abc.Mapping[builtins.str, builtins.str] | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing_extensions.Literal["annotations", b"annotations", "field_number", b"field_number", "name", b"name", "repeated", b"repeated", "type", b"type"]) -> None: ...
+    def ClearField(
+        self,
+        field_name: typing_extensions.Literal[
+            "annotations",
+            b"annotations",
+            "field_number",
+            b"field_number",
+            "name",
+            b"name",
+            "repeated",
+            b"repeated",
+            "type",
+            b"type",
+        ],
+    ) -> None: ...
 
 global___Output = Output

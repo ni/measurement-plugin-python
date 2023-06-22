@@ -5,7 +5,6 @@ import enum
 import typing
 from pathlib import Path
 from typing import NamedTuple
-from typing import Dict
 
 from google.protobuf import type_pb2
 
@@ -55,6 +54,7 @@ class ServiceInfo(NamedTuple):
     description_url: str
     provided_interfaces: typing.List[str] = ["ni.measurementlink.measurement.v1.MeasurementService"]
     annotations: typing.Dict[str, str] = {}
+
 
 class TypeSpecialization(enum.Enum):
     """Enum that represents the type specializations for measurement parameters."""

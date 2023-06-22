@@ -73,24 +73,37 @@ class MeasurementParameter(google.protobuf.message.Message):
     bool_data: builtins.bool
     string_data: builtins.str
     @property
-    def double_array_data(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.float]: ...
+    def double_array_data(
+        self,
+    ) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.float]: ...
     @property
-    def float_array_data(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.float]: ...
+    def float_array_data(
+        self,
+    ) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.float]: ...
     @property
-    def int32_array_data(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.int]: ...
+    def int32_array_data(
+        self,
+    ) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.int]: ...
     @property
-    def uint32_array_data(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.int]: ...
+    def uint32_array_data(
+        self,
+    ) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.int]: ...
     @property
-    def int64_array_data(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.int]: ...
+    def int64_array_data(
+        self,
+    ) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.int]: ...
     @property
-    def uint64_array_data(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.int]: ...
+    def uint64_array_data(
+        self,
+    ) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.int]: ...
     @property
-    def bool_array_data(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.bool]: ...
+    def bool_array_data(
+        self,
+    ) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.bool]: ...
     @property
-    def string_array_data(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]: ...
-    enum_data: global___DifferentColor.ValueType
-    @property
-    def enum_array_data(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[global___DifferentColor.ValueType]: ...
+    def string_array_data(
+        self,
+    ) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]: ...
     def __init__(
         self,
         *,
@@ -113,6 +126,42 @@ class MeasurementParameter(google.protobuf.message.Message):
         enum_data: global___DifferentColor.ValueType = ...,
         enum_array_data: collections.abc.Iterable[global___DifferentColor.ValueType] | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing_extensions.Literal["bool_array_data", b"bool_array_data", "bool_data", b"bool_data", "double_array_data", b"double_array_data", "double_data", b"double_data", "enum_array_data", b"enum_array_data", "enum_data", b"enum_data", "float_array_data", b"float_array_data", "float_data", b"float_data", "int32_array_data", b"int32_array_data", "int32_data", b"int32_data", "int64_array_data", b"int64_array_data", "int64_data", b"int64_data", "string_array_data", b"string_array_data", "string_data", b"string_data", "uint32_array_data", b"uint32_array_data", "uint32_data", b"uint32_data", "uint64_array_data", b"uint64_array_data", "uint64_data", b"uint64_data"]) -> None: ...
+    def ClearField(
+        self,
+        field_name: typing_extensions.Literal[
+            "bool_array_data",
+            b"bool_array_data",
+            "bool_data",
+            b"bool_data",
+            "double_array_data",
+            b"double_array_data",
+            "double_data",
+            b"double_data",
+            "float_array_data",
+            b"float_array_data",
+            "float_data",
+            b"float_data",
+            "int32_array_data",
+            b"int32_array_data",
+            "int32_data",
+            b"int32_data",
+            "int64_array_data",
+            b"int64_array_data",
+            "int64_data",
+            b"int64_data",
+            "string_array_data",
+            b"string_array_data",
+            "string_data",
+            b"string_data",
+            "uint32_array_data",
+            b"uint32_array_data",
+            "uint32_data",
+            b"uint32_data",
+            "uint64_array_data",
+            b"uint64_array_data",
+            "uint64_data",
+            b"uint64_data",
+        ],
+    ) -> None: ...
 
 global___MeasurementParameter = MeasurementParameter

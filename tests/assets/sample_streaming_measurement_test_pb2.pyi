@@ -48,7 +48,23 @@ class SampleStreamingMeasurementParameter(google.protobuf.message.Message):
         response_interval_in_ms: builtins.int = ...,
         error_on_index: builtins.int = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing_extensions.Literal["cumulative_data", b"cumulative_data", "data_size", b"data_size", "error_on_index", b"error_on_index", "name", b"name", "num_responses", b"num_responses", "response_interval_in_ms", b"response_interval_in_ms"]) -> None: ...
+    def ClearField(
+        self,
+        field_name: typing_extensions.Literal[
+            "cumulative_data",
+            b"cumulative_data",
+            "data_size",
+            b"data_size",
+            "error_on_index",
+            b"error_on_index",
+            "name",
+            b"name",
+            "num_responses",
+            b"num_responses",
+            "response_interval_in_ms",
+            b"response_interval_in_ms",
+        ],
+    ) -> None: ...
 
 global___SampleStreamingMeasurementParameter = SampleStreamingMeasurementParameter
 
@@ -62,7 +78,9 @@ class SampleStreamingMeasurementOutput(google.protobuf.message.Message):
     name: builtins.str
     index: builtins.int
     @property
-    def data(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.int]: ...
+    def data(
+        self,
+    ) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.int]: ...
     def __init__(
         self,
         *,
@@ -70,6 +88,9 @@ class SampleStreamingMeasurementOutput(google.protobuf.message.Message):
         index: builtins.int = ...,
         data: collections.abc.Iterable[builtins.int] | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing_extensions.Literal["data", b"data", "index", b"index", "name", b"name"]) -> None: ...
+    def ClearField(
+        self,
+        field_name: typing_extensions.Literal["data", b"data", "index", b"index", "name", b"name"],
+    ) -> None: ...
 
 global___SampleStreamingMeasurementOutput = SampleStreamingMeasurementOutput

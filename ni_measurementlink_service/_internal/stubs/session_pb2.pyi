@@ -22,13 +22,20 @@ class _SessionInitializationBehavior:
     ValueType = typing.NewType("ValueType", builtins.int)
     V: typing_extensions.TypeAlias = ValueType
 
-class _SessionInitializationBehaviorEnumTypeWrapper(google.protobuf.internal.enum_type_wrapper._EnumTypeWrapper[_SessionInitializationBehavior.ValueType], builtins.type):
+class _SessionInitializationBehaviorEnumTypeWrapper(
+    google.protobuf.internal.enum_type_wrapper._EnumTypeWrapper[
+        _SessionInitializationBehavior.ValueType
+    ],
+    builtins.type,
+):
     DESCRIPTOR: google.protobuf.descriptor.EnumDescriptor
     SESSION_INITIALIZATION_BEHAVIOR_UNSPECIFIED: _SessionInitializationBehavior.ValueType  # 0
     SESSION_INITIALIZATION_BEHAVIOR_INITIALIZE_NEW: _SessionInitializationBehavior.ValueType  # 1
     SESSION_INITIALIZATION_BEHAVIOR_ATTACH_TO_EXISTING: _SessionInitializationBehavior.ValueType  # 2
 
-class SessionInitializationBehavior(_SessionInitializationBehavior, metaclass=_SessionInitializationBehaviorEnumTypeWrapper): ...
+class SessionInitializationBehavior(
+    _SessionInitializationBehavior, metaclass=_SessionInitializationBehaviorEnumTypeWrapper
+): ...
 
 SESSION_INITIALIZATION_BEHAVIOR_UNSPECIFIED: SessionInitializationBehavior.ValueType  # 0
 SESSION_INITIALIZATION_BEHAVIOR_INITIALIZE_NEW: SessionInitializationBehavior.ValueType  # 1
@@ -49,9 +56,17 @@ class Session(google.protobuf.message.Message):
         name: builtins.str = ...,
         id: builtins.int = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing_extensions.Literal["id", b"id", "name", b"name", "session", b"session"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing_extensions.Literal["id", b"id", "name", b"name", "session", b"session"]) -> None: ...
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["session", b"session"]) -> typing_extensions.Literal["name", "id"] | None: ...
+    def HasField(
+        self,
+        field_name: typing_extensions.Literal["id", b"id", "name", b"name", "session", b"session"],
+    ) -> builtins.bool: ...
+    def ClearField(
+        self,
+        field_name: typing_extensions.Literal["id", b"id", "name", b"name", "session", b"session"],
+    ) -> None: ...
+    def WhichOneof(
+        self, oneof_group: typing_extensions.Literal["session", b"session"]
+    ) -> typing_extensions.Literal["name", "id"] | None: ...
 
 global___Session = Session
 
@@ -78,7 +93,21 @@ class DeviceProperties(google.protobuf.message.Message):
         serial_number: builtins.str = ...,
         product_id: builtins.int = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing_extensions.Literal["model", b"model", "name", b"name", "product_id", b"product_id", "serial_number", b"serial_number", "vendor", b"vendor"]) -> None: ...
+    def ClearField(
+        self,
+        field_name: typing_extensions.Literal[
+            "model",
+            b"model",
+            "name",
+            b"name",
+            "product_id",
+            b"product_id",
+            "serial_number",
+            b"serial_number",
+            "vendor",
+            b"vendor",
+        ],
+    ) -> None: ...
 
 global___DeviceProperties = DeviceProperties
 
@@ -98,7 +127,11 @@ class EnumerateDevicesResponse(google.protobuf.message.Message):
 
     DEVICES_FIELD_NUMBER: builtins.int
     @property
-    def devices(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___DeviceProperties]: ...
+    def devices(
+        self,
+    ) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[
+        global___DeviceProperties
+    ]: ...
     def __init__(
         self,
         *,
@@ -124,7 +157,12 @@ class ReserveRequest(google.protobuf.message.Message):
         reservation_id: builtins.str = ...,
         client_id: builtins.str = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing_extensions.Literal["client_id", b"client_id", "reservation_id", b"reservation_id"]) -> None: ...
+    def ClearField(
+        self,
+        field_name: typing_extensions.Literal[
+            "client_id", b"client_id", "reservation_id", b"reservation_id"
+        ],
+    ) -> None: ...
 
 global___ReserveRequest = ReserveRequest
 
@@ -139,7 +177,9 @@ class ReserveResponse(google.protobuf.message.Message):
         *,
         is_reserved: builtins.bool = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing_extensions.Literal["is_reserved", b"is_reserved"]) -> None: ...
+    def ClearField(
+        self, field_name: typing_extensions.Literal["is_reserved", b"is_reserved"]
+    ) -> None: ...
 
 global___ReserveResponse = ReserveResponse
 
@@ -159,7 +199,12 @@ class IsReservedByClientRequest(google.protobuf.message.Message):
         reservation_id: builtins.str = ...,
         client_id: builtins.str = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing_extensions.Literal["client_id", b"client_id", "reservation_id", b"reservation_id"]) -> None: ...
+    def ClearField(
+        self,
+        field_name: typing_extensions.Literal[
+            "client_id", b"client_id", "reservation_id", b"reservation_id"
+        ],
+    ) -> None: ...
 
 global___IsReservedByClientRequest = IsReservedByClientRequest
 
@@ -174,7 +219,9 @@ class IsReservedByClientResponse(google.protobuf.message.Message):
         *,
         is_reserved: builtins.bool = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing_extensions.Literal["is_reserved", b"is_reserved"]) -> None: ...
+    def ClearField(
+        self, field_name: typing_extensions.Literal["is_reserved", b"is_reserved"]
+    ) -> None: ...
 
 global___IsReservedByClientResponse = IsReservedByClientResponse
 
@@ -194,7 +241,12 @@ class UnreserveRequest(google.protobuf.message.Message):
         reservation_id: builtins.str = ...,
         client_id: builtins.str = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing_extensions.Literal["client_id", b"client_id", "reservation_id", b"reservation_id"]) -> None: ...
+    def ClearField(
+        self,
+        field_name: typing_extensions.Literal[
+            "client_id", b"client_id", "reservation_id", b"reservation_id"
+        ],
+    ) -> None: ...
 
 global___UnreserveRequest = UnreserveRequest
 
@@ -209,7 +261,9 @@ class UnreserveResponse(google.protobuf.message.Message):
         *,
         is_unreserved: builtins.bool = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing_extensions.Literal["is_unreserved", b"is_unreserved"]) -> None: ...
+    def ClearField(
+        self, field_name: typing_extensions.Literal["is_unreserved", b"is_unreserved"]
+    ) -> None: ...
 
 global___UnreserveResponse = UnreserveResponse
 
@@ -234,6 +288,8 @@ class ResetServerResponse(google.protobuf.message.Message):
         *,
         is_server_reset: builtins.bool = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing_extensions.Literal["is_server_reset", b"is_server_reset"]) -> None: ...
+    def ClearField(
+        self, field_name: typing_extensions.Literal["is_server_reset", b"is_server_reset"]
+    ) -> None: ...
 
 global___ResetServerResponse = ResetServerResponse
