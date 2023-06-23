@@ -4,7 +4,6 @@ import contextlib
 import logging
 import pathlib
 import time
-from enum import Enum
 from typing import Tuple
 
 import click
@@ -39,6 +38,7 @@ service_options = ServiceOptions()
 
 WaveformWrapper = generate_wrapper_enum(nifgen.Waveform)
 
+
 @measurement_service.register_measurement
 # TODO: Rename pin_name to pin_names and make it PinArray1D
 @measurement_service.configuration(
@@ -64,7 +64,7 @@ def measure(
     logging.info(
         "Starting generation: pin_name=%s waveform_type=%s frequency=%g amplitude=%g",
         pin_name,
-        nifgen.Waveform(waveform_type.value) if waveform_type != WaveformWrapper.NONE else nifgen.Waveform.SINE,
+        nifgen.Waveform(waveform_type.value) if waveform_type.value != 0 else nifgen.Waveform.SINE,
         frequency,
         amplitude,
     )
@@ -105,7 +105,9 @@ def measure(
 
             channels = session.channels[session_info.channel_list]
             channels.configure_standard_waveform(
-                nifgen.Waveform(waveform_type.value) if waveform_type != WaveformWrapper.NONE else nifgen.Waveform.SINE,
+                nifgen.Waveform(waveform_type.value)
+                if waveform_type.value != 0
+                else nifgen.Waveform.SINE,
                 amplitude,
                 frequency,
             )

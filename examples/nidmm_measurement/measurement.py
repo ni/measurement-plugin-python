@@ -3,7 +3,6 @@
 import logging
 import math
 import pathlib
-from enum import Enum
 from typing import Tuple
 
 import click
@@ -33,6 +32,7 @@ measurement_service = nims.MeasurementService(
 service_options = ServiceOptions()
 
 FunctionWrapper = generate_wrapper_enum(nidmm.Function)
+
 
 @measurement_service.register_measurement
 @measurement_service.configuration(
@@ -85,7 +85,9 @@ def measure(
         grpc_device_channel = get_grpc_device_channel(measurement_service, nidmm, service_options)
         with create_session(session_info, grpc_device_channel) as session:
             session.configure_measurement_digits(
-                nidmm.Function(measurement_type.value) if measurement_type != FunctionWrapper.NONE else nidmm.Function.DC_VOLTS,
+                nidmm.Function(measurement_type.value)
+                if measurement_type.value != 0
+                else nidmm.Function.DC_VOLTS,
                 range,
                 resolution_digits,
             )
