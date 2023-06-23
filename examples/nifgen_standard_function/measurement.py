@@ -64,7 +64,7 @@ def measure(
     logging.info(
         "Starting generation: pin_name=%s waveform_type=%s frequency=%g amplitude=%g",
         pin_name,
-        nifgen.Waveform(waveform_type.value) if waveform_type.value != 0 else nifgen.Waveform.SINE,
+        waveform_type,
         frequency,
         amplitude,
     )
