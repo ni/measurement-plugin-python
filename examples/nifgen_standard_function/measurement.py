@@ -76,7 +76,7 @@ def measure(
     logging.info(
         "Starting generation: pin_name=%s waveform_type=%s frequency=%g amplitude=%g",
         pin_name,
-        waveform_type if waveform_type != Waveform.NONE else Waveform.SINE,
+        nifgen.Waveform(waveform_type.value) if waveform_type != Waveform.NONE else nifgen.Waveform.SINE,
         frequency,
         amplitude,
     )
@@ -117,7 +117,7 @@ def measure(
 
             channels = session.channels[session_info.channel_list]
             channels.configure_standard_waveform(
-                waveform_type,
+                nifgen.Waveform(waveform_type.value) if waveform_type != Waveform.NONE else nifgen.Waveform.SINE,
                 amplitude,
                 frequency,
             )
