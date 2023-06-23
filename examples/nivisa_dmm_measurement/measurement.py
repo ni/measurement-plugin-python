@@ -2,7 +2,7 @@
 
 import logging
 import pathlib
-from enum import Enum, auto
+from enum import Enum
 from typing import Tuple
 
 import click
@@ -47,8 +47,8 @@ RESOLUTION_DIGITS_TO_VALUE = {"3.5": 0.001, "4.5": 0.0001, "5.5": 1e-5, "6.5": 1
 class Function(Enum):
     """Function that represents the measurement type."""
 
-    DC_VOLTS = auto()
-    AC_VOLTS = auto()
+    DC_VOLTS = 0
+    AC_VOLTS = 1
 
 
 FUNCTION_TO_VALUE = {
