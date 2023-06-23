@@ -1,0 +1,49 @@
+name: Check examples
+
+on:
+  workflow_call:
+  workflow_dispatch:
+
+env:
+  POETRY_VERSION: 1.2.2
+  PYTHON_VERSION: 3.9
+
+jobs:
+  check_examples:
+    name: Check examples
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: Set up Poetry
+        uses: Gr1N/setup-poetry@v8
+        with:
+          poetry-version: ${{ env.POETRY_VERSION }}
+      - name: Cache Poetry virtualenv
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/pypoetry/virtualenvs
+          key: ${{ runner.os }}-poetry-${{ hashFiles('poetry.lock') }}
+      # Install each example's dependencies so mypy can see their types.
+      - name: Install examples
+        run: |
+          for example in examples/*/; do
+            echo "::group::$example"
+            pushd $example
+            poetry install -v
+            popd
+            echo "::endgroup::"
+          done
+      - name: Mypy static analysis (examples)
+        run: |
+          for example in examples/*/; do
+            echo "::group::$example"
+            pushd $example
+            poetry run mypy .
+            popd
+            echo "::endgroup::"
+          done

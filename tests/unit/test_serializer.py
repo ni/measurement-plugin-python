@@ -1,10 +1,24 @@
 """Contains tests to validate serializer.py."""
+from enum import Enum
+
 import pytest
 from google.protobuf import any_pb2, type_pb2
 
 from ni_measurementlink_service._internal.parameter import serializer
-from ni_measurementlink_service._internal.parameter.metadata import ParameterMetadata
+from ni_measurementlink_service._internal.parameter.metadata import (
+    ParameterMetadata,
+    TypeSpecialization,
+)
 from tests.assets import test_pb2
+
+
+class DifferentColor(Enum):
+    """Non-primary colors used for testing enum-typed config and output."""
+
+    PURPLE = 0
+    ORANGE = 1
+    TEAL = 2
+    BROWN = 3
 
 
 @pytest.mark.parametrize(
@@ -27,6 +41,8 @@ from tests.assets import test_pb2
             [0, 1, 399],
             [True, False, True],
             ["String1, String2"],
+            DifferentColor.ORANGE,
+            [DifferentColor.TEAL, DifferentColor.BROWN],
         ],
         [
             -0.9999,
@@ -45,6 +61,8 @@ from tests.assets import test_pb2
             [0, 1, 399],
             [True, False, True],
             ["String1, String2"],
+            DifferentColor.ORANGE,
+            [DifferentColor.TEAL, DifferentColor.BROWN],
         ],
     ],
 )
@@ -78,6 +96,8 @@ def test___serializer___serialize_parameter___successful_serialization(test_valu
             [0, 1, 399],
             [True, False, True],
             ["String1, String2"],
+            DifferentColor.ORANGE,
+            [DifferentColor.TEAL, DifferentColor.BROWN],
         ],
         [
             -0.9999,
@@ -96,6 +116,8 @@ def test___serializer___serialize_parameter___successful_serialization(test_valu
             [0, 1, 399],
             [True, False, True],
             ["String1, String2"],
+            DifferentColor.ORANGE,
+            [DifferentColor.TEAL, DifferentColor.BROWN],
         ],
     ],
 )
@@ -128,6 +150,8 @@ def test___serializer___serialize_default_parameter___successful_serialization(d
             [0, 1, 399],
             [True, False, True],
             ["String1", "String2"],
+            DifferentColor.ORANGE,
+            [DifferentColor.TEAL, DifferentColor.BROWN],
         ]
     ],
 )
@@ -268,6 +292,26 @@ def _get_test_parameter_by_id(default_values):
             default_value=default_values[15],
             annotations={},
         ),
+        17: ParameterMetadata(
+            display_name="enum_data",
+            type=type_pb2.Field.TYPE_ENUM,
+            repeated=False,
+            default_value=default_values[16],
+            annotations={
+                "ni/type_specialization": TypeSpecialization.Enum.value,
+                "ni/enum.values": '{"PURPLE": 0, "ORANGE": 1, "TEAL": 2, "BROWN": 3}',
+            },
+        ),
+        18: ParameterMetadata(
+            display_name="enum_array_data",
+            type=type_pb2.Field.TYPE_ENUM,
+            repeated=True,
+            default_value=default_values[17],
+            annotations={
+                "ni/type_specialization": TypeSpecialization.Enum.value,
+                "ni/enum.values": '{"PURPLE": 0, "ORANGE": 1, "TEAL": 2, "BROWN": 3}',
+            },
+        ),
     }
     return parameter_by_id
 
@@ -290,4 +334,6 @@ def _get_test_grpc_message(test_values):
     parameter.uint64_array_data.extend(test_values[13])
     parameter.bool_array_data.extend(test_values[14])
     parameter.string_array_data.extend(test_values[15])
+    parameter.enum_data = test_values[16].value
+    parameter.enum_array_data.extend(list(map(lambda x: x.value, test_values[17])))
     return parameter

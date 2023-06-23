@@ -4,9 +4,7 @@ from typing import cast
 
 import pytest
 
-from ni_measurementlink_service._internal.discovery_client import (
-    DiscoveryClient,
-)
+from ni_measurementlink_service._internal.discovery_client import DiscoveryClient
 from ni_measurementlink_service._internal.stubs.ni.measurementlink.discovery.v1.discovery_service_pb2_grpc import (
     DiscoveryServiceStub,
 )

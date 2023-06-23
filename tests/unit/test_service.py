@@ -1,11 +1,29 @@
 """Tests to validated user facing decorators in service.py."""
 import pathlib
-from typing import List
+from enum import Enum
+from typing import List, Type
 
 import pytest
 
 from ni_measurementlink_service.measurement.info import DataType, TypeSpecialization
 from ni_measurementlink_service.measurement.service import MeasurementService
+
+
+class Color(Enum):
+    """Primary colors used for testing enum-typed config and output."""
+
+    NONE = 0
+    RED = 1
+    GREEN = 2
+    BLUE = 3
+
+
+class ColorWithoutZeroValue(Enum):
+    """Enum with missing zero value used for testing enum-typed config and output."""
+
+    RED = 1
+    GREEN = 2
+    BLUE = 3
 
 
 def test___measurement_service___register_measurement_method___method_registered(
@@ -258,6 +276,26 @@ def test___service_config___create_measurement_service___service_info_matches_se
         measurement_service.service_info.description_url
         == "https://www.example.com/SampleMeasurement.html"
     )
+
+
+@pytest.mark.parametrize(
+    "display_name,type,default_value,enum_type",
+    [
+        ("EnumConfiguration", DataType.Enum, Color.GREEN, None),
+        ("EnumConfiguration", DataType.Enum, ColorWithoutZeroValue.GREEN, ColorWithoutZeroValue),
+    ],
+)
+def test___measurement_service___add_configuration_with_invalid_enum_type___raises_type_error(
+    measurement_service: MeasurementService,
+    display_name: str,
+    type: DataType,
+    default_value: object,
+    enum_type: Type[Enum],
+):
+    with pytest.raises(ValueError):
+        measurement_service.configuration(display_name, type, default_value)(
+            _fake_measurement_function
+        )
 
 
 @pytest.fixture

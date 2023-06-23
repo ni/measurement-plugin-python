@@ -3,10 +3,11 @@
 from __future__ import annotations
 
 import json
+from enum import Enum
 from os import path
 from pathlib import Path
 from threading import Lock
-from typing import Any, Callable, Dict, List, Optional, TypeVar
+from typing import Any, Callable, Dict, List, Optional, Type, TypeVar
 
 import grpc
 
@@ -215,7 +216,13 @@ class MeasurementService:
         return measurement_function
 
     def configuration(
-        self, display_name: str, type: DataType, default_value: Any, *, instrument_type: str = ""
+        self,
+        display_name: str,
+        type: DataType,
+        default_value: Any,
+        *,
+        instrument_type: str = "",
+        enum_type: Optional[Type[Enum]] = None,
     ) -> Callable:
         """Add a configuration parameter to a measurement function.
 
@@ -234,7 +241,7 @@ class MeasurementService:
 
             default_value (Any): Default value of the configuration.
 
-            instrument_type (str): Optional.
+            instrument_type (Optional[str]):
             Filter pins by instrument type. This is only supported when configuration type
             is DataType.Pin. Pin maps have built in instrument definitions using the
             NI driver based instrument type ids. These can be found as constants
@@ -243,6 +250,10 @@ class MeasurementService:
             For custom instruments the user defined instrument type id is defined in the
             pin map file.
 
+            enum_type (Optional[Type[Enum]]):
+            Defines the enum type associated with this configuration parameter. This is only
+            supported when configuration type is DataType.Enum or DataType.EnumArray1D.
+
         Returns
         -------
             Callable: Callable that takes in Any Python Function
@@ -250,7 +261,9 @@ class MeasurementService:
 
         """
         grpc_field_type, repeated, type_specialization = type.value
-        annotations = self._get_annotations(type_specialization, instrument_type)
+        annotations = self._make_annotations_dict(
+            type_specialization, instrument_type=instrument_type, enum_type=enum_type
+        )
         parameter = parameter_metadata.ParameterMetadata(
             display_name, grpc_field_type, repeated, default_value, annotations
         )
@@ -262,15 +275,17 @@ class MeasurementService:
 
         return _configuration
 
-    def output(self, display_name: str, type: DataType) -> Callable:
-        """Add a output parameter to a measurement function.
+    def output(
+        self, display_name: str, type: DataType, *, enum_type: Optional[Type[Enum]] = None
+    ) -> Callable:
+        """Add an output parameter to a measurement function.
 
         This decorator maps the measurement service's output parameters to
         the elements of the tuple returned by the measurement function.
         To add multiple output parameters to the same measurement function,
         use this decorator multiple times.
         The order of decorator calls must match the order of elements
-        returned by the measurement fuction.
+        returned by the measurement function.
 
         See also: :func:`.register_measurement`
 
@@ -280,6 +295,10 @@ class MeasurementService:
 
             type (DataType): Data type of the output.
 
+            enum_type (Optional[Type[Enum]]):
+            Defines the enum type associated with this configuration parameter. This is only
+            supported when configuration type is DataType.Enum or DataType.EnumArray1D.
+
         Returns
         -------
             Callable: Callable that takes in Any Python Function and
@@ -287,8 +306,9 @@ class MeasurementService:
 
         """
         grpc_field_type, repeated, type_specialization = type.value
+        annotations = self._make_annotations_dict(type_specialization, enum_type=enum_type)
         parameter = parameter_metadata.ParameterMetadata(
-            display_name, grpc_field_type, repeated, default_value=None, annotations={}
+            display_name, grpc_field_type, repeated, None, annotations
         )
         self.output_parameter_list.append(parameter)
 
@@ -321,8 +341,12 @@ class MeasurementService:
         )
         return self
 
-    def _get_annotations(
-        self, type_specialization: TypeSpecialization, instrument_type: str
+    def _make_annotations_dict(
+        self,
+        type_specialization: TypeSpecialization,
+        *,
+        instrument_type: str = "",
+        enum_type: Optional[Type[Enum]] = None,
     ) -> Dict[str, str]:
         annotations: Dict[str, str] = {}
         if type_specialization == TypeSpecialization.NoType:
@@ -332,8 +356,21 @@ class MeasurementService:
         if type_specialization == TypeSpecialization.Pin:
             if instrument_type != "" or instrument_type is not None:
                 annotations["ni/pin.instrument_type"] = instrument_type
+        if type_specialization == TypeSpecialization.Enum:
+            if enum_type is not None:
+                annotations["ni/enum.values"] = self._enum_to_annotations_value(enum_type)
+            else:
+                raise ValueError("enum_type is required for enum parameters.")
 
         return annotations
+
+    def _enum_to_annotations_value(self, enum_type: Type[Enum]) -> str:
+        if not any(member.value == 0 for member in enum_type):
+            raise ValueError("The enum does not have a value for 0.")
+        enum_values = {}
+        for member in enum_type:
+            enum_values[member.name] = member.value
+        return json.dumps(enum_values)
 
     def close_service(self) -> None:
         """Close the Service after un-registering with discovery service and cleanups."""

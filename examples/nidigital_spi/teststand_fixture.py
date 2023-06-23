@@ -1,8 +1,9 @@
 """Functions to set up and tear down sessions of NI Digital Pattern instruments in NI TestStand."""
-from typing import Any, Dict, Iterable
+from typing import Any, Iterable
 
 import nidigital
 from _helpers import GrpcChannelPoolHelper, PinMapClient, TestStandSupport
+from _nidigital_helpers import create_session
 
 import ni_measurementlink_service as nims
 from ni_measurementlink_service.session_management import (
@@ -191,36 +192,17 @@ def _reserve_sessions(
     )
 
 
-def _create_nidigital_session(
-    grpc_channel_pool: GrpcChannelPoolHelper,
-    session_info: nims.session_management.SessionInformation,
-    initialization_behavior=nidigital.SessionInitializationBehavior.AUTO,
-) -> nidigital.Session:
-    options: Dict[str, Any] = {}
-    if USE_SIMULATION:
-        options["simulate"] = True
-        options["driver_setup"] = {"Model": "6570"}
-
-    grpc_channel = grpc_channel_pool.get_grpc_device_channel(nidigital.GRPC_SERVICE_INTERFACE_NAME)
-    grpc_options = nidigital.GrpcSessionOptions(
-        grpc_channel,
-        session_info.session_name,
-        initialization_behavior=initialization_behavior,
-    )
-
-    return nidigital.Session(
-        resource_name=session_info.resource_name, options=options, grpc_options=grpc_options
-    )
-
-
 def _create_new_nidigital_session(
     grpc_channel_pool: GrpcChannelPoolHelper,
     session_info: nims.session_management.SessionInformation,
 ) -> nidigital.Session:
-    return _create_nidigital_session(
-        grpc_channel_pool,
+    grpc_device_channel = grpc_channel_pool.get_grpc_device_channel(
+        nidigital.GRPC_SERVICE_INTERFACE_NAME
+    )
+    return create_session(
         session_info,
-        nidigital.SessionInitializationBehavior.INITIALIZE_SERVER_SESSION,
+        grpc_device_channel,
+        initialization_behavior=nidigital.SessionInitializationBehavior.INITIALIZE_SERVER_SESSION,
     )
 
 
@@ -228,8 +210,11 @@ def _attach_nidigital_session(
     grpc_channel_pool: GrpcChannelPoolHelper,
     session_info: nims.session_management.SessionInformation,
 ) -> nidigital.Session:
-    return _create_nidigital_session(
-        grpc_channel_pool,
+    grpc_device_channel = grpc_channel_pool.get_grpc_device_channel(
+        nidigital.GRPC_SERVICE_INTERFACE_NAME
+    )
+    return create_session(
         session_info,
-        nidigital.SessionInitializationBehavior.ATTACH_TO_SERVER_SESSION,
+        grpc_device_channel,
+        initialization_behavior=nidigital.SessionInitializationBehavior.ATTACH_TO_SERVER_SESSION,
     )

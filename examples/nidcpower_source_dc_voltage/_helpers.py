@@ -3,7 +3,16 @@
 import logging
 import pathlib
 import types
-from typing import Any, Callable, Dict, NamedTuple, TypeVar
+from typing import (
+    Any,
+    Callable,
+    List,
+    NamedTuple,
+    Optional,
+    Tuple,
+    TypeVar,
+    Union,
+)
 
 import click
 import grpc
@@ -15,7 +24,10 @@ from ni_measurementlink_service._internal.stubs.ni.measurementlink.pinmap.v1 imp
     pin_map_service_pb2,
     pin_map_service_pb2_grpc,
 )
-from ni_measurementlink_service.measurement.service import GrpcChannelPool, MeasurementService
+from ni_measurementlink_service.measurement.service import (
+    GrpcChannelPool,
+    MeasurementService,
+)
 
 
 class ServiceOptions(NamedTuple):
@@ -37,18 +49,6 @@ def get_service_options(**kwargs) -> ServiceOptions:
 
 
 T = TypeVar("T")
-
-
-def str_to_enum(mapping: Dict[str, T], value: str) -> T:
-    """Convert a string to an enum (with improved error reporting)."""
-    try:
-        return mapping[value]
-    except KeyError as e:
-        logging.error("Unsupported enum value %s", value)
-        raise grpc.RpcError(
-            grpc.StatusCode.INVALID_ARGUMENT,
-            f'Unsupported enum value "{value}"',
-        ) from e
 
 
 class PinMapClient(object):
@@ -236,13 +236,20 @@ def use_simulation_option(default: bool) -> Callable[[F], F]:
 
 
 def get_grpc_device_channel(
-    measurement_service: MeasurementService, driver_module: types.ModuleType
-) -> grpc.Channel:
+    measurement_service: MeasurementService,
+    driver_module: types.ModuleType,
+    service_options: ServiceOptions,
+) -> Optional[grpc.Channel]:
     """Returns driver specific grpc device channel."""
-    return measurement_service.get_channel(
-        provided_interface=getattr(driver_module, "GRPC_SERVICE_INTERFACE_NAME"),
-        service_class="ni.measurementlink.v1.grpcdeviceserver",
-    )
+    if service_options.use_grpc_device:
+        if service_options.grpc_device_address:
+            return measurement_service.channel_pool.get_channel(service_options.grpc_device_address)
+
+        return measurement_service.get_channel(
+            provided_interface=getattr(driver_module, "GRPC_SERVICE_INTERFACE_NAME"),
+            service_class="ni.measurementlink.v1.grpcdeviceserver",
+        )
+    return None
 
 
 def create_session_management_client(
@@ -255,3 +262,41 @@ def create_session_management_client(
             service_class=nims.session_management.GRPC_SERVICE_CLASS,
         )
     )
+
+
+def get_session_and_channel_for_pin(
+    session_info: List[nims.session_management.SessionInformation],
+    pin: str,
+    site: Optional[int] = None,
+) -> Tuple[int, List[str]]:
+    """Returns the session information based on the given pin names."""
+    session_and_channel_info = get_sessions_and_channels_for_pins(
+        session_info=session_info, pins=[pin], site=site
+    )
+
+    if len(session_and_channel_info) != 1:
+        raise ValueError(f"Unsupported number of sessions for {pin}: {len(session_info)}")
+    return session_and_channel_info[0]
+
+
+def get_sessions_and_channels_for_pins(
+    session_info: List[nims.session_management.SessionInformation],
+    pins: Union[str, List[str]],
+    site: Optional[int] = None,
+) -> List[Tuple[int, List[str]]]:
+    """Returns the session information based on the given pin names."""
+    pin_names = [pins] if isinstance(pins, str) else pins
+    session_and_channel_info = []
+    for session_index, session_details in enumerate(session_info):
+        channel_list = [
+            mapping.channel
+            for mapping in session_details.channel_mappings
+            if mapping.pin_or_relay_name in pin_names and (site is None or mapping.site == site)
+        ]
+        if len(channel_list) != 0:
+            session_and_channel_info.append((session_index, channel_list))
+
+    if len(session_and_channel_info) == 0:
+        raise KeyError(f"Pin(s) {pins} and site {site} not found")
+
+    return session_and_channel_info

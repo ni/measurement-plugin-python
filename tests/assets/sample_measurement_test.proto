@@ -13,10 +13,18 @@ option csharp_namespace = "NationalInstruments.MeasurementServices.Measurements"
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
 
+enum Color{
+    NONE = 0;
+    RED = 1;
+    GREEN = 2;
+    BLUE = 3;
+}
+
 message SampleMeasurementParameter {
     float float_in = 1;
     repeated double double_array_in = 2;
     bool bool_in = 3;
     string string_in = 4;
-    repeated string string_array_in = 5;
+    Color enum_in = 5;
+    repeated string string_array_in = 6;
 }

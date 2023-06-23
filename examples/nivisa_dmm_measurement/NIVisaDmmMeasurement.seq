@@ -4608,6 +4608,9 @@
 																				<TypeSpecialization classname='Str'>
 																					<value>Pin</value>
 																				</TypeSpecialization>
+																				<EnumDefinition classname='Objs'>
+																					<value lbound='[0]' ubound='[]'/>
+																				</EnumDefinition>
 																			</subprops>
 																		</Obj>
 																	</value>
@@ -4618,7 +4621,7 @@
 																					<value>measurement_type</value>
 																				</Name>
 																				<ArgumentValue classname='ExprValue'>
-																					<value>"DC Volts"</value>
+																					<value>0i64</value>
 																				</ArgumentValue>
 																				<Direction classname='Str'>
 																					<value>In</value>
@@ -4630,14 +4633,28 @@
 																					<value representation='UInt64'>0</value>
 																				</Dimension>
 																				<Type classname='Str'>
-																					<value>TypeString</value>
+																					<value>TypeEnum</value>
 																				</Type>
 																				<ID classname='Num'>
 																					<value representation='Int64'>2</value>
 																				</ID>
 																				<TypeSpecialization classname='Str'>
-																					<value>None</value>
+																					<value>Enum</value>
 																				</TypeSpecialization>
+																				<EnumDefinition classname='Objs'>
+																					<value lbound='[0]' ubound='[1]'>
+																						<value>
+																							<Num name='DC_VOLTS'>
+																								<value representation='Int64'>0</value>
+																							</Num>
+																						</value>
+																						<value>
+																							<Num name='AC_VOLTS'>
+																								<value representation='Int64'>1</value>
+																							</Num>
+																						</value>
+																					</value>
+																				</EnumDefinition>
 																			</subprops>
 																		</Obj>
 																	</value>
@@ -4668,6 +4685,9 @@
 																				<TypeSpecialization classname='Str'>
 																					<value>None</value>
 																				</TypeSpecialization>
+																				<EnumDefinition classname='Objs'>
+																					<value lbound='[0]' ubound='[]'/>
+																				</EnumDefinition>
 																			</subprops>
 																		</Obj>
 																	</value>
@@ -4698,6 +4718,9 @@
 																				<TypeSpecialization classname='Str'>
 																					<value>None</value>
 																				</TypeSpecialization>
+																				<EnumDefinition classname='Objs'>
+																					<value lbound='[0]' ubound='[]'/>
+																				</EnumDefinition>
 																			</subprops>
 																		</Obj>
 																	</value>
@@ -4728,6 +4751,9 @@
 																				<TypeSpecialization classname='Str'>
 																					<value>None</value>
 																				</TypeSpecialization>
+																				<EnumDefinition classname='Objs'>
+																					<value lbound='[0]' ubound='[]'/>
+																				</EnumDefinition>
 																			</subprops>
 																		</Obj>
 																	</value>

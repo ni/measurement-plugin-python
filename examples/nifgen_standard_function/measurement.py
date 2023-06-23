@@ -4,7 +4,8 @@ import contextlib
 import logging
 import pathlib
 import time
-from typing import Any, Dict, Tuple
+from enum import Enum
+from typing import Tuple
 
 import click
 import grpc
@@ -13,18 +14,16 @@ import nifgen
 from _helpers import (
     ServiceOptions,
     configure_logging,
+    create_session_management_client,
+    get_grpc_device_channel,
     get_service_options,
     grpc_device_options,
-    str_to_enum,
     use_simulation_option,
     verbosity_option,
 )
+from _nifgen_helpers import USE_SIMULATION, create_session
 
 import ni_measurementlink_service as nims
-
-# To use a physical NI waveform generator instrument, set this to False or specify
-# --no-use-simulation on the command line.
-USE_SIMULATION = True
 
 NIFGEN_OPERATION_TIMED_OUT_ERROR_CODE = -1074098044
 NIFGEN_MAX_TIME_EXCEEDED_ERROR_CODE = -1074118637
@@ -37,15 +36,19 @@ measurement_service = nims.MeasurementService(
 )
 service_options = ServiceOptions()
 
-WAVEFORM_TYPE_TO_ENUM = {
-    "Sine": nifgen.Waveform.SINE,
-    "Square": nifgen.Waveform.SQUARE,
-    "Triangle": nifgen.Waveform.TRIANGLE,
-    "Ramp Up": nifgen.Waveform.RAMP_UP,
-    "Ramp Down": nifgen.Waveform.RAMP_DOWN,
-    "DC": nifgen.Waveform.DC,
-    "Noise": nifgen.Waveform.NOISE,
-}
+
+class Waveform(Enum):
+    """Wrapper enum that contains a zero value."""
+
+    NONE = 0
+    SINE = nifgen.Waveform.SINE.value
+    SQUARE = nifgen.Waveform.SQUARE.value
+    TRIANGLE = nifgen.Waveform.TRIANGLE.value
+    RAMP_UP = nifgen.Waveform.RAMP_UP.value
+    RAMP_DOWN = nifgen.Waveform.RAMP_DOWN.value
+    DC = nifgen.Waveform.DC.value
+    NOISE = nifgen.Waveform.NOISE.value
+    USER = nifgen.Waveform.USER.value
 
 
 @measurement_service.register_measurement
@@ -56,13 +59,15 @@ WAVEFORM_TYPE_TO_ENUM = {
     "Pin1",
     instrument_type=nims.session_management.INSTRUMENT_TYPE_NI_FGEN,
 )
-@measurement_service.configuration("waveform_type", nims.DataType.String, "Sine")
+@measurement_service.configuration(
+    "waveform_type", nims.DataType.Enum, Waveform.SINE, enum_type=Waveform
+)
 @measurement_service.configuration("frequency", nims.DataType.Double, 1.0e6)
 @measurement_service.configuration("amplitude", nims.DataType.Double, 2.0)
 @measurement_service.configuration("duration", nims.DataType.Double, 10.0)
 def measure(
     pin_name: str,
-    waveform_type: str,
+    waveform_type: Waveform,
     frequency: float,
     amplitude: float,
     duration: float,
@@ -85,12 +90,7 @@ def measure(
 
     measurement_service.context.add_cancel_callback(cancel_callback)
 
-    session_management_client = nims.session_management.Client(
-        grpc_channel=measurement_service.get_channel(
-            provided_interface=nims.session_management.GRPC_SERVICE_INTERFACE_NAME,
-            service_class=nims.session_management.GRPC_SERVICE_CLASS,
-        )
-    )
+    session_management_client = create_session_management_client(measurement_service)
 
     with contextlib.ExitStack() as stack:
         reservation = stack.enter_context(
@@ -105,9 +105,10 @@ def measure(
             )
         )
 
+        grpc_device_channel = get_grpc_device_channel(measurement_service, nifgen, service_options)
         sessions = [
-            stack.enter_context(_create_nifgen_session(session_info))
-            for session_info in reservation.session_infos
+            stack.enter_context(create_session(session_info, grpc_device_channel))
+            for session_info in reservation.session_info
         ]
 
         for session, session_info in zip(sessions, reservation.session_infos):
@@ -116,7 +117,9 @@ def measure(
 
             channels = session.channels[session_info.channel_list]
             channels.configure_standard_waveform(
-                str_to_enum(WAVEFORM_TYPE_TO_ENUM, waveform_type),
+                nifgen.Waveform(waveform_type.value)
+                if waveform_type != Waveform.NONE
+                else nifgen.Waveform.SINE,
                 amplitude,
                 frequency,
             )
@@ -163,41 +166,6 @@ def measure(
                         raise
 
     return ()
-
-
-def _create_nifgen_session(
-    session_info: nims.session_management.SessionInformation,
-) -> nifgen.Session:
-    options: Dict[str, Any] = {}
-    if service_options.use_simulation:
-        options["simulate"] = True
-        options["driver_setup"] = {"Model": "5423 (2CH)"}
-
-    session_kwargs: Dict[str, Any] = {}
-    if service_options.use_grpc_device:
-        session_grpc_address = service_options.grpc_device_address
-
-        if not session_grpc_address:
-            session_grpc_channel = measurement_service.get_channel(
-                provided_interface=nifgen.GRPC_SERVICE_INTERFACE_NAME,
-                service_class="ni.measurementlink.v1.grpcdeviceserver",
-            )
-        else:
-            session_grpc_channel = measurement_service.channel_pool.get_channel(
-                target=session_grpc_address
-            )
-        # Assumption: the pin map specifies one NI-FGEN session per instrument. If the pin map
-        # specified an NI-FGEN session per channel, the session name would need to include the
-        # channel name(s).
-        session_kwargs["grpc_options"] = nifgen.GrpcSessionOptions(
-            session_grpc_channel,
-            session_name=session_info.session_name,
-            initialization_behavior=nifgen.SessionInitializationBehavior.AUTO,
-        )
-
-    return nifgen.Session(
-        session_info.resource_name, session_info.channel_list, options=options, **session_kwargs
-    )
 
 
 @click.command
