@@ -235,17 +235,6 @@ def test___varying_session_count___reserve_all_registered_sessions___returns_ses
     ]
 
 
-def test___multi_session_reservation___session_info___reports_deprecated_warning_and_calls_session_infos(
-    client: Client,
-) -> None:
-    reservation = MultiSessionReservation(client, _create_grpc_session_infos(3))
-
-    with pytest.deprecated_call():
-        session_info = reservation.session_info
-
-    assert session_info is reservation.session_info
-
-
 def test___use_reservation_type___reports_deprecated_warning_and_aliases_to_multi_session_reservation(
     client: Client,
 ) -> None:
