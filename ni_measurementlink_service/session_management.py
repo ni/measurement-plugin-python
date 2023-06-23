@@ -15,7 +15,7 @@ from typing import (
 )
 
 import grpc
-from deprecation import DeprecatedWarning, deprecated
+from deprecation import DeprecatedWarning
 
 from ni_measurementlink_service._internal.stubs import session_pb2
 from ni_measurementlink_service._internal.stubs.ni.measurementlink import (
@@ -215,14 +215,8 @@ class SingleSessionReservation(BaseReservation):
 class MultiSessionReservation(BaseReservation):
     """Manages reservation for multiple sessions."""
 
-    @property
-    @deprecated(deprecated_in="1.1.0", details="Use session_infos instead.")
-    def session_info(self) -> List[SessionInformation]:
-        """Multiple session information objects."""
-        return self.session_infos
-
     @cached_property
-    def session_infos(self) -> List[SessionInformation]:
+    def session_info(self) -> List[SessionInformation]:
         """Multiple session information objects."""
         return [_convert_session_info_from_grpc(info) for info in self._session_info]
 
