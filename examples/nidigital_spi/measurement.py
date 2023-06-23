@@ -79,7 +79,7 @@ def measure(
         )
         with create_session(session_info, grpc_device_channel) as session:
             pin_map_context = measurement_service.context.pin_map_context
-            selected_sites_string = ",".join(f"site{i}" for i in pin_map_context.sites)
+            selected_sites_string = ",".join(f"site{i}" for i in pin_map_context.sites or [])
             selected_sites = session.sites[selected_sites_string]
 
             if not session_info.session_exists:
