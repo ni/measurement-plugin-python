@@ -319,6 +319,7 @@ def test___service_config___create_measurement_service___service_info_matches_se
     if provided_annotations != {}:
         assert set(measurement_service.service_info.annotations) == set(provided_annotations)
 
+
 @pytest.mark.parametrize(
     "display_name,type,default_value,enum_type",
     [
