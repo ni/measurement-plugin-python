@@ -294,7 +294,7 @@ def get_sessions_and_channels_for_pins(
     return session_and_channel_info
 
 
-def generate_wrapper_enum(enum_type: Type[Enum]) -> Enum:
+def generate_wrapper_enum(enum_type: Type[Enum]) -> Type[Enum]:
     """Wraps an enum that does not have a zero value with one that does."""
     wrapper_enum_dict = {k: v.value for k, v in enum_type.__members__.items()}
     if 0 not in wrapper_enum_dict.values():
