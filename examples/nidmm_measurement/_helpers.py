@@ -3,6 +3,7 @@
 import logging
 import pathlib
 import types
+from enum import Enum
 from typing import (
     Any,
     Callable,
@@ -300,3 +301,12 @@ def get_sessions_and_channels_for_pins(
         raise KeyError(f"Pin(s) {pins} and site {site} not found")
 
     return session_and_channel_info
+
+
+def generate_wrapper_enum(
+    enum_type: Enum
+) -> Enum:
+    wrapper_enum_dict = {k:v.value for k,v in enum_type.__members__.items()}
+    if 0 not in wrapper_enum_dict.values():
+        wrapper_enum_dict["NONE"] = 0
+    return Enum(enum_type.__name__ + "Wrapper", wrapper_enum_dict)

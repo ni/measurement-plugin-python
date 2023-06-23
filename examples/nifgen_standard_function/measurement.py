@@ -15,6 +15,7 @@ from _helpers import (
     ServiceOptions,
     configure_logging,
     create_session_management_client,
+    generate_wrapper_enum,
     get_grpc_device_channel,
     get_service_options,
     grpc_device_options,
@@ -36,20 +37,7 @@ measurement_service = nims.MeasurementService(
 )
 service_options = ServiceOptions()
 
-
-class Waveform(Enum):
-    """Wrapper enum that contains a zero value."""
-
-    NONE = 0
-    SINE = nifgen.Waveform.SINE.value
-    SQUARE = nifgen.Waveform.SQUARE.value
-    TRIANGLE = nifgen.Waveform.TRIANGLE.value
-    RAMP_UP = nifgen.Waveform.RAMP_UP.value
-    RAMP_DOWN = nifgen.Waveform.RAMP_DOWN.value
-    DC = nifgen.Waveform.DC.value
-    NOISE = nifgen.Waveform.NOISE.value
-    USER = nifgen.Waveform.USER.value
-
+WaveformWrapper = generate_wrapper_enum(nifgen.Waveform)
 
 @measurement_service.register_measurement
 # TODO: Rename pin_name to pin_names and make it PinArray1D
@@ -60,14 +48,14 @@ class Waveform(Enum):
     instrument_type=nims.session_management.INSTRUMENT_TYPE_NI_FGEN,
 )
 @measurement_service.configuration(
-    "waveform_type", nims.DataType.Enum, Waveform.SINE, enum_type=Waveform
+    "waveform_type", nims.DataType.Enum, WaveformWrapper.SINE, enum_type=WaveformWrapper
 )
 @measurement_service.configuration("frequency", nims.DataType.Double, 1.0e6)
 @measurement_service.configuration("amplitude", nims.DataType.Double, 2.0)
 @measurement_service.configuration("duration", nims.DataType.Double, 10.0)
 def measure(
     pin_name: str,
-    waveform_type: Waveform,
+    waveform_type: WaveformWrapper,
     frequency: float,
     amplitude: float,
     duration: float,
@@ -76,7 +64,7 @@ def measure(
     logging.info(
         "Starting generation: pin_name=%s waveform_type=%s frequency=%g amplitude=%g",
         pin_name,
-        nifgen.Waveform(waveform_type.value) if waveform_type != Waveform.NONE else nifgen.Waveform.SINE,
+        nifgen.Waveform(waveform_type.value) if waveform_type != WaveformWrapper.NONE else nifgen.Waveform.SINE,
         frequency,
         amplitude,
     )
@@ -117,7 +105,7 @@ def measure(
 
             channels = session.channels[session_info.channel_list]
             channels.configure_standard_waveform(
-                nifgen.Waveform(waveform_type.value) if waveform_type != Waveform.NONE else nifgen.Waveform.SINE,
+                nifgen.Waveform(waveform_type.value) if waveform_type != WaveformWrapper.NONE else nifgen.Waveform.SINE,
                 amplitude,
                 frequency,
             )
