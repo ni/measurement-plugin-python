@@ -137,4 +137,6 @@ class PinMapServiceServicer(metaclass=abc.ABCMeta):
           - Empty string specified for a pin or relay name.
         """
 
-def add_PinMapServiceServicer_to_server(servicer: PinMapServiceServicer, server: grpc.Server) -> None: ...
+def add_PinMapServiceServicer_to_server(
+    servicer: PinMapServiceServicer, server: grpc.Server
+) -> None: ...

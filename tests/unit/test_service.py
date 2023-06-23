@@ -1,7 +1,7 @@
 """Tests to validated user facing decorators in service.py."""
 import pathlib
-from enum import Enum
 import typing
+from enum import Enum
 from typing import List, Type
 
 import pytest

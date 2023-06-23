@@ -45,4 +45,6 @@ class MeasurementServiceServicer(metaclass=abc.ABCMeta):
     ) -> ni_measurementlink_measurement_v1_measurement_service_pb2.MeasureResponse:
         """API used to perform a measurement."""
 
-def add_MeasurementServiceServicer_to_server(servicer: MeasurementServiceServicer, server: grpc.Server) -> None: ...
+def add_MeasurementServiceServicer_to_server(
+    servicer: MeasurementServiceServicer, server: grpc.Server
+) -> None: ...
