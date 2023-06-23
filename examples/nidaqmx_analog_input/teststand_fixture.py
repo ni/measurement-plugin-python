@@ -64,7 +64,7 @@ def create_nidaqmx_tasks(sequence_context: Any) -> None:
                 )
                 task.ai_channels.add_ai_voltage_chan(session_info.channel_list)
 
-            session_management_client.register_sessions(reservation.session_infos)
+            session_management_client.register_sessions(reservation.session_info)
 
 
 def destroy_nidaqmx_tasks() -> None:
@@ -81,7 +81,7 @@ def destroy_nidaqmx_tasks() -> None:
             # This code module sets up the sessions, so error immediately if they are in use.
             timeout=0,
         ) as reservation:
-            session_management_client.unregister_sessions(reservation.session_infos)
+            session_management_client.unregister_sessions(reservation.session_info)
 
             for session_info in reservation.session_info:
                 task = create_task(

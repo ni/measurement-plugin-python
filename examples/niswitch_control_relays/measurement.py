@@ -68,7 +68,7 @@ def measure(
             for session_info in reservation.session_info
         ]
 
-        for session, session_info in zip(sessions, reservation.session_infos):
+        for session, session_info in zip(sessions, reservation.session_info):
             session.relay_control(
                 session_info.channel_list,
                 niswitch.RelayAction.CLOSE if close_relays else niswitch.RelayAction.OPEN,

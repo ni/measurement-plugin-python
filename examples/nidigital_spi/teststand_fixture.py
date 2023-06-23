@@ -55,11 +55,11 @@ def create_nidigital_sessions(sequence_context: Any) -> None:
         with _reserve_sessions(
             session_management_client, pin_map_id, INSTRUMENT_TYPE_NI_DIGITAL_PATTERN
         ) as reservation:
-            for session_info in reservation.session_infos:
+            for session_info in reservation.session_info:
                 # Leave session open.
                 _ = _create_new_nidigital_session(grpc_channel_pool, session_info)
 
-            session_management_client.register_sessions(reservation.session_infos)
+            session_management_client.register_sessions(reservation.session_info)
 
 
 def load_nidigital_pin_map(pin_map_path: str, sequence_context: Any) -> None:
@@ -83,7 +83,7 @@ def load_nidigital_pin_map(pin_map_path: str, sequence_context: Any) -> None:
         with _reserve_sessions(
             session_management_client, pin_map_id, INSTRUMENT_TYPE_NI_DIGITAL_PATTERN
         ) as reservation:
-            for session_info in reservation.session_infos:
+            for session_info in reservation.session_info:
                 with _attach_nidigital_session(grpc_channel_pool, session_info) as session:
                     session.load_pin_map(pin_map_abs_path)
 
@@ -122,7 +122,7 @@ def load_nidigital_specifications_levels_and_timing(
         with _reserve_sessions(
             session_management_client, pin_map_id, INSTRUMENT_TYPE_NI_DIGITAL_PATTERN
         ) as reservation:
-            for session_info in reservation.session_infos:
+            for session_info in reservation.session_info:
                 with _attach_nidigital_session(grpc_channel_pool, session_info) as session:
                     session.load_specifications_levels_and_timing(
                         specifications_file_abs_paths, levels_file_abs_paths, timing_file_abs_paths
@@ -153,7 +153,7 @@ def load_nidigital_patterns(
         with _reserve_sessions(
             session_management_client, pin_map_id, INSTRUMENT_TYPE_NI_DIGITAL_PATTERN
         ) as reservation:
-            for session_info in reservation.session_infos:
+            for session_info in reservation.session_info:
                 with _attach_nidigital_session(grpc_channel_pool, session_info) as session:
                     for pattern_file_abs_path in pattern_file_abs_paths:
                         session.load_pattern(pattern_file_abs_path)
@@ -170,9 +170,9 @@ def destroy_nidigital_sessions() -> None:
             # This code module sets up the sessions, so error immediately if they are in use.
             timeout=0,
         ) as reservation:
-            session_management_client.unregister_sessions(reservation.session_infos)
+            session_management_client.unregister_sessions(reservation.session_info)
 
-            for session_info in reservation.session_infos:
+            for session_info in reservation.session_info:
                 session = _attach_nidigital_session(grpc_channel_pool, session_info)
                 session.close()
 
