@@ -4,6 +4,7 @@ import contextlib
 import logging
 import pathlib
 import time
+from enum import Enum
 from typing import Tuple
 
 import click
@@ -14,7 +15,6 @@ from _helpers import (
     ServiceOptions,
     configure_logging,
     create_session_management_client,
-    generate_wrapper_enum,
     get_grpc_device_channel,
     get_service_options,
     grpc_device_options,
@@ -36,7 +36,19 @@ measurement_service = nims.MeasurementService(
 )
 service_options = ServiceOptions()
 
-WaveformWrapper = generate_wrapper_enum(nifgen.Waveform)
+
+class Waveform(Enum):
+    """Wrapper enum that contains a zero value."""
+
+    NONE = 0
+    SINE = nifgen.Waveform.SINE.value
+    SQUARE = nifgen.Waveform.SQUARE.value
+    TRIANGLE = nifgen.Waveform.TRIANGLE.value
+    RAMP_UP = nifgen.Waveform.RAMP_UP.value
+    RAMP_DOWN = nifgen.Waveform.RAMP_DOWN.value
+    DC = nifgen.Waveform.DC.value
+    NOISE = nifgen.Waveform.NOISE.value
+    USER = nifgen.Waveform.USER.value
 
 
 @measurement_service.register_measurement
@@ -48,14 +60,14 @@ WaveformWrapper = generate_wrapper_enum(nifgen.Waveform)
     instrument_type=nims.session_management.INSTRUMENT_TYPE_NI_FGEN,
 )
 @measurement_service.configuration(
-    "waveform_type", nims.DataType.Enum, WaveformWrapper.SINE, enum_type=WaveformWrapper
+    "waveform_type", nims.DataType.Enum, Waveform.SINE, enum_type=Waveform
 )
 @measurement_service.configuration("frequency", nims.DataType.Double, 1.0e6)
 @measurement_service.configuration("amplitude", nims.DataType.Double, 2.0)
 @measurement_service.configuration("duration", nims.DataType.Double, 10.0)
 def measure(
     pin_name: str,
-    waveform_type: WaveformWrapper,
+    waveform_type: Waveform,
     frequency: float,
     amplitude: float,
     duration: float,
@@ -106,7 +118,7 @@ def measure(
             channels = session.channels[session_info.channel_list]
             channels.configure_standard_waveform(
                 nifgen.Waveform(waveform_type.value)
-                if waveform_type.value != 0
+                if waveform_type != Waveform.NONE
                 else nifgen.Waveform.SINE,
                 amplitude,
                 frequency,
