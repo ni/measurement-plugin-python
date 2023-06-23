@@ -4,7 +4,7 @@ import logging
 import pathlib
 import types
 from enum import Enum
-from typing import Any, Callable, List, NamedTuple, Optional, Tuple, TypeVar, Union
+from typing import Any, Callable, List, NamedTuple, Optional, Tuple, Type, TypeVar, Union
 
 import click
 import grpc
@@ -294,7 +294,7 @@ def get_sessions_and_channels_for_pins(
     return session_and_channel_info
 
 
-def generate_wrapper_enum(enum_type: Enum) -> Enum:
+def generate_wrapper_enum(enum_type: Type[Enum]) -> Enum:
     """Wraps an enum that does not have a zero value with one that does."""
     wrapper_enum_dict = {k: v.value for k, v in enum_type.__members__.items()}
     if 0 not in wrapper_enum_dict.values():
