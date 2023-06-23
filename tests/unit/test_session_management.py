@@ -125,8 +125,8 @@ def test___varying_session_count___reserve_sessions___returns_multiple_session_i
     )
 
     assert isinstance(reservation, MultiSessionReservation)
-    assert len(reservation.session_infos) == session_count
-    assert [s.session_name for s in reservation.session_infos] == [
+    assert len(reservation.session_info) == session_count
+    assert [s.session_name for s in reservation.session_info] == [
         f"MySession{i}" for i in range(session_count)
     ]
 
@@ -229,8 +229,8 @@ def test___varying_session_count___reserve_all_registered_sessions___returns_ses
         instrument_type_id="MyInstrumentType", timeout=123.456
     )
 
-    assert len(reservation.session_infos) == session_count
-    assert [s.session_name for s in reservation.session_infos] == [
+    assert len(reservation.session_info) == session_count
+    assert [s.session_name for s in reservation.session_info] == [
         f"MySession{i}" for i in range(session_count)
     ]
 
@@ -243,7 +243,7 @@ def test___multi_session_reservation___session_info___reports_deprecated_warning
     with pytest.deprecated_call():
         session_info = reservation.session_info
 
-    assert session_info is reservation.session_infos
+    assert session_info is reservation.session_info
 
 
 def test___use_reservation_type___reports_deprecated_warning_and_aliases_to_multi_session_reservation(
