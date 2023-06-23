@@ -116,9 +116,10 @@ def measure(
         # Long measurements may require a longer timeout.
         timeout=60,
     ) as reservation:
-        channel_names = session_info.channel_list
+        channel_names = reservation.session_info.channel_list
         pin_to_channel = {
-            mapping.pin_or_relay_name: mapping.channel for mapping in reservation.session_info.channel_mappings
+            mapping.pin_or_relay_name: mapping.channel
+            for mapping in reservation.session_info.channel_mappings
         }
         if trigger_source in pin_to_channel:
             trigger_source = pin_to_channel[trigger_source]

@@ -5,7 +5,6 @@ import pathlib
 from typing import Iterable, Tuple, Union
 
 import click
-import grpc
 import nidigital
 from _helpers import (
     ServiceOptions,

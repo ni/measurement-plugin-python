@@ -7,7 +7,6 @@ from enum import Enum
 from typing import Tuple
 
 import click
-import grpc
 import nidmm
 from _helpers import (
     ServiceOptions,

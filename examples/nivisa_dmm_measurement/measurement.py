@@ -6,7 +6,6 @@ from enum import Enum
 from typing import Tuple
 
 import click
-import grpc
 import pyvisa.resources
 from _helpers import (
     ServiceOptions,
@@ -94,7 +93,9 @@ def measure(
         timeout=60,
     ) as reservation:
         resource_manager = create_visa_resource_manager(service_options.use_simulation)
-        with create_visa_session(resource_manager, reservation.session_info.resource_name) as session:
+        with create_visa_session(
+            resource_manager, reservation.session_info.resource_name
+        ) as session:
             # Work around https://github.com/pyvisa/pyvisa/issues/739 - Type annotation for Resource
             # context manager implicitly upcasts derived class to base class
             assert isinstance(session, pyvisa.resources.MessageBasedResource)
