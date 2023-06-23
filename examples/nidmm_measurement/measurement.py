@@ -104,7 +104,9 @@ def measure(
         grpc_device_channel = get_grpc_device_channel(measurement_service, nidmm, service_options)
         with create_session(session_info, grpc_device_channel) as session:
             session.configure_measurement_digits(
-                measurement_type if measurement_type != Function.NONE else Function.DC_VOLTS,
+                nidmm.Function(measurement_type.value)
+                if measurement_type != Function.NONE
+                else nidmm.Function.DC_VOLTS,
                 range,
                 resolution_digits,
             )
