@@ -213,13 +213,8 @@ def _get_discovery_service_address() -> str:
         return "localhost:" + key_json["InsecurePort"]
 
 
-def _ensure_discovery_service_started(key_file_path: str):
-    """Make sure discovery service is started.
-
-    Check whether discovery service key file exists, if not start the discovery
-    service.
-
-    """
+def _ensure_discovery_service_started(key_file_path: pathlib.Path) -> None:
+    """Check whether discovery service key file exists, if not start the discovery service."""
     if _key_file_exists(key_file_path):
         return
 
@@ -227,37 +222,31 @@ def _ensure_discovery_service_started(key_file_path: str):
     _start_service(exe_file_path)
 
 
-def _get_discovery_service_location() -> str:
-    """Gets the location of the discovery service process executable.
-
-    Returns:
-    -------
-        exe_file_path: path to the discovery service exe which can be used
-                to activate the discovery service.
-
-    """
+def _get_discovery_service_location() -> pathlib.PurePath:
+    """Gets the location of the discovery service process executable."""
     registration_json_path = _get_registration_json_file_path()
-    registration_json_obj = json.load(open(str(registration_json_path)))
-    root_directory = pathlib.PurePath(registration_json_path).parent
-    exe_file_path = root_directory.joinpath(registration_json_obj["discovery"]["path"])
-    return exe_file_path
+    registration_json_obj = json.loads(registration_json_path.read_text())
+    return registration_json_path.parent / registration_json_obj["discovery"]["path"]
 
 
-def _get_registration_json_file_path():
-    return (
-        pathlib.Path(os.environ["ProgramFiles"])
-        / "National Instruments"
-        / "Shared"
-        / "MeasurementLink"
-        / "MeasurementLinkServices.json"
-    )
+def _get_registration_json_file_path() -> pathlib.Path:
+    if sys.platform == "win32":
+        return (
+            pathlib.Path(os.environ["ProgramW6432"])
+            / "National Instruments"
+            / "Shared"
+            / "MeasurementLink"
+            / "MeasurementLinkServices.json"
+        )
+    else:
+        raise NotImplementedError("Platform not supported")
 
 
-def _key_file_exists(key_file_path) -> bool:
-    return pathlib.Path(key_file_path).is_file()
+def _key_file_exists(key_file_path: pathlib.Path) -> bool:
+    return key_file_path.is_file()
 
 
-def _start_service(exe_file_path):
+def _start_service(exe_file_path: pathlib.PurePath):
     """Starts the service at the specified path and wait for the service to get up and running."""
     subprocess.Popen([exe_file_path], cwd=exe_file_path.parent)
     time.sleep(1)
