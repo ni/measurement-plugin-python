@@ -27,6 +27,7 @@ Functions
 .. autoapisummary::
 
    ni_measurementlink_service._internal.parameter.metadata.validate_default_value_type
+   ni_measurementlink_service._internal.parameter.metadata.get_enum_values_annotation
 
 
 
@@ -89,6 +90,20 @@ Functions
    Raises
    ------
        TypeError: If default value does not match the Datatype.
+
+
+
+.. py:function:: get_enum_values_annotation(parameter_metadata)
+
+   Gets the value for the "ni/enum.values" annotation if it exists.
+
+   Args
+   ----
+       parameter_metadata (ParameterMetadata): Parameter metadata
+
+   Returns
+   -------
+       str: The value of "ni/enum.values" annotation
 
 
 

@@ -20,9 +20,19 @@ Classes
    ni_measurementlink_service.session_management.PinMapContext
    ni_measurementlink_service.session_management.ChannelMapping
    ni_measurementlink_service.session_management.SessionInformation
-   ni_measurementlink_service.session_management.Reservation
+   ni_measurementlink_service.session_management.BaseReservation
+   ni_measurementlink_service.session_management.SingleSessionReservation
+   ni_measurementlink_service.session_management.MultiSessionReservation
    ni_measurementlink_service.session_management.Client
 
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   ni_measurementlink_service.session_management.__getattr__
 
 
 
@@ -143,10 +153,10 @@ Attributes
 
    Attributes
    ----------
-       pin_map_id (str): The resource id of the pin map in the Pin Map service that should be used
-           for the call.
+       pin_map_id: The resource id of the pin map in the Pin Map service that should be used for
+           the call.
 
-       sites (list): List of site numbers being used for the call. If None, use all sites in the
+       sites: List of site numbers being used for the call. If None or empty, use all sites in the
            pin map.
 
 
@@ -256,11 +266,11 @@ Attributes
       
 
 
-.. py:class:: Reservation(session_manager, session_info)
+.. py:class:: BaseReservation(session_manager, session_info)
 
-   Bases: :py:obj:`object`
+   Bases: :py:obj:`abc.ABC`
 
-   Manage session reservation.
+   Manages session reservation.
 
    .. py:method:: __enter__()
 
@@ -277,10 +287,32 @@ Attributes
       Unreserve sessions.
 
 
+
+.. py:class:: SingleSessionReservation(session_manager, session_info)
+
+   Bases: :py:obj:`BaseReservation`
+
+   Manages reservation for a single session.
+
    .. py:method:: session_info()
 
-      Return session information.
+      Single session information object.
 
+
+
+.. py:class:: MultiSessionReservation(session_manager, session_info)
+
+   Bases: :py:obj:`BaseReservation`
+
+   Manages reservation for multiple sessions.
+
+   .. py:method:: session_info()
+
+      Multiple session information objects.
+
+
+
+.. py:function:: __getattr__(name)
 
 
 .. py:class:: Client(*, grpc_channel)
@@ -289,11 +321,11 @@ Attributes
 
    Class that manages driver sessions.
 
-   .. py:method:: reserve_sessions(context, pin_or_relay_names = None, instrument_type_id = None, timeout = None)
+   .. py:method:: reserve_session(context, pin_or_relay_names = None, instrument_type_id = None, timeout = None)
 
-      Reserve session(s).
+      Reserve a single session.
 
-      Reserve session(s) for the given pins, sites, and instrument type ID and returns the
+      Reserve the session matching the given pins, sites, and instrument type ID and return the
       information needed to create or access the session.
 
       Args
@@ -326,8 +358,50 @@ Attributes
 
       Returns
       -------
-          Reservation: Context manager that can be used with a with-statement to unreserve the
-          sessions.
+          SingleSessionReservation: Context manager that can be used with a with-statement to
+          unreserve the session.
+
+
+
+   .. py:method:: reserve_sessions(context, pin_or_relay_names = None, instrument_type_id = None, timeout = None)
+
+      Reserve multiple sessions.
+
+      Reserve sessions matching the given pins, sites, and instrument type ID and return the
+      information needed to create or access the sessions.
+
+      Args
+      ----
+          context (PinMapContext): Includes the pin map ID for the pin map in the Pin Map Service,
+              as well as the list of sites for the measurement.
+
+          pin_or_relay_names (Iterable[str]): List of pins, pin groups, relays, or relay groups to
+              use for the measurement. If unspecified, reserve sessions for all pins and relays in
+              the registered pin map resource.
+
+          instrument_type_id (str): Instrument type ID for the measurement. If unspecified,
+              reserve sessions for all instrument types connected in the registered pin map
+              resource. Pin maps have built in instrument definitions using the following NI
+              driver based instrument type ids:
+                  "niDCPower"
+                  "niDigitalPattern"
+                  "niScope"
+                  "niDMM"
+                  "niDAQmx"
+                  "niFGen"
+                  "niRelayDriver"
+              For custom instruments the user defined instrument type id is defined in the pin
+              map file.
+
+          timeout (float): Timeout in seconds. Allowed values,
+              0 (non-blocking, fails immediately if resources cannot be reserved),
+              -1 or negative (infinite timeout), or
+              any positive numeric value (wait for that number of second).
+
+      Returns
+      -------
+          MultiSessionReservation: Context manager that can be used with a with-statement to
+          unreserve the sessions.
 
 
 
@@ -386,8 +460,8 @@ Attributes
 
       Returns
       -------
-          Reservation: Context manager that can be used with a with-statement to unreserve the
-          sessions.
+          MultiSessionReservation: Context manager that can be used with a with-statement to
+          unreserve the sessions.
 
 
 

@@ -34,7 +34,7 @@
             ni_measurementlink_service
           </a>
               <div class="version">
-                1.1.0-dev1
+                1.1.0-dev2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
@@ -81,7 +81,11 @@
 <span class="kn">from</span> <span class="nn">google.protobuf.internal</span> <span class="kn">import</span> <span class="n">encoder</span>
 
 <span class="kn">from</span> <span class="nn">ni_measurementlink_service._internal.parameter</span> <span class="kn">import</span> <span class="n">serialization_strategy</span>
-<span class="kn">from</span> <span class="nn">ni_measurementlink_service._internal.parameter.metadata</span> <span class="kn">import</span> <span class="n">ParameterMetadata</span>
+<span class="kn">from</span> <span class="nn">ni_measurementlink_service._internal.parameter.metadata</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ParameterMetadata</span><span class="p">,</span>
+    <span class="n">get_enum_values_annotation</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">ni_measurementlink_service.measurement.info</span> <span class="kn">import</span> <span class="n">TypeSpecialization</span>
 
 <span class="n">_GRPC_WIRE_TYPE_BIT_WIDTH</span> <span class="o">=</span> <span class="mi">3</span>
 
@@ -106,6 +110,10 @@
     <span class="n">overlapping_parameter_by_id</span> <span class="o">=</span> <span class="n">_get_overlapping_parameters</span><span class="p">(</span>
         <span class="n">parameter_metadata_dict</span><span class="p">,</span> <span class="n">parameter_bytes</span>
     <span class="p">)</span>
+
+    <span class="c1"># Deserialization enum parameters to their user-defined type</span>
+    <span class="n">_deserialize_enum_parameters</span><span class="p">(</span><span class="n">parameter_metadata_dict</span><span class="p">,</span> <span class="n">overlapping_parameter_by_id</span><span class="p">)</span>
+
     <span class="c1"># Adding missing parameters with type defaults</span>
     <span class="n">missing_parameters</span> <span class="o">=</span> <span class="n">_get_missing_parameters</span><span class="p">(</span>
         <span class="n">parameter_metadata_dict</span><span class="p">,</span> <span class="n">overlapping_parameter_by_id</span>
@@ -142,6 +150,15 @@
             <span class="n">parameter_metadata</span><span class="o">.</span><span class="n">type</span><span class="p">,</span>
             <span class="n">parameter_metadata</span><span class="o">.</span><span class="n">repeated</span><span class="p">,</span>
         <span class="p">)</span>
+        <span class="c1"># Convert enum parameters to their underlying value.</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="n">parameter_metadata</span><span class="o">.</span><span class="n">annotations</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ni/type_specialization&quot;</span><span class="p">)</span>
+            <span class="o">==</span> <span class="n">TypeSpecialization</span><span class="o">.</span><span class="n">Enum</span><span class="o">.</span><span class="n">value</span>
+        <span class="p">):</span>
+            <span class="k">if</span> <span class="n">parameter_metadata</span><span class="o">.</span><span class="n">repeated</span><span class="p">:</span>
+                <span class="n">parameter</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">value</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">parameter</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">parameter</span> <span class="o">=</span> <span class="n">parameter</span><span class="o">.</span><span class="n">value</span>
         <span class="c1"># Skipping serialization if the value is None or if its a type default value.</span>
         <span class="k">if</span> <span class="n">parameter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">parameter</span> <span class="o">!=</span> <span class="n">type_default_value</span><span class="p">:</span>
             <span class="n">inner_encoder</span> <span class="o">=</span> <span class="n">encoder</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
@@ -251,10 +268,49 @@
     <span class="n">missing_parameters</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">parameter_metadata_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">parameter_by_id</span><span class="p">:</span>
-            <span class="n">missing_parameters</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">serialization_strategy</span><span class="o">.</span><span class="n">Context</span><span class="o">.</span><span class="n">get_type_default</span><span class="p">(</span>
-                <span class="n">value</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">value</span><span class="o">.</span><span class="n">repeated</span>
-            <span class="p">)</span>
+            <span class="n">enum_annotations</span> <span class="o">=</span> <span class="n">get_enum_values_annotation</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">enum_annotations</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">value</span><span class="o">.</span><span class="n">repeated</span><span class="p">:</span>
+                <span class="n">enum_type</span> <span class="o">=</span> <span class="n">_get_enum_type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+                <span class="n">missing_parameters</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">enum_type</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">missing_parameters</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">serialization_strategy</span><span class="o">.</span><span class="n">Context</span><span class="o">.</span><span class="n">get_type_default</span><span class="p">(</span>
+                    <span class="n">value</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">value</span><span class="o">.</span><span class="n">repeated</span>
+                <span class="p">)</span>
     <span class="k">return</span> <span class="n">missing_parameters</span>
+
+
+<span class="k">def</span> <span class="nf">_deserialize_enum_parameters</span><span class="p">(</span>
+    <span class="n">parameter_metadata_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">ParameterMetadata</span><span class="p">],</span> <span class="n">parameter_by_id</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Converts all enums in `parameter_by_id` to the user defined enum type.</span>
+
+<span class="sd">    Args</span>
+<span class="sd">    ----</span>
+<span class="sd">        parameter_metadata_dict (Dict[int, ParameterMetadata]): Parameter metadata by id.</span>
+
+<span class="sd">        parameter_by_id (Dict[int, Any]): Parameters by ID to compare the metadata with.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">        None: No return value.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="nb">id</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">parameter_by_id</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">parameter_metadata</span> <span class="o">=</span> <span class="n">parameter_metadata_dict</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">get_enum_values_annotation</span><span class="p">(</span><span class="n">parameter_metadata</span><span class="p">):</span>
+            <span class="n">enum_type</span> <span class="o">=</span> <span class="n">_get_enum_type</span><span class="p">(</span><span class="n">parameter_metadata</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">parameter_metadata</span><span class="o">.</span><span class="n">repeated</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">member_value</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+                    <span class="n">parameter_by_id</span><span class="p">[</span><span class="nb">id</span><span class="p">][</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">enum_type</span><span class="p">(</span><span class="n">member_value</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">parameter_by_id</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">enum_type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_get_enum_type</span><span class="p">(</span><span class="n">parameter_metadata</span><span class="p">:</span> <span class="n">ParameterMetadata</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">type</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">parameter_metadata</span><span class="o">.</span><span class="n">repeated</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">parameter_metadata</span><span class="o">.</span><span class="n">default_value</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="n">parameter_metadata</span><span class="o">.</span><span class="n">default_value</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="n">parameter_metadata</span><span class="o">.</span><span class="n">default_value</span><span class="p">)</span>
 </pre></div>
 
            </div>

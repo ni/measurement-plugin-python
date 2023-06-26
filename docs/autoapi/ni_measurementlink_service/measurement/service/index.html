@@ -37,7 +37,7 @@
             ni_measurementlink_service
           </a>
               <div class="version">
-                1.1.0-dev1
+                1.1.0-dev2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
@@ -287,7 +287,7 @@ return (output1, output2)</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ni_measurementlink_service.measurement.service.MeasurementService.configuration">
-<span class="sig-name descname"><span class="pre">configuration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">display_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_value</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instrument_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/ni_measurementlink_service/measurement/service.html#MeasurementService.configuration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service.measurement.service.MeasurementService.configuration" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">configuration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">display_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_value</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instrument_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enum_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/ni_measurementlink_service/measurement/service.html#MeasurementService.configuration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service.measurement.service.MeasurementService.configuration" title="Permalink to this definition"></a></dt>
 <dd><p>Add a configuration parameter to a measurement function.</p>
 <p>This decorator maps the measurement service’s configuration parameters
 to Python positional parameters. To add multiple configuration parameters
@@ -300,7 +300,7 @@ The order of decorator calls must match the order of positional parameters.</p>
 <div><p>display_name (str): Display name of the configuration.</p>
 <p>type (DataType): Data type of the configuration.</p>
 <p>default_value (Any): Default value of the configuration.</p>
-<p>instrument_type (str): Optional.
+<p>instrument_type (Optional[str]):
 Filter pins by instrument type. This is only supported when configuration type
 is DataType.Pin. Pin maps have built in instrument definitions using the
 NI driver based instrument type ids. These can be found as constants
@@ -308,6 +308,9 @@ in <cite>nims.session_management</cite>. For example, for an NI DCPower instrume
 the instrument type is <cite>nims.session_management.INSTRUMENT_TYPE_NI_DCPOWER</cite>.
 For custom instruments the user defined instrument type id is defined in the
 pin map file.</p>
+<p>enum_type (Optional[Type[Enum]]):
+Defines the enum type associated with this configuration parameter. This is only
+supported when configuration type is DataType.Enum or DataType.EnumArray1D.</p>
 </div></blockquote>
 </section>
 <section id="returns">
@@ -321,20 +324,23 @@ and returns the same python function.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ni_measurementlink_service.measurement.service.MeasurementService.output">
-<span class="sig-name descname"><span class="pre">output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">display_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/ni_measurementlink_service/measurement/service.html#MeasurementService.output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service.measurement.service.MeasurementService.output" title="Permalink to this definition"></a></dt>
-<dd><p>Add a output parameter to a measurement function.</p>
+<span class="sig-name descname"><span class="pre">output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">display_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enum_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/ni_measurementlink_service/measurement/service.html#MeasurementService.output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service.measurement.service.MeasurementService.output" title="Permalink to this definition"></a></dt>
+<dd><p>Add an output parameter to a measurement function.</p>
 <p>This decorator maps the measurement service’s output parameters to
 the elements of the tuple returned by the measurement function.
 To add multiple output parameters to the same measurement function,
 use this decorator multiple times.
 The order of decorator calls must match the order of elements
-returned by the measurement fuction.</p>
+returned by the measurement function.</p>
 <p>See also: <code class="xref py py-func docutils literal notranslate"><span class="pre">register_measurement()</span></code></p>
 <section id="id7">
 <h5>Args<a class="headerlink" href="#id7" title="Permalink to this heading"></a></h5>
 <blockquote>
 <div><p>display_name (str): Display name of the output.</p>
 <p>type (DataType): Data type of the output.</p>
+<p>enum_type (Optional[Type[Enum]]):
+Defines the enum type associated with this configuration parameter. This is only
+supported when configuration type is DataType.Enum or DataType.EnumArray1D.</p>
 </div></blockquote>
 </section>
 <section id="id8">

@@ -34,7 +34,7 @@
             ni_measurementlink_service
           </a>
               <div class="version">
-                1.1.0-dev1
+                1.1.0-dev2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -78,10 +78,11 @@
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
 <span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
 <span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">path</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span> <span class="nn">threading</span> <span class="kn">import</span> <span class="n">Lock</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">TypeVar</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">TypeVar</span>
 
 <span class="kn">import</span> <span class="nn">grpc</span>
 
@@ -97,35 +98,36 @@
     <span class="n">ServiceInfo</span><span class="p">,</span>
     <span class="n">TypeSpecialization</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="kn">from</span> <span class="nn">ni_measurementlink_service.session_management</span> <span class="kn">import</span> <span class="n">PinMapContext</span>
 
 
 <div class="viewcode-block" id="MeasurementContext"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/measurement/service/index.html#ni_measurementlink_service.MeasurementContext">[docs]</a><span class="k">class</span> <span class="nc">MeasurementContext</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Proxy for the Measurement Service&#39;s context-local state.&quot;&quot;&quot;</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">grpc_context</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">grpc_context</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the context for the RPC.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">grpc_servicer</span><span class="o">.</span><span class="n">measurement_service_context</span><span class="o">.</span><span class="n">get</span><span class="p">()</span><span class="o">.</span><span class="n">grpc_context</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">pin_map_context</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">pin_map_context</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PinMapContext</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the pin map context for the RPC.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">grpc_servicer</span><span class="o">.</span><span class="n">measurement_service_context</span><span class="o">.</span><span class="n">get</span><span class="p">()</span><span class="o">.</span><span class="n">pin_map_context</span>
 
-<div class="viewcode-block" id="MeasurementContext.add_cancel_callback"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/measurement/service/index.html#ni_measurementlink_service.MeasurementContext.add_cancel_callback">[docs]</a>    <span class="k">def</span> <span class="nf">add_cancel_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cancel_callback</span><span class="p">:</span> <span class="n">Callable</span><span class="p">):</span>
+<div class="viewcode-block" id="MeasurementContext.add_cancel_callback"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/measurement/service/index.html#ni_measurementlink_service.MeasurementContext.add_cancel_callback">[docs]</a>    <span class="k">def</span> <span class="nf">add_cancel_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cancel_callback</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[],</span> <span class="kc">None</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a callback which is invoked when the RPC is canceled.&quot;&quot;&quot;</span>
         <span class="n">grpc_servicer</span><span class="o">.</span><span class="n">measurement_service_context</span><span class="o">.</span><span class="n">get</span><span class="p">()</span><span class="o">.</span><span class="n">add_cancel_callback</span><span class="p">(</span><span class="n">cancel_callback</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="MeasurementContext.cancel"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/measurement/service/index.html#ni_measurementlink_service.MeasurementContext.cancel">[docs]</a>    <span class="k">def</span> <span class="nf">cancel</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="MeasurementContext.cancel"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/measurement/service/index.html#ni_measurementlink_service.MeasurementContext.cancel">[docs]</a>    <span class="k">def</span> <span class="nf">cancel</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Cancel the RPC.&quot;&quot;&quot;</span>
         <span class="n">grpc_servicer</span><span class="o">.</span><span class="n">measurement_service_context</span><span class="o">.</span><span class="n">get</span><span class="p">()</span><span class="o">.</span><span class="n">cancel</span><span class="p">()</span></div>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">time_remaining</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">time_remaining</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the time remaining for the RPC.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">grpc_servicer</span><span class="o">.</span><span class="n">measurement_service_context</span><span class="o">.</span><span class="n">get</span><span class="p">()</span><span class="o">.</span><span class="n">time_remaining</span>
 
-<div class="viewcode-block" id="MeasurementContext.abort"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/measurement/service/index.html#ni_measurementlink_service.MeasurementContext.abort">[docs]</a>    <span class="k">def</span> <span class="nf">abort</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code</span><span class="p">,</span> <span class="n">details</span><span class="p">):</span>
+<div class="viewcode-block" id="MeasurementContext.abort"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/measurement/service/index.html#ni_measurementlink_service.MeasurementContext.abort">[docs]</a>    <span class="k">def</span> <span class="nf">abort</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">StatusCode</span><span class="p">,</span> <span class="n">details</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Aborts the RPC.&quot;&quot;&quot;</span>
         <span class="n">grpc_servicer</span><span class="o">.</span><span class="n">measurement_service_context</span><span class="o">.</span><span class="n">get</span><span class="p">()</span><span class="o">.</span><span class="n">abort</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="n">details</span><span class="p">)</span></div></div>
 
@@ -257,6 +259,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">service_info</span> <span class="o">=</span> <span class="n">ServiceInfo</span><span class="p">(</span>
             <span class="n">service_class</span><span class="o">=</span><span class="n">service</span><span class="p">[</span><span class="s2">&quot;serviceClass&quot;</span><span class="p">],</span>
             <span class="n">description_url</span><span class="o">=</span><span class="n">service</span><span class="p">[</span><span class="s2">&quot;descriptionUrl&quot;</span><span class="p">],</span>
+            <span class="n">provided_interfaces</span><span class="o">=</span><span class="n">service</span><span class="p">[</span><span class="s2">&quot;providedInterfaces&quot;</span><span class="p">],</span>
         <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">configuration_parameter_list</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="p">[]</span>
@@ -288,7 +291,13 @@
         <span class="k">return</span> <span class="n">measurement_function</span></div>
 
 <div class="viewcode-block" id="MeasurementService.configuration"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/measurement/service/index.html#ni_measurementlink_service.MeasurementService.configuration">[docs]</a>    <span class="k">def</span> <span class="nf">configuration</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">display_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">type</span><span class="p">:</span> <span class="n">DataType</span><span class="p">,</span> <span class="n">default_value</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">instrument_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">display_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="nb">type</span><span class="p">:</span> <span class="n">DataType</span><span class="p">,</span>
+        <span class="n">default_value</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">instrument_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">enum_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">Enum</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a configuration parameter to a measurement function.</span>
 
@@ -307,7 +316,7 @@
 
 <span class="sd">            default_value (Any): Default value of the configuration.</span>
 
-<span class="sd">            instrument_type (str): Optional.</span>
+<span class="sd">            instrument_type (Optional[str]):</span>
 <span class="sd">            Filter pins by instrument type. This is only supported when configuration type</span>
 <span class="sd">            is DataType.Pin. Pin maps have built in instrument definitions using the</span>
 <span class="sd">            NI driver based instrument type ids. These can be found as constants</span>
@@ -316,6 +325,10 @@
 <span class="sd">            For custom instruments the user defined instrument type id is defined in the</span>
 <span class="sd">            pin map file.</span>
 
+<span class="sd">            enum_type (Optional[Type[Enum]]):</span>
+<span class="sd">            Defines the enum type associated with this configuration parameter. This is only</span>
+<span class="sd">            supported when configuration type is DataType.Enum or DataType.EnumArray1D.</span>
+
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">            Callable: Callable that takes in Any Python Function</span>
@@ -323,7 +336,9 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">grpc_field_type</span><span class="p">,</span> <span class="n">repeated</span><span class="p">,</span> <span class="n">type_specialization</span> <span class="o">=</span> <span class="nb">type</span><span class="o">.</span><span class="n">value</span>
-        <span class="n">annotations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_annotations</span><span class="p">(</span><span class="n">type_specialization</span><span class="p">,</span> <span class="n">instrument_type</span><span class="p">)</span>
+        <span class="n">annotations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_annotations_dict</span><span class="p">(</span>
+            <span class="n">type_specialization</span><span class="p">,</span> <span class="n">instrument_type</span><span class="o">=</span><span class="n">instrument_type</span><span class="p">,</span> <span class="n">enum_type</span><span class="o">=</span><span class="n">enum_type</span>
+        <span class="p">)</span>
         <span class="n">parameter</span> <span class="o">=</span> <span class="n">parameter_metadata</span><span class="o">.</span><span class="n">ParameterMetadata</span><span class="p">(</span>
             <span class="n">display_name</span><span class="p">,</span> <span class="n">grpc_field_type</span><span class="p">,</span> <span class="n">repeated</span><span class="p">,</span> <span class="n">default_value</span><span class="p">,</span> <span class="n">annotations</span>
         <span class="p">)</span>
@@ -335,15 +350,17 @@
 
         <span class="k">return</span> <span class="n">_configuration</span></div>
 
-<div class="viewcode-block" id="MeasurementService.output"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/measurement/service/index.html#ni_measurementlink_service.MeasurementService.output">[docs]</a>    <span class="k">def</span> <span class="nf">output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">display_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">type</span><span class="p">:</span> <span class="n">DataType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a output parameter to a measurement function.</span>
+<div class="viewcode-block" id="MeasurementService.output"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/measurement/service/index.html#ni_measurementlink_service.MeasurementService.output">[docs]</a>    <span class="k">def</span> <span class="nf">output</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">display_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">type</span><span class="p">:</span> <span class="n">DataType</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">enum_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">Enum</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add an output parameter to a measurement function.</span>
 
 <span class="sd">        This decorator maps the measurement service&#39;s output parameters to</span>
 <span class="sd">        the elements of the tuple returned by the measurement function.</span>
 <span class="sd">        To add multiple output parameters to the same measurement function,</span>
 <span class="sd">        use this decorator multiple times.</span>
 <span class="sd">        The order of decorator calls must match the order of elements</span>
-<span class="sd">        returned by the measurement fuction.</span>
+<span class="sd">        returned by the measurement function.</span>
 
 <span class="sd">        See also: :func:`.register_measurement`</span>
 
@@ -353,6 +370,10 @@
 
 <span class="sd">            type (DataType): Data type of the output.</span>
 
+<span class="sd">            enum_type (Optional[Type[Enum]]):</span>
+<span class="sd">            Defines the enum type associated with this configuration parameter. This is only</span>
+<span class="sd">            supported when configuration type is DataType.Enum or DataType.EnumArray1D.</span>
+
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">            Callable: Callable that takes in Any Python Function and</span>
@@ -360,8 +381,9 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">grpc_field_type</span><span class="p">,</span> <span class="n">repeated</span><span class="p">,</span> <span class="n">type_specialization</span> <span class="o">=</span> <span class="nb">type</span><span class="o">.</span><span class="n">value</span>
+        <span class="n">annotations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_annotations_dict</span><span class="p">(</span><span class="n">type_specialization</span><span class="p">,</span> <span class="n">enum_type</span><span class="o">=</span><span class="n">enum_type</span><span class="p">)</span>
         <span class="n">parameter</span> <span class="o">=</span> <span class="n">parameter_metadata</span><span class="o">.</span><span class="n">ParameterMetadata</span><span class="p">(</span>
-            <span class="n">display_name</span><span class="p">,</span> <span class="n">grpc_field_type</span><span class="p">,</span> <span class="n">repeated</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">annotations</span><span class="o">=</span><span class="p">{}</span>
+            <span class="n">display_name</span><span class="p">,</span> <span class="n">grpc_field_type</span><span class="p">,</span> <span class="n">repeated</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">annotations</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">output_parameter_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">parameter</span><span class="p">)</span>
 
@@ -394,8 +416,12 @@
         <span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
-    <span class="k">def</span> <span class="nf">_get_annotations</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">type_specialization</span><span class="p">:</span> <span class="n">TypeSpecialization</span><span class="p">,</span> <span class="n">instrument_type</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="k">def</span> <span class="nf">_make_annotations_dict</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">type_specialization</span><span class="p">:</span> <span class="n">TypeSpecialization</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">instrument_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">enum_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">Enum</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
         <span class="n">annotations</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">if</span> <span class="n">type_specialization</span> <span class="o">==</span> <span class="n">TypeSpecialization</span><span class="o">.</span><span class="n">NoType</span><span class="p">:</span>
@@ -405,8 +431,21 @@
         <span class="k">if</span> <span class="n">type_specialization</span> <span class="o">==</span> <span class="n">TypeSpecialization</span><span class="o">.</span><span class="n">Pin</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">instrument_type</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span> <span class="ow">or</span> <span class="n">instrument_type</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">annotations</span><span class="p">[</span><span class="s2">&quot;ni/pin.instrument_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">instrument_type</span>
+        <span class="k">if</span> <span class="n">type_specialization</span> <span class="o">==</span> <span class="n">TypeSpecialization</span><span class="o">.</span><span class="n">Enum</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">enum_type</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">annotations</span><span class="p">[</span><span class="s2">&quot;ni/enum.values&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_enum_to_annotations_value</span><span class="p">(</span><span class="n">enum_type</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;enum_type is required for enum parameters.&quot;</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">annotations</span>
+
+    <span class="k">def</span> <span class="nf">_enum_to_annotations_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">enum_type</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">Enum</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">member</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">member</span> <span class="ow">in</span> <span class="n">enum_type</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The enum does not have a value for 0.&quot;</span><span class="p">)</span>
+        <span class="n">enum_values</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">member</span> <span class="ow">in</span> <span class="n">enum_type</span><span class="p">:</span>
+            <span class="n">enum_values</span><span class="p">[</span><span class="n">member</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">member</span><span class="o">.</span><span class="n">value</span>
+        <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">enum_values</span><span class="p">)</span>
 
 <div class="viewcode-block" id="MeasurementService.close_service"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/measurement/service/index.html#ni_measurementlink_service.MeasurementService.close_service">[docs]</a>    <span class="k">def</span> <span class="nf">close_service</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Close the Service after un-registering with discovery service and cleanups.&quot;&quot;&quot;</span>

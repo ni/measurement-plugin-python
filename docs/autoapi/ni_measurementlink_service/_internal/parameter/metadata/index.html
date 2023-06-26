@@ -35,7 +35,7 @@
             ni_measurementlink_service
           </a>
               <div class="version">
-                1.1.0-dev1
+                1.1.0-dev2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
@@ -94,6 +94,9 @@
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#ni_measurementlink_service._internal.parameter.metadata.validate_default_value_type" title="ni_measurementlink_service._internal.parameter.metadata.validate_default_value_type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate_default_value_type</span></code></a>(parameter_metadata)</p></td>
 <td><p>Validate and raise exception if the default value does not match the type info.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ni_measurementlink_service._internal.parameter.metadata.get_enum_values_annotation" title="ni_measurementlink_service._internal.parameter.metadata.get_enum_values_annotation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_enum_values_annotation</span></code></a>(parameter_metadata)</p></td>
+<td><p>Gets the value for the &quot;ni/enum.values&quot; annotation if it exists.</p></td>
 </tr>
 </tbody>
 </table>
@@ -155,6 +158,24 @@ represented by the gRPC Field Enum.</p>
 <h4>Raises<a class="headerlink" href="#raises" title="Permalink to this heading"></a></h4>
 <blockquote>
 <div><p>TypeError: If default value does not match the Datatype.</p>
+</div></blockquote>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ni_measurementlink_service._internal.parameter.metadata.get_enum_values_annotation">
+<span class="sig-prename descclassname"><span class="pre">ni_measurementlink_service._internal.parameter.metadata.</span></span><span class="sig-name descname"><span class="pre">get_enum_values_annotation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameter_metadata</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/ni_measurementlink_service/_internal/parameter/metadata.html#get_enum_values_annotation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service._internal.parameter.metadata.get_enum_values_annotation" title="Permalink to this definition"></a></dt>
+<dd><p>Gets the value for the “ni/enum.values” annotation if it exists.</p>
+<section id="id1">
+<h4>Args<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h4>
+<blockquote>
+<div><p>parameter_metadata (ParameterMetadata): Parameter metadata</p>
+</div></blockquote>
+</section>
+<section id="returns">
+<h4>Returns<a class="headerlink" href="#returns" title="Permalink to this heading"></a></h4>
+<blockquote>
+<div><p>str: The value of “ni/enum.values” annotation</p>
 </div></blockquote>
 </section>
 </dd></dl>

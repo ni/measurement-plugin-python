@@ -36,7 +36,7 @@
             ni_measurementlink_service
           </a>
               <div class="version">
-                1.1.0-dev1
+                1.1.0-dev2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -54,6 +54,7 @@
 <li class="toctree-l4 current"><a class="current reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">ni_measurementlink_service.session_management</span></code></a><ul>
 <li class="toctree-l5"><a class="reference internal" href="#module-contents">Module Contents</a><ul>
 <li class="toctree-l6"><a class="reference internal" href="#classes">Classes</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#functions">Functions</a></li>
 <li class="toctree-l6"><a class="reference internal" href="#attributes">Attributes</a><ul>
 <li class="toctree-l7"><a class="reference internal" href="#ni_measurementlink_service.session_management.GRPC_SERVICE_INTERFACE_NAME"><code class="docutils literal notranslate"><span class="pre">GRPC_SERVICE_INTERFACE_NAME</span></code></a></li>
 <li class="toctree-l7"><a class="reference internal" href="#ni_measurementlink_service.session_management.GRPC_SERVICE_CLASS"><code class="docutils literal notranslate"><span class="pre">GRPC_SERVICE_CLASS</span></code></a></li>
@@ -92,14 +93,23 @@
 <li class="toctree-l8"><a class="reference internal" href="#ni_measurementlink_service.session_management.SessionInformation.channel_mappings"><code class="docutils literal notranslate"><span class="pre">SessionInformation.channel_mappings</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l7"><a class="reference internal" href="#ni_measurementlink_service.session_management.Reservation"><code class="docutils literal notranslate"><span class="pre">Reservation</span></code></a><ul>
-<li class="toctree-l8"><a class="reference internal" href="#ni_measurementlink_service.session_management.Reservation.__enter__"><code class="docutils literal notranslate"><span class="pre">Reservation.__enter__()</span></code></a></li>
-<li class="toctree-l8"><a class="reference internal" href="#ni_measurementlink_service.session_management.Reservation.__exit__"><code class="docutils literal notranslate"><span class="pre">Reservation.__exit__()</span></code></a></li>
-<li class="toctree-l8"><a class="reference internal" href="#ni_measurementlink_service.session_management.Reservation.unreserve"><code class="docutils literal notranslate"><span class="pre">Reservation.unreserve()</span></code></a></li>
-<li class="toctree-l8"><a class="reference internal" href="#ni_measurementlink_service.session_management.Reservation.session_info"><code class="docutils literal notranslate"><span class="pre">Reservation.session_info()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="#ni_measurementlink_service.session_management.BaseReservation"><code class="docutils literal notranslate"><span class="pre">BaseReservation</span></code></a><ul>
+<li class="toctree-l8"><a class="reference internal" href="#ni_measurementlink_service.session_management.BaseReservation.__enter__"><code class="docutils literal notranslate"><span class="pre">BaseReservation.__enter__()</span></code></a></li>
+<li class="toctree-l8"><a class="reference internal" href="#ni_measurementlink_service.session_management.BaseReservation.__exit__"><code class="docutils literal notranslate"><span class="pre">BaseReservation.__exit__()</span></code></a></li>
+<li class="toctree-l8"><a class="reference internal" href="#ni_measurementlink_service.session_management.BaseReservation.unreserve"><code class="docutils literal notranslate"><span class="pre">BaseReservation.unreserve()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l7"><a class="reference internal" href="#ni_measurementlink_service.session_management.SingleSessionReservation"><code class="docutils literal notranslate"><span class="pre">SingleSessionReservation</span></code></a><ul>
+<li class="toctree-l8"><a class="reference internal" href="#ni_measurementlink_service.session_management.SingleSessionReservation.session_info"><code class="docutils literal notranslate"><span class="pre">SingleSessionReservation.session_info()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l7"><a class="reference internal" href="#ni_measurementlink_service.session_management.MultiSessionReservation"><code class="docutils literal notranslate"><span class="pre">MultiSessionReservation</span></code></a><ul>
+<li class="toctree-l8"><a class="reference internal" href="#ni_measurementlink_service.session_management.MultiSessionReservation.session_info"><code class="docutils literal notranslate"><span class="pre">MultiSessionReservation.session_info()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l7"><a class="reference internal" href="#ni_measurementlink_service.session_management.__getattr__"><code class="docutils literal notranslate"><span class="pre">__getattr__()</span></code></a></li>
 <li class="toctree-l7"><a class="reference internal" href="#ni_measurementlink_service.session_management.Client"><code class="docutils literal notranslate"><span class="pre">Client</span></code></a><ul>
+<li class="toctree-l8"><a class="reference internal" href="#ni_measurementlink_service.session_management.Client.reserve_session"><code class="docutils literal notranslate"><span class="pre">Client.reserve_session()</span></code></a></li>
 <li class="toctree-l8"><a class="reference internal" href="#ni_measurementlink_service.session_management.Client.reserve_sessions"><code class="docutils literal notranslate"><span class="pre">Client.reserve_sessions()</span></code></a></li>
 <li class="toctree-l8"><a class="reference internal" href="#ni_measurementlink_service.session_management.Client.register_sessions"><code class="docutils literal notranslate"><span class="pre">Client.register_sessions()</span></code></a></li>
 <li class="toctree-l8"><a class="reference internal" href="#ni_measurementlink_service.session_management.Client.unregister_sessions"><code class="docutils literal notranslate"><span class="pre">Client.unregister_sessions()</span></code></a></li>
@@ -126,14 +136,23 @@
 <li class="toctree-l7"><a class="reference internal" href="#ni_measurementlink_service.session_management.PinMapContext">PinMapContext</a></li>
 <li class="toctree-l7"><a class="reference internal" href="#ni_measurementlink_service.session_management.ChannelMapping">ChannelMapping</a></li>
 <li class="toctree-l7"><a class="reference internal" href="#ni_measurementlink_service.session_management.SessionInformation">SessionInformation</a></li>
-<li class="toctree-l7"><a class="reference internal" href="#ni_measurementlink_service.session_management.Reservation">Reservation</a><ul>
-<li class="toctree-l8"><a class="reference internal" href="#ni_measurementlink_service.session_management.Reservation.__enter__">__enter__</a></li>
-<li class="toctree-l8"><a class="reference internal" href="#ni_measurementlink_service.session_management.Reservation.__exit__">__exit__</a></li>
-<li class="toctree-l8"><a class="reference internal" href="#ni_measurementlink_service.session_management.Reservation.unreserve">unreserve</a></li>
-<li class="toctree-l8"><a class="reference internal" href="#ni_measurementlink_service.session_management.Reservation.session_info">session_info</a></li>
+<li class="toctree-l7"><a class="reference internal" href="#ni_measurementlink_service.session_management.BaseReservation">BaseReservation</a><ul>
+<li class="toctree-l8"><a class="reference internal" href="#ni_measurementlink_service.session_management.BaseReservation.__enter__">__enter__</a></li>
+<li class="toctree-l8"><a class="reference internal" href="#ni_measurementlink_service.session_management.BaseReservation.__exit__">__exit__</a></li>
+<li class="toctree-l8"><a class="reference internal" href="#ni_measurementlink_service.session_management.BaseReservation.unreserve">unreserve</a></li>
 </ul>
 </li>
+<li class="toctree-l7"><a class="reference internal" href="#ni_measurementlink_service.session_management.SingleSessionReservation">SingleSessionReservation</a><ul>
+<li class="toctree-l8"><a class="reference internal" href="#ni_measurementlink_service.session_management.SingleSessionReservation.session_info">session_info</a></li>
+</ul>
+</li>
+<li class="toctree-l7"><a class="reference internal" href="#ni_measurementlink_service.session_management.MultiSessionReservation">MultiSessionReservation</a><ul>
+<li class="toctree-l8"><a class="reference internal" href="#ni_measurementlink_service.session_management.MultiSessionReservation.session_info">session_info</a></li>
+</ul>
+</li>
+<li class="toctree-l7"><a class="reference internal" href="#ni_measurementlink_service.session_management.__getattr__">__getattr__</a></li>
 <li class="toctree-l7"><a class="reference internal" href="#ni_measurementlink_service.session_management.Client">Client</a><ul>
+<li class="toctree-l8"><a class="reference internal" href="#ni_measurementlink_service.session_management.Client.reserve_session">reserve_session</a></li>
 <li class="toctree-l8"><a class="reference internal" href="#ni_measurementlink_service.session_management.Client.reserve_sessions">reserve_sessions</a></li>
 <li class="toctree-l8"><a class="reference internal" href="#ni_measurementlink_service.session_management.Client.register_sessions">register_sessions</a></li>
 <li class="toctree-l8"><a class="reference internal" href="#ni_measurementlink_service.session_management.Client.unregister_sessions">unregister_sessions</a></li>
@@ -199,11 +218,27 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="#ni_measurementlink_service.session_management.SessionInformation" title="ni_measurementlink_service.session_management.SessionInformation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SessionInformation</span></code></a></p></td>
 <td><p>Container for the session information.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#ni_measurementlink_service.session_management.Reservation" title="ni_measurementlink_service.session_management.Reservation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Reservation</span></code></a></p></td>
-<td><p>Manage session reservation.</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#ni_measurementlink_service.session_management.BaseReservation" title="ni_measurementlink_service.session_management.BaseReservation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseReservation</span></code></a></p></td>
+<td><p>Manages session reservation.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ni_measurementlink_service.session_management.SingleSessionReservation" title="ni_measurementlink_service.session_management.SingleSessionReservation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SingleSessionReservation</span></code></a></p></td>
+<td><p>Manages reservation for a single session.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ni_measurementlink_service.session_management.MultiSessionReservation" title="ni_measurementlink_service.session_management.MultiSessionReservation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MultiSessionReservation</span></code></a></p></td>
+<td><p>Manages reservation for multiple sessions.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#ni_measurementlink_service.session_management.Client" title="ni_measurementlink_service.session_management.Client"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Client</span></code></a></p></td>
 <td><p>Class that manages driver sessions.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="functions">
+<h3>Functions<a class="headerlink" href="#functions" title="Permalink to this heading"></a></h3>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ni_measurementlink_service.session_management.__getattr__" title="ni_measurementlink_service.session_management.__getattr__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__getattr__</span></code></a>(name)</p></td>
+<td><p></p></td>
 </tr>
 </tbody>
 </table>
@@ -359,9 +394,9 @@
 <h4>Attributes<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h4>
 <blockquote>
 <div><dl class="simple">
-<dt>pin_map_id (str): The resource id of the pin map in the Pin Map service that should be used</dt><dd><p>for the call.</p>
+<dt>pin_map_id: The resource id of the pin map in the Pin Map service that should be used for</dt><dd><p>the call.</p>
 </dd>
-<dt>sites (list): List of site numbers being used for the call. If None, use all sites in the</dt><dd><p>pin map.</p>
+<dt>sites: List of site numbers being used for the call. If None or empty, use all sites in the</dt><dd><p>pin map.</p>
 </dd>
 </dl>
 </div></blockquote>
@@ -475,35 +510,60 @@ Client.reserve_all_registered_sessions.</p>
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="ni_measurementlink_service.session_management.Reservation">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ni_measurementlink_service.session_management.</span></span><span class="sig-name descname"><span class="pre">Reservation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">session_manager</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session_info</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/ni_measurementlink_service/session_management.html#Reservation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service.session_management.Reservation" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Manage session reservation.</p>
+<dt class="sig sig-object py" id="ni_measurementlink_service.session_management.BaseReservation">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ni_measurementlink_service.session_management.</span></span><span class="sig-name descname"><span class="pre">BaseReservation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">session_manager</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session_info</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/ni_measurementlink_service/session_management.html#BaseReservation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service.session_management.BaseReservation" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">abc.ABC</span></code></p>
+<p>Manages session reservation.</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="ni_measurementlink_service.session_management.Reservation.__enter__">
-<span class="sig-name descname"><span class="pre">__enter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/ni_measurementlink_service/session_management.html#Reservation.__enter__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service.session_management.Reservation.__enter__" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="ni_measurementlink_service.session_management.BaseReservation.__enter__">
+<span class="sig-name descname"><span class="pre">__enter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/ni_measurementlink_service/session_management.html#BaseReservation.__enter__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service.session_management.BaseReservation.__enter__" title="Permalink to this definition"></a></dt>
 <dd><p>Context management protocol. Returns self.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="ni_measurementlink_service.session_management.Reservation.__exit__">
-<span class="sig-name descname"><span class="pre">__exit__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">exc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/ni_measurementlink_service/session_management.html#Reservation.__exit__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service.session_management.Reservation.__exit__" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="ni_measurementlink_service.session_management.BaseReservation.__exit__">
+<span class="sig-name descname"><span class="pre">__exit__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">exc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/ni_measurementlink_service/session_management.html#BaseReservation.__exit__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service.session_management.BaseReservation.__exit__" title="Permalink to this definition"></a></dt>
 <dd><p>Context management protocol. Calls unreserve().</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="ni_measurementlink_service.session_management.Reservation.unreserve">
-<span class="sig-name descname"><span class="pre">unreserve</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/ni_measurementlink_service/session_management.html#Reservation.unreserve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service.session_management.Reservation.unreserve" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="ni_measurementlink_service.session_management.BaseReservation.unreserve">
+<span class="sig-name descname"><span class="pre">unreserve</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/ni_measurementlink_service/session_management.html#BaseReservation.unreserve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service.session_management.BaseReservation.unreserve" title="Permalink to this definition"></a></dt>
 <dd><p>Unreserve sessions.</p>
 </dd></dl>
 
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="ni_measurementlink_service.session_management.SingleSessionReservation">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ni_measurementlink_service.session_management.</span></span><span class="sig-name descname"><span class="pre">SingleSessionReservation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">session_manager</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session_info</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/ni_measurementlink_service/session_management.html#SingleSessionReservation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service.session_management.SingleSessionReservation" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ni_measurementlink_service.session_management.BaseReservation" title="ni_measurementlink_service.session_management.BaseReservation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseReservation</span></code></a></p>
+<p>Manages reservation for a single session.</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="ni_measurementlink_service.session_management.Reservation.session_info">
-<span class="sig-name descname"><span class="pre">session_info</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ni_measurementlink_service.session_management.Reservation.session_info" title="Permalink to this definition"></a></dt>
-<dd><p>Return session information.</p>
+<dt class="sig sig-object py" id="ni_measurementlink_service.session_management.SingleSessionReservation.session_info">
+<span class="sig-name descname"><span class="pre">session_info</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ni_measurementlink_service.session_management.SingleSessionReservation.session_info" title="Permalink to this definition"></a></dt>
+<dd><p>Single session information object.</p>
 </dd></dl>
 
 </dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="ni_measurementlink_service.session_management.MultiSessionReservation">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ni_measurementlink_service.session_management.</span></span><span class="sig-name descname"><span class="pre">MultiSessionReservation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">session_manager</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session_info</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/ni_measurementlink_service/session_management.html#MultiSessionReservation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service.session_management.MultiSessionReservation" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ni_measurementlink_service.session_management.BaseReservation" title="ni_measurementlink_service.session_management.BaseReservation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseReservation</span></code></a></p>
+<p>Manages reservation for multiple sessions.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="ni_measurementlink_service.session_management.MultiSessionReservation.session_info">
+<span class="sig-name descname"><span class="pre">session_info</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ni_measurementlink_service.session_management.MultiSessionReservation.session_info" title="Permalink to this definition"></a></dt>
+<dd><p>Multiple session information objects.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ni_measurementlink_service.session_management.__getattr__">
+<span class="sig-prename descclassname"><span class="pre">ni_measurementlink_service.session_management.</span></span><span class="sig-name descname"><span class="pre">__getattr__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/ni_measurementlink_service/session_management.html#__getattr__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service.session_management.__getattr__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="ni_measurementlink_service.session_management.Client">
@@ -511,10 +571,10 @@ Client.reserve_all_registered_sessions.</p>
 <dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Class that manages driver sessions.</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="ni_measurementlink_service.session_management.Client.reserve_sessions">
-<span class="sig-name descname"><span class="pre">reserve_sessions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pin_or_relay_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instrument_type_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/ni_measurementlink_service/session_management.html#Client.reserve_sessions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service.session_management.Client.reserve_sessions" title="Permalink to this definition"></a></dt>
-<dd><p>Reserve session(s).</p>
-<p>Reserve session(s) for the given pins, sites, and instrument type ID and returns the
+<dt class="sig sig-object py" id="ni_measurementlink_service.session_management.Client.reserve_session">
+<span class="sig-name descname"><span class="pre">reserve_session</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pin_or_relay_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instrument_type_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/ni_measurementlink_service/session_management.html#Client.reserve_session"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service.session_management.Client.reserve_session" title="Permalink to this definition"></a></dt>
+<dd><p>Reserve a single session.</p>
+<p>Reserve the session matching the given pins, sites, and instrument type ID and return the
 information needed to create or access the session.</p>
 <section id="args">
 <h4>Args<a class="headerlink" href="#args" title="Permalink to this heading"></a></h4>
@@ -550,8 +610,54 @@ any positive numeric value (wait for that number of second).</p>
 <section id="returns">
 <h4>Returns<a class="headerlink" href="#returns" title="Permalink to this heading"></a></h4>
 <blockquote>
-<div><p>Reservation: Context manager that can be used with a with-statement to unreserve the
-sessions.</p>
+<div><p>SingleSessionReservation: Context manager that can be used with a with-statement to
+unreserve the session.</p>
+</div></blockquote>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ni_measurementlink_service.session_management.Client.reserve_sessions">
+<span class="sig-name descname"><span class="pre">reserve_sessions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pin_or_relay_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instrument_type_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/ni_measurementlink_service/session_management.html#Client.reserve_sessions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service.session_management.Client.reserve_sessions" title="Permalink to this definition"></a></dt>
+<dd><p>Reserve multiple sessions.</p>
+<p>Reserve sessions matching the given pins, sites, and instrument type ID and return the
+information needed to create or access the sessions.</p>
+<section id="id4">
+<h4>Args<a class="headerlink" href="#id4" title="Permalink to this heading"></a></h4>
+<blockquote>
+<div><dl>
+<dt>context (PinMapContext): Includes the pin map ID for the pin map in the Pin Map Service,</dt><dd><p>as well as the list of sites for the measurement.</p>
+</dd>
+<dt>pin_or_relay_names (Iterable[str]): List of pins, pin groups, relays, or relay groups to</dt><dd><p>use for the measurement. If unspecified, reserve sessions for all pins and relays in
+the registered pin map resource.</p>
+</dd>
+<dt>instrument_type_id (str): Instrument type ID for the measurement. If unspecified,</dt><dd><p>reserve sessions for all instrument types connected in the registered pin map
+resource. Pin maps have built in instrument definitions using the following NI
+driver based instrument type ids:</p>
+<blockquote>
+<div><p>“niDCPower”
+“niDigitalPattern”
+“niScope”
+“niDMM”
+“niDAQmx”
+“niFGen”
+“niRelayDriver”</p>
+</div></blockquote>
+<p>For custom instruments the user defined instrument type id is defined in the pin
+map file.</p>
+</dd>
+<dt>timeout (float): Timeout in seconds. Allowed values,</dt><dd><p>0 (non-blocking, fails immediately if resources cannot be reserved),
+-1 or negative (infinite timeout), or
+any positive numeric value (wait for that number of second).</p>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+<section id="id5">
+<h4>Returns<a class="headerlink" href="#id5" title="Permalink to this heading"></a></h4>
+<blockquote>
+<div><p>MultiSessionReservation: Context manager that can be used with a with-statement to
+unreserve the sessions.</p>
 </div></blockquote>
 </section>
 </dd></dl>
@@ -561,8 +667,8 @@ sessions.</p>
 <span class="sig-name descname"><span class="pre">register_sessions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">session_info</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/ni_measurementlink_service/session_management.html#Client.register_sessions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service.session_management.Client.register_sessions" title="Permalink to this definition"></a></dt>
 <dd><p>Register the sessions with the Session Manager.</p>
 <p>Indicates that the sessions are open and will need to be closed later.</p>
-<section id="id4">
-<h4>Args:<a class="headerlink" href="#id4" title="Permalink to this heading"></a></h4>
+<section id="id6">
+<h4>Args:<a class="headerlink" href="#id6" title="Permalink to this heading"></a></h4>
 <blockquote>
 <div><p>session_info (Iterable[SessionInformation]): Sessions to register with the session
 management service to track as the sessions are open.</p>
@@ -593,8 +699,8 @@ used again.</p>
 <dt class="sig sig-object py" id="ni_measurementlink_service.session_management.Client.reserve_all_registered_sessions">
 <span class="sig-name descname"><span class="pre">reserve_all_registered_sessions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instrument_type_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/ni_measurementlink_service/session_management.html#Client.reserve_all_registered_sessions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service.session_management.Client.reserve_all_registered_sessions" title="Permalink to this definition"></a></dt>
 <dd><p>Reserves and gets all sessions currently registered in the Session Manager.</p>
-<section id="id5">
-<h4>Args<a class="headerlink" href="#id5" title="Permalink to this heading"></a></h4>
+<section id="id7">
+<h4>Args<a class="headerlink" href="#id7" title="Permalink to this heading"></a></h4>
 <blockquote>
 <div><dl>
 <dt>instrument_type_id (str): Instrument type ID for the measurement. If unspecified,</dt><dd><p>reserve sessions for all instrument types connected in the registered pin map
@@ -619,11 +725,11 @@ any positive numeric value (wait for that number of second).</p>
 </dl>
 </div></blockquote>
 </section>
-<section id="id6">
-<h4>Returns<a class="headerlink" href="#id6" title="Permalink to this heading"></a></h4>
+<section id="id8">
+<h4>Returns<a class="headerlink" href="#id8" title="Permalink to this heading"></a></h4>
 <blockquote>
-<div><p>Reservation: Context manager that can be used with a with-statement to unreserve the
-sessions.</p>
+<div><p>MultiSessionReservation: Context manager that can be used with a with-statement to
+unreserve the sessions.</p>
 </div></blockquote>
 </section>
 </dd></dl>
