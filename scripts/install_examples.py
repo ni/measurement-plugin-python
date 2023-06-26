@@ -6,7 +6,6 @@ import pathlib
 import re
 import shutil
 import subprocess
-import sys
 
 ROOT_DIR = pathlib.Path(__file__).parent.parent
 EXAMPLES_PATH = ROOT_DIR / "examples"
@@ -49,7 +48,7 @@ def main():
         pyproject_data = pyproject_path.read_text()
         new_pyproject_data = re.sub(
             r'^ni-measurementlink-service\s*=\s*\{\s*path\s*=\s*"\.\./\.\."',
-            lambda m: m.group(0).replace('../..', ROOT_DIR.absolute().as_posix()),
+            lambda m: m.group(0).replace("../..", ROOT_DIR.absolute().as_posix()),
             pyproject_data,
             flags=re.MULTILINE,
         )
