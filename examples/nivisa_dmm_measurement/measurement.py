@@ -39,10 +39,12 @@ measurement_service = nims.MeasurementService(
 )
 service_options = ServiceOptions()
 
-# If another measurement is using the session, the reserve function will wait
-# for it to complete. Specify a reservation timeout to aid in debugging missed
-# unreserve calls. Long measurements may require a longer timeout.
 RESERVATION_TIMEOUT_IN_SECONDS = 60.0
+"""
+If another measurement is using the session, the reserve function will wait
+for it to complete. Specify a reservation timeout to aid in debugging missed
+unreserve calls. Long measurements may require a longer timeout.
+"""
 
 RESOLUTION_DIGITS_TO_VALUE = {"3.5": 0.001, "4.5": 0.0001, "5.5": 1e-5, "6.5": 1e-6}
 
