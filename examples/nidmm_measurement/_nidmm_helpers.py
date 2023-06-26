@@ -7,9 +7,11 @@ import nidmm
 
 import ni_measurementlink_service as nims
 
-# To use a physical NI DMM instrument, set this to False or specify
-# --no-use-simulation on the command line.
 USE_SIMULATION = True
+"""
+To use a physical NI DMM instrument, set this to False or specify
+--no-use-simulation on the command line.
+"""
 
 
 def create_session(
