@@ -191,7 +191,9 @@ To statically register a measurement service with the MeasurementLink discovery 
 
 2. Edit the measurement service's `.serviceconfig` file and set the `path` value to the filename of the startup batch file or executable.
 
-3. Copy the measurement service's directory (including the `.venv` subdirectory if present, `.serviceconfig` file, and startup batch file) to a subdirectory of `C:\ProgramData\National Instruments\MeasurementLink\Services`. 
+3. Copy the measurement service's directory (including the `.serviceconfig` file and startup batch file) to a subdirectory of `C:\ProgramData\National Instruments\MeasurementLink\Services`.
+> **Note**
+> If you are using a virtual environment, do not copy the `.venv` subdirectory&mdash;the virtual environment must be re-created in the new location.
 
 Once your measurement service is statically registered, the MeasurementLink discovery service makes it visible in supported NI applications.
 
