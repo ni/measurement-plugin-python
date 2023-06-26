@@ -17,6 +17,7 @@ from _helpers import (
 )
 from _visa_helpers import (
     INSTRUMENT_TYPE_DMM_SIMULATOR,
+    USE_SIMULATION,
     check_instrument_error,
     create_visa_resource_manager,
     create_visa_session,
@@ -25,10 +26,6 @@ from _visa_helpers import (
 )
 
 import ni_measurementlink_service as nims
-
-# To use NI Instrument Simulator v2.0 hardware, set this to False or specify
-# --no-use-simulation on the command line.
-USE_SIMULATION = True
 
 
 service_directory = pathlib.Path(__file__).resolve().parent

@@ -35,9 +35,8 @@ simulate the instrument in software.
 behavior of the simulated instrument. 
 
 To use NI Instrument Simulator hardware:
-- Disable software simulation by setting `USE_SIMULATION = False` in both
-  [`measurement.py`](./measurement.py) and
-  [`teststand_fixture.py`](./teststand_fixture.py). 
+- Disable software simulation by setting `USE_SIMULATION = False` in
+  [`_visa_helpers.py`](./_visa_helpers.py). 
 - Connect the NI Instrument Simulator over GPIB or serial.
 - By default, the pin map included with this example uses the resource name
   `GPIB0::3::INSTR`, which matches the NI Instrument Simulator's factory default
