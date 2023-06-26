@@ -164,6 +164,44 @@ def test___serializer___deserialize_parameter___successful_deserialization(value
     assert list(parameter_value_by_id.values()) == values
 
 
+def test___empty_buffer___deserialize_parameters___returns_zero_or_empty():
+    # Note that we set nonzero defaults to validate that we are getting zero-values
+    # as opposed to simply getting the defaults.
+    nonzero_defaults = [
+        2.0,
+        19.2,
+        3,
+        1,
+        2,
+        2,
+        True,
+        "TestString",
+        [5.5, 3.3, 1.0],
+        [5.5, 3, 1],
+        [1, 2, 3, 4],
+        [0, 1, 399],
+        [1, 2, 3, 4],
+        [0, 1, 399],
+        [True, False, True],
+        ["String1", "String2"],
+        DifferentColor.ORANGE,
+        [DifferentColor.TEAL, DifferentColor.BROWN],
+    ]
+    parameter = _get_test_parameter_by_id(nonzero_defaults)
+    parameter_value_by_id = serializer.deserialize_parameters(parameter, bytes())
+
+    for key, value in parameter_value_by_id.items():
+        parameter_metadata = parameter[key]
+        if parameter_metadata.repeated:
+            assert value == list()
+        elif parameter_metadata.type == type_pb2.Field.TYPE_ENUM:
+            assert value.value == 0
+        elif parameter_metadata.type == type_pb2.Field.TYPE_STRING:
+            assert value == ""
+        else:
+            assert value == 0
+
+
 def _validate_serialized_bytes(custom_serialized_bytes, values):
     # Serialization using gRPC Any
     grpc_serialized_data = _get_grpc_serialized_data(values)

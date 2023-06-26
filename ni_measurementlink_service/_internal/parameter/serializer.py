@@ -193,9 +193,14 @@ def _get_missing_parameters(
     missing_parameters = {}
     for key, value in parameter_metadata_dict.items():
         if key not in parameter_by_id:
-            missing_parameters[key] = serialization_strategy.Context.get_type_default(
-                value.type, value.repeated
-            )
+            enum_annotations = get_enum_values_annotation(value)
+            if enum_annotations and not value.repeated:
+                enum_type = _get_enum_type(value)
+                missing_parameters[key] = enum_type(0)
+            else:
+                missing_parameters[key] = serialization_strategy.Context.get_type_default(
+                    value.type, value.repeated
+                )
     return missing_parameters
 
 
