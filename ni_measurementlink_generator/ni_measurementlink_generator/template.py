@@ -182,3 +182,4 @@ def create_measurement(
             ui_file=ui_file,
         )
     _create_file("start.bat.mako", "start.bat", directory_out_path)
+    _create_file("_helpers.py.mako", "_helpers.py", directory_out_path)
