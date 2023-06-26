@@ -4,7 +4,6 @@
 import logging
 import pathlib
 
-import _helpers
 import click
 import ni_measurementlink_service as nims
 
