@@ -3,10 +3,12 @@
 
 import os
 import pathlib
+import re
 import shutil
 import subprocess
 
-EXAMPLES_PATH = pathlib.Path(__file__).parent.parent / "examples"
+ROOT_DIR = pathlib.Path(__file__).parent.parent
+EXAMPLES_PATH = ROOT_DIR / "examples"
 SERVICES_PATH = (
     pathlib.Path(os.environ["ProgramData"])
     / "National Instruments"
@@ -41,6 +43,18 @@ def main():
         if venv_dir.is_dir():
             print(f"Deleting virtualenv {venv_dir}")
             shutil.rmtree(venv_dir)
+
+        pyproject_path = install_path / "pyproject.toml"
+        pyproject_data = pyproject_path.read_text()
+        new_pyproject_data = re.sub(
+            r'^ni-measurementlink-service\s*=\s*\{\s*path\s*=\s*"\.\./\.\."',
+            lambda m: m.group(0).replace("../..", ROOT_DIR.absolute().as_posix()),
+            pyproject_data,
+            flags=re.MULTILINE,
+        )
+        if new_pyproject_data != pyproject_data:
+            print(f"Patching pyproject.toml to use absolute path")
+            pyproject_path.write_text(new_pyproject_data)
 
         print(f"Installing dependencies")
         subprocess.run(["poetry", "-v", "install"], check=True, cwd=install_path, env=clean_env)
