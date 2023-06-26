@@ -4,7 +4,10 @@
       "displayName": "NI-DAQmx Analog Input (Py)",
       "serviceClass": "ni.examples.NIDAQmxAnalogInput_Python",
       "descriptionUrl": "",
-      "providedInterfaces": [ "ni.measurementlink.measurement.v1.MeasurementService" ],
+      "providedInterfaces": [
+        "ni.measurementlink.measurement.v1.MeasurementService",
+        "ni.measurementlink.measurement.v2.MeasurementService"
+      ],
       "path": "start.bat"
     }
   ]

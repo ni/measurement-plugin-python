@@ -4,7 +4,10 @@
       "displayName": "Sample Measurement",
       "serviceClass": "SampleMeasurement_Python",
       "descriptionUrl": "https://www.example.com/SampleMeasurement.html",
-      "providedInterfaces": [ "ni.measurementlink.measurement.v1.MeasurementService" ],
+      "providedInterfaces": [
+        "ni.measurementlink.measurement.v1.MeasurementService",
+        "ni.measurementlink.measurement.v2.MeasurementService"
+      ],
       "path": "start.bat"
     }
   ]
