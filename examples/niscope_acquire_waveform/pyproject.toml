@@ -16,8 +16,7 @@ mypy = ">=1.0"
 grpc-stubs = "^1.53"
 # Uncomment to use prerelease dependencies (requires poetry>=1.2).
 # niscope = { git = "https://github.com/ni/nimi-python.git", subdirectory = "generated/niscope"}
-# TODO: Re-comment references below after we build a prerelease with enum support.
-ni-measurementlink-service = {path = "../..", develop = true}
+# ni-measurementlink-service = {path = "../..", develop = true}
 
 [build-system]
 requires = ["poetry-core>=1.2.0"]
