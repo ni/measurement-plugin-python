@@ -6,11 +6,11 @@ import os
 import pathlib
 import subprocess
 import sys
-import time
 import typing
 from typing import Optional
 
 import grpc
+import polling2
 
 from ni_measurementlink_service._internal.stubs.ni.measurementlink.discovery.v1 import (
     discovery_service_pb2,
@@ -219,7 +219,7 @@ def _ensure_discovery_service_started(key_file_path: pathlib.Path) -> None:
         return
 
     exe_file_path = _get_discovery_service_location()
-    _start_service(exe_file_path)
+    _start_service(exe_file_path, key_file_path)
 
 
 def _get_discovery_service_location() -> pathlib.PurePath:
@@ -246,10 +246,18 @@ def _key_file_exists(key_file_path: pathlib.Path) -> bool:
     return key_file_path.is_file()
 
 
-def _start_service(exe_file_path: pathlib.PurePath):
+def _start_service(exe_file_path: pathlib.PurePath, key_file_path: pathlib.Path) -> None:
     """Starts the service at the specified path and wait for the service to get up and running."""
     subprocess.Popen([exe_file_path], cwd=exe_file_path.parent)
-    time.sleep(1)
+    # After the execution of process, check for key file existence in the path
+    # stop checking after 30 seconds have elapsed and throw error
+    file_handle = polling2.poll(
+        lambda: _open_key_file(str(key_file_path)),
+        ignore_exceptions=(IOError,),
+        timeout=30,
+        step=0.1,
+    )
+    file_handle.close()
 
 
 def _get_key_file_path(cluster_id: Optional[str] = None) -> pathlib.Path:
