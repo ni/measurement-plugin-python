@@ -2,7 +2,6 @@
 import logging
 import pathlib
 import re
-import shutil
 from typing import Optional
 
 import click
