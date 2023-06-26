@@ -181,7 +181,7 @@ def _reserve_sessions(
     session_management_client: nims.session_management.Client,
     pin_map_id: str,
     instrument_type_id: str,
-) -> nims.session_management.Reservation:
+) -> nims.session_management.MultiSessionReservation:
     pin_map_context = nims.session_management.PinMapContext(pin_map_id=pin_map_id, sites=None)
 
     return session_management_client.reserve_sessions(

@@ -7,7 +7,6 @@ from enum import Enum
 from typing import Tuple
 
 import click
-import grpc
 import nidmm
 from _helpers import (
     ServiceOptions,
@@ -85,7 +84,7 @@ def measure(
 
     session_management_client = create_session_management_client(measurement_service)
 
-    with session_management_client.reserve_sessions(
+    with session_management_client.reserve_session(
         context=measurement_service.context.pin_map_context,
         pin_or_relay_names=[pin_name],
         instrument_type_id=nims.session_management.INSTRUMENT_TYPE_NI_DMM,
@@ -94,15 +93,8 @@ def measure(
         # Long measurements may require a longer timeout.
         timeout=60,
     ) as reservation:
-        if len(reservation.session_info) != 1:
-            measurement_service.context.abort(
-                grpc.StatusCode.INVALID_ARGUMENT,
-                f"Unsupported number of sessions: {len(reservation.session_info)}",
-            )
-
-        session_info = reservation.session_info[0]
         grpc_device_channel = get_grpc_device_channel(measurement_service, nidmm, service_options)
-        with create_session(session_info, grpc_device_channel) as session:
+        with create_session(reservation.session_info, grpc_device_channel) as session:
             session.configure_measurement_digits(
                 nidmm.Function(measurement_type.value)
                 if measurement_type != Function.NONE

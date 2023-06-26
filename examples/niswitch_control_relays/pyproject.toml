@@ -7,7 +7,7 @@ authors = ["National Instruments"]
 [tool.poetry.dependencies]
 python = "^3.8"
 niswitch = ">=1.4.3"
-ni-measurementlink-service = {version = "^1.1.0-dev1", allow-prereleases = true}
+ni-measurementlink-service = {version = "^1.1.0-dev2", allow-prereleases = true}
 click = ">=7.1.2"
 grpcio = "*"
 
@@ -16,7 +16,8 @@ mypy = ">=1.0"
 grpc-stubs = "^1.53"
 # Uncomment to use prerelease dependencies (requires poetry>=1.2).
 # niswitch = { git = "https://github.com/ni/nimi-python.git", subdirectory = "generated/niswitch"}
-# ni-measurementlink-service = {path = "../..", develop = true}
+# Uncomment once 1.1.0-dev2 is released
+ni-measurementlink-service = {path = "../..", develop = true}
 
 [build-system]
 requires = ["poetry-core>=1.2.0"]
