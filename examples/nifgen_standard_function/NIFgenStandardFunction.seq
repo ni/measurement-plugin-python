@@ -4608,6 +4608,9 @@
 																				<TypeSpecialization classname='Str'>
 																					<value>Pin</value>
 																				</TypeSpecialization>
+																				<EnumDefinition classname='Objs'>
+																					<value lbound='[0]' ubound='[]'/>
+																				</EnumDefinition>
 																			</subprops>
 																		</Obj>
 																	</value>
@@ -4618,7 +4621,7 @@
 																					<value>waveform_type</value>
 																				</Name>
 																				<ArgumentValue classname='ExprValue'>
-																					<value>"Sine"</value>
+																					<value>1i64</value>
 																				</ArgumentValue>
 																				<Direction classname='Str'>
 																					<value>In</value>
@@ -4630,14 +4633,63 @@
 																					<value representation='UInt64'>0</value>
 																				</Dimension>
 																				<Type classname='Str'>
-																					<value>TypeString</value>
+																					<value>TypeEnum</value>
 																				</Type>
 																				<ID classname='Num'>
 																					<value representation='Int64'>2</value>
 																				</ID>
 																				<TypeSpecialization classname='Str'>
-																					<value>None</value>
+																					<value>Enum</value>
 																				</TypeSpecialization>
+																				<EnumDefinition classname='Objs'>
+																					<value lbound='[0]' ubound='[8]'>
+																						<value>
+																							<Num name='NONE'>
+																								<value representation='Int64'>0</value>
+																							</Num>
+																						</value>
+																						<value>
+																							<Num name='SINE'>
+																								<value representation='Int64'>1</value>
+																							</Num>
+																						</value>
+																						<value>
+																							<Num name='SQUARE'>
+																								<value representation='Int64'>2</value>
+																							</Num>
+																						</value>
+																						<value>
+																							<Num name='TRIANGLE'>
+																								<value representation='Int64'>3</value>
+																							</Num>
+																						</value>
+																						<value>
+																							<Num name='RAMP_UP'>
+																								<value representation='Int64'>4</value>
+																							</Num>
+																						</value>
+																						<value>
+																							<Num name='RAMP_DOWN'>
+																								<value representation='Int64'>5</value>
+																							</Num>
+																						</value>
+																						<value>
+																							<Num name='DC'>
+																								<value representation='Int64'>6</value>
+																							</Num>
+																						</value>
+																						<value>
+																							<Num name='NOISE'>
+																								<value representation='Int64'>101</value>
+																							</Num>
+																						</value>
+																						<value>
+																							<Num name='USER'>
+																								<value representation='Int64'>102</value>
+																							</Num>
+																						</value>
+																					</value>
+																				</EnumDefinition>
 																			</subprops>
 																		</Obj>
 																	</value>
@@ -4668,6 +4720,9 @@
 																				<TypeSpecialization classname='Str'>
 																					<value>None</value>
 																				</TypeSpecialization>
+																				<EnumDefinition classname='Objs'>
+																					<value lbound='[0]' ubound='[]'/>
+																				</EnumDefinition>
 																			</subprops>
 																		</Obj>
 																	</value>
@@ -4698,6 +4753,9 @@
 																				<TypeSpecialization classname='Str'>
 																					<value>None</value>
 																				</TypeSpecialization>
+																				<EnumDefinition classname='Objs'>
+																					<value lbound='[0]' ubound='[]'/>
+																				</EnumDefinition>
 																			</subprops>
 																		</Obj>
 																	</value>
@@ -4728,6 +4786,9 @@
 																				<TypeSpecialization classname='Str'>
 																					<value>None</value>
 																				</TypeSpecialization>
+																				<EnumDefinition classname='Objs'>
+																					<value lbound='[0]' ubound='[]'/>
+																				</EnumDefinition>
 																			</subprops>
 																		</Obj>
 																	</value>

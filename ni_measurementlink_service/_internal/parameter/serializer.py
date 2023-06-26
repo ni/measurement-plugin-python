@@ -6,7 +6,11 @@ from typing import Any, Dict, Sequence
 from google.protobuf.internal import encoder
 
 from ni_measurementlink_service._internal.parameter import serialization_strategy
-from ni_measurementlink_service._internal.parameter.metadata import ParameterMetadata
+from ni_measurementlink_service._internal.parameter.metadata import (
+    ParameterMetadata,
+    get_enum_values_annotation,
+)
+from ni_measurementlink_service.measurement.info import TypeSpecialization
 
 _GRPC_WIRE_TYPE_BIT_WIDTH = 3
 
@@ -31,6 +35,10 @@ def deserialize_parameters(
     overlapping_parameter_by_id = _get_overlapping_parameters(
         parameter_metadata_dict, parameter_bytes
     )
+
+    # Deserialization enum parameters to their user-defined type
+    _deserialize_enum_parameters(parameter_metadata_dict, overlapping_parameter_by_id)
+
     # Adding missing parameters with type defaults
     missing_parameters = _get_missing_parameters(
         parameter_metadata_dict, overlapping_parameter_by_id
@@ -67,6 +75,15 @@ def serialize_parameters(
             parameter_metadata.type,
             parameter_metadata.repeated,
         )
+        # Convert enum parameters to their underlying value.
+        if (
+            parameter_metadata.annotations.get("ni/type_specialization")
+            == TypeSpecialization.Enum.value
+        ):
+            if parameter_metadata.repeated:
+                parameter = [x.value for x in parameter]
+            else:
+                parameter = parameter.value
         # Skipping serialization if the value is None or if its a type default value.
         if parameter is not None and parameter != type_default_value:
             inner_encoder = encoder(i + 1)
@@ -180,3 +197,37 @@ def _get_missing_parameters(
                 value.type, value.repeated
             )
     return missing_parameters
+
+
+def _deserialize_enum_parameters(
+    parameter_metadata_dict: Dict[int, ParameterMetadata], parameter_by_id: Dict[int, Any]
+) -> None:
+    """Converts all enums in `parameter_by_id` to the user defined enum type.
+
+    Args
+    ----
+        parameter_metadata_dict (Dict[int, ParameterMetadata]): Parameter metadata by id.
+
+        parameter_by_id (Dict[int, Any]): Parameters by ID to compare the metadata with.
+
+    Returns
+    -------
+        None: No return value.
+
+    """
+    for id, value in parameter_by_id.items():
+        parameter_metadata = parameter_metadata_dict[id]
+        if get_enum_values_annotation(parameter_metadata):
+            enum_type = _get_enum_type(parameter_metadata)
+            if parameter_metadata.repeated:
+                for index, member_value in enumerate(value):
+                    parameter_by_id[id][index] = enum_type(member_value)
+            else:
+                parameter_by_id[id] = enum_type(value)
+
+
+def _get_enum_type(parameter_metadata: ParameterMetadata) -> type:
+    if parameter_metadata.repeated and len(parameter_metadata.default_value) > 0:
+        return type(parameter_metadata.default_value[0])
+    else:
+        return type(parameter_metadata.default_value)

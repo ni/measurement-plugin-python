@@ -1,8 +1,8 @@
 """Perform a DMM measurement using NI-VISA and an NI Instrument Simulator v2.0."""
 
-import contextlib
 import logging
 import pathlib
+from enum import Enum
 from typing import Tuple
 
 import click
@@ -11,8 +11,8 @@ import pyvisa.resources
 from _helpers import (
     ServiceOptions,
     configure_logging,
+    create_session_management_client,
     get_service_options,
-    str_to_enum,
     use_simulation_option,
     verbosity_option,
 )
@@ -41,16 +41,19 @@ measurement_service = nims.MeasurementService(
 service_options = ServiceOptions()
 
 
-FUNCTION_TO_ENUM = {
-    "DC Volts": "VOLT:DC",
-    "AC Volts": "VOLT:AC",
-}
+RESOLUTION_DIGITS_TO_VALUE = {"3.5": 0.001, "4.5": 0.0001, "5.5": 1e-5, "6.5": 1e-6}
 
-RESOLUTION_DIGITS_TO_VALUE = {
-    "3.5": 0.001,
-    "4.5": 0.0001,
-    "5.5": 1e-5,
-    "6.5": 1e-6,
+
+class Function(Enum):
+    """Function that represents the measurement type."""
+
+    DC_VOLTS = 0
+    AC_VOLTS = 1
+
+
+FUNCTION_TO_VALUE = {
+    Function.DC_VOLTS: "VOLT:DC",
+    Function.AC_VOLTS: "VOLT:AC",
 }
 
 
@@ -58,13 +61,15 @@ RESOLUTION_DIGITS_TO_VALUE = {
 @measurement_service.configuration(
     "pin_name", nims.DataType.Pin, "Pin1", instrument_type=INSTRUMENT_TYPE_DMM_SIMULATOR
 )
-@measurement_service.configuration("measurement_type", nims.DataType.String, "DC Volts")
+@measurement_service.configuration(
+    "measurement_type", nims.DataType.Enum, Function.DC_VOLTS, enum_type=Function
+)
 @measurement_service.configuration("range", nims.DataType.Double, 1.0)
 @measurement_service.configuration("resolution_digits", nims.DataType.Double, 3.5)
 @measurement_service.output("measured_value", nims.DataType.Double)
 def measure(
     pin_name: str,
-    measurement_type: str,
+    measurement_type: Function,
     range: float,
     resolution_digits: float,
 ) -> Tuple:
@@ -77,26 +82,17 @@ def measure(
         resolution_digits,
     )
 
-    session_management_client = nims.session_management.Client(
-        grpc_channel=measurement_service.get_channel(
-            provided_interface=nims.session_management.GRPC_SERVICE_INTERFACE_NAME,
-            service_class=nims.session_management.GRPC_SERVICE_CLASS,
-        )
-    )
+    session_management_client = create_session_management_client(measurement_service)
 
-    with contextlib.ExitStack() as stack:
-        reservation = stack.enter_context(
-            session_management_client.reserve_sessions(
-                context=measurement_service.context.pin_map_context,
-                pin_or_relay_names=[pin_name],
-                instrument_type_id=INSTRUMENT_TYPE_DMM_SIMULATOR,
-                # If another measurement is using the session, wait for it to complete.
-                # Specify a timeout to aid in debugging missed unreserve calls.
-                # Long measurements may require a longer timeout.
-                timeout=60,
-            )
-        )
-
+    with session_management_client.reserve_sessions(
+        context=measurement_service.context.pin_map_context,
+        pin_or_relay_names=[pin_name],
+        instrument_type_id=INSTRUMENT_TYPE_DMM_SIMULATOR,
+        # If another measurement is using the session, wait for it to complete.
+        # Specify a timeout to aid in debugging missed unreserve calls.
+        # Long measurements may require a longer timeout.
+        timeout=60,
+    ) as reservation:
         if len(reservation.session_info) != 1:
             measurement_service.context.abort(
                 grpc.StatusCode.INVALID_ARGUMENT,
@@ -105,29 +101,27 @@ def measure(
 
         resource_manager = create_visa_resource_manager(service_options.use_simulation)
         session_info = reservation.session_info[0]
-        session = stack.enter_context(
-            create_visa_session(resource_manager, session_info.resource_name)
-        )
+        with create_visa_session(resource_manager, session_info.resource_name) as session:
+            # Work around https://github.com/pyvisa/pyvisa/issues/739 - Type annotation for Resource
+            # context manager implicitly upcasts derived class to base class
+            assert isinstance(session, pyvisa.resources.MessageBasedResource)
 
-        # Work around https://github.com/pyvisa/pyvisa/issues/739 - Type annotation for Resource
-        # context manager implicitly upcasts derived class to base class
-        assert isinstance(session, pyvisa.resources.MessageBasedResource)
+            log_instrument_id(session)
 
-        log_instrument_id(session)
+            # When this measurement is called from outside of TestStand (session_exists == False),
+            # reset the instrument to a known state. In TestStand, ProcessSetup resets the
+            # instrument.
+            if not session_info.session_exists:
+                reset_instrument(session)
 
-        # When this measurement is called from outside of TestStand (session_exists == False),
-        # reset the instrument to a known state. In TestStand, ProcessSetup resets the instrument.
-        if not session_info.session_exists:
-            reset_instrument(session)
+            function_enum = FUNCTION_TO_VALUE[measurement_type]
+            resolution_value = RESOLUTION_DIGITS_TO_VALUE[str(resolution_digits)]
+            session.write("CONF:%s %.g,%.g" % (function_enum, range, resolution_value))
+            check_instrument_error(session)
 
-        function_enum = str_to_enum(FUNCTION_TO_ENUM, measurement_type)
-        resolution_value = str_to_enum(RESOLUTION_DIGITS_TO_VALUE, str(resolution_digits))
-        session.write("CONF:%s %.g,%.g" % (function_enum, range, resolution_value))
-        check_instrument_error(session)
-
-        response = session.query("READ?")
-        check_instrument_error(session)
-        measured_value = float(response)
+            response = session.query("READ?")
+            check_instrument_error(session)
+            measured_value = float(response)
 
     logging.info("Completed measurement: measured_value=%g", measured_value)
     return (measured_value,)

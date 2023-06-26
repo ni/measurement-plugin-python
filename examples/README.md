@@ -12,6 +12,8 @@ For best results, use the example measurements corresponding to the version of M
 that you are using. Newer examples may demonstrate features that are not available in older
 versions of MeasurementLink.
 
+The TestStand sequence files associated with each example are saved in TestStand 2021 SP1.
+
 ### Available Example Measurements
 
 - `sample_measurement`: Performs a loopback measurement with various data types. Provides a Measurement UI and a LabVIEW UI.
