@@ -14,10 +14,9 @@ grpcio = "*"
 [tool.poetry.group.dev.dependencies]
 mypy = ">=1.0"
 grpc-stubs = "^1.53"
-# Uncomment to use prerelease dependencies (requires poetry>=1.2).
+# Uncomment to use prerelease dependencies.
 # nidigital = { git = "https://github.com/ni/nimi-python.git", subdirectory = "generated/nidigital"}
-# Uncomment once 1.1.0-dev2 is released
-ni-measurementlink-service = {path = "../..", develop = true}
+# ni-measurementlink-service = {path = "../..", develop = true}
 
 [build-system]
 requires = ["poetry-core>=1.2.0"]

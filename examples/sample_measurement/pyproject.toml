@@ -12,9 +12,8 @@ click = ">=7.1.2"
 [tool.poetry.group.dev.dependencies]
 mypy = ">=1.0"
 grpc-stubs = "^1.53"
-# Uncomment to use prerelease dependencies (requires poetry>=1.2).
-# TODO: Re-comment references below after we build a prerelease with enum support.
-ni-measurementlink-service = {path = "../..", develop = true}
+# Uncomment to use prerelease dependencies.
+# ni-measurementlink-service = {path = "../..", develop = true}
 
 [build-system]
 requires = ["poetry-core>=1.2.0"]
