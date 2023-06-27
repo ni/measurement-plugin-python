@@ -13,11 +13,10 @@ click = ">=7.1.2"
 [tool.poetry.group.dev.dependencies]
 mypy = ">=1.0"
 grpc-stubs = "^1.53"
-# Uncomment to use prerelease dependencies (requires poetry>=1.2).
+# Uncomment to use prerelease dependencies.
 # TODO: Comment out once a prerelease is built.
 nidaqmx = { git = "https://github.com/ni/nidaqmx-python.git", branch = "master", extras = ["grpc"]}
-# Uncomment once 1.1.0-dev2 is released
-ni-measurementlink-service = {path = "../..", develop = true}
+# ni-measurementlink-service = {path = "../..", develop = true}
 
 [build-system]
 requires = ["poetry-core>=1.2.0"]
