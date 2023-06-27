@@ -334,8 +334,8 @@ class MeasurementServiceServicerV2(v2_measurement_service_pb2_grpc.MeasurementSe
 
         # Measurement Parameters
         measurement_signature = v2_measurement_service_pb2.MeasurementSignature(
-            configuration_parameters_message_type="ni.measurementlink.measurement.v1.MeasurementConfigurations",
-            outputs_message_type="ni.measurementlink.measurement.v1.MeasurementOutputs",
+            configuration_parameters_message_type="ni.measurementlink.measurement.v2.MeasurementConfigurations",
+            outputs_message_type="ni.measurementlink.measurement.v2.MeasurementOutputs",
         )
 
         # Configurations
