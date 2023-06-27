@@ -1,4 +1,5 @@
 """Utilizes command line args to create a measurement using template files."""
+import json
 import logging
 import pathlib
 import re
@@ -169,10 +170,7 @@ def create_measurement(
         annotations_description = ""
     if collection is None:
         collection = ""
-    annotation_tags = []
-    if tags is not None:
-        for n in tags:
-            annotation_tags.append(n)
+    annotation_tags = json.dumps(tags)
 
     _create_file(
         "measurement.py.mako",
