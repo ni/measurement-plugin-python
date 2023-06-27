@@ -217,8 +217,8 @@ def _get_discovery_service_address() -> str:
 
 
 def _ensure_discovery_service_started(key_file_path: pathlib.Path) -> None:
-    """Check whether discovery service key file exists, if not start the discovery service."""
-    if _key_file_exists(key_file_path):
+    """Check whether discovery service already running, if not start the discovery service."""
+    if _service_already_running(key_file_path):
         return
 
     exe_file_path = _get_discovery_service_location()
@@ -257,13 +257,28 @@ def _start_service(exe_file_path: pathlib.PurePath, key_file_path: pathlib.Path)
     timeout_time = time.time() + _START_SERVICE_TIMEOUT
     while True:
         try:
-            with _open_key_file(str(key_file_path)) as file_handle:
+            with _open_key_file(str(key_file_path)) as _:
                 return
         except IOError:
             pass
         if time.time() >= timeout_time:
             raise TimeoutError("Timed out waiting for discovery service to start")
         time.sleep(_START_SERVICE_POLLING_INTERVAL)
+
+
+def _service_already_running(key_file_path: pathlib.Path) -> bool:
+    try:
+        _delete_existing_key_file(key_file_path)
+    except IOError:
+        return True
+    return False
+
+
+def _delete_existing_key_file(key_file_path: pathlib.Path) -> None:
+    if _key_file_exists(key_file_path):
+        with open(str(key_file_path), "w") as _:
+            pass
+        key_file_path.unlink()
 
 
 def _get_key_file_path(cluster_id: Optional[str] = None) -> pathlib.Path:
