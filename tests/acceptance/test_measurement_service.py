@@ -199,13 +199,17 @@ def _validate_get_metadata_response(
     assert get_metadata_response.measurement_details.display_name == "Sample Measurement (Py)"
     assert get_metadata_response.measurement_details.version == "0.1.0.0"
 
+    expected_version = "v1"
+    if isinstance(get_metadata_response, v2_measurement_service_pb2.GetMetadataResponse):
+        expected_version = "v2"
+
     assert (
         get_metadata_response.measurement_signature.configuration_parameters_message_type
-        == "ni.measurementlink.measurement.v1.MeasurementConfigurations"
+        == f"ni.measurementlink.measurement.{expected_version}.MeasurementConfigurations"
     )
     assert (
         get_metadata_response.measurement_signature.outputs_message_type
-        == "ni.measurementlink.measurement.v1.MeasurementOutputs"
+        == f"ni.measurementlink.measurement.{expected_version}.MeasurementOutputs"
     )
     assert (
         len(get_metadata_response.measurement_signature.configuration_parameters)
