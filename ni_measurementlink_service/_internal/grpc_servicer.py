@@ -360,6 +360,7 @@ class MeasurementServiceServicerV2(v2_measurement_service_pb2_grpc.MeasurementSe
             output_parameter.name = output_metadata.display_name
             output_parameter.type = output_metadata.type
             output_parameter.repeated = output_metadata.repeated
+            output_parameter.annotations.update(output_metadata.annotations)
             measurement_signature.outputs.append(output_parameter)
 
         # Sending back Response
