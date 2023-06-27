@@ -19,9 +19,9 @@ _PROVIDED_MEASUREMENT_SERVICES = [
 _PROVIDED_ANNOTATIONS = {
     "ni/service.description": "Measure inrush current with a shorted load and validate results against configured limits.",
     "ni/service.collection": "CurrentTests.Inrush",
-    "ni/service.tags": '["powerup", "current"]',
+    "ni/service.tags": '["powerup","current"]',
     "client/extra.NumberID": "500",
-    "client/extra.Parts": '["A25898", "A25412"]',
+    "client/extra.Parts": '["A25898","A25412"]',
     "custom": '{"foo":"bar","baz":["qux","quux","quuux"],"snork":{"blarg":"flarp","oogle":["foogle","boogle"],"ork":["zork","gork","bork"]}}',
 }
 
