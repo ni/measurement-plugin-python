@@ -261,9 +261,9 @@ no_annotations: typing.Dict[str, str] = {}
                 "ni.measurementlink.measurement.v2.MeasurementService",
             ],
             {
-                "ni/service.description": "Measure inrush current with a shorted load and validate results against configured limits.",
-                "ni/service.collection": "CurrentTests.Inrush",
-                "ni/service.tags": ["powerup", "current"],
+                "ni/service.description": '"Measure inrush current with a shorted load and validate results against configured limits."',
+                "ni/service.collection": '"CurrentTests.Inrush"',
+                "ni/service.tags": '["powerup","current"]',
             },
         ),
         (
@@ -279,21 +279,32 @@ no_annotations: typing.Dict[str, str] = {}
         (
             "example.v3.serviceconfig",
             ["ni.measurementlink.measurement.v2.MeasurementService"],
-            {"ni/service.collection": "CurrentTests.Inrush"},
+            {"ni/service.collection": '"CurrentTests.Inrush"'},
         ),
         (
             "example.v4.serviceconfig",
             ["ni.measurementlink.measurement.v2.MeasurementService"],
-            {"ni/service.tags": ["powerup", "current", "voltage"]},
+            {"ni/service.tags": '["powerup","current","voltage"]'},
         ),
         (
             "example.v5.serviceconfig",
             ["ni.measurementlink.measurement.v2.MeasurementService"],
             {
-                "ni/service.description": "Testing extra Client info",
+                "ni/service.description": '"Testing extra Client info"',
                 "client/extra.NumberID": "500",
-                "client/extra.Parts": ["A25898", "A25412"],
-                "client/extra.GroupName": {"SpeakerType": "true", "PhoneType": "false"},
+                "client/extra.Parts": '["A25898","A25412"]',
+                "client/extra.GroupName": '{"SpeakerType":"true","PhoneType":"false"}',
+            },
+        ),
+        (
+            "example.v6.serviceconfig",
+            ["ni.measurementlink.measurement.v1.MeasurementService"],
+            {
+                "description": '"An annotated test measurement service."',
+                "collection": '"Tests.Measurements"',
+                "tags": '["test","measurement"]',
+                "custom": '{"foo":"bar","baz":["qux","quux","quuux"],"snork":{"blarg":"flarp","oogle":'
+                + '["foogle","boogle"],"ork":["zork","gork","bork"]}}',
             },
         ),
     ],
@@ -317,7 +328,8 @@ def test___service_config___create_measurement_service___service_info_matches_se
         == "https://www.example.com/SampleMeasurement.html"
     )
     if provided_annotations != {}:
-        assert set(measurement_service.service_info.annotations) == set(provided_annotations)
+        for keys in provided_annotations:
+            assert measurement_service.service_info.annotations[keys] == provided_annotations[keys]
 
 
 @pytest.mark.parametrize(

@@ -19,11 +19,12 @@ _PROVIDED_MEASUREMENT_SERVICES = [
 _PROVIDED_ANNOTATIONS = {
     "ni/service.description": "Measure inrush current with a shorted load and validate results against configured limits.",
     "ni/service.collection": "CurrentTests.Inrush",
-    "ni/service.tags": ["powerup", "current"],
-    "client/extra.NumberID": 500,
-    "client/extra.Parts": ["A25898", "A25412"],
-    "client/extra.GroupName": {"SpeakerType": "true", "PhoneType": "false"},
+    "ni/service.tags": '["powerup", "current"]',
+    "client/extra.NumberID": "500",
+    "client/extra.Parts": '["A25898", "A25412"]',
+    "custom": '{"foo":"bar","baz":["qux","quux","quuux"],"snork":{"blarg":"flarp","oogle":["foogle","boogle"],"ork":["zork","gork","bork"]}}',
 }
+
 
 _TEST_SERVICE_PORT = "9999"
 _TEST_SERVICE_INFO = ServiceInfo(
@@ -100,4 +101,5 @@ def _validate_grpc_request(request):
     assert set(request.service_description.provided_interfaces) == set(
         _PROVIDED_MEASUREMENT_SERVICES
     )
-    assert set(request.service_description.annotations) == set(_PROVIDED_ANNOTATIONS)
+    for keys in _PROVIDED_ANNOTATIONS:
+        assert request.service_description.annotations[keys] == _PROVIDED_ANNOTATIONS[keys]

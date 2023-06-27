@@ -109,12 +109,7 @@ class DiscoveryClient:
 
             service_info_annotations = service_info.annotations
             for keys in service_info_annotations:
-                if isinstance(service_info_annotations[keys], (int, float)):
-                    service_descriptor.annotations[keys] = str(service_info_annotations[keys])
-                else:
-                    service_descriptor.annotations[keys] = " ".join(
-                        [str(elem) for elem in str(service_info_annotations[keys])]
-                    )
+                service_descriptor.annotations[keys] = service_info_annotations[keys]
 
             # Registration Request Creation
             request = discovery_service_pb2.RegisterServiceRequest(
