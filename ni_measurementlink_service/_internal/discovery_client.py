@@ -6,11 +6,11 @@ import os
 import pathlib
 import subprocess
 import sys
+import time
 import typing
 from typing import Optional
 
 import grpc
-import polling2
 
 from ni_measurementlink_service._internal.stubs.ni.measurementlink.discovery.v1 import (
     discovery_service_pb2,
@@ -27,6 +27,9 @@ if sys.platform == "win32":
     import winerror
 
 _logger = logging.getLogger(__name__)
+
+_START_SERVICE_TIMEOUT = 30.0
+_START_SERVICE_POLLING_INTERVAL = 100e-3
 
 
 class ServiceLocation(typing.NamedTuple):
@@ -243,7 +246,7 @@ def _get_registration_json_file_path() -> pathlib.Path:
 
 
 def _key_file_exists(key_file_path: pathlib.Path) -> bool:
-    return key_file_path.is_file()
+    return key_file_path.is_file() and key_file_path.stat().st_size > 0
 
 
 def _start_service(exe_file_path: pathlib.PurePath, key_file_path: pathlib.Path) -> None:
@@ -251,13 +254,16 @@ def _start_service(exe_file_path: pathlib.PurePath, key_file_path: pathlib.Path)
     subprocess.Popen([exe_file_path], cwd=exe_file_path.parent)
     # After the execution of process, check for key file existence in the path
     # stop checking after 30 seconds have elapsed and throw error
-    file_handle = polling2.poll(
-        lambda: _open_key_file(str(key_file_path)),
-        ignore_exceptions=(IOError,),
-        timeout=30,
-        step=0.1,
-    )
-    file_handle.close()
+    timeout_time = time.time() + _START_SERVICE_TIMEOUT
+    while True:
+        try:
+            with _open_key_file(str(key_file_path)) as file_handle:
+                return
+        except IOError:
+            pass
+        if time.time() >= timeout_time:
+            raise TimeoutError("Timed out waiting for discovery service to start")
+        time.sleep(_START_SERVICE_POLLING_INTERVAL)
 
 
 def _get_key_file_path(cluster_id: Optional[str] = None) -> pathlib.Path:
