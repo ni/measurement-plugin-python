@@ -33,9 +33,7 @@ class UIProgressUpdatesParameter(google.protobuf.message.Message):
         *,
         time_in_seconds: builtins.float = ...,
     ) -> None: ...
-    def ClearField(
-        self, field_name: typing_extensions.Literal["time_in_seconds", b"time_in_seconds"]
-    ) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["time_in_seconds", b"time_in_seconds"]) -> None: ...
 
 global___UIProgressUpdatesParameter = UIProgressUpdatesParameter
 
@@ -48,9 +46,7 @@ class UIProgressUpdatesOutput(google.protobuf.message.Message):
     STATUS_FIELD_NUMBER: builtins.int
     elapsed_time_in_seconds: builtins.float
     @property
-    def random_numbers(
-        self,
-    ) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.float]: ...
+    def random_numbers(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.float]: ...
     status: builtins.str
     def __init__(
         self,
@@ -59,16 +55,6 @@ class UIProgressUpdatesOutput(google.protobuf.message.Message):
         random_numbers: collections.abc.Iterable[builtins.float] | None = ...,
         status: builtins.str = ...,
     ) -> None: ...
-    def ClearField(
-        self,
-        field_name: typing_extensions.Literal[
-            "elapsed_time_in_seconds",
-            b"elapsed_time_in_seconds",
-            "random_numbers",
-            b"random_numbers",
-            "status",
-            b"status",
-        ],
-    ) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["elapsed_time_in_seconds", b"elapsed_time_in_seconds", "random_numbers", b"random_numbers", "status", b"status"]) -> None: ...
 
 global___UIProgressUpdatesOutput = UIProgressUpdatesOutput

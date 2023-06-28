@@ -30,9 +30,7 @@ class PinMap(google.protobuf.message.Message):
         *,
         pin_map_id: builtins.str = ...,
     ) -> None: ...
-    def ClearField(
-        self, field_name: typing_extensions.Literal["pin_map_id", b"pin_map_id"]
-    ) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["pin_map_id", b"pin_map_id"]) -> None: ...
 
 global___PinMap = PinMap
 
@@ -52,12 +50,7 @@ class CreatePinMapFromXmlRequest(google.protobuf.message.Message):
         pin_map_id: builtins.str = ...,
         pin_map_xml: builtins.str = ...,
     ) -> None: ...
-    def ClearField(
-        self,
-        field_name: typing_extensions.Literal[
-            "pin_map_id", b"pin_map_id", "pin_map_xml", b"pin_map_xml"
-        ],
-    ) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["pin_map_id", b"pin_map_id", "pin_map_xml", b"pin_map_xml"]) -> None: ...
 
 global___CreatePinMapFromXmlRequest = CreatePinMapFromXmlRequest
 
@@ -77,12 +70,7 @@ class UpdatePinMapFromXmlRequest(google.protobuf.message.Message):
         pin_map_id: builtins.str = ...,
         pin_map_xml: builtins.str = ...,
     ) -> None: ...
-    def ClearField(
-        self,
-        field_name: typing_extensions.Literal[
-            "pin_map_id", b"pin_map_id", "pin_map_xml", b"pin_map_xml"
-        ],
-    ) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["pin_map_id", b"pin_map_id", "pin_map_xml", b"pin_map_xml"]) -> None: ...
 
 global___UpdatePinMapFromXmlRequest = UpdatePinMapFromXmlRequest
 
@@ -98,9 +86,7 @@ class GetPinMapRequest(google.protobuf.message.Message):
         *,
         pin_map_id: builtins.str = ...,
     ) -> None: ...
-    def ClearField(
-        self, field_name: typing_extensions.Literal["pin_map_id", b"pin_map_id"]
-    ) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["pin_map_id", b"pin_map_id"]) -> None: ...
 
 global___GetPinMapRequest = GetPinMapRequest
 
@@ -129,12 +115,7 @@ class QueryPinsRequest(google.protobuf.message.Message):
         pin_map_id: builtins.str = ...,
         instrument_type_id: builtins.str = ...,
     ) -> None: ...
-    def ClearField(
-        self,
-        field_name: typing_extensions.Literal[
-            "instrument_type_id", b"instrument_type_id", "pin_map_id", b"pin_map_id"
-        ],
-    ) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["instrument_type_id", b"instrument_type_id", "pin_map_id", b"pin_map_id"]) -> None: ...
 
 global___QueryPinsRequest = QueryPinsRequest
 
@@ -145,18 +126,10 @@ class QueryPinsResponse(google.protobuf.message.Message):
     PINS_FIELD_NUMBER: builtins.int
     PIN_GROUPS_FIELD_NUMBER: builtins.int
     @property
-    def pins(
-        self,
-    ) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[
-        global___PinDefinition
-    ]:
+    def pins(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___PinDefinition]:
         """List of pins on the registered pin map resource. This list includes both DUT and System pins."""
     @property
-    def pin_groups(
-        self,
-    ) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[
-        global___PinGroupDefinition
-    ]:
+    def pin_groups(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___PinGroupDefinition]:
         """List of pin groups on the registered pin map resource.
         When an instrument type id filter is specified, a pin group will only be included
         in the response if all pins in the pin group match the instrument type.
@@ -167,9 +140,7 @@ class QueryPinsResponse(google.protobuf.message.Message):
         pins: collections.abc.Iterable[global___PinDefinition] | None = ...,
         pin_groups: collections.abc.Iterable[global___PinGroupDefinition] | None = ...,
     ) -> None: ...
-    def ClearField(
-        self, field_name: typing_extensions.Literal["pin_groups", b"pin_groups", "pins", b"pins"]
-    ) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["pin_groups", b"pin_groups", "pins", b"pins"]) -> None: ...
 
 global___QueryPinsResponse = QueryPinsResponse
 
@@ -189,12 +160,7 @@ class PinDefinition(google.protobuf.message.Message):
         display_name: builtins.str = ...,
         is_system_pin: builtins.bool = ...,
     ) -> None: ...
-    def ClearField(
-        self,
-        field_name: typing_extensions.Literal[
-            "display_name", b"display_name", "is_system_pin", b"is_system_pin"
-        ],
-    ) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["display_name", b"display_name", "is_system_pin", b"is_system_pin"]) -> None: ...
 
 global___PinDefinition = PinDefinition
 
@@ -208,14 +174,10 @@ class PinGroupDefinition(google.protobuf.message.Message):
     display_name: builtins.str
     """Name of the pin group."""
     @property
-    def pin_or_group_references(
-        self,
-    ) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]:
+    def pin_or_group_references(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]:
         """List of other pins or pin groups within this pin group."""
     @property
-    def resolved_pins(
-        self,
-    ) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]:
+    def resolved_pins(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]:
         """Distinct union of pins within this pin group, including those within nested pin groups."""
     def __init__(
         self,
@@ -224,17 +186,7 @@ class PinGroupDefinition(google.protobuf.message.Message):
         pin_or_group_references: collections.abc.Iterable[builtins.str] | None = ...,
         resolved_pins: collections.abc.Iterable[builtins.str] | None = ...,
     ) -> None: ...
-    def ClearField(
-        self,
-        field_name: typing_extensions.Literal[
-            "display_name",
-            b"display_name",
-            "pin_or_group_references",
-            b"pin_or_group_references",
-            "resolved_pins",
-            b"resolved_pins",
-        ],
-    ) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["display_name", b"display_name", "pin_or_group_references", b"pin_or_group_references", "resolved_pins", b"resolved_pins"]) -> None: ...
 
 global___PinGroupDefinition = PinGroupDefinition
 
@@ -250,9 +202,7 @@ class QueryRelaysRequest(google.protobuf.message.Message):
         *,
         pin_map_id: builtins.str = ...,
     ) -> None: ...
-    def ClearField(
-        self, field_name: typing_extensions.Literal["pin_map_id", b"pin_map_id"]
-    ) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["pin_map_id", b"pin_map_id"]) -> None: ...
 
 global___QueryRelaysRequest = QueryRelaysRequest
 
@@ -263,18 +213,10 @@ class QueryRelaysResponse(google.protobuf.message.Message):
     RELAYS_FIELD_NUMBER: builtins.int
     RELAY_GROUPS_FIELD_NUMBER: builtins.int
     @property
-    def relays(
-        self,
-    ) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[
-        global___RelayDefinition
-    ]:
+    def relays(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___RelayDefinition]:
         """List of relays on the registered pin map resource. This list includes both Site relays and System relays."""
     @property
-    def relay_groups(
-        self,
-    ) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[
-        global___RelayGroupDefinition
-    ]:
+    def relay_groups(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___RelayGroupDefinition]:
         """List of relay groups on the registered pin map resource."""
     def __init__(
         self,
@@ -282,10 +224,7 @@ class QueryRelaysResponse(google.protobuf.message.Message):
         relays: collections.abc.Iterable[global___RelayDefinition] | None = ...,
         relay_groups: collections.abc.Iterable[global___RelayGroupDefinition] | None = ...,
     ) -> None: ...
-    def ClearField(
-        self,
-        field_name: typing_extensions.Literal["relay_groups", b"relay_groups", "relays", b"relays"],
-    ) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["relay_groups", b"relay_groups", "relays", b"relays"]) -> None: ...
 
 global___QueryRelaysResponse = QueryRelaysResponse
 
@@ -305,12 +244,7 @@ class RelayDefinition(google.protobuf.message.Message):
         display_name: builtins.str = ...,
         is_system_relay: builtins.bool = ...,
     ) -> None: ...
-    def ClearField(
-        self,
-        field_name: typing_extensions.Literal[
-            "display_name", b"display_name", "is_system_relay", b"is_system_relay"
-        ],
-    ) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["display_name", b"display_name", "is_system_relay", b"is_system_relay"]) -> None: ...
 
 global___RelayDefinition = RelayDefinition
 
@@ -324,14 +258,10 @@ class RelayGroupDefinition(google.protobuf.message.Message):
     display_name: builtins.str
     """Name of the relay group."""
     @property
-    def relay_or_group_references(
-        self,
-    ) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]:
+    def relay_or_group_references(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]:
         """List of other relays or relay groups within this relay group."""
     @property
-    def resolved_relays(
-        self,
-    ) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]:
+    def resolved_relays(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]:
         """Distinct union of relays within this relay group, including those within nested relay groups."""
     def __init__(
         self,
@@ -340,17 +270,7 @@ class RelayGroupDefinition(google.protobuf.message.Message):
         relay_or_group_references: collections.abc.Iterable[builtins.str] | None = ...,
         resolved_relays: collections.abc.Iterable[builtins.str] | None = ...,
     ) -> None: ...
-    def ClearField(
-        self,
-        field_name: typing_extensions.Literal[
-            "display_name",
-            b"display_name",
-            "relay_or_group_references",
-            b"relay_or_group_references",
-            "resolved_relays",
-            b"resolved_relays",
-        ],
-    ) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["display_name", b"display_name", "relay_or_group_references", b"relay_or_group_references", "resolved_relays", b"resolved_relays"]) -> None: ...
 
 global___RelayGroupDefinition = RelayGroupDefinition
 
@@ -365,14 +285,10 @@ class QueryResourceAccessInformationRequest(google.protobuf.message.Message):
     pin_map_id: builtins.str
     """Required. The resource id of the registered pin map resource."""
     @property
-    def sites(
-        self,
-    ) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.int]:
+    def sites(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.int]:
         """Optional. The list of sites for which to get instrument resource access information. If unspecified, get instrument resource information for all sites in the registered pin map resource."""
     @property
-    def pin_or_relay_names(
-        self,
-    ) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]:
+    def pin_or_relay_names(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]:
         """Optional. The list of pins, pin groups, relays, or relay groups for which to get instrument resource access information. If unspecified, get instrument resource information for all pins and relays in the registered pin map resource."""
     instrument_type_id: builtins.str
     """Optional. The instrument type for which to get instrument resource access information. If unspecified, get instrument resource information for all instrument types connected in the registered pin map resource.
@@ -394,19 +310,7 @@ class QueryResourceAccessInformationRequest(google.protobuf.message.Message):
         pin_or_relay_names: collections.abc.Iterable[builtins.str] | None = ...,
         instrument_type_id: builtins.str = ...,
     ) -> None: ...
-    def ClearField(
-        self,
-        field_name: typing_extensions.Literal[
-            "instrument_type_id",
-            b"instrument_type_id",
-            "pin_map_id",
-            b"pin_map_id",
-            "pin_or_relay_names",
-            b"pin_or_relay_names",
-            "sites",
-            b"sites",
-        ],
-    ) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["instrument_type_id", b"instrument_type_id", "pin_map_id", b"pin_map_id", "pin_or_relay_names", b"pin_or_relay_names", "sites", b"sites"]) -> None: ...
 
 global___QueryResourceAccessInformationRequest = QueryResourceAccessInformationRequest
 
@@ -416,24 +320,14 @@ class QueryResourceAccessInformationResponse(google.protobuf.message.Message):
 
     RESOURCE_ACCESS_INFORMATION_FIELD_NUMBER: builtins.int
     @property
-    def resource_access_information(
-        self,
-    ) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[
-        global___ResourceAccessInformation
-    ]:
+    def resource_access_information(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___ResourceAccessInformation]:
         """List of ResourceAccessInformation objects with instrument resource names and channels."""
     def __init__(
         self,
         *,
-        resource_access_information: collections.abc.Iterable[global___ResourceAccessInformation]
-        | None = ...,
+        resource_access_information: collections.abc.Iterable[global___ResourceAccessInformation] | None = ...,
     ) -> None: ...
-    def ClearField(
-        self,
-        field_name: typing_extensions.Literal[
-            "resource_access_information", b"resource_access_information"
-        ],
-    ) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["resource_access_information", b"resource_access_information"]) -> None: ...
 
 global___QueryResourceAccessInformationResponse = QueryResourceAccessInformationResponse
 
@@ -470,11 +364,7 @@ class ResourceAccessInformation(google.protobuf.message.Message):
     For custom instruments the user defined instrument type id is defined in the pin map file.
     """
     @property
-    def channel_mappings(
-        self,
-    ) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[
-        global___ChannelMapping
-    ]:
+    def channel_mappings(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___ChannelMapping]:
         """List of site and pin/relay mappings that correspond to each channel in the channel_list.
         Each item contains a mapping corresponding to a channel in this instrument resource, in the order of the channel_list.
         """
@@ -486,19 +376,7 @@ class ResourceAccessInformation(google.protobuf.message.Message):
         instrument_type_id: builtins.str = ...,
         channel_mappings: collections.abc.Iterable[global___ChannelMapping] | None = ...,
     ) -> None: ...
-    def ClearField(
-        self,
-        field_name: typing_extensions.Literal[
-            "channel_list",
-            b"channel_list",
-            "channel_mappings",
-            b"channel_mappings",
-            "instrument_type_id",
-            b"instrument_type_id",
-            "resource_name",
-            b"resource_name",
-        ],
-    ) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["channel_list", b"channel_list", "channel_mappings", b"channel_mappings", "instrument_type_id", b"instrument_type_id", "resource_name", b"resource_name"]) -> None: ...
 
 global___ResourceAccessInformation = ResourceAccessInformation
 
@@ -524,11 +402,6 @@ class ChannelMapping(google.protobuf.message.Message):
         site: builtins.int = ...,
         channel: builtins.str = ...,
     ) -> None: ...
-    def ClearField(
-        self,
-        field_name: typing_extensions.Literal[
-            "channel", b"channel", "pin_or_relay_name", b"pin_or_relay_name", "site", b"site"
-        ],
-    ) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["channel", b"channel", "pin_or_relay_name", b"pin_or_relay_name", "site", b"site"]) -> None: ...
 
 global___ChannelMapping = ChannelMapping

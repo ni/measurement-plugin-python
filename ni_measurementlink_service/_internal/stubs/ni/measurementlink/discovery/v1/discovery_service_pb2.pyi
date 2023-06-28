@@ -40,9 +40,7 @@ class ServiceDescriptor(google.protobuf.message.Message):
             key: builtins.str = ...,
             value: builtins.str = ...,
         ) -> None: ...
-        def ClearField(
-            self, field_name: typing_extensions.Literal["key", b"key", "value", b"value"]
-        ) -> None: ...
+        def ClearField(self, field_name: typing_extensions.Literal["key", b"key", "value", b"value"]) -> None: ...
 
     DISPLAY_NAME_FIELD_NUMBER: builtins.int
     DESCRIPTION_URL_FIELD_NUMBER: builtins.int
@@ -54,9 +52,7 @@ class ServiceDescriptor(google.protobuf.message.Message):
     description_url: builtins.str
     """Optional. Url which provides descriptive information about the service"""
     @property
-    def provided_interfaces(
-        self,
-    ) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]:
+    def provided_interfaces(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]:
         """Required. The service interfaces provided by the service. This is the gRPC Full Name of the service.
         Registration can use the gRPC metadata to provide these names.
         """
@@ -65,9 +61,7 @@ class ServiceDescriptor(google.protobuf.message.Message):
     In effect, the .proto service declaration defines the interface, and this field defines a class or concrete type of the interface.
     """
     @property
-    def annotations(
-        self,
-    ) -> google.protobuf.internal.containers.ScalarMap[builtins.str, builtins.str]:
+    def annotations(self) -> google.protobuf.internal.containers.ScalarMap[builtins.str, builtins.str]:
         """Optional. Represents a set of annotations on the service.
         Well-known annotations:
         - Description
@@ -92,21 +86,7 @@ class ServiceDescriptor(google.protobuf.message.Message):
         service_class: builtins.str = ...,
         annotations: collections.abc.Mapping[builtins.str, builtins.str] | None = ...,
     ) -> None: ...
-    def ClearField(
-        self,
-        field_name: typing_extensions.Literal[
-            "annotations",
-            b"annotations",
-            "description_url",
-            b"description_url",
-            "display_name",
-            b"display_name",
-            "provided_interfaces",
-            b"provided_interfaces",
-            "service_class",
-            b"service_class",
-        ],
-    ) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["annotations", b"annotations", "description_url", b"description_url", "display_name", b"display_name", "provided_interfaces", b"provided_interfaces", "service_class", b"service_class"]) -> None: ...
 
 global___ServiceDescriptor = ServiceDescriptor
 
@@ -138,17 +118,7 @@ class ServiceLocation(google.protobuf.message.Message):
         insecure_port: builtins.str = ...,
         ssl_authenticated_port: builtins.str = ...,
     ) -> None: ...
-    def ClearField(
-        self,
-        field_name: typing_extensions.Literal[
-            "insecure_port",
-            b"insecure_port",
-            "location",
-            b"location",
-            "ssl_authenticated_port",
-            b"ssl_authenticated_port",
-        ],
-    ) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["insecure_port", b"insecure_port", "location", b"location", "ssl_authenticated_port", b"ssl_authenticated_port"]) -> None: ...
 
 global___ServiceLocation = ServiceLocation
 
@@ -170,18 +140,8 @@ class RegisterServiceRequest(google.protobuf.message.Message):
         service_description: global___ServiceDescriptor | None = ...,
         location: global___ServiceLocation | None = ...,
     ) -> None: ...
-    def HasField(
-        self,
-        field_name: typing_extensions.Literal[
-            "location", b"location", "service_description", b"service_description"
-        ],
-    ) -> builtins.bool: ...
-    def ClearField(
-        self,
-        field_name: typing_extensions.Literal[
-            "location", b"location", "service_description", b"service_description"
-        ],
-    ) -> None: ...
+    def HasField(self, field_name: typing_extensions.Literal["location", b"location", "service_description", b"service_description"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing_extensions.Literal["location", b"location", "service_description", b"service_description"]) -> None: ...
 
 global___RegisterServiceRequest = RegisterServiceRequest
 
@@ -197,9 +157,7 @@ class RegisterServiceResponse(google.protobuf.message.Message):
         *,
         registration_id: builtins.str = ...,
     ) -> None: ...
-    def ClearField(
-        self, field_name: typing_extensions.Literal["registration_id", b"registration_id"]
-    ) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["registration_id", b"registration_id"]) -> None: ...
 
 global___RegisterServiceResponse = RegisterServiceResponse
 
@@ -215,9 +173,7 @@ class UnregisterServiceRequest(google.protobuf.message.Message):
         *,
         registration_id: builtins.str = ...,
     ) -> None: ...
-    def ClearField(
-        self, field_name: typing_extensions.Literal["registration_id", b"registration_id"]
-    ) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["registration_id", b"registration_id"]) -> None: ...
 
 global___UnregisterServiceRequest = UnregisterServiceRequest
 
@@ -245,9 +201,7 @@ class EnumerateServicesRequest(google.protobuf.message.Message):
         *,
         provided_interface: builtins.str = ...,
     ) -> None: ...
-    def ClearField(
-        self, field_name: typing_extensions.Literal["provided_interface", b"provided_interface"]
-    ) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["provided_interface", b"provided_interface"]) -> None: ...
 
 global___EnumerateServicesRequest = EnumerateServicesRequest
 
@@ -257,20 +211,14 @@ class EnumerateServicesResponse(google.protobuf.message.Message):
 
     AVAILABLE_SERVICES_FIELD_NUMBER: builtins.int
     @property
-    def available_services(
-        self,
-    ) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[
-        global___ServiceDescriptor
-    ]:
+    def available_services(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___ServiceDescriptor]:
         """The list of available services which implement the specified service interface."""
     def __init__(
         self,
         *,
         available_services: collections.abc.Iterable[global___ServiceDescriptor] | None = ...,
     ) -> None: ...
-    def ClearField(
-        self, field_name: typing_extensions.Literal["available_services", b"available_services"]
-    ) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["available_services", b"available_services"]) -> None: ...
 
 global___EnumerateServicesResponse = EnumerateServicesResponse
 
@@ -294,11 +242,6 @@ class ResolveServiceRequest(google.protobuf.message.Message):
         provided_interface: builtins.str = ...,
         service_class: builtins.str = ...,
     ) -> None: ...
-    def ClearField(
-        self,
-        field_name: typing_extensions.Literal[
-            "provided_interface", b"provided_interface", "service_class", b"service_class"
-        ],
-    ) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["provided_interface", b"provided_interface", "service_class", b"service_class"]) -> None: ...
 
 global___ResolveServiceRequest = ResolveServiceRequest
