@@ -125,6 +125,4 @@ class SessionManagementServiceServicer(metaclass=abc.ABCMeta):
             - Session(s) were already reserved and didn't become available before the specified timeout expired.
         """
 
-def add_SessionManagementServiceServicer_to_server(
-    servicer: SessionManagementServiceServicer, server: grpc.Server
-) -> None: ...
+def add_SessionManagementServiceServicer_to_server(servicer: SessionManagementServiceServicer, server: grpc.Server) -> None: ...
