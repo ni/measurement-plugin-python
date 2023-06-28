@@ -251,9 +251,6 @@ def _fake_measurement_function():
 no_annotations: typing.Dict[str, str] = {}
 
 
-no_annotations: typing.Dict[str, str] = {}
-
-
 @pytest.mark.parametrize(
     "service_config,provided_interfaces,provided_annotations",
     [
@@ -351,7 +348,6 @@ def test___measurement_service___add_configuration_with_invalid_enum_type___rais
         measurement_service.configuration(display_name, type, default_value)(
             _fake_measurement_function
         )
-
 
 
 @pytest.fixture

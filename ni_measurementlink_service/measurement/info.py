@@ -52,7 +52,7 @@ class ServiceInfo(NamedTuple):
     service_class: str
     description_url: str
     provided_interfaces: List[str] = ["ni.measurementlink.measurement.v1.MeasurementService"]
-    annotations: Dict[str, object] = {}
+    annotations: Dict[str, str] = {}
 
 
 class TypeSpecialization(enum.Enum):
