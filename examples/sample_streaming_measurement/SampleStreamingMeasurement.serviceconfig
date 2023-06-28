@@ -9,8 +9,8 @@
       ],
       "path": "start.bat",
       "annotations": {
-        "ni/service.description": "Streaming Measurement",
-        "ni/service.collection": "Examples",
+        "ni/service.description": "Measurement example that returns a predictable stream of data.",
+        "ni/service.collection": "NI.Examples",
         "ni/service.tags": []
       }
     }

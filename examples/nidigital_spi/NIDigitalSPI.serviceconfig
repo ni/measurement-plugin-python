@@ -7,8 +7,8 @@
       "providedInterfaces": [ "ni.measurementlink.measurement.v1.MeasurementService" ],
       "path": "start.bat",
       "annotations": {
-        "ni/service.description": "NI-Digital Example",
-        "ni/service.collection": "Examples",
+        "ni/service.description": "Measurement example that uses a NI-Digital SPI.",
+        "ni/service.collection": "NI.Examples",
         "ni/service.tags": []
       }
     }
