@@ -327,9 +327,7 @@ def test___service_config___create_measurement_service___service_info_matches_se
         measurement_service.service_info.description_url
         == "https://www.example.com/SampleMeasurement.html"
     )
-    if provided_annotations != {}:
-        for keys in provided_annotations:
-            assert measurement_service.service_info.annotations[keys] == provided_annotations[keys]
+    assert measurement_service.service_info.annotations == provided_annotations
 
 
 @pytest.mark.parametrize(

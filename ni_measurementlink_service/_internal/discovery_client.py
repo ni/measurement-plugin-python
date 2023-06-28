@@ -106,10 +106,7 @@ class DiscoveryClient:
             service_descriptor.service_class = service_info.service_class
             service_descriptor.description_url = service_info.description_url
             service_descriptor.provided_interfaces.extend(service_info.provided_interfaces)
-
-            service_info_annotations = service_info.annotations
-            for keys in service_info_annotations:
-                service_descriptor.annotations[keys] = service_info_annotations[keys]
+            service_descriptor.annotations.update(service_info.annotations)
 
             # Registration Request Creation
             request = discovery_service_pb2.RegisterServiceRequest(
@@ -133,7 +130,6 @@ class DiscoveryClient:
             )
         except Exception as err:
             _logger.exception("Error in registering with discovery service.")
-            print(f"Unexpected {err=}, {type(err)=}")
             return False
         return True
 

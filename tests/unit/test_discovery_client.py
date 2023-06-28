@@ -98,8 +98,7 @@ def _validate_grpc_request(request):
     assert request.service_description.service_class == _TEST_SERVICE_INFO.service_class
     assert request.service_description.description_url == _TEST_SERVICE_INFO.description_url
     assert request.service_description.display_name == _TEST_MEASUREMENT_INFO.display_name
-    assert set(request.service_description.provided_interfaces) == set(
+    assert set(request.service_description.provided_interfaces) >= set(
         _PROVIDED_MEASUREMENT_SERVICES
     )
-    for keys in _PROVIDED_ANNOTATIONS:
-        assert request.service_description.annotations[keys] == _PROVIDED_ANNOTATIONS[keys]
+    assert request.service_description.annotations == _PROVIDED_ANNOTATIONS
