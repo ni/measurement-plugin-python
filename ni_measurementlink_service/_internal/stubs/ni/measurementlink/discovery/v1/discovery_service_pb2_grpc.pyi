@@ -111,6 +111,4 @@ class DiscoveryServiceServicer(metaclass=abc.ABCMeta):
         - FAILED_PRECONDITION: More than one service matching the resolve request was found
         """
 
-def add_DiscoveryServiceServicer_to_server(
-    servicer: DiscoveryServiceServicer, server: grpc.Server
-) -> None: ...
+def add_DiscoveryServiceServicer_to_server(servicer: DiscoveryServiceServicer, server: grpc.Server) -> None: ...

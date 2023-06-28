@@ -69,9 +69,7 @@ class SessionManagementServiceServicer(metaclass=abc.ABCMeta):
         self,
         request: ni_measurementlink_sessionmanagement_v1_session_management_service_pb2.ReserveSessionsRequest,
         context: grpc.ServicerContext,
-    ) -> (
-        ni_measurementlink_sessionmanagement_v1_session_management_service_pb2.ReserveSessionsResponse
-    ):
+    ) -> (ni_measurementlink_sessionmanagement_v1_session_management_service_pb2.ReserveSessionsResponse):
         """Reserve session(s) for the given pins or relays, sites, and instrument type ID and returns the information needed to create or access the session.
         (Will be implemented in AB#2046548) Also reserves the session so other processes cannot access it with a ReserveSessions() call.
         Status Codes for errors:
@@ -89,9 +87,7 @@ class SessionManagementServiceServicer(metaclass=abc.ABCMeta):
         self,
         request: ni_measurementlink_sessionmanagement_v1_session_management_service_pb2.UnreserveSessionsRequest,
         context: grpc.ServicerContext,
-    ) -> (
-        ni_measurementlink_sessionmanagement_v1_session_management_service_pb2.UnreserveSessionsResponse
-    ):
+    ) -> (ni_measurementlink_sessionmanagement_v1_session_management_service_pb2.UnreserveSessionsResponse):
         """Unreserves sessions so they can be accessed by other clients.
         - RESOURCE_EXHAUSTED:
             - Error occurred while unreserving sessions.
@@ -101,9 +97,7 @@ class SessionManagementServiceServicer(metaclass=abc.ABCMeta):
         self,
         request: ni_measurementlink_sessionmanagement_v1_session_management_service_pb2.RegisterSessionsRequest,
         context: grpc.ServicerContext,
-    ) -> (
-        ni_measurementlink_sessionmanagement_v1_session_management_service_pb2.RegisterSessionsResponse
-    ):
+    ) -> (ni_measurementlink_sessionmanagement_v1_session_management_service_pb2.RegisterSessionsResponse):
         """Registers the sessions with this service. Indicates that the sessions are open and will need to be closed later.
         Status Codes for errors:
         - ALREADY_EXISTS:
@@ -116,18 +110,14 @@ class SessionManagementServiceServicer(metaclass=abc.ABCMeta):
         self,
         request: ni_measurementlink_sessionmanagement_v1_session_management_service_pb2.UnregisterSessionsRequest,
         context: grpc.ServicerContext,
-    ) -> (
-        ni_measurementlink_sessionmanagement_v1_session_management_service_pb2.UnregisterSessionsResponse
-    ):
+    ) -> (ni_measurementlink_sessionmanagement_v1_session_management_service_pb2.UnregisterSessionsResponse):
         """Unregisters the sessions with this service. Indicates that the sessions have been closed and will need to be reopened before they can be used again."""
     @abc.abstractmethod
     def ReserveAllRegisteredSessions(
         self,
         request: ni_measurementlink_sessionmanagement_v1_session_management_service_pb2.ReserveAllRegisteredSessionsRequest,
         context: grpc.ServicerContext,
-    ) -> (
-        ni_measurementlink_sessionmanagement_v1_session_management_service_pb2.ReserveAllRegisteredSessionsResponse
-    ):
+    ) -> (ni_measurementlink_sessionmanagement_v1_session_management_service_pb2.ReserveAllRegisteredSessionsResponse):
         """Reserves and gets all sessions currently registered with this service.
         - INVALID_ARGUMENT:
             - Timeout specified is less than -1.

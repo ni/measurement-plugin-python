@@ -43,11 +43,7 @@ class MeasurementServiceServicer(metaclass=abc.ABCMeta):
         self,
         request: ni_measurementlink_measurement_v2_measurement_service_pb2.MeasureRequest,
         context: grpc.ServicerContext,
-    ) -> collections.abc.Iterator[
-        ni_measurementlink_measurement_v2_measurement_service_pb2.MeasureResponse
-    ]:
+    ) -> collections.abc.Iterator[ni_measurementlink_measurement_v2_measurement_service_pb2.MeasureResponse]:
         """API used to perform a measurement."""
 
-def add_MeasurementServiceServicer_to_server(
-    servicer: MeasurementServiceServicer, server: grpc.Server
-) -> None: ...
+def add_MeasurementServiceServicer_to_server(servicer: MeasurementServiceServicer, server: grpc.Server) -> None: ...

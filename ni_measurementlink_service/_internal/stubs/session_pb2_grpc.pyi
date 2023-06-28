@@ -75,6 +75,4 @@ class SessionUtilitiesServicer(metaclass=abc.ABCMeta):
     ) -> session_pb2.ResetServerResponse:
         """Resets the server to a default state with no open sessions"""
 
-def add_SessionUtilitiesServicer_to_server(
-    servicer: SessionUtilitiesServicer, server: grpc.Server
-) -> None: ...
+def add_SessionUtilitiesServicer_to_server(servicer: SessionUtilitiesServicer, server: grpc.Server) -> None: ...
