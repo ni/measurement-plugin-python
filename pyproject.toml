@@ -1,9 +1,9 @@
 [tool.black]
-extend-exclude ='((.+_pb2_grpc)|(.+_pb2))+(.py|.pyi)$' # Regex to files with _pb2_grpc.py and _pb2.py Auto Generated Code are excluded
+extend_exclude = '((_pb2_grpc)|(_pb2))+(.py|.pyi)$' # Regex to files with _pb2_grpc.py(pyi) and _pb2.py(pyi) Auto Generated Code are excluded
 line-length = 100
 
 [tool.ni-python-styleguide]
-extend_exclude = "*_pb2_grpc.py,*_pb2.py,venv,ni_measurementlink_generator,*.pyi"
+extend_exclude = "*_pb2_grpc.py,*_pb2.py,venv,ni_measurementlink_generator"
 
 [tool.poetry]
 name = "ni_measurementlink_service"
