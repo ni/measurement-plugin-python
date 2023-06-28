@@ -181,12 +181,10 @@ class MeasurementService:
             ui_file_paths=ui_file_paths,
         )
 
-        service_annotations_string: Dict[str, str] = {}
-        if "annotations" in service:
-            for keys in service["annotations"]:
-                service_annotations_string[keys] = json.dumps(
-                    service["annotations"][keys], separators=(",", ":")
-                )
+        service_annotations_string = {
+            key: json.dumps(value, separators=(",", ":"))
+            for key, value in service.get("annotations", {}).items()
+        }
 
         self.service_info = ServiceInfo(
             service_class=service["serviceClass"],
