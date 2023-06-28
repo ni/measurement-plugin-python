@@ -128,7 +128,7 @@ class DiscoveryClient:
             _logger.error(
                 "Unable to register with discovery service. Possible reason: discovery service not running."
             )
-        except Exception as err:
+        except Exception:
             _logger.exception("Error in registering with discovery service.")
             return False
         return True

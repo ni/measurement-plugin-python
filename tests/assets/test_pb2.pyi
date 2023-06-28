@@ -93,9 +93,7 @@ class MeasurementParameter(google.protobuf.message.Message):
     def bool_array_data(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.bool]: ...
     @property
     def string_array_data(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]: ...
-    enum_data: global___DifferentColor.ValueType
     @property
-    def enum_array_data(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[global___DifferentColor.ValueType]: ...
     def __init__(
         self,
         *,
