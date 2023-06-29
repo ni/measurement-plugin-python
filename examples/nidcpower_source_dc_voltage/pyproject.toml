@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "nidcpower_source_dc_voltage"
 version = "0.5.0"
-description = "MeasurementLink example that sources and measures a DC voltage with an NI SMU"
+description = "MeasurementLink example that sources and measures a DC voltage with an NI SMU."
 authors = ["National Instruments"]
 
 [tool.poetry.dependencies]
