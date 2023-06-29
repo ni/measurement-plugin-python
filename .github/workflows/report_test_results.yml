@@ -13,6 +13,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: test_results
+          path: test_results
       - name: Display structure of downloaded files
         run: ls -R
       - name: Report test summary
