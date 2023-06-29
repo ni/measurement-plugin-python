@@ -21,5 +21,5 @@
           }
        ]
     }
-  %>\
-  ${json.dumps(service_config, indent=2)}
+%>\
+${json.dumps(service_config, indent=2)}

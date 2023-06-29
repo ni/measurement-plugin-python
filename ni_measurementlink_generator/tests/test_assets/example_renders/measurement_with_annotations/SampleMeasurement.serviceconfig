@@ -12,7 +12,11 @@
       "annotations": {
         "ni/service.description": "Measurement description",
         "ni/service.collection": "Measurement.Collection",
-        "ni/service.tags": ["M1", "M2", "M3"]
+        "ni/service.tags": [
+          "M1",
+          "M2",
+          "M3"
+        ]
       }
     }
   ]

@@ -172,6 +172,10 @@ def create_measurement(
 
     directory_out_path.mkdir(exist_ok=True, parents=True)
 
+    annotation_tag = []
+    for i in tags:
+        annotation_tag.append(i)
+
     _create_file(
         "measurement.py.mako",
         "measurement.py",
@@ -194,7 +198,7 @@ def create_measurement(
         ui_file_type=ui_file_type,
         description = description,
         collection = collection,
-        tags = tags,
+        tags = annotation_tag,
     )
     if ui_file_type == "MeasurementUI":
         _create_file(
