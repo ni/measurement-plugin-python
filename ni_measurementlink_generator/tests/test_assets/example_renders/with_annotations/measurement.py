@@ -7,7 +7,7 @@ import ni_measurementlink_service as nims
 
 service_directory = pathlib.Path(__file__).resolve().parent
 measurement_service = nims.MeasurementService(
-    service_config_path=service_directory / "SampleMeasurementWithAnnotations.serviceconfig",
+    service_config_path=service_directory / "SampleMeasurement.serviceconfig",
     version="1.2.3.4",
     ui_file_paths=[service_directory / "MeasurementUI.measui"],
 )
@@ -30,7 +30,7 @@ def measure(array_input):
     help="Enable verbose logging. Repeat to increase verbosity.",
 )
 def main(verbose: int) -> None:
-    """Host the Sample Measurement With Annotations service."""
+    """Host the Sample Measurement service."""
     if verbose > 1:
         level = logging.DEBUG
     elif verbose == 1:

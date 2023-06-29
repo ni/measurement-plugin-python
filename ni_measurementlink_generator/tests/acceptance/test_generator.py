@@ -45,7 +45,7 @@ def test___command_line_args___create_measurement_with_annotations___render_with
     with pytest.raises(SystemExit):
         template.create_measurement(
             [
-                "Sample Measurement With Annotations",
+                "Sample Measurement",
                 "--measurement-version",
                 "1.2.3.4",
                 "--ui-file",
@@ -69,21 +69,14 @@ def test___command_line_args___create_measurement_with_annotations___render_with
             ]
         )
 
-    golden_path = test_assets_directory / "example_renders"
+    golden_path = test_assets_directory / "example_renders" / "with_annotations"
 
-    filenames = [
-        "measurementWithAnnotations.py",
-        "SampleMeasurementWithAnnotations.serviceconfig",
-        "start.bat",
-    ]
+    filenames = ["measurement.py", "SampleMeasurement.serviceconfig", "start.bat"]
     for filename in filenames:
-        golden_file = golden_path / filename
-        # We always generate only measurement.py
-        if filename == "measurementWithAnnotations.py":
-            filename = "measurement.py"
-
-        _assert_equal(golden_file, temp_directory / filename)
-
+        _assert_equal(
+            golden_path / filename,
+            temp_directory / filename,
+        )
 
 def _assert_equal(expected_path: pathlib.Path, result_path: pathlib.Path):
     expected = expected_path.read_text()
