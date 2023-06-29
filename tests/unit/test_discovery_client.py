@@ -140,7 +140,7 @@ def test___get_discovery_service_address___key_file_not_exist___throws_timeouter
 
     with pytest.raises(IOError) as exc_info:
         _get_discovery_service_address()
-        assert exc_info.value.error_type == TimeoutError
+        assert "Timed out waiting for discovery service to start" in str(exc_info.value)
 
 
 @pytest.fixture
