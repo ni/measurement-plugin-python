@@ -125,8 +125,8 @@ def _resolve_service_class(service_class: str, display_name: str) -> str:
     default=[],
     multiple=True,
     help='\b\nAdd one or multiple tags for the measurement adding one by one.'
-    + '\n-Expected format: Enter one tag per -t option.'
-    + '\n-Example to add 2 tags: "-t "test" -t "Internal"',
+    + '\n-Expected format: Enter one case-insensitive string per -t option.'
+    + '\n-Example to add 2 tags: -t "test" -t "Internal"',
 )
 @click.option(
     "-v",
@@ -173,7 +173,6 @@ def create_measurement(
 
     directory_out_path.mkdir(exist_ok=True, parents=True)
 
-    annotation_tags = json.dumps(tags)
     _create_file(
         "measurement.py.mako",
         "measurement.py",
@@ -196,7 +195,7 @@ def create_measurement(
         ui_file_type=ui_file_type,
         description = description,
         collection = collection,
-        tags = annotation_tags,
+        tags = tags,
     )
     if ui_file_type == "MeasurementUI":
         _create_file(

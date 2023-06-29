@@ -27,7 +27,7 @@ def test___command_line_args___create_measurement___render_without_exception(
             ]
         )
 
-    golden_path = test_assets_directory / "example_renders"
+    golden_path = test_assets_directory / "example_renders" / "measurement"
 
     filenames = ["measurement.py", "SampleMeasurement.serviceconfig", "start.bat"]
     for filename in filenames:
@@ -59,7 +59,7 @@ def test___command_line_args___create_measurement_with_annotations___render_with
                 "--directory-out",
                 temp_directory,
                 "--collection",
-                "Measurement collection",
+                "Measurement.Collection",
                 "--tags",
                 "M1",
                 "--tags",
@@ -69,7 +69,7 @@ def test___command_line_args___create_measurement_with_annotations___render_with
             ]
         )
 
-    golden_path = test_assets_directory / "example_renders" / "with_annotations"
+    golden_path = test_assets_directory / "example_renders" / "measurement_with_annotations"
 
     filenames = ["measurement.py", "SampleMeasurement.serviceconfig", "start.bat"]
     for filename in filenames:
