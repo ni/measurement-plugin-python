@@ -31,8 +31,6 @@ jobs:
         with:
           path: ~/.cache/pypoetry/virtualenvs
           key: ${{ runner.os }}-poetry-${{ hashFiles('poetry.lock') }}
-      - name: Create test_results directory
-        run: mkdir -p test_results/
       - name: Install ni-measurementlink-service
         run: poetry install -v
       - name: Run tests and code coverage (ni-measurementlink-service)
@@ -47,5 +45,5 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: test_results
-          path: test_results/*.xml  
+          path: test_results/*.xml
         if: always()
