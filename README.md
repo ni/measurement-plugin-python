@@ -21,7 +21,10 @@
 
 ## Introduction
 
-MeasurementLink Support for Python (`ni-measurementlink-service`) is a Python framework that enables measurement developers to quickly create Python measurements and run them as a service (gRPC).
+MeasurementLink Support for Python (`ni-measurementlink-service`) is a Python
+framework that helps you create reusable measurement plug-ins using gRPC
+services. Deploy your measurement plug-ins to perform interactive validation in
+InstrumentStudio and automated testing in TestStand.
 
 ---
 
