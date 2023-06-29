@@ -18,6 +18,7 @@ measurement_service = nims.MeasurementService(
 @measurement_service.output("Array out", nims.DataType.DoubleArray1D)
 def measure(array_input):
     """TODO: replace the following line with your own measurement logic."""
+    # TODO: revert this
     array_output = array_input
     return (array_output,)
 
