@@ -3,7 +3,7 @@ import json
 import logging
 import pathlib
 import re
-from typing import Optional
+from typing import List, Optional
 
 import click
 from mako import exceptions
@@ -95,6 +95,12 @@ def _resolve_service_class(service_class: str, display_name: str) -> str:
     help="Service Class that the measurement belongs to. Default: '<display_name>_Python'",
 )
 @click.option(
+    "-D",
+    "--description",
+    default="",
+    help="Short description of the measurement",
+)
+@click.option(
     "-d",
     "--description-url",
     default="",
@@ -106,20 +112,21 @@ def _resolve_service_class(service_class: str, display_name: str) -> str:
     help="Output directory for measurement files. Default: '<current_directory>/<display_name>'",
 )
 @click.option(
-    "-a",
-    "--annotations-description",
-    help="Short description for the Measurement",
-)
-@click.option(
     "-c",
     "--collection",
-    help="The collection that this measurement belongs to.",
+    default="",
+    help='\b\nThe collection that this measurement belongs to.'
+    + '\n-Expected format: "." delimited namespace/hierarchy case-insensitive string'
+    + '\n-Example: "CurrentTests.Inrush"',
 )
 @click.option(
     "-t",
     "--tags",
+    default=[],
     multiple=True,
-    help="Add one or multiple tags for the measurement.",
+    help='\b\nAdd one or multiple tags for the measurement adding one by one.'
+    + '\n-Expected format: Enter one tag per -t option.'
+    + '\n-Example to add 2 tags: "-t "test" -t "Internal"',
 )
 @click.option(
     "-v",
@@ -134,9 +141,9 @@ def create_measurement(
     service_class: str,
     description_url: str,
     directory_out: Optional[str],
-    annotations_description: Optional[str],
-    collection: Optional[str],
-    tags: Optional[str],
+    description: str,
+    collection:  str,
+    tags: List[str],
     verbose: bool,
 ) -> None:
     """Generate a Python measurement service from a template.
@@ -166,12 +173,7 @@ def create_measurement(
 
     directory_out_path.mkdir(exist_ok=True, parents=True)
 
-    if annotations_description is None:
-        annotations_description = ""
-    if collection is None:
-        collection = ""
     annotation_tags = json.dumps(tags)
-
     _create_file(
         "measurement.py.mako",
         "measurement.py",
@@ -192,9 +194,9 @@ def create_measurement(
         service_class=service_class,
         description_url=description_url,
         ui_file_type=ui_file_type,
-        annotations_description=annotations_description,
-        collection=collection,
-        tags=annotation_tags,
+        description = description,
+        collection = collection,
+        tags = annotation_tags,
     )
     if ui_file_type == "MeasurementUI":
         _create_file(
