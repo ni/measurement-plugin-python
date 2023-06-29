@@ -276,7 +276,7 @@ def _service_already_running(key_file_path: pathlib.Path) -> bool:
 
 def _delete_existing_key_file(key_file_path: pathlib.Path) -> None:
     if _key_file_exists(key_file_path):
-        with open(str(key_file_path), "w") as _:
+        with key_file_path.open("w") as _:
             pass
         key_file_path.unlink()
 
