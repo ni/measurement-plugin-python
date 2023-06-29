@@ -7,7 +7,7 @@
       "providedInterfaces": [ "ni.measurementlink.measurement.v1.MeasurementService" ],
       "path": "start.bat",
       "annotations": {
-        "ni/service.description": "Measurement example that interacts with an NI-DCPower instrument.",
+        "ni/service.description": "MeasurementLink example that sources and measures a DC voltage with an NI SMU. Provides a Measurement UI.",
         "ni/service.collection": "NI.Examples",
         "ni/service.tags": []
       }

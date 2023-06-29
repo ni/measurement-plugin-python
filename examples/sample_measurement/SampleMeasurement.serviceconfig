@@ -7,7 +7,7 @@
       "providedInterfaces": [ "ni.measurementlink.measurement.v1.MeasurementService" ],
       "path": "start.bat",
       "annotations": {
-        "ni/service.description": "Measurement example that copies its inputs to its outputs.",
+        "ni/service.description": "MeasurementLink example that performs a loopback measurement with various data types.",
         "ni/service.collection": "NI.Examples",
         "ni/service.tags": []
       }

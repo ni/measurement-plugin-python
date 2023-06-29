@@ -7,7 +7,7 @@
       "providedInterfaces": [ "ni.measurementlink.measurement.v1.MeasurementService" ],
       "path": "start.bat",
       "annotations": {
-        "ni/service.description": "Measurement example that interacts with a NI-VISA DMM.",
+        "ni/service.description": "MeasurementLink example that performs a DMM measurement using NI-VISA and an NI Instrument Simulator v2.0.",
         "ni/service.collection": "NI.Examples",
         "ni/service.tags": []
       }
