@@ -277,17 +277,17 @@ no_annotations: typing.Dict[str, str] = {}
             no_annotations,
         ),
         (
-            "example.v3.serviceconfig",
+            "example.OnlyCollection.serviceconfig",
             ["ni.measurementlink.measurement.v2.MeasurementService"],
             {"ni/service.collection": '"CurrentTests.Inrush"'},
         ),
         (
-            "example.v4.serviceconfig",
+            "example.OnlyTags.serviceconfig",
             ["ni.measurementlink.measurement.v2.MeasurementService"],
             {"ni/service.tags": '["powerup","current","voltage"]'},
         ),
         (
-            "example.v5.serviceconfig",
+            "example.AllAnnotations.serviceconfig",
             ["ni.measurementlink.measurement.v2.MeasurementService"],
             {
                 "ni/service.description": '"Testing extra Client info"',
@@ -297,7 +297,7 @@ no_annotations: typing.Dict[str, str] = {}
             },
         ),
         (
-            "example.v6.serviceconfig",
+            "example.CustomAnnotations.serviceconfig",
             ["ni.measurementlink.measurement.v1.MeasurementService"],
             {
                 "description": '"An annotated test measurement service."',
