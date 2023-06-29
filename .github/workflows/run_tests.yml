@@ -31,13 +31,21 @@ jobs:
         with:
           path: ~/.cache/pypoetry/virtualenvs
           key: ${{ runner.os }}-poetry-${{ hashFiles('poetry.lock') }}
+      - name: Create test_results directory
+        run: mkdir -p test_results/
       - name: Install ni-measurementlink-service
         run: poetry install -v
       - name: Run tests and code coverage (ni-measurementlink-service)
-        run: poetry run pytest ./tests -v --cov=ni_measurementlink_service
+        run: poetry run pytest ./tests -v --cov=ni_measurementlink_service --junitxml=test_results/nims-${{ matrix.os }}-py${{ matrix.python-version}}.xml
       - name: Install ni-measurementlink-generator
         run: poetry install -v
         working-directory: ./ni_measurementlink_generator
       - name: Run tests and code coverage (ni-measurementlink-generator)
-        run: poetry run pytest -v --cov=ni_measurementlink_generator
+        run: poetry run pytest -v --cov=ni_measurementlink_generator --junitxml=test_results/nimg-${{ matrix.os }}-py${{ matrix.python-version}}.xml
         working-directory: ./ni_measurementlink_generator
+      - name: Upload test results
+        uses: actions/upload-artifact@v3
+        with:
+          name: test_results
+          path: test_results/*.xml  
+        if: always()
