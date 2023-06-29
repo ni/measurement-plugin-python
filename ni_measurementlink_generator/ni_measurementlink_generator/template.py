@@ -74,7 +74,6 @@ def _resolve_service_class(service_class: str, display_name: str) -> str:
     else:
         return service_class
 
-
 @click.command()
 @click.argument("display_name")
 @click.option(
