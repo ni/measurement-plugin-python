@@ -1,5 +1,4 @@
 """Utilizes command line args to create a measurement using template files."""
-import json
 import logging
 import pathlib
 import re
@@ -74,6 +73,7 @@ def _resolve_service_class(service_class: str, display_name: str) -> str:
     else:
         return service_class
 
+
 @click.command()
 @click.argument("display_name")
 @click.option(
@@ -114,7 +114,7 @@ def _resolve_service_class(service_class: str, display_name: str) -> str:
     "-c",
     "--collection",
     default="",
-    help='\b\nThe collection that this measurement belongs to.'
+    help="\b\nThe collection that this measurement belongs to."
     + '\n-Expected format: "." delimited namespace/hierarchy case-insensitive string'
     + '\n-Example: "CurrentTests.Inrush"',
 )
@@ -123,8 +123,8 @@ def _resolve_service_class(service_class: str, display_name: str) -> str:
     "--tags",
     default=[],
     multiple=True,
-    help='\b\nAdd one or multiple tags for the measurement adding one by one.'
-    + '\n-Expected format: Enter one case-insensitive string per -t option.'
+    help="\b\nAdd one or multiple tags for the measurement adding one by one."
+    + "\n-Expected format: Enter one case-insensitive string per -t option."
     + '\n-Example to add 2 tags: -t "test" -t "Internal"',
 )
 @click.option(
@@ -141,7 +141,7 @@ def create_measurement(
     description_url: str,
     directory_out: Optional[str],
     description: str,
-    collection:  str,
+    collection: str,
     tags: List[str],
     verbose: bool,
 ) -> None:
@@ -196,9 +196,9 @@ def create_measurement(
         service_class=service_class,
         description_url=description_url,
         ui_file_type=ui_file_type,
-        description = description,
-        collection = collection,
-        tags = annotation_tag,
+        description=description,
+        collection=collection,
+        tags=annotation_tag,
     )
     if ui_file_type == "MeasurementUI":
         _create_file(

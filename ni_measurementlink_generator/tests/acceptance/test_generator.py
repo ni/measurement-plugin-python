@@ -78,6 +78,7 @@ def test___command_line_args___create_measurement_with_annotations___render_with
             temp_directory / filename,
         )
 
+
 def _assert_equal(expected_path: pathlib.Path, result_path: pathlib.Path):
     expected = expected_path.read_text()
     result = result_path.read_text()
