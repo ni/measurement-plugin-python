@@ -26,4 +26,5 @@ jobs:
         uses: EnricoMi/publish-unit-test-result-action@v2
         with:
           files: "test_results/*.xml"
+          report_suite_logs: any
         if: always()
