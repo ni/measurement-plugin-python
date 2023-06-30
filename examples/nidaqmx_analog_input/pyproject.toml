@@ -14,8 +14,7 @@ click = ">=7.1.2, !=8.1.4" # mypy fails with click 8.1.4: https://github.com/pal
 mypy = ">=1.0"
 grpc-stubs = "^1.53"
 # Uncomment to use prerelease dependencies.
-# TODO: Comment out once a prerelease is built.
-nidaqmx = { git = "https://github.com/ni/nidaqmx-python.git", branch = "master", extras = ["grpc"]}
+# nidaqmx = { git = "https://github.com/ni/nidaqmx-python.git", branch = "master", extras = ["grpc"]}
 # ni-measurementlink-service = {path = "../..", develop = true}
 
 [build-system]
