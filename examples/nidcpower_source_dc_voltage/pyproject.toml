@@ -6,15 +6,15 @@ authors = ["National Instruments"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
-nidcpower = ">=1.4.3"
-ni-measurementlink-service = {version = "^1.1.0-dev1", allow-prereleases = true}
+nidcpower = { version = ">=1.4.4", extras = ["grpc"] }
+ni-measurementlink-service = {version = "^1.1.0-dev2", allow-prereleases = true}
 click = ">=7.1.2"
 grpcio = "*"
 
 [tool.poetry.group.dev.dependencies]
 mypy = ">=1.0"
 grpc-stubs = "^1.53"
-# Uncomment to use prerelease dependencies (requires poetry>=1.2).
+# Uncomment to use prerelease dependencies.
 # nidcpower = { git = "https://github.com/ni/nimi-python.git", subdirectory = "generated/nidcpower"}
 # ni-measurementlink-service = {path = "../..", develop = true}
 

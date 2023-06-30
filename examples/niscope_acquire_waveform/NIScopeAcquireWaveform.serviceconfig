@@ -4,7 +4,10 @@
       "displayName": "NI-SCOPE Acquire Waveform (Py)",
       "serviceClass": "ni.examples.NIScopeAcquireWaveform_Python",
       "descriptionUrl": "",
-      "providedInterfaces": [ "ni.measurementlink.measurement.v1.MeasurementService" ],
+      "providedInterfaces": [
+        "ni.measurementlink.measurement.v1.MeasurementService",
+        "ni.measurementlink.measurement.v2.MeasurementService"
+      ],
       "path": "start.bat",
       "annotations": {
         "ni/service.description": "MeasurementLink example that acquires a waveform using an NI oscilloscope.",

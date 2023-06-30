@@ -1,15 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<SourceFile Checksum="6D2B8FADAC369F146D57C3017B284A896367EE858E42EC42F051E69B5199072F78CA1CBD47853BC44ACE1C9F31F5FD8B247A1BCF7E1817BFE8ACCEECECE8378A" Timestamp="1D99AF0BB0772DA" xmlns="http://www.ni.com/PlatformFramework">
+<SourceFile Checksum="B38FBF1CAD038ED77B92D7A27D7F05B96324A8514B70829FA392480669A7E334E4C079659475107304313BA2BAF76DA7D3D2C5CDEC1DFFB2F1CCB8B6F47B4770" Timestamp="1D9AA9B03FF06E8" xmlns="http://www.ni.com/PlatformFramework">
 	<SourceModelFeatureSet>
-		<ParsableNamespace AssemblyFileVersion="9.9.0.1550" FeatureSetName="Configuration Based Software Core" Name="http://www.ni.com/ConfigurationBasedSoftware.Core" OldestCompatibleVersion="6.3.0.49152" Version="9.8.1.49152" />
-		<ParsableNamespace AssemblyFileVersion="9.9.0.1550" FeatureSetName="LabVIEW Controls" Name="http://www.ni.com/Controls.LabVIEW.Design" OldestCompatibleVersion="8.1.0.49152" Version="8.1.0.49152" />
-		<ParsableNamespace AssemblyFileVersion="23.5.0.1550" FeatureSetName="InstrumentStudio Measurement UI" Name="http://www.ni.com/InstrumentFramework/ScreenDocument" OldestCompatibleVersion="22.1.0.1" Version="22.1.0.1" />
-		<ParsableNamespace AssemblyFileVersion="9.9.0.1550" FeatureSetName="Editor" Name="http://www.ni.com/PanelCommon" OldestCompatibleVersion="6.1.0.0" Version="6.1.0.49152" />
-		<ParsableNamespace AssemblyFileVersion="9.9.0.1550" FeatureSetName="Editor" Name="http://www.ni.com/PlatformFramework" OldestCompatibleVersion="8.1.0.49152" Version="8.1.0.49152" />
-		<ApplicationVersionInfo Build="23.5.0.1550" Name="MeasurementLink UI Editor" Version="23.5.0.1550" />
+		<ParsableNamespace AssemblyFileVersion="9.9.0.49805" FeatureSetName="Configuration Based Software Core" Name="http://www.ni.com/ConfigurationBasedSoftware.Core" OldestCompatibleVersion="6.3.0.49152" Version="9.8.1.49152" />
+		<ParsableNamespace AssemblyFileVersion="9.9.0.49805" FeatureSetName="LabVIEW Controls" Name="http://www.ni.com/Controls.LabVIEW.Design" OldestCompatibleVersion="8.1.0.49152" Version="8.1.0.49152" />
+		<ParsableNamespace AssemblyFileVersion="23.5.0.49805" FeatureSetName="InstrumentStudio Measurement UI" Name="http://www.ni.com/InstrumentFramework/ScreenDocument" OldestCompatibleVersion="22.1.0.1" Version="22.1.0.1" />
+		<ParsableNamespace AssemblyFileVersion="9.9.0.49805" FeatureSetName="Editor" Name="http://www.ni.com/PanelCommon" OldestCompatibleVersion="6.1.0.0" Version="6.1.0.49152" />
+		<ParsableNamespace AssemblyFileVersion="9.9.0.49805" FeatureSetName="Editor" Name="http://www.ni.com/PlatformFramework" OldestCompatibleVersion="8.1.0.49152" Version="8.1.0.49152" />
+		<ApplicationVersionInfo Build="23.5.0.49805" Name="MeasurementLink UI Editor" Version="23.5.0.49805" />
 	</SourceModelFeatureSet>
 	<Screen ClientId="{26c56ad8-e31a-456d-979e-87865b3f5c61}" DisplayName="NI-DMM Measurement (Py)" Id="f4480b18b95d49bfbefdf2b9d4958707" ServiceClass="ni.examples.NIDmmMeasurement_Python" xmlns="http://www.ni.com/InstrumentFramework/ScreenDocument">
-		<ScreenSurface BackgroundColor="[SMSolidColorBrush]#ffffffff" Height="[float]439" Id="d5c4d136f87c4189a41619217b0d4f32" Left="[float]0" PanelSizeMode="Fixed" Top="[float]0" Width="[float]410" xmlns="http://www.ni.com/ConfigurationBasedSoftware.Core">
+		<ScreenSurface BackgroundColor="[SMSolidColorBrush]#ffffffff" Height="[float]310" Id="d5c4d136f87c4189a41619217b0d4f32" Left="[float]0" PanelSizeMode="Fixed" Top="[float]0" Width="[float]410" xmlns="http://www.ni.com/ConfigurationBasedSoftware.Core">
 			<ScreenSurfaceCanvas Background="[SMSolidColorBrush]#80808080" BaseName="[string]Canvas" Height="[float]143" Id="299e88201b64436290271ab48c3f88c1" Label="[UIModel]8a81dfd7bc5c46228026d1c21aa98288" Left="[float]23" Top="[float]140" Width="[float]127">
 				<ChannelNumericText AdaptsToType="[bool]True" BaseName="[string]Numeric" Channel="[string]{26c56ad8-e31a-456d-979e-87865b3f5c61}/Configuration/range" Enabled="[bool]True" Height="[float]24" Id="3425530122134004b914e5caafe7fa5c" IsLabelBoundToChannel="[bool]False" Label="[UIModel]c24c5007263c45aaab35919b80ade906" Left="[float]15" RadixBase="[RadixBase]0" RadixVisibility="[SMVisibility]Collapsed" Top="[float]36" UnitAnnotation="[string]" ValueFormatter="[string]DisplayFormat=SystemInternational:Digits=2:DigitDisplayType=DigitsOfPrecision:MinimumFieldWidth=0:AlwaysShowSign=False:ShowThousandsSeparator=False" ValueType="[Type]Double" Width="[float]70" />
 				<Label Height="[float]16" Id="c24c5007263c45aaab35919b80ade906" LabelOwner="[UIModel]3425530122134004b914e5caafe7fa5c" Left="[float]15" Text="[string]Range" Top="[float]16" Width="[float]33" xmlns="http://www.ni.com/PanelCommon" />
@@ -27,7 +27,8 @@
 			<Label Height="[float]16" Id="60d7911814ad44b890fb464cbbd80e5d" LabelOwner="[UIModel]6b2cada7604e4852977da8ff18c273e1" Left="[float]195" Text="[string]Absolute resolution" Top="[float]163" Width="[float]103" xmlns="http://www.ni.com/PanelCommon" />
 			<ChannelPinSelector AllowUndefinedValues="[bool]True" BaseName="[string]Pin" Channel="[string]{26c56ad8-e31a-456d-979e-87865b3f5c61}/Configuration/pin_name" DataType="[Type]String" Height="[float]24" Id="f7b79f2403f9467782561c9c75a54604" IsLabelBoundToChannel="[bool]False" Label="[UIModel]9905796649f44175a56f9eb34178d24e" Left="[float]23" SelectedResource="[NI_Core_DataValues_TagRefnum]Pin1" Top="[float]30" Width="[float]127" xmlns="http://www.ni.com/InstrumentFramework/ScreenDocument" />
 			<Label Height="[float]16" Id="9905796649f44175a56f9eb34178d24e" LabelOwner="[UIModel]f7b79f2403f9467782561c9c75a54604" Left="[float]23" Text="[string]Pin name" Top="[float]10" Width="[float]49" xmlns="http://www.ni.com/PanelCommon" />
-			<ChannelEnumSelector AdaptsToType="[bool]True" AllowNonSequentialValues="[bool]True" BaseName="[string]Enum" Channel="[string]{26c56ad8-e31a-456d-979e-87865b3f5c61}/Configuration/measurement_type" Height="[float]24" Id="b97cd7939a794245b11a90b37c297997" IsLabelBoundToChannel="[bool]False" Label="[UIModel]d1f28964d0af4b10835729f4ec94466e" Left="[float]23" Top="[float]83" Width="[float]136" xmlns="http://www.ni.com/InstrumentFramework/ScreenDocument">
+			<ChannelEnumSelector AdaptsToType="[bool]True" AllowNonSequentialValues="[bool]True" BaseName="[string]Enum" Channel="[string]{26c56ad8-e31a-456d-979e-87865b3f5c61}/Configuration/measurement_type" Height="[float]24" Id="b97cd7939a794245b11a90b37c297997" IsLabelBoundToChannel="[bool]False" Label="[UIModel]d1f28964d0af4b10835729f4ec94466e" Left="[float]23" Top="[float]83" Value="[int]101" Width="[float]127" xmlns="http://www.ni.com/InstrumentFramework/ScreenDocument">
+				<RingSelectorInfo DisplayValue="[string]NONE" IsEnabled="[bool]True" Value="[int]0" xmlns="http://www.ni.com/Controls.LabVIEW.Design" />
 				<RingSelectorInfo DisplayValue="[string]DC_VOLTS" IsEnabled="[bool]True" Value="[int]1" xmlns="http://www.ni.com/Controls.LabVIEW.Design" />
 				<RingSelectorInfo DisplayValue="[string]AC_VOLTS" IsEnabled="[bool]True" Value="[int]2" xmlns="http://www.ni.com/Controls.LabVIEW.Design" />
 				<RingSelectorInfo DisplayValue="[string]DC_CURRENT" IsEnabled="[bool]True" Value="[int]3" xmlns="http://www.ni.com/Controls.LabVIEW.Design" />
@@ -44,7 +45,7 @@
 				<RingSelectorInfo DisplayValue="[string]CAPACITANCE" IsEnabled="[bool]True" Value="[int]1005" xmlns="http://www.ni.com/Controls.LabVIEW.Design" />
 				<RingSelectorInfo DisplayValue="[string]INDUCTANCE" IsEnabled="[bool]True" Value="[int]1006" xmlns="http://www.ni.com/Controls.LabVIEW.Design" />
 			</ChannelEnumSelector>
-			<Label Height="[float]16" Id="d1f28964d0af4b10835729f4ec94466e" LabelOwner="[UIModel]b97cd7939a794245b11a90b37c297997" Left="[float]23" Text="[string]Measurement type" Top="[float]63" Width="[float]100" xmlns="http://www.ni.com/PanelCommon" />
+			<Label Height="[float]16" Id="d1f28964d0af4b10835729f4ec94466e" LabelOwner="[UIModel]b97cd7939a794245b11a90b37c297997" Left="[float]23" Text="[string]Measurement type" Top="[float]63" Width="[float]99" xmlns="http://www.ni.com/PanelCommon" />
 		</ScreenSurface>
 	</Screen>
 </SourceFile>

@@ -4,7 +4,10 @@
       "displayName": "NI-DCPower Source DC Voltage (Py)",
       "serviceClass": "ni.examples.NIDCPowerSourceDCVoltage_Python",
       "descriptionUrl": "",
-      "providedInterfaces": [ "ni.measurementlink.measurement.v1.MeasurementService" ],
+      "providedInterfaces": [
+        "ni.measurementlink.measurement.v1.MeasurementService",
+        "ni.measurementlink.measurement.v2.MeasurementService"
+      ],
       "path": "start.bat",
       "annotations": {
         "ni/service.description": "MeasurementLink example that sources and measures a DC voltage with an NI SMU.",

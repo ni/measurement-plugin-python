@@ -30,6 +30,13 @@ measurement_service = nims.MeasurementService(
 )
 service_options = ServiceOptions()
 
+RESERVATION_TIMEOUT_IN_SECONDS = 60.0
+"""
+If another measurement is using the session, the reserve function will wait
+for it to complete. Specify a reservation timeout to aid in debugging missed
+unreserve calls. Long measurements may require a longer timeout.
+"""
+
 
 @measurement_service.register_measurement
 @measurement_service.configuration(
@@ -107,31 +114,22 @@ def measure(
 
     session_management_client = create_session_management_client(measurement_service)
 
-    with session_management_client.reserve_sessions(
+    with session_management_client.reserve_session(
         context=measurement_service.context.pin_map_context,
         pin_or_relay_names=pin_names,
         instrument_type_id=nims.session_management.INSTRUMENT_TYPE_NI_SCOPE,
-        # If another measurement is using the session, wait for it to complete.
-        # Specify a timeout to aid in debugging missed unreserve calls.
-        # Long measurements may require a longer timeout.
-        timeout=60,
+        timeout=RESERVATION_TIMEOUT_IN_SECONDS,
     ) as reservation:
-        if len(reservation.session_info) != 1:
-            measurement_service.context.abort(
-                grpc.StatusCode.INVALID_ARGUMENT,
-                f"Unsupported number of sessions: {len(reservation.session_info)}",
-            )
-
-        session_info = reservation.session_info[0]
-        channel_names = session_info.channel_list
+        channel_names = reservation.session_info.channel_list
         pin_to_channel = {
-            mapping.pin_or_relay_name: mapping.channel for mapping in session_info.channel_mappings
+            mapping.pin_or_relay_name: mapping.channel
+            for mapping in reservation.session_info.channel_mappings
         }
         if trigger_source in pin_to_channel:
             trigger_source = pin_to_channel[trigger_source]
 
         grpc_device_channel = get_grpc_device_channel(measurement_service, niscope, service_options)
-        with create_session(session_info, grpc_device_channel) as session:
+        with create_session(reservation.session_info, grpc_device_channel) as session:
             session.channels[""].channel_enabled = False
             session.channels[channel_names].configure_vertical(
                 vertical_range,
