@@ -171,10 +171,6 @@ def create_measurement(
 
     directory_out_path.mkdir(exist_ok=True, parents=True)
 
-    annotation_tag = []
-    for i in tags:
-        annotation_tag.append(i)
-
     _create_file(
         "measurement.py.mako",
         "measurement.py",
