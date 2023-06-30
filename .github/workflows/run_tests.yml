@@ -15,6 +15,9 @@ jobs:
       matrix:
         os: [macos-latest, windows-latest, ubuntu-latest]
         python-version: [3.8, 3.9, '3.10', 3.11]
+      # Fail-fast skews the pass/fail ratio and seems to make pytest produce
+      # incomplete JUnit XML results.
+      fail-fast: false
     steps:
       - name: Check out repo
         uses: actions/checkout@v2
