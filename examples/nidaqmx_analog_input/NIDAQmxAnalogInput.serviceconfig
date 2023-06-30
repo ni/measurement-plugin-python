@@ -8,7 +8,12 @@
         "ni.measurementlink.measurement.v1.MeasurementService",
         "ni.measurementlink.measurement.v2.MeasurementService"
       ],
-      "path": "start.bat"
+      "path": "start.bat",
+      "annotations": {
+        "ni/service.description": "MeasurementLink example that performs a finite analog input measurement with NI-DAQmx.",
+        "ni/service.collection": "NI.Examples",
+        "ni/service.tags": []
+      }
     }
   ]
 }
