@@ -25,3 +25,12 @@ jobs:
         uses: mikepenz/action-junit-report@v3
         with:
           report_paths: "test_results/*.xml"
+          check_name: "Test results 2"
+          require_passed_tests: true
+          detailed_summary: true
+      - name: Report test summary 3
+        uses: dorny/test-reporter@v1
+        with:
+          name: "Test results 3"
+          path: "test_results/*.xml"
+          reporter: java-junit
