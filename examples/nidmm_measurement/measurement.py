@@ -3,10 +3,10 @@
 import logging
 import math
 import pathlib
+from enum import Enum
 from typing import Tuple
 
 import click
-import grpc
 import nidmm
 from _helpers import (
     ServiceOptions,
@@ -30,6 +30,34 @@ measurement_service = nims.MeasurementService(
 )
 service_options = ServiceOptions()
 
+RESERVATION_TIMEOUT_IN_SECONDS = 60.0
+"""
+If another measurement is using the session, the reserve function will wait
+for it to complete. Specify a reservation timeout to aid in debugging missed
+unreserve calls. Long measurements may require a longer timeout.
+"""
+
+
+class Function(Enum):
+    """Wrapper enum that contains a zero value."""
+
+    NONE = 0
+    DC_VOLTS = nidmm.Function.DC_VOLTS.value
+    AC_VOLTS = nidmm.Function.AC_VOLTS.value
+    DC_CURRENT = nidmm.Function.DC_CURRENT.value
+    AC_CURRENT = nidmm.Function.AC_CURRENT.value
+    TWO_WIRE_RES = nidmm.Function.TWO_WIRE_RES.value
+    FOUR_WIRE_RES = nidmm.Function.FOUR_WIRE_RES.value
+    FREQ = nidmm.Function.FREQ.value
+    PERIOD = nidmm.Function.PERIOD.value
+    TEMPERATURE = nidmm.Function.TEMPERATURE.value
+    AC_VOLTS_DC_COUPLED = nidmm.Function.AC_VOLTS_DC_COUPLED.value
+    DIODE = nidmm.Function.DIODE.value
+    WAVEFORM_VOLTAGE = nidmm.Function.WAVEFORM_VOLTAGE.value
+    WAVEFORM_CURRENT = nidmm.Function.WAVEFORM_CURRENT.value
+    CAPACITANCE = nidmm.Function.CAPACITANCE.value
+    INDUCTANCE = nidmm.Function.INDUCTANCE.value
+
 
 @measurement_service.register_measurement
 @measurement_service.configuration(
@@ -39,7 +67,7 @@ service_options = ServiceOptions()
     instrument_type=nims.session_management.INSTRUMENT_TYPE_NI_DMM,
 )
 @measurement_service.configuration(
-    "measurement_type", nims.DataType.Enum, nidmm.Function.DC_VOLTS, enum_type=nidmm.Function
+    "measurement_type", nims.DataType.Enum, Function.DC_VOLTS, enum_type=Function
 )
 @measurement_service.configuration("range", nims.DataType.Double, 10.0)
 @measurement_service.configuration("resolution_digits", nims.DataType.Double, 5.5)
@@ -48,7 +76,7 @@ service_options = ServiceOptions()
 @measurement_service.output("absolute_resolution", nims.DataType.Double)
 def measure(
     pin_name: str,
-    measurement_type: nidmm.Function,
+    measurement_type: Function,
     range: float,
     resolution_digits: float,
 ) -> Tuple:
@@ -63,26 +91,18 @@ def measure(
 
     session_management_client = create_session_management_client(measurement_service)
 
-    with session_management_client.reserve_sessions(
+    with session_management_client.reserve_session(
         context=measurement_service.context.pin_map_context,
         pin_or_relay_names=[pin_name],
         instrument_type_id=nims.session_management.INSTRUMENT_TYPE_NI_DMM,
-        # If another measurement is using the session, wait for it to complete.
-        # Specify a timeout to aid in debugging missed unreserve calls.
-        # Long measurements may require a longer timeout.
-        timeout=60,
+        timeout=RESERVATION_TIMEOUT_IN_SECONDS,
     ) as reservation:
-        if len(reservation.session_info) != 1:
-            measurement_service.context.abort(
-                grpc.StatusCode.INVALID_ARGUMENT,
-                f"Unsupported number of sessions: {len(reservation.session_info)}",
-            )
-
-        session_info = reservation.session_info[0]
         grpc_device_channel = get_grpc_device_channel(measurement_service, nidmm, service_options)
-        with create_session(session_info, grpc_device_channel) as session:
+        with create_session(reservation.session_info, grpc_device_channel) as session:
             session.configure_measurement_digits(
-                measurement_type,
+                nidmm.Function(measurement_type.value)
+                if measurement_type != Function.NONE
+                else nidmm.Function.DC_VOLTS,
                 range,
                 resolution_digits,
             )

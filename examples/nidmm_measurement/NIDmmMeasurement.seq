@@ -4608,6 +4608,9 @@
 																				<TypeSpecialization classname='Str'>
 																					<value>Pin</value>
 																				</TypeSpecialization>
+																				<EnumDefinition classname='Objs'>
+																					<value lbound='[0]' ubound='[]'/>
+																				</EnumDefinition>
 																			</subprops>
 																		</Obj>
 																	</value>
@@ -4618,26 +4621,110 @@
 																					<value>measurement_type</value>
 																				</Name>
 																				<ArgumentValue classname='ExprValue'>
-																					<value>"DC Volts"</value>
+																					<value>1i64</value>
 																				</ArgumentValue>
 																				<Direction classname='Str'>
 																					<value>In</value>
 																				</Direction>
 																				<Log classname='Bool'>
-																					<value>false</value>
+																					<value>true</value>
 																				</Log>
 																				<Dimension classname='Num'>
 																					<value representation='UInt64'>0</value>
 																				</Dimension>
 																				<Type classname='Str'>
-																					<value>TypeString</value>
+																					<value>TypeEnum</value>
 																				</Type>
 																				<ID classname='Num'>
 																					<value representation='Int64'>2</value>
 																				</ID>
 																				<TypeSpecialization classname='Str'>
-																					<value>None</value>
+																					<value>Enum</value>
 																				</TypeSpecialization>
+																				<EnumDefinition classname='Objs'>
+																					<value lbound='[0]' ubound='[15]'>
+																						<value>
+																							<Num name='NONE'>
+																								<value representation='Int64'>0</value>
+																							</Num>
+																						</value>
+																						<value>
+																							<Num name='DC_VOLTS'>
+																								<value representation='Int64'>1</value>
+																							</Num>
+																						</value>
+																						<value>
+																							<Num name='AC_VOLTS'>
+																								<value representation='Int64'>2</value>
+																							</Num>
+																						</value>
+																						<value>
+																							<Num name='DC_CURRENT'>
+																								<value representation='Int64'>3</value>
+																							</Num>
+																						</value>
+																						<value>
+																							<Num name='AC_CURRENT'>
+																								<value representation='Int64'>4</value>
+																							</Num>
+																						</value>
+																						<value>
+																							<Num name='TWO_WIRE_RES'>
+																								<value representation='Int64'>5</value>
+																							</Num>
+																						</value>
+																						<value>
+																							<Num name='FOUR_WIRE_RES'>
+																								<value representation='Int64'>101</value>
+																							</Num>
+																						</value>
+																						<value>
+																							<Num name='FREQ'>
+																								<value representation='Int64'>104</value>
+																							</Num>
+																						</value>
+																						<value>
+																							<Num name='PERIOD'>
+																								<value representation='Int64'>105</value>
+																							</Num>
+																						</value>
+																						<value>
+																							<Num name='TEMPERATURE'>
+																								<value representation='Int64'>108</value>
+																							</Num>
+																						</value>
+																						<value>
+																							<Num name='AC_VOLTS_DC_COUPLED'>
+																								<value representation='Int64'>1001</value>
+																							</Num>
+																						</value>
+																						<value>
+																							<Num name='DIODE'>
+																								<value representation='Int64'>1002</value>
+																							</Num>
+																						</value>
+																						<value>
+																							<Num name='WAVEFORM_VOLTAGE'>
+																								<value representation='Int64'>1003</value>
+																							</Num>
+																						</value>
+																						<value>
+																							<Num name='WAVEFORM_CURRENT'>
+																								<value representation='Int64'>1004</value>
+																							</Num>
+																						</value>
+																						<value>
+																							<Num name='CAPACITANCE'>
+																								<value representation='Int64'>1005</value>
+																							</Num>
+																						</value>
+																						<value>
+																							<Num name='INDUCTANCE'>
+																								<value representation='Int64'>1006</value>
+																							</Num>
+																						</value>
+																					</value>
+																				</EnumDefinition>
 																			</subprops>
 																		</Obj>
 																	</value>
@@ -4668,6 +4755,9 @@
 																				<TypeSpecialization classname='Str'>
 																					<value>None</value>
 																				</TypeSpecialization>
+																				<EnumDefinition classname='Objs'>
+																					<value lbound='[0]' ubound='[]'/>
+																				</EnumDefinition>
 																			</subprops>
 																		</Obj>
 																	</value>
@@ -4698,6 +4788,9 @@
 																				<TypeSpecialization classname='Str'>
 																					<value>None</value>
 																				</TypeSpecialization>
+																				<EnumDefinition classname='Objs'>
+																					<value lbound='[0]' ubound='[]'/>
+																				</EnumDefinition>
 																			</subprops>
 																		</Obj>
 																	</value>
@@ -4728,6 +4821,9 @@
 																				<TypeSpecialization classname='Str'>
 																					<value>None</value>
 																				</TypeSpecialization>
+																				<EnumDefinition classname='Objs'>
+																					<value lbound='[0]' ubound='[]'/>
+																				</EnumDefinition>
 																			</subprops>
 																		</Obj>
 																	</value>
@@ -4758,6 +4854,9 @@
 																				<TypeSpecialization classname='Str'>
 																					<value>None</value>
 																				</TypeSpecialization>
+																				<EnumDefinition classname='Objs'>
+																					<value lbound='[0]' ubound='[]'/>
+																				</EnumDefinition>
 																			</subprops>
 																		</Obj>
 																	</value>
@@ -4788,6 +4887,9 @@
 																				<TypeSpecialization classname='Str'>
 																					<value>None</value>
 																				</TypeSpecialization>
+																				<EnumDefinition classname='Objs'>
+																					<value lbound='[0]' ubound='[]'/>
+																				</EnumDefinition>
 																			</subprops>
 																		</Obj>
 																	</value>

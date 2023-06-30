@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<SourceFile Checksum="289F3717A5E060CF7B8A7A76D4EF88B55AD6AFC6D88787752C0619D5BCC3E3AF3BCBDEF6A71196F91AE93EE924886C622EEFA267AE33F7CE92234AD34A517AB4" Timestamp="1D9A47887470A1E" xmlns="http://www.ni.com/PlatformFramework">
+<SourceFile Checksum="F305ECA1DE82AC0234FC742DEF3D86F06F6C05439FE95B9A2EF652DEDE03F4A1CE20C5A15962ADB620EA3E39E2D06326C980D2C453F654A2318946055A3FE079" Timestamp="1D9A91D58BBAAD2" xmlns="http://www.ni.com/PlatformFramework">
 	<SourceModelFeatureSet>
-		<ParsableNamespace AssemblyFileVersion="9.9.0.1550" FeatureSetName="Configuration Based Software Core" Name="http://www.ni.com/ConfigurationBasedSoftware.Core" OldestCompatibleVersion="6.3.0.49152" Version="9.8.1.49152" />
-		<ParsableNamespace AssemblyFileVersion="9.9.0.1550" FeatureSetName="LabVIEW Controls" Name="http://www.ni.com/Controls.LabVIEW.Design" OldestCompatibleVersion="8.1.0.49152" Version="8.1.0.49152" />
-		<ParsableNamespace AssemblyFileVersion="23.5.0.1550" FeatureSetName="InstrumentStudio Measurement UI" Name="http://www.ni.com/InstrumentFramework/ScreenDocument" OldestCompatibleVersion="22.1.0.1" Version="22.1.0.1" />
-		<ParsableNamespace AssemblyFileVersion="9.9.0.1550" FeatureSetName="Editor" Name="http://www.ni.com/PanelCommon" OldestCompatibleVersion="6.1.0.0" Version="6.1.0.49152" />
-		<ParsableNamespace AssemblyFileVersion="9.9.0.1550" FeatureSetName="Editor" Name="http://www.ni.com/PlatformFramework" OldestCompatibleVersion="8.1.0.49152" Version="8.1.0.49152" />
-		<ApplicationVersionInfo Build="23.5.0.1550" Name="MeasurementLink UI Editor" Version="23.5.0.1550" />
+		<ParsableNamespace AssemblyFileVersion="9.9.0.2752" FeatureSetName="Configuration Based Software Core" Name="http://www.ni.com/ConfigurationBasedSoftware.Core" OldestCompatibleVersion="6.3.0.49152" Version="9.8.1.49152" />
+		<ParsableNamespace AssemblyFileVersion="9.9.0.2752" FeatureSetName="LabVIEW Controls" Name="http://www.ni.com/Controls.LabVIEW.Design" OldestCompatibleVersion="8.1.0.49152" Version="8.1.0.49152" />
+		<ParsableNamespace AssemblyFileVersion="23.5.0.2752" FeatureSetName="InstrumentStudio Measurement UI" Name="http://www.ni.com/InstrumentFramework/ScreenDocument" OldestCompatibleVersion="22.1.0.1" Version="22.1.0.1" />
+		<ParsableNamespace AssemblyFileVersion="9.9.0.2752" FeatureSetName="Editor" Name="http://www.ni.com/PanelCommon" OldestCompatibleVersion="6.1.0.0" Version="6.1.0.49152" />
+		<ParsableNamespace AssemblyFileVersion="9.9.0.2752" FeatureSetName="Editor" Name="http://www.ni.com/PlatformFramework" OldestCompatibleVersion="8.1.0.49152" Version="8.1.0.49152" />
+		<ApplicationVersionInfo Build="23.5.0.2752" Name="MeasurementLink UI Editor" Version="23.5.0.2752" />
 	</SourceModelFeatureSet>
 	<Screen ClientId="{abd0ec1b-8a8a-46a1-9b11-1bcb569d1849}" DisplayName="Sample Measurement (Py)" Id="20c496a981bb4f73bea9d243756baab5" ServiceClass="ni.examples.SampleMeasurement_Python" xmlns="http://www.ni.com/InstrumentFramework/ScreenDocument">
 		<ScreenSurface BackgroundColor="[SMSolidColorBrush]#00ffffff" Height="[float]445" Id="c47bc3494c0244bab74b59853ae5087f" Left="[float]0" PanelSizeMode="Fixed" Top="[float]0" Width="[float]1094" xmlns="http://www.ni.com/ConfigurationBasedSoftware.Core">
@@ -16,7 +16,7 @@
 			<Label Height="[float]16" Id="72b5606765b48f6a03e01d0505d78c9" LabelOwner="[UIModel]50072f6dacfc4f4cbbcf875d6d8483cd" Left="[float]31" Text="[string]Bool In" Top="[float]71" Width="[float]37" xmlns="http://www.ni.com/PanelCommon" />
 			<ChannelStringControl AcceptsReturn="[bool]False" BaseName="[string]String" Channel="[string]{abd0ec1b-8a8a-46a1-9b11-1bcb569d1849}/Configuration/String In" Enabled="[bool]True" Height="[float]24" HorizontalScrollBarVisibility="[ScrollBarVisibility]Hidden" Id="344fe1d909e0448ca0923ced1bcdcb12" Label="[UIModel]4b4dcad2a0248e58564c645943b0c7f" Left="[float]31" Text="[string]" Top="[float]138" VerticalScrollBarVisibility="[ScrollBarVisibility]Auto" Width="[float]160" />
 			<Label Height="[float]16" Id="4b4dcad2a0248e58564c645943b0c7f" LabelOwner="[UIModel]344fe1d909e0448ca0923ced1bcdcb12" Left="[float]31" Text="[string]String In" Top="[float]118" Width="[float]44" xmlns="http://www.ni.com/PanelCommon" />
-			<ChannelArrayViewer AdaptsToType="[bool]True" ArrayElement="[UIModel]4e1d7f76fed3408c879928fcf2039e63" BaseName="[string]Numeric Array Input" Channel="[string]{abd0ec1b-8a8a-46a1-9b11-1bcb569d1849}/Configuration/Double Array In" Columns="[int]1" Dimensions="[int]1" Enabled="[bool]True" Height="[float]120" Id="2d88c55ec56e4ee58ddb2acd0bee73b0" IndexVisibility="[Visibility]Collapsed" Label="[UIModel]3d3aa154901d4d738857fa48bddcef45" Left="[float]30" Orientation="[SMOrientation]Vertical" Rows="[int]4" Top="[float]201" VerticalScrollBarVisibility="[ScrollBarVisibility]Visible" Width="[float]161">
+			<ChannelArrayViewer AdaptsToType="[bool]True" ArrayElement="[UIModel]4e1d7f76fed3408c879928fcf2039e63" BaseName="[string]Numeric Array Input" Channel="[string]{abd0ec1b-8a8a-46a1-9b11-1bcb569d1849}/Configuration/Double Array In" Columns="[int]1" Dimensions="[int]1" Enabled="[bool]True" Height="[float]120" Id="2d88c55ec56e4ee58ddb2acd0bee73b0" IndexVisibility="[Visibility]Collapsed" IsFixedSize="[bool]False" Label="[UIModel]3d3aa154901d4d738857fa48bddcef45" Left="[float]30" Orientation="[SMOrientation]Vertical" Rows="[int]4" Top="[float]201" VerticalScrollBarVisibility="[ScrollBarVisibility]Visible" Width="[float]161">
 				<p.DefaultElementValue>0x0</p.DefaultElementValue>
 				<ChannelArrayNumericText BaseName="[string]Numeric" Height="[float]24" Id="4e1d7f76fed3408c879928fcf2039e63" UnitAnnotation="[string]" ValueFormatter="[string]LV:G5" ValueType="[Type]Double" Width="[float]129" />
 			</ChannelArrayViewer>
@@ -27,7 +27,7 @@
 			<Label Height="[float]16" Id="aff1aad914904ce6a6fb6756cba2c866" LabelOwner="[UIModel]529587ea90ea4255aec8f53606bc99b9" Left="[float]239" Text="[string]Bool out" Top="[float]71" Width="[float]45" xmlns="http://www.ni.com/PanelCommon" />
 			<ChannelStringControl AcceptsReturn="[bool]False" BaseName="[string]String" Channel="[string]{abd0ec1b-8a8a-46a1-9b11-1bcb569d1849}/Output/String out" Height="[float]24" HorizontalScrollBarVisibility="[ScrollBarVisibility]Hidden" Id="fa35489e33a34b0183b746fffa2ced9d" IsReadOnly="[bool]True" Label="[UIModel]94b2b204aefb4bc7b509f1c49eae0c18" Left="[float]239" Top="[float]138" VerticalScrollBarVisibility="[ScrollBarVisibility]Auto" Width="[float]160" />
 			<Label Height="[float]16" Id="94b2b204aefb4bc7b509f1c49eae0c18" LabelOwner="[UIModel]fa35489e33a34b0183b746fffa2ced9d" Left="[float]239" Text="[string]String out" Top="[float]118" Width="[float]52" xmlns="http://www.ni.com/PanelCommon" />
-			<ChannelArrayViewer AdaptsToType="[bool]True" ArrayElement="[UIModel]9845cec681cb4828a587b9fd395fa78c" BaseName="[string]Numeric Array Output" Channel="[string]{abd0ec1b-8a8a-46a1-9b11-1bcb569d1849}/Output/Double Array out" Columns="[int]1" Dimensions="[int]1" Height="[float]120" Id="13707da33a16404e92bf506121dc2dbc" IndexVisibility="[Visibility]Collapsed" Label="[UIModel]4d641544433e4a3ab6f691b85e44d2d2" Left="[float]239" Orientation="[SMOrientation]Vertical" Rows="[int]4" Top="[float]201" VerticalScrollBarVisibility="[ScrollBarVisibility]Visible" Width="[float]160">
+			<ChannelArrayViewer AdaptsToType="[bool]True" ArrayElement="[UIModel]9845cec681cb4828a587b9fd395fa78c" BaseName="[string]Numeric Array Output" Channel="[string]{abd0ec1b-8a8a-46a1-9b11-1bcb569d1849}/Output/Double Array out" Columns="[int]1" Dimensions="[int]1" Height="[float]120" Id="13707da33a16404e92bf506121dc2dbc" IndexVisibility="[Visibility]Collapsed" IsFixedSize="[bool]False" Label="[UIModel]4d641544433e4a3ab6f691b85e44d2d2" Left="[float]239" Orientation="[SMOrientation]Vertical" Rows="[int]4" Top="[float]201" VerticalScrollBarVisibility="[ScrollBarVisibility]Visible" Width="[float]160">
 				<p.DefaultElementValue>0x0</p.DefaultElementValue>
 				<ChannelArrayNumericText BaseName="[string]Numeric" Height="[float]24" Id="9845cec681cb4828a587b9fd395fa78c" IsReadOnly="[bool]True" UnitAnnotation="[string]" ValueFormatter="[string]LV:G5" ValueType="[Type]Double" Width="[float]128" />
 			</ChannelArrayViewer>
@@ -69,13 +69,20 @@
 				<Label Id="5fdaffd604954eab8c40eece223bace6" LabelOwner="[UIModel]7791599dec5e40c98da2dc1dff8203f7" Left="[float]92" Text="[string]Reset" Top="[float]-18" Visible="[bool]False" xmlns="http://www.ni.com/PanelCommon" />
 			</ArrayGraphTools>
 			<Label Height="[float]16" Id="7d653a1b8e82474fa5957187f74dc876" LabelOwner="[UIModel]7a4e3733e44a4251a517215af2e6fb34" Left="[float]431" Text="[string]Double Array out" Top="[float]1" Width="[float]91" xmlns="http://www.ni.com/PanelCommon" />
-			<ChannelEnumSelector AdaptsToType="[bool]True" AllowNonSequentialValues="[bool]True" BaseName="[string]Enum" Channel="[string]{abd0ec1b-8a8a-46a1-9b11-1bcb569d1849}/Configuration/Enum In" Height="[float]24" Id="604b159420bd4525aa1b71300d41d9be" Label="[UIModel]6ecc1177484d4f099186d5680091578b" Left="[float]30" Top="[float]355" Value="[int]0" Width="[float]136" xmlns="http://www.ni.com/InstrumentFramework/ScreenDocument">
+			<ChannelEnumSelector AdaptsToType="[bool]True" AllowNonSequentialValues="[bool]True" BaseName="[string]Enum" Channel="[string]{abd0ec1b-8a8a-46a1-9b11-1bcb569d1849}/Configuration/Enum In" Enabled="[bool]True" Height="[float]24" Id="604b159420bd4525aa1b71300d41d9be" Label="[UIModel]6ecc1177484d4f099186d5680091578b" Left="[float]30" Top="[float]355" Value="[int]3" Width="[float]136" xmlns="http://www.ni.com/InstrumentFramework/ScreenDocument">
 				<RingSelectorInfo DisplayValue="[string]NONE" IsEnabled="[bool]True" Value="[int]0" xmlns="http://www.ni.com/Controls.LabVIEW.Design" />
 				<RingSelectorInfo DisplayValue="[string]RED" IsEnabled="[bool]True" Value="[int]1" xmlns="http://www.ni.com/Controls.LabVIEW.Design" />
 				<RingSelectorInfo DisplayValue="[string]GREEN" IsEnabled="[bool]True" Value="[int]2" xmlns="http://www.ni.com/Controls.LabVIEW.Design" />
 				<RingSelectorInfo DisplayValue="[string]BLUE" IsEnabled="[bool]True" Value="[int]3" xmlns="http://www.ni.com/Controls.LabVIEW.Design" />
 			</ChannelEnumSelector>
 			<Label Height="[float]16" Id="6ecc1177484d4f099186d5680091578b" LabelOwner="[UIModel]604b159420bd4525aa1b71300d41d9be" Left="[float]30" Text="[string]Enum In" Top="[float]335" Width="[float]43" xmlns="http://www.ni.com/PanelCommon" />
+			<ChannelEnumSelector AdaptsToType="[bool]True" AllowNonSequentialValues="[bool]True" BaseName="[string]Enum" Channel="[string]{abd0ec1b-8a8a-46a1-9b11-1bcb569d1849}/Output/Enum out" Height="[float]24" Id="b82a4cfdbd2d47b3b3457b17fe57c29e" InteractionMode="[SelectorInteractionModes]ReadOnly" Label="[UIModel]f45987e5f4b442508b463a26fab7b15a" Left="[float]239" Top="[float]355" Width="[float]136" xmlns="http://www.ni.com/InstrumentFramework/ScreenDocument">
+				<RingSelectorInfo DisplayValue="[string]NONE" IsEnabled="[bool]True" Value="[int]0" xmlns="http://www.ni.com/Controls.LabVIEW.Design" />
+				<RingSelectorInfo DisplayValue="[string]RED" IsEnabled="[bool]True" Value="[int]1" xmlns="http://www.ni.com/Controls.LabVIEW.Design" />
+				<RingSelectorInfo DisplayValue="[string]GREEN" IsEnabled="[bool]True" Value="[int]2" xmlns="http://www.ni.com/Controls.LabVIEW.Design" />
+				<RingSelectorInfo DisplayValue="[string]BLUE" IsEnabled="[bool]True" Value="[int]3" xmlns="http://www.ni.com/Controls.LabVIEW.Design" />
+			</ChannelEnumSelector>
+			<Label Height="[float]16" Id="f45987e5f4b442508b463a26fab7b15a" LabelOwner="[UIModel]b82a4cfdbd2d47b3b3457b17fe57c29e" Left="[float]239" Text="[string]Enum out" Top="[float]335" Width="[float]51" xmlns="http://www.ni.com/PanelCommon" />
 		</ScreenSurface>
 	</Screen>
 </SourceFile>

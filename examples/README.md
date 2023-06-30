@@ -7,10 +7,13 @@ If you are using a previous version of MeasurementLink, download the appropriate
 
 - MeasurementLink 2023 Q1: [measurementlink-python-examples-1.0.1.zip](https://github.com/ni/measurementlink-python/releases/download/1.0.1/measurementlink-python-examples-1.0.1.zip)
 - MeasurementLink 2023 Q2: [measurementlink-python-examples-1.0.1.zip](https://github.com/ni/measurementlink-python/releases/download/1.0.1/measurementlink-python-examples-1.0.1.zip)
+- MeasurementLink 2023 Q3: [measurementlink-python-examples-1.1.0.zip](https://github.com/ni/measurementlink-python/releases/download/1.1.0/measurementlink-python-examples-1.1.0.zip)
 
 For best results, use the example measurements corresponding to the version of MeasurementLink
 that you are using. Newer examples may demonstrate features that are not available in older
 versions of MeasurementLink.
+
+The TestStand sequence files associated with each example are saved in TestStand 2021 SP1.
 
 ### Available Example Measurements
 

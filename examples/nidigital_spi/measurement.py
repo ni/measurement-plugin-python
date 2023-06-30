@@ -5,7 +5,6 @@ import pathlib
 from typing import Iterable, Tuple, Union
 
 import click
-import grpc
 import nidigital
 from _helpers import (
     ServiceOptions,
@@ -28,6 +27,13 @@ measurement_service = nims.MeasurementService(
     ui_file_paths=[service_directory / "NIDigitalSPI.measui"],
 )
 service_options = ServiceOptions()
+
+RESERVATION_TIMEOUT_IN_SECONDS = 60.0
+"""
+If another measurement is using the session, the reserve function will wait
+for it to complete. Specify a reservation timeout to aid in debugging missed
+unreserve calls. Long measurements may require a longer timeout.
+"""
 
 
 @measurement_service.register_measurement
@@ -58,31 +64,21 @@ def measure(
 
     session_management_client = create_session_management_client(measurement_service)
 
-    with session_management_client.reserve_sessions(
+    with session_management_client.reserve_session(
         context=measurement_service.context.pin_map_context,
         pin_or_relay_names=pin_names,
         instrument_type_id=nims.session_management.INSTRUMENT_TYPE_NI_DIGITAL_PATTERN,
-        # If another measurement is using the session, wait for it to complete.
-        # Specify a timeout to aid in debugging missed unreserve calls.
-        # Long measurements may require a longer timeout.
-        timeout=60,
+        timeout=RESERVATION_TIMEOUT_IN_SECONDS,
     ) as reservation:
-        if len(reservation.session_info) != 1:
-            measurement_service.context.abort(
-                grpc.StatusCode.INVALID_ARGUMENT,
-                f"Unsupported number of sessions: {len(reservation.session_info)}",
-            )
-
-        session_info = reservation.session_info[0]
         grpc_device_channel = get_grpc_device_channel(
             measurement_service, nidigital, service_options
         )
-        with create_session(session_info, grpc_device_channel) as session:
+        with create_session(reservation.session_info, grpc_device_channel) as session:
             pin_map_context = measurement_service.context.pin_map_context
             selected_sites_string = ",".join(f"site{i}" for i in pin_map_context.sites or [])
             selected_sites = session.sites[selected_sites_string]
 
-            if not session_info.session_exists:
+            if not reservation.session_info.session_exists:
                 # When running the measurement from TestStand, teststand_fixture.py should have
                 # already loaded the pin map, specifications, levels, timing, and patterns.
                 session.load_pin_map(pin_map_context.pin_map_id)

@@ -71,7 +71,7 @@ def test___command_line_args___create_measurement_with_annotations___render_with
 
     golden_path = test_assets_directory / "example_renders" / "measurement_with_annotations"
 
-    filenames = ["measurement.py", "SampleMeasurement.serviceconfig", "start.bat"]
+    filenames = ["measurement.py", "SampleMeasurement.serviceconfig", "start.bat", "_helpers.py"]
     for filename in filenames:
         _assert_equal(
             golden_path / filename,

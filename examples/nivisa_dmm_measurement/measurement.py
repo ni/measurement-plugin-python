@@ -2,11 +2,10 @@
 
 import logging
 import pathlib
-from enum import Enum, auto
+from enum import Enum
 from typing import Tuple
 
 import click
-import grpc
 import pyvisa.resources
 from _helpers import (
     ServiceOptions,
@@ -18,6 +17,7 @@ from _helpers import (
 )
 from _visa_helpers import (
     INSTRUMENT_TYPE_DMM_SIMULATOR,
+    USE_SIMULATION,
     check_instrument_error,
     create_visa_resource_manager,
     create_visa_session,
@@ -26,10 +26,6 @@ from _visa_helpers import (
 )
 
 import ni_measurementlink_service as nims
-
-# To use NI Instrument Simulator v2.0 hardware, set this to False or specify
-# --no-use-simulation on the command line.
-USE_SIMULATION = True
 
 
 service_directory = pathlib.Path(__file__).resolve().parent
@@ -40,6 +36,12 @@ measurement_service = nims.MeasurementService(
 )
 service_options = ServiceOptions()
 
+RESERVATION_TIMEOUT_IN_SECONDS = 60.0
+"""
+If another measurement is using the session, the reserve function will wait
+for it to complete. Specify a reservation timeout to aid in debugging missed
+unreserve calls. Long measurements may require a longer timeout.
+"""
 
 RESOLUTION_DIGITS_TO_VALUE = {"3.5": 0.001, "4.5": 0.0001, "5.5": 1e-5, "6.5": 1e-6}
 
@@ -47,8 +49,8 @@ RESOLUTION_DIGITS_TO_VALUE = {"3.5": 0.001, "4.5": 0.0001, "5.5": 1e-5, "6.5": 1
 class Function(Enum):
     """Function that represents the measurement type."""
 
-    DC_VOLTS = auto()
-    AC_VOLTS = auto()
+    DC_VOLTS = 0
+    AC_VOLTS = 1
 
 
 FUNCTION_TO_VALUE = {
@@ -84,24 +86,16 @@ def measure(
 
     session_management_client = create_session_management_client(measurement_service)
 
-    with session_management_client.reserve_sessions(
+    with session_management_client.reserve_session(
         context=measurement_service.context.pin_map_context,
         pin_or_relay_names=[pin_name],
         instrument_type_id=INSTRUMENT_TYPE_DMM_SIMULATOR,
-        # If another measurement is using the session, wait for it to complete.
-        # Specify a timeout to aid in debugging missed unreserve calls.
-        # Long measurements may require a longer timeout.
-        timeout=60,
+        timeout=RESERVATION_TIMEOUT_IN_SECONDS,
     ) as reservation:
-        if len(reservation.session_info) != 1:
-            measurement_service.context.abort(
-                grpc.StatusCode.INVALID_ARGUMENT,
-                f"Unsupported number of sessions: {len(reservation.session_info)}",
-            )
-
         resource_manager = create_visa_resource_manager(service_options.use_simulation)
-        session_info = reservation.session_info[0]
-        with create_visa_session(resource_manager, session_info.resource_name) as session:
+        with create_visa_session(
+            resource_manager, reservation.session_info.resource_name
+        ) as session:
             # Work around https://github.com/pyvisa/pyvisa/issues/739 - Type annotation for Resource
             # context manager implicitly upcasts derived class to base class
             assert isinstance(session, pyvisa.resources.MessageBasedResource)
@@ -111,7 +105,7 @@ def measure(
             # When this measurement is called from outside of TestStand (session_exists == False),
             # reset the instrument to a known state. In TestStand, ProcessSetup resets the
             # instrument.
-            if not session_info.session_exists:
+            if not reservation.session_info.session_exists:
                 reset_instrument(session)
 
             function_enum = FUNCTION_TO_VALUE[measurement_type]

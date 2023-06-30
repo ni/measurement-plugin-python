@@ -21,7 +21,10 @@
 
 ## Introduction
 
-MeasurementLink Support for Python (`ni-measurementlink-service`) is a Python framework that enables measurement developers to quickly create Python measurements and run them as a service (gRPC).
+MeasurementLink Support for Python (`ni-measurementlink-service`) is a Python
+framework that helps you create reusable measurement plug-ins using gRPC
+services. Deploy your measurement plug-ins to perform interactive validation in
+InstrumentStudio and automated testing in TestStand.
 
 ---
 
@@ -64,6 +67,7 @@ you are using a previous version of MeasurementLink, download the appropriate ex
 
 - MeasurementLink 2023 Q1: [measurementlink-python-examples-1.0.1.zip](https://github.com/ni/measurementlink-python/releases/download/1.0.1/measurementlink-python-examples-1.0.1.zip)
 - MeasurementLink 2023 Q2: [measurementlink-python-examples-1.0.1.zip](https://github.com/ni/measurementlink-python/releases/download/1.0.1/measurementlink-python-examples-1.0.1.zip)
+- MeasurementLink 2023 Q3: [measurementlink-python-examples-1.1.0.zip](https://github.com/ni/measurementlink-python/releases/download/1.1.0/measurementlink-python-examples-1.1.0.zip)
 
 For more information on setting up and running the example measurements, see the included `README.md` file.
 
@@ -191,7 +195,9 @@ To statically register a measurement service with the MeasurementLink discovery 
 
 2. Edit the measurement service's `.serviceconfig` file and set the `path` value to the filename of the startup batch file or executable.
 
-3. Copy the measurement service's directory (including the `.venv` subdirectory if present, `.serviceconfig` file, and startup batch file) to a subdirectory of `C:\ProgramData\National Instruments\MeasurementLink\Services`. 
+3. Copy the measurement service's directory (including the `.serviceconfig` file and startup batch file) to a subdirectory of `C:\ProgramData\National Instruments\MeasurementLink\Services`.
+> **Note**
+> If you are using a virtual environment, do not copy the `.venv` subdirectory&mdash;the virtual environment must be re-created in the new location.
 
 Once your measurement service is statically registered, the MeasurementLink discovery service makes it visible in supported NI applications.
 

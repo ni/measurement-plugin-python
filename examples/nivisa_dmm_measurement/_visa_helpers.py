@@ -12,9 +12,17 @@ INSTRUMENT_TYPE_FGEN_SIMULATOR = "WaveformGeneratorSimulator"
 INSTRUMENT_TYPE_SCOPE_SIMULATOR = "OscilloscopeSimulator"
 INSTRUMENT_TYPE_DMM_SIMULATOR = "DigitalMultimeterSimulator"
 
-# Path to a simulation YAML file that can be used to simulate an NI Instrument Simulator v2.0
-# with pyvisa-sim
 SIMULATION_YAML_PATH = pathlib.Path(__file__).resolve().parent / "NIInstrumentSimulatorV2_0.yaml"
+"""
+Path to a simulation YAML file that can be used to simulate an NI Instrument Simulator v2.0
+with pyvisa-sim
+"""
+
+USE_SIMULATION = True
+"""
+To use NI Instrument Simulator v2.0 hardware, set this to False or specify
+--no-use-simulation on the command line.
+"""
 
 
 def create_visa_resource_manager(
