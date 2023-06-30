@@ -17,7 +17,7 @@ from ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v
 from tests.utilities.fake_discovery_service import FakeDiscoveryServiceStub
 
 
-@pytest.skip(reason="blah blah")
+@pytest.mark.skip(reason="blah blah")
 def test___grpc_service___start_service___service_hosted(grpc_service: GrpcService):
     port_number = grpc_service.start(
         measurement.sample_measurement_service.measurement_info,
