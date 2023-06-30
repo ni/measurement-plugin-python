@@ -2,7 +2,7 @@
 import logging
 import pathlib
 import re
-from typing import Optional
+from typing import Optional, Tuple
 
 import click
 from mako import exceptions
@@ -94,6 +94,12 @@ def _resolve_service_class(service_class: str, display_name: str) -> str:
     help="Service Class that the measurement belongs to. Default: '<display_name>_Python'",
 )
 @click.option(
+    "-D",
+    "--description",
+    default="",
+    help="Short description of the measurement",
+)
+@click.option(
     "-d",
     "--description-url",
     default="",
@@ -103,6 +109,22 @@ def _resolve_service_class(service_class: str, display_name: str) -> str:
     "-o",
     "--directory-out",
     help="Output directory for measurement files. Default: '<current_directory>/<display_name>'",
+)
+@click.option(
+    "-c",
+    "--collection",
+    default="",
+    help="\b\nThe collection that this measurement belongs to. Collection names are specified"
+    "using a period-delimited namespace hierarchy and are case-insensitive."
+    "\nExample: 'CurrentTests.Inrush'",
+)
+@click.option(
+    "-t",
+    "--tags",
+    default=[],
+    multiple=True,
+    help="\b\nTags describing the measurement. This option may be repeated to specify multiple tags. Tags are case-insensitive."
+    "\nExample: '-t test -t Internal'",
 )
 @click.option(
     "-v",
@@ -117,6 +139,9 @@ def create_measurement(
     service_class: str,
     description_url: str,
     directory_out: Optional[str],
+    description: str,
+    collection: str,
+    tags: Tuple[str, ...],
     verbose: bool,
 ) -> None:
     """Generate a Python measurement service from a template.
@@ -166,6 +191,9 @@ def create_measurement(
         service_class=service_class,
         description_url=description_url,
         ui_file_type=ui_file_type,
+        description=description,
+        collection=collection,
+        tags=list(tags),
     )
     if ui_file_type == "MeasurementUI":
         _create_file(
