@@ -39,7 +39,6 @@ def test___grpc_service_without_discovery_service___start_service___service_host
         measurement.sample_measurement_service.output_parameter_list,
         measurement.sample_measurement_service.measure_function,
     )
-    assert False, "TODO: revert this"
 
     _validate_if_service_running_by_making_rpc(port_number)
 

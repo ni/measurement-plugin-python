@@ -33,7 +33,7 @@ def test___discovery_service_available___register_service___registration_success
     )
 
     _validate_grpc_request(discovery_service_stub.request)
-    assert registration_success_flag == "TODO: revert this"
+    assert registration_success_flag
 
 
 def test___discovery_service_available___unregister_registered_service___unregistration_success(
