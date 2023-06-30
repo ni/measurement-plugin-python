@@ -67,6 +67,22 @@ message ServiceDescriptor {
   // Required. The "class" of a service. The value of this field should be unique for a given interface in provided_interfaces.
   // In effect, the .proto service declaration defines the interface, and this field defines a class or concrete type of the interface.
   string service_class = 4;
+
+  // Optional. Represents a set of annotations on the service.
+  // Well-known annotations:
+  // - Description
+  //   - Key: "ni/service.description"
+  //   - Expected format: string
+  //   - Example: "Measure inrush current with a shorted load and validate results against configured limits."
+  // - Collection
+  //   - Key: "ni/service.collection"
+  //   - Expected format: "." delimited namespace/hierarchy case-insensitive string
+  //   - Example: "CurrentTests.Inrush"
+  // - Tags
+  //   - Key: "ni/service.tags"
+  //   - Expected format: serialized JSON string of an array of strings
+  //   - Example: "[\"powerup\", \"current\"]"
+  map<string, string> annotations = 5;
 }
 
 // Represents the location of a service. The location generally includes the IP address and port number for the service

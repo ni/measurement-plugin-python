@@ -26,10 +26,27 @@ class ServiceDescriptor(google.protobuf.message.Message):
 
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
+    @typing_extensions.final
+    class AnnotationsEntry(google.protobuf.message.Message):
+        DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+        KEY_FIELD_NUMBER: builtins.int
+        VALUE_FIELD_NUMBER: builtins.int
+        key: builtins.str
+        value: builtins.str
+        def __init__(
+            self,
+            *,
+            key: builtins.str = ...,
+            value: builtins.str = ...,
+        ) -> None: ...
+        def ClearField(self, field_name: typing_extensions.Literal["key", b"key", "value", b"value"]) -> None: ...
+
     DISPLAY_NAME_FIELD_NUMBER: builtins.int
     DESCRIPTION_URL_FIELD_NUMBER: builtins.int
     PROVIDED_INTERFACES_FIELD_NUMBER: builtins.int
     SERVICE_CLASS_FIELD_NUMBER: builtins.int
+    ANNOTATIONS_FIELD_NUMBER: builtins.int
     display_name: builtins.str
     """Required. The user visible name of the service."""
     description_url: builtins.str
@@ -43,6 +60,23 @@ class ServiceDescriptor(google.protobuf.message.Message):
     """Required. The "class" of a service. The value of this field should be unique for a given interface in provided_interfaces.
     In effect, the .proto service declaration defines the interface, and this field defines a class or concrete type of the interface.
     """
+    @property
+    def annotations(self) -> google.protobuf.internal.containers.ScalarMap[builtins.str, builtins.str]:
+        """Optional. Represents a set of annotations on the service.
+        Well-known annotations:
+        - Description
+          - Key: "ni/service.description"
+          - Expected format: string
+          - Example: "Measure inrush current with a shorted load and validate results against configured limits."
+        - Collection
+          - Key: "ni/service.collection"
+          - Expected format: "." delimited namespace/hierarchy case-insensitive string
+          - Example: "CurrentTests.Inrush"
+        - Tags
+          - Key: "ni/service.tags"
+          - Expected format: serialized JSON string of an array of strings
+          - Example: "[\\"powerup\\", \\"current\\"]"
+        """
     def __init__(
         self,
         *,
@@ -50,8 +84,9 @@ class ServiceDescriptor(google.protobuf.message.Message):
         description_url: builtins.str = ...,
         provided_interfaces: collections.abc.Iterable[builtins.str] | None = ...,
         service_class: builtins.str = ...,
+        annotations: collections.abc.Mapping[builtins.str, builtins.str] | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing_extensions.Literal["description_url", b"description_url", "display_name", b"display_name", "provided_interfaces", b"provided_interfaces", "service_class", b"service_class"]) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["annotations", b"annotations", "description_url", b"description_url", "display_name", b"display_name", "provided_interfaces", b"provided_interfaces", "service_class", b"service_class"]) -> None: ...
 
 global___ServiceDescriptor = ServiceDescriptor
 

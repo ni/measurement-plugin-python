@@ -16,8 +16,19 @@ _PROVIDED_MEASUREMENT_SERVICES = [
     "ni.measurementlink.measurement.v2.MeasurementService",
 ]
 
+_PROVIDED_ANNOTATIONS = {
+    "ni/service.description": "This annotation is just an example for this test",
+    "ni/service.collection": "CurrentTests.Inrush",
+    "ni/service.tags": '["NI_Example","Voltage"]',
+    "client/extra.NumberID": "500",
+    "client/extra.Parts": '["PartNumber_25898","PartNumber_25412"]',
+}
+
+
 _TEST_SERVICE_PORT = "9999"
-_TEST_SERVICE_INFO = ServiceInfo("TestServiceClass", "TestUrl", _PROVIDED_MEASUREMENT_SERVICES)
+_TEST_SERVICE_INFO = ServiceInfo(
+    "TestServiceClass", "TestUrl", _PROVIDED_MEASUREMENT_SERVICES, _PROVIDED_ANNOTATIONS
+)
 _TEST_MEASUREMENT_INFO = MeasurementInfo(
     display_name="TestMeasurement",
     version="1.0.0.0",
@@ -89,3 +100,4 @@ def _validate_grpc_request(request):
     assert set(request.service_description.provided_interfaces) >= set(
         _PROVIDED_MEASUREMENT_SERVICES
     )
+    assert request.service_description.annotations == _PROVIDED_ANNOTATIONS

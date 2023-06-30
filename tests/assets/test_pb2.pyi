@@ -24,7 +24,10 @@ class _DifferentColor:
     ValueType = typing.NewType("ValueType", builtins.int)
     V: typing_extensions.TypeAlias = ValueType
 
-class _DifferentColorEnumTypeWrapper(google.protobuf.internal.enum_type_wrapper._EnumTypeWrapper[_DifferentColor.ValueType], builtins.type):
+class _DifferentColorEnumTypeWrapper(
+    google.protobuf.internal.enum_type_wrapper._EnumTypeWrapper[_DifferentColor.ValueType],
+    builtins.type,
+):
     DESCRIPTOR: google.protobuf.descriptor.EnumDescriptor
     PURPLE: _DifferentColor.ValueType  # 0
     ORANGE: _DifferentColor.ValueType  # 1
@@ -72,6 +75,8 @@ class MeasurementParameter(google.protobuf.message.Message):
     uint64_data: builtins.int
     bool_data: builtins.bool
     string_data: builtins.str
+    enum_data: builtins.str
+    enum_array_data: builtins.list
     @property
     def double_array_data(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.float]: ...
     @property
@@ -88,9 +93,7 @@ class MeasurementParameter(google.protobuf.message.Message):
     def bool_array_data(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.bool]: ...
     @property
     def string_array_data(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]: ...
-    enum_data: global___DifferentColor.ValueType
     @property
-    def enum_array_data(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[global___DifferentColor.ValueType]: ...
     def __init__(
         self,
         *,

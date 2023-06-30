@@ -2,9 +2,8 @@
 from __future__ import annotations
 
 import enum
-import typing
 from pathlib import Path
-from typing import NamedTuple
+from typing import Dict, List, NamedTuple
 
 from google.protobuf import type_pb2
 
@@ -25,7 +24,7 @@ class MeasurementInfo(NamedTuple):
 
     display_name: str
     version: str
-    ui_file_paths: typing.List[Path]
+    ui_file_paths: List[Path]
 
 
 class ServiceInfo(NamedTuple):
@@ -44,11 +43,16 @@ class ServiceInfo(NamedTuple):
         For e.g., ni.measurementlink.measurement.v2.MeasurementService.
         Defaults to ["ni.measurementlink.measurement.v1.MeasurementService"].
 
+        annotations (Dict[str,str]): Dict that contains extra information of the measurement.
+        As default we added a (str) description, (str) collection and a (List[str]) list of tags.
+        Feel free to add your own Annotations as needed.
+
     """
 
     service_class: str
     description_url: str
-    provided_interfaces: typing.List[str] = ["ni.measurementlink.measurement.v1.MeasurementService"]
+    provided_interfaces: List[str] = ["ni.measurementlink.measurement.v1.MeasurementService"]
+    annotations: Dict[str, str] = {}
 
 
 class TypeSpecialization(enum.Enum):

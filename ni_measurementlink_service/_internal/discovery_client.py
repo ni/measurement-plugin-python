@@ -111,6 +111,7 @@ class DiscoveryClient:
             service_descriptor.service_class = service_info.service_class
             service_descriptor.description_url = service_info.description_url
             service_descriptor.provided_interfaces.extend(service_info.provided_interfaces)
+            service_descriptor.annotations.update(service_info.annotations)
 
             # Registration Request Creation
             request = discovery_service_pb2.RegisterServiceRequest(
