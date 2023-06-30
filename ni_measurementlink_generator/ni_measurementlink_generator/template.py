@@ -2,7 +2,7 @@
 import logging
 import pathlib
 import re
-from typing import List, Optional, Tuple
+from typing import Optional, Tuple
 
 import click
 from mako import exceptions
