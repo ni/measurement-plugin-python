@@ -30,15 +30,15 @@ def test___command_line_args___create_measurement___render_without_exception(
     golden_path = test_assets_directory / "example_renders" / "measurement"
 
     filenames = [
-        "..\\measurement.py",
+        "../measurement.py",
         "SampleMeasurement.serviceconfig",
-        "..\\start.bat",
-        "..\\_helpers.py",
+        "../start.bat",
+        "../_helpers.py",
     ]
     for filename in filenames:
         _assert_equal(
             golden_path / filename,
-            temp_directory / filename.replace("..\\", ""),
+            temp_directory / filename.replace("../", ""),
         )
 
 
@@ -77,15 +77,15 @@ def test___command_line_args___create_measurement_with_annotations___render_with
     golden_path = test_assets_directory / "example_renders" / "measurement_with_annotations"
 
     filenames = [
-        "..\\measurement.py",
+        "../measurement.py",
         "SampleMeasurement.serviceconfig",
-        "..\\start.bat",
-        "..\\_helpers.py",
+        "../start.bat",
+        "../_helpers.py",
     ]
     for filename in filenames:
         _assert_equal(
             golden_path / filename,
-            temp_directory / filename.replace("..\\", ""),
+            temp_directory / filename.replace("../", ""),
         )
 
 
