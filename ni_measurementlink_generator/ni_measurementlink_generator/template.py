@@ -2,7 +2,7 @@
 import logging
 import pathlib
 import re
-from typing import List, Optional
+from typing import List, Optional, Tuple
 
 import click
 from mako import exceptions
@@ -114,17 +114,17 @@ def _resolve_service_class(service_class: str, display_name: str) -> str:
     "-c",
     "--collection",
     default="",
-    help="\b\nThe collection that this measurement belongs to. Collection names are specified"\
-        "using a period-delimited namespace hierarchy and are case-insensitive."\
-        "\nExample: 'CurrentTests.Inrush'",
+    help="\b\nThe collection that this measurement belongs to. Collection names are specified"
+    "using a period-delimited namespace hierarchy and are case-insensitive."
+    "\nExample: 'CurrentTests.Inrush'",
 )
 @click.option(
     "-t",
     "--tags",
     default=[],
     multiple=True,
-    help="\b\nTags describing the measurement. This option may be repeated to specify multiple tags and are case-insensitive."\
-         "\nExample: '-t test -t Internal'",
+    help="\b\nTags describing the measurement. This option may be repeated to specify multiple tags. Tags are case-insensitive."
+    "\nExample: '-t test -t Internal'",
 )
 @click.option(
     "-v",
@@ -141,7 +141,7 @@ def create_measurement(
     directory_out: Optional[str],
     description: str,
     collection: str,
-    tags: List[str],
+    tags: Tuple[str],
     verbose: bool,
 ) -> None:
     """Generate a Python measurement service from a template.
@@ -171,10 +171,6 @@ def create_measurement(
 
     directory_out_path.mkdir(exist_ok=True, parents=True)
 
-    annotation_tag = []
-    for i in tags:
-        annotation_tag.append(i)
-
     _create_file(
         "measurement.py.mako",
         "measurement.py",
@@ -197,7 +193,7 @@ def create_measurement(
         ui_file_type=ui_file_type,
         description=description,
         collection=collection,
-        tags=annotation_tag,
+        tags=list(tags),
     )
     if ui_file_type == "MeasurementUI":
         _create_file(
