@@ -4,6 +4,10 @@ on:
   workflow_call:
   workflow_dispatch:
 
+permissions:
+  checks: write
+  pull-requests: write
+
 jobs:
   report_test_results:
     name: Report test results
@@ -21,6 +25,7 @@ jobs:
         with:
           paths: "test_results/*.xml"
           show: "fail, skip"
+          if: always()
       - name: Report test summary 2
         uses: mikepenz/action-junit-report@v3
         with:
@@ -28,9 +33,17 @@ jobs:
           check_name: "Test results 2"
           require_passed_tests: true
           detailed_summary: true
+          if: always()
       - name: Report test summary 3
         uses: dorny/test-reporter@v1
         with:
           name: "Test results 3"
           path: "test_results/*.xml"
           reporter: java-junit
+        if: always()
+      - name: Report test summary 4
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always()
+        with:
+          files: |
+            test-results/**/*.xml
