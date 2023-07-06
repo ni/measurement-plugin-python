@@ -116,7 +116,15 @@ def test____get_discovery_service_address___start_service_jit___returns_expected
 
     discovery_service_address = _get_discovery_service_address()
 
-    assert _MOCK_REGISTRATION_FILE_CONTENT["discovery"]["path"] in str(mock_popen.call_args[0])
+    for call in mock_popen.call_args_list:
+        args, _ = call
+        (mock_file_path_arg,) = args
+        assert (
+            mock_file_path_arg[0]
+            == disc_key_temp_path / _MOCK_REGISTRATION_FILE_CONTENT["discovery"]["path"]
+        )
+
+    assert mock_popen.call_count == 1
     assert _TEST_SERVICE_PORT in discovery_service_address
 
 
