@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<SourceFile Checksum="E712E41970E1F18D5B1D7948E34B622766AAC7BDA700C5E01A60C8D3DA3BBF8D7DA053061A5BA1794F82EC5E9A6C9275D808F467BFF89523A3A228EC839B9E8E" Timestamp="1D9AFD05709CBBE" xmlns="http://www.ni.com/PlatformFramework">
+<SourceFile Checksum="AEE9B3573C2657C8D1AF9843E723335D4B8211D722D8DB20B54FE62F7695AB2D90B6E8623D6E78A9D7F814C6977F00D7B8D9D1EF3C521EB423A0C1FDF8ABCE8A" Timestamp="1D9B00C6776DEB9" xmlns="http://www.ni.com/PlatformFramework">
 	<SourceModelFeatureSet>
 		<ParsableNamespace AssemblyFileVersion="9.9.0.49841" FeatureSetName="Configuration Based Software Core" Name="http://www.ni.com/ConfigurationBasedSoftware.Core" OldestCompatibleVersion="6.3.0.49152" Version="9.8.1.49152" />
 		<ParsableNamespace AssemblyFileVersion="9.9.0.49841" FeatureSetName="LabVIEW Controls" Name="http://www.ni.com/Controls.LabVIEW.Design" OldestCompatibleVersion="8.1.0.49152" Version="8.1.0.49152" />
@@ -37,12 +37,12 @@
 				<ChannelPinSelector AllowUndefinedValues="[bool]True" BaseName="[string]Pin" Channel="[string]{21e4f263-a4e2-4bf6-8919-682ad9c620e3}/Configuration/output_pin" DataType="[Type]String" Enabled="[bool]True" Height="[float]24" Id="44d9b7bad810427c8d6c27ebb56ddf8d" IsLabelBoundToChannel="[bool]False" Label="[UIModel]840b2b608c324ffd8ea7c5687edc15eb" Left="[float]19" SelectedResource="[NI_Core_DataValues_TagRefnum]Pin1" Top="[float]186" Width="[float]160" xmlns="http://www.ni.com/InstrumentFramework/ScreenDocument" />
 				<Label Height="[float]16" Id="840b2b608c324ffd8ea7c5687edc15eb" LabelOwner="[UIModel]44d9b7bad810427c8d6c27ebb56ddf8d" Left="[float]19" Text="[string]Output pin" Top="[float]166" Width="[float]58" xmlns="http://www.ni.com/PanelCommon" />
 				<ChannelEnumSelector AdaptsToType="[bool]True" AllowNonSequentialValues="[bool]True" BaseName="[string]Enum" Channel="[string]{21e4f263-a4e2-4bf6-8919-682ad9c620e3}/Configuration/measurement_type" Enabled="[bool]True" Height="[float]24" Id="ddc77a82dbf24349aa70c8ecf70e39a4" IsLabelBoundToChannel="[bool]False" Label="[UIModel]4f6f6c962fcb4e83a606086879a2520c" Left="[float]19" Top="[float]136" Width="[float]160" xmlns="http://www.ni.com/InstrumentFramework/ScreenDocument">
-					<RingSelectorInfo DisplayValue="[string]DC_VOLTS" IsEnabled="[bool]True" Value="[int]0" xmlns="http://www.ni.com/Controls.LabVIEW.Design" />
-					<RingSelectorInfo DisplayValue="[string]AC_VOLTS" IsEnabled="[bool]True" Value="[int]1" xmlns="http://www.ni.com/Controls.LabVIEW.Design" />
+					<RingSelectorInfo DisplayValue="[string]DC_VOLTS" IsEnabled="[bool]True" Value="[int]0" ValueType="[Type]Int32" xmlns="http://www.ni.com/Controls.LabVIEW.Design" />
+					<RingSelectorInfo DisplayValue="[string]AC_VOLTS" IsEnabled="[bool]True" Value="[int]1" ValueType="[Type]Int32" xmlns="http://www.ni.com/Controls.LabVIEW.Design" />
 				</ChannelEnumSelector>
 				<Label Height="[float]16" Id="4f6f6c962fcb4e83a606086879a2520c" LabelOwner="[UIModel]ddc77a82dbf24349aa70c8ecf70e39a4" Left="[float]19" Text="[string]Measurement type" Top="[float]116" Width="[float]100" xmlns="http://www.ni.com/PanelCommon" />
 			</ScreenSurfaceCanvas>
-			<Label Height="[float]16" Id="cff50b5d6b4740deb732308c223e7154" LabelOwner="[UIModel]a0f0b2b429e14b668dfe8e394245b4c9" Left="[float]306" Text="[string]NI-VISA DMM configuration" Top="[float]53" Width="[float]150" xmlns="http://www.ni.com/PanelCommon" />
+			<Label Height="[float]16" Id="cff50b5d6b4740deb732308c223e7154" LabelOwner="[UIModel]a0f0b2b429e14b668dfe8e394245b4c9" Left="[float]306" Text="[string]NI-VISA DMM configuration" Top="[float]53" Width="[float]151" xmlns="http://www.ni.com/PanelCommon" />
 		</ScreenSurface>
 	</Screen>
 </SourceFile>

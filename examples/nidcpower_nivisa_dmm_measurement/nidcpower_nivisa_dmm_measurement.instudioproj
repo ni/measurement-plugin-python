@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<SourceFile Checksum="427C1875500E5A0785F66BE5FBEEFDB3D3D72C4D90B840D0BB1A357B53FFA1947F546A5DFFD1776EDF8FB401B86145E0F6D5A1BE02E90B36B3A0C57E0AAD4AB2" xmlns="http://www.ni.com/PlatformFramework">
+<SourceFile Checksum="2B7C9E385DA229055797DEE5373B12F52A890C84C5752D440F452EB2273A573FFEECF8107C8DE53E6782D780BC521A6B90A3E4A3E055A46ED7E730379C1DDFB1" xmlns="http://www.ni.com/PlatformFramework">
 	<SourceModelFeatureSet>
 		<ParsableNamespace AssemblyFileVersion="23.5.0.49841" FeatureSetName="Pin Map" Name="http://www.ni.com/InstrumentFramework/PinMap" OldestCompatibleVersion="21.3.0.0" Version="21.3.0.0" />
 		<ParsableNamespace AssemblyFileVersion="9.9.0.49841" FeatureSetName="Editor" Name="http://www.ni.com/PlatformFramework" OldestCompatibleVersion="8.1.0.49152" Version="8.1.0.49152" />
@@ -13,7 +13,7 @@
 		<NameScopingEnvoy Id="eea51d76a45f4d28b4a92aea14b08c38" ModelDefinitionType="DefaultTarget" Name="DefaultTarget">
 			<DefaultTarget />
 			<SourceFileReference Bindings="EnvoyManager" Id="ff387b0ae90c443b92bdf7b2ad34112e" ModelDefinitionType="NationalInstruments.InstrumentFramework.Document.SourceModel.UnifiedTask" Name="nidcpower_nivisa_dmm_measurement.sfp" StoragePath="nidcpower_nivisa_dmm_measurement.sfp" />
-			<FileReference Id="8921b87ddfbc4f6ea386ab377ff9c296" ModelDefinitionType="{http://www.ni.com/InstrumentFramework/PinMap}PinMapDefinition" Name="nidcpower_nivisa_dmm_measurement.pinmap" StoragePath="..\nidcpower_nivisa_dmm_measurement.pinmap" p4:IsActive="True" xmlns:p4="http://www.ni.com/InstrumentFramework/PinMap" />
+			<FileReference Id="c25af4c20d504153b9c1c85e4bfb6da5" ModelDefinitionType="{http://www.ni.com/InstrumentFramework/PinMap}PinMapDefinition" Name="nidcpower_nivisa_dmm_measurement.pinmap" StoragePath="nidcpower_nivisa_dmm_measurement.pinmap" p4:IsActive="True" xmlns:p4="http://www.ni.com/InstrumentFramework/PinMap" />
 		</NameScopingEnvoy>
 	</Project>
 	<ProjectInformation xmlns="http://www.ni.com/PlatformFramework" />

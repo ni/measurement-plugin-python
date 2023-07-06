@@ -9,8 +9,8 @@
 		</Instrument>
 	</Instruments>
 	<Pins>
-		<DUTPin name="OutPin" />
 		<DUTPin name="InPin" />
+		<DUTPin name="OutPin" />
 	</Pins>
 	<PinGroups></PinGroups>
 	<Sites>
