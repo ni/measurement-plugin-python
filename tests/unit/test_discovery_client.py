@@ -1,5 +1,6 @@
 """Contains tests to validate the discovery_client.py.
 """
+import json
 import pathlib
 from typing import cast
 
@@ -40,10 +41,10 @@ _TEST_MEASUREMENT_INFO = MeasurementInfo(
     ui_file_paths=[],
 )
 
-_MOCK_KEY_FILE_CONTENT = {"SecurePort": "", "InsecurePort": _TEST_SERVICE_PORT}
-_MOCK_REGISTRATION_FILE_CONTENT = {
+_MOCK_KEY_FILE_CONTENT = json.dumps({"SecurePort": "", "InsecurePort": _TEST_SERVICE_PORT})
+_MOCK_REGISTRATION_FILE_CONTENT = json.dumps({
     "discovery": {"path": "Discovery/NationalInstruments.MeasurementLink.DiscoveryService.exe"}
-}
+})
 
 _FAKE_DISCOVERY_SERVICE_KEY_FILE_PATH = pathlib.Path("test\\DiscoveryService.json")
 
@@ -108,6 +109,10 @@ def test____get_discovery_service_address___start_service_jit___returns_expected
         return_value=temp_disc_key_file,
     )
     mocker.patch(
+        "ni_measurementlink_service._internal.discovery_client._service_already_running",
+        return_value=False,
+    )
+    mocker.patch(
         "ni_measurementlink_service._internal.discovery_client._get_registration_json_file_path",
         return_value=temp_registration_file,
     )
@@ -120,7 +125,7 @@ def test____get_discovery_service_address___start_service_jit___returns_expected
         (mock_file_path_arg,) = args
         assert (
             mock_file_path_arg[0]
-            == disc_key_temp_path / _MOCK_REGISTRATION_FILE_CONTENT["discovery"]["path"]
+            == disc_key_temp_path / json.loads(_MOCK_REGISTRATION_FILE_CONTENT)["discovery"]["path"]
         )
 
     assert mock_popen.call_count == 1
