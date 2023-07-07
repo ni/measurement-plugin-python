@@ -142,9 +142,7 @@ def measure(
             add_cancel_callback(
                 source_session, measurement_service, pending_cancellation
             )
-            # Work around https://github.com/pyvisa/pyvisa/issues/739 - Type annotation for Resource
-            # context manager implicitly upcasts derived class to base class
-
+            
             assert isinstance(measure_session, pyvisa.resources.MessageBasedResource)
 
             log_instrument_id(measure_session)
