@@ -42,9 +42,9 @@ _TEST_MEASUREMENT_INFO = MeasurementInfo(
 )
 
 _MOCK_KEY_FILE_CONTENT = json.dumps({"SecurePort": "", "InsecurePort": _TEST_SERVICE_PORT})
-_MOCK_REGISTRATION_FILE_CONTENT = json.dumps({
-    "discovery": {"path": "Discovery/NationalInstruments.MeasurementLink.DiscoveryService.exe"}
-})
+_MOCK_REGISTRATION_FILE_CONTENT = json.dumps(
+    {"discovery": {"path": "Discovery/NationalInstruments.MeasurementLink.DiscoveryService.exe"}}
+)
 
 _FAKE_DISCOVERY_SERVICE_KEY_FILE_PATH = pathlib.Path("test\\DiscoveryService.json")
 
