@@ -1,6 +1,5 @@
 """nidcpower Helper classes and functions for MeasurementLink examples."""
 
-import time
 from typing import Any, Dict, Optional
 
 import grpc
@@ -13,8 +12,6 @@ USE_SIMULATION = True
 To use a physical NI SMU instrument, set this to False or specify
 --no-use-simulation on the command line.
 """
-NIDCPOWER_WAIT_FOR_EVENT_TIMEOUT_ERROR_CODE = -1074116059
-NIDCPOWER_TIMEOUT_EXCEEDED_ERROR_CODE = -1074097933
 
 
 def create_session(
@@ -40,36 +37,3 @@ def create_session(
     return nidcpower.Session(
         resource_name=session_info.resource_name, options=options, **session_kwargs
     )
-
-
-def wait_for_source_complete_event(measurement_service, channels, pending_cancellation):
-    deadline = time.time() + measurement_service.context.time_remaining
-    while True:
-        if time.time() > deadline:
-            measurement_service.context.abort(
-                grpc.StatusCode.DEADLINE_EXCEEDED, "deadline exceeded"
-            )
-        if pending_cancellation:
-            measurement_service.context.abort(
-                grpc.StatusCode.CANCELLED, "client requested cancellation"
-            )
-        try:
-            channels.wait_for_event(
-                nidcpower.enums.Event.SOURCE_COMPLETE, timeout=0.1
-            )
-            break
-        except nidcpower.errors.DriverError as e:
-            """
-            There is no native way to support cancellation when taking a DCPower
-            measurement. To support cancellation, we will be calling WaitForEvent
-            until it succeeds or we have gone past the specified timeout. WaitForEvent
-            will throw an exception if it times out, which is why we are catching
-            and doing nothing.
-            """
-            if (
-                e.code == NIDCPOWER_WAIT_FOR_EVENT_TIMEOUT_ERROR_CODE
-                or e.code == NIDCPOWER_TIMEOUT_EXCEEDED_ERROR_CODE
-            ):
-                pass
-            else:
-                raise

@@ -1,7 +1,8 @@
 import logging
+import time
 import pathlib
-from typing import Iterable
 import click
+import grpc
 import hightime
 import nidcpower
 import pyvisa
@@ -22,7 +23,6 @@ from _helpers import (
 from _nidcpower_helpers import (
     USE_SIMULATION,
     create_session,
-    wait_for_source_complete_event,
 )
 from _visa_helpers import (
     INSTRUMENT_TYPE_DMM_SIMULATOR,
@@ -34,6 +34,8 @@ from _visa_helpers import (
     reset_instrument,
 )
 
+NIDCPOWER_WAIT_FOR_EVENT_TIMEOUT_ERROR_CODE = -1074116059
+NIDCPOWER_TIMEOUT_EXCEEDED_ERROR_CODE = -1074097933
 RESOLUTION_DIGITS_TO_VALUE = {"3.5": 0.001, "4.5": 0.0001, "5.5": 1e-5, "6.5": 1e-6}
 
 service_directory = pathlib.Path(__file__).resolve().parent
@@ -142,7 +144,7 @@ def measure(
             add_cancel_callback(
                 source_session, measurement_service, pending_cancellation
             )
-            
+
             assert isinstance(measure_session, pyvisa.resources.MessageBasedResource)
 
             log_instrument_id(measure_session)
@@ -199,6 +201,37 @@ def add_cancel_callback(session, measurement_service, pending_cancellation):
             session_to_abort.abort()
 
     measurement_service.context.add_cancel_callback(cancel_callback)
+
+
+def wait_for_source_complete_event(measurement_service, channels, pending_cancellation):
+    deadline = time.time() + measurement_service.context.time_remaining
+    while True:
+        if time.time() > deadline:
+            measurement_service.context.abort(
+                grpc.StatusCode.DEADLINE_EXCEEDED, "deadline exceeded"
+            )
+        if pending_cancellation:
+            measurement_service.context.abort(
+                grpc.StatusCode.CANCELLED, "client requested cancellation"
+            )
+        try:
+            channels.wait_for_event(nidcpower.enums.Event.SOURCE_COMPLETE, timeout=0.1)
+            break
+        except nidcpower.errors.DriverError as e:
+            """
+            There is no native way to support cancellation when taking a DCPower
+            measurement. To support cancellation, we will be calling WaitForEvent
+            until it succeeds or we have gone past the specified timeout. WaitForEvent
+            will throw an exception if it times out, which is why we are catching
+            and doing nothing.
+            """
+            if (
+                e.code == NIDCPOWER_WAIT_FOR_EVENT_TIMEOUT_ERROR_CODE
+                or e.code == NIDCPOWER_TIMEOUT_EXCEEDED_ERROR_CODE
+            ):
+                pass
+            else:
+                raise
 
 
 @click.command
