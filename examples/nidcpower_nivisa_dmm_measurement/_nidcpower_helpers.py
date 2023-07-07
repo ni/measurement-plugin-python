@@ -73,13 +73,3 @@ def wait_for_source_complete_event(measurement_service, channels, pending_cancel
                 pass
             else:
                 raise
-
-
-def add_cancel_callback(session, measurement_service, pending_cancellation):
-    def cancel_callback():
-        session_to_abort = session
-        if session_to_abort is not None:
-            nonlocal pending_cancellation
-            pending_cancellation = True
-            session_to_abort.abort()
-    measurement_service.context.add_cancel_callback(cancel_callback)
