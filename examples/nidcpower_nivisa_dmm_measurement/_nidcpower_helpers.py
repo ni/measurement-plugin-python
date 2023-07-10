@@ -1,12 +1,11 @@
 """nidcpower Helper classes and functions for MeasurementLink examples."""
 
-from _helpers import USE_SIMULATION
 from typing import Any, Dict, Optional
 
 import grpc
-import nidcpower
-
 import ni_measurementlink_service as nims
+import nidcpower
+from _helpers import USE_SIMULATION
 
 
 def create_session(

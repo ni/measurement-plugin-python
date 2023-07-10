@@ -1,29 +1,27 @@
 import logging
-import time
 import pathlib
+import time
+from enum import Enum
+
 import click
 import grpc
 import hightime
+import ni_measurementlink_service as nims
 import nidcpower
 import pyvisa
-import ni_measurementlink_service as nims
-
-from enum import Enum
 from _helpers import (
-    ServiceOptions,
     USE_SIMULATION,
+    ServiceOptions,
     configure_logging,
     create_session_management_client,
     get_grpc_device_channel,
     get_service_options,
+    get_session_and_channel_for_pin,
     grpc_device_options,
     use_simulation_option,
     verbosity_option,
-    get_session_and_channel_for_pin,
 )
-from _nidcpower_helpers import (
-    create_session,
-)
+from _nidcpower_helpers import create_session
 from _visa_helpers import (
     INSTRUMENT_TYPE_DMM_SIMULATOR,
     check_instrument_error,
@@ -39,8 +37,7 @@ RESOLUTION_DIGITS_TO_VALUE = {"3.5": 0.001, "4.5": 0.0001, "5.5": 1e-5, "6.5": 1
 
 service_directory = pathlib.Path(__file__).resolve().parent
 measurement_service = nims.MeasurementService(
-    service_config_path=service_directory
-    / "nidcpower_nivisa_dmm_measurement.serviceconfig",
+    service_config_path=service_directory / "nidcpower_nivisa_dmm_measurement.serviceconfig",
     version="1.0.0.0",
     ui_file_paths=[service_directory / "nidcpower_nivisa_dmm_measurement.measui"],
 )
@@ -106,7 +103,10 @@ def measure(
     resolution_digits: float,
     output_pin: str,
 ):
-    """Source DC voltage as input with an NI SMU and measure output using NI-VISA DMM and an NI Instrument Simulator v2.0."""
+    """
+    Source DC voltage as input with an NI SMU and 
+    measure output using NI-VISA DMM and an NI Instrument Simulator v2.0.
+    """
     logging.info(
         "Executing measurement: pin_names=%s voltage_level=%g measurement_type=%s range=%g resolution_digits=%g",
         [input_pin, output_pin],
@@ -126,12 +126,8 @@ def measure(
         grpc_device_channel = get_grpc_device_channel(
             measurement_service, nidcpower, service_options
         )
-        source_session_info = get_session_info_from_pin(
-            reservation.session_info, input_pin
-        )
-        measure_session_info = get_session_info_from_pin(
-            reservation.session_info, output_pin
-        )
+        source_session_info = _get_session_info_from_pin(reservation.session_info, input_pin)
+        measure_session_info = _get_session_info_from_pin(reservation.session_info, output_pin)
         resource_manager = create_visa_resource_manager(service_options.use_simulation)
         # Creates NI-DCPower and NI-VISA DMM sessions.
         with create_session(
@@ -140,9 +136,7 @@ def measure(
             resource_manager, measure_session_info.resource_name
         ) as measure_session:
             pending_cancellation = False
-            add_cancel_callback(
-                source_session, measurement_service, pending_cancellation
-            )
+            _add_cancel_callback(source_session, measurement_service, pending_cancellation)
 
             assert isinstance(measure_session, pyvisa.resources.MessageBasedResource)
 
@@ -164,16 +158,12 @@ def measure(
             channels.source_delay = hightime.timedelta(seconds=source_delay)
             channels.voltage_level = voltage_level
             with channels.initiate():
-                wait_for_source_complete_event(
-                    measurement_service, channels, pending_cancellation
-                )
+                _wait_for_source_complete_event(measurement_service, channels, pending_cancellation)
 
             # Configure and measure output pin using NI-VISA DMM
             function_enum = FUNCTION_TO_VALUE[measurement_type]
             resolution_value = RESOLUTION_DIGITS_TO_VALUE[str(resolution_digits)]
-            measure_session.write(
-                "CONF:%s %.g,%.g" % (function_enum, range, resolution_value)
-            )
+            measure_session.write("CONF:%s %.g,%.g" % (function_enum, range, resolution_value))
             check_instrument_error(measure_session)
 
             response = measure_session.query("READ?")
@@ -186,12 +176,12 @@ def measure(
     return (measured_value,)
 
 
-def get_session_info_from_pin(session_info, pin_name):
+def _get_session_info_from_pin(session_info, pin_name):
     session_index = get_session_and_channel_for_pin(session_info, pin_name)[0]
     return session_info[session_index]
 
 
-def add_cancel_callback(session, measurement_service, pending_cancellation):
+def _add_cancel_callback(session, measurement_service, pending_cancellation):
     def cancel_callback():
         session_to_abort = session
         if session_to_abort is not None:
@@ -199,10 +189,10 @@ def add_cancel_callback(session, measurement_service, pending_cancellation):
             pending_cancellation = True
             session_to_abort.abort()
 
-    measurement_service.context.add_cancel_callback(cancel_callback)
+    measurement_service.context._add_cancel_callback(cancel_callback)
 
 
-def wait_for_source_complete_event(measurement_service, channels, pending_cancellation):
+def _wait_for_source_complete_event(measurement_service, channels, pending_cancellation):
     deadline = time.time() + measurement_service.context.time_remaining
     while True:
         if time.time() > deadline:
@@ -238,7 +228,10 @@ def wait_for_source_complete_event(measurement_service, channels, pending_cancel
 @grpc_device_options
 @use_simulation_option(default=USE_SIMULATION)
 def main(verbosity: int, **kwargs) -> None:
-    """Source DC voltage as input with an NI SMU and measure output using NI-VISA DMM and an NI Instrument Simulator v2.0."""
+    """
+    Source DC voltage as input with an NI SMU and 
+    measure output using NI-VISA DMM and an NI Instrument Simulator v2.0.
+    """
     configure_logging(verbosity)
 
     global service_options
