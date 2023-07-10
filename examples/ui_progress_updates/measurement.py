@@ -85,7 +85,7 @@ def _generate_random_numbers(count: int) -> Generator[float, None, None]:
         yield RANDOM_NUMBER_RANGE * (2.0 * random.random() - 1.0)
 
 
-@click.command
+@click.command  # type: ignore
 @click.option(
     "-v",
     "--verbose",

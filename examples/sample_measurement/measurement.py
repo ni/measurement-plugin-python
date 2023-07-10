@@ -74,7 +74,7 @@ def measure(float_input, double_array_input, bool_input, string_input, enum_inpu
     )
 
 
-@click.command
+@click.command  # type: ignore
 @click.option(
     "-v",
     "--verbose",

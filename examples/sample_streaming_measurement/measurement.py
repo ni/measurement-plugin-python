@@ -75,7 +75,7 @@ def measure(
     logging.info("Completed measurement")
 
 
-@click.command
+@click.command  # type: ignore
 @click.option(
     "-v",
     "--verbose",
