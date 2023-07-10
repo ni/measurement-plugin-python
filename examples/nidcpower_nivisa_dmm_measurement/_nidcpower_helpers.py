@@ -8,6 +8,7 @@ from _helpers import USE_SIMULATION
 
 import ni_measurementlink_service as nims
 
+
 def create_session(
     session_info: nims.session_management.SessionInformation,
     session_grpc_channel: Optional[grpc.Channel] = None,
