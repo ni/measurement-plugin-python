@@ -11,6 +11,7 @@ import ni_measurementlink_service as nims
 from enum import Enum
 from _helpers import (
     ServiceOptions,
+    USE_SIMULATION,
     configure_logging,
     create_session_management_client,
     get_grpc_device_channel,
@@ -21,12 +22,10 @@ from _helpers import (
     get_session_and_channel_for_pin,
 )
 from _nidcpower_helpers import (
-    USE_SIMULATION,
     create_session,
 )
 from _visa_helpers import (
     INSTRUMENT_TYPE_DMM_SIMULATOR,
-    USE_SIMULATION,
     check_instrument_error,
     create_visa_resource_manager,
     create_visa_session,
@@ -107,7 +106,7 @@ def measure(
     resolution_digits: float,
     output_pin: str,
 ):
-    """Source DC voltage as input with an NI SMU and measure output using NI-VISA and an NI Instrument Simulator v2.0."""
+    """Source DC voltage as input with an NI SMU and measure output using NI-VISA DMM and an NI Instrument Simulator v2.0."""
     logging.info(
         "Executing measurement: pin_names=%s voltage_level=%g measurement_type=%s range=%g resolution_digits=%g",
         [input_pin, output_pin],
@@ -239,7 +238,7 @@ def wait_for_source_complete_event(measurement_service, channels, pending_cancel
 @grpc_device_options
 @use_simulation_option(default=USE_SIMULATION)
 def main(verbosity: int, **kwargs) -> None:
-    """Source and measure a DC voltage with an NI SMU."""
+    """Source DC voltage as input with an NI SMU and measure output using NI-VISA DMM and an NI Instrument Simulator v2.0."""
     configure_logging(verbosity)
 
     global service_options

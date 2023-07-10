@@ -1,17 +1,12 @@
 """nidcpower Helper classes and functions for MeasurementLink examples."""
 
+from _helpers import USE_SIMULATION
 from typing import Any, Dict, Optional
 
 import grpc
 import nidcpower
 
 import ni_measurementlink_service as nims
-
-USE_SIMULATION = True
-"""
-To use a physical NI SMU instrument, set this to False or specify
---no-use-simulation on the command line.
-"""
 
 
 def create_session(
