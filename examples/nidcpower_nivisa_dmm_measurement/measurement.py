@@ -1,7 +1,4 @@
-"""
-Source DC voltage as input with an NI SMU and
-measure output using NI-VISA DMM and an NI Instrument Simulator v2.0.
-"""
+""" Source DC voltage as input with an NI SMU and measure output using NI-VISA DMM."""
 
 import logging
 import pathlib
@@ -11,7 +8,6 @@ from enum import Enum
 import click
 import grpc
 import hightime
-import ni_measurementlink_service as nims
 import nidcpower
 import pyvisa
 from _helpers import (
@@ -36,14 +32,15 @@ from _visa_helpers import (
     reset_instrument,
 )
 
+import ni_measurementlink_service as nims
+
 NIDCPOWER_WAIT_FOR_EVENT_TIMEOUT_ERROR_CODE = -1074116059
 NIDCPOWER_TIMEOUT_EXCEEDED_ERROR_CODE = -1074097933
 RESOLUTION_DIGITS_TO_VALUE = {"3.5": 0.001, "4.5": 0.0001, "5.5": 1e-5, "6.5": 1e-6}
 
 service_directory = pathlib.Path(__file__).resolve().parent
 measurement_service = nims.MeasurementService(
-    service_config_path=service_directory
-    / "nidcpower_nivisa_dmm_measurement.serviceconfig",
+    service_config_path=service_directory / "nidcpower_nivisa_dmm_measurement.serviceconfig",
     version="1.0.0.0",
     ui_file_paths=[service_directory / "nidcpower_nivisa_dmm_measurement.measui"],
 )
@@ -109,10 +106,7 @@ def measure(
     resolution_digits: float,
     output_pin: str,
 ):
-    """
-    Source DC voltage as input with an NI SMU and
-    measure output using NI-VISA DMM and an NI Instrument Simulator v2.0.
-    """
+    """Source DC voltage as input with an NI SMU and measure output using NI-VISA DMM."""
     logging.info(
         "Executing measurement: pin_names=%s voltage_level=%g measurement_type=%s range=%g resolution_digits=%g",
         [input_pin, output_pin],
@@ -246,10 +240,7 @@ def _wait_for_source_complete_event(
 @grpc_device_options
 @use_simulation_option(default=USE_SIMULATION)
 def main(verbosity: int, **kwargs) -> None:
-    """
-    Source DC voltage as input with an NI SMU and
-    measure output using NI-VISA DMM and an NI Instrument Simulator v2.0.
-    """
+    """Source DC voltage as input with an NI SMU and measure output using NI-VISA DMM."""
     configure_logging(verbosity)
 
     global service_options
