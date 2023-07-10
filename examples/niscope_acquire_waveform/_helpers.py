@@ -206,18 +206,20 @@ def verbosity_option(func: F) -> F:
         "verbosity",
         count=True,
         help="Enable verbose logging. Repeat to increase verbosity.",
-    )(func)
+    )(
+        func  # type: ignore
+    )
 
 
 def grpc_device_options(func: F) -> F:
     """Decorator for NI gRPC Device Server command line options."""
-    use_grpc_device_option = click.option(
+    use_grpc_device_option: Any = click.option(
         "--use-grpc-device/--no-use-grpc-device",
         default=True,
         is_flag=True,
         help="Use the NI gRPC Device Server.",
     )
-    grpc_device_address_option = click.option(
+    grpc_device_address_option: Any = click.option(
         "--grpc-device-address",
         default="",
         help="NI gRPC Device Server address (e.g. localhost:31763). If unspecified, use the discovery service to resolve the address.",
