@@ -40,9 +40,9 @@ RESOLUTION_DIGITS_TO_VALUE = {"3.5": 0.001, "4.5": 0.0001, "5.5": 1e-5, "6.5": 1
 
 service_directory = pathlib.Path(__file__).resolve().parent
 measurement_service = nims.MeasurementService(
-    service_config_path=service_directory / "nidcpower_nivisa_dmm_measurement.serviceconfig",
+    service_config_path=service_directory / "NIDCPowerNIVisaDmmMeasurement.serviceconfig",
     version="1.0.0.0",
-    ui_file_paths=[service_directory / "nidcpower_nivisa_dmm_measurement.measui"],
+    ui_file_paths=[service_directory / "NIDCPowerNIVisaDmmMeasurement.measui"],
 )
 
 service_options = ServiceOptions()
@@ -189,7 +189,7 @@ def _add_cancel_callback(session, measurement_service, pending_cancellation):
             pending_cancellation = True
             session_to_abort.abort()
 
-    measurement_service.context._add_cancel_callback(cancel_callback)
+    measurement_service.context.add_cancel_callback(cancel_callback)
 
 
 def _wait_for_source_complete_event(measurement_service, channels, pending_cancellation):

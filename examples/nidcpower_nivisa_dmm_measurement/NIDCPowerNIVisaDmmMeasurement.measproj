@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<SourceFile Checksum="10B8B18571B3949366BA5A50857FC9E8CC9FDA58C28C7369CDDEA5C21F2D0D5F527CDD0FA378AA52A270AEBBBF58367E46B17FB423D0F796F034ABCBD48297E8" xmlns="http://www.ni.com/PlatformFramework">
+<SourceFile Checksum="AFE812FB5421C4D233EB302C27D4E56509C62F05E2D40C4FB0EA98AB9121501F06EB93BA8EEEB4B788EE126C03BBF9745360BF353E3FDB6460E2C0D65430B5AA" xmlns="http://www.ni.com/PlatformFramework">
 	<SourceModelFeatureSet>
 		<ParsableNamespace AssemblyFileVersion="23.5.0.49841" FeatureSetName="Pin Map" Name="http://www.ni.com/InstrumentFramework/PinMap" OldestCompatibleVersion="21.3.0.0" Version="21.3.0.0" />
 		<ParsableNamespace AssemblyFileVersion="23.5.0.49841" FeatureSetName="InstrumentStudio Measurement UI" Name="http://www.ni.com/InstrumentFramework/ScreenDocument" OldestCompatibleVersion="22.1.0.1" Version="22.1.0.1" />
@@ -29,8 +29,8 @@
 		</NameScopingEnvoy>
 		<NameScopingEnvoy Id="c63f5ac83cb34e108bb4ec589ce96130" ModelDefinitionType="DefaultTarget" Name="DefaultTarget">
 			<DefaultTarget />
-			<SourceFileReference Id="c69ab14b072e4db88751b1cf51ffc7cf" ModelDefinitionType="{http://www.ni.com/InstrumentFramework/ScreenDocument}Screen" Name="nidcpower_nivisa_dmm_measurement.measui" StoragePath="nidcpower_nivisa_dmm_measurement.measui" />
-			<FileReference Id="ce7942e68b146d894cb5da9188f4450" ModelDefinitionType="{http://www.ni.com/InstrumentFramework/PinMap}PinMapDefinition" Name="nidcpower_nivisa_dmm_measurement.pinmap" StoragePath="..\nidcpower_nivisa_dmm_measurement.pinmap" p4:IsActive="True" xmlns:p4="http://www.ni.com/InstrumentFramework/PinMap" />
+			<FileReference Id="e112c28b0d9c4472a4cf6bece0cbda64" ModelDefinitionType="{http://www.ni.com/InstrumentFramework/PinMap}PinMapDefinition" Name="NIDCPowerNIVisaDmmMeasurement.pinmap" StoragePath="NIDCPowerNIVisaDmmMeasurement.pinmap" p4:IsActive="True" xmlns:p4="http://www.ni.com/InstrumentFramework/PinMap" />
+			<SourceFileReference Id="d0c6ffe5ebc24ec381db3c6fa34800ef" ModelDefinitionType="{http://www.ni.com/InstrumentFramework/ScreenDocument}Screen" Name="NIDCPowerNIVisaDmmMeasurement.measui" StoragePath="NIDCPowerNIVisaDmmMeasurement.measui" />
 		</NameScopingEnvoy>
 	</Project>
 	<ProjectInformation xmlns="http://www.ni.com/PlatformFramework" />

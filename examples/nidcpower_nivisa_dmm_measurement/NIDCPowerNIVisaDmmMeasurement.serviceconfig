@@ -1,0 +1,19 @@
+{
+  "services": [
+    {
+      "displayName": "NI-DCPower NI-VISA DMM Measurement (Py)",
+      "serviceClass": "ni.examples.NIDCPowerNIVisaDmmMeasurement_Python",
+      "descriptionUrl": "",
+      "providedInterfaces": [
+        "ni.measurementlink.measurement.v1.MeasurementService",
+        "ni.measurementlink.measurement.v2.MeasurementService"
+      ],
+      "path": "start.bat",
+      "annotations": {
+        "ni/service.description": "Source DC voltage as input with an NI SMU and measure output using NI-VISA DMM and an NI Instrument Simulator v2.0.",
+        "ni/service.collection": "NI.Examples",
+        "ni/service.tags": []
+      }
+    }
+  ]
+}
