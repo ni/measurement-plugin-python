@@ -6,6 +6,7 @@ from enum import Enum
 import click
 
 import ni_measurementlink_service as nims
+from assets.color_pb2 import ProtobufColor
 
 service_directory = pathlib.Path(__file__).resolve().parent
 sample_measurement_service = nims.MeasurementService(
@@ -39,6 +40,9 @@ class Color(Enum):
     "Enum In", nims.DataType.Enum, Color.BLUE, enum_type=Color
 )
 @sample_measurement_service.configuration(
+    "Protobuf Enum In", nims.DataType.Enum, ProtobufColor.BLACK, enum_type=ProtobufColor
+)
+@sample_measurement_service.configuration(
     "String Array In", nims.DataType.StringArray1D, ["String1", "String2"]
 )
 @sample_measurement_service.output("Float out", nims.DataType.Float)
@@ -46,8 +50,9 @@ class Color(Enum):
 @sample_measurement_service.output("Bool out", nims.DataType.Boolean)
 @sample_measurement_service.output("String out", nims.DataType.String)
 @sample_measurement_service.output("Enum out", nims.DataType.Enum, enum_type=Color)
+@sample_measurement_service.output("Protobuf Enum out", nims.DataType.Enum, enum_type=ProtobufColor)
 @sample_measurement_service.output("String Array out", nims.DataType.StringArray1D)
-def measure(float_input, double_array_input, bool_input, string_input, enum_input, string_array_in):
+def measure(float_input, double_array_input, bool_input, string_input, enum_input, protobuf_enum_input, string_array_in):
     """Perform a loopback measurement with various data types."""
     logging.info("Executing measurement")
 
@@ -61,6 +66,7 @@ def measure(float_input, double_array_input, bool_input, string_input, enum_inpu
     bool_output = bool_input
     string_output = string_input
     enum_output = enum_input
+    protobuf_enum_output = protobuf_enum_input
     string_array_out = string_array_in
     logging.info("Completed measurement")
 
@@ -70,6 +76,7 @@ def measure(float_input, double_array_input, bool_input, string_input, enum_inpu
         bool_output,
         string_output,
         enum_output,
+        protobuf_enum_output,
         string_array_out,
     )
 
