@@ -128,8 +128,13 @@ def test___get_discovery_service_address___start_service_jit___returns_expected_
 
 def test___get_discovery_service_address___key_file_not_exist___throws_timeouterror(
     mocker: MockerFixture,
+    temp_discovery_key_file_path: pathlib.Path,
     temp_registration_json_file_path: pathlib.Path,
 ):
+    mocker.patch(
+        "ni_measurementlink_service._internal.discovery_client._get_key_file_path",
+        return_value=temp_discovery_key_file_path,
+    )
     mocker.patch(
         "ni_measurementlink_service._internal.discovery_client._START_SERVICE_TIMEOUT", 5.0
     )
