@@ -8,7 +8,7 @@ from os import path
 from pathlib import Path
 from threading import Lock
 from types import TracebackType
-from typing import Any, Callable, Dict, List, Optional, Type, TypeVar
+from typing import Any, Callable, Dict, List, Literal, Optional, Type, TypeVar
 
 import grpc
 
@@ -80,7 +80,7 @@ class GrpcChannelPool(object):
         exc_type: Optional[Type[BaseException]],
         exc_val: Optional[BaseException],
         traceback: Optional[TracebackType],
-    ) -> bool:
+    ) -> Literal[False]:
         """Exit the runtime context of the GrpcChannelPool."""
         self.close()
         return False
@@ -399,7 +399,7 @@ class MeasurementService:
         exc_type: Optional[Type[BaseException]],
         exc_val: Optional[BaseException],
         traceback: Optional[TracebackType],
-    ) -> bool:
+    ) -> Literal[False]:
         """Exit the runtime context related to the measurement service."""
         self.close_service()
         return False

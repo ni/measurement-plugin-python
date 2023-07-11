@@ -5,7 +5,7 @@ import abc
 import warnings
 from functools import cached_property
 from types import TracebackType
-from typing import Any, Iterable, List, NamedTuple, Optional, Sequence, Type, TypeVar
+from typing import Any, Iterable, List, Literal, NamedTuple, Optional, Sequence, Type, TypeVar
 
 import grpc
 from deprecation import DeprecatedWarning
@@ -190,7 +190,7 @@ class BaseReservation(abc.ABC):
         exc_type: Optional[Type[BaseException]],
         exc_val: Optional[BaseException],
         traceback: Optional[TracebackType],
-    ) -> bool:
+    ) -> Literal[False]:
         """Context management protocol. Calls unreserve()."""
         self.unreserve()
         return False
