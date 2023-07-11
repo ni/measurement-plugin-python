@@ -5,6 +5,8 @@ import pathlib
 from typing import cast
 
 import pytest
+from pytest_mock import MockerFixture
+
 from ni_measurementlink_service._internal.discovery_client import (
     DiscoveryClient,
     _get_discovery_service_address,
@@ -14,8 +16,6 @@ from ni_measurementlink_service._internal.stubs.ni.measurementlink.discovery.v1.
     DiscoveryServiceStub,
 )
 from ni_measurementlink_service.measurement.info import MeasurementInfo, ServiceInfo
-from pytest_mock import MockerFixture
-
 from tests.utilities.fake_discovery_service import FakeDiscoveryServiceStub
 
 _PROVIDED_MEASUREMENT_SERVICES = [
