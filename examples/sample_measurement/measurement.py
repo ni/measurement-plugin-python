@@ -6,7 +6,7 @@ from enum import Enum
 import click
 
 import ni_measurementlink_service as nims
-from assets.color_pb2 import ProtobufColor
+from examples.sample_measurement.assets.color_pb2 import ProtobufColor
 
 service_directory = pathlib.Path(__file__).resolve().parent
 sample_measurement_service = nims.MeasurementService(

@@ -37,7 +37,7 @@ class DifferentColor(Enum):
         (DataType.Double, 1, {}),
         (
             DataType.Enum,
-            1,
+            1.0,
             {
                 "ni/type_specialization": TypeSpecialization.Enum.value,
                 "ni/enum.values": '{"NONE":0, "RED": 1, "GREEN": 2, "BLUE": 3}',
@@ -54,7 +54,7 @@ class DifferentColor(Enum):
         (DataType.EnumArray1D, 1, {}),
         (
             DataType.EnumArray1D,
-            [1, 2],
+            [1.0, 2.0],
             {
                 "ni/type_specialization": TypeSpecialization.Enum.value,
                 "ni/enum.values": '{"NONE":0, "RED": 1, "GREEN": 2, "BLUE": 3}',
