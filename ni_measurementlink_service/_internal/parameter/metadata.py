@@ -161,5 +161,8 @@ def get_enum_values_annotation(parameter_metadata: ParameterMetadata) -> str:
 
 def _is_valid_enum_value(enum_value: object, user_enum: Dict[str, int]) -> bool:
     if not isinstance(enum_value, Enum):
-        return False
+        if isinstance(enum_value, int):
+            return enum_value in user_enum.values()
+        else:
+            return False
     return enum_value.name in user_enum and user_enum[enum_value.name] == enum_value.value

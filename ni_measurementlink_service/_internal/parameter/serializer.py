@@ -1,5 +1,6 @@
 """Parameter Serializer."""
 
+from enum import Enum
 from io import BytesIO
 from typing import Any, Dict, Sequence
 
@@ -75,15 +76,17 @@ def serialize_parameters(
             parameter_metadata.type,
             parameter_metadata.repeated,
         )
-        # Convert enum parameters to their underlying value.
+        # Convert enum parameters to their underlying value if necessary.
         if (
             parameter_metadata.annotations.get("ni/type_specialization")
             == TypeSpecialization.Enum.value
         ):
             if parameter_metadata.repeated:
-                parameter = [x.value for x in parameter]
+                if len(parameter) > 0 and isinstance(parameter[0], Enum):
+                    parameter = [x.value for x in parameter]
             else:
-                parameter = parameter.value
+                if isinstance(parameter, Enum):
+                    parameter = parameter.value
         # Skipping serialization if the value is None or if its a type default value.
         if parameter is not None and parameter != type_default_value:
             inner_encoder = encoder(i + 1)
@@ -224,11 +227,18 @@ def _deserialize_enum_parameters(
         parameter_metadata = parameter_metadata_dict[id]
         if get_enum_values_annotation(parameter_metadata):
             enum_type = _get_enum_type(parameter_metadata)
+            is_protobuf_enum = enum_type is int
             if parameter_metadata.repeated:
                 for index, member_value in enumerate(value):
-                    parameter_by_id[id][index] = enum_type(member_value)
+                    if is_protobuf_enum:
+                        parameter_by_id[id][index] = member_value
+                    else:
+                        parameter_by_id[id][index] = enum_type(member_value)
             else:
-                parameter_by_id[id] = enum_type(value)
+                if is_protobuf_enum:
+                    parameter_by_id[id] = value
+                else:
+                    parameter_by_id[id] = enum_type(value)
 
 
 def _get_enum_type(parameter_metadata: ParameterMetadata) -> type:

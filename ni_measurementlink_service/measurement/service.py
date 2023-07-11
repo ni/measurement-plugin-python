@@ -7,7 +7,8 @@ from enum import Enum
 from os import path
 from pathlib import Path
 from threading import Lock
-from typing import Any, Callable, Dict, List, Optional, Type, TypeVar
+from typing import Any, Callable, Dict, List, Optional, Type, TypeVar, Union
+from google.protobuf.internal.enum_type_wrapper import EnumTypeWrapper
 
 import grpc
 
@@ -222,7 +223,7 @@ class MeasurementService:
         default_value: Any,
         *,
         instrument_type: str = "",
-        enum_type: Optional[Type[Enum]] = None,
+        enum_type: Optional[Union[Type[Enum], Type[EnumTypeWrapper]]] = None,
     ) -> Callable:
         """Add a configuration parameter to a measurement function.
 
@@ -250,7 +251,7 @@ class MeasurementService:
             For custom instruments the user defined instrument type id is defined in the
             pin map file.
 
-            enum_type (Optional[Type[Enum]]):
+            enum_type (Optional[Union[Type[Enum], Type[EnumTypeWrapper]]]):
             Defines the enum type associated with this configuration parameter. This is only
             supported when configuration type is DataType.Enum or DataType.EnumArray1D.
 
@@ -276,7 +277,7 @@ class MeasurementService:
         return _configuration
 
     def output(
-        self, display_name: str, type: DataType, *, enum_type: Optional[Type[Enum]] = None
+        self, display_name: str, type: DataType, *, enum_type: Optional[Union[Type[Enum], Type[EnumTypeWrapper]]] = None,
     ) -> Callable:
         """Add an output parameter to a measurement function.
 
@@ -295,7 +296,7 @@ class MeasurementService:
 
             type (DataType): Data type of the output.
 
-            enum_type (Optional[Type[Enum]]):
+            enum_type (Optional[Union[Type[Enum], Type[EnumTypeWrapper]]]:
             Defines the enum type associated with this configuration parameter. This is only
             supported when configuration type is DataType.Enum or DataType.EnumArray1D.
 
@@ -346,7 +347,7 @@ class MeasurementService:
         type_specialization: TypeSpecialization,
         *,
         instrument_type: str = "",
-        enum_type: Optional[Type[Enum]] = None,
+        enum_type: Optional[Union[Type[Enum], Type[EnumTypeWrapper]]] = None,
     ) -> Dict[str, str]:
         annotations: Dict[str, str] = {}
         if type_specialization == TypeSpecialization.NoType:
@@ -364,13 +365,21 @@ class MeasurementService:
 
         return annotations
 
-    def _enum_to_annotations_value(self, enum_type: Type[Enum]) -> str:
-        if not any(member.value == 0 for member in enum_type):
-            raise ValueError("The enum does not have a value for 0.")
+    def _enum_to_annotations_value(self, enum_type: Union[Type[Enum], Type[EnumTypeWrapper]]) -> str:
         enum_values = {}
-        for member in enum_type:
-            enum_values[member.name] = member.value
+        if isinstance(enum_type, EnumTypeWrapper):
+            a = list(enum_type.DESCRIPTOR.values)
+            if not any(value.number == 0 for value in enum_type.DESCRIPTOR.values):
+                raise ValueError("The enum does not have a value for 0.")
+            for value in enum_type.DESCRIPTOR.values:
+                enum_values[value.name] = value.number
+        elif issubclass(enum_type, Enum):
+            if not any(member.value == 0 for member in enum_type):
+                raise ValueError("The enum does not have a value for 0.")
+            for member in enum_type:
+                enum_values[member.name] = member.value
         return json.dumps(enum_values)
+    
 
     def close_service(self) -> None:
         """Close the Service after un-registering with discovery service and cleanups."""
