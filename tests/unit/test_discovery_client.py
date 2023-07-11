@@ -158,7 +158,7 @@ def test___start_discovery_service___key_file_exist_after_poll___service_start_s
     )
     mocker.patch("subprocess.Popen")
 
-    assert _start_service(temp_registration_json_file_path, temp_discovery_key_file_path) is None
+    _start_service(temp_registration_json_file_path, temp_discovery_key_file_path)
 
 
 @pytest.fixture
