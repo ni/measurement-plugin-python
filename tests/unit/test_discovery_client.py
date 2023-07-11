@@ -5,16 +5,17 @@ import pathlib
 from typing import cast
 
 import pytest
-from pytest_mock import MockerFixture
-
 from ni_measurementlink_service._internal.discovery_client import (
     DiscoveryClient,
     _get_discovery_service_address,
+    _start_service,
 )
 from ni_measurementlink_service._internal.stubs.ni.measurementlink.discovery.v1.discovery_service_pb2_grpc import (
     DiscoveryServiceStub,
 )
 from ni_measurementlink_service.measurement.info import MeasurementInfo, ServiceInfo
+from pytest_mock import MockerFixture
+
 from tests.utilities.fake_discovery_service import FakeDiscoveryServiceStub
 
 _PROVIDED_MEASUREMENT_SERVICES = [
@@ -45,8 +46,6 @@ _MOCK_KEY_FILE_CONTENT = json.dumps({"SecurePort": "", "InsecurePort": _TEST_SER
 _MOCK_REGISTRATION_FILE_CONTENT = json.dumps(
     {"discovery": {"path": "Discovery/NationalInstruments.MeasurementLink.DiscoveryService.exe"}}
 )
-
-_FAKE_DISCOVERY_SERVICE_KEY_FILE_PATH = pathlib.Path("test\\DiscoveryService.json")
 
 
 def test___discovery_service_available___register_service___registration_success(
@@ -92,21 +91,15 @@ def test___discovery_service_unavailable___register_service_registration_failure
     assert ~unregistration_success_flag  # False
 
 
-def test____get_discovery_service_address___start_service_jit___returns_expected_value(
-    mocker: MockerFixture, tmp_path: pathlib.Path
+def test___get_discovery_service_address___start_service_jit___returns_expected_value(
+    mocker: MockerFixture,
+    temp_discovery_key_file_path: pathlib.Path,
+    temp_registration_json_file_path: pathlib.Path,
+    discovery_service_temp_directory: pathlib.Path,
 ):
-    disc_key_temp_path = tmp_path / "disc_temp"
-    disc_key_temp_path.mkdir()
-
-    temp_disc_key_file = disc_key_temp_path / "test_discovery_service.json"
-    temp_disc_key_file.write_text(str(_MOCK_KEY_FILE_CONTENT))
-
-    temp_registration_file = disc_key_temp_path / "test_measurementlink_services.json"
-    temp_registration_file.write_text(str(_MOCK_REGISTRATION_FILE_CONTENT))
-
     mocker.patch(
         "ni_measurementlink_service._internal.discovery_client._get_key_file_path",
-        return_value=temp_disc_key_file,
+        return_value=temp_discovery_key_file_path,
     )
     mocker.patch(
         "ni_measurementlink_service._internal.discovery_client._service_already_running",
@@ -114,7 +107,7 @@ def test____get_discovery_service_address___start_service_jit___returns_expected
     )
     mocker.patch(
         "ni_measurementlink_service._internal.discovery_client._get_registration_json_file_path",
-        return_value=temp_registration_file,
+        return_value=temp_registration_json_file_path,
     )
     mock_popen = mocker.patch("subprocess.Popen")
 
@@ -125,7 +118,8 @@ def test____get_discovery_service_address___start_service_jit___returns_expected
         (mock_file_path_arg,) = args
         assert (
             mock_file_path_arg[0]
-            == disc_key_temp_path / json.loads(_MOCK_REGISTRATION_FILE_CONTENT)["discovery"]["path"]
+            == discovery_service_temp_directory
+            / json.loads(_MOCK_REGISTRATION_FILE_CONTENT)["discovery"]["path"]
         )
 
     assert mock_popen.call_count == 1
@@ -134,27 +128,37 @@ def test____get_discovery_service_address___start_service_jit___returns_expected
 
 def test___get_discovery_service_address___key_file_not_exist___throws_timeouterror(
     mocker: MockerFixture,
+    temp_registration_json_file_path: pathlib.Path,
 ):
     mocker.patch(
-        "ni_measurementlink_service._internal.discovery_client._get_key_file_path",
-        return_value=_FAKE_DISCOVERY_SERVICE_KEY_FILE_PATH,
+        "ni_measurementlink_service._internal.discovery_client._START_SERVICE_TIMEOUT", 5.0
     )
     mocker.patch(
         "ni_measurementlink_service._internal.discovery_client._open_key_file", side_effect=IOError
     )
     mocker.patch(
         "ni_measurementlink_service._internal.discovery_client._get_registration_json_file_path",
-        return_value=_FAKE_DISCOVERY_SERVICE_KEY_FILE_PATH,
+        return_value=temp_registration_json_file_path,
     )
-    mocker.patch(
-        "ni_measurementlink_service._internal.discovery_client._get_discovery_service_location",
-        return_value=_FAKE_DISCOVERY_SERVICE_KEY_FILE_PATH,
-    )
-    mocker.patch("ni_measurementlink_service._internal.discovery_client.subprocess.Popen")
+    mocker.patch("subprocess.Popen")
 
     with pytest.raises(IOError) as exc_info:
         _get_discovery_service_address()
-        assert "Timed out waiting for discovery service to start" in str(exc_info.value)
+    assert exc_info.type is TimeoutError
+
+
+def test___start_discovery_service___key_file_exist_after_poll___service_start_success(
+    mocker: MockerFixture,
+    temp_discovery_key_file_path: pathlib.Path,
+    temp_registration_json_file_path: pathlib.Path,
+):
+    mocker.patch(
+        "ni_measurementlink_service._internal.discovery_client._open_key_file",
+        side_effect=[IOError, IOError, IOError, temp_discovery_key_file_path],
+    )
+    mocker.patch("subprocess.Popen")
+
+    assert _start_service(temp_registration_json_file_path, temp_discovery_key_file_path) is None
 
 
 @pytest.fixture
@@ -167,6 +171,34 @@ def discovery_client(discovery_service_stub: FakeDiscoveryServiceStub) -> Discov
 def discovery_service_stub() -> FakeDiscoveryServiceStub:
     """Create a FakeDiscoveryServiceStub."""
     return FakeDiscoveryServiceStub()
+
+
+@pytest.fixture
+def discovery_service_temp_directory(tmp_path: pathlib.Path) -> pathlib.Path:
+    """Create a temp directory to store discovery service key and registration files."""
+    discovery_service_temp_path = tmp_path / "disc_temp"
+    discovery_service_temp_path.mkdir()
+    return discovery_service_temp_path
+
+
+@pytest.fixture
+def temp_discovery_key_file_path(discovery_service_temp_directory: pathlib.Path) -> pathlib.Path:
+    """Create a discovery service key file."""
+    temp_discovery_key_file_path = discovery_service_temp_directory / "test_discovery_service.json"
+    temp_discovery_key_file_path.write_text(str(_MOCK_KEY_FILE_CONTENT))
+    return temp_discovery_key_file_path
+
+
+@pytest.fixture
+def temp_registration_json_file_path(
+    discovery_service_temp_directory: pathlib.Path,
+) -> pathlib.Path:
+    """Create a discovery service registration json file."""
+    temp_registration_json_file_path = (
+        discovery_service_temp_directory / "test_measurementlink_services.json"
+    )
+    temp_registration_json_file_path.write_text(str(_MOCK_REGISTRATION_FILE_CONTENT))
+    return temp_registration_json_file_path
 
 
 def _validate_grpc_request(request):
