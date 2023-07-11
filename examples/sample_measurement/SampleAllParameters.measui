@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<SourceFile Checksum="F305ECA1DE82AC0234FC742DEF3D86F06F6C05439FE95B9A2EF652DEDE03F4A1CE20C5A15962ADB620EA3E39E2D06326C980D2C453F654A2318946055A3FE079" Timestamp="1D9A91D58BBAAD2" xmlns="http://www.ni.com/PlatformFramework">
+<SourceFile Checksum="F55B0EC78C67ACE66A86F7865112684B8275F395DD9062138FA3420C4FC770C1093972128F3B863A78F50037AEF3CBC9814F38F95E1F023E19B3AEB89B725D9A" Timestamp="1D9B41EF86E4FC1" xmlns="http://www.ni.com/PlatformFramework">
 	<SourceModelFeatureSet>
 		<ParsableNamespace AssemblyFileVersion="9.9.0.2752" FeatureSetName="Configuration Based Software Core" Name="http://www.ni.com/ConfigurationBasedSoftware.Core" OldestCompatibleVersion="6.3.0.49152" Version="9.8.1.49152" />
 		<ParsableNamespace AssemblyFileVersion="9.9.0.2752" FeatureSetName="LabVIEW Controls" Name="http://www.ni.com/Controls.LabVIEW.Design" OldestCompatibleVersion="8.1.0.49152" Version="8.1.0.49152" />
@@ -83,6 +83,20 @@
 				<RingSelectorInfo DisplayValue="[string]BLUE" IsEnabled="[bool]True" Value="[int]3" xmlns="http://www.ni.com/Controls.LabVIEW.Design" />
 			</ChannelEnumSelector>
 			<Label Height="[float]16" Id="f45987e5f4b442508b463a26fab7b15a" LabelOwner="[UIModel]b82a4cfdbd2d47b3b3457b17fe57c29e" Left="[float]239" Text="[string]Enum out" Top="[float]335" Width="[float]51" xmlns="http://www.ni.com/PanelCommon" />
+			<ChannelEnumSelector AdaptsToType="[bool]True" AllowNonSequentialValues="[bool]True" BaseName="[string]Enum" Channel="[string]{abd0ec1b-8a8a-46a1-9b11-1bcb569d1849}/Output/Protobuf Enum out" Height="[float]24" Id="f40567b55efb4c1caa64ce1f49d7ca4f" InteractionMode="[SelectorInteractionModes]ReadOnly" Label="[UIModel]cceab74986a742e4bcdcdf9a26427440" Left="[float]239" Top="[float]413" Width="[float]136" xmlns="http://www.ni.com/InstrumentFramework/ScreenDocument">
+				<RingSelectorInfo DisplayValue="[string]NONE" IsEnabled="[bool]True" Value="[int]0" xmlns="http://www.ni.com/Controls.LabVIEW.Design" />
+				<RingSelectorInfo DisplayValue="[string]PINK" IsEnabled="[bool]True" Value="[int]1" xmlns="http://www.ni.com/Controls.LabVIEW.Design" />
+				<RingSelectorInfo DisplayValue="[string]WHITE" IsEnabled="[bool]True" Value="[int]2" xmlns="http://www.ni.com/Controls.LabVIEW.Design" />
+				<RingSelectorInfo DisplayValue="[string]BLACK" IsEnabled="[bool]True" Value="[int]3" xmlns="http://www.ni.com/Controls.LabVIEW.Design" />
+			</ChannelEnumSelector>
+			<Label Height="[float]16" Id="cceab74986a742e4bcdcdf9a26427440" LabelOwner="[UIModel]f40567b55efb4c1caa64ce1f49d7ca4f" Left="[float]239" Text="[string]Protobuf Enum out" Top="[float]393" Width="[float]101" xmlns="http://www.ni.com/PanelCommon" />
+			<ChannelEnumSelector AdaptsToType="[bool]True" AllowNonSequentialValues="[bool]True" BaseName="[string]Enum" Channel="[string]{abd0ec1b-8a8a-46a1-9b11-1bcb569d1849}/Configuration/Protobuf Enum In" Enabled="[bool]True" Height="[float]24" Id="6a69bdf9c93e41bfb4726e3d0794db28" Label="[UIModel]2ee07ceb54f34e5aa0328f4e072cdc96" Left="[float]30" Top="[float]413" Value="[int]2" Width="[float]136" xmlns="http://www.ni.com/InstrumentFramework/ScreenDocument">
+				<RingSelectorInfo DisplayValue="[string]NONE" IsEnabled="[bool]True" Value="[int]0" xmlns="http://www.ni.com/Controls.LabVIEW.Design" />
+				<RingSelectorInfo DisplayValue="[string]PINK" IsEnabled="[bool]True" Value="[int]1" xmlns="http://www.ni.com/Controls.LabVIEW.Design" />
+				<RingSelectorInfo DisplayValue="[string]WHITE" IsEnabled="[bool]True" Value="[int]2" xmlns="http://www.ni.com/Controls.LabVIEW.Design" />
+				<RingSelectorInfo DisplayValue="[string]BLACK" IsEnabled="[bool]True" Value="[int]3" xmlns="http://www.ni.com/Controls.LabVIEW.Design" />
+			</ChannelEnumSelector>
+			<Label Height="[float]16" Id="2ee07ceb54f34e5aa0328f4e072cdc96" LabelOwner="[UIModel]6a69bdf9c93e41bfb4726e3d0794db28" Left="[float]30" Text="[string]Protobuf Enum In" Top="[float]393" Width="[float]93" xmlns="http://www.ni.com/PanelCommon" />
 		</ScreenSurface>
 	</Screen>
 </SourceFile>
