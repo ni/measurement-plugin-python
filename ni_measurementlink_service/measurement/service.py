@@ -380,7 +380,6 @@ class MeasurementService:
     ) -> str:
         enum_values = {}
         if isinstance(enum_type, EnumTypeWrapper):
-            a = list(enum_type.DESCRIPTOR.values)
             if not any(value.number == 0 for value in enum_type.DESCRIPTOR.values):
                 raise ValueError("The enum does not have a value for 0.")
             for value in enum_type.DESCRIPTOR.values:
