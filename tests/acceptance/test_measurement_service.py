@@ -8,7 +8,6 @@ from typing import Generator, List, Union
 
 import pytest
 from examples.sample_measurement import measurement
-from examples.sample_measurement.assets.color_pb2 import ProtobufColor
 from google.protobuf import any_pb2
 
 from ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v1 import (
@@ -21,6 +20,7 @@ from ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v
 )
 from ni_measurementlink_service.measurement.service import MeasurementService
 from tests.assets import sample_measurement_test_pb2
+from tests.assets.sample_measurement_test_pb2 import ProtobufColor
 
 EXPECTED_PARAMETER_COUNT = 7
 EXPECTED_UI_FILE_COUNT = 3
@@ -71,7 +71,7 @@ def test___measurement_service_v1___measure___returns_output(
     bool_in: bool,
     string_in: str,
     enum_in: Enum,
-    protobuf_enum_in: ProtobufColor,
+    protobuf_enum_in: ProtobufColor.ValueType,
     string_array_in: List[str],
     stub_v1: v1_measurement_service_pb2_grpc.MeasurementServiceStub,
 ):
@@ -114,7 +114,7 @@ def test___measurement_service_v2___measure___returns_output(
     bool_in: bool,
     string_in: str,
     enum_in: Enum,
-    protobuf_enum_in: ProtobufColor,
+    protobuf_enum_in: ProtobufColor.ValueType,
     string_array_in: List[str],
     stub_v2: v2_measurement_service_pb2_grpc.MeasurementServiceStub,
 ):
@@ -223,7 +223,7 @@ def _get_serialized_measurement_signature(
     bool_in: bool,
     string_in: str,
     enum_in: Enum,
-    protobuf_enum_in: ProtobufColor,
+    protobuf_enum_in: ProtobufColor.ValueType,
     string_array_in: List[str],
 ) -> bytes:
     config_params = sample_measurement_test_pb2.SampleMeasurementParameter()
