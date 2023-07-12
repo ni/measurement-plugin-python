@@ -182,10 +182,16 @@ class MeasurementService:
             ui_file_paths=ui_file_paths,
         )
 
+        service_annotations_string = {
+            key: json.dumps(value, separators=(",", ":"))
+            for key, value in service.get("annotations", {}).items()
+        }
+
         self.service_info = ServiceInfo(
             service_class=service["serviceClass"],
             description_url=service["descriptionUrl"],
             provided_interfaces=service["providedInterfaces"],
+            annotations=service_annotations_string,
         )
 
         self.configuration_parameter_list: list = []

@@ -8,7 +8,12 @@
         "ni.measurementlink.measurement.v1.MeasurementService",
         "ni.measurementlink.measurement.v2.MeasurementService"
       ],
-      "path": "start.bat"
+      "path": "start.bat",
+      "annotations": {
+        "ni/service.description": "MeasurementLink example that performs a DMM measurement using NI-VISA and an NI Instrument Simulator v2.0.",
+        "ni/service.collection": "NI.Examples",
+        "ni/service.tags": []
+      }
     }
   ]
 }

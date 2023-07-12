@@ -1,0 +1,30 @@
+{
+  "services": [
+    {
+      "displayName": "SampleMeasurement",
+      "serviceClass": "SampleMeasurement_Python",
+      "descriptionUrl": "https://www.example.com/SampleMeasurement.html",
+      "providedInterfaces": [
+         "ni.measurementlink.measurement.v1.MeasurementService"
+      ],
+      "path": "NoFile.exe",
+      "annotations": {
+        "description": "An annotated test measurement service.",
+        "collection": "Tests.Measurements",
+        "tags": [
+          "test",
+          "measurement"
+        ],
+        "custom": {
+          "foo": "bar",
+          "baz": [ "qux", "quux", "quuux" ],
+          "snork": {
+            "blarg": "flarp",
+            "oogle": [ "foogle", "boogle" ],
+            "ork": [ "zork", "gork", "bork" ]
+          }
+        }
+      }
+    }
+  ]
+}

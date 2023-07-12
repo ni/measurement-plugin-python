@@ -1,7 +1,7 @@
 {
   "services": [
     {
-      "displayName": "SampleMeasurement",
+      "displayName": "Sample Measurement",
       "serviceClass": "SampleMeasurement_Python",
       "descriptionUrl": "https://www.example.com/SampleMeasurement.html",
       "providedInterfaces": [
@@ -10,9 +10,9 @@
       ],
       "path": "start.bat",
       "annotations": {
-        "ni/service.description": "Measure inrush current with a shorted load and validate results against configured limits.",
-        "ni/service.collection": "CurrentTests.Inrush",
-        "ni/service.tags": [ "powerup", "current" ]
+        "ni/service.description": "",
+        "ni/service.collection": "",
+        "ni/service.tags": []
       }
     }
   ]

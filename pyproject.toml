@@ -1,13 +1,9 @@
 [tool.black]
-extend-exclude ='((.+_pb2_grpc)|(.+_pb2))+(.py)$' # Regex to files with _pb2_grpc.py and _pb2.py Auto Generated Code are excluded
+extend_exclude = '_pb2(_grpc)?\.(py|pyi)$|ni_measurementlink_generator/'
 line-length = 100
-exclude = '''
-(
-\.git # root of the project
-| \.venv
-| venv
-)
-'''
+
+[tool.ni-python-styleguide]
+extend_exclude = '*_pb2_grpc.py,*_pb2_grpc.pyi,*_pb2.py,*_pb2.pyi,ni_measurementlink_generator/'
 
 [tool.poetry]
 name = "ni_measurementlink_service"
@@ -69,9 +65,6 @@ sphinx-click = "^4.1.0"
 [build-system]
 requires = ["poetry-core>=1.2.0"]
 build-backend = "poetry.core.masonry.api"
-
-[tool.ni-python-styleguide]
-extend_exclude = "*_pb2_grpc.py,*_pb2.py,venv,ni_measurementlink_generator/*"
 
 [tool.pytest.ini_options]
 addopts = "--doctest-modules --strict-markers"
