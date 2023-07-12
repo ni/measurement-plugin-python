@@ -34,7 +34,7 @@
             ni_measurementlink_service
           </a>
               <div class="version">
-                1.1.0-dev2
+                1.1.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -409,8 +409,8 @@
 
         <span class="c1"># Measurement Parameters</span>
         <span class="n">measurement_signature</span> <span class="o">=</span> <span class="n">v2_measurement_service_pb2</span><span class="o">.</span><span class="n">MeasurementSignature</span><span class="p">(</span>
-            <span class="n">configuration_parameters_message_type</span><span class="o">=</span><span class="s2">&quot;ni.measurementlink.measurement.v1.MeasurementConfigurations&quot;</span><span class="p">,</span>
-            <span class="n">outputs_message_type</span><span class="o">=</span><span class="s2">&quot;ni.measurementlink.measurement.v1.MeasurementOutputs&quot;</span><span class="p">,</span>
+            <span class="n">configuration_parameters_message_type</span><span class="o">=</span><span class="s2">&quot;ni.measurementlink.measurement.v2.MeasurementConfigurations&quot;</span><span class="p">,</span>
+            <span class="n">outputs_message_type</span><span class="o">=</span><span class="s2">&quot;ni.measurementlink.measurement.v2.MeasurementOutputs&quot;</span><span class="p">,</span>
         <span class="p">)</span>
 
         <span class="c1"># Configurations</span>
@@ -435,6 +435,7 @@
             <span class="n">output_parameter</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">output_metadata</span><span class="o">.</span><span class="n">display_name</span>
             <span class="n">output_parameter</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">output_metadata</span><span class="o">.</span><span class="n">type</span>
             <span class="n">output_parameter</span><span class="o">.</span><span class="n">repeated</span> <span class="o">=</span> <span class="n">output_metadata</span><span class="o">.</span><span class="n">repeated</span>
+            <span class="n">output_parameter</span><span class="o">.</span><span class="n">annotations</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">output_metadata</span><span class="o">.</span><span class="n">annotations</span><span class="p">)</span>
             <span class="n">measurement_signature</span><span class="o">.</span><span class="n">outputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">output_parameter</span><span class="p">)</span>
 
         <span class="c1"># Sending back Response</span>
