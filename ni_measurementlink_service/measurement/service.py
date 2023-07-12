@@ -8,9 +8,9 @@ from os import path
 from pathlib import Path
 from threading import Lock
 from typing import Any, Callable, Dict, List, Optional, Type, TypeVar, Union
-from google.protobuf.internal.enum_type_wrapper import EnumTypeWrapper
 
 import grpc
+from google.protobuf.internal.enum_type_wrapper import EnumTypeWrapper
 
 from ni_measurementlink_service._internal import grpc_servicer
 from ni_measurementlink_service._internal.discovery_client import DiscoveryClient
@@ -283,7 +283,11 @@ class MeasurementService:
         return _configuration
 
     def output(
-        self, display_name: str, type: DataType, *, enum_type: Optional[Union[Type[Enum], Type[EnumTypeWrapper]]] = None,
+        self,
+        display_name: str,
+        type: DataType,
+        *,
+        enum_type: Optional[Union[Type[Enum], Type[EnumTypeWrapper]]] = None,
     ) -> Callable:
         """Add an output parameter to a measurement function.
 
@@ -371,7 +375,9 @@ class MeasurementService:
 
         return annotations
 
-    def _enum_to_annotations_value(self, enum_type: Union[Type[Enum], Type[EnumTypeWrapper]]) -> str:
+    def _enum_to_annotations_value(
+        self, enum_type: Union[Type[Enum], Type[EnumTypeWrapper]]
+    ) -> str:
         enum_values = {}
         if isinstance(enum_type, EnumTypeWrapper):
             a = list(enum_type.DESCRIPTOR.values)
@@ -385,7 +391,6 @@ class MeasurementService:
             for member in enum_type:
                 enum_values[member.name] = member.value
         return json.dumps(enum_values)
-    
 
     def close_service(self) -> None:
         """Close the Service after un-registering with discovery service and cleanups."""

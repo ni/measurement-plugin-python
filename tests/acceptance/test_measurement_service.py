@@ -53,7 +53,17 @@ def test___measurement_service_v2___get_metadata___returns_metadata(
 
 @pytest.mark.parametrize(
     "float_in,double_array_in,bool_in,string_in,enum_in,protobuf_enum_in,string_array_in",
-    [(0.9, [1.0, 23.56], True, "InputString", Color.BLUE, ProtobufColor.WHITE, ["", "TestString1", "#$%!@<*(&^~`"])],
+    [
+        (
+            0.9,
+            [1.0, 23.56],
+            True,
+            "InputString",
+            Color.BLUE,
+            ProtobufColor.WHITE,
+            ["", "TestString1", "#$%!@<*(&^~`"],
+        )
+    ],
 )
 def test___measurement_service_v1___measure___returns_output(
     float_in: float,
@@ -67,7 +77,13 @@ def test___measurement_service_v1___measure___returns_output(
 ):
     request = v1_measurement_service_pb2.MeasureRequest(
         configuration_parameters=_get_configuration_parameters(
-            float_in, double_array_in, bool_in, string_in, enum_in, protobuf_enum_in, string_array_in
+            float_in,
+            double_array_in,
+            bool_in,
+            string_in,
+            enum_in,
+            protobuf_enum_in,
+            string_array_in,
         )
     )
     response = stub_v1.Measure(request)
@@ -80,7 +96,17 @@ def test___measurement_service_v1___measure___returns_output(
 
 @pytest.mark.parametrize(
     "float_in,double_array_in,bool_in,string_in,enum_in,protobuf_enum_in,string_array_in",
-    [(0.9, [1.0, 23.56], True, "InputString", Color.BLUE, ProtobufColor.WHITE, ["", "TestString1", "#$%!@<*(&^~`"])],
+    [
+        (
+            0.9,
+            [1.0, 23.56],
+            True,
+            "InputString",
+            Color.BLUE,
+            ProtobufColor.WHITE,
+            ["", "TestString1", "#$%!@<*(&^~`"],
+        )
+    ],
 )
 def test___measurement_service_v2___measure___returns_output(
     float_in: float,
@@ -94,7 +120,13 @@ def test___measurement_service_v2___measure___returns_output(
 ):
     request = v2_measurement_service_pb2.MeasureRequest(
         configuration_parameters=_get_configuration_parameters(
-            float_in, double_array_in, bool_in, string_in, enum_in, protobuf_enum_in, string_array_in
+            float_in,
+            double_array_in,
+            bool_in,
+            string_in,
+            enum_in,
+            protobuf_enum_in,
+            string_array_in,
         )
     )
     response_iterator = stub_v2.Measure(request)
@@ -121,7 +153,13 @@ def test___measurement_service_v1___measure_with_large_array___returns_output(
 
     request = v1_measurement_service_pb2.MeasureRequest(
         configuration_parameters=_get_configuration_parameters(
-            float_in, double_array_in, bool_in, string_in, enum_in, protobuf_enum_in, string_array_in
+            float_in,
+            double_array_in,
+            bool_in,
+            string_in,
+            enum_in,
+            protobuf_enum_in,
+            string_array_in,
         )
     )
     response = stub_v1.Measure(request)
@@ -146,7 +184,13 @@ def test___measurement_service_v2___measure_with_large_array___returns_output(
 
     request = v2_measurement_service_pb2.MeasureRequest(
         configuration_parameters=_get_configuration_parameters(
-            float_in, double_array_in, bool_in, string_in, enum_in, protobuf_enum_in, string_array_in
+            float_in,
+            double_array_in,
+            bool_in,
+            string_in,
+            enum_in,
+            protobuf_enum_in,
+            string_array_in,
         )
     )
     response_iterator = stub_v2.Measure(request)
