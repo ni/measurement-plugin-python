@@ -381,8 +381,8 @@ class MeasurementService:
         enum_values = {}
         # Note that the type of protobuf enums are an instance of EnumTypeWrapper
         # in addition to being a type itself. Additionally, issubclass excludes
-        # instances as valid parameters so we must call type(enum_type) here.
-        if issubclass(type(enum_type), EnumTypeWrapper):
+        # instances as valid parameters so we use isinstance here.
+        if isinstance(enum_type, EnumTypeWrapper):
             if not any(value.number == 0 for value in enum_type.DESCRIPTOR.values):
                 raise ValueError("The enum does not have a value for 0.")
             for value in enum_type.DESCRIPTOR.values:
