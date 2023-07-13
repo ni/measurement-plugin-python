@@ -7,7 +7,8 @@ from enum import Enum
 from os import path
 from pathlib import Path
 from threading import Lock
-from typing import Any, Callable, Dict, List, Optional, Type, TypeVar, Union
+from types import TracebackType
+from typing import Any, Callable, Dict, List, Literal, Optional, Type, TypeVar, Union
 
 import grpc
 from google.protobuf.internal.enum_type_wrapper import EnumTypeWrapper
@@ -68,7 +69,7 @@ _TMeasurementService = TypeVar("_TMeasurementService", bound="MeasurementService
 class GrpcChannelPool(object):
     """Class that manages gRPC channel lifetimes."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize the GrpcChannelPool object."""
         self._lock: Lock = Lock()
         self._channel_cache: Dict[str, grpc.Channel] = {}
@@ -77,9 +78,15 @@ class GrpcChannelPool(object):
         """Enter the runtime context of the GrpcChannelPool."""
         return self
 
-    def __exit__(self, exc_type, exc_value, traceback):
+    def __exit__(
+        self,
+        exc_type: Optional[Type[BaseException]],
+        exc_val: Optional[BaseException],
+        traceback: Optional[TracebackType],
+    ) -> Literal[False]:
         """Exit the runtime context of the GrpcChannelPool."""
         self.close()
+        return False
 
     def get_channel(self, target: str) -> grpc.Channel:
         """Return a gRPC channel.
@@ -196,8 +203,8 @@ class MeasurementService:
             annotations=service_annotations_string,
         )
 
-        self.configuration_parameter_list: list = []
-        self.output_parameter_list: list = []
+        self.configuration_parameter_list: List[Any] = []
+        self.output_parameter_list: List[Any] = []
         self.grpc_service = GrpcService()
         self.context: MeasurementContext = MeasurementContext()
         self.discovery_client: DiscoveryClient = self.grpc_service.discovery_client
@@ -403,9 +410,15 @@ class MeasurementService:
         """Enter the runtime context related to the measurement service."""
         return self
 
-    def __exit__(self, exc_type, exc_value, traceback):
+    def __exit__(
+        self,
+        exc_type: Optional[Type[BaseException]],
+        exc_val: Optional[BaseException],
+        traceback: Optional[TracebackType],
+    ) -> Literal[False]:
         """Exit the runtime context related to the measurement service."""
         self.close_service()
+        return False
 
     def get_channel(self, provided_interface: str, service_class: str = "") -> grpc.Channel:
         """Return gRPC channel to specified service.

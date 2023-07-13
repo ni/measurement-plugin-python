@@ -4,15 +4,8 @@ from __future__ import annotations
 import abc
 import warnings
 from functools import cached_property
-from typing import (
-    Any,
-    Iterable,
-    List,
-    NamedTuple,
-    Optional,
-    Sequence,
-    TypeVar,
-)
+from types import TracebackType
+from typing import Any, Iterable, List, Literal, NamedTuple, Optional, Sequence, Type, TypeVar
 
 import grpc
 from deprecation import DeprecatedWarning
@@ -183,7 +176,7 @@ class BaseReservation(abc.ABC):
         self,
         session_manager: Client,
         session_info: Sequence[session_management_service_pb2.SessionInformation],
-    ):
+    ) -> None:
         """Initialize reservation object."""
         self._session_manager = session_manager
         self._session_info = session_info
@@ -192,12 +185,17 @@ class BaseReservation(abc.ABC):
         """Context management protocol. Returns self."""
         return self
 
-    def __exit__(self, *exc):
+    def __exit__(
+        self,
+        exc_type: Optional[Type[BaseException]],
+        exc_val: Optional[BaseException],
+        traceback: Optional[TracebackType],
+    ) -> Literal[False]:
         """Context management protocol. Calls unreserve()."""
         self.unreserve()
         return False
 
-    def unreserve(self):
+    def unreserve(self) -> None:
         """Unreserve sessions."""
         self._session_manager._unreserve_sessions(self._session_info)
 
@@ -240,7 +238,7 @@ def __getattr__(name: str) -> Any:
 class Client(object):
     """Class that manages driver sessions."""
 
-    def __init__(self, *, grpc_channel: grpc.Channel):
+    def __init__(self, *, grpc_channel: grpc.Channel) -> None:
         """Initialize session manangement client."""
         self._client: session_management_service_pb2_grpc.SessionManagementServiceStub = (
             session_management_service_pb2_grpc.SessionManagementServiceStub(grpc_channel)
@@ -388,12 +386,12 @@ class Client(object):
 
     def _unreserve_sessions(
         self, session_info: Iterable[session_management_service_pb2.SessionInformation]
-    ):
+    ) -> None:
         """Unreserves sessions so they can be accessed by other clients."""
         request = session_management_service_pb2.UnreserveSessionsRequest(sessions=session_info)
         self._client.UnreserveSessions(request)
 
-    def register_sessions(self, session_info: Iterable[SessionInformation]):
+    def register_sessions(self, session_info: Iterable[SessionInformation]) -> None:
         """Register the sessions with the Session Manager.
 
         Indicates that the sessions are open and will need to be closed later.
@@ -430,7 +428,7 @@ class Client(object):
         )
         self._client.RegisterSessions(request)
 
-    def unregister_sessions(self, session_info: Iterable[SessionInformation]):
+    def unregister_sessions(self, session_info: Iterable[SessionInformation]) -> None:
         """Unregisters the sessions from the Session Manager.
 
         Indicates that the sessions have been closed and will need to be reopened before they can be
