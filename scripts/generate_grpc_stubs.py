@@ -19,6 +19,10 @@ TEST_STUBS_PATH = pathlib.Path(__file__).parent.parent / "tests" / "assets"
 TEST_PROTO_PATH = TEST_STUBS_PATH
 TEST_PROTO_FILES = list(TEST_PROTO_PATH.rglob("*.proto"))
 
+SAMPLE_MEASUREMENT_STUBS_PATH = pathlib.Path(__file__).parent.parent / "examples" / "sample_measurement" / "assets"
+SAMPLE_MEASUREMENT_PROTO_PATH = SAMPLE_MEASUREMENT_STUBS_PATH
+SAMPLE_MEASUREMENT_PROTO_FILES = list(SAMPLE_MEASUREMENT_PROTO_PATH.rglob("*.proto"))
+
 
 def main():
     """Generate and fixup gRPC Python stubs."""
@@ -28,6 +32,8 @@ def main():
     add_init_files(STUBS_PATH, PROTO_PATH)
 
     generate_python_files(TEST_STUBS_PATH, TEST_PROTO_PATH, TEST_PROTO_FILES)
+
+    generate_python_files(SAMPLE_MEASUREMENT_STUBS_PATH, SAMPLE_MEASUREMENT_PROTO_PATH, SAMPLE_MEASUREMENT_PROTO_FILES)
 
 
 def is_relative_to(path: pathlib.PurePath, other: pathlib.PurePath) -> bool:
