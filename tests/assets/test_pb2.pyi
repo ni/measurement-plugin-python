@@ -24,10 +24,7 @@ class _DifferentColor:
     ValueType = typing.NewType("ValueType", builtins.int)
     V: typing_extensions.TypeAlias = ValueType
 
-class _DifferentColorEnumTypeWrapper(
-    google.protobuf.internal.enum_type_wrapper._EnumTypeWrapper[_DifferentColor.ValueType],
-    builtins.type,
-):
+class _DifferentColorEnumTypeWrapper(google.protobuf.internal.enum_type_wrapper._EnumTypeWrapper[_DifferentColor.ValueType], builtins.type):
     DESCRIPTOR: google.protobuf.descriptor.EnumDescriptor
     PURPLE: _DifferentColor.ValueType  # 0
     ORANGE: _DifferentColor.ValueType  # 1
@@ -44,6 +41,25 @@ ORANGE: DifferentColor.ValueType  # 1
 TEAL: DifferentColor.ValueType  # 2
 BROWN: DifferentColor.ValueType  # 3
 global___DifferentColor = DifferentColor
+
+class _Countries:
+    ValueType = typing.NewType("ValueType", builtins.int)
+    V: typing_extensions.TypeAlias = ValueType
+
+class _CountriesEnumTypeWrapper(google.protobuf.internal.enum_type_wrapper._EnumTypeWrapper[_Countries.ValueType], builtins.type):
+    DESCRIPTOR: google.protobuf.descriptor.EnumDescriptor
+    AMERICA: _Countries.ValueType  # 0
+    TAIWAN: _Countries.ValueType  # 1
+    AUSTRALIA: _Countries.ValueType  # 2
+    CANADA: _Countries.ValueType  # 3
+
+class Countries(_Countries, metaclass=_CountriesEnumTypeWrapper): ...
+
+AMERICA: Countries.ValueType  # 0
+TAIWAN: Countries.ValueType  # 1
+AUSTRALIA: Countries.ValueType  # 2
+CANADA: Countries.ValueType  # 3
+global___Countries = Countries
 
 @typing_extensions.final
 class MeasurementParameter(google.protobuf.message.Message):
@@ -67,6 +83,8 @@ class MeasurementParameter(google.protobuf.message.Message):
     STRING_ARRAY_DATA_FIELD_NUMBER: builtins.int
     ENUM_DATA_FIELD_NUMBER: builtins.int
     ENUM_ARRAY_DATA_FIELD_NUMBER: builtins.int
+    INT_ENUM_DATA_FIELD_NUMBER: builtins.int
+    INT_ENUM_ARRAY_DATA_FIELD_NUMBER: builtins.int
     float_data: builtins.float
     double_data: builtins.float
     int32_data: builtins.int
@@ -75,8 +93,6 @@ class MeasurementParameter(google.protobuf.message.Message):
     uint64_data: builtins.int
     bool_data: builtins.bool
     string_data: builtins.str
-    enum_data: builtins.str
-    enum_array_data: builtins.list
     @property
     def double_array_data(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.float]: ...
     @property
@@ -93,7 +109,12 @@ class MeasurementParameter(google.protobuf.message.Message):
     def bool_array_data(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.bool]: ...
     @property
     def string_array_data(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]: ...
+    enum_data: global___DifferentColor.ValueType
     @property
+    def enum_array_data(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[global___DifferentColor.ValueType]: ...
+    int_enum_data: global___Countries.ValueType
+    @property
+    def int_enum_array_data(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[global___Countries.ValueType]: ...
     def __init__(
         self,
         *,
@@ -115,7 +136,9 @@ class MeasurementParameter(google.protobuf.message.Message):
         string_array_data: collections.abc.Iterable[builtins.str] | None = ...,
         enum_data: global___DifferentColor.ValueType = ...,
         enum_array_data: collections.abc.Iterable[global___DifferentColor.ValueType] | None = ...,
+        int_enum_data: global___Countries.ValueType = ...,
+        int_enum_array_data: collections.abc.Iterable[global___Countries.ValueType] | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing_extensions.Literal["bool_array_data", b"bool_array_data", "bool_data", b"bool_data", "double_array_data", b"double_array_data", "double_data", b"double_data", "enum_array_data", b"enum_array_data", "enum_data", b"enum_data", "float_array_data", b"float_array_data", "float_data", b"float_data", "int32_array_data", b"int32_array_data", "int32_data", b"int32_data", "int64_array_data", b"int64_array_data", "int64_data", b"int64_data", "string_array_data", b"string_array_data", "string_data", b"string_data", "uint32_array_data", b"uint32_array_data", "uint32_data", b"uint32_data", "uint64_array_data", b"uint64_array_data", "uint64_data", b"uint64_data"]) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["bool_array_data", b"bool_array_data", "bool_data", b"bool_data", "double_array_data", b"double_array_data", "double_data", b"double_data", "enum_array_data", b"enum_array_data", "enum_data", b"enum_data", "float_array_data", b"float_array_data", "float_data", b"float_data", "int32_array_data", b"int32_array_data", "int32_data", b"int32_data", "int64_array_data", b"int64_array_data", "int64_data", b"int64_data", "int_enum_array_data", b"int_enum_array_data", "int_enum_data", b"int_enum_data", "string_array_data", b"string_array_data", "string_data", b"string_data", "uint32_array_data", b"uint32_array_data", "uint32_data", b"uint32_data", "uint64_array_data", b"uint64_array_data", "uint64_data", b"uint64_data"]) -> None: ...
 
 global___MeasurementParameter = MeasurementParameter
