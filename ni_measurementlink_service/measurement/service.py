@@ -26,6 +26,7 @@ from ni_measurementlink_service.measurement.info import (
 )
 from ni_measurementlink_service.session_management import PinMapContext
 
+SupportedEnumType = Union[Type[Enum], Type[EnumTypeWrapper]]
 
 class MeasurementContext:
     """Proxy for the Measurement Service's context-local state."""
@@ -229,7 +230,7 @@ class MeasurementService:
         default_value: Any,
         *,
         instrument_type: str = "",
-        enum_type: Optional[Union[Type[Enum], Type[EnumTypeWrapper]]] = None,
+        enum_type: Optional[SupportedEnumType] = None,
     ) -> Callable:
         """Add a configuration parameter to a measurement function.
 
@@ -257,7 +258,7 @@ class MeasurementService:
             For custom instruments the user defined instrument type id is defined in the
             pin map file.
 
-            enum_type (Optional[Union[Type[Enum], Type[EnumTypeWrapper]]]):
+            enum_type (Optional[SupportedEnumType]):
             Defines the enum type associated with this configuration parameter. This is only
             supported when configuration type is DataType.Enum or DataType.EnumArray1D.
 
@@ -287,7 +288,7 @@ class MeasurementService:
         display_name: str,
         type: DataType,
         *,
-        enum_type: Optional[Union[Type[Enum], Type[EnumTypeWrapper]]] = None,
+        enum_type: Optional[SupportedEnumType] = None,
     ) -> Callable:
         """Add an output parameter to a measurement function.
 
@@ -306,7 +307,7 @@ class MeasurementService:
 
             type (DataType): Data type of the output.
 
-            enum_type (Optional[Union[Type[Enum], Type[EnumTypeWrapper]]]:
+            enum_type (Optional[SupportedEnumType]:
             Defines the enum type associated with this configuration parameter. This is only
             supported when configuration type is DataType.Enum or DataType.EnumArray1D.
 
@@ -357,7 +358,7 @@ class MeasurementService:
         type_specialization: TypeSpecialization,
         *,
         instrument_type: str = "",
-        enum_type: Optional[Union[Type[Enum], Type[EnumTypeWrapper]]] = None,
+        enum_type: Optional[SupportedEnumType] = None,
     ) -> Dict[str, str]:
         annotations: Dict[str, str] = {}
         if type_specialization == TypeSpecialization.NoType:
@@ -376,10 +377,13 @@ class MeasurementService:
         return annotations
 
     def _enum_to_annotations_value(
-        self, enum_type: Union[Type[Enum], Type[EnumTypeWrapper]]
+        self, enum_type: SupportedEnumType
     ) -> str:
         enum_values = {}
-        if isinstance(enum_type, EnumTypeWrapper):
+        # Note that the type of protobuf enums are an instance of EnumTypeWrapper
+        # in addition to being a type itself. Additionally, issubclass excludes 
+        # instances as valid parameters so we must call type(enum_type) here.
+        if issubclass(type(enum_type), EnumTypeWrapper):
             if not any(value.number == 0 for value in enum_type.DESCRIPTOR.values):
                 raise ValueError("The enum does not have a value for 0.")
             for value in enum_type.DESCRIPTOR.values:
