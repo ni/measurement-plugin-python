@@ -28,6 +28,7 @@ from ni_measurementlink_service.session_management import PinMapContext
 
 SupportedEnumType = Union[Type[Enum], Type[EnumTypeWrapper]]
 
+
 class MeasurementContext:
     """Proxy for the Measurement Service's context-local state."""
 
@@ -376,12 +377,10 @@ class MeasurementService:
 
         return annotations
 
-    def _enum_to_annotations_value(
-        self, enum_type: SupportedEnumType
-    ) -> str:
+    def _enum_to_annotations_value(self, enum_type: SupportedEnumType) -> str:
         enum_values = {}
         # Note that the type of protobuf enums are an instance of EnumTypeWrapper
-        # in addition to being a type itself. Additionally, issubclass excludes 
+        # in addition to being a type itself. Additionally, issubclass excludes
         # instances as valid parameters so we must call type(enum_type) here.
         if issubclass(type(enum_type), EnumTypeWrapper):
             if not any(value.number == 0 for value in enum_type.DESCRIPTOR.values):

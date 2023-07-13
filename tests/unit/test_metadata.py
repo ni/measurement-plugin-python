@@ -24,7 +24,7 @@ class DifferentColor(Enum):
     TEAL = 2
     BROWN = 3
 
-    
+
 class Countries(IntEnum):
     """Countries enum used for testing enum-typed config and output."""
 

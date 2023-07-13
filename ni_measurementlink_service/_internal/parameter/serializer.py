@@ -246,7 +246,6 @@ def _get_enum_value(parameter: Any, repeated: bool) -> Any:
     return parameter
 
 
-
 def _get_enum_type(parameter_metadata: ParameterMetadata) -> type:
     if parameter_metadata.repeated and len(parameter_metadata.default_value) > 0:
         return type(parameter_metadata.default_value[0])
