@@ -8,10 +8,10 @@ from os import path
 from pathlib import Path
 from threading import Lock
 from types import TracebackType
-from typing import Any, Callable, Dict, List, Literal, Optional, Type, TypeVar, Union
+from typing import Any, Callable, Dict, List, Literal, Optional, Type, TYPE_CHECKING, TypeVar, Union
 
 import grpc
-from google.protobuf.internal.enum_type_wrapper import EnumTypeWrapper
+from google.protobuf.descriptor import EnumDescriptor
 
 from ni_measurementlink_service._internal import grpc_servicer
 from ni_measurementlink_service._internal.discovery_client import DiscoveryClient
@@ -27,7 +27,9 @@ from ni_measurementlink_service.measurement.info import (
 )
 from ni_measurementlink_service.session_management import PinMapContext
 
-SupportedEnumType = Union[Type[Enum], EnumTypeWrapper]
+if TYPE_CHECKING:
+    from google.protobuf.internal.enum_type_wrapper import EnumTypeWrapper
+    SupportedEnumType = Union[Type[Enum], EnumTypeWrapper]
 
 
 class MeasurementContext:
@@ -389,7 +391,7 @@ class MeasurementService:
         # Note that the type of protobuf enums are an instance of EnumTypeWrapper.
         # Additionally, issubclass excludes instances as valid parameters so 
         # we use isinstance here.
-        if isinstance(enum_type, EnumTypeWrapper):
+        if self._is_protobuf_enum(enum_type):
             if 0 not in enum_type.values():
                 raise ValueError("The enum does not have a value for 0.")
             for name, value in enum_type.items():
@@ -400,6 +402,9 @@ class MeasurementService:
             for member in enum_type:
                 enum_values[member.name] = member.value
         return json.dumps(enum_values)
+    
+    def _is_protobuf_enum(self, enum_type: SupportedEnumType) -> bool:
+        return isinstance(getattr(enum_type, "DESCRIPTOR", None), EnumDescriptor)
 
     def close_service(self) -> None:
         """Close the Service after un-registering with discovery service and cleanups."""
