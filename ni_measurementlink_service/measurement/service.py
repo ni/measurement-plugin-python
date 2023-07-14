@@ -8,7 +8,18 @@ from os import path
 from pathlib import Path
 from threading import Lock
 from types import TracebackType
-from typing import Any, Callable, Dict, List, Literal, Optional, Type, TYPE_CHECKING, TypeVar, Union
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Callable,
+    Dict,
+    List,
+    Literal,
+    Optional,
+    Type,
+    TypeVar,
+    Union,
+)
 
 import grpc
 from google.protobuf.descriptor import EnumDescriptor
@@ -29,6 +40,7 @@ from ni_measurementlink_service.session_management import PinMapContext
 
 if TYPE_CHECKING:
     from google.protobuf.internal.enum_type_wrapper import EnumTypeWrapper
+
     SupportedEnumType = Union[Type[Enum], EnumTypeWrapper]
 
 
@@ -389,7 +401,7 @@ class MeasurementService:
     def _enum_to_annotations_value(self, enum_type: SupportedEnumType) -> str:
         enum_values = {}
         # Note that the type of protobuf enums are an instance of EnumTypeWrapper.
-        # Additionally, issubclass excludes instances as valid parameters so 
+        # Additionally, issubclass excludes instances as valid parameters so
         # we use isinstance here.
         if self._is_protobuf_enum(enum_type):
             if 0 not in enum_type.values():
@@ -402,7 +414,7 @@ class MeasurementService:
             for member in enum_type:
                 enum_values[member.name] = member.value
         return json.dumps(enum_values)
-    
+
     def _is_protobuf_enum(self, enum_type: SupportedEnumType) -> bool:
         return isinstance(getattr(enum_type, "DESCRIPTOR", None), EnumDescriptor)
 
