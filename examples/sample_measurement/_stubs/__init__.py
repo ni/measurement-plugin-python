@@ -1,1 +1,1 @@
-"""Stubs for sample_measurement"""
+"""Stubs for sample_measurement's color enum"""
