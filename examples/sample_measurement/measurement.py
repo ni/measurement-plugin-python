@@ -4,7 +4,10 @@ import pathlib
 from enum import Enum
 
 import click
-from examples.sample_measurement.assets.color_pb2 import ProtobufColor
+try:
+    from assets.color_pb2 import ProtobufColor
+except ImportError:
+    from examples.sample_measurement.assets.color_pb2 import ProtobufColor
 
 import ni_measurementlink_service as nims
 
