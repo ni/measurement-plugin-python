@@ -12,6 +12,7 @@ from typing import (
     TYPE_CHECKING,
     Any,
     Callable,
+    cast,
     Dict,
     List,
     Literal,
@@ -404,11 +405,13 @@ class MeasurementService:
         # Additionally, issubclass excludes instances as valid parameters so
         # we use isinstance here.
         if self._is_protobuf_enum(enum_type):
+            if TYPE_CHECKING:
+                enum_type = cast(EnumTypeWrapper, enum_type)
             if 0 not in enum_type.values():
                 raise ValueError("The enum does not have a value for 0.")
             for name, value in enum_type.items():
                 enum_values[name] = value
-        elif issubclass(enum_type, Enum):
+        elif isinstance(enum_type, type) and issubclass(enum_type, Enum):
             if not any(member.value == 0 for member in enum_type):
                 raise ValueError("The enum does not have a value for 0.")
             for member in enum_type:
