@@ -26,7 +26,7 @@ class DifferentColor(Enum):
 
 
 class Countries(IntEnum):
-    """Countries enum used for testing enum-typed config and output."""
+    """Countries enum used for testing IntEnum-typed config and output."""
 
     AMERICA = 0
     TAIWAN = 1
