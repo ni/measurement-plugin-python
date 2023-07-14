@@ -12,9 +12,9 @@ click = ">=7.1.2, !=8.1.4" # mypy fails with click 8.1.4: https://github.com/pal
 [tool.poetry.group.dev.dependencies]
 mypy = ">=1.0"
 grpc-stubs = "^1.53"
+types-protobuf = "^4.21"
 # Uncomment to use prerelease dependencies.
 # ni-measurementlink-service = {path = "../..", develop = true}
-types-protobuf = "^4.21"
 
 [build-system]
 requires = ["poetry-core>=1.2.0"]
