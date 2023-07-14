@@ -390,10 +390,10 @@ class MeasurementService:
         # Additionally, issubclass excludes instances as valid parameters so 
         # we use isinstance here.
         if isinstance(enum_type, EnumTypeWrapper):
-            if not any(value.number == 0 for value in enum_type.DESCRIPTOR.values):
+            if 0 not in enum_type.values():
                 raise ValueError("The enum does not have a value for 0.")
-            for value in enum_type.DESCRIPTOR.values:
-                enum_values[value.name] = value.number
+            for name, value in enum_type.items():
+                enum_values[name] = value
         elif issubclass(enum_type, Enum):
             if not any(member.value == 0 for member in enum_type):
                 raise ValueError("The enum does not have a value for 0.")
