@@ -27,7 +27,7 @@ from ni_measurementlink_service.measurement.info import (
 )
 from ni_measurementlink_service.session_management import PinMapContext
 
-SupportedEnumType = Union[Type[Enum], Type[EnumTypeWrapper]]
+SupportedEnumType = Union[Type[Enum], EnumTypeWrapper]
 
 
 class MeasurementContext:
@@ -386,9 +386,9 @@ class MeasurementService:
 
     def _enum_to_annotations_value(self, enum_type: SupportedEnumType) -> str:
         enum_values = {}
-        # Note that the type of protobuf enums are an instance of EnumTypeWrapper
-        # in addition to being a type itself. Additionally, issubclass excludes
-        # instances as valid parameters so we use isinstance here.
+        # Note that the type of protobuf enums are an instance of EnumTypeWrapper.
+        # Additionally, issubclass excludes instances as valid parameters so 
+        # we use isinstance here.
         if isinstance(enum_type, EnumTypeWrapper):
             if not any(value.number == 0 for value in enum_type.DESCRIPTOR.values):
                 raise ValueError("The enum does not have a value for 0.")
