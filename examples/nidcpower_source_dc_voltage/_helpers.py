@@ -1,17 +1,21 @@
 """Helper classes and functions for MeasurementLink examples."""
 
+import functools
+import itertools
 import logging
 import pathlib
 import types
 from typing import (
     Any,
     Callable,
+    Iterable,
     List,
     NamedTuple,
     Optional,
     Tuple,
     TypeVar,
     Union,
+    cast,
 )
 
 import click
@@ -20,6 +24,7 @@ import grpc
 import ni_measurementlink_service as nims
 from ni_measurementlink_service import session_management
 from ni_measurementlink_service._internal.discovery_client import DiscoveryClient
+from ni_measurementlink_service._internal.parameter.metadata import ParameterMetadata
 from ni_measurementlink_service._internal.stubs.ni.measurementlink.pinmap.v1 import (
     pin_map_service_pb2,
     pin_map_service_pb2_grpc,
@@ -28,6 +33,8 @@ from ni_measurementlink_service.measurement.service import (
     GrpcChannelPool,
     MeasurementService,
 )
+from ni_measurementlink_service.session_management import SingleSessionReservation
+from typing_extensions import ParamSpec, Concatenate
 
 
 class ServiceOptions(NamedTuple):
@@ -300,3 +307,41 @@ def get_sessions_and_channels_for_pins(
         raise KeyError(f"Pin(s) {pins} and site {site} not found")
 
     return session_and_channel_info
+
+
+
+RESERVATION_TIMEOUT_IN_SECONDS = 60.0
+"""
+If another measurement is using the session, the reserve function will wait
+for it to complete. Specify a reservation timeout to aid in debugging missed
+unreserve calls. Long measurements may require a longer timeout.
+"""
+
+T = TypeVar("T")
+P = ParamSpec("P")
+
+
+# TODO: figure out type hints
+def single_session_reservation(measurement_service: nims.MeasurementService, pin_names_arg_name: str, session_info_arg_name: str = "session_info") -> Callable:
+    def decorator(func: Callable) -> Callable:
+        @functools.wraps(func)
+        def wrapper(*args: Any, **kwargs: Any) -> Any:
+            pin_names = kwargs[pin_names_arg_name]
+
+            parameter_list = cast(List[ParameterMetadata], measurement_service.configuration_parameter_list + measurement_service.output_parameter_list)
+            parameter_metadata = next(md for md in parameter_list if md.display_name == pin_names_arg_name)
+            instrument_type_id = parameter_metadata.annotations["ni/pin.instrument_type"]
+
+            session_management_client = create_session_management_client(measurement_service)
+            with session_management_client.reserve_session(
+                context=measurement_service.context.pin_map_context,
+                pin_or_relay_names=pin_names,
+                instrument_type_id=instrument_type_id,
+                timeout=RESERVATION_TIMEOUT_IN_SECONDS,
+            ) as reservation:
+                kwargs[session_info_arg_name] = reservation.session_info
+                return func(*args, **kwargs)
+            
+        return wrapper
+
+    return decorator

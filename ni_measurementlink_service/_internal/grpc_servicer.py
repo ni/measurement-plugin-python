@@ -114,6 +114,9 @@ def _get_mapping_by_parameter_name(
     signature = inspect.signature(measure_function)
     mapping_by_variable_name = {}
     for i, parameter in enumerate(signature.parameters.values(), start=1):
+        # TODO: find a better way to keep NIMS's grubby hands off my parameters
+        if parameter.kind != inspect.Parameter.POSITIONAL_OR_KEYWORD:
+            continue
         mapping_by_variable_name[parameter.name] = mapping_by_id[i]
     return mapping_by_variable_name
 

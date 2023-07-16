@@ -1,11 +1,13 @@
 """nidcpower Helper classes and functions for MeasurementLink examples."""
 
-from typing import Any, Dict, Optional
+import functools
+from typing import Any, Callable, Dict, Optional
 
 import grpc
 import nidcpower
 
 import ni_measurementlink_service as nims
+from _helpers import get_grpc_device_channel, ServiceOptions
 
 USE_SIMULATION = True
 """
@@ -37,3 +39,21 @@ def create_session(
     return nidcpower.Session(
         resource_name=session_info.resource_name, options=options, **session_kwargs
     )
+
+
+def single_session(measurement_service: nims.MeasurementService, service_options: ServiceOptions, session_info_arg_name: str = "session_info", session_arg_name: str = "session") -> Callable:
+    def decorator(func: Callable) -> Callable:
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            session_info = kwargs[session_info_arg_name]
+
+            grpc_device_channel = get_grpc_device_channel(
+                measurement_service, nidcpower, service_options
+            )
+            with create_session(session_info, grpc_device_channel) as session:
+                kwargs[session_arg_name] = session
+                return func(*args, **kwargs)
+            
+        return wrapper
+    
+    return decorator
