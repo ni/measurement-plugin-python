@@ -3,7 +3,6 @@ from typing import cast
 
 import grpc
 import pytest
-from examples.sample_measurement import measurement
 
 from ni_measurementlink_service._internal.discovery_client import DiscoveryClient
 from ni_measurementlink_service._internal.service_manager import GrpcService
@@ -15,15 +14,16 @@ from ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v
     measurement_service_pb2_grpc,
 )
 from tests.utilities.fake_discovery_service import FakeDiscoveryServiceStub
+from tests.utilities.fake_measurement_service import FakeMeasurementService
 
 
 def test___grpc_service___start_service___service_hosted(grpc_service: GrpcService):
     port_number = grpc_service.start(
-        measurement.sample_measurement_service.measurement_info,
-        measurement.sample_measurement_service.service_info,
-        measurement.sample_measurement_service.configuration_parameter_list,
-        measurement.sample_measurement_service.output_parameter_list,
-        measurement.sample_measurement_service.measure_function,
+        FakeMeasurementService.fake_measurement_service.measurement_info,
+        FakeMeasurementService.fake_measurement_service.service_info,
+        FakeMeasurementService.fake_measurement_service.configuration_parameter_list,
+        FakeMeasurementService.fake_measurement_service.output_parameter_list,
+        FakeMeasurementService.fake_measurement_service.measure_function,
     )
 
     _validate_if_service_running_by_making_rpc(port_number)
@@ -33,11 +33,11 @@ def test___grpc_service_without_discovery_service___start_service___service_host
     grpc_service: GrpcService,
 ):
     port_number = grpc_service.start(
-        measurement.sample_measurement_service.measurement_info,
-        measurement.sample_measurement_service.service_info,
-        measurement.sample_measurement_service.configuration_parameter_list,
-        measurement.sample_measurement_service.output_parameter_list,
-        measurement.sample_measurement_service.measure_function,
+        FakeMeasurementService.fake_measurement_service.measurement_info,
+        FakeMeasurementService.fake_measurement_service.service_info,
+        FakeMeasurementService.fake_measurement_service.configuration_parameter_list,
+        FakeMeasurementService.fake_measurement_service.output_parameter_list,
+        FakeMeasurementService.fake_measurement_service.measure_function,
     )
 
     _validate_if_service_running_by_making_rpc(port_number)
@@ -45,11 +45,11 @@ def test___grpc_service_without_discovery_service___start_service___service_host
 
 def test___grpc_service_started___stop_service___service_stopped(grpc_service: GrpcService):
     port_number = grpc_service.start(
-        measurement.sample_measurement_service.measurement_info,
-        measurement.sample_measurement_service.service_info,
-        measurement.sample_measurement_service.configuration_parameter_list,
-        measurement.sample_measurement_service.output_parameter_list,
-        measurement.sample_measurement_service.measure_function,
+        FakeMeasurementService.fake_measurement_service.measurement_info,
+        FakeMeasurementService.fake_measurement_service.service_info,
+        FakeMeasurementService.fake_measurement_service.configuration_parameter_list,
+        FakeMeasurementService.fake_measurement_service.output_parameter_list,
+        FakeMeasurementService.fake_measurement_service.measure_function,
     )
 
     grpc_service.stop()

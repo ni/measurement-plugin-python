@@ -7,7 +7,6 @@ from os import path
 from typing import Generator, List, Union
 
 import pytest
-from examples.sample_measurement import measurement
 from google.protobuf import any_pb2
 
 from ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v1 import (
@@ -20,6 +19,8 @@ from ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v
 )
 from ni_measurementlink_service.measurement.service import MeasurementService
 from tests.assets import sample_measurement_test_pb2
+from tests.utilities.fake_measurement_service import FakeMeasurementService
+
 
 EXPECTED_PARAMETER_COUNT = 6
 EXPECTED_UI_FILE_COUNT = 3
@@ -157,7 +158,7 @@ def test___measurement_service_v2___measure_with_large_array___returns_output(
 @pytest.fixture(scope="module")
 def measurement_service() -> Generator[MeasurementService, None, None]:
     """Test fixture that creates and hosts a measurement service."""
-    with measurement.sample_measurement_service.host_service() as service:
+    with FakeMeasurementService.fake_measurement_service.host_service() as service:
         yield service
 
 
