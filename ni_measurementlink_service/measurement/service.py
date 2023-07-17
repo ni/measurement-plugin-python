@@ -405,8 +405,7 @@ class MeasurementService:
         # Additionally, issubclass excludes instances as valid parameters so
         # we use isinstance here.
         if self._is_protobuf_enum(enum_type):
-            if TYPE_CHECKING:
-                enum_type = cast(EnumTypeWrapper, enum_type)
+            enum_type = cast("EnumTypeWrapper", enum_type)
             if 0 not in enum_type.values():
                 raise ValueError("The enum does not have a value for 0.")
             for name, value in enum_type.items():
