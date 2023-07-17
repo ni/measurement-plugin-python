@@ -12,7 +12,6 @@ from typing import (
     TYPE_CHECKING,
     Any,
     Callable,
-    cast,
     Dict,
     List,
     Literal,
@@ -20,6 +19,7 @@ from typing import (
     Type,
     TypeVar,
     Union,
+    cast,
 )
 
 import grpc
@@ -40,10 +40,12 @@ from ni_measurementlink_service.measurement.info import (
 from ni_measurementlink_service.session_management import PinMapContext
 
 if TYPE_CHECKING:
-    from google.protobuf.internal.enum_type_wrapper import EnumTypeWrapper, _EnumTypeWrapper
+    from google.protobuf.internal.enum_type_wrapper import (
+        EnumTypeWrapper,
+        _EnumTypeWrapper,
+    )
 
     SupportedEnumType = Union[Type[Enum], _EnumTypeWrapper]
-
 
 
 class MeasurementContext:
