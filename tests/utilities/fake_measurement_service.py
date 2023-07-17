@@ -44,9 +44,7 @@ fake_measurement_service = nims.MeasurementService(
 @fake_measurement_service.output("String out", nims.DataType.String)
 @fake_measurement_service.output("Enum out", nims.DataType.Enum, enum_type=Color)
 @fake_measurement_service.output("String Array out", nims.DataType.StringArray1D)
-def measure(
-    self, float_input, double_array_input, bool_input, string_input, enum_input, string_array_in
-):
+def measure(float_input, double_array_input, bool_input, string_input, enum_input, string_array_in):
     """Perform a loopback measurement with various data types."""
     float_output = float_input
     float_array_output = double_array_input
