@@ -19,7 +19,7 @@ from ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v
 )
 from ni_measurementlink_service.measurement.service import MeasurementService
 from tests.assets import sample_measurement_test_pb2
-from tests.utilities.fake_measurement_service import FakeMeasurementService
+from tests.utilities.fake_measurement_service import fake_measurement_service
 
 
 EXPECTED_PARAMETER_COUNT = 6
@@ -158,7 +158,7 @@ def test___measurement_service_v2___measure_with_large_array___returns_output(
 @pytest.fixture(scope="module")
 def measurement_service() -> Generator[MeasurementService, None, None]:
     """Test fixture that creates and hosts a measurement service."""
-    with FakeMeasurementService.fake_measurement_service.host_service() as service:
+    with fake_measurement_service.host_service() as service:
         yield service
 
 
