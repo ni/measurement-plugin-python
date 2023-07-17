@@ -19,8 +19,3 @@ ni-measurementlink-service = {path = "../..", develop = true}
 [build-system]
 requires = ["poetry-core>=1.2.0"]
 build-backend = "poetry.core.masonry.api"
-
-[[tool.mypy.overrides]]
-module = [
-    "ni-measurementlink-service.*",
-]
