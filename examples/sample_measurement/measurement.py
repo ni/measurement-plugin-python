@@ -47,7 +47,7 @@ class Color(Enum):
     "Protobuf Enum In",
     nims.DataType.Enum,
     color_pb2.ProtobufColor.BLACK,
-    enum_type=color_pb2.ProtobufColor,  # type: ignore
+    enum_type=color_pb2.ProtobufColor,
 )
 @sample_measurement_service.configuration(
     "String Array In", nims.DataType.StringArray1D, ["String1", "String2"]
@@ -58,7 +58,7 @@ class Color(Enum):
 @sample_measurement_service.output("String out", nims.DataType.String)
 @sample_measurement_service.output("Enum out", nims.DataType.Enum, enum_type=Color)
 @sample_measurement_service.output(
-    "Protobuf Enum out", nims.DataType.Enum, enum_type=color_pb2.ProtobufColor  # type: ignore
+    "Protobuf Enum out", nims.DataType.Enum, enum_type=color_pb2.ProtobufColor
 )
 @sample_measurement_service.output("String Array out", nims.DataType.StringArray1D)
 def measure(
