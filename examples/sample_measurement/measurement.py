@@ -8,7 +8,7 @@ import click
 try:
     from _stubs import color_pb2
 except ImportError:
-    from examples.sample_measurement._stubs import color_pb2 # type: ignore
+    from examples.sample_measurement._stubs import color_pb2  # type: ignore
 
 import ni_measurementlink_service as nims
 
