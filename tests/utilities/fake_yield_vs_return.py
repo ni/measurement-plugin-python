@@ -1,4 +1,4 @@
-"""Contains fake service - Generates random num and updates the measurement UI to show progress."""
+"""Contains Test Doubles - Generates random num and updates the measurement UI to show progress."""
 import pathlib
 import random
 import threading

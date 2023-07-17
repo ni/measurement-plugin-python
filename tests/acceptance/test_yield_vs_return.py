@@ -12,6 +12,7 @@ from ni_measurementlink_service.measurement.service import MeasurementService
 from tests.assets import ui_progress_updates_test_pb2
 from tests.utilities.fake_yield_vs_return import fake_measurement_ui_service
 
+
 def test___measurement_utilizing_yield_and_return___call_measurement___receives_responses_from_yield_and_return(
     stub_v2: v2_measurement_service_pb2_grpc.MeasurementServiceStub,
 ):
