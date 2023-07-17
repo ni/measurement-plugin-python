@@ -42,6 +42,25 @@ GREEN: Color.ValueType  # 2
 BLUE: Color.ValueType  # 3
 global___Color = Color
 
+class _ProtobufColor:
+    ValueType = typing.NewType("ValueType", builtins.int)
+    V: typing_extensions.TypeAlias = ValueType
+
+class _ProtobufColorEnumTypeWrapper(google.protobuf.internal.enum_type_wrapper._EnumTypeWrapper[_ProtobufColor.ValueType], builtins.type):
+    DESCRIPTOR: google.protobuf.descriptor.EnumDescriptor
+    COLORLESS: _ProtobufColor.ValueType  # 0
+    PINK: _ProtobufColor.ValueType  # 1
+    WHITE: _ProtobufColor.ValueType  # 2
+    BLACK: _ProtobufColor.ValueType  # 3
+
+class ProtobufColor(_ProtobufColor, metaclass=_ProtobufColorEnumTypeWrapper): ...
+
+COLORLESS: ProtobufColor.ValueType  # 0
+PINK: ProtobufColor.ValueType  # 1
+WHITE: ProtobufColor.ValueType  # 2
+BLACK: ProtobufColor.ValueType  # 3
+global___ProtobufColor = ProtobufColor
+
 @typing_extensions.final
 class SampleMeasurementParameter(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
@@ -51,6 +70,7 @@ class SampleMeasurementParameter(google.protobuf.message.Message):
     BOOL_IN_FIELD_NUMBER: builtins.int
     STRING_IN_FIELD_NUMBER: builtins.int
     ENUM_IN_FIELD_NUMBER: builtins.int
+    PROTOBUF_ENUM_IN_FIELD_NUMBER: builtins.int
     STRING_ARRAY_IN_FIELD_NUMBER: builtins.int
     float_in: builtins.float
     @property
@@ -58,6 +78,7 @@ class SampleMeasurementParameter(google.protobuf.message.Message):
     bool_in: builtins.bool
     string_in: builtins.str
     enum_in: global___Color.ValueType
+    protobuf_enum_in: global___ProtobufColor.ValueType
     @property
     def string_array_in(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]: ...
     def __init__(
@@ -68,8 +89,9 @@ class SampleMeasurementParameter(google.protobuf.message.Message):
         bool_in: builtins.bool = ...,
         string_in: builtins.str = ...,
         enum_in: global___Color.ValueType = ...,
+        protobuf_enum_in: global___ProtobufColor.ValueType = ...,
         string_array_in: collections.abc.Iterable[builtins.str] | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing_extensions.Literal["bool_in", b"bool_in", "double_array_in", b"double_array_in", "enum_in", b"enum_in", "float_in", b"float_in", "string_array_in", b"string_array_in", "string_in", b"string_in"]) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["bool_in", b"bool_in", "double_array_in", b"double_array_in", "enum_in", b"enum_in", "float_in", b"float_in", "protobuf_enum_in", b"protobuf_enum_in", "string_array_in", b"string_array_in", "string_in", b"string_in"]) -> None: ...
 
 global___SampleMeasurementParameter = SampleMeasurementParameter

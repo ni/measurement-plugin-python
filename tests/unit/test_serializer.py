@@ -1,5 +1,5 @@
 """Contains tests to validate serializer.py."""
-from enum import Enum
+from enum import Enum, IntEnum
 
 import pytest
 from google.protobuf import any_pb2, type_pb2
@@ -19,6 +19,15 @@ class DifferentColor(Enum):
     ORANGE = 1
     TEAL = 2
     BROWN = 3
+
+
+class Countries(IntEnum):
+    """Countries enum used for testing enum-typed config and output."""
+
+    AMERICA = 0
+    TAIWAN = 1
+    AUSTRALIA = 2
+    CANADA = 3
 
 
 @pytest.mark.parametrize(
@@ -43,6 +52,8 @@ class DifferentColor(Enum):
             ["String1, String2"],
             DifferentColor.ORANGE,
             [DifferentColor.TEAL, DifferentColor.BROWN],
+            Countries.AUSTRALIA,
+            [Countries.AUSTRALIA, Countries.CANADA],
         ],
         [
             -0.9999,
@@ -63,6 +74,8 @@ class DifferentColor(Enum):
             ["String1, String2"],
             DifferentColor.ORANGE,
             [DifferentColor.TEAL, DifferentColor.BROWN],
+            Countries.AUSTRALIA,
+            [Countries.AUSTRALIA, Countries.CANADA],
         ],
     ],
 )
@@ -98,6 +111,8 @@ def test___serializer___serialize_parameter___successful_serialization(test_valu
             ["String1, String2"],
             DifferentColor.ORANGE,
             [DifferentColor.TEAL, DifferentColor.BROWN],
+            Countries.AUSTRALIA,
+            [Countries.AUSTRALIA, Countries.CANADA],
         ],
         [
             -0.9999,
@@ -118,6 +133,8 @@ def test___serializer___serialize_parameter___successful_serialization(test_valu
             ["String1, String2"],
             DifferentColor.ORANGE,
             [DifferentColor.TEAL, DifferentColor.BROWN],
+            Countries.AUSTRALIA,
+            [Countries.AUSTRALIA, Countries.CANADA],
         ],
     ],
 )
@@ -152,6 +169,8 @@ def test___serializer___serialize_default_parameter___successful_serialization(d
             ["String1", "String2"],
             DifferentColor.ORANGE,
             [DifferentColor.TEAL, DifferentColor.BROWN],
+            Countries.AUSTRALIA,
+            [Countries.AUSTRALIA, Countries.CANADA],
         ]
     ],
 )
@@ -186,6 +205,8 @@ def test___empty_buffer___deserialize_parameters___returns_zero_or_empty():
         ["String1", "String2"],
         DifferentColor.ORANGE,
         [DifferentColor.TEAL, DifferentColor.BROWN],
+        Countries.AUSTRALIA,
+        [Countries.AUSTRALIA, Countries.CANADA],
     ]
     parameter = _get_test_parameter_by_id(nonzero_defaults)
     parameter_value_by_id = serializer.deserialize_parameters(parameter, bytes())
@@ -350,6 +371,26 @@ def _get_test_parameter_by_id(default_values):
                 "ni/enum.values": '{"PURPLE": 0, "ORANGE": 1, "TEAL": 2, "BROWN": 3}',
             },
         ),
+        19: ParameterMetadata(
+            display_name="int_enum_data",
+            type=type_pb2.Field.TYPE_ENUM,
+            repeated=False,
+            default_value=default_values[18],
+            annotations={
+                "ni/type_specialization": TypeSpecialization.Enum.value,
+                "ni/enum.values": '{"AMERICA": 0, "TAIWAN": 1, "AUSTRALIA": 2, "CANADA": 3}',
+            },
+        ),
+        20: ParameterMetadata(
+            display_name="int_enum_array_data",
+            type=type_pb2.Field.TYPE_ENUM,
+            repeated=True,
+            default_value=default_values[19],
+            annotations={
+                "ni/type_specialization": TypeSpecialization.Enum.value,
+                "ni/enum.values": '{"AMERICA": 0, "TAIWAN": 1, "AUSTRALIA": 2, "CANADA": 3}',
+            },
+        ),
     }
     return parameter_by_id
 
@@ -374,4 +415,6 @@ def _get_test_grpc_message(test_values):
     parameter.string_array_data.extend(test_values[15])
     parameter.enum_data = test_values[16].value
     parameter.enum_array_data.extend(list(map(lambda x: x.value, test_values[17])))
+    parameter.int_enum_data = test_values[18].value
+    parameter.int_enum_array_data.extend(list(map(lambda x: x.value, test_values[19])))
     return parameter
