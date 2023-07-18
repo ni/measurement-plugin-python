@@ -19,10 +19,11 @@ from ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v
 )
 from ni_measurementlink_service.measurement.service import MeasurementService
 from tests.assets import sample_measurement_test_pb2
+from tests.assets.sample_measurement_test_pb2 import ProtobufColor
 from tests.utilities.fake_measurement_service import fake_measurement_service
 
 
-EXPECTED_PARAMETER_COUNT = 6
+EXPECTED_PARAMETER_COUNT = 7
 EXPECTED_UI_FILE_COUNT = 3
 
 
@@ -52,8 +53,18 @@ def test___measurement_service_v2___get_metadata___returns_metadata(
 
 
 @pytest.mark.parametrize(
-    "float_in,double_array_in,bool_in,string_in,enum_in,string_array_in",
-    [(0.9, [1.0, 23.56], True, "InputString", Color.BLUE, ["", "TestString1", "#$%!@<*(&^~`"])],
+    "float_in,double_array_in,bool_in,string_in,enum_in,protobuf_enum_in,string_array_in",
+    [
+        (
+            0.9,
+            [1.0, 23.56],
+            True,
+            "InputString",
+            Color.BLUE,
+            ProtobufColor.WHITE,
+            ["", "TestString1", "#$%!@<*(&^~`"],
+        )
+    ],
 )
 def test___measurement_service_v1___measure___returns_output(
     float_in: float,
@@ -61,25 +72,42 @@ def test___measurement_service_v1___measure___returns_output(
     bool_in: bool,
     string_in: str,
     enum_in: Enum,
+    protobuf_enum_in: ProtobufColor.ValueType,
     string_array_in: List[str],
     stub_v1: v1_measurement_service_pb2_grpc.MeasurementServiceStub,
 ):
     request = v1_measurement_service_pb2.MeasureRequest(
         configuration_parameters=_get_configuration_parameters(
-            float_in, double_array_in, bool_in, string_in, enum_in, string_array_in
+            float_in,
+            double_array_in,
+            bool_in,
+            string_in,
+            enum_in,
+            protobuf_enum_in,
+            string_array_in,
         )
     )
     response = stub_v1.Measure(request)
 
     serialized_parameter = _get_serialized_measurement_signature(
-        float_in, double_array_in, bool_in, string_in, enum_in, string_array_in
+        float_in, double_array_in, bool_in, string_in, enum_in, protobuf_enum_in, string_array_in
     )
     assert response.outputs.value == serialized_parameter
 
 
 @pytest.mark.parametrize(
-    "float_in,double_array_in,bool_in,string_in,enum_in,string_array_in",
-    [(0.9, [1.0, 23.56], True, "InputString", Color.BLUE, ["", "TestString1", "#$%!@<*(&^~`"])],
+    "float_in,double_array_in,bool_in,string_in,enum_in,protobuf_enum_in,string_array_in",
+    [
+        (
+            0.9,
+            [1.0, 23.56],
+            True,
+            "InputString",
+            Color.BLUE,
+            ProtobufColor.WHITE,
+            ["", "TestString1", "#$%!@<*(&^~`"],
+        )
+    ],
 )
 def test___measurement_service_v2___measure___returns_output(
     float_in: float,
@@ -87,19 +115,26 @@ def test___measurement_service_v2___measure___returns_output(
     bool_in: bool,
     string_in: str,
     enum_in: Enum,
+    protobuf_enum_in: ProtobufColor.ValueType,
     string_array_in: List[str],
     stub_v2: v2_measurement_service_pb2_grpc.MeasurementServiceStub,
 ):
     request = v2_measurement_service_pb2.MeasureRequest(
         configuration_parameters=_get_configuration_parameters(
-            float_in, double_array_in, bool_in, string_in, enum_in, string_array_in
+            float_in,
+            double_array_in,
+            bool_in,
+            string_in,
+            enum_in,
+            protobuf_enum_in,
+            string_array_in,
         )
     )
     response_iterator = stub_v2.Measure(request)
     responses = [response for response in response_iterator]
 
     serialized_parameter = _get_serialized_measurement_signature(
-        float_in, double_array_in, bool_in, string_in, enum_in, string_array_in
+        float_in, double_array_in, bool_in, string_in, enum_in, protobuf_enum_in, string_array_in
     )
     assert len(responses) == 1
     assert responses[0].outputs.value == serialized_parameter
@@ -114,17 +149,24 @@ def test___measurement_service_v1___measure_with_large_array___returns_output(
     bool_in = False
     string_in = "InputString"
     enum_in = Color.BLUE
+    protobuf_enum_in = ProtobufColor.WHITE
     string_array_in = ["", "TestString1", "#$%!@<*(&^~`"]
 
     request = v1_measurement_service_pb2.MeasureRequest(
         configuration_parameters=_get_configuration_parameters(
-            float_in, double_array_in, bool_in, string_in, enum_in, string_array_in
+            float_in,
+            double_array_in,
+            bool_in,
+            string_in,
+            enum_in,
+            protobuf_enum_in,
+            string_array_in,
         )
     )
     response = stub_v1.Measure(request)
 
     serialized_parameter = _get_serialized_measurement_signature(
-        float_in, double_array_in, bool_in, string_in, enum_in, string_array_in
+        float_in, double_array_in, bool_in, string_in, enum_in, protobuf_enum_in, string_array_in
     )
     assert response.outputs.value == serialized_parameter
 
@@ -137,19 +179,26 @@ def test___measurement_service_v2___measure_with_large_array___returns_output(
     double_array_in = [random.random() for i in range(double_array_len)]
     bool_in = False
     enum_in = Color.BLUE
+    protobuf_enum_in = ProtobufColor.WHITE
     string_in = "InputString"
     string_array_in = ["", "TestString1", "#$%!@<*(&^~`"]
 
     request = v2_measurement_service_pb2.MeasureRequest(
         configuration_parameters=_get_configuration_parameters(
-            float_in, double_array_in, bool_in, string_in, enum_in, string_array_in
+            float_in,
+            double_array_in,
+            bool_in,
+            string_in,
+            enum_in,
+            protobuf_enum_in,
+            string_array_in,
         )
     )
     response_iterator = stub_v2.Measure(request)
     responses = [response for response in response_iterator]
 
     serialized_parameter = _get_serialized_measurement_signature(
-        float_in, double_array_in, bool_in, string_in, enum_in, string_array_in
+        float_in, double_array_in, bool_in, string_in, enum_in, protobuf_enum_in, string_array_in
     )
     assert len(responses) == 1
     assert responses[0].outputs.value == serialized_parameter
@@ -175,6 +224,7 @@ def _get_serialized_measurement_signature(
     bool_in: bool,
     string_in: str,
     enum_in: Enum,
+    protobuf_enum_in: ProtobufColor.ValueType,
     string_array_in: List[str],
 ) -> bytes:
     config_params = sample_measurement_test_pb2.SampleMeasurementParameter()
@@ -183,6 +233,7 @@ def _get_serialized_measurement_signature(
     config_params.bool_in = bool_in
     config_params.string_in = string_in
     config_params.enum_in = enum_in.value
+    config_params.protobuf_enum_in = protobuf_enum_in
     config_params.string_array_in.extend(string_array_in)
 
     temp_any = any_pb2.Any()

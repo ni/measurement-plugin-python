@@ -7,9 +7,23 @@ from enum import Enum
 from os import path
 from pathlib import Path
 from threading import Lock
-from typing import Any, Callable, Dict, List, Optional, Type, TypeVar
+from types import TracebackType
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Callable,
+    Dict,
+    List,
+    Literal,
+    Optional,
+    Type,
+    TypeVar,
+    Union,
+    cast,
+)
 
 import grpc
+from google.protobuf.descriptor import EnumDescriptor
 
 from ni_measurementlink_service._internal import grpc_servicer
 from ni_measurementlink_service._internal.discovery_client import DiscoveryClient
@@ -24,6 +38,14 @@ from ni_measurementlink_service.measurement.info import (
     TypeSpecialization,
 )
 from ni_measurementlink_service.session_management import PinMapContext
+
+if TYPE_CHECKING:
+    from google.protobuf.internal.enum_type_wrapper import (
+        EnumTypeWrapper,
+        _EnumTypeWrapper,
+    )
+
+    SupportedEnumType = Union[Type[Enum], _EnumTypeWrapper]
 
 
 class MeasurementContext:
@@ -65,7 +87,7 @@ _TMeasurementService = TypeVar("_TMeasurementService", bound="MeasurementService
 class GrpcChannelPool(object):
     """Class that manages gRPC channel lifetimes."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize the GrpcChannelPool object."""
         self._lock: Lock = Lock()
         self._channel_cache: Dict[str, grpc.Channel] = {}
@@ -74,9 +96,15 @@ class GrpcChannelPool(object):
         """Enter the runtime context of the GrpcChannelPool."""
         return self
 
-    def __exit__(self, exc_type, exc_value, traceback):
+    def __exit__(
+        self,
+        exc_type: Optional[Type[BaseException]],
+        exc_val: Optional[BaseException],
+        traceback: Optional[TracebackType],
+    ) -> Literal[False]:
         """Exit the runtime context of the GrpcChannelPool."""
         self.close()
+        return False
 
     def get_channel(self, target: str) -> grpc.Channel:
         """Return a gRPC channel.
@@ -193,8 +221,8 @@ class MeasurementService:
             annotations=service_annotations_string,
         )
 
-        self.configuration_parameter_list: list = []
-        self.output_parameter_list: list = []
+        self.configuration_parameter_list: List[Any] = []
+        self.output_parameter_list: List[Any] = []
         self.grpc_service = GrpcService()
         self.context: MeasurementContext = MeasurementContext()
         self.discovery_client: DiscoveryClient = self.grpc_service.discovery_client
@@ -228,7 +256,7 @@ class MeasurementService:
         default_value: Any,
         *,
         instrument_type: str = "",
-        enum_type: Optional[Type[Enum]] = None,
+        enum_type: Optional[SupportedEnumType] = None,
     ) -> Callable:
         """Add a configuration parameter to a measurement function.
 
@@ -256,7 +284,7 @@ class MeasurementService:
             For custom instruments the user defined instrument type id is defined in the
             pin map file.
 
-            enum_type (Optional[Type[Enum]]):
+            enum_type (Optional[SupportedEnumType]):
             Defines the enum type associated with this configuration parameter. This is only
             supported when configuration type is DataType.Enum or DataType.EnumArray1D.
 
@@ -282,7 +310,11 @@ class MeasurementService:
         return _configuration
 
     def output(
-        self, display_name: str, type: DataType, *, enum_type: Optional[Type[Enum]] = None
+        self,
+        display_name: str,
+        type: DataType,
+        *,
+        enum_type: Optional[SupportedEnumType] = None,
     ) -> Callable:
         """Add an output parameter to a measurement function.
 
@@ -301,7 +333,7 @@ class MeasurementService:
 
             type (DataType): Data type of the output.
 
-            enum_type (Optional[Type[Enum]]):
+            enum_type (Optional[SupportedEnumType]:
             Defines the enum type associated with this configuration parameter. This is only
             supported when configuration type is DataType.Enum or DataType.EnumArray1D.
 
@@ -352,7 +384,7 @@ class MeasurementService:
         type_specialization: TypeSpecialization,
         *,
         instrument_type: str = "",
-        enum_type: Optional[Type[Enum]] = None,
+        enum_type: Optional[SupportedEnumType] = None,
     ) -> Dict[str, str]:
         annotations: Dict[str, str] = {}
         if type_specialization == TypeSpecialization.NoType:
@@ -370,13 +402,26 @@ class MeasurementService:
 
         return annotations
 
-    def _enum_to_annotations_value(self, enum_type: Type[Enum]) -> str:
-        if not any(member.value == 0 for member in enum_type):
-            raise ValueError("The enum does not have a value for 0.")
+    def _enum_to_annotations_value(self, enum_type: SupportedEnumType) -> str:
         enum_values = {}
-        for member in enum_type:
-            enum_values[member.name] = member.value
+        # Note that the type of protobuf enums are an instance of EnumTypeWrapper.
+        # Additionally, issubclass excludes instances as valid parameters so
+        # we use isinstance here.
+        if self._is_protobuf_enum(enum_type):
+            enum_type = cast("EnumTypeWrapper", enum_type)
+            if 0 not in enum_type.values():
+                raise ValueError("The enum does not have a value for 0.")
+            for name, value in enum_type.items():
+                enum_values[name] = value
+        elif isinstance(enum_type, type) and issubclass(enum_type, Enum):
+            if not any(member.value == 0 for member in enum_type):
+                raise ValueError("The enum does not have a value for 0.")
+            for member in enum_type:
+                enum_values[member.name] = member.value
         return json.dumps(enum_values)
+
+    def _is_protobuf_enum(self, enum_type: SupportedEnumType) -> bool:
+        return isinstance(getattr(enum_type, "DESCRIPTOR", None), EnumDescriptor)
 
     def close_service(self) -> None:
         """Close the Service after un-registering with discovery service and cleanups."""
@@ -387,9 +432,15 @@ class MeasurementService:
         """Enter the runtime context related to the measurement service."""
         return self
 
-    def __exit__(self, exc_type, exc_value, traceback):
+    def __exit__(
+        self,
+        exc_type: Optional[Type[BaseException]],
+        exc_val: Optional[BaseException],
+        traceback: Optional[TracebackType],
+    ) -> Literal[False]:
         """Exit the runtime context related to the measurement service."""
         self.close_service()
+        return False
 
     def get_channel(self, provided_interface: str, service_class: str = "") -> grpc.Channel:
         """Return gRPC channel to specified service.

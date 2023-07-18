@@ -1,5 +1,5 @@
 """Contains tests to validate metadata.py."""
-from enum import Enum
+from enum import Enum, IntEnum
 
 import pytest
 
@@ -25,6 +25,15 @@ class DifferentColor(Enum):
     BROWN = 3
 
 
+class Countries(IntEnum):
+    """Countries enum used for testing IntEnum-typed config and output."""
+
+    AMERICA = 0
+    TAIWAN = 1
+    AUSTRALIA = 2
+    CANADA = 3
+
+
 @pytest.mark.parametrize(
     "type,default_value,annotations",
     [
@@ -37,7 +46,7 @@ class DifferentColor(Enum):
         (DataType.Double, 1, {}),
         (
             DataType.Enum,
-            1,
+            1.0,
             {
                 "ni/type_specialization": TypeSpecialization.Enum.value,
                 "ni/enum.values": '{"NONE":0, "RED": 1, "GREEN": 2, "BLUE": 3}',
@@ -54,7 +63,7 @@ class DifferentColor(Enum):
         (DataType.EnumArray1D, 1, {}),
         (
             DataType.EnumArray1D,
-            [1, 2],
+            [1.0, 2.0],
             {
                 "ni/type_specialization": TypeSpecialization.Enum.value,
                 "ni/enum.values": '{"NONE":0, "RED": 1, "GREEN": 2, "BLUE": 3}',
@@ -96,6 +105,22 @@ def test___default_value_different_from_type___validate___raises_type_exception(
             {
                 "ni/type_specialization": TypeSpecialization.Enum.value,
                 "ni/enum.values": '{"NONE":0, "RED": 1, "GREEN": 2, "BLUE": 3}',
+            },
+        ),
+        (
+            DataType.Enum,
+            Countries.AUSTRALIA,
+            {
+                "ni/type_specialization": TypeSpecialization.Enum.value,
+                "ni/enum.values": '{"AMERICA":0, "TAIWAN": 1, "AUSTRALIA": 2, "CANADA": 3}',
+            },
+        ),
+        (
+            DataType.EnumArray1D,
+            [Countries.AUSTRALIA, Countries.CANADA],
+            {
+                "ni/type_specialization": TypeSpecialization.Enum.value,
+                "ni/enum.values": '{"AMERICA":0, "TAIWAN": 1, "AUSTRALIA": 2, "CANADA": 3}',
             },
         ),
     ],

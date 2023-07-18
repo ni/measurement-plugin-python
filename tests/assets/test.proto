@@ -21,6 +21,14 @@ enum DifferentColor
   BROWN = 3;
 }
 
+enum Countries
+{
+  AMERICA = 0;
+  TAIWAN = 1;
+  AUSTRALIA = 2;
+  CANADA = 3;
+}
+
 message MeasurementParameter{
     float float_data = 1;
     double double_data = 2;
@@ -40,4 +48,6 @@ message MeasurementParameter{
     repeated string string_array_data = 16;
     DifferentColor enum_data = 17;
     repeated DifferentColor enum_array_data = 18;
+    Countries int_enum_data = 19;
+    repeated Countries int_enum_array_data = 20;
 }
