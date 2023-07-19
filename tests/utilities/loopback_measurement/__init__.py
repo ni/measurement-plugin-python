@@ -33,13 +33,13 @@ measurement_service = nims.MeasurementService(
 @measurement_service.configuration("String In", nims.DataType.String, "sample string")
 @measurement_service.configuration("Enum In", nims.DataType.Enum, Color.BLUE, enum_type=Color)
 @measurement_service.configuration(
-    "String Array In", nims.DataType.StringArray1D, ["String1", "String2"]
-)
-@measurement_service.configuration(
     "Protobuf Enum In",
     nims.DataType.Enum,
     color_pb2.ProtobufColor.BLACK,
     enum_type=color_pb2.ProtobufColor,
+)
+@measurement_service.configuration(
+    "String Array In", nims.DataType.StringArray1D, ["String1", "String2"]
 )
 @measurement_service.output("Float out", nims.DataType.Float)
 @measurement_service.output("Double Array out", nims.DataType.DoubleArray1D)
