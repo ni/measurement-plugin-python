@@ -4,7 +4,7 @@ syntax = "proto3";
 
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-package ni.measurementlink.measurement.tests.v1;
+package ni.measurementlink.measurement.sample_measurement.v1;
 
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
@@ -13,26 +13,9 @@ option csharp_namespace = "NationalInstruments.MeasurementServices.Measurements"
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
 
-enum Color{
-    NONE = 0;
-    RED = 1;
-    GREEN = 2;
-    BLUE = 3;
-}
-
 enum ProtobufColor{
-    COLORLESS = 0;
+    NONE = 0;
     PINK = 1;
     WHITE = 2;
     BLACK = 3;
-}
-
-message SampleMeasurementParameter {
-    float float_in = 1;
-    repeated double double_array_in = 2;
-    bool bool_in = 3;
-    string string_in = 4;
-    Color enum_in = 5;
-    ProtobufColor protobuf_enum_in = 6;
-    repeated string string_array_in = 7;
 }
