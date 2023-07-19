@@ -183,7 +183,7 @@ class MeasurementService:
 
         def removeDoubleQuote(string: str):
             if string and string[0] == string[-1] == '"':
-                    string = string[1:-1]
+                string = string[1:-1]
             return string
 
         service_annotations_string = {
