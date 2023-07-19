@@ -181,13 +181,13 @@ class MeasurementService:
             ui_file_paths=ui_file_paths,
         )
 
-        def removeDoubleQuote(string: str):
+        def remove_double_quotes(string: str):
             if string and string[0] == string[-1] == '"':
                 string = string[1:-1]
             return string
 
         service_annotations_string = {
-            key: removeDoubleQuote(json.dumps(value, separators=(",", ":")))
+            key: remove_double_quotes(json.dumps(value, separators=(",", ":")))
             for key, value in service.get("annotations", {}).items()
         }
 
