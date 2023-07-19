@@ -13,30 +13,31 @@ RANDOM_NUMBERS_PER_SECOND = 100.0
 RANDOM_NUMBER_RANGE = 10.0
 UI_UPDATE_INTERVAL_IN_SECONDS = 100e-3
 
-service_directory = pathlib.Path(__file__).resolve().parent.parent.parent
-fake_measurement_ui_service = nims.MeasurementService(
-    service_config_path=service_directory
-    / "examples/ui_progress_updates/UIProgressUpdates.serviceconfig",
+service_directory = pathlib.Path(__file__).resolve().parent
+measurement_service = nims.MeasurementService(
+    service_config_path=service_directory / "UIProgressUpdates.serviceconfig",
     version="0.5.0.0",
-    ui_file_paths=[service_directory / "examples/ui_progress_updates/UIProgressUpdates.measui"],
+    ui_file_paths=[
+        service_directory,
+    ],
 )
 
 
 Outputs = Tuple[float, List[float], str]
 
 
-@fake_measurement_ui_service.register_measurement
-@fake_measurement_ui_service.configuration("time_in_seconds", nims.DataType.Double, 10.0)
-@fake_measurement_ui_service.output("elapsed_time_in_seconds", nims.DataType.Double)
-@fake_measurement_ui_service.output("random_numbers", nims.DataType.DoubleArray1D)
-@fake_measurement_ui_service.output("status", nims.DataType.String)
+@measurement_service.register_measurement
+@measurement_service.configuration("time_in_seconds", nims.DataType.Double, 10.0)
+@measurement_service.output("elapsed_time_in_seconds", nims.DataType.Double)
+@measurement_service.output("random_numbers", nims.DataType.DoubleArray1D)
+@measurement_service.output("status", nims.DataType.String)
 def measure(time_in_seconds: float) -> Generator[Outputs, None, Outputs]:
     """Generates random numbers and updates the measurement UI to show progress."""
     cancellation_event = threading.Event()
-    fake_measurement_ui_service.context.add_cancel_callback(cancellation_event.set)
+    measurement_service.context.add_cancel_callback(cancellation_event.set)
 
     if time_in_seconds < 0.0:
-        fake_measurement_ui_service.context.abort(
+        measurement_service.context.abort(
             grpc.StatusCode.INVALID_ARGUMENT, "time_in_seconds must be non-negative."
         )
 
@@ -65,7 +66,7 @@ def measure(time_in_seconds: float) -> Generator[Outputs, None, Outputs]:
         # Delay for the remaining portion of the UI update interval and check for cancellation.
         delay = max(0.0, UI_UPDATE_INTERVAL_IN_SECONDS - (time.monotonic() - update_time))
         if cancellation_event.wait(delay):
-            fake_measurement_ui_service.context.abort(
+            measurement_service.context.abort(
                 grpc.StatusCode.CANCELLED, "Client requested cancellation."
             )
 

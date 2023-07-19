@@ -1,0 +1,20 @@
+{
+  "services": [
+    {
+      "displayName": "Loopback Measurement (Py)",
+      "serviceClass": "ni.examples.SampleMeasurement_Python",
+      "descriptionUrl": "",
+      "providedInterfaces": [
+        "ni.measurementlink.measurement.v1.MeasurementService",
+        "ni.measurementlink.measurement.v2.MeasurementService"
+      ],
+      "path": "start.bat",
+      "annotations": {
+        "ni/service.description": "MeasurementLink example that performs a loopback measurement with various data types.",
+        "ni/service.collection": "NI.Examples",
+        "ni/service.tags": []
+      }
+
+    }
+  ]
+}

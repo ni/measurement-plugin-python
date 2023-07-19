@@ -1,0 +1,19 @@
+{
+  "services": [
+    {
+      "displayName": "UI Progress Updates (Py)",
+      "serviceClass": "ni.examples.UIProgressUpdates_Python",
+      "descriptionUrl": "",
+      "providedInterfaces": [
+        "ni.measurementlink.measurement.v1.MeasurementService",
+        "ni.measurementlink.measurement.v2.MeasurementService"
+      ],
+      "path": "start.bat",
+      "annotations": {
+        "ni/service.description": "MeasurementLink example that generates random numbers and updates the measurement UI to show progress.",
+        "ni/service.collection": "NI.Examples",
+        "ni/service.tags": []
+      }
+    }
+  ]
+}

@@ -8,14 +8,12 @@ import grpc
 
 import ni_measurementlink_service as nims
 
-service_directory = pathlib.Path(__file__).resolve().parent.parent.parent
-fake_streaming_data_measurement_service = nims.MeasurementService(
-    service_config_path=service_directory
-    / "examples/sample_streaming_measurement/SampleStreamingMeasurement.serviceconfig",
+service_directory = pathlib.Path(__file__).resolve().parent
+measurement_service = nims.MeasurementService(
+    service_config_path=service_directory / "StreamingMeasurement.serviceconfig",
     version="0.1.0.0",
     ui_file_paths=[
-        service_directory
-        / "examples/sample_streaming_measurement/SampleStreamingMeasurement.measui"
+        service_directory,
     ],
 )
 
@@ -23,20 +21,16 @@ fake_streaming_data_measurement_service = nims.MeasurementService(
 Outputs = Tuple[str, int, List[int]]
 
 
-@fake_streaming_data_measurement_service.register_measurement
-@fake_streaming_data_measurement_service.configuration("name", nims.DataType.String, "<Name>")
-@fake_streaming_data_measurement_service.configuration("num_responses", nims.DataType.Int32, 10)
-@fake_streaming_data_measurement_service.configuration("data_size", nims.DataType.Int32, 1)
-@fake_streaming_data_measurement_service.configuration(
-    "cumulative_data", nims.DataType.Boolean, True
-)
-@fake_streaming_data_measurement_service.configuration(
-    "response_interval_in_ms", nims.DataType.Int32, 1000
-)
-@fake_streaming_data_measurement_service.configuration("error_on_index", nims.DataType.Int32, -1)
-@fake_streaming_data_measurement_service.output("name", nims.DataType.String)
-@fake_streaming_data_measurement_service.output("index", nims.DataType.Int32)
-@fake_streaming_data_measurement_service.output("data", nims.DataType.Int32Array1D)
+@measurement_service.register_measurement
+@measurement_service.configuration("name", nims.DataType.String, "<Name>")
+@measurement_service.configuration("num_responses", nims.DataType.Int32, 10)
+@measurement_service.configuration("data_size", nims.DataType.Int32, 1)
+@measurement_service.configuration("cumulative_data", nims.DataType.Boolean, True)
+@measurement_service.configuration("response_interval_in_ms", nims.DataType.Int32, 1000)
+@measurement_service.configuration("error_on_index", nims.DataType.Int32, -1)
+@measurement_service.output("name", nims.DataType.String)
+@measurement_service.output("index", nims.DataType.Int32)
+@measurement_service.output("data", nims.DataType.Int32Array1D)
 def measure(
     name: str,
     num_responses: int,
@@ -47,7 +41,7 @@ def measure(
 ) -> Generator[Outputs, None, None]:
     """Returns the number of responses requested at the requested interval."""
     cancellation_event = threading.Event()
-    fake_streaming_data_measurement_service.context.add_cancel_callback(cancellation_event.set)
+    measurement_service.context.add_cancel_callback(cancellation_event.set)
 
     data: List[int] = []
 
@@ -57,7 +51,7 @@ def measure(
         update_time = time.monotonic()
 
         if index == error_on_index:
-            fake_streaming_data_measurement_service.context.abort(
+            measurement_service.context.abort(
                 grpc.StatusCode.UNKNOWN,
                 f"Errored at index {error_on_index}",
             )
@@ -72,6 +66,6 @@ def measure(
         # Delay for the remaining portion of the requested interval and check for cancellation.
         delay = max(0.0, response_interval_in_seconds - (time.monotonic() - update_time))
         if cancellation_event.wait(delay):
-            fake_streaming_data_measurement_service.context.abort(
+            measurement_service.context.abort(
                 grpc.StatusCode.CANCELLED, "Client requested cancellation."
             )

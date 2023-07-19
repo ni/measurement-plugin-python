@@ -11,9 +11,7 @@ from ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v
 )
 from ni_measurementlink_service.measurement.service import MeasurementService
 from tests.assets import sample_streaming_measurement_test_pb2
-from tests.utilities.fake_streaming_data_measurement_service import (
-    fake_streaming_data_measurement_service,
-)
+from tests.utilities import streaming_data_measurment
 
 
 @pytest.mark.parametrize("num_responses", [1, 10, 100])
@@ -141,5 +139,5 @@ def _get_serialized_measurement_outputs(
 @pytest.fixture(scope="module")
 def measurement_service() -> Generator[MeasurementService, None, None]:
     """Test fixture that creates and hosts a measurement service."""
-    with fake_streaming_data_measurement_service.host_service() as service:
+    with streaming_data_measurment.measurement_service.host_service() as service:
         yield service
