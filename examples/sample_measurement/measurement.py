@@ -4,6 +4,7 @@ import pathlib
 from enum import Enum
 
 import click
+from _helpers import verbosity_option, configure_logging
 
 try:
     from _stubs import color_pb2
@@ -99,30 +100,13 @@ def measure(
 
 
 @click.command
-@click.option(
-    "-v",
-    "--verbose",
-    "verbosity",
-    count=True,
-    help="Enable verbose logging. Repeat to increase verbosity.",
-)
+@verbosity_option
 def main(verbosity: int) -> None:
     """Perform a loopback measurement with various data types."""
-    _configure_logging(verbosity)
+    configure_logging(verbosity)
 
     with sample_measurement_service.host_service():
         input("Press enter to close the measurement service.\n")
-
-
-def _configure_logging(verbosity: int):
-    """Configure logging for this process."""
-    if verbosity > 1:
-        level = logging.DEBUG
-    elif verbosity == 1:
-        level = logging.INFO
-    else:
-        level = logging.WARNING
-    logging.basicConfig(format="%(asctime)s %(levelname)s: %(message)s", level=level)
 
 
 if __name__ == "__main__":
