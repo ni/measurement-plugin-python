@@ -13,8 +13,8 @@ from ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v
     measurement_service_pb2,
     measurement_service_pb2_grpc,
 )
-from tests.utilities.fake_discovery_service import FakeDiscoveryServiceStub
 from tests.utilities import loopback_measurement
+from tests.utilities.fake_discovery_service import FakeDiscoveryServiceStub
 
 
 def test___grpc_service___start_service___service_hosted(grpc_service: GrpcService):

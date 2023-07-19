@@ -2,8 +2,9 @@
 import pathlib
 from enum import Enum
 
-import ni_measurementlink_service as nims
 from examples.sample_measurement._stubs import color_pb2
+
+import ni_measurementlink_service as nims
 
 
 class Color(Enum):
