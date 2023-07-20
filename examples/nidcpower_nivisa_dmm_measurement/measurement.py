@@ -5,13 +5,14 @@ import pathlib
 import time
 from enum import Enum
 
+import _nidcpower_helpers
+import _visa_helpers
 import click
 import grpc
 import hightime
 import nidcpower
 import pyvisa
 from _helpers import (
-    USE_SIMULATION,
     ServiceOptions,
     configure_logging,
     create_session_management_client,
@@ -22,17 +23,16 @@ from _helpers import (
     use_simulation_option,
     verbosity_option,
 )
-from _nidcpower_helpers import create_session
-from _visa_helpers import (
-    INSTRUMENT_TYPE_DMM_SIMULATOR,
-    check_instrument_error,
-    create_visa_resource_manager,
-    create_visa_session,
-    log_instrument_id,
-    reset_instrument,
-)
+from _visa_helpers import check_instrument_error, log_instrument_id, reset_instrument
+
 
 import ni_measurementlink_service as nims
+
+USE_SIMULATION = True
+"""
+To use physical instruments, set this to False or specify
+--no-use-simulation on the command line.
+"""
 
 NIDCPOWER_WAIT_FOR_EVENT_TIMEOUT_ERROR_CODE = -1074116059
 NIDCPOWER_TIMEOUT_EXCEEDED_ERROR_CODE = -1074097933
@@ -91,7 +91,7 @@ FUNCTION_TO_VALUE = {
     "output_pin",
     nims.DataType.Pin,
     "OutPin",
-    instrument_type=INSTRUMENT_TYPE_DMM_SIMULATOR,
+    instrument_type=_visa_helpers.INSTRUMENT_TYPE_DMM_SIMULATOR,
 )
 @measurement_service.output("measured_value", nims.DataType.Double)
 def measure(
@@ -126,13 +126,13 @@ def measure(
         grpc_device_channel = get_grpc_device_channel(
             measurement_service, nidcpower, service_options
         )
-        source_session_info = _get_session_info_from_pin(reservation.session_info, input_pin)
-        measure_session_info = _get_session_info_from_pin(reservation.session_info, output_pin)
-        resource_manager = create_visa_resource_manager(service_options.use_simulation)
+        source_session_info = _get_session_info_for_pin(reservation.session_info, input_pin)
+        measure_session_info = _get_session_info_for_pin(reservation.session_info, output_pin)
+        resource_manager = _visa_helpers.create_resource_manager(service_options.use_simulation)
         # Creates NI-DCPower and NI-VISA DMM sessions.
-        with create_session(
-            source_session_info, grpc_device_channel
-        ) as source_session, create_visa_session(
+        with _nidcpower_helpers.create_session(
+            source_session_info, service_options.use_simulation, grpc_device_channel
+        ) as source_session, _visa_helpers.create_session(
             resource_manager, measure_session_info.resource_name
         ) as measure_session:
             pending_cancellation = False
@@ -176,7 +176,7 @@ def measure(
     return (measured_value,)
 
 
-def _get_session_info_from_pin(session_info, pin_name):
+def _get_session_info_for_pin(session_info, pin_name):
     session_index = get_session_and_channel_for_pin(session_info, pin_name)[0]
     return session_info[session_index]
 

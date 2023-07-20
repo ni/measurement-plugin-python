@@ -13,9 +13,13 @@ INSTRUMENT_TYPE_SCOPE_SIMULATOR = "OscilloscopeSimulator"
 INSTRUMENT_TYPE_DMM_SIMULATOR = "DigitalMultimeterSimulator"
 
 SIMULATION_YAML_PATH = pathlib.Path(__file__).resolve().parent / "NIInstrumentSimulatorV2_0.yaml"
+"""
+Path to a simulation YAML file that can be used to simulate an NI Instrument Simulator v2.0
+with pyvisa-sim
+"""
 
 
-def create_visa_resource_manager(
+def create_resource_manager(
     use_simulation: bool, simulation_yaml_path: pathlib.Path = SIMULATION_YAML_PATH
 ) -> pyvisa.ResourceManager:
     """Create a real or simulated VISA resource manager."""
@@ -23,7 +27,7 @@ def create_visa_resource_manager(
     return pyvisa.ResourceManager(visa_library)
 
 
-def create_visa_session(
+def create_session(
     resource_manager: pyvisa.ResourceManager, resource_name: str
 ) -> pyvisa.resources.MessageBasedResource:
     """Create a VISA session."""
