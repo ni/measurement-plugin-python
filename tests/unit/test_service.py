@@ -261,8 +261,8 @@ no_annotations: typing.Dict[str, str] = {}
                 "ni.measurementlink.measurement.v2.MeasurementService",
             ],
             {
-                "ni/service.description": '"Measure inrush current with a shorted load and validate results against configured limits."',
-                "ni/service.collection": '"CurrentTests.Inrush"',
+                "ni/service.description": "Measure inrush current with a shorted load and validate results against configured limits.",
+                "ni/service.collection": "CurrentTests.Inrush",
                 "ni/service.tags": '["powerup","current"]',
             },
         ),
@@ -279,7 +279,7 @@ no_annotations: typing.Dict[str, str] = {}
         (
             "example.OnlyCollection.serviceconfig",
             ["ni.measurementlink.measurement.v2.MeasurementService"],
-            {"ni/service.collection": '"CurrentTests.Inrush"'},
+            {"ni/service.collection": "CurrentTests.Inrush"},
         ),
         (
             "example.OnlyTags.serviceconfig",
@@ -290,7 +290,7 @@ no_annotations: typing.Dict[str, str] = {}
             "example.AllAnnotations.serviceconfig",
             ["ni.measurementlink.measurement.v2.MeasurementService"],
             {
-                "ni/service.description": '"Testing extra Client info"',
+                "ni/service.description": "Testing extra Client info",
                 "client/extra.NumberID": "500",
                 "client/extra.Parts": '["A25898","A25412"]',
                 "client/extra.GroupName": '{"SpeakerType":"true","PhoneType":"false"}',
@@ -300,8 +300,8 @@ no_annotations: typing.Dict[str, str] = {}
             "example.CustomAnnotations.serviceconfig",
             ["ni.measurementlink.measurement.v1.MeasurementService"],
             {
-                "description": '"An annotated test measurement service."',
-                "collection": '"Tests.Measurements"',
+                "description": "An annotated test measurement service.",
+                "collection": "Tests.Measurements",
                 "tags": '["test","measurement"]',
                 "custom": '{"foo":"bar","baz":["qux","quux","quuux"],"snork":{"blarg":"flarp","oogle":'
                 + '["foogle","boogle"],"ork":["zork","gork","bork"]}}',
