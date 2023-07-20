@@ -181,13 +181,14 @@ class MeasurementService:
             ui_file_paths=ui_file_paths,
         )
 
-        def process_annotations(value: object):
+        def convert_value_to_str(value: object) -> str:
             if isinstance(value, str):
                 return value
             return json.dumps(value, separators=(",", ":"))
 
         service_annotations_string = {
-            key: process_annotations(value) for key, value in service.get("annotations", {}).items()
+            key: convert_value_to_str(value)
+            for key, value in service.get("annotations", {}).items()
         }
 
         self.service_info = ServiceInfo(
