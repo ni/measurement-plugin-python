@@ -1,0 +1,18 @@
+{
+  "services": [
+    {
+      "displayName": "Streaming Data Measurement (Py)",
+      "serviceClass": "ni.tests.StreamingDataMeasurement_Python",
+      "descriptionUrl": "",
+      "providedInterfaces": [
+        "ni.measurementlink.measurement.v2.MeasurementService"
+      ],
+      "path": "start.bat",
+      "annotations": {
+        "ni/service.description": "MeasurementLink test service that generates a predictable stream of data.",
+        "ni/service.collection": "NI.Tests",
+        "ni/service.tags": []
+      }
+    }
+  ]
+}

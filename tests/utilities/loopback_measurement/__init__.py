@@ -1,4 +1,4 @@
-"""Contains Test Doubles related to loopback measurement service. """
+"""Contains utility functions to test loopback measurement service. """
 import pathlib
 from enum import Enum
 

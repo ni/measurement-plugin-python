@@ -1,4 +1,4 @@
-"""Contains Test Doubles - Returns the number of responses requested at the requested interval."""
+"""Contains utility functions to test a v2 measurement service that streams data."""
 import pathlib
 import threading
 import time
@@ -10,7 +10,7 @@ import ni_measurementlink_service as nims
 
 service_directory = pathlib.Path(__file__).resolve().parent
 measurement_service = nims.MeasurementService(
-    service_config_path=service_directory / "StreamingMeasurement.serviceconfig",
+    service_config_path=service_directory / "StreamingDataMeasurement.serviceconfig",
     version="0.1.0.0",
     ui_file_paths=[
         service_directory,

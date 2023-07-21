@@ -1,4 +1,4 @@
-"""Contains Test Doubles - Generates random num and updates the measurement UI to show progress."""
+"""Contains utility functions to test that yield and return are supported in measurements."""
 import pathlib
 import random
 import threading
