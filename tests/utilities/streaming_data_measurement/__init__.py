@@ -1,21 +1,20 @@
-"""Returns the number of responses requested at the requested interval."""
-import logging
+"""Contains utility functions to test a v2 measurement service that streams data."""
 import pathlib
 import threading
 import time
 from typing import Generator, List, Tuple
 
-import click
 import grpc
-from _helpers import verbosity_option, configure_logging
 
 import ni_measurementlink_service as nims
 
 service_directory = pathlib.Path(__file__).resolve().parent
 measurement_service = nims.MeasurementService(
-    service_config_path=service_directory / "SampleStreamingMeasurement.serviceconfig",
+    service_config_path=service_directory / "StreamingDataMeasurement.serviceconfig",
     version="0.1.0.0",
-    ui_file_paths=[service_directory / "SampleStreamingMeasurement.measui"],
+    ui_file_paths=[
+        service_directory,
+    ],
 )
 
 
@@ -41,7 +40,6 @@ def measure(
     error_on_index: int,
 ) -> Generator[Outputs, None, None]:
     """Returns the number of responses requested at the requested interval."""
-    logging.info("Executing measurement")
     cancellation_event = threading.Event()
     measurement_service.context.add_cancel_callback(cancellation_event.set)
 
@@ -68,23 +66,6 @@ def measure(
         # Delay for the remaining portion of the requested interval and check for cancellation.
         delay = max(0.0, response_interval_in_seconds - (time.monotonic() - update_time))
         if cancellation_event.wait(delay):
-            logging.info("Canceling measurement")
             measurement_service.context.abort(
                 grpc.StatusCode.CANCELLED, "Client requested cancellation."
             )
-
-    logging.info("Completed measurement")
-
-
-@click.command
-@verbosity_option
-def main(verbosity: int) -> None:
-    """Returns the number of responses requested at the requested interval."""
-    configure_logging(verbosity)
-
-    with measurement_service.host_service():
-        input("Press enter to close the measurement service.\n")
-
-
-if __name__ == "__main__":
-    main()

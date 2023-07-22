@@ -2,7 +2,6 @@
 from typing import Generator
 
 import pytest
-from examples.ui_progress_updates import measurement
 from google.protobuf import any_pb2
 
 from ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v2 import (
@@ -11,6 +10,7 @@ from ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v
 )
 from ni_measurementlink_service.measurement.service import MeasurementService
 from tests.assets import ui_progress_updates_test_pb2
+from tests.utilities import yield_vs_return_measurement
 
 
 def test___measurement_utilizing_yield_and_return___call_measurement___receives_responses_from_yield_and_return(
@@ -55,5 +55,5 @@ def _get_serialized_measurement_configuration_parameters(
 @pytest.fixture(scope="module")
 def measurement_service() -> Generator[MeasurementService, None, None]:
     """Test fixture that creates and hosts a measurement service."""
-    with measurement.measurement_service.host_service() as service:
+    with yield_vs_return_measurement.measurement_service.host_service() as service:
         yield service

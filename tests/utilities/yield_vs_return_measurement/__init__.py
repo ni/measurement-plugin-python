@@ -1,14 +1,11 @@
-"""Generates random numbers and updates the measurement UI to show progress."""
-import logging
+"""Contains utility functions to test that yield and return are supported in measurements."""
 import pathlib
 import random
 import threading
 import time
 from typing import Generator, List, Tuple
 
-import click
 import grpc
-from _helpers import verbosity_option, configure_logging
 
 import ni_measurementlink_service as nims
 
@@ -20,7 +17,9 @@ service_directory = pathlib.Path(__file__).resolve().parent
 measurement_service = nims.MeasurementService(
     service_config_path=service_directory / "UIProgressUpdates.serviceconfig",
     version="0.5.0.0",
-    ui_file_paths=[service_directory / "UIProgressUpdates.measui"],
+    ui_file_paths=[
+        service_directory,
+    ],
 )
 
 
@@ -34,7 +33,6 @@ Outputs = Tuple[float, List[float], str]
 @measurement_service.output("status", nims.DataType.String)
 def measure(time_in_seconds: float) -> Generator[Outputs, None, Outputs]:
     """Generates random numbers and updates the measurement UI to show progress."""
-    logging.info("Executing measurement: time_in_seconds=%d", time_in_seconds)
     cancellation_event = threading.Event()
     measurement_service.context.add_cancel_callback(cancellation_event.set)
 
@@ -68,14 +66,12 @@ def measure(time_in_seconds: float) -> Generator[Outputs, None, Outputs]:
         # Delay for the remaining portion of the UI update interval and check for cancellation.
         delay = max(0.0, UI_UPDATE_INTERVAL_IN_SECONDS - (time.monotonic() - update_time))
         if cancellation_event.wait(delay):
-            logging.info("Canceling measurement")
             measurement_service.context.abort(
                 grpc.StatusCode.CANCELLED, "Client requested cancellation."
             )
 
     # Non-interactive clients such as TestStand only use the measurement's final
     # update. You may use either yield or return to send the final update.
-    logging.info("Completed measurement")
     status = f"Total updates: {update_number}"
     return (elapsed_time_in_seconds, random_numbers, status)
 
@@ -84,17 +80,3 @@ def _generate_random_numbers(count: int) -> Generator[float, None, None]:
     """Generate random numbers between -RANDOM_NUMBER_RANGE and +RANDOM_NUMBER_RANGE."""
     for _ in range(count):
         yield RANDOM_NUMBER_RANGE * (2.0 * random.random() - 1.0)
-
-
-@click.command
-@verbosity_option
-def main(verbosity: int) -> None:
-    """Generates random numbers and updates the measurement UI to show progress."""
-    configure_logging(verbosity)
-
-    with measurement_service.host_service():
-        input("Press enter to close the measurement service.\n")
-
-
-if __name__ == "__main__":
-    main()
