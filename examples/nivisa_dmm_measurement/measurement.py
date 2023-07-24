@@ -98,7 +98,9 @@ def measure(
         timeout=RESERVATION_TIMEOUT_IN_SECONDS,
     ) as reservation:
         resource_manager = create_resource_manager(service_options.use_simulation)
-        with create_session(resource_manager, reservation.session_info.resource_name) as session:
+        with create_session(
+            resource_manager, reservation.session_info.resource_name
+        ) as session:
             # Work around https://github.com/pyvisa/pyvisa/issues/739 - Type annotation for Resource
             # context manager implicitly upcasts derived class to base class
             assert isinstance(session, pyvisa.resources.MessageBasedResource)
