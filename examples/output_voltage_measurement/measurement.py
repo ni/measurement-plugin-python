@@ -155,7 +155,7 @@ def measure(
             # instrument.
             if not measure_session_info.session_exists:
                 reset_instrument(measure_session)
-            # Source input pin
+
             channels = source_session.channels[source_session_info.channel_list]
 
             channels.source_mode = nidcpower.SourceMode.SINGLE_POINT
@@ -165,18 +165,19 @@ def measure(
             channels.current_limit_range = current_limit_range
             channels.source_delay = hightime.timedelta(seconds=source_delay)
             channels.voltage_level = voltage_level
-            with channels.initiate():
-                _wait_for_source_complete_event(
-                    measurement_service, channels, pending_cancellation
-                )
 
-            # Configure and measure output pin using NI-VISA DMM
+            # Configure NI-VISA DMM
             function_enum = FUNCTION_TO_VALUE[measurement_type]
             resolution_value = RESOLUTION_DIGITS_TO_VALUE[str(resolution_digits)]
             measure_session.write(
                 "CONF:%s %.g,%.g" % (function_enum, range, resolution_value)
             )
             check_instrument_error(measure_session)
+            
+            with channels.initiate():
+                _wait_for_source_complete_event(
+                    measurement_service, channels, pending_cancellation
+                )
 
             response = measure_session.query("READ?")
             check_instrument_error(measure_session)
