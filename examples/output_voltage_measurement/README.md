@@ -1,4 +1,4 @@
-## NI-DCPower NI-VISA DMM measurement
+## Output Voltage Measurement
 
 This is a MeasurementLink example that sources DC voltage as input with an NI SMU and measures output using NI-VISA DMM.
 

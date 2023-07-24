@@ -40,9 +40,9 @@ RESOLUTION_DIGITS_TO_VALUE = {"3.5": 0.001, "4.5": 0.0001, "5.5": 1e-5, "6.5": 1
 
 service_directory = pathlib.Path(__file__).resolve().parent
 measurement_service = nims.MeasurementService(
-    service_config_path=service_directory / "NIDCPowerNIVisaDmmMeasurement.serviceconfig",
+    service_config_path=service_directory / "OutputVoltageMeasurement.serviceconfig",
     version="1.0.0.0",
-    ui_file_paths=[service_directory / "NIDCPowerNIVisaDmmMeasurement.measui"],
+    ui_file_paths=[service_directory / "OutputVoltageMeasurement.measui"],
 )
 
 service_options = ServiceOptions()

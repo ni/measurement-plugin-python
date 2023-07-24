@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "nidcpower_nivisa_dmm_measurement"
+name = "output_voltage_measurement"
 version = "0.5.0"
 description = ""
 authors = ["National Instruments"]

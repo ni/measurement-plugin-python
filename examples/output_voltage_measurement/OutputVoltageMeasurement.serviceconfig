@@ -1,8 +1,8 @@
 {
   "services": [
     {
-      "displayName": "NI-DCPower NI-VISA DMM Measurement (Py)",
-      "serviceClass": "ni.examples.NIDCPowerNIVisaDmmMeasurement_Python",
+      "displayName": "Output Voltage Measurement (Py)",
+      "serviceClass": "ni.examples.OutputVoltageMeasurement_Python",
       "descriptionUrl": "",
       "providedInterfaces": [
         "ni.measurementlink.measurement.v1.MeasurementService",
