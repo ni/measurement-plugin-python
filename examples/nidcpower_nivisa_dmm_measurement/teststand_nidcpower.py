@@ -23,9 +23,7 @@ def create_nidcpower_sessions(sequence_context: Any) -> None:
 
         teststand_support = TestStandSupport(sequence_context)
         pin_map_id = teststand_support.get_active_pin_map_id()
-        pin_map_context = nims.session_management.PinMapContext(
-            pin_map_id=pin_map_id, sites=None
-        )
+        pin_map_context = nims.session_management.PinMapContext(pin_map_id=pin_map_id, sites=None)
         grpc_device_channel = grpc_channel_pool.get_grpc_device_channel(
             nidcpower.GRPC_SERVICE_INTERFACE_NAME
         )
