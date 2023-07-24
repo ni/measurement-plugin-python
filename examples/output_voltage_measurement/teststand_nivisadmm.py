@@ -43,9 +43,7 @@ def create_nivisa_dmm_sessions(sequence_context: Any, use_simulation: bool) -> N
             resource_manager = create_resource_manager(use_simulation)
 
             for session_info in reservation.session_info:
-                with create_session(
-                    resource_manager, session_info.resource_name
-                ) as session:
+                with create_session(resource_manager, session_info.resource_name) as session:
                     # Work around https://github.com/pyvisa/pyvisa/issues/739 - Type annotation
                     # for Resource context manager implicitly upcasts derived class to base class
                     assert isinstance(session, pyvisa.resources.MessageBasedResource)

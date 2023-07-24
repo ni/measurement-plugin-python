@@ -126,15 +126,9 @@ def measure(
         grpc_device_channel = get_grpc_device_channel(
             measurement_service, nidcpower, service_options
         )
-        source_session_info = _get_session_info_for_pin(
-            reservation.session_info, input_pin
-        )
-        measure_session_info = _get_session_info_for_pin(
-            reservation.session_info, output_pin
-        )
-        resource_manager = _visa_helpers.create_resource_manager(
-            service_options.use_simulation
-        )
+        source_session_info = _get_session_info_for_pin(reservation.session_info, input_pin)
+        measure_session_info = _get_session_info_for_pin(reservation.session_info, output_pin)
+        resource_manager = _visa_helpers.create_resource_manager(service_options.use_simulation)
         # Creates NI-DCPower and NI-VISA DMM sessions.
         with _nidcpower_helpers.create_session(
             source_session_info, service_options.use_simulation, grpc_device_channel
