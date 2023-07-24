@@ -30,7 +30,9 @@ def create_nivisa_dmm_sessions(sequence_context: Any, use_simulation: bool) -> N
         teststand_support = TestStandSupport(sequence_context)
         pin_map_id = teststand_support.get_active_pin_map_id()
 
-        pin_map_context = nims.session_management.PinMapContext(pin_map_id=pin_map_id, sites=None)
+        pin_map_context = nims.session_management.PinMapContext(
+            pin_map_id=pin_map_id, sites=None
+        )
         with session_management_client.reserve_sessions(
             context=pin_map_context,
             instrument_type_id=INSTRUMENT_TYPE_DMM_SIMULATOR,
@@ -40,7 +42,9 @@ def create_nivisa_dmm_sessions(sequence_context: Any, use_simulation: bool) -> N
             resource_manager = create_resource_manager(use_simulation)
 
             for session_info in reservation.session_info:
-                with create_session(resource_manager, session_info.resource_name) as session:
+                with create_session(
+                    resource_manager, session_info.resource_name
+                ) as session:
                     # Work around https://github.com/pyvisa/pyvisa/issues/739 - Type annotation
                     # for Resource context manager implicitly upcasts derived class to base class
                     assert isinstance(session, pyvisa.resources.MessageBasedResource)

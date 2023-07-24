@@ -40,7 +40,8 @@ RESOLUTION_DIGITS_TO_VALUE = {"3.5": 0.001, "4.5": 0.0001, "5.5": 1e-5, "6.5": 1
 
 service_directory = pathlib.Path(__file__).resolve().parent
 measurement_service = nims.MeasurementService(
-    service_config_path=service_directory / "NIDCPowerNIVisaDmmMeasurement.serviceconfig",
+    service_config_path=service_directory
+    / "NIDCPowerNIVisaDmmMeasurement.serviceconfig",
     version="1.0.0.0",
     ui_file_paths=[service_directory / "NIDCPowerNIVisaDmmMeasurement.measui"],
 )
@@ -126,9 +127,15 @@ def measure(
         grpc_device_channel = get_grpc_device_channel(
             measurement_service, nidcpower, service_options
         )
-        source_session_info = _get_session_info_for_pin(reservation.session_info, input_pin)
-        measure_session_info = _get_session_info_for_pin(reservation.session_info, output_pin)
-        resource_manager = _visa_helpers.create_resource_manager(service_options.use_simulation)
+        source_session_info = _get_session_info_for_pin(
+            reservation.session_info, input_pin
+        )
+        measure_session_info = _get_session_info_for_pin(
+            reservation.session_info, output_pin
+        )
+        resource_manager = _visa_helpers.create_resource_manager(
+            service_options.use_simulation
+        )
         # Creates NI-DCPower and NI-VISA DMM sessions.
         with _nidcpower_helpers.create_session(
             source_session_info, service_options.use_simulation, grpc_device_channel
@@ -136,7 +143,9 @@ def measure(
             resource_manager, measure_session_info.resource_name
         ) as measure_session:
             pending_cancellation = False
-            _add_cancel_callback(source_session, measurement_service, pending_cancellation)
+            _add_cancel_callback(
+                source_session, measurement_service, pending_cancellation
+            )
 
             assert isinstance(measure_session, pyvisa.resources.MessageBasedResource)
 
@@ -158,12 +167,16 @@ def measure(
             channels.source_delay = hightime.timedelta(seconds=source_delay)
             channels.voltage_level = voltage_level
             with channels.initiate():
-                _wait_for_source_complete_event(measurement_service, channels, pending_cancellation)
+                _wait_for_source_complete_event(
+                    measurement_service, channels, pending_cancellation
+                )
 
             # Configure and measure output pin using NI-VISA DMM
             function_enum = FUNCTION_TO_VALUE[measurement_type]
             resolution_value = RESOLUTION_DIGITS_TO_VALUE[str(resolution_digits)]
-            measure_session.write("CONF:%s %.g,%.g" % (function_enum, range, resolution_value))
+            measure_session.write(
+                "CONF:%s %.g,%.g" % (function_enum, range, resolution_value)
+            )
             check_instrument_error(measure_session)
 
             response = measure_session.query("READ?")
@@ -192,7 +205,9 @@ def _add_cancel_callback(session, measurement_service, pending_cancellation):
     measurement_service.context.add_cancel_callback(cancel_callback)
 
 
-def _wait_for_source_complete_event(measurement_service, channels, pending_cancellation):
+def _wait_for_source_complete_event(
+    measurement_service, channels, pending_cancellation
+):
     deadline = time.time() + measurement_service.context.time_remaining
     while True:
         if time.time() > deadline:
