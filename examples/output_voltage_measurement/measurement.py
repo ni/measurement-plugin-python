@@ -25,7 +25,6 @@ from _helpers import (
 )
 from _visa_helpers import check_instrument_error, log_instrument_id, reset_instrument
 
-
 import ni_measurementlink_service as nims
 
 USE_SIMULATION = True
@@ -136,9 +135,7 @@ def measure(
             resource_manager, measure_session_info.resource_name
         ) as measure_session:
             pending_cancellation = False
-            _add_cancel_callback(
-                source_session, measurement_service, pending_cancellation
-            )
+            _add_cancel_callback(source_session, measurement_service, pending_cancellation)
 
             assert isinstance(measure_session, pyvisa.resources.MessageBasedResource)
 
@@ -163,15 +160,11 @@ def measure(
             # Configure NI-VISA DMM
             function_enum = FUNCTION_TO_VALUE[measurement_type]
             resolution_value = RESOLUTION_DIGITS_TO_VALUE[str(resolution_digits)]
-            measure_session.write(
-                "CONF:%s %.g,%.g" % (function_enum, range, resolution_value)
-            )
+            measure_session.write("CONF:%s %.g,%.g" % (function_enum, range, resolution_value))
             check_instrument_error(measure_session)
-            
+
             with channels.initiate():
-                _wait_for_source_complete_event(
-                    measurement_service, channels, pending_cancellation
-                )
+                _wait_for_source_complete_event(measurement_service, channels, pending_cancellation)
 
             response = measure_session.query("READ?")
             check_instrument_error(measure_session)
@@ -199,9 +192,7 @@ def _add_cancel_callback(session, measurement_service, pending_cancellation):
     measurement_service.context.add_cancel_callback(cancel_callback)
 
 
-def _wait_for_source_complete_event(
-    measurement_service, channels, pending_cancellation
-):
+def _wait_for_source_complete_event(measurement_service, channels, pending_cancellation):
     deadline = time.time() + measurement_service.context.time_remaining
     while True:
         if time.time() > deadline:
