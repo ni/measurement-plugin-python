@@ -1,0 +1,28 @@
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+syntax = "proto3";
+
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+package ni.protobuf.types;
+
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+option csharp_namespace = "NationalInstruments.Protobuf.Types";
+option go_package = "types";
+option java_multiple_files = true;
+option java_outer_classname = "XYDataProto";
+option java_package = "com.ni.protobuf.types";
+option objc_class_prefix = "NIPT";
+option php_namespace = "NI\\PROTOBUF\\TYPES";
+option ruby_package = "NI::Protobuf::Types";
+
+// XYData for a cartesian graph.
+// x_data and y_data should contain the same number of values.
+// If they do not, the smaller-sized array will be used to determine
+// the number of XY points.
+message DoubleXYData
+{
+    repeated double x_data = 1;
+    repeated double y_data = 2;
+}
