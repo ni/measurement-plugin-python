@@ -75,9 +75,9 @@ def test___discovery_service_available___unregister_registered_service___unregis
 def test___discovery_service_available___unregister_non_registered_service___unregistration_failure(
     discovery_client: DiscoveryClient,
 ):
-    unregistration_success_flag = discovery_client.unregister_service()
+    unregistration_failure_flag = discovery_client.unregister_service()
 
-    assert unregistration_success_flag
+    assert unregistration_failure_flag
 
 
 def test___discovery_service_unavailable___register_service_registration_failure(
