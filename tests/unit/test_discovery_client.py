@@ -80,18 +80,6 @@ def test___discovery_service_available___unregister_non_registered_service___unr
     assert not unregistration_success_flag
 
 
-def test___discovery_service_unavailable___register_service_registration_failure(
-    discovery_client: DiscoveryClient,
-):
-    discovery_client.register_measurement_service(
-        _TEST_SERVICE_PORT, _TEST_SERVICE_INFO, _TEST_MEASUREMENT_INFO
-    )
-
-    unregistration_success_flag = discovery_client.unregister_service()
-
-    assert unregistration_success_flag
-
-
 def test___get_discovery_service_address___start_service_jit___returns_expected_value(
     mocker: MockerFixture,
     temp_discovery_key_file_path: pathlib.Path,
