@@ -2,6 +2,7 @@
 """
 import json
 import pathlib
+import subprocess
 from typing import cast
 
 import pytest
@@ -115,7 +116,12 @@ def test___get_discovery_service_address___start_service_jit___returns_expected_
 
     exe_file_path = temp_directory / _MOCK_REGISTRATION_FILE_CONTENT["discovery"]["path"]
 
-    mock_popen.assert_called_once_with([exe_file_path], cwd=exe_file_path.parent)
+    mock_popen.assert_called_once_with(
+        [exe_file_path],
+        cwd=exe_file_path.parent,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+    )
     assert _TEST_SERVICE_PORT in discovery_service_address
 
 
@@ -158,7 +164,35 @@ def test___start_discovery_service___key_file_exist_after_poll___service_start_s
 
     _start_service(exe_file_path, temp_discovery_key_file_path)
 
-    mock_popen.assert_called_once_with([exe_file_path], cwd=exe_file_path.parent)
+    mock_popen.assert_called_once_with(
+        [exe_file_path],
+        cwd=exe_file_path.parent,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+    )
+
+
+def test___discovery_service_exe_unavailable___register_service___registration_failure(
+    mocker: MockerFixture,
+    temp_discovery_key_file_path: pathlib.Path,
+    temp_registration_json_file_path: pathlib.Path,
+):
+    mocker.patch(
+        "ni_measurementlink_service._internal.discovery_client._get_key_file_path",
+        return_value=temp_discovery_key_file_path,
+    )
+    mocker.patch(
+        "ni_measurementlink_service._internal.discovery_client._get_registration_json_file_path",
+        return_value=temp_registration_json_file_path,
+    )
+    mocker.patch("subprocess.Popen", side_effect=FileNotFoundError)
+
+    discovery_client = DiscoveryClient()
+    registration_success_flag = discovery_client.register_measurement_service(
+        _TEST_SERVICE_PORT, _TEST_SERVICE_INFO, _TEST_MEASUREMENT_INFO
+    )
+
+    assert ~registration_success_flag
 
 
 @pytest.fixture
