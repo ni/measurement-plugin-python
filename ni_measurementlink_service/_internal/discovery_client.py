@@ -254,19 +254,27 @@ def _key_file_exists(key_file_path: pathlib.Path) -> bool:
 
 def _start_service(exe_file_path: pathlib.PurePath, key_file_path: pathlib.Path) -> None:
     """Starts the service at the specified path and wait for the service to get up and running."""
-    subprocess.Popen([exe_file_path], cwd=exe_file_path.parent)
-    # After the execution of process, check for key file existence in the path
-    # stop checking after 30 seconds have elapsed and throw error
-    timeout_time = time.time() + _START_SERVICE_TIMEOUT
-    while True:
-        try:
-            with _open_key_file(str(key_file_path)) as _:
-                return
-        except IOError:
-            pass
-        if time.time() >= timeout_time:
-            raise TimeoutError("Timed out waiting for discovery service to start")
-        time.sleep(_START_SERVICE_POLLING_INTERVAL)
+    try:
+        subprocess.Popen(
+            [exe_file_path],
+            cwd=exe_file_path.parent,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        )
+        # After the execution of process, check for key file existence in the path
+        # stop checking after 30 seconds have elapsed and throw error
+        timeout_time = time.time() + _START_SERVICE_TIMEOUT
+        while True:
+            try:
+                with _open_key_file(str(key_file_path)) as _:
+                    return
+            except IOError:
+                pass
+            if time.time() >= timeout_time:
+                raise TimeoutError("Timed out waiting for discovery service to start")
+            time.sleep(_START_SERVICE_POLLING_INTERVAL)
+    except FileNotFoundError:
+       raise Exception
 
 
 def _service_already_running(key_file_path: pathlib.Path) -> bool:
