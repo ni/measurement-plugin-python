@@ -274,7 +274,7 @@ def _start_service(exe_file_path: pathlib.PurePath, key_file_path: pathlib.Path)
                 raise TimeoutError("Timed out waiting for discovery service to start")
             time.sleep(_START_SERVICE_POLLING_INTERVAL)
     except FileNotFoundError:
-       raise Exception
+        raise Exception
 
 
 def _service_already_running(key_file_path: pathlib.Path) -> bool:
