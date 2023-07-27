@@ -192,7 +192,7 @@ def test___discovery_service_exe_unavailable___register_service___registration_f
         _TEST_SERVICE_PORT, _TEST_SERVICE_INFO, _TEST_MEASUREMENT_INFO
     )
 
-    assert registration_success_flag is False
+    assert not registration_success_flag
 
 
 @pytest.fixture
