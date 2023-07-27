@@ -162,6 +162,7 @@ class DiscoveryClient:
                 _logger.info("Successfully unregistered with discovery service.")
             else:
                 _logger.info("Not registered with discovery service.")
+                return False
         except grpc.RpcError as e:
             if e.code() == grpc.StatusCode.UNAVAILABLE:
                 _logger.error(
