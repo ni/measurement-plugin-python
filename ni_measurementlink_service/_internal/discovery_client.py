@@ -257,7 +257,7 @@ def _key_file_exists(key_file_path: pathlib.Path) -> bool:
 
 def _start_service(exe_file_path: pathlib.PurePath, key_file_path: pathlib.Path) -> None:
     """Starts the service at the specified path and wait for the service to get up and running."""
-    global disc_service_subprocess # only to avoid resource warnings about subprocess still running
+    global disc_service_subprocess  # only to avoid resource warnings about subprocess still running
     disc_service_subprocess = subprocess.Popen([exe_file_path], cwd=exe_file_path.parent)
     # After the execution of process, check for key file existence in the path
     # stop checking after 30 seconds have elapsed and throw error
