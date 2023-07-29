@@ -27,9 +27,8 @@ if sys.platform == "win32":
     import winerror
 
 _logger = logging.getLogger(__name__)
-# store sub-process that is running; it's only to avoid
-# "ResourceWarning: subprocess N is still running" from subprocess library
-disc_service_subprocess = None
+# Save Popen object to avoid "ResourceWarning: subprocess N is still running"
+_discovery_service_subprocess: Optional[subprocess.Popen] = None
 
 _START_SERVICE_TIMEOUT = 30.0
 _START_SERVICE_POLLING_INTERVAL = 100e-3
@@ -257,8 +256,8 @@ def _key_file_exists(key_file_path: pathlib.Path) -> bool:
 
 def _start_service(exe_file_path: pathlib.PurePath, key_file_path: pathlib.Path) -> None:
     """Starts the service at the specified path and wait for the service to get up and running."""
-    global disc_service_subprocess  # only to avoid resource warnings about subprocess still running
-    disc_service_subprocess = subprocess.Popen([exe_file_path], cwd=exe_file_path.parent)
+    global _discovery_service_subprocess  # save Popen object to avoid ResourceWarning
+    _discovery_service_subprocess = subprocess.Popen([exe_file_path], cwd=exe_file_path.parent)
     # After the execution of process, check for key file existence in the path
     # stop checking after 30 seconds have elapsed and throw error
     timeout_time = time.time() + _START_SERVICE_TIMEOUT
