@@ -137,6 +137,7 @@ class DiscoveryClient:
             _logger.error(
                 "Unable to register with discovery service. Possible reason: discovery service not running."
             )
+            return False
         except Exception:
             _logger.exception("Error in registering with discovery service.")
             return False
@@ -163,6 +164,7 @@ class DiscoveryClient:
                 _logger.info("Successfully unregistered with discovery service.")
             else:
                 _logger.info("Not registered with discovery service.")
+                return False
         except grpc.RpcError as e:
             if e.code() == grpc.StatusCode.UNAVAILABLE:
                 _logger.error(
@@ -175,6 +177,7 @@ class DiscoveryClient:
             _logger.error(
                 "Unable to unregister with discovery service. Possible reason: discovery service not running."
             )
+            return False
         except Exception:
             _logger.exception("Error in unregistering with discovery service.")
             return False
@@ -257,7 +260,12 @@ def _key_file_exists(key_file_path: pathlib.Path) -> bool:
 def _start_service(exe_file_path: pathlib.PurePath, key_file_path: pathlib.Path) -> None:
     """Starts the service at the specified path and wait for the service to get up and running."""
     global _discovery_service_subprocess  # save Popen object to avoid ResourceWarning
-    _discovery_service_subprocess = subprocess.Popen([exe_file_path], cwd=exe_file_path.parent)
+    _discovery_service_subprocess = subprocess.Popen(
+        [exe_file_path],
+        cwd=exe_file_path.parent,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+    )
     # After the execution of process, check for key file existence in the path
     # stop checking after 30 seconds have elapsed and throw error
     timeout_time = time.time() + _START_SERVICE_TIMEOUT
