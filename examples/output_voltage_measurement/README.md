@@ -1,6 +1,6 @@
 ## Output Voltage Measurement
 
-This is a MeasurementLink example that sources DC voltage as input with an NI SMU and measures output using NI-VISA DMM.
+This is a MeasurementLink example that sources DC voltage as input to the DUT with an NI SMU and measures the DUT output using NI-VISA DMM.
 
 ### Features
 
