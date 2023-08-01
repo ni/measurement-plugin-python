@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ni_measurementlink_service.measurement.info &mdash; ni_measurementlink_service 1.1 documentation</title>
+  <title>ni_measurementlink_service.measurement.info &mdash; ni_measurementlink_service 1.2 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
@@ -37,7 +37,7 @@
             ni_measurementlink_service
           </a>
               <div class="version">
-                1.1.0-dev1
+                1.2.0-dev0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
@@ -65,12 +65,15 @@
 <li class="toctree-l9"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.ServiceInfo"><code class="docutils literal notranslate"><span class="pre">ServiceInfo</span></code></a><ul>
 <li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.ServiceInfo.service_class"><code class="docutils literal notranslate"><span class="pre">ServiceInfo.service_class</span></code></a></li>
 <li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.ServiceInfo.description_url"><code class="docutils literal notranslate"><span class="pre">ServiceInfo.description_url</span></code></a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.ServiceInfo.provided_interfaces"><code class="docutils literal notranslate"><span class="pre">ServiceInfo.provided_interfaces</span></code></a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.ServiceInfo.annotations"><code class="docutils literal notranslate"><span class="pre">ServiceInfo.annotations</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l9"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.TypeSpecialization"><code class="docutils literal notranslate"><span class="pre">TypeSpecialization</span></code></a><ul>
 <li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.TypeSpecialization.NoType"><code class="docutils literal notranslate"><span class="pre">TypeSpecialization.NoType</span></code></a></li>
 <li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.TypeSpecialization.Pin"><code class="docutils literal notranslate"><span class="pre">TypeSpecialization.Pin</span></code></a></li>
 <li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.TypeSpecialization.Path"><code class="docutils literal notranslate"><span class="pre">TypeSpecialization.Path</span></code></a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.TypeSpecialization.Enum"><code class="docutils literal notranslate"><span class="pre">TypeSpecialization.Enum</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l9"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType"><code class="docutils literal notranslate"><span class="pre">DataType</span></code></a><ul>
@@ -84,6 +87,7 @@
 <li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.String"><code class="docutils literal notranslate"><span class="pre">DataType.String</span></code></a></li>
 <li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.Pin"><code class="docutils literal notranslate"><span class="pre">DataType.Pin</span></code></a></li>
 <li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.Path"><code class="docutils literal notranslate"><span class="pre">DataType.Path</span></code></a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.Enum"><code class="docutils literal notranslate"><span class="pre">DataType.Enum</span></code></a></li>
 <li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.Int32Array1D"><code class="docutils literal notranslate"><span class="pre">DataType.Int32Array1D</span></code></a></li>
 <li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.Int64Array1D"><code class="docutils literal notranslate"><span class="pre">DataType.Int64Array1D</span></code></a></li>
 <li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.UInt32Array1D"><code class="docutils literal notranslate"><span class="pre">DataType.UInt32Array1D</span></code></a></li>
@@ -94,6 +98,7 @@
 <li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.StringArray1D"><code class="docutils literal notranslate"><span class="pre">DataType.StringArray1D</span></code></a></li>
 <li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.PinArray1D"><code class="docutils literal notranslate"><span class="pre">DataType.PinArray1D</span></code></a></li>
 <li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.PathArray1D"><code class="docutils literal notranslate"><span class="pre">DataType.PathArray1D</span></code></a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.EnumArray1D"><code class="docutils literal notranslate"><span class="pre">DataType.EnumArray1D</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l9"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.MeasurementInfo">MeasurementInfo</a></li>
@@ -102,6 +107,7 @@
 <li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.TypeSpecialization.NoType">NoType</a></li>
 <li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.TypeSpecialization.Pin">Pin</a></li>
 <li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.TypeSpecialization.Path">Path</a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.TypeSpecialization.Enum">Enum</a></li>
 </ul>
 </li>
 <li class="toctree-l9"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType">DataType</a><ul>
@@ -115,6 +121,7 @@
 <li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.String">String</a></li>
 <li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.Pin">Pin</a></li>
 <li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.Path">Path</a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.Enum">Enum</a></li>
 <li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.Int32Array1D">Int32Array1D</a></li>
 <li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.Int64Array1D">Int64Array1D</a></li>
 <li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.UInt32Array1D">UInt32Array1D</a></li>
@@ -125,6 +132,7 @@
 <li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.StringArray1D">StringArray1D</a></li>
 <li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.PinArray1D">PinArray1D</a></li>
 <li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.PathArray1D">PathArray1D</a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.EnumArray1D">EnumArray1D</a></li>
 </ul>
 </li>
 </ul>
@@ -241,6 +249,12 @@ maintain versions of a measurement in future.</p>
 Measurements under same service class expected to perform same logic.
 For e.g., different version of measurement can come under same service class.</p>
 <p>description_url (str): Description URL of the measurement.</p>
+<p>provided_interfaces (List[str]): List of interfaces the service provides.
+For e.g., ni.measurementlink.measurement.v2.MeasurementService.
+Defaults to [“ni.measurementlink.measurement.v1.MeasurementService”].</p>
+<p>annotations (Dict[str,str]): Dict that contains extra information of the measurement.
+As default we added a (str) description, (str) collection and a (List[str]) list of tags.
+Feel free to add your own Annotations as needed.</p>
 </div></blockquote>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ni_measurementlink_service.measurement.info.ServiceInfo.service_class">
@@ -250,6 +264,16 @@ For e.g., different version of measurement can come under same service class.</p
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ni_measurementlink_service.measurement.info.ServiceInfo.description_url">
 <span class="sig-name descname"><span class="pre">description_url</span></span><em class="property"><span class="w"> </span><span class="pre">:str</span></em><a class="headerlink" href="#ni_measurementlink_service.measurement.info.ServiceInfo.description_url" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ni_measurementlink_service.measurement.info.ServiceInfo.provided_interfaces">
+<span class="sig-name descname"><span class="pre">provided_interfaces</span></span><em class="property"><span class="w"> </span><span class="pre">:List[str]</span> <span class="pre">=</span> <span class="pre">['ni.measurementlink.measurement.v1.MeasurementService']</span></em><a class="headerlink" href="#ni_measurementlink_service.measurement.info.ServiceInfo.provided_interfaces" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ni_measurementlink_service.measurement.info.ServiceInfo.annotations">
+<span class="sig-name descname"><span class="pre">annotations</span></span><em class="property"><span class="w"> </span><span class="pre">:Dict[str,</span> <span class="pre">str]</span></em><a class="headerlink" href="#ni_measurementlink_service.measurement.info.ServiceInfo.annotations" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </section>
@@ -273,6 +297,11 @@ For e.g., different version of measurement can come under same service class.</p
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ni_measurementlink_service.measurement.info.TypeSpecialization.Path">
 <span class="sig-name descname"><span class="pre">Path</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">path</span></em><a class="headerlink" href="#ni_measurementlink_service.measurement.info.TypeSpecialization.Path" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ni_measurementlink_service.measurement.info.TypeSpecialization.Enum">
+<span class="sig-name descname"><span class="pre">Enum</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">enum</span></em><a class="headerlink" href="#ni_measurementlink_service.measurement.info.TypeSpecialization.Enum" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -333,6 +362,11 @@ For e.g., different version of measurement can come under same service class.</p
 <dd></dd></dl>
 
 <dl class="py attribute">
+<dt class="sig sig-object py" id="ni_measurementlink_service.measurement.info.DataType.Enum">
+<span class="sig-name descname"><span class="pre">Enum</span></span><a class="headerlink" href="#ni_measurementlink_service.measurement.info.DataType.Enum" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
 <dt class="sig sig-object py" id="ni_measurementlink_service.measurement.info.DataType.Int32Array1D">
 <span class="sig-name descname"><span class="pre">Int32Array1D</span></span><a class="headerlink" href="#ni_measurementlink_service.measurement.info.DataType.Int32Array1D" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
@@ -380,6 +414,11 @@ For e.g., different version of measurement can come under same service class.</p
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ni_measurementlink_service.measurement.info.DataType.PathArray1D">
 <span class="sig-name descname"><span class="pre">PathArray1D</span></span><a class="headerlink" href="#ni_measurementlink_service.measurement.info.DataType.PathArray1D" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ni_measurementlink_service.measurement.info.DataType.EnumArray1D">
+<span class="sig-name descname"><span class="pre">EnumArray1D</span></span><a class="headerlink" href="#ni_measurementlink_service.measurement.info.DataType.EnumArray1D" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>

@@ -16,5 +16,6 @@ Subpackages
    :maxdepth: 3
 
    measurementlink/index.rst
+   protobuf/index.rst
 
 

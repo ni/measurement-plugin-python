@@ -69,7 +69,16 @@ Classes
        Measurements under same service class expected to perform same logic.
        For e.g., different version of measurement can come under same service class.
 
+
        description_url (str): Description URL of the measurement.
+
+       provided_interfaces (List[str]): List of interfaces the service provides.
+       For e.g., ni.measurementlink.measurement.v2.MeasurementService.
+       Defaults to ["ni.measurementlink.measurement.v1.MeasurementService"].
+
+       annotations (Dict[str,str]): Dict that contains extra information of the measurement.
+       As default we added a (str) description, (str) collection and a (List[str]) list of tags.
+       Feel free to add your own Annotations as needed.
 
 
    .. py:attribute:: service_class
@@ -79,6 +88,16 @@ Classes
 
    .. py:attribute:: description_url
       :annotation: :str
+
+      
+
+   .. py:attribute:: provided_interfaces
+      :annotation: :List[str] = ['ni.measurementlink.measurement.v1.MeasurementService']
+
+      
+
+   .. py:attribute:: annotations
+      :annotation: :Dict[str, str]
 
       
 
@@ -101,6 +120,11 @@ Classes
 
    .. py:attribute:: Path
       :annotation: = path
+
+      
+
+   .. py:attribute:: Enum
+      :annotation: = enum
 
       
 
@@ -161,6 +185,11 @@ Classes
 
       
 
+   .. py:attribute:: Enum
+      
+
+      
+
    .. py:attribute:: Int32Array1D
       
 
@@ -207,6 +236,11 @@ Classes
       
 
    .. py:attribute:: PathArray1D
+      
+
+      
+
+   .. py:attribute:: EnumArray1D
       
 
       

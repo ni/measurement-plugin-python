@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ni_measurementlink_service._internal.grpc_servicer &mdash; ni_measurementlink_service 1.1 documentation</title>
+  <title>ni_measurementlink_service._internal.grpc_servicer &mdash; ni_measurementlink_service 1.2 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
@@ -34,7 +34,7 @@
             ni_measurementlink_service
           </a>
               <div class="version">
-                1.1.0-dev1
+                1.2.0-dev0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -99,34 +99,37 @@
     <span class="n">measurement_service_pb2_grpc</span> <span class="k">as</span> <span class="n">v2_measurement_service_pb2_grpc</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">ni_measurementlink_service.measurement.info</span> <span class="kn">import</span> <span class="n">MeasurementInfo</span>
+<span class="kn">from</span> <span class="nn">ni_measurementlink_service.session_management</span> <span class="kn">import</span> <span class="n">PinMapContext</span>
 
 
 <div class="viewcode-block" id="MeasurementServiceContext"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/_internal/grpc_servicer/index.html#ni_measurementlink_service._internal.grpc_servicer.MeasurementServiceContext">[docs]</a><span class="k">class</span> <span class="nc">MeasurementServiceContext</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Accessor for the Measurement Service&#39;s context-local state.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">grpc_context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">,</span> <span class="n">pin_map_context</span><span class="p">:</span> <span class="n">pin_map_context_pb2</span><span class="o">.</span><span class="n">PinMapContext</span>
-    <span class="p">):</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">grpc_context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">,</span>
+        <span class="n">pin_map_context</span><span class="p">:</span> <span class="n">PinMapContext</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the Measurement Service Context.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_grpc_context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span> <span class="o">=</span> <span class="n">grpc_context</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_pin_map_context</span><span class="p">:</span> <span class="n">pin_map_context_pb2</span><span class="o">.</span><span class="n">PinMapContext</span> <span class="o">=</span> <span class="n">pin_map_context</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pin_map_context</span><span class="p">:</span> <span class="n">PinMapContext</span> <span class="o">=</span> <span class="n">pin_map_context</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_is_complete</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
 
-<div class="viewcode-block" id="MeasurementServiceContext.mark_complete"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/_internal/grpc_servicer/index.html#ni_measurementlink_service._internal.grpc_servicer.MeasurementServiceContext.mark_complete">[docs]</a>    <span class="k">def</span> <span class="nf">mark_complete</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="MeasurementServiceContext.mark_complete"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/_internal/grpc_servicer/index.html#ni_measurementlink_service._internal.grpc_servicer.MeasurementServiceContext.mark_complete">[docs]</a>    <span class="k">def</span> <span class="nf">mark_complete</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Mark the current RPC as complete.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_is_complete</span> <span class="o">=</span> <span class="kc">True</span></div>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">grpc_context</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">grpc_context</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the context for the RPC.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_grpc_context</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">pin_map_context</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">pin_map_context</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PinMapContext</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the pin map context for the RPC.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pin_map_context</span>
 
-<div class="viewcode-block" id="MeasurementServiceContext.add_cancel_callback"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/_internal/grpc_servicer/index.html#ni_measurementlink_service._internal.grpc_servicer.MeasurementServiceContext.add_cancel_callback">[docs]</a>    <span class="k">def</span> <span class="nf">add_cancel_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cancel_callback</span><span class="p">:</span> <span class="n">Callable</span><span class="p">):</span>
+<div class="viewcode-block" id="MeasurementServiceContext.add_cancel_callback"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/_internal/grpc_servicer/index.html#ni_measurementlink_service._internal.grpc_servicer.MeasurementServiceContext.add_cancel_callback">[docs]</a>    <span class="k">def</span> <span class="nf">add_cancel_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cancel_callback</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[],</span> <span class="kc">None</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a callback that is invoked when the RPC is canceled.&quot;&quot;&quot;</span>
 
         <span class="k">def</span> <span class="nf">grpc_callback</span><span class="p">():</span>
@@ -135,17 +138,17 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_grpc_context</span><span class="o">.</span><span class="n">add_callback</span><span class="p">(</span><span class="n">grpc_callback</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="MeasurementServiceContext.cancel"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/_internal/grpc_servicer/index.html#ni_measurementlink_service._internal.grpc_servicer.MeasurementServiceContext.cancel">[docs]</a>    <span class="k">def</span> <span class="nf">cancel</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="MeasurementServiceContext.cancel"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/_internal/grpc_servicer/index.html#ni_measurementlink_service._internal.grpc_servicer.MeasurementServiceContext.cancel">[docs]</a>    <span class="k">def</span> <span class="nf">cancel</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Cancel the RPC.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_complete</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_grpc_context</span><span class="o">.</span><span class="n">cancel</span><span class="p">()</span></div>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">time_remaining</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">time_remaining</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the time remaining for the RPC.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_grpc_context</span><span class="o">.</span><span class="n">time_remaining</span><span class="p">()</span>
 
-<div class="viewcode-block" id="MeasurementServiceContext.abort"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/_internal/grpc_servicer/index.html#ni_measurementlink_service._internal.grpc_servicer.MeasurementServiceContext.abort">[docs]</a>    <span class="k">def</span> <span class="nf">abort</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code</span><span class="p">,</span> <span class="n">details</span><span class="p">):</span>
+<div class="viewcode-block" id="MeasurementServiceContext.abort"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/_internal/grpc_servicer/index.html#ni_measurementlink_service._internal.grpc_servicer.MeasurementServiceContext.abort">[docs]</a>    <span class="k">def</span> <span class="nf">abort</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">StatusCode</span><span class="p">,</span> <span class="n">details</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Aborts the RPC.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_grpc_context</span><span class="o">.</span><span class="n">abort</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="n">details</span><span class="p">)</span></div></div>
 
@@ -153,6 +156,18 @@
 <span class="n">measurement_service_context</span><span class="p">:</span> <span class="n">ContextVar</span><span class="p">[</span><span class="n">MeasurementServiceContext</span><span class="p">]</span> <span class="o">=</span> <span class="n">ContextVar</span><span class="p">(</span>
     <span class="s2">&quot;measurement_service_context&quot;</span>
 <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_convert_pin_map_context_from_grpc</span><span class="p">(</span>
+    <span class="n">grpc_pin_map_context</span><span class="p">:</span> <span class="n">pin_map_context_pb2</span><span class="o">.</span><span class="n">PinMapContext</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PinMapContext</span><span class="p">:</span>
+    <span class="c1"># The protobuf PinMapContext sites field is a RepeatedScalarContainer, not a list.</span>
+    <span class="c1"># Constructing a protobuf PinMapContext with sites=None sets sites to an empty</span>
+    <span class="c1"># RepeatedScalarContainer, not None.</span>
+    <span class="k">return</span> <span class="n">PinMapContext</span><span class="p">(</span>
+        <span class="n">pin_map_id</span><span class="o">=</span><span class="n">grpc_pin_map_context</span><span class="o">.</span><span class="n">pin_map_id</span><span class="p">,</span>
+        <span class="n">sites</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">grpc_pin_map_context</span><span class="o">.</span><span class="n">sites</span><span class="p">),</span>
+    <span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">_get_mapping_by_parameter_name</span><span class="p">(</span>
@@ -306,9 +321,8 @@
         <span class="n">mapping_by_variable_name</span> <span class="o">=</span> <span class="n">_get_mapping_by_parameter_name</span><span class="p">(</span>
             <span class="n">mapping_by_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">measure_function</span>
         <span class="p">)</span>
-        <span class="n">token</span> <span class="o">=</span> <span class="n">measurement_service_context</span><span class="o">.</span><span class="n">set</span><span class="p">(</span>
-            <span class="n">MeasurementServiceContext</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">pin_map_context</span><span class="p">)</span>
-        <span class="p">)</span>
+        <span class="n">pin_map_context</span> <span class="o">=</span> <span class="n">_convert_pin_map_context_from_grpc</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">pin_map_context</span><span class="p">)</span>
+        <span class="n">token</span> <span class="o">=</span> <span class="n">measurement_service_context</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">MeasurementServiceContext</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">pin_map_context</span><span class="p">))</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">return_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">measure_function</span><span class="p">(</span><span class="o">**</span><span class="n">mapping_by_variable_name</span><span class="p">)</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">return_value</span><span class="p">,</span> <span class="n">collections</span><span class="o">.</span><span class="n">abc</span><span class="o">.</span><span class="n">Generator</span><span class="p">):</span>
@@ -395,8 +409,8 @@
 
         <span class="c1"># Measurement Parameters</span>
         <span class="n">measurement_signature</span> <span class="o">=</span> <span class="n">v2_measurement_service_pb2</span><span class="o">.</span><span class="n">MeasurementSignature</span><span class="p">(</span>
-            <span class="n">configuration_parameters_message_type</span><span class="o">=</span><span class="s2">&quot;ni.measurementlink.measurement.v1.MeasurementConfigurations&quot;</span><span class="p">,</span>
-            <span class="n">outputs_message_type</span><span class="o">=</span><span class="s2">&quot;ni.measurementlink.measurement.v1.MeasurementOutputs&quot;</span><span class="p">,</span>
+            <span class="n">configuration_parameters_message_type</span><span class="o">=</span><span class="s2">&quot;ni.measurementlink.measurement.v2.MeasurementConfigurations&quot;</span><span class="p">,</span>
+            <span class="n">outputs_message_type</span><span class="o">=</span><span class="s2">&quot;ni.measurementlink.measurement.v2.MeasurementOutputs&quot;</span><span class="p">,</span>
         <span class="p">)</span>
 
         <span class="c1"># Configurations</span>
@@ -421,6 +435,7 @@
             <span class="n">output_parameter</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">output_metadata</span><span class="o">.</span><span class="n">display_name</span>
             <span class="n">output_parameter</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">output_metadata</span><span class="o">.</span><span class="n">type</span>
             <span class="n">output_parameter</span><span class="o">.</span><span class="n">repeated</span> <span class="o">=</span> <span class="n">output_metadata</span><span class="o">.</span><span class="n">repeated</span>
+            <span class="n">output_parameter</span><span class="o">.</span><span class="n">annotations</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">output_metadata</span><span class="o">.</span><span class="n">annotations</span><span class="p">)</span>
             <span class="n">measurement_signature</span><span class="o">.</span><span class="n">outputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">output_parameter</span><span class="p">)</span>
 
         <span class="c1"># Sending back Response</span>
@@ -450,9 +465,8 @@
         <span class="n">mapping_by_variable_name</span> <span class="o">=</span> <span class="n">_get_mapping_by_parameter_name</span><span class="p">(</span>
             <span class="n">mapping_by_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">measure_function</span>
         <span class="p">)</span>
-        <span class="n">token</span> <span class="o">=</span> <span class="n">measurement_service_context</span><span class="o">.</span><span class="n">set</span><span class="p">(</span>
-            <span class="n">MeasurementServiceContext</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">pin_map_context</span><span class="p">)</span>
-        <span class="p">)</span>
+        <span class="n">pin_map_context</span> <span class="o">=</span> <span class="n">_convert_pin_map_context_from_grpc</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">pin_map_context</span><span class="p">)</span>
+        <span class="n">token</span> <span class="o">=</span> <span class="n">measurement_service_context</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">MeasurementServiceContext</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">pin_map_context</span><span class="p">))</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">return_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">measure_function</span><span class="p">(</span><span class="o">**</span><span class="n">mapping_by_variable_name</span><span class="p">)</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">return_value</span><span class="p">,</span> <span class="n">collections</span><span class="o">.</span><span class="n">abc</span><span class="o">.</span><span class="n">Generator</span><span class="p">):</span>

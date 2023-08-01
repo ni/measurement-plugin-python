@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ni_measurementlink_service._internal.discovery_client &mdash; ni_measurementlink_service 1.1 documentation</title>
+  <title>ni_measurementlink_service._internal.discovery_client &mdash; ni_measurementlink_service 1.2 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
@@ -34,7 +34,7 @@
             ni_measurementlink_service
           </a>
               <div class="version">
-                1.1.0-dev1
+                1.2.0-dev0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -79,7 +79,9 @@
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">pathlib</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
 <span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">typing</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
 
@@ -99,13 +101,12 @@
     <span class="kn">import</span> <span class="nn">win32file</span>
     <span class="kn">import</span> <span class="nn">winerror</span>
 
-
-<span class="n">_PROVIDED_MEASUREMENT_SERVICES</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;ni.measurementlink.measurement.v1.MeasurementService&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;ni.measurementlink.measurement.v2.MeasurementService&quot;</span><span class="p">,</span>
-<span class="p">]</span>
-
 <span class="n">_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+<span class="c1"># Save Popen object to avoid &quot;ResourceWarning: subprocess N is still running&quot;</span>
+<span class="n">_discovery_service_subprocess</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+<span class="n">_START_SERVICE_TIMEOUT</span> <span class="o">=</span> <span class="mf">30.0</span>
+<span class="n">_START_SERVICE_POLLING_INTERVAL</span> <span class="o">=</span> <span class="mf">100e-3</span>
 
 
 <div class="viewcode-block" id="ServiceLocation"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/_internal/discovery_client/index.html#ni_measurementlink_service._internal.discovery_client.ServiceLocation">[docs]</a><span class="k">class</span> <span class="nc">ServiceLocation</span><span class="p">(</span><span class="n">typing</span><span class="o">.</span><span class="n">NamedTuple</span><span class="p">):</span>
@@ -138,7 +139,9 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stub</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">discovery_service_pb2_grpc</span><span class="o">.</span><span class="n">DiscoveryServiceStub</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">stub</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">discovery_service_pb2_grpc</span><span class="o">.</span><span class="n">DiscoveryServiceStub</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the Discovery Client with provided registry service stub.</span>
 
 <span class="sd">        Args:</span>
@@ -186,7 +189,8 @@
             <span class="n">service_descriptor</span><span class="o">.</span><span class="n">display_name</span> <span class="o">=</span> <span class="n">measurement_info</span><span class="o">.</span><span class="n">display_name</span>
             <span class="n">service_descriptor</span><span class="o">.</span><span class="n">service_class</span> <span class="o">=</span> <span class="n">service_info</span><span class="o">.</span><span class="n">service_class</span>
             <span class="n">service_descriptor</span><span class="o">.</span><span class="n">description_url</span> <span class="o">=</span> <span class="n">service_info</span><span class="o">.</span><span class="n">description_url</span>
-            <span class="n">service_descriptor</span><span class="o">.</span><span class="n">provided_interfaces</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">_PROVIDED_MEASUREMENT_SERVICES</span><span class="p">)</span>
+            <span class="n">service_descriptor</span><span class="o">.</span><span class="n">provided_interfaces</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">service_info</span><span class="o">.</span><span class="n">provided_interfaces</span><span class="p">)</span>
+            <span class="n">service_descriptor</span><span class="o">.</span><span class="n">annotations</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">service_info</span><span class="o">.</span><span class="n">annotations</span><span class="p">)</span>
 
             <span class="c1"># Registration Request Creation</span>
             <span class="n">request</span> <span class="o">=</span> <span class="n">discovery_service_pb2</span><span class="o">.</span><span class="n">RegisterServiceRequest</span><span class="p">(</span>
@@ -208,6 +212,7 @@
             <span class="n">_logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
                 <span class="s2">&quot;Unable to register with discovery service. Possible reason: discovery service not running.&quot;</span>
             <span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span>
         <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
             <span class="n">_logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Error in registering with discovery service.&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="kc">False</span>
@@ -234,6 +239,7 @@
                 <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Successfully unregistered with discovery service.&quot;</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Not registered with discovery service.&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="kc">False</span>
         <span class="k">except</span> <span class="n">grpc</span><span class="o">.</span><span class="n">RpcError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">code</span><span class="p">()</span> <span class="o">==</span> <span class="n">grpc</span><span class="o">.</span><span class="n">StatusCode</span><span class="o">.</span><span class="n">UNAVAILABLE</span><span class="p">:</span>
                 <span class="n">_logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
@@ -246,6 +252,7 @@
             <span class="n">_logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
                 <span class="s2">&quot;Unable to unregister with discovery service. Possible reason: discovery service not running.&quot;</span>
             <span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span>
         <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
             <span class="n">_logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Error in unregistering with discovery service.&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="kc">False</span>
@@ -285,10 +292,82 @@
 
 <span class="k">def</span> <span class="nf">_get_discovery_service_address</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="n">key_file_path</span> <span class="o">=</span> <span class="n">_get_key_file_path</span><span class="p">()</span>
+    <span class="n">_ensure_discovery_service_started</span><span class="p">(</span><span class="n">key_file_path</span><span class="p">)</span>
     <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Discovery service key file path: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">key_file_path</span><span class="p">)</span>
     <span class="k">with</span> <span class="n">_open_key_file</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">key_file_path</span><span class="p">))</span> <span class="k">as</span> <span class="n">key_file</span><span class="p">:</span>
         <span class="n">key_json</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">key_file</span><span class="p">)</span>
         <span class="k">return</span> <span class="s2">&quot;localhost:&quot;</span> <span class="o">+</span> <span class="n">key_json</span><span class="p">[</span><span class="s2">&quot;InsecurePort&quot;</span><span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">_ensure_discovery_service_started</span><span class="p">(</span><span class="n">key_file_path</span><span class="p">:</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check whether discovery service already running, if not start the discovery service.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">_service_already_running</span><span class="p">(</span><span class="n">key_file_path</span><span class="p">):</span>
+        <span class="k">return</span>
+
+    <span class="n">exe_file_path</span> <span class="o">=</span> <span class="n">_get_discovery_service_location</span><span class="p">()</span>
+    <span class="n">_start_service</span><span class="p">(</span><span class="n">exe_file_path</span><span class="p">,</span> <span class="n">key_file_path</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_get_discovery_service_location</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">PurePath</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Gets the location of the discovery service process executable.&quot;&quot;&quot;</span>
+    <span class="n">registration_json_path</span> <span class="o">=</span> <span class="n">_get_registration_json_file_path</span><span class="p">()</span>
+    <span class="n">registration_json_obj</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">registration_json_path</span><span class="o">.</span><span class="n">read_text</span><span class="p">())</span>
+    <span class="k">return</span> <span class="n">registration_json_path</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="n">registration_json_obj</span><span class="p">[</span><span class="s2">&quot;discovery&quot;</span><span class="p">][</span><span class="s2">&quot;path&quot;</span><span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">_get_registration_json_file_path</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span> <span class="o">==</span> <span class="s2">&quot;win32&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;ProgramW6432&quot;</span><span class="p">])</span>
+            <span class="o">/</span> <span class="s2">&quot;National Instruments&quot;</span>
+            <span class="o">/</span> <span class="s2">&quot;Shared&quot;</span>
+            <span class="o">/</span> <span class="s2">&quot;MeasurementLink&quot;</span>
+            <span class="o">/</span> <span class="s2">&quot;MeasurementLinkServices.json&quot;</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Platform not supported&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_key_file_exists</span><span class="p">(</span><span class="n">key_file_path</span><span class="p">:</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">key_file_path</span><span class="o">.</span><span class="n">is_file</span><span class="p">()</span> <span class="ow">and</span> <span class="n">key_file_path</span><span class="o">.</span><span class="n">stat</span><span class="p">()</span><span class="o">.</span><span class="n">st_size</span> <span class="o">&gt;</span> <span class="mi">0</span>
+
+
+<span class="k">def</span> <span class="nf">_start_service</span><span class="p">(</span><span class="n">exe_file_path</span><span class="p">:</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">PurePath</span><span class="p">,</span> <span class="n">key_file_path</span><span class="p">:</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Starts the service at the specified path and wait for the service to get up and running.&quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">_discovery_service_subprocess</span>  <span class="c1"># save Popen object to avoid ResourceWarning</span>
+    <span class="n">_discovery_service_subprocess</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span>
+        <span class="p">[</span><span class="n">exe_file_path</span><span class="p">],</span>
+        <span class="n">cwd</span><span class="o">=</span><span class="n">exe_file_path</span><span class="o">.</span><span class="n">parent</span><span class="p">,</span>
+        <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">DEVNULL</span><span class="p">,</span>
+        <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">DEVNULL</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="c1"># After the execution of process, check for key file existence in the path</span>
+    <span class="c1"># stop checking after 30 seconds have elapsed and throw error</span>
+    <span class="n">timeout_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">+</span> <span class="n">_START_SERVICE_TIMEOUT</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">_open_key_file</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">key_file_path</span><span class="p">))</span> <span class="k">as</span> <span class="n">_</span><span class="p">:</span>
+                <span class="k">return</span>
+        <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="k">if</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="n">timeout_time</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TimeoutError</span><span class="p">(</span><span class="s2">&quot;Timed out waiting for discovery service to start&quot;</span><span class="p">)</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">_START_SERVICE_POLLING_INTERVAL</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_service_already_running</span><span class="p">(</span><span class="n">key_file_path</span><span class="p">:</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">_delete_existing_key_file</span><span class="p">(</span><span class="n">key_file_path</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">return</span> <span class="kc">False</span>
+
+
+<span class="k">def</span> <span class="nf">_delete_existing_key_file</span><span class="p">(</span><span class="n">key_file_path</span><span class="p">:</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">_key_file_exists</span><span class="p">(</span><span class="n">key_file_path</span><span class="p">):</span>
+        <span class="k">with</span> <span class="n">key_file_path</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">_</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="n">key_file_path</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>
 
 
 <span class="k">def</span> <span class="nf">_get_key_file_path</span><span class="p">(</span><span class="n">cluster_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">:</span>

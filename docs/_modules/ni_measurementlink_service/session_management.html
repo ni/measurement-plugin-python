@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ni_measurementlink_service.session_management &mdash; ni_measurementlink_service 1.1 documentation</title>
+  <title>ni_measurementlink_service.session_management &mdash; ni_measurementlink_service 1.2 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -34,7 +34,7 @@
             ni_measurementlink_service
           </a>
               <div class="version">
-                1.1.0-dev1
+                1.2.0-dev0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -74,10 +74,16 @@
              
   <h1>Source code for ni_measurementlink_service.session_management</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Contains methods related to managing driver sessions.&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span> <span class="nn">abc</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
 <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">cached_property</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">NamedTuple</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">TypeVar</span>
+<span class="kn">from</span> <span class="nn">types</span> <span class="kn">import</span> <span class="n">TracebackType</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">NamedTuple</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">TypeVar</span>
 
 <span class="kn">import</span> <span class="nn">grpc</span>
+<span class="kn">from</span> <span class="nn">deprecation</span> <span class="kn">import</span> <span class="n">DeprecatedWarning</span>
 
 <span class="kn">from</span> <span class="nn">ni_measurementlink_service._internal.stubs</span> <span class="kn">import</span> <span class="n">session_pb2</span>
 <span class="kn">from</span> <span class="nn">ni_measurementlink_service._internal.stubs.ni.measurementlink</span> <span class="kn">import</span> <span class="p">(</span>
@@ -115,10 +121,10 @@
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
-<span class="sd">        pin_map_id (str): The resource id of the pin map in the Pin Map service that should be used</span>
-<span class="sd">            for the call.</span>
+<span class="sd">        pin_map_id: The resource id of the pin map in the Pin Map service that should be used for</span>
+<span class="sd">            the call.</span>
 
-<span class="sd">        sites (list): List of site numbers being used for the call. If None, use all sites in the</span>
+<span class="sd">        sites: List of site numbers being used for the call. If None or empty, use all sites in the</span>
 <span class="sd">            pin map.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -184,77 +190,145 @@
     <span class="n">channel_mappings</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">ChannelMapping</span><span class="p">]</span></div>
 
 
+<span class="k">def</span> <span class="nf">_convert_channel_mapping_from_grpc</span><span class="p">(</span>
+    <span class="n">channel_mapping</span><span class="p">:</span> <span class="n">session_management_service_pb2</span><span class="o">.</span><span class="n">ChannelMapping</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ChannelMapping</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">ChannelMapping</span><span class="p">(</span>
+        <span class="n">pin_or_relay_name</span><span class="o">=</span><span class="n">channel_mapping</span><span class="o">.</span><span class="n">pin_or_relay_name</span><span class="p">,</span>
+        <span class="n">site</span><span class="o">=</span><span class="n">channel_mapping</span><span class="o">.</span><span class="n">site</span><span class="p">,</span>
+        <span class="n">channel</span><span class="o">=</span><span class="n">channel_mapping</span><span class="o">.</span><span class="n">channel</span><span class="p">,</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_convert_channel_mapping_to_grpc</span><span class="p">(</span>
+    <span class="n">channel_mapping</span><span class="p">:</span> <span class="n">ChannelMapping</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">session_management_service_pb2</span><span class="o">.</span><span class="n">ChannelMapping</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">session_management_service_pb2</span><span class="o">.</span><span class="n">ChannelMapping</span><span class="p">(</span>
+        <span class="n">pin_or_relay_name</span><span class="o">=</span><span class="n">channel_mapping</span><span class="o">.</span><span class="n">pin_or_relay_name</span><span class="p">,</span>
+        <span class="n">site</span><span class="o">=</span><span class="n">channel_mapping</span><span class="o">.</span><span class="n">site</span><span class="p">,</span>
+        <span class="n">channel</span><span class="o">=</span><span class="n">channel_mapping</span><span class="o">.</span><span class="n">channel</span><span class="p">,</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_convert_session_info_from_grpc</span><span class="p">(</span>
+    <span class="n">session_info</span><span class="p">:</span> <span class="n">session_management_service_pb2</span><span class="o">.</span><span class="n">SessionInformation</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SessionInformation</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">SessionInformation</span><span class="p">(</span>
+        <span class="n">session_name</span><span class="o">=</span><span class="n">session_info</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+        <span class="n">resource_name</span><span class="o">=</span><span class="n">session_info</span><span class="o">.</span><span class="n">resource_name</span><span class="p">,</span>
+        <span class="n">channel_list</span><span class="o">=</span><span class="n">session_info</span><span class="o">.</span><span class="n">channel_list</span><span class="p">,</span>
+        <span class="n">instrument_type_id</span><span class="o">=</span><span class="n">session_info</span><span class="o">.</span><span class="n">instrument_type_id</span><span class="p">,</span>
+        <span class="n">session_exists</span><span class="o">=</span><span class="n">session_info</span><span class="o">.</span><span class="n">session_exists</span><span class="p">,</span>
+        <span class="n">channel_mappings</span><span class="o">=</span><span class="p">[</span>
+            <span class="n">_convert_channel_mapping_from_grpc</span><span class="p">(</span><span class="n">m</span><span class="p">)</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">session_info</span><span class="o">.</span><span class="n">channel_mappings</span>
+        <span class="p">],</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_convert_session_info_to_grpc</span><span class="p">(</span>
+    <span class="n">session_info</span><span class="p">:</span> <span class="n">SessionInformation</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">session_management_service_pb2</span><span class="o">.</span><span class="n">SessionInformation</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">session_management_service_pb2</span><span class="o">.</span><span class="n">SessionInformation</span><span class="p">(</span>
+        <span class="n">session</span><span class="o">=</span><span class="n">session_pb2</span><span class="o">.</span><span class="n">Session</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">session_info</span><span class="o">.</span><span class="n">session_name</span><span class="p">),</span>
+        <span class="n">resource_name</span><span class="o">=</span><span class="n">session_info</span><span class="o">.</span><span class="n">resource_name</span><span class="p">,</span>
+        <span class="n">channel_list</span><span class="o">=</span><span class="n">session_info</span><span class="o">.</span><span class="n">channel_list</span><span class="p">,</span>
+        <span class="n">instrument_type_id</span><span class="o">=</span><span class="n">session_info</span><span class="o">.</span><span class="n">instrument_type_id</span><span class="p">,</span>
+        <span class="n">session_exists</span><span class="o">=</span><span class="n">session_info</span><span class="o">.</span><span class="n">session_exists</span><span class="p">,</span>
+        <span class="n">channel_mappings</span><span class="o">=</span><span class="p">[</span>
+            <span class="n">_convert_channel_mapping_to_grpc</span><span class="p">(</span><span class="n">m</span><span class="p">)</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">session_info</span><span class="o">.</span><span class="n">channel_mappings</span>
+        <span class="p">],</span>
+    <span class="p">)</span>
+
+
 <span class="c1"># Eventually, this can be replaced with typing.Self (Python &gt;= 3.11).</span>
-<span class="n">_TReservation</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">&quot;_TReservation&quot;</span><span class="p">,</span> <span class="n">bound</span><span class="o">=</span><span class="s2">&quot;Reservation&quot;</span><span class="p">)</span>
+<span class="n">_TReservation</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">&quot;_TReservation&quot;</span><span class="p">,</span> <span class="n">bound</span><span class="o">=</span><span class="s2">&quot;BaseReservation&quot;</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="Reservation"><a class="viewcode-back" href="../../autoapi/ni_measurementlink_service/session_management/index.html#ni_measurementlink_service.session_management.Reservation">[docs]</a><span class="k">class</span> <span class="nc">Reservation</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Manage session reservation.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="BaseReservation"><a class="viewcode-back" href="../../autoapi/ni_measurementlink_service/session_management/index.html#ni_measurementlink_service.session_management.BaseReservation">[docs]</a><span class="k">class</span> <span class="nc">BaseReservation</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Manages session reservation.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">session_manager</span><span class="p">:</span> <span class="s2">&quot;Client&quot;</span><span class="p">,</span>
-        <span class="n">session_info</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">session_management_service_pb2</span><span class="o">.</span><span class="n">SessionInformation</span><span class="p">],</span>
-    <span class="p">):</span>
+        <span class="n">session_manager</span><span class="p">:</span> <span class="n">Client</span><span class="p">,</span>
+        <span class="n">session_info</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">session_management_service_pb2</span><span class="o">.</span><span class="n">SessionInformation</span><span class="p">],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize reservation object.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_session_manager</span> <span class="o">=</span> <span class="n">session_manager</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_session_info</span> <span class="o">=</span> <span class="n">session_info</span>
 
-<div class="viewcode-block" id="Reservation.__enter__"><a class="viewcode-back" href="../../autoapi/ni_measurementlink_service/session_management/index.html#ni_measurementlink_service.session_management.Reservation.__enter__">[docs]</a>    <span class="k">def</span> <span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="n">_TReservation</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_TReservation</span><span class="p">:</span>
+<div class="viewcode-block" id="BaseReservation.__enter__"><a class="viewcode-back" href="../../autoapi/ni_measurementlink_service/session_management/index.html#ni_measurementlink_service.session_management.BaseReservation.__enter__">[docs]</a>    <span class="k">def</span> <span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="n">_TReservation</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_TReservation</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Context management protocol. Returns self.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="Reservation.__exit__"><a class="viewcode-back" href="../../autoapi/ni_measurementlink_service/session_management/index.html#ni_measurementlink_service.session_management.Reservation.__exit__">[docs]</a>    <span class="k">def</span> <span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">exc</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseReservation.__exit__"><a class="viewcode-back" href="../../autoapi/ni_measurementlink_service/session_management/index.html#ni_measurementlink_service.session_management.BaseReservation.__exit__">[docs]</a>    <span class="k">def</span> <span class="fm">__exit__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">exc_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="ne">BaseException</span><span class="p">]],</span>
+        <span class="n">exc_val</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="ne">BaseException</span><span class="p">],</span>
+        <span class="n">traceback</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TracebackType</span><span class="p">],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">False</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Context management protocol. Calls unreserve().&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">unreserve</span><span class="p">()</span>
         <span class="k">return</span> <span class="kc">False</span></div>
 
-<div class="viewcode-block" id="Reservation.unreserve"><a class="viewcode-back" href="../../autoapi/ni_measurementlink_service/session_management/index.html#ni_measurementlink_service.session_management.Reservation.unreserve">[docs]</a>    <span class="k">def</span> <span class="nf">unreserve</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseReservation.unreserve"><a class="viewcode-back" href="../../autoapi/ni_measurementlink_service/session_management/index.html#ni_measurementlink_service.session_management.BaseReservation.unreserve">[docs]</a>    <span class="k">def</span> <span class="nf">unreserve</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Unreserve sessions.&quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_session_manager</span><span class="o">.</span><span class="n">_unreserve_sessions</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_session_info</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_session_manager</span><span class="o">.</span><span class="n">_unreserve_sessions</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_session_info</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="SingleSessionReservation"><a class="viewcode-back" href="../../autoapi/ni_measurementlink_service/session_management/index.html#ni_measurementlink_service.session_management.SingleSessionReservation">[docs]</a><span class="k">class</span> <span class="nc">SingleSessionReservation</span><span class="p">(</span><span class="n">BaseReservation</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Manages reservation for a single session.&quot;&quot;&quot;</span>
+
+    <span class="nd">@cached_property</span>
+    <span class="k">def</span> <span class="nf">session_info</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SessionInformation</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Single session information object.&quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_session_info</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">_convert_session_info_from_grpc</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_session_info</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="MultiSessionReservation"><a class="viewcode-back" href="../../autoapi/ni_measurementlink_service/session_management/index.html#ni_measurementlink_service.session_management.MultiSessionReservation">[docs]</a><span class="k">class</span> <span class="nc">MultiSessionReservation</span><span class="p">(</span><span class="n">BaseReservation</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Manages reservation for multiple sessions.&quot;&quot;&quot;</span>
 
     <span class="nd">@cached_property</span>
     <span class="k">def</span> <span class="nf">session_info</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">SessionInformation</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return session information.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="p">[</span>
-            <span class="n">SessionInformation</span><span class="p">(</span>
-                <span class="n">session_name</span><span class="o">=</span><span class="n">info</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-                <span class="n">resource_name</span><span class="o">=</span><span class="n">info</span><span class="o">.</span><span class="n">resource_name</span><span class="p">,</span>
-                <span class="n">channel_list</span><span class="o">=</span><span class="n">info</span><span class="o">.</span><span class="n">channel_list</span><span class="p">,</span>
-                <span class="n">instrument_type_id</span><span class="o">=</span><span class="n">info</span><span class="o">.</span><span class="n">instrument_type_id</span><span class="p">,</span>
-                <span class="n">session_exists</span><span class="o">=</span><span class="n">info</span><span class="o">.</span><span class="n">session_exists</span><span class="p">,</span>
-                <span class="n">channel_mappings</span><span class="o">=</span><span class="p">[</span>
-                    <span class="n">ChannelMapping</span><span class="p">(</span>
-                        <span class="n">pin_or_relay_name</span><span class="o">=</span><span class="n">channel_mapping</span><span class="o">.</span><span class="n">pin_or_relay_name</span><span class="p">,</span>
-                        <span class="n">site</span><span class="o">=</span><span class="n">channel_mapping</span><span class="o">.</span><span class="n">site</span><span class="p">,</span>
-                        <span class="n">channel</span><span class="o">=</span><span class="n">channel_mapping</span><span class="o">.</span><span class="n">channel</span><span class="p">,</span>
-                    <span class="p">)</span>
-                    <span class="k">for</span> <span class="n">channel_mapping</span> <span class="ow">in</span> <span class="n">info</span><span class="o">.</span><span class="n">channel_mappings</span>
-                <span class="p">],</span>
-            <span class="p">)</span>
-            <span class="k">for</span> <span class="n">info</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session_info</span>
-        <span class="p">]</span></div>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Multiple session information objects.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">_convert_session_info_from_grpc</span><span class="p">(</span><span class="n">info</span><span class="p">)</span> <span class="k">for</span> <span class="n">info</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session_info</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="__getattr__"><a class="viewcode-back" href="../../autoapi/ni_measurementlink_service/session_management/index.html#ni_measurementlink_service.session_management.__getattr__">[docs]</a><span class="k">def</span> <span class="fm">__getattr__</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;Reservation&quot;</span><span class="p">:</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="n">DeprecatedWarning</span><span class="p">(</span>
+                <span class="n">name</span><span class="p">,</span>
+                <span class="n">deprecated_in</span><span class="o">=</span><span class="s2">&quot;1.1.0&quot;</span><span class="p">,</span>
+                <span class="n">removed_in</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                <span class="n">details</span><span class="o">=</span><span class="s2">&quot;Use MultiSessionReservation instead.&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">MultiSessionReservation</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;module </span><span class="si">{</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> has no attribute </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Client"><a class="viewcode-back" href="../../autoapi/ni_measurementlink_service/session_management/index.html#ni_measurementlink_service.session_management.Client">[docs]</a><span class="k">class</span> <span class="nc">Client</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Class that manages driver sessions.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">grpc_channel</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">Channel</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">grpc_channel</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">Channel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize session manangement client.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="p">:</span> <span class="n">session_management_service_pb2_grpc</span><span class="o">.</span><span class="n">SessionManagementServiceStub</span> <span class="o">=</span> <span class="p">(</span>
             <span class="n">session_management_service_pb2_grpc</span><span class="o">.</span><span class="n">SessionManagementServiceStub</span><span class="p">(</span><span class="n">grpc_channel</span><span class="p">)</span>
         <span class="p">)</span>
 
-<div class="viewcode-block" id="Client.reserve_sessions"><a class="viewcode-back" href="../../autoapi/ni_measurementlink_service/session_management/index.html#ni_measurementlink_service.session_management.Client.reserve_sessions">[docs]</a>    <span class="k">def</span> <span class="nf">reserve_sessions</span><span class="p">(</span>
+<div class="viewcode-block" id="Client.reserve_session"><a class="viewcode-back" href="../../autoapi/ni_measurementlink_service/session_management/index.html#ni_measurementlink_service.session_management.Client.reserve_session">[docs]</a>    <span class="k">def</span> <span class="nf">reserve_session</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">context</span><span class="p">:</span> <span class="n">PinMapContext</span><span class="p">,</span>
         <span class="n">pin_or_relay_names</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">instrument_type_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">timeout</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Reservation</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Reserve session(s).</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SingleSessionReservation</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Reserve a single session.</span>
 
-<span class="sd">        Reserve session(s) for the given pins, sites, and instrument type ID and returns the</span>
+<span class="sd">        Reserve the session matching the given pins, sites, and instrument type ID and return the</span>
 <span class="sd">        information needed to create or access the session.</span>
 
 <span class="sd">        Args</span>
@@ -287,10 +361,81 @@
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">            Reservation: Context manager that can be used with a with-statement to unreserve the</span>
-<span class="sd">            sessions.</span>
+<span class="sd">            SingleSessionReservation: Context manager that can be used with a with-statement to</span>
+<span class="sd">            unreserve the session.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">session_info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reserve_sessions</span><span class="p">(</span>
+            <span class="n">context</span><span class="p">,</span> <span class="n">pin_or_relay_names</span><span class="p">,</span> <span class="n">instrument_type_id</span><span class="p">,</span> <span class="n">timeout</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">session_info</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No sessions reserved. Expected single session, got 0 sessions.&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">session_info</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Too many sessions reserved. Expected single session, got &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">session_info</span><span class="p">)</span><span class="si">}</span><span class="s2"> sessions.&quot;</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">SingleSessionReservation</span><span class="p">(</span><span class="n">session_manager</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">session_info</span><span class="o">=</span><span class="n">session_info</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.reserve_sessions"><a class="viewcode-back" href="../../autoapi/ni_measurementlink_service/session_management/index.html#ni_measurementlink_service.session_management.Client.reserve_sessions">[docs]</a>    <span class="k">def</span> <span class="nf">reserve_sessions</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">context</span><span class="p">:</span> <span class="n">PinMapContext</span><span class="p">,</span>
+        <span class="n">pin_or_relay_names</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">instrument_type_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">timeout</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MultiSessionReservation</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Reserve multiple sessions.</span>
+
+<span class="sd">        Reserve sessions matching the given pins, sites, and instrument type ID and return the</span>
+<span class="sd">        information needed to create or access the sessions.</span>
+
+<span class="sd">        Args</span>
+<span class="sd">        ----</span>
+<span class="sd">            context (PinMapContext): Includes the pin map ID for the pin map in the Pin Map Service,</span>
+<span class="sd">                as well as the list of sites for the measurement.</span>
+
+<span class="sd">            pin_or_relay_names (Iterable[str]): List of pins, pin groups, relays, or relay groups to</span>
+<span class="sd">                use for the measurement. If unspecified, reserve sessions for all pins and relays in</span>
+<span class="sd">                the registered pin map resource.</span>
+
+<span class="sd">            instrument_type_id (str): Instrument type ID for the measurement. If unspecified,</span>
+<span class="sd">                reserve sessions for all instrument types connected in the registered pin map</span>
+<span class="sd">                resource. Pin maps have built in instrument definitions using the following NI</span>
+<span class="sd">                driver based instrument type ids:</span>
+<span class="sd">                    &quot;niDCPower&quot;</span>
+<span class="sd">                    &quot;niDigitalPattern&quot;</span>
+<span class="sd">                    &quot;niScope&quot;</span>
+<span class="sd">                    &quot;niDMM&quot;</span>
+<span class="sd">                    &quot;niDAQmx&quot;</span>
+<span class="sd">                    &quot;niFGen&quot;</span>
+<span class="sd">                    &quot;niRelayDriver&quot;</span>
+<span class="sd">                For custom instruments the user defined instrument type id is defined in the pin</span>
+<span class="sd">                map file.</span>
+
+<span class="sd">            timeout (float): Timeout in seconds. Allowed values,</span>
+<span class="sd">                0 (non-blocking, fails immediately if resources cannot be reserved),</span>
+<span class="sd">                -1 or negative (infinite timeout), or</span>
+<span class="sd">                any positive numeric value (wait for that number of second).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">            MultiSessionReservation: Context manager that can be used with a with-statement to</span>
+<span class="sd">            unreserve the sessions.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">session_info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reserve_sessions</span><span class="p">(</span>
+            <span class="n">context</span><span class="p">,</span> <span class="n">pin_or_relay_names</span><span class="p">,</span> <span class="n">instrument_type_id</span><span class="p">,</span> <span class="n">timeout</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">MultiSessionReservation</span><span class="p">(</span><span class="n">session_manager</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">session_info</span><span class="o">=</span><span class="n">session_info</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_reserve_sessions</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">context</span><span class="p">:</span> <span class="n">PinMapContext</span><span class="p">,</span>
+        <span class="n">pin_or_relay_names</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">instrument_type_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">timeout</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">session_management_service_pb2</span><span class="o">.</span><span class="n">SessionInformation</span><span class="p">]:</span>
         <span class="n">pin_map_context</span> <span class="o">=</span> <span class="n">pin_map_context_pb2</span><span class="o">.</span><span class="n">PinMapContext</span><span class="p">(</span>
             <span class="n">pin_map_id</span><span class="o">=</span><span class="n">context</span><span class="o">.</span><span class="n">pin_map_id</span><span class="p">,</span> <span class="n">sites</span><span class="o">=</span><span class="n">context</span><span class="o">.</span><span class="n">sites</span>
         <span class="p">)</span>
@@ -312,19 +457,16 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">ReserveSessions</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
         <span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">Reservation</span><span class="p">(</span>
-            <span class="n">session_manager</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
-            <span class="n">session_info</span><span class="o">=</span><span class="n">response</span><span class="o">.</span><span class="n">sessions</span><span class="p">,</span>
-        <span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">sessions</span>
 
     <span class="k">def</span> <span class="nf">_unreserve_sessions</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">session_info</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">session_management_service_pb2</span><span class="o">.</span><span class="n">SessionInformation</span><span class="p">]</span>
-    <span class="p">):</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Unreserves sessions so they can be accessed by other clients.&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">session_management_service_pb2</span><span class="o">.</span><span class="n">UnreserveSessionsRequest</span><span class="p">(</span><span class="n">sessions</span><span class="o">=</span><span class="n">session_info</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">UnreserveSessions</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Client.register_sessions"><a class="viewcode-back" href="../../autoapi/ni_measurementlink_service/session_management/index.html#ni_measurementlink_service.session_management.Client.register_sessions">[docs]</a>    <span class="k">def</span> <span class="nf">register_sessions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session_info</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">SessionInformation</span><span class="p">]):</span>
+<div class="viewcode-block" id="Client.register_sessions"><a class="viewcode-back" href="../../autoapi/ni_measurementlink_service/session_management/index.html#ni_measurementlink_service.session_management.Client.register_sessions">[docs]</a>    <span class="k">def</span> <span class="nf">register_sessions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session_info</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">SessionInformation</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Register the sessions with the Session Manager.</span>
 
 <span class="sd">        Indicates that the sessions are open and will need to be closed later.</span>
@@ -361,7 +503,7 @@
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">RegisterSessions</span><span class="p">(</span><span class="n">request</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Client.unregister_sessions"><a class="viewcode-back" href="../../autoapi/ni_measurementlink_service/session_management/index.html#ni_measurementlink_service.session_management.Client.unregister_sessions">[docs]</a>    <span class="k">def</span> <span class="nf">unregister_sessions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session_info</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">SessionInformation</span><span class="p">]):</span>
+<div class="viewcode-block" id="Client.unregister_sessions"><a class="viewcode-back" href="../../autoapi/ni_measurementlink_service/session_management/index.html#ni_measurementlink_service.session_management.Client.unregister_sessions">[docs]</a>    <span class="k">def</span> <span class="nf">unregister_sessions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session_info</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">SessionInformation</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Unregisters the sessions from the Session Manager.</span>
 
 <span class="sd">        Indicates that the sessions have been closed and will need to be reopened before they can be</span>
@@ -395,7 +537,7 @@
 
 <div class="viewcode-block" id="Client.reserve_all_registered_sessions"><a class="viewcode-back" href="../../autoapi/ni_measurementlink_service/session_management/index.html#ni_measurementlink_service.session_management.Client.reserve_all_registered_sessions">[docs]</a>    <span class="k">def</span> <span class="nf">reserve_all_registered_sessions</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">instrument_type_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Reservation</span><span class="p">:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MultiSessionReservation</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Reserves and gets all sessions currently registered in the Session Manager.</span>
 
 <span class="sd">        Args</span>
@@ -421,8 +563,8 @@
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">            Reservation: Context manager that can be used with a with-statement to unreserve the</span>
-<span class="sd">            sessions.</span>
+<span class="sd">            MultiSessionReservation: Context manager that can be used with a with-statement to</span>
+<span class="sd">            unreserve the sessions.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">session_management_service_pb2</span><span class="o">.</span><span class="n">ReserveAllRegisteredSessionsRequest</span><span class="p">()</span>
@@ -437,7 +579,7 @@
         <span class="n">response</span><span class="p">:</span> <span class="n">session_management_service_pb2</span><span class="o">.</span><span class="n">ReserveAllRegisteredSessionsResponse</span> <span class="o">=</span> <span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">ReserveAllRegisteredSessions</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
         <span class="p">)</span>
-        <span class="k">return</span> <span class="n">Reservation</span><span class="p">(</span><span class="n">session_manager</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">session_info</span><span class="o">=</span><span class="n">response</span><span class="o">.</span><span class="n">sessions</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="n">MultiSessionReservation</span><span class="p">(</span><span class="n">session_manager</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">session_info</span><span class="o">=</span><span class="n">response</span><span class="o">.</span><span class="n">sessions</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>

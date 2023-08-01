@@ -24,6 +24,19 @@ Classes
 
 
 
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   ni_measurementlink_service.measurement.service.SupportedEnumType
+
+
+.. py:data:: SupportedEnumType
+   
+
+   
+
 .. py:class:: MeasurementContext
 
    Proxy for the Measurement Service's context-local state.
@@ -73,7 +86,7 @@ Classes
       Enter the runtime context of the GrpcChannelPool.
 
 
-   .. py:method:: __exit__(exc_type, exc_value, traceback)
+   .. py:method:: __exit__(exc_type, exc_val, traceback)
 
       Exit the runtime context of the GrpcChannelPool.
 
@@ -136,7 +149,7 @@ Classes
       See also: :func:`.configuration`, :func:`.output`
 
 
-   .. py:method:: configuration(display_name, type, default_value, *, instrument_type = '')
+   .. py:method:: configuration(display_name, type, default_value, *, instrument_type = '', enum_type = None)
 
       Add a configuration parameter to a measurement function.
 
@@ -155,7 +168,7 @@ Classes
 
           default_value (Any): Default value of the configuration.
 
-          instrument_type (str): Optional.
+          instrument_type (Optional[str]):
           Filter pins by instrument type. This is only supported when configuration type
           is DataType.Pin. Pin maps have built in instrument definitions using the
           NI driver based instrument type ids. These can be found as constants
@@ -164,6 +177,10 @@ Classes
           For custom instruments the user defined instrument type id is defined in the
           pin map file.
 
+          enum_type (Optional[SupportedEnumType]):
+          Defines the enum type associated with this configuration parameter. This is only
+          supported when configuration type is DataType.Enum or DataType.EnumArray1D.
+
       Returns
       -------
           Callable: Callable that takes in Any Python Function
@@ -171,16 +188,16 @@ Classes
 
 
 
-   .. py:method:: output(display_name, type)
+   .. py:method:: output(display_name, type, *, enum_type = None)
 
-      Add a output parameter to a measurement function.
+      Add an output parameter to a measurement function.
 
       This decorator maps the measurement service's output parameters to
       the elements of the tuple returned by the measurement function.
       To add multiple output parameters to the same measurement function,
       use this decorator multiple times.
       The order of decorator calls must match the order of elements
-      returned by the measurement fuction.
+      returned by the measurement function.
 
       See also: :func:`.register_measurement`
 
@@ -189,6 +206,10 @@ Classes
           display_name (str): Display name of the output.
 
           type (DataType): Data type of the output.
+
+          enum_type (Optional[SupportedEnumType]:
+          Defines the enum type associated with this configuration parameter. This is only
+          supported when configuration type is DataType.Enum or DataType.EnumArray1D.
 
       Returns
       -------
@@ -222,7 +243,7 @@ Classes
       Enter the runtime context related to the measurement service.
 
 
-   .. py:method:: __exit__(exc_type, exc_value, traceback)
+   .. py:method:: __exit__(exc_type, exc_val, traceback)
 
       Exit the runtime context related to the measurement service.
 

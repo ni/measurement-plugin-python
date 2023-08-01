@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Index &mdash; ni_measurementlink_service 1.1 documentation</title>
+  <title>Index &mdash; ni_measurementlink_service 1.2 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
@@ -34,7 +34,7 @@
             ni_measurementlink_service
           </a>
               <div class="version">
-                1.1.0-dev1
+                1.2.0-dev0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -108,7 +108,7 @@
 </li>
         <li><a href="autoapi/ni_measurementlink_service/index.html#ni_measurementlink_service.MeasurementService.__enter__">(ni_measurementlink_service.MeasurementService method)</a>
 </li>
-        <li><a href="autoapi/ni_measurementlink_service/session_management/index.html#ni_measurementlink_service.session_management.Reservation.__enter__">(ni_measurementlink_service.session_management.Reservation method)</a>
+        <li><a href="autoapi/ni_measurementlink_service/session_management/index.html#ni_measurementlink_service.session_management.BaseReservation.__enter__">(ni_measurementlink_service.session_management.BaseReservation method)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -120,9 +120,11 @@
 </li>
         <li><a href="autoapi/ni_measurementlink_service/index.html#ni_measurementlink_service.MeasurementService.__exit__">(ni_measurementlink_service.MeasurementService method)</a>
 </li>
-        <li><a href="autoapi/ni_measurementlink_service/session_management/index.html#ni_measurementlink_service.session_management.Reservation.__exit__">(ni_measurementlink_service.session_management.Reservation method)</a>
+        <li><a href="autoapi/ni_measurementlink_service/session_management/index.html#ni_measurementlink_service.session_management.BaseReservation.__exit__">(ni_measurementlink_service.session_management.BaseReservation method)</a>
 </li>
       </ul></li>
+      <li><a href="autoapi/ni_measurementlink_service/session_management/index.html#ni_measurementlink_service.session_management.__getattr__">__getattr__() (in module ni_measurementlink_service.session_management)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -143,14 +145,14 @@
       </ul></li>
       <li><a href="autoapi/ni_measurementlink_service/_internal/stubs/ni/measurementlink/discovery/v1/discovery_service_pb2_grpc/index.html#ni_measurementlink_service._internal.stubs.ni.measurementlink.discovery.v1.discovery_service_pb2_grpc.add_DiscoveryServiceServicer_to_server">add_DiscoveryServiceServicer_to_server() (in module ni_measurementlink_service._internal.stubs.ni.measurementlink.discovery.v1.discovery_service_pb2_grpc)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="autoapi/ni_measurementlink_service/_internal/stubs/ni/measurementlink/measurement/v1/measurement_service_pb2_grpc/index.html#ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v1.measurement_service_pb2_grpc.add_MeasurementServiceServicer_to_server">add_MeasurementServiceServicer_to_server() (in module ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v1.measurement_service_pb2_grpc)</a>
 
       <ul>
         <li><a href="autoapi/ni_measurementlink_service/_internal/stubs/ni/measurementlink/measurement/v2/measurement_service_pb2_grpc/index.html#ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v2.measurement_service_pb2_grpc.add_MeasurementServiceServicer_to_server">(in module ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v2.measurement_service_pb2_grpc)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="autoapi/ni_measurementlink_service/_internal/stubs/ni/measurementlink/pinmap/v1/pin_map_service_pb2_grpc/index.html#ni_measurementlink_service._internal.stubs.ni.measurementlink.pinmap.v1.pin_map_service_pb2_grpc.add_PinMapServiceServicer_to_server">add_PinMapServiceServicer_to_server() (in module ni_measurementlink_service._internal.stubs.ni.measurementlink.pinmap.v1.pin_map_service_pb2_grpc)</a>
 </li>
       <li><a href="autoapi/ni_measurementlink_service/_internal/stubs/ni/measurementlink/sessionmanagement/v1/session_management_service_pb2_grpc/index.html#ni_measurementlink_service._internal.stubs.ni.measurementlink.sessionmanagement.v1.session_management_service_pb2_grpc.add_SessionManagementServiceServicer_to_server">add_SessionManagementServiceServicer_to_server() (in module ni_measurementlink_service._internal.stubs.ni.measurementlink.sessionmanagement.v1.session_management_service_pb2_grpc)</a>
@@ -158,27 +160,35 @@
       <li><a href="autoapi/ni_measurementlink_service/_internal/stubs/session_pb2_grpc/index.html#ni_measurementlink_service._internal.stubs.session_pb2_grpc.add_SessionUtilitiesServicer_to_server">add_SessionUtilitiesServicer_to_server() (in module ni_measurementlink_service._internal.stubs.session_pb2_grpc)</a>
 </li>
       <li><a href="autoapi/ni_measurementlink_service/_internal/parameter/metadata/index.html#ni_measurementlink_service._internal.parameter.metadata.ParameterMetadata.annotations">annotations (ni_measurementlink_service._internal.parameter.metadata.ParameterMetadata attribute)</a>
+
+      <ul>
+        <li><a href="autoapi/ni_measurementlink_service/measurement/info/index.html#ni_measurementlink_service.measurement.info.ServiceInfo.annotations">(ni_measurementlink_service.measurement.info.ServiceInfo attribute)</a>
 </li>
+        <li><a href="autoapi/ni_measurementlink_service/index.html#ni_measurementlink_service.ServiceInfo.annotations">(ni_measurementlink_service.ServiceInfo attribute)</a>
+</li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
 <h2 id="B">B</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autoapi/ni_measurementlink_service/session_management/index.html#ni_measurementlink_service.session_management.BaseReservation">BaseReservation (class in ni_measurementlink_service.session_management)</a>
+</li>
       <li><a href="autoapi/ni_measurementlink_service/_internal/parameter/serialization_strategy/index.html#ni_measurementlink_service._internal.parameter.serialization_strategy.BoolArrayDecoder">BoolArrayDecoder (in module ni_measurementlink_service._internal.parameter.serialization_strategy)</a>
 </li>
       <li><a href="autoapi/ni_measurementlink_service/_internal/parameter/serialization_strategy/index.html#ni_measurementlink_service._internal.parameter.serialization_strategy.BoolArrayEncoder">BoolArrayEncoder (in module ni_measurementlink_service._internal.parameter.serialization_strategy)</a>
 </li>
       <li><a href="autoapi/ni_measurementlink_service/_internal/parameter/serialization_strategy/index.html#ni_measurementlink_service._internal.parameter.serialization_strategy.BoolDecoder">BoolDecoder (in module ni_measurementlink_service._internal.parameter.serialization_strategy)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="autoapi/ni_measurementlink_service/index.html#ni_measurementlink_service.DataType.Boolean">Boolean (ni_measurementlink_service.DataType attribute)</a>
 
       <ul>
         <li><a href="autoapi/ni_measurementlink_service/measurement/info/index.html#ni_measurementlink_service.measurement.info.DataType.Boolean">(ni_measurementlink_service.measurement.info.DataType attribute)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="autoapi/ni_measurementlink_service/index.html#ni_measurementlink_service.DataType.BooleanArray1D">BooleanArray1D (ni_measurementlink_service.DataType attribute)</a>
 
       <ul>
@@ -266,15 +276,17 @@
 </li>
         <li><a href="autoapi/ni_measurementlink_service/_internal/stubs/ni/measurementlink/sessionmanagement/v1/session_management_service_pb2/index.html#ni_measurementlink_service._internal.stubs.ni.measurementlink.sessionmanagement.v1.session_management_service_pb2.DESCRIPTOR">(in module ni_measurementlink_service._internal.stubs.ni.measurementlink.sessionmanagement.v1.session_management_service_pb2)</a>
 </li>
+        <li><a href="autoapi/ni_measurementlink_service/_internal/stubs/ni/protobuf/types/xydata_pb2/index.html#ni_measurementlink_service._internal.stubs.ni.protobuf.types.xydata_pb2.DESCRIPTOR">(in module ni_measurementlink_service._internal.stubs.ni.protobuf.types.xydata_pb2)</a>
+</li>
         <li><a href="autoapi/ni_measurementlink_service/_internal/stubs/session_pb2/index.html#ni_measurementlink_service._internal.stubs.session_pb2.DESCRIPTOR">(in module ni_measurementlink_service._internal.stubs.session_pb2)</a>
 </li>
       </ul></li>
       <li><a href="autoapi/ni_measurementlink_service/_internal/parameter/serializer/index.html#ni_measurementlink_service._internal.parameter.serializer.deserialize_parameters">deserialize_parameters() (in module ni_measurementlink_service._internal.parameter.serializer)</a>
 </li>
-      <li><a href="autoapi/ni_measurementlink_service/_internal/discovery_client/index.html#ni_measurementlink_service._internal.discovery_client.DiscoveryClient">DiscoveryClient (class in ni_measurementlink_service._internal.discovery_client)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autoapi/ni_measurementlink_service/_internal/discovery_client/index.html#ni_measurementlink_service._internal.discovery_client.DiscoveryClient">DiscoveryClient (class in ni_measurementlink_service._internal.discovery_client)</a>
+</li>
       <li><a href="autoapi/ni_measurementlink_service/_internal/stubs/ni/measurementlink/discovery/v1/discovery_service_pb2_grpc/index.html#ni_measurementlink_service._internal.stubs.ni.measurementlink.discovery.v1.discovery_service_pb2_grpc.DiscoveryService">DiscoveryService (class in ni_measurementlink_service._internal.stubs.ni.measurementlink.discovery.v1.discovery_service_pb2_grpc)</a>
 </li>
       <li><a href="autoapi/ni_measurementlink_service/_internal/stubs/ni/measurementlink/discovery/v1/discovery_service_pb2_grpc/index.html#ni_measurementlink_service._internal.stubs.ni.measurementlink.discovery.v1.discovery_service_pb2_grpc.DiscoveryServiceServicer">DiscoveryServiceServicer (class in ni_measurementlink_service._internal.stubs.ni.measurementlink.discovery.v1.discovery_service_pb2_grpc)</a>
@@ -315,14 +327,28 @@
 <h2 id="E">E</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autoapi/ni_measurementlink_service/index.html#ni_measurementlink_service.DataType.Enum">Enum (ni_measurementlink_service.DataType attribute)</a>
+
+      <ul>
+        <li><a href="autoapi/ni_measurementlink_service/measurement/info/index.html#ni_measurementlink_service.measurement.info.DataType.Enum">(ni_measurementlink_service.measurement.info.DataType attribute)</a>
+</li>
+        <li><a href="autoapi/ni_measurementlink_service/measurement/info/index.html#ni_measurementlink_service.measurement.info.TypeSpecialization.Enum">(ni_measurementlink_service.measurement.info.TypeSpecialization attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="autoapi/ni_measurementlink_service/index.html#ni_measurementlink_service.DataType.EnumArray1D">EnumArray1D (ni_measurementlink_service.DataType attribute)</a>
+
+      <ul>
+        <li><a href="autoapi/ni_measurementlink_service/measurement/info/index.html#ni_measurementlink_service.measurement.info.DataType.EnumArray1D">(ni_measurementlink_service.measurement.info.DataType attribute)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="autoapi/ni_measurementlink_service/_internal/stubs/session_pb2_grpc/index.html#ni_measurementlink_service._internal.stubs.session_pb2_grpc.SessionUtilities.EnumerateDevices">EnumerateDevices() (ni_measurementlink_service._internal.stubs.session_pb2_grpc.SessionUtilities static method)</a>
 
       <ul>
         <li><a href="autoapi/ni_measurementlink_service/_internal/stubs/session_pb2_grpc/index.html#ni_measurementlink_service._internal.stubs.session_pb2_grpc.SessionUtilitiesServicer.EnumerateDevices">(ni_measurementlink_service._internal.stubs.session_pb2_grpc.SessionUtilitiesServicer method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="autoapi/ni_measurementlink_service/_internal/stubs/ni/measurementlink/discovery/v1/discovery_service_pb2_grpc/index.html#ni_measurementlink_service._internal.stubs.ni.measurementlink.discovery.v1.discovery_service_pb2_grpc.DiscoveryService.EnumerateServices">EnumerateServices() (ni_measurementlink_service._internal.stubs.ni.measurementlink.discovery.v1.discovery_service_pb2_grpc.DiscoveryService static method)</a>
 
       <ul>
@@ -374,6 +400,8 @@
       <li><a href="autoapi/ni_measurementlink_service/_internal/parameter/serialization_strategy/index.html#ni_measurementlink_service._internal.parameter.serialization_strategy.Context.get_decoder">get_decoder() (ni_measurementlink_service._internal.parameter.serialization_strategy.Context static method)</a>
 </li>
       <li><a href="autoapi/ni_measurementlink_service/_internal/parameter/serialization_strategy/index.html#ni_measurementlink_service._internal.parameter.serialization_strategy.Context.get_encoder">get_encoder() (ni_measurementlink_service._internal.parameter.serialization_strategy.Context static method)</a>
+</li>
+      <li><a href="autoapi/ni_measurementlink_service/_internal/parameter/metadata/index.html#ni_measurementlink_service._internal.parameter.metadata.get_enum_values_annotation">get_enum_values_annotation() (in module ni_measurementlink_service._internal.parameter.metadata)</a>
 </li>
       <li><a href="autoapi/ni_measurementlink_service/_internal/parameter/serialization_strategy/index.html#ni_measurementlink_service._internal.parameter.serialization_strategy.Context.get_type_default">get_type_default() (ni_measurementlink_service._internal.parameter.serialization_strategy.Context static method)</a>
 </li>
@@ -649,6 +677,14 @@
 </li>
         <li><a href="autoapi/ni_measurementlink_service/_internal/stubs/ni/measurementlink/sessionmanagement/v1/session_management_service_pb2_grpc/index.html#module-ni_measurementlink_service._internal.stubs.ni.measurementlink.sessionmanagement.v1.session_management_service_pb2_grpc">ni_measurementlink_service._internal.stubs.ni.measurementlink.sessionmanagement.v1.session_management_service_pb2_grpc</a>
 </li>
+        <li><a href="autoapi/ni_measurementlink_service/_internal/stubs/ni/protobuf/index.html#module-ni_measurementlink_service._internal.stubs.ni.protobuf">ni_measurementlink_service._internal.stubs.ni.protobuf</a>
+</li>
+        <li><a href="autoapi/ni_measurementlink_service/_internal/stubs/ni/protobuf/types/index.html#module-ni_measurementlink_service._internal.stubs.ni.protobuf.types">ni_measurementlink_service._internal.stubs.ni.protobuf.types</a>
+</li>
+        <li><a href="autoapi/ni_measurementlink_service/_internal/stubs/ni/protobuf/types/xydata_pb2/index.html#module-ni_measurementlink_service._internal.stubs.ni.protobuf.types.xydata_pb2">ni_measurementlink_service._internal.stubs.ni.protobuf.types.xydata_pb2</a>
+</li>
+        <li><a href="autoapi/ni_measurementlink_service/_internal/stubs/ni/protobuf/types/xydata_pb2_grpc/index.html#module-ni_measurementlink_service._internal.stubs.ni.protobuf.types.xydata_pb2_grpc">ni_measurementlink_service._internal.stubs.ni.protobuf.types.xydata_pb2_grpc</a>
+</li>
         <li><a href="autoapi/ni_measurementlink_service/_internal/stubs/session_pb2/index.html#module-ni_measurementlink_service._internal.stubs.session_pb2">ni_measurementlink_service._internal.stubs.session_pb2</a>
 </li>
         <li><a href="autoapi/ni_measurementlink_service/_internal/stubs/session_pb2_grpc/index.html#module-ni_measurementlink_service._internal.stubs.session_pb2_grpc">ni_measurementlink_service._internal.stubs.session_pb2_grpc</a>
@@ -664,6 +700,10 @@
         <li><a href="autoapi/ni_measurementlink_service/session_management/index.html#module-ni_measurementlink_service.session_management">ni_measurementlink_service.session_management</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autoapi/ni_measurementlink_service/session_management/index.html#ni_measurementlink_service.session_management.MultiSessionReservation">MultiSessionReservation (class in ni_measurementlink_service.session_management)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -810,8 +850,6 @@
         <li><a href="autoapi/ni_measurementlink_service/_internal/stubs/ni/measurementlink/measurement/v1/measurement_service_pb2_grpc/index.html#module-ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v1.measurement_service_pb2_grpc">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v2
 
@@ -826,6 +864,8 @@
         <li><a href="autoapi/ni_measurementlink_service/_internal/stubs/ni/measurementlink/measurement/v2/measurement_service_pb2/index.html#module-ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v2.measurement_service_pb2">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v2.measurement_service_pb2_grpc
 
@@ -901,6 +941,34 @@
 
       <ul>
         <li><a href="autoapi/ni_measurementlink_service/_internal/stubs/ni/measurementlink/sessionmanagement/v1/session_management_service_pb2_grpc/index.html#module-ni_measurementlink_service._internal.stubs.ni.measurementlink.sessionmanagement.v1.session_management_service_pb2_grpc">module</a>
+</li>
+      </ul></li>
+      <li>
+    ni_measurementlink_service._internal.stubs.ni.protobuf
+
+      <ul>
+        <li><a href="autoapi/ni_measurementlink_service/_internal/stubs/ni/protobuf/index.html#module-ni_measurementlink_service._internal.stubs.ni.protobuf">module</a>
+</li>
+      </ul></li>
+      <li>
+    ni_measurementlink_service._internal.stubs.ni.protobuf.types
+
+      <ul>
+        <li><a href="autoapi/ni_measurementlink_service/_internal/stubs/ni/protobuf/types/index.html#module-ni_measurementlink_service._internal.stubs.ni.protobuf.types">module</a>
+</li>
+      </ul></li>
+      <li>
+    ni_measurementlink_service._internal.stubs.ni.protobuf.types.xydata_pb2
+
+      <ul>
+        <li><a href="autoapi/ni_measurementlink_service/_internal/stubs/ni/protobuf/types/xydata_pb2/index.html#module-ni_measurementlink_service._internal.stubs.ni.protobuf.types.xydata_pb2">module</a>
+</li>
+      </ul></li>
+      <li>
+    ni_measurementlink_service._internal.stubs.ni.protobuf.types.xydata_pb2_grpc
+
+      <ul>
+        <li><a href="autoapi/ni_measurementlink_service/_internal/stubs/ni/protobuf/types/xydata_pb2_grpc/index.html#module-ni_measurementlink_service._internal.stubs.ni.protobuf.types.xydata_pb2_grpc">module</a>
 </li>
       </ul></li>
       <li>
@@ -996,14 +1064,14 @@
         <li><a href="autoapi/ni_measurementlink_service/measurement/info/index.html#ni_measurementlink_service.measurement.info.TypeSpecialization.Pin">(ni_measurementlink_service.measurement.info.TypeSpecialization attribute)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="autoapi/ni_measurementlink_service/_internal/grpc_servicer/index.html#ni_measurementlink_service._internal.grpc_servicer.MeasurementServiceContext.pin_map_context">pin_map_context (ni_measurementlink_service._internal.grpc_servicer.MeasurementServiceContext property)</a>
 
       <ul>
         <li><a href="autoapi/ni_measurementlink_service/measurement/service/index.html#ni_measurementlink_service.measurement.service.MeasurementContext.pin_map_context">(ni_measurementlink_service.measurement.service.MeasurementContext property)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="autoapi/ni_measurementlink_service/session_management/index.html#ni_measurementlink_service.session_management.PinMapContext.pin_map_id">pin_map_id (ni_measurementlink_service.session_management.PinMapContext attribute)</a>
 </li>
       <li><a href="autoapi/ni_measurementlink_service/session_management/index.html#ni_measurementlink_service.session_management.ChannelMapping.pin_or_relay_name">pin_or_relay_name (ni_measurementlink_service.session_management.ChannelMapping attribute)</a>
@@ -1022,6 +1090,12 @@
 </li>
       <li><a href="autoapi/ni_measurementlink_service/_internal/stubs/ni/measurementlink/pinmap/v1/pin_map_service_pb2_grpc/index.html#ni_measurementlink_service._internal.stubs.ni.measurementlink.pinmap.v1.pin_map_service_pb2_grpc.PinMapServiceStub">PinMapServiceStub (class in ni_measurementlink_service._internal.stubs.ni.measurementlink.pinmap.v1.pin_map_service_pb2_grpc)</a>
 </li>
+      <li><a href="autoapi/ni_measurementlink_service/measurement/info/index.html#ni_measurementlink_service.measurement.info.ServiceInfo.provided_interfaces">provided_interfaces (ni_measurementlink_service.measurement.info.ServiceInfo attribute)</a>
+
+      <ul>
+        <li><a href="autoapi/ni_measurementlink_service/index.html#ni_measurementlink_service.ServiceInfo.provided_interfaces">(ni_measurementlink_service.ServiceInfo attribute)</a>
+</li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
@@ -1078,17 +1152,17 @@
       </ul></li>
       <li><a href="autoapi/ni_measurementlink_service/_internal/parameter/metadata/index.html#ni_measurementlink_service._internal.parameter.metadata.ParameterMetadata.repeated">repeated (ni_measurementlink_service._internal.parameter.metadata.ParameterMetadata attribute)</a>
 </li>
-      <li><a href="autoapi/ni_measurementlink_service/session_management/index.html#ni_measurementlink_service.session_management.Reservation">Reservation (class in ni_measurementlink_service.session_management)</a>
-</li>
       <li><a href="autoapi/ni_measurementlink_service/_internal/stubs/session_pb2_grpc/index.html#ni_measurementlink_service._internal.stubs.session_pb2_grpc.SessionUtilities.Reserve">Reserve() (ni_measurementlink_service._internal.stubs.session_pb2_grpc.SessionUtilities static method)</a>
 
       <ul>
         <li><a href="autoapi/ni_measurementlink_service/_internal/stubs/session_pb2_grpc/index.html#ni_measurementlink_service._internal.stubs.session_pb2_grpc.SessionUtilitiesServicer.Reserve">(ni_measurementlink_service._internal.stubs.session_pb2_grpc.SessionUtilitiesServicer method)</a>
 </li>
       </ul></li>
+      <li><a href="autoapi/ni_measurementlink_service/session_management/index.html#ni_measurementlink_service.session_management.Client.reserve_all_registered_sessions">reserve_all_registered_sessions() (ni_measurementlink_service.session_management.Client method)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autoapi/ni_measurementlink_service/session_management/index.html#ni_measurementlink_service.session_management.Client.reserve_all_registered_sessions">reserve_all_registered_sessions() (ni_measurementlink_service.session_management.Client method)</a>
+      <li><a href="autoapi/ni_measurementlink_service/session_management/index.html#ni_measurementlink_service.session_management.Client.reserve_session">reserve_session() (ni_measurementlink_service.session_management.Client method)</a>
 </li>
       <li><a href="autoapi/ni_measurementlink_service/session_management/index.html#ni_measurementlink_service.session_management.Client.reserve_sessions">reserve_sessions() (ni_measurementlink_service.session_management.Client method)</a>
 </li>
@@ -1146,8 +1220,12 @@
 </li>
       <li><a href="autoapi/ni_measurementlink_service/session_management/index.html#ni_measurementlink_service.session_management.SessionInformation.session_exists">session_exists (ni_measurementlink_service.session_management.SessionInformation attribute)</a>
 </li>
-      <li><a href="autoapi/ni_measurementlink_service/session_management/index.html#ni_measurementlink_service.session_management.Reservation.session_info">session_info() (ni_measurementlink_service.session_management.Reservation method)</a>
+      <li><a href="autoapi/ni_measurementlink_service/session_management/index.html#ni_measurementlink_service.session_management.MultiSessionReservation.session_info">session_info() (ni_measurementlink_service.session_management.MultiSessionReservation method)</a>
+
+      <ul>
+        <li><a href="autoapi/ni_measurementlink_service/session_management/index.html#ni_measurementlink_service.session_management.SingleSessionReservation.session_info">(ni_measurementlink_service.session_management.SingleSessionReservation method)</a>
 </li>
+      </ul></li>
       <li><a href="autoapi/ni_measurementlink_service/session_management/index.html#ni_measurementlink_service.session_management.SessionInformation.session_name">session_name (ni_measurementlink_service.session_management.SessionInformation attribute)</a>
 </li>
       <li><a href="autoapi/ni_measurementlink_service/session_management/index.html#ni_measurementlink_service.session_management.SessionInformation">SessionInformation (class in ni_measurementlink_service.session_management)</a>
@@ -1165,6 +1243,8 @@
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="autoapi/ni_measurementlink_service/_internal/stubs/session_pb2_grpc/index.html#ni_measurementlink_service._internal.stubs.session_pb2_grpc.SessionUtilitiesStub">SessionUtilitiesStub (class in ni_measurementlink_service._internal.stubs.session_pb2_grpc)</a>
+</li>
+      <li><a href="autoapi/ni_measurementlink_service/session_management/index.html#ni_measurementlink_service.session_management.SingleSessionReservation">SingleSessionReservation (class in ni_measurementlink_service.session_management)</a>
 </li>
       <li><a href="autoapi/ni_measurementlink_service/session_management/index.html#ni_measurementlink_service.session_management.ChannelMapping.site">site (ni_measurementlink_service.session_management.ChannelMapping attribute)</a>
 </li>
@@ -1199,6 +1279,8 @@
       <li><a href="autoapi/ni_measurementlink_service/_internal/parameter/serialization_strategy/index.html#ni_measurementlink_service._internal.parameter.serialization_strategy.StringEncoder">StringEncoder (in module ni_measurementlink_service._internal.parameter.serialization_strategy)</a>
 </li>
       <li><a href="autoapi/ni_measurementlink_service/_internal/discovery_client/index.html#ni_measurementlink_service._internal.discovery_client.DiscoveryClient.stub">stub (ni_measurementlink_service._internal.discovery_client.DiscoveryClient property)</a>
+</li>
+      <li><a href="autoapi/ni_measurementlink_service/measurement/service/index.html#ni_measurementlink_service.measurement.service.SupportedEnumType">SupportedEnumType (in module ni_measurementlink_service.measurement.service)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -1290,7 +1372,7 @@
         <li><a href="autoapi/ni_measurementlink_service/_internal/stubs/session_pb2_grpc/index.html#ni_measurementlink_service._internal.stubs.session_pb2_grpc.SessionUtilitiesServicer.Unreserve">(ni_measurementlink_service._internal.stubs.session_pb2_grpc.SessionUtilitiesServicer method)</a>
 </li>
       </ul></li>
-      <li><a href="autoapi/ni_measurementlink_service/session_management/index.html#ni_measurementlink_service.session_management.Reservation.unreserve">unreserve() (ni_measurementlink_service.session_management.Reservation method)</a>
+      <li><a href="autoapi/ni_measurementlink_service/session_management/index.html#ni_measurementlink_service.session_management.BaseReservation.unreserve">unreserve() (ni_measurementlink_service.session_management.BaseReservation method)</a>
 </li>
       <li><a href="autoapi/ni_measurementlink_service/_internal/stubs/ni/measurementlink/sessionmanagement/v1/session_management_service_pb2_grpc/index.html#ni_measurementlink_service._internal.stubs.ni.measurementlink.sessionmanagement.v1.session_management_service_pb2_grpc.SessionManagementService.UnreserveSessions">UnreserveSessions() (ni_measurementlink_service._internal.stubs.ni.measurementlink.sessionmanagement.v1.session_management_service_pb2_grpc.SessionManagementService static method)</a>
 

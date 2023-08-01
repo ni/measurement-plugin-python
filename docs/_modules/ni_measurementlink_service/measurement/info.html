@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ni_measurementlink_service.measurement.info &mdash; ni_measurementlink_service 1.1 documentation</title>
+  <title>ni_measurementlink_service.measurement.info &mdash; ni_measurementlink_service 1.2 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
@@ -34,7 +34,7 @@
             ni_measurementlink_service
           </a>
               <div class="version">
-                1.1.0-dev1
+                1.2.0-dev0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -77,9 +77,8 @@
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
 <span class="kn">import</span> <span class="nn">enum</span>
-<span class="kn">import</span> <span class="nn">typing</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">NamedTuple</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">NamedTuple</span>
 
 <span class="kn">from</span> <span class="nn">google.protobuf</span> <span class="kn">import</span> <span class="n">type_pb2</span>
 
@@ -100,7 +99,7 @@
 
     <span class="n">display_name</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">version</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">ui_file_paths</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span></div>
+    <span class="n">ui_file_paths</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="ServiceInfo"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/measurement/info/index.html#ni_measurementlink_service.ServiceInfo">[docs]</a><span class="k">class</span> <span class="nc">ServiceInfo</span><span class="p">(</span><span class="n">NamedTuple</span><span class="p">):</span>
@@ -112,12 +111,23 @@
 <span class="sd">        Measurements under same service class expected to perform same logic.</span>
 <span class="sd">        For e.g., different version of measurement can come under same service class.</span>
 
+
 <span class="sd">        description_url (str): Description URL of the measurement.</span>
+
+<span class="sd">        provided_interfaces (List[str]): List of interfaces the service provides.</span>
+<span class="sd">        For e.g., ni.measurementlink.measurement.v2.MeasurementService.</span>
+<span class="sd">        Defaults to [&quot;ni.measurementlink.measurement.v1.MeasurementService&quot;].</span>
+
+<span class="sd">        annotations (Dict[str,str]): Dict that contains extra information of the measurement.</span>
+<span class="sd">        As default we added a (str) description, (str) collection and a (List[str]) list of tags.</span>
+<span class="sd">        Feel free to add your own Annotations as needed.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">service_class</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">description_url</span><span class="p">:</span> <span class="nb">str</span></div>
+    <span class="n">description_url</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">provided_interfaces</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ni.measurementlink.measurement.v1.MeasurementService&quot;</span><span class="p">]</span>
+    <span class="n">annotations</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span></div>
 
 
 <div class="viewcode-block" id="TypeSpecialization"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/measurement/info/index.html#ni_measurementlink_service.TypeSpecialization">[docs]</a><span class="k">class</span> <span class="nc">TypeSpecialization</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
@@ -125,7 +135,8 @@
 
     <span class="n">NoType</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
     <span class="n">Pin</span> <span class="o">=</span> <span class="s2">&quot;pin&quot;</span>
-    <span class="n">Path</span> <span class="o">=</span> <span class="s2">&quot;path&quot;</span></div>
+    <span class="n">Path</span> <span class="o">=</span> <span class="s2">&quot;path&quot;</span>
+    <span class="n">Enum</span> <span class="o">=</span> <span class="s2">&quot;enum&quot;</span></div>
 
 
 <div class="viewcode-block" id="DataType"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/measurement/info/index.html#ni_measurementlink_service.DataType">[docs]</a><span class="k">class</span> <span class="nc">DataType</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
@@ -141,6 +152,7 @@
     <span class="n">String</span> <span class="o">=</span> <span class="p">(</span><span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">TYPE_STRING</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">TypeSpecialization</span><span class="o">.</span><span class="n">NoType</span><span class="p">)</span>
     <span class="n">Pin</span> <span class="o">=</span> <span class="p">(</span><span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">TYPE_STRING</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">TypeSpecialization</span><span class="o">.</span><span class="n">Pin</span><span class="p">)</span>
     <span class="n">Path</span> <span class="o">=</span> <span class="p">(</span><span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">TYPE_STRING</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">TypeSpecialization</span><span class="o">.</span><span class="n">Path</span><span class="p">)</span>
+    <span class="n">Enum</span> <span class="o">=</span> <span class="p">(</span><span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">TYPE_ENUM</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">TypeSpecialization</span><span class="o">.</span><span class="n">Enum</span><span class="p">)</span>
 
     <span class="n">Int32Array1D</span> <span class="o">=</span> <span class="p">(</span><span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">TYPE_INT32</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">TypeSpecialization</span><span class="o">.</span><span class="n">NoType</span><span class="p">)</span>
     <span class="n">Int64Array1D</span> <span class="o">=</span> <span class="p">(</span><span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">TYPE_INT64</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">TypeSpecialization</span><span class="o">.</span><span class="n">NoType</span><span class="p">)</span>
@@ -151,7 +163,8 @@
     <span class="n">BooleanArray1D</span> <span class="o">=</span> <span class="p">(</span><span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">TYPE_BOOL</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">TypeSpecialization</span><span class="o">.</span><span class="n">NoType</span><span class="p">)</span>
     <span class="n">StringArray1D</span> <span class="o">=</span> <span class="p">(</span><span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">TYPE_STRING</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">TypeSpecialization</span><span class="o">.</span><span class="n">NoType</span><span class="p">)</span>
     <span class="n">PinArray1D</span> <span class="o">=</span> <span class="p">(</span><span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">TYPE_STRING</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">TypeSpecialization</span><span class="o">.</span><span class="n">Pin</span><span class="p">)</span>
-    <span class="n">PathArray1D</span> <span class="o">=</span> <span class="p">(</span><span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">TYPE_STRING</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">TypeSpecialization</span><span class="o">.</span><span class="n">Path</span><span class="p">)</span></div>
+    <span class="n">PathArray1D</span> <span class="o">=</span> <span class="p">(</span><span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">TYPE_STRING</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">TypeSpecialization</span><span class="o">.</span><span class="n">Path</span><span class="p">)</span>
+    <span class="n">EnumArray1D</span> <span class="o">=</span> <span class="p">(</span><span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">TYPE_ENUM</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">TypeSpecialization</span><span class="o">.</span><span class="n">Enum</span><span class="p">)</span></div>
 </pre></div>
 
            </div>
