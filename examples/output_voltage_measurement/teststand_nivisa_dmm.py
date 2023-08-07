@@ -3,8 +3,6 @@ from typing import Any
 
 import pyvisa.resources
 
-import ni_measurementlink_service as nims
-
 from _helpers import GrpcChannelPoolHelper, TestStandSupport
 from _visa_helpers import (
     INSTRUMENT_TYPE_DMM_SIMULATOR,
@@ -13,6 +11,8 @@ from _visa_helpers import (
     log_instrument_id,
     reset_instrument,
 )
+
+import ni_measurementlink_service as nims
 
 
 def create_nivisa_dmm_sessions(sequence_context: Any, use_simulation: bool) -> None:

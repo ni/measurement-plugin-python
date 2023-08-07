@@ -15,6 +15,7 @@ def create_nidcpower_sessions(sequence_context: Any, use_simulation: bool) -> No
         sequence_context:
             The SequenceContext COM object from the TestStand sequence execution.
             (Dynamically typed.)
+        use_simulation (bool): This boolean determines creation of real or simulated instrument.
     """
     with GrpcChannelPoolHelper() as grpc_channel_pool:
         session_management_client = nims.session_management.Client(
@@ -47,7 +48,11 @@ def create_nidcpower_sessions(sequence_context: Any, use_simulation: bool) -> No
 
 
 def destroy_nidcpower_sessions(use_simulation: bool) -> None:
-    """Destroy and unregister all NI-DCPower sessions."""
+    """Destroy and unregister all NI-DCPower sessions.
+
+    Args:
+        use_simulation (bool): This boolean determines creation of real or simulated instrument.
+    """
     with GrpcChannelPoolHelper() as grpc_channel_pool:
         session_management_client = nims.session_management.Client(
             grpc_channel=grpc_channel_pool.session_management_channel
