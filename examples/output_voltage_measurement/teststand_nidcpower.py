@@ -8,7 +8,7 @@ from _nidcpower_helpers import create_session
 import ni_measurementlink_service as nims
 
 
-def create_nidcpower_sessions(sequence_context: Any) -> None:
+def create_nidcpower_sessions(sequence_context: Any, use_simulation: bool) -> None:
     """Create and register all NI-DCPower sessions.
 
     Args:
@@ -39,13 +39,14 @@ def create_nidcpower_sessions(sequence_context: Any) -> None:
                 # Leave session open
                 _ = create_session(
                     session_info,
+                    use_simulation,
                     grpc_device_channel,
                     initialization_behavior=nidcpower.SessionInitializationBehavior.INITIALIZE_SERVER_SESSION,
                 )
             session_management_client.register_sessions(reservation.session_info)
 
 
-def destroy_nidcpower_sessions() -> None:
+def destroy_nidcpower_sessions(use_simulation: bool) -> None:
     """Destroy and unregister all NI-DCPower sessions."""
     with GrpcChannelPoolHelper() as grpc_channel_pool:
         session_management_client = nims.session_management.Client(
@@ -64,6 +65,7 @@ def destroy_nidcpower_sessions() -> None:
             for session_info in reservation.session_info:
                 session = create_session(
                     session_info,
+                    use_simulation,
                     grpc_device_channel,
                     initialization_behavior=nidcpower.SessionInitializationBehavior.ATTACH_TO_SERVER_SESSION,
                 )

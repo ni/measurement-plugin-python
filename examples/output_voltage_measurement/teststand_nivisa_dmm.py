@@ -1,8 +1,10 @@
 """Functions to set up and tear down NI-VISA DMM sessions in NI TestStand."""
 from typing import Any
 
-import ni_measurementlink_service as nims
 import pyvisa.resources
+
+import ni_measurementlink_service as nims
+
 from _helpers import GrpcChannelPoolHelper, TestStandSupport
 from _visa_helpers import (
     INSTRUMENT_TYPE_DMM_SIMULATOR,
