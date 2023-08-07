@@ -265,6 +265,7 @@ def _start_service(exe_file_path: pathlib.PurePath, key_file_path: pathlib.Path)
         cwd=exe_file_path.parent,
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,
+        creationflags=subprocess.CREATE_BREAKAWAY_FROM_JOB,
     )
     # After the execution of process, check for key file existence in the path
     # stop checking after 30 seconds have elapsed and throw error
