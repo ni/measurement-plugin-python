@@ -127,12 +127,12 @@ def measure(
         )
         source_session_info = _get_session_info_for_pin(reservation.session_info, input_pin)
         measure_session_info = _get_session_info_for_pin(reservation.session_info, output_pin)
-        resource_manager = _visa_helpers.create_resource_manager(service_options.use_simulation)
         # Creates NI-DCPower and NI-VISA DMM sessions.
         with _nidcpower_helpers.create_session(
             source_session_info, service_options.use_simulation, grpc_device_channel
         ) as source_session, _visa_helpers.create_session(
-            resource_manager, measure_session_info.resource_name
+            measure_session_info.resource_name,
+            use_simulation=service_options.use_simulation,
         ) as measure_session:
             pending_cancellation = False
             _add_cancel_callback(source_session, measurement_service, pending_cancellation)
