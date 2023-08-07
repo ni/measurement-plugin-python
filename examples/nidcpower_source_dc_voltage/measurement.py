@@ -19,15 +19,9 @@ from _helpers import (
     use_simulation_option,
     verbosity_option,
 )
-from _nidcpower_helpers import create_session
+from _nidcpower_helpers import USE_SIMULATION, create_session
 
 import ni_measurementlink_service as nims
-
-USE_SIMULATION = True
-"""
-To use a physical NI SMU instrument, set this to False or specify
---no-use-simulation on the command line.
-"""
 
 NIDCPOWER_WAIT_FOR_EVENT_TIMEOUT_ERROR_CODE = -1074116059
 NIDCPOWER_TIMEOUT_EXCEEDED_ERROR_CODE = -1074097933
@@ -90,11 +84,7 @@ def measure(
         grpc_device_channel = get_grpc_device_channel(
             measurement_service, nidcpower, service_options
         )
-        with create_session(
-            reservation.session_info,
-            service_options.use_simulation,
-            grpc_device_channel,
-        ) as session:
+        with create_session(reservation.session_info, grpc_device_channel) as session:
             channels = session.channels[reservation.session_info.channel_list]
             channel_mappings = reservation.session_info.channel_mappings
 

@@ -17,20 +17,15 @@ from _helpers import (
 )
 from _visa_helpers import (
     INSTRUMENT_TYPE_DMM_SIMULATOR,
+    USE_SIMULATION,
     check_instrument_error,
-    create_resource_manager,
-    create_session,
+    create_visa_resource_manager,
+    create_visa_session,
     log_instrument_id,
     reset_instrument,
 )
 
 import ni_measurementlink_service as nims
-
-USE_SIMULATION = True
-"""
-To use NI Instrument Simulator v2.0 hardware, set this to False or specify
---no-use-simulation on the command line.
-"""
 
 
 service_directory = pathlib.Path(__file__).resolve().parent
@@ -97,8 +92,10 @@ def measure(
         instrument_type_id=INSTRUMENT_TYPE_DMM_SIMULATOR,
         timeout=RESERVATION_TIMEOUT_IN_SECONDS,
     ) as reservation:
-        resource_manager = create_resource_manager(service_options.use_simulation)
-        with create_session(resource_manager, reservation.session_info.resource_name) as session:
+        resource_manager = create_visa_resource_manager(service_options.use_simulation)
+        with create_visa_session(
+            resource_manager, reservation.session_info.resource_name
+        ) as session:
             # Work around https://github.com/pyvisa/pyvisa/issues/739 - Type annotation for Resource
             # context manager implicitly upcasts derived class to base class
             assert isinstance(session, pyvisa.resources.MessageBasedResource)

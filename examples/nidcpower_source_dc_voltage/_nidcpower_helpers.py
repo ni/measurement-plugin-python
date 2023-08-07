@@ -7,16 +7,21 @@ import nidcpower
 
 import ni_measurementlink_service as nims
 
+USE_SIMULATION = True
+"""
+To use a physical NI SMU instrument, set this to False or specify
+--no-use-simulation on the command line.
+"""
+
 
 def create_session(
     session_info: nims.session_management.SessionInformation,
-    use_simulation: bool,
     session_grpc_channel: Optional[grpc.Channel] = None,
     initialization_behavior=nidcpower.SessionInitializationBehavior.AUTO,
 ) -> nidcpower.Session:
     """Create driver session based on reserved session and grpc channel."""
     options: Dict[str, Any] = {}
-    if use_simulation:
+    if USE_SIMULATION:
         options["simulate"] = True
         options["driver_setup"] = {"Model": "4141"}
 
