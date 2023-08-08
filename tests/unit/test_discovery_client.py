@@ -3,7 +3,8 @@
 import json
 import pathlib
 import subprocess
-from typing import cast
+import sys
+from typing import Any, Dict, cast
 
 import pytest
 from pytest_mock import MockerFixture
@@ -85,6 +86,7 @@ def test___get_discovery_service_address___start_service_jit___returns_expected_
     temp_discovery_key_file_path: pathlib.Path,
     temp_registration_json_file_path: pathlib.Path,
     temp_directory: pathlib.Path,
+    add_subprocess_popen_creationflags: Dict[str, Any],
 ):
     mocker.patch(
         "ni_measurementlink_service._internal.discovery_client._get_key_file_path",
@@ -109,7 +111,7 @@ def test___get_discovery_service_address___start_service_jit___returns_expected_
         cwd=exe_file_path.parent,
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,
-        creationflags=0x1000000,
+        **add_subprocess_popen_creationflags,
     )
     assert _TEST_SERVICE_PORT in discovery_service_address
 
@@ -141,7 +143,10 @@ def test___get_discovery_service_address___key_file_not_exist___throws_timeouter
 
 
 def test___start_discovery_service___key_file_exist_after_poll___service_start_success(
-    mocker: MockerFixture, temp_directory: pathlib.Path, temp_discovery_key_file_path: pathlib.Path
+    mocker: MockerFixture,
+    temp_directory: pathlib.Path,
+    temp_discovery_key_file_path: pathlib.Path,
+    add_subprocess_popen_creationflags: Dict[str, Any],
 ):
     exe_file_path = temp_directory / _MOCK_REGISTRATION_FILE_CONTENT["discovery"]["path"]
 
@@ -158,7 +163,7 @@ def test___start_discovery_service___key_file_exist_after_poll___service_start_s
         cwd=exe_file_path.parent,
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,
-        creationflags=0x1000000,
+        **add_subprocess_popen_creationflags,
     )
 
 
@@ -183,6 +188,14 @@ def test___discovery_service_exe_unavailable___register_service___registration_f
     )
 
     assert not registration_success_flag
+
+
+@pytest.fixture(scope="module")
+def add_subprocess_popen_creationflags() -> Dict[str, Any]:
+    kwargs: Dict[str, Any] = {}
+    if sys.platform == "win32":
+        kwargs["creationflags"] = subprocess.CREATE_BREAKAWAY_FROM_JOB
+    return kwargs
 
 
 @pytest.fixture
