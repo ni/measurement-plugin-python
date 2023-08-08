@@ -17,7 +17,6 @@ from ni_measurementlink_service._internal.stubs.ni.measurementlink.discovery.v1 
     discovery_service_pb2_grpc,
 )
 from ni_measurementlink_service.measurement.info import MeasurementInfo, ServiceInfo
-from subprocess import CREATE_BREAKAWAY_FROM_JOB
 
 if sys.platform == "win32":
     import errno
