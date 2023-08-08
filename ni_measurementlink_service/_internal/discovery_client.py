@@ -16,6 +16,7 @@ from ni_measurementlink_service._internal.stubs.ni.measurementlink.discovery.v1 
     discovery_service_pb2,
     discovery_service_pb2_grpc,
 )
+from ni_measurementlink_service._internal.utilities.globaltestingstate import GlobalTestingState
 from ni_measurementlink_service.measurement.info import MeasurementInfo, ServiceInfo
 
 if sys.platform == "win32":
@@ -181,6 +182,13 @@ class DiscoveryClient:
         except Exception:
             _logger.exception("Error in unregistering with discovery service.")
             return False
+        finally:
+            global _discovery_service_subprocess
+            # Killing the Discovery Service started by the Test environment.
+            if GlobalTestingState.IsInTestState and _discovery_service_subprocess is not None:
+                _discovery_service_subprocess.kill()
+                _discovery_service_subprocess.communicate()
+
         return True
 
     def resolve_service(self, provided_interface: str, service_class: str = "") -> ServiceLocation:
