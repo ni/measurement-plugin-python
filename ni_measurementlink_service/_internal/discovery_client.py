@@ -17,6 +17,7 @@ from ni_measurementlink_service._internal.stubs.ni.measurementlink.discovery.v1 
     discovery_service_pb2_grpc,
 )
 from ni_measurementlink_service.measurement.info import MeasurementInfo, ServiceInfo
+from subprocess import CREATE_BREAKAWAY_FROM_JOB
 
 if sys.platform == "win32":
     import errno
@@ -265,7 +266,7 @@ def _start_service(exe_file_path: pathlib.PurePath, key_file_path: pathlib.Path)
         cwd=exe_file_path.parent,
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,
-        creationflags=0x1000000,
+        creationflags=CREATE_BREAKAWAY_FROM_JOB,
     )
     # After the execution of process, check for key file existence in the path
     # stop checking after 30 seconds have elapsed and throw error
