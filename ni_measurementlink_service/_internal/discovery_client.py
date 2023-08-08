@@ -8,7 +8,7 @@ import subprocess
 import sys
 import time
 import typing
-from typing import Optional
+from typing import Any, Dict, Optional
 
 import grpc
 
@@ -260,15 +260,16 @@ def _key_file_exists(key_file_path: pathlib.Path) -> bool:
 def _start_service(exe_file_path: pathlib.PurePath, key_file_path: pathlib.Path) -> None:
     """Starts the service at the specified path and wait for the service to get up and running."""
     global _discovery_service_subprocess  # save Popen object to avoid ResourceWarning
-
-    # Added hexadecimal equivalent of subprocess.CREATE_BREAKAWAY_FROM_JOB to avoid
-    # Mypy error 'Module subprocess has no attribute CREATE_BREAKAWAY_FROM_JOB'.
+    kwargs: Dict[str, Any] = {}
+    if sys.platform == "win32":
+        # Terminating the measurement service should not terminate the discovery service.
+        kwargs["creationflags"] = subprocess.CREATE_BREAKAWAY_FROM_JOB
     _discovery_service_subprocess = subprocess.Popen(
         [exe_file_path],
         cwd=exe_file_path.parent,
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,
-        creationflags=0x1000000,
+        **kwargs,
     )
     # After the execution of process, check for key file existence in the path
     # stop checking after 30 seconds have elapsed and throw error
