@@ -1,5 +1,6 @@
 """ Contains API to register and un-register measurement service with discovery service.
 """
+import _winapi
 import json
 import logging
 import os
@@ -260,13 +261,12 @@ def _key_file_exists(key_file_path: pathlib.Path) -> bool:
 def _start_service(exe_file_path: pathlib.PurePath, key_file_path: pathlib.Path) -> None:
     """Starts the service at the specified path and wait for the service to get up and running."""
     global _discovery_service_subprocess  # save Popen object to avoid ResourceWarning
-    creationflags = subprocess.CREATE_BREAKAWAY_FROM_JOB
     _discovery_service_subprocess = subprocess.Popen(
         [exe_file_path],
         cwd=exe_file_path.parent,
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,
-        creationflags=creationflags,
+        creationflags=_winapi.CREATE_BREAKAWAY_FROM_JOB,
     )
     # After the execution of process, check for key file existence in the path
     # stop checking after 30 seconds have elapsed and throw error
