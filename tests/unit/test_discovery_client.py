@@ -109,7 +109,7 @@ def test___get_discovery_service_address___start_service_jit___returns_expected_
         cwd=exe_file_path.parent,
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,
-        creationflags=subprocess.CREATE_BREAKAWAY_FROM_JOB,
+        creationflags=0x1000000,
     )
     assert _TEST_SERVICE_PORT in discovery_service_address
 
@@ -158,7 +158,7 @@ def test___start_discovery_service___key_file_exist_after_poll___service_start_s
         cwd=exe_file_path.parent,
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,
-        creationflags=subprocess.CREATE_BREAKAWAY_FROM_JOB,
+        creationflags=0x1000000,
     )
 
 

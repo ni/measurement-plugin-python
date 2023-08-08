@@ -1,6 +1,5 @@
 """ Contains API to register and un-register measurement service with discovery service.
 """
-import _winapi
 import json
 import logging
 import os
@@ -266,7 +265,7 @@ def _start_service(exe_file_path: pathlib.PurePath, key_file_path: pathlib.Path)
         cwd=exe_file_path.parent,
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,
-        creationflags=_winapi.CREATE_BREAKAWAY_FROM_JOB,
+        creationflags=0x1000000,
     )
     # After the execution of process, check for key file existence in the path
     # stop checking after 30 seconds have elapsed and throw error
