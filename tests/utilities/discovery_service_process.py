@@ -1,7 +1,9 @@
 """Class to create and terminate Discovery Service instance."""
 
 from types import TracebackType
-from typing import Optional, Type, TypeVar
+from typing import Optional, Type
+
+from typing_extensions import Self
 
 from ni_measurementlink_service._internal.discovery_client import (
     _get_discovery_service_location,
@@ -9,8 +11,6 @@ from ni_measurementlink_service._internal.discovery_client import (
     _service_already_running,
     _start_service,
 )
-
-Self = TypeVar("Self", bound=object)
 
 
 class DiscoveryServiceProcess:
