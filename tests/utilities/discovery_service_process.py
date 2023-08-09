@@ -1,4 +1,7 @@
-"""Generator class to create and terminate Discovery Service instance."""
+"""Class to create and terminate Discovery Service instance."""
+
+from types import TracebackType
+from typing import Optional, Type, TypeVar
 
 from ni_measurementlink_service._internal.discovery_client import (
     _get_discovery_service_location,
@@ -7,11 +10,13 @@ from ni_measurementlink_service._internal.discovery_client import (
     _start_service,
 )
 
+Self = TypeVar("Self", bound=object)
+
 
 class DiscoveryServiceProcess:
     """Maintains the processes involved in creating and terminating discovery service."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Creates a DiscoveryServiceProcess instance."""
         try:
             self._proc = None
@@ -23,15 +28,20 @@ class DiscoveryServiceProcess:
             self._close_discovery_service()
             raise
 
-    def __enter__(self):
+    def __enter__(self: Self) -> Self:
         """Returns the DiscoveryServiceProcess instance."""
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    def __exit__(
+        self,
+        exc_type: Optional[Type[BaseException]],
+        exc_val: Optional[BaseException],
+        exc_tb: Optional[TracebackType],
+    ) -> None:
         """Closes the DiscoveryServiceProcess instance."""
         self._close_discovery_service()
 
-    def _close_discovery_service(self):
+    def _close_discovery_service(self) -> None:
         if self._proc is not None:
             self._proc.kill()
             # Use communicate() to close the stdout pipe and wait for the server process to exit.
