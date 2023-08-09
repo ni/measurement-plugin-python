@@ -12,6 +12,7 @@ from ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v
     measurement_service_pb2_grpc as v2_measurement_service_pb2_grpc,
 )
 from ni_measurementlink_service.measurement.service import MeasurementService
+from tests.utilities.discovery_service_process import DiscoveryServiceProcess
 
 
 @pytest.fixture(scope="module")
@@ -42,3 +43,10 @@ def stub_v1(grpc_channel: grpc.Channel) -> v1_measurement_service_pb2_grpc.Measu
 def stub_v2(grpc_channel: grpc.Channel) -> v2_measurement_service_pb2_grpc.MeasurementServiceStub:
     """Test fixture that creates a MeasurementService v2 stub."""
     return v2_measurement_service_pb2_grpc.MeasurementServiceStub(grpc_channel)
+
+
+@pytest.fixture(scope="session")
+def discovery_service_process() -> Generator[DiscoveryServiceProcess, None, None]:
+    """Test fixture that creates discovery service process."""
+    with DiscoveryServiceProcess() as proc:
+        yield proc
