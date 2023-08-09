@@ -9,7 +9,6 @@ from ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v
     measurement_service_pb2 as v2_measurement_service_pb2,
     measurement_service_pb2_grpc as v2_measurement_service_pb2_grpc,
 )
-from ni_measurementlink_service._internal.utilities.globaltestingstate import GlobalTestingState
 from ni_measurementlink_service.measurement.service import MeasurementService
 from tests.assets import sample_streaming_measurement_test_pb2
 from tests.utilities import streaming_data_measurement
@@ -138,8 +137,8 @@ def _get_serialized_measurement_outputs(
 
 
 @pytest.fixture(scope="module")
-def measurement_service() -> Generator[MeasurementService, None, None]:
+def measurement_service(discovery_service_process) -> Generator[MeasurementService, None, None]:
     """Test fixture that creates and hosts a measurement service."""
-    GlobalTestingState.IsInTestState = True
+    _ = discovery_service_process
     with streaming_data_measurement.measurement_service.host_service() as service:
         yield service
