@@ -8,7 +8,7 @@ import subprocess
 import sys
 import time
 import typing
-from typing import Optional
+from typing import Any, Dict, Optional
 
 import grpc
 
@@ -262,11 +262,16 @@ def _start_service(
     exe_file_path: pathlib.PurePath, key_file_path: pathlib.Path
 ) -> subprocess.Popen:
     """Starts the service at the specified path and wait for the service to get up and running."""
+    kwargs: Dict[str, Any] = {}
+    if sys.platform == "win32":
+        # Terminating the measurement service should not terminate the discovery service.
+        kwargs["creationflags"] = subprocess.CREATE_BREAKAWAY_FROM_JOB
     _discovery_service_subprocess = subprocess.Popen(
         [exe_file_path],
         cwd=exe_file_path.parent,
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,
+        **kwargs,
     )
     # After the execution of process, check for key file existence in the path
     # stop checking after 30 seconds have elapsed and throw error
