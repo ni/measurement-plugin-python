@@ -86,7 +86,7 @@ def test___get_discovery_service_address___start_service_jit___returns_expected_
     temp_discovery_key_file_path: pathlib.Path,
     temp_registration_json_file_path: pathlib.Path,
     temp_directory: pathlib.Path,
-    subprocess_popen_creationflags: Dict[str, Any],
+    subprocess_popen_kwargs: Dict[str, Any],
 ):
     mocker.patch(
         "ni_measurementlink_service._internal.discovery_client._get_key_file_path",
@@ -111,7 +111,7 @@ def test___get_discovery_service_address___start_service_jit___returns_expected_
         cwd=exe_file_path.parent,
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,
-        **subprocess_popen_creationflags,
+        **subprocess_popen_kwargs,
     )
     assert _TEST_SERVICE_PORT in discovery_service_address
 
@@ -146,7 +146,7 @@ def test___start_discovery_service___key_file_exist_after_poll___service_start_s
     mocker: MockerFixture,
     temp_directory: pathlib.Path,
     temp_discovery_key_file_path: pathlib.Path,
-    subprocess_popen_creationflags: Dict[str, Any],
+    subprocess_popen_kwargs: Dict[str, Any],
 ):
     exe_file_path = temp_directory / _MOCK_REGISTRATION_FILE_CONTENT["discovery"]["path"]
 
@@ -163,7 +163,7 @@ def test___start_discovery_service___key_file_exist_after_poll___service_start_s
         cwd=exe_file_path.parent,
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,
-        **subprocess_popen_creationflags,
+        **subprocess_popen_kwargs,
     )
 
 
@@ -191,7 +191,7 @@ def test___discovery_service_exe_unavailable___register_service___registration_f
 
 
 @pytest.fixture(scope="module")
-def subprocess_popen_creationflags() -> Dict[str, Any]:
+def subprocess_popen_kwargs() -> Dict[str, Any]:
     kwargs: Dict[str, Any] = {}
     if sys.platform == "win32":
         kwargs["creationflags"] = subprocess.CREATE_BREAKAWAY_FROM_JOB
