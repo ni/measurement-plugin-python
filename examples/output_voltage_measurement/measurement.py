@@ -12,6 +12,7 @@ import grpc
 import hightime
 import nidcpower
 import pyvisa
+from _constants import USE_SIMULATION
 from _helpers import (
     ServiceOptions,
     configure_logging,
@@ -26,12 +27,6 @@ from _helpers import (
 from _visa_helpers import check_instrument_error, log_instrument_id, reset_instrument
 
 import ni_measurementlink_service as nims
-
-USE_SIMULATION = True
-"""
-To use physical instruments, set this to False or specify
---no-use-simulation on the command line.
-"""
 
 NIDCPOWER_WAIT_FOR_EVENT_TIMEOUT_ERROR_CODE = -1074116059
 NIDCPOWER_TIMEOUT_EXCEEDED_ERROR_CODE = -1074097933

@@ -2,6 +2,7 @@
 from typing import Any
 
 import pyvisa.resources
+from _constants import USE_SIMULATION
 from _helpers import GrpcChannelPoolHelper, TestStandSupport
 from _visa_helpers import (
     INSTRUMENT_TYPE_DMM_SIMULATOR,
@@ -14,16 +15,13 @@ from _visa_helpers import (
 import ni_measurementlink_service as nims
 
 
-def create_nivisa_dmm_sessions(sequence_context: Any, use_simulation: bool) -> None:
+def create_nivisa_dmm_sessions(sequence_context: Any) -> None:
     """Create and register all NI-VISA DMM sessions.
 
     Args:
         sequence_context:
             The SequenceContext COM object from the TestStand sequence execution.
             (Dynamically typed.)
-        use_simulation:
-            This boolean determines creation of real or simulated
-            VISA resource manager
     """
     with GrpcChannelPoolHelper() as grpc_channel_pool:
         session_management_client = nims.session_management.Client(
@@ -40,7 +38,7 @@ def create_nivisa_dmm_sessions(sequence_context: Any, use_simulation: bool) -> N
             # This code module sets up the sessions, so error immediately if they are in use.
             timeout=0,
         ) as reservation:
-            resource_manager = create_resource_manager(use_simulation)
+            resource_manager = create_resource_manager(USE_SIMULATION)
 
             for session_info in reservation.session_info:
                 with create_session(session_info.resource_name, resource_manager) as session:
