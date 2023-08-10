@@ -16,6 +16,7 @@ from ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v
 from ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v2 import (
     measurement_service_pb2_grpc as v2_measurement_service_pb2_grpc,
 )
+from ni_measurementlink_service._loggers import ServerLogger
 from ni_measurementlink_service.measurement.info import MeasurementInfo, ServiceInfo
 
 _logger = logging.getLogger(__name__)
@@ -75,6 +76,7 @@ class GrpcService:
         """
         self.server = grpc.server(
             logging_pool.pool(max_workers=10),
+            interceptors=[ServerLogger()],
             options=[
                 ("grpc.max_receive_message_length", -1),
                 ("grpc.max_send_message_length", -1),
