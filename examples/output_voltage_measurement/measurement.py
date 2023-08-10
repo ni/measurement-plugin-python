@@ -2,6 +2,7 @@
 
 import logging
 import pathlib
+import threading
 import time
 from enum import Enum
 
@@ -122,15 +123,14 @@ def measure(
         )
         source_session_info = _get_session_info_for_pin(reservation.session_info, input_pin)
         measure_session_info = _get_session_info_for_pin(reservation.session_info, output_pin)
-        # Creates NI-DCPower and NI-VISA DMM sessions.
         with _nidcpower_helpers.create_session(
             source_session_info, service_options.use_simulation, grpc_device_channel
         ) as source_session, _visa_helpers.create_session(
             measure_session_info.resource_name,
             use_simulation=service_options.use_simulation,
         ) as measure_session:
-            pending_cancellation = False
-            _add_cancel_callback(source_session, measurement_service, pending_cancellation)
+            cancellation_event = threading.Event()
+            measurement_service.context.add_cancel_callback(cancellation_event.set)
 
             assert isinstance(measure_session, pyvisa.resources.MessageBasedResource)
 
@@ -159,7 +159,7 @@ def measure(
             check_instrument_error(measure_session)
 
             with channels.initiate():
-                _wait_for_source_complete_event(measurement_service, channels, pending_cancellation)
+                _wait_for_source_complete_event(measurement_service, channels, cancellation_event)
 
             response = measure_session.query("READ?")
             check_instrument_error(measure_session)
@@ -176,25 +176,14 @@ def _get_session_info_for_pin(session_info, pin_name):
     return session_info[session_index]
 
 
-def _add_cancel_callback(session, measurement_service, pending_cancellation):
-    def cancel_callback():
-        session_to_abort = session
-        if session_to_abort is not None:
-            nonlocal pending_cancellation
-            pending_cancellation = True
-            session_to_abort.abort()
-
-    measurement_service.context.add_cancel_callback(cancel_callback)
-
-
-def _wait_for_source_complete_event(measurement_service, channels, pending_cancellation):
+def _wait_for_source_complete_event(measurement_service, channels, cancellation_event):
     deadline = time.time() + measurement_service.context.time_remaining
     while True:
         if time.time() > deadline:
             measurement_service.context.abort(
                 grpc.StatusCode.DEADLINE_EXCEEDED, "deadline exceeded"
             )
-        if pending_cancellation:
+        if cancellation_event.wait(0.1):
             measurement_service.context.abort(
                 grpc.StatusCode.CANCELLED, "client requested cancellation"
             )

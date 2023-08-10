@@ -5,7 +5,7 @@ This is a MeasurementLink example that sources DC voltage as input to the DUT wi
 ### Features
 
 - Uses the `nidcpower` package to access NI-DCPower from Python
-- Uses the open-source `PyVISA` package to access PyVISA from Python
+- Uses the open-source `PyVISA` package to access NI-VISA from Python
 - Uses the open-source `PyVISA-sim` package to simulate instruments in software
 - Includes InstrumentStudio and MeasurementLink UI Editor project files
 - Includes a TestStand sequence showing how to configure the pin map, register
@@ -36,9 +36,8 @@ By default, this example does not require hardware; it uses a simulated instrume
 
 This example requires an NI SMU that is supported by NI-DCPower (e.g. PXIe-4141).
 
-To use physical instruments: 
-- Edit `measurement.py` to specify `USE_SIMULATION = False` when working with MeasurementLink UI Editor / InstrumentStudio.
-- Edit `OutputVoltageMeasurement.seq` to specify `FileGlobals.UseSimulation` value to `False` when working with TestStand.
+By default, this example uses simulated instruments. To use physical instruments, edit
+`_constants.py` to specify `USE_SIMULATION = False`.
 
 To use NI Instrument Simulator hardware:
 
@@ -53,6 +52,5 @@ To use NI Instrument Simulator hardware:
     serial configuration), use the `Instrument Simulator Wizard` included with
     the NI Instrument Simulator software.
 
-To use a DMM like Keysight 34401A:
-  - Update the [`OutputVoltageMeasurement.pinmap`](./OutputVoltageMeasurement.pinmap) to reflect the connected instrument's type and resource name.
-  - Additionally, verify driver specific commands in `_visa_helpers.py` and update them when required.
+To use a 3rd party DMM, such as a Keysight 34401A:
+  - Verify the driver specific commands in `_visa_helpers.py` and update them if required.
