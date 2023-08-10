@@ -25,4 +25,4 @@ This is a MeasurementLink example that performs a measurement using an NI DMM.
 This example requires an NI DMM (e.g. PXIe-4081).
 
 By default, this example uses a simulated instrument. To use a physical instrument, edit
-`measurement.py` and `teststand_fixture.py` to specify `USE_SIMULATION = False`.
+`_nidmm_helpers.py` and `teststand_fixture.py` to specify `USE_SIMULATION = False`.

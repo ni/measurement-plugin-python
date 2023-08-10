@@ -30,4 +30,4 @@ using an NI waveform generator.
 This example requires an NI waveform generator (e.g. PXIe-5423 (2CH)).
 
 By default, this example uses a simulated instrument. To use a physical instrument, edit
-`measurement.py` and `teststand_fixture.py` to specify `USE_SIMULATION = False`.
+`_nifgen_helpers.py` and `teststand_fixture.py` to specify `USE_SIMULATION = False`.
