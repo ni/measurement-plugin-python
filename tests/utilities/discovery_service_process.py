@@ -44,4 +44,4 @@ class DiscoveryServiceProcess:
         if self._proc is not None:
             self._proc.kill()
             # Use communicate() to close the stdout pipe and wait for the server process to exit.
-            _, _ = self._proc.communicate()
+            self._proc.communicate()
