@@ -205,8 +205,9 @@ def test___measurement_service_v2___measure_with_large_array___returns_output(
 
 
 @pytest.fixture(scope="module")
-def measurement_service() -> Generator[MeasurementService, None, None]:
+def measurement_service(discovery_service_process) -> Generator[MeasurementService, None, None]:
     """Test fixture that creates and hosts a measurement service."""
+    discovery_service_process
     with loopback_measurement.measurement_service.host_service() as service:
         yield service
 
