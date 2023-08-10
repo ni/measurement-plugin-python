@@ -26,7 +26,6 @@ class DiscoveryServiceProcess:
             self._proc = _start_service(_get_discovery_service_location(), key_file_path)
         except Exception:
             self._close_discovery_service()
-            raise
 
     def __enter__(self: Self) -> Self:
         """Returns the DiscoveryServiceProcess instance."""
