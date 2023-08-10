@@ -80,10 +80,9 @@ class DiscoveryClient:
     @property
     def stub(self) -> discovery_service_pb2_grpc.DiscoveryServiceStub:
         """Get the gRPC stub used to interact with the discovery service."""
-        if self._stub is None:
-            address = _get_discovery_service_address()
-            channel = grpc.insecure_channel(address)
-            self._stub = discovery_service_pb2_grpc.DiscoveryServiceStub(channel)
+        address = _get_discovery_service_address()
+        channel = grpc.insecure_channel(address)
+        self._stub = discovery_service_pb2_grpc.DiscoveryServiceStub(channel)
         return self._stub
 
     def register_measurement_service(
