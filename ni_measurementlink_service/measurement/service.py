@@ -31,6 +31,7 @@ from ni_measurementlink_service._internal.parameter import (
     metadata as parameter_metadata,
 )
 from ni_measurementlink_service._internal.service_manager import GrpcService
+from ni_measurementlink_service._loggers import ClientLogger
 from ni_measurementlink_service.measurement.info import (
     DataType,
     MeasurementInfo,
@@ -118,6 +119,7 @@ class GrpcChannelPool(object):
             if target not in self._channel_cache:
                 self._lock.release()
                 new_channel = grpc.insecure_channel(target)
+                new_channel = grpc.intercept_channel(new_channel, ClientLogger())
                 self._lock.acquire()
                 if target not in self._channel_cache:
                     self._channel_cache[target] = new_channel
