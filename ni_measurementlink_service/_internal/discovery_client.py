@@ -80,7 +80,8 @@ class DiscoveryClient:
         if self._stub is None:
             address = _get_discovery_service_address()
             channel = grpc.insecure_channel(address)
-            channel = grpc.intercept_channel(channel, ClientLogger())
+            if ClientLogger.is_enabled():
+                channel = grpc.intercept_channel(channel, ClientLogger())
             self._stub = discovery_service_pb2_grpc.DiscoveryServiceStub(channel)
         return self._stub
 

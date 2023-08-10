@@ -31,6 +31,11 @@ class ClientLogger(
 ):
     """Intercepts gRPC client calls and logs them for debugging."""
 
+    @classmethod
+    def is_enabled(cls) -> bool:
+        """Indicates whether gRPC client call logging is enabled for the current log level."""
+        return _ClientCallLogger.is_enabled()
+
     def intercept_unary_unary(
         self,
         continuation: Callable[
@@ -122,6 +127,11 @@ class ClientLogger(
 
 class ServerLogger(grpc.ServerInterceptor):
     """Intercepts gRPC server calls and logs them for debugging."""
+
+    @classmethod
+    def is_enabled(cls) -> bool:
+        """Indicates whether gRPC client call logging is enabled for the current log level."""
+        return _ServerCallLogger.is_enabled()
 
     def intercept_service(
         self,

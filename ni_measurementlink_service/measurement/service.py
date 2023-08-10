@@ -91,7 +91,8 @@ class GrpcChannelPool(object):
             if target not in self._channel_cache:
                 self._lock.release()
                 new_channel = grpc.insecure_channel(target)
-                new_channel = grpc.intercept_channel(new_channel, ClientLogger())
+                if ClientLogger.is_enabled():
+                    new_channel = grpc.intercept_channel(new_channel, ClientLogger())
                 self._lock.acquire()
                 if target not in self._channel_cache:
                     self._channel_cache[target] = new_channel
@@ -193,8 +194,8 @@ class MeasurementService:
         self.output_parameter_list: list = []
         self.grpc_service = GrpcService()
         self.context: MeasurementContext = MeasurementContext()
-        self.discovery_client: DiscoveryClient = self.grpc_service.discovery_client
         self.channel_pool: GrpcChannelPool = GrpcChannelPool()
+        self.discovery_client: DiscoveryClient = DiscoveryClient()
 
     def register_measurement(self, measurement_function: Callable) -> Callable:
         """Register a function as the measurement function for a measurement service.
