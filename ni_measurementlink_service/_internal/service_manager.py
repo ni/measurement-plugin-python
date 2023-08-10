@@ -74,9 +74,12 @@ class GrpcService:
             int: The port number of the server
 
         """
+        interceptors: List[grpc.ServerInterceptor] = []
+        if ServerLogger.is_enabled():
+            interceptors.append(ServerLogger())
         self.server = grpc.server(
             logging_pool.pool(max_workers=10),
-            interceptors=[ServerLogger()],
+            interceptors=interceptors,
             options=[
                 ("grpc.max_receive_message_length", -1),
                 ("grpc.max_send_message_length", -1),
