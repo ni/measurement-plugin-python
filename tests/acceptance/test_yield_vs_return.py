@@ -55,6 +55,6 @@ def _get_serialized_measurement_configuration_parameters(
 @pytest.fixture(scope="module")
 def measurement_service(discovery_service_process) -> Generator[MeasurementService, None, None]:
     """Test fixture that creates and hosts a measurement service."""
-    _ = discovery_service_process
+    discovery_service_process
     with yield_vs_return_measurement.measurement_service.host_service() as service:
         yield service

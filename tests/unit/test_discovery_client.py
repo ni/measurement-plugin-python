@@ -156,7 +156,7 @@ def test___start_discovery_service___key_file_exist_after_poll___service_start_s
     )
     mock_popen = mocker.patch("subprocess.Popen")
 
-    _ = _start_service(exe_file_path, temp_discovery_key_file_path)
+    _start_service(exe_file_path, temp_discovery_key_file_path)
 
     mock_popen.assert_called_once_with(
         [exe_file_path],
