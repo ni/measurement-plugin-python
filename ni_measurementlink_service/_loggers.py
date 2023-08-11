@@ -20,6 +20,13 @@ from typing import (
 import grpc
 from typing_extensions import Self
 
+try:
+    import traceloggingdynamic
+
+    _event_provider = traceloggingdynamic.Provider(b"NI-MeasurementLink-Python")
+except ImportError:
+    _event_provider = None
+
 _logger = logging.getLogger(__name__)
 
 
@@ -279,21 +286,43 @@ class _ClientCallLogger(_CallLogger):
 
     @classmethod
     def is_enabled(cls) -> bool:
-        return _logger.isEnabledFor(logging.DEBUG)
+        return _logger.isEnabledFor(logging.DEBUG) or _event_provider
 
     def __init__(self, method_name: str) -> None:
         super().__init__()
         self._method_name = method_name
         _logger.debug("gRPC client call starting: %s", self._method_name)
+        if _event_provider and _event_provider.is_enabled(level=4):
+            eb = traceloggingdynamic.EventBuilder()
+            # TODO: ETW Viewer displays GrpcClientCallStartStart
+            eb.reset(b'GrpcClientCallStart', level=4, opcode=1, id=1)
+            # TODO: does tracelogging support formatted messages like EventSource?
+            eb.add_str8(b'Message', "gRPC client call starting: " + self._method_name)
+            _event_provider.write(eb)
 
     def _close(self, exception: BaseException | None = None) -> None:
         _logger.debug("gRPC client call complete: %s", self._method_name)
+        if _event_provider and _event_provider.is_enabled(level=4):
+            eb = traceloggingdynamic.EventBuilder()
+            eb.reset(b'GrpcClientCallStop', level=4, opcode=2, id=2)
+            eb.add_str8(b'Message', "gRPC client call complete: " + self._method_name)
+            _event_provider.write(eb)
 
     def log_streaming_request(self) -> None:
         _logger.debug("gRPC client call streaming request: %s", self._method_name)
+        if _event_provider and _event_provider.is_enabled(level=4):
+            eb = traceloggingdynamic.EventBuilder()
+            eb.reset(b'GrpcClientCallStreamingRequest', level=4, opcode=0, id=3)
+            eb.add_str8(b'Message', "gRPC client call streaming request: " + self._method_name)
+            _event_provider.write(eb)
 
     def log_streaming_response(self) -> None:
         _logger.debug("gRPC client call streaming response: %s", self._method_name)
+        if _event_provider and _event_provider.is_enabled(level=4):
+            eb = traceloggingdynamic.EventBuilder()
+            eb.reset(b'GrpcClientCallStreamingResponse', level=4, opcode=0, id=4)
+            eb.add_str8(b'Message', "gRPC client call streaming response: " + self._method_name)
+            _event_provider.write(eb)
 
 
 class _ServerCallLogger(_CallLogger):
@@ -301,13 +330,18 @@ class _ServerCallLogger(_CallLogger):
 
     @classmethod
     def is_enabled(cls) -> bool:
-        return _logger.isEnabledFor(logging.INFO)
+        return _logger.isEnabledFor(logging.INFO) or _event_provider
 
     def __init__(self, method_name: str) -> None:
         super().__init__()
         self._method_name = method_name
         self._start_time = time.perf_counter()
         _logger.debug("gRPC server call starting: %s", self._method_name)
+        if _event_provider and _event_provider.is_enabled(level=4):
+            eb = traceloggingdynamic.EventBuilder()
+            eb.reset(b'GrpcServerCallStart', level=4, opcode=1, id=5)
+            eb.add_str8(b'Message', "gRPC server call starting: " + self._method_name)
+            _event_provider.write(eb)
 
     def _close(self, exception: BaseException | None = None) -> None:
         if _logger.isEnabledFor(logging.INFO):
@@ -322,12 +356,27 @@ class _ServerCallLogger(_CallLogger):
                 elapsed_time * 1000.0,
             )
         _logger.debug("gRPC server call complete: %s", self._method_name)
+        if _event_provider and _event_provider.is_enabled(level=4):
+            eb = traceloggingdynamic.EventBuilder()
+            eb.reset(b'GrpcServerCallStop', level=4, opcode=2, id=6)
+            eb.add_str8(b'Message', "gRPC server call complete: " + self._method_name)
+            _event_provider.write(eb)
 
     def log_streaming_request(self) -> None:
         _logger.debug("gRPC server call streaming request: %s", self._method_name)
+        if _event_provider and _event_provider.is_enabled(level=4):
+            eb = traceloggingdynamic.EventBuilder()
+            eb.reset(b'GrpcServerCallStreamingRequest', level=4, opcode=0, id=7)
+            eb.add_str8(b'Message', "gRPC server call streaming request: " + self._method_name)
+            _event_provider.write(eb)
 
     def log_streaming_response(self) -> None:
         _logger.debug("gRPC server call streaming response: %s", self._method_name)
+        if _event_provider and _event_provider.is_enabled(level=4):
+            eb = traceloggingdynamic.EventBuilder()
+            eb.reset(b'GrpcServerCallStreamingResponse', level=4, opcode=0, id=8)
+            eb.add_str8(b'Message', "gRPC server call streaming response: " + self._method_name)
+            _event_provider.write(eb)
 
 
 def _get_status_code(exception: BaseException | None) -> grpc.StatusCode:
