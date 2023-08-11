@@ -183,7 +183,7 @@ def _wait_for_source_complete_event(measurement_service, channels, cancellation_
             measurement_service.context.abort(
                 grpc.StatusCode.DEADLINE_EXCEEDED, "deadline exceeded"
             )
-        if cancellation_event.wait(0.1):
+        if cancellation_event.is_set():
             measurement_service.context.abort(
                 grpc.StatusCode.CANCELLED, "client requested cancellation"
             )
