@@ -17,13 +17,13 @@ from _helpers import (
 )
 from _visa_helpers import (
     INSTRUMENT_TYPE_DMM_SIMULATOR,
-    USE_SIMULATION,
     check_instrument_error,
     create_visa_resource_manager,
     create_visa_session,
     log_instrument_id,
     reset_instrument,
 )
+from _constants import USE_SIMULATION
 
 import ni_measurementlink_service as nims
 

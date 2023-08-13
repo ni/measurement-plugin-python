@@ -18,13 +18,6 @@ Path to a simulation YAML file that can be used to simulate an NI Instrument Sim
 with pyvisa-sim
 """
 
-USE_SIMULATION = True
-"""
-To use NI Instrument Simulator v2.0 hardware, set this to False or specify
---no-use-simulation on the command line.
-"""
-
-
 def create_visa_resource_manager(
     use_simulation: bool, simulation_yaml_path: pathlib.Path = SIMULATION_YAML_PATH
 ) -> pyvisa.ResourceManager:

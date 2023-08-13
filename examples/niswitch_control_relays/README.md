@@ -27,4 +27,4 @@ This is a MeasurementLink example that controls relays using an NI relay driver
 This example requires an NI relay driver (e.g. PXI-2567).
 
 By default, this example uses a simulated instrument. To use a physical instrument, edit
-`_niswitch_helpers.py` and `teststand_fixture.py` to specify `USE_SIMULATION = False`.
+`_constants.py` to specify `USE_SIMULATION = False`.

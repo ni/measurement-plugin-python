@@ -6,13 +6,7 @@ import grpc
 import nidigital
 
 import ni_measurementlink_service as nims
-
-USE_SIMULATION = True
-"""
-To use a physical NI digital pattern instrument, set this to False or specify
---no-use-simulation on the command line.
-"""
-
+from _constants import USE_SIMULATION
 
 def create_session(
     session_info: nims.session_management.SessionInformation,

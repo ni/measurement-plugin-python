@@ -10,10 +10,6 @@ from ni_measurementlink_service.session_management import (
     INSTRUMENT_TYPE_NI_DIGITAL_PATTERN,
 )
 
-# To use a physical NI Digital Pattern instrument, set this to False.
-USE_SIMULATION = True
-
-
 def update_pin_map(pin_map_path: str, sequence_context: Any) -> str:
     """Update registered pin map contents.
 

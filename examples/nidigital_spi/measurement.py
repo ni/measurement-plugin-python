@@ -16,7 +16,8 @@ from _helpers import (
     use_simulation_option,
     verbosity_option,
 )
-from _nidigital_helpers import USE_SIMULATION, create_session
+from _nidigital_helpers import create_session
+from _constants import USE_SIMULATION
 
 import ni_measurementlink_service as nims
 

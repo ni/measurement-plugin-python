@@ -28,4 +28,4 @@ This is a MeasurementLink example that acquires a waveform using an NI oscillosc
 This example requires an NI oscilloscope (e.g. PXIe-5162 (4CH)).
 
 By default, this example uses a simulated instrument. To use a physical instrument, edit
-`_niscope_helpers.py` and `teststand_fixture.py` to specify `USE_SIMULATION = False`.
+`_constants.py` to specify `USE_SIMULATION = False`.
