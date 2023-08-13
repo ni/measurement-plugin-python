@@ -4,9 +4,10 @@ from typing import Any, Dict, Optional
 
 import grpc
 import nifgen
+from _constants import USE_SIMULATION
 
 import ni_measurementlink_service as nims
-from _constants import USE_SIMULATION
+
 
 def create_session(
     session_info: nims.session_management.SessionInformation,

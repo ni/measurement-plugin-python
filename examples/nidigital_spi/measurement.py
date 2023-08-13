@@ -6,6 +6,7 @@ from typing import Iterable, Tuple, Union
 
 import click
 import nidigital
+from _constants import USE_SIMULATION
 from _helpers import (
     ServiceOptions,
     configure_logging,
@@ -17,7 +18,6 @@ from _helpers import (
     verbosity_option,
 )
 from _nidigital_helpers import create_session
-from _constants import USE_SIMULATION
 
 import ni_measurementlink_service as nims
 

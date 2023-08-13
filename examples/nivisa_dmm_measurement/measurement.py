@@ -7,6 +7,7 @@ from typing import Tuple
 
 import click
 import pyvisa.resources
+from _constants import USE_SIMULATION
 from _helpers import (
     ServiceOptions,
     configure_logging,
@@ -23,10 +24,8 @@ from _visa_helpers import (
     log_instrument_id,
     reset_instrument,
 )
-from _constants import USE_SIMULATION
 
 import ni_measurementlink_service as nims
-
 
 service_directory = pathlib.Path(__file__).resolve().parent
 measurement_service = nims.MeasurementService(
