@@ -1,10 +1,13 @@
 """Pytest configuration file."""
+import os
 import pathlib
+import sys
 from typing import Generator
 
 import grpc
 import pytest
 
+from ni_measurementlink_service._internal.discovery_client import _get_registration_json_file_path
 from ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v1 import (
     measurement_service_pb2_grpc as v1_measurement_service_pb2_grpc,
 )
@@ -48,5 +51,16 @@ def stub_v2(grpc_channel: grpc.Channel) -> v2_measurement_service_pb2_grpc.Measu
 @pytest.fixture(scope="session")
 def discovery_service_process() -> Generator[DiscoveryServiceProcess, None, None]:
     """Test fixture that creates discovery service process."""
-    with DiscoveryServiceProcess() as proc:
-        yield proc
+    if sys.platform != "win32":
+        pytest.skip(
+            f"Platform {sys.platform} is not supported for starting discovery service."
+            "Could not proceed to run the tests."
+        )
+    elif os.path.exists(_get_registration_json_file_path()):
+        pytest.skip(
+            "MeasurementLink registration file not found or MeasurementLink not installed."
+            "Could not proceed to run the tests. Install MeasurementLink to create the registration file."
+        )
+    else:
+        with DiscoveryServiceProcess() as proc:
+            yield proc
