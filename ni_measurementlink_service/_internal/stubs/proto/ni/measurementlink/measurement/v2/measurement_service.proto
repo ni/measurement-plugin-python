@@ -109,6 +109,8 @@ message ConfigurationParameter {
   int32 field_number = 1;
 
   // Required. The data type for the configuration parameter.
+  // NOTE: If this is Kind.TypeMessage, you *must* also fill in
+  // the 'message_type' field below with the gRPC full name of the message.
   google.protobuf.Field.Kind type = 2;
 
   // Required. The name of the configuration parameter. When defining a user interface for the measurement, a control
@@ -133,6 +135,10 @@ message ConfigurationParameter {
   //   - Expected format: JSON dictionary string"
   //   - Example: "{\"RED\":0, \"GREEN\":25, \"BLUE\":5}"
   map<string, string> annotations = 5;
+  
+  // Required when 'type' is Kind.TypeMessage. Ignored for any other 'type'.
+  // This is the gRPC full name of the message type.
+  string message_type = 6;
 }
 
 // Message that defines an output of the measurement.
@@ -142,6 +148,8 @@ message Output {
   int32 field_number = 1;
 
   // Required. The data type for the output.
+  // NOTE: If this is Kind.TypeMessage, you *must* also fill in
+  // the 'message_type' field below with the gRPC full name of the message.
   google.protobuf.Field.Kind type = 2;
 
   // Required. The name of the output. When defining a user interface for the measurement, an indicator
@@ -154,4 +162,8 @@ message Output {
   // Optional. Represents a set of annotations on the type.
   // See documentation for ConfigurationParameter annotations for more details and examples.
   map<string, string> annotations = 5;
+
+  // Required when 'type' is Kind.TypeMessage. Ignored for any other 'type'.
+  // This is the gRPC full name of the message type.
+  string message_type = 6;
 }
