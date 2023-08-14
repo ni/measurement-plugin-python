@@ -266,7 +266,7 @@ def _start_service(
     if sys.platform == "win32":
         # Terminating the measurement service should not terminate the discovery service.
         kwargs["creationflags"] = subprocess.CREATE_BREAKAWAY_FROM_JOB
-    _discovery_service_subprocess = subprocess.Popen(
+    discovery_service_subprocess = subprocess.Popen(
         [exe_file_path],
         cwd=exe_file_path.parent,
         stdout=subprocess.DEVNULL,
@@ -279,7 +279,7 @@ def _start_service(
     while True:
         try:
             with _open_key_file(str(key_file_path)) as _:
-                return _discovery_service_subprocess
+                return discovery_service_subprocess
         except IOError:
             pass
         if time.time() >= timeout_time:
