@@ -230,7 +230,8 @@ def _ensure_discovery_service_started(key_file_path: pathlib.Path) -> None:
         return
 
     exe_file_path = _get_discovery_service_location()
-    _start_service(exe_file_path, key_file_path)
+    global _discovery_service_subprocess  # save Popen object to avoid ResourceWarning
+    _discovery_service_subprocess = _start_service(exe_file_path, key_file_path)
 
 
 def _get_discovery_service_location() -> pathlib.PurePath:
@@ -257,14 +258,15 @@ def _key_file_exists(key_file_path: pathlib.Path) -> bool:
     return key_file_path.is_file() and key_file_path.stat().st_size > 0
 
 
-def _start_service(exe_file_path: pathlib.PurePath, key_file_path: pathlib.Path) -> None:
+def _start_service(
+    exe_file_path: pathlib.PurePath, key_file_path: pathlib.Path
+) -> subprocess.Popen:
     """Starts the service at the specified path and wait for the service to get up and running."""
-    global _discovery_service_subprocess  # save Popen object to avoid ResourceWarning
     kwargs: Dict[str, Any] = {}
     if sys.platform == "win32":
         # Terminating the measurement service should not terminate the discovery service.
         kwargs["creationflags"] = subprocess.CREATE_BREAKAWAY_FROM_JOB
-    _discovery_service_subprocess = subprocess.Popen(
+    discovery_service_subprocess = subprocess.Popen(
         [exe_file_path],
         cwd=exe_file_path.parent,
         stdout=subprocess.DEVNULL,
@@ -277,7 +279,7 @@ def _start_service(exe_file_path: pathlib.PurePath, key_file_path: pathlib.Path)
     while True:
         try:
             with _open_key_file(str(key_file_path)) as _:
-                return
+                return discovery_service_subprocess
         except IOError:
             pass
         if time.time() >= timeout_time:

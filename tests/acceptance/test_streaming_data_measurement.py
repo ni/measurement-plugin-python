@@ -137,7 +137,7 @@ def _get_serialized_measurement_outputs(
 
 
 @pytest.fixture(scope="module")
-def measurement_service() -> Generator[MeasurementService, None, None]:
+def measurement_service(discovery_service_process) -> Generator[MeasurementService, None, None]:
     """Test fixture that creates and hosts a measurement service."""
     with streaming_data_measurement.measurement_service.host_service() as service:
         yield service
