@@ -5,6 +5,7 @@ from enum import Enum
 from typing import List, Type
 
 import pytest
+from pytest_mock import MockerFixture
 
 from ni_measurementlink_service.measurement.info import DataType, TypeSpecialization
 from ni_measurementlink_service.measurement.service import MeasurementService
@@ -348,6 +349,20 @@ def test___measurement_service___add_configuration_with_invalid_enum_type___rais
         measurement_service.configuration(display_name, type, default_value)(
             _fake_measurement_function
         )
+
+
+def test___measurement_service___host_service_with_grpc_service_not_started___raises_type_error(
+    measurement_service: MeasurementService,
+    mocker: MockerFixture,
+):
+    measurement_service.register_measurement(_fake_measurement_function)
+    mocker.patch(
+        "ni_measurementlink_service._internal.service_manager.GrpcService.start",
+        return_value=None,
+    )
+
+    with pytest.raises(Exception):
+        measurement_service.host_service()
 
 
 @pytest.fixture
