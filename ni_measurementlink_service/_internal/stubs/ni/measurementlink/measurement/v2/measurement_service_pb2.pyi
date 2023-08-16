@@ -221,12 +221,16 @@ class ConfigurationParameter(google.protobuf.message.Message):
     NAME_FIELD_NUMBER: builtins.int
     REPEATED_FIELD_NUMBER: builtins.int
     ANNOTATIONS_FIELD_NUMBER: builtins.int
+    MESSAGE_TYPE_FIELD_NUMBER: builtins.int
     field_number: builtins.int
     """Required. The field number for the configuration parameter as defined by the message indicated by
     MethodSignature.configuration_parameters_message_type.
     """
     type: google.protobuf.type_pb2.Field.Kind.ValueType
-    """Required. The data type for the configuration parameter."""
+    """Required. The data type for the configuration parameter.
+    NOTE: If this is Kind.TypeMessage, you *must* also fill in
+    the 'message_type' field below with the gRPC full name of the message.
+    """
     name: builtins.str
     """Required. The name of the configuration parameter. When defining a user interface for the measurement, a control
     that matches this name will be used to supply a value to this configuration parameter.
@@ -250,6 +254,10 @@ class ConfigurationParameter(google.protobuf.message.Message):
           - Expected format: JSON dictionary string"
           - Example: "{\\"RED\\":0, \\"GREEN\\":25, \\"BLUE\\":5}"
         """
+    message_type: builtins.str
+    """Required when 'type' is Kind.TypeMessage. Ignored for any other 'type'.
+    This is the gRPC full name of the message type.
+    """
     def __init__(
         self,
         *,
@@ -258,8 +266,9 @@ class ConfigurationParameter(google.protobuf.message.Message):
         name: builtins.str = ...,
         repeated: builtins.bool = ...,
         annotations: collections.abc.Mapping[builtins.str, builtins.str] | None = ...,
+        message_type: builtins.str = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing_extensions.Literal["annotations", b"annotations", "field_number", b"field_number", "name", b"name", "repeated", b"repeated", "type", b"type"]) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["annotations", b"annotations", "field_number", b"field_number", "message_type", b"message_type", "name", b"name", "repeated", b"repeated", "type", b"type"]) -> None: ...
 
 global___ConfigurationParameter = ConfigurationParameter
 
@@ -290,12 +299,16 @@ class Output(google.protobuf.message.Message):
     NAME_FIELD_NUMBER: builtins.int
     REPEATED_FIELD_NUMBER: builtins.int
     ANNOTATIONS_FIELD_NUMBER: builtins.int
+    MESSAGE_TYPE_FIELD_NUMBER: builtins.int
     field_number: builtins.int
     """Required. The field number for the output as defined by the message indicated by
     MethodSignature.outputs_message_type.
     """
     type: google.protobuf.type_pb2.Field.Kind.ValueType
-    """Required. The data type for the output."""
+    """Required. The data type for the output.
+    NOTE: If this is Kind.TypeMessage, you *must* also fill in
+    the 'message_type' field below with the gRPC full name of the message.
+    """
     name: builtins.str
     """Required. The name of the output. When defining a user interface for the measurement, an indicator
     that matches this name will be used to display the value for this output.
@@ -307,6 +320,10 @@ class Output(google.protobuf.message.Message):
         """Optional. Represents a set of annotations on the type.
         See documentation for ConfigurationParameter annotations for more details and examples.
         """
+    message_type: builtins.str
+    """Required when 'type' is Kind.TypeMessage. Ignored for any other 'type'.
+    This is the gRPC full name of the message type.
+    """
     def __init__(
         self,
         *,
@@ -315,7 +332,8 @@ class Output(google.protobuf.message.Message):
         name: builtins.str = ...,
         repeated: builtins.bool = ...,
         annotations: collections.abc.Mapping[builtins.str, builtins.str] | None = ...,
+        message_type: builtins.str = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing_extensions.Literal["annotations", b"annotations", "field_number", b"field_number", "name", b"name", "repeated", b"repeated", "type", b"type"]) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["annotations", b"annotations", "field_number", b"field_number", "message_type", b"message_type", "name", b"name", "repeated", b"repeated", "type", b"type"]) -> None: ...
 
 global___Output = Output
