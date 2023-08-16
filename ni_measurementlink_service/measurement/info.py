@@ -106,7 +106,7 @@ class DataTypeInfo(NamedTuple):
 
     """
 
-    grpc_field_type: type_pb2.Field.Kind
+    grpc_field_type: type_pb2.Field.Kind.ValueType
     repeated: bool
     type_specialization: TypeSpecialization = TypeSpecialization.NoType
 
