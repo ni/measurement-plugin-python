@@ -375,14 +375,14 @@ class MeasurementService:
         """
         if self.measure_function is None:
             raise Exception("Error, must register measurement method.")
-        is_service_started = self.grpc_service.start(
+        port = self.grpc_service.start(
             self.measurement_info,
             self.service_info,
             self.configuration_parameter_list,
             self.output_parameter_list,
             self.measure_function,
         )
-        if is_service_started:
+        if port:
             return self
         raise Exception("Error in starting the measurement service.")
 
