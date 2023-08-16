@@ -1,5 +1,5 @@
 import logging
-from typing import Callable, List, Optional
+from typing import Callable, List, Optional, Union
 
 import grpc
 from grpc.framework.foundation import logging_pool
@@ -53,7 +53,7 @@ class GrpcService:
         configuration_parameter_list: List[ParameterMetadata],
         output_parameter_list: List[ParameterMetadata],
         measure_function: Callable,
-    ):
+    ) -> Union[str, None]:
         """Host a gRPC service with the registered measurement method.
 
         Args:
