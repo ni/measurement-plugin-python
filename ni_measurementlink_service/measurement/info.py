@@ -28,7 +28,7 @@ class MeasurementInfo(NamedTuple):
 
 
 class ServiceInfo(NamedTuple):
-    """Class the represents the service information.
+    """Class that represents the service information.
 
     Attributes
     ----------
@@ -63,30 +63,105 @@ class TypeSpecialization(enum.Enum):
     Path = "path"
     Enum = "enum"
 
-
 class DataType(enum.Enum):
     """Enum that represents the supported data types."""
 
-    Int32 = (type_pb2.Field.TYPE_INT32, False, TypeSpecialization.NoType)
-    Int64 = (type_pb2.Field.TYPE_INT64, False, TypeSpecialization.NoType)
-    UInt32 = (type_pb2.Field.TYPE_UINT32, False, TypeSpecialization.NoType)
-    UInt64 = (type_pb2.Field.TYPE_UINT64, False, TypeSpecialization.NoType)
-    Float = (type_pb2.Field.TYPE_FLOAT, False, TypeSpecialization.NoType)
-    Double = (type_pb2.Field.TYPE_DOUBLE, False, TypeSpecialization.NoType)
-    Boolean = (type_pb2.Field.TYPE_BOOL, False, TypeSpecialization.NoType)
-    String = (type_pb2.Field.TYPE_STRING, False, TypeSpecialization.NoType)
-    Pin = (type_pb2.Field.TYPE_STRING, False, TypeSpecialization.Pin)
-    Path = (type_pb2.Field.TYPE_STRING, False, TypeSpecialization.Path)
-    Enum = (type_pb2.Field.TYPE_ENUM, False, TypeSpecialization.Enum)
+    Int32 = 0,
+    Int64 = 1,
+    UInt32 = 2,
+    UInt64 = 3,
+    Float = 4,
+    Double = 5,
+    Boolean = 6,
+    String = 7,
+    Pin = 8,
+    Path = 9,
+    Enum = 10,
 
-    Int32Array1D = (type_pb2.Field.TYPE_INT32, True, TypeSpecialization.NoType)
-    Int64Array1D = (type_pb2.Field.TYPE_INT64, True, TypeSpecialization.NoType)
-    UInt32Array1D = (type_pb2.Field.TYPE_UINT32, True, TypeSpecialization.NoType)
-    UInt64Array1D = (type_pb2.Field.TYPE_UINT64, True, TypeSpecialization.NoType)
-    FloatArray1D = (type_pb2.Field.TYPE_FLOAT, True, TypeSpecialization.NoType)
-    DoubleArray1D = (type_pb2.Field.TYPE_DOUBLE, True, TypeSpecialization.NoType)
-    BooleanArray1D = (type_pb2.Field.TYPE_BOOL, True, TypeSpecialization.NoType)
-    StringArray1D = (type_pb2.Field.TYPE_STRING, True, TypeSpecialization.NoType)
-    PinArray1D = (type_pb2.Field.TYPE_STRING, True, TypeSpecialization.Pin)
-    PathArray1D = (type_pb2.Field.TYPE_STRING, True, TypeSpecialization.Path)
-    EnumArray1D = (type_pb2.Field.TYPE_ENUM, True, TypeSpecialization.Enum)
+    Int32Array1D = 100,
+    Int64Array1D = 101,
+    UInt32Array1D = 102,
+    UInt64Array1D = 103,
+    FloatArray1D = 104,
+    DoubleArray1D = 105,
+    BooleanArray1D = 106,
+    StringArray1D = 107,
+    PinArray1D = 108,
+    PathArray1D = 109,
+    EnumArray1D = 110,
+
+class DataTypeInfo(NamedTuple):
+    """Class that represents the information for each of the DataType enum values.
+
+    Attributes
+    ----------
+        grpc_field_type (type_pb2.Field.Kind): Field.Kind associated with the DataType
+
+        repeated (bool): Whether the DataType is a repeated field
+
+        type_specialization (TypeSpecialization): Specific type when value_type
+        can have more than one use
+
+    """
+
+    grpc_field_type: type_pb2.Field.Kind
+    repeated: bool
+    type_specialization: TypeSpecialization = TypeSpecialization.NoType
+
+Int32TypeInfo = DataTypeInfo(type_pb2.Field.TYPE_INT32, False)
+Int64TypeInfo = DataTypeInfo(type_pb2.Field.TYPE_INT64, False)
+UInt32TypeInfo = DataTypeInfo(type_pb2.Field.TYPE_UINT32, False)
+UInt64TypeInfo = DataTypeInfo(type_pb2.Field.TYPE_UINT64, False)
+FloatTypeInfo = DataTypeInfo(type_pb2.Field.TYPE_FLOAT, False)
+DoubleTypeInfo = DataTypeInfo(type_pb2.Field.TYPE_DOUBLE, False)
+BooleanTypeInfo = DataTypeInfo(type_pb2.Field.TYPE_BOOL, False)
+StringTypeInfo = DataTypeInfo(type_pb2.Field.TYPE_STRING, False)
+PinTypeInfo = DataTypeInfo(type_pb2.Field.TYPE_STRING, False, TypeSpecialization.Pin)
+PathTypeInfo = DataTypeInfo(type_pb2.Field.TYPE_STRING, False, TypeSpecialization.Path)
+EnumTypeInfo = DataTypeInfo(type_pb2.Field.TYPE_ENUM, False, TypeSpecialization.Enum)
+
+Int32Array1DTypeInfo = DataTypeInfo(type_pb2.Field.TYPE_INT32, True)
+Int64Array1DTypeInfo = DataTypeInfo(type_pb2.Field.TYPE_INT64, True)
+UInt32Array1DTypeInfo = DataTypeInfo(type_pb2.Field.TYPE_UINT32, True)
+UInt64Array1DTypeInfo = DataTypeInfo(type_pb2.Field.TYPE_UINT64, True)
+FloatArray1DTypeInfo = DataTypeInfo(type_pb2.Field.TYPE_FLOAT, True)
+DoubleArray1DTypeInfo = DataTypeInfo(type_pb2.Field.TYPE_DOUBLE, True)
+BooleanArray1DTypeInfo = DataTypeInfo(type_pb2.Field.TYPE_BOOL, True)
+StringArray1DTypeInfo = DataTypeInfo(type_pb2.Field.TYPE_STRING, True)
+PinArray1DTypeInfo = DataTypeInfo(type_pb2.Field.TYPE_STRING, True, TypeSpecialization.Pin)
+PathArray1DTypeInfo = DataTypeInfo(type_pb2.Field.TYPE_STRING, True, TypeSpecialization.Path)
+EnumArray1DTypeInfo = DataTypeInfo(type_pb2.Field.TYPE_ENUM, True, TypeSpecialization.Enum)
+
+class DataTypeInfoLookup:
+    _DATATYPE_TO_DATATYPEINFO_LOOKUP = {
+        DataType.Int32: Int32TypeInfo,
+        DataType.Int64: Int64TypeInfo,
+        DataType.UInt32: UInt32TypeInfo,
+        DataType.UInt64: UInt64TypeInfo,
+        DataType.Float: FloatTypeInfo,
+        DataType.Double: DoubleTypeInfo,
+        DataType.Boolean: BooleanTypeInfo,
+        DataType.String: StringTypeInfo,
+        DataType.Pin: PinTypeInfo,
+        DataType.Path: PathTypeInfo,
+        DataType.Enum: EnumTypeInfo,
+
+        DataType.Int32Array1D: Int32Array1DTypeInfo,
+        DataType.Int64Array1D: Int64Array1DTypeInfo,
+        DataType.UInt32Array1D: UInt32Array1DTypeInfo,
+        DataType.UInt64Array1D: UInt64Array1DTypeInfo,
+        DataType.FloatArray1D: FloatArray1DTypeInfo,
+        DataType.DoubleArray1D: DoubleArray1DTypeInfo,
+        DataType.BooleanArray1D: BooleanArray1DTypeInfo,
+        DataType.StringArray1D: StringArray1DTypeInfo,
+        DataType.PinArray1D: PinArray1DTypeInfo,
+        DataType.PathArray1D: PathArray1DTypeInfo,
+        DataType.EnumArray1D: EnumArray1DTypeInfo,
+    }
+
+    @staticmethod
+    def get_type_info(data_type: DataType) -> DataTypeInfo:
+        if data_type not in DataTypeInfoLookup._DATATYPE_TO_DATATYPEINFO_LOOKUP:
+            raise Exception(f"Data type information not found '{data_type}'")
+        data_type_info = DataTypeInfoLookup._DATATYPE_TO_DATATYPEINFO_LOOKUP[data_type]
+        return data_type_info

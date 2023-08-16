@@ -6,7 +6,7 @@ from typing import List, Type
 
 import pytest
 
-from ni_measurementlink_service.measurement.info import DataType, TypeSpecialization
+from ni_measurementlink_service.measurement.info import DataType, TypeSpecialization, DataTypeInfoLookup
 from ni_measurementlink_service.measurement.service import MeasurementService
 
 
@@ -58,11 +58,12 @@ def test___measurement_service___add_configuration__configuration_added(
     default_value: object,
 ):
     measurement_service.configuration(display_name, type, default_value)(_fake_measurement_function)
+    data_type_info = DataTypeInfoLookup.get_type_info(type)
 
     assert any(
         param.display_name == display_name
-        and param.type == type.value[0]
-        and param.repeated == type.value[1]
+        and param.type == data_type_info.grpc_field_type
+        and param.repeated == data_type_info.repeated
         and param.default_value == default_value
         for param in measurement_service.configuration_parameter_list
     )
@@ -85,11 +86,12 @@ def test___measurement_service___add_pin_configuration__pin_configuration_added(
     measurement_service.configuration(
         display_name, type, default_value, instrument_type=instrument_type
     )(_fake_measurement_function)
+    data_type_info = DataTypeInfoLookup.get_type_info(type)
 
     assert any(
         param.display_name == display_name
-        and param.type == type.value[0]
-        and param.repeated == type.value[1]
+        and param.type == data_type_info.grpc_field_type
+        and param.repeated == data_type_info.repeated
         and param.default_value == default_value
         and param.annotations
         == {
@@ -143,11 +145,12 @@ def test___measurement_service___add_path_configuration__path_configuration_adde
     default_value: object,
 ):
     measurement_service.configuration(display_name, type, default_value)(_fake_measurement_function)
+    data_type_info = DataTypeInfoLookup.get_type_info(type)
 
     assert any(
         param.display_name == display_name
-        and param.type == type.value[0]
-        and param.repeated == type.value[1]
+        and param.type == data_type_info.grpc_field_type
+        and param.repeated == data_type_info.repeated
         and param.default_value == default_value
         and param.annotations
         == {
@@ -235,11 +238,12 @@ def test___measurement_service___add_output__output_added(
     measurement_service: MeasurementService, display_name: str, type: DataType
 ):
     measurement_service.output(display_name, type)(_fake_measurement_function)
+    data_type_info = DataTypeInfoLookup.get_type_info(type)
 
     assert any(
         param.display_name == display_name
-        and param.type == type.value[0]
-        and param.repeated == type.value[1]
+        and param.type == data_type_info.grpc_field_type
+        and param.repeated == data_type_info.repeated
         for param in measurement_service.output_parameter_list
     )
 
