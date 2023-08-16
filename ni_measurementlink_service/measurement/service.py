@@ -33,11 +33,11 @@ from ni_measurementlink_service._internal.parameter import (
 from ni_measurementlink_service._internal.service_manager import GrpcService
 from ni_measurementlink_service.measurement.info import (
     DataType,
-    DataTypeInfoLookup,
     MeasurementInfo,
     ServiceInfo,
     TypeSpecialization,
 )
+from ni_measurementlink_service import _datatypeinfo
 from ni_measurementlink_service.session_management import PinMapContext
 
 if TYPE_CHECKING:
@@ -300,7 +300,7 @@ class MeasurementService:
             and returns the same python function.
 
         """
-        data_type_info = DataTypeInfoLookup.get_type_info(type)
+        data_type_info = _datatypeinfo.get_type_info(type)
         annotations = self._make_annotations_dict(
             data_type_info.type_specialization, instrument_type=instrument_type, enum_type=enum_type
         )
@@ -353,7 +353,7 @@ class MeasurementService:
             returns the same python function.
 
         """
-        data_type_info = DataTypeInfoLookup.get_type_info(type)
+        data_type_info = _datatypeinfo.get_type_info(type)
         annotations = self._make_annotations_dict(
             data_type_info.type_specialization, enum_type=enum_type
         )

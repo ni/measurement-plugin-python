@@ -6,10 +6,9 @@ import pytest
 from ni_measurementlink_service._internal.parameter import metadata
 from ni_measurementlink_service.measurement.info import (
     DataType,
-    DataTypeInfoLookup,
     TypeSpecialization,
 )
-
+from ni_measurementlink_service import _datatypeinfo
 
 class Color(Enum):
     """Primary colors used for testing enum-typed config and output."""
@@ -78,7 +77,7 @@ class Countries(IntEnum):
 def test___default_value_different_from_type___validate___raises_type_exception(
     type, default_value, annotations
 ):
-    data_type_info = DataTypeInfoLookup.get_type_info(type)
+    data_type_info = _datatypeinfo.get_type_info(type)
     parameter_metadata = metadata.ParameterMetadata(
         "test_display_name",
         data_type_info.grpc_field_type,
@@ -136,7 +135,7 @@ def test___default_value_different_from_type___validate___raises_type_exception(
 def test___default_value_same_as_type___validate___raises_no_exception(
     type, default_value, annotations
 ):
-    data_type_info = DataTypeInfoLookup.get_type_info(type)
+    data_type_info = _datatypeinfo.get_type_info(type)
     parameter_metadata = metadata.ParameterMetadata(
         "test_display_name",
         data_type_info.grpc_field_type,

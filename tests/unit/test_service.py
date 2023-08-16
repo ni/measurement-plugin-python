@@ -8,9 +8,9 @@ import pytest
 
 from ni_measurementlink_service.measurement.info import (
     DataType,
-    DataTypeInfoLookup,
     TypeSpecialization,
 )
+from ni_measurementlink_service import _datatypeinfo
 from ni_measurementlink_service.measurement.service import MeasurementService
 
 
@@ -62,7 +62,7 @@ def test___measurement_service___add_configuration__configuration_added(
     default_value: object,
 ):
     measurement_service.configuration(display_name, type, default_value)(_fake_measurement_function)
-    data_type_info = DataTypeInfoLookup.get_type_info(type)
+    data_type_info = _datatypeinfo.get_type_info(type)
 
     assert any(
         param.display_name == display_name
@@ -90,7 +90,7 @@ def test___measurement_service___add_pin_configuration__pin_configuration_added(
     measurement_service.configuration(
         display_name, type, default_value, instrument_type=instrument_type
     )(_fake_measurement_function)
-    data_type_info = DataTypeInfoLookup.get_type_info(type)
+    data_type_info = _datatypeinfo.get_type_info(type)
 
     assert any(
         param.display_name == display_name
@@ -149,7 +149,7 @@ def test___measurement_service___add_path_configuration__path_configuration_adde
     default_value: object,
 ):
     measurement_service.configuration(display_name, type, default_value)(_fake_measurement_function)
-    data_type_info = DataTypeInfoLookup.get_type_info(type)
+    data_type_info = _datatypeinfo.get_type_info(type)
 
     assert any(
         param.display_name == display_name
@@ -242,7 +242,7 @@ def test___measurement_service___add_output__output_added(
     measurement_service: MeasurementService, display_name: str, type: DataType
 ):
     measurement_service.output(display_name, type)(_fake_measurement_function)
-    data_type_info = DataTypeInfoLookup.get_type_info(type)
+    data_type_info = _datatypeinfo.get_type_info(type)
 
     assert any(
         param.display_name == display_name
