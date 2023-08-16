@@ -258,7 +258,6 @@ def _key_file_exists(key_file_path: pathlib.Path) -> bool:
     return key_file_path.is_file() and key_file_path.stat().st_size > 0
 
 
-
 def _start_service(
     exe_file_path: pathlib.PurePath, key_file_path: pathlib.Path
 ) -> subprocess.Popen:
