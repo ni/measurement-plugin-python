@@ -101,10 +101,16 @@ class GrpcService:
         port = str(self.server.add_insecure_port("[::]:0"))
         self.server.start()
         _logger.info("Measurement service hosted on port: %s", port)
-        self.discovery_client.register_measurement_service(port, service_info, measurement_info)
+        is_measurement_registered = self.discovery_client.register_measurement_service(
+            port, service_info, measurement_info
+        )
 
         self.port = port
-        return port
+
+        # Return port number if measurement is successfully registered with the Discovery Service.
+        if is_measurement_registered:
+            return port
+        return None
 
     def stop(self) -> None:
         """Close the Service after un-registering with discovery service and cleanups."""

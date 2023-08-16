@@ -375,14 +375,16 @@ class MeasurementService:
         """
         if self.measure_function is None:
             raise Exception("Error, must register measurement method.")
-        self.grpc_service.start(
+        is_service_started = self.grpc_service.start(
             self.measurement_info,
             self.service_info,
             self.configuration_parameter_list,
             self.output_parameter_list,
             self.measure_function,
         )
-        return self
+        if is_service_started:
+            return self
+        raise Exception("Error in starting the measurement service.")
 
     def _make_annotations_dict(
         self,
