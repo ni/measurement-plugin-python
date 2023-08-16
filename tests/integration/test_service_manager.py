@@ -61,7 +61,7 @@ def test___grpc_service___start_service_error_registering_measurement___raises_e
     with pytest.raises(Exception):
         _validate_if_service_running_by_making_rpc(port_number)
 
-    assert not port_number
+    assert port_number is None
 
 
 def test___grpc_service_started___stop_service___service_stopped(grpc_service: GrpcService):
