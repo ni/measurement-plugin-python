@@ -53,7 +53,7 @@ class GrpcService:
         configuration_parameter_list: List[ParameterMetadata],
         output_parameter_list: List[ParameterMetadata],
         measure_function: Callable,
-    ) -> str:
+    ):
         """Host a gRPC service with the registered measurement method.
 
         Args:
@@ -110,7 +110,7 @@ class GrpcService:
         # Return port number if measurement is successfully registered with the Discovery Service.
         if is_measurement_registered:
             return port
-        return
+        return None
 
     def stop(self) -> None:
         """Close the Service after un-registering with discovery service and cleanups."""
