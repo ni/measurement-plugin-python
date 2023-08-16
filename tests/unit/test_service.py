@@ -6,11 +6,8 @@ from typing import List, Type
 
 import pytest
 
-from ni_measurementlink_service.measurement.info import (
-    DataType,
-    TypeSpecialization,
-)
 from ni_measurementlink_service import _datatypeinfo
+from ni_measurementlink_service.measurement.info import DataType, TypeSpecialization
 from ni_measurementlink_service.measurement.service import MeasurementService
 
 

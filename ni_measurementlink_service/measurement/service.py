@@ -25,6 +25,7 @@ from typing import (
 import grpc
 from google.protobuf.descriptor import EnumDescriptor
 
+from ni_measurementlink_service import _datatypeinfo
 from ni_measurementlink_service._internal import grpc_servicer
 from ni_measurementlink_service._internal.discovery_client import DiscoveryClient
 from ni_measurementlink_service._internal.parameter import (
@@ -37,7 +38,6 @@ from ni_measurementlink_service.measurement.info import (
     ServiceInfo,
     TypeSpecialization,
 )
-from ni_measurementlink_service import _datatypeinfo
 from ni_measurementlink_service.session_management import PinMapContext
 
 if TYPE_CHECKING:

@@ -3,12 +3,10 @@ from enum import Enum, IntEnum
 
 import pytest
 
-from ni_measurementlink_service._internal.parameter import metadata
-from ni_measurementlink_service.measurement.info import (
-    DataType,
-    TypeSpecialization,
-)
 from ni_measurementlink_service import _datatypeinfo
+from ni_measurementlink_service._internal.parameter import metadata
+from ni_measurementlink_service.measurement.info import DataType, TypeSpecialization
+
 
 class Color(Enum):
     """Primary colors used for testing enum-typed config and output."""

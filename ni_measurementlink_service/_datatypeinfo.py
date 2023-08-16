@@ -1,7 +1,9 @@
 from typing import NamedTuple
-from ni_measurementlink_service.measurement.info import DataType, TypeSpecialization
 
 from google.protobuf import type_pb2
+
+from ni_measurementlink_service.measurement.info import DataType, TypeSpecialization
+
 
 class DataTypeInfo(NamedTuple):
     """Class that represents the information for each of the DataType enum values.
@@ -21,6 +23,7 @@ class DataTypeInfo(NamedTuple):
     repeated: bool
     type_specialization: TypeSpecialization = TypeSpecialization.NoType
 
+
 def get_type_info(data_type: DataType) -> DataTypeInfo:
     """Get information about a DataType."""
     data_type_info = _DATATYPE_TO_DATATYPEINFO_LOOKUP.get(data_type)
@@ -28,6 +31,7 @@ def get_type_info(data_type: DataType) -> DataTypeInfo:
         raise Exception(f"Data type information not found '{data_type}'")
     data_type_info = _DATATYPE_TO_DATATYPEINFO_LOOKUP[data_type]
     return data_type_info
+
 
 _DATATYPE_TO_DATATYPEINFO_LOOKUP = {
     DataType.Int32: DataTypeInfo(type_pb2.Field.TYPE_INT32, False),

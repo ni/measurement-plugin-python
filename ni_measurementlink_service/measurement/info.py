@@ -5,6 +5,7 @@ import enum
 from pathlib import Path
 from typing import Dict, List, NamedTuple
 
+
 class MeasurementInfo(NamedTuple):
     """Class that represents the measurement information.
 
