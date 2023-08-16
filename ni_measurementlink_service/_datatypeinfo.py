@@ -10,11 +10,11 @@ class DataTypeInfo(NamedTuple):
 
     Attributes
     ----------
-        grpc_field_type (type_pb2.Field.Kind): Field.Kind associated with the DataType
+        grpc_field_type: Field.Kind associated with the DataType
 
-        repeated (bool): Whether the DataType is a repeated field
+        repeated: Whether the DataType is a repeated field
 
-        type_specialization (TypeSpecialization): Specific type when value_type
+        type_specialization: Specific type when value_type
         can have more than one use
 
     """
@@ -29,7 +29,6 @@ def get_type_info(data_type: DataType) -> DataTypeInfo:
     data_type_info = _DATATYPE_TO_DATATYPEINFO_LOOKUP.get(data_type)
     if data_type_info is None:
         raise Exception(f"Data type information not found '{data_type}'")
-    data_type_info = _DATATYPE_TO_DATATYPEINFO_LOOKUP[data_type]
     return data_type_info
 
 
