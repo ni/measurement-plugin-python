@@ -231,12 +231,12 @@ Examples to start the fictitious file named `foo_measurement.py`:
 
 ### Create Executable for Python Scripts
 
-To create an executable from a measurement, measurement authors can use the [pyinstaller](https://www.pyinstaller.org/) tooling. During the executable creation, the user can also embed the User Interface file using the `--add-data "<path_of_the_UI_File>;."`.
+To create an executable from a measurement, measurement authors can use the [pyinstaller](https://www.pyinstaller.org/) tooling. If you are using a virtual environment, ensure that pyinstaller is installed to your venv. During the executable creation, the user can also embed the User Interface file using the `--add-data "<path_of_the_UI_File>;."`. The `.serviceconfig` file will need to be included using the `--add-data` option as well.
 
 Typical Pyinstaller command to build executable.
 
 ```cmd
-pyinstaller --onefile --console --add-data "<path_of_the_UI_File>;." --paths .venv\Lib\site-packages\ <path_of_the_measurement_script>
+pyinstaller --onefile --console --add-data "<path_of_the_serviceconfig_File>;." --add-data "<path_of_the_UI_File>;." --paths .venv\Lib\site-packages\ <path_of_the_measurement_script>
 ```
 
 ## Troubleshooting
