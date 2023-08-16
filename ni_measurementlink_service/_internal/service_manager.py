@@ -108,9 +108,7 @@ class GrpcService:
         self.port = port
 
         # Return port number if measurement is successfully registered with the Discovery Service.
-        if is_measurement_registered:
-            return port
-        return None
+        return port if is_measurement_registered else None
 
     def stop(self) -> None:
         """Close the Service after un-registering with discovery service and cleanups."""
