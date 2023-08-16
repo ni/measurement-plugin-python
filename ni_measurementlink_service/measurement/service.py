@@ -33,10 +33,10 @@ from ni_measurementlink_service._internal.parameter import (
 from ni_measurementlink_service._internal.service_manager import GrpcService
 from ni_measurementlink_service.measurement.info import (
     DataType,
+    DataTypeInfoLookup,
     MeasurementInfo,
     ServiceInfo,
     TypeSpecialization,
-    DataTypeInfoLookup
 )
 from ni_measurementlink_service.session_management import PinMapContext
 
@@ -305,7 +305,11 @@ class MeasurementService:
             data_type_info.type_specialization, instrument_type=instrument_type, enum_type=enum_type
         )
         parameter = parameter_metadata.ParameterMetadata(
-            display_name, data_type_info.grpc_field_type, data_type_info.repeated, default_value, annotations
+            display_name,
+            data_type_info.grpc_field_type,
+            data_type_info.repeated,
+            default_value,
+            annotations,
         )
         parameter_metadata.validate_default_value_type(parameter)
         self.configuration_parameter_list.append(parameter)
@@ -350,7 +354,9 @@ class MeasurementService:
 
         """
         data_type_info = DataTypeInfoLookup.get_type_info(type)
-        annotations = self._make_annotations_dict(data_type_info.type_specialization, enum_type=enum_type)
+        annotations = self._make_annotations_dict(
+            data_type_info.type_specialization, enum_type=enum_type
+        )
         parameter = parameter_metadata.ParameterMetadata(
             display_name, data_type_info.grpc_field_type, data_type_info.repeated, None, annotations
         )

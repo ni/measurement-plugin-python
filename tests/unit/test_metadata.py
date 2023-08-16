@@ -4,7 +4,11 @@ from enum import Enum, IntEnum
 import pytest
 
 from ni_measurementlink_service._internal.parameter import metadata
-from ni_measurementlink_service.measurement.info import DataType, TypeSpecialization, DataTypeInfoLookup
+from ni_measurementlink_service.measurement.info import (
+    DataType,
+    DataTypeInfoLookup,
+    TypeSpecialization,
+)
 
 
 class Color(Enum):
@@ -76,7 +80,11 @@ def test___default_value_different_from_type___validate___raises_type_exception(
 ):
     data_type_info = DataTypeInfoLookup.get_type_info(type)
     parameter_metadata = metadata.ParameterMetadata(
-        "test_display_name", data_type_info.grpc_field_type, data_type_info.repeated, default_value, annotations
+        "test_display_name",
+        data_type_info.grpc_field_type,
+        data_type_info.repeated,
+        default_value,
+        annotations,
     )
 
     with pytest.raises(TypeError):
@@ -130,7 +138,11 @@ def test___default_value_same_as_type___validate___raises_no_exception(
 ):
     data_type_info = DataTypeInfoLookup.get_type_info(type)
     parameter_metadata = metadata.ParameterMetadata(
-        "test_display_name", data_type_info.grpc_field_type, data_type_info.repeated, default_value, annotations
+        "test_display_name",
+        data_type_info.grpc_field_type,
+        data_type_info.repeated,
+        default_value,
+        annotations,
     )
 
     metadata.validate_default_value_type(parameter_metadata)  # implicitly assert does not throw

@@ -63,32 +63,34 @@ class TypeSpecialization(enum.Enum):
     Path = "path"
     Enum = "enum"
 
+
 class DataType(enum.Enum):
     """Enum that represents the supported data types."""
 
-    Int32 = 0,
-    Int64 = 1,
-    UInt32 = 2,
-    UInt64 = 3,
-    Float = 4,
-    Double = 5,
-    Boolean = 6,
-    String = 7,
-    Pin = 8,
-    Path = 9,
-    Enum = 10,
+    Int32 = (0,)
+    Int64 = (1,)
+    UInt32 = (2,)
+    UInt64 = (3,)
+    Float = (4,)
+    Double = (5,)
+    Boolean = (6,)
+    String = (7,)
+    Pin = (8,)
+    Path = (9,)
+    Enum = (10,)
 
-    Int32Array1D = 100,
-    Int64Array1D = 101,
-    UInt32Array1D = 102,
-    UInt64Array1D = 103,
-    FloatArray1D = 104,
-    DoubleArray1D = 105,
-    BooleanArray1D = 106,
-    StringArray1D = 107,
-    PinArray1D = 108,
-    PathArray1D = 109,
-    EnumArray1D = 110,
+    Int32Array1D = (100,)
+    Int64Array1D = (101,)
+    UInt32Array1D = (102,)
+    UInt64Array1D = (103,)
+    FloatArray1D = (104,)
+    DoubleArray1D = (105,)
+    BooleanArray1D = (106,)
+    StringArray1D = (107,)
+    PinArray1D = (108,)
+    PathArray1D = (109,)
+    EnumArray1D = (110,)
+
 
 class DataTypeInfo(NamedTuple):
     """Class that represents the information for each of the DataType enum values.
@@ -107,6 +109,7 @@ class DataTypeInfo(NamedTuple):
     grpc_field_type: type_pb2.Field.Kind
     repeated: bool
     type_specialization: TypeSpecialization = TypeSpecialization.NoType
+
 
 Int32TypeInfo = DataTypeInfo(type_pb2.Field.TYPE_INT32, False)
 Int64TypeInfo = DataTypeInfo(type_pb2.Field.TYPE_INT64, False)
@@ -132,6 +135,7 @@ PinArray1DTypeInfo = DataTypeInfo(type_pb2.Field.TYPE_STRING, True, TypeSpeciali
 PathArray1DTypeInfo = DataTypeInfo(type_pb2.Field.TYPE_STRING, True, TypeSpecialization.Path)
 EnumArray1DTypeInfo = DataTypeInfo(type_pb2.Field.TYPE_ENUM, True, TypeSpecialization.Enum)
 
+
 class DataTypeInfoLookup:
     _DATATYPE_TO_DATATYPEINFO_LOOKUP = {
         DataType.Int32: Int32TypeInfo,
@@ -145,7 +149,6 @@ class DataTypeInfoLookup:
         DataType.Pin: PinTypeInfo,
         DataType.Path: PathTypeInfo,
         DataType.Enum: EnumTypeInfo,
-
         DataType.Int32Array1D: Int32Array1DTypeInfo,
         DataType.Int64Array1D: Int64Array1DTypeInfo,
         DataType.UInt32Array1D: UInt32Array1DTypeInfo,
