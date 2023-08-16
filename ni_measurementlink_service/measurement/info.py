@@ -137,7 +137,7 @@ EnumArray1DTypeInfo = DataTypeInfo(type_pb2.Field.TYPE_ENUM, True, TypeSpecializ
 
 
 class DataTypeInfoLookup:
-    """Lookup information about a DataType"""
+    """Lookup information about a DataType."""
 
     _DATATYPE_TO_DATATYPEINFO_LOOKUP = {
         DataType.Int32: Int32TypeInfo,
@@ -166,8 +166,7 @@ class DataTypeInfoLookup:
 
     @staticmethod
     def get_type_info(data_type: DataType) -> DataTypeInfo:
-        """Get information about a DataType"""
-
+        """Get information about a DataType."""
         if data_type not in DataTypeInfoLookup._DATATYPE_TO_DATATYPEINFO_LOOKUP:
             raise Exception(f"Data type information not found '{data_type}'")
         data_type_info = DataTypeInfoLookup._DATATYPE_TO_DATATYPEINFO_LOOKUP[data_type]
