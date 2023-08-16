@@ -97,7 +97,11 @@ def discovery_service_stub(request) -> FakeDiscoveryServiceStub:
     expect_discovery_service_stub_error = _get_marker_value(
         request, "expect_discovery_service_stub_error"
     )
-    return FakeDiscoveryServiceStubError() if expect_discovery_service_stub_error else FakeDiscoveryServiceStub()
+    return (
+        FakeDiscoveryServiceStubError()
+        if expect_discovery_service_stub_error
+        else FakeDiscoveryServiceStub()
+    )
 
 
 def _validate_if_service_running_by_making_rpc(port_number):
