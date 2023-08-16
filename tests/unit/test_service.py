@@ -351,7 +351,7 @@ def test___measurement_service___add_configuration_with_invalid_enum_type___rais
         )
 
 
-def test___measurement_service___host_service_with_grpc_service_not_started___raises_type_error(
+def test___measurement_service___host_service_with_grpc_service_not_started___raises_error(
     measurement_service: MeasurementService,
     mocker: MockerFixture,
 ):
