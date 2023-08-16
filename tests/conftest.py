@@ -55,7 +55,7 @@ def discovery_service_process() -> Generator[DiscoveryServiceProcess, None, None
             f"Platform {sys.platform} is not supported for starting discovery service."
             "Could not proceed to run the tests."
         )
-    elif not pathlib.Path.exists(_get_registration_json_file_path()):
+    elif not _get_registration_json_file_path().exists():
         pytest.skip(
             "MeasurementLink registration file not found or MeasurementLink not installed."
             "Could not proceed to run the tests. Install MeasurementLink to create the registration file."
