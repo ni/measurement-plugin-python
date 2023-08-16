@@ -47,7 +47,7 @@ def test___grpc_service_without_discovery_service___start_service___service_host
 
 
 @pytest.mark.expect_discovery_service_stub_error(True)
-def test___grpc_service___start_service_error_registering_measurement___raises_type_error(
+def test___grpc_service___start_service_error_registering_measurement___raises_error(
     grpc_service: GrpcService,
 ):
     port_number = grpc_service.start(
