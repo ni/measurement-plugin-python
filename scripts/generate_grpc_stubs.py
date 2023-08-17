@@ -18,6 +18,7 @@ TEST_STUBS_PATH = pathlib.Path(__file__).parent.parent / "tests" / "assets"
 TEST_PROTO_PATH = TEST_STUBS_PATH
 TEST_PROTO_FILES = list(TEST_PROTO_PATH.rglob("*.proto"))
 
+
 def main():
     """Generate and fixup gRPC Python stubs."""
     remove_generated_files(STUBS_PATH, PROTO_PATH)
@@ -49,7 +50,10 @@ def remove_generated_files(stubs_path: pathlib.Path, proto_path: pathlib.Path):
 
 
 def generate_python_files(
-    stubs_path: pathlib.Path, proto_path: pathlib.Path, proto_files: Sequence[pathlib.Path], alternate_proto_path: pathlib.Path = ""
+    stubs_path: pathlib.Path,
+    proto_path: pathlib.Path,
+    proto_files: Sequence[pathlib.Path],
+    alternate_proto_path: pathlib.Path = "",
 ):
     """Generate python files from .proto files with protoc."""
     arguments = [
@@ -61,16 +65,19 @@ def generate_python_files(
         f"--grpc_python_out={str(stubs_path)}",
         f"--mypy_grpc_out={str(stubs_path)}",
     ]
-    if (alternate_proto_path != ""):
-        arguments += f"--proto_path={str(alternate_proto_path)}",
-    
+    if alternate_proto_path != "":
+        arguments += (f"--proto_path={str(alternate_proto_path)}",)
+
     arguments += [str(path.relative_to(proto_path)).replace("\\", "/") for path in proto_files]
 
     grpc_tools.protoc.main(arguments)
 
 
 def fix_import_paths(
-    protos_path: pathlib.Path, stubs_path: pathlib.Path, stubs_namespace: str, proto_parent_namespaces: Sequence[str]
+    protos_path: pathlib.Path,
+    stubs_path: pathlib.Path,
+    stubs_namespace: str,
+    proto_parent_namespaces: Sequence[str],
 ):
     """Fix import paths of generated files."""
     print("Fixing import paths")

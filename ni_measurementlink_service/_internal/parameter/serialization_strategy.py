@@ -2,9 +2,11 @@
 
 from typing import Any, Callable
 
-from ni_measurementlink_service._internal.stubs.ni.protobuf.types import xydata_pb2
 from google.protobuf import type_pb2
 from google.protobuf.internal import decoder, encoder, wire_format
+
+from ni_measurementlink_service._internal.stubs.ni.protobuf.types import xydata_pb2
+
 
 def _scalar_encoder(encoder) -> Callable[[int], Callable]:
     """Abstract Specific Encoder(Callable) as Scalar Encoder Callable that takes in field index.
@@ -52,16 +54,19 @@ def _vector_encoder(encoder, is_packed=True) -> Callable[[int], Callable]:
 
     return vector_encoder
 
-def InnerMessageEncoder(field_index):
+
+def inner_message_encoder(field_index):
     """Mimics google.protobuf._internal.MessageEncoder."""
     tag = encoder.TagBytes(field_index, wire_format.WIRETYPE_LENGTH_DELIMITED)
-    def EncodeMessage(write, value, deterministic):
+
+    def encode_message(write, value, deterministic):
         write(tag)
         bytes = value.SerializeToString()
         encoder._EncodeVarint(write, len(bytes), deterministic)
         write(bytes)
 
-    return EncodeMessage
+    return encode_message
+
 
 def _message_encoder(encoder) -> Callable[[int], Callable]:
     """Abstract Specific Encoder(Callable) as Message Encoder Callable that takes in field index.
@@ -77,10 +82,12 @@ def _message_encoder(encoder) -> Callable[[int], Callable]:
         field_index and returns the Low-level Encode Callable.
 
     """
+
     def message_encoder(field_index):
         return encoder(field_index)
 
     return message_encoder
+
 
 def _scalar_decoder(decoder) -> Callable[[int, str], Callable]:
     """Abstract Specific Decoder(Callable) as Scalar Decoder Callable that takes in field index,key.
@@ -134,28 +141,31 @@ def _vector_decoder(decoder, is_packed=True) -> Callable[[int, str], Callable]:
 
     return vector_decoder
 
-def InnerMessageDecoder(field_index, is_repeated, is_packed, key, new_default):
+
+def inner_message_decoder(field_index, is_repeated, is_packed, key, new_default):
     """Based on google.protobuf.internal.MessageDecoder."""
-    def _ConvertToByteString(memview):
+
+    def _convert_to_byte_string(memview):
         """Convert bytes to byte_string."""
         byte_str = memview.tobytes()
         return byte_str
 
-    def DecodeMessage(buffer, pos, end, message, field_dict):
+    def decode_message(buffer, pos, end, message, field_dict):
         value = field_dict.get(key)
         if value is None:
             value = field_dict.setdefault(key, new_default(message))
         # Read length.
         (size, pos) = decoder._DecodeVarint(buffer, pos)
         new_pos = pos + size
-        thestring = _ConvertToByteString(buffer[pos:new_pos])
+        thestring = _convert_to_byte_string(buffer[pos:new_pos])
         value.ParseFromString(thestring)
         return new_pos
 
-    return DecodeMessage
+    return decode_message
 
-def DoubleXYDataDecoder(decoder) -> Callable[[int, str], Callable]:
-    """Abstract Specific Decoder(Callable) as Message Decoder Callable that takes in field index,key.
+
+def double_xy_data_decoder(decoder) -> Callable[[int, str], Callable]:
+    """Decoder for DoubleXYData.
 
     Args
     ----
@@ -180,13 +190,14 @@ def DoubleXYDataDecoder(decoder) -> Callable[[int, str], Callable]:
 
     return message_decoder
 
+
 FloatEncoder = _scalar_encoder(encoder.FloatEncoder)
 DoubleEncoder = _scalar_encoder(encoder.DoubleEncoder)
 IntEncoder = _scalar_encoder(encoder.Int32Encoder)
 UIntEncoder = _scalar_encoder(encoder.UInt32Encoder)
 BoolEncoder = _scalar_encoder(encoder.BoolEncoder)
 StringEncoder = _scalar_encoder(encoder.StringEncoder)
-MessageEncoder = _message_encoder(InnerMessageEncoder)
+MessageEncoder = _message_encoder(inner_message_encoder)
 
 FloatArrayEncoder = _vector_encoder(encoder.FloatEncoder)
 DoubleArrayEncoder = _vector_encoder(encoder.DoubleEncoder)
@@ -204,7 +215,7 @@ Int64Decoder = _scalar_decoder(decoder.Int64Decoder)
 UInt64Decoder = _scalar_decoder(decoder.UInt64Decoder)
 BoolDecoder = _scalar_decoder(decoder.BoolDecoder)
 StringDecoder = _scalar_decoder(decoder.StringDecoder)
-XYDataDecoder = DoubleXYDataDecoder(InnerMessageDecoder)
+XYDataDecoder = double_xy_data_decoder(inner_message_encoder)
 
 FloatArrayDecoder = _vector_decoder(decoder.FloatDecoder)
 DoubleArrayDecoder = _vector_decoder(decoder.DoubleDecoder)

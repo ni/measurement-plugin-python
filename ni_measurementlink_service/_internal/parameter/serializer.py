@@ -158,7 +158,9 @@ def _get_overlapping_parameters(
             )
         type = parameter_metadata_dict[field_index].type
         is_repeated = parameter_metadata_dict[field_index].repeated
-        decoder = serialization_strategy.Context.get_decoder(type, is_repeated, parameter_metadata_dict[field_index].message_type)
+        decoder = serialization_strategy.Context.get_decoder(
+            type, is_repeated, parameter_metadata_dict[field_index].message_type
+        )
         inner_decoder = decoder(field_index, field_index)
         parameter_bytes_io = BytesIO(parameter_bytes)
         parameter_bytes_memory_view = parameter_bytes_io.getbuffer()
