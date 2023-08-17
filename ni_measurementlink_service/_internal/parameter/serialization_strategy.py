@@ -69,7 +69,7 @@ def _encode_varint(write, value, unused_deterministic=None):
     return write(local_int2byte(bits))
 
 
-def inner_message_encoder(field_index):
+def _inner_message_encoder(field_index):
     """Mimics google.protobuf._internal.MessageEncoder."""
     tag = encoder.TagBytes(field_index, wire_format.WIRETYPE_LENGTH_DELIMITED)
 
@@ -174,7 +174,7 @@ def _decode_varint(buffer, pos):
             raise Exception("Too many bytes when decoding varint.")
 
 
-def inner_message_decoder(field_index, is_repeated, is_packed, key, new_default):
+def _inner_message_decoder(field_index, is_repeated, is_packed, key, new_default):
     """Based on google.protobuf.internal.MessageDecoder."""
 
     def _convert_to_byte_string(memview):
@@ -196,7 +196,7 @@ def inner_message_decoder(field_index, is_repeated, is_packed, key, new_default)
     return decode_message
 
 
-def double_xy_data_decoder(decoder) -> Callable[[int, str], Callable]:
+def _double_xy_data_decoder(decoder) -> Callable[[int, str], Callable]:
     """Decoder for DoubleXYData.
 
     Args
@@ -229,7 +229,7 @@ IntEncoder = _scalar_encoder(encoder.Int32Encoder)
 UIntEncoder = _scalar_encoder(encoder.UInt32Encoder)
 BoolEncoder = _scalar_encoder(encoder.BoolEncoder)
 StringEncoder = _scalar_encoder(encoder.StringEncoder)
-MessageEncoder = _message_encoder(inner_message_encoder)
+MessageEncoder = _message_encoder(_inner_message_encoder)
 
 FloatArrayEncoder = _vector_encoder(encoder.FloatEncoder)
 DoubleArrayEncoder = _vector_encoder(encoder.DoubleEncoder)
@@ -247,7 +247,7 @@ Int64Decoder = _scalar_decoder(decoder.Int64Decoder)
 UInt64Decoder = _scalar_decoder(decoder.UInt64Decoder)
 BoolDecoder = _scalar_decoder(decoder.BoolDecoder)
 StringDecoder = _scalar_decoder(decoder.StringDecoder)
-XYDataDecoder = double_xy_data_decoder(inner_message_decoder)
+XYDataDecoder = _double_xy_data_decoder(_inner_message_decoder)
 
 FloatArrayDecoder = _vector_decoder(decoder.FloatDecoder)
 DoubleArrayDecoder = _vector_decoder(decoder.DoubleDecoder)
