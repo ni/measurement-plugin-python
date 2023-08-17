@@ -2,8 +2,8 @@ from typing import NamedTuple
 
 from google.protobuf import type_pb2
 
-from ni_measurementlink_service.measurement.info import DataType, TypeSpecialization
 from ni_measurementlink_service._internal.stubs.ni.protobuf.types import xydata_pb2
+from ni_measurementlink_service.measurement.info import DataType, TypeSpecialization
 
 
 class DataTypeInfo(NamedTuple):
@@ -20,7 +20,7 @@ class DataTypeInfo(NamedTuple):
 
         message_type (str): This is the gRPC full name of the message type.
         Required when 'grpc_field_type' is Kind.TypeMessage.
-        Ignored for any other 'type'. 
+        Ignored for any other 'type'.
 
     """
 
@@ -50,7 +50,11 @@ _DATATYPE_TO_DATATYPEINFO_LOOKUP = {
     DataType.Pin: DataTypeInfo(type_pb2.Field.TYPE_STRING, False, TypeSpecialization.Pin),
     DataType.Path: DataTypeInfo(type_pb2.Field.TYPE_STRING, False, TypeSpecialization.Path),
     DataType.Enum: DataTypeInfo(type_pb2.Field.TYPE_ENUM, False, TypeSpecialization.Enum),
-    DataType.DoubleXYData: DataTypeInfo(type_pb2.Field.TYPE_MESSAGE, False, message_type=xydata_pb2.DoubleXYData.DESCRIPTOR.full_name),
+    DataType.DoubleXYData: DataTypeInfo(
+        type_pb2.Field.TYPE_MESSAGE,
+        False,
+        message_type=xydata_pb2.DoubleXYData.DESCRIPTOR.full_name,
+    ),
     DataType.Int32Array1D: DataTypeInfo(type_pb2.Field.TYPE_INT32, True),
     DataType.Int64Array1D: DataTypeInfo(type_pb2.Field.TYPE_INT64, True),
     DataType.UInt32Array1D: DataTypeInfo(type_pb2.Field.TYPE_UINT32, True),

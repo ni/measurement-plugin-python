@@ -310,7 +310,7 @@ class MeasurementService:
             data_type_info.repeated,
             default_value,
             annotations,
-            data_type_info.message_type
+            data_type_info.message_type,
         )
         parameter_metadata.validate_default_value_type(parameter)
         self.configuration_parameter_list.append(parameter)
@@ -364,7 +364,7 @@ class MeasurementService:
             data_type_info.repeated,
             None,
             annotations,
-            data_type_info.message_type
+            data_type_info.message_type,
         )
         self.output_parameter_list.append(parameter)
 

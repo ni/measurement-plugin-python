@@ -31,7 +31,7 @@ class ParameterMetadata(NamedTuple):
 
         message_type (str): This is the gRPC full name of the message type.
         Required when 'type' is Kind.TypeMessage.
-        Ignored for any other 'type'. 
+        Ignored for any other 'type'.
 
     """
 
