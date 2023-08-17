@@ -132,15 +132,15 @@ class DiscoveryClient:
                 )
             else:
                 _logger.exception("Error in registering with discovery service.")
-            return False
-        except FileNotFoundError:
+            raise grpc.RpcError(type(e).__name__, e.args[0]) from e
+        except FileNotFoundError as e:
             _logger.error(
                 "Unable to register with discovery service. Possible reason: discovery service not running."
             )
-            return False
-        except Exception:
+            raise FileNotFoundError(e.strerror, e.filename) from e
+        except Exception as e:
             _logger.exception("Error in registering with discovery service.")
-            return False
+            raise Exception(type(e).__name__, e.args[0]) from e
         return True
 
     def unregister_service(self) -> bool:
@@ -172,15 +172,15 @@ class DiscoveryClient:
                 )
             else:
                 _logger.exception("Error in unregistering with discovery service.")
-            return False
-        except FileNotFoundError:
+            raise Exception(type(e).__name__, e.args[0]) from e
+        except FileNotFoundError as e:
             _logger.error(
                 "Unable to unregister with discovery service. Possible reason: discovery service not running."
             )
-            return False
-        except Exception:
+            raise FileNotFoundError(e.strerror, e.filename) from e
+        except Exception as e:
             _logger.exception("Error in unregistering with discovery service.")
-            return False
+            raise Exception(type(e).__name__, e.args[0]) from e
         return True
 
     def resolve_service(self, provided_interface: str, service_class: str = "") -> ServiceLocation:
