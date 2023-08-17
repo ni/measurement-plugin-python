@@ -310,6 +310,7 @@ class MeasurementService:
             data_type_info.repeated,
             default_value,
             annotations,
+            data_type_info.message_type
         )
         parameter_metadata.validate_default_value_type(parameter)
         self.configuration_parameter_list.append(parameter)
@@ -358,7 +359,12 @@ class MeasurementService:
             data_type_info.type_specialization, enum_type=enum_type
         )
         parameter = parameter_metadata.ParameterMetadata(
-            display_name, data_type_info.grpc_field_type, data_type_info.repeated, None, annotations
+            display_name,
+            data_type_info.grpc_field_type,
+            data_type_info.repeated,
+            None,
+            annotations,
+            data_type_info.message_type
         )
         self.output_parameter_list.append(parameter)
 

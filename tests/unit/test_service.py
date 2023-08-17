@@ -50,6 +50,7 @@ def test___measurement_service___register_measurement_method___method_registered
         ("UInt32", DataType.UInt32, 3994),
         ("UInt64", DataType.UInt64, 3456),
         ("UInt64", DataType.UInt64, False),
+        ("DoubleXYData", DataType.DoubleXYData, None)
     ],
 )
 def test___measurement_service___add_configuration__configuration_added(
@@ -66,6 +67,7 @@ def test___measurement_service___add_configuration__configuration_added(
         and param.type == data_type_info.grpc_field_type
         and param.repeated == data_type_info.repeated
         and param.default_value == default_value
+        and param.message_type == data_type_info.message_type
         for param in measurement_service.configuration_parameter_list
     )
 
@@ -233,6 +235,7 @@ def test___measurement_service___add_configuration_with_mismatch_default_value__
         ("UInt32", DataType.UInt32),
         ("UInt44", DataType.UInt64),
         ("UInt44", DataType.UInt64),
+        ("DoubleXYData", DataType.DoubleXYData),
     ],
 )
 def test___measurement_service___add_output__output_added(
@@ -245,6 +248,7 @@ def test___measurement_service___add_output__output_added(
         param.display_name == display_name
         and param.type == data_type_info.grpc_field_type
         and param.repeated == data_type_info.repeated
+        and param.message_type == data_type_info.message_type
         for param in measurement_service.output_parameter_list
     )
 
