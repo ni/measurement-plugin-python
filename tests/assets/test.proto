@@ -6,6 +6,8 @@ syntax = "proto3";
 //---------------------------------------------------------------------
 package ni.measurementlink.measurement.tests.v1;
 
+import "ni/protobuf/types/xydata.proto";
+
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
 option csharp_namespace = "NationalInstruments.MeasurementServices.Measurements";
@@ -50,4 +52,5 @@ message MeasurementParameter{
     repeated DifferentColor enum_array_data = 18;
     Countries int_enum_data = 19;
     repeated Countries int_enum_array_data = 20;
+    ni.protobuf.types.DoubleXYData xy_data = 21;
 }
