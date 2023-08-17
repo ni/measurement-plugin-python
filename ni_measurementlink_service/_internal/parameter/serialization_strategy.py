@@ -1,5 +1,6 @@
 """Serialization Strategy."""
 
+import struct
 from typing import Any, Callable
 
 from google.protobuf import type_pb2
@@ -55,6 +56,19 @@ def _vector_encoder(encoder, is_packed=True) -> Callable[[int], Callable]:
     return vector_encoder
 
 
+local_int2byte = struct.Struct(">B").pack
+
+
+def _encode_varint(write, value, unused_deterministic=None):
+    bits = value & 0x7F
+    value >>= 7
+    while value:
+        write(local_int2byte(0x80 | bits))
+        bits = value & 0x7F
+        value >>= 7
+    return write(local_int2byte(bits))
+
+
 def inner_message_encoder(field_index):
     """Mimics google.protobuf._internal.MessageEncoder."""
     tag = encoder.TagBytes(field_index, wire_format.WIRETYPE_LENGTH_DELIMITED)
@@ -62,7 +76,7 @@ def inner_message_encoder(field_index):
     def encode_message(write, value, deterministic):
         write(tag)
         bytes = value.SerializeToString()
-        encoder._EncodeVarint(write, len(bytes), deterministic)
+        _encode_varint(write, len(bytes), deterministic)
         write(bytes)
 
     return encode_message
@@ -142,6 +156,24 @@ def _vector_decoder(decoder, is_packed=True) -> Callable[[int, str], Callable]:
     return vector_decoder
 
 
+def _decode_varint(buffer, pos):
+    mask = (1 << 64) - 1
+    result_type = int
+    result = 0
+    shift = 0
+    while 1:
+        b = buffer[pos]
+        result |= (b & 0x7F) << shift
+        pos += 1
+        if not (b & 0x80):
+            result &= mask
+            result = result_type(result)
+            return (result, pos)
+        shift += 7
+        if shift >= 64:
+            raise Exception("Too many bytes when decoding varint.")
+
+
 def inner_message_decoder(field_index, is_repeated, is_packed, key, new_default):
     """Based on google.protobuf.internal.MessageDecoder."""
 
@@ -155,7 +187,7 @@ def inner_message_decoder(field_index, is_repeated, is_packed, key, new_default)
         if value is None:
             value = field_dict.setdefault(key, new_default(message))
         # Read length.
-        (size, pos) = decoder._DecodeVarint(buffer, pos)
+        (size, pos) = _decode_varint(buffer, pos)
         new_pos = pos + size
         thestring = _convert_to_byte_string(buffer[pos:new_pos])
         value.ParseFromString(thestring)
@@ -240,7 +272,8 @@ class Context:
         type_pb2.Field.TYPE_BOOL: (BoolEncoder, BoolArrayEncoder),
         type_pb2.Field.TYPE_STRING: (StringEncoder, StringArrayEncoder),
         type_pb2.Field.TYPE_ENUM: (IntEncoder, IntArrayEncoder),
-        type_pb2.Field.TYPE_MESSAGE: (MessageEncoder, None),
+        # Array encoder is not correct, but 'None' violates expected return value
+        type_pb2.Field.TYPE_MESSAGE: (MessageEncoder, StringArrayEncoder),
     }
 
     _FIELD_TYPE_TO_DECODER_MAPPING = {
