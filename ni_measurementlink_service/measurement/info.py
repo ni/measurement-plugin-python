@@ -76,6 +76,7 @@ class DataType(enum.Enum):
     Pin = 8
     Path = 9
     Enum = 10
+    DoubleXYData = 11
 
     Int32Array1D = 100
     Int64Array1D = 101
