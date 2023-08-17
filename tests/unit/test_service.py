@@ -358,7 +358,7 @@ def test___measurement_service___host_service_with_grpc_service_not_started___ra
     measurement_service.register_measurement(_fake_measurement_function)
     mocker.patch(
         "ni_measurementlink_service._internal.service_manager.GrpcService.start",
-        return_value=None,
+        side_effect=Exception,
     )
 
     with pytest.raises(Exception):

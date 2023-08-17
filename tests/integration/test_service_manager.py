@@ -46,22 +46,18 @@ def test___grpc_service_without_discovery_service___start_service___service_host
     _validate_if_service_running_by_making_rpc(port_number)
 
 
-@pytest.mark.expect_discovery_service_stub_error(True)
+@pytest.mark.parametrize("expect_discovery_service_error_stub", [True])
 def test___grpc_service___start_service_error_registering_measurement___raises_error(
     grpc_service: GrpcService,
 ):
-    port_number = grpc_service.start(
-        loopback_measurement.measurement_service.measurement_info,
-        loopback_measurement.measurement_service.service_info,
-        loopback_measurement.measurement_service.configuration_parameter_list,
-        loopback_measurement.measurement_service.output_parameter_list,
-        loopback_measurement.measurement_service.measure_function,
-    )
-
     with pytest.raises(Exception):
-        _validate_if_service_running_by_making_rpc(port_number)
-
-    assert port_number is None
+        grpc_service.start(
+            loopback_measurement.measurement_service.measurement_info,
+            loopback_measurement.measurement_service.service_info,
+            loopback_measurement.measurement_service.configuration_parameter_list,
+            loopback_measurement.measurement_service.output_parameter_list,
+            loopback_measurement.measurement_service.measure_function,
+        )
 
 
 def test___grpc_service_started___stop_service___service_stopped(grpc_service: GrpcService):
@@ -92,16 +88,19 @@ def discovery_client(discovery_service_stub: FakeDiscoveryServiceStub) -> Discov
 
 
 @pytest.fixture
-def discovery_service_stub(request) -> FakeDiscoveryServiceStub:
-    """Create a valid or error FakeDiscoveryServiceStub."""
-    expect_discovery_service_stub_error = _get_marker_value(
-        request, "expect_discovery_service_stub_error"
-    )
+def discovery_service_stub(expect_discovery_service_error_stub: bool) -> FakeDiscoveryServiceStub:
+    """Create a valid/error stub based on expect_discovery_service_error_stub value."""
     return (
         FakeDiscoveryServiceStubError()
-        if expect_discovery_service_stub_error
+        if expect_discovery_service_error_stub
         else FakeDiscoveryServiceStub()
     )
+
+
+@pytest.fixture
+def expect_discovery_service_error_stub() -> bool:
+    """Boolean to choose between FakeDiscoveryServiceStub and FakeDiscoveryServiceStubError."""
+    return False
 
 
 def _validate_if_service_running_by_making_rpc(port_number):
@@ -112,13 +111,3 @@ def _validate_if_service_running_by_making_rpc(port_number):
     with grpc.insecure_channel("localhost:" + port_number) as channel:
         stub = measurement_service_pb2_grpc.MeasurementServiceStub(channel)
         stub.GetMetadata(measurement_service_pb2.GetMetadataRequest())  # RPC call
-
-
-def _get_marker_value(request, marker_name, default=None):
-    """Gets the value of a pytest marker based on the marker name."""
-    marker_value = default
-    for marker in request.node.iter_markers():
-        if marker.name == marker_name:  # only look at markers with valid argument name
-            marker_value = marker.args[0]  # assume single parameter in marker
-
-    return marker_value
