@@ -53,7 +53,7 @@ class GrpcService:
         configuration_parameter_list: List[ParameterMetadata],
         output_parameter_list: List[ParameterMetadata],
         measure_function: Callable,
-    ) -> Optional[str]:
+    ) -> str:
         """Host a gRPC service with the registered measurement method.
 
         Args:
@@ -73,45 +73,48 @@ class GrpcService:
             int: The port number of the server
 
         """
-        self.server = grpc.server(
-            logging_pool.pool(max_workers=10),
-            options=[
-                ("grpc.max_receive_message_length", -1),
-                ("grpc.max_send_message_length", -1),
-            ],
-        )
-        servicer_v1 = MeasurementServiceServicerV1(
-            measurement_info,
-            configuration_parameter_list,
-            output_parameter_list,
-            measure_function,
-        )
-        v1_measurement_service_pb2_grpc.add_MeasurementServiceServicer_to_server(
-            servicer_v1, self.server
-        )
-        servicer_v2 = MeasurementServiceServicerV2(
-            measurement_info,
-            configuration_parameter_list,
-            output_parameter_list,
-            measure_function,
-        )
-        v2_measurement_service_pb2_grpc.add_MeasurementServiceServicer_to_server(
-            servicer_v2, self.server
-        )
-        port = str(self.server.add_insecure_port("[::]:0"))
-        self.server.start()
-        _logger.info("Measurement service hosted on port: %s", port)
-        is_measurement_registered = self.discovery_client.register_measurement_service(
-            port, service_info, measurement_info
-        )
+        try:
+            self.server = grpc.server(
+                logging_pool.pool(max_workers=10),
+                options=[
+                    ("grpc.max_receive_message_length", -1),
+                    ("grpc.max_send_message_length", -1),
+                ],
+            )
+            servicer_v1 = MeasurementServiceServicerV1(
+                measurement_info,
+                configuration_parameter_list,
+                output_parameter_list,
+                measure_function,
+            )
+            v1_measurement_service_pb2_grpc.add_MeasurementServiceServicer_to_server(
+                servicer_v1, self.server
+            )
+            servicer_v2 = MeasurementServiceServicerV2(
+                measurement_info,
+                configuration_parameter_list,
+                output_parameter_list,
+                measure_function,
+            )
+            v2_measurement_service_pb2_grpc.add_MeasurementServiceServicer_to_server(
+                servicer_v2, self.server
+            )
+            port = str(self.server.add_insecure_port("[::]:0"))
+            self.server.start()
+            _logger.info("Measurement service hosted on port: %s", port)
+            self.discovery_client.register_measurement_service(port, service_info, measurement_info)
 
-        self.port = port
+            self.port = port
 
-        # Return port number if measurement is successfully registered with the Discovery Service.
-        return port if is_measurement_registered else None
+            return port
+        except Exception as e:
+            raise e
 
     def stop(self) -> None:
         """Close the Service after un-registering with discovery service and cleanups."""
-        self.discovery_client.unregister_service()
-        self.server.stop(5)
-        _logger.info("Measurement service closed.")
+        try:
+            self.discovery_client.unregister_service()
+            self.server.stop(5)
+            _logger.info("Measurement service closed.")
+        except Exception as e:
+            raise Exception(e)
