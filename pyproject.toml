@@ -70,10 +70,6 @@ build-backend = "poetry.core.masonry.api"
 addopts = "--doctest-modules --strict-markers"
 filterwarnings = ["always::ImportWarning", "always::ResourceWarning"]
 testpaths = ["tests"]
-markers = [
-  # Defines custom markers used by measurement link python tests. Prevents PytestUnknownMarkWarning.  
-  "expect_discovery_service_stub_error: boolean specifying that the fake discovery service stub is valid or errored."
-]
 
 [tool.mypy]
 warn_unused_configs = true
