@@ -1,0 +1,13 @@
+{
+  "services": [
+    {
+      "displayName": "Conway's Game of Life (Py)",
+      "serviceClass": "game_of_life_Python",
+      "descriptionUrl": "",
+      "providedInterfaces": [
+        "ni.measurementlink.measurement.v2.MeasurementService"
+      ],
+      "path": "start.bat"
+    }
+  ]
+}
