@@ -5,8 +5,6 @@ import enum
 from pathlib import Path
 from typing import Dict, List, NamedTuple
 
-from google.protobuf import type_pb2
-
 
 class MeasurementInfo(NamedTuple):
     """Class that represents the measurement information.
@@ -28,7 +26,7 @@ class MeasurementInfo(NamedTuple):
 
 
 class ServiceInfo(NamedTuple):
-    """Class the represents the service information.
+    """Class that represents the service information.
 
     Attributes
     ----------
@@ -67,26 +65,27 @@ class TypeSpecialization(enum.Enum):
 class DataType(enum.Enum):
     """Enum that represents the supported data types."""
 
-    Int32 = (type_pb2.Field.TYPE_INT32, False, TypeSpecialization.NoType)
-    Int64 = (type_pb2.Field.TYPE_INT64, False, TypeSpecialization.NoType)
-    UInt32 = (type_pb2.Field.TYPE_UINT32, False, TypeSpecialization.NoType)
-    UInt64 = (type_pb2.Field.TYPE_UINT64, False, TypeSpecialization.NoType)
-    Float = (type_pb2.Field.TYPE_FLOAT, False, TypeSpecialization.NoType)
-    Double = (type_pb2.Field.TYPE_DOUBLE, False, TypeSpecialization.NoType)
-    Boolean = (type_pb2.Field.TYPE_BOOL, False, TypeSpecialization.NoType)
-    String = (type_pb2.Field.TYPE_STRING, False, TypeSpecialization.NoType)
-    Pin = (type_pb2.Field.TYPE_STRING, False, TypeSpecialization.Pin)
-    Path = (type_pb2.Field.TYPE_STRING, False, TypeSpecialization.Path)
-    Enum = (type_pb2.Field.TYPE_ENUM, False, TypeSpecialization.Enum)
+    Int32 = 0
+    Int64 = 1
+    UInt32 = 2
+    UInt64 = 3
+    Float = 4
+    Double = 5
+    Boolean = 6
+    String = 7
+    Pin = 8
+    Path = 9
+    Enum = 10
+    DoubleXYData = 11
 
-    Int32Array1D = (type_pb2.Field.TYPE_INT32, True, TypeSpecialization.NoType)
-    Int64Array1D = (type_pb2.Field.TYPE_INT64, True, TypeSpecialization.NoType)
-    UInt32Array1D = (type_pb2.Field.TYPE_UINT32, True, TypeSpecialization.NoType)
-    UInt64Array1D = (type_pb2.Field.TYPE_UINT64, True, TypeSpecialization.NoType)
-    FloatArray1D = (type_pb2.Field.TYPE_FLOAT, True, TypeSpecialization.NoType)
-    DoubleArray1D = (type_pb2.Field.TYPE_DOUBLE, True, TypeSpecialization.NoType)
-    BooleanArray1D = (type_pb2.Field.TYPE_BOOL, True, TypeSpecialization.NoType)
-    StringArray1D = (type_pb2.Field.TYPE_STRING, True, TypeSpecialization.NoType)
-    PinArray1D = (type_pb2.Field.TYPE_STRING, True, TypeSpecialization.Pin)
-    PathArray1D = (type_pb2.Field.TYPE_STRING, True, TypeSpecialization.Path)
-    EnumArray1D = (type_pb2.Field.TYPE_ENUM, True, TypeSpecialization.Enum)
+    Int32Array1D = 100
+    Int64Array1D = 101
+    UInt32Array1D = 102
+    UInt64Array1D = 103
+    FloatArray1D = 104
+    DoubleArray1D = 105
+    BooleanArray1D = 106
+    StringArray1D = 107
+    PinArray1D = 108
+    PathArray1D = 109
+    EnumArray1D = 110

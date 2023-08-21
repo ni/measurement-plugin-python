@@ -9,6 +9,7 @@ from typing import Tuple
 import click
 import grpc
 import niscope
+from _constants import USE_SIMULATION
 from _helpers import (
     ServiceOptions,
     configure_logging,
@@ -19,7 +20,7 @@ from _helpers import (
     use_simulation_option,
     verbosity_option,
 )
-from _niscope_helpers import USE_SIMULATION, create_session
+from _niscope_helpers import create_session
 
 import ni_measurementlink_service as nims
 

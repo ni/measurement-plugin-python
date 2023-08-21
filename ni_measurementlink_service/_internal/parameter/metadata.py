@@ -29,6 +29,10 @@ class ParameterMetadata(NamedTuple):
 
         annotations (Dict[str,str]): Represents a set of annotations on the type.
 
+        message_type (str): This is the gRPC full name of the message type.
+        Required when 'type' is Kind.TypeMessage.
+        Ignored for any other 'type'.
+
     """
 
     display_name: str
@@ -36,6 +40,7 @@ class ParameterMetadata(NamedTuple):
     repeated: bool
     default_value: Any
     annotations: Dict[str, str]
+    message_type: str = ""
 
 
 def validate_default_value_type(parameter_metadata: ParameterMetadata) -> None:

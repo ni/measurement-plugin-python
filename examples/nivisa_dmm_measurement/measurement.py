@@ -8,6 +8,7 @@ from typing import Tuple
 
 import click
 import pyvisa.resources
+from _constants import USE_SIMULATION
 from _helpers import (
     ServiceOptions,
     configure_logging,
@@ -18,7 +19,6 @@ from _helpers import (
 )
 from _visa_helpers import (
     INSTRUMENT_TYPE_DMM_SIMULATOR,
-    USE_SIMULATION,
     check_instrument_error,
     create_visa_resource_manager,
     create_visa_session,

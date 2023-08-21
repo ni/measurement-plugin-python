@@ -3,6 +3,7 @@ from enum import Enum, IntEnum
 
 import pytest
 
+from ni_measurementlink_service import _datatypeinfo
 from ni_measurementlink_service._internal.parameter import metadata
 from ni_measurementlink_service.measurement.info import DataType, TypeSpecialization
 
@@ -74,9 +75,13 @@ class Countries(IntEnum):
 def test___default_value_different_from_type___validate___raises_type_exception(
     type, default_value, annotations
 ):
-    grpc_field_type, repeated, type_specialization = type.value
+    data_type_info = _datatypeinfo.get_type_info(type)
     parameter_metadata = metadata.ParameterMetadata(
-        "test_display_name", grpc_field_type, repeated, default_value, annotations
+        "test_display_name",
+        data_type_info.grpc_field_type,
+        data_type_info.repeated,
+        default_value,
+        annotations,
     )
 
     with pytest.raises(TypeError):
@@ -128,9 +133,13 @@ def test___default_value_different_from_type___validate___raises_type_exception(
 def test___default_value_same_as_type___validate___raises_no_exception(
     type, default_value, annotations
 ):
-    grpc_field_type, repeated, type_specialization = type.value
+    data_type_info = _datatypeinfo.get_type_info(type)
     parameter_metadata = metadata.ParameterMetadata(
-        "test_display_name", grpc_field_type, repeated, default_value, annotations
+        "test_display_name",
+        data_type_info.grpc_field_type,
+        data_type_info.repeated,
+        default_value,
+        annotations,
     )
 
     metadata.validate_default_value_type(parameter_metadata)  # implicitly assert does not throw

@@ -32,7 +32,7 @@ This is a MeasurementLink example that sources and measures a DC voltage with an
 This example requires an NI SMU that is supported by NI-DCPower (e.g. PXIe-4141).
 
 By default, this example uses a simulated instrument. To use a physical instrument, edit
-`measurement.py` and `teststand_fixture.py` to specify `USE_SIMULATION = False`.
+`_constants.py` to specify `USE_SIMULATION = False`.
 
 > **Note**
 > The multi-site pin map, `NIDCPowerSourceDCVoltageMultiSite.pinmap`, requires an

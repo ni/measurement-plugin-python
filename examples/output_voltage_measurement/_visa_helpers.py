@@ -2,6 +2,7 @@
 
 import logging
 import pathlib
+from typing import Optional
 
 import pyvisa
 import pyvisa.resources
@@ -19,7 +20,7 @@ with pyvisa-sim
 """
 
 
-def create_visa_resource_manager(
+def create_resource_manager(
     use_simulation: bool, simulation_yaml_path: pathlib.Path = SIMULATION_YAML_PATH
 ) -> pyvisa.ResourceManager:
     """Create a real or simulated VISA resource manager."""
@@ -27,12 +28,16 @@ def create_visa_resource_manager(
     return pyvisa.ResourceManager(visa_library)
 
 
-def create_visa_session(
-    resource_manager: pyvisa.ResourceManager, resource_name: str
+def create_session(
+    resource_name: str,
+    resource_manager: Optional[pyvisa.ResourceManager] = None,
+    use_simulation: Optional[bool] = False,
 ) -> pyvisa.resources.MessageBasedResource:
     """Create a VISA session."""
     # The NI Instrument Simulator hardware accepts either \r\n or \n but the simulation YAML needs
     # the newlines to match.
+    if resource_manager is None:
+        resource_manager = create_resource_manager(bool(use_simulation))
     session = resource_manager.open_resource(
         resource_name, read_termination="\n", write_termination="\n"
     )

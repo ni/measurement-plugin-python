@@ -12,6 +12,7 @@ import click
 import grpc
 import hightime
 import nifgen
+from _constants import USE_SIMULATION
 from _helpers import (
     ServiceOptions,
     configure_logging,
@@ -22,7 +23,7 @@ from _helpers import (
     use_simulation_option,
     verbosity_option,
 )
-from _nifgen_helpers import USE_SIMULATION, create_session
+from _nifgen_helpers import create_session
 
 import ni_measurementlink_service as nims
 
