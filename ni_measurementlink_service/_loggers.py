@@ -277,7 +277,7 @@ class _CallLogger(abc.ABC):
 
 
 class _ClientCallLogger(_CallLogger):
-    __slots__ = ["_method_name"]
+    __slots__ = ["_method_name", "_activity_id"]
 
     @classmethod
     def is_enabled(cls) -> bool:
@@ -287,11 +287,11 @@ class _ClientCallLogger(_CallLogger):
         super().__init__()
         self._method_name = method_name
         _logger.debug("gRPC client call starting: %s", self._method_name)
-        _tracelogging.log_grpc_client_call_start(self._method_name)
+        self._activity_id = _tracelogging.log_grpc_client_call_start(self._method_name)
 
     def _close(self, exception: BaseException | None = None) -> None:
         _logger.debug("gRPC client call complete: %s", self._method_name)
-        _tracelogging.log_grpc_client_call_stop(self._method_name)
+        _tracelogging.log_grpc_client_call_stop(self._method_name, self._activity_id)
 
     def log_streaming_request(self) -> None:
         _logger.debug("gRPC client call streaming request: %s", self._method_name)
@@ -303,7 +303,7 @@ class _ClientCallLogger(_CallLogger):
 
 
 class _ServerCallLogger(_CallLogger):
-    __slots__ = ["_method_name", "_start_time"]
+    __slots__ = ["_method_name", "_start_time", "_activity_id"]
 
     @classmethod
     def is_enabled(cls) -> bool:
@@ -314,7 +314,7 @@ class _ServerCallLogger(_CallLogger):
         self._method_name = method_name
         self._start_time = time.perf_counter()
         _logger.debug("gRPC server call starting: %s", self._method_name)
-        _tracelogging.log_grpc_server_call_start(self._method_name)
+        self._activity_id = _tracelogging.log_grpc_server_call_start(self._method_name)
 
     def _close(self, exception: BaseException | None = None) -> None:
         if _logger.isEnabledFor(logging.INFO):
@@ -329,7 +329,7 @@ class _ServerCallLogger(_CallLogger):
                 elapsed_time * 1000.0,
             )
         _logger.debug("gRPC server call complete: %s", self._method_name)
-        _tracelogging.log_grpc_server_call_stop(self._method_name)
+        _tracelogging.log_grpc_server_call_stop(self._method_name, self._activity_id)
 
     def log_streaming_request(self) -> None:
         _logger.debug("gRPC server call streaming request: %s", self._method_name)
