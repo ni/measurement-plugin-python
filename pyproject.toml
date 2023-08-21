@@ -83,6 +83,8 @@ warn_unused_ignores = true
 module = [
   # https://github.com/briancurtin/deprecation/issues/56 - Add type information (PEP 561)
   "deprecation.*",
-  "grpc.framework.foundation.*"
+  "grpc.framework.foundation.*",
+  # https://github.com/microsoft/tracelogging/issues/57 - Python traceloggingdynamic package is missing py.typed marker file
+  "traceloggingdynamic",
 ]
 ignore_missing_imports = true
