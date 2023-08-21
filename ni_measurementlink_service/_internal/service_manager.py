@@ -109,9 +109,6 @@ class GrpcService:
 
     def stop(self) -> None:
         """Close the Service after un-registering with discovery service and cleanups."""
-        try:
-            self.discovery_client.unregister_service()
-            self.server.stop(5)
-            _logger.info("Measurement service closed.")
-        except Exception as e:
-            raise Exception(e)
+        self.discovery_client.unregister_service()
+        self.server.stop(5)
+        _logger.info("Measurement service closed.")
