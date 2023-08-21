@@ -285,9 +285,9 @@ class Context:
         """
         if message_type == xydata_pb2.DoubleXYData.DESCRIPTOR.full_name:
             if type != type_pb2.Field.Kind.TYPE_MESSAGE:
-                raise Exception(f"Message type must have a TYPE_MESSAGE kind '{message_type}'")
+                raise ValueError(f"Message type must have a TYPE_MESSAGE kind '{message_type}'")
             if repeated:
-                raise Exception(f"Repeated message types are not supported '{message_type}'")
+                raise ValueError(f"Repeated message types are not supported '{message_type}'")
             return XYDataDecoder
         if type not in Context._FIELD_TYPE_TO_DECODER_MAPPING:
             raise Exception(f"Error can not decode type '{type}'")
