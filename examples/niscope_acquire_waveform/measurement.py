@@ -2,6 +2,7 @@
 
 import logging
 import pathlib
+import sys
 import time
 from typing import Tuple
 
@@ -22,7 +23,8 @@ from _niscope_helpers import USE_SIMULATION, create_session
 
 import ni_measurementlink_service as nims
 
-service_directory = pathlib.Path(__file__).resolve().parent
+script_or_exe = sys.executable if getattr(sys, "frozen", False) else __file__
+service_directory = pathlib.Path(script_or_exe).resolve().parent
 measurement_service = nims.MeasurementService(
     service_config_path=service_directory / "NIScopeAcquireWaveform.serviceconfig",
     version="0.1.0.0",

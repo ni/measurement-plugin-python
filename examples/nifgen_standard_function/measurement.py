@@ -3,6 +3,7 @@
 import contextlib
 import logging
 import pathlib
+import sys
 import time
 from enum import Enum
 from typing import Tuple
@@ -28,7 +29,8 @@ import ni_measurementlink_service as nims
 NIFGEN_OPERATION_TIMED_OUT_ERROR_CODE = -1074098044
 NIFGEN_MAX_TIME_EXCEEDED_ERROR_CODE = -1074118637
 
-service_directory = pathlib.Path(__file__).resolve().parent
+script_or_exe = sys.executable if getattr(sys, "frozen", False) else __file__
+service_directory = pathlib.Path(script_or_exe).resolve().parent
 measurement_service = nims.MeasurementService(
     service_config_path=service_directory / "NIFgenStandardFunction.serviceconfig",
     version="0.1.0.0",

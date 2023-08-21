@@ -1,6 +1,7 @@
 """Contains utility functions to test that yield and return are supported in measurements."""
 import pathlib
 import random
+import sys
 import threading
 import time
 from typing import Generator, List, Tuple
@@ -13,7 +14,8 @@ RANDOM_NUMBERS_PER_SECOND = 100.0
 RANDOM_NUMBER_RANGE = 10.0
 UI_UPDATE_INTERVAL_IN_SECONDS = 100e-3
 
-service_directory = pathlib.Path(__file__).resolve().parent
+script_or_exe = sys.executable if getattr(sys, "frozen", False) else __file__
+service_directory = pathlib.Path(script_or_exe).resolve().parent
 measurement_service = nims.MeasurementService(
     service_config_path=service_directory / "UIProgressUpdates.serviceconfig",
     version="0.5.0.0",
