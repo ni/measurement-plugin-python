@@ -373,19 +373,16 @@ class MeasurementService:
             Exception: If register measurement methods not available.
 
         """
-        try:
-            if self.measure_function is None:
-                raise Exception("Error, must register measurement method.")
-            self.grpc_service.start(
+        if self.measure_function is None:
+            raise Exception("Error, must register measurement method.")
+        self.grpc_service.start(
                 self.measurement_info,
                 self.service_info,
                 self.configuration_parameter_list,
                 self.output_parameter_list,
                 self.measure_function,
-            )
-            return self
-        except Exception as e:
-            raise e
+        )
+        return self
 
     def _make_annotations_dict(
         self,
