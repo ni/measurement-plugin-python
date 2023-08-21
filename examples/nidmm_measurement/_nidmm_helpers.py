@@ -4,14 +4,9 @@ from typing import Any, Dict, Optional
 
 import grpc
 import nidmm
+from _constants import USE_SIMULATION
 
 import ni_measurementlink_service as nims
-
-USE_SIMULATION = True
-"""
-To use a physical NI DMM instrument, set this to False or specify
---no-use-simulation on the command line.
-"""
 
 
 def create_session(

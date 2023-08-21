@@ -2,10 +2,10 @@
 from typing import Any
 
 import pyvisa.resources
+from _constants import USE_SIMULATION
 from _helpers import GrpcChannelPoolHelper, PinMapClient, TestStandSupport
 from _visa_helpers import (
     INSTRUMENT_TYPE_DMM_SIMULATOR,
-    USE_SIMULATION,
     create_visa_resource_manager,
     create_visa_session,
     log_instrument_id,

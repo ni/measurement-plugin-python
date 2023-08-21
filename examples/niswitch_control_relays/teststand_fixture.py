@@ -7,9 +7,6 @@ from _niswitch_helpers import create_session
 
 import ni_measurementlink_service as nims
 
-# To use a physical NI relay driver instrument, set this to False.
-USE_SIMULATION = True
-
 
 def update_pin_map(pin_map_path: str, sequence_context: Any) -> None:
     """Update registered pin map contents.
