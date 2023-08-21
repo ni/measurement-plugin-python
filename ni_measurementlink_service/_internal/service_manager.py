@@ -104,7 +104,6 @@ class GrpcService:
         self.discovery_client.register_measurement_service(port, service_info, measurement_info)
 
         self.port = port
-
         return port
 
     def stop(self) -> None:
