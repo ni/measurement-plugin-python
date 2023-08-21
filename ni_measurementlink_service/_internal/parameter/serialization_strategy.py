@@ -77,6 +77,10 @@ def _message_encoder(encoder) -> Callable[[int], Callable]:
     return message_encoder
 
 
+def _unsupported_encoder(field_index, is_repeated, is_packed):
+    raise NotImplementedError(f"Unsupported data type for field {field_index}")
+
+
 def _scalar_decoder(decoder) -> Callable[[int, str], Callable]:
     """Abstract Specific Decoder(Callable) as Scalar Decoder Callable that takes in field index,key.
 
@@ -171,7 +175,7 @@ IntArrayEncoder = _vector_encoder(encoder.Int32Encoder)
 UIntArrayEncoder = _vector_encoder(encoder.UInt32Encoder)
 BoolArrayEncoder = _vector_encoder(encoder.BoolEncoder)
 StringArrayEncoder = _vector_encoder(encoder.StringEncoder, is_packed=False)
-
+UnsupportedMessageArrayEncoder = _message_encoder(_unsupported_encoder)
 
 FloatDecoder = _scalar_decoder(decoder.FloatDecoder)
 DoubleDecoder = _scalar_decoder(decoder.DoubleDecoder)
@@ -206,8 +210,7 @@ class Context:
         type_pb2.Field.TYPE_BOOL: (BoolEncoder, BoolArrayEncoder),
         type_pb2.Field.TYPE_STRING: (StringEncoder, StringArrayEncoder),
         type_pb2.Field.TYPE_ENUM: (IntEncoder, IntArrayEncoder),
-        # Array encoder is not correct, but 'None' violates expected return value
-        type_pb2.Field.TYPE_MESSAGE: (MessageEncoder, StringArrayEncoder),
+        type_pb2.Field.TYPE_MESSAGE: (MessageEncoder, UnsupportedMessageArrayEncoder),
     }
 
     _FIELD_TYPE_TO_DECODER_MAPPING = {
