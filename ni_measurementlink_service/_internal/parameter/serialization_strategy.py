@@ -139,7 +139,7 @@ def _double_xy_data_decoder(decoder) -> Callable[[int, str], Callable]:
 
     Args
     ----
-        decoder (Callable[[int, bool, bool], Callable]): Specific decoder(Callable) that takes in
+        decoder: Specific decoder(Callable) that takes in
         field_index, is_repeated, is_packed,  key, new_default and
         returns the Low-level Decode Callable.
 
