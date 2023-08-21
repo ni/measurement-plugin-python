@@ -1,11 +1,11 @@
 """Serialization Strategy."""
 
-import struct
 from typing import Any, Callable
 
 from google.protobuf import type_pb2
-from google.protobuf.internal import decoder, encoder, wire_format
+from google.protobuf.internal import decoder, encoder
 
+from ni_measurementlink_service._internal.parameter import _message
 from ni_measurementlink_service._internal.stubs.ni.protobuf.types import xydata_pb2
 
 
@@ -56,38 +56,12 @@ def _vector_encoder(encoder, is_packed=True) -> Callable[[int], Callable]:
     return vector_encoder
 
 
-local_int2byte = struct.Struct(">B").pack
-
-
-def _encode_varint(write, value, unused_deterministic=None):
-    bits = value & 0x7F
-    value >>= 7
-    while value:
-        write(local_int2byte(0x80 | bits))
-        bits = value & 0x7F
-        value >>= 7
-    return write(local_int2byte(bits))
-
-
-def _inner_message_encoder(field_index):
-    """Mimics google.protobuf._internal.MessageEncoder."""
-    tag = encoder.TagBytes(field_index, wire_format.WIRETYPE_LENGTH_DELIMITED)
-
-    def encode_message(write, value, deterministic):
-        write(tag)
-        bytes = value.SerializeToString()
-        _encode_varint(write, len(bytes), deterministic)
-        write(bytes)
-
-    return encode_message
-
-
 def _message_encoder(encoder) -> Callable[[int], Callable]:
     """Abstract Specific Encoder(Callable) as Message Encoder Callable that takes in field index.
 
     Args
     ----
-       encoder (Callable[[int, bool, bool], Callable]): Specific encoder(Callable) that takes in
+       encoder: Specific encoder(Callable) that takes in
        field_index, is_repeated, is_packed and returns the Low-level Encode Callable.
 
     Returns
@@ -156,46 +130,6 @@ def _vector_decoder(decoder, is_packed=True) -> Callable[[int, str], Callable]:
     return vector_decoder
 
 
-def _decode_varint(buffer, pos):
-    mask = (1 << 64) - 1
-    result_type = int
-    result = 0
-    shift = 0
-    while 1:
-        b = buffer[pos]
-        result |= (b & 0x7F) << shift
-        pos += 1
-        if not (b & 0x80):
-            result &= mask
-            result = result_type(result)
-            return (result, pos)
-        shift += 7
-        if shift >= 64:
-            raise Exception("Too many bytes when decoding varint.")
-
-
-def _inner_message_decoder(field_index, is_repeated, is_packed, key, new_default):
-    """Based on google.protobuf.internal.MessageDecoder."""
-
-    def _convert_to_byte_string(memview):
-        """Convert bytes to byte_string."""
-        byte_str = memview.tobytes()
-        return byte_str
-
-    def decode_message(buffer, pos, end, message, field_dict):
-        value = field_dict.get(key)
-        if value is None:
-            value = field_dict.setdefault(key, new_default(message))
-        # Read length.
-        (size, pos) = _decode_varint(buffer, pos)
-        new_pos = pos + size
-        thestring = _convert_to_byte_string(buffer[pos:new_pos])
-        value.ParseFromString(thestring)
-        return new_pos
-
-    return decode_message
-
-
 def _double_xy_data_decoder(decoder) -> Callable[[int, str], Callable]:
     """Decoder for DoubleXYData.
 
@@ -229,7 +163,7 @@ IntEncoder = _scalar_encoder(encoder.Int32Encoder)
 UIntEncoder = _scalar_encoder(encoder.UInt32Encoder)
 BoolEncoder = _scalar_encoder(encoder.BoolEncoder)
 StringEncoder = _scalar_encoder(encoder.StringEncoder)
-MessageEncoder = _message_encoder(_inner_message_encoder)
+MessageEncoder = _message_encoder(_message._inner_message_encoder)
 
 FloatArrayEncoder = _vector_encoder(encoder.FloatEncoder)
 DoubleArrayEncoder = _vector_encoder(encoder.DoubleEncoder)
@@ -247,7 +181,7 @@ Int64Decoder = _scalar_decoder(decoder.Int64Decoder)
 UInt64Decoder = _scalar_decoder(decoder.UInt64Decoder)
 BoolDecoder = _scalar_decoder(decoder.BoolDecoder)
 StringDecoder = _scalar_decoder(decoder.StringDecoder)
-XYDataDecoder = _double_xy_data_decoder(_inner_message_decoder)
+XYDataDecoder = _double_xy_data_decoder(_message._inner_message_decoder)
 
 FloatArrayDecoder = _vector_decoder(decoder.FloatDecoder)
 DoubleArrayDecoder = _vector_decoder(decoder.DoubleDecoder)
