@@ -38,4 +38,5 @@ class FakeDiscoveryServiceStubError(FakeDiscoveryServiceStub):
 
 class FakeDiscoveryServiceError(Exception):
     """Fake discovery service error to mimic the exceptions thrown from  discovery service."""
+
     pass
