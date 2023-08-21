@@ -15,6 +15,7 @@ from ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v
 )
 from tests.utilities import loopback_measurement
 from tests.utilities.fake_discovery_service import (
+    FakeDiscoveryServiceError,
     FakeDiscoveryServiceStub,
     FakeDiscoveryServiceStubError,
 )
@@ -50,7 +51,7 @@ def test___grpc_service_without_discovery_service___start_service___service_host
 def test___grpc_service___start_service_error_registering_measurement___raises_error(
     grpc_service: GrpcService,
 ):
-    with pytest.raises(Exception):
+    with pytest.raises(FakeDiscoveryServiceError):
         grpc_service.start(
             loopback_measurement.measurement_service.measurement_info,
             loopback_measurement.measurement_service.service_info,
