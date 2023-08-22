@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import sys
 from enum import Enum, EnumMeta
 from os import path
 from pathlib import Path
@@ -19,7 +20,6 @@ from typing import (
     Type,
     TypeVar,
     Union,
-    cast,
 )
 
 import grpc
@@ -42,10 +42,12 @@ from ni_measurementlink_service.measurement.info import (
 from ni_measurementlink_service.session_management import PinMapContext
 
 if TYPE_CHECKING:
-    from google.protobuf.internal.enum_type_wrapper import (
-        EnumTypeWrapper,
-        _EnumTypeWrapper,
-    )
+    from google.protobuf.internal.enum_type_wrapper import _EnumTypeWrapper
+
+    if sys.version_info >= (3, 10):
+        from typing import TypeGuard
+    else:
+        from typing_extensions import TypeGuard
 
     SupportedEnumType = Union[Type[Enum], _EnumTypeWrapper]
 
@@ -425,11 +427,9 @@ class MeasurementService:
 
     def _enum_to_annotations_value(self, enum_type: SupportedEnumType) -> str:
         enum_values = {}
-        # Note that the type of protobuf enums are an instance of EnumTypeWrapper.
-        # Additionally, issubclass excludes instances as valid parameters so
-        # we use isinstance here.
+        # For protobuf enums, enum_type is an instance of EnumTypeWrapper at run time, so passing
+        # it to issubclass() would raise an error.
         if self._is_protobuf_enum(enum_type):
-            enum_type = cast("EnumTypeWrapper", enum_type)
             if 0 not in enum_type.values():
                 raise ValueError("The enum does not have a value for 0.")
             for name, value in enum_type.items():
@@ -441,7 +441,9 @@ class MeasurementService:
                 enum_values[member.name] = member.value
         return json.dumps(enum_values)
 
-    def _is_protobuf_enum(self, enum_type: SupportedEnumType) -> bool:
+    def _is_protobuf_enum(self, enum_type: SupportedEnumType) -> TypeGuard[_EnumTypeWrapper]:
+        # Use EnumDescriptor to check for protobuf enums at run time without using
+        # google.protobuf.internal.
         return isinstance(getattr(enum_type, "DESCRIPTOR", None), EnumDescriptor)
 
     def close_service(self) -> None:
