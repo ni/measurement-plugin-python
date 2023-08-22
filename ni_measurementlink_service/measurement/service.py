@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import json
-from enum import Enum
+from enum import Enum, EnumMeta
 from os import path
 from pathlib import Path
 from threading import Lock
@@ -434,7 +434,7 @@ class MeasurementService:
                 raise ValueError("The enum does not have a value for 0.")
             for name, value in enum_type.items():
                 enum_values[name] = value
-        elif isinstance(enum_type, type) and issubclass(enum_type, Enum):
+        elif isinstance(enum_type, EnumMeta):
             if not any(member.value == 0 for member in enum_type):
                 raise ValueError("The enum does not have a value for 0.")
             for member in enum_type:
