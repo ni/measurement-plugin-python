@@ -34,7 +34,8 @@ grpcio = "^1.49.1"
 protobuf = "^4.21"
 pywin32 = {version = ">=303", platform = "win32"}
 deprecation = ">=2.1"
-traceloggingdynamic = {version = ">=1.0", platform = "win32"}
+# https://github.com/microsoft/tracelogging/issues/58 - traceloggingdynamic raises TypeError with Python 3.8
+traceloggingdynamic = {version = ">=1.0", platform = "win32", python = "^3.9"}
 
 [tool.poetry.group.dev.dependencies]
 pytest = ">=7.2.0"
