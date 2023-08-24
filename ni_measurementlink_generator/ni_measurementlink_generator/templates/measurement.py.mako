@@ -3,11 +3,13 @@
 """A default measurement with an array in and out."""
 import logging
 import pathlib
+import sys
 
 import click
 import ni_measurementlink_service as nims
 
-service_directory = pathlib.Path(__file__).resolve().parent
+script_or_exe = sys.executable if getattr(sys, "frozen", False) else __file__
+service_directory = pathlib.Path(script_or_exe).resolve().parent
 measurement_service = nims.MeasurementService(
     service_config_path=service_directory / "${serviceconfig_file}",
     version="${version}",
