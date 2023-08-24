@@ -167,7 +167,7 @@ def test___start_discovery_service___key_file_exist_after_poll___service_start_s
     )
 
 
-def test___discovery_service_exe_unavailable___register_service___registration_failure(
+def test___discovery_service_exe_unavailable___register_service___raises_file_not_found_error(
     mocker: MockerFixture,
     temp_discovery_key_file_path: pathlib.Path,
     temp_registration_json_file_path: pathlib.Path,
@@ -181,13 +181,12 @@ def test___discovery_service_exe_unavailable___register_service___registration_f
         return_value=temp_registration_json_file_path,
     )
     mocker.patch("subprocess.Popen", side_effect=FileNotFoundError)
-
     discovery_client = DiscoveryClient()
-    registration_success_flag = discovery_client.register_measurement_service(
-        _TEST_SERVICE_PORT, _TEST_SERVICE_INFO, _TEST_MEASUREMENT_INFO
-    )
 
-    assert not registration_success_flag
+    with pytest.raises(FileNotFoundError):
+        discovery_client.register_measurement_service(
+            _TEST_SERVICE_PORT, _TEST_SERVICE_INFO, _TEST_MEASUREMENT_INFO
+        )
 
 
 @pytest.fixture(scope="module")

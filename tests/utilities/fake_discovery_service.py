@@ -29,8 +29,14 @@ class FakeDiscoveryServiceStubError(FakeDiscoveryServiceStub):
 
     def RegisterService(self, request):  # noqa: N802 - function name should be lowercase
         """Fake gRPC registration call to discovery service."""
-        raise Exception("TestException")
+        raise FakeDiscoveryServiceError("TestException")
 
     def UnregisterService(self, request):  # noqa: N802 - function name should be lowercase
         """Fake gRPC un-registration call to discovery service."""
-        raise Exception("TestException")
+        raise FakeDiscoveryServiceError("TestException")
+
+
+class FakeDiscoveryServiceError(Exception):
+    """Fake discovery service error to mimic the exceptions thrown from  discovery service."""
+
+    pass

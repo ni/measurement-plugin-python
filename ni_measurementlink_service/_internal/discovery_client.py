@@ -135,15 +135,15 @@ class DiscoveryClient:
                 )
             else:
                 _logger.exception("Error in registering with discovery service.")
-            return False
+            raise
         except FileNotFoundError:
             _logger.error(
                 "Unable to register with discovery service. Possible reason: discovery service not running."
             )
-            return False
+            raise
         except Exception:
             _logger.exception("Error in registering with discovery service.")
-            return False
+            raise
         return True
 
     def unregister_service(self) -> bool:
@@ -175,15 +175,15 @@ class DiscoveryClient:
                 )
             else:
                 _logger.exception("Error in unregistering with discovery service.")
-            return False
+            raise
         except FileNotFoundError:
             _logger.error(
                 "Unable to unregister with discovery service. Possible reason: discovery service not running."
             )
-            return False
+            raise
         except Exception:
             _logger.exception("Error in unregistering with discovery service.")
-            return False
+            raise
         return True
 
     def resolve_service(self, provided_interface: str, service_class: str = "") -> ServiceLocation:
