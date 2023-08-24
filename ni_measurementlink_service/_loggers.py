@@ -3,6 +3,7 @@ from __future__ import annotations
 import abc
 import functools
 import logging
+import sys
 import threading
 import time
 from types import TracebackType
@@ -18,7 +19,12 @@ from typing import (
 )
 
 import grpc
-from typing_extensions import Self
+
+if TYPE_CHECKING:
+    if sys.version_info >= (3, 11):
+        from typing import Self
+    else:
+        from typing_extensions import Self
 
 from ni_measurementlink_service import _tracelogging
 
