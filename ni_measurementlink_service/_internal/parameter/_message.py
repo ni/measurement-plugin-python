@@ -58,8 +58,7 @@ def _inner_message_decoder(field_index, is_repeated, is_packed, key, new_default
         # Read length.
         (size, pos) = decode_varint(buffer, pos)
         new_pos = pos + size
-        thestring = _convert_to_byte_string(buffer[pos:new_pos])
-        value.ParseFromString(thestring)
+        value.ParseFromString(_convert_to_byte_string(buffer[pos:new_pos]))
         return new_pos
 
     return _decode_message
