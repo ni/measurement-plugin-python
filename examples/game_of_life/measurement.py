@@ -1,5 +1,4 @@
-"""A default measurement with an array in and out."""
-import logging
+"""Source the XY data for Conway's Game of Life."""
 import pathlib
 import random
 import time
@@ -8,6 +7,11 @@ import click
 
 import ni_measurementlink_service as nims
 from ni_measurementlink_service._internal.stubs.ni.protobuf.types import xydata_pb2
+from _helpers import (
+    configure_logging,
+    get_service_options,
+    verbosity_option,
+)
 
 service_directory = pathlib.Path(__file__).resolve().parent
 measurement_service = nims.MeasurementService(
@@ -102,21 +106,13 @@ def _update_grid(grid):
 
 
 @click.command
-@click.option(
-    "-v",
-    "--verbose",
-    count=True,
-    help="Enable verbose logging. Repeat to increase verbosity.",
-)
-def main(verbose: int) -> None:
-    """Host the game_of_life service."""
-    if verbose > 1:
-        level = logging.DEBUG
-    elif verbose == 1:
-        level = logging.INFO
-    else:
-        level = logging.WARNING
-    logging.basicConfig(format="%(asctime)s %(levelname)s: %(message)s", level=level)
+@verbosity_option
+def main(verbosity: int, **kwargs) -> None:
+    """Source the XY data for Conway's Game of Life."""
+    configure_logging(verbosity)
+
+    global service_options
+    service_options = get_service_options(**kwargs)
 
     with measurement_service.host_service():
         input("Press enter to close the measurement service.\n")
