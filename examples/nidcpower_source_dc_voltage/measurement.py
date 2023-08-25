@@ -2,6 +2,7 @@
 
 import logging
 import pathlib
+import sys
 import time
 from typing import Iterable
 
@@ -9,6 +10,7 @@ import click
 import grpc
 import hightime
 import nidcpower
+from _constants import USE_SIMULATION
 from _helpers import (
     ServiceOptions,
     configure_logging,
@@ -19,14 +21,15 @@ from _helpers import (
     use_simulation_option,
     verbosity_option,
 )
-from _nidcpower_helpers import USE_SIMULATION, create_session
+from _nidcpower_helpers import create_session
 
 import ni_measurementlink_service as nims
 
 NIDCPOWER_WAIT_FOR_EVENT_TIMEOUT_ERROR_CODE = -1074116059
 NIDCPOWER_TIMEOUT_EXCEEDED_ERROR_CODE = -1074097933
 
-service_directory = pathlib.Path(__file__).resolve().parent
+script_or_exe = sys.executable if getattr(sys, "frozen", False) else __file__
+service_directory = pathlib.Path(script_or_exe).resolve().parent
 measurement_service = nims.MeasurementService(
     service_config_path=service_directory / "NIDCPowerSourceDCVoltage.serviceconfig",
     version="0.1.0.0",
