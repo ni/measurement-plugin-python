@@ -1,25 +1,34 @@
 """Serialization Strategy."""
 
-from typing import Any, Callable
+from typing import Any, Callable, Dict
 
 from google.protobuf import type_pb2
+from google.protobuf.descriptor import FieldDescriptor
 from google.protobuf.internal import decoder, encoder
+from typing_extensions import Buffer
 
 from ni_measurementlink_service._internal.parameter import _message
 from ni_measurementlink_service._internal.stubs.ni.protobuf.types import xydata_pb2
 
+LowLevelEncoder = Callable[[Callable[[Buffer], int], Any, None], None]
+EncoderFactory = Callable[[int], LowLevelEncoder]
+LowLevelDecoder = Callable[
+    [memoryview, int, int, type_pb2.Field.Kind.ValueType, Dict[FieldDescriptor, Any]], int
+]
+DecoderFactory = Callable[[int, str], LowLevelDecoder]
 
-def _scalar_encoder(encoder) -> Callable[[int], Callable]:
+
+def _scalar_encoder(encoder) -> EncoderFactory:
     """Abstract Specific Encoder(Callable) as Scalar Encoder Callable that takes in field index.
 
     Args
     ----
-       encoder (Callable[[int, bool, bool], Callable]): Specific encoder that takes in
+       encoder: Specific encoder that takes in
        field_index, is_repeated, is_packed and returns the Low-level Encode Callable.
 
     Returns
     -------
-        Callable[[int],Callable]: Callable Encoder for scalar types that takes
+        EncoderFactoryForFieldIndex: Callable Encoder for scalar types that takes
         in field_index and returns the Low-level Encode Callable.
 
     """
@@ -32,7 +41,7 @@ def _scalar_encoder(encoder) -> Callable[[int], Callable]:
     return scalar_encoder
 
 
-def _vector_encoder(encoder, is_packed=True) -> Callable[[int], Callable]:
+def _vector_encoder(encoder, is_packed=True) -> EncoderFactory:
     """Abstract Specific Encoder(Callable) as Vector Encoder Callable that takes in field index.
 
     Args
@@ -56,7 +65,7 @@ def _vector_encoder(encoder, is_packed=True) -> Callable[[int], Callable]:
     return vector_encoder
 
 
-def _message_encoder(encoder) -> Callable[[int], Callable]:
+def _message_encoder(encoder) -> EncoderFactory:
     """Abstract Specific Encoder(Callable) as Message Encoder Callable that takes in field index.
 
     Args
@@ -81,7 +90,7 @@ def _unsupported_encoder(field_index, is_repeated, is_packed):
     raise NotImplementedError(f"Unsupported data type for field {field_index}")
 
 
-def _scalar_decoder(decoder) -> Callable[[int, str], Callable]:
+def _scalar_decoder(decoder) -> DecoderFactory:
     """Abstract Specific Decoder(Callable) as Scalar Decoder Callable that takes in field index,key.
 
     Args
@@ -105,7 +114,7 @@ def _scalar_decoder(decoder) -> Callable[[int, str], Callable]:
     return scalar_decoder
 
 
-def _vector_decoder(decoder, is_packed=True) -> Callable[[int, str], Callable]:
+def _vector_decoder(decoder, is_packed=True) -> DecoderFactory:
     """Abstract Specific Decoder(Callable) as Vector Decoder Callable that takes in field index,key.
 
     Args
@@ -134,7 +143,7 @@ def _vector_decoder(decoder, is_packed=True) -> Callable[[int, str], Callable]:
     return vector_decoder
 
 
-def _double_xy_data_decoder(decoder) -> Callable[[int, str], Callable]:
+def _double_xy_data_decoder(decoder) -> DecoderFactory:
     """Decoder for DoubleXYData.
 
     Args
@@ -240,7 +249,7 @@ class Context:
     @staticmethod
     def get_encoder(
         type: type_pb2.Field.Kind.ValueType, repeated: bool
-    ) -> Callable[[int], Callable]:
+    ) -> Callable[[int], LowLevelEncoder]:
         """Get the Scalar Encoder or Vector Encoder for the specified type based on repeated bool.
 
         Args
