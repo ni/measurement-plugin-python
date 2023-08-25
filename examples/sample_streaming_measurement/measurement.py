@@ -1,17 +1,19 @@
 """Returns the number of responses requested at the requested interval."""
 import logging
 import pathlib
+import sys
 import threading
 import time
 from typing import Generator, List, Tuple
 
 import click
 import grpc
-from _helpers import verbosity_option, configure_logging
+from _helpers import configure_logging, verbosity_option
 
 import ni_measurementlink_service as nims
 
-service_directory = pathlib.Path(__file__).resolve().parent
+script_or_exe = sys.executable if getattr(sys, "frozen", False) else __file__
+service_directory = pathlib.Path(script_or_exe).resolve().parent
 measurement_service = nims.MeasurementService(
     service_config_path=service_directory / "SampleStreamingMeasurement.serviceconfig",
     version="0.1.0.0",

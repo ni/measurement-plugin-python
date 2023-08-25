@@ -1,10 +1,11 @@
 """Perform a loopback measurement with various data types."""
 import logging
 import pathlib
+import sys
 from enum import Enum
 
 import click
-from _helpers import verbosity_option, configure_logging
+from _helpers import configure_logging, verbosity_option
 
 try:
     from _stubs import color_pb2
@@ -13,7 +14,8 @@ except ImportError:
 
 import ni_measurementlink_service as nims
 
-service_directory = pathlib.Path(__file__).resolve().parent
+script_or_exe = sys.executable if getattr(sys, "frozen", False) else __file__
+service_directory = pathlib.Path(script_or_exe).resolve().parent
 sample_measurement_service = nims.MeasurementService(
     service_config_path=service_directory / "SampleMeasurement.serviceconfig",
     version="0.1.0.0",

@@ -1,24 +1,34 @@
 """Serialization Strategy."""
 
-from typing import Any, Callable
+from typing import Any, Callable, Dict
 
 from google.protobuf import type_pb2
-from google.protobuf.internal import decoder, encoder, wire_format
+from google.protobuf.descriptor import FieldDescriptor
+from google.protobuf.internal import decoder, encoder
+from typing_extensions import Buffer
 
+from ni_measurementlink_service._internal.parameter import _message
 from ni_measurementlink_service._internal.stubs.ni.protobuf.types import xydata_pb2
 
+LowLevelEncoder = Callable[[Callable[[Buffer], int], Any, None], None]
+EncoderFactory = Callable[[int], LowLevelEncoder]
+LowLevelDecoder = Callable[
+    [memoryview, int, int, type_pb2.Field.Kind.ValueType, Dict[FieldDescriptor, Any]], int
+]
+DecoderFactory = Callable[[int, str], LowLevelDecoder]
 
-def _scalar_encoder(encoder) -> Callable[[int], Callable]:
+
+def _scalar_encoder(encoder) -> EncoderFactory:
     """Abstract Specific Encoder(Callable) as Scalar Encoder Callable that takes in field index.
 
     Args
     ----
-       encoder (Callable[[int, bool, bool], Callable]): Specific encoder that takes in
+       encoder: Specific encoder that takes in
        field_index, is_repeated, is_packed and returns the Low-level Encode Callable.
 
     Returns
     -------
-        Callable[[int],Callable]: Callable Encoder for scalar types that takes
+        EncoderFactoryForFieldIndex: Callable Encoder for scalar types that takes
         in field_index and returns the Low-level Encode Callable.
 
     """
@@ -31,7 +41,7 @@ def _scalar_encoder(encoder) -> Callable[[int], Callable]:
     return scalar_encoder
 
 
-def _vector_encoder(encoder, is_packed=True) -> Callable[[int], Callable]:
+def _vector_encoder(encoder, is_packed=True) -> EncoderFactory:
     """Abstract Specific Encoder(Callable) as Vector Encoder Callable that takes in field index.
 
     Args
@@ -55,25 +65,12 @@ def _vector_encoder(encoder, is_packed=True) -> Callable[[int], Callable]:
     return vector_encoder
 
 
-def inner_message_encoder(field_index):
-    """Mimics google.protobuf._internal.MessageEncoder."""
-    tag = encoder.TagBytes(field_index, wire_format.WIRETYPE_LENGTH_DELIMITED)
-
-    def encode_message(write, value, deterministic):
-        write(tag)
-        bytes = value.SerializeToString()
-        encoder._EncodeVarint(write, len(bytes), deterministic)
-        write(bytes)
-
-    return encode_message
-
-
-def _message_encoder(encoder) -> Callable[[int], Callable]:
+def _message_encoder(encoder) -> EncoderFactory:
     """Abstract Specific Encoder(Callable) as Message Encoder Callable that takes in field index.
 
     Args
     ----
-       encoder (Callable[[int, bool, bool], Callable]): Specific encoder(Callable) that takes in
+       encoder: Specific encoder(Callable) that takes in
        field_index, is_repeated, is_packed and returns the Low-level Encode Callable.
 
     Returns
@@ -89,7 +86,11 @@ def _message_encoder(encoder) -> Callable[[int], Callable]:
     return message_encoder
 
 
-def _scalar_decoder(decoder) -> Callable[[int, str], Callable]:
+def _unsupported_encoder(field_index, is_repeated, is_packed):
+    raise NotImplementedError(f"Unsupported data type for field {field_index}")
+
+
+def _scalar_decoder(decoder) -> DecoderFactory:
     """Abstract Specific Decoder(Callable) as Scalar Decoder Callable that takes in field index,key.
 
     Args
@@ -113,7 +114,7 @@ def _scalar_decoder(decoder) -> Callable[[int, str], Callable]:
     return scalar_decoder
 
 
-def _vector_decoder(decoder, is_packed=True) -> Callable[[int, str], Callable]:
+def _vector_decoder(decoder, is_packed=True) -> DecoderFactory:
     """Abstract Specific Decoder(Callable) as Vector Decoder Callable that takes in field index,key.
 
     Args
@@ -142,34 +143,12 @@ def _vector_decoder(decoder, is_packed=True) -> Callable[[int, str], Callable]:
     return vector_decoder
 
 
-def inner_message_decoder(field_index, is_repeated, is_packed, key, new_default):
-    """Based on google.protobuf.internal.MessageDecoder."""
-
-    def _convert_to_byte_string(memview):
-        """Convert bytes to byte_string."""
-        byte_str = memview.tobytes()
-        return byte_str
-
-    def decode_message(buffer, pos, end, message, field_dict):
-        value = field_dict.get(key)
-        if value is None:
-            value = field_dict.setdefault(key, new_default(message))
-        # Read length.
-        (size, pos) = decoder._DecodeVarint(buffer, pos)
-        new_pos = pos + size
-        thestring = _convert_to_byte_string(buffer[pos:new_pos])
-        value.ParseFromString(thestring)
-        return new_pos
-
-    return decode_message
-
-
-def double_xy_data_decoder(decoder) -> Callable[[int, str], Callable]:
+def _double_xy_data_decoder(decoder) -> DecoderFactory:
     """Decoder for DoubleXYData.
 
     Args
     ----
-        decoder (Callable[[int, bool, bool], Callable]): Specific decoder(Callable) that takes in
+        decoder: Specific decoder(Callable) that takes in
         field_index, is_repeated, is_packed,  key, new_default and
         returns the Low-level Decode Callable.
 
@@ -197,7 +176,7 @@ IntEncoder = _scalar_encoder(encoder.Int32Encoder)
 UIntEncoder = _scalar_encoder(encoder.UInt32Encoder)
 BoolEncoder = _scalar_encoder(encoder.BoolEncoder)
 StringEncoder = _scalar_encoder(encoder.StringEncoder)
-MessageEncoder = _message_encoder(inner_message_encoder)
+MessageEncoder = _message_encoder(_message._inner_message_encoder)
 
 FloatArrayEncoder = _vector_encoder(encoder.FloatEncoder)
 DoubleArrayEncoder = _vector_encoder(encoder.DoubleEncoder)
@@ -205,7 +184,7 @@ IntArrayEncoder = _vector_encoder(encoder.Int32Encoder)
 UIntArrayEncoder = _vector_encoder(encoder.UInt32Encoder)
 BoolArrayEncoder = _vector_encoder(encoder.BoolEncoder)
 StringArrayEncoder = _vector_encoder(encoder.StringEncoder, is_packed=False)
-
+UnsupportedMessageArrayEncoder = _message_encoder(_unsupported_encoder)
 
 FloatDecoder = _scalar_decoder(decoder.FloatDecoder)
 DoubleDecoder = _scalar_decoder(decoder.DoubleDecoder)
@@ -215,7 +194,7 @@ Int64Decoder = _scalar_decoder(decoder.Int64Decoder)
 UInt64Decoder = _scalar_decoder(decoder.UInt64Decoder)
 BoolDecoder = _scalar_decoder(decoder.BoolDecoder)
 StringDecoder = _scalar_decoder(decoder.StringDecoder)
-XYDataDecoder = double_xy_data_decoder(inner_message_decoder)
+XYDataDecoder = _double_xy_data_decoder(_message._inner_message_decoder)
 
 FloatArrayDecoder = _vector_decoder(decoder.FloatDecoder)
 DoubleArrayDecoder = _vector_decoder(decoder.DoubleDecoder)
@@ -240,7 +219,7 @@ class Context:
         type_pb2.Field.TYPE_BOOL: (BoolEncoder, BoolArrayEncoder),
         type_pb2.Field.TYPE_STRING: (StringEncoder, StringArrayEncoder),
         type_pb2.Field.TYPE_ENUM: (IntEncoder, IntArrayEncoder),
-        type_pb2.Field.TYPE_MESSAGE: (MessageEncoder, None),
+        type_pb2.Field.TYPE_MESSAGE: (MessageEncoder, UnsupportedMessageArrayEncoder),
     }
 
     _FIELD_TYPE_TO_DECODER_MAPPING = {
@@ -270,7 +249,7 @@ class Context:
     @staticmethod
     def get_encoder(
         type: type_pb2.Field.Kind.ValueType, repeated: bool
-    ) -> Callable[[int], Callable]:
+    ) -> Callable[[int], LowLevelEncoder]:
         """Get the Scalar Encoder or Vector Encoder for the specified type based on repeated bool.
 
         Args
@@ -318,9 +297,9 @@ class Context:
         """
         if message_type == xydata_pb2.DoubleXYData.DESCRIPTOR.full_name:
             if type != type_pb2.Field.Kind.TYPE_MESSAGE:
-                raise Exception(f"Message type must have a TYPE_MESSAGE kind '{message_type}'")
+                raise ValueError(f"Message type must have a TYPE_MESSAGE kind '{message_type}'")
             if repeated:
-                raise Exception(f"Repeated message types are not supported '{message_type}'")
+                raise ValueError(f"Repeated message types are not supported '{message_type}'")
             return XYDataDecoder
         if type not in Context._FIELD_TYPE_TO_DECODER_MAPPING:
             raise Exception(f"Error can not decode type '{type}'")

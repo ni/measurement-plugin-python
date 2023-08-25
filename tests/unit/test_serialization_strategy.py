@@ -19,7 +19,6 @@ from ni_measurementlink_service._internal.stubs.ni.protobuf.types import xydata_
         (type_pb2.Field.TYPE_STRING, False, serialization_strategy.StringEncoder),
         (type_pb2.Field.TYPE_ENUM, False, serialization_strategy.IntEncoder),
         (type_pb2.Field.TYPE_MESSAGE, False, serialization_strategy.MessageEncoder),
-        (type_pb2.Field.TYPE_MESSAGE, True, None),  # repeated messages are not yet supported
     ],
 )
 def test___serialization_strategy___get_encoder___returns_expected_encoder(

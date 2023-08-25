@@ -2,10 +2,12 @@
 
 import logging
 import pathlib
+import sys
 from typing import Iterable, Tuple, Union
 
 import click
 import nidigital
+from _constants import USE_SIMULATION
 from _helpers import (
     ServiceOptions,
     configure_logging,
@@ -16,11 +18,12 @@ from _helpers import (
     use_simulation_option,
     verbosity_option,
 )
-from _nidigital_helpers import USE_SIMULATION, create_session
+from _nidigital_helpers import create_session
 
 import ni_measurementlink_service as nims
 
-service_directory = pathlib.Path(__file__).resolve().parent
+script_or_exe = sys.executable if getattr(sys, "frozen", False) else __file__
+service_directory = pathlib.Path(script_or_exe).resolve().parent
 measurement_service = nims.MeasurementService(
     service_config_path=service_directory / "NIDigitalSPI.serviceconfig",
     version="0.1.0.0",

@@ -16,6 +16,7 @@ from ni_measurementlink_service._internal.stubs.ni.measurementlink.discovery.v1 
     discovery_service_pb2,
     discovery_service_pb2_grpc,
 )
+from ni_measurementlink_service._loggers import ClientLogger
 from ni_measurementlink_service.measurement.info import MeasurementInfo, ServiceInfo
 
 if sys.platform == "win32":
@@ -83,6 +84,8 @@ class DiscoveryClient:
         if self._stub is None:
             address = _get_discovery_service_address()
             channel = grpc.insecure_channel(address)
+            if ClientLogger.is_enabled():
+                channel = grpc.intercept_channel(channel, ClientLogger())
             self._stub = discovery_service_pb2_grpc.DiscoveryServiceStub(channel)
         return self._stub
 
@@ -132,15 +135,15 @@ class DiscoveryClient:
                 )
             else:
                 _logger.exception("Error in registering with discovery service.")
-            return False
+            raise
         except FileNotFoundError:
             _logger.error(
                 "Unable to register with discovery service. Possible reason: discovery service not running."
             )
-            return False
+            raise
         except Exception:
             _logger.exception("Error in registering with discovery service.")
-            return False
+            raise
         return True
 
     def unregister_service(self) -> bool:
@@ -172,15 +175,15 @@ class DiscoveryClient:
                 )
             else:
                 _logger.exception("Error in unregistering with discovery service.")
-            return False
+            raise
         except FileNotFoundError:
             _logger.error(
                 "Unable to unregister with discovery service. Possible reason: discovery service not running."
             )
-            return False
+            raise
         except Exception:
             _logger.exception("Error in unregistering with discovery service.")
-            return False
+            raise
         return True
 
     def resolve_service(self, provided_interface: str, service_class: str = "") -> ServiceLocation:
