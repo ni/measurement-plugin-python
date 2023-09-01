@@ -123,13 +123,9 @@ def measure(
             session.output_mode = nifgen.OutputMode.FUNC
 
             channels = session.channels[session_info.channel_list]
-            channels.configure_standard_waveform(
-                nifgen.Waveform(waveform_type.value)
-                if waveform_type != Waveform.NONE
-                else nifgen.Waveform.SINE,
-                amplitude,
-                frequency,
-            )
+            # If the waveform type is not specified, use SINE.
+            nifgen_waveform = nifgen.Waveform(waveform_type.value or Waveform.SINE.value)
+            channels.configure_standard_waveform(nifgen_waveform, amplitude, frequency)
 
             stack.enter_context(session.initiate())
 
