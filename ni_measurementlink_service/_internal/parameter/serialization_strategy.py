@@ -1,12 +1,15 @@
 """Serialization Strategy."""
 
-from typing import Any, Callable
+from typing import Any, Callable, Dict
 
 from google.protobuf import type_pb2
+from google.protobuf.descriptor import FieldDescriptor
 from google.protobuf.internal import decoder, encoder
+from google.protobuf.message import Message
 from typing_extensions import TypeAlias
 
 _Encoder: TypeAlias = Callable[[Callable[[bytes], int], bytes, bool], int]
+_Decoder: TypeAlias = Callable[[str, int, int, Message, Dict[FieldDescriptor, Any]], int]
 
 
 def _scalar_encoder(encoder) -> Callable[[int], _Encoder]:
@@ -56,7 +59,7 @@ def _vector_encoder(encoder, is_packed=True) -> Callable[[int], _Encoder]:
     return vector_encoder
 
 
-def _scalar_decoder(decoder) -> Callable[[int, str], Callable]:
+def _scalar_decoder(decoder) -> Callable[[int, str], _Decoder]:
     """Abstract Specific Decoder(Callable) as Scalar Decoder Callable that takes in field index,key.
 
     Args
@@ -80,7 +83,7 @@ def _scalar_decoder(decoder) -> Callable[[int, str], Callable]:
     return scalar_decoder
 
 
-def _vector_decoder(decoder, is_packed=True) -> Callable[[int, str], Callable]:
+def _vector_decoder(decoder, is_packed=True) -> Callable[[int, str], _Decoder]:
     """Abstract Specific Decoder(Callable) as Vector Decoder Callable that takes in field index,key.
 
     Args
