@@ -8,11 +8,11 @@ from google.protobuf.internal import decoder, encoder
 from google.protobuf.message import Message
 from typing_extensions import TypeAlias
 
-_Encoder: TypeAlias = Callable[[Callable[[bytes], int], bytes, bool], int]
-_Decoder: TypeAlias = Callable[[str, int, int, Message, Dict[FieldDescriptor, Any]], int]
+InnerEncoder: TypeAlias = Callable[[Callable[[bytes], int], bytes, bool], int]
+InnerDecoder: TypeAlias = Callable[[str, int, int, Message, Dict[FieldDescriptor, Any]], int]
 
 
-def _scalar_encoder(encoder) -> Callable[[int], _Encoder]:
+def _scalar_encoder(encoder) -> Callable[[int], InnerEncoder]:
     """Abstract Specific Encoder(Callable) as Scalar Encoder Callable that takes in field index.
 
     Args
@@ -35,7 +35,7 @@ def _scalar_encoder(encoder) -> Callable[[int], _Encoder]:
     return scalar_encoder
 
 
-def _vector_encoder(encoder, is_packed=True) -> Callable[[int], _Encoder]:
+def _vector_encoder(encoder, is_packed=True) -> Callable[[int], InnerEncoder]:
     """Abstract Specific Encoder(Callable) as Vector Encoder Callable that takes in field index.
 
     Args
@@ -59,7 +59,7 @@ def _vector_encoder(encoder, is_packed=True) -> Callable[[int], _Encoder]:
     return vector_encoder
 
 
-def _scalar_decoder(decoder) -> Callable[[int, str], _Decoder]:
+def _scalar_decoder(decoder) -> Callable[[int, str], InnerDecoder]:
     """Abstract Specific Decoder(Callable) as Scalar Decoder Callable that takes in field index,key.
 
     Args
@@ -83,7 +83,7 @@ def _scalar_decoder(decoder) -> Callable[[int, str], _Decoder]:
     return scalar_decoder
 
 
-def _vector_decoder(decoder, is_packed=True) -> Callable[[int, str], _Decoder]:
+def _vector_decoder(decoder, is_packed=True) -> Callable[[int, str], InnerDecoder]:
     """Abstract Specific Decoder(Callable) as Vector Decoder Callable that takes in field index,key.
 
     Args
@@ -188,7 +188,7 @@ class Context:
     @staticmethod
     def get_encoder(
         type: type_pb2.Field.Kind.ValueType, repeated: bool
-    ) -> Callable[[int], _Encoder]:
+    ) -> Callable[[int], InnerEncoder]:
         """Get the Scalar Encoder or Vector Encoder for the specified type based on repeated bool.
 
         Args
