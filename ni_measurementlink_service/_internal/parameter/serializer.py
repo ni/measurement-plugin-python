@@ -85,7 +85,7 @@ def serialize_parameters(
         # Skipping serialization if the value is None or if its a type default value.
         if parameter is not None and parameter != type_default_value:
             inner_encoder = encoder(i + 1)
-            inner_encoder(serialize_buffer.write, parameter, None)
+            inner_encoder(serialize_buffer.write, parameter, False)
     return serialize_buffer.getvalue()
 
 

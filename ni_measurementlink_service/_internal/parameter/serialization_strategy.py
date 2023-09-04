@@ -3,11 +3,13 @@
 from typing import Any, Callable
 
 from google.protobuf import type_pb2
-from google.protobuf.internal import decoder
-from google.protobuf.internal import encoder
+from google.protobuf.internal import decoder, encoder
+from typing_extensions import TypeAlias
+
+_Encoder: TypeAlias = Callable[[Callable[[bytes], int], bytes, bool], int]
 
 
-def _scalar_encoder(encoder) -> Callable[[int], Callable]:
+def _scalar_encoder(encoder) -> Callable[[int], _Encoder]:
     """Abstract Specific Encoder(Callable) as Scalar Encoder Callable that takes in field index.
 
     Args
@@ -30,7 +32,7 @@ def _scalar_encoder(encoder) -> Callable[[int], Callable]:
     return scalar_encoder
 
 
-def _vector_encoder(encoder, is_packed=True) -> Callable[[int], Callable]:
+def _vector_encoder(encoder, is_packed=True) -> Callable[[int], _Encoder]:
     """Abstract Specific Encoder(Callable) as Vector Encoder Callable that takes in field index.
 
     Args
@@ -183,7 +185,7 @@ class Context:
     @staticmethod
     def get_encoder(
         type: type_pb2.Field.Kind.ValueType, repeated: bool
-    ) -> Callable[[int], Callable]:
+    ) -> Callable[[int], _Encoder]:
         """Get the Scalar Encoder or Vector Encoder for the specified type based on repeated bool.
 
         Args
