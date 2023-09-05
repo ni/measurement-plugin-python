@@ -183,19 +183,7 @@ def get_decoder(
 
 
 def get_type_default(type: type_pb2.Field.Kind.ValueType, repeated: bool) -> Any:
-    """Get the Type default.
-
-    Args
-    ----
-        type (type_pb2.Field.Kind.ValueType): Type of the Parameter.
-
-        repeated (bool): Boolean that represents if the Parameter is repeated or not.
-
-    Returns
-    -------
-        Any: Default value.
-
-    """
+    """Get the default value for the give type."""
     if repeated:
         return list()
     type_default_value = _TYPE_DEFAULT_MAPPING.get(type)
