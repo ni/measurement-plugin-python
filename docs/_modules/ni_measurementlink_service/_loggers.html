@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ni_measurementlink_service._loggers &mdash; ni_measurementlink_service 1.2 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            ni_measurementlink_service
+          </a>
+              <div class="version">
+                1.2.0-dev1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../autoapi/index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">ni_measurementlink_service</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ni_measurementlink_service._loggers</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ni_measurementlink_service._loggers</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span> <span class="nn">abc</span>
+<span class="kn">import</span> <span class="nn">functools</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">threading</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">types</span> <span class="kn">import</span> <span class="n">TracebackType</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">TYPE_CHECKING</span><span class="p">,</span>
+    <span class="n">Any</span><span class="p">,</span>
+    <span class="n">Callable</span><span class="p">,</span>
+    <span class="n">Generic</span><span class="p">,</span>
+    <span class="n">Iterator</span><span class="p">,</span>
+    <span class="n">Optional</span><span class="p">,</span>
+    <span class="n">Type</span><span class="p">,</span>
+    <span class="n">TypeVar</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="kn">import</span> <span class="nn">grpc</span>
+
+<span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">11</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Self</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="kn">from</span> <span class="nn">typing_extensions</span> <span class="kn">import</span> <span class="n">Self</span>
+
+<span class="kn">from</span> <span class="nn">ni_measurementlink_service</span> <span class="kn">import</span> <span class="n">_tracelogging</span>
+
+<span class="n">_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="ClientLogger"><a class="viewcode-back" href="../../autoapi/ni_measurementlink_service/_loggers/index.html#ni_measurementlink_service._loggers.ClientLogger">[docs]</a><span class="k">class</span> <span class="nc">ClientLogger</span><span class="p">(</span>
+    <span class="n">grpc</span><span class="o">.</span><span class="n">UnaryUnaryClientInterceptor</span><span class="p">,</span>
+    <span class="n">grpc</span><span class="o">.</span><span class="n">UnaryStreamClientInterceptor</span><span class="p">,</span>
+    <span class="n">grpc</span><span class="o">.</span><span class="n">StreamUnaryClientInterceptor</span><span class="p">,</span>
+    <span class="n">grpc</span><span class="o">.</span><span class="n">StreamStreamClientInterceptor</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Intercepts gRPC client calls and logs them for debugging.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ClientLogger.is_enabled"><a class="viewcode-back" href="../../autoapi/ni_measurementlink_service/_loggers/index.html#ni_measurementlink_service._loggers.ClientLogger.is_enabled">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">is_enabled</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Indicates whether gRPC client call logging is enabled for the current log level.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">_ClientCallLogger</span><span class="o">.</span><span class="n">is_enabled</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="ClientLogger.intercept_unary_unary"><a class="viewcode-back" href="../../autoapi/ni_measurementlink_service/_loggers/index.html#ni_measurementlink_service._loggers.ClientLogger.intercept_unary_unary">[docs]</a>    <span class="k">def</span> <span class="nf">intercept_unary_unary</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">continuation</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span>
+            <span class="p">[</span><span class="n">grpc</span><span class="o">.</span><span class="n">ClientCallDetails</span><span class="p">,</span> <span class="n">grpc</span><span class="o">.</span><span class="n">TRequest</span><span class="p">],</span> <span class="n">grpc</span><span class="o">.</span><span class="n">CallFuture</span><span class="p">[</span><span class="n">grpc</span><span class="o">.</span><span class="n">TResponse</span><span class="p">]</span>
+        <span class="p">],</span>
+        <span class="n">client_call_details</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ClientCallDetails</span><span class="p">,</span>
+        <span class="n">request</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">TRequest</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">grpc</span><span class="o">.</span><span class="n">CallFuture</span><span class="p">[</span><span class="n">grpc</span><span class="o">.</span><span class="n">TResponse</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Intercept and log a unary call.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">_ClientCallLogger</span><span class="o">.</span><span class="n">is_enabled</span><span class="p">():</span>
+            <span class="n">call_logger</span> <span class="o">=</span> <span class="n">_ClientCallLogger</span><span class="p">(</span><span class="n">client_call_details</span><span class="o">.</span><span class="n">method</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">call</span> <span class="o">=</span> <span class="n">continuation</span><span class="p">(</span><span class="n">client_call_details</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span>
+                <span class="c1"># call.add_callback(call_logger.close)</span>
+                <span class="k">return</span> <span class="n">_LoggingResponseCallFuture</span><span class="p">(</span><span class="n">call_logger</span><span class="p">,</span> <span class="n">call</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="n">call_logger</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+                <span class="k">raise</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">continuation</span><span class="p">(</span><span class="n">client_call_details</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ClientLogger.intercept_unary_stream"><a class="viewcode-back" href="../../autoapi/ni_measurementlink_service/_loggers/index.html#ni_measurementlink_service._loggers.ClientLogger.intercept_unary_stream">[docs]</a>    <span class="k">def</span> <span class="nf">intercept_unary_stream</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">continuation</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span>
+            <span class="p">[</span><span class="n">grpc</span><span class="o">.</span><span class="n">ClientCallDetails</span><span class="p">,</span> <span class="n">grpc</span><span class="o">.</span><span class="n">TRequest</span><span class="p">],</span> <span class="n">grpc</span><span class="o">.</span><span class="n">CallIterator</span><span class="p">[</span><span class="n">grpc</span><span class="o">.</span><span class="n">TResponse</span><span class="p">]</span>
+        <span class="p">],</span>
+        <span class="n">client_call_details</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ClientCallDetails</span><span class="p">,</span>
+        <span class="n">request</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">TRequest</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">grpc</span><span class="o">.</span><span class="n">CallIterator</span><span class="p">[</span><span class="n">grpc</span><span class="o">.</span><span class="n">TResponse</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Intercept and log a server-streaming call.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">_ClientCallLogger</span><span class="o">.</span><span class="n">is_enabled</span><span class="p">():</span>
+            <span class="n">call_logger</span> <span class="o">=</span> <span class="n">_ClientCallLogger</span><span class="p">(</span><span class="n">client_call_details</span><span class="o">.</span><span class="n">method</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">call_iterator</span> <span class="o">=</span> <span class="n">continuation</span><span class="p">(</span><span class="n">client_call_details</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span>
+                <span class="c1"># call_iterator.add_callback(call_logger.close)</span>
+                <span class="k">return</span> <span class="n">_LoggingResponseCallIterator</span><span class="p">(</span><span class="n">call_logger</span><span class="p">,</span> <span class="n">call_iterator</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="n">call_logger</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+                <span class="k">raise</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">continuation</span><span class="p">(</span><span class="n">client_call_details</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ClientLogger.intercept_stream_unary"><a class="viewcode-back" href="../../autoapi/ni_measurementlink_service/_loggers/index.html#ni_measurementlink_service._loggers.ClientLogger.intercept_stream_unary">[docs]</a>    <span class="k">def</span> <span class="nf">intercept_stream_unary</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">continuation</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span>
+            <span class="p">[</span><span class="n">grpc</span><span class="o">.</span><span class="n">ClientCallDetails</span><span class="p">,</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">grpc</span><span class="o">.</span><span class="n">TRequest</span><span class="p">]],</span> <span class="n">grpc</span><span class="o">.</span><span class="n">CallFuture</span><span class="p">[</span><span class="n">grpc</span><span class="o">.</span><span class="n">TResponse</span><span class="p">]</span>
+        <span class="p">],</span>
+        <span class="n">client_call_details</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ClientCallDetails</span><span class="p">,</span>
+        <span class="n">request_iterator</span><span class="p">:</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">grpc</span><span class="o">.</span><span class="n">TRequest</span><span class="p">],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">grpc</span><span class="o">.</span><span class="n">CallFuture</span><span class="p">[</span><span class="n">grpc</span><span class="o">.</span><span class="n">TResponse</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Intercept and log a client-streaming call.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">_ClientCallLogger</span><span class="o">.</span><span class="n">is_enabled</span><span class="p">():</span>
+            <span class="n">call_logger</span> <span class="o">=</span> <span class="n">_ClientCallLogger</span><span class="p">(</span><span class="n">client_call_details</span><span class="o">.</span><span class="n">method</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">call</span> <span class="o">=</span> <span class="n">continuation</span><span class="p">(</span>
+                    <span class="n">client_call_details</span><span class="p">,</span> <span class="n">_LoggingRequestIterator</span><span class="p">(</span><span class="n">call_logger</span><span class="p">,</span> <span class="n">request_iterator</span><span class="p">)</span>
+                <span class="p">)</span>
+                <span class="c1"># call.add_callback(call_logger.close)</span>
+                <span class="k">return</span> <span class="n">_LoggingResponseCallFuture</span><span class="p">(</span><span class="n">call_logger</span><span class="p">,</span> <span class="n">call</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="n">call_logger</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+                <span class="k">raise</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">continuation</span><span class="p">(</span><span class="n">client_call_details</span><span class="p">,</span> <span class="n">request_iterator</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ClientLogger.intercept_stream_stream"><a class="viewcode-back" href="../../autoapi/ni_measurementlink_service/_loggers/index.html#ni_measurementlink_service._loggers.ClientLogger.intercept_stream_stream">[docs]</a>    <span class="k">def</span> <span class="nf">intercept_stream_stream</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">continuation</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span>
+            <span class="p">[</span><span class="n">grpc</span><span class="o">.</span><span class="n">ClientCallDetails</span><span class="p">,</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">grpc</span><span class="o">.</span><span class="n">TRequest</span><span class="p">]],</span> <span class="n">grpc</span><span class="o">.</span><span class="n">CallIterator</span><span class="p">[</span><span class="n">grpc</span><span class="o">.</span><span class="n">TResponse</span><span class="p">]</span>
+        <span class="p">],</span>
+        <span class="n">client_call_details</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ClientCallDetails</span><span class="p">,</span>
+        <span class="n">request_iterator</span><span class="p">:</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">grpc</span><span class="o">.</span><span class="n">TRequest</span><span class="p">],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">grpc</span><span class="o">.</span><span class="n">CallIterator</span><span class="p">[</span><span class="n">grpc</span><span class="o">.</span><span class="n">TResponse</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Intercept and log a bidirectional streaming call.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">_ClientCallLogger</span><span class="o">.</span><span class="n">is_enabled</span><span class="p">():</span>
+            <span class="n">call_logger</span> <span class="o">=</span> <span class="n">_ClientCallLogger</span><span class="p">(</span><span class="n">client_call_details</span><span class="o">.</span><span class="n">method</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">call_iterator</span> <span class="o">=</span> <span class="n">continuation</span><span class="p">(</span>
+                    <span class="n">client_call_details</span><span class="p">,</span> <span class="n">_LoggingRequestIterator</span><span class="p">(</span><span class="n">call_logger</span><span class="p">,</span> <span class="n">request_iterator</span><span class="p">)</span>
+                <span class="p">)</span>
+                <span class="c1"># call_iterator.add_callback(call_logger.close)</span>
+                <span class="k">return</span> <span class="n">_LoggingResponseCallIterator</span><span class="p">(</span><span class="n">call_logger</span><span class="p">,</span> <span class="n">call_iterator</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="n">call_logger</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+                <span class="k">raise</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">continuation</span><span class="p">(</span><span class="n">client_call_details</span><span class="p">,</span> <span class="n">request_iterator</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="ServerLogger"><a class="viewcode-back" href="../../autoapi/ni_measurementlink_service/_loggers/index.html#ni_measurementlink_service._loggers.ServerLogger">[docs]</a><span class="k">class</span> <span class="nc">ServerLogger</span><span class="p">(</span><span class="n">grpc</span><span class="o">.</span><span class="n">ServerInterceptor</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Intercepts gRPC server calls and logs them for debugging.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ServerLogger.is_enabled"><a class="viewcode-back" href="../../autoapi/ni_measurementlink_service/_loggers/index.html#ni_measurementlink_service._loggers.ServerLogger.is_enabled">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">is_enabled</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Indicates whether gRPC client call logging is enabled for the current log level.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">_ServerCallLogger</span><span class="o">.</span><span class="n">is_enabled</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="ServerLogger.intercept_service"><a class="viewcode-back" href="../../autoapi/ni_measurementlink_service/_loggers/index.html#ni_measurementlink_service._loggers.ServerLogger.intercept_service">[docs]</a>    <span class="k">def</span> <span class="nf">intercept_service</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">continuation</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span>
+            <span class="p">[</span><span class="n">grpc</span><span class="o">.</span><span class="n">HandlerCallDetails</span><span class="p">],</span> <span class="n">grpc</span><span class="o">.</span><span class="n">RpcMethodHandler</span><span class="p">[</span><span class="n">grpc</span><span class="o">.</span><span class="n">TRequest</span><span class="p">,</span> <span class="n">grpc</span><span class="o">.</span><span class="n">TResponse</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span>
+        <span class="p">],</span>
+        <span class="n">handler_call_details</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">HandlerCallDetails</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">grpc</span><span class="o">.</span><span class="n">RpcMethodHandler</span><span class="p">[</span><span class="n">grpc</span><span class="o">.</span><span class="n">TRequest</span><span class="p">,</span> <span class="n">grpc</span><span class="o">.</span><span class="n">TResponse</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Intercept and log a server call.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">_ServerCallLogger</span><span class="o">.</span><span class="n">is_enabled</span><span class="p">():</span>
+            <span class="n">call_logger</span> <span class="o">=</span> <span class="n">_ServerCallLogger</span><span class="p">(</span><span class="n">handler_call_details</span><span class="o">.</span><span class="n">method</span><span class="p">)</span>
+            <span class="n">handler</span> <span class="o">=</span> <span class="n">continuation</span><span class="p">(</span><span class="n">handler_call_details</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">handler</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="c1"># ServerInterceptor.intercept_service return type doesn&#39;t match continuation return</span>
+                <span class="c1"># type -- https://github.com/shabbyrobe/grpc-stubs/issues/48</span>
+                <span class="k">return</span> <span class="n">handler</span>  <span class="c1"># type: ignore[return-value]</span>
+            <span class="k">elif</span> <span class="n">handler</span><span class="o">.</span><span class="n">unary_unary</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">grpc</span><span class="o">.</span><span class="n">unary_unary_rpc_method_handler</span><span class="p">(</span>
+                    <span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_log_unary_unary</span><span class="p">,</span> <span class="n">call_logger</span><span class="p">,</span> <span class="n">handler</span><span class="o">.</span><span class="n">unary_unary</span><span class="p">),</span>
+                    <span class="n">handler</span><span class="o">.</span><span class="n">request_deserializer</span><span class="p">,</span>
+                    <span class="n">handler</span><span class="o">.</span><span class="n">response_serializer</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="k">elif</span> <span class="n">handler</span><span class="o">.</span><span class="n">unary_stream</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">grpc</span><span class="o">.</span><span class="n">unary_stream_rpc_method_handler</span><span class="p">(</span>
+                    <span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_log_unary_stream</span><span class="p">,</span> <span class="n">call_logger</span><span class="p">,</span> <span class="n">handler</span><span class="o">.</span><span class="n">unary_stream</span><span class="p">),</span>
+                    <span class="n">handler</span><span class="o">.</span><span class="n">request_deserializer</span><span class="p">,</span>
+                    <span class="n">handler</span><span class="o">.</span><span class="n">response_serializer</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="k">elif</span> <span class="n">handler</span><span class="o">.</span><span class="n">stream_unary</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">grpc</span><span class="o">.</span><span class="n">stream_unary_rpc_method_handler</span><span class="p">(</span>
+                    <span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_log_stream_unary</span><span class="p">,</span> <span class="n">call_logger</span><span class="p">,</span> <span class="n">handler</span><span class="o">.</span><span class="n">stream_unary</span><span class="p">),</span>
+                    <span class="n">handler</span><span class="o">.</span><span class="n">request_deserializer</span><span class="p">,</span>
+                    <span class="n">handler</span><span class="o">.</span><span class="n">response_serializer</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="k">elif</span> <span class="n">handler</span><span class="o">.</span><span class="n">stream_stream</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">grpc</span><span class="o">.</span><span class="n">stream_stream_rpc_method_handler</span><span class="p">(</span>
+                    <span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_log_stream_stream</span><span class="p">,</span> <span class="n">call_logger</span><span class="p">,</span> <span class="n">handler</span><span class="o">.</span><span class="n">stream_stream</span><span class="p">),</span>
+                    <span class="n">handler</span><span class="o">.</span><span class="n">request_deserializer</span><span class="p">,</span>
+                    <span class="n">handler</span><span class="o">.</span><span class="n">response_serializer</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Invalid RpcMethodHandler&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">continuation</span><span class="p">(</span><span class="n">handler_call_details</span><span class="p">)</span>  <span class="c1"># type: ignore[return-value]</span></div>
+
+    <span class="k">def</span> <span class="nf">_log_unary_unary</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">call_logger</span><span class="p">:</span> <span class="n">_CallLogger</span><span class="p">,</span>
+        <span class="n">handler_function</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">grpc</span><span class="o">.</span><span class="n">TRequest</span><span class="p">,</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">],</span> <span class="n">grpc</span><span class="o">.</span><span class="n">TResponse</span><span class="p">],</span>
+        <span class="n">request</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">TRequest</span><span class="p">,</span>
+        <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">grpc</span><span class="o">.</span><span class="n">TResponse</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">call_logger</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">handler_function</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_log_unary_stream</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">call_logger</span><span class="p">:</span> <span class="n">_CallLogger</span><span class="p">,</span>
+        <span class="n">handler_function</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">grpc</span><span class="o">.</span><span class="n">TRequest</span><span class="p">,</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">],</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">grpc</span><span class="o">.</span><span class="n">TResponse</span><span class="p">]],</span>
+        <span class="n">request</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">TRequest</span><span class="p">,</span>
+        <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">grpc</span><span class="o">.</span><span class="n">TResponse</span><span class="p">]:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">_LoggingResponseIterator</span><span class="p">(</span><span class="n">call_logger</span><span class="p">,</span> <span class="n">handler_function</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">))</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="n">call_logger</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="k">raise</span>
+
+    <span class="k">def</span> <span class="nf">_log_stream_unary</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">call_logger</span><span class="p">:</span> <span class="n">_CallLogger</span><span class="p">,</span>
+        <span class="n">handler_function</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Iterator</span><span class="p">[</span><span class="n">grpc</span><span class="o">.</span><span class="n">TRequest</span><span class="p">],</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">],</span> <span class="n">grpc</span><span class="o">.</span><span class="n">TResponse</span><span class="p">],</span>
+        <span class="n">request_iterator</span><span class="p">:</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">grpc</span><span class="o">.</span><span class="n">TRequest</span><span class="p">],</span>
+        <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">grpc</span><span class="o">.</span><span class="n">TResponse</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">call_logger</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">handler_function</span><span class="p">(</span><span class="n">_LoggingRequestIterator</span><span class="p">(</span><span class="n">call_logger</span><span class="p">,</span> <span class="n">request_iterator</span><span class="p">),</span> <span class="n">context</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_log_stream_stream</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">call_logger</span><span class="p">:</span> <span class="n">_CallLogger</span><span class="p">,</span>
+        <span class="n">handler_function</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span>
+            <span class="p">[</span><span class="n">Iterator</span><span class="p">[</span><span class="n">grpc</span><span class="o">.</span><span class="n">TRequest</span><span class="p">],</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">],</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">grpc</span><span class="o">.</span><span class="n">TResponse</span><span class="p">]</span>
+        <span class="p">],</span>
+        <span class="n">request_iterator</span><span class="p">:</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">grpc</span><span class="o">.</span><span class="n">TRequest</span><span class="p">],</span>
+        <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">grpc</span><span class="o">.</span><span class="n">TResponse</span><span class="p">]:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">_LoggingResponseIterator</span><span class="p">(</span>
+                <span class="n">call_logger</span><span class="p">,</span>
+                <span class="n">handler_function</span><span class="p">(</span><span class="n">_LoggingRequestIterator</span><span class="p">(</span><span class="n">call_logger</span><span class="p">,</span> <span class="n">request_iterator</span><span class="p">),</span> <span class="n">context</span><span class="p">),</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="n">call_logger</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="k">raise</span></div>
+
+
+<span class="k">class</span> <span class="nc">_CallLogger</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Logs a single call.&quot;&quot;&quot;</span>
+
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;_closed&quot;</span><span class="p">]</span>
+
+    <span class="c1"># As of 2023, the Python stdlib doesn&#39;t support atomic operations, so use a global lock to</span>
+    <span class="c1"># atomically update self._closed.</span>
+    <span class="n">_lock</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_closed</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exception</span><span class="p">:</span> <span class="ne">BaseException</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># close() is idempotent to avoid duplicate logs.</span>
+        <span class="k">with</span> <span class="n">_CallLogger</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_closed</span><span class="p">:</span>
+                <span class="k">return</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_closed</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_close</span><span class="p">(</span><span class="n">exception</span><span class="p">)</span>
+
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span> <span class="nf">_close</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exception</span><span class="p">:</span> <span class="ne">BaseException</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="n">Self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="fm">__exit__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">exc_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="ne">BaseException</span><span class="p">]],</span>
+        <span class="n">exc_val</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="ne">BaseException</span><span class="p">],</span>
+        <span class="n">traceback</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TracebackType</span><span class="p">],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">exc_val</span><span class="p">)</span>
+
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span> <span class="nf">log_streaming_request</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span> <span class="nf">log_streaming_response</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+
+
+<span class="k">class</span> <span class="nc">_ClientCallLogger</span><span class="p">(</span><span class="n">_CallLogger</span><span class="p">):</span>
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;_method_name&quot;</span><span class="p">,</span> <span class="s2">&quot;_activity_id&quot;</span><span class="p">]</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">is_enabled</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">_logger</span><span class="o">.</span><span class="n">isEnabledFor</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span> <span class="ow">or</span> <span class="n">_tracelogging</span><span class="o">.</span><span class="n">is_enabled</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_method_name</span> <span class="o">=</span> <span class="n">method_name</span>
+        <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;gRPC client call starting: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_method_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_activity_id</span> <span class="o">=</span> <span class="n">_tracelogging</span><span class="o">.</span><span class="n">log_grpc_client_call_start</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_method_name</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_close</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exception</span><span class="p">:</span> <span class="ne">BaseException</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;gRPC client call complete: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_method_name</span><span class="p">)</span>
+        <span class="n">_tracelogging</span><span class="o">.</span><span class="n">log_grpc_client_call_stop</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_method_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_activity_id</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">log_streaming_request</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;gRPC client call streaming request: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_method_name</span><span class="p">)</span>
+        <span class="n">_tracelogging</span><span class="o">.</span><span class="n">log_grpc_client_call_streaming_request</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_method_name</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">log_streaming_response</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;gRPC client call streaming response: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_method_name</span><span class="p">)</span>
+        <span class="n">_tracelogging</span><span class="o">.</span><span class="n">log_grpc_client_call_streaming_response</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_method_name</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">_ServerCallLogger</span><span class="p">(</span><span class="n">_CallLogger</span><span class="p">):</span>
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;_method_name&quot;</span><span class="p">,</span> <span class="s2">&quot;_start_time&quot;</span><span class="p">,</span> <span class="s2">&quot;_activity_id&quot;</span><span class="p">]</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">is_enabled</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">_logger</span><span class="o">.</span><span class="n">isEnabledFor</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span> <span class="ow">or</span> <span class="n">_tracelogging</span><span class="o">.</span><span class="n">is_enabled</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_method_name</span> <span class="o">=</span> <span class="n">method_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+        <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;gRPC server call starting: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_method_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_activity_id</span> <span class="o">=</span> <span class="n">_tracelogging</span><span class="o">.</span><span class="n">log_grpc_server_call_start</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_method_name</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_close</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exception</span><span class="p">:</span> <span class="ne">BaseException</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">_logger</span><span class="o">.</span><span class="n">isEnabledFor</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">):</span>
+            <span class="c1"># For production usage, log a concise one-line summary of the call, similar to what</span>
+            <span class="c1"># Serilog provides for ASP.NET Core services. Don&#39;t log exception details because</span>
+            <span class="c1"># grpcio&#39;s logging_pool already handles this.</span>
+            <span class="n">elapsed_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_start_time</span>
+            <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                <span class="s2">&quot;gRPC server call </span><span class="si">%s</span><span class="s2"> responded </span><span class="si">%s</span><span class="s2"> in </span><span class="si">%.4f</span><span class="s2"> ms&quot;</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_method_name</span><span class="p">,</span>
+                <span class="nb">str</span><span class="p">(</span><span class="n">_get_status_code</span><span class="p">(</span><span class="n">exception</span><span class="p">))</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;StatusCode.&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">),</span>
+                <span class="n">elapsed_time</span> <span class="o">*</span> <span class="mf">1000.0</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;gRPC server call complete: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_method_name</span><span class="p">)</span>
+        <span class="n">_tracelogging</span><span class="o">.</span><span class="n">log_grpc_server_call_stop</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_method_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_activity_id</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">log_streaming_request</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;gRPC server call streaming request: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_method_name</span><span class="p">)</span>
+        <span class="n">_tracelogging</span><span class="o">.</span><span class="n">log_grpc_server_call_streaming_request</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_method_name</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">log_streaming_response</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;gRPC server call streaming response: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_method_name</span><span class="p">)</span>
+        <span class="n">_tracelogging</span><span class="o">.</span><span class="n">log_grpc_server_call_streaming_response</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_method_name</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_get_status_code</span><span class="p">(</span><span class="n">exception</span><span class="p">:</span> <span class="ne">BaseException</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">grpc</span><span class="o">.</span><span class="n">StatusCode</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">exception</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">grpc</span><span class="o">.</span><span class="n">StatusCode</span><span class="o">.</span><span class="n">OK</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">exception</span><span class="p">,</span> <span class="n">grpc</span><span class="o">.</span><span class="n">RpcError</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">exception</span><span class="o">.</span><span class="n">code</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">grpc</span><span class="o">.</span><span class="n">StatusCode</span><span class="o">.</span><span class="n">UNKNOWN</span>
+
+
+<span class="n">_T</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">&quot;_T&quot;</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">_LoggingRequestIterator</span><span class="p">(</span><span class="n">Generic</span><span class="p">[</span><span class="n">_T</span><span class="p">]):</span>
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;_call_logger&quot;</span><span class="p">,</span> <span class="s2">&quot;_inner_iterator&quot;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">call_logger</span><span class="p">:</span> <span class="n">_CallLogger</span><span class="p">,</span> <span class="n">inner_iterator</span><span class="p">:</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">_T</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_call_logger</span> <span class="o">=</span> <span class="n">call_logger</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_inner_iterator</span> <span class="o">=</span> <span class="n">inner_iterator</span>
+
+    <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">_T</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="fm">__next__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_T</span><span class="p">:</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_inner_iterator</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_call_logger</span><span class="o">.</span><span class="n">log_streaming_request</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">request</span>
+
+
+<span class="k">class</span> <span class="nc">_LoggingResponseIterator</span><span class="p">(</span><span class="n">Generic</span><span class="p">[</span><span class="n">_T</span><span class="p">]):</span>
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;_call_logger&quot;</span><span class="p">,</span> <span class="s2">&quot;_inner_iterator&quot;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">call_logger</span><span class="p">:</span> <span class="n">_CallLogger</span><span class="p">,</span> <span class="n">inner_iterator</span><span class="p">:</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">_T</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_call_logger</span> <span class="o">=</span> <span class="n">call_logger</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_inner_iterator</span> <span class="o">=</span> <span class="n">inner_iterator</span>
+
+    <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">_T</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="fm">__next__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_T</span><span class="p">:</span>
+        <span class="c1"># For server-streaming and bidirectional RPCs, the call is complete when the response</span>
+        <span class="c1"># stream is closed or it throws an exception.</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_inner_iterator</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_call_logger</span><span class="o">.</span><span class="n">log_streaming_response</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">response</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">StopIteration</span><span class="p">,</span> <span class="ne">Exception</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_call_logger</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="k">raise</span>
+
+
+<span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="c1"># These types only exist in grpc-stubs.</span>
+    <span class="n">_CallFuture</span> <span class="o">=</span> <span class="n">grpc</span><span class="o">.</span><span class="n">CallFuture</span>
+    <span class="n">_CallIterator</span> <span class="o">=</span> <span class="n">grpc</span><span class="o">.</span><span class="n">CallIterator</span>
+<span class="k">else</span><span class="p">:</span>
+
+    <span class="k">class</span> <span class="nc">_CallFuture</span><span class="p">(</span><span class="n">Generic</span><span class="p">[</span><span class="n">_T</span><span class="p">]):</span>
+        <span class="k">pass</span>
+
+    <span class="k">class</span> <span class="nc">_CallIterator</span><span class="p">(</span><span class="n">Generic</span><span class="p">[</span><span class="n">_T</span><span class="p">]):</span>
+        <span class="k">pass</span>
+
+
+<span class="c1"># Type hints for abstract base classes are missing abc.ABC</span>
+<span class="c1"># https://github.com/shabbyrobe/grpc-stubs/issues/49</span>
+<span class="nd">@grpc</span><span class="o">.</span><span class="n">Call</span><span class="o">.</span><span class="n">register</span>  <span class="c1"># type: ignore[attr-defined]</span>
+<span class="nd">@grpc</span><span class="o">.</span><span class="n">Future</span><span class="o">.</span><span class="n">register</span>  <span class="c1"># type: ignore[attr-defined]</span>
+<span class="k">class</span> <span class="nc">_LoggingResponseCallFuture</span><span class="p">(</span><span class="n">_CallFuture</span><span class="p">[</span><span class="n">_T</span><span class="p">]):</span>
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;_call_logger&quot;</span><span class="p">,</span> <span class="s2">&quot;_inner_call_future&quot;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">call_logger</span><span class="p">:</span> <span class="n">_CallLogger</span><span class="p">,</span> <span class="n">inner_call_future</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">CallFuture</span><span class="p">[</span><span class="n">_T</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_call_logger</span> <span class="o">=</span> <span class="n">call_logger</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_inner_call_future</span> <span class="o">=</span> <span class="n">inner_call_future</span>
+
+    <span class="k">def</span> <span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_inner_call_future</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_T</span><span class="p">:</span>
+        <span class="c1"># For unary and client-streaming RPCs, the call is complete when it returns a response or</span>
+        <span class="c1"># throws an exception.</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call_logger</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_inner_call_future</span><span class="o">.</span><span class="n">result</span><span class="p">(</span><span class="n">timeout</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">exception</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="ne">Exception</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call_logger</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_inner_call_future</span><span class="o">.</span><span class="n">exception</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">traceback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call_logger</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_inner_call_future</span><span class="o">.</span><span class="n">traceback</span><span class="p">(</span><span class="n">timeout</span><span class="p">)</span>
+
+
+<span class="nd">@grpc</span><span class="o">.</span><span class="n">Call</span><span class="o">.</span><span class="n">register</span>  <span class="c1"># type: ignore[attr-defined]</span>
+<span class="nd">@grpc</span><span class="o">.</span><span class="n">Future</span><span class="o">.</span><span class="n">register</span>  <span class="c1"># type: ignore[attr-defined]</span>
+<span class="k">class</span> <span class="nc">_LoggingResponseCallIterator</span><span class="p">(</span><span class="n">_CallIterator</span><span class="p">[</span><span class="n">_T</span><span class="p">]):</span>
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;_call_logger&quot;</span><span class="p">,</span> <span class="s2">&quot;_inner_call_iterator&quot;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">call_logger</span><span class="p">:</span> <span class="n">_CallLogger</span><span class="p">,</span> <span class="n">inner_call_iterator</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">CallIterator</span><span class="p">[</span><span class="n">_T</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_call_logger</span> <span class="o">=</span> <span class="n">call_logger</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_inner_call_iterator</span> <span class="o">=</span> <span class="n">inner_call_iterator</span>
+
+    <span class="k">def</span> <span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_inner_call_iterator</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">_T</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="fm">__next__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_T</span><span class="p">:</span>
+        <span class="c1"># For server-streaming and bidirectional RPCs, the call is complete when the response</span>
+        <span class="c1"># stream is closed or throws an exception.</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># CallIterator is missing __next__ method</span>
+            <span class="c1"># https://github.com/shabbyrobe/grpc-stubs/issues/50</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_inner_call_iterator</span><span class="p">)</span>  <span class="c1"># type: ignore[call-overload]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_call_logger</span><span class="o">.</span><span class="n">log_streaming_response</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">response</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">StopIteration</span><span class="p">,</span> <span class="ne">Exception</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_call_logger</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="k">raise</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, National Instruments.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

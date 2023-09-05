@@ -34,7 +34,7 @@
             ni_measurementlink_service
           </a>
               <div class="version">
-                1.2.0-dev0
+                1.2.0-dev1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -91,6 +91,7 @@
 <span class="kn">from</span> <span class="nn">ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v2</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">measurement_service_pb2_grpc</span> <span class="k">as</span> <span class="n">v2_measurement_service_pb2_grpc</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="kn">from</span> <span class="nn">ni_measurementlink_service._loggers</span> <span class="kn">import</span> <span class="n">ServerLogger</span>
 <span class="kn">from</span> <span class="nn">ni_measurementlink_service.measurement.info</span> <span class="kn">import</span> <span class="n">MeasurementInfo</span><span class="p">,</span> <span class="n">ServiceInfo</span>
 
 <span class="n">_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
@@ -148,8 +149,12 @@
 <span class="sd">            int: The port number of the server</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">interceptors</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">grpc</span><span class="o">.</span><span class="n">ServerInterceptor</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">ServerLogger</span><span class="o">.</span><span class="n">is_enabled</span><span class="p">():</span>
+            <span class="n">interceptors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ServerLogger</span><span class="p">())</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">server</span> <span class="o">=</span> <span class="n">grpc</span><span class="o">.</span><span class="n">server</span><span class="p">(</span>
             <span class="n">logging_pool</span><span class="o">.</span><span class="n">pool</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="mi">10</span><span class="p">),</span>
+            <span class="n">interceptors</span><span class="o">=</span><span class="n">interceptors</span><span class="p">,</span>
             <span class="n">options</span><span class="o">=</span><span class="p">[</span>
                 <span class="p">(</span><span class="s2">&quot;grpc.max_receive_message_length&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
                 <span class="p">(</span><span class="s2">&quot;grpc.max_send_message_length&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>

@@ -35,7 +35,7 @@
             ni_measurementlink_service
           </a>
               <div class="version">
-                1.2.0-dev0
+                1.2.0-dev1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
@@ -115,6 +115,9 @@ represented by the gRPC Field Enum.</p>
 <p>True for 1DArray and false for scalar.</p>
 <p>default_value (Any): The default value of the parameter.</p>
 <p>annotations (Dict[str,str]): Represents a set of annotations on the type.</p>
+<p>message_type (str): This is the gRPC full name of the message type.
+Required when ‘type’ is Kind.TypeMessage.
+Ignored for any other ‘type’.</p>
 </div></blockquote>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ni_measurementlink_service._internal.parameter.metadata.ParameterMetadata.display_name">
@@ -139,6 +142,11 @@ represented by the gRPC Field Enum.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ni_measurementlink_service._internal.parameter.metadata.ParameterMetadata.annotations">
 <span class="sig-name descname"><span class="pre">annotations</span></span><em class="property"><span class="w"> </span><span class="pre">:Dict[str,</span> <span class="pre">str]</span></em><a class="headerlink" href="#ni_measurementlink_service._internal.parameter.metadata.ParameterMetadata.annotations" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ni_measurementlink_service._internal.parameter.metadata.ParameterMetadata.message_type">
+<span class="sig-name descname"><span class="pre">message_type</span></span><em class="property"><span class="w"> </span><span class="pre">:str</span> <span class="pre">=</span></em><a class="headerlink" href="#ni_measurementlink_service._internal.parameter.metadata.ParameterMetadata.message_type" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </section>
