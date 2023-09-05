@@ -3,28 +3,22 @@
 from typing import Any, Callable, Dict
 
 from google.protobuf import type_pb2
-from google.protobuf.descriptor import FieldDescriptor
 from google.protobuf.internal import decoder, encoder
-from google.protobuf.message import Message
 from typing_extensions import TypeAlias
 
 InnerEncoder: TypeAlias = Callable[[Callable[[bytes], int], bytes, bool], int]
-InnerDecoder: TypeAlias = Callable[[str, int, int, Message, Dict[FieldDescriptor, Any]], int]
+InnerDecoder: TypeAlias = Callable[
+    [memoryview, int, int, type_pb2.Field.Kind.ValueType, Dict[int, Any]], int
+]
+EncoderFactory: TypeAlias = Callable[[int], InnerEncoder]
+DecoderFactory: TypeAlias = Callable[[int, str], InnerDecoder]
 
 
 def _scalar_encoder(encoder) -> Callable[[int], InnerEncoder]:
-    """Abstract Specific Encoder(Callable) as Scalar Encoder Callable that takes in field index.
+    """Constructs a scalar encoder factory that takes a field index and returns an InnerEncoder.
 
-    Args
-    ----
-       encoder (Callable[[int, bool, bool], Callable]): Specific encoder that takes in
-       field_index, is_repeated, is_packed and returns the Low-level Encode Callable.
-
-    Returns
-    -------
-        Callable[[int],Callable]: Callable Encoder for scalar types that takes
-        in field_index and returns the Low-level Encode Callable.
-
+    This class returns the InnerEncoder callable with is_repeated set to False
+    and is_packed set to False.
     """
 
     def scalar_encoder(field_index):
@@ -36,20 +30,12 @@ def _scalar_encoder(encoder) -> Callable[[int], InnerEncoder]:
 
 
 def _vector_encoder(encoder, is_packed=True) -> Callable[[int], InnerEncoder]:
-    """Abstract Specific Encoder(Callable) as Vector Encoder Callable that takes in field index.
+    """Constructs a vector (array) encoder factory.
 
-    Args
-    ----
-       encoder (Callable[[int, bool, bool], Callable]): Specific encoder(Callable) that takes in
-       field_index, is_repeated, is_packed and returns the Low-level Encode Callable.
+    Takes a field index and returns an InnerEncoder.
 
-       is_packed (bool, optional): Represents if the encoder supports packed type. Defaults to True.
-
-    Returns
-    -------
-        Callable[[int],Callable]: Callable Encoder for 1D Array types that takes in
-        field_index and returns the Low-level Encode Callable.
-
+    This class returns the InnerEncoder callable with is_repeated set to True
+    and is_packed defaults to True.
     """
 
     def vector_encoder(field_index):
@@ -60,19 +46,12 @@ def _vector_encoder(encoder, is_packed=True) -> Callable[[int], InnerEncoder]:
 
 
 def _scalar_decoder(decoder) -> Callable[[int, str], InnerDecoder]:
-    """Abstract Specific Decoder(Callable) as Scalar Decoder Callable that takes in field index,key.
+    """Constructs a scalar decoder factory.
 
-    Args
-    ----
-        decoder (Callable[[int, bool, bool], Callable]): Specific decoder(Callable) that takes in
-        field_index, is_repeated, is_packed,  key, new_default and
-        returns the Low-level Decode Callable.
+    Takes a field index and a key and returns an InnerDecoder.
 
-    Returns
-    -------
-        Callable[[int,str],Callable]: Callable Decoder for scalar types that takes in
-        field_index, key and returns the Low-level Decode Callable.
-
+    This class returns the InnerDecoder callable with is_repeated set to False
+    and is_packed set to False.
     """
 
     def scalar_decoder(field_index, key):
@@ -84,22 +63,12 @@ def _scalar_decoder(decoder) -> Callable[[int, str], InnerDecoder]:
 
 
 def _vector_decoder(decoder, is_packed=True) -> Callable[[int, str], InnerDecoder]:
-    """Abstract Specific Decoder(Callable) as Vector Decoder Callable that takes in field index,key.
+    """Constructs a vector (array) decoder factory.
 
-    Args
-    ----
-        decoder (Callable[[int, bool, bool], Callable]): Specific decoder(Callable) that takes in
-        field_index, is_repeated, is_packed,  key, new_default and
-        returns the Low-level Decode Callable.
+    Takes a field index and a key and returns an InnerDecoder.
 
-        is_packed (bool, optional): Represents if the decoder supports packed type.
-        Defaults to True.
-
-    Returns
-    -------
-        Callable[[int,str],Callable]: Callable Decoder for 1D Array types that takes in
-        field_index , key and returns the Low-level Decode Callable.
-
+    This class returns the InnerDecoder callable with is_repeated set to True
+    and is_packed defaults to True.
     """
 
     def _new_default(unused_message=None):
@@ -189,22 +158,9 @@ class Context:
     def get_encoder(
         type: type_pb2.Field.Kind.ValueType, repeated: bool
     ) -> Callable[[int], InnerEncoder]:
-        """Get the Scalar Encoder or Vector Encoder for the specified type based on repeated bool.
+        """Get the appropriate encoder factory for the specified type.
 
-        Args
-        ----
-            type (type_pb2.Field.Kind.ValueType): Type of the Parameter.
-
-            repeated (bool): Boolean that represents if the Parameter is repeated or not.
-
-        Raises
-        ------
-            Exception: If the specified type is not supported.
-
-        Returns
-        -------
-            Callable[[int], Callable]: ScalarEncoder or VectorEncoder.
-
+        A scalar or vector factory is returned based on the 'repeated' parameter.
         """
         if type not in Context._FIELD_TYPE_TO_ENCODER_MAPPING:
             raise Exception(f"Error can not encode type '{type}'")
@@ -216,23 +172,10 @@ class Context:
     @staticmethod
     def get_decoder(
         type: type_pb2.Field.Kind.ValueType, repeated: bool
-    ) -> Callable[[int, str], Callable]:
-        """Get the Scalar Decoder or Vector Decoder for the specified type based on repeated bool.
+    ) -> Callable[[int, str], InnerDecoder]:
+        """Get the appropriate decoder factory for the specified type.
 
-        Args
-        ----
-            type (type_pb2.Field.Kind.ValueType): Type of the Parameter.
-
-            repeated (bool): Boolean that represents if the Parameter is repeated or not.
-
-        Raises
-        ------
-            Exception: If the specified type is not supported.
-
-        Returns
-        -------
-            Callable[[int], Callable]: ScalarDecoder or VectorDecoder.
-
+        A scalar or vector factory is returned based on the 'repeated' parameter.
         """
         if type not in Context._FIELD_TYPE_TO_DECODER_MAPPING:
             raise Exception(f"Error can not decode type '{type}'")
