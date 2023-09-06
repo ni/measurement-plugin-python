@@ -87,7 +87,7 @@ class GrpcService:
                 ("grpc.max_send_message_length", -1),
             ],
         )
-        if service_info.provided_interfaces.__contains__(_V1_INTERFACE):
+        if _V1_INTERFACE in service_info.provided_interfaces:
             servicer_v1 = MeasurementServiceServicerV1(
                 measurement_info,
                 configuration_parameter_list,
@@ -97,7 +97,7 @@ class GrpcService:
             v1_measurement_service_pb2_grpc.add_MeasurementServiceServicer_to_server(
                 servicer_v1, self.server
             )
-        if service_info.provided_interfaces.__contains__(_V2_INTERFACE):
+        if _V2_INTERFACE in service_info.provided_interfaces:
             servicer_v2 = MeasurementServiceServicerV2(
                 measurement_info,
                 configuration_parameter_list,
