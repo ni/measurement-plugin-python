@@ -14,6 +14,8 @@ from ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v
     measurement_service_pb2_grpc,
 )
 from tests.utilities import loopback_measurement
+from tests.utilities import v1_only_measurement
+from tests.utilities import v2_only_measurement
 from tests.utilities.fake_discovery_service import (
     FakeDiscoveryServiceError,
     FakeDiscoveryServiceStub,
@@ -80,15 +82,29 @@ def test___grpc_service_v2_only___start_service_and_check_v1___raises_error(
     grpc_service: GrpcService,
 ):
     port_number = grpc_service.start(
-        loopback_measurement.measurement_service_v2_only.measurement_info,
-        loopback_measurement.measurement_service_v2_only.service_info,
-        loopback_measurement.measurement_service_v2_only.configuration_parameter_list,
-        loopback_measurement.measurement_service_v2_only.output_parameter_list,
-        loopback_measurement.measurement_service_v2_only.measure_function,
+        v2_only_measurement.measurement_service.measurement_info,
+        v2_only_measurement.measurement_service.service_info,
+        v2_only_measurement.measurement_service.configuration_parameter_list,
+        v2_only_measurement.measurement_service.output_parameter_list,
+        v2_only_measurement.measurement_service.measure_function,
     )
 
     with pytest.raises(Exception):
         _validate_if_service_running_by_making_rpc(port_number)
+
+
+def test___grpc_service_v1_only___start_service_and_check_v1___service_hosted(
+    grpc_service: GrpcService,
+):
+    port_number = grpc_service.start(
+        v1_only_measurement.measurement_service.measurement_info,
+        v1_only_measurement.measurement_service.service_info,
+        v1_only_measurement.measurement_service.configuration_parameter_list,
+        v1_only_measurement.measurement_service.output_parameter_list,
+        v1_only_measurement.measurement_service.measure_function,
+    )
+
+    _validate_if_service_running_by_making_rpc(port_number)
 
 
 @pytest.fixture

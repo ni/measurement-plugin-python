@@ -77,22 +77,3 @@ def measure(
         protobuf_enum_output,
         string_array_out,
     )
-
-
-measurement_service_v2_only = nims.MeasurementService(
-    service_config_path=service_directory / "LoopbackMeasurement_v2_only.serviceconfig",
-    version="0.1.0.0",
-    ui_file_paths=[
-        service_directory,
-    ],
-)
-
-
-@measurement_service_v2_only.register_measurement
-@measurement_service_v2_only.configuration("Float In", nims.DataType.Float, 0.06)
-@measurement_service_v2_only.output("Float out", nims.DataType.Float)
-def measure_v2_only(float_input):
-    """Perform a loopback measurement with various data types."""
-    float_output = float_input
-
-    return float_output

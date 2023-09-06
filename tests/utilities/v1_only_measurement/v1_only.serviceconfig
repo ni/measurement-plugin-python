@@ -1,0 +1,19 @@
+{
+  "services": [
+    {
+      "displayName": "V1 Measurement (Py)",
+      "serviceClass": "ni.tests.V1Measurement_Python",
+      "descriptionUrl": "",
+      "providedInterfaces": [
+        "ni.measurementlink.measurement.v1.MeasurementService"
+      ],
+      "path": "start.bat",
+      "annotations": {
+        "ni/service.description": "MeasurementLink test service that only supports a v1 measurement.",
+        "ni/service.collection": "NI.Tests",
+        "ni/service.tags": []
+      }
+
+    }
+  ]
+}

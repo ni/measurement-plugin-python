@@ -1,15 +1,15 @@
 {
   "services": [
     {
-      "displayName": "Loopback Measurement (Py)",
-      "serviceClass": "ni.tests.LoopbackMeasurement_Python",
+      "displayName": "V2 Measurement (Py)",
+      "serviceClass": "ni.tests.V2Measurement_Python",
       "descriptionUrl": "",
       "providedInterfaces": [
         "ni.measurementlink.measurement.v2.MeasurementService"
       ],
       "path": "start.bat",
       "annotations": {
-        "ni/service.description": "MeasurementLink test service that performs a loopback measurement with various data types.",
+        "ni/service.description": "MeasurementLink test service that only supports a v2 measurement.",
         "ni/service.collection": "NI.Tests",
         "ni/service.tags": []
       }
