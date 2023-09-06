@@ -76,6 +76,21 @@ def test___grpc_service_started___stop_service___service_stopped(grpc_service: G
         _validate_if_service_running_by_making_rpc(port_number)
 
 
+def test___grpc_service_v2_only___start_service_and_check_v1___raises_error(
+    grpc_service: GrpcService,
+):
+    port_number = grpc_service.start(
+        loopback_measurement.measurement_service_v2_only.measurement_info,
+        loopback_measurement.measurement_service_v2_only.service_info,
+        loopback_measurement.measurement_service_v2_only.configuration_parameter_list,
+        loopback_measurement.measurement_service_v2_only.output_parameter_list,
+        loopback_measurement.measurement_service_v2_only.measure_function,
+    )
+
+    with pytest.raises(Exception):
+        _validate_if_service_running_by_making_rpc(port_number)
+
+
 @pytest.fixture
 def grpc_service(discovery_client: DiscoveryClient) -> GrpcService:
     """Create a GrpcService."""
