@@ -80,7 +80,7 @@ def measure(
 
 
 measurement_service_v2_only = nims.MeasurementService(
-    service_config_path=service_directory / "LoopbackMeasurement_V2_Only.serviceconfig",
+    service_config_path=service_directory / "LoopbackMeasurement_v2_only.serviceconfig",
     version="0.1.0.0",
     ui_file_paths=[
         service_directory,
