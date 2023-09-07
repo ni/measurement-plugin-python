@@ -7,18 +7,18 @@ from google.protobuf.internal import decoder, encoder
 from typing_extensions import TypeAlias
 
 WriteFunction: TypeAlias = Callable[[bytes], int]
-InnerEncoder: TypeAlias = Callable[[WriteFunction, bytes, bool], int]
-InnerDecoder: TypeAlias = Callable[
+Encoder: TypeAlias = Callable[[WriteFunction, bytes, bool], int]
+Decoder: TypeAlias = Callable[
     [memoryview, int, int, type_pb2.Field.Kind.ValueType, Dict[int, Any]], int
 ]
-EncoderFactory: TypeAlias = Callable[[int], InnerEncoder]
-DecoderFactory: TypeAlias = Callable[[int, str], InnerDecoder]
+EncoderFactory: TypeAlias = Callable[[int], Encoder]
+DecoderFactory: TypeAlias = Callable[[int, str], Decoder]
 
 
-def _scalar_encoder(encoder) -> Callable[[int], InnerEncoder]:
-    """Constructs a scalar encoder factory that takes a field index and returns an InnerEncoder.
+def _scalar_encoder(encoder) -> Callable[[int], Encoder]:
+    """Constructs a scalar encoder factory that takes a field index and returns an Encoder.
 
-    This class returns the InnerEncoder callable with is_repeated set to False
+    This class returns the Encoder callable with is_repeated set to False
     and is_packed set to False.
     """
 
@@ -30,12 +30,12 @@ def _scalar_encoder(encoder) -> Callable[[int], InnerEncoder]:
     return scalar_encoder
 
 
-def _vector_encoder(encoder, is_packed=True) -> Callable[[int], InnerEncoder]:
+def _vector_encoder(encoder, is_packed=True) -> Callable[[int], Encoder]:
     """Constructs a vector (array) encoder factory.
 
-    Takes a field index and returns an InnerEncoder.
+    Takes a field index and returns an Encoder.
 
-    This class returns the InnerEncoder callable with is_repeated set to True
+    This class returns the Encoder callable with is_repeated set to True
     and is_packed defaults to True.
     """
 
@@ -46,12 +46,12 @@ def _vector_encoder(encoder, is_packed=True) -> Callable[[int], InnerEncoder]:
     return vector_encoder
 
 
-def _scalar_decoder(decoder) -> Callable[[int, str], InnerDecoder]:
+def _scalar_decoder(decoder) -> Callable[[int, str], Decoder]:
     """Constructs a scalar decoder factory.
 
-    Takes a field index and a key and returns an InnerDecoder.
+    Takes a field index and a key and returns an Decoder.
 
-    This class returns the InnerDecoder callable with is_repeated set to False
+    This class returns the Decoder callable with is_repeated set to False
     and is_packed set to False.
     """
 
@@ -63,12 +63,12 @@ def _scalar_decoder(decoder) -> Callable[[int, str], InnerDecoder]:
     return scalar_decoder
 
 
-def _vector_decoder(decoder, is_packed=True) -> Callable[[int, str], InnerDecoder]:
+def _vector_decoder(decoder, is_packed=True) -> Callable[[int, str], Decoder]:
     """Constructs a vector (array) decoder factory.
 
-    Takes a field index and a key and returns an InnerDecoder.
+    Takes a field index and a key and returns an Decoder.
 
-    This class returns the InnerDecoder callable with is_repeated set to True
+    This class returns the Decoder callable with is_repeated set to True
     and is_packed defaults to True.
     """
 
@@ -153,9 +153,7 @@ _TYPE_DEFAULT_MAPPING = {
 }
 
 
-def get_encoder(
-    type: type_pb2.Field.Kind.ValueType, repeated: bool
-) -> Callable[[int], InnerEncoder]:
+def get_encoder(type: type_pb2.Field.Kind.ValueType, repeated: bool) -> Callable[[int], Encoder]:
     """Get the appropriate encoder factory for the specified type.
 
     A scalar or vector factory is returned based on the 'repeated' parameter.
@@ -170,7 +168,7 @@ def get_encoder(
 
 def get_decoder(
     type: type_pb2.Field.Kind.ValueType, repeated: bool
-) -> Callable[[int, str], InnerDecoder]:
+) -> Callable[[int, str], Decoder]:
     """Get the appropriate decoder factory for the specified type.
 
     A scalar or vector factory is returned based on the 'repeated' parameter.
