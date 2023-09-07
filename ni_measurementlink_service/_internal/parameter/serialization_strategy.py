@@ -1,21 +1,27 @@
 """Serialization Strategy."""
 
-from typing import Any, Callable, Dict
+from typing import Any, Callable, Dict, cast
 
 from google.protobuf import type_pb2
+from google.protobuf.descriptor import FieldDescriptor
 from google.protobuf.internal import decoder, encoder
+from google.protobuf.message import Message
 from typing_extensions import TypeAlias
 
 WriteFunction: TypeAlias = Callable[[bytes], int]
 Encoder: TypeAlias = Callable[[WriteFunction, bytes, bool], int]
+PartialEncoderConstructor: TypeAlias = Callable[[int], Encoder]
+EncoderConstructor: TypeAlias = Callable[[int, bool, bool], Encoder]
+
 Decoder: TypeAlias = Callable[
     [memoryview, int, int, type_pb2.Field.Kind.ValueType, Dict[int, Any]], int
 ]
-PartialEncoderConstructor: TypeAlias = Callable[[int], Encoder]
 PartialDecoderConstructor: TypeAlias = Callable[[int, str], Decoder]
+NewDefault: TypeAlias = Callable[[Message], Message]
+DecoderConstructor: TypeAlias = Callable[[int, bool, bool, FieldDescriptor, NewDefault], Decoder]
 
 
-def _scalar_encoder(encoder) -> PartialEncoderConstructor:
+def _scalar_encoder(encoder: EncoderConstructor) -> PartialEncoderConstructor:
     """Constructs a scalar encoder factory that takes a field index and returns an Encoder.
 
     This class returns the Encoder callable with is_repeated set to False
@@ -30,7 +36,7 @@ def _scalar_encoder(encoder) -> PartialEncoderConstructor:
     return scalar_encoder
 
 
-def _vector_encoder(encoder, is_packed=True) -> PartialEncoderConstructor:
+def _vector_encoder(encoder: EncoderConstructor, is_packed=True) -> PartialEncoderConstructor:
     """Constructs a vector (array) encoder factory.
 
     Takes a field index and returns an Encoder.
@@ -46,7 +52,7 @@ def _vector_encoder(encoder, is_packed=True) -> PartialEncoderConstructor:
     return vector_encoder
 
 
-def _scalar_decoder(decoder) -> PartialDecoderConstructor:
+def _scalar_decoder(decoder: DecoderConstructor) -> PartialDecoderConstructor:
     """Constructs a scalar decoder factory.
 
     Takes a field index and a key and returns an Decoder.
@@ -58,12 +64,12 @@ def _scalar_decoder(decoder) -> PartialDecoderConstructor:
     def scalar_decoder(field_index, key):
         is_repeated = False
         is_packed = False
-        return decoder(field_index, is_repeated, is_packed, key, None)
+        return decoder(field_index, is_repeated, is_packed, key, cast(NewDefault, None))
 
     return scalar_decoder
 
 
-def _vector_decoder(decoder, is_packed=True) -> PartialDecoderConstructor:
+def _vector_decoder(decoder: DecoderConstructor, is_packed=True) -> PartialDecoderConstructor:
     """Constructs a vector (array) decoder factory.
 
     Takes a field index and a key and returns an Decoder.
@@ -82,38 +88,40 @@ def _vector_decoder(decoder, is_packed=True) -> PartialDecoderConstructor:
     return vector_decoder
 
 
-FloatEncoder = _scalar_encoder(encoder.FloatEncoder)
-DoubleEncoder = _scalar_encoder(encoder.DoubleEncoder)
-IntEncoder = _scalar_encoder(encoder.Int32Encoder)
-UIntEncoder = _scalar_encoder(encoder.UInt32Encoder)
+FloatEncoder = _scalar_encoder(cast(EncoderConstructor, encoder.FloatEncoder))
+DoubleEncoder = _scalar_encoder(cast(EncoderConstructor, encoder.DoubleEncoder))
+IntEncoder = _scalar_encoder(cast(EncoderConstructor, encoder.Int32Encoder))
+UIntEncoder = _scalar_encoder(cast(EncoderConstructor, encoder.UInt32Encoder))
 BoolEncoder = _scalar_encoder(encoder.BoolEncoder)
 StringEncoder = _scalar_encoder(encoder.StringEncoder)
 
-FloatArrayEncoder = _vector_encoder(encoder.FloatEncoder)
-DoubleArrayEncoder = _vector_encoder(encoder.DoubleEncoder)
-IntArrayEncoder = _vector_encoder(encoder.Int32Encoder)
-UIntArrayEncoder = _vector_encoder(encoder.UInt32Encoder)
+FloatArrayEncoder = _vector_encoder(cast(EncoderConstructor, encoder.FloatEncoder))
+DoubleArrayEncoder = _vector_encoder(cast(EncoderConstructor, encoder.DoubleEncoder))
+IntArrayEncoder = _vector_encoder(cast(EncoderConstructor, encoder.Int32Encoder))
+UIntArrayEncoder = _vector_encoder(cast(EncoderConstructor, encoder.UInt32Encoder))
 BoolArrayEncoder = _vector_encoder(encoder.BoolEncoder)
 StringArrayEncoder = _vector_encoder(encoder.StringEncoder, is_packed=False)
 
 
-FloatDecoder = _scalar_decoder(decoder.FloatDecoder)
-DoubleDecoder = _scalar_decoder(decoder.DoubleDecoder)
-Int32Decoder = _scalar_decoder(decoder.Int32Decoder)
-UInt32Decoder = _scalar_decoder(decoder.UInt32Decoder)
-Int64Decoder = _scalar_decoder(decoder.Int64Decoder)
-UInt64Decoder = _scalar_decoder(decoder.UInt64Decoder)
-BoolDecoder = _scalar_decoder(decoder.BoolDecoder)
-StringDecoder = _scalar_decoder(decoder.StringDecoder)
+FloatDecoder = _scalar_decoder(cast(DecoderConstructor, decoder.FloatDecoder))
+DoubleDecoder = _scalar_decoder(cast(DecoderConstructor, decoder.DoubleDecoder))
+Int32Decoder = _scalar_decoder(cast(DecoderConstructor, decoder.Int32Decoder))
+UInt32Decoder = _scalar_decoder(cast(DecoderConstructor, decoder.UInt32Decoder))
+Int64Decoder = _scalar_decoder(cast(DecoderConstructor, decoder.Int64Decoder))
+UInt64Decoder = _scalar_decoder(cast(DecoderConstructor, decoder.UInt64Decoder))
+BoolDecoder = _scalar_decoder(cast(DecoderConstructor, decoder.BoolDecoder))
+StringDecoder = _scalar_decoder(cast(DecoderConstructor, decoder.StringDecoder))
 
-FloatArrayDecoder = _vector_decoder(decoder.FloatDecoder)
-DoubleArrayDecoder = _vector_decoder(decoder.DoubleDecoder)
-Int32ArrayDecoder = _vector_decoder(decoder.Int32Decoder)
-UInt32ArrayDecoder = _vector_decoder(decoder.UInt32Decoder)
-Int64ArrayDecoder = _vector_decoder(decoder.Int64Decoder)
-UInt64ArrayDecoder = _vector_decoder(decoder.UInt64Decoder)
-BoolArrayDecoder = _vector_decoder(decoder.BoolDecoder)
-StringArrayDecoder = _vector_decoder(decoder.StringDecoder, is_packed=False)
+FloatArrayDecoder = _vector_decoder(cast(DecoderConstructor, decoder.FloatDecoder))
+DoubleArrayDecoder = _vector_decoder(cast(DecoderConstructor, decoder.DoubleDecoder))
+Int32ArrayDecoder = _vector_decoder(cast(DecoderConstructor, decoder.Int32Decoder))
+UInt32ArrayDecoder = _vector_decoder(cast(DecoderConstructor, decoder.UInt32Decoder))
+Int64ArrayDecoder = _vector_decoder(cast(DecoderConstructor, decoder.Int64Decoder))
+UInt64ArrayDecoder = _vector_decoder(cast(DecoderConstructor, decoder.UInt64Decoder))
+BoolArrayDecoder = _vector_decoder(cast(DecoderConstructor, decoder.BoolDecoder))
+StringArrayDecoder = _vector_decoder(
+    cast(DecoderConstructor, decoder.StringDecoder), is_packed=False
+)
 
 
 _FIELD_TYPE_TO_ENCODER_MAPPING = {
