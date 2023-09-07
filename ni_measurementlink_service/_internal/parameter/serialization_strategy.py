@@ -11,11 +11,11 @@ Encoder: TypeAlias = Callable[[WriteFunction, bytes, bool], int]
 Decoder: TypeAlias = Callable[
     [memoryview, int, int, type_pb2.Field.Kind.ValueType, Dict[int, Any]], int
 ]
-EncoderConstructor: TypeAlias = Callable[[int], Encoder]
-DecoderConstructor: TypeAlias = Callable[[int, str], Decoder]
+PartialEncoderConstructor: TypeAlias = Callable[[int], Encoder]
+PartialDecoderConstructor: TypeAlias = Callable[[int, str], Decoder]
 
 
-def _scalar_encoder(encoder) -> EncoderConstructor:
+def _scalar_encoder(encoder) -> PartialEncoderConstructor:
     """Constructs a scalar encoder factory that takes a field index and returns an Encoder.
 
     This class returns the Encoder callable with is_repeated set to False
@@ -30,7 +30,7 @@ def _scalar_encoder(encoder) -> EncoderConstructor:
     return scalar_encoder
 
 
-def _vector_encoder(encoder, is_packed=True) -> EncoderConstructor:
+def _vector_encoder(encoder, is_packed=True) -> PartialEncoderConstructor:
     """Constructs a vector (array) encoder factory.
 
     Takes a field index and returns an Encoder.
@@ -46,7 +46,7 @@ def _vector_encoder(encoder, is_packed=True) -> EncoderConstructor:
     return vector_encoder
 
 
-def _scalar_decoder(decoder) -> DecoderConstructor:
+def _scalar_decoder(decoder) -> PartialDecoderConstructor:
     """Constructs a scalar decoder factory.
 
     Takes a field index and a key and returns an Decoder.
@@ -63,7 +63,7 @@ def _scalar_decoder(decoder) -> DecoderConstructor:
     return scalar_decoder
 
 
-def _vector_decoder(decoder, is_packed=True) -> DecoderConstructor:
+def _vector_decoder(decoder, is_packed=True) -> PartialDecoderConstructor:
     """Constructs a vector (array) decoder factory.
 
     Takes a field index and a key and returns an Decoder.
@@ -153,7 +153,7 @@ _TYPE_DEFAULT_MAPPING = {
 }
 
 
-def get_encoder(type: type_pb2.Field.Kind.ValueType, repeated: bool) -> EncoderConstructor:
+def get_encoder(type: type_pb2.Field.Kind.ValueType, repeated: bool) -> PartialEncoderConstructor:
     """Get the appropriate encoder factory for the specified type.
 
     A scalar or vector factory is returned based on the 'repeated' parameter.
@@ -166,7 +166,7 @@ def get_encoder(type: type_pb2.Field.Kind.ValueType, repeated: bool) -> EncoderC
     return scalar
 
 
-def get_decoder(type: type_pb2.Field.Kind.ValueType, repeated: bool) -> DecoderConstructor:
+def get_decoder(type: type_pb2.Field.Kind.ValueType, repeated: bool) -> PartialDecoderConstructor:
     """Get the appropriate decoder factory for the specified type.
 
     A scalar or vector factory is returned based on the 'repeated' parameter.
