@@ -6,7 +6,8 @@ from google.protobuf import type_pb2
 from google.protobuf.internal import decoder, encoder
 from typing_extensions import TypeAlias
 
-InnerEncoder: TypeAlias = Callable[[Callable[[bytes], int], bytes, bool], int]
+WriteFunction: TypeAlias = Callable[[bytes], int]
+InnerEncoder: TypeAlias = Callable[[WriteFunction, bytes, bool], int]
 InnerDecoder: TypeAlias = Callable[
     [memoryview, int, int, type_pb2.Field.Kind.ValueType, Dict[int, Any]], int
 ]
