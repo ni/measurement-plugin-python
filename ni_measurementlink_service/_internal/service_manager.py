@@ -109,7 +109,7 @@ class GrpcService:
                     servicer_v2, self.server
                 )
             else:
-                raise Exception(
+                raise ValueError(
                     f"Unknown interface was provided in the .serviceconfig file: {interface}"
                 )
         port = str(self.server.add_insecure_port("[::]:0"))
