@@ -85,12 +85,12 @@ def test___streaming_data_measurement___measure___server_call_logged(
         )
         num_responses = 10
 
-        request = v2_measurement_service_pb2.MeasureRequest(
+        measure_request = v2_measurement_service_pb2.MeasureRequest(
             configuration_parameters=get_streaming_data_configuration_parameters(
                 num_responses=num_responses
             )
         )
-        response_iterator = stub_v2.Measure(request)
+        response_iterator = stub_v2.Measure(measure_request)
         for response in response_iterator:
             pass
 
