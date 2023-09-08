@@ -75,7 +75,7 @@ def measure(
     measurement_type: Function,
     range: float,
     resolution_digits: float,
-) -> Tuple:
+) -> Tuple[float]:
     """Perform a DMM measurement using NI-VISA and an NI Instrument Simulator v2.0."""
     logging.info(
         "Starting measurement: pin_name=%s measurement_type=%s range=%g resolution_digits=%g",
