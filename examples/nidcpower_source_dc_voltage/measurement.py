@@ -4,7 +4,7 @@ import logging
 import pathlib
 import sys
 import time
-from typing import Iterable
+from typing import Iterable, List, Tuple
 
 import click
 import grpc
@@ -72,7 +72,7 @@ def measure(
     current_limit: float,
     current_limit_range: float,
     source_delay: float,
-):
+) -> Tuple[List[int], List[str], List[float], List[float], List[bool]]:
     """Source and measure a DC voltage with an NI SMU."""
     logging.info("Executing measurement: pin_names=%s voltage_level=%g", pin_names, voltage_level)
 
@@ -93,7 +93,7 @@ def measure(
 
             pending_cancellation = False
 
-            def cancel_callback():
+            def cancel_callback() -> None:
                 logging.info("Canceling measurement")
                 session_to_abort = session
                 if session_to_abort is not None:
@@ -165,7 +165,7 @@ def measure(
 def _log_measured_values(
     channel_mappings: Iterable[nims.session_management.ChannelMapping],
     measured_values: Iterable,
-):
+) -> None:
     """Log the measured values."""
     for mapping, measurement in zip(channel_mappings, measured_values):
         logging.info("site%s/%s:", mapping.site, mapping.pin_or_relay_name)

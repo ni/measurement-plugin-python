@@ -81,7 +81,7 @@ def measure(
     frequency: float,
     amplitude: float,
     duration: float,
-) -> Tuple:
+) -> Tuple[()]:
     """Generate a standard function waveform using an NI waveform generator."""
     logging.info(
         "Starting generation: pin_name=%s waveform_type=%s frequency=%g amplitude=%g",
@@ -93,7 +93,7 @@ def measure(
 
     pending_cancellation = False
 
-    def cancel_callback():
+    def cancel_callback() -> None:
         logging.info("Canceling generation")
         nonlocal pending_cancellation
         pending_cancellation = True

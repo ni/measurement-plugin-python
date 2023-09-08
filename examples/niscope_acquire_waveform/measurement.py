@@ -4,7 +4,7 @@ import logging
 import pathlib
 import sys
 import time
-from typing import Tuple
+from typing import List, Tuple
 
 import click
 import grpc
@@ -96,7 +96,7 @@ def measure(
     auto_trigger: bool,
     trigger_coupling: str,
     timeout: float,
-) -> Tuple:
+) -> Tuple[List[float], ...]:
     """Acquire a waveform using an NI oscilloscope."""
     logging.info(
         "Starting acquisition: pin_or_relay_names=%s vertical_range=%g trigger_source=%s trigger_level=%g",
@@ -108,7 +108,7 @@ def measure(
 
     pending_cancellation = False
 
-    def cancel_callback():
+    def cancel_callback() -> None:
         logging.info("Canceling acquisition")
         nonlocal pending_cancellation
         pending_cancellation = True

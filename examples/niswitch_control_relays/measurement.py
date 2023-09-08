@@ -46,7 +46,7 @@ unreserve calls. Long measurements may require a longer timeout.
 def measure(
     relay_names: str,
     close_relays: bool,
-) -> Tuple:
+) -> Tuple[()]:
     """Control relays using an NI relay driver (e.g. PXI-2567)."""
     logging.info(
         "Controlling relays: relay_names=%s close_relay=%s",
