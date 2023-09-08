@@ -72,6 +72,9 @@ build-backend = "poetry.core.masonry.api"
 addopts = "--doctest-modules --strict-markers"
 filterwarnings = ["always::ImportWarning", "always::ResourceWarning"]
 testpaths = ["tests"]
+markers = [
+  "service_class: specifies which test service to use.",
+]
 
 [tool.mypy]
 warn_unused_configs = true
