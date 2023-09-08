@@ -59,8 +59,8 @@ class ClientLogger(
                 call = continuation(client_call_details, request)
                 # call.add_callback(call_logger.close)
                 return _LoggingResponseCallFuture(call_logger, call)
-            except Exception:
-                call_logger.close()
+            except Exception as e:
+                call_logger.close(e)
                 raise
         else:
             return continuation(client_call_details, request)
@@ -80,8 +80,8 @@ class ClientLogger(
                 call_iterator = continuation(client_call_details, request)
                 # call_iterator.add_callback(call_logger.close)
                 return _LoggingResponseCallIterator(call_logger, call_iterator)
-            except Exception:
-                call_logger.close()
+            except Exception as e:
+                call_logger.close(e)
                 raise
         else:
             return continuation(client_call_details, request)
@@ -103,8 +103,8 @@ class ClientLogger(
                 )
                 # call.add_callback(call_logger.close)
                 return _LoggingResponseCallFuture(call_logger, call)
-            except Exception:
-                call_logger.close()
+            except Exception as e:
+                call_logger.close(e)
                 raise
         else:
             return continuation(client_call_details, request_iterator)
@@ -126,8 +126,8 @@ class ClientLogger(
                 )
                 # call_iterator.add_callback(call_logger.close)
                 return _LoggingResponseCallIterator(call_logger, call_iterator)
-            except Exception:
-                call_logger.close()
+            except Exception as e:
+                call_logger.close(e)
                 raise
         else:
             return continuation(client_call_details, request_iterator)
@@ -204,8 +204,8 @@ class ServerLogger(grpc.ServerInterceptor):
     ) -> Iterator[grpc.TResponse]:
         try:
             return _LoggingResponseIterator(call_logger, handler_function(request, context))
-        except Exception:
-            call_logger.close()
+        except Exception as e:
+            call_logger.close(e)
             raise
 
     def _log_stream_unary(
@@ -232,8 +232,8 @@ class ServerLogger(grpc.ServerInterceptor):
                 call_logger,
                 handler_function(_LoggingRequestIterator(call_logger, request_iterator), context),
             )
-        except Exception:
-            call_logger.close()
+        except Exception as e:
+            call_logger.close(e)
             raise
 
 
@@ -391,8 +391,11 @@ class _LoggingResponseIterator(Generic[_T]):
             response = next(self._inner_iterator)
             self._call_logger.log_streaming_response()
             return response
-        except (StopIteration, Exception):
+        except StopIteration:
             self._call_logger.close()
+            raise
+        except Exception as e:
+            self._call_logger.close(e)
             raise
 
 
@@ -464,6 +467,9 @@ class _LoggingResponseCallIterator(_CallIterator[_T]):
             response = next(self._inner_call_iterator)  # type: ignore[call-overload]
             self._call_logger.log_streaming_response()
             return response
-        except (StopIteration, Exception):
+        except StopIteration:
             self._call_logger.close()
+            raise
+        except Exception as e:
+            self._call_logger.close(e)
             raise
