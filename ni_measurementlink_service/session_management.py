@@ -5,7 +5,17 @@ import abc
 import warnings
 from functools import cached_property
 from types import TracebackType
-from typing import Any, Iterable, List, Literal, NamedTuple, Optional, Sequence, Type, TypeVar
+from typing import (
+    Any,
+    Iterable,
+    List,
+    Literal,
+    NamedTuple,
+    Optional,
+    Sequence,
+    Type,
+    TypeVar,
+)
 
 import grpc
 from deprecation import DeprecatedWarning
@@ -235,7 +245,7 @@ def __getattr__(name: str) -> Any:
         raise AttributeError(f"module {__name__} has no attribute {name}")
 
 
-class Client(object):
+class SessionManagementClient(object):
     """Class that manages driver sessions."""
 
     def __init__(self, *, grpc_channel: grpc.Channel) -> None:
@@ -505,3 +515,7 @@ class Client(object):
             self._client.ReserveAllRegisteredSessions(request)
         )
         return MultiSessionReservation(session_manager=self, session_info=response.sessions)
+
+
+Client = SessionManagementClient
+"""Alias for compatibility with code that uses session_management.Client."""
