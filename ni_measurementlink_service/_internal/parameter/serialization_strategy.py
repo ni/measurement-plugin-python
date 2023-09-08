@@ -1,12 +1,17 @@
 """Serialization Strategy."""
 
+import sys
 from typing import Any, Callable, Dict, cast
 
 from google.protobuf import type_pb2
 from google.protobuf.descriptor import FieldDescriptor
 from google.protobuf.internal import decoder, encoder
 from google.protobuf.message import Message
-from typing_extensions import TypeAlias
+
+if sys.version_info >= (3, 10):
+    from typing import TypeAlias
+else:
+    from typing_extensions import TypeAlias
 
 WriteFunction: TypeAlias = Callable[[bytes], int]
 Encoder: TypeAlias = Callable[[WriteFunction, bytes, bool], int]
