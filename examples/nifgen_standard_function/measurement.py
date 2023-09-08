@@ -4,6 +4,7 @@ import contextlib
 import logging
 import pathlib
 import sys
+import threading
 import time
 from enum import Enum
 from typing import Tuple
@@ -91,14 +92,8 @@ def measure(
         amplitude,
     )
 
-    pending_cancellation = False
-
-    def cancel_callback() -> None:
-        logging.info("Canceling generation")
-        nonlocal pending_cancellation
-        pending_cancellation = True
-
-    measurement_service.context.add_cancel_callback(cancel_callback)
+    cancellation_event = threading.Event()
+    measurement_service.context.add_cancel_callback(cancellation_event.set)
 
     session_management_client = create_session_management_client(measurement_service)
 
@@ -139,7 +134,7 @@ def measure(
                 measurement_service.context.abort(
                     grpc.StatusCode.DEADLINE_EXCEEDED, "Deadline exceeded."
                 )
-            if pending_cancellation:
+            if cancellation_event.is_set():
                 measurement_service.context.abort(
                     grpc.StatusCode.CANCELLED, "Client requested cancellation."
                 )

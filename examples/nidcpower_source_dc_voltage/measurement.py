@@ -3,6 +3,7 @@
 import logging
 import pathlib
 import sys
+import threading
 import time
 from typing import Iterable, List, Tuple
 
@@ -91,17 +92,8 @@ def measure(
             channels = session.channels[reservation.session_info.channel_list]
             channel_mappings = reservation.session_info.channel_mappings
 
-            pending_cancellation = False
-
-            def cancel_callback() -> None:
-                logging.info("Canceling measurement")
-                session_to_abort = session
-                if session_to_abort is not None:
-                    nonlocal pending_cancellation
-                    pending_cancellation = True
-                    session_to_abort.abort()
-
-            measurement_service.context.add_cancel_callback(cancel_callback)
+            cancellation_event = threading.Event()
+            measurement_service.context.add_cancel_callback(cancellation_event.set)
             time_remaining = measurement_service.context.time_remaining
 
             channels.source_mode = nidcpower.SourceMode.SINGLE_POINT
@@ -121,7 +113,7 @@ def measure(
                         measurement_service.context.abort(
                             grpc.StatusCode.DEADLINE_EXCEEDED, "deadline exceeded"
                         )
-                    if pending_cancellation:
+                    if cancellation_event.is_set():
                         measurement_service.context.abort(
                             grpc.StatusCode.CANCELLED, "client requested cancellation"
                         )
