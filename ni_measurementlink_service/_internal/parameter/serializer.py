@@ -2,9 +2,10 @@
 
 from enum import Enum
 from io import BytesIO
-from typing import Any, Dict, Sequence
+from typing import Any, Dict, Sequence, cast
 
 from google.protobuf.internal import encoder
+from google.protobuf.message import Message
 
 from ni_measurementlink_service._internal.parameter import serialization_strategy
 from ni_measurementlink_service._internal.parameter.metadata import (
@@ -166,7 +167,7 @@ def _get_overlapping_parameters(
             parameter_bytes_memory_view,
             position + encoder._TagSize(field_index),  # type: ignore[attr-defined]
             len(parameter_bytes),
-            type,
+            cast(Message, None),  # unused
             overlapping_parameters_by_id,
         )
     return overlapping_parameters_by_id

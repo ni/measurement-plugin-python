@@ -1,6 +1,8 @@
 """Serialization Strategy."""
+from __future__ import annotations
 
 import sys
+import typing
 from typing import Any, Callable, Dict, cast
 
 from google.protobuf import type_pb2
@@ -8,19 +10,18 @@ from google.protobuf.descriptor import FieldDescriptor
 from google.protobuf.internal import decoder, encoder
 from google.protobuf.message import Message
 
-if sys.version_info >= (3, 10):
-    from typing import TypeAlias
-else:
-    from typing_extensions import TypeAlias
+if typing.TYPE_CHECKING:
+    if sys.version_info >= (3, 10):
+        from typing import TypeAlias
+    else:
+        from typing_extensions import TypeAlias
 
 WriteFunction: TypeAlias = Callable[[bytes], int]
 Encoder: TypeAlias = Callable[[WriteFunction, bytes, bool], int]
 PartialEncoderConstructor: TypeAlias = Callable[[int], Encoder]
 EncoderConstructor: TypeAlias = Callable[[int, bool, bool], Encoder]
 
-Decoder: TypeAlias = Callable[
-    [memoryview, int, int, type_pb2.Field.Kind.ValueType, Dict[int, Any]], int
-]
+Decoder: TypeAlias = Callable[[memoryview, int, int, Message, Dict[int, Any]], int]
 PartialDecoderConstructor: TypeAlias = Callable[[int, str], Decoder]
 NewDefault: TypeAlias = Callable[[Message], Message]
 DecoderConstructor: TypeAlias = Callable[[int, bool, bool, FieldDescriptor, NewDefault], Decoder]
@@ -33,7 +34,7 @@ def _scalar_encoder(encoder: EncoderConstructor) -> PartialEncoderConstructor:
     and is_packed set to False.
     """
 
-    def scalar_encoder(field_index):
+    def scalar_encoder(field_index: int) -> Encoder:
         is_repeated = False
         is_packed = False
         return encoder(field_index, is_repeated, is_packed)
@@ -50,7 +51,7 @@ def _vector_encoder(encoder: EncoderConstructor, is_packed=True) -> PartialEncod
     and is_packed defaults to True.
     """
 
-    def vector_encoder(field_index):
+    def vector_encoder(field_index: int) -> Encoder:
         is_repeated = True
         return encoder(field_index, is_repeated, is_packed)
 
@@ -66,7 +67,7 @@ def _scalar_decoder(decoder: DecoderConstructor) -> PartialDecoderConstructor:
     and is_packed set to False.
     """
 
-    def scalar_decoder(field_index, key):
+    def scalar_decoder(field_index: int, key) -> Decoder:
         is_repeated = False
         is_packed = False
         return decoder(field_index, is_repeated, is_packed, key, cast(NewDefault, None))
@@ -86,7 +87,7 @@ def _vector_decoder(decoder: DecoderConstructor, is_packed=True) -> PartialDecod
     def _new_default(unused_message=None):
         return []
 
-    def vector_decoder(field_index, key):
+    def vector_decoder(field_index: int, key) -> Decoder:
         is_repeated = True
         return decoder(field_index, is_repeated, is_packed, key, _new_default)
 
