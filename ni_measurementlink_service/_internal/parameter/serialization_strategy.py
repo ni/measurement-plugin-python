@@ -3,10 +3,9 @@ from __future__ import annotations
 
 import sys
 import typing
-from typing import Any, Callable, Dict, cast
+from typing import Any, Callable, Dict, TypeVar, cast
 
 from google.protobuf import type_pb2
-from google.protobuf.descriptor import FieldDescriptor
 from google.protobuf.internal import decoder, encoder
 from google.protobuf.message import Message
 
@@ -16,15 +15,17 @@ if typing.TYPE_CHECKING:
     else:
         from typing_extensions import TypeAlias
 
+Key = TypeVar("Key")
+
 WriteFunction: TypeAlias = Callable[[bytes], int]
 Encoder: TypeAlias = Callable[[WriteFunction, bytes, bool], int]
 PartialEncoderConstructor: TypeAlias = Callable[[int], Encoder]
 EncoderConstructor: TypeAlias = Callable[[int, bool, bool], Encoder]
 
-Decoder: TypeAlias = Callable[[memoryview, int, int, Message, Dict[int, Any]], int]
-PartialDecoderConstructor: TypeAlias = Callable[[int, str], Decoder]
+Decoder: TypeAlias = Callable[[memoryview, int, int, Message, Dict[Key, Any]], int]
+PartialDecoderConstructor: TypeAlias = Callable[[int, Key], Decoder]
 NewDefault: TypeAlias = Callable[[Message], Message]
-DecoderConstructor: TypeAlias = Callable[[int, bool, bool, FieldDescriptor, NewDefault], Decoder]
+DecoderConstructor: TypeAlias = Callable[[int, bool, bool, Key, NewDefault], Decoder]
 
 
 def _scalar_encoder(encoder: EncoderConstructor) -> PartialEncoderConstructor:
@@ -69,7 +70,7 @@ def _scalar_decoder(decoder: DecoderConstructor) -> PartialDecoderConstructor:
     and is_packed set to False.
     """
 
-    def scalar_decoder(field_index: int, key) -> Decoder:
+    def scalar_decoder(field_index: int, key: Key) -> Decoder:
         is_repeated = False
         is_packed = False
         return decoder(field_index, is_repeated, is_packed, key, cast(NewDefault, None))
@@ -96,6 +97,8 @@ def _vector_decoder(decoder: DecoderConstructor, is_packed=True) -> PartialDecod
     return vector_decoder
 
 
+# Cast works around this issue in typeshed
+# https://github.com/python/typeshed/issues/10695
 FloatEncoder = _scalar_encoder(cast(EncoderConstructor, encoder.FloatEncoder))
 DoubleEncoder = _scalar_encoder(cast(EncoderConstructor, encoder.DoubleEncoder))
 IntEncoder = _scalar_encoder(cast(EncoderConstructor, encoder.Int32Encoder))
@@ -110,7 +113,8 @@ UIntArrayEncoder = _vector_encoder(cast(EncoderConstructor, encoder.UInt32Encode
 BoolArrayEncoder = _vector_encoder(encoder.BoolEncoder)
 StringArrayEncoder = _vector_encoder(encoder.StringEncoder, is_packed=False)
 
-
+# Cast works around this issue in typeshed
+# https://github.com/python/typeshed/issues/10697
 FloatDecoder = _scalar_decoder(cast(DecoderConstructor, decoder.FloatDecoder))
 DoubleDecoder = _scalar_decoder(cast(DecoderConstructor, decoder.DoubleDecoder))
 Int32Decoder = _scalar_decoder(cast(DecoderConstructor, decoder.Int32Decoder))
