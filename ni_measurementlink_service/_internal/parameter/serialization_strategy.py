@@ -28,9 +28,11 @@ DecoderConstructor: TypeAlias = Callable[[int, bool, bool, FieldDescriptor, NewD
 
 
 def _scalar_encoder(encoder: EncoderConstructor) -> PartialEncoderConstructor:
-    """Constructs a scalar encoder factory that takes a field index and returns an Encoder.
+    """Constructs a scalar encoder constructor.
 
-    This class returns the Encoder callable with is_repeated set to False
+    Takes a field index and returns an Encoder.
+
+    This class returns the Encoder with is_repeated set to False
     and is_packed set to False.
     """
 
@@ -43,12 +45,12 @@ def _scalar_encoder(encoder: EncoderConstructor) -> PartialEncoderConstructor:
 
 
 def _vector_encoder(encoder: EncoderConstructor, is_packed=True) -> PartialEncoderConstructor:
-    """Constructs a vector (array) encoder factory.
+    """Constructs a vector (array) encoder constructor.
 
     Takes a field index and returns an Encoder.
 
-    This class returns the Encoder callable with is_repeated set to True
-    and is_packed defaults to True.
+    This class returns the Encoder with is_repeated set to True
+    and is_packed defaulting to True.
     """
 
     def vector_encoder(field_index: int) -> Encoder:
@@ -59,11 +61,11 @@ def _vector_encoder(encoder: EncoderConstructor, is_packed=True) -> PartialEncod
 
 
 def _scalar_decoder(decoder: DecoderConstructor) -> PartialDecoderConstructor:
-    """Constructs a scalar decoder factory.
+    """Constructs a scalar decoder constructor.
 
-    Takes a field index and a key and returns an Decoder.
+    Takes a field index and a key and returns a Decoder.
 
-    This class returns the Decoder callable with is_repeated set to False
+    This class returns the Decoder with is_repeated set to False
     and is_packed set to False.
     """
 
@@ -76,12 +78,12 @@ def _scalar_decoder(decoder: DecoderConstructor) -> PartialDecoderConstructor:
 
 
 def _vector_decoder(decoder: DecoderConstructor, is_packed=True) -> PartialDecoderConstructor:
-    """Constructs a vector (array) decoder factory.
+    """Constructs a vector (array) decoder constructor.
 
-    Takes a field index and a key and returns an Decoder.
+    Takes a field index and a key and returns a Decoder.
 
-    This class returns the Decoder callable with is_repeated set to True
-    and is_packed defaults to True.
+    This class returns the Decoder with is_repeated set to True
+    and is_packed defaulting to True.
     """
 
     def _new_default(unused_message=None):
@@ -168,9 +170,9 @@ _TYPE_DEFAULT_MAPPING = {
 
 
 def get_encoder(type: type_pb2.Field.Kind.ValueType, repeated: bool) -> PartialEncoderConstructor:
-    """Get the appropriate encoder factory for the specified type.
+    """Get the appropriate partial encoder constructor for the specified type.
 
-    A scalar or vector factory is returned based on the 'repeated' parameter.
+    A scalar or vector constructor is returned based on the 'repeated' parameter.
     """
     if type not in _FIELD_TYPE_TO_ENCODER_MAPPING:
         raise Exception(f"Error can not encode type '{type}'")
@@ -181,9 +183,9 @@ def get_encoder(type: type_pb2.Field.Kind.ValueType, repeated: bool) -> PartialE
 
 
 def get_decoder(type: type_pb2.Field.Kind.ValueType, repeated: bool) -> PartialDecoderConstructor:
-    """Get the appropriate decoder factory for the specified type.
+    """Get the appropriate partial decoder constructor for the specified type.
 
-    A scalar or vector factory is returned based on the 'repeated' parameter.
+    A scalar or vector constructor is returned based on the 'repeated' parameter.
     """
     if type not in _FIELD_TYPE_TO_DECODER_MAPPING:
         raise Exception(f"Error can not decode type '{type}'")
