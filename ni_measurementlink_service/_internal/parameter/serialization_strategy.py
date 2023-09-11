@@ -70,10 +70,15 @@ def _scalar_decoder(decoder: DecoderConstructor) -> PartialDecoderConstructor:
     and is_packed set to False.
     """
 
+    def _unsupported_new_default(message: Message) -> Message:
+        raise NotImplementedError(
+            "This function should not be called. Verify that you are using up-to-date and compatible versions of the ni-measurementlink-service and protobuf packages."
+        )
+
     def scalar_decoder(field_index: int, key: Key) -> Decoder:
         is_repeated = False
         is_packed = False
-        return decoder(field_index, is_repeated, is_packed, key, cast(NewDefault, None))
+        return decoder(field_index, is_repeated, is_packed, key, _unsupported_new_default)
 
     return scalar_decoder
 

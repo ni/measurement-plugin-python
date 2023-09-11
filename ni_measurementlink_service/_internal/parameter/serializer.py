@@ -167,7 +167,7 @@ def _get_overlapping_parameters(
             parameter_bytes_memory_view,
             position + encoder._TagSize(field_index),  # type: ignore[attr-defined]
             len(parameter_bytes),
-            cast(Message, None),  # unused
+            cast(Message, None),  # unused - See serialization_strategy._vector_decoder._new_default
             overlapping_parameters_by_id,
         )
     return overlapping_parameters_by_id
