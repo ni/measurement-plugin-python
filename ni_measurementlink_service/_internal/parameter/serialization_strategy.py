@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import sys
 import typing
-from typing import Any, Callable, Dict, TypeVar, cast
+from typing import Any, Callable, Dict, Optional, cast
 
 from google.protobuf import type_pb2
 from google.protobuf.internal import decoder, encoder
@@ -15,8 +15,7 @@ if typing.TYPE_CHECKING:
     else:
         from typing_extensions import TypeAlias
 
-Key = TypeVar("Key")
-
+Key: TypeAlias = int
 WriteFunction: TypeAlias = Callable[[bytes], int]
 Encoder: TypeAlias = Callable[[WriteFunction, bytes, bool], int]
 PartialEncoderConstructor: TypeAlias = Callable[[int], Encoder]
@@ -45,7 +44,9 @@ def _scalar_encoder(encoder: EncoderConstructor) -> PartialEncoderConstructor:
     return scalar_encoder
 
 
-def _vector_encoder(encoder: EncoderConstructor, is_packed=True) -> PartialEncoderConstructor:
+def _vector_encoder(
+    encoder: EncoderConstructor, is_packed: bool = True
+) -> PartialEncoderConstructor:
     """Constructs a vector (array) encoder constructor.
 
     Takes a field index and returns an Encoder.
@@ -83,7 +84,9 @@ def _scalar_decoder(decoder: DecoderConstructor) -> PartialDecoderConstructor:
     return scalar_decoder
 
 
-def _vector_decoder(decoder: DecoderConstructor, is_packed=True) -> PartialDecoderConstructor:
+def _vector_decoder(
+    decoder: DecoderConstructor, is_packed: bool = True
+) -> PartialDecoderConstructor:
     """Constructs a vector (array) decoder constructor.
 
     Takes a field index and a key and returns a Decoder.
@@ -92,10 +95,10 @@ def _vector_decoder(decoder: DecoderConstructor, is_packed=True) -> PartialDecod
     and is_packed defaulting to True.
     """
 
-    def _new_default(unused_message=None):
+    def _new_default(unused_message: Optional[Message] = None) -> Any:
         return []
 
-    def vector_decoder(field_index: int, key) -> Decoder:
+    def vector_decoder(field_index: int, key: Key) -> Decoder:
         is_repeated = True
         return decoder(field_index, is_repeated, is_packed, key, _new_default)
 
