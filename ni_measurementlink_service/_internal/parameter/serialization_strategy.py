@@ -72,7 +72,7 @@ def _scalar_decoder(decoder: DecoderConstructor) -> PartialDecoderConstructor:
     and is_packed set to False.
     """
 
-    def _unsupported_new_default(message: Message) -> Message:
+    def _unsupported_new_default(message: Optional[Message]) -> Message:
         raise NotImplementedError(
             "This function should not be called. Verify that you are using up-to-date and compatible versions of the ni-measurementlink-service and protobuf packages."
         )
@@ -188,7 +188,7 @@ def get_encoder(type: type_pb2.Field.Kind.ValueType, repeated: bool) -> PartialE
     A scalar or vector constructor is returned based on the 'repeated' parameter.
     """
     if type not in _FIELD_TYPE_TO_ENCODER_MAPPING:
-        raise Exception(f"Error can not encode type '{type}'")
+        raise ValueError(f"Error can not encode type '{type}'")
     scalar, array = _FIELD_TYPE_TO_ENCODER_MAPPING[type]
     if repeated:
         return array
@@ -201,7 +201,7 @@ def get_decoder(type: type_pb2.Field.Kind.ValueType, repeated: bool) -> PartialD
     A scalar or vector constructor is returned based on the 'repeated' parameter.
     """
     if type not in _FIELD_TYPE_TO_DECODER_MAPPING:
-        raise Exception(f"Error can not decode type '{type}'")
+        raise ValueError(f"Error can not decode type '{type}'")
     scalar, array = _FIELD_TYPE_TO_DECODER_MAPPING[type]
     if repeated:
         return array
