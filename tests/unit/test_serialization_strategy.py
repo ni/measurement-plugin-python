@@ -22,7 +22,7 @@ from ni_measurementlink_service._internal.parameter import serialization_strateg
 def test___serialization_strategy___get_encoder___returns_expected_encoder(
     type, is_repeated, expected_encoder
 ):
-    encoder = serialization_strategy.Context.get_encoder(type, is_repeated)
+    encoder = serialization_strategy.get_encoder(type, is_repeated)
 
     assert encoder == expected_encoder
 
@@ -44,7 +44,7 @@ def test___serialization_strategy___get_encoder___returns_expected_encoder(
 def test___serialization_strategy___get_decoder___returns_expected_decoder(
     type, is_repeated, expected_decoder
 ):
-    decoder = serialization_strategy.Context.get_decoder(type, is_repeated)
+    decoder = serialization_strategy.get_decoder(type, is_repeated)
 
     assert decoder == expected_decoder
 
@@ -66,6 +66,6 @@ def test___serialization_strategy___get_decoder___returns_expected_decoder(
 def test___serialization_strategy___get_default_value___returns_type_defaults(
     type, is_repeated, expected_default_value
 ):
-    default_value = serialization_strategy.Context.get_type_default(type, is_repeated)
+    default_value = serialization_strategy.get_type_default(type, is_repeated)
 
     assert default_value == expected_default_value
