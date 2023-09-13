@@ -6,6 +6,7 @@ import typing
 from typing import Any, Callable, Dict, Optional, cast
 
 from google.protobuf import type_pb2
+from google.protobuf.descriptor import FieldDescriptor
 from google.protobuf.internal import decoder, encoder
 from google.protobuf.message import Message
 
@@ -15,7 +16,7 @@ if typing.TYPE_CHECKING:
     else:
         from typing_extensions import TypeAlias
 
-Key: TypeAlias = int
+Key: TypeAlias = FieldDescriptor
 WriteFunction: TypeAlias = Callable[[bytes], int]
 Encoder: TypeAlias = Callable[[WriteFunction, bytes, bool], int]
 PartialEncoderConstructor: TypeAlias = Callable[[int], Encoder]

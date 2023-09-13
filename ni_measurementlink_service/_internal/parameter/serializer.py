@@ -4,6 +4,7 @@ from enum import Enum
 from io import BytesIO
 from typing import Any, Dict, Sequence, cast
 
+from google.protobuf.descriptor import FieldDescriptor
 from google.protobuf.internal import encoder
 from google.protobuf.message import Message
 
@@ -168,7 +169,7 @@ def _get_overlapping_parameters(
             position + encoder._TagSize(field_index),  # type: ignore[attr-defined]
             len(parameter_bytes),
             cast(Message, None),  # unused - See serialization_strategy._vector_decoder._new_default
-            overlapping_parameters_by_id,
+            cast(Dict[FieldDescriptor, Any], overlapping_parameters_by_id),
         )
     return overlapping_parameters_by_id
 
