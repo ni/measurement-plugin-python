@@ -72,7 +72,7 @@ def _scalar_decoder(decoder: DecoderConstructor) -> PartialDecoderConstructor:
     and is_packed set to False.
     """
 
-    def _unsupported_new_default(message: Optional[Message]) -> Message:
+    def _unsupported_new_default(message: Optional[Message]) -> Any:
         raise NotImplementedError(
             "This function should not be called. Verify that you are using up-to-date and compatible versions of the ni-measurementlink-service and protobuf packages."
         )
