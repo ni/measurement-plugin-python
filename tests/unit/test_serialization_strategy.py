@@ -52,7 +52,7 @@ def test___serialization_strategy___get_encoder___returns_expected_encoder(
 def test___serialization_strategy___get_decoder___returns_expected_decoder(
     type, is_repeated, message_type, expected_decoder
 ):
-    decoder = serialization_strategy.get_decoder(type, is_repeated)
+    decoder = serialization_strategy.get_decoder(type, is_repeated, message_type)
 
     assert decoder == expected_decoder
 
