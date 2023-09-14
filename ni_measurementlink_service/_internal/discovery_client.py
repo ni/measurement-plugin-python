@@ -11,6 +11,7 @@ import typing
 from typing import Any, Dict, Optional
 
 import grpc
+from deprecation import deprecated
 
 from ni_measurementlink_service._internal.stubs.ni.measurementlink.discovery.v1 import (
     discovery_service_pb2,
@@ -54,16 +55,7 @@ class ServiceLocation(typing.NamedTuple):
 
 
 class DiscoveryClient:
-    """Class that contains APIs need to interact with discovery service.
-
-    Attributes
-    ----------
-        stub (DiscoveryServiceStub): The gRPC stub used to interact with the discovery
-        service.
-
-        registration_id(string): The ID from discovery service upon successful registration.
-
-    """
+    """Class that contains APIs need to interact with discovery service."""
 
     def __init__(
         self, stub: Optional[discovery_service_pb2_grpc.DiscoveryServiceStub] = None
@@ -76,11 +68,27 @@ class DiscoveryClient:
 
         """
         self._stub = stub
-        self.registration_id = ""
+        self._registration_id = ""
 
     @property
+    @deprecated(
+        deprecated_in="1.2.0-dev2",
+        details="This property should not be public and will be removed in a later release.",
+    )
+    def registration_id(self) -> str:
+        """ "The ID from discovery service upon successful registration."""
+        return self._registration_id
+
+    @property
+    @deprecated(
+        deprecated_in="1.2.0-dev2",
+        details="This property should not be public and will be removed in a later release.",
+    )
     def stub(self) -> discovery_service_pb2_grpc.DiscoveryServiceStub:
         """Get the gRPC stub used to interact with the discovery service."""
+        return self._get_stub()
+
+    def _get_stub(self) -> discovery_service_pb2_grpc.DiscoveryServiceStub:
         if self._stub is None:
             address = _get_discovery_service_address()
             channel = grpc.insecure_channel(address)
@@ -89,6 +97,7 @@ class DiscoveryClient:
             self._stub = discovery_service_pb2_grpc.DiscoveryServiceStub(channel)
         return self._stub
 
+    @deprecated(deprecated_in="1.2.0-dev2", details="Use register_service instead.")
     def register_measurement_service(
         self, service_port: str, service_info: ServiceInfo, measurement_info: MeasurementInfo
     ) -> bool:
@@ -96,38 +105,68 @@ class DiscoveryClient:
 
         Args:
         ----
-            service_port (str): Port Number of the measurement service.
+            service_port: The port number of the service.
 
-            service_info (ServiceInfo): Service Info.
+            service_info: Information describing the service.
 
-            display_name (str): Display name of the service.
+            measurement_info: Information describing the measurement.
 
         Returns
         -------
             bool: Boolean to represent if the registration is successful.
 
         """
-        try:
-            # Service Location
-            service_location = discovery_service_pb2.ServiceLocation()
-            service_location.location = "localhost"
-            service_location.insecure_port = service_port
-            # Service Descriptor
-            service_descriptor = discovery_service_pb2.ServiceDescriptor()
-            service_descriptor.display_name = measurement_info.display_name
-            service_descriptor.service_class = service_info.service_class
-            service_descriptor.description_url = service_info.description_url
-            service_descriptor.provided_interfaces.extend(service_info.provided_interfaces)
-            service_descriptor.annotations.update(service_info.annotations)
+        if self._registration_id:
+            raise RuntimeError("Service already registered")
 
-            # Registration Request Creation
-            request = discovery_service_pb2.RegisterServiceRequest(
-                location=service_location, service_description=service_descriptor
+        service_location = ServiceLocation(
+            location="localhost",
+            insecure_port=service_port,
+            ssl_authenticated_port="",
+        )
+
+        self._registration_id = self.register_service(
+            service_info._replace(display_name=measurement_info.display_name),
+            service_location,
+        )
+        return True
+
+    def register_service(self, service_info: ServiceInfo, service_location: ServiceLocation) -> str:
+        """Register the specified service with the discovery service.
+
+        Args:
+        ----
+            service_info: Information describing the service.
+
+            service_location: The location of the service on the network.
+
+        Returns:
+        -------
+            ID that can be used to unregister the service.
+        """
+        try:
+            grpc_service_description = discovery_service_pb2.ServiceDescriptor(
+                display_name=service_info.display_name,
+                description_url=service_info.description_url,
+                provided_interfaces=service_info.provided_interfaces,
+                service_class=service_info.service_class,
+                annotations=service_info.annotations,
             )
-            # Registration RPC Call
-            register_response = self.stub.RegisterService(request)
-            self.registration_id = register_response.registration_id
+
+            grpc_service_location = discovery_service_pb2.ServiceLocation(
+                location=service_location.location,
+                insecure_port=service_location.insecure_port,
+                ssl_authenticated_port=service_location.ssl_authenticated_port,
+            )
+
+            request = discovery_service_pb2.RegisterServiceRequest(
+                service_description=grpc_service_description,
+                location=grpc_service_location,
+            )
+
+            response = self._get_stub().RegisterService(request)
             _logger.info("Successfully registered with discovery service.")
+            return response.registration_id
         except grpc.RpcError as e:
             if e.code() == grpc.StatusCode.UNAVAILABLE:
                 _logger.error(
@@ -144,30 +183,41 @@ class DiscoveryClient:
         except Exception:
             _logger.exception("Error in registering with discovery service.")
             raise
-        return True
 
-    def unregister_service(self) -> bool:
-        """Un-registers the measurement service from the discovery service.
+    def unregister_service(self, registration_id: str = "") -> bool:
+        """Unregisters the specified service from the discovery service.
 
-        Should be called before the service is closed.
+        This method should be called before the service exits.
+
+        Args:
+        ----
+            registration_id: The registration ID returned from register_service.
+                This argument should be omitted after calling the deprecated
+                register_measurement_service method.
 
         Returns
         -------
-            bool: Boolean to represent if the un-registration is successful.
+            Boolean indicating whether the service was unregistered.
 
         """
         try:
-            if self.registration_id:
-                # Un-registration Request Creation
-                request = discovery_service_pb2.UnregisterServiceRequest(
-                    registration_id=self.registration_id
-                )
-                # Un-registration RPC Call
-                self.stub.UnregisterService(request)
-                _logger.info("Successfully unregistered with discovery service.")
-            else:
-                _logger.info("Not registered with discovery service.")
-                return False
+            if not registration_id:
+                registration_id = self._registration_id
+                if not registration_id:
+                    _logger.info("Not registered with discovery service.")
+                    return False
+
+            request = discovery_service_pb2.UnregisterServiceRequest(
+                registration_id=registration_id
+            )
+
+            _ = self._get_stub().UnregisterService(request)
+            _logger.info("Successfully unregistered with discovery service.")
+
+            if registration_id == self._registration_id:
+                self._registration_id = ""
+
+            return True
         except grpc.RpcError as e:
             if e.code() == grpc.StatusCode.UNAVAILABLE:
                 _logger.error(
@@ -184,7 +234,6 @@ class DiscoveryClient:
         except Exception:
             _logger.exception("Error in unregistering with discovery service.")
             raise
-        return True
 
     def resolve_service(self, provided_interface: str, service_class: str = "") -> ServiceLocation:
         """Resolve the location of a service.
@@ -205,11 +254,11 @@ class DiscoveryClient:
             A ServiceLocation location object that represents the location of a service.
 
         """
-        request = discovery_service_pb2.ResolveServiceRequest()
-        request.provided_interface = provided_interface
-        request.service_class = service_class
+        request = discovery_service_pb2.ResolveServiceRequest(
+            provided_interface=provided_interface, service_class=service_class
+        )
 
-        response: discovery_service_pb2.ServiceLocation = self.stub.ResolveService(request)
+        response = self._get_stub().ResolveService(request)
 
         return ServiceLocation(
             location=response.location,
