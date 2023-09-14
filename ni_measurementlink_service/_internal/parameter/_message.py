@@ -57,10 +57,6 @@ def _inner_message_decoder(
     See DecodeField
     """
 
-    def _convert_to_byte_string(memview):
-        byte_str = memview.tobytes()
-        return byte_str
-
     def _decode_message(
         buffer: memoryview, pos: int, end: int, message: Message, field_dict: Dict[Key, Any]
     ) -> int:
@@ -71,7 +67,7 @@ def _inner_message_decoder(
         # Read length.
         (size, pos) = decode_varint(buffer, pos)
         new_pos = pos + size
-        value.ParseFromString(_convert_to_byte_string(buffer[pos:new_pos]))
+        value.ParseFromString(buffer[pos:new_pos])
         return new_pos
 
     return _decode_message
