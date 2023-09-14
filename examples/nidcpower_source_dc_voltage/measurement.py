@@ -3,8 +3,9 @@
 import logging
 import pathlib
 import sys
+import threading
 import time
-from typing import Iterable
+from typing import Iterable, List, Tuple
 
 import click
 import grpc
@@ -72,7 +73,7 @@ def measure(
     current_limit: float,
     current_limit_range: float,
     source_delay: float,
-):
+) -> Tuple[List[int], List[str], List[float], List[float], List[bool]]:
     """Source and measure a DC voltage with an NI SMU."""
     logging.info("Executing measurement: pin_names=%s voltage_level=%g", pin_names, voltage_level)
 
@@ -91,17 +92,8 @@ def measure(
             channels = session.channels[reservation.session_info.channel_list]
             channel_mappings = reservation.session_info.channel_mappings
 
-            pending_cancellation = False
-
-            def cancel_callback():
-                logging.info("Canceling measurement")
-                session_to_abort = session
-                if session_to_abort is not None:
-                    nonlocal pending_cancellation
-                    pending_cancellation = True
-                    session_to_abort.abort()
-
-            measurement_service.context.add_cancel_callback(cancel_callback)
+            cancellation_event = threading.Event()
+            measurement_service.context.add_cancel_callback(cancellation_event.set)
             time_remaining = measurement_service.context.time_remaining
 
             channels.source_mode = nidcpower.SourceMode.SINGLE_POINT
@@ -121,7 +113,7 @@ def measure(
                         measurement_service.context.abort(
                             grpc.StatusCode.DEADLINE_EXCEEDED, "deadline exceeded"
                         )
-                    if pending_cancellation:
+                    if cancellation_event.is_set():
                         measurement_service.context.abort(
                             grpc.StatusCode.CANCELLED, "client requested cancellation"
                         )
@@ -165,7 +157,7 @@ def measure(
 def _log_measured_values(
     channel_mappings: Iterable[nims.session_management.ChannelMapping],
     measured_values: Iterable,
-):
+) -> None:
     """Log the measured values."""
     for mapping, measurement in zip(channel_mappings, measured_values):
         logging.info("site%s/%s:", mapping.site, mapping.pin_or_relay_name)

@@ -1,9 +1,18 @@
 import struct
+from typing import Any, Dict
 
 from google.protobuf.internal import encoder, wire_format
+from google.protobuf.message import Message
+
+from ni_measurementlink_service._internal.parameter._serializer_types import (
+    Decoder,
+    Encoder,
+    Key,
+    NewDefault,
+)
 
 
-def _inner_message_encoder(field_index):
+def _inner_message_encoder(field_index: int, is_repeated: bool, is_packed: bool) -> Encoder:
     """Mimics google.protobuf.internal.MessageEncoder.
 
     See EncodeField:
@@ -40,7 +49,9 @@ def _varint_encoder():
     return encode_varint
 
 
-def _inner_message_decoder(field_index, is_repeated, is_packed, key, new_default):
+def _inner_message_decoder(
+    field_index: int, is_repeated: bool, is_packed: bool, key: Key, new_default: NewDefault
+) -> Decoder:
     """Based on google.protobuf.internal.MessageDecoder.
 
     See DecodeField
@@ -50,7 +61,9 @@ def _inner_message_decoder(field_index, is_repeated, is_packed, key, new_default
         byte_str = memview.tobytes()
         return byte_str
 
-    def _decode_message(buffer, pos, end, message, field_dict):
+    def _decode_message(
+        buffer: memoryview, pos: int, end: int, message: Message, field_dict: Dict[Key, Any]
+    ) -> int:
         decode_varint = _varint_decoder(mask=(1 << 64) - 1, result_type=int)
         value = field_dict.get(key)
         if value is None:

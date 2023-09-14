@@ -6,14 +6,22 @@ from typing import Generator
 import grpc
 import pytest
 
-from ni_measurementlink_service._internal.discovery_client import _get_registration_json_file_path
+from ni_measurementlink_service import session_management
+from ni_measurementlink_service._internal.discovery_client import (
+    DiscoveryClient,
+    _get_registration_json_file_path,
+)
 from ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v1 import (
     measurement_service_pb2_grpc as v1_measurement_service_pb2_grpc,
 )
 from ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v2 import (
     measurement_service_pb2_grpc as v2_measurement_service_pb2_grpc,
 )
-from ni_measurementlink_service.measurement.service import MeasurementService
+from ni_measurementlink_service.measurement.service import (
+    GrpcChannelPool,
+    MeasurementService,
+)
+from ni_measurementlink_service.session_management import SessionManagementClient
 from tests.utilities.discovery_service_process import DiscoveryServiceProcess
 
 
@@ -63,3 +71,30 @@ def discovery_service_process() -> Generator[DiscoveryServiceProcess, None, None
     else:
         with DiscoveryServiceProcess() as proc:
             yield proc
+
+
+@pytest.fixture(scope="session")
+def grpc_channel_pool() -> Generator[GrpcChannelPool, None, None]:
+    """Test fixture that creates a gRPC channel pool."""
+    with GrpcChannelPool() as grpc_channel_pool:
+        yield grpc_channel_pool
+
+
+@pytest.fixture
+def discovery_client(discovery_service_process: DiscoveryServiceProcess) -> DiscoveryClient:
+    """Test fixture that creates a discovery client."""
+    # TODO: DiscoveryClient should accept a GrpcChannelPool
+    return DiscoveryClient()
+
+
+@pytest.fixture
+def session_management_client(
+    discovery_client: DiscoveryClient, grpc_channel_pool: GrpcChannelPool
+) -> SessionManagementClient:
+    """Test fixture that creates a session management client."""
+    # TODO: SessionManagementClient should accept a GrpcChannelPool
+    location = discovery_client.resolve_service(
+        session_management.GRPC_SERVICE_INTERFACE_NAME, session_management.GRPC_SERVICE_CLASS
+    )
+    grpc_channel = grpc_channel_pool.get_channel(location.insecure_address)
+    return SessionManagementClient(grpc_channel=grpc_channel)

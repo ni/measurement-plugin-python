@@ -26,6 +26,8 @@ if TYPE_CHECKING:
     else:
         from typing_extensions import Self
 
+from ni_measurementlink_service import _tracelogging
+
 _logger = logging.getLogger(__name__)
 
 
@@ -57,8 +59,8 @@ class ClientLogger(
                 call = continuation(client_call_details, request)
                 # call.add_callback(call_logger.close)
                 return _LoggingResponseCallFuture(call_logger, call)
-            except Exception:
-                call_logger.close()
+            except Exception as e:
+                call_logger.close(e)
                 raise
         else:
             return continuation(client_call_details, request)
@@ -78,8 +80,8 @@ class ClientLogger(
                 call_iterator = continuation(client_call_details, request)
                 # call_iterator.add_callback(call_logger.close)
                 return _LoggingResponseCallIterator(call_logger, call_iterator)
-            except Exception:
-                call_logger.close()
+            except Exception as e:
+                call_logger.close(e)
                 raise
         else:
             return continuation(client_call_details, request)
@@ -101,8 +103,8 @@ class ClientLogger(
                 )
                 # call.add_callback(call_logger.close)
                 return _LoggingResponseCallFuture(call_logger, call)
-            except Exception:
-                call_logger.close()
+            except Exception as e:
+                call_logger.close(e)
                 raise
         else:
             return continuation(client_call_details, request_iterator)
@@ -124,8 +126,8 @@ class ClientLogger(
                 )
                 # call_iterator.add_callback(call_logger.close)
                 return _LoggingResponseCallIterator(call_logger, call_iterator)
-            except Exception:
-                call_logger.close()
+            except Exception as e:
+                call_logger.close(e)
                 raise
         else:
             return continuation(client_call_details, request_iterator)
@@ -202,8 +204,8 @@ class ServerLogger(grpc.ServerInterceptor):
     ) -> Iterator[grpc.TResponse]:
         try:
             return _LoggingResponseIterator(call_logger, handler_function(request, context))
-        except Exception:
-            call_logger.close()
+        except Exception as e:
+            call_logger.close(e)
             raise
 
     def _log_stream_unary(
@@ -230,8 +232,8 @@ class ServerLogger(grpc.ServerInterceptor):
                 call_logger,
                 handler_function(_LoggingRequestIterator(call_logger, request_iterator), context),
             )
-        except Exception:
-            call_logger.close()
+        except Exception as e:
+            call_logger.close(e)
             raise
 
 
@@ -281,39 +283,44 @@ class _CallLogger(abc.ABC):
 
 
 class _ClientCallLogger(_CallLogger):
-    __slots__ = ["_method_name"]
+    __slots__ = ["_method_name", "_activity_id"]
 
     @classmethod
     def is_enabled(cls) -> bool:
-        return _logger.isEnabledFor(logging.DEBUG)
+        return _logger.isEnabledFor(logging.DEBUG) or _tracelogging.is_enabled()
 
     def __init__(self, method_name: str) -> None:
         super().__init__()
         self._method_name = method_name
         _logger.debug("gRPC client call starting: %s", self._method_name)
+        self._activity_id = _tracelogging.log_grpc_client_call_start(self._method_name)
 
     def _close(self, exception: BaseException | None = None) -> None:
         _logger.debug("gRPC client call complete: %s", self._method_name)
+        _tracelogging.log_grpc_client_call_stop(self._method_name, self._activity_id)
 
     def log_streaming_request(self) -> None:
         _logger.debug("gRPC client call streaming request: %s", self._method_name)
+        _tracelogging.log_grpc_client_call_streaming_request(self._method_name)
 
     def log_streaming_response(self) -> None:
         _logger.debug("gRPC client call streaming response: %s", self._method_name)
+        _tracelogging.log_grpc_client_call_streaming_response(self._method_name)
 
 
 class _ServerCallLogger(_CallLogger):
-    __slots__ = ["_method_name", "_start_time"]
+    __slots__ = ["_method_name", "_start_time", "_activity_id"]
 
     @classmethod
     def is_enabled(cls) -> bool:
-        return _logger.isEnabledFor(logging.INFO)
+        return _logger.isEnabledFor(logging.INFO) or _tracelogging.is_enabled()
 
     def __init__(self, method_name: str) -> None:
         super().__init__()
         self._method_name = method_name
         self._start_time = time.perf_counter()
         _logger.debug("gRPC server call starting: %s", self._method_name)
+        self._activity_id = _tracelogging.log_grpc_server_call_start(self._method_name)
 
     def _close(self, exception: BaseException | None = None) -> None:
         if _logger.isEnabledFor(logging.INFO):
@@ -328,12 +335,15 @@ class _ServerCallLogger(_CallLogger):
                 elapsed_time * 1000.0,
             )
         _logger.debug("gRPC server call complete: %s", self._method_name)
+        _tracelogging.log_grpc_server_call_stop(self._method_name, self._activity_id)
 
     def log_streaming_request(self) -> None:
         _logger.debug("gRPC server call streaming request: %s", self._method_name)
+        _tracelogging.log_grpc_server_call_streaming_request(self._method_name)
 
     def log_streaming_response(self) -> None:
         _logger.debug("gRPC server call streaming response: %s", self._method_name)
+        _tracelogging.log_grpc_server_call_streaming_response(self._method_name)
 
 
 def _get_status_code(exception: BaseException | None) -> grpc.StatusCode:
@@ -381,8 +391,11 @@ class _LoggingResponseIterator(Generic[_T]):
             response = next(self._inner_iterator)
             self._call_logger.log_streaming_response()
             return response
-        except (StopIteration, Exception):
+        except StopIteration:
             self._call_logger.close()
+            raise
+        except Exception as e:
+            self._call_logger.close(e)
             raise
 
 
@@ -454,6 +467,9 @@ class _LoggingResponseCallIterator(_CallIterator[_T]):
             response = next(self._inner_call_iterator)  # type: ignore[call-overload]
             self._call_logger.log_streaming_response()
             return response
-        except (StopIteration, Exception):
+        except StopIteration:
             self._call_logger.close()
+            raise
+        except Exception as e:
+            self._call_logger.close(e)
             raise

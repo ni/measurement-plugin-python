@@ -61,7 +61,7 @@ Classes
 
    Bases: :py:obj:`NamedTuple`
 
-   Class the represents the service information.
+   Class that represents the service information.
 
    Attributes
    ----------
@@ -136,112 +136,117 @@ Classes
    Enum that represents the supported data types.
 
    .. py:attribute:: Int32
-      
+      :annotation: = 0
 
       
 
    .. py:attribute:: Int64
-      
+      :annotation: = 1
 
       
 
    .. py:attribute:: UInt32
-      
+      :annotation: = 2
 
       
 
    .. py:attribute:: UInt64
-      
+      :annotation: = 3
 
       
 
    .. py:attribute:: Float
-      
+      :annotation: = 4
 
       
 
    .. py:attribute:: Double
-      
+      :annotation: = 5
 
       
 
    .. py:attribute:: Boolean
-      
+      :annotation: = 6
 
       
 
    .. py:attribute:: String
-      
+      :annotation: = 7
 
       
 
    .. py:attribute:: Pin
-      
+      :annotation: = 8
 
       
 
    .. py:attribute:: Path
-      
+      :annotation: = 9
 
       
 
    .. py:attribute:: Enum
+      :annotation: = 10
+
       
+
+   .. py:attribute:: DoubleXYData
+      :annotation: = 11
 
       
 
    .. py:attribute:: Int32Array1D
-      
+      :annotation: = 100
 
       
 
    .. py:attribute:: Int64Array1D
-      
+      :annotation: = 101
 
       
 
    .. py:attribute:: UInt32Array1D
-      
+      :annotation: = 102
 
       
 
    .. py:attribute:: UInt64Array1D
-      
+      :annotation: = 103
 
       
 
    .. py:attribute:: FloatArray1D
-      
+      :annotation: = 104
 
       
 
    .. py:attribute:: DoubleArray1D
-      
+      :annotation: = 105
 
       
 
    .. py:attribute:: BooleanArray1D
-      
+      :annotation: = 106
 
       
 
    .. py:attribute:: StringArray1D
-      
+      :annotation: = 107
 
       
 
    .. py:attribute:: PinArray1D
-      
+      :annotation: = 108
 
       
 
    .. py:attribute:: PathArray1D
-      
+      :annotation: = 109
 
       
 
    .. py:attribute:: EnumArray1D
-      
+      :annotation: = 110
 
       
 

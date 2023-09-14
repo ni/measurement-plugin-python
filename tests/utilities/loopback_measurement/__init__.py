@@ -1,6 +1,7 @@
 """Contains utility functions to test loopback measurement service. """
 import pathlib
 from enum import Enum
+from typing import Iterable, Tuple
 
 from examples.sample_measurement._stubs import color_pb2
 
@@ -51,14 +52,16 @@ measurement_service = nims.MeasurementService(
 )
 @measurement_service.output("String Array out", nims.DataType.StringArray1D)
 def measure(
-    float_input,
-    double_array_input,
-    bool_input,
-    string_input,
-    enum_input,
-    protobuf_enum_input,
-    string_array_in,
-):
+    float_input: float,
+    double_array_input: Iterable[float],
+    bool_input: bool,
+    string_input: str,
+    enum_input: Color,
+    protobuf_enum_input: color_pb2.ProtobufColor.ValueType,
+    string_array_in: Iterable[str],
+) -> Tuple[
+    float, Iterable[float], bool, str, Color, color_pb2.ProtobufColor.ValueType, Iterable[str]
+]:
     """Perform a loopback measurement with various data types."""
     float_output = float_input
     float_array_output = double_array_input

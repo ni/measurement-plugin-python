@@ -20,6 +20,8 @@ from ni_measurementlink_service._loggers import ServerLogger
 from ni_measurementlink_service.measurement.info import MeasurementInfo, ServiceInfo
 
 _logger = logging.getLogger(__name__)
+_V1_INTERFACE = "ni.measurementlink.measurement.v1.MeasurementService"
+_V2_INTERFACE = "ni.measurementlink.measurement.v2.MeasurementService"
 
 
 class GrpcService:
@@ -85,24 +87,31 @@ class GrpcService:
                 ("grpc.max_send_message_length", -1),
             ],
         )
-        servicer_v1 = MeasurementServiceServicerV1(
-            measurement_info,
-            configuration_parameter_list,
-            output_parameter_list,
-            measure_function,
-        )
-        v1_measurement_service_pb2_grpc.add_MeasurementServiceServicer_to_server(
-            servicer_v1, self.server
-        )
-        servicer_v2 = MeasurementServiceServicerV2(
-            measurement_info,
-            configuration_parameter_list,
-            output_parameter_list,
-            measure_function,
-        )
-        v2_measurement_service_pb2_grpc.add_MeasurementServiceServicer_to_server(
-            servicer_v2, self.server
-        )
+        for interface in service_info.provided_interfaces:
+            if interface == _V1_INTERFACE:
+                servicer_v1 = MeasurementServiceServicerV1(
+                    measurement_info,
+                    configuration_parameter_list,
+                    output_parameter_list,
+                    measure_function,
+                )
+                v1_measurement_service_pb2_grpc.add_MeasurementServiceServicer_to_server(
+                    servicer_v1, self.server
+                )
+            elif interface == _V2_INTERFACE:
+                servicer_v2 = MeasurementServiceServicerV2(
+                    measurement_info,
+                    configuration_parameter_list,
+                    output_parameter_list,
+                    measure_function,
+                )
+                v2_measurement_service_pb2_grpc.add_MeasurementServiceServicer_to_server(
+                    servicer_v2, self.server
+                )
+            else:
+                raise ValueError(
+                    f"Unknown interface was provided in the .serviceconfig file: {interface}"
+                )
         port = str(self.server.add_insecure_port("[::]:0"))
         self.server.start()
         _logger.info("Measurement service hosted on port: %s", port)

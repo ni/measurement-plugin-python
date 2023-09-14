@@ -34,7 +34,7 @@
             ni_measurementlink_service
           </a>
               <div class="version">
-                1.2.0-dev0
+                1.2.0-dev1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
@@ -104,13 +104,18 @@
 
 <span class="sd">        annotations (Dict[str,str]): Represents a set of annotations on the type.</span>
 
+<span class="sd">        message_type (str): This is the gRPC full name of the message type.</span>
+<span class="sd">        Required when &#39;type&#39; is Kind.TypeMessage.</span>
+<span class="sd">        Ignored for any other &#39;type&#39;.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">display_name</span><span class="p">:</span> <span class="nb">str</span>
     <span class="nb">type</span><span class="p">:</span> <span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">Kind</span><span class="o">.</span><span class="n">ValueType</span>
     <span class="n">repeated</span><span class="p">:</span> <span class="nb">bool</span>
     <span class="n">default_value</span><span class="p">:</span> <span class="n">Any</span>
-    <span class="n">annotations</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span></div>
+    <span class="n">annotations</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span>
+    <span class="n">message_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="validate_default_value_type"><a class="viewcode-back" href="../../../../autoapi/ni_measurementlink_service/_internal/parameter/metadata/index.html#ni_measurementlink_service._internal.parameter.metadata.validate_default_value_type">[docs]</a><span class="k">def</span> <span class="nf">validate_default_value_type</span><span class="p">(</span><span class="n">parameter_metadata</span><span class="p">:</span> <span class="n">ParameterMetadata</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>

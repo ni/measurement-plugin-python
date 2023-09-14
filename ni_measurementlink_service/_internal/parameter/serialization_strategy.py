@@ -1,39 +1,35 @@
 """Serialization Strategy."""
+from __future__ import annotations
 
-from typing import Any, Callable, Dict
+from typing import Any, Optional, cast
 
 from google.protobuf import type_pb2
-from google.protobuf.descriptor import FieldDescriptor
 from google.protobuf.internal import decoder, encoder
-from typing_extensions import Buffer
+from google.protobuf.message import Message
 
 from ni_measurementlink_service._internal.parameter import _message
+from ni_measurementlink_service._internal.parameter._serializer_types import (
+    Decoder,
+    DecoderConstructor,
+    Encoder,
+    EncoderConstructor,
+    Key,
+    PartialDecoderConstructor,
+    PartialEncoderConstructor,
+)
 from ni_measurementlink_service._internal.stubs.ni.protobuf.types import xydata_pb2
 
-LowLevelEncoder = Callable[[Callable[[Buffer], int], Any, None], None]
-EncoderFactory = Callable[[int], LowLevelEncoder]
-LowLevelDecoder = Callable[
-    [memoryview, int, int, type_pb2.Field.Kind.ValueType, Dict[FieldDescriptor, Any]], int
-]
-DecoderFactory = Callable[[int, str], LowLevelDecoder]
 
+def _scalar_encoder(encoder: EncoderConstructor) -> PartialEncoderConstructor:
+    """Constructs a scalar encoder constructor.
 
-def _scalar_encoder(encoder) -> EncoderFactory:
-    """Abstract Specific Encoder(Callable) as Scalar Encoder Callable that takes in field index.
+    Takes a field index and returns an Encoder.
 
-    Args
-    ----
-       encoder: Specific encoder that takes in
-       field_index, is_repeated, is_packed and returns the Low-level Encode Callable.
-
-    Returns
-    -------
-        EncoderFactoryForFieldIndex: Callable Encoder for scalar types that takes
-        in field_index and returns the Low-level Encode Callable.
-
+    This class returns the Encoder with is_repeated set to False
+    and is_packed set to False.
     """
 
-    def scalar_encoder(field_index):
+    def scalar_encoder(field_index: int) -> Encoder:
         is_repeated = False
         is_packed = False
         return encoder(field_index, is_repeated, is_packed)
@@ -41,109 +37,72 @@ def _scalar_encoder(encoder) -> EncoderFactory:
     return scalar_encoder
 
 
-def _vector_encoder(encoder, is_packed=True) -> EncoderFactory:
-    """Abstract Specific Encoder(Callable) as Vector Encoder Callable that takes in field index.
+def _vector_encoder(
+    encoder: EncoderConstructor, is_packed: bool = True
+) -> PartialEncoderConstructor:
+    """Constructs a vector (array) encoder constructor.
 
-    Args
-    ----
-       encoder (Callable[[int, bool, bool], Callable]): Specific encoder(Callable) that takes in
-       field_index, is_repeated, is_packed and returns the Low-level Encode Callable.
+    Takes a field index and returns an Encoder.
 
-       is_packed (bool, optional): Represents if the encoder supports packed type. Defaults to True.
-
-    Returns
-    -------
-        Callable[[int],Callable]: Callable Encoder for 1D Array types that takes in
-        field_index and returns the Low-level Encode Callable.
-
+    This class returns the Encoder with is_repeated set to True
+    and is_packed defaulting to True.
     """
 
-    def vector_encoder(field_index):
+    def vector_encoder(field_index: int) -> Encoder:
         is_repeated = True
         return encoder(field_index, is_repeated, is_packed)
 
     return vector_encoder
 
 
-def _message_encoder(encoder) -> EncoderFactory:
-    """Abstract Specific Encoder(Callable) as Message Encoder Callable that takes in field index.
-
-    Args
-    ----
-       encoder: Specific encoder(Callable) that takes in
-       field_index, is_repeated, is_packed and returns the Low-level Encode Callable.
-
-    Returns
-    -------
-        Callable[[int],Callable]: Callable Encoder for Message types that takes in
-        field_index and returns the Low-level Encode Callable.
-
-    """
-
-    def message_encoder(field_index):
-        return encoder(field_index)
-
-    return message_encoder
-
-
 def _unsupported_encoder(field_index, is_repeated, is_packed):
     raise NotImplementedError(f"Unsupported data type for field {field_index}")
 
 
-def _scalar_decoder(decoder) -> DecoderFactory:
-    """Abstract Specific Decoder(Callable) as Scalar Decoder Callable that takes in field index,key.
+def _scalar_decoder(decoder: DecoderConstructor) -> PartialDecoderConstructor:
+    """Constructs a scalar decoder constructor.
 
-    Args
-    ----
-        decoder (Callable[[int, bool, bool], Callable]): Specific decoder(Callable) that takes in
-        field_index, is_repeated, is_packed,  key, new_default and
-        returns the Low-level Decode Callable.
+    Takes a field index and a key and returns a Decoder.
 
-    Returns
-    -------
-        Callable[[int,str],Callable]: Callable Decoder for scalar types that takes in
-        field_index, key and returns the Low-level Decode Callable.
-
+    This class returns the Decoder with is_repeated set to False
+    and is_packed set to False.
     """
 
-    def scalar_decoder(field_index, key):
+    def _unsupported_new_default(message: Optional[Message]) -> Any:
+        raise NotImplementedError(
+            "This function should not be called. Verify that you are using up-to-date and compatible versions of the ni-measurementlink-service and protobuf packages."
+        )
+
+    def scalar_decoder(field_index: int, key: Key) -> Decoder:
         is_repeated = False
         is_packed = False
-        return decoder(field_index, is_repeated, is_packed, key, None)
+        return decoder(field_index, is_repeated, is_packed, key, _unsupported_new_default)
 
     return scalar_decoder
 
 
-def _vector_decoder(decoder, is_packed=True) -> DecoderFactory:
-    """Abstract Specific Decoder(Callable) as Vector Decoder Callable that takes in field index,key.
+def _vector_decoder(
+    decoder: DecoderConstructor, is_packed: bool = True
+) -> PartialDecoderConstructor:
+    """Constructs a vector (array) decoder constructor.
 
-    Args
-    ----
-        decoder (Callable[[int, bool, bool], Callable]): Specific decoder(Callable) that takes in
-        field_index, is_repeated, is_packed,  key, new_default and
-        returns the Low-level Decode Callable.
+    Takes a field index and a key and returns a Decoder.
 
-        is_packed (bool, optional): Represents if the decoder supports packed type.
-        Defaults to True.
-
-    Returns
-    -------
-        Callable[[int,str],Callable]: Callable Decoder for 1D Array types that takes in
-        field_index , key and returns the Low-level Decode Callable.
-
+    This class returns the Decoder with is_repeated set to True
+    and is_packed defaulting to True.
     """
 
-    def _new_default(unused_message=None):
+    def _new_default(unused_message: Optional[Message] = None) -> Any:
         return []
 
-    def vector_decoder(field_index, key):
+    def vector_decoder(field_index: int, key: Key) -> Decoder:
         is_repeated = True
         return decoder(field_index, is_repeated, is_packed, key, _new_default)
 
     return vector_decoder
 
 
-def _double_xy_data_decoder(decoder) -> DecoderFactory:
+def _double_xy_data_decoder(decoder: DecoderConstructor) -> PartialDecoderConstructor:
     """Decoder for DoubleXYData.
 
     Args
@@ -156,7 +115,6 @@ def _double_xy_data_decoder(decoder) -> DecoderFactory:
     -------
         Callable[[int,str],Callable]: Callable Decoder for message types that takes in
         field_index, key and returns the Low-level Decode Callable.
-
     """
 
     def _new_default(unused_message=None):
@@ -170,160 +128,120 @@ def _double_xy_data_decoder(decoder) -> DecoderFactory:
     return message_decoder
 
 
-FloatEncoder = _scalar_encoder(encoder.FloatEncoder)
-DoubleEncoder = _scalar_encoder(encoder.DoubleEncoder)
-IntEncoder = _scalar_encoder(encoder.Int32Encoder)
-UIntEncoder = _scalar_encoder(encoder.UInt32Encoder)
+# Cast works around this issue in typeshed
+# https://github.com/python/typeshed/issues/10695
+FloatEncoder = _scalar_encoder(cast(EncoderConstructor, encoder.FloatEncoder))
+DoubleEncoder = _scalar_encoder(cast(EncoderConstructor, encoder.DoubleEncoder))
+IntEncoder = _scalar_encoder(cast(EncoderConstructor, encoder.Int32Encoder))
+UIntEncoder = _scalar_encoder(cast(EncoderConstructor, encoder.UInt32Encoder))
 BoolEncoder = _scalar_encoder(encoder.BoolEncoder)
 StringEncoder = _scalar_encoder(encoder.StringEncoder)
-MessageEncoder = _message_encoder(_message._inner_message_encoder)
+MessageEncoder = _scalar_encoder(_message._inner_message_encoder)
 
-FloatArrayEncoder = _vector_encoder(encoder.FloatEncoder)
-DoubleArrayEncoder = _vector_encoder(encoder.DoubleEncoder)
-IntArrayEncoder = _vector_encoder(encoder.Int32Encoder)
-UIntArrayEncoder = _vector_encoder(encoder.UInt32Encoder)
+FloatArrayEncoder = _vector_encoder(cast(EncoderConstructor, encoder.FloatEncoder))
+DoubleArrayEncoder = _vector_encoder(cast(EncoderConstructor, encoder.DoubleEncoder))
+IntArrayEncoder = _vector_encoder(cast(EncoderConstructor, encoder.Int32Encoder))
+UIntArrayEncoder = _vector_encoder(cast(EncoderConstructor, encoder.UInt32Encoder))
 BoolArrayEncoder = _vector_encoder(encoder.BoolEncoder)
 StringArrayEncoder = _vector_encoder(encoder.StringEncoder, is_packed=False)
-UnsupportedMessageArrayEncoder = _message_encoder(_unsupported_encoder)
+UnsupportedMessageArrayEncoder = _vector_encoder(_unsupported_encoder)
 
-FloatDecoder = _scalar_decoder(decoder.FloatDecoder)
-DoubleDecoder = _scalar_decoder(decoder.DoubleDecoder)
-Int32Decoder = _scalar_decoder(decoder.Int32Decoder)
-UInt32Decoder = _scalar_decoder(decoder.UInt32Decoder)
-Int64Decoder = _scalar_decoder(decoder.Int64Decoder)
-UInt64Decoder = _scalar_decoder(decoder.UInt64Decoder)
-BoolDecoder = _scalar_decoder(decoder.BoolDecoder)
-StringDecoder = _scalar_decoder(decoder.StringDecoder)
+# Cast works around this issue in typeshed
+# https://github.com/python/typeshed/issues/10697
+FloatDecoder = _scalar_decoder(cast(DecoderConstructor, decoder.FloatDecoder))
+DoubleDecoder = _scalar_decoder(cast(DecoderConstructor, decoder.DoubleDecoder))
+Int32Decoder = _scalar_decoder(cast(DecoderConstructor, decoder.Int32Decoder))
+UInt32Decoder = _scalar_decoder(cast(DecoderConstructor, decoder.UInt32Decoder))
+Int64Decoder = _scalar_decoder(cast(DecoderConstructor, decoder.Int64Decoder))
+UInt64Decoder = _scalar_decoder(cast(DecoderConstructor, decoder.UInt64Decoder))
+BoolDecoder = _scalar_decoder(cast(DecoderConstructor, decoder.BoolDecoder))
+StringDecoder = _scalar_decoder(cast(DecoderConstructor, decoder.StringDecoder))
 XYDataDecoder = _double_xy_data_decoder(_message._inner_message_decoder)
 
-FloatArrayDecoder = _vector_decoder(decoder.FloatDecoder)
-DoubleArrayDecoder = _vector_decoder(decoder.DoubleDecoder)
-Int32ArrayDecoder = _vector_decoder(decoder.Int32Decoder)
-UInt32ArrayDecoder = _vector_decoder(decoder.UInt32Decoder)
-Int64ArrayDecoder = _vector_decoder(decoder.Int64Decoder)
-UInt64ArrayDecoder = _vector_decoder(decoder.UInt64Decoder)
-BoolArrayDecoder = _vector_decoder(decoder.BoolDecoder)
-StringArrayDecoder = _vector_decoder(decoder.StringDecoder, is_packed=False)
+FloatArrayDecoder = _vector_decoder(cast(DecoderConstructor, decoder.FloatDecoder))
+DoubleArrayDecoder = _vector_decoder(cast(DecoderConstructor, decoder.DoubleDecoder))
+Int32ArrayDecoder = _vector_decoder(cast(DecoderConstructor, decoder.Int32Decoder))
+UInt32ArrayDecoder = _vector_decoder(cast(DecoderConstructor, decoder.UInt32Decoder))
+Int64ArrayDecoder = _vector_decoder(cast(DecoderConstructor, decoder.Int64Decoder))
+UInt64ArrayDecoder = _vector_decoder(cast(DecoderConstructor, decoder.UInt64Decoder))
+BoolArrayDecoder = _vector_decoder(cast(DecoderConstructor, decoder.BoolDecoder))
+StringArrayDecoder = _vector_decoder(
+    cast(DecoderConstructor, decoder.StringDecoder), is_packed=False
+)
 
 
-class Context:
-    """Strategy context."""
+_FIELD_TYPE_TO_ENCODER_MAPPING = {
+    type_pb2.Field.TYPE_FLOAT: (FloatEncoder, FloatArrayEncoder),
+    type_pb2.Field.TYPE_DOUBLE: (DoubleEncoder, DoubleArrayEncoder),
+    type_pb2.Field.TYPE_INT32: (IntEncoder, IntArrayEncoder),
+    type_pb2.Field.TYPE_INT64: (IntEncoder, IntArrayEncoder),
+    type_pb2.Field.TYPE_UINT32: (UIntEncoder, UIntArrayEncoder),
+    type_pb2.Field.TYPE_UINT64: (UIntEncoder, UIntArrayEncoder),
+    type_pb2.Field.TYPE_BOOL: (BoolEncoder, BoolArrayEncoder),
+    type_pb2.Field.TYPE_STRING: (StringEncoder, StringArrayEncoder),
+    type_pb2.Field.TYPE_ENUM: (IntEncoder, IntArrayEncoder),
+    type_pb2.Field.TYPE_MESSAGE: (MessageEncoder, UnsupportedMessageArrayEncoder),
+}
 
-    _FIELD_TYPE_TO_ENCODER_MAPPING = {
-        type_pb2.Field.TYPE_FLOAT: (FloatEncoder, FloatArrayEncoder),
-        type_pb2.Field.TYPE_DOUBLE: (DoubleEncoder, DoubleArrayEncoder),
-        type_pb2.Field.TYPE_INT32: (IntEncoder, IntArrayEncoder),
-        type_pb2.Field.TYPE_INT64: (IntEncoder, IntArrayEncoder),
-        type_pb2.Field.TYPE_UINT32: (UIntEncoder, UIntArrayEncoder),
-        type_pb2.Field.TYPE_UINT64: (UIntEncoder, UIntArrayEncoder),
-        type_pb2.Field.TYPE_BOOL: (BoolEncoder, BoolArrayEncoder),
-        type_pb2.Field.TYPE_STRING: (StringEncoder, StringArrayEncoder),
-        type_pb2.Field.TYPE_ENUM: (IntEncoder, IntArrayEncoder),
-        type_pb2.Field.TYPE_MESSAGE: (MessageEncoder, UnsupportedMessageArrayEncoder),
-    }
+_FIELD_TYPE_TO_DECODER_MAPPING = {
+    type_pb2.Field.TYPE_FLOAT: (FloatDecoder, FloatArrayDecoder),
+    type_pb2.Field.TYPE_DOUBLE: (DoubleDecoder, DoubleArrayDecoder),
+    type_pb2.Field.TYPE_INT32: (Int32Decoder, Int32ArrayDecoder),
+    type_pb2.Field.TYPE_INT64: (Int64Decoder, Int64ArrayDecoder),
+    type_pb2.Field.TYPE_UINT32: (UInt32Decoder, UInt32ArrayDecoder),
+    type_pb2.Field.TYPE_UINT64: (UInt64Decoder, UInt64ArrayDecoder),
+    type_pb2.Field.TYPE_BOOL: (BoolDecoder, BoolArrayDecoder),
+    type_pb2.Field.TYPE_STRING: (StringDecoder, StringArrayDecoder),
+    type_pb2.Field.TYPE_ENUM: (Int32Decoder, Int32ArrayDecoder),
+}
 
-    _FIELD_TYPE_TO_DECODER_MAPPING = {
-        type_pb2.Field.TYPE_FLOAT: (FloatDecoder, FloatArrayDecoder),
-        type_pb2.Field.TYPE_DOUBLE: (DoubleDecoder, DoubleArrayDecoder),
-        type_pb2.Field.TYPE_INT32: (Int32Decoder, Int32ArrayDecoder),
-        type_pb2.Field.TYPE_INT64: (Int64Decoder, Int64ArrayDecoder),
-        type_pb2.Field.TYPE_UINT32: (UInt32Decoder, UInt32ArrayDecoder),
-        type_pb2.Field.TYPE_UINT64: (UInt64Decoder, UInt64ArrayDecoder),
-        type_pb2.Field.TYPE_BOOL: (BoolDecoder, BoolArrayDecoder),
-        type_pb2.Field.TYPE_STRING: (StringDecoder, StringArrayDecoder),
-        type_pb2.Field.TYPE_ENUM: (Int32Decoder, Int32ArrayDecoder),
-    }
+_TYPE_DEFAULT_MAPPING = {
+    type_pb2.Field.TYPE_FLOAT: float(),
+    type_pb2.Field.TYPE_DOUBLE: float(),
+    type_pb2.Field.TYPE_INT32: int(),
+    type_pb2.Field.TYPE_INT64: int(),
+    type_pb2.Field.TYPE_UINT32: int(),
+    type_pb2.Field.TYPE_UINT64: int(),
+    type_pb2.Field.TYPE_BOOL: bool(),
+    type_pb2.Field.TYPE_STRING: str(),
+    type_pb2.Field.TYPE_ENUM: int(),
+}
 
-    _TYPE_DEFAULT_MAPPING = {
-        type_pb2.Field.TYPE_FLOAT: float(),
-        type_pb2.Field.TYPE_DOUBLE: float(),
-        type_pb2.Field.TYPE_INT32: int(),
-        type_pb2.Field.TYPE_INT64: int(),
-        type_pb2.Field.TYPE_UINT32: int(),
-        type_pb2.Field.TYPE_UINT64: int(),
-        type_pb2.Field.TYPE_BOOL: bool(),
-        type_pb2.Field.TYPE_STRING: str(),
-        type_pb2.Field.TYPE_ENUM: int(),
-    }
 
-    @staticmethod
-    def get_encoder(
-        type: type_pb2.Field.Kind.ValueType, repeated: bool
-    ) -> Callable[[int], LowLevelEncoder]:
-        """Get the Scalar Encoder or Vector Encoder for the specified type based on repeated bool.
+def get_encoder(type: type_pb2.Field.Kind.ValueType, repeated: bool) -> PartialEncoderConstructor:
+    """Get the appropriate partial encoder constructor for the specified type.
 
-        Args
-        ----
-            type (type_pb2.Field.Kind.ValueType): Type of the Parameter.
+    A scalar or vector constructor is returned based on the 'repeated' parameter.
+    """
+    if type not in _FIELD_TYPE_TO_ENCODER_MAPPING:
+        raise ValueError(f"Error can not encode type '{type}'")
+    scalar, array = _FIELD_TYPE_TO_ENCODER_MAPPING[type]
+    if repeated:
+        return array
+    return scalar
 
-            repeated (bool): Boolean that represents if the Parameter is repeated or not.
 
-        Raises
-        ------
-            Exception: If the specified type is not supported.
-
-        Returns
-        -------
-            Callable[[int], Callable]: ScalarEncoder or VectorEncoder.
-
-        """
-        if type not in Context._FIELD_TYPE_TO_ENCODER_MAPPING:
-            raise Exception(f"Error can not encode type '{type}'")
-        scalar, array = Context._FIELD_TYPE_TO_ENCODER_MAPPING[type]
+def get_decoder(
+    type: type_pb2.Field.Kind.ValueType, repeated: bool, message_type: str = ""
+) -> PartialDecoderConstructor:
+    """Get the appropriate partial decoder constructor for the specified type."""
+    if message_type == xydata_pb2.DoubleXYData.DESCRIPTOR.full_name:
+        if type != type_pb2.Field.Kind.TYPE_MESSAGE:
+            raise ValueError(f"Message type must have a TYPE_MESSAGE kind '{message_type}'")
         if repeated:
-            return array
-        return scalar
+            raise ValueError(f"Repeated message types are not supported '{message_type}'")
+        return XYDataDecoder
+    if type not in _FIELD_TYPE_TO_DECODER_MAPPING:
+        raise ValueError(f"Error can not decode type '{type}'")
+    scalar, array = _FIELD_TYPE_TO_DECODER_MAPPING[type]
+    if repeated:
+        return array
+    return scalar
 
-    @staticmethod
-    def get_decoder(
-        type: type_pb2.Field.Kind.ValueType, repeated: bool, message_type: str = ""
-    ) -> Callable[[int, str], Callable]:
-        """Get the Scalar Decoder or Vector Decoder for the specified type based on repeated bool.
 
-        Args
-        ----
-            type (type_pb2.Field.Kind.ValueType): Type of the Parameter.
-
-            repeated (bool): Boolean that represents if the Parameter is repeated or not.
-
-        Raises
-        ------
-            Exception: If the specified type is not supported.
-
-        Returns
-        -------
-            Callable[[int], Callable]: ScalarDecoder or VectorDecoder.
-
-        """
-        if message_type == xydata_pb2.DoubleXYData.DESCRIPTOR.full_name:
-            if type != type_pb2.Field.Kind.TYPE_MESSAGE:
-                raise ValueError(f"Message type must have a TYPE_MESSAGE kind '{message_type}'")
-            if repeated:
-                raise ValueError(f"Repeated message types are not supported '{message_type}'")
-            return XYDataDecoder
-        if type not in Context._FIELD_TYPE_TO_DECODER_MAPPING:
-            raise Exception(f"Error can not decode type '{type}'")
-        scalar, array = Context._FIELD_TYPE_TO_DECODER_MAPPING[type]
-        if repeated:
-            return array
-        return scalar
-
-    @staticmethod
-    def get_type_default(type: type_pb2.Field.Kind.ValueType, repeated: bool) -> Any:
-        """Get the Type default.
-
-        Args
-        ----
-            type (type_pb2.Field.Kind.ValueType): Type of the Parameter.
-
-            repeated (bool): Boolean that represents if the Parameter is repeated or not.
-
-        Returns
-        -------
-            Any: Default value.
-
-        """
-        if repeated:
-            return list()
-        type_default_value = Context._TYPE_DEFAULT_MAPPING.get(type)
-        return type_default_value
+def get_type_default(type: type_pb2.Field.Kind.ValueType, repeated: bool) -> Any:
+    """Get the default value for the give type."""
+    if repeated:
+        return list()
+    type_default_value = _TYPE_DEFAULT_MAPPING.get(type)
+    return type_default_value

@@ -47,9 +47,6 @@ def get_service_options(**kwargs) -> ServiceOptions:
     )
 
 
-T = TypeVar("T")
-
-
 class PinMapClient(object):
     """Class that communicates with the pin map service."""
 
