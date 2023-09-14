@@ -1,12 +1,13 @@
 """Contains methods related to managing driver sessions."""
 from __future__ import annotations
 
-import sys
 import abc
+import sys
 import warnings
 from functools import cached_property
 from types import TracebackType
 from typing import (
+    TYPE_CHECKING,
     Any,
     Iterable,
     List,
@@ -15,8 +16,6 @@ from typing import (
     Optional,
     Sequence,
     Type,
-    TypeVar,
-    TYPE_CHECKING,
 )
 
 import grpc

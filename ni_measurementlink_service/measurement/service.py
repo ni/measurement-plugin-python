@@ -17,7 +17,6 @@ from typing import (
     Literal,
     Optional,
     Type,
-    TypeVar,
     Union,
 )
 
@@ -25,7 +24,9 @@ import grpc
 from google.protobuf.descriptor import EnumDescriptor
 
 from ni_measurementlink_service import _datatypeinfo
-from ni_measurementlink_service._channelpool import GrpcChannelPool as GrpcChannelPool  # re-export
+from ni_measurementlink_service._channelpool import (  # re-export
+    GrpcChannelPool as GrpcChannelPool,
+)
 from ni_measurementlink_service._internal import grpc_servicer
 from ni_measurementlink_service._internal.discovery_client import DiscoveryClient
 from ni_measurementlink_service._internal.parameter import (
