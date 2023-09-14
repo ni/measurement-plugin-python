@@ -11,7 +11,7 @@ class MeasurementInfo(NamedTuple):
 
     Attributes
     ----------
-        display_name (str): The measurement display name for client to display to user.
+        display_name (str): The measurement display name for clients to display to users.
 
         version (str): The measurement version that helps to
         maintain versions of a measurement in future.
@@ -45,12 +45,14 @@ class ServiceInfo(NamedTuple):
         As default we added a (str) description, (str) collection and a (List[str]) list of tags.
         Feel free to add your own Annotations as needed.
 
+        display_name: The service display name for clients to display to users.
     """
 
     service_class: str
     description_url: str
     provided_interfaces: List[str] = ["ni.measurementlink.measurement.v1.MeasurementService"]
     annotations: Dict[str, str] = {}
+    display_name: str = ""
 
 
 class TypeSpecialization(enum.Enum):
