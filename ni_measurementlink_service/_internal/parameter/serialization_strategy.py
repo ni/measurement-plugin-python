@@ -55,7 +55,7 @@ def _vector_encoder(
     return vector_encoder
 
 
-def _unsupported_encoder(field_index, is_repeated, is_packed):
+def _unsupported_encoder(field_index: int, is_repeated: bool, is_packed: bool):
     raise NotImplementedError(f"Unsupported data type for field {field_index}")
 
 
