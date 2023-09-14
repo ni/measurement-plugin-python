@@ -1,9 +1,9 @@
 [tool.black]
-extend_exclude = '_pb2(_grpc)?\.(py|pyi)$|ni_measurementlink_generator/'
+extend_exclude = '_pb2(_grpc)?\.(py|pyi)$|ni_measurementlink_generator/|examples/'
 line-length = 100
 
 [tool.ni-python-styleguide]
-extend_exclude = '*_pb2_grpc.py,*_pb2_grpc.pyi,*_pb2.py,*_pb2.pyi,ni_measurementlink_generator/'
+extend_exclude = '*_pb2_grpc.py,*_pb2_grpc.pyi,*_pb2.py,*_pb2.pyi,ni_measurementlink_generator/,examples/'
 
 [tool.poetry]
 name = "ni_measurementlink_service"
@@ -51,6 +51,7 @@ types-protobuf = "^4.21"
 types-pkg-resources = "*"
 types-pywin32 = {version = ">=304", platform = "win32"}
 grpc-stubs = "^1.53"
+poethepoet = ">=0.22.1"
 
 [tool.poetry.group.docs]
 optional = true
@@ -92,3 +93,21 @@ module = [
   "traceloggingdynamic",
 ]
 ignore_missing_imports = true
+
+[tool.poe.tasks.install]
+shell = "for dir in . ni_measurementlink_generator/ examples/*/; do pushd $dir; poetry install; popd; done"
+
+[tool.poe.tasks.ni-python-styleguide]
+args = [
+  { name = "command", positional = true, required = true }
+]
+shell = "for dir in . ni_measurementlink_generator/ examples/*/; do pushd $dir; ni-python-styleguide $command; popd; done"
+
+[tool.poe.tasks.mypy]
+shell = "for dir in . ni_measurementlink_generator/ examples/*/; do pushd $dir; mypy .; popd; done"
+
+[tool.poe.tasks.test]
+sequence = [
+  { cmd = "pytest --cov=ni_measurementlink_service -v" },
+  { cmd = "pytest --cov=ni_measurementlink_generator -v", cwd = "ni_measurementlink_generator" }
+]
