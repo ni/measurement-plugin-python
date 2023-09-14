@@ -216,18 +216,18 @@ def get_decoder(
     type: type_pb2.Field.Kind.ValueType, repeated: bool, message_type: str = ""
 ) -> PartialDecoderConstructor:
     """Get the appropriate partial decoder constructor for the specified type."""
-    if message_type == xydata_pb2.DoubleXYData.DESCRIPTOR.full_name:
+    decoder_mapping = _FIELD_TYPE_TO_DECODER_MAPPING.get(type)
+    if decoder_mapping is not None:
+        scalar_decoder, array_decoder = decoder_mapping
+        return array_decoder if repeated else scalar_decoder
+    elif message_type == xydata_pb2.DoubleXYData.DESCRIPTOR.full_name:
         if type != type_pb2.Field.Kind.TYPE_MESSAGE:
             raise ValueError(f"Message type must have a TYPE_MESSAGE kind '{message_type}'")
         if repeated:
             raise ValueError(f"Repeated message types are not supported '{message_type}'")
         return XYDataDecoder
-    if type not in _FIELD_TYPE_TO_DECODER_MAPPING:
+    else:
         raise ValueError(f"Error can not decode type '{type}'")
-    scalar, array = _FIELD_TYPE_TO_DECODER_MAPPING[type]
-    if repeated:
-        return array
-    return scalar
 
 
 def get_type_default(type: type_pb2.Field.Kind.ValueType, repeated: bool) -> Any:
