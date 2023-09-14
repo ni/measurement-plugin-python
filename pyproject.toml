@@ -104,7 +104,11 @@ args = [
 shell = "for dir in . ni_measurementlink_generator/ examples/*/; do pushd $dir; ni-python-styleguide $command; popd; done"
 
 [tool.poe.tasks.mypy]
-shell = "for dir in . ni_measurementlink_generator/ examples/*/; do pushd $dir; mypy .; popd; done"
+sequence = [
+  { cmd = "mypy -p ni_measurementlink_service" },
+  { cmd = "mypy -p ni_measurementlink_generator", cwd = "ni_measurementlink_generator" },
+  { shell = "for dir in examples/*/; do pushd $dir; mypy .; popd; done" }
+]
 
 [tool.poe.tasks.test]
 sequence = [
