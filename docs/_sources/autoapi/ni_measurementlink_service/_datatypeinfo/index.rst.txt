@@ -1,0 +1,75 @@
+:orphan:
+
+:py:mod:`ni_measurementlink_service._datatypeinfo`
+==================================================
+
+.. py:module:: ni_measurementlink_service._datatypeinfo
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   ni_measurementlink_service._datatypeinfo.DataTypeInfo
+
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   ni_measurementlink_service._datatypeinfo.get_type_info
+
+
+
+.. py:class:: DataTypeInfo
+
+   Bases: :py:obj:`NamedTuple`
+
+   Class that represents the information for each of the DataType enum values.
+
+   Attributes
+   ----------
+       grpc_field_type: Field.Kind associated with the DataType
+
+       repeated: Whether the DataType is a repeated field
+
+       type_specialization: Specific type when value_type
+       can have more than one use
+
+       message_type (str): This is the gRPC full name of the message type.
+       Required when 'grpc_field_type' is Kind.TypeMessage.
+       Ignored for any other 'type'.
+
+
+   .. py:attribute:: grpc_field_type
+      :annotation: :google.protobuf.type_pb2.Field.Kind.ValueType
+
+      
+
+   .. py:attribute:: repeated
+      :annotation: :bool
+
+      
+
+   .. py:attribute:: type_specialization
+      :annotation: :ni_measurementlink_service.measurement.info.TypeSpecialization
+
+      
+
+   .. py:attribute:: message_type
+      :annotation: :str = 
+
+      
+
+
+.. py:function:: get_type_info(data_type)
+
+   Get information about a DataType.
+
+

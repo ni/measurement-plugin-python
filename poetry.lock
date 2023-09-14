@@ -791,6 +791,14 @@ optional = false
 python-versions = ">=3.7"
 
 [[package]]
+name = "traceloggingdynamic"
+version = "1.0.0"
+description = "Generates Event Tracing for Windows events using TraceLogging"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[[package]]
 name = "types-pkg-resources"
 version = "0.1.3"
 description = "Typing stubs for pkg_resources"
@@ -867,7 +875,7 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "adac96e286138dea834043a8ca62d88f9222bb658e27cce1d0d024c8bdf3f6ca"
+content-hash = "f96808663643ca5b62266a98c99e7c6128e06f0ec745662ec3b1b000ae86573b"
 
 [metadata.files]
 alabaster = [
@@ -1534,6 +1542,9 @@ tomli = [
 tomlkit = [
     {file = "tomlkit-0.11.8-py3-none-any.whl", hash = "sha256:8c726c4c202bdb148667835f68d68780b9a003a9ec34167b6c673b38eff2a171"},
     {file = "tomlkit-0.11.8.tar.gz", hash = "sha256:9330fc7faa1db67b541b28e62018c17d20be733177d290a13b24c62d1614e0c3"},
+]
+traceloggingdynamic = [
+    {file = "traceloggingdynamic-1.0.0.tar.gz", hash = "sha256:09b6129438b99432733de18519017a7eed8285aeaa08c0cff6de45ac60e04b75"},
 ]
 types-pkg-resources = [
     {file = "types-pkg_resources-0.1.3.tar.gz", hash = "sha256:834a9b8d3dbea343562fd99d5d3359a726f6bf9d3733bccd2b4f3096fbab9dae"},

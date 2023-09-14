@@ -34,7 +34,7 @@
             ni_measurementlink_service
           </a>
               <div class="version">
-                1.2.0-dev0
+                1.2.0-dev1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -78,7 +78,8 @@
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
 <span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span><span class="p">,</span> <span class="n">EnumMeta</span>
 <span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">path</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span> <span class="nn">threading</span> <span class="kn">import</span> <span class="n">Lock</span>
@@ -94,18 +95,19 @@
     <span class="n">Type</span><span class="p">,</span>
     <span class="n">TypeVar</span><span class="p">,</span>
     <span class="n">Union</span><span class="p">,</span>
-    <span class="n">cast</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="kn">import</span> <span class="nn">grpc</span>
 <span class="kn">from</span> <span class="nn">google.protobuf.descriptor</span> <span class="kn">import</span> <span class="n">EnumDescriptor</span>
 
+<span class="kn">from</span> <span class="nn">ni_measurementlink_service</span> <span class="kn">import</span> <span class="n">_datatypeinfo</span>
 <span class="kn">from</span> <span class="nn">ni_measurementlink_service._internal</span> <span class="kn">import</span> <span class="n">grpc_servicer</span>
 <span class="kn">from</span> <span class="nn">ni_measurementlink_service._internal.discovery_client</span> <span class="kn">import</span> <span class="n">DiscoveryClient</span>
 <span class="kn">from</span> <span class="nn">ni_measurementlink_service._internal.parameter</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">metadata</span> <span class="k">as</span> <span class="n">parameter_metadata</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">ni_measurementlink_service._internal.service_manager</span> <span class="kn">import</span> <span class="n">GrpcService</span>
+<span class="kn">from</span> <span class="nn">ni_measurementlink_service._loggers</span> <span class="kn">import</span> <span class="n">ClientLogger</span>
 <span class="kn">from</span> <span class="nn">ni_measurementlink_service.measurement.info</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">DataType</span><span class="p">,</span>
     <span class="n">MeasurementInfo</span><span class="p">,</span>
@@ -115,10 +117,12 @@
 <span class="kn">from</span> <span class="nn">ni_measurementlink_service.session_management</span> <span class="kn">import</span> <span class="n">PinMapContext</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">google.protobuf.internal.enum_type_wrapper</span> <span class="kn">import</span> <span class="p">(</span>
-        <span class="n">EnumTypeWrapper</span><span class="p">,</span>
-        <span class="n">_EnumTypeWrapper</span><span class="p">,</span>
-    <span class="p">)</span>
+    <span class="kn">from</span> <span class="nn">google.protobuf.internal.enum_type_wrapper</span> <span class="kn">import</span> <span class="n">_EnumTypeWrapper</span>
+
+    <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TypeGuard</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="kn">from</span> <span class="nn">typing_extensions</span> <span class="kn">import</span> <span class="n">TypeGuard</span>
 
     <span class="n">SupportedEnumType</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">Enum</span><span class="p">],</span> <span class="n">_EnumTypeWrapper</span><span class="p">]</span>
 
@@ -193,6 +197,8 @@
             <span class="k">if</span> <span class="n">target</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_channel_cache</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
                 <span class="n">new_channel</span> <span class="o">=</span> <span class="n">grpc</span><span class="o">.</span><span class="n">insecure_channel</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">ClientLogger</span><span class="o">.</span><span class="n">is_enabled</span><span class="p">():</span>
+                    <span class="n">new_channel</span> <span class="o">=</span> <span class="n">grpc</span><span class="o">.</span><span class="n">intercept_channel</span><span class="p">(</span><span class="n">new_channel</span><span class="p">,</span> <span class="n">ClientLogger</span><span class="p">())</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="o">.</span><span class="n">acquire</span><span class="p">()</span>
                 <span class="k">if</span> <span class="n">target</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_channel_cache</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_channel_cache</span><span class="p">[</span><span class="n">target</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_channel</span>
@@ -305,8 +311,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">output_parameter_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">grpc_service</span> <span class="o">=</span> <span class="n">GrpcService</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="p">:</span> <span class="n">MeasurementContext</span> <span class="o">=</span> <span class="n">MeasurementContext</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">discovery_client</span><span class="p">:</span> <span class="n">DiscoveryClient</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grpc_service</span><span class="o">.</span><span class="n">discovery_client</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">channel_pool</span><span class="p">:</span> <span class="n">GrpcChannelPool</span> <span class="o">=</span> <span class="n">GrpcChannelPool</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">discovery_client</span><span class="p">:</span> <span class="n">DiscoveryClient</span> <span class="o">=</span> <span class="n">DiscoveryClient</span><span class="p">()</span>
 
 <div class="viewcode-block" id="MeasurementService.register_measurement"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/measurement/service/index.html#ni_measurementlink_service.MeasurementService.register_measurement">[docs]</a>    <span class="k">def</span> <span class="nf">register_measurement</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">measurement_function</span><span class="p">:</span> <span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Register a function as the measurement function for a measurement service.</span>
@@ -374,12 +380,17 @@
 <span class="sd">            and returns the same python function.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">grpc_field_type</span><span class="p">,</span> <span class="n">repeated</span><span class="p">,</span> <span class="n">type_specialization</span> <span class="o">=</span> <span class="nb">type</span><span class="o">.</span><span class="n">value</span>
+        <span class="n">data_type_info</span> <span class="o">=</span> <span class="n">_datatypeinfo</span><span class="o">.</span><span class="n">get_type_info</span><span class="p">(</span><span class="nb">type</span><span class="p">)</span>
         <span class="n">annotations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_annotations_dict</span><span class="p">(</span>
-            <span class="n">type_specialization</span><span class="p">,</span> <span class="n">instrument_type</span><span class="o">=</span><span class="n">instrument_type</span><span class="p">,</span> <span class="n">enum_type</span><span class="o">=</span><span class="n">enum_type</span>
+            <span class="n">data_type_info</span><span class="o">.</span><span class="n">type_specialization</span><span class="p">,</span> <span class="n">instrument_type</span><span class="o">=</span><span class="n">instrument_type</span><span class="p">,</span> <span class="n">enum_type</span><span class="o">=</span><span class="n">enum_type</span>
         <span class="p">)</span>
         <span class="n">parameter</span> <span class="o">=</span> <span class="n">parameter_metadata</span><span class="o">.</span><span class="n">ParameterMetadata</span><span class="p">(</span>
-            <span class="n">display_name</span><span class="p">,</span> <span class="n">grpc_field_type</span><span class="p">,</span> <span class="n">repeated</span><span class="p">,</span> <span class="n">default_value</span><span class="p">,</span> <span class="n">annotations</span>
+            <span class="n">display_name</span><span class="p">,</span>
+            <span class="n">data_type_info</span><span class="o">.</span><span class="n">grpc_field_type</span><span class="p">,</span>
+            <span class="n">data_type_info</span><span class="o">.</span><span class="n">repeated</span><span class="p">,</span>
+            <span class="n">default_value</span><span class="p">,</span>
+            <span class="n">annotations</span><span class="p">,</span>
+            <span class="n">data_type_info</span><span class="o">.</span><span class="n">message_type</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">parameter_metadata</span><span class="o">.</span><span class="n">validate_default_value_type</span><span class="p">(</span><span class="n">parameter</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">configuration_parameter_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">parameter</span><span class="p">)</span>
@@ -423,10 +434,17 @@
 <span class="sd">            returns the same python function.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">grpc_field_type</span><span class="p">,</span> <span class="n">repeated</span><span class="p">,</span> <span class="n">type_specialization</span> <span class="o">=</span> <span class="nb">type</span><span class="o">.</span><span class="n">value</span>
-        <span class="n">annotations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_annotations_dict</span><span class="p">(</span><span class="n">type_specialization</span><span class="p">,</span> <span class="n">enum_type</span><span class="o">=</span><span class="n">enum_type</span><span class="p">)</span>
+        <span class="n">data_type_info</span> <span class="o">=</span> <span class="n">_datatypeinfo</span><span class="o">.</span><span class="n">get_type_info</span><span class="p">(</span><span class="nb">type</span><span class="p">)</span>
+        <span class="n">annotations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_annotations_dict</span><span class="p">(</span>
+            <span class="n">data_type_info</span><span class="o">.</span><span class="n">type_specialization</span><span class="p">,</span> <span class="n">enum_type</span><span class="o">=</span><span class="n">enum_type</span>
+        <span class="p">)</span>
         <span class="n">parameter</span> <span class="o">=</span> <span class="n">parameter_metadata</span><span class="o">.</span><span class="n">ParameterMetadata</span><span class="p">(</span>
-            <span class="n">display_name</span><span class="p">,</span> <span class="n">grpc_field_type</span><span class="p">,</span> <span class="n">repeated</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">annotations</span>
+            <span class="n">display_name</span><span class="p">,</span>
+            <span class="n">data_type_info</span><span class="o">.</span><span class="n">grpc_field_type</span><span class="p">,</span>
+            <span class="n">data_type_info</span><span class="o">.</span><span class="n">repeated</span><span class="p">,</span>
+            <span class="kc">None</span><span class="p">,</span>
+            <span class="n">annotations</span><span class="p">,</span>
+            <span class="n">data_type_info</span><span class="o">.</span><span class="n">message_type</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">output_parameter_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">parameter</span><span class="p">)</span>
 
@@ -484,23 +502,23 @@
 
     <span class="k">def</span> <span class="nf">_enum_to_annotations_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">enum_type</span><span class="p">:</span> <span class="n">SupportedEnumType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="n">enum_values</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="c1"># Note that the type of protobuf enums are an instance of EnumTypeWrapper.</span>
-        <span class="c1"># Additionally, issubclass excludes instances as valid parameters so</span>
-        <span class="c1"># we use isinstance here.</span>
+        <span class="c1"># For protobuf enums, enum_type is an instance of EnumTypeWrapper at run time, so passing</span>
+        <span class="c1"># it to issubclass() would raise an error.</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_protobuf_enum</span><span class="p">(</span><span class="n">enum_type</span><span class="p">):</span>
-            <span class="n">enum_type</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="s2">&quot;EnumTypeWrapper&quot;</span><span class="p">,</span> <span class="n">enum_type</span><span class="p">)</span>
             <span class="k">if</span> <span class="mi">0</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">enum_type</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The enum does not have a value for 0.&quot;</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">enum_type</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                 <span class="n">enum_values</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
-        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">enum_type</span><span class="p">,</span> <span class="nb">type</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">enum_type</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">enum_type</span><span class="p">,</span> <span class="n">EnumMeta</span><span class="p">):</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">member</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">member</span> <span class="ow">in</span> <span class="n">enum_type</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The enum does not have a value for 0.&quot;</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">member</span> <span class="ow">in</span> <span class="n">enum_type</span><span class="p">:</span>
                 <span class="n">enum_values</span><span class="p">[</span><span class="n">member</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">member</span><span class="o">.</span><span class="n">value</span>
         <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">enum_values</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_is_protobuf_enum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">enum_type</span><span class="p">:</span> <span class="n">SupportedEnumType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_is_protobuf_enum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">enum_type</span><span class="p">:</span> <span class="n">SupportedEnumType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TypeGuard</span><span class="p">[</span><span class="n">_EnumTypeWrapper</span><span class="p">]:</span>
+        <span class="c1"># Use EnumDescriptor to check for protobuf enums at run time without using</span>
+        <span class="c1"># google.protobuf.internal.</span>
         <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">enum_type</span><span class="p">,</span> <span class="s2">&quot;DESCRIPTOR&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="n">EnumDescriptor</span><span class="p">)</span>
 
 <div class="viewcode-block" id="MeasurementService.close_service"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/measurement/service/index.html#ni_measurementlink_service.MeasurementService.close_service">[docs]</a>    <span class="k">def</span> <span class="nf">close_service</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>

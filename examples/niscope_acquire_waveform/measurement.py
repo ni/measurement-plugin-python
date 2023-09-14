@@ -3,8 +3,9 @@
 import logging
 import pathlib
 import sys
+import threading
 import time
-from typing import Tuple
+from typing import List, Tuple
 
 import click
 import grpc
@@ -96,7 +97,7 @@ def measure(
     auto_trigger: bool,
     trigger_coupling: str,
     timeout: float,
-) -> Tuple:
+) -> Tuple[List[float], ...]:
     """Acquire a waveform using an NI oscilloscope."""
     logging.info(
         "Starting acquisition: pin_or_relay_names=%s vertical_range=%g trigger_source=%s trigger_level=%g",
@@ -106,14 +107,8 @@ def measure(
         trigger_level,
     )
 
-    pending_cancellation = False
-
-    def cancel_callback():
-        logging.info("Canceling acquisition")
-        nonlocal pending_cancellation
-        pending_cancellation = True
-
-    measurement_service.context.add_cancel_callback(cancel_callback)
+    cancellation_event = threading.Event()
+    measurement_service.context.add_cancel_callback(cancellation_event.set)
 
     session_management_client = create_session_management_client(measurement_service)
 
@@ -167,7 +162,7 @@ def measure(
                         measurement_service.context.abort(
                             grpc.StatusCode.DEADLINE_EXCEEDED, "Deadline exceeded."
                         )
-                    if pending_cancellation:
+                    if cancellation_event.is_set():
                         measurement_service.context.abort(
                             grpc.StatusCode.CANCELLED, "Client requested cancellation."
                         )

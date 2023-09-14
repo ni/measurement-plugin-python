@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ni_measurementlink_service._loggers &mdash; ni_measurementlink_service 1.2 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            ni_measurementlink_service
+          </a>
+              <div class="version">
+                1.2.0-dev1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">ni_measurementlink_service</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active"><code class="xref py py-mod docutils literal notranslate"><span class="pre">ni_measurementlink_service._loggers</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/autoapi/ni_measurementlink_service/_loggers/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-ni_measurementlink_service._loggers">
+<span id="ni-measurementlink-service-loggers"></span><h1><a class="reference internal" href="#module-ni_measurementlink_service._loggers" title="ni_measurementlink_service._loggers"><code class="xref py py-mod docutils literal notranslate"><span class="pre">ni_measurementlink_service._loggers</span></code></a><a class="headerlink" href="#module-ni_measurementlink_service._loggers" title="Permalink to this heading"></a></h1>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this heading"></a></h2>
+<section id="classes">
+<h3>Classes<a class="headerlink" href="#classes" title="Permalink to this heading"></a></h3>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ni_measurementlink_service._loggers.ClientLogger" title="ni_measurementlink_service._loggers.ClientLogger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ClientLogger</span></code></a></p></td>
+<td><p>Intercepts gRPC client calls and logs them for debugging.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ni_measurementlink_service._loggers.ServerLogger" title="ni_measurementlink_service._loggers.ServerLogger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ServerLogger</span></code></a></p></td>
+<td><p>Intercepts gRPC server calls and logs them for debugging.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py class">
+<dt class="sig sig-object py" id="ni_measurementlink_service._loggers.ClientLogger">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ni_measurementlink_service._loggers.</span></span><span class="sig-name descname"><span class="pre">ClientLogger</span></span><a class="reference internal" href="../../../_modules/ni_measurementlink_service/_loggers.html#ClientLogger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service._loggers.ClientLogger" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">grpc.UnaryUnaryClientInterceptor</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">grpc.UnaryStreamClientInterceptor</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">grpc.StreamUnaryClientInterceptor</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">grpc.StreamStreamClientInterceptor</span></code></p>
+<p>Intercepts gRPC client calls and logs them for debugging.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="ni_measurementlink_service._loggers.ClientLogger.is_enabled">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_enabled</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/ni_measurementlink_service/_loggers.html#ClientLogger.is_enabled"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service._loggers.ClientLogger.is_enabled" title="Permalink to this definition"></a></dt>
+<dd><p>Indicates whether gRPC client call logging is enabled for the current log level.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ni_measurementlink_service._loggers.ClientLogger.intercept_unary_unary">
+<span class="sig-name descname"><span class="pre">intercept_unary_unary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">continuation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">client_call_details</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/ni_measurementlink_service/_loggers.html#ClientLogger.intercept_unary_unary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service._loggers.ClientLogger.intercept_unary_unary" title="Permalink to this definition"></a></dt>
+<dd><p>Intercept and log a unary call.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ni_measurementlink_service._loggers.ClientLogger.intercept_unary_stream">
+<span class="sig-name descname"><span class="pre">intercept_unary_stream</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">continuation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">client_call_details</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/ni_measurementlink_service/_loggers.html#ClientLogger.intercept_unary_stream"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service._loggers.ClientLogger.intercept_unary_stream" title="Permalink to this definition"></a></dt>
+<dd><p>Intercept and log a server-streaming call.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ni_measurementlink_service._loggers.ClientLogger.intercept_stream_unary">
+<span class="sig-name descname"><span class="pre">intercept_stream_unary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">continuation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">client_call_details</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">request_iterator</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/ni_measurementlink_service/_loggers.html#ClientLogger.intercept_stream_unary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service._loggers.ClientLogger.intercept_stream_unary" title="Permalink to this definition"></a></dt>
+<dd><p>Intercept and log a client-streaming call.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ni_measurementlink_service._loggers.ClientLogger.intercept_stream_stream">
+<span class="sig-name descname"><span class="pre">intercept_stream_stream</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">continuation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">client_call_details</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">request_iterator</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/ni_measurementlink_service/_loggers.html#ClientLogger.intercept_stream_stream"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service._loggers.ClientLogger.intercept_stream_stream" title="Permalink to this definition"></a></dt>
+<dd><p>Intercept and log a bidirectional streaming call.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="ni_measurementlink_service._loggers.ServerLogger">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ni_measurementlink_service._loggers.</span></span><span class="sig-name descname"><span class="pre">ServerLogger</span></span><a class="reference internal" href="../../../_modules/ni_measurementlink_service/_loggers.html#ServerLogger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service._loggers.ServerLogger" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">grpc.ServerInterceptor</span></code></p>
+<p>Intercepts gRPC server calls and logs them for debugging.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="ni_measurementlink_service._loggers.ServerLogger.is_enabled">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_enabled</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/ni_measurementlink_service/_loggers.html#ServerLogger.is_enabled"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service._loggers.ServerLogger.is_enabled" title="Permalink to this definition"></a></dt>
+<dd><p>Indicates whether gRPC client call logging is enabled for the current log level.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ni_measurementlink_service._loggers.ServerLogger.intercept_service">
+<span class="sig-name descname"><span class="pre">intercept_service</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">continuation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">handler_call_details</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/ni_measurementlink_service/_loggers.html#ServerLogger.intercept_service"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service._loggers.ServerLogger.intercept_service" title="Permalink to this definition"></a></dt>
+<dd><p>Intercept and log a server call.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, National Instruments.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ni_measurementlink_service._datatypeinfo &mdash; ni_measurementlink_service 1.2 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            ni_measurementlink_service
+          </a>
+              <div class="version">
+                1.2.0-dev1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../autoapi/index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">ni_measurementlink_service</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ni_measurementlink_service._datatypeinfo</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ni_measurementlink_service._datatypeinfo</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">NamedTuple</span>
+
+<span class="kn">from</span> <span class="nn">google.protobuf</span> <span class="kn">import</span> <span class="n">type_pb2</span>
+
+<span class="kn">from</span> <span class="nn">ni_measurementlink_service._internal.stubs.ni.protobuf.types</span> <span class="kn">import</span> <span class="n">xydata_pb2</span>
+<span class="kn">from</span> <span class="nn">ni_measurementlink_service.measurement.info</span> <span class="kn">import</span> <span class="n">DataType</span><span class="p">,</span> <span class="n">TypeSpecialization</span>
+
+
+<div class="viewcode-block" id="DataTypeInfo"><a class="viewcode-back" href="../../autoapi/ni_measurementlink_service/_datatypeinfo/index.html#ni_measurementlink_service._datatypeinfo.DataTypeInfo">[docs]</a><span class="k">class</span> <span class="nc">DataTypeInfo</span><span class="p">(</span><span class="n">NamedTuple</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class that represents the information for each of the DataType enum values.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">        grpc_field_type: Field.Kind associated with the DataType</span>
+
+<span class="sd">        repeated: Whether the DataType is a repeated field</span>
+
+<span class="sd">        type_specialization: Specific type when value_type</span>
+<span class="sd">        can have more than one use</span>
+
+<span class="sd">        message_type (str): This is the gRPC full name of the message type.</span>
+<span class="sd">        Required when &#39;grpc_field_type&#39; is Kind.TypeMessage.</span>
+<span class="sd">        Ignored for any other &#39;type&#39;.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">grpc_field_type</span><span class="p">:</span> <span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">Kind</span><span class="o">.</span><span class="n">ValueType</span>
+    <span class="n">repeated</span><span class="p">:</span> <span class="nb">bool</span>
+    <span class="n">type_specialization</span><span class="p">:</span> <span class="n">TypeSpecialization</span> <span class="o">=</span> <span class="n">TypeSpecialization</span><span class="o">.</span><span class="n">NoType</span>
+    <span class="n">message_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="get_type_info"><a class="viewcode-back" href="../../autoapi/ni_measurementlink_service/_datatypeinfo/index.html#ni_measurementlink_service._datatypeinfo.get_type_info">[docs]</a><span class="k">def</span> <span class="nf">get_type_info</span><span class="p">(</span><span class="n">data_type</span><span class="p">:</span> <span class="n">DataType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataTypeInfo</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get information about a DataType.&quot;&quot;&quot;</span>
+    <span class="n">data_type_info</span> <span class="o">=</span> <span class="n">_DATATYPE_TO_DATATYPEINFO_LOOKUP</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">data_type</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">data_type_info</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Data type information not found &#39;</span><span class="si">{</span><span class="n">data_type</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">data_type_info</span></div>
+
+
+<span class="n">_DATATYPE_TO_DATATYPEINFO_LOOKUP</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">DataType</span><span class="o">.</span><span class="n">Int32</span><span class="p">:</span> <span class="n">DataTypeInfo</span><span class="p">(</span><span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">TYPE_INT32</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
+    <span class="n">DataType</span><span class="o">.</span><span class="n">Int64</span><span class="p">:</span> <span class="n">DataTypeInfo</span><span class="p">(</span><span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">TYPE_INT64</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
+    <span class="n">DataType</span><span class="o">.</span><span class="n">UInt32</span><span class="p">:</span> <span class="n">DataTypeInfo</span><span class="p">(</span><span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">TYPE_UINT32</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
+    <span class="n">DataType</span><span class="o">.</span><span class="n">UInt64</span><span class="p">:</span> <span class="n">DataTypeInfo</span><span class="p">(</span><span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">TYPE_UINT64</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
+    <span class="n">DataType</span><span class="o">.</span><span class="n">Float</span><span class="p">:</span> <span class="n">DataTypeInfo</span><span class="p">(</span><span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">TYPE_FLOAT</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
+    <span class="n">DataType</span><span class="o">.</span><span class="n">Double</span><span class="p">:</span> <span class="n">DataTypeInfo</span><span class="p">(</span><span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">TYPE_DOUBLE</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
+    <span class="n">DataType</span><span class="o">.</span><span class="n">Boolean</span><span class="p">:</span> <span class="n">DataTypeInfo</span><span class="p">(</span><span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">TYPE_BOOL</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
+    <span class="n">DataType</span><span class="o">.</span><span class="n">String</span><span class="p">:</span> <span class="n">DataTypeInfo</span><span class="p">(</span><span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">TYPE_STRING</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
+    <span class="n">DataType</span><span class="o">.</span><span class="n">Pin</span><span class="p">:</span> <span class="n">DataTypeInfo</span><span class="p">(</span><span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">TYPE_STRING</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">TypeSpecialization</span><span class="o">.</span><span class="n">Pin</span><span class="p">),</span>
+    <span class="n">DataType</span><span class="o">.</span><span class="n">Path</span><span class="p">:</span> <span class="n">DataTypeInfo</span><span class="p">(</span><span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">TYPE_STRING</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">TypeSpecialization</span><span class="o">.</span><span class="n">Path</span><span class="p">),</span>
+    <span class="n">DataType</span><span class="o">.</span><span class="n">Enum</span><span class="p">:</span> <span class="n">DataTypeInfo</span><span class="p">(</span><span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">TYPE_ENUM</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">TypeSpecialization</span><span class="o">.</span><span class="n">Enum</span><span class="p">),</span>
+    <span class="n">DataType</span><span class="o">.</span><span class="n">DoubleXYData</span><span class="p">:</span> <span class="n">DataTypeInfo</span><span class="p">(</span>
+        <span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">TYPE_MESSAGE</span><span class="p">,</span>
+        <span class="kc">False</span><span class="p">,</span>
+        <span class="n">message_type</span><span class="o">=</span><span class="n">xydata_pb2</span><span class="o">.</span><span class="n">DoubleXYData</span><span class="o">.</span><span class="n">DESCRIPTOR</span><span class="o">.</span><span class="n">full_name</span><span class="p">,</span>
+    <span class="p">),</span>
+    <span class="n">DataType</span><span class="o">.</span><span class="n">Int32Array1D</span><span class="p">:</span> <span class="n">DataTypeInfo</span><span class="p">(</span><span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">TYPE_INT32</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span>
+    <span class="n">DataType</span><span class="o">.</span><span class="n">Int64Array1D</span><span class="p">:</span> <span class="n">DataTypeInfo</span><span class="p">(</span><span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">TYPE_INT64</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span>
+    <span class="n">DataType</span><span class="o">.</span><span class="n">UInt32Array1D</span><span class="p">:</span> <span class="n">DataTypeInfo</span><span class="p">(</span><span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">TYPE_UINT32</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span>
+    <span class="n">DataType</span><span class="o">.</span><span class="n">UInt64Array1D</span><span class="p">:</span> <span class="n">DataTypeInfo</span><span class="p">(</span><span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">TYPE_UINT64</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span>
+    <span class="n">DataType</span><span class="o">.</span><span class="n">FloatArray1D</span><span class="p">:</span> <span class="n">DataTypeInfo</span><span class="p">(</span><span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">TYPE_FLOAT</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span>
+    <span class="n">DataType</span><span class="o">.</span><span class="n">DoubleArray1D</span><span class="p">:</span> <span class="n">DataTypeInfo</span><span class="p">(</span><span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">TYPE_DOUBLE</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span>
+    <span class="n">DataType</span><span class="o">.</span><span class="n">BooleanArray1D</span><span class="p">:</span> <span class="n">DataTypeInfo</span><span class="p">(</span><span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">TYPE_BOOL</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span>
+    <span class="n">DataType</span><span class="o">.</span><span class="n">StringArray1D</span><span class="p">:</span> <span class="n">DataTypeInfo</span><span class="p">(</span><span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">TYPE_STRING</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span>
+    <span class="n">DataType</span><span class="o">.</span><span class="n">PinArray1D</span><span class="p">:</span> <span class="n">DataTypeInfo</span><span class="p">(</span><span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">TYPE_STRING</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">TypeSpecialization</span><span class="o">.</span><span class="n">Pin</span><span class="p">),</span>
+    <span class="n">DataType</span><span class="o">.</span><span class="n">PathArray1D</span><span class="p">:</span> <span class="n">DataTypeInfo</span><span class="p">(</span><span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">TYPE_STRING</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">TypeSpecialization</span><span class="o">.</span><span class="n">Path</span><span class="p">),</span>
+    <span class="n">DataType</span><span class="o">.</span><span class="n">EnumArray1D</span><span class="p">:</span> <span class="n">DataTypeInfo</span><span class="p">(</span><span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">TYPE_ENUM</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">TypeSpecialization</span><span class="o">.</span><span class="n">Enum</span><span class="p">),</span>
+<span class="p">}</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, National Instruments.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

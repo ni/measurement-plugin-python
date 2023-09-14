@@ -34,7 +34,7 @@
             ni_measurementlink_service
           </a>
               <div class="version">
-                1.2.0-dev0
+                1.2.0-dev1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -83,7 +83,7 @@
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">typing</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span>
 
 <span class="kn">import</span> <span class="nn">grpc</span>
 
@@ -91,6 +91,7 @@
     <span class="n">discovery_service_pb2</span><span class="p">,</span>
     <span class="n">discovery_service_pb2_grpc</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="kn">from</span> <span class="nn">ni_measurementlink_service._loggers</span> <span class="kn">import</span> <span class="n">ClientLogger</span>
 <span class="kn">from</span> <span class="nn">ni_measurementlink_service.measurement.info</span> <span class="kn">import</span> <span class="n">MeasurementInfo</span><span class="p">,</span> <span class="n">ServiceInfo</span>
 
 <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span> <span class="o">==</span> <span class="s2">&quot;win32&quot;</span><span class="p">:</span>
@@ -158,6 +159,8 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stub</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">address</span> <span class="o">=</span> <span class="n">_get_discovery_service_address</span><span class="p">()</span>
             <span class="n">channel</span> <span class="o">=</span> <span class="n">grpc</span><span class="o">.</span><span class="n">insecure_channel</span><span class="p">(</span><span class="n">address</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">ClientLogger</span><span class="o">.</span><span class="n">is_enabled</span><span class="p">():</span>
+                <span class="n">channel</span> <span class="o">=</span> <span class="n">grpc</span><span class="o">.</span><span class="n">intercept_channel</span><span class="p">(</span><span class="n">channel</span><span class="p">,</span> <span class="n">ClientLogger</span><span class="p">())</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_stub</span> <span class="o">=</span> <span class="n">discovery_service_pb2_grpc</span><span class="o">.</span><span class="n">DiscoveryServiceStub</span><span class="p">(</span><span class="n">channel</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stub</span>
 
@@ -207,15 +210,15 @@
                 <span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">_logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Error in registering with discovery service.&quot;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="kc">False</span>
+            <span class="k">raise</span>
         <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
             <span class="n">_logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
                 <span class="s2">&quot;Unable to register with discovery service. Possible reason: discovery service not running.&quot;</span>
             <span class="p">)</span>
-            <span class="k">return</span> <span class="kc">False</span>
+            <span class="k">raise</span>
         <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
             <span class="n">_logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Error in registering with discovery service.&quot;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="kc">False</span>
+            <span class="k">raise</span>
         <span class="k">return</span> <span class="kc">True</span></div>
 
 <div class="viewcode-block" id="DiscoveryClient.unregister_service"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/_internal/discovery_client/index.html#ni_measurementlink_service._internal.discovery_client.DiscoveryClient.unregister_service">[docs]</a>    <span class="k">def</span> <span class="nf">unregister_service</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
@@ -247,15 +250,15 @@
                 <span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">_logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Error in unregistering with discovery service.&quot;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="kc">False</span>
+            <span class="k">raise</span>
         <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
             <span class="n">_logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
                 <span class="s2">&quot;Unable to unregister with discovery service. Possible reason: discovery service not running.&quot;</span>
             <span class="p">)</span>
-            <span class="k">return</span> <span class="kc">False</span>
+            <span class="k">raise</span>
         <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
             <span class="n">_logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Error in unregistering with discovery service.&quot;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="kc">False</span>
+            <span class="k">raise</span>
         <span class="k">return</span> <span class="kc">True</span></div>
 
 <div class="viewcode-block" id="DiscoveryClient.resolve_service"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/_internal/discovery_client/index.html#ni_measurementlink_service._internal.discovery_client.DiscoveryClient.resolve_service">[docs]</a>    <span class="k">def</span> <span class="nf">resolve_service</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">provided_interface</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">service_class</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ServiceLocation</span><span class="p">:</span>
@@ -305,7 +308,8 @@
         <span class="k">return</span>
 
     <span class="n">exe_file_path</span> <span class="o">=</span> <span class="n">_get_discovery_service_location</span><span class="p">()</span>
-    <span class="n">_start_service</span><span class="p">(</span><span class="n">exe_file_path</span><span class="p">,</span> <span class="n">key_file_path</span><span class="p">)</span>
+    <span class="k">global</span> <span class="n">_discovery_service_subprocess</span>  <span class="c1"># save Popen object to avoid ResourceWarning</span>
+    <span class="n">_discovery_service_subprocess</span> <span class="o">=</span> <span class="n">_start_service</span><span class="p">(</span><span class="n">exe_file_path</span><span class="p">,</span> <span class="n">key_file_path</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">_get_discovery_service_location</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">PurePath</span><span class="p">:</span>
@@ -332,14 +336,20 @@
     <span class="k">return</span> <span class="n">key_file_path</span><span class="o">.</span><span class="n">is_file</span><span class="p">()</span> <span class="ow">and</span> <span class="n">key_file_path</span><span class="o">.</span><span class="n">stat</span><span class="p">()</span><span class="o">.</span><span class="n">st_size</span> <span class="o">&gt;</span> <span class="mi">0</span>
 
 
-<span class="k">def</span> <span class="nf">_start_service</span><span class="p">(</span><span class="n">exe_file_path</span><span class="p">:</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">PurePath</span><span class="p">,</span> <span class="n">key_file_path</span><span class="p">:</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">_start_service</span><span class="p">(</span>
+    <span class="n">exe_file_path</span><span class="p">:</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">PurePath</span><span class="p">,</span> <span class="n">key_file_path</span><span class="p">:</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Starts the service at the specified path and wait for the service to get up and running.&quot;&quot;&quot;</span>
-    <span class="k">global</span> <span class="n">_discovery_service_subprocess</span>  <span class="c1"># save Popen object to avoid ResourceWarning</span>
-    <span class="n">_discovery_service_subprocess</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span>
+    <span class="n">kwargs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span> <span class="o">==</span> <span class="s2">&quot;win32&quot;</span><span class="p">:</span>
+        <span class="c1"># Terminating the measurement service should not terminate the discovery service.</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;creationflags&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">CREATE_BREAKAWAY_FROM_JOB</span>
+    <span class="n">discovery_service_subprocess</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span>
         <span class="p">[</span><span class="n">exe_file_path</span><span class="p">],</span>
         <span class="n">cwd</span><span class="o">=</span><span class="n">exe_file_path</span><span class="o">.</span><span class="n">parent</span><span class="p">,</span>
         <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">DEVNULL</span><span class="p">,</span>
         <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">DEVNULL</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="c1"># After the execution of process, check for key file existence in the path</span>
     <span class="c1"># stop checking after 30 seconds have elapsed and throw error</span>
@@ -347,7 +357,7 @@
     <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">with</span> <span class="n">_open_key_file</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">key_file_path</span><span class="p">))</span> <span class="k">as</span> <span class="n">_</span><span class="p">:</span>
-                <span class="k">return</span>
+                <span class="k">return</span> <span class="n">discovery_service_subprocess</span>
         <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
             <span class="k">pass</span>
         <span class="k">if</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="n">timeout_time</span><span class="p">:</span>

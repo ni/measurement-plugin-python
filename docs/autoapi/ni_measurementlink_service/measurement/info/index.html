@@ -37,7 +37,7 @@
             ni_measurementlink_service
           </a>
               <div class="version">
-                1.2.0-dev0
+                1.2.0-dev1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
@@ -88,6 +88,7 @@
 <li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.Pin"><code class="docutils literal notranslate"><span class="pre">DataType.Pin</span></code></a></li>
 <li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.Path"><code class="docutils literal notranslate"><span class="pre">DataType.Path</span></code></a></li>
 <li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.Enum"><code class="docutils literal notranslate"><span class="pre">DataType.Enum</span></code></a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.DoubleXYData"><code class="docutils literal notranslate"><span class="pre">DataType.DoubleXYData</span></code></a></li>
 <li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.Int32Array1D"><code class="docutils literal notranslate"><span class="pre">DataType.Int32Array1D</span></code></a></li>
 <li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.Int64Array1D"><code class="docutils literal notranslate"><span class="pre">DataType.Int64Array1D</span></code></a></li>
 <li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.UInt32Array1D"><code class="docutils literal notranslate"><span class="pre">DataType.UInt32Array1D</span></code></a></li>
@@ -122,6 +123,7 @@
 <li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.Pin">Pin</a></li>
 <li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.Path">Path</a></li>
 <li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.Enum">Enum</a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.DoubleXYData">DoubleXYData</a></li>
 <li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.Int32Array1D">Int32Array1D</a></li>
 <li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.Int64Array1D">Int64Array1D</a></li>
 <li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.UInt32Array1D">UInt32Array1D</a></li>
@@ -196,7 +198,7 @@
 <td><p>Class that represents the measurement information.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#ni_measurementlink_service.measurement.info.ServiceInfo" title="ni_measurementlink_service.measurement.info.ServiceInfo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ServiceInfo</span></code></a></p></td>
-<td><p>Class the represents the service information.</p></td>
+<td><p>Class that represents the service information.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#ni_measurementlink_service.measurement.info.TypeSpecialization" title="ni_measurementlink_service.measurement.info.TypeSpecialization"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TypeSpecialization</span></code></a></p></td>
 <td><p>Enum that represents the type specializations for measurement parameters.</p></td>
@@ -241,7 +243,7 @@ maintain versions of a measurement in future.</p>
 <dt class="sig sig-object py" id="ni_measurementlink_service.measurement.info.ServiceInfo">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ni_measurementlink_service.measurement.info.</span></span><span class="sig-name descname"><span class="pre">ServiceInfo</span></span><a class="reference internal" href="../../../../_modules/ni_measurementlink_service/measurement/info.html#ServiceInfo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service.measurement.info.ServiceInfo" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">NamedTuple</span></code></p>
-<p>Class the represents the service information.</p>
+<p>Class that represents the service information.</p>
 <section id="id1">
 <h4>Attributes<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h4>
 <blockquote>
@@ -313,112 +315,117 @@ Feel free to add your own Annotations as needed.</p>
 <p>Enum that represents the supported data types.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ni_measurementlink_service.measurement.info.DataType.Int32">
-<span class="sig-name descname"><span class="pre">Int32</span></span><a class="headerlink" href="#ni_measurementlink_service.measurement.info.DataType.Int32" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">Int32</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#ni_measurementlink_service.measurement.info.DataType.Int32" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ni_measurementlink_service.measurement.info.DataType.Int64">
-<span class="sig-name descname"><span class="pre">Int64</span></span><a class="headerlink" href="#ni_measurementlink_service.measurement.info.DataType.Int64" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">Int64</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#ni_measurementlink_service.measurement.info.DataType.Int64" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ni_measurementlink_service.measurement.info.DataType.UInt32">
-<span class="sig-name descname"><span class="pre">UInt32</span></span><a class="headerlink" href="#ni_measurementlink_service.measurement.info.DataType.UInt32" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">UInt32</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">2</span></em><a class="headerlink" href="#ni_measurementlink_service.measurement.info.DataType.UInt32" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ni_measurementlink_service.measurement.info.DataType.UInt64">
-<span class="sig-name descname"><span class="pre">UInt64</span></span><a class="headerlink" href="#ni_measurementlink_service.measurement.info.DataType.UInt64" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">UInt64</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">3</span></em><a class="headerlink" href="#ni_measurementlink_service.measurement.info.DataType.UInt64" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ni_measurementlink_service.measurement.info.DataType.Float">
-<span class="sig-name descname"><span class="pre">Float</span></span><a class="headerlink" href="#ni_measurementlink_service.measurement.info.DataType.Float" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">Float</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">4</span></em><a class="headerlink" href="#ni_measurementlink_service.measurement.info.DataType.Float" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ni_measurementlink_service.measurement.info.DataType.Double">
-<span class="sig-name descname"><span class="pre">Double</span></span><a class="headerlink" href="#ni_measurementlink_service.measurement.info.DataType.Double" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">Double</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">5</span></em><a class="headerlink" href="#ni_measurementlink_service.measurement.info.DataType.Double" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ni_measurementlink_service.measurement.info.DataType.Boolean">
-<span class="sig-name descname"><span class="pre">Boolean</span></span><a class="headerlink" href="#ni_measurementlink_service.measurement.info.DataType.Boolean" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">Boolean</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">6</span></em><a class="headerlink" href="#ni_measurementlink_service.measurement.info.DataType.Boolean" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ni_measurementlink_service.measurement.info.DataType.String">
-<span class="sig-name descname"><span class="pre">String</span></span><a class="headerlink" href="#ni_measurementlink_service.measurement.info.DataType.String" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">String</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">7</span></em><a class="headerlink" href="#ni_measurementlink_service.measurement.info.DataType.String" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ni_measurementlink_service.measurement.info.DataType.Pin">
-<span class="sig-name descname"><span class="pre">Pin</span></span><a class="headerlink" href="#ni_measurementlink_service.measurement.info.DataType.Pin" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">Pin</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">8</span></em><a class="headerlink" href="#ni_measurementlink_service.measurement.info.DataType.Pin" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ni_measurementlink_service.measurement.info.DataType.Path">
-<span class="sig-name descname"><span class="pre">Path</span></span><a class="headerlink" href="#ni_measurementlink_service.measurement.info.DataType.Path" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">Path</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">9</span></em><a class="headerlink" href="#ni_measurementlink_service.measurement.info.DataType.Path" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ni_measurementlink_service.measurement.info.DataType.Enum">
-<span class="sig-name descname"><span class="pre">Enum</span></span><a class="headerlink" href="#ni_measurementlink_service.measurement.info.DataType.Enum" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">Enum</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">10</span></em><a class="headerlink" href="#ni_measurementlink_service.measurement.info.DataType.Enum" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ni_measurementlink_service.measurement.info.DataType.DoubleXYData">
+<span class="sig-name descname"><span class="pre">DoubleXYData</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">11</span></em><a class="headerlink" href="#ni_measurementlink_service.measurement.info.DataType.DoubleXYData" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ni_measurementlink_service.measurement.info.DataType.Int32Array1D">
-<span class="sig-name descname"><span class="pre">Int32Array1D</span></span><a class="headerlink" href="#ni_measurementlink_service.measurement.info.DataType.Int32Array1D" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">Int32Array1D</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">100</span></em><a class="headerlink" href="#ni_measurementlink_service.measurement.info.DataType.Int32Array1D" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ni_measurementlink_service.measurement.info.DataType.Int64Array1D">
-<span class="sig-name descname"><span class="pre">Int64Array1D</span></span><a class="headerlink" href="#ni_measurementlink_service.measurement.info.DataType.Int64Array1D" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">Int64Array1D</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">101</span></em><a class="headerlink" href="#ni_measurementlink_service.measurement.info.DataType.Int64Array1D" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ni_measurementlink_service.measurement.info.DataType.UInt32Array1D">
-<span class="sig-name descname"><span class="pre">UInt32Array1D</span></span><a class="headerlink" href="#ni_measurementlink_service.measurement.info.DataType.UInt32Array1D" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">UInt32Array1D</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">102</span></em><a class="headerlink" href="#ni_measurementlink_service.measurement.info.DataType.UInt32Array1D" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ni_measurementlink_service.measurement.info.DataType.UInt64Array1D">
-<span class="sig-name descname"><span class="pre">UInt64Array1D</span></span><a class="headerlink" href="#ni_measurementlink_service.measurement.info.DataType.UInt64Array1D" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">UInt64Array1D</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">103</span></em><a class="headerlink" href="#ni_measurementlink_service.measurement.info.DataType.UInt64Array1D" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ni_measurementlink_service.measurement.info.DataType.FloatArray1D">
-<span class="sig-name descname"><span class="pre">FloatArray1D</span></span><a class="headerlink" href="#ni_measurementlink_service.measurement.info.DataType.FloatArray1D" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">FloatArray1D</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">104</span></em><a class="headerlink" href="#ni_measurementlink_service.measurement.info.DataType.FloatArray1D" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ni_measurementlink_service.measurement.info.DataType.DoubleArray1D">
-<span class="sig-name descname"><span class="pre">DoubleArray1D</span></span><a class="headerlink" href="#ni_measurementlink_service.measurement.info.DataType.DoubleArray1D" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">DoubleArray1D</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">105</span></em><a class="headerlink" href="#ni_measurementlink_service.measurement.info.DataType.DoubleArray1D" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ni_measurementlink_service.measurement.info.DataType.BooleanArray1D">
-<span class="sig-name descname"><span class="pre">BooleanArray1D</span></span><a class="headerlink" href="#ni_measurementlink_service.measurement.info.DataType.BooleanArray1D" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">BooleanArray1D</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">106</span></em><a class="headerlink" href="#ni_measurementlink_service.measurement.info.DataType.BooleanArray1D" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ni_measurementlink_service.measurement.info.DataType.StringArray1D">
-<span class="sig-name descname"><span class="pre">StringArray1D</span></span><a class="headerlink" href="#ni_measurementlink_service.measurement.info.DataType.StringArray1D" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">StringArray1D</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">107</span></em><a class="headerlink" href="#ni_measurementlink_service.measurement.info.DataType.StringArray1D" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ni_measurementlink_service.measurement.info.DataType.PinArray1D">
-<span class="sig-name descname"><span class="pre">PinArray1D</span></span><a class="headerlink" href="#ni_measurementlink_service.measurement.info.DataType.PinArray1D" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">PinArray1D</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">108</span></em><a class="headerlink" href="#ni_measurementlink_service.measurement.info.DataType.PinArray1D" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ni_measurementlink_service.measurement.info.DataType.PathArray1D">
-<span class="sig-name descname"><span class="pre">PathArray1D</span></span><a class="headerlink" href="#ni_measurementlink_service.measurement.info.DataType.PathArray1D" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">PathArray1D</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">109</span></em><a class="headerlink" href="#ni_measurementlink_service.measurement.info.DataType.PathArray1D" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ni_measurementlink_service.measurement.info.DataType.EnumArray1D">
-<span class="sig-name descname"><span class="pre">EnumArray1D</span></span><a class="headerlink" href="#ni_measurementlink_service.measurement.info.DataType.EnumArray1D" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">EnumArray1D</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">110</span></em><a class="headerlink" href="#ni_measurementlink_service.measurement.info.DataType.EnumArray1D" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>

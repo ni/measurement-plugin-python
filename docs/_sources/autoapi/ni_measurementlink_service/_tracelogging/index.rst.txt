@@ -1,0 +1,74 @@
+:orphan:
+
+:py:mod:`ni_measurementlink_service._tracelogging`
+==================================================
+
+.. py:module:: ni_measurementlink_service._tracelogging
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   ni_measurementlink_service._tracelogging.is_enabled
+   ni_measurementlink_service._tracelogging.log_grpc_client_call_start
+   ni_measurementlink_service._tracelogging.log_grpc_client_call_stop
+   ni_measurementlink_service._tracelogging.log_grpc_client_call_streaming_request
+   ni_measurementlink_service._tracelogging.log_grpc_client_call_streaming_response
+   ni_measurementlink_service._tracelogging.log_grpc_server_call_start
+   ni_measurementlink_service._tracelogging.log_grpc_server_call_stop
+   ni_measurementlink_service._tracelogging.log_grpc_server_call_streaming_request
+   ni_measurementlink_service._tracelogging.log_grpc_server_call_streaming_response
+
+
+
+.. py:function:: is_enabled()
+
+   Queries whether the event provider is enabled.
+
+
+.. py:function:: log_grpc_client_call_start(method_name)
+
+   Log when starting a gRPC client call.
+
+
+.. py:function:: log_grpc_client_call_stop(method_name, activity_id = None)
+
+   Log when a gRPC client call has completed.
+
+
+.. py:function:: log_grpc_client_call_streaming_request(method_name)
+
+   Log when a gRPC client call is sending a client-streaming request.
+
+
+.. py:function:: log_grpc_client_call_streaming_response(method_name)
+
+   Log when a gRPC client call has received a server-streaming response.
+
+
+.. py:function:: log_grpc_server_call_start(method_name)
+
+   Log when starting a gRPC server call.
+
+
+.. py:function:: log_grpc_server_call_stop(method_name, activity_id = None)
+
+   Log when a gRPC server call has completed.
+
+
+.. py:function:: log_grpc_server_call_streaming_request(method_name)
+
+   Log when a gRPC server call is sending a server-streaming request.
+
+
+.. py:function:: log_grpc_server_call_streaming_response(method_name)
+
+   Log when a gRPC server call has received a server-streaming response.
+
+

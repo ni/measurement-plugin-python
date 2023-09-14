@@ -3,7 +3,7 @@
 import logging
 import pathlib
 import sys
-from typing import Optional
+from typing import List, Optional, Tuple
 
 import click
 import nidaqmx
@@ -49,7 +49,7 @@ unreserve calls. Long measurements may require a longer timeout.
 @measurement_service.configuration("sample_rate", nims.DataType.Double, 1000.0)
 @measurement_service.configuration("number_of_samples", nims.DataType.UInt64, 100)
 @measurement_service.output("acquired_samples", nims.DataType.DoubleArray1D)
-def measure(pin_name, sample_rate, number_of_samples):
+def measure(pin_name: str, sample_rate: float, number_of_samples: int) -> Tuple[List[float]]:
     """Perform a finite analog input measurement with NI-DAQmx."""
     logging.info(
         "Executing measurement: pin_name=%s sample_rate=%g number_of_samples=%d",
@@ -66,7 +66,7 @@ def measure(pin_name, sample_rate, number_of_samples):
     ) as reservation:
         task: Optional[nidaqmx.Task] = None
 
-        def cancel_callback():
+        def cancel_callback() -> None:
             logging.info("Canceling measurement")
             task_to_abort = task
             if task_to_abort is not None:

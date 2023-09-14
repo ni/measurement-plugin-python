@@ -52,6 +52,10 @@ Functions
 
        annotations (Dict[str,str]): Represents a set of annotations on the type.
 
+       message_type (str): This is the gRPC full name of the message type.
+       Required when 'type' is Kind.TypeMessage.
+       Ignored for any other 'type'.
+
 
    .. py:attribute:: display_name
       :annotation: :str
@@ -75,6 +79,11 @@ Functions
 
    .. py:attribute:: annotations
       :annotation: :Dict[str, str]
+
+      
+
+   .. py:attribute:: message_type
+      :annotation: :str = 
 
       
 

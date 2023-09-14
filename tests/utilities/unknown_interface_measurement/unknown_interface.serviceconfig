@@ -1,0 +1,19 @@
+{
+  "services": [
+    {
+      "displayName": "Unknown Interface Measurement (Py)",
+      "serviceClass": "ni.tests.UnknownInterface_Python",
+      "descriptionUrl": "",
+      "providedInterfaces": [
+        "acme.unknown.measurement.interface.V1"
+      ],
+      "path": "start.bat",
+      "annotations": {
+        "ni/service.description": "MeasurementLink test service that provides an unknown interface.",
+        "ni/service.collection": "NI.Tests",
+        "ni/service.tags": []
+      }
+
+    }
+  ]
+}

@@ -82,7 +82,7 @@ def measure(
     measurement_type: Function,
     range: float,
     resolution_digits: float,
-) -> Tuple:
+) -> Tuple[float, bool, float]:
     """Perform a measurement using an NI DMM."""
     logging.info(
         "Starting measurement: pin_name=%s measurement_type=%s range=%g resolution_digits=%g",
@@ -102,13 +102,9 @@ def measure(
     ) as reservation:
         grpc_device_channel = get_grpc_device_channel(measurement_service, nidmm, service_options)
         with create_session(reservation.session_info, grpc_device_channel) as session:
-            session.configure_measurement_digits(
-                nidmm.Function(measurement_type.value)
-                if measurement_type != Function.NONE
-                else nidmm.Function.DC_VOLTS,
-                range,
-                resolution_digits,
-            )
+            # If the measurement type is not specified, use DC_VOLTS.
+            nidmm_function = nidmm.Function(measurement_type.value or Function.DC_VOLTS.value)
+            session.configure_measurement_digits(nidmm_function, range, resolution_digits)
             measured_value = session.read()
             signal_out_of_range = math.isnan(measured_value) or math.isinf(measured_value)
             absolute_resolution = session.resolution_absolute

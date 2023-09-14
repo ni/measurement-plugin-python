@@ -2,9 +2,11 @@
 
 from enum import Enum
 from io import BytesIO
-from typing import Any, Dict, Sequence
+from typing import Any, Dict, Sequence, cast
 
+from google.protobuf.descriptor import FieldDescriptor
 from google.protobuf.internal import encoder
+from google.protobuf.message import Message
 
 from ni_measurementlink_service._internal.parameter import serialization_strategy
 from ni_measurementlink_service._internal.parameter.metadata import (
@@ -68,11 +70,11 @@ def serialize_parameters(
     serialize_buffer = BytesIO()  # inner_encoder updates the serialize_buffer
     for i, parameter in enumerate(parameter_values):
         parameter_metadata = parameter_metadata_dict[i + 1]
-        encoder = serialization_strategy.Context.get_encoder(
+        encoder = serialization_strategy.get_encoder(
             parameter_metadata.type,
             parameter_metadata.repeated,
         )
-        type_default_value = serialization_strategy.Context.get_type_default(
+        type_default_value = serialization_strategy.get_type_default(
             parameter_metadata.type,
             parameter_metadata.repeated,
         )
@@ -85,7 +87,7 @@ def serialize_parameters(
         # Skipping serialization if the value is None or if its a type default value.
         if parameter is not None and parameter != type_default_value:
             inner_encoder = encoder(i + 1)
-            inner_encoder(serialize_buffer.write, parameter, None)
+            inner_encoder(serialize_buffer.write, parameter, False)
     return serialize_buffer.getvalue()
 
 
@@ -156,11 +158,10 @@ def _get_overlapping_parameters(
             raise Exception(
                 f"Error occurred while reading the parameter - given protobuf index '{field_index}' is invalid."
             )
-        type = parameter_metadata_dict[field_index].type
-        is_repeated = parameter_metadata_dict[field_index].repeated
-        decoder = serialization_strategy.Context.get_decoder(
-            type, is_repeated, parameter_metadata_dict[field_index].message_type
-        )
+        field_metadata = parameter_metadata_dict[field_index]
+        type = field_metadata.type
+        is_repeated = field_metadata.repeated
+        decoder = serialization_strategy.get_decoder(type, is_repeated, field_metadata.message_type)
         inner_decoder = decoder(field_index, field_index)
         parameter_bytes_io = BytesIO(parameter_bytes)
         parameter_bytes_memory_view = parameter_bytes_io.getbuffer()
@@ -168,8 +169,8 @@ def _get_overlapping_parameters(
             parameter_bytes_memory_view,
             position + encoder._TagSize(field_index),  # type: ignore[attr-defined]
             len(parameter_bytes),
-            type,
-            overlapping_parameters_by_id,
+            cast(Message, None),  # unused - See serialization_strategy._vector_decoder._new_default
+            cast(Dict[FieldDescriptor, Any], overlapping_parameters_by_id),
         )
     return overlapping_parameters_by_id
 
@@ -198,7 +199,7 @@ def _get_missing_parameters(
                 enum_type = _get_enum_type(value)
                 missing_parameters[key] = enum_type(0)
             else:
-                missing_parameters[key] = serialization_strategy.Context.get_type_default(
+                missing_parameters[key] = serialization_strategy.get_type_default(
                     value.type, value.repeated
                 )
     return missing_parameters
