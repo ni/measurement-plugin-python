@@ -8,9 +8,8 @@ from typing import Generator, List, Tuple
 
 import click
 import grpc
-from _helpers import configure_logging, verbosity_option
-
 import ni_measurementlink_service as nims
+from _helpers import configure_logging, verbosity_option
 
 script_or_exe = sys.executable if getattr(sys, "frozen", False) else __file__
 service_directory = pathlib.Path(script_or_exe).resolve().parent

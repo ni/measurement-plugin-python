@@ -12,6 +12,7 @@ import _visa_helpers
 import click
 import grpc
 import hightime
+import ni_measurementlink_service as nims
 import nidcpower
 import pyvisa
 from _constants import USE_SIMULATION
@@ -27,8 +28,6 @@ from _helpers import (
     verbosity_option,
 )
 from _visa_helpers import check_instrument_error, log_instrument_id, reset_instrument
-
-import ni_measurementlink_service as nims
 
 NIDCPOWER_WAIT_FOR_EVENT_TIMEOUT_ERROR_CODE = -1074116059
 NIDCPOWER_TIMEOUT_EXCEEDED_ERROR_CODE = -1074097933

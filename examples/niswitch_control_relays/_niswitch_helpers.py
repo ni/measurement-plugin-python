@@ -3,10 +3,9 @@
 from typing import Any, Dict, Optional
 
 import grpc
+import ni_measurementlink_service as nims
 import niswitch
 from _constants import USE_SIMULATION
-
-import ni_measurementlink_service as nims
 
 
 def create_session(

@@ -9,9 +9,8 @@ from typing import Generator, List, Tuple
 
 import click
 import grpc
-from _helpers import configure_logging, verbosity_option
-
 import ni_measurementlink_service as nims
+from _helpers import configure_logging, verbosity_option
 
 RANDOM_NUMBERS_PER_SECOND = 100.0
 RANDOM_NUMBER_RANGE = 10.0

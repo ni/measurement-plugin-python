@@ -6,6 +6,7 @@ import sys
 from typing import Iterable, Tuple, Union
 
 import click
+import ni_measurementlink_service as nims
 import nidigital
 from _constants import USE_SIMULATION
 from _helpers import (
@@ -19,8 +20,6 @@ from _helpers import (
     verbosity_option,
 )
 from _nidigital_helpers import create_session
-
-import ni_measurementlink_service as nims
 
 script_or_exe = sys.executable if getattr(sys, "frozen", False) else __file__
 service_directory = pathlib.Path(script_or_exe).resolve().parent

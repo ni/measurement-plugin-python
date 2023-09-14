@@ -7,6 +7,7 @@ from enum import Enum
 from typing import Tuple
 
 import click
+import ni_measurementlink_service as nims
 import pyvisa.resources
 from _constants import USE_SIMULATION
 from _helpers import (
@@ -25,8 +26,6 @@ from _visa_helpers import (
     log_instrument_id,
     reset_instrument,
 )
-
-import ni_measurementlink_service as nims
 
 script_or_exe = sys.executable if getattr(sys, "frozen", False) else __file__
 service_directory = pathlib.Path(script_or_exe).resolve().parent

@@ -10,6 +10,7 @@ from typing import Iterable, List, Tuple
 import click
 import grpc
 import hightime
+import ni_measurementlink_service as nims
 import nidcpower
 from _constants import USE_SIMULATION
 from _helpers import (
@@ -23,8 +24,6 @@ from _helpers import (
     verbosity_option,
 )
 from _nidcpower_helpers import create_session
-
-import ni_measurementlink_service as nims
 
 NIDCPOWER_WAIT_FOR_EVENT_TIMEOUT_ERROR_CODE = -1074116059
 NIDCPOWER_TIMEOUT_EXCEEDED_ERROR_CODE = -1074097933

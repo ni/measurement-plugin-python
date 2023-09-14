@@ -3,9 +3,8 @@
 from typing import Optional
 
 import grpc
-import nidaqmx
-
 import ni_measurementlink_service as nims
+import nidaqmx
 
 
 def create_task(
