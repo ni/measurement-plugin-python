@@ -4,21 +4,33 @@ import json
 import pathlib
 import subprocess
 import sys
-from typing import Any, Dict, cast
+from typing import Any, Dict, Union, cast
+from unittest.mock import Mock
 
+import grpc
 import pytest
 from pytest_mock import MockerFixture
 
 from ni_measurementlink_service._internal.discovery_client import (
     DiscoveryClient,
+    ServiceLocation,
     _get_discovery_service_address,
     _start_service,
+)
+from ni_measurementlink_service._internal.stubs.ni.measurementlink.discovery.v1.discovery_service_pb2 import (
+    RegisterServiceRequest,
+    RegisterServiceResponse,
+    ResolveServiceRequest,
+    ServiceDescriptor as GrpcServiceDescriptor,
+    ServiceLocation as GrpcServiceLocation,
+    UnregisterServiceRequest,
+    UnregisterServiceResponse,
 )
 from ni_measurementlink_service._internal.stubs.ni.measurementlink.discovery.v1.discovery_service_pb2_grpc import (
     DiscoveryServiceStub,
 )
 from ni_measurementlink_service.measurement.info import MeasurementInfo, ServiceInfo
-from tests.utilities.fake_discovery_service import FakeDiscoveryServiceStub
+from tests.utilities.fake_rpc_error import FakeRpcError
 
 _PROVIDED_MEASUREMENT_SERVICES = [
     "ni.measurementlink.measurement.v1.MeasurementService",
@@ -35,9 +47,20 @@ _PROVIDED_ANNOTATIONS = {
 
 
 _TEST_SERVICE_PORT = "9999"
+_TEST_SERVICE_SSL_PORT = "9998"
+
+_TEST_SERVICE_LOCATION = ServiceLocation("localhost", _TEST_SERVICE_PORT, _TEST_SERVICE_SSL_PORT)
+_TEST_SERVICE_LOCATION_WITHOUT_SSL = _TEST_SERVICE_LOCATION._replace(ssl_authenticated_port="")
+
 _TEST_SERVICE_INFO = ServiceInfo(
-    "TestServiceClass", "TestUrl", _PROVIDED_MEASUREMENT_SERVICES, _PROVIDED_ANNOTATIONS
+    "TestServiceClass",
+    "TestUrl",
+    _PROVIDED_MEASUREMENT_SERVICES,
+    _PROVIDED_ANNOTATIONS,
+    "TestMeasurement",
 )
+_TEST_SERVICE_INFO_WITHOUT_DISPLAY_NAME = _TEST_SERVICE_INFO._replace(display_name="")
+
 _TEST_MEASUREMENT_INFO = MeasurementInfo(
     display_name="TestMeasurement",
     version="1.0.0.0",
@@ -50,34 +73,117 @@ _MOCK_REGISTRATION_FILE_CONTENT = {
 }
 
 
-def test___discovery_service_available___register_service___registration_success(
-    discovery_client: DiscoveryClient, discovery_service_stub: FakeDiscoveryServiceStub
+def test___service_not_registered___register_service___sends_request_and_returns_id(
+    discovery_client: DiscoveryClient, discovery_service_stub: Mock
 ):
-    registration_success_flag = discovery_client.register_measurement_service(
-        _TEST_SERVICE_PORT, _TEST_SERVICE_INFO, _TEST_MEASUREMENT_INFO
+    discovery_service_stub.RegisterService.return_value = RegisterServiceResponse(
+        registration_id="abcd"
     )
 
-    _validate_grpc_request(discovery_service_stub.request)
-    assert registration_success_flag
+    registration_id = discovery_client.register_service(_TEST_SERVICE_INFO, _TEST_SERVICE_LOCATION)
+
+    discovery_service_stub.RegisterService.assert_called_once()
+    request: RegisterServiceRequest = discovery_service_stub.RegisterService.call_args.args[0]
+    _assert_service_info_equal(_TEST_SERVICE_INFO, request.service_description)
+    _assert_service_location_equal(_TEST_SERVICE_LOCATION, request.location)
+    assert registration_id == "abcd"
 
 
-def test___discovery_service_available___unregister_registered_service___unregistration_success(
-    discovery_client: DiscoveryClient,
+def test___service_registered___unregister_service___sends_request(
+    discovery_client: DiscoveryClient, discovery_service_stub: Mock
 ):
-    discovery_client.register_measurement_service(
-        _TEST_SERVICE_PORT, _TEST_SERVICE_INFO, _TEST_MEASUREMENT_INFO
-    )
+    discovery_service_stub.UnregisterService.return_value = UnregisterServiceResponse()
 
-    unregistration_success_flag = discovery_client.unregister_service()
+    unregistration_success_flag = discovery_client.unregister_service("abcd")
 
+    discovery_service_stub.UnregisterService.assert_called_once()
+    request: UnregisterServiceRequest = discovery_service_stub.UnregisterService.call_args.args[0]
+    assert request.registration_id == "abcd"
     assert unregistration_success_flag
 
 
-def test___discovery_service_available___unregister_non_registered_service___unregistration_failure(
-    discovery_client: DiscoveryClient,
+def test___service_registered___resolve_service___sends_request(
+    discovery_client: DiscoveryClient, discovery_service_stub: Mock
+):
+    discovery_service_stub.ResolveService.return_value = GrpcServiceLocation(
+        location=_TEST_SERVICE_LOCATION.location,
+        insecure_port=_TEST_SERVICE_LOCATION.insecure_port,
+        ssl_authenticated_port=_TEST_SERVICE_LOCATION.ssl_authenticated_port,
+    )
+
+    service_location = discovery_client.resolve_service(
+        _TEST_SERVICE_INFO.provided_interfaces[0], _TEST_SERVICE_INFO.service_class
+    )
+
+    discovery_service_stub.ResolveService.assert_called_once()
+    request: ResolveServiceRequest = discovery_service_stub.ResolveService.call_args.args[0]
+    assert _TEST_SERVICE_INFO.provided_interfaces[0] == request.provided_interface
+    assert _TEST_SERVICE_INFO.service_class == request.service_class
+    _assert_service_location_equal(_TEST_SERVICE_LOCATION, service_location)
+
+
+def test___service_not_registered___resolve_service___raises_not_found_error(
+    discovery_client: DiscoveryClient, discovery_service_stub: Mock
+):
+    discovery_service_stub.ResolveService.side_effect = FakeRpcError(
+        grpc.StatusCode.NOT_FOUND, details="Service not found"
+    )
+
+    with pytest.raises(grpc.RpcError) as exc_info:
+        _ = discovery_client.resolve_service(
+            _TEST_SERVICE_INFO.provided_interfaces[0], _TEST_SERVICE_INFO.service_class
+        )
+
+    discovery_service_stub.ResolveService.assert_called_once()
+    assert exc_info.value.code() == grpc.StatusCode.NOT_FOUND
+
+
+def test___service_not_registered___register_measurement_service___sends_request_and_warns(
+    discovery_client: DiscoveryClient, discovery_service_stub: Mock
+):
+    discovery_service_stub.RegisterService.return_value = RegisterServiceResponse(
+        registration_id="abcd"
+    )
+
+    with pytest.deprecated_call():
+        registration_success_flag = discovery_client.register_measurement_service(
+            _TEST_SERVICE_PORT, _TEST_SERVICE_INFO_WITHOUT_DISPLAY_NAME, _TEST_MEASUREMENT_INFO
+        )
+
+    discovery_service_stub.RegisterService.assert_called_once()
+    request = discovery_service_stub.RegisterService.call_args.args[0]
+    _assert_service_info_equal(_TEST_SERVICE_INFO, request.service_description)
+    _assert_service_location_equal(_TEST_SERVICE_LOCATION_WITHOUT_SSL, request.location)
+    assert discovery_client._registration_id == "abcd"
+    assert registration_success_flag
+
+
+def test___service_registered___unregister_service_no_args___sends_request_and_returns_true(
+    discovery_client: DiscoveryClient, discovery_service_stub: Mock
+):
+    discovery_service_stub.RegisterService.return_value = RegisterServiceResponse(
+        registration_id="abcd"
+    )
+    discovery_service_stub.UnregisterService.return_value = UnregisterServiceResponse()
+    with pytest.deprecated_call():
+        discovery_client.register_measurement_service(
+            _TEST_SERVICE_PORT, _TEST_SERVICE_INFO_WITHOUT_DISPLAY_NAME, _TEST_MEASUREMENT_INFO
+        )
+
+    unregistration_success_flag = discovery_client.unregister_service()
+
+    discovery_service_stub.UnregisterService.assert_called_once()
+    request = discovery_service_stub.UnregisterService.call_args.args[0]
+    assert request.registration_id == "abcd"
+    assert unregistration_success_flag
+
+
+def test___service_not_registered___unregister_service_no_args___only_returns_false(
+    discovery_client: DiscoveryClient, discovery_service_stub: Mock
 ):
     unregistration_success_flag = discovery_client.unregister_service()
 
+    discovery_service_stub.UnregisterService.assert_not_called()
     assert not unregistration_success_flag
 
 
@@ -184,9 +290,7 @@ def test___discovery_service_exe_unavailable___register_service___raises_file_no
     discovery_client = DiscoveryClient()
 
     with pytest.raises(FileNotFoundError):
-        discovery_client.register_measurement_service(
-            _TEST_SERVICE_PORT, _TEST_SERVICE_INFO, _TEST_MEASUREMENT_INFO
-        )
+        discovery_client.register_service(_TEST_SERVICE_INFO, _TEST_SERVICE_LOCATION)
 
 
 @pytest.fixture(scope="module")
@@ -198,15 +302,20 @@ def subprocess_popen_kwargs() -> Dict[str, Any]:
 
 
 @pytest.fixture
-def discovery_client(discovery_service_stub: FakeDiscoveryServiceStub) -> DiscoveryClient:
+def discovery_client(discovery_service_stub: Mock) -> DiscoveryClient:
     """Create a DiscoveryClient."""
     return DiscoveryClient(cast(DiscoveryServiceStub, discovery_service_stub))
 
 
 @pytest.fixture
-def discovery_service_stub() -> FakeDiscoveryServiceStub:
-    """Create a FakeDiscoveryServiceStub."""
-    return FakeDiscoveryServiceStub()
+def discovery_service_stub(mocker: MockerFixture) -> Mock:
+    """Create a mock DiscoveryServiceStub."""
+    stub = mocker.create_autospec(DiscoveryServiceStub)
+    stub.RegisterService = mocker.create_autospec(grpc.UnaryUnaryMultiCallable)
+    stub.UnregisterService = mocker.create_autospec(grpc.UnaryUnaryMultiCallable)
+    stub.EnumerateServices = mocker.create_autospec(grpc.UnaryUnaryMultiCallable)
+    stub.ResolveService = mocker.create_autospec(grpc.UnaryUnaryMultiCallable)
+    return stub
 
 
 @pytest.fixture
@@ -235,13 +344,19 @@ def temp_registration_json_file_path(
     return temp_registration_json_file_path
 
 
-def _validate_grpc_request(request):
-    assert request.location.insecure_port == _TEST_SERVICE_PORT
-    assert request.location.location == "localhost"
-    assert request.service_description.service_class == _TEST_SERVICE_INFO.service_class
-    assert request.service_description.description_url == _TEST_SERVICE_INFO.description_url
-    assert request.service_description.display_name == _TEST_MEASUREMENT_INFO.display_name
-    assert set(request.service_description.provided_interfaces) >= set(
-        _PROVIDED_MEASUREMENT_SERVICES
-    )
-    assert request.service_description.annotations == _PROVIDED_ANNOTATIONS
+def _assert_service_location_equal(
+    expected: ServiceLocation, actual: Union[ServiceLocation, GrpcServiceLocation]
+) -> None:
+    assert expected.location == actual.location
+    assert expected.insecure_port == actual.insecure_port
+    assert expected.ssl_authenticated_port == actual.ssl_authenticated_port
+
+
+def _assert_service_info_equal(
+    expected: ServiceInfo, actual: Union[ServiceInfo, GrpcServiceDescriptor]
+) -> None:
+    assert expected.display_name == actual.display_name
+    assert expected.description_url == actual.description_url
+    assert set(expected.provided_interfaces) == set(actual.provided_interfaces)
+    assert expected.service_class == actual.service_class
+    assert expected.annotations == actual.annotations
