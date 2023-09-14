@@ -103,18 +103,9 @@ def _vector_decoder(
 
 
 def _double_xy_data_decoder(decoder: DecoderConstructor) -> PartialDecoderConstructor:
-    """Decoder for DoubleXYData.
+    """Constructs a DoubleXYData decoder constructor.
 
-    Args
-    ----
-        decoder: Specific decoder(Callable) that takes in
-        field_index, is_repeated, is_packed,  key, new_default and
-        returns the Low-level Decode Callable.
-
-    Returns
-    -------
-        Callable[[int,str],Callable]: Callable Decoder for message types that takes in
-        field_index, key and returns the Low-level Decode Callable.
+    Takes a field index and a key and returns a Decoder for DoubleXYData.
     """
 
     def _new_default(unused_message=None):
@@ -136,7 +127,7 @@ IntEncoder = _scalar_encoder(cast(EncoderConstructor, encoder.Int32Encoder))
 UIntEncoder = _scalar_encoder(cast(EncoderConstructor, encoder.UInt32Encoder))
 BoolEncoder = _scalar_encoder(encoder.BoolEncoder)
 StringEncoder = _scalar_encoder(encoder.StringEncoder)
-MessageEncoder = _scalar_encoder(_message._inner_message_encoder)
+MessageEncoder = _scalar_encoder(_message._message_encoder_constructor)
 
 FloatArrayEncoder = _vector_encoder(cast(EncoderConstructor, encoder.FloatEncoder))
 DoubleArrayEncoder = _vector_encoder(cast(EncoderConstructor, encoder.DoubleEncoder))
@@ -156,7 +147,7 @@ Int64Decoder = _scalar_decoder(cast(DecoderConstructor, decoder.Int64Decoder))
 UInt64Decoder = _scalar_decoder(cast(DecoderConstructor, decoder.UInt64Decoder))
 BoolDecoder = _scalar_decoder(cast(DecoderConstructor, decoder.BoolDecoder))
 StringDecoder = _scalar_decoder(cast(DecoderConstructor, decoder.StringDecoder))
-XYDataDecoder = _double_xy_data_decoder(_message._inner_message_decoder)
+XYDataDecoder = _double_xy_data_decoder(_message._message_decoder_constructor)
 
 FloatArrayDecoder = _vector_decoder(cast(DecoderConstructor, decoder.FloatDecoder))
 DoubleArrayDecoder = _vector_decoder(cast(DecoderConstructor, decoder.DoubleDecoder))

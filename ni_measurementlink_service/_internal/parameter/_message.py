@@ -12,8 +12,11 @@ from ni_measurementlink_service._internal.parameter._serializer_types import (
 )
 
 
-def _inner_message_encoder(field_index: int, is_repeated: bool, is_packed: bool) -> Encoder:
+def _message_encoder_constructor(field_index: int, is_repeated: bool, is_packed: bool) -> Encoder:
     """Mimics google.protobuf.internal.MessageEncoder.
+
+    We cannot use MessageEncoder because it is for the pure-Python implementation
+    of messages. Our messages are upb messages, so we need to call 'SerializeToString'
 
     See EncodeField:
     https://github.com/protocolbuffers/protobuf/blob/0b817d46d4ca1977d3dccf2442aeee3c9e98e3a1/python/google/protobuf/internal/encoder.py#L765C15-L765C15
@@ -49,10 +52,13 @@ def _varint_encoder():
     return encode_varint
 
 
-def _inner_message_decoder(
+def _message_decoder_constructor(
     field_index: int, is_repeated: bool, is_packed: bool, key: Key, new_default: NewDefault
 ) -> Decoder:
-    """Based on google.protobuf.internal.MessageDecoder.
+    """Mimics google.protobuf.internal.MessageDecoder.
+
+    We cannot use MessageDecoder because it is for the pure-Python implementation
+    of messages. Our messages are upb messages, so we need to call 'ParseFromString'
 
     See DecodeField
     """
@@ -67,7 +73,11 @@ def _inner_message_decoder(
         # Read length.
         (size, pos) = decode_varint(buffer, pos)
         new_pos = pos + size
-        value.ParseFromString(buffer[pos:new_pos])
+        if new_pos > end:
+            raise ValueError("Error decoding a message. Message is truncated.")
+        parsed_bytes = value.ParseFromString(buffer[pos:new_pos])
+        if parsed_bytes != size:
+            raise ValueError("Parsed incorrect number of bytes.")
         return new_pos
 
     return _decode_message
