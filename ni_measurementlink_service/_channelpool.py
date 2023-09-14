@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import sys
 from threading import Lock
 from types import TracebackType
 from typing import (
@@ -7,16 +8,18 @@ from typing import (
     Literal,
     Optional,
     Type,
-    TypeVar,
+    TYPE_CHECKING,
 )
 
 import grpc
 
 from ni_measurementlink_service._loggers import ClientLogger
 
-
-# Eventually, these can be replaced with typing.Self (Python >= 3.11).
-_TGrpcChannelPool = TypeVar("_TGrpcChannelPool", bound="GrpcChannelPool")
+if TYPE_CHECKING:
+    if sys.version_info >= (3, 11):
+        from typing import Self
+    else:
+        from typing_extensions import Self
 
 
 class GrpcChannelPool(object):
@@ -27,7 +30,7 @@ class GrpcChannelPool(object):
         self._lock: Lock = Lock()
         self._channel_cache: Dict[str, grpc.Channel] = {}
 
-    def __enter__(self: _TGrpcChannelPool) -> _TGrpcChannelPool:
+    def __enter__(self: Self) -> Self:
         """Enter the runtime context of the GrpcChannelPool."""
         return self
 

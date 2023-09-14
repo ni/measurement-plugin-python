@@ -48,6 +48,11 @@ if TYPE_CHECKING:
     else:
         from typing_extensions import TypeGuard
 
+    if sys.version_info >= (3, 11):
+        from typing import Self
+    else:
+        from typing_extensions import Self
+
     SupportedEnumType = Union[Type[Enum], _EnumTypeWrapper]
 
 
@@ -80,10 +85,6 @@ class MeasurementContext:
     def abort(self, code: grpc.StatusCode, details: str) -> None:
         """Aborts the RPC."""
         grpc_servicer.measurement_service_context.get().abort(code, details)
-
-
-# Eventually, these can be replaced with typing.Self (Python >= 3.11).
-_TMeasurementService = TypeVar("_TMeasurementService", bound="MeasurementService")
 
 
 class MeasurementService:
@@ -393,7 +394,7 @@ class MeasurementService:
         self.grpc_service.stop()
         self.channel_pool.close()
 
-    def __enter__(self: _TMeasurementService) -> _TMeasurementService:
+    def __enter__(self: Self) -> Self:
         """Enter the runtime context related to the measurement service."""
         return self
 
