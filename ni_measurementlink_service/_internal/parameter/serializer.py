@@ -110,7 +110,7 @@ def serialize_default_values(parameter_metadata_dict: Dict[int, ParameterMetadat
     return serialize_parameters(parameter_metadata_dict, default_value_parameter_array)
 
 
-def _get_field_index(parameter_bytes: bytes, tag_position: int):
+def _get_field_index(parameter_bytes: bytes, tag_position: int) -> int:
     """Get the Filed Index based on the tag's position.
 
     The tag Position should be the index of the TagValue in the ByteArray for valid field index.
