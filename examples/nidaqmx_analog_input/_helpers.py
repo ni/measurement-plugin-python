@@ -39,7 +39,7 @@ class ServiceOptions(NamedTuple):
     use_simulation: bool = False
 
 
-def get_service_options(**kwargs) -> ServiceOptions:
+def get_service_options(**kwargs: Any) -> ServiceOptions:
     """Get service options from keyword arguments."""
     return ServiceOptions(
         use_grpc_device=kwargs.get("use_grpc_device", False),
@@ -81,7 +81,7 @@ class PinMapClient(object):
 class GrpcChannelPoolHelper(GrpcChannelPool):
     """Class that manages gRPC channel lifetimes."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize the GrpcChannelPool object."""
         super().__init__()
         self._discovery_client = DiscoveryClient()
@@ -181,7 +181,7 @@ class TestStandSupport(object):
         return absolute_path
 
 
-def configure_logging(verbosity: int):
+def configure_logging(verbosity: int) -> None:
     """Configure logging for this process."""
     if verbosity > 1:
         level = logging.DEBUG
