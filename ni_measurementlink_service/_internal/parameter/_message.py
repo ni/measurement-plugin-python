@@ -42,7 +42,9 @@ def _varint_encoder() -> Callable[[WriteFunction, int, Optional[bool]], int]:
     """
     local_int2byte = struct.Struct(">B").pack
 
-    def encode_varint(write, value, unused_deterministic=None):
+    def encode_varint(
+        write: WriteFunction, value: int, unused_deterministic: Optional[bool] = None
+    ) -> int:
         bits = value & 0x7F
         value >>= 7
         while value:
