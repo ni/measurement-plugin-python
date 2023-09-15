@@ -159,9 +159,9 @@ def _get_overlapping_parameters(
                 f"Error occurred while reading the parameter - given protobuf index '{field_index}' is invalid."
             )
         field_metadata = parameter_metadata_dict[field_index]
-        type = field_metadata.type
-        is_repeated = field_metadata.repeated
-        decoder = serialization_strategy.get_decoder(type, is_repeated, field_metadata.message_type)
+        decoder = serialization_strategy.get_decoder(
+            field_metadata.type, field_metadata.repeated, field_metadata.message_type
+        )
         inner_decoder = decoder(field_index, field_index)
         parameter_bytes_io = BytesIO(parameter_bytes)
         parameter_bytes_memory_view = parameter_bytes_io.getbuffer()
