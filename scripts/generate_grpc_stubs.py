@@ -9,7 +9,7 @@ import grpc_tools.protoc
 import pkg_resources
 
 STUBS_NAMESPACE = "ni_measurementlink_service._internal.stubs"
-PROTO_PARENT_NAMESPACES = ["ni.measurementlink", "nidevice_grpc"]
+PROTO_PARENT_NAMESPACES = ["ni.measurementlink", "nidevice_grpc", "ni.protobuf.types"]
 STUBS_PATH = pathlib.Path(__file__).parent.parent / STUBS_NAMESPACE.replace(".", "/")
 PROTO_PATH = STUBS_PATH / "proto"
 PROTO_FILES = list(PROTO_PATH.rglob("*.proto"))
@@ -18,25 +18,16 @@ TEST_STUBS_PATH = pathlib.Path(__file__).parent.parent / "tests" / "assets"
 TEST_PROTO_PATH = TEST_STUBS_PATH
 TEST_PROTO_FILES = list(TEST_PROTO_PATH.rglob("*.proto"))
 
-SAMPLE_MEASUREMENT_STUBS_PATH = (
-    pathlib.Path(__file__).parent.parent / "examples" / "sample_measurement" / "assets"
-)
-SAMPLE_MEASUREMENT_PROTO_PATH = SAMPLE_MEASUREMENT_STUBS_PATH
-SAMPLE_MEASUREMENT_PROTO_FILES = list(SAMPLE_MEASUREMENT_PROTO_PATH.rglob("*.proto"))
-
 
 def main():
     """Generate and fixup gRPC Python stubs."""
     remove_generated_files(STUBS_PATH, PROTO_PATH)
     generate_python_files(STUBS_PATH, PROTO_PATH, PROTO_FILES)
-    fix_import_paths(STUBS_PATH, STUBS_NAMESPACE, PROTO_PARENT_NAMESPACES)
+    fix_import_paths(STUBS_PATH, STUBS_PATH, STUBS_NAMESPACE, PROTO_PARENT_NAMESPACES)
     add_init_files(STUBS_PATH, PROTO_PATH)
 
-    generate_python_files(TEST_STUBS_PATH, TEST_PROTO_PATH, TEST_PROTO_FILES)
-
-    generate_python_files(
-        SAMPLE_MEASUREMENT_STUBS_PATH, SAMPLE_MEASUREMENT_PROTO_PATH, SAMPLE_MEASUREMENT_PROTO_FILES
-    )
+    generate_python_files(TEST_STUBS_PATH, TEST_PROTO_PATH, TEST_PROTO_FILES, PROTO_PATH)
+    fix_import_paths(TEST_STUBS_PATH, STUBS_PATH, STUBS_NAMESPACE, PROTO_PARENT_NAMESPACES)
 
 
 def is_relative_to(path: pathlib.PurePath, other: pathlib.PurePath) -> bool:
@@ -59,7 +50,10 @@ def remove_generated_files(stubs_path: pathlib.Path, proto_path: pathlib.Path):
 
 
 def generate_python_files(
-    stubs_path: pathlib.Path, proto_path: pathlib.Path, proto_files: Sequence[pathlib.Path]
+    stubs_path: pathlib.Path,
+    proto_path: pathlib.Path,
+    proto_files: Sequence[pathlib.Path],
+    alternate_proto_path: pathlib.Path = "",
 ):
     """Generate python files from .proto files with protoc."""
     arguments = [
@@ -71,24 +65,31 @@ def generate_python_files(
         f"--grpc_python_out={str(stubs_path)}",
         f"--mypy_grpc_out={str(stubs_path)}",
     ]
+    if alternate_proto_path != "":
+        arguments += (f"--proto_path={str(alternate_proto_path)}",)
+
     arguments += [str(path.relative_to(proto_path)).replace("\\", "/") for path in proto_files]
 
     grpc_tools.protoc.main(arguments)
 
 
 def fix_import_paths(
-    stubs_path: pathlib.Path, stubs_namespace: str, proto_parent_namespaces: Sequence[str]
+    protos_path: pathlib.Path,
+    stubs_path: pathlib.Path,
+    stubs_namespace: str,
+    proto_parent_namespaces: Sequence[str],
 ):
     """Fix import paths of generated files."""
     print("Fixing import paths")
-    grpc_codegened_file_paths = list(stubs_path.rglob("*pb2*py"))
-    imports_to_fix = [path.stem for path in grpc_codegened_file_paths if path.parent == stubs_path]
+    grpc_codegened_file_paths = list(protos_path.rglob("*pb2*py"))
+    stubs_codegened_file_paths = list(stubs_path.rglob("*pb2*py"))
+    imports_to_fix = [path.stem for path in stubs_codegened_file_paths if path.parent == stubs_path]
     imports_to_alias = [
         ".".join(path.relative_to(stubs_path).with_suffix("").parts)
-        for path in grpc_codegened_file_paths
+        for path in stubs_codegened_file_paths
         if path.stem not in imports_to_fix
     ]
-    grpc_codegened_file_paths.extend(stubs_path.rglob("*pb2*pyi"))
+    grpc_codegened_file_paths.extend(protos_path.rglob("*pb2*pyi"))
     for path in grpc_codegened_file_paths:
         print(f"Processing {path}")
         data = path.read_bytes()
