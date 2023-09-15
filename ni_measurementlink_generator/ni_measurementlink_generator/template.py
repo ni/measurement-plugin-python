@@ -24,7 +24,9 @@ def _render_template(template_name: str, **template_args: Any) -> bytes:
         ) from e
 
 
-def _create_file(template_name: str, file_name: str, directory_out: pathlib.Path, **template_args: Any) -> None:
+def _create_file(
+    template_name: str, file_name: str, directory_out: pathlib.Path, **template_args: Any
+) -> None:
     output_file = directory_out / file_name
 
     output = _render_template(template_name, **template_args)
