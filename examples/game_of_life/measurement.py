@@ -4,7 +4,7 @@ import random
 import time
 
 import click
-from _helpers import configure_logging, get_service_options, verbosity_option
+from _helpers import configure_logging, verbosity_option
 
 import ni_measurementlink_service as nims
 from ni_measurementlink_service._internal.stubs.ni.protobuf.types import xydata_pb2
@@ -106,9 +106,6 @@ def _update_grid(grid):
 def main(verbosity: int, **kwargs) -> None:
     """Source the XY data for Conway's Game of Life."""
     configure_logging(verbosity)
-
-    global service_options
-    service_options = get_service_options(**kwargs)
 
     with measurement_service.host_service():
         input("Press enter to close the measurement service.\n")
