@@ -1,30 +1,32 @@
 import struct
-from typing import Any, Dict
+from typing import Any, Callable, Dict, Optional, Tuple, Type, TypeVar
 
 from google.protobuf.internal import encoder, wire_format
 from google.protobuf.message import Message
 
 from ni_measurementlink_service._internal.parameter._serializer_types import (
     Decoder,
-    Encoder,
     Key,
     NewDefault,
+    WriteFunction,
 )
 
 
-def _message_encoder_constructor(field_index: int, is_repeated: bool, is_packed: bool) -> Encoder:
+def _message_encoder_constructor(
+    field_index: int, is_repeated: bool, is_packed: bool
+) -> Callable[[WriteFunction, Message, bool], int]:
     """Mimics google.protobuf.internal.MessageEncoder.
 
-    We cannot use MessageEncoder because it is for the pure-Python implementation
-    of messages. Our messages are upb messages, so we need to call 'SerializeToString'
+    This function was forked in order to call SerializeToString instead of _InternalSerialize.
 
-    See EncodeField:
-    https://github.com/protocolbuffers/protobuf/blob/0b817d46d4ca1977d3dccf2442aeee3c9e98e3a1/python/google/protobuf/internal/encoder.py#L765C15-L765C15
+    _InternalSerialize is only defined for the pure-Python protobuf implementation. Our child
+    messages (like DoubleXYData) are defined in .proto files, so they use whichever protobuf
+    implementation that google.protobuf.internal.api_implementation chooses (usually upb).
     """
     tag = encoder.TagBytes(field_index, wire_format.WIRETYPE_LENGTH_DELIMITED)
     encode_varint = _varint_encoder()
 
-    def _encode_message(write, value, deterministic):
+    def _encode_message(write: WriteFunction, value: Message, deterministic: bool):
         write(tag)
         bytes = value.SerializeToString()
         encode_varint(write, len(bytes), deterministic)
@@ -33,7 +35,7 @@ def _message_encoder_constructor(field_index: int, is_repeated: bool, is_packed:
     return _encode_message
 
 
-def _varint_encoder():
+def _varint_encoder() -> Callable[[WriteFunction, int, Optional[bool]], int]:
     """Return an encoder for a basic varint value (does not include tag).
 
     From google.protobuf.internal.encoder.py _VarintEncoder
@@ -57,10 +59,11 @@ def _message_decoder_constructor(
 ) -> Decoder:
     """Mimics google.protobuf.internal.MessageDecoder.
 
-    We cannot use MessageDecoder because it is for the pure-Python implementation
-    of messages. Our messages are upb messages, so we need to call 'ParseFromString'
+    This function was forked in order to call ParseFromString instead of _InternalParse.
 
-    See DecodeField
+    _InternalParse is only defined for the pure-Python protobuf implementation. Our child messages
+    (like DoubleXYData) are defined in .proto files, so they use whichever protobuf implementation
+    that google.protobuf.internal.api_implementation chooses (usually upb).
     """
 
     def _decode_message(
@@ -83,7 +86,10 @@ def _message_decoder_constructor(
     return _decode_message
 
 
-def _varint_decoder(mask, result_type):
+T = TypeVar("T", bound="int")
+
+
+def _varint_decoder(mask: int, result_type: Type[T]) -> Callable[[memoryview, int], Tuple[T, int]]:
     """Return an encoder for a basic varint value (does not include tag).
 
     Decoded values will be bitwise-anded with the given mask before being
@@ -95,7 +101,7 @@ def _varint_decoder(mask, result_type):
     From google.protobuf.internal.decoder.py _VarintDecoder
     """
 
-    def decode_varint(buffer, pos):
+    def decode_varint(buffer: memoryview, pos: int) -> Tuple[T, int]:
         result = 0
         shift = 0
         while 1:

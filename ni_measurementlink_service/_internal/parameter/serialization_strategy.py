@@ -55,7 +55,7 @@ def _vector_encoder(
     return vector_encoder
 
 
-def _unsupported_encoder(field_index: int, is_repeated: bool, is_packed: bool):
+def _unsupported_encoder(field_index: int, is_repeated: bool, is_packed: bool) -> Encoder:
     raise NotImplementedError(f"Unsupported data type for field {field_index}")
 
 
@@ -108,10 +108,10 @@ def _double_xy_data_decoder(decoder: DecoderConstructor) -> PartialDecoderConstr
     Takes a field index and a key and returns a Decoder for DoubleXYData.
     """
 
-    def _new_default(unused_message=None):
+    def _new_default(unused_message: Optional[Message] = None) -> Any:
         return xydata_pb2.DoubleXYData()
 
-    def message_decoder(field_index, key):
+    def message_decoder(field_index: int, key: Key) -> Decoder:
         is_repeated = True
         is_packed = True
         return decoder(field_index, is_repeated, is_packed, key, _new_default)
@@ -127,7 +127,7 @@ IntEncoder = _scalar_encoder(cast(EncoderConstructor, encoder.Int32Encoder))
 UIntEncoder = _scalar_encoder(cast(EncoderConstructor, encoder.UInt32Encoder))
 BoolEncoder = _scalar_encoder(encoder.BoolEncoder)
 StringEncoder = _scalar_encoder(encoder.StringEncoder)
-MessageEncoder = _scalar_encoder(_message._message_encoder_constructor)
+MessageEncoder = _scalar_encoder(cast(EncoderConstructor, _message._message_encoder_constructor))
 
 FloatArrayEncoder = _vector_encoder(cast(EncoderConstructor, encoder.FloatEncoder))
 DoubleArrayEncoder = _vector_encoder(cast(EncoderConstructor, encoder.DoubleEncoder))
@@ -198,6 +198,10 @@ _TYPE_DEFAULT_MAPPING = {
     type_pb2.Field.TYPE_ENUM: int(),
 }
 
+_MESSAGE_TYPE_TO_DECODER = {
+    xydata_pb2.DoubleXYData.DESCRIPTOR.full_name: XYDataDecoder,
+}
+
 
 def get_encoder(type: type_pb2.Field.Kind.ValueType, repeated: bool) -> PartialEncoderConstructor:
     """Get the appropriate partial encoder constructor for the specified type.
@@ -220,12 +224,13 @@ def get_decoder(
     if decoder_mapping is not None:
         scalar_decoder, array_decoder = decoder_mapping
         return array_decoder if repeated else scalar_decoder
-    elif message_type == xydata_pb2.DoubleXYData.DESCRIPTOR.full_name:
-        if type != type_pb2.Field.Kind.TYPE_MESSAGE:
-            raise ValueError(f"Message type must have a TYPE_MESSAGE kind '{message_type}'")
+    elif type == type_pb2.Field.Kind.TYPE_MESSAGE:
         if repeated:
             raise ValueError(f"Repeated message types are not supported '{message_type}'")
-        return XYDataDecoder
+        decoder = _MESSAGE_TYPE_TO_DECODER.get(message_type)
+        if decoder is None:
+            raise ValueError(f"Unknown message type '{message_type}'")
+        return decoder
     else:
         raise ValueError(f"Error can not decode type '{type}'")
 
