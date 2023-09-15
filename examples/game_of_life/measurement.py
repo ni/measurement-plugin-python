@@ -4,14 +4,10 @@ import random
 import time
 
 import click
+from _helpers import configure_logging, get_service_options, verbosity_option
 
 import ni_measurementlink_service as nims
 from ni_measurementlink_service._internal.stubs.ni.protobuf.types import xydata_pb2
-from _helpers import (
-    configure_logging,
-    get_service_options,
-    verbosity_option,
-)
 
 service_directory = pathlib.Path(__file__).resolve().parent
 measurement_service = nims.MeasurementService(
@@ -27,10 +23,7 @@ measurement_service = nims.MeasurementService(
 @measurement_service.configuration("update_interval", nims.DataType.UInt32, 100)
 @measurement_service.output("game_of_life", nims.DataType.DoubleXYData)
 @measurement_service.output("generation", nims.DataType.UInt32)
-def measure(
-    width: int,
-    height: int,
-    update_interval: int):
+def measure(width: int, height: int, update_interval: int):
     """Streaming measurement that returns Conway's Game of Life grid as DoubleXYData."""
     grid = _initialize_grid_with_seeded_data(width, height)
     generation = 0
