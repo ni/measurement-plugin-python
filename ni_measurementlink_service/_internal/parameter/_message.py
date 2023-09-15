@@ -26,11 +26,11 @@ def _message_encoder_constructor(
     tag = encoder.TagBytes(field_index, wire_format.WIRETYPE_LENGTH_DELIMITED)
     encode_varint = _varint_encoder()
 
-    def _encode_message(write: WriteFunction, value: Message, deterministic: bool):
+    def _encode_message(write: WriteFunction, value: Message, deterministic: bool) -> int:
         write(tag)
         bytes = value.SerializeToString()
         encode_varint(write, len(bytes), deterministic)
-        write(bytes)
+        return write(bytes)
 
     return _encode_message
 
