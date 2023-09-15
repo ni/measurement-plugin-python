@@ -17,7 +17,6 @@ measurement_service = nims.MeasurementService(
     ui_file_paths=[service_directory / "game_of_life.measui"],
 )
 
-Outputs = Tuple[xydata_pb2.DoubleXYData, int]
 Grid = List[List[bool]]
 
 
@@ -27,7 +26,9 @@ Grid = List[List[bool]]
 @measurement_service.configuration("update_interval", nims.DataType.UInt32, 100)
 @measurement_service.output("game_of_life", nims.DataType.DoubleXYData)
 @measurement_service.output("generation", nims.DataType.UInt32)
-def measure(width: int, height: int, update_interval: int) -> Generator[Outputs, None, Outputs]:
+def measure(
+    width: int, height: int, update_interval: int
+) -> Generator[Tuple[xydata_pb2.DoubleXYData, int], None, None]:
     """Streaming measurement that returns Conway's Game of Life grid as DoubleXYData."""
     grid = _initialize_grid_with_seeded_data(width, height)
     generation = 0
