@@ -87,6 +87,8 @@ class MeasurementContext:
 _TGrpcChannelPool = TypeVar("_TGrpcChannelPool", bound="GrpcChannelPool")
 _TMeasurementService = TypeVar("_TMeasurementService", bound="MeasurementService")
 
+_F = TypeVar("_F", bound=Callable)
+
 
 class GrpcChannelPool(object):
     """Class that manages gRPC channel lifetimes."""
@@ -239,7 +241,7 @@ class MeasurementService:
         self.channel_pool: GrpcChannelPool = GrpcChannelPool()
         self.discovery_client: DiscoveryClient = DiscoveryClient()
 
-    def register_measurement(self, measurement_function: Callable) -> Callable:
+    def register_measurement(self, measurement_function: _F) -> _F:
         """Register a function as the measurement function for a measurement service.
 
         To declare a measurement function, use this idiom:
@@ -268,7 +270,7 @@ class MeasurementService:
         *,
         instrument_type: str = "",
         enum_type: Optional[SupportedEnumType] = None,
-    ) -> Callable:
+    ) -> Callable[[_F], _F]:
         """Add a configuration parameter to a measurement function.
 
         This decorator maps the measurement service's configuration parameters
@@ -320,7 +322,7 @@ class MeasurementService:
         parameter_metadata.validate_default_value_type(parameter)
         self.configuration_parameter_list.append(parameter)
 
-        def _configuration(func):
+        def _configuration(func: _F) -> _F:
             return func
 
         return _configuration
@@ -331,7 +333,7 @@ class MeasurementService:
         type: DataType,
         *,
         enum_type: Optional[SupportedEnumType] = None,
-    ) -> Callable:
+    ) -> Callable[[_F], _F]:
         """Add an output parameter to a measurement function.
 
         This decorator maps the measurement service's output parameters to
@@ -373,7 +375,7 @@ class MeasurementService:
         )
         self.output_parameter_list.append(parameter)
 
-        def _output(func):
+        def _output(func: _F) -> _F:
             return func
 
         return _output

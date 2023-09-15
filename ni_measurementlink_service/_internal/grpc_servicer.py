@@ -57,7 +57,7 @@ class MeasurementServiceContext:
     def add_cancel_callback(self, cancel_callback: Callable[[], None]) -> None:
         """Add a callback that is invoked when the RPC is canceled."""
 
-        def grpc_callback():
+        def grpc_callback() -> None:
             if not self._is_complete:
                 cancel_callback()
 
