@@ -3,7 +3,16 @@
 import logging
 import pathlib
 import types
-from typing import Any, Callable, List, NamedTuple, Optional, Tuple, TypeVar, Union
+from typing import (
+    Any,
+    Callable,
+    List,
+    NamedTuple,
+    Optional,
+    Tuple,
+    TypeVar,
+    Union,
+)
 
 import click
 import grpc
