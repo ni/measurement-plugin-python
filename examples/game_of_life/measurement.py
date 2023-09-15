@@ -2,6 +2,7 @@
 import pathlib
 import random
 import time
+from typing import Any, Generator, List, Tuple
 
 import click
 from _helpers import configure_logging, verbosity_option
@@ -16,6 +17,7 @@ measurement_service = nims.MeasurementService(
     ui_file_paths=[service_directory / "game_of_life.measui"],
 )
 
+Outputs = Tuple[xydata_pb2.DoubleXYData, int]
 
 @measurement_service.register_measurement
 @measurement_service.configuration("width", nims.DataType.UInt32, 100)
@@ -23,7 +25,7 @@ measurement_service = nims.MeasurementService(
 @measurement_service.configuration("update_interval", nims.DataType.UInt32, 100)
 @measurement_service.output("game_of_life", nims.DataType.DoubleXYData)
 @measurement_service.output("generation", nims.DataType.UInt32)
-def measure(width: int, height: int, update_interval: int):
+def measure(width: int, height: int, update_interval: int) -> Generator[Outputs, None, Outputs]:
     """Streaming measurement that returns Conway's Game of Life grid as DoubleXYData."""
     grid = _initialize_grid_with_seeded_data(width, height)
     generation = 0
@@ -48,7 +50,7 @@ def measure(width: int, height: int, update_interval: int):
         yield (xydata_out, generation)
 
 
-def _initialize_xydata_and_frame(width, height) -> xydata_pb2.DoubleXYData:
+def _initialize_xydata_and_frame(width: int, height: int) -> xydata_pb2.DoubleXYData:
     xydata = xydata_pb2.DoubleXYData()
 
     # Frame To keep the graph stable
@@ -63,15 +65,15 @@ def _initialize_xydata_and_frame(width, height) -> xydata_pb2.DoubleXYData:
     return xydata
 
 
-def _initialize_grid_with_seeded_data(rows, cols, probability=0.6):
+def _initialize_grid_with_seeded_data(rows: int, cols: int, probability: float=0.6) -> List[List[bool]]:
     return [[random.random() < probability for _ in range(cols)] for _ in range(rows)]
 
 
-def _initialize_grid(rows, cols):
+def _initialize_grid(rows: int, cols: int) -> List[List[bool]]:
     return [[False for _ in range(cols)] for _ in range(rows)]
 
 
-def _count_neighbors(grid, row, col):
+def _count_neighbors(grid: List[List[bool]], row: int, col: int) -> int:
     count = 0
     neighbors = [
         (row - 1, col - 1),
@@ -89,7 +91,7 @@ def _count_neighbors(grid, row, col):
     return count
 
 
-def _update_grid(grid):
+def _update_grid(grid: List[List[bool]]) -> List[List[bool]]:
     new_grid = _initialize_grid(len(grid), len(grid[0]))
     for row in range(len(grid)):
         for col in range(len(grid[0])):
@@ -103,7 +105,7 @@ def _update_grid(grid):
 
 @click.command
 @verbosity_option
-def main(verbosity: int, **kwargs) -> None:
+def main(verbosity: int, **kwargs: Any) -> None:
     """Source the XY data for Conway's Game of Life."""
     configure_logging(verbosity)
 
