@@ -165,7 +165,9 @@ class MeasurementServiceServicerV1(v1_measurement_service_pb2_grpc.MeasurementSe
         """
         super().__init__()
 
-        def frame_metadata_dict(parameter_list: List[ParameterMetadata]) -> Dict[int, ParameterMetadata]:
+        def frame_metadata_dict(
+            parameter_list: List[ParameterMetadata],
+        ) -> Dict[int, ParameterMetadata]:
             metadata_dict = {}
             for i, parameter in enumerate(parameter_list, start=1):
                 metadata_dict[i] = parameter
@@ -308,7 +310,9 @@ class MeasurementServiceServicerV2(v2_measurement_service_pb2_grpc.MeasurementSe
         """
         super().__init__()
 
-        def frame_metadata_dict(parameter_list: List[ParameterMetadata]) -> Dict[int, ParameterMetadata]:
+        def frame_metadata_dict(
+            parameter_list: List[ParameterMetadata],
+        ) -> Dict[int, ParameterMetadata]:
             metadata_dict = {}
             for i, parameter in enumerate(parameter_list, start=1):
                 metadata_dict[i] = parameter
