@@ -5,7 +5,7 @@ import pathlib
 import sys
 import threading
 import time
-from typing import Iterable, List, Tuple
+from typing import Any, Iterable, List, Tuple
 
 import click
 import grpc
@@ -170,7 +170,7 @@ def _log_measured_values(
 @verbosity_option
 @grpc_device_options
 @use_simulation_option(default=USE_SIMULATION)
-def main(verbosity: int, **kwargs) -> None:
+def main(verbosity: int, **kwargs: Any) -> None:
     """Source and measure a DC voltage with an NI SMU."""
     configure_logging(verbosity)
 
