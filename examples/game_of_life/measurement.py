@@ -5,9 +5,8 @@ import time
 from typing import Any, Generator, List, Tuple
 
 import click
-from _helpers import configure_logging, verbosity_option
-
 import ni_measurementlink_service as nims
+from _helpers import configure_logging, verbosity_option
 from ni_measurementlink_service._internal.stubs.ni.protobuf.types import xydata_pb2
 
 service_directory = pathlib.Path(__file__).resolve().parent
@@ -18,6 +17,8 @@ measurement_service = nims.MeasurementService(
 )
 
 Outputs = Tuple[xydata_pb2.DoubleXYData, int]
+Grid = List[List[bool]]
+
 
 @measurement_service.register_measurement
 @measurement_service.configuration("width", nims.DataType.UInt32, 100)
@@ -65,15 +66,15 @@ def _initialize_xydata_and_frame(width: int, height: int) -> xydata_pb2.DoubleXY
     return xydata
 
 
-def _initialize_grid_with_seeded_data(rows: int, cols: int, probability: float=0.6) -> List[List[bool]]:
+def _initialize_grid_with_seeded_data(rows: int, cols: int, probability: float = 0.6) -> Grid:
     return [[random.random() < probability for _ in range(cols)] for _ in range(rows)]
 
 
-def _initialize_grid(rows: int, cols: int) -> List[List[bool]]:
+def _initialize_grid(rows: int, cols: int) -> Grid:
     return [[False for _ in range(cols)] for _ in range(rows)]
 
 
-def _count_neighbors(grid: List[List[bool]], row: int, col: int) -> int:
+def _count_neighbors(grid: Grid, row: int, col: int) -> int:
     count = 0
     neighbors = [
         (row - 1, col - 1),
@@ -91,7 +92,7 @@ def _count_neighbors(grid: List[List[bool]], row: int, col: int) -> int:
     return count
 
 
-def _update_grid(grid: List[List[bool]]) -> List[List[bool]]:
+def _update_grid(grid: Grid) -> Grid:
     new_grid = _initialize_grid(len(grid), len(grid[0]))
     for row in range(len(grid)):
         for col in range(len(grid[0])):
