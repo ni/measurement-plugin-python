@@ -25,11 +25,9 @@ def test___measurement_service___measure___returns_outputs(
         resolution_digits=5.5,
     )
     request = MeasureRequest(
-        configuration_parameters=any_pb2.Any(
-            type_url="ignored", value=configurations.SerializeToString()
-        ),
         pin_map_context=PinMapContext(pin_map_id=pin_map_id, sites=[0]),
     )
+    request.configuration_parameters.Pack(configurations)
 
     response_iterator = measurement_stub.Measure(request)
 
