@@ -4,7 +4,7 @@ import logging
 import pathlib
 import sys
 from enum import Enum
-from typing import Tuple
+from typing import Any, Tuple
 
 import click
 import pyvisa.resources
@@ -125,7 +125,7 @@ def measure(
 @click.command
 @verbosity_option
 @use_simulation_option(default=USE_SIMULATION)
-def main(verbosity: int, **kwargs) -> None:
+def main(verbosity: int, **kwargs: Any) -> None:
     """Perform a DMM measurement using NI-VISA and an NI Instrument Simulator v2.0."""
     configure_logging(verbosity)
     global service_options

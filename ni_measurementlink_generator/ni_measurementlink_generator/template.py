@@ -2,7 +2,7 @@
 import logging
 import pathlib
 import re
-from typing import Optional, Tuple
+from typing import Any, Optional, Tuple
 
 import click
 from mako import exceptions
@@ -11,7 +11,7 @@ from mako.template import Template
 _logger = logging.getLogger(__name__)
 
 
-def _render_template(template_name: str, **template_args) -> bytes:
+def _render_template(template_name: str, **template_args: Any) -> bytes:
     file_path = str(pathlib.Path(__file__).parent / "templates" / template_name)
 
     template = Template(filename=file_path, input_encoding="utf-8", output_encoding="utf-8")
@@ -24,7 +24,9 @@ def _render_template(template_name: str, **template_args) -> bytes:
         ) from e
 
 
-def _create_file(template_name: str, file_name: str, directory_out: pathlib.Path, **template_args):
+def _create_file(
+    template_name: str, file_name: str, directory_out: pathlib.Path, **template_args: Any
+) -> None:
     output_file = directory_out / file_name
 
     output = _render_template(template_name, **template_args)

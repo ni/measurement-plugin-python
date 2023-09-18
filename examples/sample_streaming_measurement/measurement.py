@@ -21,9 +21,6 @@ measurement_service = nims.MeasurementService(
 )
 
 
-Outputs = Tuple[str, int, List[int]]
-
-
 @measurement_service.register_measurement
 @measurement_service.configuration("name", nims.DataType.String, "<Name>")
 @measurement_service.configuration("num_responses", nims.DataType.Int32, 10)
@@ -41,7 +38,7 @@ def measure(
     cumulative_data: bool,
     response_interval_in_ms: int,
     error_on_index: int,
-) -> Generator[Outputs, None, None]:
+) -> Generator[Tuple[str, int, List[int]], None, None]:
     """Returns the number of responses requested at the requested interval."""
     logging.info("Executing measurement")
     cancellation_event = threading.Event()

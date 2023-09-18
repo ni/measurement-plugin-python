@@ -110,7 +110,7 @@ def serialize_default_values(parameter_metadata_dict: Dict[int, ParameterMetadat
     return serialize_parameters(parameter_metadata_dict, default_value_parameter_array)
 
 
-def _get_field_index(parameter_bytes: bytes, tag_position: int):
+def _get_field_index(parameter_bytes: bytes, tag_position: int) -> int:
     """Get the Filed Index based on the tag's position.
 
     The tag Position should be the index of the TagValue in the ByteArray for valid field index.
@@ -162,7 +162,7 @@ def _get_overlapping_parameters(
         decoder = serialization_strategy.get_decoder(
             field_metadata.type, field_metadata.repeated, field_metadata.message_type
         )
-        inner_decoder = decoder(field_index, field_index)
+        inner_decoder = decoder(field_index, cast(FieldDescriptor, field_index))
         parameter_bytes_io = BytesIO(parameter_bytes)
         parameter_bytes_memory_view = parameter_bytes_io.getbuffer()
         position = inner_decoder(
