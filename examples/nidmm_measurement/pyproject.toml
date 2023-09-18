@@ -12,8 +12,13 @@ click = ">=7.1.2, !=8.1.4" # mypy fails with click 8.1.4: https://github.com/pal
 grpcio = "*"
 
 [tool.poetry.group.dev.dependencies]
+grpcio-tools = ">=1.49.1"
 mypy = ">=1.0"
 grpc-stubs = "^1.53"
+mypy-protobuf = ">=3.4"
+types-protobuf = "^4.21"
+pytest = ">=7.2.0"
+pytest-mock = ">=3.0"
 # Uncomment to use prerelease dependencies.
 # nidmm = { git = "https://github.com/ni/nimi-python.git", subdirectory = "generated/nidmm"}
 # ni-measurementlink-service = {path = "../..", develop = true}

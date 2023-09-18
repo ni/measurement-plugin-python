@@ -26,3 +26,30 @@ This example requires an NI DMM (e.g. PXIe-4081).
 
 By default, this example uses a simulated instrument. To use a physical instrument, edit
 `_constants.py` to specify `USE_SIMULATION = False`.
+
+### Tests
+
+This example demonstrates how to write integration and unit tests for a measurement
+service.
+
+To run the tests, run:
+```
+poetry run python -m pytest -v
+```
+
+> **Note**
+> 
+> `poetry run pytest` currently does not work because it doesn't add the current directory to
+> the path.
+
+The integration tests exercise the entire service, including its interaction with the
+MeasurementLink session management service, pin map services, and the NI gRPC Device
+Server. This requires MeasurementLink and NI-DMM to be installed.
+
+To regenerate the protobuf and gRPC codegen for the integration tests, run:
+
+```
+poetry run python -m grpc_tools.protoc -I tests/assets --python_out=tests/assets \
+    --mypy_out=tests/assets --grpc_python_out=tests/assets --mypy_grpc_out=tests/assets \
+    nidmm_measurement_parameters.proto
+```
