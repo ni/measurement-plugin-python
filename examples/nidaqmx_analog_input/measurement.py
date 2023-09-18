@@ -3,7 +3,7 @@
 import logging
 import pathlib
 import sys
-from typing import List, Optional, Tuple
+from typing import Any, List, Optional, Tuple
 
 import click
 import nidaqmx
@@ -95,7 +95,7 @@ def measure(pin_name: str, sample_rate: float, number_of_samples: int) -> Tuple[
     return (voltage_values,)
 
 
-def _log_measured_values(samples, max_samples_to_display=5):
+def _log_measured_values(samples: List[float], max_samples_to_display: int = 5) -> None:
     """Log the measured values."""
     if len(samples) > max_samples_to_display:
         for index, value in enumerate(samples[0 : max_samples_to_display - 1]):
@@ -110,7 +110,7 @@ def _log_measured_values(samples, max_samples_to_display=5):
 @click.command
 @verbosity_option
 @grpc_device_options
-def main(verbosity: int, **kwargs):
+def main(verbosity: int, **kwargs: Any) -> None:
     """Perform a finite analog input measurement with NI-DAQmx."""
     configure_logging(verbosity)
     global service_options

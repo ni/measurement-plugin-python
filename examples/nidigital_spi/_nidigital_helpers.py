@@ -12,7 +12,7 @@ import ni_measurementlink_service as nims
 def create_session(
     session_info: nims.session_management.SessionInformation,
     session_grpc_channel: Optional[grpc.Channel] = None,
-    initialization_behavior=nidigital.SessionInitializationBehavior.AUTO,
+    initialization_behavior: nidigital.SessionInitializationBehavior = nidigital.SessionInitializationBehavior.AUTO,
 ) -> nidigital.Session:
     """Create driver session based on reserved session and grpc channel."""
     options: Dict[str, Any] = {}

@@ -4,7 +4,7 @@ import contextlib
 import logging
 import pathlib
 import sys
-from typing import Tuple
+from typing import Any, Tuple
 
 import click
 import niswitch
@@ -91,7 +91,7 @@ def measure(
 @verbosity_option
 @grpc_device_options
 @use_simulation_option(default=USE_SIMULATION)
-def main(verbosity: int, **kwargs) -> None:
+def main(verbosity: int, **kwargs: Any) -> None:
     """Control relays using an NI relay driver (e.g. PXI-2567)."""
     configure_logging(verbosity)
     global service_options

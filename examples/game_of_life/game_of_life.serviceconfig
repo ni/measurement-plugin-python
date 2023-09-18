@@ -1,0 +1,18 @@
+{
+  "services": [
+    {
+      "displayName": "Conway's Game of Life (Py)",
+      "serviceClass": "game_of_life_Python",
+      "descriptionUrl": "",
+      "providedInterfaces": [
+        "ni.measurementlink.measurement.v2.MeasurementService"
+      ],
+      "path": "start.bat",
+      "annotations": {
+        "ni/service.description": "MeasurementLink example that displays Conway's Game of Life simulation in a graph.",
+        "ni/service.collection": "NI.Examples",
+        "ni/service.tags": []
+      }
+    }
+  ]
+}

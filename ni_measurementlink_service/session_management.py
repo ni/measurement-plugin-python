@@ -2,10 +2,12 @@
 from __future__ import annotations
 
 import abc
+import sys
 import warnings
 from functools import cached_property
 from types import TracebackType
 from typing import (
+    TYPE_CHECKING,
     Any,
     Iterable,
     List,
@@ -14,7 +16,6 @@ from typing import (
     Optional,
     Sequence,
     Type,
-    TypeVar,
 )
 
 import grpc
@@ -28,6 +29,12 @@ from ni_measurementlink_service._internal.stubs.ni.measurementlink.sessionmanage
     session_management_service_pb2,
     session_management_service_pb2_grpc,
 )
+
+if TYPE_CHECKING:
+    if sys.version_info >= (3, 11):
+        from typing import Self
+    else:
+        from typing_extensions import Self
 
 GRPC_SERVICE_INTERFACE_NAME = "ni.measurementlink.sessionmanagement.v1.SessionManagementService"
 GRPC_SERVICE_CLASS = "ni.measurementlink.sessionmanagement.v1.SessionManagementService"
@@ -175,10 +182,6 @@ def _convert_session_info_to_grpc(
     )
 
 
-# Eventually, this can be replaced with typing.Self (Python >= 3.11).
-_TReservation = TypeVar("_TReservation", bound="BaseReservation")
-
-
 class BaseReservation(abc.ABC):
     """Manages session reservation."""
 
@@ -191,7 +194,7 @@ class BaseReservation(abc.ABC):
         self._session_manager = session_manager
         self._session_info = session_info
 
-    def __enter__(self: _TReservation) -> _TReservation:
+    def __enter__(self: Self) -> Self:
         """Context management protocol. Returns self."""
         return self
 

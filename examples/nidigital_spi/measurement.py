@@ -3,7 +3,7 @@
 import logging
 import pathlib
 import sys
-from typing import Iterable, Tuple, Union
+from typing import Any, Iterable, Tuple, Union
 
 import click
 import nidigital
@@ -121,7 +121,7 @@ def _resolve_relative_path(
 @verbosity_option
 @grpc_device_options
 @use_simulation_option(default=USE_SIMULATION)
-def main(verbosity: int, **kwargs) -> None:
+def main(verbosity: int, **kwargs: Any) -> None:
     """Test a SPI device using an NI Digital Pattern instrument."""
     configure_logging(verbosity)
     global service_options

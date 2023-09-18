@@ -1,23 +1,24 @@
 [tool.poetry]
-name = "ui_progress_updates"
-version = "0.5.0"
-description = "MeasurementLink example that generates random numbers and updates the measurement UI to show progress."
+name = "game_of_life"
+version = "1.0.0"
+description = "MeasurementLink example that displays Conway's Game of Life in a graph."
 authors = ["National Instruments"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
-ni-measurementlink-service = {version = "^1.1.0"}
+ni-measurementlink-service = {version = "^1.2.0-dev0", allow-prereleases = true}
 click = ">=7.1.2, !=8.1.4" # mypy fails with click 8.1.4: https://github.com/pallets/click/issues/2558
 
 [tool.poetry.group.dev.dependencies]
 mypy = ">=1.0"
 grpc-stubs = "^1.53"
+types-protobuf = "^4.21"
 # Uncomment to use prerelease dependencies.
-# ni-measurementlink-service = {path = "../..", develop = true}
+ni-measurementlink-service = {path = "../..", develop = true}
+
+[tool.mypy]
+disallow_untyped_defs = true
 
 [build-system]
 requires = ["poetry-core>=1.2.0"]
 build-backend = "poetry.core.masonry.api"
-
-[tool.mypy]
-disallow_untyped_defs = true

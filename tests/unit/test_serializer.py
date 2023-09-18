@@ -9,6 +9,7 @@ from ni_measurementlink_service._internal.parameter.metadata import (
     ParameterMetadata,
     TypeSpecialization,
 )
+from ni_measurementlink_service._internal.stubs.ni.protobuf.types import xydata_pb2
 from tests.assets import test_pb2
 
 
@@ -28,6 +29,11 @@ class Countries(IntEnum):
     TAIWAN = 1
     AUSTRALIA = 2
     CANADA = 3
+
+
+double_xy_data = xydata_pb2.DoubleXYData()
+double_xy_data.x_data.append(4)
+double_xy_data.y_data.append(6)
 
 
 @pytest.mark.parametrize(
@@ -54,6 +60,7 @@ class Countries(IntEnum):
             [DifferentColor.TEAL, DifferentColor.BROWN],
             Countries.AUSTRALIA,
             [Countries.AUSTRALIA, Countries.CANADA],
+            double_xy_data,
         ],
         [
             -0.9999,
@@ -76,6 +83,7 @@ class Countries(IntEnum):
             [DifferentColor.TEAL, DifferentColor.BROWN],
             Countries.AUSTRALIA,
             [Countries.AUSTRALIA, Countries.CANADA],
+            double_xy_data,
         ],
     ],
 )
@@ -113,6 +121,7 @@ def test___serializer___serialize_parameter___successful_serialization(test_valu
             [DifferentColor.TEAL, DifferentColor.BROWN],
             Countries.AUSTRALIA,
             [Countries.AUSTRALIA, Countries.CANADA],
+            double_xy_data,
         ],
         [
             -0.9999,
@@ -135,6 +144,7 @@ def test___serializer___serialize_parameter___successful_serialization(test_valu
             [DifferentColor.TEAL, DifferentColor.BROWN],
             Countries.AUSTRALIA,
             [Countries.AUSTRALIA, Countries.CANADA],
+            double_xy_data,
         ],
     ],
 )
@@ -171,6 +181,7 @@ def test___serializer___serialize_default_parameter___successful_serialization(d
             [DifferentColor.TEAL, DifferentColor.BROWN],
             Countries.AUSTRALIA,
             [Countries.AUSTRALIA, Countries.CANADA],
+            double_xy_data,
         ]
     ],
 )
@@ -207,6 +218,7 @@ def test___empty_buffer___deserialize_parameters___returns_zero_or_empty():
         [DifferentColor.TEAL, DifferentColor.BROWN],
         Countries.AUSTRALIA,
         [Countries.AUSTRALIA, Countries.CANADA],
+        double_xy_data,
     ]
     parameter = _get_test_parameter_by_id(nonzero_defaults)
     parameter_value_by_id = serializer.deserialize_parameters(parameter, bytes())
@@ -219,6 +231,8 @@ def test___empty_buffer___deserialize_parameters___returns_zero_or_empty():
             assert value.value == 0
         elif parameter_metadata.type == type_pb2.Field.TYPE_STRING:
             assert value == ""
+        elif parameter_metadata.type == type_pb2.Field.TYPE_MESSAGE:
+            assert value is None
         else:
             assert value == 0
 
@@ -391,6 +405,14 @@ def _get_test_parameter_by_id(default_values):
                 "ni/enum.values": '{"AMERICA": 0, "TAIWAN": 1, "AUSTRALIA": 2, "CANADA": 3}',
             },
         ),
+        21: ParameterMetadata(
+            display_name="xy_data",
+            type=type_pb2.Field.TYPE_MESSAGE,
+            repeated=False,
+            default_value=default_values[20],
+            annotations={},
+            message_type=xydata_pb2.DoubleXYData.DESCRIPTOR.full_name,
+        ),
     }
     return parameter_by_id
 
@@ -417,4 +439,6 @@ def _get_test_grpc_message(test_values):
     parameter.enum_array_data.extend(list(map(lambda x: x.value, test_values[17])))
     parameter.int_enum_data = test_values[18].value
     parameter.int_enum_array_data.extend(list(map(lambda x: x.value, test_values[19])))
+    parameter.xy_data.x_data.append(test_values[20].x_data[0])
+    parameter.xy_data.y_data.append(test_values[20].y_data[0])
     return parameter
