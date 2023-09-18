@@ -1,8 +1,9 @@
-"""Contains methods related to managing driver sessions."""
+"""Client for accessing the MeasurementLink session management service."""
 from __future__ import annotations
 
 import abc
 import sys
+import threading
 import warnings
 from functools import cached_property
 from types import TracebackType
@@ -20,6 +21,8 @@ from typing import (
 
 import grpc
 from deprecation import DeprecatedWarning
+from ni_measurementlink_service._channelpool import GrpcChannelPool
+from ni_measurementlink_service._internal.discovery_client import DiscoveryClient
 
 from ni_measurementlink_service._internal.stubs import session_pb2
 from ni_measurementlink_service._internal.stubs.ni.measurementlink import (
@@ -249,13 +252,42 @@ def __getattr__(name: str) -> Any:
 
 
 class SessionManagementClient(object):
-    """Class that manages driver sessions."""
+    """Client for accessing the MeasurementLink session management service."""
 
-    def __init__(self, *, grpc_channel: grpc.Channel) -> None:
-        """Initialize session manangement client."""
-        self._client: session_management_service_pb2_grpc.SessionManagementServiceStub = (
-            session_management_service_pb2_grpc.SessionManagementServiceStub(grpc_channel)
-        )
+    def __init__(
+        self,
+        *,
+        discovery_client: Optional[DiscoveryClient] = None,
+        grpc_channel: Optional[grpc.Channel] = None,
+        grpc_channel_pool: Optional[GrpcChannelPool] = None,
+    ) -> None:
+        """Initialize session management client.
+        
+        Args:
+            discovery_client: An optional discovery client (recommended).
+
+            grpc_channel: An optional session management gRPC channel.
+
+            grpc_channel_pool: An optional gRPC channel pool (recommended).
+        """
+        self._discovery_client = discovery_client or DiscoveryClient()
+        self._initialization_lock = threading.Lock()
+        self._grpc_channel_pool = grpc_channel_pool or GrpcChannelPool()          
+        self._stub: Optional[session_management_service_pb2_grpc.SessionManagementServiceStub] = None
+
+        if grpc_channel is not None:
+            self._stub = session_management_service_pb2_grpc.SessionManagementServiceStub(grpc_channel)
+
+    def _get_stub(self) -> session_management_service_pb2_grpc.SessionManagementServiceStub:
+        with self._initialization_lock:
+            if self._stub is None:
+                service_location = self._discovery_client.resolve_service(
+                    provided_interface=GRPC_SERVICE_INTERFACE_NAME,
+                    service_class=GRPC_SERVICE_CLASS,
+                )
+                channel = self._grpc_channel_pool.get_channel(service_location.insecure_address)
+                self._stub = session_management_service_pb2_grpc.SessionManagementServiceStub(channel)
+            return self._stub
 
     def reserve_session(
         self,
@@ -391,10 +423,7 @@ class SessionManagementClient(object):
                 timeout_in_ms = -1
             request.timeout_in_milliseconds = timeout_in_ms
 
-        response: session_management_service_pb2.ReserveSessionsResponse = (
-            self._client.ReserveSessions(request)
-        )
-
+        response = self._get_stub().ReserveSessions(request)
         return response.sessions
 
     def _unreserve_sessions(
@@ -402,7 +431,7 @@ class SessionManagementClient(object):
     ) -> None:
         """Unreserves sessions so they can be accessed by other clients."""
         request = session_management_service_pb2.UnreserveSessionsRequest(sessions=session_info)
-        self._client.UnreserveSessions(request)
+        self._get_stub().UnreserveSessions(request)
 
     def register_sessions(self, session_info: Iterable[SessionInformation]) -> None:
         """Register the sessions with the Session Manager.
@@ -439,7 +468,7 @@ class SessionManagementClient(object):
                 for info in session_info
             )
         )
-        self._client.RegisterSessions(request)
+        self._get_stub().RegisterSessions(request)
 
     def unregister_sessions(self, session_info: Iterable[SessionInformation]) -> None:
         """Unregisters the sessions from the Session Manager.
@@ -471,7 +500,7 @@ class SessionManagementClient(object):
                 for info in session_info
             )
         )
-        self._client.UnregisterSessions(request)
+        self._get_stub().UnregisterSessions(request)
 
     def reserve_all_registered_sessions(
         self, instrument_type_id: Optional[str] = None, timeout: Optional[float] = None
@@ -514,9 +543,7 @@ class SessionManagementClient(object):
                 timeout_in_ms = -1
             request.timeout_in_milliseconds = timeout_in_ms
 
-        response: session_management_service_pb2.ReserveAllRegisteredSessionsResponse = (
-            self._client.ReserveAllRegisteredSessions(request)
-        )
+        response = self._get_stub().ReserveAllRegisteredSessions(request)
         return MultiSessionReservation(session_manager=self, session_info=response.sessions)
 
 
