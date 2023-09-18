@@ -58,6 +58,9 @@ class ServiceInfo(NamedTuple):
            - Example: "[\"powerup\", \"current\"]"
     """
 
+    display_name: str = ""
+    """The service display name for clients to display to users."""
+
 
 class TypeSpecialization(enum.Enum):
     """Enum that represents the type specializations for measurement parameters."""
