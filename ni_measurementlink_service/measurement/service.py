@@ -183,10 +183,10 @@ class MeasurementService:
 
         self.configuration_parameter_list: List[Any] = []
         self.output_parameter_list: List[Any] = []
-        self.grpc_service = GrpcService()
-        self.context: MeasurementContext = MeasurementContext()
-        self.channel_pool: GrpcChannelPool = GrpcChannelPool()
-        self.discovery_client: DiscoveryClient = DiscoveryClient()
+        self.context = MeasurementContext()
+        self.channel_pool = GrpcChannelPool()
+        self.discovery_client = DiscoveryClient(grpc_channel_pool=self.channel_pool)
+        self.grpc_service = GrpcService(discovery_client=self.discovery_client)
 
     def register_measurement(self, measurement_function: _F) -> _F:
         """Register a function as the measurement function for a measurement service.
