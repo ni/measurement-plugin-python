@@ -55,17 +55,15 @@ class ServiceLocation(typing.NamedTuple):
 
 
 class DiscoveryClient:
-    """Class that contains APIs need to interact with discovery service."""
+    """Client for accessing the MeasurementLink discovery service."""
 
     def __init__(
         self, stub: Optional[discovery_service_pb2_grpc.DiscoveryServiceStub] = None
     ) -> None:
-        """Initialize the Discovery Client with provided registry service stub.
+        """Initialize the discovery client.
 
         Args:
-            stub (DiscoveryServiceStub, optional): The gRPC stub to interact with discovery
-            service. Defaults to None.
-
+            stub: An optional discovery service gRPC stub for unit testing.
         """
         self._stub = stub
         self._registration_id = ""
@@ -104,17 +102,14 @@ class DiscoveryClient:
         """Register the measurement service with the discovery service.
 
         Args:
-        ----
             service_port: The port number of the service.
 
             service_info: Information describing the service.
 
             measurement_info: Information describing the measurement.
 
-        Returns
-        -------
-            bool: Boolean to represent if the registration is successful.
-
+        Returns:
+            Boolean indicating whether the service was successfully registered.
         """
         if self._registration_id:
             raise RuntimeError("Service already registered")
@@ -135,13 +130,11 @@ class DiscoveryClient:
         """Register the specified service with the discovery service.
 
         Args:
-        ----
             service_info: Information describing the service.
 
             service_location: The location of the service on the network.
 
         Returns:
-        -------
             ID that can be used to unregister the service.
         """
         try:
@@ -190,15 +183,12 @@ class DiscoveryClient:
         This method should be called before the service exits.
 
         Args:
-        ----
             registration_id: The registration ID returned from register_service.
                 This argument should be omitted after calling the deprecated
                 register_measurement_service method.
 
-        Returns
-        -------
+        Returns:
             Boolean indicating whether the service was unregistered.
-
         """
         try:
             if not registration_id:
@@ -243,16 +233,13 @@ class DiscoveryClient:
         discovery service if it has not already been started.
 
         Args:
-        ----
-            provided_interface: The gRPC Full Name of the service.
+            provided_interface: The gRPC full name of the service.
             service_class: The service "class" that should be matched. If the value is not
                 specified and there is more than one matching service registered, an error
                 is returned.
 
-        Returns
-        -------
-            A ServiceLocation location object that represents the location of a service.
-
+        Returns:
+            The service location.
         """
         request = discovery_service_pb2.ResolveServiceRequest(
             provided_interface=provided_interface, service_class=service_class
