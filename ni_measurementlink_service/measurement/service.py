@@ -174,6 +174,7 @@ class MeasurementService:
         }
 
         self.service_info = ServiceInfo(
+            display_name=service["displayName"],
             service_class=service["serviceClass"],
             description_url=service["descriptionUrl"],
             provided_interfaces=service["providedInterfaces"],

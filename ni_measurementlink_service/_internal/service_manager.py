@@ -4,7 +4,10 @@ from typing import Callable, List, Optional
 import grpc
 from grpc.framework.foundation import logging_pool
 
-from ni_measurementlink_service._internal.discovery_client import DiscoveryClient
+from ni_measurementlink_service._internal.discovery_client import (
+    DiscoveryClient,
+    ServiceLocation,
+)
 from ni_measurementlink_service._internal.grpc_servicer import (
     MeasurementServiceServicerV1,
     MeasurementServiceServicerV2,
@@ -48,6 +51,7 @@ class GrpcService:
 
         """
         self.discovery_client = discovery_client or DiscoveryClient()
+        self._registration_id = ""
 
     def start(
         self,
@@ -115,13 +119,17 @@ class GrpcService:
         port = str(self.server.add_insecure_port("[::]:0"))
         self.server.start()
         _logger.info("Measurement service hosted on port: %s", port)
-        self.discovery_client.register_measurement_service(port, service_info, measurement_info)
+
+        service_location = ServiceLocation("localhost", port, "")
+        self._registration_id = self.discovery_client.register_service(
+            service_info, service_location
+        )
 
         self.port = port
         return port
 
     def stop(self) -> None:
         """Close the Service after un-registering with discovery service and cleanups."""
-        self.discovery_client.unregister_service()
+        self.discovery_client.unregister_service(self._registration_id)
         self.server.stop(5)
         _logger.info("Measurement service closed.")
