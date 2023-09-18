@@ -350,6 +350,7 @@ class MeasurementServiceServicerV2(v2_measurement_service_pb2_grpc.MeasurementSe
             configuration_parameter.repeated = configuration_metadata.repeated
             configuration_parameter.type = configuration_metadata.type
             configuration_parameter.annotations.update(configuration_metadata.annotations)
+            configuration_parameter.message_type = configuration_metadata.message_type
             measurement_signature.configuration_parameters.append(configuration_parameter)
 
         # Configuration Defaults
@@ -365,6 +366,7 @@ class MeasurementServiceServicerV2(v2_measurement_service_pb2_grpc.MeasurementSe
             output_parameter.type = output_metadata.type
             output_parameter.repeated = output_metadata.repeated
             output_parameter.annotations.update(output_metadata.annotations)
+            output_parameter.message_type = output_metadata.message_type
             measurement_signature.outputs.append(output_parameter)
 
         # Sending back Response
