@@ -23,7 +23,7 @@ Classes
    ni_measurementlink_service.session_management.BaseReservation
    ni_measurementlink_service.session_management.SingleSessionReservation
    ni_measurementlink_service.session_management.MultiSessionReservation
-   ni_measurementlink_service.session_management.Client
+   ni_measurementlink_service.session_management.SessionManagementClient
 
 
 
@@ -58,6 +58,7 @@ Attributes
    ni_measurementlink_service.session_management.INSTRUMENT_TYPE_NI_RELAY_DRIVER
    ni_measurementlink_service.session_management.INSTRUMENT_TYPE_NI_MODEL_BASED_INSTRUMENT
    ni_measurementlink_service.session_management.INSTRUMENT_TYPE_NI_SWITCH_EXECUTIVE_VIRTUAL_DEVICE
+   ni_measurementlink_service.session_management.Client
 
 
 .. py:data:: GRPC_SERVICE_INTERFACE_NAME
@@ -315,7 +316,7 @@ Attributes
 .. py:function:: __getattr__(name)
 
 
-.. py:class:: Client(*, grpc_channel)
+.. py:class:: SessionManagementClient(*, grpc_channel)
 
    Bases: :py:obj:`object`
 
@@ -465,4 +466,9 @@ Attributes
 
 
 
+
+.. py:data:: Client
+   
+
+   Alias for compatibility with code that uses session_management.Client.
 

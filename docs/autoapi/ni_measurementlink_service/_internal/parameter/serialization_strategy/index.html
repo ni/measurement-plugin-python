@@ -35,7 +35,7 @@
             ni_measurementlink_service
           </a>
               <div class="version">
-                1.2.0-dev1
+                1.2.0-dev2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
@@ -78,12 +78,18 @@
 <p>Serialization Strategy.</p>
 <section id="module-contents">
 <h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this heading"></a></h2>
-<section id="classes">
-<h3>Classes<a class="headerlink" href="#classes" title="Permalink to this heading"></a></h3>
+<section id="functions">
+<h3>Functions<a class="headerlink" href="#functions" title="Permalink to this heading"></a></h3>
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#ni_measurementlink_service._internal.parameter.serialization_strategy.Context" title="ni_measurementlink_service._internal.parameter.serialization_strategy.Context"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Context</span></code></a></p></td>
-<td><p>Strategy context.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ni_measurementlink_service._internal.parameter.serialization_strategy.get_encoder" title="ni_measurementlink_service._internal.parameter.serialization_strategy.get_encoder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_encoder</span></code></a>(type, repeated)</p></td>
+<td><p>Get the appropriate partial encoder constructor for the specified type.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ni_measurementlink_service._internal.parameter.serialization_strategy.get_decoder" title="ni_measurementlink_service._internal.parameter.serialization_strategy.get_decoder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_decoder</span></code></a>(type, repeated[, message_type])</p></td>
+<td><p>Get the appropriate partial decoder constructor for the specified type.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ni_measurementlink_service._internal.parameter.serialization_strategy.get_type_default" title="ni_measurementlink_service._internal.parameter.serialization_strategy.get_type_default"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_type_default</span></code></a>(type, repeated)</p></td>
+<td><p>Get the default value for the give type.</p></td>
 </tr>
 </tbody>
 </table>
@@ -110,22 +116,28 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#ni_measurementlink_service._internal.parameter.serialization_strategy.StringEncoder" title="ni_measurementlink_service._internal.parameter.serialization_strategy.StringEncoder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">StringEncoder</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#ni_measurementlink_service._internal.parameter.serialization_strategy.FloatArrayEncoder" title="ni_measurementlink_service._internal.parameter.serialization_strategy.FloatArrayEncoder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FloatArrayEncoder</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ni_measurementlink_service._internal.parameter.serialization_strategy.MessageEncoder" title="ni_measurementlink_service._internal.parameter.serialization_strategy.MessageEncoder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MessageEncoder</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#ni_measurementlink_service._internal.parameter.serialization_strategy.DoubleArrayEncoder" title="ni_measurementlink_service._internal.parameter.serialization_strategy.DoubleArrayEncoder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DoubleArrayEncoder</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#ni_measurementlink_service._internal.parameter.serialization_strategy.FloatArrayEncoder" title="ni_measurementlink_service._internal.parameter.serialization_strategy.FloatArrayEncoder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FloatArrayEncoder</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#ni_measurementlink_service._internal.parameter.serialization_strategy.IntArrayEncoder" title="ni_measurementlink_service._internal.parameter.serialization_strategy.IntArrayEncoder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">IntArrayEncoder</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ni_measurementlink_service._internal.parameter.serialization_strategy.DoubleArrayEncoder" title="ni_measurementlink_service._internal.parameter.serialization_strategy.DoubleArrayEncoder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DoubleArrayEncoder</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#ni_measurementlink_service._internal.parameter.serialization_strategy.UIntArrayEncoder" title="ni_measurementlink_service._internal.parameter.serialization_strategy.UIntArrayEncoder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">UIntArrayEncoder</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#ni_measurementlink_service._internal.parameter.serialization_strategy.IntArrayEncoder" title="ni_measurementlink_service._internal.parameter.serialization_strategy.IntArrayEncoder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">IntArrayEncoder</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#ni_measurementlink_service._internal.parameter.serialization_strategy.BoolArrayEncoder" title="ni_measurementlink_service._internal.parameter.serialization_strategy.BoolArrayEncoder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BoolArrayEncoder</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ni_measurementlink_service._internal.parameter.serialization_strategy.UIntArrayEncoder" title="ni_measurementlink_service._internal.parameter.serialization_strategy.UIntArrayEncoder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">UIntArrayEncoder</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#ni_measurementlink_service._internal.parameter.serialization_strategy.StringArrayEncoder" title="ni_measurementlink_service._internal.parameter.serialization_strategy.StringArrayEncoder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">StringArrayEncoder</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#ni_measurementlink_service._internal.parameter.serialization_strategy.BoolArrayEncoder" title="ni_measurementlink_service._internal.parameter.serialization_strategy.BoolArrayEncoder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BoolArrayEncoder</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ni_measurementlink_service._internal.parameter.serialization_strategy.StringArrayEncoder" title="ni_measurementlink_service._internal.parameter.serialization_strategy.StringArrayEncoder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">StringArrayEncoder</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ni_measurementlink_service._internal.parameter.serialization_strategy.UnsupportedMessageArrayEncoder" title="ni_measurementlink_service._internal.parameter.serialization_strategy.UnsupportedMessageArrayEncoder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">UnsupportedMessageArrayEncoder</span></code></a></p></td>
 <td><p></p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#ni_measurementlink_service._internal.parameter.serialization_strategy.FloatDecoder" title="ni_measurementlink_service._internal.parameter.serialization_strategy.FloatDecoder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FloatDecoder</span></code></a></p></td>
@@ -152,28 +164,31 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#ni_measurementlink_service._internal.parameter.serialization_strategy.StringDecoder" title="ni_measurementlink_service._internal.parameter.serialization_strategy.StringDecoder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">StringDecoder</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#ni_measurementlink_service._internal.parameter.serialization_strategy.FloatArrayDecoder" title="ni_measurementlink_service._internal.parameter.serialization_strategy.FloatArrayDecoder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FloatArrayDecoder</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ni_measurementlink_service._internal.parameter.serialization_strategy.XYDataDecoder" title="ni_measurementlink_service._internal.parameter.serialization_strategy.XYDataDecoder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">XYDataDecoder</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#ni_measurementlink_service._internal.parameter.serialization_strategy.DoubleArrayDecoder" title="ni_measurementlink_service._internal.parameter.serialization_strategy.DoubleArrayDecoder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DoubleArrayDecoder</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#ni_measurementlink_service._internal.parameter.serialization_strategy.FloatArrayDecoder" title="ni_measurementlink_service._internal.parameter.serialization_strategy.FloatArrayDecoder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FloatArrayDecoder</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#ni_measurementlink_service._internal.parameter.serialization_strategy.Int32ArrayDecoder" title="ni_measurementlink_service._internal.parameter.serialization_strategy.Int32ArrayDecoder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Int32ArrayDecoder</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ni_measurementlink_service._internal.parameter.serialization_strategy.DoubleArrayDecoder" title="ni_measurementlink_service._internal.parameter.serialization_strategy.DoubleArrayDecoder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DoubleArrayDecoder</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#ni_measurementlink_service._internal.parameter.serialization_strategy.UInt32ArrayDecoder" title="ni_measurementlink_service._internal.parameter.serialization_strategy.UInt32ArrayDecoder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">UInt32ArrayDecoder</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#ni_measurementlink_service._internal.parameter.serialization_strategy.Int32ArrayDecoder" title="ni_measurementlink_service._internal.parameter.serialization_strategy.Int32ArrayDecoder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Int32ArrayDecoder</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#ni_measurementlink_service._internal.parameter.serialization_strategy.Int64ArrayDecoder" title="ni_measurementlink_service._internal.parameter.serialization_strategy.Int64ArrayDecoder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Int64ArrayDecoder</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ni_measurementlink_service._internal.parameter.serialization_strategy.UInt32ArrayDecoder" title="ni_measurementlink_service._internal.parameter.serialization_strategy.UInt32ArrayDecoder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">UInt32ArrayDecoder</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#ni_measurementlink_service._internal.parameter.serialization_strategy.UInt64ArrayDecoder" title="ni_measurementlink_service._internal.parameter.serialization_strategy.UInt64ArrayDecoder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">UInt64ArrayDecoder</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#ni_measurementlink_service._internal.parameter.serialization_strategy.Int64ArrayDecoder" title="ni_measurementlink_service._internal.parameter.serialization_strategy.Int64ArrayDecoder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Int64ArrayDecoder</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#ni_measurementlink_service._internal.parameter.serialization_strategy.BoolArrayDecoder" title="ni_measurementlink_service._internal.parameter.serialization_strategy.BoolArrayDecoder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BoolArrayDecoder</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ni_measurementlink_service._internal.parameter.serialization_strategy.UInt64ArrayDecoder" title="ni_measurementlink_service._internal.parameter.serialization_strategy.UInt64ArrayDecoder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">UInt64ArrayDecoder</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#ni_measurementlink_service._internal.parameter.serialization_strategy.StringArrayDecoder" title="ni_measurementlink_service._internal.parameter.serialization_strategy.StringArrayDecoder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">StringArrayDecoder</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#ni_measurementlink_service._internal.parameter.serialization_strategy.BoolArrayDecoder" title="ni_measurementlink_service._internal.parameter.serialization_strategy.BoolArrayDecoder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BoolArrayDecoder</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ni_measurementlink_service._internal.parameter.serialization_strategy.StringArrayDecoder" title="ni_measurementlink_service._internal.parameter.serialization_strategy.StringArrayDecoder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">StringArrayDecoder</span></code></a></p></td>
 <td><p></p></td>
 </tr>
 </tbody>
@@ -209,6 +224,11 @@
 <dd></dd></dl>
 
 <dl class="py data">
+<dt class="sig sig-object py" id="ni_measurementlink_service._internal.parameter.serialization_strategy.MessageEncoder">
+<span class="sig-prename descclassname"><span class="pre">ni_measurementlink_service._internal.parameter.serialization_strategy.</span></span><span class="sig-name descname"><span class="pre">MessageEncoder</span></span><a class="headerlink" href="#ni_measurementlink_service._internal.parameter.serialization_strategy.MessageEncoder" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
 <dt class="sig sig-object py" id="ni_measurementlink_service._internal.parameter.serialization_strategy.FloatArrayEncoder">
 <span class="sig-prename descclassname"><span class="pre">ni_measurementlink_service._internal.parameter.serialization_strategy.</span></span><span class="sig-name descname"><span class="pre">FloatArrayEncoder</span></span><a class="headerlink" href="#ni_measurementlink_service._internal.parameter.serialization_strategy.FloatArrayEncoder" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
@@ -236,6 +256,11 @@
 <dl class="py data">
 <dt class="sig sig-object py" id="ni_measurementlink_service._internal.parameter.serialization_strategy.StringArrayEncoder">
 <span class="sig-prename descclassname"><span class="pre">ni_measurementlink_service._internal.parameter.serialization_strategy.</span></span><span class="sig-name descname"><span class="pre">StringArrayEncoder</span></span><a class="headerlink" href="#ni_measurementlink_service._internal.parameter.serialization_strategy.StringArrayEncoder" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="ni_measurementlink_service._internal.parameter.serialization_strategy.UnsupportedMessageArrayEncoder">
+<span class="sig-prename descclassname"><span class="pre">ni_measurementlink_service._internal.parameter.serialization_strategy.</span></span><span class="sig-name descname"><span class="pre">UnsupportedMessageArrayEncoder</span></span><a class="headerlink" href="#ni_measurementlink_service._internal.parameter.serialization_strategy.UnsupportedMessageArrayEncoder" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py data">
@@ -279,6 +304,11 @@
 <dd></dd></dl>
 
 <dl class="py data">
+<dt class="sig sig-object py" id="ni_measurementlink_service._internal.parameter.serialization_strategy.XYDataDecoder">
+<span class="sig-prename descclassname"><span class="pre">ni_measurementlink_service._internal.parameter.serialization_strategy.</span></span><span class="sig-name descname"><span class="pre">XYDataDecoder</span></span><a class="headerlink" href="#ni_measurementlink_service._internal.parameter.serialization_strategy.XYDataDecoder" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
 <dt class="sig sig-object py" id="ni_measurementlink_service._internal.parameter.serialization_strategy.FloatArrayDecoder">
 <span class="sig-prename descclassname"><span class="pre">ni_measurementlink_service._internal.parameter.serialization_strategy.</span></span><span class="sig-name descname"><span class="pre">FloatArrayDecoder</span></span><a class="headerlink" href="#ni_measurementlink_service._internal.parameter.serialization_strategy.FloatArrayDecoder" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
@@ -318,79 +348,23 @@
 <span class="sig-prename descclassname"><span class="pre">ni_measurementlink_service._internal.parameter.serialization_strategy.</span></span><span class="sig-name descname"><span class="pre">StringArrayDecoder</span></span><a class="headerlink" href="#ni_measurementlink_service._internal.parameter.serialization_strategy.StringArrayDecoder" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
-<dl class="py class">
-<dt class="sig sig-object py" id="ni_measurementlink_service._internal.parameter.serialization_strategy.Context">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ni_measurementlink_service._internal.parameter.serialization_strategy.</span></span><span class="sig-name descname"><span class="pre">Context</span></span><a class="reference internal" href="../../../../../_modules/ni_measurementlink_service/_internal/parameter/serialization_strategy.html#Context"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service._internal.parameter.serialization_strategy.Context" title="Permalink to this definition"></a></dt>
-<dd><p>Strategy context.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="ni_measurementlink_service._internal.parameter.serialization_strategy.Context.get_encoder">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_encoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeated</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/ni_measurementlink_service/_internal/parameter/serialization_strategy.html#Context.get_encoder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service._internal.parameter.serialization_strategy.Context.get_encoder" title="Permalink to this definition"></a></dt>
-<dd><p>Get the Scalar Encoder or Vector Encoder for the specified type based on repeated bool.</p>
-<section id="args">
-<h4>Args<a class="headerlink" href="#args" title="Permalink to this heading"></a></h4>
-<blockquote>
-<div><p>type (type_pb2.Field.Kind.ValueType): Type of the Parameter.</p>
-<p>repeated (bool): Boolean that represents if the Parameter is repeated or not.</p>
-</div></blockquote>
-</section>
-<section id="raises">
-<h4>Raises<a class="headerlink" href="#raises" title="Permalink to this heading"></a></h4>
-<blockquote>
-<div><p>Exception: If the specified type is not supported.</p>
-</div></blockquote>
-</section>
-<section id="returns">
-<h4>Returns<a class="headerlink" href="#returns" title="Permalink to this heading"></a></h4>
-<blockquote>
-<div><p>Callable[[int], Callable]: ScalarEncoder or VectorEncoder.</p>
-</div></blockquote>
-</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="ni_measurementlink_service._internal.parameter.serialization_strategy.get_encoder">
+<span class="sig-prename descclassname"><span class="pre">ni_measurementlink_service._internal.parameter.serialization_strategy.</span></span><span class="sig-name descname"><span class="pre">get_encoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeated</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/ni_measurementlink_service/_internal/parameter/serialization_strategy.html#get_encoder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service._internal.parameter.serialization_strategy.get_encoder" title="Permalink to this definition"></a></dt>
+<dd><p>Get the appropriate partial encoder constructor for the specified type.</p>
+<p>A scalar or vector constructor is returned based on the ‘repeated’ parameter.</p>
 </dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="ni_measurementlink_service._internal.parameter.serialization_strategy.Context.get_decoder">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_decoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeated</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/ni_measurementlink_service/_internal/parameter/serialization_strategy.html#Context.get_decoder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service._internal.parameter.serialization_strategy.Context.get_decoder" title="Permalink to this definition"></a></dt>
-<dd><p>Get the Scalar Decoder or Vector Decoder for the specified type based on repeated bool.</p>
-<section id="id1">
-<h4>Args<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h4>
-<blockquote>
-<div><p>type (type_pb2.Field.Kind.ValueType): Type of the Parameter.</p>
-<p>repeated (bool): Boolean that represents if the Parameter is repeated or not.</p>
-</div></blockquote>
-</section>
-<section id="id2">
-<h4>Raises<a class="headerlink" href="#id2" title="Permalink to this heading"></a></h4>
-<blockquote>
-<div><p>Exception: If the specified type is not supported.</p>
-</div></blockquote>
-</section>
-<section id="id3">
-<h4>Returns<a class="headerlink" href="#id3" title="Permalink to this heading"></a></h4>
-<blockquote>
-<div><p>Callable[[int], Callable]: ScalarDecoder or VectorDecoder.</p>
-</div></blockquote>
-</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="ni_measurementlink_service._internal.parameter.serialization_strategy.get_decoder">
+<span class="sig-prename descclassname"><span class="pre">ni_measurementlink_service._internal.parameter.serialization_strategy.</span></span><span class="sig-name descname"><span class="pre">get_decoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeated</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/ni_measurementlink_service/_internal/parameter/serialization_strategy.html#get_decoder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service._internal.parameter.serialization_strategy.get_decoder" title="Permalink to this definition"></a></dt>
+<dd><p>Get the appropriate partial decoder constructor for the specified type.</p>
 </dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="ni_measurementlink_service._internal.parameter.serialization_strategy.Context.get_type_default">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_type_default</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeated</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/ni_measurementlink_service/_internal/parameter/serialization_strategy.html#Context.get_type_default"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service._internal.parameter.serialization_strategy.Context.get_type_default" title="Permalink to this definition"></a></dt>
-<dd><p>Get the Type default.</p>
-<section id="id4">
-<h4>Args<a class="headerlink" href="#id4" title="Permalink to this heading"></a></h4>
-<blockquote>
-<div><p>type (type_pb2.Field.Kind.ValueType): Type of the Parameter.</p>
-<p>repeated (bool): Boolean that represents if the Parameter is repeated or not.</p>
-</div></blockquote>
-</section>
-<section id="id5">
-<h4>Returns<a class="headerlink" href="#id5" title="Permalink to this heading"></a></h4>
-<blockquote>
-<div><p>Any: Default value.</p>
-</div></blockquote>
-</section>
-</dd></dl>
-
+<dl class="py function">
+<dt class="sig sig-object py" id="ni_measurementlink_service._internal.parameter.serialization_strategy.get_type_default">
+<span class="sig-prename descclassname"><span class="pre">ni_measurementlink_service._internal.parameter.serialization_strategy.</span></span><span class="sig-name descname"><span class="pre">get_type_default</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeated</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/ni_measurementlink_service/_internal/parameter/serialization_strategy.html#get_type_default"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service._internal.parameter.serialization_strategy.get_type_default" title="Permalink to this definition"></a></dt>
+<dd><p>Get the default value for the give type.</p>
 </dd></dl>
 
 </section>

@@ -37,7 +37,7 @@
             ni_measurementlink_service
           </a>
               <div class="version">
-                1.2.0-dev1
+                1.2.0-dev2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
@@ -102,8 +102,19 @@
 <li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.DataType.EnumArray1D"><code class="docutils literal notranslate"><span class="pre">DataType.EnumArray1D</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l9"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.MeasurementInfo">MeasurementInfo</a></li>
-<li class="toctree-l9"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.ServiceInfo">ServiceInfo</a></li>
+<li class="toctree-l9"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.MeasurementInfo">MeasurementInfo</a><ul>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.MeasurementInfo.display_name">display_name</a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.MeasurementInfo.version">version</a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.MeasurementInfo.ui_file_paths">ui_file_paths</a></li>
+</ul>
+</li>
+<li class="toctree-l9"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.ServiceInfo">ServiceInfo</a><ul>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.ServiceInfo.service_class">service_class</a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.ServiceInfo.description_url">description_url</a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.ServiceInfo.provided_interfaces">provided_interfaces</a></li>
+<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.ServiceInfo.annotations">annotations</a></li>
+</ul>
+</li>
 <li class="toctree-l9"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.TypeSpecialization">TypeSpecialization</a><ul>
 <li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.TypeSpecialization.NoType">NoType</a></li>
 <li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.info.TypeSpecialization.Pin">Pin</a></li>
@@ -187,7 +198,7 @@
              
   <section id="module-ni_measurementlink_service.measurement.info">
 <span id="ni-measurementlink-service-measurement-info"></span><h1><a class="reference internal" href="#module-ni_measurementlink_service.measurement.info" title="ni_measurementlink_service.measurement.info"><code class="xref py py-mod docutils literal notranslate"><span class="pre">ni_measurementlink_service.measurement.info</span></code></a><a class="headerlink" href="#module-ni_measurementlink_service.measurement.info" title="Permalink to this heading"></a></h1>
-<p>Contains classes and enums to represent measurement metadata.</p>
+<p>Measurement service metadata classes and enums.</p>
 <section id="module-contents">
 <h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this heading"></a></h2>
 <section id="classes">
@@ -195,10 +206,10 @@
 <table class="autosummary longtable docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#ni_measurementlink_service.measurement.info.MeasurementInfo" title="ni_measurementlink_service.measurement.info.MeasurementInfo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MeasurementInfo</span></code></a></p></td>
-<td><p>Class that represents the measurement information.</p></td>
+<td><p>A named tuple providing information about a measurement.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#ni_measurementlink_service.measurement.info.ServiceInfo" title="ni_measurementlink_service.measurement.info.ServiceInfo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ServiceInfo</span></code></a></p></td>
-<td><p>Class that represents the service information.</p></td>
+<td><p>A named tuple providing information about a registered service.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#ni_measurementlink_service.measurement.info.TypeSpecialization" title="ni_measurementlink_service.measurement.info.TypeSpecialization"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TypeSpecialization</span></code></a></p></td>
 <td><p>Enum that represents the type specializations for measurement parameters.</p></td>
@@ -212,73 +223,107 @@
 <dt class="sig sig-object py" id="ni_measurementlink_service.measurement.info.MeasurementInfo">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ni_measurementlink_service.measurement.info.</span></span><span class="sig-name descname"><span class="pre">MeasurementInfo</span></span><a class="reference internal" href="../../../../_modules/ni_measurementlink_service/measurement/info.html#MeasurementInfo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service.measurement.info.MeasurementInfo" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">NamedTuple</span></code></p>
-<p>Class that represents the measurement information.</p>
-<section id="attributes">
-<h4>Attributes<a class="headerlink" href="#attributes" title="Permalink to this heading"></a></h4>
-<blockquote>
-<div><p>display_name (str): The measurement display name for client to display to user.</p>
-<p>version (str): The measurement version that helps to
-maintain versions of a measurement in future.</p>
-<p>ui_file_paths (list): Absolute paths of the UI file(s) linked to the measurement.</p>
-</div></blockquote>
+<p>A named tuple providing information about a measurement.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ni_measurementlink_service.measurement.info.MeasurementInfo.display_name">
 <span class="sig-name descname"><span class="pre">display_name</span></span><em class="property"><span class="w"> </span><span class="pre">:str</span></em><a class="headerlink" href="#ni_measurementlink_service.measurement.info.MeasurementInfo.display_name" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>The user visible name of the measurement.</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ni_measurementlink_service.measurement.info.MeasurementInfo.version">
 <span class="sig-name descname"><span class="pre">version</span></span><em class="property"><span class="w"> </span><span class="pre">:str</span></em><a class="headerlink" href="#ni_measurementlink_service.measurement.info.MeasurementInfo.version" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>The current version of the measurement.</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ni_measurementlink_service.measurement.info.MeasurementInfo.ui_file_paths">
 <span class="sig-name descname"><span class="pre">ui_file_paths</span></span><em class="property"><span class="w"> </span><span class="pre">:List[pathlib.Path]</span></em><a class="headerlink" href="#ni_measurementlink_service.measurement.info.MeasurementInfo.ui_file_paths" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Absolute paths to user interface files for the measurement (e.g. <code class="docutils literal notranslate"><span class="pre">.measui</span></code> or <code class="docutils literal notranslate"><span class="pre">.vi</span></code>
+files).</p>
+</dd></dl>
 
-</section>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="ni_measurementlink_service.measurement.info.ServiceInfo">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ni_measurementlink_service.measurement.info.</span></span><span class="sig-name descname"><span class="pre">ServiceInfo</span></span><a class="reference internal" href="../../../../_modules/ni_measurementlink_service/measurement/info.html#ServiceInfo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service.measurement.info.ServiceInfo" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">NamedTuple</span></code></p>
-<p>Class that represents the service information.</p>
-<section id="id1">
-<h4>Attributes<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h4>
-<blockquote>
-<div><p>service_class (str): Service class that the measurement belongs to.
-Measurements under same service class expected to perform same logic.
-For e.g., different version of measurement can come under same service class.</p>
-<p>description_url (str): Description URL of the measurement.</p>
-<p>provided_interfaces (List[str]): List of interfaces the service provides.
-For e.g., ni.measurementlink.measurement.v2.MeasurementService.
-Defaults to [“ni.measurementlink.measurement.v1.MeasurementService”].</p>
-<p>annotations (Dict[str,str]): Dict that contains extra information of the measurement.
-As default we added a (str) description, (str) collection and a (List[str]) list of tags.
-Feel free to add your own Annotations as needed.</p>
-</div></blockquote>
+<p>A named tuple providing information about a registered service.</p>
+<p>This class is used with the MeasurementLink discovery service when registering and enumerating
+services.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ni_measurementlink_service.measurement.info.ServiceInfo.service_class">
 <span class="sig-name descname"><span class="pre">service_class</span></span><em class="property"><span class="w"> </span><span class="pre">:str</span></em><a class="headerlink" href="#ni_measurementlink_service.measurement.info.ServiceInfo.service_class" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>“The “class” of a service. The value of this field should be unique for a given interface
+in <code class="docutils literal notranslate"><span class="pre">provided_interfaces</span></code>. In effect, the <code class="docutils literal notranslate"><span class="pre">.proto</span></code> service declaration defines the
+interface, and this field defines a class or concrete type of the interface.</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ni_measurementlink_service.measurement.info.ServiceInfo.description_url">
 <span class="sig-name descname"><span class="pre">description_url</span></span><em class="property"><span class="w"> </span><span class="pre">:str</span></em><a class="headerlink" href="#ni_measurementlink_service.measurement.info.ServiceInfo.description_url" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>The URL of a web page that provides a description of the service.</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ni_measurementlink_service.measurement.info.ServiceInfo.provided_interfaces">
 <span class="sig-name descname"><span class="pre">provided_interfaces</span></span><em class="property"><span class="w"> </span><span class="pre">:List[str]</span> <span class="pre">=</span> <span class="pre">['ni.measurementlink.measurement.v1.MeasurementService']</span></em><a class="headerlink" href="#ni_measurementlink_service.measurement.info.ServiceInfo.provided_interfaces" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>The service interfaces provided by the service. These are gRPC full names for the service.</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ni_measurementlink_service.measurement.info.ServiceInfo.annotations">
 <span class="sig-name descname"><span class="pre">annotations</span></span><em class="property"><span class="w"> </span><span class="pre">:Dict[str,</span> <span class="pre">str]</span></em><a class="headerlink" href="#ni_measurementlink_service.measurement.info.ServiceInfo.annotations" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Represents a set of annotations on the service.</p>
+<p>Well-known annotations:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Description</dt><dd><ul>
+<li><dl class="simple">
+<dt>Key: “ni/service.description”</dt><dd><ul>
+<li><p>Expected format: string</p></li>
+<li><p>Example: “Measure inrush current with a shorted load and validate results against
+configured limits.”</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Collection</dt><dd><ul>
+<li><dl class="simple">
+<dt>Key: “ni/service.collection”</dt><dd><ul>
+<li><p>Expected format: “.” delimited namespace/hierarchy case-insensitive string</p></li>
+<li><p>Example: “CurrentTests.Inrush”</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Tags</dt><dd><ul>
+<li><dl class="simple">
+<dt>Key: “ni/service.tags”</dt><dd><ul>
+<li><p>Expected format: serialized JSON string of an array of strings</p></li>
+<li><p>Example: “[“powerup”, “current”]”</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
 
-</section>
 </dd></dl>
 
 <dl class="py class">

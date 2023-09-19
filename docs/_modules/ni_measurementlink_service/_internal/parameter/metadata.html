@@ -34,7 +34,7 @@
             ni_measurementlink_service
           </a>
               <div class="version">
-                1.2.0-dev1
+                1.2.0-dev2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
@@ -80,9 +80,7 @@
 
 <span class="kn">from</span> <span class="nn">google.protobuf</span> <span class="kn">import</span> <span class="n">type_pb2</span>
 
-<span class="kn">from</span> <span class="nn">ni_measurementlink_service._internal.parameter.serialization_strategy</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">Context</span><span class="p">,</span>
-<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">ni_measurementlink_service._internal.parameter</span> <span class="kn">import</span> <span class="n">serialization_strategy</span>
 <span class="kn">from</span> <span class="nn">ni_measurementlink_service.measurement.info</span> <span class="kn">import</span> <span class="n">TypeSpecialization</span>
 
 
@@ -135,13 +133,17 @@
         <span class="k">return</span> <span class="kc">None</span>
 
     <span class="n">expected_type</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span>
-        <span class="n">Context</span><span class="o">.</span><span class="n">get_type_default</span><span class="p">(</span><span class="n">parameter_metadata</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">parameter_metadata</span><span class="o">.</span><span class="n">repeated</span><span class="p">)</span>
+        <span class="n">serialization_strategy</span><span class="o">.</span><span class="n">get_type_default</span><span class="p">(</span>
+            <span class="n">parameter_metadata</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">parameter_metadata</span><span class="o">.</span><span class="n">repeated</span>
+        <span class="p">)</span>
     <span class="p">)</span>
     <span class="n">display_name</span> <span class="o">=</span> <span class="n">parameter_metadata</span><span class="o">.</span><span class="n">display_name</span>
     <span class="n">enum_values_annotation</span> <span class="o">=</span> <span class="n">get_enum_values_annotation</span><span class="p">(</span><span class="n">parameter_metadata</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">parameter_metadata</span><span class="o">.</span><span class="n">repeated</span><span class="p">:</span>
-        <span class="n">expected_element_type</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">Context</span><span class="o">.</span><span class="n">get_type_default</span><span class="p">(</span><span class="n">parameter_metadata</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="kc">False</span><span class="p">))</span>
+        <span class="n">expected_element_type</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span>
+            <span class="n">serialization_strategy</span><span class="o">.</span><span class="n">get_type_default</span><span class="p">(</span><span class="n">parameter_metadata</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="p">)</span>
         <span class="n">_validate_default_value_type_for_repeated_type</span><span class="p">(</span>
             <span class="n">default_value</span><span class="p">,</span>
             <span class="n">expected_type</span><span class="p">,</span>
