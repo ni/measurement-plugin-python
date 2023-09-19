@@ -7,25 +7,22 @@ from ni_measurementlink_service.measurement.info import DataType, TypeSpecializa
 
 
 class DataTypeInfo(NamedTuple):
-    """Class that represents the information for each of the DataType enum values.
-
-    Attributes:
-        grpc_field_type: Field.Kind associated with the DataType
-
-        repeated: Whether the DataType is a repeated field
-
-        type_specialization: Specific type when value_type
-        can have more than one use
-
-        message_type (str): This is the gRPC full name of the message type.
-        Required when 'grpc_field_type' is Kind.TypeMessage.
-        Ignored for any other 'type'.
-    """
+    """Class that represents the information for each of the DataType enum values."""
 
     grpc_field_type: type_pb2.Field.Kind.ValueType
+    """Field.Kind associated with the DataType."""
+
     repeated: bool
+    """Whether the DataType is a repeated field."""
+
     type_specialization: TypeSpecialization = TypeSpecialization.NoType
+    """Specific type when value_type can have more than one use."""
+
     message_type: str = ""
+    """The gRPC full name of the message type. Required when 'grpc_field_type' is Kind.TypeMessage.
+
+    Ignored for any other 'type'.
+    """
 
 
 def get_type_info(data_type: DataType) -> DataTypeInfo:

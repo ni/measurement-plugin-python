@@ -10,33 +10,30 @@ from ni_measurementlink_service.measurement.info import TypeSpecialization
 
 
 class ParameterMetadata(NamedTuple):
-    """Class that represents the metadata of parameters.
-
-    Attributes:
-        display_name (str): The display name of the parameter.
-
-        type (type_pb2.Field): The datatype of the parameter
-        represented by the gRPC Field Enum.
-
-        repeated (bool): Represent if the parameter is a scalar or 1D array.
-
-        True for 1DArray and false for scalar.
-
-        default_value (Any): The default value of the parameter.
-
-        annotations (Dict[str,str]): Represents a set of annotations on the type.
-
-        message_type (str): This is the gRPC full name of the message type.
-        Required when 'type' is Kind.TypeMessage.
-        Ignored for any other 'type'.
-    """
+    """Class that represents the metadata of parameters."""
 
     display_name: str
+    """The display name of the parameter."""
+
     type: type_pb2.Field.Kind.ValueType
+    """The datatype of the parameter represented by the gRPC field enum."""
+
     repeated: bool
+    """Indicates whether the parameter is a scalar or 1D array.
+    
+    True for 1D array and false for scalar."""
+
     default_value: Any
+    """The default value of the parameter."""
+
     annotations: Dict[str, str]
+    """Represents a set of annotations on the type."""
+
     message_type: str = ""
+    """The gRPC full name of the message type. 
+    
+    Required when 'type' is Kind.TypeMessage. Ignored for any other 'type'.
+    """
 
 
 def validate_default_value_type(parameter_metadata: ParameterMetadata) -> None:
