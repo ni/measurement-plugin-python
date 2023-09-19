@@ -40,10 +40,11 @@ jobs:
         run:  poetry run mypy tests
       - name: Install ni-measurementlink-service with docs
         run: poetry install --with docs
-      - name: Check documentation
+      - name: Build docs and check for errors/warnings
         run: |
           rm -rf docs
           mkdir -p docs
           touch docs/.nojekyll         
           poetry run sphinx-build _docs_source docs -b html
-          git restore docs/
+      - name: Revert docs
+        run:  git clean -dfx docs/ && git restore docs/
