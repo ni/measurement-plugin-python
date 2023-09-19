@@ -274,17 +274,12 @@ class SessionManagementClient(object):
 
             instrument_type_id (str): Instrument type ID for the measurement. If unspecified,
                 reserve sessions for all instrument types connected in the registered pin map
-                resource. Pin maps have built in instrument definitions using the following NI
-                driver based instrument type ids:
-                    "niDCPower"
-                    "niDigitalPattern"
-                    "niScope"
-                    "niDMM"
-                    "niDAQmx"
-                    "niFGen"
-                    "niRelayDriver"
-                For custom instruments the user defined instrument type id is defined in the pin
-                map file.
+                resource.
+                
+                For NI instruments, use instrument type id constants, such as INSTRUMENT_TYPE_NI_DCPOWER
+                or INSTRUMENT_TYPE_NI_DMM.
+               
+                For custom instruments, use the instrument type id defined in the pin map file.
 
             timeout (float): Timeout in seconds. Allowed values,
                 0 (non-blocking, fails immediately if resources cannot be reserved),
@@ -330,17 +325,12 @@ class SessionManagementClient(object):
 
             instrument_type_id (str): Instrument type ID for the measurement. If unspecified,
                 reserve sessions for all instrument types connected in the registered pin map
-                resource. Pin maps have built in instrument definitions using the following NI
-                driver based instrument type ids:
-                    "niDCPower"
-                    "niDigitalPattern"
-                    "niScope"
-                    "niDMM"
-                    "niDAQmx"
-                    "niFGen"
-                    "niRelayDriver"
-                For custom instruments the user defined instrument type id is defined in the pin
-                map file.
+                resource.
+
+                For NI instruments, use instrument type id constants, such as INSTRUMENT_TYPE_NI_DCPOWER
+                or INSTRUMENT_TYPE_NI_DMM.
+               
+                For custom instruments, use the instrument type id defined in the pin map file.
 
             timeout (float): Timeout in seconds. Allowed values,
                 0 (non-blocking, fails immediately if resources cannot be reserved),
@@ -467,17 +457,12 @@ class SessionManagementClient(object):
         Args:
             instrument_type_id (str): Instrument type ID for the measurement. If unspecified,
                 reserve sessions for all instrument types connected in the registered pin map
-                resource. Pin maps have built in instrument definitions using the following NI
-                driver based instrument type ids:
-                    "niDCPower"
-                    "niDigitalPattern"
-                    "niScope"
-                    "niDMM"
-                    "niDAQmx"
-                    "niFGen"
-                    "niRelayDriver"
-                For custom instruments the user defined instrument type id is defined in the pin
-                map file.
+                resource.
+        
+                For NI instruments, use instrument type id constants, such as INSTRUMENT_TYPE_NI_DCPOWER
+                or INSTRUMENT_TYPE_NI_DMM.
+               
+                For custom instruments, use the instrument type id defined in the pin map file.
 
             timeout (float): Timeout in seconds. Allowed values,
                 0 (non-blocking, fails immediately if resources cannot be reserved),

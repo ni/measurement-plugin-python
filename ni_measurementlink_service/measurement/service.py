@@ -189,18 +189,16 @@ class MeasurementService:
     def register_measurement(self, measurement_function: _F) -> _F:
         """Register a function as the measurement function for a measurement service.
 
-        To declare a measurement function, use this idiom:
+        To declare a measurement function, use this idiom::
 
-        ```
-        @measurement_service.register_measurement
-        @measurement_service.configuration("Configuration 1", ...)
-        @measurement_service.configuration("Configuration 2", ...)
-        @measurement_service.output("Output 1", ...)
-        @measurement_service.output("Output 2", ...)
-        def measure(configuration1, configuration2):
-            ...
-            return (output1, output2)
-        ```
+            @measurement_service.register_measurement
+            @measurement_service.configuration("Configuration 1", ...)
+            @measurement_service.configuration("Configuration 2", ...)
+            @measurement_service.output("Output 1", ...)
+            @measurement_service.output("Output 2", ...)
+            def measure(configuration1, configuration2):
+                ...
+                return (output1, output2)
 
         See also: :func:`.configuration`, :func:`.output`
         """
