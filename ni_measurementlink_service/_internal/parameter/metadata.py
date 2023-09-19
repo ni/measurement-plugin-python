@@ -12,8 +12,7 @@ from ni_measurementlink_service.measurement.info import TypeSpecialization
 class ParameterMetadata(NamedTuple):
     """Class that represents the metadata of parameters.
 
-    Attributes
-    ----------
+    Attributes:
         display_name (str): The display name of the parameter.
 
         type (type_pb2.Field): The datatype of the parameter
@@ -30,7 +29,6 @@ class ParameterMetadata(NamedTuple):
         message_type (str): This is the gRPC full name of the message type.
         Required when 'type' is Kind.TypeMessage.
         Ignored for any other 'type'.
-
     """
 
     display_name: str
@@ -44,14 +42,11 @@ class ParameterMetadata(NamedTuple):
 def validate_default_value_type(parameter_metadata: ParameterMetadata) -> None:
     """Validate and raise exception if the default value does not match the type info.
 
-    Args
-    ----
+    Args:
         parameter_metadata (ParameterMetadata): Parameter metadata
 
-    Raises
-    ------
+    Raises:
         TypeError: If default value does not match the Datatype.
-
     """
     default_value = parameter_metadata.default_value
     if default_value is None:
@@ -148,14 +143,11 @@ def _validate_default_value_type_for_enum_type(
 def get_enum_values_annotation(parameter_metadata: ParameterMetadata) -> str:
     """Gets the value for the "ni/enum.values" annotation if it exists.
 
-    Args
-    ----
+    Args:
         parameter_metadata (ParameterMetadata): Parameter metadata
 
-    Returns
-    -------
+    Returns:
         str: The value of "ni/enum.values" annotation
-
     """
     if (
         parameter_metadata.annotations.get("ni/type_specialization")

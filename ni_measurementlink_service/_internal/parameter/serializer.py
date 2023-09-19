@@ -23,16 +23,13 @@ def deserialize_parameters(
 ) -> Dict[int, Any]:
     """Deserialize the bytes of the parameter based on the metadata.
 
-    Args
-    ----
+    Args:
         parameter_metadata_dict (Dict[int, ParameterMetadata]): Parameter metadata by ID.
 
         parameter_bytes (bytes): Byte string to deserialize.
 
-    Returns
-    -------
+    Returns:
         Dict[int, Any]: Deserialized parameters by ID
-
     """
     # Getting overlapping parameters
     overlapping_parameter_by_id = _get_overlapping_parameters(
@@ -56,16 +53,13 @@ def serialize_parameters(
 ) -> bytes:
     """Serialize the parameter values in same order based on the metadata_dict.
 
-    Args
-    ----
+    Args:
         parameter_metadata_dict (Dict[int, ParameterMetadata]): Parameter metadata by ID.
 
         parameter_value (Sequence[Any]): Parameter values to serialize.
 
-    Returns
-    -------
+    Returns:
         bytes: Serialized byte string containing parameter values.
-
     """
     serialize_buffer = BytesIO()  # inner_encoder updates the serialize_buffer
     for i, parameter in enumerate(parameter_values):
@@ -94,14 +88,11 @@ def serialize_parameters(
 def serialize_default_values(parameter_metadata_dict: Dict[int, ParameterMetadata]) -> bytes:
     """Serialize the Default values in the Metadata.
 
-    Args
-    -----
+    Args:
         parameter_metadata_dict (Dict[int, ParameterMetadata]): Configuration metadata.
 
-    Returns
-    -------
+    Returns:
         bytes: Serialized byte string containing default values.
-
     """
     default_value_parameter_array = list()
     default_value_parameter_array = [
@@ -115,16 +106,13 @@ def _get_field_index(parameter_bytes: bytes, tag_position: int) -> int:
 
     The tag Position should be the index of the TagValue in the ByteArray for valid field index.
 
-    Args
-    ----
+    Args:
         parameter_bytes (bytes): Serialized bytes
 
         tag_position (int): Tag position
 
-    Returns
-    -------
+    Returns:
         int: Filed index of the Tag Position
-
     """
     return parameter_bytes[tag_position] >> _GRPC_WIRE_TYPE_BIT_WIDTH
 
@@ -134,20 +122,16 @@ def _get_overlapping_parameters(
 ) -> Dict[int, Any]:
     """Get the parameters present in both `parameter_metadata_dict` and `parameter_bytes`.
 
-    Args
-    ----
+    Args:
         parameter_metadata_dict (Dict[int, ParameterMetadata]): Parameter metadata by ID.
 
         parameter_bytes (bytes): bytes of Parameter that need to be deserialized.
 
-    Raises
-    ------
+    Raises:
         Exception: If the protobuf filed index is invalid.
 
-    Returns
-    -------
+    Returns:
         Dict[int, Any]: Overlapping Parameters by ID.
-
     """
     # inner_decoder update the overlapping_parameters
     overlapping_parameters_by_id: Dict[int, Any] = {}
@@ -180,16 +164,13 @@ def _get_missing_parameters(
 ) -> Dict[int, Any]:
     """Get the Parameters defined in `parameter_metadata_dict` but not in `parameter_by_id`.
 
-    Args
-    ----
+    Args:
         parameter_metadata_dict (Dict[int, ParameterMetadata]): Parameter metadata by id.
 
         parameter_by_id (Dict[int, Any]): Parameters by ID to compare the metadata with.
 
-    Returns
-    -------
+    Returns:
         Dict[int, Any]: Missing parameter(as type defaults) by ID.
-
     """
     missing_parameters = {}
     for key, value in parameter_metadata_dict.items():
@@ -210,16 +191,10 @@ def _deserialize_enum_parameters(
 ) -> None:
     """Converts all enums in `parameter_by_id` to the user defined enum type.
 
-    Args
-    ----
+    Args:
         parameter_metadata_dict (Dict[int, ParameterMetadata]): Parameter metadata by id.
 
         parameter_by_id (Dict[int, Any]): Parameters by ID to compare the metadata with.
-
-    Returns
-    -------
-        None: No return value.
-
     """
     for id, value in parameter_by_id.items():
         parameter_metadata = parameter_metadata_dict[id]

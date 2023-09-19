@@ -95,8 +95,7 @@ _F = TypeVar("_F", bound=Callable)
 class MeasurementService:
     """Class that supports registering and hosting a python function as a gRPC service.
 
-    Attributes
-    ----------
+    Attributes:
         measurement_info (info.MeasurementInfo): Measurement info
 
         service_info(info.ServiceInfo) : Service Info
@@ -113,7 +112,6 @@ class MeasurementService:
             service.
 
         channel_pool (GrpcChannelPool): Pool of gRPC channels used by the service.
-
     """
 
     def __init__(
@@ -227,8 +225,7 @@ class MeasurementService:
 
         See also: :func:`.register_measurement`
 
-        Args
-        ----
+        Args:
             display_name (str): Display name of the configuration.
 
             type (DataType): Data type of the configuration.
@@ -248,11 +245,9 @@ class MeasurementService:
             Defines the enum type associated with this configuration parameter. This is only
             supported when configuration type is DataType.Enum or DataType.EnumArray1D.
 
-        Returns
-        -------
+        Returns:
             Callable: Callable that takes in Any Python Function
             and returns the same python function.
-
         """
         data_type_info = _datatypeinfo.get_type_info(type)
         annotations = self._make_annotations_dict(
@@ -292,8 +287,7 @@ class MeasurementService:
 
         See also: :func:`.register_measurement`
 
-        Args
-        ----
+        Args:
             display_name (str): Display name of the output.
 
             type (DataType): Data type of the output.
@@ -302,11 +296,9 @@ class MeasurementService:
             Defines the enum type associated with this configuration parameter. This is only
             supported when configuration type is DataType.Enum or DataType.EnumArray1D.
 
-        Returns
-        -------
+        Returns:
             Callable: Callable that takes in Any Python Function and
             returns the same python function.
-
         """
         data_type_info = _datatypeinfo.get_type_info(type)
         annotations = self._make_annotations_dict(
@@ -330,15 +322,12 @@ class MeasurementService:
     def host_service(self) -> MeasurementService:
         """Host the registered measurement method as gRPC measurement service.
 
-        Returns
-        -------
+        Returns:
             MeasurementService: Context manager that can be used with a with-statement to close
             the service.
 
-        Raises
-        ------
+        Raises:
             Exception: If register measurement methods not available.
-
         """
         if self.measure_function is None:
             raise Exception("Error, must register measurement method.")
@@ -417,21 +406,17 @@ class MeasurementService:
     def get_channel(self, provided_interface: str, service_class: str = "") -> grpc.Channel:
         """Return gRPC channel to specified service.
 
-        Args
-        ----
+        Args:
             provided_interface (str): The gRPC Full Name of the service.
 
             service_class (str): The service "class" that should be matched.
 
-        Returns
-        -------
+        Returns:
             grpc.Channel: A channel to the gRPC service.
 
-        Raises
-        ------
+        Raises:
             Exception: If service_class is not specified and there is more than one matching service
                 registered.
-
         """
         service_location = self.grpc_service.discovery_client.resolve_service(
             provided_interface, service_class

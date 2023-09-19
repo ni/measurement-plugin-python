@@ -30,11 +30,9 @@ _V2_INTERFACE = "ni.measurementlink.measurement.v2.MeasurementService"
 class GrpcService:
     """Class that manages hosting the measurement as service and closing service.
 
-    Attributes
-    ----------
+    Attributes:
         discovery_client (DiscoveryClient, optional): Instance of Discovery Client.
         Defaults to None.
-
     """
 
     def __init__(self, discovery_client: Optional[DiscoveryClient] = None) -> None:
@@ -64,7 +62,6 @@ class GrpcService:
         """Host a gRPC service with the registered measurement method.
 
         Args:
-        ----
             measurement_info (MeasurementInfo): Measurement info
 
             service_info (ServiceInfo): Service info
@@ -75,10 +72,8 @@ class GrpcService:
 
             measure_function (Callable): Registered measurement function.
 
-        Returns
-        -------
+        Returns:
             int: The port number of the server
-
         """
         interceptors: List[grpc.ServerInterceptor] = []
         if ServerLogger.is_enabled():
