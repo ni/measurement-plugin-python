@@ -276,8 +276,8 @@ class SessionManagementClient(object):
                 reserve sessions for all instrument types connected in the registered pin map
                 resource.
                 
-                For NI instruments, use instrument type id constants, such as INSTRUMENT_TYPE_NI_DCPOWER
-                or INSTRUMENT_TYPE_NI_DMM.
+                For NI instruments, use instrument type id constants, such as
+                :py:const:`INSTRUMENT_TYPE_NI_DCPOWER` or :py:const:`INSTRUMENT_TYPE_NI_DMM`.
                
                 For custom instruments, use the instrument type id defined in the pin map file.
 
@@ -327,8 +327,8 @@ class SessionManagementClient(object):
                 reserve sessions for all instrument types connected in the registered pin map
                 resource.
 
-                For NI instruments, use instrument type id constants, such as INSTRUMENT_TYPE_NI_DCPOWER
-                or INSTRUMENT_TYPE_NI_DMM.
+                For NI instruments, use instrument type id constants, such as
+                :py:const:`INSTRUMENT_TYPE_NI_DCPOWER` or :py:const:`INSTRUMENT_TYPE_NI_DMM`.
                
                 For custom instruments, use the instrument type id defined in the pin map file.
 
@@ -390,7 +390,7 @@ class SessionManagementClient(object):
 
         Args:
             session_info (Iterable[SessionInformation]): Sessions to register with the session
-            management service to track as the sessions are open.
+                management service to track as the sessions are open.
 
         Raises:
             Exception: If a session by the same name is already registered.
@@ -459,8 +459,8 @@ class SessionManagementClient(object):
                 reserve sessions for all instrument types connected in the registered pin map
                 resource.
         
-                For NI instruments, use instrument type id constants, such as INSTRUMENT_TYPE_NI_DCPOWER
-                or INSTRUMENT_TYPE_NI_DMM.
+                For NI instruments, use instrument type id constants, such as
+                :py:const:`INSTRUMENT_TYPE_NI_DCPOWER` or :py:const:`INSTRUMENT_TYPE_NI_DMM`.
                
                 For custom instruments, use the instrument type id defined in the pin map file.
 

@@ -134,8 +134,8 @@ class MeasurementService:
             ui_file_paths (List[Path]): List of paths to supported UIs.
 
             service_class (str): The service class from the .serviceconfig to use.
-            Default value is None, which will use the first service in the
-            .serviceconfig file.
+                Default value is None, which will use the first service in the
+                .serviceconfig file.
 
         """
         if not path.exists(service_config_path):
@@ -231,17 +231,19 @@ class MeasurementService:
             default_value (Any): Default value of the configuration.
 
             instrument_type (Optional[str]):
-            Filter pins by instrument type. This is only supported when configuration type
-            is DataType.Pin. Pin maps have built in instrument definitions using the
-            NI driver based instrument type ids. These can be found as constants
-            in `nims.session_management`. For example, for an NI DCPower instrument
-            the instrument type is `nims.session_management.INSTRUMENT_TYPE_NI_DCPOWER`.
-            For custom instruments the user defined instrument type id is defined in the
-            pin map file.
+                Filter pins by instrument type. This is only supported when configuration type
+                is DataType.Pin. 
+                
+                For NI instruments, use instrument type id constants defined by
+                :py:mod:`ni_measurementlink_service.session_management`, such as
+                :py:const:`~ni_measurementlink_service.session_management.INSTRUMENT_TYPE_NI_DCPOWER`
+                or :py:const:`~ni_measurementlink_service.session_management.INSTRUMENT_TYPE_NI_DMM`.
+               
+                For custom instruments, use the instrument type id defined in the pin map file.
 
             enum_type (Optional[SupportedEnumType]):
-            Defines the enum type associated with this configuration parameter. This is only
-            supported when configuration type is DataType.Enum or DataType.EnumArray1D.
+                Defines the enum type associated with this configuration parameter. This is only
+                supported when configuration type is DataType.Enum or DataType.EnumArray1D.
 
         Returns:
             Callable: Callable that takes in Any Python Function
@@ -291,8 +293,8 @@ class MeasurementService:
             type (DataType): Data type of the output.
 
             enum_type (Optional[SupportedEnumType]:
-            Defines the enum type associated with this configuration parameter. This is only
-            supported when configuration type is DataType.Enum or DataType.EnumArray1D.
+                Defines the enum type associated with this configuration parameter. This is only
+                supported when configuration type is DataType.Enum or DataType.EnumArray1D.
 
         Returns:
             Callable: Callable that takes in Any Python Function and
