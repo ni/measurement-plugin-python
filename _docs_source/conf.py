@@ -53,6 +53,13 @@ autodoc_typehints = "none"
 # This patterns also effect to html_static_path and html_extra_path
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
+suppress_warnings = [
+    # WARNING: more than one target found for cross-reference 'MeasurementInfo':
+    # ni_measurementlink_service.MeasurementInfo,
+    # ni_measurementlink_service.measurement.info.MeasurementInfo
+    "ref"
+]
+
 
 # -- Options for HTML output ----------------------------------------------
 
