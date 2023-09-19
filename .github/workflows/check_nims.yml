@@ -38,6 +38,8 @@ jobs:
         run:  poetry run mypy -p ni_measurementlink_service
       - name: Mypy static analysis (tests)
         run:  poetry run mypy tests
+      - name: Install ni-measurementlink-service with docs
+        run: poetry install --with docs
       - name: Check documentation
         run: |
           rm -rf docs
