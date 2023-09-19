@@ -268,7 +268,7 @@ def _start_service(
     kwargs: Dict[str, Any] = {}
     if sys.platform == "win32":
         # Terminating the measurement service should not terminate the discovery service.
-        kwargs["creationflags"] = subprocess.CREATE_BREAKAWAY_FROM_JOB
+        kwargs["creationflags"] = subprocess.CREATE_BREAKAWAY_FROM_JOB | subprocess.DETACHED_PROCESS
     discovery_service_subprocess = subprocess.Popen(
         [exe_file_path],
         cwd=exe_file_path.parent,
