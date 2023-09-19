@@ -275,10 +275,10 @@ class SessionManagementClient(object):
             instrument_type_id (str): Instrument type ID for the measurement. If unspecified,
                 reserve sessions for all instrument types connected in the registered pin map
                 resource.
-                
+
                 For NI instruments, use instrument type id constants, such as
                 :py:const:`INSTRUMENT_TYPE_NI_DCPOWER` or :py:const:`INSTRUMENT_TYPE_NI_DMM`.
-               
+
                 For custom instruments, use the instrument type id defined in the pin map file.
 
             timeout (float): Timeout in seconds. Allowed values,
@@ -329,7 +329,7 @@ class SessionManagementClient(object):
 
                 For NI instruments, use instrument type id constants, such as
                 :py:const:`INSTRUMENT_TYPE_NI_DCPOWER` or :py:const:`INSTRUMENT_TYPE_NI_DMM`.
-               
+
                 For custom instruments, use the instrument type id defined in the pin map file.
 
             timeout (float): Timeout in seconds. Allowed values,
@@ -458,10 +458,10 @@ class SessionManagementClient(object):
             instrument_type_id (str): Instrument type ID for the measurement. If unspecified,
                 reserve sessions for all instrument types connected in the registered pin map
                 resource.
-        
+
                 For NI instruments, use instrument type id constants, such as
                 :py:const:`INSTRUMENT_TYPE_NI_DCPOWER` or :py:const:`INSTRUMENT_TYPE_NI_DMM`.
-               
+
                 For custom instruments, use the instrument type id defined in the pin map file.
 
             timeout (float): Timeout in seconds. Allowed values,

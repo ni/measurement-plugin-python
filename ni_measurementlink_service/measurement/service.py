@@ -232,13 +232,14 @@ class MeasurementService:
 
             instrument_type (Optional[str]):
                 Filter pins by instrument type. This is only supported when configuration type
-                is DataType.Pin. 
-                
+                is DataType.Pin.
+
                 For NI instruments, use instrument type id constants defined by
                 :py:mod:`ni_measurementlink_service.session_management`, such as
                 :py:const:`~ni_measurementlink_service.session_management.INSTRUMENT_TYPE_NI_DCPOWER`
-                or :py:const:`~ni_measurementlink_service.session_management.INSTRUMENT_TYPE_NI_DMM`.
-               
+                or
+                :py:const:`~ni_measurementlink_service.session_management.INSTRUMENT_TYPE_NI_DMM`.
+
                 For custom instruments, use the instrument type id defined in the pin map file.
 
             enum_type (Optional[SupportedEnumType]):
