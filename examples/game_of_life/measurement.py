@@ -26,7 +26,7 @@ INFINITE_GENERATIONS = -1
 @measurement_service.configuration("width", nims.DataType.UInt32, 100)
 @measurement_service.configuration("height", nims.DataType.UInt32, 100)
 @measurement_service.configuration("update_interval", nims.DataType.UInt32, 100)
-@measurement_service.configuration("max_generations", nims.DataType.Int32, -1)
+@measurement_service.configuration("max_generations", nims.DataType.Int32, INFINITE_GENERATIONS)
 @measurement_service.output("game_of_life", nims.DataType.DoubleXYData)
 @measurement_service.output("generation", nims.DataType.UInt32)
 def measure(
