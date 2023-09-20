@@ -212,7 +212,7 @@ class MeasurementService:
         deprecated_in="1.3.0-dev0",
         details="This property should not be public and will be removed in a later release.",
     )
-    def grpc_service(self) -> GrpcService:
+    def grpc_service(self) -> Optional[GrpcService]:
         """The gRPC service object. This is a private implementation detail."""
         return self._grpc_service
 
@@ -456,12 +456,12 @@ class MeasurementService:
         Exiting the measurement service's runtime context automatically calls close_service().
         """
         with self._initialization_lock:
-            self._grpc_service.stop()
-            self._grpc_service = None
-
+            if self._grpc_service is not None:
+                self._grpc_service.stop()
             if self._channel_pool is not None:
                 self._channel_pool.close()
 
+            self._grpc_service = None
             self._channel_pool = None
             self._discovery_client = None
 
