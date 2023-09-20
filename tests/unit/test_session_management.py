@@ -13,15 +13,15 @@ from ni_measurementlink_service._internal.stubs.ni.measurementlink.sessionmanage
     SessionManagementServiceStub,
 )
 from ni_measurementlink_service.session_management import (
-    Client,
     MultiSessionReservation,
     PinMapContext,
     SessionInformation,
+    SessionManagementClient,
     SingleSessionReservation,
 )
 
 
-def test___reserve_session___sends_request(client: Client, stub: Mock) -> None:
+def test___reserve_session___sends_request(client: SessionManagementClient, stub: Mock) -> None:
     stub.ReserveSessions.return_value = session_management_service_pb2.ReserveSessionsResponse(
         sessions=_create_grpc_session_infos(1)
     )
@@ -43,7 +43,7 @@ def test___reserve_session___sends_request(client: Client, stub: Mock) -> None:
 
 
 def test___single_session___reserve_session___returns_single_session_info(
-    client: Client, stub: Mock
+    client: SessionManagementClient, stub: Mock
 ) -> None:
     stub.ReserveSessions.return_value = session_management_service_pb2.ReserveSessionsResponse(
         sessions=_create_grpc_session_infos(1)
@@ -61,7 +61,7 @@ def test___single_session___reserve_session___returns_single_session_info(
 
 
 def test___no_sessions___reserve_session___raises_no_sessions_value_error(
-    client: Client, stub: Mock
+    client: SessionManagementClient, stub: Mock
 ) -> None:
     stub.ReserveSessions.return_value = session_management_service_pb2.ReserveSessionsResponse()
 
@@ -75,7 +75,7 @@ def test___no_sessions___reserve_session___raises_no_sessions_value_error(
 
 
 def test___too_many_sessions___reserve_session___raises_too_many_sessions_value_error(
-    client: Client, stub: Mock
+    client: SessionManagementClient, stub: Mock
 ) -> None:
     stub.ReserveSessions.return_value = session_management_service_pb2.ReserveSessionsResponse(
         sessions=_create_grpc_session_infos(2)
@@ -90,7 +90,7 @@ def test___too_many_sessions___reserve_session___raises_too_many_sessions_value_
         )
 
 
-def test___reserve_sessions___sends_request(client: Client, stub: Mock) -> None:
+def test___reserve_sessions___sends_request(client: SessionManagementClient, stub: Mock) -> None:
     stub.ReserveSessions.return_value = session_management_service_pb2.ReserveSessionsResponse()
 
     _ = client.reserve_sessions(
@@ -111,7 +111,7 @@ def test___reserve_sessions___sends_request(client: Client, stub: Mock) -> None:
 
 @pytest.mark.parametrize("session_count", [0, 1, 2])
 def test___varying_session_count___reserve_sessions___returns_multiple_session_infos(
-    client: Client, stub: Mock, session_count: int
+    client: SessionManagementClient, stub: Mock, session_count: int
 ) -> None:
     stub.ReserveSessions.return_value = session_management_service_pb2.ReserveSessionsResponse(
         sessions=_create_grpc_session_infos(session_count)
@@ -133,7 +133,7 @@ def test___varying_session_count___reserve_sessions___returns_multiple_session_i
 
 @pytest.mark.parametrize("session_count", [0, 1, 2])
 def test___varying_session_count___unreserve___sends_request(
-    client: Client, stub: Mock, session_count: int
+    client: SessionManagementClient, stub: Mock, session_count: int
 ) -> None:
     reservation = MultiSessionReservation(client, _create_grpc_session_infos(session_count))
     stub.UnreserveSessions.return_value = session_management_service_pb2.UnreserveSessionsResponse()
@@ -150,7 +150,7 @@ def test___varying_session_count___unreserve___sends_request(
 
 @pytest.mark.parametrize("session_count", [0, 1, 2])
 def test___varying_session_count___exit_reservation___sends_request(
-    client: Client, stub: Mock, session_count: int
+    client: SessionManagementClient, stub: Mock, session_count: int
 ) -> None:
     reservation = MultiSessionReservation(client, _create_grpc_session_infos(session_count))
     stub.UnreserveSessions.return_value = session_management_service_pb2.UnreserveSessionsResponse()
@@ -168,7 +168,7 @@ def test___varying_session_count___exit_reservation___sends_request(
 
 @pytest.mark.parametrize("session_count", [0, 1, 2])
 def test___varying_session_count___register_sessions___sends_request(
-    client: Client, stub: Mock, session_count: int
+    client: SessionManagementClient, stub: Mock, session_count: int
 ) -> None:
     stub.RegisterSessions.return_value = session_management_service_pb2.RegisterSessionsResponse()
 
@@ -184,7 +184,7 @@ def test___varying_session_count___register_sessions___sends_request(
 
 @pytest.mark.parametrize("session_count", [0, 1, 2])
 def test___varying_session_count___unregister_sessions___sends_request(
-    client: Client, stub: Mock, session_count: int
+    client: SessionManagementClient, stub: Mock, session_count: int
 ) -> None:
     stub.UnregisterSessions.return_value = (
         session_management_service_pb2.UnregisterSessionsResponse()
@@ -200,7 +200,9 @@ def test___varying_session_count___unregister_sessions___sends_request(
     ]
 
 
-def test___reserve_all_registered_sessions___sends_request(client: Client, stub: Mock) -> None:
+def test___reserve_all_registered_sessions___sends_request(
+    client: SessionManagementClient, stub: Mock
+) -> None:
     stub.ReserveAllRegisteredSessions.return_value = (
         session_management_service_pb2.ReserveAllRegisteredSessionsResponse()
     )
@@ -217,7 +219,7 @@ def test___reserve_all_registered_sessions___sends_request(client: Client, stub:
 
 @pytest.mark.parametrize("session_count", [0, 1, 2])
 def test___varying_session_count___reserve_all_registered_sessions___returns_session_infos(
-    client: Client, stub: Mock, session_count: int
+    client: SessionManagementClient, stub: Mock, session_count: int
 ) -> None:
     stub.ReserveAllRegisteredSessions.return_value = (
         session_management_service_pb2.ReserveAllRegisteredSessionsResponse(
@@ -236,7 +238,7 @@ def test___varying_session_count___reserve_all_registered_sessions___returns_ses
 
 
 def test___use_reservation_type___reports_deprecated_warning_and_aliases_to_multi_session_reservation(
-    client: Client,
+    client: SessionManagementClient,
 ) -> None:
     with pytest.deprecated_call():
         from ni_measurementlink_service.session_management import Reservation
@@ -282,8 +284,8 @@ def stub(mocker: MockerFixture) -> Mock:
 
 
 @pytest.fixture
-def client(grpc_channel: Mock, stub: Mock) -> Client:
+def client(grpc_channel: Mock, stub: Mock) -> SessionManagementClient:
     """Create a Client with a mock SessionManagementServiceStub."""
-    client = Client(grpc_channel=cast(grpc.Channel, grpc_channel))
+    client = SessionManagementClient(grpc_channel=cast(grpc.Channel, grpc_channel))
     client._client = cast(SessionManagementServiceStub, stub)
     return client
