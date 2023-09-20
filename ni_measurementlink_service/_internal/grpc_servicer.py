@@ -100,16 +100,13 @@ def _get_mapping_by_parameter_name(
 ) -> Dict[str, Any]:
     """Transform the mapping by id to mapping by parameter names of the measurement function.
 
-    Args
-    ----
+    Args:
         mapping_by_id (Dict[int, Any]): Mapping by ID
 
         measure_function (callable): Function from which the parameter names are extracted.
 
-    Returns
-    -------
-        Dict[str, Any]: Mapping by Parameters names based on the measurement function.
-
+    Returns:
+        Dict[str, Any]: Mapping by Parameters names based on the measurement function
     """
     signature = inspect.signature(measure_function)
     mapping_by_variable_name = {}
@@ -132,8 +129,7 @@ def _serialize_outputs(output_metadata: Dict[int, ParameterMetadata], outputs: A
 class MeasurementServiceServicerV1(v1_measurement_service_pb2_grpc.MeasurementServiceServicer):
     """Implementation of the Measurement Service's gRPC base class.
 
-    Attributes
-    ----------
+    Attributes:
         measurement_info (MeasurementInfo): Measurement info
 
         configuration_parameter_list (List): List of configuration parameters.
@@ -141,7 +137,6 @@ class MeasurementServiceServicerV1(v1_measurement_service_pb2_grpc.MeasurementSe
         output_parameter_list (List): List of output parameters.
 
         measure_function (Callable): Registered measurement function.
-
     """
 
     def __init__(
@@ -277,8 +272,7 @@ class MeasurementServiceServicerV1(v1_measurement_service_pb2_grpc.MeasurementSe
 class MeasurementServiceServicerV2(v2_measurement_service_pb2_grpc.MeasurementServiceServicer):
     """Implementation of the Measurement Service's gRPC base class.
 
-    Attributes
-    ----------
+    Attributes:
         measurement_info (MeasurementInfo): Measurement info
 
         configuration_parameter_list (List): List of configuration parameters.
@@ -286,7 +280,6 @@ class MeasurementServiceServicerV2(v2_measurement_service_pb2_grpc.MeasurementSe
         output_parameter_list (List): List of output parameters.
 
         measure_function (Callable): Registered measurement function.
-
     """
 
     def __init__(
@@ -306,7 +299,6 @@ class MeasurementServiceServicerV2(v2_measurement_service_pb2_grpc.MeasurementSe
             output_parameter_list (List): List of output parameters.
 
             measure_function (Callable): Registered measurement function.
-
         """
         super().__init__()
 
