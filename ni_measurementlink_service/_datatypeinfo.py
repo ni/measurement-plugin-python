@@ -7,21 +7,22 @@ from ni_measurementlink_service.measurement.info import DataType, TypeSpecializa
 
 
 class DataTypeInfo(NamedTuple):
-    """Class that represents the information for each of the DataType enum values."""
+    """Class that represents the information for each of the :any:`DataType` enum values."""
 
     grpc_field_type: type_pb2.Field.Kind.ValueType
-    """Field.Kind associated with the DataType."""
+    """`Field.Kind` associated with the :any:`DataType`."""
 
     repeated: bool
-    """Whether the DataType is a repeated field."""
+    """Whether the :any:`DataType` is a repeated field."""
 
     type_specialization: TypeSpecialization = TypeSpecialization.NoType
-    """Specific type when value_type can have more than one use."""
+    """Specific type when :any:`grpc_field_type` can have more than one use."""
 
     message_type: str = ""
-    """The gRPC full name of the message type. Required when 'grpc_field_type' is Kind.TypeMessage.
-
-    Ignored for any other 'type'.
+    """The gRPC full name of the message type. 
+    
+    Required when :any:`grpc_field_type` is `Kind.TypeMessage`.
+    Ignored for any other :any:`grpc_field_type` value.
     """
 
 

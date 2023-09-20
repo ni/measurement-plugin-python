@@ -48,17 +48,29 @@ autoapi_dirs = [root_path / "ni_measurementlink_service"]
 autoapi_type = "python"
 autodoc_typehints = "none"
 
+# WARNING: more than one target found for cross-reference 'MeasurementInfo':
+# ni_measurementlink_service.MeasurementInfo,
+# ni_measurementlink_service.measurement.info.MeasurementInfo
+#
+# TODO: figure out how to make :canonical: work with autoapi
+def skip_aliases(app, what, name, obj, skip, options):
+    if name in [
+        "ni_measurementlink_service.DataType",
+        "ni_measurementlink_service.MeasurementInfo",
+        "ni_measurementlink_service.ServiceInfo",
+        "ni_measurementlink_service.MeasurementService",
+    ]:
+        skip = True
+    return skip
+
+
+def setup(sphinx):
+    sphinx.connect("autoapi-skip-member", skip_aliases)
+
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This patterns also effect to html_static_path and html_extra_path
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
-
-suppress_warnings = [
-    # WARNING: more than one target found for cross-reference 'MeasurementInfo':
-    # ni_measurementlink_service.MeasurementInfo,
-    # ni_measurementlink_service.measurement.info.MeasurementInfo
-    "ref"
-]
 
 
 # -- Options for HTML output ----------------------------------------------
