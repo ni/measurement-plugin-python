@@ -19,20 +19,23 @@ measurement_service = nims.MeasurementService(
 
 Grid = List[List[bool]]
 
+INFINITE_GENERATIONS = -1
+
 
 @measurement_service.register_measurement
 @measurement_service.configuration("width", nims.DataType.UInt32, 100)
 @measurement_service.configuration("height", nims.DataType.UInt32, 100)
 @measurement_service.configuration("update_interval", nims.DataType.UInt32, 100)
+@measurement_service.configuration("max_generations", nims.DataType.Int32, INFINITE_GENERATIONS)
 @measurement_service.output("game_of_life", nims.DataType.DoubleXYData)
 @measurement_service.output("generation", nims.DataType.UInt32)
 def measure(
-    width: int, height: int, update_interval: int
+    width: int, height: int, update_interval: int, max_generations: int
 ) -> Generator[Tuple[xydata_pb2.DoubleXYData, int], None, None]:
     """Streaming measurement that returns Conway's Game of Life grid as DoubleXYData."""
     grid = _initialize_grid_with_seeded_data(width, height)
     generation = 0
-    while True:
+    while max_generations == INFINITE_GENERATIONS or generation < max_generations:
         generation += 1
 
         xydata = _initialize_xydata_and_frame(width, height)
