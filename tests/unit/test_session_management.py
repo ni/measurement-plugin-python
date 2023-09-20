@@ -67,7 +67,7 @@ def test___no_optional_args___reserve_session___sends_request_with_defaults(
     assert request.instrument_type_id == ""
     assert request.timeout_in_milliseconds == 0.0
 
-    
+
 def test___explicit_none___reserve_session___sends_request_with_defaults(
     session_management_client: SessionManagementClient, session_management_stub: Mock
 ) -> None:
