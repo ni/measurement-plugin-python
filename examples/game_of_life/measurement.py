@@ -5,9 +5,8 @@ import time
 from typing import Any, Generator, List, Tuple
 
 import click
-from _helpers import configure_logging, verbosity_option
-
 import ni_measurementlink_service as nims
+from _helpers import configure_logging, verbosity_option
 from ni_measurementlink_service._internal.stubs.ni.protobuf.types import xydata_pb2
 
 service_directory = pathlib.Path(__file__).resolve().parent
@@ -20,6 +19,7 @@ measurement_service = nims.MeasurementService(
 Grid = List[List[bool]]
 
 INFINITE_GENERATIONS = -1
+
 
 @measurement_service.register_measurement
 @measurement_service.configuration("width", nims.DataType.UInt32, 100)
