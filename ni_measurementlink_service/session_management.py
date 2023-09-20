@@ -21,9 +21,9 @@ from typing import (
 
 import grpc
 from deprecation import DeprecatedWarning
+
 from ni_measurementlink_service._channelpool import GrpcChannelPool
 from ni_measurementlink_service._internal.discovery_client import DiscoveryClient
-
 from ni_measurementlink_service._internal.stubs import session_pb2
 from ni_measurementlink_service._internal.stubs.ni.measurementlink import (
     pin_map_context_pb2,
@@ -262,7 +262,7 @@ class SessionManagementClient(object):
         grpc_channel_pool: Optional[GrpcChannelPool] = None,
     ) -> None:
         """Initialize session management client.
-        
+
         Args:
             discovery_client: An optional discovery client (recommended).
 
@@ -272,11 +272,15 @@ class SessionManagementClient(object):
         """
         self._discovery_client = discovery_client or DiscoveryClient()
         self._initialization_lock = threading.Lock()
-        self._grpc_channel_pool = grpc_channel_pool or GrpcChannelPool()          
-        self._stub: Optional[session_management_service_pb2_grpc.SessionManagementServiceStub] = None
+        self._grpc_channel_pool = grpc_channel_pool or GrpcChannelPool()
+        self._stub: Optional[
+            session_management_service_pb2_grpc.SessionManagementServiceStub
+        ] = None
 
         if grpc_channel is not None:
-            self._stub = session_management_service_pb2_grpc.SessionManagementServiceStub(grpc_channel)
+            self._stub = session_management_service_pb2_grpc.SessionManagementServiceStub(
+                grpc_channel
+            )
 
     def _get_stub(self) -> session_management_service_pb2_grpc.SessionManagementServiceStub:
         with self._initialization_lock:
@@ -286,7 +290,9 @@ class SessionManagementClient(object):
                     service_class=GRPC_SERVICE_CLASS,
                 )
                 channel = self._grpc_channel_pool.get_channel(service_location.insecure_address)
-                self._stub = session_management_service_pb2_grpc.SessionManagementServiceStub(channel)
+                self._stub = session_management_service_pb2_grpc.SessionManagementServiceStub(
+                    channel
+                )
             return self._stub
 
     def reserve_session(

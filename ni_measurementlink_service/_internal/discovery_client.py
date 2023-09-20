@@ -58,7 +58,7 @@ class DiscoveryClient:
     """Client for accessing the MeasurementLink discovery service."""
 
     def __init__(
-        self, 
+        self,
         stub: Optional[discovery_service_pb2_grpc.DiscoveryServiceStub] = None,
         *,
         grpc_channel_pool: Optional[GrpcChannelPool] = None,
