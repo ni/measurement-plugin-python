@@ -23,7 +23,7 @@ from ni_measurementlink_service.session_management import (
 )
 
 
-def test___reserve_session___sends_request(
+def test___all_optional_args___reserve_session___sends_request_with_args(
     session_management_client: SessionManagementClient, session_management_stub: Mock
 ) -> None:
     session_management_stub.ReserveSessions.return_value = (
@@ -46,6 +46,45 @@ def test___reserve_session___sends_request(
     assert request.pin_or_relay_names == ["Pin1", "Pin2"]
     assert request.instrument_type_id == "MyInstrumentType"
     assert request.timeout_in_milliseconds == 123456
+
+
+def test___no_optional_args___reserve_session___sends_request_with_defaults(
+    session_management_client: SessionManagementClient, session_management_stub: Mock
+) -> None:
+    session_management_stub.ReserveSessions.return_value = (
+        session_management_service_pb2.ReserveSessionsResponse(
+            sessions=_create_grpc_session_infos(1)
+        )
+    )
+
+    _ = session_management_client.reserve_session(
+        PinMapContext("MyPinMap", [0, 1]),
+    )
+
+    session_management_stub.ReserveSessions.assert_called_once()
+    (request,) = session_management_stub.ReserveSessions.call_args.args
+    assert request.pin_or_relay_names == []
+    assert request.instrument_type_id == ""
+    assert request.timeout_in_milliseconds == 0.0
+
+
+def test___single_pin___reserve_session___sends_request_with_single_pin(
+    session_management_client: SessionManagementClient, session_management_stub: Mock
+) -> None:
+    session_management_stub.ReserveSessions.return_value = (
+        session_management_service_pb2.ReserveSessionsResponse(
+            sessions=_create_grpc_session_infos(1)
+        )
+    )
+
+    _ = session_management_client.reserve_session(
+        PinMapContext("MyPinMap", [0, 1]),
+        pin_or_relay_names="Pin1",
+    )
+
+    session_management_stub.ReserveSessions.assert_called_once()
+    (request,) = session_management_stub.ReserveSessions.call_args.args
+    assert request.pin_or_relay_names == ["Pin1"]
 
 
 def test___single_session___reserve_session___returns_single_session_info(
@@ -102,7 +141,7 @@ def test___too_many_sessions___reserve_session___raises_too_many_sessions_value_
         )
 
 
-def test___reserve_sessions___sends_request(
+def test___all_optional_args___reserve_sessions___sends_request_with_args(
     session_management_client: SessionManagementClient, session_management_stub: Mock
 ) -> None:
     session_management_stub.ReserveSessions.return_value = (
@@ -123,6 +162,41 @@ def test___reserve_sessions___sends_request(
     assert request.pin_or_relay_names == ["Pin1", "Pin2"]
     assert request.instrument_type_id == "MyInstrumentType"
     assert request.timeout_in_milliseconds == 123456
+
+
+def test___no_optional_args___reserve_sessions___sends_request_with_defaults(
+    session_management_client: SessionManagementClient, session_management_stub: Mock
+) -> None:
+    session_management_stub.ReserveSessions.return_value = (
+        session_management_service_pb2.ReserveSessionsResponse()
+    )
+
+    _ = session_management_client.reserve_sessions(
+        PinMapContext("MyPinMap", [0, 1]),
+    )
+
+    session_management_stub.ReserveSessions.assert_called_once()
+    (request,) = session_management_stub.ReserveSessions.call_args.args
+    assert request.pin_or_relay_names == []
+    assert request.instrument_type_id == ""
+    assert request.timeout_in_milliseconds == 0.0
+
+
+def test___single_pin___reserve_sessions___sends_request_with_single_pin(
+    session_management_client: SessionManagementClient, session_management_stub: Mock
+) -> None:
+    session_management_stub.ReserveSessions.return_value = (
+        session_management_service_pb2.ReserveSessionsResponse()
+    )
+
+    _ = session_management_client.reserve_sessions(
+        PinMapContext("MyPinMap", [0, 1]),
+        pin_or_relay_names="Pin1",
+    )
+
+    session_management_stub.ReserveSessions.assert_called_once()
+    (request,) = session_management_stub.ReserveSessions.call_args.args
+    assert request.pin_or_relay_names == ["Pin1"]
 
 
 @pytest.mark.parametrize("session_count", [0, 1, 2])
