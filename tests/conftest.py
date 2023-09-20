@@ -6,7 +6,6 @@ from typing import Generator
 import grpc
 import pytest
 
-from ni_measurementlink_service import session_management
 from ni_measurementlink_service._internal.discovery_client import (
     DiscoveryClient,
     _get_registration_json_file_path,
@@ -34,7 +33,7 @@ def test_assets_directory() -> pathlib.Path:
 @pytest.fixture
 def grpc_channel(measurement_service: MeasurementService) -> Generator[grpc.Channel, None, None]:
     """Test fixture that creates a gRPC channel."""
-    target = f"localhost:{measurement_service.grpc_service.port}"
+    target = measurement_service.service_location.insecure_address
     options = [
         ("grpc.max_receive_message_length", -1),
         ("grpc.max_send_message_length", -1),
@@ -81,10 +80,11 @@ def grpc_channel_pool() -> Generator[GrpcChannelPool, None, None]:
 
 
 @pytest.fixture
-def discovery_client(discovery_service_process: DiscoveryServiceProcess) -> DiscoveryClient:
+def discovery_client(
+    discovery_service_process: DiscoveryServiceProcess, grpc_channel_pool: GrpcChannelPool
+) -> DiscoveryClient:
     """Test fixture that creates a discovery client."""
-    # TODO: DiscoveryClient should accept a GrpcChannelPool
-    return DiscoveryClient()
+    return DiscoveryClient(grpc_channel_pool=grpc_channel_pool)
 
 
 @pytest.fixture
@@ -92,9 +92,6 @@ def session_management_client(
     discovery_client: DiscoveryClient, grpc_channel_pool: GrpcChannelPool
 ) -> SessionManagementClient:
     """Test fixture that creates a session management client."""
-    # TODO: SessionManagementClient should accept a GrpcChannelPool
-    location = discovery_client.resolve_service(
-        session_management.GRPC_SERVICE_INTERFACE_NAME, session_management.GRPC_SERVICE_CLASS
+    return SessionManagementClient(
+        discovery_client=discovery_client, grpc_channel_pool=grpc_channel_pool
     )
-    grpc_channel = grpc_channel_pool.get_channel(location.insecure_address)
-    return SessionManagementClient(grpc_channel=grpc_channel)
