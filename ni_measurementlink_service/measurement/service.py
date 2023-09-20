@@ -100,8 +100,7 @@ _F = TypeVar("_F", bound=Callable)
 class MeasurementService:
     """Class that supports registering and hosting a python function as a gRPC service.
 
-    Attributes
-    ----------
+    Attributes:
         measurement_info (info.MeasurementInfo): Measurement info
 
         service_info(info.ServiceInfo) : Service Info
@@ -135,8 +134,8 @@ class MeasurementService:
             ui_file_paths (List[Path]): List of paths to supported UIs.
 
             service_class (str): The service class from the .serviceconfig to use.
-            Default value is None, which will use the first service in the
-            .serviceconfig file.
+                Default value is None, which will use the first service in the
+                .serviceconfig file.
 
         """
         if not path.exists(service_config_path):
@@ -234,18 +233,16 @@ class MeasurementService:
     def register_measurement(self, measurement_function: _F) -> _F:
         """Register a function as the measurement function for a measurement service.
 
-        To declare a measurement function, use this idiom:
+        To declare a measurement function, use this idiom::
 
-        ```
-        @measurement_service.register_measurement
-        @measurement_service.configuration("Configuration 1", ...)
-        @measurement_service.configuration("Configuration 2", ...)
-        @measurement_service.output("Output 1", ...)
-        @measurement_service.output("Output 2", ...)
-        def measure(configuration1, configuration2):
-            ...
-            return (output1, output2)
-        ```
+            @measurement_service.register_measurement
+            @measurement_service.configuration("Configuration 1", ...)
+            @measurement_service.configuration("Configuration 2", ...)
+            @measurement_service.output("Output 1", ...)
+            @measurement_service.output("Output 2", ...)
+            def measure(configuration1, configuration2):
+                ...
+                return (output1, output2)
 
         See also: :func:`.configuration`, :func:`.output`
         """
@@ -270,8 +267,7 @@ class MeasurementService:
 
         See also: :func:`.register_measurement`
 
-        Args
-        ----
+        Args:
             display_name (str): Display name of the configuration.
 
             type (DataType): Data type of the configuration.
@@ -279,23 +275,24 @@ class MeasurementService:
             default_value (Any): Default value of the configuration.
 
             instrument_type (Optional[str]):
-            Filter pins by instrument type. This is only supported when configuration type
-            is DataType.Pin. Pin maps have built in instrument definitions using the
-            NI driver based instrument type ids. These can be found as constants
-            in `nims.session_management`. For example, for an NI DCPower instrument
-            the instrument type is `nims.session_management.INSTRUMENT_TYPE_NI_DCPOWER`.
-            For custom instruments the user defined instrument type id is defined in the
-            pin map file.
+                Filter pins by instrument type. This is only supported when configuration type
+                is DataType.Pin.
+
+                For NI instruments, use instrument type id constants defined by
+                :py:mod:`ni_measurementlink_service.session_management`, such as
+                :py:const:`~ni_measurementlink_service.session_management.INSTRUMENT_TYPE_NI_DCPOWER`
+                or
+                :py:const:`~ni_measurementlink_service.session_management.INSTRUMENT_TYPE_NI_DMM`.
+
+                For custom instruments, use the instrument type id defined in the pin map file.
 
             enum_type (Optional[SupportedEnumType]):
-            Defines the enum type associated with this configuration parameter. This is only
-            supported when configuration type is DataType.Enum or DataType.EnumArray1D.
+                Defines the enum type associated with this configuration parameter. This is only
+                supported when configuration type is DataType.Enum or DataType.EnumArray1D.
 
-        Returns
-        -------
+        Returns:
             Callable: Callable that takes in Any Python Function
             and returns the same python function.
-
         """
         data_type_info = _datatypeinfo.get_type_info(type)
         annotations = self._make_annotations_dict(
@@ -335,21 +332,18 @@ class MeasurementService:
 
         See also: :func:`.register_measurement`
 
-        Args
-        ----
+        Args:
             display_name (str): Display name of the output.
 
             type (DataType): Data type of the output.
 
             enum_type (Optional[SupportedEnumType]:
-            Defines the enum type associated with this configuration parameter. This is only
-            supported when configuration type is DataType.Enum or DataType.EnumArray1D.
+                Defines the enum type associated with this configuration parameter. This is only
+                supported when configuration type is DataType.Enum or DataType.EnumArray1D.
 
-        Returns
-        -------
+        Returns:
             Callable: Callable that takes in Any Python Function and
             returns the same python function.
-
         """
         data_type_info = _datatypeinfo.get_type_info(type)
         annotations = self._make_annotations_dict(
@@ -373,15 +367,12 @@ class MeasurementService:
     def host_service(self) -> MeasurementService:
         """Host the registered measurement method as a gRPC measurement service.
 
-        Returns
-        -------
+        Returns:
             MeasurementService: Context manager that can be used with a with-statement to close
             the service.
 
-        Raises
-        ------
+        Raises:
             Exception: If register measurement methods not available.
-
         """
         with self._initialization_lock:
             if self.measure_function is None:
@@ -482,21 +473,17 @@ class MeasurementService:
     def get_channel(self, provided_interface: str, service_class: str = "") -> grpc.Channel:
         """Return gRPC channel to specified service.
 
-        Args
-        ----
+        Args:
             provided_interface (str): The gRPC Full Name of the service.
 
             service_class (str): The service "class" that should be matched.
 
-        Returns
-        -------
+        Returns:
             grpc.Channel: A channel to the gRPC service.
 
-        Raises
-        ------
+        Raises:
             Exception: If service_class is not specified and there is more than one matching service
                 registered.
-
         """
         service_location = self.grpc_service.discovery_client.resolve_service(
             provided_interface, service_class

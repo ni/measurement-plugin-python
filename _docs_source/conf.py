@@ -5,7 +5,6 @@ import pathlib
 import autoapi.extension
 import toml
 
-
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
@@ -47,6 +46,29 @@ autoapi_options.remove("private-members")  # note: remove this to include "_" me
 autoapi_dirs = [root_path / "ni_measurementlink_service"]
 autoapi_type = "python"
 autodoc_typehints = "none"
+
+
+# WARNING: more than one target found for cross-reference 'MeasurementInfo':
+# ni_measurementlink_service.MeasurementInfo,
+# ni_measurementlink_service.measurement.info.MeasurementInfo
+#
+# TODO: figure out how to make :canonical: work with autoapi
+def skip_aliases(app, what, name, obj, skip, options):
+    """Skip documentation for classes that are exported from multiple modules."""
+    if name in [
+        "ni_measurementlink_service.DataType",
+        "ni_measurementlink_service.MeasurementInfo",
+        "ni_measurementlink_service.ServiceInfo",
+        "ni_measurementlink_service.MeasurementService",
+    ]:
+        skip = True
+    return skip
+
+
+def setup(sphinx):
+    """Sphinx setup callback."""
+    sphinx.connect("autoapi-skip-member", skip_aliases)
+
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.

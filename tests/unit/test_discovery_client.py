@@ -298,7 +298,7 @@ def test___discovery_service_exe_unavailable___register_service___raises_file_no
 def subprocess_popen_kwargs() -> Dict[str, Any]:
     kwargs: Dict[str, Any] = {}
     if sys.platform == "win32":
-        kwargs["creationflags"] = subprocess.CREATE_BREAKAWAY_FROM_JOB
+        kwargs["creationflags"] = subprocess.CREATE_BREAKAWAY_FROM_JOB | subprocess.DETACHED_PROCESS
     return kwargs
 
 
