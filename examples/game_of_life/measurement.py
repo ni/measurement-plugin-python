@@ -33,7 +33,6 @@ def measure(
     """Streaming measurement that returns Conway's Game of Life grid as DoubleXYData."""
     grid = _initialize_grid_with_seeded_data(width, height)
     generation = 0
-    # either go forever if max_generations < 0 or until max_generations is reached
     while max_generations < 0 or generation < max_generations:
         generation += 1
 
