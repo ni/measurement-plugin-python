@@ -1,11 +1,11 @@
-""" Contains API to register and un-register measurement service with discovery service.
-"""
+"""Client for accessing the MeasurementLink discovery service."""
 import json
 import logging
 import os
 import pathlib
 import subprocess
 import sys
+import threading
 import time
 import typing
 from typing import Any, Dict, Optional
@@ -13,11 +13,11 @@ from typing import Any, Dict, Optional
 import grpc
 from deprecation import deprecated
 
+from ni_measurementlink_service._channelpool import GrpcChannelPool
 from ni_measurementlink_service._internal.stubs.ni.measurementlink.discovery.v1 import (
     discovery_service_pb2,
     discovery_service_pb2_grpc,
 )
-from ni_measurementlink_service._loggers import ClientLogger
 from ni_measurementlink_service.measurement.info import MeasurementInfo, ServiceInfo
 
 if sys.platform == "win32":
@@ -58,13 +58,20 @@ class DiscoveryClient:
     """Client for accessing the MeasurementLink discovery service."""
 
     def __init__(
-        self, stub: Optional[discovery_service_pb2_grpc.DiscoveryServiceStub] = None
+        self,
+        stub: Optional[discovery_service_pb2_grpc.DiscoveryServiceStub] = None,
+        *,
+        grpc_channel_pool: Optional[GrpcChannelPool] = None,
     ) -> None:
         """Initialize the discovery client.
 
         Args:
             stub: An optional discovery service gRPC stub for unit testing.
+
+            grpc_channel_pool: An optional gRPC channel pool (recommended).
         """
+        self._initialization_lock = threading.Lock()
+        self._grpc_channel_pool = grpc_channel_pool
         self._stub = stub
         self._registration_id = ""
 
@@ -88,11 +95,14 @@ class DiscoveryClient:
 
     def _get_stub(self) -> discovery_service_pb2_grpc.DiscoveryServiceStub:
         if self._stub is None:
-            address = _get_discovery_service_address()
-            channel = grpc.insecure_channel(address)
-            if ClientLogger.is_enabled():
-                channel = grpc.intercept_channel(channel, ClientLogger())
-            self._stub = discovery_service_pb2_grpc.DiscoveryServiceStub(channel)
+            with self._initialization_lock:
+                if self._grpc_channel_pool is None:
+                    _logger.debug("Creating unshared GrpcChannelPool.")
+                    self._grpc_channel_pool = GrpcChannelPool()
+                if self._stub is None:
+                    address = _get_discovery_service_address()
+                    channel = self._grpc_channel_pool.get_channel(address)
+                    self._stub = discovery_service_pb2_grpc.DiscoveryServiceStub(channel)
         return self._stub
 
     @deprecated(deprecated_in="1.2.0-dev2", details="Use register_service instead.")

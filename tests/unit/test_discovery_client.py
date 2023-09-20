@@ -11,6 +11,7 @@ import grpc
 import pytest
 from pytest_mock import MockerFixture
 
+from ni_measurementlink_service._channelpool import GrpcChannelPool
 from ni_measurementlink_service._internal.discovery_client import (
     DiscoveryClient,
     ServiceLocation,
@@ -302,9 +303,15 @@ def subprocess_popen_kwargs() -> Dict[str, Any]:
 
 
 @pytest.fixture
-def discovery_client(discovery_service_stub: Mock) -> DiscoveryClient:
+def discovery_client(
+    discovery_service_stub: Mock, grpc_channel_pool: Mock, mocker: MockerFixture
+) -> DiscoveryClient:
     """Create a DiscoveryClient."""
-    return DiscoveryClient(cast(DiscoveryServiceStub, discovery_service_stub))
+    mocker.patch(
+        "ni_measurementlink_service._internal.discovery_client.DiscoveryClient._get_stub",
+        return_value=discovery_service_stub,
+    )
+    return DiscoveryClient(grpc_channel_pool=cast(GrpcChannelPool, grpc_channel_pool))
 
 
 @pytest.fixture

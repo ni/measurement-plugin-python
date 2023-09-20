@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import sys
+import threading
 from enum import Enum, EnumMeta
 from os import path
 from pathlib import Path
@@ -22,6 +23,7 @@ from typing import (
 )
 
 import grpc
+from deprecation import deprecated
 from google.protobuf.descriptor import EnumDescriptor
 
 from ni_measurementlink_service import _datatypeinfo
@@ -29,7 +31,10 @@ from ni_measurementlink_service._channelpool import (  # re-export
     GrpcChannelPool as GrpcChannelPool,
 )
 from ni_measurementlink_service._internal import grpc_servicer
-from ni_measurementlink_service._internal.discovery_client import DiscoveryClient
+from ni_measurementlink_service._internal.discovery_client import (
+    DiscoveryClient,
+    ServiceLocation,
+)
 from ni_measurementlink_service._internal.parameter import (
     metadata as parameter_metadata,
 )
@@ -107,11 +112,6 @@ class MeasurementService:
         measure_function (Callable): Registered measurement function.
 
         context (MeasurementContext): Accessor for context-local state.
-
-        discovery_client (DiscoveryClient): Client for accessing the MeasurementLink discovery
-            service.
-
-        channel_pool (GrpcChannelPool): Pool of gRPC channels used by the service.
     """
 
     def __init__(
@@ -181,10 +181,54 @@ class MeasurementService:
 
         self.configuration_parameter_list: List[Any] = []
         self.output_parameter_list: List[Any] = []
-        self.grpc_service = GrpcService()
-        self.context: MeasurementContext = MeasurementContext()
-        self.channel_pool: GrpcChannelPool = GrpcChannelPool()
-        self.discovery_client: DiscoveryClient = DiscoveryClient()
+        self.context = MeasurementContext()
+
+        self._initialization_lock = threading.RLock()
+        self._channel_pool: Optional[GrpcChannelPool] = None
+        self._discovery_client: Optional[DiscoveryClient] = None
+        self._grpc_service: Optional[GrpcService] = None
+
+    @property
+    def channel_pool(self) -> GrpcChannelPool:
+        """Pool of gRPC channels used by the service."""
+        if self._channel_pool is None:
+            with self._initialization_lock:
+                if self._channel_pool is None:
+                    self._channel_pool = GrpcChannelPool()
+        return self._channel_pool
+
+    @property
+    def discovery_client(self) -> DiscoveryClient:
+        """Client for accessing the MeasurementLink discovery service."""
+        if self._discovery_client is None:
+            with self._initialization_lock:
+                if self._discovery_client is None:
+                    self._discovery_client = DiscoveryClient(grpc_channel_pool=self.channel_pool)
+        return self._discovery_client
+
+    @property
+    @deprecated(
+        deprecated_in="1.3.0-dev0",
+        details="This property should not be public and will be removed in a later release.",
+    )
+    def grpc_service(self) -> Optional[GrpcService]:
+        """The gRPC service object. This is a private implementation detail."""
+        return self._grpc_service
+
+    @property
+    def service_location(self) -> ServiceLocation:
+        """The location of the service on the network."""
+        with self._initialization_lock:
+            if self._grpc_service is None:
+                raise RuntimeError(
+                    "Measurement service not running. Call host_service() before querying the service_location."
+                )
+
+            return ServiceLocation(
+                location="localhost",
+                insecure_port=self._grpc_service.port,
+                ssl_authenticated_port="",
+            )
 
     def register_measurement(self, measurement_function: _F) -> _F:
         """Register a function as the measurement function for a measurement service.
@@ -321,7 +365,7 @@ class MeasurementService:
         return _output
 
     def host_service(self) -> MeasurementService:
-        """Host the registered measurement method as gRPC measurement service.
+        """Host the registered measurement method as a gRPC measurement service.
 
         Returns:
             MeasurementService: Context manager that can be used with a with-statement to close
@@ -330,16 +374,23 @@ class MeasurementService:
         Raises:
             Exception: If register measurement methods not available.
         """
-        if self.measure_function is None:
-            raise Exception("Error, must register measurement method.")
-        self.grpc_service.start(
-            self.measurement_info,
-            self.service_info,
-            self.configuration_parameter_list,
-            self.output_parameter_list,
-            self.measure_function,
-        )
-        return self
+        with self._initialization_lock:
+            if self.measure_function is None:
+                raise RuntimeError(
+                    "Measurement method not registered. Use the register_measurement decorator to register it."
+                )
+            if self._grpc_service is not None:
+                raise RuntimeError("Measurement service already running.")
+
+            self._grpc_service = GrpcService(self.discovery_client)
+            self._grpc_service.start(
+                self.measurement_info,
+                self.service_info,
+                self.configuration_parameter_list,
+                self.output_parameter_list,
+                self.measure_function,
+            )
+            return self
 
     def _make_annotations_dict(
         self,
@@ -386,9 +437,24 @@ class MeasurementService:
         return isinstance(getattr(enum_type, "DESCRIPTOR", None), EnumDescriptor)
 
     def close_service(self) -> None:
-        """Close the Service after un-registering with discovery service and cleanups."""
-        self.grpc_service.stop()
-        self.channel_pool.close()
+        """Stop the gRPC measurement service.
+
+        This method stops the gRPC server, unregisters with the discovery service, and cleans up
+        the cached discovery client and gRPC channel pool.
+
+        After calling close_service(), you may call host_service() again.
+
+        Exiting the measurement service's runtime context automatically calls close_service().
+        """
+        with self._initialization_lock:
+            if self._grpc_service is not None:
+                self._grpc_service.stop()
+            if self._channel_pool is not None:
+                self._channel_pool.close()
+
+            self._grpc_service = None
+            self._channel_pool = None
+            self._discovery_client = None
 
     def __enter__(self: Self) -> Self:
         """Enter the runtime context related to the measurement service."""
