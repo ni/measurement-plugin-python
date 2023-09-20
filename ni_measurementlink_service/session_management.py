@@ -308,7 +308,7 @@ class SessionManagementClient(object):
         context: PinMapContext,
         pin_or_relay_names: Union[str, Iterable[str], None] = None,
         instrument_type_id: Optional[str] = None,
-        timeout: Optional[float] = None,
+        timeout: Optional[float] = 0.0,
     ) -> SingleSessionReservation:
         """Reserve a single session.
 
@@ -359,7 +359,7 @@ class SessionManagementClient(object):
         context: PinMapContext,
         pin_or_relay_names: Union[str, Iterable[str], None] = None,
         instrument_type_id: Optional[str] = None,
-        timeout: Optional[float] = None,
+        timeout: Optional[float] = 0.0,
     ) -> MultiSessionReservation:
         """Reserve multiple sessions.
 
@@ -402,7 +402,7 @@ class SessionManagementClient(object):
         context: PinMapContext,
         pin_or_relay_names: Union[str, Iterable[str], None] = None,
         instrument_type_id: Optional[str] = None,
-        timeout: Optional[float] = None,
+        timeout: Optional[float] = 0.0,
     ) -> Sequence[session_management_service_pb2.SessionInformation]:
         pin_map_context = pin_map_context_pb2.PinMapContext(
             pin_map_id=context.pin_map_id, sites=context.sites
