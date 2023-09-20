@@ -18,6 +18,7 @@ from typing import (
     Optional,
     Sequence,
     Type,
+    Union,
 )
 
 import grpc
@@ -305,7 +306,7 @@ class SessionManagementClient(object):
     def reserve_session(
         self,
         context: PinMapContext,
-        pin_or_relay_names: Optional[Iterable[str]] = None,
+        pin_or_relay_names: Union[str, Iterable[str], None] = None,
         instrument_type_id: Optional[str] = None,
         timeout: Optional[float] = None,
     ) -> SingleSessionReservation:
@@ -356,7 +357,7 @@ class SessionManagementClient(object):
     def reserve_sessions(
         self,
         context: PinMapContext,
-        pin_or_relay_names: Optional[Iterable[str]] = None,
+        pin_or_relay_names: Union[str, Iterable[str], None] = None,
         instrument_type_id: Optional[str] = None,
         timeout: Optional[float] = None,
     ) -> MultiSessionReservation:
@@ -399,7 +400,7 @@ class SessionManagementClient(object):
     def _reserve_sessions(
         self,
         context: PinMapContext,
-        pin_or_relay_names: Optional[Iterable[str]] = None,
+        pin_or_relay_names: Union[str, Iterable[str], None] = None,
         instrument_type_id: Optional[str] = None,
         timeout: Optional[float] = None,
     ) -> Sequence[session_management_service_pb2.SessionInformation]:
@@ -412,7 +413,9 @@ class SessionManagementClient(object):
         )
         if instrument_type_id is not None:
             request.instrument_type_id = instrument_type_id
-        if pin_or_relay_names is not None:
+        if isinstance(pin_or_relay_names, str):
+            request.pin_or_relay_names.append(pin_or_relay_names)
+        elif pin_or_relay_names is not None:
             request.pin_or_relay_names.extend(pin_or_relay_names)
         if timeout is not None:
             timeout_in_ms = round(timeout * 1000)
