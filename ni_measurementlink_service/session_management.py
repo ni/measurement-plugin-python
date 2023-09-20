@@ -283,17 +283,18 @@ class SessionManagementClient(object):
             )
 
     def _get_stub(self) -> session_management_service_pb2_grpc.SessionManagementServiceStub:
-        with self._initialization_lock:
-            if self._stub is None:
-                service_location = self._discovery_client.resolve_service(
-                    provided_interface=GRPC_SERVICE_INTERFACE_NAME,
-                    service_class=GRPC_SERVICE_CLASS,
-                )
-                channel = self._grpc_channel_pool.get_channel(service_location.insecure_address)
-                self._stub = session_management_service_pb2_grpc.SessionManagementServiceStub(
-                    channel
-                )
-            return self._stub
+        if self._stub is None:
+            with self._initialization_lock:
+                if self._stub is None:
+                    service_location = self._discovery_client.resolve_service(
+                        provided_interface=GRPC_SERVICE_INTERFACE_NAME,
+                        service_class=GRPC_SERVICE_CLASS,
+                    )
+                    channel = self._grpc_channel_pool.get_channel(service_location.insecure_address)
+                    self._stub = session_management_service_pb2_grpc.SessionManagementServiceStub(
+                        channel
+                    )
+        return self._stub
 
     def reserve_session(
         self,

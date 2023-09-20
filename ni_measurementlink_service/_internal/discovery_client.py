@@ -94,12 +94,13 @@ class DiscoveryClient:
         return self._get_stub()
 
     def _get_stub(self) -> discovery_service_pb2_grpc.DiscoveryServiceStub:
-        with self._initialization_lock:
-            if self._stub is None:
-                address = _get_discovery_service_address()
-                channel = self._grpc_channel_pool.get_channel(address)
-                self._stub = discovery_service_pb2_grpc.DiscoveryServiceStub(channel)
-            return self._stub
+        if self._stub is None:
+            with self._initialization_lock:
+                if self._stub is None:
+                    address = _get_discovery_service_address()
+                    channel = self._grpc_channel_pool.get_channel(address)
+                    self._stub = discovery_service_pb2_grpc.DiscoveryServiceStub(channel)
+        return self._stub
 
     @deprecated(deprecated_in="1.2.0-dev2", details="Use register_service instead.")
     def register_measurement_service(
