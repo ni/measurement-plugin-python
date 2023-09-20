@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import abc
+import logging
 import sys
 import threading
 import warnings
@@ -38,6 +39,8 @@ if TYPE_CHECKING:
         from typing import Self
     else:
         from typing_extensions import Self
+
+_logger = logging.getLogger(__name__)
 
 GRPC_SERVICE_INTERFACE_NAME = "ni.measurementlink.sessionmanagement.v1.SessionManagementService"
 GRPC_SERVICE_CLASS = "ni.measurementlink.sessionmanagement.v1.SessionManagementService"
@@ -270,9 +273,9 @@ class SessionManagementClient(object):
 
             grpc_channel_pool: An optional gRPC channel pool (recommended).
         """
-        self._discovery_client = discovery_client or DiscoveryClient()
         self._initialization_lock = threading.Lock()
-        self._grpc_channel_pool = grpc_channel_pool or GrpcChannelPool()
+        self._discovery_client = discovery_client
+        self._grpc_channel_pool = grpc_channel_pool
         self._stub: Optional[
             session_management_service_pb2_grpc.SessionManagementServiceStub
         ] = None
@@ -285,6 +288,14 @@ class SessionManagementClient(object):
     def _get_stub(self) -> session_management_service_pb2_grpc.SessionManagementServiceStub:
         if self._stub is None:
             with self._initialization_lock:
+                if self._grpc_channel_pool is None:
+                    _logger.debug("Creating unshared GrpcChannelPool.")
+                    self._grpc_channel_pool = GrpcChannelPool()
+                if self._discovery_client is None:
+                    _logger.debug("Creating unshared DiscoveryClient.")
+                    self._discovery_client = DiscoveryClient(
+                        grpc_channel_pool=self._grpc_channel_pool
+                    )
                 if self._stub is None:
                     service_location = self._discovery_client.resolve_service(
                         provided_interface=GRPC_SERVICE_INTERFACE_NAME,

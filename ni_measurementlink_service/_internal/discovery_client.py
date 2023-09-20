@@ -71,7 +71,7 @@ class DiscoveryClient:
             grpc_channel_pool: An optional gRPC channel pool (recommended).
         """
         self._initialization_lock = threading.Lock()
-        self._grpc_channel_pool = grpc_channel_pool or GrpcChannelPool()
+        self._grpc_channel_pool = grpc_channel_pool
         self._stub = stub
         self._registration_id = ""
 
@@ -96,6 +96,9 @@ class DiscoveryClient:
     def _get_stub(self) -> discovery_service_pb2_grpc.DiscoveryServiceStub:
         if self._stub is None:
             with self._initialization_lock:
+                if self._grpc_channel_pool is None:
+                    _logger.debug("Creating unshared GrpcChannelPool.")
+                    self._grpc_channel_pool = GrpcChannelPool()
                 if self._stub is None:
                     address = _get_discovery_service_address()
                     channel = self._grpc_channel_pool.get_channel(address)
