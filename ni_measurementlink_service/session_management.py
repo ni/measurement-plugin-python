@@ -121,9 +121,19 @@ class SessionInformation(NamedTuple):
     """
 
     session_exists: bool
-    """Indicates whether the session exists in the Session Manager. 
+    """Indicates whether the session has been registered with the session management service.
     
-    This indicates whether the session has been created."""
+    When calling measurements from TestStand, the test sequence's ``ProcessSetup`` callback
+    creates instrument sessions and registers them with the session management service so that
+    they can be shared between multiple measurement steps. In this case, the `session_exists`
+    attribute is ``True``, indicating that the instrument sessions were already created and any
+    one-time setup (such as creating NI-DAQmx channels or loading NI-Digital files) has been
+    performed.
+    
+    When calling measurements outside of TestStand, the `session_exists` attribute is ``False``,
+    indicating that the measurement is responsible for creating the instrument sessions and
+    performing any one-time setup.
+    """
 
     channel_mappings: Iterable[ChannelMapping]
     """List of site and pin/relay mappings that correspond to each channel in the channel_list.
@@ -316,30 +326,34 @@ class SessionManagementClient(object):
         information needed to create or access the session.
 
         Args:
-            context (PinMapContext): Includes the pin map ID for the pin map in the Pin Map Service,
+            context: Includes the pin map ID for the pin map in the Pin Map Service,
                 as well as the list of sites for the measurement.
 
-            pin_or_relay_names (Iterable[str]): List of pins, pin groups, relays, or relay groups to
-                use for the measurement. If unspecified, reserve sessions for all pins and relays in
-                the registered pin map resource.
+            pin_or_relay_names: One or multiple pins, pin groups, relays, or relay groups to use
+                for the measurement.
 
-            instrument_type_id (str): Instrument type ID for the measurement. If unspecified,
-                reserve sessions for all instrument types connected in the registered pin map
+                If unspecified, reserve sessions for all pins and relays in the registered pin map
                 resource.
+
+            instrument_type_id: Instrument type ID for the measurement.
+
+                If unspecified, this method reserve sessions for all instrument types connected
+                in the registered pin map resource.
 
                 For NI instruments, use instrument type id constants, such as
                 :py:const:`INSTRUMENT_TYPE_NI_DCPOWER` or :py:const:`INSTRUMENT_TYPE_NI_DMM`.
 
                 For custom instruments, use the instrument type id defined in the pin map file.
 
-            timeout (float): Timeout in seconds. Allowed values,
-                0 (non-blocking, fails immediately if resources cannot be reserved),
-                -1 or negative (infinite timeout), or
-                any positive numeric value (wait for that number of second).
+            timeout: Timeout in seconds.
+
+                Allowed values: 0 (non-blocking, fails immediately if resources cannot be
+                reserved), -1 (infinite timeout), or any other positive numeric value (wait for
+                that number of milliseconds)
 
         Returns:
-            SingleSessionReservation: Context manager that can be used with a with-statement to
-            unreserve the session.
+            A reservation object with which you can query information about the session and
+            unreserve it.
         """
         session_info = self._reserve_sessions(
             context, pin_or_relay_names, instrument_type_id, timeout
@@ -367,30 +381,34 @@ class SessionManagementClient(object):
         information needed to create or access the sessions.
 
         Args:
-            context (PinMapContext): Includes the pin map ID for the pin map in the Pin Map Service,
+            context: Includes the pin map ID for the pin map in the Pin Map Service,
                 as well as the list of sites for the measurement.
 
-            pin_or_relay_names (Iterable[str]): List of pins, pin groups, relays, or relay groups to
-                use for the measurement. If unspecified, reserve sessions for all pins and relays in
-                the registered pin map resource.
+            pin_or_relay_names: One or multiple pins, pin groups, relays, or relay groups to use
+                for the measurement.
 
-            instrument_type_id (str): Instrument type ID for the measurement. If unspecified,
-                reserve sessions for all instrument types connected in the registered pin map
+                If unspecified, reserve sessions for all pins and relays in the registered pin map
                 resource.
+
+            instrument_type_id: Instrument type ID for the measurement.
+
+                If unspecified, this method reserves sessions for all instrument types connected
+                in the registered pin map resource.
 
                 For NI instruments, use instrument type id constants, such as
                 :py:const:`INSTRUMENT_TYPE_NI_DCPOWER` or :py:const:`INSTRUMENT_TYPE_NI_DMM`.
 
                 For custom instruments, use the instrument type id defined in the pin map file.
 
-            timeout (float): Timeout in seconds. Allowed values,
-                0 (non-blocking, fails immediately if resources cannot be reserved),
-                -1 or negative (infinite timeout), or
-                any positive numeric value (wait for that number of second).
+            timeout: Timeout in seconds.
+
+                Allowed values: 0 (non-blocking, fails immediately if resources cannot be
+                reserved), -1 (infinite timeout), or any other positive numeric value (wait for
+                that number of milliseconds)
 
         Returns:
-            MultiSessionReservation: Context manager that can be used with a with-statement to
-            unreserve the sessions.
+            A reservation object with which you can query information about the sessions and
+            unreserve them.
         """
         session_info = self._reserve_sessions(
             context, pin_or_relay_names, instrument_type_id, timeout
@@ -434,16 +452,12 @@ class SessionManagementClient(object):
         self._get_stub().UnreserveSessions(request)
 
     def register_sessions(self, session_info: Iterable[SessionInformation]) -> None:
-        """Register the sessions with the Session Manager.
+        """Register sessions with the session management service.
 
         Indicates that the sessions are open and will need to be closed later.
 
         Args:
-            session_info (Iterable[SessionInformation]): Sessions to register with the session
-                management service to track as the sessions are open.
-
-        Raises:
-            Exception: If a session by the same name is already registered.
+            session_info: Sessions to register.
         """
         request = session_management_service_pb2.RegisterSessionsRequest(
             sessions=(
@@ -468,14 +482,13 @@ class SessionManagementClient(object):
         self._get_stub().RegisterSessions(request)
 
     def unregister_sessions(self, session_info: Iterable[SessionInformation]) -> None:
-        """Unregisters the sessions from the Session Manager.
+        """Unregisters sessions from the session management service.
 
         Indicates that the sessions have been closed and will need to be reopened before they can be
         used again.
 
         Args:
-            session_info (Iterable[SessionInformation]): Sessions to be registered.
-
+            session_info: Sessions to unregister.
         """
         request = session_management_service_pb2.UnregisterSessionsRequest(
             sessions=(
@@ -502,26 +515,28 @@ class SessionManagementClient(object):
     def reserve_all_registered_sessions(
         self, instrument_type_id: Optional[str] = None, timeout: Optional[float] = None
     ) -> MultiSessionReservation:
-        """Reserves and gets all sessions currently registered in the Session Manager.
+        """Reserve all sessions currently registered with the session management service.
 
         Args:
-            instrument_type_id (str): Instrument type ID for the measurement. If unspecified,
-                reserve sessions for all instrument types connected in the registered pin map
-                resource.
+            instrument_type_id: Instrument type ID for the measurement.
+
+                If unspecified, reserve sessions for all instrument types connected in the
+                registered pin map resource.
 
                 For NI instruments, use instrument type id constants, such as
                 :py:const:`INSTRUMENT_TYPE_NI_DCPOWER` or :py:const:`INSTRUMENT_TYPE_NI_DMM`.
 
                 For custom instruments, use the instrument type id defined in the pin map file.
 
-            timeout (float): Timeout in seconds. Allowed values,
-                0 (non-blocking, fails immediately if resources cannot be reserved),
-                -1 or negative (infinite timeout), or
-                any positive numeric value (wait for that number of second).
+            timeout: Timeout in seconds.
+
+                Allowed values: 0 (non-blocking, fails immediately if resources cannot be
+                reserved), -1 (infinite timeout), or any other positive numeric value (wait for
+                that number of milliseconds)
 
         Returns:
-            MultiSessionReservation: Context manager that can be used with a with-statement to
-            unreserve the sessions.
+            A reservation object with which you can query information about the sessions and
+            unreserve them.
         """
         request = session_management_service_pb2.ReserveAllRegisteredSessionsRequest()
         if instrument_type_id is not None:
