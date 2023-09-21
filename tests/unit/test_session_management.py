@@ -112,7 +112,9 @@ def test___single_pin___reserve_session___sends_request_with_single_pin(
 
 @pytest.mark.parametrize("timeout", [-1, -1.0])
 def test___infinite_timeout___reserve_session___sends_request_with_infinite_timeout(
-    session_management_client: SessionManagementClient, session_management_stub: Mock, timeout: float
+    session_management_client: SessionManagementClient,
+    session_management_stub: Mock,
+    timeout: float,
 ) -> None:
     session_management_stub.ReserveSessions.return_value = (
         session_management_service_pb2.ReserveSessionsResponse(
@@ -121,8 +123,7 @@ def test___infinite_timeout___reserve_session___sends_request_with_infinite_time
     )
 
     _ = session_management_client.reserve_session(
-        PinMapContext("MyPinMap", [0, 1]),
-        timeout=timeout
+        PinMapContext("MyPinMap", [0, 1]), timeout=timeout
     )
 
     session_management_stub.ReserveSessions.assert_called_once()
@@ -140,10 +141,7 @@ def test___negative_timeout___reserve_session___warns_and_sends_request_with_inf
     )
 
     with pytest.warns(RuntimeWarning):
-        _ = session_management_client.reserve_session(
-            PinMapContext("MyPinMap", [0, 1]),
-            timeout=-2
-        )
+        _ = session_management_client.reserve_session(PinMapContext("MyPinMap", [0, 1]), timeout=-2)
 
     session_management_stub.ReserveSessions.assert_called_once()
     (request,) = session_management_stub.ReserveSessions.call_args.args
@@ -285,7 +283,9 @@ def test___single_pin___reserve_sessions___sends_request_with_single_pin(
 
 @pytest.mark.parametrize("timeout", [-1, -1.0])
 def test___infinite_timeout___reserve_sessions___sends_request_with_infinite_timeout(
-    session_management_client: SessionManagementClient, session_management_stub: Mock, timeout: float
+    session_management_client: SessionManagementClient,
+    session_management_stub: Mock,
+    timeout: float,
 ) -> None:
     session_management_stub.ReserveSessions.return_value = (
         session_management_service_pb2.ReserveSessionsResponse(
@@ -294,8 +294,7 @@ def test___infinite_timeout___reserve_sessions___sends_request_with_infinite_tim
     )
 
     _ = session_management_client.reserve_sessions(
-        PinMapContext("MyPinMap", [0, 1]),
-        timeout=timeout
+        PinMapContext("MyPinMap", [0, 1]), timeout=timeout
     )
 
     session_management_stub.ReserveSessions.assert_called_once()
@@ -314,8 +313,7 @@ def test___negative_timeout___reserve_sessions___warns_and_sends_request_with_in
 
     with pytest.warns(RuntimeWarning):
         _ = session_management_client.reserve_sessions(
-            PinMapContext("MyPinMap", [0, 1]),
-            timeout=-2
+            PinMapContext("MyPinMap", [0, 1]), timeout=-2
         )
 
     session_management_stub.ReserveSessions.assert_called_once()
@@ -451,7 +449,7 @@ def test___all_optional_args___reserve_all_registered_sessions___sends_request_w
     (request,) = session_management_stub.ReserveAllRegisteredSessions.call_args.args
     assert request.instrument_type_id == "MyInstrumentType"
     assert request.timeout_in_milliseconds == 123456
-    
+
 
 def test___no_optional_args___reserve_all_registered_sessions___sends_request_with_defaults(
     session_management_client: SessionManagementClient, session_management_stub: Mock
@@ -466,7 +464,7 @@ def test___no_optional_args___reserve_all_registered_sessions___sends_request_wi
     (request,) = session_management_stub.ReserveAllRegisteredSessions.call_args.args
     assert request.instrument_type_id == ""
     assert request.timeout_in_milliseconds == 0
-    
+
 
 def test___explicit_none___reserve_all_registered_sessions___sends_request_with_defaults(
     session_management_client: SessionManagementClient, session_management_stub: Mock
@@ -487,7 +485,9 @@ def test___explicit_none___reserve_all_registered_sessions___sends_request_with_
 
 @pytest.mark.parametrize("timeout", [-1, -1.0])
 def test___infinite_timeout___reserve_all_registered_sessions___sends_request_with_infinite_timeout(
-    session_management_client: SessionManagementClient, session_management_stub: Mock, timeout: float
+    session_management_client: SessionManagementClient,
+    session_management_stub: Mock,
+    timeout: float,
 ) -> None:
     session_management_stub.ReserveAllRegisteredSessions.return_value = (
         session_management_service_pb2.ReserveAllRegisteredSessionsResponse()

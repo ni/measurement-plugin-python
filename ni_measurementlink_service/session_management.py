@@ -428,7 +428,7 @@ class SessionManagementClient(object):
 
         request = session_management_service_pb2.ReserveSessionsRequest(
             pin_map_context=pin_map_context,
-            timeout_in_milliseconds=_timeout_to_milliseconds(timeout)
+            timeout_in_milliseconds=_timeout_to_milliseconds(timeout),
         )
         if instrument_type_id is not None:
             request.instrument_type_id = instrument_type_id
