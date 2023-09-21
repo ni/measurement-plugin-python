@@ -513,7 +513,7 @@ class SessionManagementClient(object):
         self._get_stub().UnregisterSessions(request)
 
     def reserve_all_registered_sessions(
-        self, instrument_type_id: Optional[str] = None, timeout: Optional[float] = None
+        self, instrument_type_id: Optional[str] = None, timeout: Optional[float] = 0.0
     ) -> MultiSessionReservation:
         """Reserve all sessions currently registered with the session management service.
 
