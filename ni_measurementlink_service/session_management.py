@@ -349,7 +349,7 @@ class SessionManagementClient(object):
 
                 Allowed values: 0 (non-blocking, fails immediately if resources cannot be
                 reserved), -1 (infinite timeout), or any other positive numeric value (wait for
-                that number of milliseconds)
+                that number of seconds)
 
         Returns:
             A reservation object with which you can query information about the session and
@@ -404,7 +404,7 @@ class SessionManagementClient(object):
 
                 Allowed values: 0 (non-blocking, fails immediately if resources cannot be
                 reserved), -1 (infinite timeout), or any other positive numeric value (wait for
-                that number of milliseconds)
+                that number of seconds)
 
         Returns:
             A reservation object with which you can query information about the sessions and
@@ -532,7 +532,7 @@ class SessionManagementClient(object):
 
                 Allowed values: 0 (non-blocking, fails immediately if resources cannot be
                 reserved), -1 (infinite timeout), or any other positive numeric value (wait for
-                that number of milliseconds)
+                that number of seconds)
 
         Returns:
             A reservation object with which you can query information about the sessions and
