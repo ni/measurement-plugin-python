@@ -35,9 +35,9 @@ class MeasurementServiceContext:
         pin_map_context: PinMapContext,
     ) -> None:
         """Initialize the measurement service context."""
-        self._grpc_context: grpc.ServicerContext = grpc_context
-        self._pin_map_context: PinMapContext = pin_map_context
-        self._is_complete: bool = False
+        self._grpc_context = grpc_context
+        self._pin_map_context = pin_map_context
+        self._is_complete = False
 
     def mark_complete(self) -> None:
         """Mark the current RPC as complete."""
