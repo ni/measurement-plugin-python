@@ -7,7 +7,7 @@ extend_exclude = '*_pb2_grpc.py,*_pb2_grpc.pyi,*_pb2.py,*_pb2.pyi,ni_measurement
 
 [tool.poetry]
 name = "ni_measurementlink_service"
-version = "1.2.0-dev1"
+version = "1.2.0-dev2"
 description = "MeasurementLink Support for Python"
 authors = ["NI <opensource@ni.com>"]
 readme = "README.md" # apply the repo readme to the package as well
@@ -77,10 +77,10 @@ markers = [
 ]
 
 [tool.mypy]
-warn_unused_configs = true
+disallow_untyped_defs = true
 namespace_packages = true
-check_untyped_defs = true
 warn_redundant_casts = true
+warn_unused_configs = true
 warn_unused_ignores = true
 
 [[tool.mypy.overrides]]
@@ -92,3 +92,9 @@ module = [
   "traceloggingdynamic",
 ]
 ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+# The tests are not yet ready for --disallow-untyped-defs (or even --disallow-incomplete-defs)
+module = ["tests.*"]
+check_untyped_defs = true
+disallow_untyped_defs = false

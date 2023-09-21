@@ -12,13 +12,15 @@
 Module Contents
 ---------------
 
-Classes
-~~~~~~~
+
+Functions
+~~~~~~~~~
 
 .. autoapisummary::
 
-   ni_measurementlink_service._internal.parameter.serialization_strategy.Context
-
+   ni_measurementlink_service._internal.parameter.serialization_strategy.get_encoder
+   ni_measurementlink_service._internal.parameter.serialization_strategy.get_decoder
+   ni_measurementlink_service._internal.parameter.serialization_strategy.get_type_default
 
 
 
@@ -33,12 +35,14 @@ Attributes
    ni_measurementlink_service._internal.parameter.serialization_strategy.UIntEncoder
    ni_measurementlink_service._internal.parameter.serialization_strategy.BoolEncoder
    ni_measurementlink_service._internal.parameter.serialization_strategy.StringEncoder
+   ni_measurementlink_service._internal.parameter.serialization_strategy.MessageEncoder
    ni_measurementlink_service._internal.parameter.serialization_strategy.FloatArrayEncoder
    ni_measurementlink_service._internal.parameter.serialization_strategy.DoubleArrayEncoder
    ni_measurementlink_service._internal.parameter.serialization_strategy.IntArrayEncoder
    ni_measurementlink_service._internal.parameter.serialization_strategy.UIntArrayEncoder
    ni_measurementlink_service._internal.parameter.serialization_strategy.BoolArrayEncoder
    ni_measurementlink_service._internal.parameter.serialization_strategy.StringArrayEncoder
+   ni_measurementlink_service._internal.parameter.serialization_strategy.UnsupportedMessageArrayEncoder
    ni_measurementlink_service._internal.parameter.serialization_strategy.FloatDecoder
    ni_measurementlink_service._internal.parameter.serialization_strategy.DoubleDecoder
    ni_measurementlink_service._internal.parameter.serialization_strategy.Int32Decoder
@@ -47,6 +51,7 @@ Attributes
    ni_measurementlink_service._internal.parameter.serialization_strategy.UInt64Decoder
    ni_measurementlink_service._internal.parameter.serialization_strategy.BoolDecoder
    ni_measurementlink_service._internal.parameter.serialization_strategy.StringDecoder
+   ni_measurementlink_service._internal.parameter.serialization_strategy.XYDataDecoder
    ni_measurementlink_service._internal.parameter.serialization_strategy.FloatArrayDecoder
    ni_measurementlink_service._internal.parameter.serialization_strategy.DoubleArrayDecoder
    ni_measurementlink_service._internal.parameter.serialization_strategy.Int32ArrayDecoder
@@ -87,6 +92,11 @@ Attributes
 
    
 
+.. py:data:: MessageEncoder
+   
+
+   
+
 .. py:data:: FloatArrayEncoder
    
 
@@ -113,6 +123,11 @@ Attributes
    
 
 .. py:data:: StringArrayEncoder
+   
+
+   
+
+.. py:data:: UnsupportedMessageArrayEncoder
    
 
    
@@ -157,6 +172,11 @@ Attributes
 
    
 
+.. py:data:: XYDataDecoder
+   
+
+   
+
 .. py:data:: FloatArrayDecoder
    
 
@@ -197,67 +217,20 @@ Attributes
 
    
 
-.. py:class:: Context
+.. py:function:: get_encoder(type, repeated)
 
-   Strategy context.
+   Get the appropriate partial encoder constructor for the specified type.
 
-   .. py:method:: get_encoder(type, repeated)
-      :staticmethod:
-
-      Get the Scalar Encoder or Vector Encoder for the specified type based on repeated bool.
-
-      Args
-      ----
-          type (type_pb2.Field.Kind.ValueType): Type of the Parameter.
-
-          repeated (bool): Boolean that represents if the Parameter is repeated or not.
-
-      Raises
-      ------
-          Exception: If the specified type is not supported.
-
-      Returns
-      -------
-          Callable[[int], Callable]: ScalarEncoder or VectorEncoder.
+   A scalar or vector constructor is returned based on the 'repeated' parameter.
 
 
+.. py:function:: get_decoder(type, repeated, message_type = '')
 
-   .. py:method:: get_decoder(type, repeated)
-      :staticmethod:
-
-      Get the Scalar Decoder or Vector Decoder for the specified type based on repeated bool.
-
-      Args
-      ----
-          type (type_pb2.Field.Kind.ValueType): Type of the Parameter.
-
-          repeated (bool): Boolean that represents if the Parameter is repeated or not.
-
-      Raises
-      ------
-          Exception: If the specified type is not supported.
-
-      Returns
-      -------
-          Callable[[int], Callable]: ScalarDecoder or VectorDecoder.
+   Get the appropriate partial decoder constructor for the specified type.
 
 
+.. py:function:: get_type_default(type, repeated)
 
-   .. py:method:: get_type_default(type, repeated)
-      :staticmethod:
-
-      Get the Type default.
-
-      Args
-      ----
-          type (type_pb2.Field.Kind.ValueType): Type of the Parameter.
-
-          repeated (bool): Boolean that represents if the Parameter is repeated or not.
-
-      Returns
-      -------
-          Any: Default value.
-
-
+   Get the default value for the give type.
 
 

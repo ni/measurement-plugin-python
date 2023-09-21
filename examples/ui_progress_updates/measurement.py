@@ -27,6 +27,7 @@ measurement_service = nims.MeasurementService(
 
 
 Outputs = Tuple[float, List[float], str]
+"""Type alias to avoid duplicating output parameters for yield vs. return."""
 
 
 @measurement_service.register_measurement

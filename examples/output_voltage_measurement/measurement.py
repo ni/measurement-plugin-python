@@ -5,7 +5,7 @@ import pathlib
 import threading
 import time
 from enum import Enum
-from typing import Tuple
+from typing import Any, List, Tuple
 
 import _nidcpower_helpers
 import _visa_helpers
@@ -29,6 +29,7 @@ from _helpers import (
 from _visa_helpers import check_instrument_error, log_instrument_id, reset_instrument
 
 import ni_measurementlink_service as nims
+from ni_measurementlink_service.session_management import SessionInformation
 
 NIDCPOWER_WAIT_FOR_EVENT_TIMEOUT_ERROR_CODE = -1074116059
 NIDCPOWER_TIMEOUT_EXCEEDED_ERROR_CODE = -1074097933
@@ -172,12 +173,18 @@ def measure(
     return (measured_value,)
 
 
-def _get_session_info_for_pin(session_info, pin_name):
+def _get_session_info_for_pin(
+    session_info: List[SessionInformation], pin_name: str
+) -> SessionInformation:
     session_index = get_session_and_channel_for_pin(session_info, pin_name)[0]
     return session_info[session_index]
 
 
-def _wait_for_source_complete_event(measurement_service, channels, cancellation_event):
+def _wait_for_source_complete_event(
+    measurement_service: nims.MeasurementService,
+    channels: nidcpower._SessionBase,
+    cancellation_event: threading.Event,
+) -> None:
     deadline = time.time() + measurement_service.context.time_remaining
     while True:
         if time.time() > deadline:
@@ -212,7 +219,7 @@ def _wait_for_source_complete_event(measurement_service, channels, cancellation_
 @verbosity_option
 @grpc_device_options
 @use_simulation_option(default=USE_SIMULATION)
-def main(verbosity: int, **kwargs) -> None:
+def main(verbosity: int, **kwargs: Any) -> None:
     """Source DC voltage as input with an NI SMU and measure output using NI-VISA DMM."""
     configure_logging(verbosity)
 

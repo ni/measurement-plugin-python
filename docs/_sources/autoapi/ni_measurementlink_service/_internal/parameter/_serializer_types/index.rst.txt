@@ -1,0 +1,56 @@
+:orphan:
+
+:py:mod:`ni_measurementlink_service._internal.parameter._serializer_types`
+==========================================================================
+
+.. py:module:: ni_measurementlink_service._internal.parameter._serializer_types
+
+
+Module Contents
+---------------
+
+.. py:data:: Key
+   :annotation: :TypeAlias
+
+   
+
+.. py:data:: WriteFunction
+   :annotation: :TypeAlias
+
+   
+
+.. py:data:: Encoder
+   :annotation: :TypeAlias
+
+   
+
+.. py:data:: PartialEncoderConstructor
+   :annotation: :TypeAlias
+
+   
+
+.. py:data:: EncoderConstructor
+   :annotation: :TypeAlias
+
+   
+
+.. py:data:: Decoder
+   :annotation: :TypeAlias
+
+   
+
+.. py:data:: PartialDecoderConstructor
+   :annotation: :TypeAlias
+
+   
+
+.. py:data:: NewDefault
+   :annotation: :TypeAlias
+
+   
+
+.. py:data:: DecoderConstructor
+   :annotation: :TypeAlias
+
+   
+

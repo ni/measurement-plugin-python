@@ -34,7 +34,7 @@
             ni_measurementlink_service
           </a>
               <div class="version">
-                1.2.0-dev1
+                1.2.0-dev2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
@@ -77,9 +77,11 @@
 
 <span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
 <span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">BytesIO</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Sequence</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">cast</span>
 
+<span class="kn">from</span> <span class="nn">google.protobuf.descriptor</span> <span class="kn">import</span> <span class="n">FieldDescriptor</span>
 <span class="kn">from</span> <span class="nn">google.protobuf.internal</span> <span class="kn">import</span> <span class="n">encoder</span>
+<span class="kn">from</span> <span class="nn">google.protobuf.message</span> <span class="kn">import</span> <span class="n">Message</span>
 
 <span class="kn">from</span> <span class="nn">ni_measurementlink_service._internal.parameter</span> <span class="kn">import</span> <span class="n">serialization_strategy</span>
 <span class="kn">from</span> <span class="nn">ni_measurementlink_service._internal.parameter.metadata</span> <span class="kn">import</span> <span class="p">(</span>
@@ -143,11 +145,11 @@
     <span class="n">serialize_buffer</span> <span class="o">=</span> <span class="n">BytesIO</span><span class="p">()</span>  <span class="c1"># inner_encoder updates the serialize_buffer</span>
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">parameter</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">parameter_values</span><span class="p">):</span>
         <span class="n">parameter_metadata</span> <span class="o">=</span> <span class="n">parameter_metadata_dict</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
-        <span class="n">encoder</span> <span class="o">=</span> <span class="n">serialization_strategy</span><span class="o">.</span><span class="n">Context</span><span class="o">.</span><span class="n">get_encoder</span><span class="p">(</span>
+        <span class="n">encoder</span> <span class="o">=</span> <span class="n">serialization_strategy</span><span class="o">.</span><span class="n">get_encoder</span><span class="p">(</span>
             <span class="n">parameter_metadata</span><span class="o">.</span><span class="n">type</span><span class="p">,</span>
             <span class="n">parameter_metadata</span><span class="o">.</span><span class="n">repeated</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="n">type_default_value</span> <span class="o">=</span> <span class="n">serialization_strategy</span><span class="o">.</span><span class="n">Context</span><span class="o">.</span><span class="n">get_type_default</span><span class="p">(</span>
+        <span class="n">type_default_value</span> <span class="o">=</span> <span class="n">serialization_strategy</span><span class="o">.</span><span class="n">get_type_default</span><span class="p">(</span>
             <span class="n">parameter_metadata</span><span class="o">.</span><span class="n">type</span><span class="p">,</span>
             <span class="n">parameter_metadata</span><span class="o">.</span><span class="n">repeated</span><span class="p">,</span>
         <span class="p">)</span>
@@ -160,7 +162,7 @@
         <span class="c1"># Skipping serialization if the value is None or if its a type default value.</span>
         <span class="k">if</span> <span class="n">parameter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">parameter</span> <span class="o">!=</span> <span class="n">type_default_value</span><span class="p">:</span>
             <span class="n">inner_encoder</span> <span class="o">=</span> <span class="n">encoder</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-            <span class="n">inner_encoder</span><span class="p">(</span><span class="n">serialize_buffer</span><span class="o">.</span><span class="n">write</span><span class="p">,</span> <span class="n">parameter</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="n">inner_encoder</span><span class="p">(</span><span class="n">serialize_buffer</span><span class="o">.</span><span class="n">write</span><span class="p">,</span> <span class="n">parameter</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">serialize_buffer</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span></div>
 
 
@@ -183,7 +185,7 @@
     <span class="k">return</span> <span class="n">serialize_parameters</span><span class="p">(</span><span class="n">parameter_metadata_dict</span><span class="p">,</span> <span class="n">default_value_parameter_array</span><span class="p">)</span></div>
 
 
-<span class="k">def</span> <span class="nf">_get_field_index</span><span class="p">(</span><span class="n">parameter_bytes</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">tag_position</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_get_field_index</span><span class="p">(</span><span class="n">parameter_bytes</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">tag_position</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the Filed Index based on the tag&#39;s position.</span>
 
 <span class="sd">    The tag Position should be the index of the TagValue in the ByteArray for valid field index.</span>
@@ -231,18 +233,19 @@
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">&quot;Error occurred while reading the parameter - given protobuf index &#39;</span><span class="si">{</span><span class="n">field_index</span><span class="si">}</span><span class="s2">&#39; is invalid.&quot;</span>
             <span class="p">)</span>
-        <span class="nb">type</span> <span class="o">=</span> <span class="n">parameter_metadata_dict</span><span class="p">[</span><span class="n">field_index</span><span class="p">]</span><span class="o">.</span><span class="n">type</span>
-        <span class="n">is_repeated</span> <span class="o">=</span> <span class="n">parameter_metadata_dict</span><span class="p">[</span><span class="n">field_index</span><span class="p">]</span><span class="o">.</span><span class="n">repeated</span>
-        <span class="n">decoder</span> <span class="o">=</span> <span class="n">serialization_strategy</span><span class="o">.</span><span class="n">Context</span><span class="o">.</span><span class="n">get_decoder</span><span class="p">(</span><span class="nb">type</span><span class="p">,</span> <span class="n">is_repeated</span><span class="p">)</span>
-        <span class="n">inner_decoder</span> <span class="o">=</span> <span class="n">decoder</span><span class="p">(</span><span class="n">field_index</span><span class="p">,</span> <span class="n">field_index</span><span class="p">)</span>
+        <span class="n">field_metadata</span> <span class="o">=</span> <span class="n">parameter_metadata_dict</span><span class="p">[</span><span class="n">field_index</span><span class="p">]</span>
+        <span class="n">decoder</span> <span class="o">=</span> <span class="n">serialization_strategy</span><span class="o">.</span><span class="n">get_decoder</span><span class="p">(</span>
+            <span class="n">field_metadata</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">field_metadata</span><span class="o">.</span><span class="n">repeated</span><span class="p">,</span> <span class="n">field_metadata</span><span class="o">.</span><span class="n">message_type</span>
+        <span class="p">)</span>
+        <span class="n">inner_decoder</span> <span class="o">=</span> <span class="n">decoder</span><span class="p">(</span><span class="n">field_index</span><span class="p">,</span> <span class="n">cast</span><span class="p">(</span><span class="n">FieldDescriptor</span><span class="p">,</span> <span class="n">field_index</span><span class="p">))</span>
         <span class="n">parameter_bytes_io</span> <span class="o">=</span> <span class="n">BytesIO</span><span class="p">(</span><span class="n">parameter_bytes</span><span class="p">)</span>
         <span class="n">parameter_bytes_memory_view</span> <span class="o">=</span> <span class="n">parameter_bytes_io</span><span class="o">.</span><span class="n">getbuffer</span><span class="p">()</span>
         <span class="n">position</span> <span class="o">=</span> <span class="n">inner_decoder</span><span class="p">(</span>
             <span class="n">parameter_bytes_memory_view</span><span class="p">,</span>
             <span class="n">position</span> <span class="o">+</span> <span class="n">encoder</span><span class="o">.</span><span class="n">_TagSize</span><span class="p">(</span><span class="n">field_index</span><span class="p">),</span>  <span class="c1"># type: ignore[attr-defined]</span>
             <span class="nb">len</span><span class="p">(</span><span class="n">parameter_bytes</span><span class="p">),</span>
-            <span class="nb">type</span><span class="p">,</span>
-            <span class="n">overlapping_parameters_by_id</span><span class="p">,</span>
+            <span class="n">cast</span><span class="p">(</span><span class="n">Message</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>  <span class="c1"># unused - See serialization_strategy._vector_decoder._new_default</span>
+            <span class="n">cast</span><span class="p">(</span><span class="n">Dict</span><span class="p">[</span><span class="n">FieldDescriptor</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">overlapping_parameters_by_id</span><span class="p">),</span>
         <span class="p">)</span>
     <span class="k">return</span> <span class="n">overlapping_parameters_by_id</span>
 
@@ -271,7 +274,7 @@
                 <span class="n">enum_type</span> <span class="o">=</span> <span class="n">_get_enum_type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
                 <span class="n">missing_parameters</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">enum_type</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">missing_parameters</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">serialization_strategy</span><span class="o">.</span><span class="n">Context</span><span class="o">.</span><span class="n">get_type_default</span><span class="p">(</span>
+                <span class="n">missing_parameters</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">serialization_strategy</span><span class="o">.</span><span class="n">get_type_default</span><span class="p">(</span>
                     <span class="n">value</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">value</span><span class="o">.</span><span class="n">repeated</span>
                 <span class="p">)</span>
     <span class="k">return</span> <span class="n">missing_parameters</span>

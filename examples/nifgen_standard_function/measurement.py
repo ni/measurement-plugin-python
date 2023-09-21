@@ -7,7 +7,7 @@ import sys
 import threading
 import time
 from enum import Enum
-from typing import Tuple
+from typing import Any, Tuple
 
 import click
 import grpc
@@ -170,7 +170,7 @@ def measure(
 @verbosity_option
 @grpc_device_options
 @use_simulation_option(default=USE_SIMULATION)
-def main(verbosity: int, **kwargs) -> None:
+def main(verbosity: int, **kwargs: Any) -> None:
     """Generate a standard function waveform using an NI waveform generator."""
     configure_logging(verbosity)
     global service_options

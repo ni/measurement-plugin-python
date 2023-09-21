@@ -5,7 +5,7 @@ import pathlib
 import sys
 import threading
 import time
-from typing import List, Tuple
+from typing import Any, List, Tuple
 
 import click
 import grpc
@@ -183,7 +183,7 @@ def measure(
 @verbosity_option
 @grpc_device_options
 @use_simulation_option(default=USE_SIMULATION)
-def main(verbosity: int, **kwargs) -> None:
+def main(verbosity: int, **kwargs: Any) -> None:
     """Acquire a waveform using an NI oscilloscope."""
     configure_logging(verbosity)
     global service_options

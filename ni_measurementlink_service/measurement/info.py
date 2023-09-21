@@ -1,4 +1,4 @@
-"""Contains classes and enums to represent measurement metadata."""
+"""Measurement service metadata classes and enums."""
 from __future__ import annotations
 
 import enum
@@ -7,50 +7,56 @@ from typing import Dict, List, NamedTuple
 
 
 class MeasurementInfo(NamedTuple):
-    """Class that represents the measurement information.
-
-    Attributes
-    ----------
-        display_name (str): The measurement display name for client to display to user.
-
-        version (str): The measurement version that helps to
-        maintain versions of a measurement in future.
-
-        ui_file_paths (list): Absolute paths of the UI file(s) linked to the measurement.
-
-    """
+    """A named tuple providing information about a measurement."""
 
     display_name: str
+    """The user visible name of the measurement."""
+
     version: str
+    """The current version of the measurement."""
+
     ui_file_paths: List[Path]
+    """Absolute paths to user interface files for the measurement (e.g. ``.measui`` or ``.vi``
+    files)."""
 
 
 class ServiceInfo(NamedTuple):
-    """Class that represents the service information.
+    """A named tuple providing information about a registered service.
 
-    Attributes
-    ----------
-        service_class (str): Service class that the measurement belongs to.
-        Measurements under same service class expected to perform same logic.
-        For e.g., different version of measurement can come under same service class.
-
-
-        description_url (str): Description URL of the measurement.
-
-        provided_interfaces (List[str]): List of interfaces the service provides.
-        For e.g., ni.measurementlink.measurement.v2.MeasurementService.
-        Defaults to ["ni.measurementlink.measurement.v1.MeasurementService"].
-
-        annotations (Dict[str,str]): Dict that contains extra information of the measurement.
-        As default we added a (str) description, (str) collection and a (List[str]) list of tags.
-        Feel free to add your own Annotations as needed.
-
+    This class is used with the MeasurementLink discovery service when registering and enumerating
+    services.
     """
 
     service_class: str
+    """"The "class" of a service. The value of this field should be unique for a given interface
+    in ``provided_interfaces``. In effect, the ``.proto`` service declaration defines the
+    interface, and this field defines a class or concrete type of the interface."""
+
     description_url: str
+    """The URL of a web page that provides a description of the service."""
+
     provided_interfaces: List[str] = ["ni.measurementlink.measurement.v1.MeasurementService"]
+    """The service interfaces provided by the service. These are gRPC full names for the service."""
+
     annotations: Dict[str, str] = {}
+    """Represents a set of annotations on the service.
+    
+    Well-known annotations:
+
+    - Description
+       - Key: "ni/service.description"
+          - Expected format: string
+          - Example: "Measure inrush current with a shorted load and validate results against
+            configured limits."
+    - Collection
+       - Key: "ni/service.collection"
+          - Expected format: "." delimited namespace/hierarchy case-insensitive string
+          - Example: "CurrentTests.Inrush"
+    - Tags
+        - Key: "ni/service.tags"
+           - Expected format: serialized JSON string of an array of strings
+           - Example: "[\"powerup\", \"current\"]"
+    """
 
 
 class TypeSpecialization(enum.Enum):

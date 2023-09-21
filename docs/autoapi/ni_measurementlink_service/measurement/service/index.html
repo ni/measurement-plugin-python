@@ -37,7 +37,7 @@
             ni_measurementlink_service
           </a>
               <div class="version">
-                1.2.0-dev1
+                1.2.0-dev2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
@@ -68,13 +68,6 @@
 <li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.service.MeasurementContext.abort"><code class="docutils literal notranslate"><span class="pre">MeasurementContext.abort()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l9"><a class="reference internal" href="#ni_measurementlink_service.measurement.service.GrpcChannelPool"><code class="docutils literal notranslate"><span class="pre">GrpcChannelPool</span></code></a><ul>
-<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.service.GrpcChannelPool.__enter__"><code class="docutils literal notranslate"><span class="pre">GrpcChannelPool.__enter__()</span></code></a></li>
-<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.service.GrpcChannelPool.__exit__"><code class="docutils literal notranslate"><span class="pre">GrpcChannelPool.__exit__()</span></code></a></li>
-<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.service.GrpcChannelPool.get_channel"><code class="docutils literal notranslate"><span class="pre">GrpcChannelPool.get_channel()</span></code></a></li>
-<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.service.GrpcChannelPool.close"><code class="docutils literal notranslate"><span class="pre">GrpcChannelPool.close()</span></code></a></li>
-</ul>
-</li>
 <li class="toctree-l9"><a class="reference internal" href="#ni_measurementlink_service.measurement.service.MeasurementService"><code class="docutils literal notranslate"><span class="pre">MeasurementService</span></code></a><ul>
 <li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.service.MeasurementService.register_measurement"><code class="docutils literal notranslate"><span class="pre">MeasurementService.register_measurement()</span></code></a></li>
 <li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.service.MeasurementService.configuration"><code class="docutils literal notranslate"><span class="pre">MeasurementService.configuration()</span></code></a></li>
@@ -94,13 +87,6 @@
 <li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.service.MeasurementContext.cancel">cancel</a></li>
 <li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.service.MeasurementContext.time_remaining">time_remaining</a></li>
 <li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.service.MeasurementContext.abort">abort</a></li>
-</ul>
-</li>
-<li class="toctree-l9"><a class="reference internal" href="#ni_measurementlink_service.measurement.service.GrpcChannelPool">GrpcChannelPool</a><ul>
-<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.service.GrpcChannelPool.__enter__">__enter__</a></li>
-<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.service.GrpcChannelPool.__exit__">__exit__</a></li>
-<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.service.GrpcChannelPool.get_channel">get_channel</a></li>
-<li class="toctree-l10"><a class="reference internal" href="#ni_measurementlink_service.measurement.service.GrpcChannelPool.close">close</a></li>
 </ul>
 </li>
 <li class="toctree-l9"><a class="reference internal" href="#ni_measurementlink_service.measurement.service.MeasurementService">MeasurementService</a></li>
@@ -163,10 +149,7 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="#ni_measurementlink_service.measurement.service.MeasurementContext" title="ni_measurementlink_service.measurement.service.MeasurementContext"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MeasurementContext</span></code></a></p></td>
 <td><p>Proxy for the Measurement Service's context-local state.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#ni_measurementlink_service.measurement.service.GrpcChannelPool" title="ni_measurementlink_service.measurement.service.GrpcChannelPool"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GrpcChannelPool</span></code></a></p></td>
-<td><p>Class that manages gRPC channel lifetimes.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#ni_measurementlink_service.measurement.service.MeasurementService" title="ni_measurementlink_service.measurement.service.MeasurementService"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MeasurementService</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#ni_measurementlink_service.measurement.service.MeasurementService" title="ni_measurementlink_service.measurement.service.MeasurementService"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MeasurementService</span></code></a></p></td>
 <td><p>Class that supports registering and hosting a python function as a gRPC service.</p></td>
 </tr>
 </tbody>
@@ -224,42 +207,6 @@
 <dt class="sig sig-object py" id="ni_measurementlink_service.measurement.service.MeasurementContext.abort">
 <span class="sig-name descname"><span class="pre">abort</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">code</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">details</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/ni_measurementlink_service/measurement/service.html#MeasurementContext.abort"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service.measurement.service.MeasurementContext.abort" title="Permalink to this definition"></a></dt>
 <dd><p>Aborts the RPC.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="ni_measurementlink_service.measurement.service.GrpcChannelPool">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ni_measurementlink_service.measurement.service.</span></span><span class="sig-name descname"><span class="pre">GrpcChannelPool</span></span><a class="reference internal" href="../../../../_modules/ni_measurementlink_service/measurement/service.html#GrpcChannelPool"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service.measurement.service.GrpcChannelPool" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Class that manages gRPC channel lifetimes.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="ni_measurementlink_service.measurement.service.GrpcChannelPool.__enter__">
-<span class="sig-name descname"><span class="pre">__enter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/ni_measurementlink_service/measurement/service.html#GrpcChannelPool.__enter__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service.measurement.service.GrpcChannelPool.__enter__" title="Permalink to this definition"></a></dt>
-<dd><p>Enter the runtime context of the GrpcChannelPool.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ni_measurementlink_service.measurement.service.GrpcChannelPool.__exit__">
-<span class="sig-name descname"><span class="pre">__exit__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exc_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exc_val</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">traceback</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/ni_measurementlink_service/measurement/service.html#GrpcChannelPool.__exit__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service.measurement.service.GrpcChannelPool.__exit__" title="Permalink to this definition"></a></dt>
-<dd><p>Exit the runtime context of the GrpcChannelPool.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ni_measurementlink_service.measurement.service.GrpcChannelPool.get_channel">
-<span class="sig-name descname"><span class="pre">get_channel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/ni_measurementlink_service/measurement/service.html#GrpcChannelPool.get_channel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service.measurement.service.GrpcChannelPool.get_channel" title="Permalink to this definition"></a></dt>
-<dd><p>Return a gRPC channel.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>target</strong> (<em>str</em>) – The server address</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ni_measurementlink_service.measurement.service.GrpcChannelPool.close">
-<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/ni_measurementlink_service/measurement/service.html#GrpcChannelPool.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service.measurement.service.GrpcChannelPool.close" title="Permalink to this definition"></a></dt>
-<dd><p>Close channels opened by get_channel().</p>
 </dd></dl>
 
 </dd></dl>

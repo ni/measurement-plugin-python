@@ -7,7 +7,6 @@ import sys
 from enum import Enum, EnumMeta
 from os import path
 from pathlib import Path
-from threading import Lock
 from types import TracebackType
 from typing import (
     TYPE_CHECKING,
@@ -26,13 +25,15 @@ import grpc
 from google.protobuf.descriptor import EnumDescriptor
 
 from ni_measurementlink_service import _datatypeinfo
+from ni_measurementlink_service._channelpool import (  # re-export
+    GrpcChannelPool as GrpcChannelPool,
+)
 from ni_measurementlink_service._internal import grpc_servicer
 from ni_measurementlink_service._internal.discovery_client import DiscoveryClient
 from ni_measurementlink_service._internal.parameter import (
     metadata as parameter_metadata,
 )
 from ni_measurementlink_service._internal.service_manager import GrpcService
-from ni_measurementlink_service._loggers import ClientLogger
 from ni_measurementlink_service.measurement.info import (
     DataType,
     MeasurementInfo,
@@ -48,6 +49,11 @@ if TYPE_CHECKING:
         from typing import TypeGuard
     else:
         from typing_extensions import TypeGuard
+
+    if sys.version_info >= (3, 11):
+        from typing import Self
+    else:
+        from typing_extensions import Self
 
     SupportedEnumType = Union[Type[Enum], _EnumTypeWrapper]
 
@@ -83,65 +89,7 @@ class MeasurementContext:
         grpc_servicer.measurement_service_context.get().abort(code, details)
 
 
-# Eventually, these can be replaced with typing.Self (Python >= 3.11).
-_TGrpcChannelPool = TypeVar("_TGrpcChannelPool", bound="GrpcChannelPool")
-_TMeasurementService = TypeVar("_TMeasurementService", bound="MeasurementService")
-
-
-class GrpcChannelPool(object):
-    """Class that manages gRPC channel lifetimes."""
-
-    def __init__(self) -> None:
-        """Initialize the GrpcChannelPool object."""
-        self._lock: Lock = Lock()
-        self._channel_cache: Dict[str, grpc.Channel] = {}
-
-    def __enter__(self: _TGrpcChannelPool) -> _TGrpcChannelPool:
-        """Enter the runtime context of the GrpcChannelPool."""
-        return self
-
-    def __exit__(
-        self,
-        exc_type: Optional[Type[BaseException]],
-        exc_val: Optional[BaseException],
-        traceback: Optional[TracebackType],
-    ) -> Literal[False]:
-        """Exit the runtime context of the GrpcChannelPool."""
-        self.close()
-        return False
-
-    def get_channel(self, target: str) -> grpc.Channel:
-        """Return a gRPC channel.
-
-        Args:
-            target (str): The server address
-
-        """
-        new_channel = None
-        with self._lock:
-            if target not in self._channel_cache:
-                self._lock.release()
-                new_channel = grpc.insecure_channel(target)
-                if ClientLogger.is_enabled():
-                    new_channel = grpc.intercept_channel(new_channel, ClientLogger())
-                self._lock.acquire()
-                if target not in self._channel_cache:
-                    self._channel_cache[target] = new_channel
-                    new_channel = None
-            channel = self._channel_cache[target]
-
-        # Close new_channel if it was not stored in _channel_cache.
-        if new_channel is not None:
-            new_channel.close()
-
-        return channel
-
-    def close(self) -> None:
-        """Close channels opened by get_channel()."""
-        with self._lock:
-            for channel in self._channel_cache.values():
-                channel.close()
-            self._channel_cache.clear()
+_F = TypeVar("_F", bound=Callable)
 
 
 class MeasurementService:
@@ -239,7 +187,7 @@ class MeasurementService:
         self.channel_pool: GrpcChannelPool = GrpcChannelPool()
         self.discovery_client: DiscoveryClient = DiscoveryClient()
 
-    def register_measurement(self, measurement_function: Callable) -> Callable:
+    def register_measurement(self, measurement_function: _F) -> _F:
         """Register a function as the measurement function for a measurement service.
 
         To declare a measurement function, use this idiom:
@@ -268,7 +216,7 @@ class MeasurementService:
         *,
         instrument_type: str = "",
         enum_type: Optional[SupportedEnumType] = None,
-    ) -> Callable:
+    ) -> Callable[[_F], _F]:
         """Add a configuration parameter to a measurement function.
 
         This decorator maps the measurement service's configuration parameters
@@ -320,7 +268,7 @@ class MeasurementService:
         parameter_metadata.validate_default_value_type(parameter)
         self.configuration_parameter_list.append(parameter)
 
-        def _configuration(func):
+        def _configuration(func: _F) -> _F:
             return func
 
         return _configuration
@@ -331,7 +279,7 @@ class MeasurementService:
         type: DataType,
         *,
         enum_type: Optional[SupportedEnumType] = None,
-    ) -> Callable:
+    ) -> Callable[[_F], _F]:
         """Add an output parameter to a measurement function.
 
         This decorator maps the measurement service's output parameters to
@@ -373,7 +321,7 @@ class MeasurementService:
         )
         self.output_parameter_list.append(parameter)
 
-        def _output(func):
+        def _output(func: _F) -> _F:
             return func
 
         return _output
@@ -451,7 +399,7 @@ class MeasurementService:
         self.grpc_service.stop()
         self.channel_pool.close()
 
-    def __enter__(self: _TMeasurementService) -> _TMeasurementService:
+    def __enter__(self: Self) -> Self:
         """Enter the runtime context related to the measurement service."""
         return self
 

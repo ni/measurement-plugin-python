@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ni_measurementlink_generator"
-version = "1.2.0-dev1"
+version = "1.2.0-dev2"
 description = "MeasurementLink Code Generator for Python"
 authors = ["NI <opensource@ni.com>"]
 readme = "README.md"
@@ -40,10 +40,10 @@ build-backend = "poetry.core.masonry.api"
 line-length = 100
 
 [tool.mypy]
-warn_unused_configs = true
+disallow_untyped_defs = true
 namespace_packages = true
-check_untyped_defs = true
 warn_redundant_casts = true
+warn_unused_configs = true
 warn_unused_ignores = true
 
 [[tool.mypy.overrides]]

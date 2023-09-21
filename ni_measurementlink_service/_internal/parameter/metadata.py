@@ -5,9 +5,7 @@ from typing import Any, Dict, Iterable, NamedTuple
 
 from google.protobuf import type_pb2
 
-from ni_measurementlink_service._internal.parameter.serialization_strategy import (
-    Context,
-)
+from ni_measurementlink_service._internal.parameter import serialization_strategy
 from ni_measurementlink_service.measurement.info import TypeSpecialization
 
 
@@ -60,13 +58,17 @@ def validate_default_value_type(parameter_metadata: ParameterMetadata) -> None:
         return None
 
     expected_type = type(
-        Context.get_type_default(parameter_metadata.type, parameter_metadata.repeated)
+        serialization_strategy.get_type_default(
+            parameter_metadata.type, parameter_metadata.repeated
+        )
     )
     display_name = parameter_metadata.display_name
     enum_values_annotation = get_enum_values_annotation(parameter_metadata)
 
     if parameter_metadata.repeated:
-        expected_element_type = type(Context.get_type_default(parameter_metadata.type, False))
+        expected_element_type = type(
+            serialization_strategy.get_type_default(parameter_metadata.type, False)
+        )
         _validate_default_value_type_for_repeated_type(
             default_value,
             expected_type,
