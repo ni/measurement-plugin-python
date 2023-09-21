@@ -427,7 +427,8 @@ class SessionManagementClient(object):
         )
 
         request = session_management_service_pb2.ReserveSessionsRequest(
-            pin_map_context=pin_map_context
+            pin_map_context=pin_map_context,
+            timeout_in_milliseconds=_timeout_to_milliseconds(timeout)
         )
         if instrument_type_id is not None:
             request.instrument_type_id = instrument_type_id
@@ -435,11 +436,6 @@ class SessionManagementClient(object):
             request.pin_or_relay_names.append(pin_or_relay_names)
         elif pin_or_relay_names is not None:
             request.pin_or_relay_names.extend(pin_or_relay_names)
-        if timeout is not None:
-            timeout_in_ms = round(timeout * 1000)
-            if timeout_in_ms < 0:
-                timeout_in_ms = -1
-            request.timeout_in_milliseconds = timeout_in_ms
 
         response = self._get_stub().ReserveSessions(request)
         return response.sessions
@@ -538,14 +534,11 @@ class SessionManagementClient(object):
             A reservation object with which you can query information about the sessions and
             unreserve them.
         """
-        request = session_management_service_pb2.ReserveAllRegisteredSessionsRequest()
+        request = session_management_service_pb2.ReserveAllRegisteredSessionsRequest(
+            timeout_in_milliseconds=_timeout_to_milliseconds(timeout)
+        )
         if instrument_type_id is not None:
             request.instrument_type_id = instrument_type_id
-        if timeout is not None:
-            timeout_in_ms = round(timeout * 1000)
-            if timeout_in_ms < 0:
-                timeout_in_ms = -1
-            request.timeout_in_milliseconds = timeout_in_ms
 
         response = self._get_stub().ReserveAllRegisteredSessions(request)
         return MultiSessionReservation(session_manager=self, session_info=response.sessions)
@@ -553,3 +546,15 @@ class SessionManagementClient(object):
 
 Client = SessionManagementClient
 """Alias for compatibility with code that uses session_management.Client."""
+
+
+def _timeout_to_milliseconds(timeout: Optional[float]) -> int:
+    if timeout is None:
+        return 0
+    elif timeout == -1:
+        return -1
+    elif timeout < 0:
+        warnings.warn("Specify -1 for an infinite timeout.", RuntimeWarning)
+        return -1
+    else:
+        return round(timeout * 1000)
