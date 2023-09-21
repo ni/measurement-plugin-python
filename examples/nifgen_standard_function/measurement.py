@@ -40,13 +40,6 @@ measurement_service = nims.MeasurementService(
 )
 service_options = ServiceOptions()
 
-RESERVATION_TIMEOUT_IN_SECONDS = 60.0
-"""
-If another measurement is using the session, the reserve function will wait
-for it to complete. Specify a reservation timeout to aid in debugging missed
-unreserve calls. Long measurements may require a longer timeout.
-"""
-
 
 class Waveform(Enum):
     """Wrapper enum that contains a zero value."""
@@ -100,10 +93,7 @@ def measure(
     with contextlib.ExitStack() as stack:
         reservation = stack.enter_context(
             session_management_client.reserve_sessions(
-                context=measurement_service.context.pin_map_context,
-                pin_or_relay_names=[pin_name],
-                instrument_type_id=nims.session_management.INSTRUMENT_TYPE_NI_FGEN,
-                timeout=RESERVATION_TIMEOUT_IN_SECONDS,
+                context=measurement_service.context.pin_map_context, pin_or_relay_names=[pin_name]
             )
         )
 

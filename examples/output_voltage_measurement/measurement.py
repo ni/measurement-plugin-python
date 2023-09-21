@@ -44,13 +44,6 @@ measurement_service = nims.MeasurementService(
 
 service_options = ServiceOptions()
 
-RESERVATION_TIMEOUT_IN_SECONDS = 60.0
-"""
-If another measurement is using the session, the reserve function will wait
-for it to complete. Specify a reservation timeout to aid in debugging missed
-unreserve calls. Long measurements may require a longer timeout.
-"""
-
 
 class Function(Enum):
     """Function that represents the measurement type."""
@@ -118,7 +111,6 @@ def measure(
     with session_management_client.reserve_sessions(
         context=measurement_service.context.pin_map_context,
         pin_or_relay_names=[input_pin, output_pin],
-        timeout=RESERVATION_TIMEOUT_IN_SECONDS,
     ) as reservation:
         grpc_device_channel = get_grpc_device_channel(
             measurement_service, nidcpower, service_options
