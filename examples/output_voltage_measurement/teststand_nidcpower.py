@@ -25,10 +25,6 @@ def create_nidcpower_sessions(sequence_context: Any) -> None:
         with session_management_client.reserve_sessions(
             context=pin_map_context,
             instrument_type_id=nims.session_management.INSTRUMENT_TYPE_NI_DCPOWER,
-            # If another measurement is using the session, wait for it to complete.
-            # Specify a timeout to aid in debugging missed unreserve calls.
-            # Long measurements may require a longer timeout.
-            timeout=60,
         ) as reservation:
             for session_info in reservation.session_info:
                 # Leave session open

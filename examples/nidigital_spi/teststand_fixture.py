@@ -182,10 +182,7 @@ def _reserve_sessions(
     pin_map_context = nims.session_management.PinMapContext(pin_map_id=pin_map_id, sites=None)
 
     return session_management_client.reserve_sessions(
-        context=pin_map_context,
-        instrument_type_id=instrument_type_id,
-        # This code module sets up the sessions, so error immediately if they are in use.
-        timeout=0,
+        context=pin_map_context, instrument_type_id=instrument_type_id
     )
 
 

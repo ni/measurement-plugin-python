@@ -53,8 +53,6 @@ def create_niscope_sessions(sequence_context: Any) -> None:
         with session_management_client.reserve_sessions(
             context=pin_map_context,
             instrument_type_id=nims.session_management.INSTRUMENT_TYPE_NI_SCOPE,
-            # This code module sets up the sessions, so error immediately if they are in use.
-            timeout=0,
         ) as reservation:
             for session_info in reservation.session_info:
                 # Leave session open
