@@ -1,5 +1,4 @@
-"""Contains Measurement Service Implementation class and method to host the service.
-"""
+"""gRPC servicers for each version of the measurement service interface."""
 import collections.abc
 import contextlib
 import inspect
@@ -28,14 +27,14 @@ from ni_measurementlink_service.session_management import PinMapContext
 
 
 class MeasurementServiceContext:
-    """Accessor for the Measurement Service's context-local state."""
+    """Accessor for the measurement service's context-local state."""
 
     def __init__(
         self,
         grpc_context: grpc.ServicerContext,
         pin_map_context: PinMapContext,
     ) -> None:
-        """Initialize the Measurement Service Context."""
+        """Initialize the measurement service context."""
         self._grpc_context: grpc.ServicerContext = grpc_context
         self._pin_map_context: PinMapContext = pin_map_context
         self._is_complete: bool = False
@@ -98,16 +97,7 @@ def _convert_pin_map_context_from_grpc(
 def _get_mapping_by_parameter_name(
     mapping_by_id: Dict[int, Any], measure_function: Callable[[], None]
 ) -> Dict[str, Any]:
-    """Transform the mapping by id to mapping by parameter names of the measurement function.
-
-    Args:
-        mapping_by_id (Dict[int, Any]): Mapping by ID
-
-        measure_function (callable): Function from which the parameter names are extracted.
-
-    Returns:
-        Dict[str, Any]: Mapping by Parameters names based on the measurement function
-    """
+    """Transform a mapping by id into a mapping by parameter name (i.e. kwargs)."""
     signature = inspect.signature(measure_function)
     mapping_by_variable_name = {}
     for i, parameter in enumerate(signature.parameters.values(), start=1):
@@ -126,18 +116,17 @@ def _serialize_outputs(output_metadata: Dict[int, ParameterMetadata], outputs: A
         )
 
 
+def _frame_metadata_dict(
+    parameter_list: List[ParameterMetadata],
+) -> Dict[int, ParameterMetadata]:
+    metadata_dict = {}
+    for i, parameter in enumerate(parameter_list, start=1):
+        metadata_dict[i] = parameter
+    return metadata_dict
+
+
 class MeasurementServiceServicerV1(v1_measurement_service_pb2_grpc.MeasurementServiceServicer):
-    """Implementation of the Measurement Service's gRPC base class.
-
-    Attributes:
-        measurement_info (MeasurementInfo): Measurement info
-
-        configuration_parameter_list (List): List of configuration parameters.
-
-        output_parameter_list (List): List of output parameters.
-
-        measure_function (Callable): Registered measurement function.
-    """
+    """Measurement v1 servicer."""
 
     def __init__(
         self,
@@ -146,87 +135,59 @@ class MeasurementServiceServicerV1(v1_measurement_service_pb2_grpc.MeasurementSe
         output_parameter_list: List[ParameterMetadata],
         measure_function: Callable,
     ) -> None:
-        """Initialize the Measurement Service Servicer.
-
-        Args:
-            measurement_info (MeasurementInfo): Measurement info
-
-            configuration_parameter_list (List): List of configuration parameters.
-
-            output_parameter_list (List): List of output parameters.
-
-            measure_function (Callable): Registered measurement function.
-
-        """
+        """Initialize the measurement v1 servicer."""
         super().__init__()
-
-        def frame_metadata_dict(
-            parameter_list: List[ParameterMetadata],
-        ) -> Dict[int, ParameterMetadata]:
-            metadata_dict = {}
-            for i, parameter in enumerate(parameter_list, start=1):
-                metadata_dict[i] = parameter
-            return metadata_dict
-
-        self.configuration_metadata: Dict[int, ParameterMetadata] = frame_metadata_dict(
-            configuration_parameter_list
-        )
-        self.output_metadata: Dict[int, ParameterMetadata] = frame_metadata_dict(
-            output_parameter_list
-        )
-        self.measurement_info: MeasurementInfo = measurement_info
-        self.measure_function = measure_function
+        self._configuration_metadata = _frame_metadata_dict(configuration_parameter_list)
+        self._output_metadata = _frame_metadata_dict(output_parameter_list)
+        self._measurement_info = measurement_info
+        self._measure_function = measure_function
 
     def GetMetadata(  # noqa: N802 - function name should be lowercase
         self, request: v1_measurement_service_pb2.GetMetadataRequest, context: grpc.ServicerContext
     ) -> v1_measurement_service_pb2.GetMetadataResponse:
-        """RPC API to get complete metadata."""
-        # measurement details
-        measurement_details = v1_measurement_service_pb2.MeasurementDetails()
-        measurement_details.display_name = self.measurement_info.display_name
-        measurement_details.version = self.measurement_info.version
+        """RPC API to get measurement metadata."""
+        measurement_details = v1_measurement_service_pb2.MeasurementDetails(
+            display_name=self._measurement_info.display_name, version=self._measurement_info.version
+        )
 
-        # Measurement Parameters
         measurement_signature = v1_measurement_service_pb2.MeasurementSignature(
             configuration_parameters_message_type="ni.measurementlink.measurement.v1.MeasurementConfigurations",
             outputs_message_type="ni.measurementlink.measurement.v1.MeasurementOutputs",
         )
 
-        # Configurations
-        for field_number, configuration_metadata in self.configuration_metadata.items():
-            configuration_parameter = v1_measurement_service_pb2.ConfigurationParameter()
-            configuration_parameter.field_number = field_number
-            configuration_parameter.name = configuration_metadata.display_name
-            configuration_parameter.repeated = configuration_metadata.repeated
-            configuration_parameter.type = configuration_metadata.type
-            configuration_parameter.annotations.update(configuration_metadata.annotations)
+        for field_number, configuration_metadata in self._configuration_metadata.items():
+            configuration_parameter = v1_measurement_service_pb2.ConfigurationParameter(
+                field_number=field_number,
+                name=configuration_metadata.display_name,
+                repeated=configuration_metadata.repeated,
+                type=configuration_metadata.type,
+                annotations=configuration_metadata.annotations,
+            )
             measurement_signature.configuration_parameters.append(configuration_parameter)
 
-        # Configuration Defaults
         measurement_signature.configuration_defaults.value = serializer.serialize_default_values(
-            self.configuration_metadata
+            self._configuration_metadata
         )
 
-        # Output Parameters Metadata
-        for field_number, output_metadata in self.output_metadata.items():
-            output_parameter = v1_measurement_service_pb2.Output()
-            output_parameter.field_number = field_number
-            output_parameter.name = output_metadata.display_name
-            output_parameter.type = output_metadata.type
-            output_parameter.repeated = output_metadata.repeated
+        for field_number, output_metadata in self._output_metadata.items():
+            output_parameter = v1_measurement_service_pb2.Output(
+                field_number=field_number,
+                name=output_metadata.display_name,
+                type=output_metadata.type,
+                repeated=output_metadata.repeated,
+            )
             measurement_signature.outputs.append(output_parameter)
 
-        # Sending back Response
         metadata_response = v1_measurement_service_pb2.GetMetadataResponse(
             measurement_details=measurement_details,
             measurement_signature=measurement_signature,
             user_interface_details=None,
         )
 
-        # User Interface details - Framed relative to the metadata python File
-        for ui_file_path in self.measurement_info.ui_file_paths:
-            ui_details = v1_measurement_service_pb2.UserInterfaceDetails()
-            ui_details.file_url = pathlib.Path(ui_file_path).as_uri()
+        for ui_file_path in self._measurement_info.ui_file_paths:
+            ui_details = v1_measurement_service_pb2.UserInterfaceDetails(
+                file_url=pathlib.Path(ui_file_path).as_uri()
+            )
             metadata_response.user_interface_details.append(ui_details)
 
         return metadata_response
@@ -234,19 +195,17 @@ class MeasurementServiceServicerV1(v1_measurement_service_pb2_grpc.MeasurementSe
     def Measure(  # noqa: N802 - function name should be lowercase
         self, request: v1_measurement_service_pb2.MeasureRequest, context: grpc.ServicerContext
     ) -> v1_measurement_service_pb2.MeasureResponse:
-        """RPC API that Executes the registered measurement method."""
+        """RPC API that executes the registered measurement method."""
         mapping_by_id = serializer.deserialize_parameters(
-            self.configuration_metadata, request.configuration_parameters.value
+            self._configuration_metadata, request.configuration_parameters.value
         )
-
-        # Calling the registered measurement
         mapping_by_variable_name = _get_mapping_by_parameter_name(
-            mapping_by_id, self.measure_function
+            mapping_by_id, self._measure_function
         )
         pin_map_context = _convert_pin_map_context_from_grpc(request.pin_map_context)
         token = measurement_service_context.set(MeasurementServiceContext(context, pin_map_context))
         try:
-            return_value = self.measure_function(**mapping_by_variable_name)
+            return_value = self._measure_function(**mapping_by_variable_name)
             if isinstance(return_value, collections.abc.Generator):
                 with contextlib.closing(return_value) as output_iter:
                     outputs = None
@@ -265,22 +224,12 @@ class MeasurementServiceServicerV1(v1_measurement_service_pb2_grpc.MeasurementSe
 
     def _serialize_response(self, outputs: Any) -> v1_measurement_service_pb2.MeasureResponse:
         return v1_measurement_service_pb2.MeasureResponse(
-            outputs=_serialize_outputs(self.output_metadata, outputs)
+            outputs=_serialize_outputs(self._output_metadata, outputs)
         )
 
 
 class MeasurementServiceServicerV2(v2_measurement_service_pb2_grpc.MeasurementServiceServicer):
-    """Implementation of the Measurement Service's gRPC base class.
-
-    Attributes:
-        measurement_info (MeasurementInfo): Measurement info
-
-        configuration_parameter_list (List): List of configuration parameters.
-
-        output_parameter_list (List): List of output parameters.
-
-        measure_function (Callable): Registered measurement function.
-    """
+    """Measurement v2 servicer."""
 
     def __init__(
         self,
@@ -289,89 +238,62 @@ class MeasurementServiceServicerV2(v2_measurement_service_pb2_grpc.MeasurementSe
         output_parameter_list: List[ParameterMetadata],
         measure_function: Callable,
     ) -> None:
-        """Initialize the Measurement Service Servicer.
-
-        Args:
-            measurement_info (MeasurementInfo): Measurement info
-
-            configuration_parameter_list (List): List of configuration parameters.
-
-            output_parameter_list (List): List of output parameters.
-
-            measure_function (Callable): Registered measurement function.
-        """
+        """Initialize the measurement v2 servicer."""
         super().__init__()
-
-        def frame_metadata_dict(
-            parameter_list: List[ParameterMetadata],
-        ) -> Dict[int, ParameterMetadata]:
-            metadata_dict = {}
-            for i, parameter in enumerate(parameter_list, start=1):
-                metadata_dict[i] = parameter
-            return metadata_dict
-
-        self.configuration_metadata: Dict[int, ParameterMetadata] = frame_metadata_dict(
-            configuration_parameter_list
-        )
-        self.output_metadata: Dict[int, ParameterMetadata] = frame_metadata_dict(
-            output_parameter_list
-        )
-        self.measurement_info: MeasurementInfo = measurement_info
-        self.measure_function = measure_function
+        self._configuration_metadata = _frame_metadata_dict(configuration_parameter_list)
+        self._output_metadata = _frame_metadata_dict(output_parameter_list)
+        self._measurement_info: MeasurementInfo = measurement_info
+        self._measure_function = measure_function
 
     def GetMetadata(  # noqa: N802 - function name should be lowercase
         self, request: v2_measurement_service_pb2.GetMetadataRequest, context: grpc.ServicerContext
     ) -> v2_measurement_service_pb2.GetMetadataResponse:
-        """RPC API to get complete metadata."""
-        # measurement details
-        measurement_details = v2_measurement_service_pb2.MeasurementDetails()
-        measurement_details.display_name = self.measurement_info.display_name
-        measurement_details.version = self.measurement_info.version
+        """RPC API to get measurement metadata."""
+        measurement_details = v2_measurement_service_pb2.MeasurementDetails(
+            display_name=self._measurement_info.display_name, version=self._measurement_info.version
+        )
 
-        # Measurement Parameters
         measurement_signature = v2_measurement_service_pb2.MeasurementSignature(
             configuration_parameters_message_type="ni.measurementlink.measurement.v2.MeasurementConfigurations",
             outputs_message_type="ni.measurementlink.measurement.v2.MeasurementOutputs",
         )
 
-        # Configurations
-        for field_number, configuration_metadata in self.configuration_metadata.items():
-            configuration_parameter = v2_measurement_service_pb2.ConfigurationParameter()
-            configuration_parameter.field_number = field_number
-            configuration_parameter.name = configuration_metadata.display_name
-            configuration_parameter.repeated = configuration_metadata.repeated
-            configuration_parameter.type = configuration_metadata.type
-            configuration_parameter.annotations.update(configuration_metadata.annotations)
-            configuration_parameter.message_type = configuration_metadata.message_type
+        for field_number, configuration_metadata in self._configuration_metadata.items():
+            configuration_parameter = v2_measurement_service_pb2.ConfigurationParameter(
+                field_number=field_number,
+                name=configuration_metadata.display_name,
+                repeated=configuration_metadata.repeated,
+                type=configuration_metadata.type,
+                annotations=configuration_metadata.annotations,
+                message_type=configuration_metadata.message_type,
+            )
             measurement_signature.configuration_parameters.append(configuration_parameter)
 
-        # Configuration Defaults
         measurement_signature.configuration_defaults.value = serializer.serialize_default_values(
-            self.configuration_metadata
+            self._configuration_metadata
         )
 
-        # Output Parameters Metadata
-        for field_number, output_metadata in self.output_metadata.items():
-            output_parameter = v2_measurement_service_pb2.Output()
-            output_parameter.field_number = field_number
-            output_parameter.name = output_metadata.display_name
-            output_parameter.type = output_metadata.type
-            output_parameter.repeated = output_metadata.repeated
-            output_parameter.annotations.update(output_metadata.annotations)
-            output_parameter.message_type = output_metadata.message_type
+        for field_number, output_metadata in self._output_metadata.items():
+            output_parameter = v2_measurement_service_pb2.Output(
+                field_number=field_number,
+                name=output_metadata.display_name,
+                type=output_metadata.type,
+                repeated=output_metadata.repeated,
+                annotations=output_metadata.annotations,
+                message_type=output_metadata.message_type,
+            )
             measurement_signature.outputs.append(output_parameter)
 
-        # Sending back Response
         metadata_response = v2_measurement_service_pb2.GetMetadataResponse(
             measurement_details=measurement_details,
             measurement_signature=measurement_signature,
             user_interface_details=None,
         )
 
-        # User Interface details - Framed relative to the metadata python File
-        for ui_file_path in self.measurement_info.ui_file_paths:
-            ui_details = v2_measurement_service_pb2.UserInterfaceDetails()
-            ui_details.file_url = pathlib.Path(ui_file_path).as_uri()
+        for ui_file_path in self._measurement_info.ui_file_paths:
+            ui_details = v2_measurement_service_pb2.UserInterfaceDetails(
+                file_url=pathlib.Path(ui_file_path).as_uri()
+            )
             metadata_response.user_interface_details.append(ui_details)
 
         return metadata_response
@@ -379,19 +301,17 @@ class MeasurementServiceServicerV2(v2_measurement_service_pb2_grpc.MeasurementSe
     def Measure(  # noqa: N802 - function name should be lowercase
         self, request: v2_measurement_service_pb2.MeasureRequest, context: grpc.ServicerContext
     ) -> Generator[v2_measurement_service_pb2.MeasureResponse, None, None]:
-        """RPC API that Executes the registered measurement method."""
+        """RPC API that executes the registered measurement method."""
         mapping_by_id = serializer.deserialize_parameters(
-            self.configuration_metadata, request.configuration_parameters.value
+            self._configuration_metadata, request.configuration_parameters.value
         )
-
-        # Calling the registered measurement
         mapping_by_variable_name = _get_mapping_by_parameter_name(
-            mapping_by_id, self.measure_function
+            mapping_by_id, self._measure_function
         )
         pin_map_context = _convert_pin_map_context_from_grpc(request.pin_map_context)
         token = measurement_service_context.set(MeasurementServiceContext(context, pin_map_context))
         try:
-            return_value = self.measure_function(**mapping_by_variable_name)
+            return_value = self._measure_function(**mapping_by_variable_name)
             if isinstance(return_value, collections.abc.Generator):
                 with contextlib.closing(return_value) as output_iter:
                     try:
@@ -409,5 +329,5 @@ class MeasurementServiceServicerV2(v2_measurement_service_pb2_grpc.MeasurementSe
 
     def _serialize_response(self, outputs: Any) -> v2_measurement_service_pb2.MeasureResponse:
         return v2_measurement_service_pb2.MeasureResponse(
-            outputs=_serialize_outputs(self.output_metadata, outputs)
+            outputs=_serialize_outputs(self._output_metadata, outputs)
         )
