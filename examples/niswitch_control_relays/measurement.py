@@ -8,7 +8,6 @@ from typing import Any, Tuple
 
 import click
 import niswitch
-from _constants import USE_SIMULATION
 from _helpers import (
     ServiceOptions,
     configure_logging,
@@ -16,7 +15,6 @@ from _helpers import (
     get_grpc_device_channel,
     get_service_options,
     grpc_device_options,
-    use_simulation_option,
     verbosity_option,
 )
 from _niswitch_helpers import create_session

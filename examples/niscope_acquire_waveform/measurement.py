@@ -10,7 +10,6 @@ from typing import Any, List, Tuple
 import click
 import grpc
 import niscope
-from _constants import USE_SIMULATION
 from _helpers import (
     ServiceOptions,
     configure_logging,
@@ -18,7 +17,6 @@ from _helpers import (
     get_grpc_device_channel,
     get_service_options,
     grpc_device_options,
-    use_simulation_option,
     verbosity_option,
 )
 from _niscope_helpers import create_session
