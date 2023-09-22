@@ -3,8 +3,9 @@ import collections.abc
 import contextlib
 import inspect
 import pathlib
+import weakref
 from contextvars import ContextVar
-from typing import Any, Callable, Dict, Generator, List
+from typing import Any, Callable, Dict, Generator, List, Optional
 
 import grpc
 from google.protobuf import any_pb2
@@ -33,11 +34,13 @@ class MeasurementServiceContext:
         self,
         grpc_context: grpc.ServicerContext,
         pin_map_context: PinMapContext,
+        owner: Optional[weakref.ref[object]],
     ) -> None:
         """Initialize the measurement service context."""
         self._grpc_context = grpc_context
         self._pin_map_context = pin_map_context
         self._is_complete = False
+        self._owner = owner
 
     def mark_complete(self) -> None:
         """Mark the current RPC as complete."""
@@ -47,6 +50,13 @@ class MeasurementServiceContext:
     def grpc_context(self) -> grpc.ServicerContext:
         """Get the context for the RPC."""
         return self._grpc_context
+
+    @property
+    def owner(self) -> object:
+        """The owner of the server (e.g. measurement service)."""
+        if self._owner is None:
+            return None
+        return self._owner()  # dereference weak ref
 
     @property
     def pin_map_context(self) -> PinMapContext:
@@ -134,6 +144,7 @@ class MeasurementServiceServicerV1(v1_measurement_service_pb2_grpc.MeasurementSe
         configuration_parameter_list: List[ParameterMetadata],
         output_parameter_list: List[ParameterMetadata],
         measure_function: Callable,
+        owner: object,
     ) -> None:
         """Initialize the measurement v1 servicer."""
         super().__init__()
@@ -141,6 +152,7 @@ class MeasurementServiceServicerV1(v1_measurement_service_pb2_grpc.MeasurementSe
         self._output_metadata = _frame_metadata_dict(output_parameter_list)
         self._measurement_info = measurement_info
         self._measure_function = measure_function
+        self._owner = weakref.ref(owner) if owner is not None else None  # avoid reference cycle
 
     def GetMetadata(  # noqa: N802 - function name should be lowercase
         self, request: v1_measurement_service_pb2.GetMetadataRequest, context: grpc.ServicerContext
@@ -203,7 +215,9 @@ class MeasurementServiceServicerV1(v1_measurement_service_pb2_grpc.MeasurementSe
             mapping_by_id, self._measure_function
         )
         pin_map_context = _convert_pin_map_context_from_grpc(request.pin_map_context)
-        token = measurement_service_context.set(MeasurementServiceContext(context, pin_map_context))
+        token = measurement_service_context.set(
+            MeasurementServiceContext(context, pin_map_context, self._owner)
+        )
         try:
             return_value = self._measure_function(**mapping_by_variable_name)
             if isinstance(return_value, collections.abc.Generator):
@@ -237,6 +251,7 @@ class MeasurementServiceServicerV2(v2_measurement_service_pb2_grpc.MeasurementSe
         configuration_parameter_list: List[ParameterMetadata],
         output_parameter_list: List[ParameterMetadata],
         measure_function: Callable,
+        owner: object,
     ) -> None:
         """Initialize the measurement v2 servicer."""
         super().__init__()
@@ -244,6 +259,7 @@ class MeasurementServiceServicerV2(v2_measurement_service_pb2_grpc.MeasurementSe
         self._output_metadata = _frame_metadata_dict(output_parameter_list)
         self._measurement_info: MeasurementInfo = measurement_info
         self._measure_function = measure_function
+        self._owner = weakref.ref(owner) if owner is not None else None  # avoid reference cycle
 
     def GetMetadata(  # noqa: N802 - function name should be lowercase
         self, request: v2_measurement_service_pb2.GetMetadataRequest, context: grpc.ServicerContext
@@ -309,7 +325,9 @@ class MeasurementServiceServicerV2(v2_measurement_service_pb2_grpc.MeasurementSe
             mapping_by_id, self._measure_function
         )
         pin_map_context = _convert_pin_map_context_from_grpc(request.pin_map_context)
-        token = measurement_service_context.set(MeasurementServiceContext(context, pin_map_context))
+        token = measurement_service_context.set(
+            MeasurementServiceContext(context, pin_map_context, self._owner)
+        )
         try:
             return_value = self._measure_function(**mapping_by_variable_name)
             if isinstance(return_value, collections.abc.Generator):
