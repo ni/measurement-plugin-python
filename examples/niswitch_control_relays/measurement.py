@@ -32,13 +32,6 @@ measurement_service = nims.MeasurementService(
 )
 service_options = ServiceOptions()
 
-RESERVATION_TIMEOUT_IN_SECONDS = 60.0
-"""
-If another measurement is using the session, the reserve function will wait
-for it to complete. Specify a reservation timeout to aid in debugging missed
-unreserve calls. Long measurements may require a longer timeout.
-"""
-
 
 @measurement_service.register_measurement
 @measurement_service.configuration("relay_names", nims.DataType.String, "SiteRelay1")
@@ -60,10 +53,7 @@ def measure(
         relay_list = [r.strip() for r in relay_names.split(",")]
         reservation = stack.enter_context(
             session_management_client.reserve_sessions(
-                context=measurement_service.context.pin_map_context,
-                pin_or_relay_names=relay_list,
-                instrument_type_id=nims.session_management.INSTRUMENT_TYPE_NI_RELAY_DRIVER,
-                timeout=RESERVATION_TIMEOUT_IN_SECONDS,
+                context=measurement_service.context.pin_map_context, pin_or_relay_names=relay_list
             )
         )
 

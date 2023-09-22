@@ -31,14 +31,6 @@ measurement_service = nims.MeasurementService(
 service_options = ServiceOptions()
 
 
-RESERVATION_TIMEOUT_IN_SECONDS = 60.0
-"""
-If another measurement is using the session, the reserve function will wait
-for it to complete. Specify a reservation timeout to aid in debugging missed
-unreserve calls. Long measurements may require a longer timeout.
-"""
-
-
 @measurement_service.register_measurement
 @measurement_service.configuration(
     "pin_name",
@@ -59,10 +51,7 @@ def measure(pin_name: str, sample_rate: float, number_of_samples: int) -> Tuple[
     )
     session_management_client = create_session_management_client(measurement_service)
     with session_management_client.reserve_session(
-        context=measurement_service.context.pin_map_context,
-        pin_or_relay_names=[pin_name],
-        instrument_type_id=nims.session_management.INSTRUMENT_TYPE_NI_DAQMX,
-        timeout=RESERVATION_TIMEOUT_IN_SECONDS,
+        context=measurement_service.context.pin_map_context, pin_or_relay_names=[pin_name]
     ) as reservation:
         task: Optional[nidaqmx.Task] = None
 
