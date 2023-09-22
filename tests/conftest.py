@@ -22,6 +22,7 @@ from ni_measurementlink_service.measurement.service import (
 )
 from ni_measurementlink_service.session_management import SessionManagementClient
 from tests.utilities.discovery_service_process import DiscoveryServiceProcess
+from tests.utilities.pin_map_client import PinMapClient
 
 
 @pytest.fixture(scope="module")
@@ -85,6 +86,14 @@ def discovery_client(
 ) -> DiscoveryClient:
     """Test fixture that creates a discovery client."""
     return DiscoveryClient(grpc_channel_pool=grpc_channel_pool)
+
+
+@pytest.fixture
+def pin_map_client(
+    discovery_client: DiscoveryClient, grpc_channel_pool: GrpcChannelPool
+) -> PinMapClient:
+    """Test fixture that creates a pin map client."""
+    return PinMapClient(discovery_client=discovery_client, grpc_channel_pool=grpc_channel_pool)
 
 
 @pytest.fixture
