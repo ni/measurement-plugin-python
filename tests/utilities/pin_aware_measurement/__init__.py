@@ -32,7 +32,7 @@ def measure(
         with measurement_service.context.reserve_sessions(pin_names, timeout=5.0) as reservation:
             return (
                 pin_map_context.pin_map_id,
-                pin_map_context.sites,
+                pin_map_context.sites or [],
                 [s.session_name for s in reservation.session_info],
                 [s.resource_name for s in reservation.session_info],
                 [s.channel_list for s in reservation.session_info],
@@ -41,7 +41,7 @@ def measure(
         with measurement_service.context.reserve_session(pin_names, timeout=5.0) as reservation:
             return (
                 pin_map_context.pin_map_id,
-                pin_map_context.sites,
+                pin_map_context.sites or [],
                 [reservation.session_info.resource_name],
                 [reservation.session_info.resource_name],
                 [reservation.session_info.channel_list],
