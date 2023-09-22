@@ -182,7 +182,6 @@ def measure(
 @click.command
 @verbosity_option
 @grpc_device_options
-@use_simulation_option(default=USE_SIMULATION)
 def main(verbosity: int, **kwargs: Any) -> None:
     """Acquire a waveform using an NI oscilloscope."""
     configure_logging(verbosity)

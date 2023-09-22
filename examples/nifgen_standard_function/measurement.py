@@ -169,7 +169,6 @@ def measure(
 @click.command
 @verbosity_option
 @grpc_device_options
-@use_simulation_option(default=USE_SIMULATION)
 def main(verbosity: int, **kwargs: Any) -> None:
     """Generate a standard function waveform using an NI waveform generator."""
     configure_logging(verbosity)

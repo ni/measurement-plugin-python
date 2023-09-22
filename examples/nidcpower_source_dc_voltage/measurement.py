@@ -169,7 +169,6 @@ def _log_measured_values(
 @click.command
 @verbosity_option
 @grpc_device_options
-@use_simulation_option(default=USE_SIMULATION)
 def main(verbosity: int, **kwargs: Any) -> None:
     """Source and measure a DC voltage with an NI SMU."""
     configure_logging(verbosity)

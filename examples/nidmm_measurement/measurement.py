@@ -121,7 +121,6 @@ def measure(
 @click.command
 @verbosity_option
 @grpc_device_options
-@use_simulation_option(default=USE_SIMULATION)
 def main(verbosity: int, **kwargs: Any) -> None:
     """Perform a measurement using an NI DMM."""
     configure_logging(verbosity)

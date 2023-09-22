@@ -120,7 +120,6 @@ def _resolve_relative_path(
 @click.command
 @verbosity_option
 @grpc_device_options
-@use_simulation_option(default=USE_SIMULATION)
 def main(verbosity: int, **kwargs: Any) -> None:
     """Test a SPI device using an NI Digital Pattern instrument."""
     configure_logging(verbosity)
