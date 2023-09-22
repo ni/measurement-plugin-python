@@ -257,7 +257,7 @@ class MeasurementServiceServicerV2(v2_measurement_service_pb2_grpc.MeasurementSe
         super().__init__()
         self._configuration_metadata = _frame_metadata_dict(configuration_parameter_list)
         self._output_metadata = _frame_metadata_dict(output_parameter_list)
-        self._measurement_info: MeasurementInfo = measurement_info
+        self._measurement_info = measurement_info
         self._measure_function = measure_function
         self._owner = weakref.ref(owner) if owner is not None else None  # avoid reference cycle
 
