@@ -14,6 +14,7 @@ from typing import (
     Any,
     Callable,
     Dict,
+    Iterable,
     List,
     Literal,
     Optional,
@@ -26,7 +27,7 @@ import grpc
 from deprecation import deprecated
 from google.protobuf.descriptor import EnumDescriptor
 
-from ni_measurementlink_service import _datatypeinfo
+from ni_measurementlink_service import _datatypeinfo, _featuretoggles
 from ni_measurementlink_service._channelpool import (  # re-export
     GrpcChannelPool as GrpcChannelPool,
 )
@@ -45,7 +46,12 @@ from ni_measurementlink_service.measurement.info import (
     ServiceInfo,
     TypeSpecialization,
 )
-from ni_measurementlink_service.session_management import PinMapContext
+from ni_measurementlink_service.session_management import (
+    MultiSessionReservation,
+    PinMapContext,
+    SessionManagementClient,
+    SingleSessionReservation,
+)
 
 if TYPE_CHECKING:
     from google.protobuf.internal.enum_type_wrapper import _EnumTypeWrapper
@@ -92,6 +98,101 @@ class MeasurementContext:
     def abort(self, code: grpc.StatusCode, details: str) -> None:
         """Aborts the RPC."""
         grpc_servicer.measurement_service_context.get().abort(code, details)
+
+    @property
+    def _measurement_service(self) -> MeasurementService:
+        owner = grpc_servicer.measurement_service_context.get().owner
+        assert isinstance(owner, MeasurementService)
+        return owner
+
+    if _featuretoggles.SESSION_MANAGEMENT_2024Q1:
+
+        def reserve_session(
+            self,
+            pin_or_relay_names: Union[str, Iterable[str], None] = None,
+            instrument_type_id: Optional[str] = None,
+            timeout: Optional[float] = 0.0,
+        ) -> SingleSessionReservation:
+            """Reserve a single session.
+
+            Reserve the session matching the given pins, sites, and instrument type ID and return
+            the information needed to create or access the session.
+
+            Args:
+                pin_or_relay_names: One or multiple pins, pin groups, relays, or relay groups to
+                    use for the measurement.
+
+                    If unspecified, reserve sessions for all pins and relays in the registered pin
+                    map resource.
+
+                instrument_type_id: Instrument type ID for the measurement.
+
+                    If unspecified, this method reserve sessions for all instrument types connected
+                    in the registered pin map resource.
+
+                    For NI instruments, use instrument type id constants, such as
+                    :py:const:`INSTRUMENT_TYPE_NI_DCPOWER` or :py:const:`INSTRUMENT_TYPE_NI_DMM`.
+
+                    For custom instruments, use the instrument type id defined in the pin map file.
+
+                timeout: Timeout in seconds.
+
+                    Allowed values: 0 (non-blocking, fails immediately if resources cannot be
+                    reserved), -1 (infinite timeout), or any other positive numeric value (wait for
+                    that number of seconds)
+
+            Returns:
+                A reservation object with which you can query information about the session and
+                unreserve it.
+            """
+            return self._measurement_service.session_management_client.reserve_session(
+                self.pin_map_context, pin_or_relay_names, instrument_type_id, timeout
+            )
+
+        def reserve_sessions(
+            self,
+            pin_or_relay_names: Union[str, Iterable[str], None] = None,
+            instrument_type_id: Optional[str] = None,
+            timeout: Optional[float] = 0.0,
+        ) -> MultiSessionReservation:
+            """Reserve multiple sessions.
+
+            Reserve sessions matching the given pins, sites, and instrument type ID and return the
+            information needed to create or access the sessions.
+
+            Args:
+                context: Includes the pin map ID for the pin map in the Pin Map Service,
+                    as well as the list of sites for the measurement.
+
+                pin_or_relay_names: One or multiple pins, pin groups, relays, or relay groups to use
+                    for the measurement.
+
+                    If unspecified, reserve sessions for all pins and relays in the registered pin
+                    map resource.
+
+                instrument_type_id: Instrument type ID for the measurement.
+
+                    If unspecified, this method reserves sessions for all instrument types connected
+                    in the registered pin map resource.
+
+                    For NI instruments, use instrument type id constants, such as
+                    :py:const:`INSTRUMENT_TYPE_NI_DCPOWER` or :py:const:`INSTRUMENT_TYPE_NI_DMM`.
+
+                    For custom instruments, use the instrument type id defined in the pin map file.
+
+                timeout: Timeout in seconds.
+
+                    Allowed values: 0 (non-blocking, fails immediately if resources cannot be
+                    reserved), -1 (infinite timeout), or any other positive numeric value (wait for
+                    that number of seconds)
+
+            Returns:
+                A reservation object with which you can query information about the sessions and
+                unreserve them.
+            """
+            return self._measurement_service.session_management_client.reserve_sessions(
+                self.pin_map_context, pin_or_relay_names, instrument_type_id, timeout
+            )
 
 
 _F = TypeVar("_F", bound=Callable)
@@ -187,6 +288,7 @@ class MeasurementService:
         self._channel_pool: Optional[GrpcChannelPool] = None
         self._discovery_client: Optional[DiscoveryClient] = None
         self._grpc_service: Optional[GrpcService] = None
+        self._session_management_client: Optional[SessionManagementClient] = None
 
     @property
     def channel_pool(self) -> GrpcChannelPool:
@@ -222,6 +324,20 @@ class MeasurementService:
             if self._grpc_service is None:
                 raise RuntimeError("Measurement service not running")
             return self._grpc_service.service_location
+
+    if _featuretoggles.SESSION_MANAGEMENT_2024Q1:
+
+        @property
+        def session_management_client(self) -> SessionManagementClient:
+            """Client for accessing the MeasurementLink session management service."""
+            if self._session_management_client is None:
+                with self._initialization_lock:
+                    if self._session_management_client is None:
+                        self._session_management_client = SessionManagementClient(
+                            discovery_client=self.discovery_client,
+                            grpc_channel_pool=self.channel_pool,
+                        )
+            return self._session_management_client
 
     def register_measurement(self, measurement_function: _F) -> _F:
         """Register a function as the measurement function for a measurement service.
@@ -382,6 +498,7 @@ class MeasurementService:
                 self.configuration_parameter_list,
                 self.output_parameter_list,
                 self.measure_function,
+                owner=self,
             )
             return self
 
