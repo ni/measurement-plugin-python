@@ -9,7 +9,7 @@ from unittest.mock import Mock
 
 import grpc
 import pytest
-import win32file
+from win32 import win32file
 import winerror
 from pytest_mock import MockerFixture
 
@@ -264,7 +264,7 @@ def test___key_file_not_exist___open_key_file___raises_file_not_found_error(
     )
 
     with pytest.raises(FileNotFoundError):
-        _open_key_file(temp_discovery_key_file_path)
+        _open_key_file(str(temp_discovery_key_file_path))
 
 
 def test___start_discovery_service___key_file_exist_after_poll___service_start_success(
