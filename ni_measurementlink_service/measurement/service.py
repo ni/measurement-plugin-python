@@ -220,15 +220,8 @@ class MeasurementService:
         """The location of the service on the network."""
         with self._initialization_lock:
             if self._grpc_service is None:
-                raise RuntimeError(
-                    "Measurement service not running. Call host_service() before querying the service_location."
-                )
-
-            return ServiceLocation(
-                location="localhost",
-                insecure_port=self._grpc_service.port,
-                ssl_authenticated_port="",
-            )
+                raise RuntimeError("Measurement service not running")
+            return self._grpc_service.service_location
 
     def register_measurement(self, measurement_function: _F) -> _F:
         """Register a function as the measurement function for a measurement service.
@@ -485,8 +478,5 @@ class MeasurementService:
             Exception: If service_class is not specified and there is more than one matching service
                 registered.
         """
-        service_location = self.grpc_service.discovery_client.resolve_service(
-            provided_interface, service_class
-        )
-
-        return self.channel_pool.get_channel(target=service_location.insecure_address)
+        service_location = self.discovery_client.resolve_service(provided_interface, service_class)
+        return self.channel_pool.get_channel(service_location.insecure_address)
