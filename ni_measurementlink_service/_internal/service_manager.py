@@ -2,6 +2,7 @@ import logging
 from typing import Callable, List, Optional
 
 import grpc
+from deprecation import deprecated
 from grpc.framework.foundation import logging_pool
 
 from ni_measurementlink_service._internal.discovery_client import (
@@ -28,28 +29,48 @@ _V2_INTERFACE = "ni.measurementlink.measurement.v2.MeasurementService"
 
 
 class GrpcService:
-    """Class that manages hosting the measurement as service and closing service.
-
-    Attributes:
-        discovery_client (DiscoveryClient, optional): Instance of Discovery Client.
-        Defaults to None.
-    """
+    """Manages the gRPC server lifetime and registration."""
 
     def __init__(self, discovery_client: Optional[DiscoveryClient] = None) -> None:
-        """Initialize Service Manager.
-
-        Args:
-            discovery_client (DiscoveryClient, optional): Instance of Discovery Client.
-            Defaults to None.
-
-            servicer(MeasurementServiceServicer): The gRPC implementation class of the service.
-            Used in tests.
-
-            port(str) : The port number of the hosted service.Used in Tests.
-
-        """
-        self.discovery_client = discovery_client or DiscoveryClient()
+        """Initialize the service."""
+        self._discovery_client = discovery_client or DiscoveryClient()
+        self._server: Optional[grpc.Server] = None
+        self._service_location: Optional[ServiceLocation] = None
         self._registration_id = ""
+
+    @property
+    @deprecated(
+        deprecated_in="1.3.0-dev0",
+        details="This property should not be public and will be removed in a later release.",
+    )
+    def discovery_client(self) -> DiscoveryClient:
+        """Client for accessing the MeasurementLink discovery service."""
+        return self._discovery_client
+
+    @property
+    @deprecated(
+        deprecated_in="1.3.0-dev0",
+        details="Use service_location instead.",
+    )
+    def port(self) -> str:
+        """The insecure port."""
+        return self.service_location.insecure_port
+
+    @property
+    @deprecated(
+        deprecated_in="1.3.0-dev0",
+        details="This property should not be public and will be removed in a later release.",
+    )
+    def server(self) -> Optional[grpc.Server]:
+        """The gRPC server."""
+        return self._server
+
+    @property
+    def service_location(self) -> ServiceLocation:
+        """The location of the service on the network."""
+        if self._service_location is None:
+            raise RuntimeError("Measurement service not running")
+        return self._service_location
 
     def start(
         self,
@@ -59,26 +80,15 @@ class GrpcService:
         output_parameter_list: List[ParameterMetadata],
         measure_function: Callable,
     ) -> str:
-        """Host a gRPC service with the registered measurement method.
-
-        Args:
-            measurement_info (MeasurementInfo): Measurement info
-
-            service_info (ServiceInfo): Service info
-
-            configuration_parameter_list (List): List of configuration parameters.
-
-            output_parameter_list (List): List of output parameters.
-
-            measure_function (Callable): Registered measurement function.
+        """Start the gRPC server and register it with the discovery service.
 
         Returns:
-            int: The port number of the server
+            The insecure port.
         """
         interceptors: List[grpc.ServerInterceptor] = []
         if ServerLogger.is_enabled():
             interceptors.append(ServerLogger())
-        self.server = grpc.server(
+        self._server = grpc.server(
             logging_pool.pool(max_workers=10),
             interceptors=interceptors,
             options=[
@@ -95,7 +105,7 @@ class GrpcService:
                     measure_function,
                 )
                 v1_measurement_service_pb2_grpc.add_MeasurementServiceServicer_to_server(
-                    servicer_v1, self.server
+                    servicer_v1, self._server
                 )
             elif interface == _V2_INTERFACE:
                 servicer_v2 = MeasurementServiceServicerV2(
@@ -105,26 +115,30 @@ class GrpcService:
                     measure_function,
                 )
                 v2_measurement_service_pb2_grpc.add_MeasurementServiceServicer_to_server(
-                    servicer_v2, self.server
+                    servicer_v2, self._server
                 )
             else:
                 raise ValueError(
                     f"Unknown interface was provided in the .serviceconfig file: {interface}"
                 )
-        port = str(self.server.add_insecure_port("[::]:0"))
-        self.server.start()
+        port = str(self._server.add_insecure_port("[::]:0"))
+        self._server.start()
         _logger.info("Measurement service hosted on port: %s", port)
 
-        service_location = ServiceLocation("localhost", port, "")
-        self._registration_id = self.discovery_client.register_service(
-            service_info, service_location
+        self._service_location = ServiceLocation("localhost", port, "")
+        self._registration_id = self._discovery_client.register_service(
+            service_info, self.service_location
         )
-
-        self.port = port
         return port
 
     def stop(self) -> None:
-        """Close the Service after un-registering with discovery service and cleanups."""
-        self.discovery_client.unregister_service(self._registration_id)
-        self.server.stop(5)
+        """Unregister and stop the gRPC server."""
+        if self._registration_id:
+            self._discovery_client.unregister_service(self._registration_id)
+        if self._server is not None:
+            self._server.stop(5)
+
+        self._registration_id = ""
+        self._server = None
+        self._service_location = None
         _logger.info("Measurement service closed.")
