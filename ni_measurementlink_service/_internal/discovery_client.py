@@ -329,7 +329,7 @@ def _start_service(
         try:
             with _open_key_file(str(key_file_path)) as _:
                 return discovery_service_subprocess
-        except IOError:
+        except OSError:
             pass
         if time.time() >= timeout_time:
             raise TimeoutError("Timed out waiting for discovery service to start")
@@ -390,14 +390,17 @@ def _open_key_file(path: str) -> typing.TextIO:
                 None,
             )
         except win32file.error as e:
-            if e.winerror == winerror.ERROR_FILE_NOT_FOUND:
+            if (
+                e.winerror == winerror.ERROR_FILE_NOT_FOUND
+                or e.winerror == winerror.ERROR_PATH_NOT_FOUND
+            ):
                 raise FileNotFoundError(errno.ENOENT, e.strerror, path) from e
             elif (
                 e.winerror == winerror.ERROR_ACCESS_DENIED
                 or e.winerror == winerror.ERROR_SHARING_VIOLATION
             ):
                 raise PermissionError(errno.EACCES, e.strerror, path) from e
-            raise
+            raise WindowsError(errno.ENONET, e.strerror, path) from e
 
         # The CRT file descriptor takes ownership of the Win32 file handle.
         # os.O_TEXT is unnecessary because Python handles newline conversion.
