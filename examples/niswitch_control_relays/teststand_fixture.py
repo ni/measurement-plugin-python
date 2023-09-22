@@ -76,8 +76,6 @@ def destroy_niswitch_sessions() -> None:
         )
         with session_management_client.reserve_all_registered_sessions(
             instrument_type_id=nims.session_management.INSTRUMENT_TYPE_NI_RELAY_DRIVER,
-            # This code module sets up the sessions, so error immediately if they are in use.
-            timeout=0,
         ) as reservation:
             session_management_client.unregister_sessions(reservation.session_info)
 
