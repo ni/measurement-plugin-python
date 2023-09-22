@@ -13,6 +13,7 @@ import click
 import grpc
 import hightime
 import nidcpower
+import nidcpower.session
 import pyvisa
 from _constants import USE_SIMULATION
 from _helpers import (
@@ -174,7 +175,7 @@ def _get_session_info_for_pin(
 
 def _wait_for_source_complete_event(
     measurement_service: nims.MeasurementService,
-    channels: nidcpower._SessionBase,
+    channels: nidcpower.session._SessionBase,
     cancellation_event: threading.Event,
 ) -> None:
     deadline = time.time() + measurement_service.context.time_remaining
