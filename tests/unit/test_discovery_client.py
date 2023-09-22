@@ -228,7 +228,7 @@ def test___get_discovery_service_address___start_service_jit___returns_expected_
     assert _TEST_SERVICE_PORT in discovery_service_address
 
 
-def test___open_key_file_that_throws_ioerror___get_discovery_service_address___throws_timeouterror(
+def test___get_discovery_service_address___open_key_file_throws_ioerror___throws_timeouterror(
     mocker: MockerFixture,
     temp_discovery_key_file_path: pathlib.Path,
     temp_registration_json_file_path: pathlib.Path,
@@ -254,7 +254,7 @@ def test___open_key_file_that_throws_ioerror___get_discovery_service_address___t
     assert exc_info.type is TimeoutError
 
 
-def test___open_key_file_that_throws_windowserror___get_discovery_service_address___throws_timeouterror(
+def test___get_discovery_service_address___open_key_file_throws_windowserror___throws_timeouterror(
     mocker: MockerFixture,
     temp_discovery_key_file_path: pathlib.Path,
     temp_registration_json_file_path: pathlib.Path,
