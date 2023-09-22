@@ -1,4 +1,6 @@
 """gRPC servicers for each version of the measurement service interface."""
+from __future__ import annotations
+
 import collections.abc
 import contextlib
 import inspect
@@ -34,7 +36,7 @@ class MeasurementServiceContext:
         self,
         grpc_context: grpc.ServicerContext,
         pin_map_context: PinMapContext,
-        owner: Optional[weakref.ref[object]],
+        owner: Optional[weakref.ReferenceType[object]],
     ) -> None:
         """Initialize the measurement service context."""
         self._grpc_context = grpc_context
