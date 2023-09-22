@@ -9,8 +9,6 @@ from unittest.mock import Mock
 
 import grpc
 import pytest
-from win32 import win32file
-import winerror
 from pytest_mock import MockerFixture
 
 from ni_measurementlink_service._channelpool import GrpcChannelPool
@@ -35,6 +33,10 @@ from ni_measurementlink_service._internal.stubs.ni.measurementlink.discovery.v1.
 )
 from ni_measurementlink_service.measurement.info import MeasurementInfo, ServiceInfo
 from tests.utilities.fake_rpc_error import FakeRpcError
+
+if sys.platform == "win32":
+    import win32file
+    import winerror
 
 _PROVIDED_MEASUREMENT_SERVICES = [
     "ni.measurementlink.measurement.v1.MeasurementService",
@@ -226,12 +228,10 @@ def test___get_discovery_service_address___start_service_jit___returns_expected_
     assert _TEST_SERVICE_PORT in discovery_service_address
 
 
-@pytest.mark.parametrize("key_file_error", [IOError, WindowsError])
-def test___get_discovery_service_address___key_file_not_exist___throws_timeouterror(
+def test___open_key_file_that_throws_IOError___get_discovery_service_address___throws_timeouterror(
     mocker: MockerFixture,
     temp_discovery_key_file_path: pathlib.Path,
     temp_registration_json_file_path: pathlib.Path,
-    key_file_error,
 ):
     mocker.patch(
         "ni_measurementlink_service._internal.discovery_client._get_key_file_path",
@@ -241,8 +241,7 @@ def test___get_discovery_service_address___key_file_not_exist___throws_timeouter
         "ni_measurementlink_service._internal.discovery_client._START_SERVICE_TIMEOUT", 5.0
     )
     mocker.patch(
-        "ni_measurementlink_service._internal.discovery_client._open_key_file",
-        side_effect=key_file_error,
+        "ni_measurementlink_service._internal.discovery_client._open_key_file", side_effect=IOError
     )
     mocker.patch(
         "ni_measurementlink_service._internal.discovery_client._get_registration_json_file_path",
@@ -255,16 +254,49 @@ def test___get_discovery_service_address___key_file_not_exist___throws_timeouter
     assert exc_info.type is TimeoutError
 
 
+def test___open_key_file_that_throws_windowserror___get_discovery_service_address___throws_timeouterror(
+    mocker: MockerFixture,
+    temp_discovery_key_file_path: pathlib.Path,
+    temp_registration_json_file_path: pathlib.Path,
+):
+    if sys.platform != "win32":
+        pytest.skip(f"Platform {sys.platform} is not supported")
+    else:
+        mocker.patch(
+            "ni_measurementlink_service._internal.discovery_client._get_key_file_path",
+            return_value=temp_discovery_key_file_path,
+        )
+        mocker.patch(
+            "ni_measurementlink_service._internal.discovery_client._START_SERVICE_TIMEOUT", 5.0
+        )
+        mocker.patch(
+            "ni_measurementlink_service._internal.discovery_client._open_key_file",
+            side_effect=WindowsError,
+        )
+        mocker.patch(
+            "ni_measurementlink_service._internal.discovery_client._get_registration_json_file_path",
+            return_value=temp_registration_json_file_path,
+        )
+        mocker.patch("subprocess.Popen")
+
+        with pytest.raises(IOError) as exc_info:
+            _get_discovery_service_address()
+        assert exc_info.type is TimeoutError
+
+
 def test___key_file_not_exist___open_key_file___raises_file_not_found_error(
     mocker: MockerFixture, temp_discovery_key_file_path: pathlib.Path
 ):
-    mocker.patch(
-        "win32file.CreateFile",
-        side_effect=win32file.error(winerror.ERROR_PATH_NOT_FOUND, None, None),
-    )
+    if sys.platform != "win32":
+        pytest.skip(f"Platform {sys.platform} is not supported")
+    else:
+        mocker.patch(
+            "win32file.CreateFile",
+            side_effect=win32file.error(winerror.ERROR_PATH_NOT_FOUND, None, None),
+        )
 
-    with pytest.raises(FileNotFoundError):
-        _open_key_file(str(temp_discovery_key_file_path))
+        with pytest.raises(FileNotFoundError):
+            _open_key_file(str(temp_discovery_key_file_path))
 
 
 def test___start_discovery_service___key_file_exist_after_poll___service_start_success(
