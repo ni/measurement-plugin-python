@@ -5,7 +5,7 @@ import pathlib
 import sys
 import threading
 import time
-from typing import Any, Iterable, List, Tuple
+from typing import Any, Dict, Iterable, List, Tuple
 
 import click
 import grpc
@@ -15,16 +15,17 @@ from _constants import USE_SIMULATION
 from _helpers import (
     ServiceOptions,
     configure_logging,
-    create_session_management_client,
-    get_grpc_device_channel,
     get_service_options,
     grpc_device_options,
     use_simulation_option,
     verbosity_option,
 )
-from _nidcpower_helpers import create_session
 
 import ni_measurementlink_service as nims
+from ni_measurementlink_service.session_management import (
+    INSTRUMENT_TYPE_NI_DCPOWER,
+    SessionInformation,
+)
 
 NIDCPOWER_WAIT_FOR_EVENT_TIMEOUT_ERROR_CODE = -1074116059
 NIDCPOWER_TIMEOUT_EXCEEDED_ERROR_CODE = -1074097933
@@ -77,20 +78,13 @@ def measure(
     """Source and measure a DC voltage with an NI SMU."""
     logging.info("Executing measurement: pin_names=%s voltage_level=%g", pin_names, voltage_level)
 
-    session_management_client = create_session_management_client(measurement_service)
-
-    with session_management_client.reserve_session(
-        context=measurement_service.context.pin_map_context,
-        pin_or_relay_names=pin_names,
-        instrument_type_id=nims.session_management.INSTRUMENT_TYPE_NI_DCPOWER,
-        timeout=RESERVATION_TIMEOUT_IN_SECONDS,
-    ) as reservation:
-        grpc_device_channel = get_grpc_device_channel(
-            measurement_service, nidcpower, service_options
-        )
-        with create_session(reservation.session_info, grpc_device_channel) as session:
-            channels = session.channels[reservation.session_info.channel_list]
-            channel_mappings = reservation.session_info.channel_mappings
+    with measurement_service.context.reserve_session(pin_names) as reservation:
+        with reservation.create_session(_create_session, INSTRUMENT_TYPE_NI_DCPOWER) as (
+            session_info,
+            session,
+        ):
+            channels = session.channels[session_info.channel_list]
+            channel_mappings = session_info.channel_mappings
 
             cancellation_event = threading.Event()
             measurement_service.context.add_cancel_callback(cancellation_event.set)
@@ -151,6 +145,26 @@ def measure(
         [m.voltage for m in measured_values],
         [m.current for m in measured_values],
         [m.in_compliance for m in measured_values],
+    )
+
+
+def _create_session(session_info: SessionInformation) -> nidcpower.Session:
+    options: Dict[str, Any] = {}
+    if USE_SIMULATION:
+        options["simulate"] = True
+        options["driver_setup"] = {"Model": "4141"}
+
+    grpc_channel = measurement_service.get_channel(
+        provided_interface=nidcpower.GRPC_SERVICE_INTERFACE_NAME,
+        service_class="ni.measurementlink.v1.grpcdeviceserver",
+    )
+    grpc_options = nidcpower.GrpcSessionOptions(
+        grpc_channel,
+        session_name=session_info.session_name,
+        initialization_behavior=nidcpower.SessionInitializationBehavior.AUTO,
+    )
+    return nidcpower.Session(
+        resource_name=session_info.resource_name, options=options, grpc_options=grpc_options
     )
 
 
