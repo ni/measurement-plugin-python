@@ -5,6 +5,7 @@ import abc
 import logging
 import sys
 import threading
+import types
 import warnings
 from contextlib import AbstractContextManager, ExitStack, contextmanager
 from functools import cached_property
@@ -13,6 +14,7 @@ from typing import (
     TYPE_CHECKING,
     Any,
     Callable,
+    ContextManager,
     Dict,
     Generator,
     Iterable,
@@ -30,6 +32,7 @@ from typing import (
 import grpc
 from deprecation import DeprecatedWarning
 
+from ni_measurementlink_service import _featuretoggles
 from ni_measurementlink_service._channelpool import GrpcChannelPool
 from ni_measurementlink_service._internal.discovery_client import DiscoveryClient
 from ni_measurementlink_service._internal.stubs import session_pb2
@@ -46,6 +49,11 @@ if TYPE_CHECKING:
         from typing import Self
     else:
         from typing_extensions import Self
+
+try:
+    import nidcpower
+except ImportError:
+    nidcpower = None
 
 _logger = logging.getLogger(__name__)
 
@@ -235,6 +243,18 @@ class BaseReservation(abc.ABC):
         """Unreserve sessions."""
         self._session_manager._unreserve_sessions(self._session_info)
 
+    def _get_grpc_channel(self, provided_interface: str, service_class: str = "") -> grpc.Channel:
+        assert self._discovery_client is not None
+        assert self._grpc_channel_pool is not None
+        service_location = self._discovery_client.resolve_service(provided_interface, service_class)
+        return self._grpc_channel_pool.get_channel(service_location.insecure_address)
+
+    def _get_grpc_device_channel(self, driver_module: types.ModuleType) -> grpc.Channel:
+        return self._get_grpc_channel(
+            provided_interface=getattr(driver_module, "GRPC_SERVICE_INTERFACE_NAME"),
+            service_class="ni.measurementlink.v1.grpcdeviceserver",
+        )
+
 
 TSession = TypeVar("TSession", bound=AbstractContextManager)
 
@@ -248,41 +268,85 @@ class SingleSessionReservation(BaseReservation):
         assert len(self._session_info) == 1
         return _convert_session_info_from_grpc(self._session_info[0])
 
-    @contextmanager
-    def create_session(
-        self,
-        session_constructor: Callable[[SessionInformation], TSession],
-        instrument_type_id: str,
-    ) -> Generator[Tuple[SessionInformation, TSession], None, None]:
-        """Create an instrument session.
+    if _featuretoggles.SESSION_MANAGEMENT_2024Q1:
 
-        This is a generic method that supports any instrument driver.
+        @contextmanager
+        def create_session(
+            self,
+            session_constructor: Callable[[SessionInformation], TSession],
+            instrument_type_id: str,
+        ) -> Generator[Tuple[SessionInformation, TSession], None, None]:
+            """Create a single instrument session.
 
-        Args:
-            session_constructor: A function that constructs sessions based on session information.
+            This is a generic method that supports any instrument driver.
 
-            instrument_type_id: Instrument type ID for the session.
+            Args:
+                session_constructor: A function that constructs sessions based on session
+                    information.
 
-                For NI instruments, use instrument type id constants, such as
-                :py:const:`INSTRUMENT_TYPE_NI_DCPOWER` or :py:const:`INSTRUMENT_TYPE_NI_DMM`.
+                instrument_type_id: Instrument type ID for the session.
 
-                For custom instruments, use the instrument type id defined in the pin map file.
+                    For NI instruments, use instrument type id constants, such as
+                    :py:const:`INSTRUMENT_TYPE_NI_DCPOWER` or :py:const:`INSTRUMENT_TYPE_NI_DMM`.
 
-        Returns:
-            A context manager that yields the session information and session object.
-        """
-        session_info = self.session_info
-        if session_info.instrument_type_id != instrument_type_id:
-            raise RuntimeError(f"No sessions matched instrument type ID '{instrument_type_id}'")
-        if session_info.session_name in self._sessions:
-            raise RuntimeError(f"Session '{session_info.session_name}' already exists.")
+                    For custom instruments, use the instrument type id defined in the pin map file.
 
-        with session_constructor(session_info) as session:
-            self._sessions[session_info.session_name] = session
-            try:
-                yield (session_info, session)
-            finally:
-                del self._sessions[session_info.session_name]
+            Returns:
+                A context manager that yields the session information and session object.
+            """
+            session_info = self.session_info
+            if session_info.instrument_type_id != instrument_type_id:
+                raise RuntimeError(f"No sessions matched instrument type ID '{instrument_type_id}'")
+            if session_info.session_name in self._sessions:
+                raise RuntimeError(f"Session '{session_info.session_name}' already exists.")
+
+            with session_constructor(session_info) as session:
+                self._sessions[session_info.session_name] = session
+                try:
+                    yield (session_info, session)
+                finally:
+                    del self._sessions[session_info.session_name]
+
+    if _featuretoggles.SESSION_MANAGEMENT_2024Q1 and nidcpower:
+
+        def create_nidcpower_session(
+            self,
+            reset: bool = False,
+            options: Dict[str, Any] = {},
+            initialization_behavior: nidcpower.SessionInitializationBehavior = nidcpower.SessionInitializationBehavior.AUTO,
+        ) -> ContextManager[Tuple[SessionInformation, nidcpower.Session]]:
+            """Create a single NI-DCPower instrument session.
+
+            For more details regarding constructor parameters, see :py:class:`nidcpower.Session`.
+
+            Args:
+                reset: Specifies whether to reset channel(s) during the initialization procedure.
+
+                options: Specifies the initial value of certain properties for the session.
+
+                initialization_behavior: Specifies whether it is acceptable to initialize a new
+                    session or attach to an existing one, or if only one of the behaviors is
+                    desired. The driver session exists on the NI gRPC Device Server.
+
+            Returns:
+                A context manager that yields the session information and session object.
+            """
+            grpc_channel = self._get_grpc_device_channel(nidcpower)
+
+            def _create_session(session_info: SessionInformation) -> nidcpower.Session:
+                grpc_options = nidcpower.GrpcSessionOptions(
+                    grpc_channel,
+                    session_name=session_info.session_name,
+                    initialization_behavior=initialization_behavior,
+                )
+                return nidcpower.Session(
+                    resource_name=session_info.resource_name,
+                    reset=reset,
+                    options=options,
+                    grpc_options=grpc_options,
+                )
+
+            return self.create_session(_create_session, INSTRUMENT_TYPE_NI_DCPOWER)
 
 
 class MultiSessionReservation(BaseReservation):
@@ -293,51 +357,96 @@ class MultiSessionReservation(BaseReservation):
         """Multiple session information objects."""
         return [_convert_session_info_from_grpc(info) for info in self._session_info]
 
-    @contextmanager
-    def create_sessions(
-        self,
-        session_constructor: Callable[[SessionInformation], TSession],
-        instrument_type_id: str,
-    ) -> Generator[Sequence[Tuple[SessionInformation, TSession]], None, None]:
-        """Create instrument sessions.
+    if _featuretoggles.SESSION_MANAGEMENT_2024Q1:
 
-        This is a generic method that supports any instrument driver.
+        @contextmanager
+        def create_sessions(
+            self,
+            session_constructor: Callable[[SessionInformation], TSession],
+            instrument_type_id: str,
+        ) -> Generator[Sequence[Tuple[SessionInformation, TSession]], None, None]:
+            """Create multiple instrument sessions.
 
-        Args:
-            session_constructor: A function that constructs sessions based on session information.
+            This is a generic method that supports any instrument driver.
 
-            instrument_type_id: Instrument type ID for the session.
+            Args:
+                session_constructor: A function that constructs sessions based on session
+                    information.
 
-                For NI instruments, use instrument type id constants, such as
-                :py:const:`INSTRUMENT_TYPE_NI_DCPOWER` or :py:const:`INSTRUMENT_TYPE_NI_DMM`.
+                instrument_type_id: Instrument type ID for the session.
 
-                For custom instruments, use the instrument type id defined in the pin map file.
+                    For NI instruments, use instrument type id constants, such as
+                    :py:const:`INSTRUMENT_TYPE_NI_DCPOWER` or :py:const:`INSTRUMENT_TYPE_NI_DMM`.
 
-        Returns:
-            A context manager that yields a sequence of tuples of session information and session
-            objects.
-        """
-        matching_session_infos = [
-            info for info in self.session_info if info.instrument_type_id == instrument_type_id
-        ]
-        if not matching_session_infos:
-            raise RuntimeError(f"No sessions matched instrument type ID '{instrument_type_id}'")
+                    For custom instruments, use the instrument type id defined in the pin map file.
 
-        for session_info in matching_session_infos:
-            if session_info.session_name in self._sessions:
-                raise RuntimeError(f"Session '{session_info.session_name}' already exists.")
+            Returns:
+                A context manager that yields a sequence of tuples of session information and
+                session objects.
+            """
+            matching_session_infos = [
+                info for info in self.session_info if info.instrument_type_id == instrument_type_id
+            ]
+            if not matching_session_infos:
+                raise RuntimeError(f"No sessions matched instrument type ID '{instrument_type_id}'")
 
-        with ExitStack() as stack:
-            session_tuples: List[Tuple[SessionInformation, TSession]] = []
             for session_info in matching_session_infos:
-                session = stack.enter_context(session_constructor(session_info))
-                session_tuples.append((session_info, session))
-                self._sessions[session_info.session_name] = session
-            try:
-                yield session_tuples
-            finally:
+                if session_info.session_name in self._sessions:
+                    raise RuntimeError(f"Session '{session_info.session_name}' already exists.")
+
+            with ExitStack() as stack:
+                session_tuples: List[Tuple[SessionInformation, TSession]] = []
                 for session_info in matching_session_infos:
-                    del self._sessions[session_info.session_name]
+                    session = stack.enter_context(session_constructor(session_info))
+                    session_tuples.append((session_info, session))
+                    self._sessions[session_info.session_name] = session
+                try:
+                    yield session_tuples
+                finally:
+                    for session_info in matching_session_infos:
+                        del self._sessions[session_info.session_name]
+
+    if _featuretoggles.SESSION_MANAGEMENT_2024Q1 and nidcpower:
+
+        def create_nidcpower_sessions(
+            self,
+            reset: bool = False,
+            options: Dict[str, Any] = {},
+            initialization_behavior: nidcpower.SessionInitializationBehavior = nidcpower.SessionInitializationBehavior.AUTO,
+        ) -> ContextManager[Sequence[Tuple[SessionInformation, nidcpower.Session]]]:
+            """Create multiple NI-DCPower instrument sessions.
+
+            For more details regarding constructor parameters, see :py:class:`nidcpower.Session`.
+
+            Args:
+                reset: Specifies whether to reset channel(s) during the initialization procedure.
+
+                options: Specifies the initial value of certain properties for the session.
+
+                initialization_behavior: Specifies whether it is acceptable to initialize a new
+                    session or attach to an existing one, or if only one of the behaviors is
+                    desired. The driver session exists on the NI gRPC Device Server.
+
+            Returns:
+                A context manager that yields a sequence of tuples of session information and
+                session objects.
+            """
+            grpc_channel = self._get_grpc_device_channel(nidcpower)
+
+            def _create_session(session_info: SessionInformation) -> nidcpower.Session:
+                grpc_options = nidcpower.GrpcSessionOptions(
+                    grpc_channel,
+                    session_name=session_info.session_name,
+                    initialization_behavior=initialization_behavior,
+                )
+                return nidcpower.Session(
+                    resource_name=session_info.resource_name,
+                    reset=reset,
+                    options=options,
+                    grpc_options=grpc_options,
+                )
+
+            return self.create_sessions(_create_session, INSTRUMENT_TYPE_NI_DCPOWER)
 
 
 def __getattr__(name: str) -> Any:
@@ -463,7 +572,12 @@ class SessionManagementClient(object):
                 f"{len(session_info)} sessions."
             )
         else:
-            return SingleSessionReservation(session_manager=self, session_info=session_info)
+            return SingleSessionReservation(
+                session_manager=self,
+                session_info=session_info,
+                discovery_client=self._discovery_client,
+                grpc_channel_pool=self._grpc_channel_pool,
+            )
 
     def reserve_sessions(
         self,
@@ -510,7 +624,12 @@ class SessionManagementClient(object):
         session_info = self._reserve_sessions(
             context, pin_or_relay_names, instrument_type_id, timeout
         )
-        return MultiSessionReservation(session_manager=self, session_info=session_info)
+        return MultiSessionReservation(
+            session_manager=self,
+            session_info=session_info,
+            discovery_client=self._discovery_client,
+            grpc_channel_pool=self._grpc_channel_pool,
+        )
 
     def _reserve_sessions(
         self,

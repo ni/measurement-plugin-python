@@ -88,6 +88,7 @@ module = [
   # https://github.com/briancurtin/deprecation/issues/56 - Add type information (PEP 561)
   "deprecation.*",
   "grpc.framework.foundation.*",
+  "nidcpower.*",
   # https://github.com/microsoft/tracelogging/issues/57 - Python traceloggingdynamic package is missing py.typed marker file
   "traceloggingdynamic",
 ]
