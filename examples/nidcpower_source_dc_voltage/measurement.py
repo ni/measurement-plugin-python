@@ -5,7 +5,7 @@ import pathlib
 import sys
 import threading
 import time
-from typing import Any, Dict, Iterable, List, Tuple
+from typing import Any, Iterable, List, Tuple
 
 import click
 import grpc
@@ -22,10 +22,6 @@ from _helpers import (
 )
 
 import ni_measurementlink_service as nims
-from ni_measurementlink_service.session_management import (
-    INSTRUMENT_TYPE_NI_DCPOWER,
-    SessionInformation,
-)
 
 NIDCPOWER_WAIT_FOR_EVENT_TIMEOUT_ERROR_CODE = -1074116059
 NIDCPOWER_TIMEOUT_EXCEEDED_ERROR_CODE = -1074097933
@@ -78,11 +74,12 @@ def measure(
     """Source and measure a DC voltage with an NI SMU."""
     logging.info("Executing measurement: pin_names=%s voltage_level=%g", pin_names, voltage_level)
 
+    options = {}
+    if USE_SIMULATION:
+        options = {"simulate": True, "driver_setup": {"Model": "4141"}}
+
     with measurement_service.context.reserve_session(pin_names) as reservation:
-        with reservation.create_session(_create_session, INSTRUMENT_TYPE_NI_DCPOWER) as (
-            session_info,
-            session,
-        ):
+        with reservation.create_nidcpower_session(options=options) as (session_info, session):
             channels = session.channels[session_info.channel_list]
             channel_mappings = session_info.channel_mappings
 
@@ -145,26 +142,6 @@ def measure(
         [m.voltage for m in measured_values],
         [m.current for m in measured_values],
         [m.in_compliance for m in measured_values],
-    )
-
-
-def _create_session(session_info: SessionInformation) -> nidcpower.Session:
-    options: Dict[str, Any] = {}
-    if USE_SIMULATION:
-        options["simulate"] = True
-        options["driver_setup"] = {"Model": "4141"}
-
-    grpc_channel = measurement_service.get_channel(
-        provided_interface=nidcpower.GRPC_SERVICE_INTERFACE_NAME,
-        service_class="ni.measurementlink.v1.grpcdeviceserver",
-    )
-    grpc_options = nidcpower.GrpcSessionOptions(
-        grpc_channel,
-        session_name=session_info.session_name,
-        initialization_behavior=nidcpower.SessionInitializationBehavior.AUTO,
-    )
-    return nidcpower.Session(
-        resource_name=session_info.resource_name, options=options, grpc_options=grpc_options
     )
 
 
