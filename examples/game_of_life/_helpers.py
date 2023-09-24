@@ -27,15 +27,12 @@ class ServiceOptions(NamedTuple):
     use_grpc_device: bool = False
     grpc_device_address: str = ""
 
-    use_simulation: bool = False
-
 
 def get_service_options(**kwargs: Any) -> ServiceOptions:
     """Get service options from keyword arguments."""
     return ServiceOptions(
         use_grpc_device=kwargs.get("use_grpc_device", False),
         grpc_device_address=kwargs.get("grpc_device_address", ""),
-        use_simulation=kwargs.get("use_simulation", False),
     )
 
 
@@ -211,16 +208,6 @@ def grpc_device_options(func: F) -> F:
         help="NI gRPC Device Server address (e.g. localhost:31763). If unspecified, use the discovery service to resolve the address.",
     )
     return grpc_device_address_option(use_grpc_device_option(func))
-
-
-def use_simulation_option(default: bool) -> Callable[[F], F]:
-    """Decorator for --use-simulation command line option."""
-    return click.option(
-        "--use-simulation/--no-use-simulation",
-        default=default,
-        is_flag=True,
-        help="Use simulated instruments.",
-    )
 
 
 def get_grpc_device_channel(

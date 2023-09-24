@@ -23,7 +23,6 @@ from _helpers import (
     get_service_options,
     get_session_and_channel_for_pin,
     grpc_device_options,
-    use_simulation_option,
     verbosity_option,
 )
 from _visa_helpers import check_instrument_error, log_instrument_id, reset_instrument
@@ -126,10 +125,10 @@ def measure(
         source_session_info = _get_session_info_for_pin(reservation.session_info, input_pin)
         measure_session_info = _get_session_info_for_pin(reservation.session_info, output_pin)
         with _nidcpower_helpers.create_session(
-            source_session_info, service_options.use_simulation, grpc_device_channel
+            source_session_info, USE_SIMULATION, grpc_device_channel
         ) as source_session, _visa_helpers.create_session(
             measure_session_info.resource_name,
-            use_simulation=service_options.use_simulation,
+            use_simulation=USE_SIMULATION,
         ) as measure_session:
             cancellation_event = threading.Event()
             measurement_service.context.add_cancel_callback(cancellation_event.set)
@@ -218,7 +217,6 @@ def _wait_for_source_complete_event(
 @click.command
 @verbosity_option
 @grpc_device_options
-@use_simulation_option(default=USE_SIMULATION)
 def main(verbosity: int, **kwargs: Any) -> None:
     """Source DC voltage as input with an NI SMU and measure output using NI-VISA DMM."""
     configure_logging(verbosity)

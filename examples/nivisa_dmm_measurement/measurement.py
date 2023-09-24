@@ -14,7 +14,6 @@ from _helpers import (
     configure_logging,
     create_session_management_client,
     get_service_options,
-    use_simulation_option,
     verbosity_option,
 )
 from _visa_helpers import (
@@ -93,7 +92,7 @@ def measure(
         instrument_type_id=INSTRUMENT_TYPE_DMM_SIMULATOR,
         timeout=RESERVATION_TIMEOUT_IN_SECONDS,
     ) as reservation:
-        resource_manager = create_visa_resource_manager(service_options.use_simulation)
+        resource_manager = create_visa_resource_manager(USE_SIMULATION)
         with create_visa_session(
             resource_manager, reservation.session_info.resource_name
         ) as session:
@@ -124,7 +123,6 @@ def measure(
 
 @click.command
 @verbosity_option
-@use_simulation_option(default=USE_SIMULATION)
 def main(verbosity: int, **kwargs: Any) -> None:
     """Perform a DMM measurement using NI-VISA and an NI Instrument Simulator v2.0."""
     configure_logging(verbosity)
