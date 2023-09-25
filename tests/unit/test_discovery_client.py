@@ -257,7 +257,7 @@ def test___get_discovery_service_address___key_file_not_exist___throws_timeouter
     "windows_error_code", [2, 3]
 )  # ERROR_FILE_NOT_FOUND = 2, ERROR_PATH_NOT_FOUND = 3
 def test___key_file_not_exist___open_key_file___raises_file_not_found_error(
-    mocker: MockerFixture, temp_discovery_key_file_path: pathlib.Path, windows_error_code
+    mocker: MockerFixture, temp_discovery_key_file_path: pathlib.Path, windows_error_code: int
 ) -> None:
     if sys.platform != "win32":
         pytest.skip("Windows-only test")
