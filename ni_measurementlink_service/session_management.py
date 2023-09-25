@@ -361,6 +361,7 @@ class SessionManagementClient(object):
         if len(session_info) == 0:
             raise ValueError("No sessions reserved. Expected single session, got 0 sessions.")
         elif len(session_info) > 1:
+            self._unreserve_sessions(session_info)
             raise ValueError(
                 "Too many sessions reserved. Expected single session, got "
                 f"{len(session_info)} sessions."
