@@ -12,6 +12,7 @@ from pytest_mock import MockerFixture
 from ni_measurementlink_service._internal.discovery_client import (
     DiscoveryClient,
     _get_discovery_service_address,
+    _open_key_file,
     _start_service,
 )
 from ni_measurementlink_service._internal.stubs.ni.measurementlink.discovery.v1.discovery_service_pb2_grpc import (
@@ -19,6 +20,9 @@ from ni_measurementlink_service._internal.stubs.ni.measurementlink.discovery.v1.
 )
 from ni_measurementlink_service.measurement.info import MeasurementInfo, ServiceInfo
 from tests.utilities.fake_discovery_service import FakeDiscoveryServiceStub
+
+if sys.platform == "win32":
+    import win32file
 
 _PROVIDED_MEASUREMENT_SERVICES = [
     "ni.measurementlink.measurement.v1.MeasurementService",
@@ -129,7 +133,7 @@ def test___get_discovery_service_address___key_file_not_exist___throws_timeouter
         "ni_measurementlink_service._internal.discovery_client._START_SERVICE_TIMEOUT", 5.0
     )
     mocker.patch(
-        "ni_measurementlink_service._internal.discovery_client._open_key_file", side_effect=IOError
+        "ni_measurementlink_service._internal.discovery_client._open_key_file", side_effect=OSError
     )
     mocker.patch(
         "ni_measurementlink_service._internal.discovery_client._get_registration_json_file_path",
@@ -137,9 +141,27 @@ def test___get_discovery_service_address___key_file_not_exist___throws_timeouter
     )
     mocker.patch("subprocess.Popen")
 
-    with pytest.raises(IOError) as exc_info:
+    with pytest.raises(OSError) as exc_info:
         _get_discovery_service_address()
     assert exc_info.type is TimeoutError
+
+
+@pytest.mark.parametrize(
+    "windows_error_code", [2, 3]
+)  # ERROR_FILE_NOT_FOUND = 2, ERROR_PATH_NOT_FOUND = 3
+def test___key_file_not_exist___open_key_file___raises_file_not_found_error(
+    mocker: MockerFixture, temp_discovery_key_file_path: pathlib.Path, windows_error_code: int
+) -> None:
+    if sys.platform != "win32":
+        pytest.skip("Windows-only test")
+    else:
+        mocker.patch(
+            "win32file.CreateFile",
+            side_effect=win32file.error(windows_error_code, None, None),
+        )
+
+        with pytest.raises(FileNotFoundError):
+            _open_key_file(str(temp_discovery_key_file_path))
 
 
 def test___start_discovery_service___key_file_exist_after_poll___service_start_success(
@@ -152,7 +174,7 @@ def test___start_discovery_service___key_file_exist_after_poll___service_start_s
 
     mocker.patch(
         "ni_measurementlink_service._internal.discovery_client._open_key_file",
-        side_effect=[IOError, IOError, IOError, temp_discovery_key_file_path],
+        side_effect=[OSError, OSError, OSError, temp_discovery_key_file_path],
     )
     mock_popen = mocker.patch("subprocess.Popen")
 
