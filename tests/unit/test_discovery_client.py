@@ -228,7 +228,7 @@ def test___get_discovery_service_address___start_service_jit___returns_expected_
     assert _TEST_SERVICE_PORT in discovery_service_address
 
 
-def test___get_discovery_service_address___open_key_file_throws_ioerror___throws_timeouterror(
+def test___get_discovery_service_address___key_file_not_exist___throws_timeouterror(
     mocker: MockerFixture,
     temp_discovery_key_file_path: pathlib.Path,
     temp_registration_json_file_path: pathlib.Path,
@@ -241,7 +241,7 @@ def test___get_discovery_service_address___open_key_file_throws_ioerror___throws
         "ni_measurementlink_service._internal.discovery_client._START_SERVICE_TIMEOUT", 5.0
     )
     mocker.patch(
-        "ni_measurementlink_service._internal.discovery_client._open_key_file", side_effect=IOError
+        "ni_measurementlink_service._internal.discovery_client._open_key_file", side_effect=OSError
     )
     mocker.patch(
         "ni_measurementlink_service._internal.discovery_client._get_registration_json_file_path",
@@ -249,54 +249,25 @@ def test___get_discovery_service_address___open_key_file_throws_ioerror___throws
     )
     mocker.patch("subprocess.Popen")
 
-    with pytest.raises(IOError) as exc_info:
+    with pytest.raises(OSError) as exc_info:
         _get_discovery_service_address()
     assert exc_info.type is TimeoutError
 
 
-def test___get_discovery_service_address___open_key_file_throws_windowserror___throws_timeouterror(
-    mocker: MockerFixture,
-    temp_discovery_key_file_path: pathlib.Path,
-    temp_registration_json_file_path: pathlib.Path,
-):
-    if sys.platform != "win32":
-        pytest.skip(f"Platform {sys.platform} is not supported")
-    else:
-        mocker.patch(
-            "ni_measurementlink_service._internal.discovery_client._get_key_file_path",
-            return_value=temp_discovery_key_file_path,
-        )
-        mocker.patch(
-            "ni_measurementlink_service._internal.discovery_client._START_SERVICE_TIMEOUT", 5.0
-        )
-        mocker.patch(
-            "ni_measurementlink_service._internal.discovery_client._open_key_file",
-            side_effect=WindowsError,
-        )
-        mocker.patch(
-            "ni_measurementlink_service._internal.discovery_client._get_registration_json_file_path",
-            return_value=temp_registration_json_file_path,
-        )
-        mocker.patch("subprocess.Popen")
-
-        with pytest.raises(IOError) as exc_info:
-            _get_discovery_service_address()
-        assert exc_info.type is TimeoutError
-
-
+@pytest.mark.skipif(sys.platform != "win32", reason="Windows-only test")
+@pytest.mark.parametrize(
+    "windows_error_code", [2, 3]
+)  # ERROR_FILE_NOT_FOUND = 2, ERROR_PATH_NOT_FOUND = 3
 def test___key_file_not_exist___open_key_file___raises_file_not_found_error(
-    mocker: MockerFixture, temp_discovery_key_file_path: pathlib.Path
+    mocker: MockerFixture, temp_discovery_key_file_path: pathlib.Path, windows_error_code
 ):
-    if sys.platform != "win32":
-        pytest.skip(f"Platform {sys.platform} is not supported")
-    else:
-        mocker.patch(
-            "win32file.CreateFile",
-            side_effect=win32file.error(winerror.ERROR_PATH_NOT_FOUND, None, None),
-        )
+    mocker.patch(
+        "win32file.CreateFile",
+        side_effect=win32file.error(windows_error_code, None, None),
+    )
 
-        with pytest.raises(FileNotFoundError):
-            _open_key_file(str(temp_discovery_key_file_path))
+    with pytest.raises(FileNotFoundError):
+        _open_key_file(str(temp_discovery_key_file_path))
 
 
 def test___start_discovery_service___key_file_exist_after_poll___service_start_success(
@@ -309,7 +280,7 @@ def test___start_discovery_service___key_file_exist_after_poll___service_start_s
 
     mocker.patch(
         "ni_measurementlink_service._internal.discovery_client._open_key_file",
-        side_effect=[IOError, IOError, IOError, temp_discovery_key_file_path],
+        side_effect=[OSError, OSError, OSError, temp_discovery_key_file_path],
     )
     mock_popen = mocker.patch("subprocess.Popen")
 

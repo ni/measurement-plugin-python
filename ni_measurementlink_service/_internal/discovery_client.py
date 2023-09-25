@@ -339,7 +339,7 @@ def _start_service(
 def _service_already_running(key_file_path: pathlib.Path) -> bool:
     try:
         _delete_existing_key_file(key_file_path)
-    except IOError:
+    except OSError:
         return True
     return False
 
@@ -394,13 +394,13 @@ def _open_key_file(path: str) -> typing.TextIO:
                 e.winerror == winerror.ERROR_FILE_NOT_FOUND
                 or e.winerror == winerror.ERROR_PATH_NOT_FOUND
             ):
-                raise FileNotFoundError(errno.ENOENT, e.strerror, path) from e
+                raise OSError(errno.ENOENT, e.strerror, path, e.winerror) from e
             elif (
                 e.winerror == winerror.ERROR_ACCESS_DENIED
                 or e.winerror == winerror.ERROR_SHARING_VIOLATION
             ):
-                raise PermissionError(errno.EACCES, e.strerror, path) from e
-            raise WindowsError(errno.ENONET, e.strerror, path) from e
+                raise OSError(errno.EACCES, e.strerror, path, e.winerror) from e
+            raise OSError(None, e.strerror, path, winerror.ERROR_INVALID_FUNCTION) from e
 
         # The CRT file descriptor takes ownership of the Win32 file handle.
         # os.O_TEXT is unnecessary because Python handles newline conversion.
