@@ -253,20 +253,22 @@ def test___get_discovery_service_address___key_file_not_exist___throws_timeouter
     assert exc_info.type is TimeoutError
 
 
-@pytest.mark.skipif(sys.platform != "win32", reason="Windows-only test")
 @pytest.mark.parametrize(
     "windows_error_code", [2, 3]
 )  # ERROR_FILE_NOT_FOUND = 2, ERROR_PATH_NOT_FOUND = 3
 def test___key_file_not_exist___open_key_file___raises_file_not_found_error(
     mocker: MockerFixture, temp_discovery_key_file_path: pathlib.Path, windows_error_code
-):
-    mocker.patch(
-        "win32file.CreateFile",
-        side_effect=win32file.error(windows_error_code, None, None),
-    )
+) -> None:
+    if sys.platform != "win32":
+        pytest.skip("Windows-only test")
+    else:
+        mocker.patch(
+            "win32file.CreateFile",
+            side_effect=win32file.error(windows_error_code, None, None),
+        )
 
-    with pytest.raises(FileNotFoundError):
-        _open_key_file(str(temp_discovery_key_file_path))
+        with pytest.raises(FileNotFoundError):
+            _open_key_file(str(temp_discovery_key_file_path))
 
 
 def test___start_discovery_service___key_file_exist_after_poll___service_start_success(
