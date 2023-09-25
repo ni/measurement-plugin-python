@@ -34,7 +34,7 @@ from ni_measurementlink_service._internal.stubs.ni.measurementlink.discovery.v1.
 from ni_measurementlink_service.measurement.info import MeasurementInfo, ServiceInfo
 from tests.utilities.fake_rpc_error import FakeRpcError
 
-if sys.platform.startswith("win"):
+if sys.platform == "win32":
     import win32file
 
 _PROVIDED_MEASUREMENT_SERVICES = [
