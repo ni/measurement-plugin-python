@@ -188,7 +188,7 @@ def test___service_not_registered___unregister_service_no_args___only_returns_fa
     assert not unregistration_success_flag
 
 
-def test___get_discovery_service_address___start_service_jit___returns_expected_value(
+def test___discovery_service_not_running___get_discovery_service_address___starts_discovery_service(
     mocker: MockerFixture,
     temp_discovery_key_file_path: pathlib.Path,
     temp_registration_json_file_path: pathlib.Path,
@@ -223,7 +223,7 @@ def test___get_discovery_service_address___start_service_jit___returns_expected_
     assert _TEST_SERVICE_PORT in discovery_service_address
 
 
-def test___get_discovery_service_address___key_file_not_exist___throws_timeouterror(
+def test___key_file_never_created___get_discovery_service_address___throws_timeout_error(
     mocker: MockerFixture,
     temp_discovery_key_file_path: pathlib.Path,
     temp_registration_json_file_path: pathlib.Path,
@@ -249,7 +249,7 @@ def test___get_discovery_service_address___key_file_not_exist___throws_timeouter
     assert exc_info.type is TimeoutError
 
 
-def test___start_discovery_service___key_file_exist_after_poll___service_start_success(
+def test___key_file_exist_after_poll___start_discovery_service___discovery_service_started(
     mocker: MockerFixture,
     temp_directory: pathlib.Path,
     temp_discovery_key_file_path: pathlib.Path,
