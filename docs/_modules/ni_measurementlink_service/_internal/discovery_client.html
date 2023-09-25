@@ -34,7 +34,7 @@
             ni_measurementlink_service
           </a>
               <div class="version">
-                1.2.0-dev2
+                1.2.0-dev3
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -95,12 +95,10 @@
 <span class="kn">from</span> <span class="nn">ni_measurementlink_service.measurement.info</span> <span class="kn">import</span> <span class="n">MeasurementInfo</span><span class="p">,</span> <span class="n">ServiceInfo</span>
 
 <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span> <span class="o">==</span> <span class="s2">&quot;win32&quot;</span><span class="p">:</span>
-    <span class="kn">import</span> <span class="nn">errno</span>
     <span class="kn">import</span> <span class="nn">msvcrt</span>
 
     <span class="kn">import</span> <span class="nn">win32con</span>
     <span class="kn">import</span> <span class="nn">win32file</span>
-    <span class="kn">import</span> <span class="nn">winerror</span>
 
 <span class="n">_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 <span class="c1"># Save Popen object to avoid &quot;ResourceWarning: subprocess N is still running&quot;</span>
@@ -343,7 +341,7 @@
     <span class="n">kwargs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span> <span class="o">==</span> <span class="s2">&quot;win32&quot;</span><span class="p">:</span>
         <span class="c1"># Terminating the measurement service should not terminate the discovery service.</span>
-        <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;creationflags&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">CREATE_BREAKAWAY_FROM_JOB</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;creationflags&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">CREATE_BREAKAWAY_FROM_JOB</span> <span class="o">|</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">DETACHED_PROCESS</span>
     <span class="n">discovery_service_subprocess</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span>
         <span class="p">[</span><span class="n">exe_file_path</span><span class="p">],</span>
         <span class="n">cwd</span><span class="o">=</span><span class="n">exe_file_path</span><span class="o">.</span><span class="n">parent</span><span class="p">,</span>
@@ -358,7 +356,7 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="k">with</span> <span class="n">_open_key_file</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">key_file_path</span><span class="p">))</span> <span class="k">as</span> <span class="n">_</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">discovery_service_subprocess</span>
-        <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
+        <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
             <span class="k">pass</span>
         <span class="k">if</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="n">timeout_time</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">TimeoutError</span><span class="p">(</span><span class="s2">&quot;Timed out waiting for discovery service to start&quot;</span><span class="p">)</span>
@@ -368,7 +366,7 @@
 <span class="k">def</span> <span class="nf">_service_already_running</span><span class="p">(</span><span class="n">key_file_path</span><span class="p">:</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">_delete_existing_key_file</span><span class="p">(</span><span class="n">key_file_path</span><span class="p">)</span>
-    <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
+    <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">True</span>
     <span class="k">return</span> <span class="kc">False</span>
 
@@ -419,14 +417,7 @@
                 <span class="kc">None</span><span class="p">,</span>
             <span class="p">)</span>
         <span class="k">except</span> <span class="n">win32file</span><span class="o">.</span><span class="n">error</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">winerror</span> <span class="o">==</span> <span class="n">winerror</span><span class="o">.</span><span class="n">ERROR_FILE_NOT_FOUND</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="n">errno</span><span class="o">.</span><span class="n">ENOENT</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">strerror</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
-            <span class="k">elif</span> <span class="p">(</span>
-                <span class="n">e</span><span class="o">.</span><span class="n">winerror</span> <span class="o">==</span> <span class="n">winerror</span><span class="o">.</span><span class="n">ERROR_ACCESS_DENIED</span>
-                <span class="ow">or</span> <span class="n">e</span><span class="o">.</span><span class="n">winerror</span> <span class="o">==</span> <span class="n">winerror</span><span class="o">.</span><span class="n">ERROR_SHARING_VIOLATION</span>
-            <span class="p">):</span>
-                <span class="k">raise</span> <span class="ne">PermissionError</span><span class="p">(</span><span class="n">errno</span><span class="o">.</span><span class="n">EACCES</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">strerror</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
-            <span class="k">raise</span>
+            <span class="k">raise</span> <span class="ne">OSError</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">strerror</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">winerror</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
 
         <span class="c1"># The CRT file descriptor takes ownership of the Win32 file handle.</span>
         <span class="c1"># os.O_TEXT is unnecessary because Python handles newline conversion.</span>
