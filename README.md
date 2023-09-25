@@ -62,7 +62,7 @@ There are three ways to do this:
 
 ## Examples
 
-The `examples` directory contains example measurements for MeasurementLink 2024 Q1 or later. If
+The `examples` directory contains example measurements for MeasurementLink 2023 Q4 or later. If
 you are using a previous version of MeasurementLink, download the appropriate examples:
 
 - MeasurementLink 2023 Q1: [measurementlink-python-examples-1.0.1.zip](https://github.com/ni/measurementlink-python/releases/download/1.0.1/measurementlink-python-examples-1.0.1.zip)

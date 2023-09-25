@@ -7,7 +7,7 @@ extend_exclude = '*_pb2_grpc.py,*_pb2_grpc.pyi,*_pb2.py,*_pb2.pyi,ni_measurement
 
 [tool.poetry]
 name = "ni_measurementlink_service"
-version = "1.3.0-dev0"
+version = "1.2.0-dev2"
 description = "MeasurementLink Support for Python"
 authors = ["NI <opensource@ni.com>"]
 readme = "README.md" # apply the repo readme to the package as well
@@ -56,13 +56,13 @@ grpc-stubs = "^1.53"
 optional = true
 
 [tool.poetry.group.docs.dependencies]
-Sphinx = ">=5.0.1"
-sphinx-rtd-theme = ">=1.0.0"
-sphinx-autoapi = ">=1.8.4"
-m2r2 = ">=0.3.2"
-toml = ">=0.10.2"
-tomlkit = ">=0.11.0"
-sphinx-click = ">=4.1.0"
+Sphinx = "^5.0.1"
+sphinx-rtd-theme = "^1.0.0"
+sphinx-autoapi = "^1.8.4"
+m2r2 = "^0.3.2"
+toml = "^0.10.2"
+tomlkit = "^0.11.0"
+sphinx-click = "^4.1.0"
 
 [build-system]
 requires = ["poetry-core>=1.2.0"]

@@ -34,7 +34,7 @@
             ni_measurementlink_service
           </a>
               <div class="version">
-                1.2.0-dev1
+                1.2.0-dev2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -73,7 +73,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ni_measurementlink_service.measurement.info</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Contains classes and enums to represent measurement metadata.&quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot;Measurement service metadata classes and enums.&quot;&quot;&quot;</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
 <span class="kn">import</span> <span class="nn">enum</span>
@@ -82,50 +82,56 @@
 
 
 <div class="viewcode-block" id="MeasurementInfo"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/measurement/info/index.html#ni_measurementlink_service.MeasurementInfo">[docs]</a><span class="k">class</span> <span class="nc">MeasurementInfo</span><span class="p">(</span><span class="n">NamedTuple</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class that represents the measurement information.</span>
-
-<span class="sd">    Attributes</span>
-<span class="sd">    ----------</span>
-<span class="sd">        display_name (str): The measurement display name for client to display to user.</span>
-
-<span class="sd">        version (str): The measurement version that helps to</span>
-<span class="sd">        maintain versions of a measurement in future.</span>
-
-<span class="sd">        ui_file_paths (list): Absolute paths of the UI file(s) linked to the measurement.</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A named tuple providing information about a measurement.&quot;&quot;&quot;</span>
 
     <span class="n">display_name</span><span class="p">:</span> <span class="nb">str</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The user visible name of the measurement.&quot;&quot;&quot;</span>
+
     <span class="n">version</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">ui_file_paths</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span></div>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The current version of the measurement.&quot;&quot;&quot;</span>
+
+    <span class="n">ui_file_paths</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Absolute paths to user interface files for the measurement (e.g. ``.measui`` or ``.vi``</span>
+<span class="sd">    files).&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="ServiceInfo"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/measurement/info/index.html#ni_measurementlink_service.ServiceInfo">[docs]</a><span class="k">class</span> <span class="nc">ServiceInfo</span><span class="p">(</span><span class="n">NamedTuple</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class that represents the service information.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A named tuple providing information about a registered service.</span>
 
-<span class="sd">    Attributes</span>
-<span class="sd">    ----------</span>
-<span class="sd">        service_class (str): Service class that the measurement belongs to.</span>
-<span class="sd">        Measurements under same service class expected to perform same logic.</span>
-<span class="sd">        For e.g., different version of measurement can come under same service class.</span>
-
-
-<span class="sd">        description_url (str): Description URL of the measurement.</span>
-
-<span class="sd">        provided_interfaces (List[str]): List of interfaces the service provides.</span>
-<span class="sd">        For e.g., ni.measurementlink.measurement.v2.MeasurementService.</span>
-<span class="sd">        Defaults to [&quot;ni.measurementlink.measurement.v1.MeasurementService&quot;].</span>
-
-<span class="sd">        annotations (Dict[str,str]): Dict that contains extra information of the measurement.</span>
-<span class="sd">        As default we added a (str) description, (str) collection and a (List[str]) list of tags.</span>
-<span class="sd">        Feel free to add your own Annotations as needed.</span>
-
+<span class="sd">    This class is used with the MeasurementLink discovery service when registering and enumerating</span>
+<span class="sd">    services.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">service_class</span><span class="p">:</span> <span class="nb">str</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;&quot;The &quot;class&quot; of a service. The value of this field should be unique for a given interface</span>
+<span class="sd">    in ``provided_interfaces``. In effect, the ``.proto`` service declaration defines the</span>
+<span class="sd">    interface, and this field defines a class or concrete type of the interface.&quot;&quot;&quot;</span>
+
     <span class="n">description_url</span><span class="p">:</span> <span class="nb">str</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The URL of a web page that provides a description of the service.&quot;&quot;&quot;</span>
+
     <span class="n">provided_interfaces</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ni.measurementlink.measurement.v1.MeasurementService&quot;</span><span class="p">]</span>
-    <span class="n">annotations</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span></div>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The service interfaces provided by the service. These are gRPC full names for the service.&quot;&quot;&quot;</span>
+
+    <span class="n">annotations</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Represents a set of annotations on the service.</span>
+<span class="sd">    </span>
+<span class="sd">    Well-known annotations:</span>
+
+<span class="sd">    - Description</span>
+<span class="sd">       - Key: &quot;ni/service.description&quot;</span>
+<span class="sd">          - Expected format: string</span>
+<span class="sd">          - Example: &quot;Measure inrush current with a shorted load and validate results against</span>
+<span class="sd">            configured limits.&quot;</span>
+<span class="sd">    - Collection</span>
+<span class="sd">       - Key: &quot;ni/service.collection&quot;</span>
+<span class="sd">          - Expected format: &quot;.&quot; delimited namespace/hierarchy case-insensitive string</span>
+<span class="sd">          - Example: &quot;CurrentTests.Inrush&quot;</span>
+<span class="sd">    - Tags</span>
+<span class="sd">        - Key: &quot;ni/service.tags&quot;</span>
+<span class="sd">           - Expected format: serialized JSON string of an array of strings</span>
+<span class="sd">           - Example: &quot;[\&quot;powerup\&quot;, \&quot;current\&quot;]&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="TypeSpecialization"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/measurement/info/index.html#ni_measurementlink_service.TypeSpecialization">[docs]</a><span class="k">class</span> <span class="nc">TypeSpecialization</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>

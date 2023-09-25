@@ -34,7 +34,7 @@
             ni_measurementlink_service
           </a>
               <div class="version">
-                1.2.0-dev1
+                1.2.0-dev2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -95,6 +95,8 @@
 <span class="kn">from</span> <span class="nn">ni_measurementlink_service.measurement.info</span> <span class="kn">import</span> <span class="n">MeasurementInfo</span><span class="p">,</span> <span class="n">ServiceInfo</span>
 
 <span class="n">_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+<span class="n">_V1_INTERFACE</span> <span class="o">=</span> <span class="s2">&quot;ni.measurementlink.measurement.v1.MeasurementService&quot;</span>
+<span class="n">_V2_INTERFACE</span> <span class="o">=</span> <span class="s2">&quot;ni.measurementlink.measurement.v2.MeasurementService&quot;</span>
 
 
 <div class="viewcode-block" id="GrpcService"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/_internal/service_manager/index.html#ni_measurementlink_service._internal.service_manager.GrpcService">[docs]</a><span class="k">class</span> <span class="nc">GrpcService</span><span class="p">:</span>
@@ -160,24 +162,31 @@
                 <span class="p">(</span><span class="s2">&quot;grpc.max_send_message_length&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
             <span class="p">],</span>
         <span class="p">)</span>
-        <span class="n">servicer_v1</span> <span class="o">=</span> <span class="n">MeasurementServiceServicerV1</span><span class="p">(</span>
-            <span class="n">measurement_info</span><span class="p">,</span>
-            <span class="n">configuration_parameter_list</span><span class="p">,</span>
-            <span class="n">output_parameter_list</span><span class="p">,</span>
-            <span class="n">measure_function</span><span class="p">,</span>
-        <span class="p">)</span>
-        <span class="n">v1_measurement_service_pb2_grpc</span><span class="o">.</span><span class="n">add_MeasurementServiceServicer_to_server</span><span class="p">(</span>
-            <span class="n">servicer_v1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">server</span>
-        <span class="p">)</span>
-        <span class="n">servicer_v2</span> <span class="o">=</span> <span class="n">MeasurementServiceServicerV2</span><span class="p">(</span>
-            <span class="n">measurement_info</span><span class="p">,</span>
-            <span class="n">configuration_parameter_list</span><span class="p">,</span>
-            <span class="n">output_parameter_list</span><span class="p">,</span>
-            <span class="n">measure_function</span><span class="p">,</span>
-        <span class="p">)</span>
-        <span class="n">v2_measurement_service_pb2_grpc</span><span class="o">.</span><span class="n">add_MeasurementServiceServicer_to_server</span><span class="p">(</span>
-            <span class="n">servicer_v2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">server</span>
-        <span class="p">)</span>
+        <span class="k">for</span> <span class="n">interface</span> <span class="ow">in</span> <span class="n">service_info</span><span class="o">.</span><span class="n">provided_interfaces</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">interface</span> <span class="o">==</span> <span class="n">_V1_INTERFACE</span><span class="p">:</span>
+                <span class="n">servicer_v1</span> <span class="o">=</span> <span class="n">MeasurementServiceServicerV1</span><span class="p">(</span>
+                    <span class="n">measurement_info</span><span class="p">,</span>
+                    <span class="n">configuration_parameter_list</span><span class="p">,</span>
+                    <span class="n">output_parameter_list</span><span class="p">,</span>
+                    <span class="n">measure_function</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">v1_measurement_service_pb2_grpc</span><span class="o">.</span><span class="n">add_MeasurementServiceServicer_to_server</span><span class="p">(</span>
+                    <span class="n">servicer_v1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">server</span>
+                <span class="p">)</span>
+            <span class="k">elif</span> <span class="n">interface</span> <span class="o">==</span> <span class="n">_V2_INTERFACE</span><span class="p">:</span>
+                <span class="n">servicer_v2</span> <span class="o">=</span> <span class="n">MeasurementServiceServicerV2</span><span class="p">(</span>
+                    <span class="n">measurement_info</span><span class="p">,</span>
+                    <span class="n">configuration_parameter_list</span><span class="p">,</span>
+                    <span class="n">output_parameter_list</span><span class="p">,</span>
+                    <span class="n">measure_function</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">v2_measurement_service_pb2_grpc</span><span class="o">.</span><span class="n">add_MeasurementServiceServicer_to_server</span><span class="p">(</span>
+                    <span class="n">servicer_v2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">server</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Unknown interface was provided in the .serviceconfig file: </span><span class="si">{</span><span class="n">interface</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
         <span class="n">port</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">add_insecure_port</span><span class="p">(</span><span class="s2">&quot;[::]:0&quot;</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
         <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Measurement service hosted on port: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>

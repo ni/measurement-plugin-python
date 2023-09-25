@@ -1,7 +1,7 @@
 
 ## Example Measurements
 
-These are example measurements for MeasurementLink 2024 Q1 or later.
+These are example measurements for MeasurementLink 2023 Q4 or later.
 
 If you are using a previous version of MeasurementLink, download the appropriate examples:
 
