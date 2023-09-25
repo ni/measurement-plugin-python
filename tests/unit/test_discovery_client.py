@@ -36,7 +36,6 @@ from tests.utilities.fake_rpc_error import FakeRpcError
 
 if sys.platform == "win32":
     import win32file
-    import winerror
 
 _PROVIDED_MEASUREMENT_SERVICES = [
     "ni.measurementlink.measurement.v1.MeasurementService",
