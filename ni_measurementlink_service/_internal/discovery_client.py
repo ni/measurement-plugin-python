@@ -21,12 +21,10 @@ from ni_measurementlink_service._internal.stubs.ni.measurementlink.discovery.v1 
 from ni_measurementlink_service.measurement.info import MeasurementInfo, ServiceInfo
 
 if sys.platform == "win32":
-    import errno
     import msvcrt
 
     import win32con
     import win32file
-    import winerror
 
 _logger = logging.getLogger(__name__)
 # Save Popen object to avoid "ResourceWarning: subprocess N is still running"
@@ -390,17 +388,7 @@ def _open_key_file(path: str) -> typing.TextIO:
                 None,
             )
         except win32file.error as e:
-            if (
-                e.winerror == winerror.ERROR_FILE_NOT_FOUND
-                or e.winerror == winerror.ERROR_PATH_NOT_FOUND
-            ):
-                raise OSError(errno.ENOENT, e.strerror, path, e.winerror) from e
-            elif (
-                e.winerror == winerror.ERROR_ACCESS_DENIED
-                or e.winerror == winerror.ERROR_SHARING_VIOLATION
-            ):
-                raise OSError(errno.EACCES, e.strerror, path, e.winerror) from e
-            raise OSError(None, e.strerror, path, winerror.ERROR_INVALID_FUNCTION) from e
+            raise OSError(None, e.strerror, path, e.winerror) from e
 
         # The CRT file descriptor takes ownership of the Win32 file handle.
         # os.O_TEXT is unnecessary because Python handles newline conversion.
