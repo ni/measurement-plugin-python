@@ -3,7 +3,7 @@ from __future__ import annotations
 import functools
 import sys
 from enum import Enum
-from typing import TYPE_CHECKING, Callable, TypeVar
+from typing import TYPE_CHECKING, Any, Callable, TypeVar
 
 from decouple import config
 
@@ -13,6 +13,7 @@ else:
     from typing_extensions import ParamSpec
 
 if TYPE_CHECKING:
+    _F = TypeVar("_F", bound=Callable[..., Any])
     _P = ParamSpec("_P")
     _T = TypeVar("_T")
 
@@ -51,24 +52,34 @@ class FeatureToggle:
             f"MEASUREMENTLINK_ENABLE_{name}", default=False, cast=bool
         )
 
-    def required(self, func: Callable[_P, _T]) -> Callable[_P, _T]:
-        """Function decorator specifying that this feature is required."""
+    def _raise_if_disabled(self) -> None:
+        if self.is_enabled:
+            return
 
+        env_vars = f"MEASUREMENTLINK_ENABLE_{self.name}"
+        if self.readiness in [CodeReadiness.NEXT_RELEASE, CodeReadiness.INCOMPLETE]:
+            env_vars += f" or MEASUREMENTLINK_ALLOW_{self.readiness.name}"
+        message = (
+            f"The {self.name} feature is not supported at the current code readiness level. "
+            f" To enable it, set {env_vars}."
+        )
+        raise FeatureNotSupportedError(message)
+
+
+def requires_feature(
+    feature_toggle: FeatureToggle,
+) -> Callable[[Callable[_P, _T]], Callable[_P, _T]]:
+    """Function decorator specifying a required feature toggle."""
+
+    def decorator(func: Callable[_P, _T]) -> Callable[_P, _T]:
         @functools.wraps(func)
         def wrapper(*args: _P.args, **kwargs: _P.kwargs) -> _T:
-            if not self.is_enabled:
-                message = (
-                    f"The {self.name} feature is not supported at the current code readiness level."
-                )
-                if self.readiness in [CodeReadiness.NEXT_RELEASE, CodeReadiness.INCOMPLETE]:
-                    message += f" To enable it, set MEASUREMENTLINK_ALLOW_{self.readiness.name} or MEASUREMENTLINK_ENABLE_{self.name}"
-                else:
-                    message += f" To enable it, set MEASUREMENTLINK_ENABLE_{self.name}"
-                raise FeatureNotSupportedError(message)
-
+            feature_toggle._raise_if_disabled()
             return func(*args, **kwargs)
 
         return wrapper
+
+    return decorator
 
 
 _ALLOW_INCOMPLETE: bool = config("MEASUREMENTLINK_ALLOW_INCOMPLETE", default=False, cast=bool)

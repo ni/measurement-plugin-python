@@ -8,6 +8,7 @@ from ni_measurementlink_service._featuretoggles import (
     CodeReadiness,
     FeatureNotSupportedError,
     FeatureToggle,
+    requires_feature,
 )
 
 RELEASE_FEATURE = FeatureToggle("INCOMPLETE_FEATURE", CodeReadiness.RELEASE)
@@ -16,7 +17,7 @@ INCOMPLETE_FEATURE = FeatureToggle("INCOMPLETE_FEATURE", CodeReadiness.INCOMPLET
 PROTOTYPE_FEATURE = FeatureToggle("PROTOTYPE_FEATURE", CodeReadiness.PROTOTYPE)
 
 
-@PROTOTYPE_FEATURE.required
+@requires_feature(PROTOTYPE_FEATURE)
 def _prototype_function(x: int, y: str, z: List[int]) -> str:
     return _prototype_function_impl(x, y, z)
 
