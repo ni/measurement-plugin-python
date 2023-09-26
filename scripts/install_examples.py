@@ -57,7 +57,12 @@ def main():
             pyproject_path.write_text(new_pyproject_data)
 
         print(f"Installing dependencies")
-        subprocess.run(["poetry", "-v", "install"], check=True, cwd=install_path, env=clean_env)
+        subprocess.run(
+            ["poetry", "-v", "install", "--only", "main"],
+            check=True,
+            cwd=install_path,
+            env=clean_env,
+        )
 
         print("")
 
