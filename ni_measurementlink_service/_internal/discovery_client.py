@@ -21,12 +21,10 @@ from ni_measurementlink_service._internal.stubs.ni.measurementlink.discovery.v1 
 from ni_measurementlink_service.measurement.info import MeasurementInfo, ServiceInfo
 
 if sys.platform == "win32":
-    import errno
     import msvcrt
 
     import win32con
     import win32file
-    import winerror
 
 _logger = logging.getLogger(__name__)
 # Save Popen object to avoid "ResourceWarning: subprocess N is still running"
@@ -329,7 +327,7 @@ def _start_service(
         try:
             with _open_key_file(str(key_file_path)) as _:
                 return discovery_service_subprocess
-        except IOError:
+        except OSError:
             pass
         if time.time() >= timeout_time:
             raise TimeoutError("Timed out waiting for discovery service to start")
@@ -339,7 +337,7 @@ def _start_service(
 def _service_already_running(key_file_path: pathlib.Path) -> bool:
     try:
         _delete_existing_key_file(key_file_path)
-    except IOError:
+    except OSError:
         return True
     return False
 
@@ -390,14 +388,7 @@ def _open_key_file(path: str) -> typing.TextIO:
                 None,
             )
         except win32file.error as e:
-            if e.winerror == winerror.ERROR_FILE_NOT_FOUND:
-                raise FileNotFoundError(errno.ENOENT, e.strerror, path) from e
-            elif (
-                e.winerror == winerror.ERROR_ACCESS_DENIED
-                or e.winerror == winerror.ERROR_SHARING_VIOLATION
-            ):
-                raise PermissionError(errno.EACCES, e.strerror, path) from e
-            raise
+            raise OSError(None, e.strerror, path, e.winerror) from e
 
         # The CRT file descriptor takes ownership of the Win32 file handle.
         # os.O_TEXT is unnecessary because Python handles newline conversion.
