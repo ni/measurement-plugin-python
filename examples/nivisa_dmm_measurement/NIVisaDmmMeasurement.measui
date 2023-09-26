@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<SourceFile Checksum="48149289EF42D2A23B024F46B74A2234ED6BC230BDE9A43237BE6134C0418398A19960CD1BBB9FC8732C8D4658A2A9FBEC0F31EE282F0EEDB1ED04CC8D5F2BE5" Timestamp="1D9F0ACB4E9D7FA" xmlns="http://www.ni.com/PlatformFramework">
+<SourceFile Checksum="29901652DC38053C5608553C1BB27B37984E75E487149AEB2169D50BDFDF010896FA0B9ACD9632824B213385E278204EFEE1E20A942B4626E727698B76A2E691" Timestamp="1D9F0ADAB2C23DF" xmlns="http://www.ni.com/PlatformFramework">
 	<SourceModelFeatureSet>
 		<ParsableNamespace AssemblyFileVersion="9.9.0.50025" FeatureSetName="Configuration Based Software Core" Name="http://www.ni.com/ConfigurationBasedSoftware.Core" OldestCompatibleVersion="6.3.0.49152" Version="9.8.1.49152" />
 		<ParsableNamespace AssemblyFileVersion="9.9.0.50025" FeatureSetName="LabVIEW Controls" Name="http://www.ni.com/Controls.LabVIEW.Design" OldestCompatibleVersion="8.1.0.49152" Version="8.1.0.49152" />
@@ -17,7 +17,7 @@
 				<Label Height="[float]16" Id="6110b26a8afe4a14b3e3be3bee9d797e" LabelOwner="[UIModel]f00e4a6e2da64780a841bd86ebbe1932" Left="[float]16" Text="[string]Resolution (digits)" Top="[float]73" Width="[float]95" xmlns="http://www.ni.com/PanelCommon" />
 			</ScreenSurfaceCanvas>
 			<Label Height="[float]16" Id="8a81dfd7bc5c46228026d1c21aa98288" LabelOwner="[UIModel]299e88201b64436290271ab48c3f88c1" Left="[float]23" Text="[string]Configuration" Top="[float]120" Width="[float]73" xmlns="http://www.ni.com/PanelCommon" />
-			<ChannelNumericText AdaptsToType="[bool]True" BaseName="[string]Numeric" Channel="[string]{26c56ad8-e31a-456d-979e-87865b3f5c61}/Output/measured_value" Height="[float]51" Id="b8c14ae283ec4bf8ad8a037705e08afc" IsLabelBoundToChannel="[bool]False" IsReadOnly="[bool]True" Label="[UIModel]71a08f4917d143caa1a9edb08cfff3c8" Left="[float]195" MinHeight="[float]51" TabIndex="[int]0" Top="[float]30" UnitAnnotation="[string]" ValueFormatter="[string]DisplayFormat=Automatic:Digits=6:DigitDisplayType=DigitsOfPrecision:MinimumFieldWidth=0:AlwaysShowSign=False:ShowThousandsSeparator=False" ValueType="[Type]Double" Width="[float]215">
+			<ChannelNumericText AdaptsToType="[bool]True" BaseName="[string]Numeric" Channel="[string]{26c56ad8-e31a-456d-979e-87865b3f5c61}/Output/measured_value" Height="[float]51" Id="b8c14ae283ec4bf8ad8a037705e08afc" IsLabelBoundToChannel="[bool]False" IsReadOnly="[bool]True" Label="[UIModel]71a08f4917d143caa1a9edb08cfff3c8" Left="[float]195" MinHeight="[float]51" TabIndex="[int]0" Top="[float]30" UnitAnnotation="[string]" ValueFormatter="[string]DisplayFormat=Automatic:Digits=6:DigitDisplayType=SignificantDigits:MinimumFieldWidth=0:AlwaysShowSign=False:ShowThousandsSeparator=False" ValueType="[Type]Double" Width="[float]215">
 				<FontSetting FontFamily="Segoe UI" FontSize="24" Id="142973a4882412f8a4bf0df63295bf1" xmlns="http://www.ni.com/PlatformFramework" />
 			</ChannelNumericText>
 			<Label Height="[float]16" Id="71a08f4917d143caa1a9edb08cfff3c8" LabelOwner="[UIModel]b8c14ae283ec4bf8ad8a037705e08afc" Left="[float]195" Text="[string]Measured value" Top="[float]10" Width="[float]84" xmlns="http://www.ni.com/PanelCommon" />
