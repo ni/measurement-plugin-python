@@ -117,6 +117,9 @@ def feature_toggles(monkeypatch: pytest.MonkeyPatch, request: pytest.FixtureRequ
 
 def pytest_collection_modifyitems(items: List[pytest.Item]) -> None:
     """Hook to inject fixtures based on marks."""
+    # By default, all features are enabled when running tests.
+    _featuretoggles._CODE_READINESS_LEVEL = CodeReadiness.PROTOTYPE
+
     for item in items:
         if (
             item.get_closest_marker("disable_feature_toggle")

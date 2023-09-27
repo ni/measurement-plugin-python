@@ -26,18 +26,13 @@ def _prototype_function_impl(x: int, y: str, z: List[int]) -> str:
     return ""
 
 
-def test___current_code_readiness_level___is_enabled___reflects_code_readiness_level() -> None:
-    level = get_code_readiness_level()
-
-    assert RELEASE_FEATURE.is_enabled == (level >= CodeReadiness.RELEASE)
-    assert NEXT_RELEASE_FEATURE.is_enabled == (level >= CodeReadiness.NEXT_RELEASE)
-    assert INCOMPLETE_FEATURE.is_enabled == (level >= CodeReadiness.INCOMPLETE)
-    assert PROTOTYPE_FEATURE.is_enabled == (level >= CodeReadiness.PROTOTYPE)
-
-
-@pytest.mark.use_code_readiness(CodeReadiness.PROTOTYPE)
-def test___use_prototype_readiness___get_code_readiness_level___equals_prototype() -> None:
+def test___default_code_readiness_level___get_code_readiness_level___equals_prototype() -> None:
     assert get_code_readiness_level() == CodeReadiness.PROTOTYPE
+
+
+@pytest.mark.use_code_readiness(CodeReadiness.RELEASE)
+def test___use_release_readiness___get_code_readiness_level___equals_release() -> None:
+    assert get_code_readiness_level() == CodeReadiness.RELEASE
 
 
 @pytest.mark.use_code_readiness(CodeReadiness.NEXT_RELEASE)
@@ -45,12 +40,19 @@ def test___use_next_release_readiness___get_code_readiness_level___equals_next_r
     assert get_code_readiness_level() == CodeReadiness.NEXT_RELEASE
 
 
-@pytest.mark.use_code_readiness(CodeReadiness.PROTOTYPE)
-def test___prototype_readiness_level___is_enabled___reflects_code_readiness_level() -> None:
+def test___default_code_readiness_level___is_enabled___returns_true() -> None:
     assert RELEASE_FEATURE.is_enabled
     assert NEXT_RELEASE_FEATURE.is_enabled
     assert INCOMPLETE_FEATURE.is_enabled
     assert PROTOTYPE_FEATURE.is_enabled
+
+
+@pytest.mark.use_code_readiness(CodeReadiness.INCOMPLETE)
+def test___use_incomplete_readiness___is_enabled___reflects_code_readiness_level() -> None:
+    assert RELEASE_FEATURE.is_enabled
+    assert NEXT_RELEASE_FEATURE.is_enabled
+    assert INCOMPLETE_FEATURE.is_enabled
+    assert not PROTOTYPE_FEATURE.is_enabled
 
 
 @pytest.mark.use_code_readiness(CodeReadiness.RELEASE)
