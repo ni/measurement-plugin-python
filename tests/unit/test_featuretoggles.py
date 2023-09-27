@@ -11,7 +11,7 @@ from ni_measurementlink_service._featuretoggles import (
     requires_feature,
 )
 
-RELEASE_FEATURE = FeatureToggle("INCOMPLETE_FEATURE", CodeReadiness.RELEASE)
+RELEASE_FEATURE = FeatureToggle("RELEASE_FEATURE", CodeReadiness.RELEASE)
 NEXT_RELEASE_FEATURE = FeatureToggle("NEXT_RELEASE_FEATURE", CodeReadiness.NEXT_RELEASE)
 INCOMPLETE_FEATURE = FeatureToggle("INCOMPLETE_FEATURE", CodeReadiness.INCOMPLETE)
 PROTOTYPE_FEATURE = FeatureToggle("PROTOTYPE_FEATURE", CodeReadiness.PROTOTYPE)
