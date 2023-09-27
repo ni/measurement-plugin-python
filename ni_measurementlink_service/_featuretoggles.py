@@ -13,13 +13,41 @@ if TYPE_CHECKING:
     else:
         from typing_extensions import ParamSpec
 
+    if sys.version_info >= (3, 11):
+        from typing import Self
+    else:
+        from typing_extensions import Self
+
     _P = ParamSpec("_P")
     _T = TypeVar("_T")
 
 _PREFIX = "MEASUREMENTLINK"
 
 
-class CodeReadiness(Enum):
+# Based on the recipe at https://docs.python.org/3/howto/enum.html
+class _OrderedEnum(Enum):
+    def __ge__(self, other: Self) -> bool:
+        if self.__class__ is other.__class__:
+            return self.value >= other.value
+        return NotImplemented
+
+    def __gt__(self, other: Self) -> bool:
+        if self.__class__ is other.__class__:
+            return self.value > other.value
+        return NotImplemented
+
+    def __le__(self, other: Self) -> bool:
+        if self.__class__ is other.__class__:
+            return self.value <= other.value
+        return NotImplemented
+
+    def __lt__(self, other: Self) -> bool:
+        if self.__class__ is other.__class__:
+            return self.value < other.value
+        return NotImplemented
+
+
+class CodeReadiness(_OrderedEnum):
     """Indicates whether code is ready to be supported."""
 
     RELEASE = 0
@@ -34,12 +62,12 @@ def _init_code_readiness_level() -> CodeReadiness:
     )
     if (
         config(f"{_PREFIX}_ALLOW_INCOMPLETE", default=False, cast=bool)
-        and level.value < CodeReadiness.INCOMPLETE.value
+        and level < CodeReadiness.INCOMPLETE
     ):
         level = CodeReadiness.INCOMPLETE
     elif (
         config(f"{_PREFIX}_ALLOW_NEXT_RELEASE", default=False, cast=bool)
-        and level.value < CodeReadiness.NEXT_RELEASE.value
+        and level < CodeReadiness.NEXT_RELEASE
     ):
         level = CodeReadiness.NEXT_RELEASE
     return level
@@ -91,7 +119,7 @@ class FeatureToggle:
         """
         if self._is_enabled_override is not None:
             return self._is_enabled_override
-        return self.readiness.value <= get_code_readiness_level().value
+        return self.readiness <= get_code_readiness_level()
 
     def _raise_if_disabled(self) -> None:
         if self.is_enabled:

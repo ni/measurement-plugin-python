@@ -29,10 +29,10 @@ def _prototype_function_impl(x: int, y: str, z: List[int]) -> str:
 def test___current_code_readiness_level___is_enabled___reflects_code_readiness_level() -> None:
     level = get_code_readiness_level()
 
-    assert RELEASE_FEATURE.is_enabled == (level.value >= CodeReadiness.RELEASE.value)
-    assert NEXT_RELEASE_FEATURE.is_enabled == (level.value >= CodeReadiness.NEXT_RELEASE.value)
-    assert INCOMPLETE_FEATURE.is_enabled == (level.value >= CodeReadiness.INCOMPLETE.value)
-    assert PROTOTYPE_FEATURE.is_enabled == (level.value >= CodeReadiness.PROTOTYPE.value)
+    assert RELEASE_FEATURE.is_enabled == (level >= CodeReadiness.RELEASE)
+    assert NEXT_RELEASE_FEATURE.is_enabled == (level >= CodeReadiness.NEXT_RELEASE)
+    assert INCOMPLETE_FEATURE.is_enabled == (level >= CodeReadiness.INCOMPLETE)
+    assert PROTOTYPE_FEATURE.is_enabled == (level >= CodeReadiness.PROTOTYPE)
 
 
 @pytest.mark.use_code_readiness(CodeReadiness.PROTOTYPE)
