@@ -109,8 +109,7 @@ class MeasurementContext:
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def reserve_session(
         self,
-        pin_or_relay_names: Union[str, Iterable[str], None] = None,
-        instrument_type_id: Optional[str] = None,
+        pin_or_relay_names: Union[str, Iterable[str]],
         timeout: Optional[float] = 0.0,
     ) -> SingleSessionReservation:
         """Reserve a single session.
@@ -122,19 +121,6 @@ class MeasurementContext:
             pin_or_relay_names: One or multiple pins, pin groups, relays, or relay groups to
                 use for the measurement.
 
-                If unspecified, reserve sessions for all pins and relays in the registered pin
-                map resource.
-
-            instrument_type_id: Instrument type ID for the measurement.
-
-                If unspecified, this method reserve sessions for all instrument types connected
-                in the registered pin map resource.
-
-                For NI instruments, use instrument type id constants, such as
-                :py:const:`INSTRUMENT_TYPE_NI_DCPOWER` or :py:const:`INSTRUMENT_TYPE_NI_DMM`.
-
-                For custom instruments, use the instrument type id defined in the pin map file.
-
             timeout: Timeout in seconds.
 
                 Allowed values: 0 (non-blocking, fails immediately if resources cannot be
@@ -145,15 +131,16 @@ class MeasurementContext:
             A reservation object with which you can query information about the session and
             unreserve it.
         """
+        if not pin_or_relay_names:
+            raise ValueError("You must specify at least one pin or relay name.")
         return self._measurement_service.session_management_client.reserve_session(
-            self.pin_map_context, pin_or_relay_names, instrument_type_id, timeout
+            self.pin_map_context, pin_or_relay_names, timeout
         )
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def reserve_sessions(
         self,
-        pin_or_relay_names: Union[str, Iterable[str], None] = None,
-        instrument_type_id: Optional[str] = None,
+        pin_or_relay_names: Union[str, Iterable[str]],
         timeout: Optional[float] = 0.0,
     ) -> MultiSessionReservation:
         """Reserve multiple sessions.
@@ -162,24 +149,8 @@ class MeasurementContext:
         information needed to create or access the sessions.
 
         Args:
-            context: Includes the pin map ID for the pin map in the Pin Map Service,
-                as well as the list of sites for the measurement.
-
             pin_or_relay_names: One or multiple pins, pin groups, relays, or relay groups to use
                 for the measurement.
-
-                If unspecified, reserve sessions for all pins and relays in the registered pin
-                map resource.
-
-            instrument_type_id: Instrument type ID for the measurement.
-
-                If unspecified, this method reserves sessions for all instrument types connected
-                in the registered pin map resource.
-
-                For NI instruments, use instrument type id constants, such as
-                :py:const:`INSTRUMENT_TYPE_NI_DCPOWER` or :py:const:`INSTRUMENT_TYPE_NI_DMM`.
-
-                For custom instruments, use the instrument type id defined in the pin map file.
 
             timeout: Timeout in seconds.
 
@@ -191,8 +162,10 @@ class MeasurementContext:
             A reservation object with which you can query information about the sessions and
             unreserve them.
         """
+        if not pin_or_relay_names:
+            raise ValueError("You must specify at least one pin or relay name.")
         return self._measurement_service.session_management_client.reserve_sessions(
-            self.pin_map_context, pin_or_relay_names, instrument_type_id, timeout
+            self.pin_map_context, pin_or_relay_names, timeout
         )
 
 
