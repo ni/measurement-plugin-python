@@ -57,20 +57,12 @@ class CodeReadiness(_OrderedEnum):
 
 
 def _init_code_readiness_level() -> CodeReadiness:
-    level = config(
-        f"{_PREFIX}_CODE_READINESS_LEVEL", default=CodeReadiness.RELEASE, cast=CodeReadiness
-    )
-    if (
-        config(f"{_PREFIX}_ALLOW_INCOMPLETE", default=False, cast=bool)
-        and level < CodeReadiness.INCOMPLETE
-    ):
-        level = CodeReadiness.INCOMPLETE
-    elif (
-        config(f"{_PREFIX}_ALLOW_NEXT_RELEASE", default=False, cast=bool)
-        and level < CodeReadiness.NEXT_RELEASE
-    ):
-        level = CodeReadiness.NEXT_RELEASE
-    return level
+    if config(f"{_PREFIX}_ALLOW_INCOMPLETE", default=False, cast=bool):
+        return CodeReadiness.INCOMPLETE
+    elif config(f"{_PREFIX}_ALLOW_NEXT_RELEASE", default=False, cast=bool):
+        return CodeReadiness.NEXT_RELEASE
+    else:
+        return CodeReadiness.RELEASE
 
 
 # This is not public because `from _featuretoggles import CODE_READINESS_LEVEL`
