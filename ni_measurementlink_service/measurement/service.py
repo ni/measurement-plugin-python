@@ -134,7 +134,7 @@ class MeasurementContext:
         if not pin_or_relay_names:
             raise ValueError("You must specify at least one pin or relay name.")
         return self._measurement_service.session_management_client.reserve_session(
-            self.pin_map_context, pin_or_relay_names, timeout
+            context=self.pin_map_context, pin_or_relay_names=pin_or_relay_names, timeout=timeout
         )
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
@@ -165,7 +165,7 @@ class MeasurementContext:
         if not pin_or_relay_names:
             raise ValueError("You must specify at least one pin or relay name.")
         return self._measurement_service.session_management_client.reserve_sessions(
-            self.pin_map_context, pin_or_relay_names, timeout
+            context=self.pin_map_context, pin_or_relay_names=pin_or_relay_names, timeout=timeout
         )
 
 
