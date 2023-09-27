@@ -3,8 +3,6 @@ import pathlib
 from typing import Iterable, Tuple
 
 import ni_measurementlink_service as nims
-from ni_measurementlink_service import _featuretoggles
-from ni_measurementlink_service.session_management import SessionManagementClient
 
 service_directory = pathlib.Path(__file__).resolve().parent
 measurement_service = nims.MeasurementService(
@@ -30,49 +28,21 @@ def measure(
 ) -> Tuple[str, Iterable[int], Iterable[str], Iterable[str], Iterable[str]]:
     """Pin-aware MeasurementLink test service."""
     pin_map_context = measurement_service.context.pin_map_context
-    if _featuretoggles.SESSION_MANAGEMENT_2024Q1:
-        if multi_session:
-            with measurement_service.context.reserve_sessions(pin_names) as reservation:
-                return (
-                    pin_map_context.pin_map_id,
-                    pin_map_context.sites or [],
-                    [s.session_name for s in reservation.session_info],
-                    [s.resource_name for s in reservation.session_info],
-                    [s.channel_list for s in reservation.session_info],
-                )
-        else:
-            with measurement_service.context.reserve_session(pin_names) as reservation:
-                return (
-                    pin_map_context.pin_map_id,
-                    pin_map_context.sites or [],
-                    [reservation.session_info.resource_name],
-                    [reservation.session_info.resource_name],
-                    [reservation.session_info.channel_list],
-                )
+    if multi_session:
+        with measurement_service.context.reserve_sessions(pin_names) as reservation:
+            return (
+                pin_map_context.pin_map_id,
+                pin_map_context.sites or [],
+                [s.session_name for s in reservation.session_info],
+                [s.resource_name for s in reservation.session_info],
+                [s.channel_list for s in reservation.session_info],
+            )
     else:
-        session_management_client = SessionManagementClient(
-            discovery_client=measurement_service.discovery_client,
-            grpc_channel_pool=measurement_service.channel_pool,
-        )
-        if multi_session:
-            with session_management_client.reserve_sessions(
-                pin_map_context, pin_names
-            ) as reservation:
-                return (
-                    pin_map_context.pin_map_id,
-                    pin_map_context.sites or [],
-                    [s.session_name for s in reservation.session_info],
-                    [s.resource_name for s in reservation.session_info],
-                    [s.channel_list for s in reservation.session_info],
-                )
-        else:
-            with session_management_client.reserve_session(
-                pin_map_context, pin_names
-            ) as reservation:
-                return (
-                    pin_map_context.pin_map_id,
-                    pin_map_context.sites or [],
-                    [reservation.session_info.resource_name],
-                    [reservation.session_info.resource_name],
-                    [reservation.session_info.channel_list],
-                )
+        with measurement_service.context.reserve_session(pin_names) as reservation:
+            return (
+                pin_map_context.pin_map_id,
+                pin_map_context.sites or [],
+                [reservation.session_info.resource_name],
+                [reservation.session_info.resource_name],
+                [reservation.session_info.channel_list],
+            )
