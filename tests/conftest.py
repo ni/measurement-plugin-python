@@ -112,7 +112,7 @@ def feature_toggles(monkeypatch: pytest.MonkeyPatch, request: pytest.FixtureRequ
         elif mark.name == "use_code_readiness":
             code_readiness = mark.args[0]
             assert isinstance(code_readiness, CodeReadiness)
-            monkeypatch.setattr(_featuretoggles, "READINESS_LEVEL", code_readiness)
+            monkeypatch.setattr(_featuretoggles, "_CODE_READINESS_LEVEL", code_readiness)
 
 
 def pytest_collection_modifyitems(items: List[pytest.Item]) -> None:

@@ -3,11 +3,11 @@ from typing import List
 import pytest
 from pytest_mock import MockerFixture
 
-from ni_measurementlink_service import _featuretoggles
 from ni_measurementlink_service._featuretoggles import (
     CodeReadiness,
     FeatureNotSupportedError,
     FeatureToggle,
+    get_code_readiness_level,
     requires_feature,
 )
 
@@ -26,8 +26,8 @@ def _prototype_function_impl(x: int, y: str, z: List[int]) -> str:
     return ""
 
 
-def test___current_readiness_level___is_enabled___reflects_readiness_level() -> None:
-    level = _featuretoggles.READINESS_LEVEL
+def test___current_code_readiness_level___is_enabled___reflects_code_readiness_level() -> None:
+    level = get_code_readiness_level()
 
     assert RELEASE_FEATURE.is_enabled == (level.value >= CodeReadiness.RELEASE.value)
     assert NEXT_RELEASE_FEATURE.is_enabled == (level.value >= CodeReadiness.NEXT_RELEASE.value)
@@ -36,17 +36,17 @@ def test___current_readiness_level___is_enabled___reflects_readiness_level() -> 
 
 
 @pytest.mark.use_code_readiness(CodeReadiness.PROTOTYPE)
-def test___use_prototype_readiness___readiness_level___equals_prototype() -> None:
-    assert _featuretoggles.READINESS_LEVEL == CodeReadiness.PROTOTYPE
+def test___use_prototype_readiness___get_code_readiness_level___equals_prototype() -> None:
+    assert get_code_readiness_level() == CodeReadiness.PROTOTYPE
 
 
 @pytest.mark.use_code_readiness(CodeReadiness.NEXT_RELEASE)
-def test___use_next_release_readiness___readiness_level___equals_next_release() -> None:
-    assert _featuretoggles.READINESS_LEVEL == CodeReadiness.NEXT_RELEASE
+def test___use_next_release_readiness___get_code_readiness_level___equals_next_release() -> None:
+    assert get_code_readiness_level() == CodeReadiness.NEXT_RELEASE
 
 
 @pytest.mark.use_code_readiness(CodeReadiness.PROTOTYPE)
-def test___prototype_readiness_level___is_enabled___reflects_readiness_level() -> None:
+def test___prototype_readiness_level___is_enabled___reflects_code_readiness_level() -> None:
     assert RELEASE_FEATURE.is_enabled
     assert NEXT_RELEASE_FEATURE.is_enabled
     assert INCOMPLETE_FEATURE.is_enabled
@@ -54,7 +54,7 @@ def test___prototype_readiness_level___is_enabled___reflects_readiness_level() -
 
 
 @pytest.mark.use_code_readiness(CodeReadiness.RELEASE)
-def test___release_readiness_level___is_enabled___reflects_readiness_level() -> None:
+def test___release_readiness_level___is_enabled___reflects_code_readiness_level() -> None:
     assert RELEASE_FEATURE.is_enabled
     assert not NEXT_RELEASE_FEATURE.is_enabled
     assert not INCOMPLETE_FEATURE.is_enabled
