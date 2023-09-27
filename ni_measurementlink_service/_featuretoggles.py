@@ -40,25 +40,30 @@ class FeatureToggle:
     readiness: CodeReadiness
     """The code readiness at which this feature is enabled."""
 
-    is_enabled: bool
-    """Indicates whether the feature is currently enabled."""
-
     def __init__(self, name: str, readiness: CodeReadiness) -> None:
         """Initialize the feature toggle."""
         assert name == name.upper()
         self.name = name
         self.readiness = readiness
-        self.is_enabled = readiness.value <= READINESS_LEVEL.value or config(
-            f"MEASUREMENTLINK_ENABLE_{name}", default=False, cast=bool
-        )
+        self._is_enabled_override = None
+        # Only read the env var at initialization time.
+        if config(f"{_ENV_VAR_PREFIX}_ENABLE_{name}", default=False, cast=bool):
+            self._is_enabled_override = True
+
+    @property
+    def is_enabled(self) -> bool:
+        """Indicates whether the feature is currently enabled."""
+        if self._is_enabled_override is not None:
+            return self._is_enabled_override
+        return self.readiness.value <= READINESS_LEVEL.value
 
     def _raise_if_disabled(self) -> None:
         if self.is_enabled:
             return
 
-        env_vars = f"MEASUREMENTLINK_ENABLE_{self.name}"
+        env_vars = f"{_ENV_VAR_PREFIX}_ENABLE_{self.name}"
         if self.readiness in [CodeReadiness.NEXT_RELEASE, CodeReadiness.INCOMPLETE]:
-            env_vars += f" or MEASUREMENTLINK_ALLOW_{self.readiness.name}"
+            env_vars += f" or {_ENV_VAR_PREFIX}_ALLOW_{self.readiness.name}"
         message = (
             f"The {self.name} feature is not supported at the current code readiness level. "
             f" To enable it, set {env_vars}."
@@ -82,8 +87,11 @@ def requires_feature(
     return decorator
 
 
-_ALLOW_INCOMPLETE: bool = config("MEASUREMENTLINK_ALLOW_INCOMPLETE", default=False, cast=bool)
-_ALLOW_NEXT_RELEASE: bool = config("MEASUREMENTLINK_ALLOW_NEXT_RELEASE", default=False, cast=bool)
+_ENV_VAR_PREFIX = "MEASUREMENTLINK"
+_ALLOW_INCOMPLETE: bool = config(f"{_ENV_VAR_PREFIX}_ALLOW_INCOMPLETE", default=False, cast=bool)
+_ALLOW_NEXT_RELEASE: bool = config(
+    f"{_ENV_VAR_PREFIX}_ALLOW_NEXT_RELEASE", default=False, cast=bool
+)
 
 if _ALLOW_INCOMPLETE:
     READINESS_LEVEL = CodeReadiness.INCOMPLETE

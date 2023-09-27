@@ -74,9 +74,10 @@ addopts = "--doctest-modules --strict-markers"
 filterwarnings = ["always::ImportWarning", "always::ResourceWarning"]
 testpaths = ["tests"]
 markers = [
-  "disable_feature_toggle: specifies a feature toggle to disable.",
-  "enable_feature_toggle: specifies a feature toggle to enable.",
+  "disable_feature_toggle: specifies a feature toggle to disable for the test function/module.",
+  "enable_feature_toggle: specifies a feature toggle to enable for the test function/module.",
   "service_class: specifies which test service to use.",
+  "use_code_readiness: specifies a code readiness level to use for the test function/module.",
 ]
 
 [tool.mypy]
