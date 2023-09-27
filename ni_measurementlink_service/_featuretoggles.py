@@ -7,13 +7,12 @@ from typing import TYPE_CHECKING, Any, Callable, TypeVar
 
 from decouple import config
 
-if sys.version_info >= (3, 10):
-    from typing import ParamSpec
-else:
-    from typing_extensions import ParamSpec
-
 if TYPE_CHECKING:
-    _F = TypeVar("_F", bound=Callable[..., Any])
+    if sys.version_info >= (3, 10):
+        from typing import ParamSpec
+    else:
+        from typing_extensions import ParamSpec
+
     _P = ParamSpec("_P")
     _T = TypeVar("_T")
 
