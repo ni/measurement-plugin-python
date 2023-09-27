@@ -3,7 +3,7 @@ from __future__ import annotations
 import functools
 import sys
 from enum import Enum
-from typing import TYPE_CHECKING, Any, Callable, TypeVar
+from typing import TYPE_CHECKING, Callable, TypeVar
 
 from decouple import config
 
@@ -46,7 +46,7 @@ class FeatureToggle:
         self.readiness = readiness
         self._is_enabled_override = None
         # Only read the env var at initialization time.
-        if config(f"{_ENV_VAR_PREFIX}_ENABLE_{name}", default=False, cast=bool):
+        if config(f"{_PREFIX}_ENABLE_{name}", default=False, cast=bool):
             self._is_enabled_override = True
 
     @property
@@ -60,9 +60,9 @@ class FeatureToggle:
         if self.is_enabled:
             return
 
-        env_vars = f"{_ENV_VAR_PREFIX}_ENABLE_{self.name}"
+        env_vars = f"{_PREFIX}_ENABLE_{self.name}"
         if self.readiness in [CodeReadiness.NEXT_RELEASE, CodeReadiness.INCOMPLETE]:
-            env_vars += f" or {_ENV_VAR_PREFIX}_ALLOW_{self.readiness.name}"
+            env_vars += f" or {_PREFIX}_ALLOW_{self.readiness.name}"
         message = (
             f"The {self.name} feature is not supported at the current code readiness level. "
             f" To enable it, set {env_vars}."
@@ -86,11 +86,9 @@ def requires_feature(
     return decorator
 
 
-_ENV_VAR_PREFIX = "MEASUREMENTLINK"
-_ALLOW_INCOMPLETE: bool = config(f"{_ENV_VAR_PREFIX}_ALLOW_INCOMPLETE", default=False, cast=bool)
-_ALLOW_NEXT_RELEASE: bool = config(
-    f"{_ENV_VAR_PREFIX}_ALLOW_NEXT_RELEASE", default=False, cast=bool
-)
+_PREFIX = "MEASUREMENTLINK"
+_ALLOW_INCOMPLETE: bool = config(f"{_PREFIX}_ALLOW_INCOMPLETE", default=False, cast=bool)
+_ALLOW_NEXT_RELEASE: bool = config(f"{_PREFIX}_ALLOW_NEXT_RELEASE", default=False, cast=bool)
 
 if _ALLOW_INCOMPLETE:
     READINESS_LEVEL = CodeReadiness.INCOMPLETE
