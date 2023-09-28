@@ -45,7 +45,7 @@ def test___no_pins___reserve_session___value_error_raised(
     measurement_context = MeasurementContext()
 
     with pytest.raises(ValueError):
-        _ = measurement_context.reserve_session(no_pins)
+        _ = measurement_context.reserve_session(no_pins)  # type: ignore[arg-type]
 
 
 def test___timeout___reserve_session___timeout_specified(
@@ -98,7 +98,7 @@ def test___no_pins___reserve_sessions___value_error_raised(
     measurement_context = MeasurementContext()
 
     with pytest.raises(ValueError):
-        _ = measurement_context.reserve_sessions(no_pins)
+        _ = measurement_context.reserve_sessions(no_pins)  # type: ignore[arg-type]
 
 
 def test___timeout___reserve_sessions___timeout_specified(
