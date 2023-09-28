@@ -18,7 +18,7 @@ def test___single_pin___reserve_session___session_reserved(
     reservation = measurement_context.reserve_session("Pin1")
 
     session_management_client.reserve_session.assert_called_once_with(
-        measurement_service_context.pin_map_context, "Pin1", 0.0
+        context=measurement_service_context.pin_map_context, pin_or_relay_names="Pin1", timeout=0.0
     )
     assert reservation is single_session_reservation
 
@@ -33,7 +33,9 @@ def test___multiple_pins___reserve_session___session_reserved(
     reservation = measurement_context.reserve_session(["Pin1", "Pin2"])
 
     session_management_client.reserve_session.assert_called_once_with(
-        measurement_service_context.pin_map_context, ["Pin1", "Pin2"], 0.0
+        context=measurement_service_context.pin_map_context,
+        pin_or_relay_names=["Pin1", "Pin2"],
+        timeout=0.0,
     )
     assert reservation is single_session_reservation
 
@@ -57,7 +59,7 @@ def test___timeout___reserve_session___timeout_specified(
     _ = measurement_context.reserve_session("Pin1", 10.0)
 
     session_management_client.reserve_session.assert_called_once_with(
-        measurement_service_context.pin_map_context, "Pin1", 10.0
+        context=measurement_service_context.pin_map_context, pin_or_relay_names="Pin1", timeout=10.0
     )
 
 
@@ -71,7 +73,7 @@ def test___single_pin___reserve_sessions___session_reserved(
     reservation = measurement_context.reserve_sessions("Pin1")
 
     session_management_client.reserve_sessions.assert_called_once_with(
-        measurement_service_context.pin_map_context, "Pin1", 0.0
+        context=measurement_service_context.pin_map_context, pin_or_relay_names="Pin1", timeout=0.0
     )
     assert reservation is multi_session_reservation
 
@@ -86,7 +88,9 @@ def test___multiple_pins___reserve_sessions___session_reserved(
     reservation = measurement_context.reserve_sessions(["Pin1", "Pin2"])
 
     session_management_client.reserve_sessions.assert_called_once_with(
-        measurement_service_context.pin_map_context, ["Pin1", "Pin2"], 0.0
+        context=measurement_service_context.pin_map_context,
+        pin_or_relay_names=["Pin1", "Pin2"],
+        timeout=0.0,
     )
     assert reservation is multi_session_reservation
 
@@ -110,5 +114,5 @@ def test___timeout___reserve_sessions___timeout_specified(
     _ = measurement_context.reserve_sessions("Pin1", 10.0)
 
     session_management_client.reserve_sessions.assert_called_once_with(
-        measurement_service_context.pin_map_context, "Pin1", 10.0
+        context=measurement_service_context.pin_map_context, pin_or_relay_names="Pin1", timeout=10.0
     )
