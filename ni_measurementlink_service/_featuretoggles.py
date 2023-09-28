@@ -1,11 +1,12 @@
 from __future__ import annotations
 
 import functools
+import pathlib
 import sys
 from enum import Enum
-from typing import TYPE_CHECKING, Callable, TypeVar
+from typing import TYPE_CHECKING, Callable, Optional, TypeVar
 
-from decouple import config
+from decouple import AutoConfig
 
 if TYPE_CHECKING:
     if sys.version_info >= (3, 10):
@@ -22,6 +23,9 @@ if TYPE_CHECKING:
     _T = TypeVar("_T")
 
 _PREFIX = "MEASUREMENTLINK"
+
+# Search for the `.env` file starting with the current directory.
+_config = AutoConfig(str(pathlib.Path.cwd()))
 
 
 # Based on the recipe at https://docs.python.org/3/howto/enum.html
@@ -57,9 +61,9 @@ class CodeReadiness(_OrderedEnum):
 
 
 def _init_code_readiness_level() -> CodeReadiness:
-    if config(f"{_PREFIX}_ALLOW_INCOMPLETE", default=False, cast=bool):
+    if _config(f"{_PREFIX}_ALLOW_INCOMPLETE", default=False, cast=bool):
         return CodeReadiness.INCOMPLETE
-    elif config(f"{_PREFIX}_ALLOW_NEXT_RELEASE", default=False, cast=bool):
+    elif _config(f"{_PREFIX}_ALLOW_NEXT_RELEASE", default=False, cast=bool):
         return CodeReadiness.NEXT_RELEASE
     else:
         return CodeReadiness.RELEASE
@@ -99,7 +103,7 @@ class FeatureToggle:
         self.readiness = readiness
         self._is_enabled_override = None
         # Only read the env var at initialization time.
-        if config(f"{_PREFIX}_ENABLE_{name}", default=False, cast=bool):
+        if _config(f"{_PREFIX}_ENABLE_{name}", default=False, cast=bool):
             self._is_enabled_override = True
 
     @property
