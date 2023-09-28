@@ -34,10 +34,14 @@ jobs:
         run: poetry install -v
       - name: Lint ni-measurementlink-service
         run: poetry run ni-python-styleguide lint
-      - name: Mypy static analysis (ni-measurementlink-service)
+      - name: Mypy static analysis (ni-measurementlink-service, Linux)
         run:  poetry run mypy -p ni_measurementlink_service
-      - name: Mypy static analysis (tests)
+      - name: Mypy static analysis (ni-measurementlink-service, Windows)
+        run:  poetry run mypy -p ni_measurementlink_service --platform win32
+      - name: Mypy static analysis (tests, Linux)
         run:  poetry run mypy tests
+      - name: Mypy static analysis (tests, Windows)
+        run:  poetry run mypy tests --platform win32
       - name: Install ni-measurementlink-service with docs
         run: poetry install --with docs
       - name: Build docs and check for errors/warnings
