@@ -148,4 +148,4 @@ def requires_feature(
 # --------------------------------------
 
 SESSION_MANAGEMENT_2024Q1 = FeatureToggle("SESSION_MANAGEMENT_2024Q1", CodeReadiness.INCOMPLETE)
-"""Enables simplified session management APIs for the 2024Q1 release."""
+"""Simplified session management APIs for the 2024Q1 release."""
