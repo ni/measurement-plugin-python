@@ -55,6 +55,14 @@ def test___use_incomplete_readiness___is_enabled___reflects_code_readiness_level
     assert not PROTOTYPE_FEATURE.is_enabled
 
 
+@pytest.mark.use_code_readiness(CodeReadiness.NEXT_RELEASE)
+def test___use_next_release_readiness___is_enabled___reflects_code_readiness_level() -> None:
+    assert RELEASE_FEATURE.is_enabled
+    assert NEXT_RELEASE_FEATURE.is_enabled
+    assert not INCOMPLETE_FEATURE.is_enabled
+    assert not PROTOTYPE_FEATURE.is_enabled
+
+
 @pytest.mark.use_code_readiness(CodeReadiness.RELEASE)
 def test___release_readiness_level___is_enabled___reflects_code_readiness_level() -> None:
     assert RELEASE_FEATURE.is_enabled
