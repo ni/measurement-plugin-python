@@ -14,6 +14,7 @@ from typing import (
     Any,
     Callable,
     Dict,
+    Iterable,
     List,
     Literal,
     Optional,
@@ -30,6 +31,7 @@ from ni_measurementlink_service import _datatypeinfo
 from ni_measurementlink_service._channelpool import (  # re-export
     GrpcChannelPool as GrpcChannelPool,
 )
+from ni_measurementlink_service._featuretoggles import requires_feature, SESSION_MANAGEMENT_2024Q1
 from ni_measurementlink_service._internal import grpc_servicer
 from ni_measurementlink_service._internal.discovery_client import (
     DiscoveryClient,
@@ -45,7 +47,12 @@ from ni_measurementlink_service.measurement.info import (
     ServiceInfo,
     TypeSpecialization,
 )
-from ni_measurementlink_service.session_management import PinMapContext
+from ni_measurementlink_service.session_management import (
+    MultiSessionReservation,
+    PinMapContext,
+    SessionManagementClient,
+    SingleSessionReservation,
+)
 
 if TYPE_CHECKING:
     from google.protobuf.internal.enum_type_wrapper import _EnumTypeWrapper
@@ -92,6 +99,74 @@ class MeasurementContext:
     def abort(self, code: grpc.StatusCode, details: str) -> None:
         """Aborts the RPC."""
         grpc_servicer.measurement_service_context.get().abort(code, details)
+
+    @property
+    def _measurement_service(self) -> MeasurementService:
+        owner = grpc_servicer.measurement_service_context.get().owner
+        assert isinstance(owner, MeasurementService)
+        return owner
+
+    @requires_feature(SESSION_MANAGEMENT_2024Q1)
+    def reserve_session(
+        self,
+        pin_or_relay_names: Union[str, Iterable[str]],
+        timeout: Optional[float] = 0.0,
+    ) -> SingleSessionReservation:
+        """Reserve a single session.
+
+        Reserve the session matching the given pins, sites, and instrument type ID and return
+        the information needed to create or access the session.
+
+        Args:
+            pin_or_relay_names: One or multiple pins, pin groups, relays, or relay groups to
+                use for the measurement.
+
+            timeout: Timeout in seconds.
+
+                Allowed values: 0 (non-blocking, fails immediately if resources cannot be
+                reserved), -1 (infinite timeout), or any other positive numeric value (wait for
+                that number of seconds)
+
+        Returns:
+            A reservation object with which you can query information about the session and
+            unreserve it.
+        """
+        if not pin_or_relay_names:
+            raise ValueError("You must specify at least one pin or relay name.")
+        return self._measurement_service.session_management_client.reserve_session(
+            context=self.pin_map_context, pin_or_relay_names=pin_or_relay_names, timeout=timeout
+        )
+
+    @requires_feature(SESSION_MANAGEMENT_2024Q1)
+    def reserve_sessions(
+        self,
+        pin_or_relay_names: Union[str, Iterable[str]],
+        timeout: Optional[float] = 0.0,
+    ) -> MultiSessionReservation:
+        """Reserve multiple sessions.
+
+        Reserve sessions matching the given pins, sites, and instrument type ID and return the
+        information needed to create or access the sessions.
+
+        Args:
+            pin_or_relay_names: One or multiple pins, pin groups, relays, or relay groups to use
+                for the measurement.
+
+            timeout: Timeout in seconds.
+
+                Allowed values: 0 (non-blocking, fails immediately if resources cannot be
+                reserved), -1 (infinite timeout), or any other positive numeric value (wait for
+                that number of seconds)
+
+        Returns:
+            A reservation object with which you can query information about the sessions and
+            unreserve them.
+        """
+        if not pin_or_relay_names:
+            raise ValueError("You must specify at least one pin or relay name.")
+        return self._measurement_service.session_management_client.reserve_sessions(
+            context=self.pin_map_context, pin_or_relay_names=pin_or_relay_names, timeout=timeout
+        )
 
 
 _F = TypeVar("_F", bound=Callable)
@@ -187,6 +262,7 @@ class MeasurementService:
         self._channel_pool: Optional[GrpcChannelPool] = None
         self._discovery_client: Optional[DiscoveryClient] = None
         self._grpc_service: Optional[GrpcService] = None
+        self._session_management_client: Optional[SessionManagementClient] = None
 
     @property
     def channel_pool(self) -> GrpcChannelPool:
@@ -222,6 +298,19 @@ class MeasurementService:
             if self._grpc_service is None:
                 raise RuntimeError("Measurement service not running")
             return self._grpc_service.service_location
+
+    @property
+    @requires_feature(SESSION_MANAGEMENT_2024Q1)
+    def session_management_client(self) -> SessionManagementClient:
+        """Client for accessing the MeasurementLink session management service."""
+        if self._session_management_client is None:
+            with self._initialization_lock:
+                if self._session_management_client is None:
+                    self._session_management_client = SessionManagementClient(
+                        discovery_client=self.discovery_client,
+                        grpc_channel_pool=self.channel_pool,
+                    )
+        return self._session_management_client
 
     def register_measurement(self, measurement_function: _F) -> _F:
         """Register a function as the measurement function for a measurement service.
@@ -382,6 +471,7 @@ class MeasurementService:
                 self.configuration_parameter_list,
                 self.output_parameter_list,
                 self.measure_function,
+                owner=self,
             )
             return self
 

@@ -79,6 +79,7 @@ class GrpcService:
         configuration_parameter_list: List[ParameterMetadata],
         output_parameter_list: List[ParameterMetadata],
         measure_function: Callable,
+        owner: object = None,
     ) -> str:
         """Start the gRPC server and register it with the discovery service.
 
@@ -103,6 +104,7 @@ class GrpcService:
                     configuration_parameter_list,
                     output_parameter_list,
                     measure_function,
+                    owner,
                 )
                 v1_measurement_service_pb2_grpc.add_MeasurementServiceServicer_to_server(
                     servicer_v1, self._server
@@ -113,6 +115,7 @@ class GrpcService:
                     configuration_parameter_list,
                     output_parameter_list,
                     measure_function,
+                    owner,
                 )
                 v2_measurement_service_pb2_grpc.add_MeasurementServiceServicer_to_server(
                     servicer_v2, self._server
