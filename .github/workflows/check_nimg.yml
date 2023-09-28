@@ -38,5 +38,7 @@ jobs:
         run: poetry install -v
       - name: Lint ni-measurementlink-generator
         run: poetry run ni-python-styleguide lint
-      - name: Mypy static analysis (ni-measurementlink-generator)
+      - name: Mypy static analysis (ni-measurementlink-generator, Linux)
         run:  poetry run mypy -p ni_measurementlink_generator
+      - name: Mypy static analysis (ni-measurementlink-generator, Windows)
+        run:  poetry run mypy -p ni_measurementlink_generator --platform win32
