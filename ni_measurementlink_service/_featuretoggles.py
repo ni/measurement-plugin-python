@@ -4,7 +4,7 @@ import functools
 import pathlib
 import sys
 from enum import Enum
-from typing import TYPE_CHECKING, Callable, Optional, TypeVar
+from typing import TYPE_CHECKING, Callable, TypeVar
 
 from decouple import AutoConfig
 
