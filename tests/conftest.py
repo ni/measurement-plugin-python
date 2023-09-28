@@ -1,11 +1,13 @@
 """Pytest configuration file."""
 import pathlib
 import sys
-from typing import Generator
+from typing import Generator, List
 
 import grpc
 import pytest
 
+from ni_measurementlink_service import _featuretoggles
+from ni_measurementlink_service._featuretoggles import CodeReadiness, FeatureToggle
 from ni_measurementlink_service._internal.discovery_client import (
     DiscoveryClient,
     _get_registration_json_file_path,
@@ -95,3 +97,34 @@ def session_management_client(
     return SessionManagementClient(
         discovery_client=discovery_client, grpc_channel_pool=grpc_channel_pool
     )
+
+
+@pytest.fixture
+def feature_toggles(monkeypatch: pytest.MonkeyPatch, request: pytest.FixtureRequest) -> None:
+    """Test fixture that disables or enables feature toggles."""
+    for mark in request.node.iter_markers():
+        if mark.name in ["disable_feature_toggle", "enable_feature_toggle"]:
+            feature_toggle = mark.args[0]
+            assert isinstance(feature_toggle, FeatureToggle)
+            monkeypatch.setattr(
+                feature_toggle, "_is_enabled_override", mark.name == "enable_feature_toggle"
+            )
+        elif mark.name == "use_code_readiness":
+            code_readiness = mark.args[0]
+            assert isinstance(code_readiness, CodeReadiness)
+            monkeypatch.setattr(_featuretoggles, "_CODE_READINESS_LEVEL", code_readiness)
+
+
+def pytest_collection_modifyitems(items: List[pytest.Item]) -> None:
+    """Hook to inject fixtures based on marks."""
+    # By default, all features are enabled when running tests.
+    _featuretoggles._CODE_READINESS_LEVEL = CodeReadiness.PROTOTYPE
+
+    for item in items:
+        if (
+            item.get_closest_marker("disable_feature_toggle")
+            or item.get_closest_marker("enable_feature_toggle")
+            or item.get_closest_marker("use_code_readiness")
+        ):
+            assert hasattr(item, "fixturenames")
+            item.fixturenames.append("feature_toggles")
