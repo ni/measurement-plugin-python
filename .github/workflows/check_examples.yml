@@ -38,12 +38,21 @@ jobs:
             popd
             echo "::endgroup::"
           done
-      - name: Mypy static analysis (examples)
+      - name: Mypy static analysis (examples, Linux)
         run: |
           for example in examples/*/; do
             echo "::group::$example"
             pushd $example
             poetry run mypy .
+            popd
+            echo "::endgroup::"
+          done
+      - name: Mypy static analysis (examples, Windows)
+        run: |
+          for example in examples/*/; do
+            echo "::group::$example"
+            pushd $example
+            poetry run mypy . --platform win32
             popd
             echo "::endgroup::"
           done

@@ -264,7 +264,7 @@ def test___key_file_not_exist___open_key_file___raises_file_not_found_error(
     else:
         mocker.patch(
             "win32file.CreateFile",
-            side_effect=win32file.error(windows_error_code, None, None),
+            side_effect=win32file.error(windows_error_code, "CreateFileA", "File not found"),
         )
 
         with pytest.raises(FileNotFoundError):
