@@ -1,6 +1,16 @@
 """Types and submodules for interfacing with driver APIs."""
+from __future__ import annotations
 
-from typing import ClassVar, Generic, Protocol, Type, TypeVar, runtime_checkable
+import contextlib
+from typing import (
+    ClassVar,
+    ContextManager,
+    Generic,
+    Protocol,
+    Type,
+    TypeVar,
+    runtime_checkable,
+)
 
 import grpc
 
@@ -57,3 +67,27 @@ class DriverModule(Protocol, Generic[TSessionInitializationBehavior]):
     ) -> Type[GrpcSessionOptions[TSessionInitializationBehavior]]:
         """The GrpcSessionOptions class for this API."""
         ...
+
+
+TSession = TypeVar("TSession")
+
+
+def closing_session(session: TSession) -> ContextManager[TSession]:
+    """Create a context manager that closes the session.
+
+    Args:
+        session: A driver session.
+
+    Returns:
+        A context manager that yields the session and closes it.
+    """
+    if isinstance(session, contextlib.AbstractContextManager):
+        # Assume the session yields itself.
+        return session
+    elif hasattr(session, "close"):
+        return contextlib.closing(session)
+    else:
+        raise TypeError(
+            f"Invalid session type '{type(session)}'. A session must be a context manager and/or "
+            "have a close() method."
+        )
