@@ -1,0 +1,110 @@
+"""Fake driver API for testing."""
+from __future__ import annotations
+
+import sys
+from enum import Enum, IntEnum
+from types import TracebackType
+from typing import TYPE_CHECKING, Any, ContextManager, Dict, Optional, Type
+
+if TYPE_CHECKING:
+    import grpc
+
+    if sys.version_info >= (3, 11):
+        from typing import Self
+    else:
+        from typing_extensions import Self
+
+
+GRPC_SERVICE_INTERFACE_NAME = "nifake_grpc.NiFake"
+
+_API_KEY = "00000000-0000-0000-0000-000000000000"
+
+
+class SessionInitializationBehavior(IntEnum):
+    """Specifies whether to initialize a new session or attach to an existing session."""
+
+    AUTO = 0
+    INITIALIZE_SERVER_SESSION = 1
+    ATTACH_TO_SERVER_SESSION = 2
+
+
+class GrpcSessionOptions:
+    """gRPC session options."""
+
+    def __init__(
+        self,
+        grpc_channel: grpc.Channel,
+        session_name: str,
+        *,
+        api_key: str = _API_KEY,
+        initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
+    ) -> None:
+        """Initialize the gRPC session options."""
+        self.grpc_channel = grpc_channel
+        self.session_name = session_name
+        self.api_key = api_key
+        self.initialization_behavior = initialization_behavior
+
+
+class MeasurementType(Enum):
+    """Measurement type."""
+
+    VOLTAGE = 1
+    CURRENT = 2
+
+
+class _Acquisition:
+    def __init__(self, session: Session) -> None:
+        self._session = session
+
+    def __enter__(self) -> Self:
+        return self
+
+    def __exit__(
+        self,
+        exc_type: Optional[Type[BaseException]],
+        exc_val: Optional[BaseException],
+        traceback: Optional[TracebackType],
+    ) -> None:
+        self._session.abort()
+
+
+class Session:
+    """A driver session."""
+
+    def __init__(self, resource_name: str, options: Dict[str, Any] = {}) -> None:
+        """Initialize the session."""
+        pass
+
+    def close(self) -> None:
+        """Close the session."""
+        pass
+
+    def __enter__(self) -> Self:
+        """Enter the session's runtime context."""
+        return self
+
+    def __exit__(
+        self,
+        exc_type: Optional[Type[BaseException]],
+        exc_val: Optional[BaseException],
+        traceback: Optional[TracebackType],
+    ) -> None:
+        """Exit the session's runtime context."""
+        self.close()
+
+    def configure(self, measurement_type: MeasurementType, range: float) -> None:
+        """Configure the session."""
+        pass
+
+    def initiate(self) -> ContextManager[object]:
+        """Initiate an acquisition."""
+        return _Acquisition(self)
+
+    def abort(self) -> None:
+        """Abort (stop) the acquisition."""
+        pass
+
+    def read(self) -> float:
+        """Read a sample."""
+        return 0.0
