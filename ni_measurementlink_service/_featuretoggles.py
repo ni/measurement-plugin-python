@@ -1,12 +1,12 @@
+"""MeasurementLink feature toggles."""
 from __future__ import annotations
 
 import functools
-import pathlib
 import sys
 from enum import Enum
 from typing import TYPE_CHECKING, Callable, TypeVar
 
-from decouple import AutoConfig
+from ni_measurementlink_service._configuration import _config, _PREFIX
 
 if TYPE_CHECKING:
     if sys.version_info >= (3, 10):
@@ -21,11 +21,6 @@ if TYPE_CHECKING:
 
     _P = ParamSpec("_P")
     _T = TypeVar("_T")
-
-_PREFIX = "MEASUREMENTLINK"
-
-# Search for the `.env` file starting with the current directory.
-_config = AutoConfig(str(pathlib.Path.cwd()))
 
 
 # Based on the recipe at https://docs.python.org/3/howto/enum.html
