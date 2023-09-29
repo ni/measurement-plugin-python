@@ -54,7 +54,7 @@ class MeasurementType(Enum):
 
 
 class _Acquisition:
-    def __init__(self, session: Session) -> None:
+    def __init__(self, session: _SessionBase) -> None:
         self._session = session
 
     def __enter__(self) -> Self:
@@ -69,29 +69,14 @@ class _Acquisition:
         self._session.abort()
 
 
-class Session:
-    """A driver session."""
+class _SessionBase:
+    """Base class for driver sessions."""
 
     def __init__(self, resource_name: str, options: Dict[str, Any] = {}) -> None:
         """Initialize the session."""
-        pass
-
-    def close(self) -> None:
-        """Close the session."""
-        pass
-
-    def __enter__(self) -> Self:
-        """Enter the session's runtime context."""
-        return self
-
-    def __exit__(
-        self,
-        exc_type: Optional[Type[BaseException]],
-        exc_val: Optional[BaseException],
-        traceback: Optional[TracebackType],
-    ) -> None:
-        """Exit the session's runtime context."""
-        self.close()
+        self.resource_name = resource_name
+        self.options = options
+        self.is_closed = False
 
     def configure(self, measurement_type: MeasurementType, range: float) -> None:
         """Configure the session."""
@@ -108,3 +93,55 @@ class Session:
     def read(self) -> float:
         """Read a sample."""
         return 0.0
+
+
+class ClosableSession(_SessionBase):
+    """A driver session that supports close()."""
+
+    def close(self) -> None:
+        """Close the session."""
+        self.is_closed = True
+
+
+class ContextManagerSession(_SessionBase):
+    """A driver session that supports the context manager protocol."""
+
+    def __enter__(self) -> Self:
+        """Enter the session's runtime context."""
+        return self
+
+    def __exit__(
+        self,
+        exc_type: Optional[Type[BaseException]],
+        exc_val: Optional[BaseException],
+        traceback: Optional[TracebackType],
+    ) -> None:
+        """Exit the session's runtime context."""
+        self.is_closed = True
+
+
+class Session(_SessionBase):
+    """A driver session that supports both close() and the context manager protocol."""
+
+    def __init__(self, resource_name: str, options: Dict[str, Any] = {}) -> None:
+        """Initialize the session."""
+        self.resource_name = resource_name
+        self.options = options
+        self.is_closed = False
+
+    def close(self) -> None:
+        """Close the session."""
+        self.is_closed = True
+
+    def __enter__(self) -> Self:
+        """Enter the session's runtime context."""
+        return self
+
+    def __exit__(
+        self,
+        exc_type: Optional[Type[BaseException]],
+        exc_val: Optional[BaseException],
+        traceback: Optional[TracebackType],
+    ) -> None:
+        """Exit the session's runtime context."""
+        self.close()
