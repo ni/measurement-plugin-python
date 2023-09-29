@@ -2,22 +2,30 @@
 from __future__ import annotations
 
 import abc
+import contextlib
 import logging
 import sys
 import threading
 import warnings
+from contextlib import ExitStack
 from functools import cached_property
 from types import TracebackType
 from typing import (
     TYPE_CHECKING,
     Any,
+    Callable,
+    ContextManager,
+    Dict,
+    Generator,
     Iterable,
     List,
     Literal,
     NamedTuple,
     Optional,
     Sequence,
+    Tuple,
     Type,
+    TypeVar,
     Union,
 )
 
@@ -25,6 +33,11 @@ import grpc
 from deprecation import DeprecatedWarning
 
 from ni_measurementlink_service._channelpool import GrpcChannelPool
+from ni_measurementlink_service._drivers import closing_session
+from ni_measurementlink_service._featuretoggles import (
+    SESSION_MANAGEMENT_2024Q1,
+    requires_feature,
+)
 from ni_measurementlink_service._internal.discovery_client import DiscoveryClient
 from ni_measurementlink_service._internal.stubs import session_pb2
 from ni_measurementlink_service._internal.stubs.ni.measurementlink import (
@@ -194,6 +207,9 @@ def _convert_session_info_to_grpc(
     )
 
 
+TSession = TypeVar("TSession")
+
+
 class BaseReservation(abc.ABC):
     """Manages session reservation."""
 
@@ -205,6 +221,7 @@ class BaseReservation(abc.ABC):
         """Initialize reservation object."""
         self._session_manager = session_manager
         self._session_info = session_info
+        self._session_cache: Dict[str, object] = {}
 
     def __enter__(self: Self) -> Self:
         """Context management protocol. Returns self."""
@@ -223,6 +240,116 @@ class BaseReservation(abc.ABC):
     def unreserve(self) -> None:
         """Unreserve sessions."""
         self._session_manager._unreserve_sessions(self._session_info)
+
+    @contextlib.contextmanager
+    def _cache_session(self, session_name: str, session: TSession) -> Generator[None, None, None]:
+        if session_name in self._session_cache:
+            raise RuntimeError(f"Session '{session_name}' already exists.")
+        self._session_cache[session_name] = session
+        try:
+            yield
+        finally:
+            del self._session_cache[session_name]
+
+    @contextlib.contextmanager
+    def _create_session_core(
+        self,
+        session_constructor: Callable[[SessionInformation], TSession],
+        instrument_type_id: str,
+    ) -> Generator[Tuple[SessionInformation, TSession], None, None]:
+        session_infos = [
+            _convert_session_info_from_grpc(info)
+            for info in self._session_info
+            if info.instrument_type_id == instrument_type_id
+        ]
+        if len(session_infos) == 0:
+            raise ValueError(
+                f"No sessions matched instrument type ID '{instrument_type_id}'. "
+                "Expected single session, got 0 sessions."
+            )
+        elif len(session_infos) > 1:
+            raise ValueError(
+                f"Too many sessions matched instrument type ID '{instrument_type_id}'. "
+                f"Expected single session, got {len(session_infos)} sessions."
+            )
+
+        session_info = session_infos[0]
+        with ExitStack() as stack:
+            session = stack.enter_context(closing_session(session_constructor(session_info)))
+            stack.enter_context(self._cache_session(session_info.session_name, session))
+            yield (session_info, session)
+
+    @contextlib.contextmanager
+    def _create_sessions_core(
+        self,
+        session_constructor: Callable[[SessionInformation], TSession],
+        instrument_type_id: str,
+    ) -> Generator[Sequence[Tuple[SessionInformation, TSession]], None, None]:
+        session_infos = [
+            _convert_session_info_from_grpc(info)
+            for info in self._session_info
+            if info.instrument_type_id == instrument_type_id
+        ]
+        if len(session_infos) == 0:
+            raise ValueError(
+                f"No sessions matched instrument type ID '{instrument_type_id}'. "
+                "Expected single or multiple sessions, got 0 sessions."
+            )
+
+        with ExitStack() as stack:
+            session_tuples: List[Tuple[SessionInformation, TSession]] = []
+            for session_info in session_infos:
+                session = stack.enter_context(closing_session(session_constructor(session_info)))
+                stack.enter_context(self._cache_session(session_info.session_name, session))
+                session_tuples.append((session_info, session))
+            yield session_tuples
+
+    @requires_feature(SESSION_MANAGEMENT_2024Q1)
+    def create_session(
+        self,
+        session_constructor: Callable[[SessionInformation], TSession],
+        instrument_type_id: str,
+    ) -> ContextManager[Tuple[SessionInformation, TSession]]:
+        """Create a single instrument session.
+
+        This is a generic method that supports any instrument driver.
+
+        Args:
+            session_constructor: A function that constructs sessions based on session
+                information.
+            instrument_type_id: Instrument type ID for the session.
+                For NI instruments, use instrument type id constants, such as
+                :py:const:`INSTRUMENT_TYPE_NI_DCPOWER` or :py:const:`INSTRUMENT_TYPE_NI_DMM`.
+                For custom instruments, use the instrument type id defined in the pin map file.
+
+        Returns:
+            A context manager that yields a tuple of session information and session objects.
+        """
+        return self._create_session_core(session_constructor, instrument_type_id)
+
+    @requires_feature(SESSION_MANAGEMENT_2024Q1)
+    def create_sessions(
+        self,
+        session_constructor: Callable[[SessionInformation], TSession],
+        instrument_type_id: str,
+    ) -> ContextManager[Sequence[Tuple[SessionInformation, TSession]]]:
+        """Create multiple instrument sessions.
+
+        This is a generic method that supports any instrument driver.
+
+        Args:
+            session_constructor: A function that constructs sessions based on session
+                information.
+            instrument_type_id: Instrument type ID for the session.
+                For NI instruments, use instrument type id constants, such as
+                :py:const:`INSTRUMENT_TYPE_NI_DCPOWER` or :py:const:`INSTRUMENT_TYPE_NI_DMM`.
+                For custom instruments, use the instrument type id defined in the pin map file.
+
+        Returns:
+            A context manager that yields a sequence of tuples of session information and
+            session objects.
+        """
+        return self._create_sessions_core(session_constructor, instrument_type_id)
 
 
 class SingleSessionReservation(BaseReservation):
