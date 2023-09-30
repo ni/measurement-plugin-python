@@ -17,16 +17,18 @@ from typing import (
     ContextManager,
     Dict,
     Generator,
+    Generic,
     Iterable,
     List,
     Literal,
     NamedTuple,
     Optional,
+    Protocol,
     Sequence,
-    Tuple,
     Type,
     TypeVar,
     Union,
+    cast,
 )
 
 import grpc
@@ -76,6 +78,10 @@ INSTRUMENT_TYPE_NI_DAQMX = "niDAQmx"
 INSTRUMENT_TYPE_NI_RELAY_DRIVER = "niRelayDriver"
 INSTRUMENT_TYPE_NI_MODEL_BASED_INSTRUMENT = "niModelBasedInstrument"
 INSTRUMENT_TYPE_NI_SWITCH_EXECUTIVE_VIRTUAL_DEVICE = "niSwitchExecutiveVirtualDevice"
+
+
+TSession = TypeVar("TSession")
+TSession_co = TypeVar("TSession_co", covariant=True)
 
 
 class PinMapContext(NamedTuple):
@@ -156,6 +162,56 @@ class SessionInformation(NamedTuple):
     Client.reserve_all_registered_sessions.
     """
 
+    session: object = None
+    """The driver session object.
+    
+    This field is None until the appropriate create_session(s) method is called.
+    """
+
+    def _with_session(self, session: TSession) -> TypedSessionInformation[TSession]:
+        return cast(TypedSessionInformation[TSession], self._replace(session=session))
+
+
+# Python versions <3.11 do not support generic named tuples, so we use a generic
+# protocol to return typed session information.
+class TypedSessionInformation(Protocol, Generic[TSession_co]):
+    """Generic version of :any:`SessionInformation` that preserves the session type."""
+
+    @property
+    def session_name(self) -> str:
+        """See :any:`SessionInformation.session_name`."""
+        ...
+
+    @property
+    def resource_name(self) -> str:
+        """See :any:`SessionInformation.resource_name`."""
+        ...
+
+    @property
+    def channel_list(self) -> str:
+        """See :any:`SessionInformation.channel_list`."""
+        ...
+
+    @property
+    def instrument_type_id(self) -> str:
+        """See :any:`SessionInformation.instrument_type_id`."""
+        ...
+
+    @property
+    def session_exists(self) -> bool:
+        """See :any:`SessionInformation.session_exists`."""
+        ...
+
+    @property
+    def channel_mappings(self) -> Iterable[ChannelMapping]:
+        """See :any:`SessionInformation.channel_mappings`."""
+        ...
+
+    @property
+    def session(self) -> TSession_co:
+        """See :any:`SessionInformation.session`."""
+        ...
+
 
 def _convert_channel_mapping_from_grpc(
     channel_mapping: session_management_service_pb2.ChannelMapping,
@@ -207,9 +263,6 @@ def _convert_session_info_to_grpc(
     )
 
 
-TSession = TypeVar("TSession")
-
-
 class BaseReservation(abc.ABC):
     """Manages session reservation."""
 
@@ -256,7 +309,7 @@ class BaseReservation(abc.ABC):
         self,
         session_constructor: Callable[[SessionInformation], TSession],
         instrument_type_id: str,
-    ) -> Generator[Tuple[SessionInformation, TSession], None, None]:
+    ) -> Generator[TypedSessionInformation[TSession], None, None]:
         session_infos = [
             _convert_session_info_from_grpc(info)
             for info in self._session_info
@@ -277,14 +330,14 @@ class BaseReservation(abc.ABC):
         with ExitStack() as stack:
             session = stack.enter_context(closing_session(session_constructor(session_info)))
             stack.enter_context(self._cache_session(session_info.session_name, session))
-            yield (session_info, session)
+            yield session_info._with_session(session)
 
     @contextlib.contextmanager
     def _create_sessions_core(
         self,
         session_constructor: Callable[[SessionInformation], TSession],
         instrument_type_id: str,
-    ) -> Generator[Sequence[Tuple[SessionInformation, TSession]], None, None]:
+    ) -> Generator[Sequence[TypedSessionInformation[TSession]], None, None]:
         session_infos = [
             _convert_session_info_from_grpc(info)
             for info in self._session_info
@@ -297,19 +350,19 @@ class BaseReservation(abc.ABC):
             )
 
         with ExitStack() as stack:
-            session_tuples: List[Tuple[SessionInformation, TSession]] = []
+            typed_session_infos: List[TypedSessionInformation[TSession]] = []
             for session_info in session_infos:
                 session = stack.enter_context(closing_session(session_constructor(session_info)))
                 stack.enter_context(self._cache_session(session_info.session_name, session))
-                session_tuples.append((session_info, session))
-            yield session_tuples
+                typed_session_infos.append(session_info._with_session(session))
+            yield typed_session_infos
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def create_session(
         self,
         session_constructor: Callable[[SessionInformation], TSession],
         instrument_type_id: str,
-    ) -> ContextManager[Tuple[SessionInformation, TSession]]:
+    ) -> ContextManager[TypedSessionInformation[TSession]]:
         """Create a single instrument session.
 
         This is a generic method that supports any instrument driver.
@@ -332,7 +385,7 @@ class BaseReservation(abc.ABC):
         self,
         session_constructor: Callable[[SessionInformation], TSession],
         instrument_type_id: str,
-    ) -> ContextManager[Sequence[Tuple[SessionInformation, TSession]]]:
+    ) -> ContextManager[Sequence[TypedSessionInformation[TSession]]]:
         """Create multiple instrument sessions.
 
         This is a generic method that supports any instrument driver.

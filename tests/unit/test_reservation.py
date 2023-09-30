@@ -21,10 +21,7 @@ def test___single_session_info___create_session___yields_session_info(
         session_management_client, _create_grpc_session_infos(1, "nifake")
     )
 
-    with reservation.create_session(_construct_session, "nifake") as (
-        session_info,
-        session,
-    ):
+    with reservation.create_session(_construct_session, "nifake") as session_info:
         assert session_info.session_name == "MySession0"
         assert session_info.resource_name == "Dev0"
         assert session_info.instrument_type_id == "nifake"
@@ -37,15 +34,12 @@ def test___single_session_info___create_session___session_created_and_closed(
         session_management_client, _create_grpc_session_infos(1, "nifake")
     )
 
-    with reservation.create_session(_construct_session, "nifake") as (
-        session_info,
-        session,
-    ):
-        assert isinstance(session, fake_driver.Session)
-        assert session.resource_name == "Dev0"
-        assert not session.is_closed
+    with reservation.create_session(_construct_session, "nifake") as session_info:
+        assert isinstance(session_info.session, fake_driver.Session)
+        assert session_info.session.resource_name == "Dev0"
+        assert not session_info.session.is_closed
 
-    assert session.is_closed
+    assert session_info.session.is_closed
 
 
 def test___single_session_info___create_session___session_cached(
@@ -55,11 +49,8 @@ def test___single_session_info___create_session___session_cached(
         session_management_client, _create_grpc_session_infos(1, "nifake")
     )
 
-    with reservation.create_session(_construct_session, "nifake") as (
-        session_info,
-        session,
-    ):
-        assert reservation._session_cache["MySession0"] is session
+    with reservation.create_session(_construct_session, "nifake") as session_info:
+        assert reservation._session_cache["MySession0"] is session_info.session
 
     assert len(reservation._session_cache) == 0
 
@@ -114,10 +105,9 @@ def test___heterogenous_session_infos___create_session___grouped_by_instrument_t
     grpc_session_infos[1].instrument_type_id = "nibar"
     reservation = MultiSessionReservation(session_management_client, grpc_session_infos)
 
-    with reservation.create_session(_construct_session, "nifoo") as (
-        nifoo_info,
-        nifoo_session,
-    ), reservation.create_session(_construct_session, "nibar") as (nibar_info, nibar_session):
+    with reservation.create_session(
+        _construct_session, "nifoo"
+    ) as nifoo_info, reservation.create_session(_construct_session, "nibar") as nibar_info:
         assert nifoo_info.session_name == "MySession0"
         assert nifoo_info.instrument_type_id == "nifoo"
         assert nibar_info.session_name == "MySession1"
@@ -131,14 +121,14 @@ def test___multi_session_infos___create_sessions___yields_session_infos(
         session_management_client, _create_grpc_session_infos(3, "nifake")
     )
 
-    with reservation.create_sessions(_construct_session, "nifake") as session_tuples:
-        assert [t[0].session_name for t in session_tuples] == [
+    with reservation.create_sessions(_construct_session, "nifake") as session_infos:
+        assert [info.session_name for info in session_infos] == [
             "MySession0",
             "MySession1",
             "MySession2",
         ]
-        assert [t[0].resource_name for t in session_tuples] == ["Dev0", "Dev1", "Dev2"]
-        assert [t[0].instrument_type_id for t in session_tuples] == ["nifake", "nifake", "nifake"]
+        assert [info.resource_name for info in session_infos] == ["Dev0", "Dev1", "Dev2"]
+        assert [info.instrument_type_id for info in session_infos] == ["nifake", "nifake", "nifake"]
 
 
 def test___multi_session_infos___create_sessions___sessions_created_and_closed(
@@ -148,12 +138,12 @@ def test___multi_session_infos___create_sessions___sessions_created_and_closed(
         session_management_client, _create_grpc_session_infos(1, "nifake")
     )
 
-    with reservation.create_sessions(_construct_session, "nifake") as session_tuples:
-        assert all([isinstance(t[1], fake_driver.Session) for t in session_tuples])
-        assert [t[1].resource_name for t in session_tuples]
-        assert all([not t[1].is_closed for t in session_tuples])
+    with reservation.create_sessions(_construct_session, "nifake") as session_infos:
+        assert all([isinstance(info.session, fake_driver.Session) for info in session_infos])
+        assert [info.session.resource_name for info in session_infos]
+        assert all([not info.session.is_closed for info in session_infos])
 
-    assert all([t[1].is_closed for t in session_tuples])
+    assert all([info.session.is_closed for info in session_infos])
 
 
 def test___multi_session_infos___create_sessions___sessions_cached(
@@ -163,10 +153,10 @@ def test___multi_session_infos___create_sessions___sessions_cached(
         session_management_client, _create_grpc_session_infos(3, "nifake")
     )
 
-    with reservation.create_sessions(_construct_session, "nifake") as session_tuples:
-        assert reservation._session_cache["MySession0"] is session_tuples[0][1]
-        assert reservation._session_cache["MySession1"] is session_tuples[1][1]
-        assert reservation._session_cache["MySession2"] is session_tuples[2][1]
+    with reservation.create_sessions(_construct_session, "nifake") as session_infos:
+        assert reservation._session_cache["MySession0"] is session_infos[0].session
+        assert reservation._session_cache["MySession1"] is session_infos[1].session
+        assert reservation._session_cache["MySession2"] is session_infos[2].session
 
     assert len(reservation._session_cache) == 0
 
@@ -209,11 +199,11 @@ def test___heterogenous_session_infos___create_sessions___grouped_by_instrument_
 
     with reservation.create_sessions(
         _construct_session, "nifoo"
-    ) as nifoo_tuples, reservation.create_sessions(_construct_session, "nibar") as nibar_tuples:
-        assert [t[0].session_name for t in nifoo_tuples] == ["MySession0", "MySession2"]
-        assert [t[0].instrument_type_id for t in nifoo_tuples] == ["nifoo", "nifoo"]
-        assert [t[0].session_name for t in nibar_tuples] == ["MySession1"]
-        assert [t[0].instrument_type_id for t in nibar_tuples] == ["nibar"]
+    ) as nifoo_infos, reservation.create_sessions(_construct_session, "nibar") as nibar_infos:
+        assert [info.session_name for info in nifoo_infos] == ["MySession0", "MySession2"]
+        assert [info.instrument_type_id for info in nifoo_infos] == ["nifoo", "nifoo"]
+        assert [info.session_name for info in nibar_infos] == ["MySession1"]
+        assert [info.instrument_type_id for info in nibar_infos] == ["nibar"]
 
 
 def _construct_session(session_info: SessionInformation) -> fake_driver.Session:
