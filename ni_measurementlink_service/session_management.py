@@ -327,10 +327,9 @@ class BaseReservation(abc.ABC):
             )
 
         session_info = session_infos[0]
-        with ExitStack() as stack:
-            session = stack.enter_context(closing_session(session_constructor(session_info)))
-            stack.enter_context(self._cache_session(session_info.session_name, session))
-            yield session_info._with_session(session)
+        with closing_session(session_constructor(session_info)) as session:
+            with self._cache_session(session_info.session_name, session):
+                yield session_info._with_session(session)
 
     @contextlib.contextmanager
     def _create_sessions_core(
