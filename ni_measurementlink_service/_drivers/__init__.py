@@ -3,36 +3,55 @@ from __future__ import annotations
 
 import contextlib
 from typing import (
-    ClassVar,
     ContextManager,
     Generic,
     Protocol,
     Type,
     TypeVar,
+    cast,
     runtime_checkable,
 )
 
 import grpc
 
+TSessionInitializationBehavior = TypeVar("TSessionInitializationBehavior", bound=int)
+TSessionInitializationBehavior_co = TypeVar(
+    "TSessionInitializationBehavior_co", bound=int, covariant=True
+)
 
-class SessionInitializationBehavior(Protocol):
-    """Protocol describing a driver API's SessionInitializationBehavior IntEnum.
 
-    Each driver API has its own version of this enum, which implicitly
-    implements this protocol.
+class SessionInitializationBehaviorEnumType(Protocol, Generic[TSessionInitializationBehavior_co]):
+    """Protocol describing a driver API's SessionInitializationBehavior IntEnum type.
+
+    Each driver API has its own version of this IntEnum, which provides the same
+    enum values.
     """
 
-    AUTO: ClassVar[int]
-    INITIALIZE_SERVER_SESSION: ClassVar[int]
-    ATTACH_TO_SERVER_SESSION: ClassVar[int]
+    # This protocol describes the provided enum values and nothing else.
+    #
+    # Python 3.11 doesn't have a good way to describe read-only class variables
+    # or protocols that inherit from built-in types such as int.
 
-    name: str
-    value: int
+    @property
+    def AUTO(  # noqa: N802 - function name should be lowercase
+        self,
+    ) -> TSessionInitializationBehavior_co:
+        """Automatically initialize a new session or attach to an existing one."""
+        ...
 
+    @property
+    def INITIALIZE_SERVER_SESSION(  # noqa: N802 - function name should be lowercase
+        self,
+    ) -> TSessionInitializationBehavior_co:
+        """Always initialize a new session."""
+        ...
 
-TSessionInitializationBehavior = TypeVar(
-    "TSessionInitializationBehavior", bound=SessionInitializationBehavior
-)
+    @property
+    def ATTACH_TO_SERVER_SESSION(  # noqa: N802 - function name should be lowercase
+        self,
+    ) -> TSessionInitializationBehavior_co:
+        """Always attach to an existing session."""
+        ...
 
 
 class GrpcSessionOptions(Protocol, Generic[TSessionInitializationBehavior]):
@@ -41,6 +60,18 @@ class GrpcSessionOptions(Protocol, Generic[TSessionInitializationBehavior]):
     Each driver API has its own version of this class, which implicitly
     implements this protocol.
     """
+
+    def __init__(
+        self,
+        grpc_channel: grpc.Channel,
+        session_name: str,
+        *,
+        initialization_behavior: TSessionInitializationBehavior = cast(
+            TSessionInitializationBehavior, 0
+        ),
+    ) -> None:
+        """Construct a GrpcSessionOptions."""
+        ...
 
     grpc_channel: grpc.Channel
     session_name: str
@@ -63,8 +94,8 @@ class DriverModule(Protocol, Generic[TSessionInitializationBehavior]):
     @property
     def SessionInitializationBehavior(  # noqa: N802 - function name should be lowercase
         self,
-    ) -> Type[TSessionInitializationBehavior]:
-        """The SessionInitializationBehavior enum for this API."""
+    ) -> SessionInitializationBehaviorEnumType[TSessionInitializationBehavior]:
+        """The SessionInitializationBehavior enum type for this API."""
         ...
 
     @property
