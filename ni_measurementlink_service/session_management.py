@@ -317,7 +317,7 @@ class BaseReservation(abc.ABC):
                 self._session_cache.get(info.session.name)
             )
             for info in self._session_info
-            if instrument_type_id == "" or instrument_type_id == info.instrument_type_id
+            if instrument_type_id and instrument_type_id == info.instrument_type_id
         ]
 
     @contextlib.contextmanager
@@ -326,6 +326,8 @@ class BaseReservation(abc.ABC):
         session_constructor: Callable[[SessionInformation], TSession],
         instrument_type_id: str,
     ) -> Generator[TypedSessionInformation[TSession], None, None]:
+        if not instrument_type_id:
+            raise ValueError("This method requires an instrument type ID.")
         session_infos = self._get_matching_session_infos(instrument_type_id)
         if len(session_infos) == 0:
             raise ValueError(
@@ -349,6 +351,8 @@ class BaseReservation(abc.ABC):
         session_constructor: Callable[[SessionInformation], TSession],
         instrument_type_id: str,
     ) -> Generator[Sequence[TypedSessionInformation[TSession]], None, None]:
+        if not instrument_type_id:
+            raise ValueError("This method requires an instrument type ID.")
         session_infos = self._get_matching_session_infos(instrument_type_id)
         if len(session_infos) == 0:
             raise ValueError(

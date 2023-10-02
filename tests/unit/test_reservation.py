@@ -39,18 +39,6 @@ def test___single_session_info___create_session___session_created(
         assert session_info.session.resource_name == "Dev0"
 
 
-def test___empty_instrument_type_id___create_session___session_created(
-    session_management_client: Mock,
-) -> None:
-    reservation = MultiSessionReservation(
-        session_management_client, _create_grpc_session_infos(1, "nifake")
-    )
-
-    with reservation.create_session(_construct_session, "") as session_info:
-        assert isinstance(session_info.session, fake_driver.Session)
-        assert session_info.session.resource_name == "Dev0"
-
-
 def test___single_session_info___create_session___session_lifetime_tracked(
     session_management_client: Mock,
 ) -> None:
@@ -64,6 +52,20 @@ def test___single_session_info___create_session___session_lifetime_tracked(
 
     assert len(reservation._session_cache) == 0
     assert session_info.session.is_closed
+
+
+def test___empty_instrument_type_id___create_session___value_error_raised(
+    session_management_client: Mock,
+) -> None:
+    reservation = MultiSessionReservation(
+        session_management_client, _create_grpc_session_infos(1, "nifake")
+    )
+
+    with pytest.raises(ValueError) as exc_info:
+        with reservation.create_session(_construct_session, ""):
+            pass
+
+    assert "This method requires an instrument type ID." in exc_info.value.args[0]
 
 
 def test___no_session_infos___create_session___value_error_raised(
@@ -154,18 +156,6 @@ def test___multi_session_infos___create_sessions___sessions_created(
         assert [info.session.resource_name for info in session_infos] == ["Dev0", "Dev1", "Dev2"]
 
 
-def test___empty_instrument_type_id___create_sessions___sessions_created(
-    session_management_client: Mock,
-) -> None:
-    reservation = MultiSessionReservation(
-        session_management_client, _create_grpc_session_infos(3, "nifake")
-    )
-
-    with reservation.create_sessions(_construct_session, "") as session_infos:
-        assert all([isinstance(info.session, fake_driver.Session) for info in session_infos])
-        assert [info.session.resource_name for info in session_infos] == ["Dev0", "Dev1", "Dev2"]
-
-
 def test___multi_session_infos___create_sessions___session_lifetime_tracked(
     session_management_client: Mock,
 ) -> None:
@@ -181,6 +171,20 @@ def test___multi_session_infos___create_sessions___session_lifetime_tracked(
 
     assert len(reservation._session_cache) == 0
     assert all([info.session.is_closed for info in session_infos])
+
+
+def test___empty_instrument_type_id___create_sessions___value_error_raised(
+    session_management_client: Mock,
+) -> None:
+    reservation = MultiSessionReservation(
+        session_management_client, _create_grpc_session_infos(3, "nifake")
+    )
+
+    with pytest.raises(ValueError) as exc_info:
+        with reservation.create_sessions(_construct_session, ""):
+            pass
+
+    assert "This method requires an instrument type ID." in exc_info.value.args[0]
 
 
 def test___no_session_infos___create_sessions___value_error_raised(
