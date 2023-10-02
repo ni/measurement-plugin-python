@@ -232,6 +232,14 @@ protobuf = ">=4.21.3,<5.0dev"
 setuptools = "*"
 
 [[package]]
+name = "hightime"
+version = "0.2.1"
+description = "Hightime Python API"
+category = "main"
+optional = true
+python-versions = "*"
+
+[[package]]
 name = "idna"
 version = "3.4"
 description = "Internationalized Domain Names in Applications (IDNA)"
@@ -399,6 +407,142 @@ flake8-import-order = ">=0.18.1"
 isort = ">=5.10"
 pep8-naming = ">=0.11.1"
 toml = ">=0.10.1"
+
+[[package]]
+name = "nidaqmx"
+version = "0.8.0"
+description = "NI-DAQmx Python API"
+category = "main"
+optional = true
+python-versions = ">=3.7,<4.0"
+
+[package.dependencies]
+deprecation = ">=2.1"
+grpcio = {version = ">=1.49.0,<2.0", optional = true, markers = "python_version >= \"3.8\" and python_version < \"4.0\" and extra == \"grpc\""}
+numpy = {version = ">=1.22", markers = "python_version >= \"3.8\" and python_version < \"4.0\""}
+protobuf = {version = ">=4.21,<5.0", optional = true, markers = "extra == \"grpc\""}
+
+[package.extras]
+docs = ["Sphinx (>=4.3,<5.0)", "sphinx_rtd_theme (>=1.0,<2.0)"]
+grpc = ["grpcio (>=1.49.0,<1.53)", "grpcio (>=1.49.0,<2.0)", "protobuf (>=4.21,<5.0)"]
+
+[[package]]
+name = "nidcpower"
+version = "1.4.6"
+description = "NI-DCPower Python API"
+category = "main"
+optional = true
+python-versions = "*"
+
+[package.dependencies]
+grpcio = {version = ">=1.49.1,<2.0", optional = true, markers = "extra == \"grpc\""}
+hightime = ">=0.2.0"
+protobuf = {version = ">=4.21,<5.0", optional = true, markers = "extra == \"grpc\""}
+
+[package.extras]
+grpc = ["grpcio (>=1.49.1,<2.0)", "protobuf (>=4.21,<5.0)"]
+
+[[package]]
+name = "nidigital"
+version = "1.4.6"
+description = "NI-Digital Pattern Driver Python API"
+category = "main"
+optional = true
+python-versions = "*"
+
+[package.dependencies]
+grpcio = {version = ">=1.49.1,<2.0", optional = true, markers = "extra == \"grpc\""}
+hightime = ">=0.2.0"
+nitclk = "*"
+protobuf = {version = ">=4.21,<5.0", optional = true, markers = "extra == \"grpc\""}
+
+[package.extras]
+grpc = ["grpcio (>=1.49.1,<2.0)", "protobuf (>=4.21,<5.0)"]
+
+[[package]]
+name = "nidmm"
+version = "1.4.6"
+description = "NI-DMM Python API"
+category = "main"
+optional = true
+python-versions = "*"
+
+[package.dependencies]
+grpcio = {version = ">=1.49.1,<2.0", optional = true, markers = "extra == \"grpc\""}
+hightime = ">=0.2.0"
+protobuf = {version = ">=4.21,<5.0", optional = true, markers = "extra == \"grpc\""}
+
+[package.extras]
+grpc = ["grpcio (>=1.49.1,<2.0)", "protobuf (>=4.21,<5.0)"]
+
+[[package]]
+name = "nifgen"
+version = "1.4.6"
+description = "NI-FGEN Python API"
+category = "main"
+optional = true
+python-versions = "*"
+
+[package.dependencies]
+grpcio = {version = ">=1.49.1,<2.0", optional = true, markers = "extra == \"grpc\""}
+hightime = ">=0.2.0"
+nitclk = "*"
+protobuf = {version = ">=4.21,<5.0", optional = true, markers = "extra == \"grpc\""}
+
+[package.extras]
+grpc = ["grpcio (>=1.49.1,<2.0)", "protobuf (>=4.21,<5.0)"]
+
+[[package]]
+name = "niscope"
+version = "1.4.6"
+description = "NI-SCOPE Python API"
+category = "main"
+optional = true
+python-versions = "*"
+
+[package.dependencies]
+grpcio = {version = ">=1.49.1,<2.0", optional = true, markers = "extra == \"grpc\""}
+hightime = ">=0.2.0"
+nitclk = "*"
+protobuf = {version = ">=4.21,<5.0", optional = true, markers = "extra == \"grpc\""}
+
+[package.extras]
+grpc = ["grpcio (>=1.49.1,<2.0)", "protobuf (>=4.21,<5.0)"]
+
+[[package]]
+name = "niswitch"
+version = "1.4.6"
+description = "NI-SWITCH Python API"
+category = "main"
+optional = true
+python-versions = "*"
+
+[package.dependencies]
+grpcio = {version = ">=1.49.1,<2.0", optional = true, markers = "extra == \"grpc\""}
+hightime = ">=0.2.0"
+protobuf = {version = ">=4.21,<5.0", optional = true, markers = "extra == \"grpc\""}
+
+[package.extras]
+grpc = ["grpcio (>=1.49.1,<2.0)", "protobuf (>=4.21,<5.0)"]
+
+[[package]]
+name = "nitclk"
+version = "1.4.6"
+description = "NI-TClk Python API"
+category = "main"
+optional = true
+python-versions = "*"
+
+[package.dependencies]
+hightime = ">=0.2.0"
+
+[[package]]
+name = "numpy"
+version = "1.24.4"
+description = "Fundamental package for array computing in Python"
+category = "main"
+optional = true
+python-versions = ">=3.8"
 
 [[package]]
 name = "packaging"
@@ -880,10 +1024,20 @@ python-versions = ">=3.8"
 docs = ["furo", "jaraco.packaging (>=9.3)", "jaraco.tidelift (>=1.4)", "rst.linker (>=1.9)", "sphinx (<7.2.5)", "sphinx (>=3.5)", "sphinx-lint"]
 testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "pytest (>=6)", "pytest-black (>=0.3.7)", "pytest-checkdocs (>=2.4)", "pytest-cov", "pytest-enabler (>=2.2)", "pytest-ignore-flaky", "pytest-mypy (>=0.9.1)", "pytest-ruff"]
 
+[extras]
+drivers = ["nidaqmx", "nidcpower", "nidigital", "nidmm", "nifgen", "niscope", "niswitch"]
+nidaqmx = ["nidaqmx"]
+nidcpower = ["nidcpower"]
+nidigital = ["nidigital"]
+nidmm = ["nidmm"]
+nifgen = ["nifgen"]
+niscope = ["niscope"]
+niswitch = ["niswitch"]
+
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "0e9a3a56bd9e75de11e81c4b84ad31285c5631fa5024462c22a99be39b2ad878"
+content-hash = "835376b026d624e33681133f311d76256024622023a4bba8a6638226ed633a0c"
 
 [metadata.files]
 alabaster = [
@@ -1195,6 +1349,9 @@ grpcio-tools = [
     {file = "grpcio_tools-1.49.1-cp39-cp39-win32.whl", hash = "sha256:704d21509ec06efc9d034dbe70e7152715aac004941f4f0f553cf3a0aff15bd5"},
     {file = "grpcio_tools-1.49.1-cp39-cp39-win_amd64.whl", hash = "sha256:1efa0c221c719433f441ac0e026fc3c4dbc9a1a08a552ecdc707775e2f2fbbae"},
 ]
+hightime = [
+    {file = "hightime-0.2.1-py3-none-any.whl", hash = "sha256:a300434692de16273ce46f9c1f2de01e90091b151ccfb4e0973a6a6e1d51f032"},
+]
 idna = [
     {file = "idna-3.4-py3-none-any.whl", hash = "sha256:90b77e79eaa3eba6de819a0c442c0b4ceefc341a7a2ab77d7562bf49f425c5c2"},
     {file = "idna-3.4.tar.gz", hash = "sha256:814f528e8dead7d329833b91c5faa87d60bf71824cd12a7530b5526063d02cb4"},
@@ -1371,6 +1528,68 @@ mypy-protobuf = [
 ni-python-styleguide = [
     {file = "ni_python_styleguide-0.4.1-py3-none-any.whl", hash = "sha256:aee987fe56ae5c7c05063a0c8acff5fa5dabf22d14436260e203f72616d5be0e"},
     {file = "ni_python_styleguide-0.4.1.tar.gz", hash = "sha256:12d19b7a53b94ef2803b7008bb14a552e81b299d807b070408c26759e15f14f2"},
+]
+nidaqmx = [
+    {file = "nidaqmx-0.8.0-py3-none-any.whl", hash = "sha256:7a5d5b3f78c125d31a8d00349f216f63bb8f6b887d0eca882001b729904d68bc"},
+    {file = "nidaqmx-0.8.0.tar.gz", hash = "sha256:6c72ca4ec5da95e8603c1e6d5085d59bb3c1c2ea1f45bdfaa4acac40fe82ae0c"},
+]
+nidcpower = [
+    {file = "nidcpower-1.4.6-py3-none-any.whl", hash = "sha256:4a4c2ccf2e04aabec9ac9b57ea08a9e748dd888ab3503d61aa93336924946906"},
+    {file = "nidcpower-1.4.6.tar.gz", hash = "sha256:47e2131a2a18a64661533fb43cd7039ec18c7cf4b5882df3aebe91279416744c"},
+]
+nidigital = [
+    {file = "nidigital-1.4.6-py3-none-any.whl", hash = "sha256:d79016c45fb41526acd43b92221af6a11f4b8ab5a71b833867cb9934768fcd30"},
+    {file = "nidigital-1.4.6.tar.gz", hash = "sha256:d059aef452a150be842033cd910a5e5ba344acaa4cba109d009c8dde73059550"},
+]
+nidmm = [
+    {file = "nidmm-1.4.6-py3-none-any.whl", hash = "sha256:8ce6724e7c3eff35d83dd0d3bfbe2184b8468027bc440da2c49d24a53d927aed"},
+    {file = "nidmm-1.4.6.tar.gz", hash = "sha256:95ad39272a454d6f5826fed90475de5f670536a41ba767303e6994f0eb36d2a0"},
+]
+nifgen = [
+    {file = "nifgen-1.4.6-py3-none-any.whl", hash = "sha256:d484360ddf499ac99fab8fcb54b36a526b9708d022ea8ea9ee50d1591cf11f90"},
+    {file = "nifgen-1.4.6.tar.gz", hash = "sha256:40f81d70046ced9cc3239f71cd7d26332ab68d36ddbe9e2c446874b699ba12e0"},
+]
+niscope = [
+    {file = "niscope-1.4.6-py3-none-any.whl", hash = "sha256:b993cf0f1b36605398c5cc879c875eabd95ca44b2738a0265453431a6bdc9901"},
+    {file = "niscope-1.4.6.tar.gz", hash = "sha256:cadb120820c4e531e8dda4751e6bfe6e81838130559a1be94ad18e0361b64246"},
+]
+niswitch = [
+    {file = "niswitch-1.4.6-py3-none-any.whl", hash = "sha256:e04b275de01fec29d9a7c602385bd3c56e8160eee9c72b39cc9cdb5756b99426"},
+    {file = "niswitch-1.4.6.tar.gz", hash = "sha256:42091a8c1b49186831c0c710c631f8ca0bcaf1b85cbc46f35fd971d0e1fb8d90"},
+]
+nitclk = [
+    {file = "nitclk-1.4.6-py3-none-any.whl", hash = "sha256:68d5e1761d534c7474d7c55382a624090fac1cfa95e101e58b8a98e30cf659b1"},
+    {file = "nitclk-1.4.6.tar.gz", hash = "sha256:6aac6e8646b28411058040df8b7ce825c2895d5a05b1026319b7c34c7a2e3781"},
+]
+numpy = [
+    {file = "numpy-1.24.4-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:c0bfb52d2169d58c1cdb8cc1f16989101639b34c7d3ce60ed70b19c63eba0b64"},
+    {file = "numpy-1.24.4-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:ed094d4f0c177b1b8e7aa9cba7d6ceed51c0e569a5318ac0ca9a090680a6a1b1"},
+    {file = "numpy-1.24.4-cp310-cp310-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:79fc682a374c4a8ed08b331bef9c5f582585d1048fa6d80bc6c35bc384eee9b4"},
+    {file = "numpy-1.24.4-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:7ffe43c74893dbf38c2b0a1f5428760a1a9c98285553c89e12d70a96a7f3a4d6"},
+    {file = "numpy-1.24.4-cp310-cp310-win32.whl", hash = "sha256:4c21decb6ea94057331e111a5bed9a79d335658c27ce2adb580fb4d54f2ad9bc"},
+    {file = "numpy-1.24.4-cp310-cp310-win_amd64.whl", hash = "sha256:b4bea75e47d9586d31e892a7401f76e909712a0fd510f58f5337bea9572c571e"},
+    {file = "numpy-1.24.4-cp311-cp311-macosx_10_9_x86_64.whl", hash = "sha256:f136bab9c2cfd8da131132c2cf6cc27331dd6fae65f95f69dcd4ae3c3639c810"},
+    {file = "numpy-1.24.4-cp311-cp311-macosx_11_0_arm64.whl", hash = "sha256:e2926dac25b313635e4d6cf4dc4e51c8c0ebfed60b801c799ffc4c32bf3d1254"},
+    {file = "numpy-1.24.4-cp311-cp311-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:222e40d0e2548690405b0b3c7b21d1169117391c2e82c378467ef9ab4c8f0da7"},
+    {file = "numpy-1.24.4-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:7215847ce88a85ce39baf9e89070cb860c98fdddacbaa6c0da3ffb31b3350bd5"},
+    {file = "numpy-1.24.4-cp311-cp311-win32.whl", hash = "sha256:4979217d7de511a8d57f4b4b5b2b965f707768440c17cb70fbf254c4b225238d"},
+    {file = "numpy-1.24.4-cp311-cp311-win_amd64.whl", hash = "sha256:b7b1fc9864d7d39e28f41d089bfd6353cb5f27ecd9905348c24187a768c79694"},
+    {file = "numpy-1.24.4-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:1452241c290f3e2a312c137a9999cdbf63f78864d63c79039bda65ee86943f61"},
+    {file = "numpy-1.24.4-cp38-cp38-macosx_11_0_arm64.whl", hash = "sha256:04640dab83f7c6c85abf9cd729c5b65f1ebd0ccf9de90b270cd61935eef0197f"},
+    {file = "numpy-1.24.4-cp38-cp38-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:a5425b114831d1e77e4b5d812b69d11d962e104095a5b9c3b641a218abcc050e"},
+    {file = "numpy-1.24.4-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:dd80e219fd4c71fc3699fc1dadac5dcf4fd882bfc6f7ec53d30fa197b8ee22dc"},
+    {file = "numpy-1.24.4-cp38-cp38-win32.whl", hash = "sha256:4602244f345453db537be5314d3983dbf5834a9701b7723ec28923e2889e0bb2"},
+    {file = "numpy-1.24.4-cp38-cp38-win_amd64.whl", hash = "sha256:692f2e0f55794943c5bfff12b3f56f99af76f902fc47487bdfe97856de51a706"},
+    {file = "numpy-1.24.4-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:2541312fbf09977f3b3ad449c4e5f4bb55d0dbf79226d7724211acc905049400"},
+    {file = "numpy-1.24.4-cp39-cp39-macosx_11_0_arm64.whl", hash = "sha256:9667575fb6d13c95f1b36aca12c5ee3356bf001b714fc354eb5465ce1609e62f"},
+    {file = "numpy-1.24.4-cp39-cp39-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:f3a86ed21e4f87050382c7bc96571755193c4c1392490744ac73d660e8f564a9"},
+    {file = "numpy-1.24.4-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:d11efb4dbecbdf22508d55e48d9c8384db795e1b7b51ea735289ff96613ff74d"},
+    {file = "numpy-1.24.4-cp39-cp39-win32.whl", hash = "sha256:6620c0acd41dbcb368610bb2f4d83145674040025e5536954782467100aa8835"},
+    {file = "numpy-1.24.4-cp39-cp39-win_amd64.whl", hash = "sha256:befe2bf740fd8373cf56149a5c23a0f601e82869598d41f8e188a0e9869926f8"},
+    {file = "numpy-1.24.4-pp38-pypy38_pp73-macosx_10_9_x86_64.whl", hash = "sha256:31f13e25b4e304632a4619d0e0777662c2ffea99fcae2029556b17d8ff958aef"},
+    {file = "numpy-1.24.4-pp38-pypy38_pp73-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:95f7ac6540e95bc440ad77f56e520da5bf877f87dca58bd095288dce8940532a"},
+    {file = "numpy-1.24.4-pp38-pypy38_pp73-win_amd64.whl", hash = "sha256:e98f220aa76ca2a977fe435f5b04d7b3470c0a2e6312907b37ba6068f26787f2"},
+    {file = "numpy-1.24.4.tar.gz", hash = "sha256:80f5e3a4e498641401868df4208b74581206afbee7cf7b8329daae82676d9463"},
 ]
 packaging = [
     {file = "packaging-23.1-py3-none-any.whl", hash = "sha256:994793af429502c4ea2ebf6bf664629d07c1a9fe974af92966e4b8d2df7edc61"},
