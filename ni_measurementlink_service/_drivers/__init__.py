@@ -16,9 +16,10 @@ import grpc
 
 
 class SessionInitializationBehavior(Protocol):
-    """IntEnum specifying whether to initialize a new session or attach to an existing one.
+    """Protocol describing a driver API's SessionInitializationBehavior IntEnum.
 
-    Each driver API has its own version of this enum.
+    Each driver API has its own version of this enum, which implicitly
+    implements this protocol.
     """
 
     AUTO: ClassVar[int]
@@ -35,9 +36,10 @@ TSessionInitializationBehavior = TypeVar(
 
 
 class GrpcSessionOptions(Protocol, Generic[TSessionInitializationBehavior]):
-    """gRPC options for driver sessions.
+    """Protocol describing a driver API's GrpcSessionOptions class.
 
-    Each driver API has its own version of this class.
+    Each driver API has its own version of this class, which implicitly
+    implements this protocol.
     """
 
     grpc_channel: grpc.Channel
@@ -47,7 +49,11 @@ class GrpcSessionOptions(Protocol, Generic[TSessionInitializationBehavior]):
 
 @runtime_checkable
 class DriverModule(Protocol, Generic[TSessionInitializationBehavior]):
-    """A driver API module."""
+    """Protocol describing a driver API module.
+
+    Supported driver APIs (nimi-python and nidaqmx-python) implicitly implement
+    this protocol.
+    """
 
     @property
     def GRPC_SERVICE_INTERFACE_NAME(self) -> str:  # noqa: N802 - function name should be lowercase
