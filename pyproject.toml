@@ -37,6 +37,23 @@ deprecation = ">=2.1"
 # https://github.com/microsoft/tracelogging/issues/58 - traceloggingdynamic raises TypeError with Python 3.8
 traceloggingdynamic = {version = ">=1.0", platform = "win32", python = "^3.9"}
 python-decouple = ">=3.8"
+nidaqmx = {version = ">=0.8.0", extras = ["grpc"], optional = true}
+nidcpower = {version = ">=1.4.4", extras = ["grpc"], optional = true}
+nidigital = {version = ">=1.4.4", extras = ["grpc"], optional = true}
+nidmm = {version = ">=1.4.4", extras = ["grpc"], optional = true}
+nifgen = {version = ">=1.4.4", extras = ["grpc"], optional = true}
+niscope = {version = ">=1.4.4", extras = ["grpc"], optional = true}
+niswitch = {version = ">=1.4.4", extras = ["grpc"], optional = true}
+
+[tool.poetry.extras]
+drivers = ["nidaqmx", "nidcpower", "nidigital", "nidmm", "nifgen", "niscope", "niswitch"]
+nidaqmx = ["nidaqmx"]
+nidcpower = ["nidcpower"]
+nidigital = ["nidigital"]
+nidmm = ["nidmm"]
+nifgen = ["nifgen"]
+niscope = ["niscope"]
+niswitch = ["niswitch"]
 
 [tool.poetry.group.dev.dependencies]
 pytest = ">=7.2.0"
