@@ -2,7 +2,9 @@
 from __future__ import annotations
 
 import contextlib
+import sys
 from typing import (
+    TYPE_CHECKING,
     ClassVar,
     ContextManager,
     Generic,
@@ -14,6 +16,12 @@ from typing import (
 
 import grpc
 
+if TYPE_CHECKING:
+    if sys.version_info >= (3, 11):
+        from typing import Self
+    else:
+        from typing_extensions import Self
+
 
 class SessionInitializationBehavior(Protocol):
     """Protocol describing a driver API's SessionInitializationBehavior IntEnum.
@@ -22,9 +30,9 @@ class SessionInitializationBehavior(Protocol):
     implements this protocol.
     """
 
-    AUTO: ClassVar[int]
-    INITIALIZE_SERVER_SESSION: ClassVar[int]
-    ATTACH_TO_SERVER_SESSION: ClassVar[int]
+    AUTO: ClassVar[Self]
+    INITIALIZE_SERVER_SESSION: ClassVar[Self]
+    ATTACH_TO_SERVER_SESSION: ClassVar[Self]
 
     name: str
     value: int
