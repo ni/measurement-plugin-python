@@ -168,8 +168,15 @@ class SessionInformation(NamedTuple):
     This field is None until the appropriate create_session(s) method is called.
     """
 
-    def _with_session(self, session: TSession) -> TypedSessionInformation[TSession]:
-        return cast(TypedSessionInformation[TSession], self._replace(session=session))
+    def _as_typed(self, session_type: Type[TSession]) -> TypedSessionInformation[TSession]:
+        assert isinstance(self.session, session_type)
+        return cast(TypedSessionInformation[TSession], self)
+
+    def _with_session(self, session: object) -> SessionInformation:
+        return self._replace(session=session)
+
+    def _with_typed_session(self, session: TSession) -> TypedSessionInformation[TSession]:
+        return self._with_session(session)._as_typed(type(session))
 
 
 # Python versions <3.11 do not support generic named tuples, so we use a generic
@@ -304,17 +311,22 @@ class BaseReservation(abc.ABC):
         finally:
             del self._session_cache[session_name]
 
+    def _get_matching_session_infos(self, instrument_type_id: str) -> List[SessionInformation]:
+        return [
+            _convert_session_info_from_grpc(info)._with_session(
+                self._session_cache.get(info.session.name)
+            )
+            for info in self._session_info
+            if instrument_type_id == "" or instrument_type_id == info.instrument_type_id
+        ]
+
     @contextlib.contextmanager
     def _create_session_core(
         self,
         session_constructor: Callable[[SessionInformation], TSession],
         instrument_type_id: str,
     ) -> Generator[TypedSessionInformation[TSession], None, None]:
-        session_infos = [
-            _convert_session_info_from_grpc(info)
-            for info in self._session_info
-            if info.instrument_type_id == instrument_type_id
-        ]
+        session_infos = self._get_matching_session_infos(instrument_type_id)
         if len(session_infos) == 0:
             raise ValueError(
                 f"No sessions matched instrument type ID '{instrument_type_id}'. "
@@ -329,7 +341,7 @@ class BaseReservation(abc.ABC):
         session_info = session_infos[0]
         with closing_session(session_constructor(session_info)) as session:
             with self._cache_session(session_info.session_name, session):
-                yield session_info._with_session(session)
+                yield session_info._with_typed_session(session)
 
     @contextlib.contextmanager
     def _create_sessions_core(
@@ -337,11 +349,7 @@ class BaseReservation(abc.ABC):
         session_constructor: Callable[[SessionInformation], TSession],
         instrument_type_id: str,
     ) -> Generator[Sequence[TypedSessionInformation[TSession]], None, None]:
-        session_infos = [
-            _convert_session_info_from_grpc(info)
-            for info in self._session_info
-            if info.instrument_type_id == instrument_type_id
-        ]
+        session_infos = self._get_matching_session_infos(instrument_type_id)
         if len(session_infos) == 0:
             raise ValueError(
                 f"No sessions matched instrument type ID '{instrument_type_id}'. "
@@ -353,7 +361,7 @@ class BaseReservation(abc.ABC):
             for session_info in session_infos:
                 session = stack.enter_context(closing_session(session_constructor(session_info)))
                 stack.enter_context(self._cache_session(session_info.session_name, session))
-                typed_session_infos.append(session_info._with_session(session))
+                typed_session_infos.append(session_info._with_typed_session(session))
             yield typed_session_infos
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
