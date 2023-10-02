@@ -19,7 +19,7 @@ def test___valid_driver_module___get_insecure_grpc_device_channel____returns_cha
     grpc_channel_pool.get_channel.return_value = grpc_channel
 
     returned_channel = get_insecure_grpc_device_channel(
-        discovery_client, grpc_channel_pool, fake_driver
+        discovery_client, grpc_channel_pool, fake_driver.GRPC_SERVICE_INTERFACE_NAME
     )
 
     discovery_client.resolve_service.assert_called_with(
