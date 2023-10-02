@@ -42,7 +42,7 @@ def test___single_session_info___create_session___session_created_and_closed(
     assert session_info.session.is_closed
 
 
-def test___single_session_info___create_session___session_cached(
+def test___single_session_info___create_session___session_lifetime_tracked(
     session_management_client: Mock,
 ) -> None:
     reservation = MultiSessionReservation(
@@ -146,7 +146,7 @@ def test___multi_session_infos___create_sessions___sessions_created_and_closed(
     assert all([info.session.is_closed for info in session_infos])
 
 
-def test___multi_session_infos___create_sessions___sessions_cached(
+def test___multi_session_infos___create_sessions___session_lifetime_tracked(
     session_management_client: Mock,
 ) -> None:
     reservation = MultiSessionReservation(
