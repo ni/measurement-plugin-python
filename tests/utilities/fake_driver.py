@@ -17,6 +17,7 @@ if TYPE_CHECKING:
 
 GRPC_SERVICE_INTERFACE_NAME = "nifake_grpc.NiFake"
 
+# The GrpcSessionOptions classes in nimi-python and nidaqmx-python have an api_key field.
 _API_KEY = "00000000-0000-0000-0000-000000000000"
 
 
