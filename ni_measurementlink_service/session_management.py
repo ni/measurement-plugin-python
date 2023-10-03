@@ -117,9 +117,7 @@ class SessionInformation(NamedTuple):
     """Container for the session information."""
 
     session_name: str
-    """Session identifier used to identify the session in the session management service, as well
-    as in driver services such as grpc-device.
-    """
+    """Session name used by the session management service and NI gRPC Device Server."""
 
     resource_name: str
     """Resource name used to open this session in the driver."""
@@ -132,7 +130,7 @@ class SessionInformation(NamedTuple):
     """
 
     instrument_type_id: str
-    """Instrument type ID to identify which type of instrument the session represents.
+    """Indicates the instrument type for this session.
     
     Pin maps have built in instrument definitions using the instrument
     type id constants such as `INSTRUMENT_TYPE_NI_DCPOWER`. For custom instruments, the
@@ -140,7 +138,7 @@ class SessionInformation(NamedTuple):
     """
 
     session_exists: bool
-    """Indicates whether the session has been registered with the session management service.
+    """Indicates whether the session is registered with the session management service.
     
     When calling measurements from TestStand, the test sequence's ``ProcessSetup`` callback
     creates instrument sessions and registers them with the session management service so that
@@ -155,7 +153,7 @@ class SessionInformation(NamedTuple):
     """
 
     channel_mappings: Iterable[ChannelMapping]
-    """List of site and pin/relay mappings that correspond to each channel in the channel_list.
+    """List of mappings from channels to pins and sites.
      
     Each item contains a mapping for a channel in this instrument resource, in the order of the
     channel_list. This field is empty for any SessionInformation returned from
@@ -182,41 +180,44 @@ class SessionInformation(NamedTuple):
 # Python versions <3.11 do not support generic named tuples, so we use a generic
 # protocol to return typed session information.
 class TypedSessionInformation(Protocol, Generic[TSession_co]):
-    """Generic version of :any:`SessionInformation` that preserves the session type."""
+    """Generic version of :any:`SessionInformation` that preserves the session type.
+
+    For more details, see the corresponding documentation for :any:`SessionInformation`.
+    """
 
     @property
     def session_name(self) -> str:
-        """See :any:`SessionInformation.session_name`."""
+        """Session name used by the session management service and NI gRPC Device Server."""
         ...
 
     @property
     def resource_name(self) -> str:
-        """See :any:`SessionInformation.resource_name`."""
+        """Resource name used to open this session in the driver."""
         ...
 
     @property
     def channel_list(self) -> str:
-        """See :any:`SessionInformation.channel_list`."""
+        """Channel list used for driver initialization and measurement methods."""
         ...
 
     @property
     def instrument_type_id(self) -> str:
-        """See :any:`SessionInformation.instrument_type_id`."""
+        """Indicates the instrument type for this session."""
         ...
 
     @property
     def session_exists(self) -> bool:
-        """See :any:`SessionInformation.session_exists`."""
+        """Indicates whether the session is registered with the session management service."""
         ...
 
     @property
     def channel_mappings(self) -> Iterable[ChannelMapping]:
-        """See :any:`SessionInformation.channel_mappings`."""
+        """List of mappings from channels to pins and sites."""
         ...
 
     @property
     def session(self) -> TSession_co:
-        """See :any:`SessionInformation.session`."""
+        """The driver session object."""
         ...
 
 
