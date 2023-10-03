@@ -387,7 +387,8 @@ class BaseReservation(abc.ABC):
                 For custom instruments, use the instrument type id defined in the pin map file.
 
         Returns:
-            A context manager that yields a tuple of session information and session objects.
+            A context manager that yields a session information object. The
+            created session is available via the ``session`` field.
         """
         return self._create_session_core(session_constructor, instrument_type_id)
 
@@ -410,8 +411,9 @@ class BaseReservation(abc.ABC):
                 For custom instruments, use the instrument type id defined in the pin map file.
 
         Returns:
-            A context manager that yields a sequence of tuples of session information and
-            session objects.
+            A context manager that yields a sequence of session information
+            objects. The created sessions are available via the ``session``
+            field.
         """
         return self._create_sessions_core(session_constructor, instrument_type_id)
 
