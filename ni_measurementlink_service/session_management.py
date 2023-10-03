@@ -49,8 +49,15 @@ from ni_measurementlink_service._internal.stubs.ni.measurementlink.sessionmanage
     session_management_service_pb2,
     session_management_service_pb2_grpc,
 )
+from ni_measurementlink_service._sessiontypes import (
+    SessionInitializationBehavior as SessionInitializationBehavior,  # re-export
+)
 
 if TYPE_CHECKING:
+    import nidcpower
+    import nifgen
+    import niswitch
+
     if sys.version_info >= (3, 11):
         from typing import Self
     else:
@@ -284,6 +291,18 @@ class BaseReservation(abc.ABC):
         self._session_info = session_info
         self._session_cache: Dict[str, object] = {}
 
+    @property
+    def _discovery_client(self) -> DiscoveryClient:
+        if not self._session_manager._discovery_client:
+            raise ValueError("This method requires a discovery client.")
+        return self._session_manager._discovery_client
+
+    @property
+    def _grpc_channel_pool(self) -> GrpcChannelPool:
+        if not self._session_manager._grpc_channel_pool:
+            raise ValueError("This method requires a gRPC channel pool.")
+        return self._session_manager._grpc_channel_pool
+
     def __enter__(self: Self) -> Self:
         """Context management protocol. Returns self."""
         return self
@@ -380,12 +399,13 @@ class BaseReservation(abc.ABC):
         This is a generic method that supports any instrument driver.
 
         Args:
-            session_constructor: A function that constructs sessions based on session
-                information.
+            session_constructor: A function that constructs sessions based on
+                session information.
+
             instrument_type_id: Instrument type ID for the session.
-                For NI instruments, use instrument type id constants, such as
-                :py:const:`INSTRUMENT_TYPE_NI_DCPOWER` or :py:const:`INSTRUMENT_TYPE_NI_DMM`.
-                For custom instruments, use the instrument type id defined in the pin map file.
+
+                For custom instruments, use the instrument type id defined in
+                the pin map file.
 
         Returns:
             A context manager that yields a session information object. The
@@ -404,12 +424,13 @@ class BaseReservation(abc.ABC):
         This is a generic method that supports any instrument driver.
 
         Args:
-            session_constructor: A function that constructs sessions based on session
-                information.
+            session_constructor: A function that constructs sessions based on
+                session information.
+
             instrument_type_id: Instrument type ID for the session.
-                For NI instruments, use instrument type id constants, such as
-                :py:const:`INSTRUMENT_TYPE_NI_DCPOWER` or :py:const:`INSTRUMENT_TYPE_NI_DMM`.
-                For custom instruments, use the instrument type id defined in the pin map file.
+
+                For custom instruments, use the instrument type id defined in
+                the pin map file.
 
         Returns:
             A context manager that yields a sequence of session information
@@ -417,6 +438,250 @@ class BaseReservation(abc.ABC):
             field.
         """
         return self._create_sessions_core(session_constructor, instrument_type_id)
+
+    @requires_feature(SESSION_MANAGEMENT_2024Q1)
+    def create_nidcpower_session(
+        self,
+        reset: bool = False,
+        options: Optional[Dict[str, Any]] = None,
+        initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
+    ) -> ContextManager[TypedSessionInformation[nidcpower.Session]]:
+        """Create a single NI-DCPower instrument session.
+
+        For more details regarding constructor arguments, see
+        :py:class:`nidcpower.Session`.
+
+        Args:
+            reset: Specifies whether to reset channel(s) during the
+                initialization procedure.
+
+            options: Specifies the initial value of certain properties for the
+                session. If this argument is not specified, the default value is
+                an empty dict, which you may override by specifying
+                ``NIDCPOWER_SIMULATE``, ``NIDCPOWER_BOARD_TYPE``, and
+                ``NIDCPOWER_MODEL`` in the configuration file (``.env``).
+
+            initialization_behavior: Specifies whether to initialize a new
+                session or attach to an existing session.
+
+        Returns:
+            A context manager that yields a session information object. The
+            created session is available via the ``session`` field.
+        """
+        from ni_measurementlink_service._drivers._nidcpower import SessionConstructor
+
+        session_constructor = SessionConstructor(
+            self._discovery_client, self._grpc_channel_pool, reset, options, initialization_behavior
+        )
+        return self._create_session_core(session_constructor, INSTRUMENT_TYPE_NI_DCPOWER)
+
+    @requires_feature(SESSION_MANAGEMENT_2024Q1)
+    def create_nidcpower_sessions(
+        self,
+        reset: bool = False,
+        options: Optional[Dict[str, Any]] = None,
+        initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
+    ) -> ContextManager[Sequence[TypedSessionInformation[nidcpower.Session]]]:
+        """Create multiple NI-DCPower instrument sessions.
+
+        For more details regarding constructor arguments, see
+        :py:class:`nidcpower.Session`.
+
+        Args:
+            reset: Specifies whether to reset channel(s) during the
+                initialization procedure.
+
+            options: Specifies the initial value of certain properties for the
+                session. If this argument is not specified, the default value is
+                an empty dict, which you may override by specifying
+                ``NIDCPOWER_SIMULATE``, ``NIDCPOWER_BOARD_TYPE``, and
+                ``NIDCPOWER_MODEL`` in the configuration file (``.env``).
+
+            initialization_behavior: Specifies whether to initialize a new
+                session or attach to an existing session.
+
+        Returns:
+            A context manager that yields a session information object. The
+            created sessions are available via the ``session`` field.
+        """
+        from ni_measurementlink_service._drivers._nidcpower import SessionConstructor
+
+        session_constructor = SessionConstructor(
+            self._discovery_client, self._grpc_channel_pool, reset, options, initialization_behavior
+        )
+        return self._create_sessions_core(session_constructor, INSTRUMENT_TYPE_NI_DCPOWER)
+
+    @requires_feature(SESSION_MANAGEMENT_2024Q1)
+    def create_nifgen_session(
+        self,
+        reset_device: bool = False,
+        options: Optional[Dict[str, Any]] = None,
+        initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
+    ) -> ContextManager[TypedSessionInformation[nifgen.Session]]:
+        """Create a single NI-FGEN instrument session.
+
+        For more details regarding constructor arguments, see
+        :py:class:`nifgen.Session`.
+
+        Args:
+            reset_device: Specifies whether to reset the device during the
+                initialization procedure.
+
+            options: Specifies the initial value of certain properties for the
+                session. If this argument is not specified, the default value is
+                an empty dict, which you may override by specifying
+                ``NIFGEN_SIMULATE``, ``NIFGEN_BOARD_TYPE``, and ``NIFGEN_MODEL``
+                in the configuration file (``.env``).
+
+            initialization_behavior: Specifies whether to initialize a new
+                session or attach to an existing session.
+
+        Returns:
+            A context manager that yields a session information object. The
+            created session is available via the ``session`` field.
+        """
+        from ni_measurementlink_service._drivers._nifgen import SessionConstructor
+
+        session_constructor = SessionConstructor(
+            self._discovery_client,
+            self._grpc_channel_pool,
+            reset_device,
+            options,
+            initialization_behavior,
+        )
+        return self._create_session_core(session_constructor, INSTRUMENT_TYPE_NI_FGEN)
+
+    @requires_feature(SESSION_MANAGEMENT_2024Q1)
+    def create_nifgen_sessions(
+        self,
+        reset_device: bool = False,
+        options: Optional[Dict[str, Any]] = None,
+        initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
+    ) -> ContextManager[Sequence[TypedSessionInformation[nifgen.Session]]]:
+        """Create multiple NI-FGEN instrument sessions.
+
+        For more details regarding constructor arguments, see
+        :py:class:`nifgen.Session`.
+
+        Args:
+            reset_device: Specifies whether to reset the device during the
+                initialization procedure.
+
+            options: Specifies the initial value of certain properties for the
+                session. If this argument is not specified, the default value is
+                an empty dict, which you may override by specifying
+                ``NIFGEN_SIMULATE``, ``NIFGEN_BOARD_TYPE``, and ``NIFGEN_MODEL``
+                in the configuration file (``.env``).
+
+            initialization_behavior: Specifies whether to initialize a new
+                session or attach to an existing session.
+
+        Returns:
+            A context manager that yields a session information object. The
+            created sessions are available via the ``session`` field.
+        """
+        from ni_measurementlink_service._drivers._nifgen import SessionConstructor
+
+        session_constructor = SessionConstructor(
+            self._discovery_client,
+            self._grpc_channel_pool,
+            reset_device,
+            options,
+            initialization_behavior,
+        )
+        return self._create_sessions_core(session_constructor, INSTRUMENT_TYPE_NI_FGEN)
+
+    @requires_feature(SESSION_MANAGEMENT_2024Q1)
+    def create_niswitch_session(
+        self,
+        topology: Optional[str] = None,
+        simulate: Optional[bool] = None,
+        reset_device: bool = False,
+        initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
+    ) -> ContextManager[TypedSessionInformation[niswitch.Session]]:
+        """Create a single NI-SWITCH instrument session.
+
+        For more details regarding constructor arguments, see
+        :py:class:`niswitch.Session`.
+
+        Args:
+            topology: Specifies the switch topology. If this argument is not
+                specified, the default value is "Configured Topology", which you
+                may override by setting ``NISWITCH_TOPOLOGY`` in the
+                configuration file (``.env``).
+
+            simulate: Enables or disables simulation of the switch module. If
+                this argument is not specified, the default value is ``False``,
+                which you may override by setting ``NISWITCH_SIMULATE`` in the
+                configuration file (``.env``).
+
+            reset_device: Specifies whether to reset the switch module during
+                the initialization procedure.
+
+            initialization_behavior: Specifies whether to initialize a new
+                session or attach to an existing session.
+
+        Returns:
+            A context manager that yields a session information object. The
+            created session is available via the ``session`` field.
+        """
+        from ni_measurementlink_service._drivers._niswitch import SessionConstructor
+
+        session_constructor = SessionConstructor(
+            self._discovery_client,
+            self._grpc_channel_pool,
+            topology,
+            simulate,
+            reset_device,
+            initialization_behavior,
+        )
+        return self._create_session_core(session_constructor, INSTRUMENT_TYPE_NI_RELAY_DRIVER)
+
+    @requires_feature(SESSION_MANAGEMENT_2024Q1)
+    def create_niswitch_sessions(
+        self,
+        topology: Optional[str] = None,
+        simulate: Optional[bool] = None,
+        reset_device: bool = False,
+        initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
+    ) -> ContextManager[Sequence[TypedSessionInformation[niswitch.Session]]]:
+        """Create multiple NI-SWITCH instrument sessions.
+
+        For more details regarding constructor arguments, see
+        :py:class:`niswitch.Session`.
+
+        Args:
+            topology: Specifies the switch topology. If this argument is not
+                specified, the default value is "Configured Topology", which you
+                may override by setting ``NISWITCH_TOPOLOGY`` in the
+                configuration file (``.env``).
+
+            simulate: Enables or disables simulation of the switch module. If
+                this argument is not specified, the default value is ``False``,
+                which you may override by setting ``NISWITCH_SIMULATE`` in the
+                configuration file (``.env``).
+
+            reset_device: Specifies whether to reset the switch module during
+                the initialization procedure.
+
+            initialization_behavior: Specifies whether to initialize a new
+                session or attach to an existing session.
+
+        Returns:
+            A context manager that yields a session information object. The
+            created sessions are available via the ``session`` field.
+        """
+        from ni_measurementlink_service._drivers._niswitch import SessionConstructor
+
+        session_constructor = SessionConstructor(
+            self._discovery_client,
+            self._grpc_channel_pool,
+            topology,
+            simulate,
+            reset_device,
+            initialization_behavior,
+        )
+        return self._create_sessions_core(session_constructor, INSTRUMENT_TYPE_NI_RELAY_DRIVER)
 
 
 class SingleSessionReservation(BaseReservation):
