@@ -20,6 +20,7 @@ from ni_measurementlink_service.session_management import (
     SessionInformation,
     SessionManagementClient,
     SingleSessionReservation,
+    TypedSessionInformation,
 )
 
 
@@ -546,6 +547,14 @@ def test___use_reservation_type___reports_deprecated_warning_and_aliases_to_mult
         reservation = Reservation(session_management_client, _create_grpc_session_infos(3))
 
     assert isinstance(reservation, MultiSessionReservation)
+
+
+def test___session_information___type_check___implements_typed_session_information_object() -> None:
+    # This is a type-checking test. It does nothing at run time.
+    def f(typed_session_info: TypedSessionInformation[object]) -> None:
+        pass
+
+    f(SessionInformation("MySession", "Dev1", "0", "niDCPower", False, []))
 
 
 def _create_session_infos(session_count: int) -> List[SessionInformation]:
