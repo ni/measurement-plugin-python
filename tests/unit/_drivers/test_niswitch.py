@@ -18,17 +18,18 @@ from tests.unit._reservation_utils import create_grpc_session_infos
 
 try:
     import niswitch
-    from niswitch import Session as _RealSession
 except ImportError:
     niswitch = None
 
 pytestmark = pytest.mark.skipif(niswitch is None, reason="Requires 'niswitch' package.")
 
-create_mock_niswitch_session = functools.partial(create_mock_session, _RealSession)
-create_mock_niswitch_sessions = functools.partial(create_mock_sessions, _RealSession)
-create_niswitch_session_infos = functools.partial(
-    create_grpc_session_infos, INSTRUMENT_TYPE_NI_RELAY_DRIVER
-)
+if niswitch:
+    # Note: this reads the Session type before it is patched.
+    create_mock_niswitch_session = functools.partial(create_mock_session, niswitch.Session)
+    create_mock_niswitch_sessions = functools.partial(create_mock_sessions, niswitch.Session)
+    create_niswitch_session_infos = functools.partial(
+        create_grpc_session_infos, INSTRUMENT_TYPE_NI_RELAY_DRIVER
+    )
 
 
 def test___single_session_info___create_niswitch_session___session_created(

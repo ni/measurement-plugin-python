@@ -18,16 +18,19 @@ from tests.unit._reservation_utils import create_grpc_session_infos
 
 try:
     import nifgen
-    from nifgen import Session as _RealSession
 except ImportError:
     nifgen = None
 
 pytestmark = pytest.mark.skipif(nifgen is None, reason="Requires 'nifgen' package.")
 
-create_mock_nifgen_session = functools.partial(create_mock_session, _RealSession)
-create_mock_nifgen_sessions = functools.partial(create_mock_sessions, _RealSession)
-create_nifgen_session_infos = functools.partial(create_grpc_session_infos, INSTRUMENT_TYPE_NI_FGEN)
-set_nifgen_simulation_options = functools.partial(set_simulation_options, "nifgen")
+if nifgen:
+    # Note: this reads the Session type before it is patched.
+    create_mock_nifgen_session = functools.partial(create_mock_session, nifgen.Session)
+    create_mock_nifgen_sessions = functools.partial(create_mock_sessions, nifgen.Session)
+    create_nifgen_session_infos = functools.partial(
+        create_grpc_session_infos, INSTRUMENT_TYPE_NI_FGEN
+    )
+    set_nifgen_simulation_options = functools.partial(set_simulation_options, "nifgen")
 
 
 def test___single_session_info___create_nifgen_session___session_created(

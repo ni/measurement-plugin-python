@@ -18,18 +18,19 @@ from tests.unit._reservation_utils import create_grpc_session_infos
 
 try:
     import nidcpower
-    from nidcpower import Session as _RealSession
 except ImportError:
     nidcpower = None
 
 pytestmark = pytest.mark.skipif(nidcpower is None, reason="Requires 'nidcpower' package.")
 
-create_mock_nidcpower_session = functools.partial(create_mock_session, _RealSession)
-create_mock_nidcpower_sessions = functools.partial(create_mock_sessions, _RealSession)
-create_nidcpower_session_infos = functools.partial(
-    create_grpc_session_infos, INSTRUMENT_TYPE_NI_DCPOWER
-)
-set_nidcpower_simulation_options = functools.partial(set_simulation_options, "nidcpower")
+if nidcpower:
+    # Note: this reads the Session type before it is patched.
+    create_mock_nidcpower_session = functools.partial(create_mock_session, nidcpower.Session)
+    create_mock_nidcpower_sessions = functools.partial(create_mock_sessions, nidcpower.Session)
+    create_nidcpower_session_infos = functools.partial(
+        create_grpc_session_infos, INSTRUMENT_TYPE_NI_DCPOWER
+    )
+    set_nidcpower_simulation_options = functools.partial(set_simulation_options, "nidcpower")
 
 
 def test___single_session_info___create_nidcpower_session___session_created(
