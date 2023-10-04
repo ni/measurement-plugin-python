@@ -84,8 +84,8 @@ intersphinx_mapping = {
     "nidigital": ("https://nidigital.readthedocs.io/en/stable/", None),
     "nidmm": ("https://nidmm.readthedocs.io/en/stable/", None),
     "nifgen": ("https://nifgen.readthedocs.io/en/stable/", None),
-    "niniscope": ("https://niscope.readthedocs.io/en/stable/", None),
-    "niniswitch": ("https://niswitch.readthedocs.io/en/stable/", None),
+    "niscope": ("https://niscope.readthedocs.io/en/stable/", None),
+    "niswitch": ("https://niswitch.readthedocs.io/en/stable/", None),
     "python": ("https://docs.python.org/3", None),
 }
 
