@@ -100,6 +100,7 @@ markers = [
 [tool.mypy]
 disallow_untyped_defs = true
 namespace_packages = true
+plugins = "numpy.typing.mypy_plugin"
 warn_redundant_casts = true
 warn_unused_configs = true
 warn_unused_ignores = true
