@@ -18,6 +18,8 @@ jobs:
   check_nimg:
     name: Check NIMG
     uses: ./.github/workflows/check_nimg.yml
+  # Don't run check_examples.yml because the examples may reference a
+  # package version that doesn't exist yet.
   build:
     name: Update API reference docs and Publish NIMS Package to PyPI
     runs-on : ubuntu-latest 
