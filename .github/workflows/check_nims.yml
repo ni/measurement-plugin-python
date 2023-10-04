@@ -30,8 +30,8 @@ jobs:
         with:
           path: ~/.cache/pypoetry/virtualenvs
           key: ${{ runner.os }}-poetry-${{ hashFiles('poetry.lock') }}
-      - name: Install ni-measurementlink-service
-        run: poetry install -v
+      - name: Install ni-measurementlink-service (all extras)
+        run: poetry install -v --all-extras
       - name: Lint ni-measurementlink-service
         run: poetry run ni-python-styleguide lint
       - name: Mypy static analysis (ni-measurementlink-service, Linux)
@@ -42,8 +42,8 @@ jobs:
         run:  poetry run mypy tests
       - name: Mypy static analysis (tests, Windows)
         run:  poetry run mypy tests --platform win32
-      - name: Install ni-measurementlink-service with docs
-        run: poetry install --with docs
+      - name: Install docs dependency group
+        run: poetry install -v --with docs
       - name: Build docs and check for errors/warnings
         run: |
           rm -rf docs
