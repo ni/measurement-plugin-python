@@ -448,9 +448,6 @@ class BaseReservation(abc.ABC):
     ) -> ContextManager[TypedSessionInformation[nidcpower.Session]]:
         """Create a single NI-DCPower instrument session.
 
-        For more details regarding constructor arguments, see
-        :py:class:`nidcpower.Session`.
-
         Args:
             reset: Specifies whether to reset channel(s) during the
                 initialization procedure.
@@ -467,6 +464,9 @@ class BaseReservation(abc.ABC):
         Returns:
             A context manager that yields a session information object. The
             created session is available via the ``session`` field.
+
+        See Also:
+            For more details, see :py:class:`nidcpower.Session`.
         """
         from ni_measurementlink_service._drivers._nidcpower import SessionConstructor
 
@@ -484,9 +484,6 @@ class BaseReservation(abc.ABC):
     ) -> ContextManager[Sequence[TypedSessionInformation[nidcpower.Session]]]:
         """Create multiple NI-DCPower instrument sessions.
 
-        For more details regarding constructor arguments, see
-        :py:class:`nidcpower.Session`.
-
         Args:
             reset: Specifies whether to reset channel(s) during the
                 initialization procedure.
@@ -501,8 +498,12 @@ class BaseReservation(abc.ABC):
                 session or attach to an existing session.
 
         Returns:
-            A context manager that yields a session information object. The
-            created sessions are available via the ``session`` field.
+            A context manager that yields a sequence of session information
+            objects. The created sessions are available via the ``session``
+            field.
+
+        See Also:
+            For more details, see :py:class:`nidcpower.Session`.
         """
         from ni_measurementlink_service._drivers._nidcpower import SessionConstructor
 
@@ -520,11 +521,8 @@ class BaseReservation(abc.ABC):
     ) -> ContextManager[TypedSessionInformation[nifgen.Session]]:
         """Create a single NI-FGEN instrument session.
 
-        For more details regarding constructor arguments, see
-        :py:class:`nifgen.Session`.
-
         Args:
-            reset_device: Specifies whether to reset the device during the
+            reset_device: Specifies whether to reset the instrument during the
                 initialization procedure.
 
             options: Specifies the initial value of certain properties for the
@@ -539,6 +537,9 @@ class BaseReservation(abc.ABC):
         Returns:
             A context manager that yields a session information object. The
             created session is available via the ``session`` field.
+
+        See Also:
+            For more details, see :py:class:`nifgen.Session`.
         """
         from ni_measurementlink_service._drivers._nifgen import SessionConstructor
 
@@ -560,11 +561,8 @@ class BaseReservation(abc.ABC):
     ) -> ContextManager[Sequence[TypedSessionInformation[nifgen.Session]]]:
         """Create multiple NI-FGEN instrument sessions.
 
-        For more details regarding constructor arguments, see
-        :py:class:`nifgen.Session`.
-
         Args:
-            reset_device: Specifies whether to reset the device during the
+            reset_device: Specifies whether to reset the instrument during the
                 initialization procedure.
 
             options: Specifies the initial value of certain properties for the
@@ -577,8 +575,12 @@ class BaseReservation(abc.ABC):
                 session or attach to an existing session.
 
         Returns:
-            A context manager that yields a session information object. The
-            created sessions are available via the ``session`` field.
+            A context manager that yields a sequence of session information
+            objects. The created sessions are available via the ``session``
+            field.
+
+        See Also:
+            For more details, see :py:class:`nifgen.Session`.
         """
         from ni_measurementlink_service._drivers._nifgen import SessionConstructor
 
@@ -601,9 +603,6 @@ class BaseReservation(abc.ABC):
     ) -> ContextManager[TypedSessionInformation[niswitch.Session]]:
         """Create a single NI-SWITCH instrument session.
 
-        For more details regarding constructor arguments, see
-        :py:class:`niswitch.Session`.
-
         Args:
             topology: Specifies the switch topology. If this argument is not
                 specified, the default value is "Configured Topology", which you
@@ -624,6 +623,9 @@ class BaseReservation(abc.ABC):
         Returns:
             A context manager that yields a session information object. The
             created session is available via the ``session`` field.
+
+        See Also:
+            For more details, see :py:class:`niswitch.Session`.
         """
         from ni_measurementlink_service._drivers._niswitch import SessionConstructor
 
@@ -647,9 +649,6 @@ class BaseReservation(abc.ABC):
     ) -> ContextManager[Sequence[TypedSessionInformation[niswitch.Session]]]:
         """Create multiple NI-SWITCH instrument sessions.
 
-        For more details regarding constructor arguments, see
-        :py:class:`niswitch.Session`.
-
         Args:
             topology: Specifies the switch topology. If this argument is not
                 specified, the default value is "Configured Topology", which you
@@ -668,8 +667,12 @@ class BaseReservation(abc.ABC):
                 session or attach to an existing session.
 
         Returns:
-            A context manager that yields a session information object. The
-            created sessions are available via the ``session`` field.
+            A context manager that yields a sequence of session information
+            objects. The created sessions are available via the ``session``
+            field.
+
+        See Also:
+            For more details, see :py:class:`niswitch.Session`.
         """
         from ni_measurementlink_service._drivers._niswitch import SessionConstructor
 
