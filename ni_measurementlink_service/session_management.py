@@ -54,8 +54,13 @@ from ni_measurementlink_service._sessiontypes import (
 )
 
 if TYPE_CHECKING:
+    # Driver API packages are optional dependencies, so only import them lazily
+    # at run time or when type-checking.
     import nidcpower
+    import nidigital
+    import nidmm
     import nifgen
+    import niscope
     import niswitch
 
     if sys.version_info >= (3, 11):
@@ -513,6 +518,184 @@ class BaseReservation(abc.ABC):
         return self._create_sessions_core(session_constructor, INSTRUMENT_TYPE_NI_DCPOWER)
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
+    def create_nidigital_session(
+        self,
+        id_query: bool = False,
+        reset_device: bool = False,
+        options: Optional[Dict[str, Any]] = None,
+        initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
+    ) -> ContextManager[TypedSessionInformation[nidigital.Session]]:
+        """Create a single NI-Digital Pattern instrument session.
+
+        Args:
+            id_query: Specifies whether to verify that the instrument is supported.
+
+            reset_device: Specifies whether to reset the instrument during the
+                initialization procedure.
+
+            options: Specifies the initial value of certain properties for the
+                session. If this argument is not specified, the default value is
+                an empty dict, which you may override by specifying
+                ``NIDIGITAL_SIMULATE``, ``NIDIGITAL_BOARD_TYPE``, and
+                ``NIDIGITAL_MODEL`` in the configuration file (``.env``).
+
+            initialization_behavior: Specifies whether to initialize a new
+                session or attach to an existing session.
+
+        Returns:
+            A context manager that yields a session information object. The
+            created session is available via the ``session`` field.
+
+        See Also:
+            For more details, see :py:class:`nidigital.Session`.
+        """
+        from ni_measurementlink_service._drivers._nidigital import SessionConstructor
+
+        session_constructor = SessionConstructor(
+            self._discovery_client,
+            self._grpc_channel_pool,
+            id_query,
+            reset_device,
+            options,
+            initialization_behavior,
+        )
+        return self._create_session_core(session_constructor, INSTRUMENT_TYPE_NI_DIGITAL_PATTERN)
+
+    @requires_feature(SESSION_MANAGEMENT_2024Q1)
+    def create_nidigital_sessions(
+        self,
+        id_query: bool = False,
+        reset_device: bool = False,
+        options: Optional[Dict[str, Any]] = None,
+        initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
+    ) -> ContextManager[Sequence[TypedSessionInformation[nidigital.Session]]]:
+        """Create multiple NI-Digital Pattern instrument sessions.
+
+        Args:
+            id_query: Specifies whether to verify that the instrument is supported.
+
+            reset_device: Specifies whether to reset the instrument during the
+                initialization procedure.
+
+            options: Specifies the initial value of certain properties for the
+                session. If this argument is not specified, the default value is
+                an empty dict, which you may override by specifying
+                ``NIDIGITAL_SIMULATE``, ``NIDIGITAL_BOARD_TYPE``, and
+                ``NIDIGITAL_MODEL`` in the configuration file (``.env``).
+
+            initialization_behavior: Specifies whether to initialize a new
+                session or attach to an existing session.
+
+        Returns:
+            A context manager that yields a sequence of session information
+            objects. The created sessions are available via the ``session``
+            field.
+
+        See Also:
+            For more details, see :py:class:`nidigital.Session`.
+        """
+        from ni_measurementlink_service._drivers._nidigital import SessionConstructor
+
+        session_constructor = SessionConstructor(
+            self._discovery_client,
+            self._grpc_channel_pool,
+            id_query,
+            reset_device,
+            options,
+            initialization_behavior,
+        )
+        return self._create_sessions_core(session_constructor, INSTRUMENT_TYPE_NI_DIGITAL_PATTERN)
+
+    @requires_feature(SESSION_MANAGEMENT_2024Q1)
+    def create_nidmm_session(
+        self,
+        id_query: bool = False,
+        reset_device: bool = False,
+        options: Optional[Dict[str, Any]] = None,
+        initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
+    ) -> ContextManager[TypedSessionInformation[nidmm.Session]]:
+        """Create a single NI-DMM instrument session.
+
+        Args:
+            id_query: Specifies whether to verify that the instrument is supported.
+
+            reset_device: Specifies whether to reset the instrument during the
+                initialization procedure.
+
+            options: Specifies the initial value of certain properties for the
+                session. If this argument is not specified, the default value is
+                an empty dict, which you may override by specifying
+                ``NIDMM_SIMULATE``, ``NIDMM_BOARD_TYPE``, and
+                ``NIDMM_MODEL`` in the configuration file (``.env``).
+
+            initialization_behavior: Specifies whether to initialize a new
+                session or attach to an existing session.
+
+        Returns:
+            A context manager that yields a session information object. The
+            created session is available via the ``session`` field.
+
+        See Also:
+            For more details, see :py:class:`nidmm.Session`.
+        """
+        from ni_measurementlink_service._drivers._nidmm import SessionConstructor
+
+        session_constructor = SessionConstructor(
+            self._discovery_client,
+            self._grpc_channel_pool,
+            id_query,
+            reset_device,
+            options,
+            initialization_behavior,
+        )
+        return self._create_session_core(session_constructor, INSTRUMENT_TYPE_NI_DCPOWER)
+
+    @requires_feature(SESSION_MANAGEMENT_2024Q1)
+    def create_nidmm_sessions(
+        self,
+        id_query: bool = False,
+        reset_device: bool = False,
+        options: Optional[Dict[str, Any]] = None,
+        initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
+    ) -> ContextManager[Sequence[TypedSessionInformation[nidmm.Session]]]:
+        """Create multiple NI-DMM instrument sessions.
+
+        Args:
+            id_query: Specifies whether to verify that the instrument is supported.
+
+            reset_device: Specifies whether to reset the instrument during the
+                initialization procedure.
+
+            options: Specifies the initial value of certain properties for the
+                session. If this argument is not specified, the default value is
+                an empty dict, which you may override by specifying
+                ``NIDMM_SIMULATE``, ``NIDMM_BOARD_TYPE``, and
+                ``NIDMM_MODEL`` in the configuration file (``.env``).
+
+            initialization_behavior: Specifies whether to initialize a new
+                session or attach to an existing session.
+
+        Returns:
+            A context manager that yields a sequence of session information
+            objects. The created sessions are available via the ``session``
+            field.
+
+        See Also:
+            For more details, see :py:class:`nidmm.Session`.
+        """
+        from ni_measurementlink_service._drivers._nidmm import SessionConstructor
+
+        session_constructor = SessionConstructor(
+            self._discovery_client,
+            self._grpc_channel_pool,
+            id_query,
+            reset_device,
+            options,
+            initialization_behavior,
+        )
+        return self._create_sessions_core(session_constructor, INSTRUMENT_TYPE_NI_DMM)
+
+    @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def create_nifgen_session(
         self,
         reset_device: bool = False,
@@ -592,6 +775,95 @@ class BaseReservation(abc.ABC):
             initialization_behavior,
         )
         return self._create_sessions_core(session_constructor, INSTRUMENT_TYPE_NI_FGEN)
+
+    @requires_feature(SESSION_MANAGEMENT_2024Q1)
+    def create_niscope_session(
+        self,
+        id_query: bool = False,
+        reset_device: bool = False,
+        options: Optional[Dict[str, Any]] = None,
+        initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
+    ) -> ContextManager[TypedSessionInformation[niscope.Session]]:
+        """Create a single NI-SCOPE instrument session.
+
+        Args:
+            id_query: Specifies whether to verify that the instrument is supported.
+
+            reset_device: Specifies whether to reset the instrument during the
+                initialization procedure.
+
+            options: Specifies the initial value of certain properties for the
+                session. If this argument is not specified, the default value is
+                an empty dict, which you may override by specifying
+                ``NISCOPE_SIMULATE``, ``NISCOPE_BOARD_TYPE``, and
+                ``NISCOPE_MODEL`` in the configuration file (``.env``).
+
+            initialization_behavior: Specifies whether to initialize a new
+                session or attach to an existing session.
+
+        Returns:
+            A context manager that yields a session information object. The
+            created session is available via the ``session`` field.
+
+        See Also:
+            For more details, see :py:class:`niscope.Session`.
+        """
+        from ni_measurementlink_service._drivers._niscope import SessionConstructor
+
+        session_constructor = SessionConstructor(
+            self._discovery_client,
+            self._grpc_channel_pool,
+            id_query,
+            reset_device,
+            options,
+            initialization_behavior,
+        )
+        return self._create_session_core(session_constructor, INSTRUMENT_TYPE_NI_SCOPE)
+
+    @requires_feature(SESSION_MANAGEMENT_2024Q1)
+    def create_niscope_sessions(
+        self,
+        id_query: bool = False,
+        reset_device: bool = False,
+        options: Optional[Dict[str, Any]] = None,
+        initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
+    ) -> ContextManager[Sequence[TypedSessionInformation[niscope.Session]]]:
+        """Create multiple NI-SCOPE instrument sessions.
+
+        Args:
+            id_query: Specifies whether to verify that the instrument is supported.
+
+            reset_device: Specifies whether to reset the instrument during the
+                initialization procedure.
+
+            options: Specifies the initial value of certain properties for the
+                session. If this argument is not specified, the default value is
+                an empty dict, which you may override by specifying
+                ``NISCOPE_SIMULATE``, ``NISCOPE_BOARD_TYPE``, and
+                ``NISCOPE_MODEL`` in the configuration file (``.env``).
+
+            initialization_behavior: Specifies whether to initialize a new
+                session or attach to an existing session.
+
+        Returns:
+            A context manager that yields a sequence of session information
+            objects. The created sessions are available via the ``session``
+            field.
+
+        See Also:
+            For more details, see :py:class:`niscope.Session`.
+        """
+        from ni_measurementlink_service._drivers._niscope import SessionConstructor
+
+        session_constructor = SessionConstructor(
+            self._discovery_client,
+            self._grpc_channel_pool,
+            id_query,
+            reset_device,
+            options,
+            initialization_behavior,
+        )
+        return self._create_sessions_core(session_constructor, INSTRUMENT_TYPE_NI_SCOPE)
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def create_niswitch_session(
