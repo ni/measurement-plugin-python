@@ -47,7 +47,7 @@ autoapi_options = list(autoapi.extension._DEFAULT_OPTIONS)
 autoapi_options.remove("private-members")  # note: remove this to include "_" members in docs
 autoapi_dirs = [root_path / "ni_measurementlink_service"]
 autoapi_type = "python"
-autodoc_typehints = "none"
+autodoc_typehints = "description"
 
 
 # WARNING: more than one target found for cross-reference 'MeasurementInfo':
