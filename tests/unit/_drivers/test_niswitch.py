@@ -1,19 +1,20 @@
-from typing import List
-from unittest.mock import ANY, Mock, create_autospec
+import functools
+from unittest.mock import ANY, Mock
 
 import pytest
 from pytest_mock import MockerFixture
 
 from ni_measurementlink_service._configuration import NISwitchOptions
-from ni_measurementlink_service._internal.stubs import session_pb2
-from ni_measurementlink_service._internal.stubs.ni.measurementlink.sessionmanagement.v1 import (
-    session_management_service_pb2,
-)
 from ni_measurementlink_service.session_management import (
     INSTRUMENT_TYPE_NI_RELAY_DRIVER,
     MultiSessionReservation,
     SessionInitializationBehavior,
 )
+from tests.unit._drivers._driver_utils import (
+    create_mock_session,
+    create_mock_sessions,
+)
+from tests.unit._reservation_utils import create_grpc_session_infos
 
 try:
     import niswitch
@@ -23,13 +24,21 @@ except ImportError:
 
 pytestmark = pytest.mark.skipif(niswitch is None, reason="Requires 'niswitch' package.")
 
+create_mock_niswitch_session = functools.partial(create_mock_session, _RealSession)
+create_mock_niswitch_sessions = functools.partial(create_mock_sessions, _RealSession)
+create_niswitch_session_infos = functools.partial(
+    create_grpc_session_infos, INSTRUMENT_TYPE_NI_RELAY_DRIVER
+)
+
 
 def test___single_session_info___create_niswitch_session___session_created(
     session_type: Mock,
     session_management_client: Mock,
 ) -> None:
-    reservation = MultiSessionReservation(session_management_client, _create_grpc_session_infos(1))
-    session = _create_mock_session()
+    reservation = MultiSessionReservation(
+        session_management_client, create_niswitch_session_infos(1)
+    )
+    session = create_mock_niswitch_session()
     session_type.side_effect = [session]
 
     with reservation.create_niswitch_session() as session_info:
@@ -48,8 +57,10 @@ def test___multiple_session_infos___create_niswitch_sessions___sessions_created(
     session_type: Mock,
     session_management_client: Mock,
 ) -> None:
-    reservation = MultiSessionReservation(session_management_client, _create_grpc_session_infos(2))
-    sessions = _create_mock_sessions(3)
+    reservation = MultiSessionReservation(
+        session_management_client, create_niswitch_session_infos(2)
+    )
+    sessions = create_mock_niswitch_sessions(3)
     session_type.side_effect = sessions
 
     with reservation.create_niswitch_sessions() as session_info:
@@ -76,8 +87,10 @@ def test___optional_args___create_niswitch_session___optional_args_passed(
     session_type: Mock,
     session_management_client: Mock,
 ) -> None:
-    reservation = MultiSessionReservation(session_management_client, _create_grpc_session_infos(1))
-    session = _create_mock_session()
+    reservation = MultiSessionReservation(
+        session_management_client, create_niswitch_session_infos(1)
+    )
+    session = create_mock_niswitch_session()
     session_type.side_effect = [session]
 
     with reservation.create_niswitch_session(
@@ -106,9 +119,11 @@ def test___simulation_configured___create_niswitch_session___simulation_options_
     session_type: Mock,
     session_management_client: Mock,
 ) -> None:
-    _set_simulation_options(mocker, True, "2567/Independent")
-    reservation = MultiSessionReservation(session_management_client, _create_grpc_session_infos(1))
-    session = _create_mock_session()
+    _set_niswitch_simulation_options(mocker, True, "2567/Independent")
+    reservation = MultiSessionReservation(
+        session_management_client, create_niswitch_session_infos(1)
+    )
+    session = create_mock_niswitch_session()
     session_type.side_effect = [session]
 
     with reservation.create_niswitch_session():
@@ -128,9 +143,11 @@ def test___optional_args_and_simulation_configured___create_niswitch_session___o
     session_type: Mock,
     session_management_client: Mock,
 ) -> None:
-    _set_simulation_options(mocker, True, "2567/Independent")
-    reservation = MultiSessionReservation(session_management_client, _create_grpc_session_infos(1))
-    session = _create_mock_session()
+    _set_niswitch_simulation_options(mocker, True, "2567/Independent")
+    reservation = MultiSessionReservation(
+        session_management_client, create_niswitch_session_infos(1)
+    )
+    session = create_mock_niswitch_session()
     session_type.side_effect = [session]
 
     with reservation.create_niswitch_session(
@@ -153,32 +170,7 @@ def session_type(mocker: MockerFixture) -> Mock:
     return mocker.patch("niswitch.Session", autospec=True)
 
 
-def _create_mock_session() -> Mock:
-    # Use the real Session class, not the one we patched.
-    mock = create_autospec(_RealSession)
-    mock.__enter__.return_value = mock
-    mock.__exit__.return_value = None
-    return mock
-
-
-def _create_mock_sessions(count: int) -> List[Mock]:
-    return [_create_mock_session() for _ in range(count)]
-
-
-def _create_grpc_session_infos(
-    session_count: int,
-) -> List[session_management_service_pb2.SessionInformation]:
-    return [
-        session_management_service_pb2.SessionInformation(
-            session=session_pb2.Session(name=f"MySession{i}"),
-            resource_name=f"Dev{i}",
-            instrument_type_id=INSTRUMENT_TYPE_NI_RELAY_DRIVER,
-        )
-        for i in range(session_count)
-    ]
-
-
-def _set_simulation_options(mocker: MockerFixture, simulate: bool, topology: str) -> None:
+def _set_niswitch_simulation_options(mocker: MockerFixture, simulate: bool, topology: str) -> None:
     mocker.patch(
         "ni_measurementlink_service._drivers._niswitch.NISWITCH_OPTIONS",
         NISwitchOptions("niswitch", simulate, topology),
