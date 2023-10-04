@@ -9,12 +9,14 @@ import toml
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    "sphinx.ext.autodoc",
     "autoapi.extension",
-    "sphinx.ext.viewcode",
-    "sphinx.ext.napoleon",
-    "sphinx_click",
     "m2r2",
+    "sphinx_click",
+    "sphinx.ext.autodoc",
+    "sphinx.ext.githubpages",
+    "sphinx.ext.intersphinx",
+    "sphinx.ext.napoleon",
+    "sphinx.ext.viewcode",
 ]
 
 root_path = pathlib.Path(__file__).parent.parent
@@ -74,6 +76,18 @@ def setup(sphinx):
 # directories to ignore when looking for source files.
 # This patterns also effect to html_static_path and html_extra_path
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
+
+
+intersphinx_mapping = {
+    "nidaqmx": ("https://nidaqmx-python.readthedocs.io/en/stable/", None),
+    "nidcpower": ("https://nidcpower.readthedocs.io/en/stable/", None),
+    "nidigital": ("https://nidigital.readthedocs.io/en/stable/", None),
+    "nidmm": ("https://nidmm.readthedocs.io/en/stable/", None),
+    "nifgen": ("https://nifgen.readthedocs.io/en/stable/", None),
+    "niniscope": ("https://niscope.readthedocs.io/en/stable/", None),
+    "niniswitch": ("https://niswitch.readthedocs.io/en/stable/", None),
+    "python": ("https://docs.python.org/3", None),
+}
 
 
 # -- Options for HTML output ----------------------------------------------
