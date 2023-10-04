@@ -648,7 +648,7 @@ class BaseReservation(abc.ABC):
             options,
             initialization_behavior,
         )
-        return self._create_session_core(session_constructor, INSTRUMENT_TYPE_NI_DCPOWER)
+        return self._create_session_core(session_constructor, INSTRUMENT_TYPE_NI_DMM)
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def create_nidmm_sessions(
