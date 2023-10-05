@@ -27,7 +27,6 @@ class SessionConstructor:
         self,
         discovery_client: DiscoveryClient,
         grpc_channel_pool: GrpcChannelPool,
-        id_query: bool,
         reset_device: bool,
         options: Optional[Dict[str, Any]],
         initialization_behavior: SessionInitializationBehavior,
@@ -36,7 +35,6 @@ class SessionConstructor:
         self._grpc_channel = get_insecure_grpc_device_channel(
             discovery_client, grpc_channel_pool, nidigital.GRPC_SERVICE_INTERFACE_NAME
         )
-        self._id_query = id_query
         self._reset_device = reset_device
         self._options = NIDIGITAL_OPTIONS.to_dict() if options is None else options
         self._initialization_behavior = _INITIALIZATION_BEHAVIOR[initialization_behavior]
@@ -51,9 +49,9 @@ class SessionConstructor:
                 initialization_behavior=self._initialization_behavior,
             )
 
+        # Omit id_query because it has no effect.
         return nidigital.Session(
             resource_name=session_info.resource_name,
-            id_query=self._id_query,
             reset_device=self._reset_device,
             options=self._options,
             **kwargs,

@@ -81,7 +81,9 @@ def test___multi_session_infos___create_session___value_error_raised(
         with reservation.create_session(_construct_session, "nifake"):
             pass
 
-    assert "Too many reserved sessions matched instrument type ID 'nifake'." in exc_info.value.args[0]
+    assert (
+        "Too many reserved sessions matched instrument type ID 'nifake'." in exc_info.value.args[0]
+    )
 
 
 def test___session_already_exists___create_session___runtime_error_raised(

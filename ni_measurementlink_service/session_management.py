@@ -536,7 +536,6 @@ class BaseReservation(abc.ABC):
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def create_nidigital_session(
         self,
-        id_query: bool = False,
         reset_device: bool = False,
         options: Optional[Dict[str, Any]] = None,
         initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
@@ -544,8 +543,6 @@ class BaseReservation(abc.ABC):
         """Create a single NI-Digital Pattern instrument session.
 
         Args:
-            id_query: Specifies whether to verify that the instrument is supported.
-
             reset_device: Specifies whether to reset the instrument during the
                 initialization procedure.
 
@@ -574,7 +571,6 @@ class BaseReservation(abc.ABC):
         session_constructor = SessionConstructor(
             self._discovery_client,
             self._grpc_channel_pool,
-            id_query,
             reset_device,
             options,
             initialization_behavior,
@@ -584,7 +580,6 @@ class BaseReservation(abc.ABC):
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def create_nidigital_sessions(
         self,
-        id_query: bool = False,
         reset_device: bool = False,
         options: Optional[Dict[str, Any]] = None,
         initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
@@ -592,8 +587,6 @@ class BaseReservation(abc.ABC):
         """Create multiple NI-Digital Pattern instrument sessions.
 
         Args:
-            id_query: Specifies whether to verify that the instrument is supported.
-
             reset_device: Specifies whether to reset the instrument during the
                 initialization procedure.
 
@@ -622,7 +615,6 @@ class BaseReservation(abc.ABC):
         session_constructor = SessionConstructor(
             self._discovery_client,
             self._grpc_channel_pool,
-            id_query,
             reset_device,
             options,
             initialization_behavior,
@@ -632,7 +624,6 @@ class BaseReservation(abc.ABC):
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def create_nidmm_session(
         self,
-        id_query: bool = False,
         reset_device: bool = False,
         options: Optional[Dict[str, Any]] = None,
         initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
@@ -640,8 +631,6 @@ class BaseReservation(abc.ABC):
         """Create a single NI-DMM instrument session.
 
         Args:
-            id_query: Specifies whether to verify that the instrument is supported.
-
             reset_device: Specifies whether to reset the instrument during the
                 initialization procedure.
 
@@ -670,7 +659,6 @@ class BaseReservation(abc.ABC):
         session_constructor = SessionConstructor(
             self._discovery_client,
             self._grpc_channel_pool,
-            id_query,
             reset_device,
             options,
             initialization_behavior,
@@ -680,7 +668,6 @@ class BaseReservation(abc.ABC):
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def create_nidmm_sessions(
         self,
-        id_query: bool = False,
         reset_device: bool = False,
         options: Optional[Dict[str, Any]] = None,
         initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
@@ -688,8 +675,6 @@ class BaseReservation(abc.ABC):
         """Create multiple NI-DMM instrument sessions.
 
         Args:
-            id_query: Specifies whether to verify that the instrument is supported.
-
             reset_device: Specifies whether to reset the instrument during the
                 initialization procedure.
 
@@ -718,7 +703,6 @@ class BaseReservation(abc.ABC):
         session_constructor = SessionConstructor(
             self._discovery_client,
             self._grpc_channel_pool,
-            id_query,
             reset_device,
             options,
             initialization_behavior,
@@ -816,7 +800,6 @@ class BaseReservation(abc.ABC):
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def create_niscope_session(
         self,
-        id_query: bool = False,
         reset_device: bool = False,
         options: Optional[Dict[str, Any]] = None,
         initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
@@ -824,8 +807,6 @@ class BaseReservation(abc.ABC):
         """Create a single NI-SCOPE instrument session.
 
         Args:
-            id_query: Specifies whether to verify that the instrument is supported.
-
             reset_device: Specifies whether to reset the instrument during the
                 initialization procedure.
 
@@ -854,7 +835,6 @@ class BaseReservation(abc.ABC):
         session_constructor = SessionConstructor(
             self._discovery_client,
             self._grpc_channel_pool,
-            id_query,
             reset_device,
             options,
             initialization_behavior,
@@ -864,7 +844,6 @@ class BaseReservation(abc.ABC):
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def create_niscope_sessions(
         self,
-        id_query: bool = False,
         reset_device: bool = False,
         options: Optional[Dict[str, Any]] = None,
         initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
@@ -872,8 +851,6 @@ class BaseReservation(abc.ABC):
         """Create multiple NI-SCOPE instrument sessions.
 
         Args:
-            id_query: Specifies whether to verify that the instrument is supported.
-
             reset_device: Specifies whether to reset the instrument during the
                 initialization procedure.
 
@@ -902,7 +879,6 @@ class BaseReservation(abc.ABC):
         session_constructor = SessionConstructor(
             self._discovery_client,
             self._grpc_channel_pool,
-            id_query,
             reset_device,
             options,
             initialization_behavior,

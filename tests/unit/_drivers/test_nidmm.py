@@ -45,7 +45,7 @@ def test___single_session_info___create_nidmm_session___session_created(
         assert session_info.session is session
 
     session_type.assert_called_once_with(
-        resource_name="Dev0", id_query=False, reset_device=False, options={}, grpc_options=ANY
+        resource_name="Dev0", reset_device=False, options={}, grpc_options=ANY
     )
 
 
@@ -62,10 +62,10 @@ def test___multiple_session_infos___create_nidmm_sessions___sessions_created(
         assert session_info[1].session == sessions[1]
 
     session_type.assert_any_call(
-        resource_name="Dev0", id_query=False, reset_device=False, options={}, grpc_options=ANY
+        resource_name="Dev0", reset_device=False, options={}, grpc_options=ANY
     )
     session_type.assert_any_call(
-        resource_name="Dev1", id_query=False, reset_device=False, options={}, grpc_options=ANY
+        resource_name="Dev1", reset_device=False, options={}, grpc_options=ANY
     )
 
 
@@ -78,7 +78,6 @@ def test___optional_args___create_nidmm_session___optional_args_passed(
     session_type.side_effect = [session]
 
     with reservation.create_nidmm_session(
-        id_query=True,
         reset_device=True,
         options={"simulate": False},
         initialization_behavior=SessionInitializationBehavior.INITIALIZE_SERVER_SESSION,
@@ -87,7 +86,6 @@ def test___optional_args___create_nidmm_session___optional_args_passed(
 
     session_type.assert_called_once_with(
         resource_name="Dev0",
-        id_query=True,
         reset_device=True,
         options={"simulate": False},
         grpc_options=ANY,
@@ -117,7 +115,6 @@ def test___simulation_configured___create_nidmm_session___simulation_options_pas
     }
     session_type.assert_called_once_with(
         resource_name="Dev0",
-        id_query=False,
         reset_device=False,
         options=expected_options,
         grpc_options=ANY,
@@ -134,15 +131,12 @@ def test___optional_args_and_simulation_configured___create_nidmm_session___opti
     session = create_mock_nidmm_session()
     session_type.side_effect = [session]
 
-    with reservation.create_nidmm_session(
-        id_query=True, reset_device=True, options={"simulate": False}
-    ):
+    with reservation.create_nidmm_session(reset_device=True, options={"simulate": False}):
         pass
 
     expected_options = {"simulate": False}
     session_type.assert_called_once_with(
         resource_name="Dev0",
-        id_query=True,
         reset_device=True,
         options=expected_options,
         grpc_options=ANY,
