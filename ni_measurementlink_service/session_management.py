@@ -356,12 +356,12 @@ class BaseReservation(abc.ABC):
         session_infos = self._get_matching_session_infos(instrument_type_id)
         if len(session_infos) == 0:
             raise ValueError(
-                f"No sessions matched instrument type ID '{instrument_type_id}'. "
+                f"No reserved sessions matched instrument type ID '{instrument_type_id}'. "
                 "Expected single session, got 0 sessions."
             )
         elif len(session_infos) > 1:
             raise ValueError(
-                f"Too many sessions matched instrument type ID '{instrument_type_id}'. "
+                f"Too many reserved sessions matched instrument type ID '{instrument_type_id}'. "
                 f"Expected single session, got {len(session_infos)} sessions."
             )
 
@@ -381,7 +381,7 @@ class BaseReservation(abc.ABC):
         session_infos = self._get_matching_session_infos(instrument_type_id)
         if len(session_infos) == 0:
             raise ValueError(
-                f"No sessions matched instrument type ID '{instrument_type_id}'. "
+                f"No reserved sessions matched instrument type ID '{instrument_type_id}'. "
                 "Expected single or multiple sessions, got 0 sessions."
             )
 

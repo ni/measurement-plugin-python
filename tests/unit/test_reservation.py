@@ -69,7 +69,7 @@ def test___no_session_infos___create_session___value_error_raised(
         with reservation.create_session(_construct_session, "nifake"):
             pass
 
-    assert "No sessions matched instrument type ID 'nifake'." in exc_info.value.args[0]
+    assert "No reserved sessions matched instrument type ID 'nifake'." in exc_info.value.args[0]
 
 
 def test___multi_session_infos___create_session___value_error_raised(
@@ -81,7 +81,7 @@ def test___multi_session_infos___create_session___value_error_raised(
         with reservation.create_session(_construct_session, "nifake"):
             pass
 
-    assert "Too many sessions matched instrument type ID 'nifake'." in exc_info.value.args[0]
+    assert "Too many reserved sessions matched instrument type ID 'nifake'." in exc_info.value.args[0]
 
 
 def test___session_already_exists___create_session___runtime_error_raised(
@@ -174,7 +174,7 @@ def test___no_session_infos___create_sessions___value_error_raised(
         with reservation.create_sessions(_construct_session, "nifake"):
             pass
 
-    assert "No sessions matched instrument type ID 'nifake'." in exc_info.value.args[0]
+    assert "No reserved sessions matched instrument type ID 'nifake'." in exc_info.value.args[0]
 
 
 def test___session_already_exists___create_sessions___runtime_error_raised(
