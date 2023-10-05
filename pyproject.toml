@@ -52,6 +52,8 @@ types-protobuf = "^4.21"
 types-pkg-resources = "*"
 types-pywin32 = ">=304"
 grpc-stubs = "^1.53"
+psutil = ">=5.9"
+types-psutil = ">=5.9"
 
 [tool.poetry.group.docs]
 optional = true
