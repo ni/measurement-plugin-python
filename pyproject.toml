@@ -43,7 +43,10 @@ pytest = ">=7.2.0"
 ni-python-styleguide = ">=0.4.1"
 # When you update the grpcio-tools version, you should update the minimum grpcio version
 # and regenerate gRPC stubs.
-grpcio-tools = "1.49.1"
+grpcio-tools = [
+  {version = "1.49.1", python = ">=3.8,<3.12"},
+  {version = "1.59.0", python = "^3.12"},
+]
 pytest-cov = ">=3.0.0"
 pytest-mock = ">=3.0"
 mypy = ">=1.0"
