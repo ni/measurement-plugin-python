@@ -56,6 +56,7 @@ from ni_measurementlink_service._sessiontypes import (
 if TYPE_CHECKING:
     # Driver API packages are optional dependencies, so only import them lazily
     # at run time or when type-checking.
+    import nidaqmx
     import nidcpower
     import nidigital
     import nidmm
@@ -452,6 +453,72 @@ class BaseReservation(abc.ABC):
                 sessions match the instrument type ID.
         """
         return self._create_sessions_core(session_constructor, instrument_type_id)
+
+    @requires_feature(SESSION_MANAGEMENT_2024Q1)
+    def create_nidaqmx_task(
+        self,
+        initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
+    ) -> ContextManager[TypedSessionInformation[nidaqmx.Task]]:
+        """Create a single NI-DAQmx task.
+
+        Args:
+            initialization_behavior: Specifies whether to initialize a new
+                task or attach to an existing task.
+
+        Returns:
+            A context manager that yields a session information object. The
+            created task is available via the ``session`` field.
+
+        Raises:
+            ValueError: If no NI-DAQmx tasks are reserved or too many
+                NI-DAQmx tasks are reserved.
+
+        Note:
+            If the ``session_exists`` field is ``False``, the returned task is
+            empty and the caller is expected to add channels to it.
+
+        See Also:
+            For more details, see :py:class:`nidaqmx.Task`.
+        """
+        from ni_measurementlink_service._drivers._nidaqmx import SessionConstructor
+
+        session_constructor = SessionConstructor(
+            self._discovery_client, self._grpc_channel_pool, initialization_behavior
+        )
+        return self._create_session_core(session_constructor, INSTRUMENT_TYPE_NI_DAQMX)
+
+    @requires_feature(SESSION_MANAGEMENT_2024Q1)
+    def create_nidaqmx_tasks(
+        self,
+        initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
+    ) -> ContextManager[Sequence[TypedSessionInformation[nidcpower.Session]]]:
+        """Create multiple NI-DAQmx tasks.
+
+        Args:
+            initialization_behavior: Specifies whether to initialize a new
+                task or attach to an existing task.
+
+        Returns:
+            A context manager that yields a sequence of session information
+            objects. The created tasks are available via the ``session``
+            field.
+
+        Raises:
+            ValueError: If no NI-DAQmx tasks are reserved.
+
+        Note:
+            If the ``session_exists`` field is ``False``, the returned tasks are
+            empty and the caller is expected to add channels to them.
+
+        See Also:
+            For more details, see :py:class:`nidaqmx.Task`.
+        """
+        from ni_measurementlink_service._drivers._nidaqmx import SessionConstructor
+
+        session_constructor = SessionConstructor(
+            self._discovery_client, self._grpc_channel_pool, initialization_behavior
+        )
+        return self._create_sessions_core(session_constructor, INSTRUMENT_TYPE_NI_DAQMX)
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def create_nidcpower_session(
