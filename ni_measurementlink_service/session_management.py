@@ -415,6 +415,11 @@ class BaseReservation(abc.ABC):
         Returns:
             A context manager that yields a session information object. The
             created session is available via the ``session`` field.
+
+        Raises:
+            ValueError: If the instrument type ID is empty, no reserved sessions
+                match the instrument type ID, or too many reserved sessions
+                match the instrument type ID.
         """
         return self._create_session_core(session_constructor, instrument_type_id)
 
@@ -441,6 +446,10 @@ class BaseReservation(abc.ABC):
             A context manager that yields a sequence of session information
             objects. The created sessions are available via the ``session``
             field.
+
+        Raises:
+            ValueError: If the instrument type ID is empty or no reserved
+                sessions match the instrument type ID.
         """
         return self._create_sessions_core(session_constructor, instrument_type_id)
 
@@ -469,6 +478,10 @@ class BaseReservation(abc.ABC):
         Returns:
             A context manager that yields a session information object. The
             created session is available via the ``session`` field.
+
+        Raises:
+            ValueError: If no NI-DCPower sessions are reserved or too many
+                NI-DCPower sessions are reserved.
 
         See Also:
             For more details, see :py:class:`nidcpower.Session`.
@@ -506,6 +519,9 @@ class BaseReservation(abc.ABC):
             A context manager that yields a sequence of session information
             objects. The created sessions are available via the ``session``
             field.
+
+        Raises:
+            ValueError: If no NI-DCPower sessions are reserved.
 
         See Also:
             For more details, see :py:class:`nidcpower.Session`.
@@ -545,6 +561,10 @@ class BaseReservation(abc.ABC):
         Returns:
             A context manager that yields a session information object. The
             created session is available via the ``session`` field.
+
+        Raises:
+            ValueError: If no NI-Digital sessions are reserved or too many
+                NI-Digital sessions are reserved.
 
         See Also:
             For more details, see :py:class:`nidigital.Session`.
@@ -591,6 +611,9 @@ class BaseReservation(abc.ABC):
             objects. The created sessions are available via the ``session``
             field.
 
+        Raises:
+            ValueError: If no NI-Digital sessions are reserved.
+
         See Also:
             For more details, see :py:class:`nidigital.Session`.
         """
@@ -634,6 +657,10 @@ class BaseReservation(abc.ABC):
         Returns:
             A context manager that yields a session information object. The
             created session is available via the ``session`` field.
+
+        Raises:
+            ValueError: If no NI-DMM sessions are reserved or too many
+                NI-DMM sessions are reserved.
 
         See Also:
             For more details, see :py:class:`nidmm.Session`.
@@ -680,6 +707,9 @@ class BaseReservation(abc.ABC):
             objects. The created sessions are available via the ``session``
             field.
 
+        Raises:
+            ValueError: If no NI-DMM sessions are reserved.
+
         See Also:
             For more details, see :py:class:`nidmm.Session`.
         """
@@ -721,6 +751,10 @@ class BaseReservation(abc.ABC):
             A context manager that yields a session information object. The
             created session is available via the ``session`` field.
 
+        Raises:
+            ValueError: If no NI-FGEN sessions are reserved or too many NI-FGEN
+                sessions are reserved.
+
         See Also:
             For more details, see :py:class:`nifgen.Session`.
         """
@@ -761,6 +795,9 @@ class BaseReservation(abc.ABC):
             A context manager that yields a sequence of session information
             objects. The created sessions are available via the ``session``
             field.
+
+        Raises:
+            ValueError: If no NI-FGEN sessions are reserved.
 
         See Also:
             For more details, see :py:class:`nifgen.Session`.
@@ -804,6 +841,10 @@ class BaseReservation(abc.ABC):
         Returns:
             A context manager that yields a session information object. The
             created session is available via the ``session`` field.
+
+        Raises:
+            ValueError: If no NI-SCOPE sessions are reserved or too many
+                NI-SCOPE sessions are reserved.
 
         See Also:
             For more details, see :py:class:`niscope.Session`.
@@ -850,6 +891,9 @@ class BaseReservation(abc.ABC):
             objects. The created sessions are available via the ``session``
             field.
 
+        Raises:
+            ValueError: If no NI-SCOPE sessions are reserved.
+
         See Also:
             For more details, see :py:class:`niscope.Session`.
         """
@@ -873,7 +917,7 @@ class BaseReservation(abc.ABC):
         reset_device: bool = False,
         initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
     ) -> ContextManager[TypedSessionInformation[niswitch.Session]]:
-        """Create a single NI-SWITCH instrument session.
+        """Create a single NI-SWITCH relay driver instrument session.
 
         Args:
             topology: Specifies the switch topology. If this argument is not
@@ -895,6 +939,10 @@ class BaseReservation(abc.ABC):
         Returns:
             A context manager that yields a session information object. The
             created session is available via the ``session`` field.
+
+        Raises:
+            ValueError: If no relay driver sessions are reserved or
+                too many relay driver sessions are reserved.
 
         See Also:
             For more details, see :py:class:`niswitch.Session`.
@@ -919,7 +967,7 @@ class BaseReservation(abc.ABC):
         reset_device: bool = False,
         initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
     ) -> ContextManager[Sequence[TypedSessionInformation[niswitch.Session]]]:
-        """Create multiple NI-SWITCH instrument sessions.
+        """Create multiple NI-SWITCH relay driver instrument sessions.
 
         Args:
             topology: Specifies the switch topology. If this argument is not
@@ -942,6 +990,9 @@ class BaseReservation(abc.ABC):
             A context manager that yields a sequence of session information
             objects. The created sessions are available via the ``session``
             field.
+
+        Raises:
+            ValueError: If no relay driver sessions are reserved.
 
         See Also:
             For more details, see :py:class:`niswitch.Session`.
