@@ -37,6 +37,23 @@ deprecation = ">=2.1"
 # https://github.com/microsoft/tracelogging/issues/58 - traceloggingdynamic raises TypeError with Python 3.8
 traceloggingdynamic = {version = ">=1.0", platform = "win32", python = "^3.9"}
 python-decouple = ">=3.8"
+nidaqmx = {version = ">=0.8.0", extras = ["grpc"], optional = true}
+nidcpower = {version = ">=1.4.4", extras = ["grpc"], optional = true}
+nidigital = {version = ">=1.4.4", extras = ["grpc"], optional = true}
+nidmm = {version = ">=1.4.4", extras = ["grpc"], optional = true}
+nifgen = {version = ">=1.4.4", extras = ["grpc"], optional = true}
+niscope = {version = ">=1.4.4", extras = ["grpc"], optional = true}
+niswitch = {version = ">=1.4.4", extras = ["grpc"], optional = true}
+
+[tool.poetry.extras]
+drivers = ["nidaqmx", "nidcpower", "nidigital", "nidmm", "nifgen", "niscope", "niswitch"]
+nidaqmx = ["nidaqmx"]
+nidcpower = ["nidcpower"]
+nidigital = ["nidigital"]
+nidmm = ["nidmm"]
+nifgen = ["nifgen"]
+niscope = ["niscope"]
+niswitch = ["niswitch"]
 
 [tool.poetry.group.dev.dependencies]
 pytest = ">=7.2.0"
@@ -57,6 +74,12 @@ types-pywin32 = ">=304"
 grpc-stubs = "^1.53"
 psutil = ">=5.9"
 types-psutil = ">=5.9"
+# NumPy dropped support for Python 3.8 before adding support for Python 3.12, so
+# we need to include multiple NumPy versions in poetry.lock.
+numpy = [
+  {version = ">=1.22", python = ">=3.8,<3.12"},
+  {version = ">=1.26", python = ">=3.12,<3.13"},
+]
 
 [tool.poetry.group.docs]
 optional = true
@@ -88,6 +111,7 @@ markers = [
 [tool.mypy]
 disallow_untyped_defs = true
 namespace_packages = true
+plugins = "numpy.typing.mypy_plugin"
 warn_redundant_casts = true
 warn_unused_configs = true
 warn_unused_ignores = true
@@ -101,6 +125,15 @@ module = [
   "grpc.framework.foundation.*",
   # https://github.com/microsoft/tracelogging/issues/57 - Python traceloggingdynamic package is missing py.typed marker file
   "traceloggingdynamic",
+  # https://github.com/ni/nidaqmx-python/issues/209 - Support type annotations
+  "nidaqmx",
+  # https://github.com/ni/nimi-python/issues/1887 - Support type annotations
+  "nidcpower",
+  "nidigital",
+  "nidmm",
+  "nifgen",
+  "niscope",
+  "niswitch",
 ]
 ignore_missing_imports = true
 

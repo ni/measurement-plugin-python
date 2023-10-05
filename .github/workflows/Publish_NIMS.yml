@@ -12,6 +12,14 @@ env:
   PYTHON_VERSION: 3.9
 
 jobs:
+  check_nims:
+    name: Check NIMS
+    uses: ./.github/workflows/check_nims.yml
+  check_nimg:
+    name: Check NIMG
+    uses: ./.github/workflows/check_nimg.yml
+  # Don't run check_examples.yml because the examples may reference a
+  # package version that doesn't exist yet.
   build:
     name: Update API reference docs and Publish NIMS Package to PyPI
     runs-on : ubuntu-latest 
@@ -32,16 +40,6 @@ jobs:
           path: ~/.cache/pypoetry/virtualenvs
           key: ${{ runner.os }}-poetry-${{ hashFiles('poetry.lock') }}
 
-      - name: Setup NIMS
-        run: poetry install
-
-      - name: Setup NIMG
-        run: poetry install
-        working-directory: ./ni_measurementlink_generator
-
-      - name: Lint NIMS, NIMG, and examples
-        run: poetry run ni-python-styleguide lint
-
       # If the tag is 0.1.0, this will set the version of NIMS package to 0.1.0
       - name: Store version from Tag
         id: vars
@@ -56,16 +54,16 @@ jobs:
           poetry version ${{ steps.vars.outputs.tag }}
         working-directory: ./ni_measurementlink_generator
 
-      - name: Setup NIMS with docs
-        run: poetry install --with docs
+      - name: Install ni-measurementlink-service (all extras, docs)
+        run: poetry install -v --all-extras --with docs
 
-      - name: Update API Reference Documents(Generated using Sphinx)
+      - name: Build docs
         run: |
           rm -rf docs
           mkdir -p docs       
           poetry run sphinx-build _docs_source docs -b html
 
-      - name: Commit file changes.
+      - name: Commit file changes
         if: ${{ startsWith(github.event.release.target_commitish, 'main') || startsWith(github.event.release.target_commitish, 'releases/') }}
         run: |
           git config --local user.email "action@github.com"

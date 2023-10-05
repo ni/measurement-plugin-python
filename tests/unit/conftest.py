@@ -74,10 +74,16 @@ def multi_session_reservation(mocker: MockerFixture) -> Mock:
 
 @pytest.fixture
 def session_management_client(
-    mocker: MockerFixture, multi_session_reservation: Mock, single_session_reservation: Mock
+    discovery_client: Mock,
+    grpc_channel_pool: Mock,
+    mocker: MockerFixture,
+    multi_session_reservation: Mock,
+    single_session_reservation: Mock,
 ) -> Mock:
     """Test fixture that creates a mock SessionManagementClient."""
     mock = mocker.create_autospec(SessionManagementClient)
+    mock._discovery_client = discovery_client
+    mock._grpc_channel_pool = grpc_channel_pool
     mock.reserve_session.return_value = single_session_reservation
     mock.reserve_sessions.return_value = multi_session_reservation
     mock.reserve_all_registered_sessions.return_value = multi_session_reservation
