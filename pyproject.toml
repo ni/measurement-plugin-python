@@ -74,6 +74,12 @@ types-pywin32 = ">=304"
 grpc-stubs = "^1.53"
 psutil = ">=5.9"
 types-psutil = ">=5.9"
+# NumPy dropped support for Python 3.8 before adding support for Python 3.12, so
+# we need to include multiple NumPy versions in poetry.lock.
+numpy = [
+  {version = ">=1.22", python = ">=3.8,<3.12"},
+  {version = ">=1.26", python = ">=3.12,<3.13"},
+]
 
 [tool.poetry.group.docs]
 optional = true
