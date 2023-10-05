@@ -1,0 +1,31 @@
+from ipaddress import ip_address
+from typing import Generator
+
+import psutil
+import pytest
+
+from ni_measurementlink_service.measurement.service import MeasurementService
+from tests.utilities import loopback_measurement
+from tests.utilities.discovery_service_process import DiscoveryServiceProcess
+
+
+def test___loopback_measurement___listening_on_loopback_interface(
+    measurement_service: MeasurementService,
+):
+    port = int(measurement_service.grpc_service.port)
+
+    listener_ips = [
+        ip_address(conn.laddr.ip)
+        for conn in psutil.Process().connections()
+        if conn.laddr.port == port and conn.status == psutil.CONN_LISTEN
+    ]
+    assert len(listener_ips) >= 1 and all([ip.is_loopback for ip in listener_ips])
+
+
+@pytest.fixture(scope="module")
+def measurement_service(
+    discovery_service_process: DiscoveryServiceProcess,
+) -> Generator[MeasurementService, None, None]:
+    """Test fixture that creates and hosts a measurement service."""
+    with loopback_measurement.measurement_service.host_service() as service:
+        yield service
