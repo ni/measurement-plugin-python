@@ -98,9 +98,11 @@ class GrpcService:
         v2_measurement_service_pb2_grpc.add_MeasurementServiceServicer_to_server(
             servicer_v2, self.server
         )
-        port = str(self.server.add_insecure_port("[::]:0"))
+        host = "[::1]"
+        port = str(self.server.add_insecure_port(f"{host}:0"))
+        address = f"http://{host}:{port}"
         self.server.start()
-        _logger.info("Measurement service hosted on port: %s", port)
+        _logger.info("Measurement service listening on: %s", address)
         self.discovery_client.register_measurement_service(port, service_info, measurement_info)
 
         self.port = port
