@@ -469,6 +469,10 @@ class BaseReservation(abc.ABC):
             A context manager that yields a session information object. The
             created task is available via the ``session`` field.
 
+        Raises:
+            ValueError: If no NI-DAQmx tasks are reserved or too many
+                NI-DAQmx tasks are reserved.
+
         Note:
             If the ``session_exists`` field is ``False``, the returned task is
             empty and the caller is expected to add channels to it.
@@ -498,6 +502,13 @@ class BaseReservation(abc.ABC):
             A context manager that yields a sequence of session information
             objects. The created tasks are available via the ``session``
             field.
+
+        Raises:
+            ValueError: If no NI-DAQmx tasks are reserved.
+
+        Note:
+            If the ``session_exists`` field is ``False``, the returned tasks are
+            empty and the caller is expected to add channels to them.
 
         See Also:
             For more details, see :py:class:`nidaqmx.Task`.
