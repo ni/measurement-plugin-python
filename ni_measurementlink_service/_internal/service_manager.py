@@ -124,9 +124,11 @@ class GrpcService:
                 raise ValueError(
                     f"Unknown interface was provided in the .serviceconfig file: {interface}"
                 )
-        port = str(self._server.add_insecure_port("[::]:0"))
+        host = "[::1]"
+        port = str(self._server.add_insecure_port(f"{host}:0"))
+        address = f"http://{host}:{port}"
         self._server.start()
-        _logger.info("Measurement service hosted on port: %s", port)
+        _logger.info("Measurement service listening on: %s", address)
 
         self._service_location = ServiceLocation("localhost", port, "")
         self._registration_id = self._discovery_client.register_service(
