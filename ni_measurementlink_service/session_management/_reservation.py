@@ -19,6 +19,7 @@ from typing import (
     Optional,
     Sequence,
     Type,
+    cast,
 )
 
 from ni_measurementlink_service._channelpool import GrpcChannelPool
@@ -135,6 +136,7 @@ class BaseReservation(abc.ABC):
         self,
         session_constructor: Callable[[SessionInformation], TSession],
         instrument_type_id: str,
+        session_type: Optional[Type[TSession]] = None,
     ) -> Generator[TypedSessionInformation[TSession], None, None]:
         if not instrument_type_id:
             raise ValueError("This method requires an instrument type ID.")
@@ -153,13 +155,17 @@ class BaseReservation(abc.ABC):
         session_info = session_infos[0]
         with closing_session(session_constructor(session_info)) as session:
             with self._cache_session(session_info.session_name, session):
-                yield session_info._with_typed_session(session)
+                new_session_info = session_info._with_session(session)
+                if session_type:
+                    new_session_info._check_runtime_type(session_type)
+                yield cast(TypedSessionInformation[TSession], new_session_info)
 
     @contextlib.contextmanager
     def _create_sessions_core(
         self,
         session_constructor: Callable[[SessionInformation], TSession],
         instrument_type_id: str,
+        session_type: Optional[Type[TSession]] = None,
     ) -> Generator[Sequence[TypedSessionInformation[TSession]], None, None]:
         if not instrument_type_id:
             raise ValueError("This method requires an instrument type ID.")
@@ -175,7 +181,12 @@ class BaseReservation(abc.ABC):
             for session_info in session_infos:
                 session = stack.enter_context(closing_session(session_constructor(session_info)))
                 stack.enter_context(self._cache_session(session_info.session_name, session))
-                typed_session_infos.append(session_info._with_typed_session(session))
+                new_session_info = session_info._with_session(session)
+                if session_type:
+                    new_session_info._check_runtime_type(session_type)
+                typed_session_infos.append(
+                    cast(TypedSessionInformation[TSession], new_session_info)
+                )
             yield typed_session_infos
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
@@ -264,12 +275,16 @@ class BaseReservation(abc.ABC):
         See Also:
             For more details, see :py:class:`nidaqmx.Task`.
         """
+        import nidaqmx
+
         from ni_measurementlink_service._drivers._nidaqmx import SessionConstructor
 
         session_constructor = SessionConstructor(
             self._discovery_client, self._grpc_channel_pool, initialization_behavior
         )
-        return self._create_session_core(session_constructor, INSTRUMENT_TYPE_NI_DAQMX)
+        return self._create_session_core(
+            session_constructor, INSTRUMENT_TYPE_NI_DAQMX, nidaqmx.Task
+        )
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def create_nidaqmx_tasks(
@@ -297,12 +312,16 @@ class BaseReservation(abc.ABC):
         See Also:
             For more details, see :py:class:`nidaqmx.Task`.
         """
+        import nidaqmx
+
         from ni_measurementlink_service._drivers._nidaqmx import SessionConstructor
 
         session_constructor = SessionConstructor(
             self._discovery_client, self._grpc_channel_pool, initialization_behavior
         )
-        return self._create_sessions_core(session_constructor, INSTRUMENT_TYPE_NI_DAQMX)
+        return self._create_sessions_core(
+            session_constructor, INSTRUMENT_TYPE_NI_DAQMX, nidaqmx.Task
+        )
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def create_nidcpower_session(
@@ -337,12 +356,16 @@ class BaseReservation(abc.ABC):
         See Also:
             For more details, see :py:class:`nidcpower.Session`.
         """
+        import nidcpower
+
         from ni_measurementlink_service._drivers._nidcpower import SessionConstructor
 
         session_constructor = SessionConstructor(
             self._discovery_client, self._grpc_channel_pool, reset, options, initialization_behavior
         )
-        return self._create_session_core(session_constructor, INSTRUMENT_TYPE_NI_DCPOWER)
+        return self._create_session_core(
+            session_constructor, INSTRUMENT_TYPE_NI_DCPOWER, nidcpower.Session
+        )
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def create_nidcpower_sessions(
@@ -377,12 +400,16 @@ class BaseReservation(abc.ABC):
         See Also:
             For more details, see :py:class:`nidcpower.Session`.
         """
+        import nidcpower
+
         from ni_measurementlink_service._drivers._nidcpower import SessionConstructor
 
         session_constructor = SessionConstructor(
             self._discovery_client, self._grpc_channel_pool, reset, options, initialization_behavior
         )
-        return self._create_sessions_core(session_constructor, INSTRUMENT_TYPE_NI_DCPOWER)
+        return self._create_sessions_core(
+            session_constructor, INSTRUMENT_TYPE_NI_DCPOWER, nidcpower.Session
+        )
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def create_nidigital_session(
@@ -417,6 +444,8 @@ class BaseReservation(abc.ABC):
         See Also:
             For more details, see :py:class:`nidigital.Session`.
         """
+        import nidigital
+
         from ni_measurementlink_service._drivers._nidigital import SessionConstructor
 
         session_constructor = SessionConstructor(
@@ -426,7 +455,9 @@ class BaseReservation(abc.ABC):
             options,
             initialization_behavior,
         )
-        return self._create_session_core(session_constructor, INSTRUMENT_TYPE_NI_DIGITAL_PATTERN)
+        return self._create_session_core(
+            session_constructor, INSTRUMENT_TYPE_NI_DIGITAL_PATTERN, nidigital.Session
+        )
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def create_nidigital_sessions(
@@ -461,6 +492,8 @@ class BaseReservation(abc.ABC):
         See Also:
             For more details, see :py:class:`nidigital.Session`.
         """
+        import nidigital
+
         from ni_measurementlink_service._drivers._nidigital import SessionConstructor
 
         session_constructor = SessionConstructor(
@@ -470,7 +503,9 @@ class BaseReservation(abc.ABC):
             options,
             initialization_behavior,
         )
-        return self._create_sessions_core(session_constructor, INSTRUMENT_TYPE_NI_DIGITAL_PATTERN)
+        return self._create_sessions_core(
+            session_constructor, INSTRUMENT_TYPE_NI_DIGITAL_PATTERN, nidigital.Session
+        )
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def create_nidmm_session(
@@ -505,6 +540,8 @@ class BaseReservation(abc.ABC):
         See Also:
             For more details, see :py:class:`nidmm.Session`.
         """
+        import nidmm
+
         from ni_measurementlink_service._drivers._nidmm import SessionConstructor
 
         session_constructor = SessionConstructor(
@@ -514,7 +551,7 @@ class BaseReservation(abc.ABC):
             options,
             initialization_behavior,
         )
-        return self._create_session_core(session_constructor, INSTRUMENT_TYPE_NI_DMM)
+        return self._create_session_core(session_constructor, INSTRUMENT_TYPE_NI_DMM, nidmm.Session)
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def create_nidmm_sessions(
@@ -549,6 +586,8 @@ class BaseReservation(abc.ABC):
         See Also:
             For more details, see :py:class:`nidmm.Session`.
         """
+        import nidmm
+
         from ni_measurementlink_service._drivers._nidmm import SessionConstructor
 
         session_constructor = SessionConstructor(
@@ -558,7 +597,9 @@ class BaseReservation(abc.ABC):
             options,
             initialization_behavior,
         )
-        return self._create_sessions_core(session_constructor, INSTRUMENT_TYPE_NI_DMM)
+        return self._create_sessions_core(
+            session_constructor, INSTRUMENT_TYPE_NI_DMM, nidmm.Session
+        )
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def create_nifgen_session(
@@ -593,6 +634,8 @@ class BaseReservation(abc.ABC):
         See Also:
             For more details, see :py:class:`nifgen.Session`.
         """
+        import nifgen
+
         from ni_measurementlink_service._drivers._nifgen import SessionConstructor
 
         session_constructor = SessionConstructor(
@@ -602,7 +645,9 @@ class BaseReservation(abc.ABC):
             options,
             initialization_behavior,
         )
-        return self._create_session_core(session_constructor, INSTRUMENT_TYPE_NI_FGEN)
+        return self._create_session_core(
+            session_constructor, INSTRUMENT_TYPE_NI_FGEN, nifgen.Session
+        )
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def create_nifgen_sessions(
@@ -637,6 +682,8 @@ class BaseReservation(abc.ABC):
         See Also:
             For more details, see :py:class:`nifgen.Session`.
         """
+        import nifgen
+
         from ni_measurementlink_service._drivers._nifgen import SessionConstructor
 
         session_constructor = SessionConstructor(
@@ -646,7 +693,9 @@ class BaseReservation(abc.ABC):
             options,
             initialization_behavior,
         )
-        return self._create_sessions_core(session_constructor, INSTRUMENT_TYPE_NI_FGEN)
+        return self._create_sessions_core(
+            session_constructor, INSTRUMENT_TYPE_NI_FGEN, nifgen.Session
+        )
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def create_niscope_session(
@@ -681,6 +730,8 @@ class BaseReservation(abc.ABC):
         See Also:
             For more details, see :py:class:`niscope.Session`.
         """
+        import niscope
+
         from ni_measurementlink_service._drivers._niscope import SessionConstructor
 
         session_constructor = SessionConstructor(
@@ -690,7 +741,9 @@ class BaseReservation(abc.ABC):
             options,
             initialization_behavior,
         )
-        return self._create_session_core(session_constructor, INSTRUMENT_TYPE_NI_SCOPE)
+        return self._create_session_core(
+            session_constructor, INSTRUMENT_TYPE_NI_SCOPE, niscope.Session
+        )
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def create_niscope_sessions(
@@ -725,6 +778,8 @@ class BaseReservation(abc.ABC):
         See Also:
             For more details, see :py:class:`niscope.Session`.
         """
+        import niscope
+
         from ni_measurementlink_service._drivers._niscope import SessionConstructor
 
         session_constructor = SessionConstructor(
@@ -734,7 +789,9 @@ class BaseReservation(abc.ABC):
             options,
             initialization_behavior,
         )
-        return self._create_sessions_core(session_constructor, INSTRUMENT_TYPE_NI_SCOPE)
+        return self._create_sessions_core(
+            session_constructor, INSTRUMENT_TYPE_NI_SCOPE, niscope.Session
+        )
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def create_niswitch_session(
@@ -774,6 +831,8 @@ class BaseReservation(abc.ABC):
         See Also:
             For more details, see :py:class:`niswitch.Session`.
         """
+        import niswitch
+
         from ni_measurementlink_service._drivers._niswitch import SessionConstructor
 
         session_constructor = SessionConstructor(
@@ -784,7 +843,9 @@ class BaseReservation(abc.ABC):
             reset_device,
             initialization_behavior,
         )
-        return self._create_session_core(session_constructor, INSTRUMENT_TYPE_NI_RELAY_DRIVER)
+        return self._create_session_core(
+            session_constructor, INSTRUMENT_TYPE_NI_RELAY_DRIVER, niswitch.Session
+        )
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def create_niswitch_sessions(
@@ -824,6 +885,8 @@ class BaseReservation(abc.ABC):
         See Also:
             For more details, see :py:class:`niswitch.Session`.
         """
+        import niswitch
+
         from ni_measurementlink_service._drivers._niswitch import SessionConstructor
 
         session_constructor = SessionConstructor(
@@ -834,7 +897,9 @@ class BaseReservation(abc.ABC):
             reset_device,
             initialization_behavior,
         )
-        return self._create_sessions_core(session_constructor, INSTRUMENT_TYPE_NI_RELAY_DRIVER)
+        return self._create_sessions_core(
+            session_constructor, INSTRUMENT_TYPE_NI_RELAY_DRIVER, niswitch.Session
+        )
 
 
 class SingleSessionReservation(BaseReservation):
