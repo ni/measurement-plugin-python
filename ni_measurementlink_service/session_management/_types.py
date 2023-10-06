@@ -9,9 +9,7 @@ from typing import (
     NamedTuple,
     Optional,
     Protocol,
-    Type,
     TypeVar,
-    cast,
 )
 
 from ni_measurementlink_service._internal.stubs import session_pb2
@@ -136,15 +134,15 @@ class SessionInformation(NamedTuple):
     This field is None until the appropriate create_session(s) method is called.
     """
 
-    def _as_typed(self, session_type: Type[TSession]) -> TypedSessionInformation[TSession]:
-        assert isinstance(self.session, session_type)
-        return cast(TypedSessionInformation[TSession], self)
+    def _check_runtime_type(self, session_type: type) -> None:
+        if not isinstance(self.session, session_type):
+            raise TypeError(
+                f"Incorrect type for session '{self.session_name}'. "
+                f"Expected '{session_type}', got '{type(self.session)}'"
+            )
 
     def _with_session(self, session: object) -> SessionInformation:
         return self._replace(session=session)
-
-    def _with_typed_session(self, session: TSession) -> TypedSessionInformation[TSession]:
-        return self._with_session(session)._as_typed(type(session))
 
     @classmethod
     def _from_grpc_v1(
