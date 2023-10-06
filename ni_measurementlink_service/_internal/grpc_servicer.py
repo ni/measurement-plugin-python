@@ -14,9 +14,6 @@ from google.protobuf import any_pb2
 
 from ni_measurementlink_service._internal.parameter import serializer
 from ni_measurementlink_service._internal.parameter.metadata import ParameterMetadata
-from ni_measurementlink_service._internal.stubs.ni.measurementlink import (
-    pin_map_context_pb2,
-)
 from ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v1 import (
     measurement_service_pb2 as v1_measurement_service_pb2,
     measurement_service_pb2_grpc as v1_measurement_service_pb2_grpc,
@@ -92,18 +89,6 @@ class MeasurementServiceContext:
 measurement_service_context: ContextVar[MeasurementServiceContext] = ContextVar(
     "measurement_service_context"
 )
-
-
-def _convert_pin_map_context_from_grpc(
-    grpc_pin_map_context: pin_map_context_pb2.PinMapContext,
-) -> PinMapContext:
-    # The protobuf PinMapContext sites field is a RepeatedScalarContainer, not a list.
-    # Constructing a protobuf PinMapContext with sites=None sets sites to an empty
-    # RepeatedScalarContainer, not None.
-    return PinMapContext(
-        pin_map_id=grpc_pin_map_context.pin_map_id,
-        sites=list(grpc_pin_map_context.sites),
-    )
 
 
 def _get_mapping_by_parameter_name(
@@ -216,7 +201,7 @@ class MeasurementServiceServicerV1(v1_measurement_service_pb2_grpc.MeasurementSe
         mapping_by_variable_name = _get_mapping_by_parameter_name(
             mapping_by_id, self._measure_function
         )
-        pin_map_context = _convert_pin_map_context_from_grpc(request.pin_map_context)
+        pin_map_context = PinMapContext._from_grpc(request.pin_map_context)
         token = measurement_service_context.set(
             MeasurementServiceContext(context, pin_map_context, self._owner)
         )
@@ -326,7 +311,7 @@ class MeasurementServiceServicerV2(v2_measurement_service_pb2_grpc.MeasurementSe
         mapping_by_variable_name = _get_mapping_by_parameter_name(
             mapping_by_id, self._measure_function
         )
-        pin_map_context = _convert_pin_map_context_from_grpc(request.pin_map_context)
+        pin_map_context = PinMapContext._from_grpc(request.pin_map_context)
         token = measurement_service_context.set(
             MeasurementServiceContext(context, pin_map_context, self._owner)
         )
