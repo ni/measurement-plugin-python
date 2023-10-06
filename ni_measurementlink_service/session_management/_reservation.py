@@ -5,7 +5,6 @@ import abc
 import contextlib
 import sys
 from contextlib import ExitStack
-from functools import cached_property
 from types import TracebackType
 from typing import (
     TYPE_CHECKING,
@@ -79,7 +78,10 @@ class BaseReservation(abc.ABC):
     ) -> None:
         """Initialize reservation object."""
         self._session_manager = session_manager
-        self._session_info = session_info
+        self._grpc_session_info = session_info  # needed for unreserve
+        self._session_info = [
+            SessionInformation._from_grpc_v1(info) for info in self._grpc_session_info
+        ]
         self._session_cache: Dict[str, object] = {}
 
     @property
@@ -110,7 +112,7 @@ class BaseReservation(abc.ABC):
 
     def unreserve(self) -> None:
         """Unreserve sessions."""
-        self._session_manager._unreserve_sessions(self._session_info)
+        self._session_manager._unreserve_sessions(self._grpc_session_info)
 
     @contextlib.contextmanager
     def _cache_session(self, session_name: str, session: TSession) -> Generator[None, None, None]:
@@ -124,9 +126,7 @@ class BaseReservation(abc.ABC):
 
     def _get_matching_session_infos(self, instrument_type_id: str) -> List[SessionInformation]:
         return [
-            SessionInformation._from_grpc_v1(info)._with_session(
-                self._session_cache.get(info.session.name)
-            )
+            info._with_session(self._session_cache.get(info.session_name))
             for info in self._session_info
             if instrument_type_id and instrument_type_id == info.instrument_type_id
         ]
@@ -845,17 +845,17 @@ class BaseReservation(abc.ABC):
 class SingleSessionReservation(BaseReservation):
     """Manages reservation for a single session."""
 
-    @cached_property
+    @property
     def session_info(self) -> SessionInformation:
         """Single session information object."""
         assert len(self._session_info) == 1
-        return SessionInformation._from_grpc_v1(self._session_info[0])
+        return self._session_info[0]
 
 
 class MultiSessionReservation(BaseReservation):
     """Manages reservation for multiple sessions."""
 
-    @cached_property
+    @property
     def session_info(self) -> List[SessionInformation]:
         """Multiple session information objects."""
-        return [SessionInformation._from_grpc_v1(info) for info in self._session_info]
+        return self._session_info
