@@ -4,14 +4,16 @@ from typing import Any, Dict, Optional
 
 import niswitch
 
-from ni_measurementlink_service import session_management  # circular import
 from ni_measurementlink_service._channelpool import GrpcChannelPool
 from ni_measurementlink_service._configuration import NISWITCH_OPTIONS
 from ni_measurementlink_service._drivers._grpcdevice import (
     get_insecure_grpc_device_channel,
 )
 from ni_measurementlink_service._internal.discovery_client import DiscoveryClient
-from ni_measurementlink_service._sessiontypes import SessionInitializationBehavior
+from ni_measurementlink_service.session_management._types import (
+    SessionInformation,
+    SessionInitializationBehavior,
+)
 
 _INITIALIZATION_BEHAVIOR = {
     SessionInitializationBehavior.AUTO: niswitch.SessionInitializationBehavior.AUTO,
@@ -41,7 +43,7 @@ class SessionConstructor:
         self._reset_device = reset_device
         self._initialization_behavior = _INITIALIZATION_BEHAVIOR[initialization_behavior]
 
-    def __call__(self, session_info: session_management.SessionInformation) -> niswitch.Session:
+    def __call__(self, session_info: SessionInformation) -> niswitch.Session:
         """Construct a session object."""
         kwargs: Dict[str, Any] = {}
         if self._grpc_channel:

@@ -1,12 +1,9 @@
-"""Client for accessing the MeasurementLink session management service."""
+"""Session management reservation classes."""
 from __future__ import annotations
 
 import abc
 import contextlib
-import logging
 import sys
-import threading
-import warnings
 from contextlib import ExitStack
 from functools import cached_property
 from types import TracebackType
@@ -17,22 +14,12 @@ from typing import (
     ContextManager,
     Dict,
     Generator,
-    Generic,
-    Iterable,
     List,
     Literal,
-    NamedTuple,
     Optional,
-    Protocol,
     Sequence,
     Type,
-    TypeVar,
-    Union,
-    cast,
 )
-
-import grpc
-from deprecation import DeprecatedWarning
 
 from ni_measurementlink_service._channelpool import GrpcChannelPool
 from ni_measurementlink_service._drivers import closing_session
@@ -41,16 +28,23 @@ from ni_measurementlink_service._featuretoggles import (
     requires_feature,
 )
 from ni_measurementlink_service._internal.discovery_client import DiscoveryClient
-from ni_measurementlink_service._internal.stubs import session_pb2
-from ni_measurementlink_service._internal.stubs.ni.measurementlink import (
-    pin_map_context_pb2,
-)
 from ni_measurementlink_service._internal.stubs.ni.measurementlink.sessionmanagement.v1 import (
     session_management_service_pb2,
-    session_management_service_pb2_grpc,
 )
-from ni_measurementlink_service._sessiontypes import (
-    SessionInitializationBehavior as SessionInitializationBehavior,  # re-export
+from ni_measurementlink_service.session_management._constants import (
+    INSTRUMENT_TYPE_NI_DAQMX,
+    INSTRUMENT_TYPE_NI_DCPOWER,
+    INSTRUMENT_TYPE_NI_DIGITAL_PATTERN,
+    INSTRUMENT_TYPE_NI_DMM,
+    INSTRUMENT_TYPE_NI_FGEN,
+    INSTRUMENT_TYPE_NI_RELAY_DRIVER,
+    INSTRUMENT_TYPE_NI_SCOPE,
+)
+from ni_measurementlink_service.session_management._types import (
+    SessionInformation,
+    SessionInitializationBehavior,
+    TSession,
+    TypedSessionInformation,
 )
 
 if TYPE_CHECKING:
@@ -64,227 +58,14 @@ if TYPE_CHECKING:
     import niscope
     import niswitch
 
+    from ni_measurementlink_service.session_management._client import (  # circular import
+        SessionManagementClient,
+    )
+
     if sys.version_info >= (3, 11):
         from typing import Self
     else:
         from typing_extensions import Self
-
-_logger = logging.getLogger(__name__)
-
-GRPC_SERVICE_INTERFACE_NAME = "ni.measurementlink.sessionmanagement.v1.SessionManagementService"
-GRPC_SERVICE_CLASS = "ni.measurementlink.sessionmanagement.v1.SessionManagementService"
-
-
-# Constants for instrument_type_id parameters
-INSTRUMENT_TYPE_NONE = ""
-INSTRUMENT_TYPE_NI_DCPOWER = "niDCPower"
-INSTRUMENT_TYPE_NI_HSDIO = "niHSDIO"
-INSTRUMENT_TYPE_NI_RFSA = "niRFSA"
-INSTRUMENT_TYPE_NI_RFMX = "niRFmx"
-INSTRUMENT_TYPE_NI_RFSG = "niRFSG"
-INSTRUMENT_TYPE_NI_RFPM = "niRFPM"
-INSTRUMENT_TYPE_NI_DMM = "niDMM"
-INSTRUMENT_TYPE_NI_DIGITAL_PATTERN = "niDigitalPattern"
-INSTRUMENT_TYPE_NI_SCOPE = "niScope"
-INSTRUMENT_TYPE_NI_FGEN = "niFGen"
-INSTRUMENT_TYPE_NI_DAQMX = "niDAQmx"
-INSTRUMENT_TYPE_NI_RELAY_DRIVER = "niRelayDriver"
-INSTRUMENT_TYPE_NI_MODEL_BASED_INSTRUMENT = "niModelBasedInstrument"
-INSTRUMENT_TYPE_NI_SWITCH_EXECUTIVE_VIRTUAL_DEVICE = "niSwitchExecutiveVirtualDevice"
-
-
-TSession = TypeVar("TSession")
-TSession_co = TypeVar("TSession_co", covariant=True)
-
-
-class PinMapContext(NamedTuple):
-    """Container for the pin map and sites."""
-
-    pin_map_id: str
-    """The resource id of the pin map in the Pin Map service that should be used for the call."""
-
-    sites: Optional[List[int]]
-    """List of site numbers being used for the call.
-    
-    If None or empty, use all sites in the pin map.
-    """
-
-    @classmethod
-    def _from_grpc(
-        cls,
-        other: pin_map_context_pb2.PinMapContext,
-    ) -> PinMapContext:
-        # The protobuf PinMapContext sites field is a RepeatedScalarContainer, not a list.
-        # Constructing a protobuf PinMapContext with sites=None sets sites to an empty
-        # RepeatedScalarContainer, not None.
-        return PinMapContext(pin_map_id=other.pin_map_id, sites=list(other.sites))
-
-    def _to_grpc(self) -> pin_map_context_pb2.PinMapContext:
-        return pin_map_context_pb2.PinMapContext(pin_map_id=self.pin_map_id, sites=self.sites)
-
-
-class ChannelMapping(NamedTuple):
-    """Mapping of each channel to the pin and site it is connected to."""
-
-    pin_or_relay_name: str
-    """The pin or relay that is mapped to a channel."""
-
-    site: int
-    """The site on which the pin or relay is mapped to a channel.
-            
-    For system pins/relays the site number is -1 as they do not belong to a specific site.
-    """
-
-    channel: str
-    """The channel to which the pin or relay is mapped on this site."""
-
-    @classmethod
-    def _from_grpc_v1(cls, other: session_management_service_pb2.ChannelMapping) -> ChannelMapping:
-        return ChannelMapping(
-            pin_or_relay_name=other.pin_or_relay_name,
-            site=other.site,
-            channel=other.channel,
-        )
-
-    def _to_grpc_v1(self) -> session_management_service_pb2.ChannelMapping:
-        return session_management_service_pb2.ChannelMapping(
-            pin_or_relay_name=self.pin_or_relay_name,
-            site=self.site,
-            channel=self.channel,
-        )
-
-
-class SessionInformation(NamedTuple):
-    """Container for the session information."""
-
-    session_name: str
-    """Session name used by the session management service and NI gRPC Device Server."""
-
-    resource_name: str
-    """Resource name used to open this session in the driver."""
-
-    channel_list: str
-    """Channel list used for driver initialization and measurement methods.
-
-    This field is empty for any SessionInformation returned from
-    Client.reserve_all_registered_sessions.
-    """
-
-    instrument_type_id: str
-    """Indicates the instrument type for this session.
-    
-    Pin maps have built in instrument definitions using the instrument
-    type id constants such as `INSTRUMENT_TYPE_NI_DCPOWER`. For custom instruments, the
-    user defined instrument type id is defined in the pin map file.
-    """
-
-    session_exists: bool
-    """Indicates whether the session is registered with the session management service.
-    
-    When calling measurements from TestStand, the test sequence's ``ProcessSetup`` callback
-    creates instrument sessions and registers them with the session management service so that
-    they can be shared between multiple measurement steps. In this case, the `session_exists`
-    attribute is ``True``, indicating that the instrument sessions were already created and any
-    one-time setup (such as creating NI-DAQmx channels or loading NI-Digital files) has been
-    performed.
-    
-    When calling measurements outside of TestStand, the `session_exists` attribute is ``False``,
-    indicating that the measurement is responsible for creating the instrument sessions and
-    performing any one-time setup.
-    """
-
-    channel_mappings: Iterable[ChannelMapping]
-    """List of mappings from channels to pins and sites.
-     
-    Each item contains a mapping for a channel in this instrument resource, in the order of the
-    channel_list. This field is empty for any SessionInformation returned from
-    Client.reserve_all_registered_sessions.
-    """
-
-    session: object = None
-    """The driver session object.
-    
-    This field is None until the appropriate create_session(s) method is called.
-    """
-
-    def _as_typed(self, session_type: Type[TSession]) -> TypedSessionInformation[TSession]:
-        assert isinstance(self.session, session_type)
-        return cast(TypedSessionInformation[TSession], self)
-
-    def _with_session(self, session: object) -> SessionInformation:
-        return self._replace(session=session)
-
-    def _with_typed_session(self, session: TSession) -> TypedSessionInformation[TSession]:
-        return self._with_session(session)._as_typed(type(session))
-
-    @classmethod
-    def _from_grpc_v1(
-        cls, other: session_management_service_pb2.SessionInformation
-    ) -> SessionInformation:
-        return SessionInformation(
-            session_name=other.session.name,
-            resource_name=other.resource_name,
-            channel_list=other.channel_list,
-            instrument_type_id=other.instrument_type_id,
-            session_exists=other.session_exists,
-            channel_mappings=[ChannelMapping._from_grpc_v1(m) for m in other.channel_mappings],
-        )
-
-    def _to_grpc_v1(
-        self,
-    ) -> session_management_service_pb2.SessionInformation:
-        return session_management_service_pb2.SessionInformation(
-            session=session_pb2.Session(name=self.session_name),
-            resource_name=self.resource_name,
-            channel_list=self.channel_list,
-            instrument_type_id=self.instrument_type_id,
-            session_exists=self.session_exists,
-            channel_mappings=[m._to_grpc_v1() for m in self.channel_mappings],
-        )
-
-
-# Python versions <3.11 do not support generic named tuples, so we use a generic
-# protocol to return typed session information.
-class TypedSessionInformation(Protocol, Generic[TSession_co]):
-    """Generic version of :any:`SessionInformation` that preserves the session type.
-
-    For more details, see the corresponding documentation for :any:`SessionInformation`.
-    """
-
-    @property
-    def session_name(self) -> str:
-        """Session name used by the session management service and NI gRPC Device Server."""
-        ...
-
-    @property
-    def resource_name(self) -> str:
-        """Resource name used to open this session in the driver."""
-        ...
-
-    @property
-    def channel_list(self) -> str:
-        """Channel list used for driver initialization and measurement methods."""
-        ...
-
-    @property
-    def instrument_type_id(self) -> str:
-        """Indicates the instrument type for this session."""
-        ...
-
-    @property
-    def session_exists(self) -> bool:
-        """Indicates whether the session is registered with the session management service."""
-        ...
-
-    @property
-    def channel_mappings(self) -> Iterable[ChannelMapping]:
-        """List of mappings from channels to pins and sites."""
-        ...
-
-    @property
-    def session(self) -> TSession_co:
-        """The driver session object."""
-        ...
 
 
 class BaseReservation(abc.ABC):
@@ -292,7 +73,7 @@ class BaseReservation(abc.ABC):
 
     def __init__(
         self,
-        session_manager: Client,
+        session_manager: SessionManagementClient,
         session_info: Sequence[session_management_service_pb2.SessionInformation],
     ) -> None:
         """Initialize reservation object."""
@@ -1073,282 +854,3 @@ class MultiSessionReservation(BaseReservation):
     def session_info(self) -> List[SessionInformation]:
         """Multiple session information objects."""
         return [SessionInformation._from_grpc_v1(info) for info in self._session_info]
-
-
-def __getattr__(name: str) -> Any:
-    if name == "Reservation":
-        warnings.warn(
-            DeprecatedWarning(
-                name,
-                deprecated_in="1.1.0",
-                removed_in=None,
-                details="Use MultiSessionReservation instead.",
-            ),
-            stacklevel=2,
-        )
-        return MultiSessionReservation
-    else:
-        raise AttributeError(f"module {__name__} has no attribute {name}")
-
-
-class SessionManagementClient(object):
-    """Client for accessing the MeasurementLink session management service."""
-
-    def __init__(
-        self,
-        *,
-        discovery_client: Optional[DiscoveryClient] = None,
-        grpc_channel: Optional[grpc.Channel] = None,
-        grpc_channel_pool: Optional[GrpcChannelPool] = None,
-    ) -> None:
-        """Initialize session management client.
-
-        Args:
-            discovery_client: An optional discovery client (recommended).
-
-            grpc_channel: An optional session management gRPC channel.
-
-            grpc_channel_pool: An optional gRPC channel pool (recommended).
-        """
-        self._initialization_lock = threading.Lock()
-        self._discovery_client = discovery_client
-        self._grpc_channel_pool = grpc_channel_pool
-        self._stub: Optional[
-            session_management_service_pb2_grpc.SessionManagementServiceStub
-        ] = None
-
-        if grpc_channel is not None:
-            self._stub = session_management_service_pb2_grpc.SessionManagementServiceStub(
-                grpc_channel
-            )
-
-    def _get_stub(self) -> session_management_service_pb2_grpc.SessionManagementServiceStub:
-        if self._stub is None:
-            with self._initialization_lock:
-                if self._grpc_channel_pool is None:
-                    _logger.debug("Creating unshared GrpcChannelPool.")
-                    self._grpc_channel_pool = GrpcChannelPool()
-                if self._discovery_client is None:
-                    _logger.debug("Creating unshared DiscoveryClient.")
-                    self._discovery_client = DiscoveryClient(
-                        grpc_channel_pool=self._grpc_channel_pool
-                    )
-                if self._stub is None:
-                    service_location = self._discovery_client.resolve_service(
-                        provided_interface=GRPC_SERVICE_INTERFACE_NAME,
-                        service_class=GRPC_SERVICE_CLASS,
-                    )
-                    channel = self._grpc_channel_pool.get_channel(service_location.insecure_address)
-                    self._stub = session_management_service_pb2_grpc.SessionManagementServiceStub(
-                        channel
-                    )
-        return self._stub
-
-    def reserve_session(
-        self,
-        context: PinMapContext,
-        pin_or_relay_names: Union[str, Iterable[str], None] = None,
-        instrument_type_id: Optional[str] = None,
-        timeout: Optional[float] = 0.0,
-    ) -> SingleSessionReservation:
-        """Reserve a single session.
-
-        Reserve the session matching the given pins, sites, and instrument type ID and return the
-        information needed to create or access the session.
-
-        Args:
-            context: Includes the pin map ID for the pin map in the Pin Map Service,
-                as well as the list of sites for the measurement.
-
-            pin_or_relay_names: One or multiple pins, pin groups, relays, or relay groups to use
-                for the measurement.
-
-                If unspecified, reserve sessions for all pins and relays in the registered pin map
-                resource.
-
-            instrument_type_id: Instrument type ID for the measurement.
-
-                If unspecified, this method reserve sessions for all instrument types connected
-                in the registered pin map resource.
-
-                For NI instruments, use instrument type id constants, such as
-                :py:const:`INSTRUMENT_TYPE_NI_DCPOWER` or :py:const:`INSTRUMENT_TYPE_NI_DMM`.
-
-                For custom instruments, use the instrument type id defined in the pin map file.
-
-            timeout: Timeout in seconds.
-
-                Allowed values: 0 (non-blocking, fails immediately if resources cannot be
-                reserved), -1 (infinite timeout), or any other positive numeric value (wait for
-                that number of seconds)
-
-        Returns:
-            A reservation object with which you can query information about the session and
-            unreserve it.
-        """
-        session_info = self._reserve_sessions(
-            context, pin_or_relay_names, instrument_type_id, timeout
-        )
-        if len(session_info) == 0:
-            raise ValueError("No sessions reserved. Expected single session, got 0 sessions.")
-        elif len(session_info) > 1:
-            self._unreserve_sessions(session_info)
-            raise ValueError(
-                "Too many sessions reserved. Expected single session, got "
-                f"{len(session_info)} sessions."
-            )
-        else:
-            return SingleSessionReservation(session_manager=self, session_info=session_info)
-
-    def reserve_sessions(
-        self,
-        context: PinMapContext,
-        pin_or_relay_names: Union[str, Iterable[str], None] = None,
-        instrument_type_id: Optional[str] = None,
-        timeout: Optional[float] = 0.0,
-    ) -> MultiSessionReservation:
-        """Reserve multiple sessions.
-
-        Reserve sessions matching the given pins, sites, and instrument type ID and return the
-        information needed to create or access the sessions.
-
-        Args:
-            context: Includes the pin map ID for the pin map in the Pin Map Service,
-                as well as the list of sites for the measurement.
-
-            pin_or_relay_names: One or multiple pins, pin groups, relays, or relay groups to use
-                for the measurement.
-
-                If unspecified, reserve sessions for all pins and relays in the registered pin map
-                resource.
-
-            instrument_type_id: Instrument type ID for the measurement.
-
-                If unspecified, this method reserves sessions for all instrument types connected
-                in the registered pin map resource.
-
-                For NI instruments, use instrument type id constants, such as
-                :py:const:`INSTRUMENT_TYPE_NI_DCPOWER` or :py:const:`INSTRUMENT_TYPE_NI_DMM`.
-
-                For custom instruments, use the instrument type id defined in the pin map file.
-
-            timeout: Timeout in seconds.
-
-                Allowed values: 0 (non-blocking, fails immediately if resources cannot be
-                reserved), -1 (infinite timeout), or any other positive numeric value (wait for
-                that number of seconds)
-
-        Returns:
-            A reservation object with which you can query information about the sessions and
-            unreserve them.
-        """
-        session_info = self._reserve_sessions(
-            context, pin_or_relay_names, instrument_type_id, timeout
-        )
-        return MultiSessionReservation(session_manager=self, session_info=session_info)
-
-    def _reserve_sessions(
-        self,
-        context: PinMapContext,
-        pin_or_relay_names: Union[str, Iterable[str], None] = None,
-        instrument_type_id: Optional[str] = None,
-        timeout: Optional[float] = 0.0,
-    ) -> Sequence[session_management_service_pb2.SessionInformation]:
-        request = session_management_service_pb2.ReserveSessionsRequest(
-            pin_map_context=context._to_grpc(),
-            timeout_in_milliseconds=_timeout_to_milliseconds(timeout),
-        )
-        if instrument_type_id is not None:
-            request.instrument_type_id = instrument_type_id
-        if isinstance(pin_or_relay_names, str):
-            request.pin_or_relay_names.append(pin_or_relay_names)
-        elif pin_or_relay_names is not None:
-            request.pin_or_relay_names.extend(pin_or_relay_names)
-
-        response = self._get_stub().ReserveSessions(request)
-        return response.sessions
-
-    def _unreserve_sessions(
-        self, session_info: Iterable[session_management_service_pb2.SessionInformation]
-    ) -> None:
-        """Unreserves sessions so they can be accessed by other clients."""
-        request = session_management_service_pb2.UnreserveSessionsRequest(sessions=session_info)
-        self._get_stub().UnreserveSessions(request)
-
-    def register_sessions(self, session_info: Iterable[SessionInformation]) -> None:
-        """Register sessions with the session management service.
-
-        Indicates that the sessions are open and will need to be closed later.
-
-        Args:
-            session_info: Sessions to register.
-        """
-        request = session_management_service_pb2.RegisterSessionsRequest(
-            sessions=(info._to_grpc_v1() for info in session_info),
-        )
-        self._get_stub().RegisterSessions(request)
-
-    def unregister_sessions(self, session_info: Iterable[SessionInformation]) -> None:
-        """Unregisters sessions from the session management service.
-
-        Indicates that the sessions have been closed and will need to be reopened before they can be
-        used again.
-
-        Args:
-            session_info: Sessions to unregister.
-        """
-        request = session_management_service_pb2.UnregisterSessionsRequest(
-            sessions=(info._to_grpc_v1() for info in session_info),
-        )
-        self._get_stub().UnregisterSessions(request)
-
-    def reserve_all_registered_sessions(
-        self, instrument_type_id: Optional[str] = None, timeout: Optional[float] = 0.0
-    ) -> MultiSessionReservation:
-        """Reserve all sessions currently registered with the session management service.
-
-        Args:
-            instrument_type_id: Instrument type ID for the measurement.
-
-                If unspecified, reserve sessions for all instrument types connected in the
-                registered pin map resource.
-
-                For NI instruments, use instrument type id constants, such as
-                :py:const:`INSTRUMENT_TYPE_NI_DCPOWER` or :py:const:`INSTRUMENT_TYPE_NI_DMM`.
-
-                For custom instruments, use the instrument type id defined in the pin map file.
-
-            timeout: Timeout in seconds.
-
-                Allowed values: 0 (non-blocking, fails immediately if resources cannot be
-                reserved), -1 (infinite timeout), or any other positive numeric value (wait for
-                that number of seconds)
-
-        Returns:
-            A reservation object with which you can query information about the sessions and
-            unreserve them.
-        """
-        request = session_management_service_pb2.ReserveAllRegisteredSessionsRequest(
-            timeout_in_milliseconds=_timeout_to_milliseconds(timeout)
-        )
-        if instrument_type_id is not None:
-            request.instrument_type_id = instrument_type_id
-
-        response = self._get_stub().ReserveAllRegisteredSessions(request)
-        return MultiSessionReservation(session_manager=self, session_info=response.sessions)
-
-
-Client = SessionManagementClient
-"""Alias for compatibility with code that uses session_management.Client."""
-
-
-def _timeout_to_milliseconds(timeout: Optional[float]) -> int:
-    if timeout is None:
-        return 0
-    elif timeout == -1:
-        return -1
-    elif timeout < 0:
-        warnings.warn("Specify -1 for an infinite timeout.", RuntimeWarning)
-        return -1
-    else:
-        return round(timeout * 1000)
