@@ -109,6 +109,19 @@ class PinMapContext(NamedTuple):
     If None or empty, use all sites in the pin map.
     """
 
+    @classmethod
+    def _from_grpc(
+        cls,
+        other: pin_map_context_pb2.PinMapContext,
+    ) -> PinMapContext:
+        # The protobuf PinMapContext sites field is a RepeatedScalarContainer, not a list.
+        # Constructing a protobuf PinMapContext with sites=None sets sites to an empty
+        # RepeatedScalarContainer, not None.
+        return PinMapContext(pin_map_id=other.pin_map_id, sites=list(other.sites))
+
+    def _to_grpc(self) -> pin_map_context_pb2.PinMapContext:
+        return pin_map_context_pb2.PinMapContext(pin_map_id=self.pin_map_id, sites=self.sites)
+
 
 class ChannelMapping(NamedTuple):
     """Mapping of each channel to the pin and site it is connected to."""
@@ -124,6 +137,21 @@ class ChannelMapping(NamedTuple):
 
     channel: str
     """The channel to which the pin or relay is mapped on this site."""
+
+    @classmethod
+    def _from_grpc_v1(cls, other: session_management_service_pb2.ChannelMapping) -> ChannelMapping:
+        return ChannelMapping(
+            pin_or_relay_name=other.pin_or_relay_name,
+            site=other.site,
+            channel=other.channel,
+        )
+
+    def _to_grpc_v1(self) -> session_management_service_pb2.ChannelMapping:
+        return session_management_service_pb2.ChannelMapping(
+            pin_or_relay_name=self.pin_or_relay_name,
+            site=self.site,
+            channel=self.channel,
+        )
 
 
 class SessionInformation(NamedTuple):
@@ -189,6 +217,31 @@ class SessionInformation(NamedTuple):
     def _with_typed_session(self, session: TSession) -> TypedSessionInformation[TSession]:
         return self._with_session(session)._as_typed(type(session))
 
+    @classmethod
+    def _from_grpc_v1(
+        cls, other: session_management_service_pb2.SessionInformation
+    ) -> SessionInformation:
+        return SessionInformation(
+            session_name=other.session.name,
+            resource_name=other.resource_name,
+            channel_list=other.channel_list,
+            instrument_type_id=other.instrument_type_id,
+            session_exists=other.session_exists,
+            channel_mappings=[ChannelMapping._from_grpc_v1(m) for m in other.channel_mappings],
+        )
+
+    def _to_grpc_v1(
+        self,
+    ) -> session_management_service_pb2.SessionInformation:
+        return session_management_service_pb2.SessionInformation(
+            session=session_pb2.Session(name=self.session_name),
+            resource_name=self.resource_name,
+            channel_list=self.channel_list,
+            instrument_type_id=self.instrument_type_id,
+            session_exists=self.session_exists,
+            channel_mappings=[m._to_grpc_v1() for m in self.channel_mappings],
+        )
+
 
 # Python versions <3.11 do not support generic named tuples, so we use a generic
 # protocol to return typed session information.
@@ -232,56 +285,6 @@ class TypedSessionInformation(Protocol, Generic[TSession_co]):
     def session(self) -> TSession_co:
         """The driver session object."""
         ...
-
-
-def _convert_channel_mapping_from_grpc(
-    channel_mapping: session_management_service_pb2.ChannelMapping,
-) -> ChannelMapping:
-    return ChannelMapping(
-        pin_or_relay_name=channel_mapping.pin_or_relay_name,
-        site=channel_mapping.site,
-        channel=channel_mapping.channel,
-    )
-
-
-def _convert_channel_mapping_to_grpc(
-    channel_mapping: ChannelMapping,
-) -> session_management_service_pb2.ChannelMapping:
-    return session_management_service_pb2.ChannelMapping(
-        pin_or_relay_name=channel_mapping.pin_or_relay_name,
-        site=channel_mapping.site,
-        channel=channel_mapping.channel,
-    )
-
-
-def _convert_session_info_from_grpc(
-    session_info: session_management_service_pb2.SessionInformation,
-) -> SessionInformation:
-    return SessionInformation(
-        session_name=session_info.session.name,
-        resource_name=session_info.resource_name,
-        channel_list=session_info.channel_list,
-        instrument_type_id=session_info.instrument_type_id,
-        session_exists=session_info.session_exists,
-        channel_mappings=[
-            _convert_channel_mapping_from_grpc(m) for m in session_info.channel_mappings
-        ],
-    )
-
-
-def _convert_session_info_to_grpc(
-    session_info: SessionInformation,
-) -> session_management_service_pb2.SessionInformation:
-    return session_management_service_pb2.SessionInformation(
-        session=session_pb2.Session(name=session_info.session_name),
-        resource_name=session_info.resource_name,
-        channel_list=session_info.channel_list,
-        instrument_type_id=session_info.instrument_type_id,
-        session_exists=session_info.session_exists,
-        channel_mappings=[
-            _convert_channel_mapping_to_grpc(m) for m in session_info.channel_mappings
-        ],
-    )
 
 
 class BaseReservation(abc.ABC):
@@ -339,7 +342,7 @@ class BaseReservation(abc.ABC):
 
     def _get_matching_session_infos(self, instrument_type_id: str) -> List[SessionInformation]:
         return [
-            _convert_session_info_from_grpc(info)._with_session(
+            SessionInformation._from_grpc_v1(info)._with_session(
                 self._session_cache.get(info.session.name)
             )
             for info in self._session_info
@@ -1060,7 +1063,7 @@ class SingleSessionReservation(BaseReservation):
     def session_info(self) -> SessionInformation:
         """Single session information object."""
         assert len(self._session_info) == 1
-        return _convert_session_info_from_grpc(self._session_info[0])
+        return SessionInformation._from_grpc_v1(self._session_info[0])
 
 
 class MultiSessionReservation(BaseReservation):
@@ -1069,7 +1072,7 @@ class MultiSessionReservation(BaseReservation):
     @cached_property
     def session_info(self) -> List[SessionInformation]:
         """Multiple session information objects."""
-        return [_convert_session_info_from_grpc(info) for info in self._session_info]
+        return [SessionInformation._from_grpc_v1(info) for info in self._session_info]
 
 
 def __getattr__(name: str) -> Any:
@@ -1251,12 +1254,8 @@ class SessionManagementClient(object):
         instrument_type_id: Optional[str] = None,
         timeout: Optional[float] = 0.0,
     ) -> Sequence[session_management_service_pb2.SessionInformation]:
-        pin_map_context = pin_map_context_pb2.PinMapContext(
-            pin_map_id=context.pin_map_id, sites=context.sites
-        )
-
         request = session_management_service_pb2.ReserveSessionsRequest(
-            pin_map_context=pin_map_context,
+            pin_map_context=context._to_grpc(),
             timeout_in_milliseconds=_timeout_to_milliseconds(timeout),
         )
         if instrument_type_id is not None:
@@ -1285,24 +1284,7 @@ class SessionManagementClient(object):
             session_info: Sessions to register.
         """
         request = session_management_service_pb2.RegisterSessionsRequest(
-            sessions=(
-                session_management_service_pb2.SessionInformation(
-                    session=session_pb2.Session(name=info.session_name),
-                    resource_name=info.resource_name,
-                    channel_list=info.channel_list,
-                    instrument_type_id=info.instrument_type_id,
-                    session_exists=info.session_exists,
-                    channel_mappings=[
-                        session_management_service_pb2.ChannelMapping(
-                            pin_or_relay_name=channel_mapping.pin_or_relay_name,
-                            site=channel_mapping.site,
-                            channel=channel_mapping.channel,
-                        )
-                        for channel_mapping in info.channel_mappings
-                    ],
-                )
-                for info in session_info
-            )
+            sessions=(info._to_grpc_v1() for info in session_info),
         )
         self._get_stub().RegisterSessions(request)
 
@@ -1316,24 +1298,7 @@ class SessionManagementClient(object):
             session_info: Sessions to unregister.
         """
         request = session_management_service_pb2.UnregisterSessionsRequest(
-            sessions=(
-                session_management_service_pb2.SessionInformation(
-                    session=session_pb2.Session(name=info.session_name),
-                    resource_name=info.resource_name,
-                    channel_list=info.channel_list,
-                    instrument_type_id=info.instrument_type_id,
-                    session_exists=info.session_exists,
-                    channel_mappings=[
-                        session_management_service_pb2.ChannelMapping(
-                            pin_or_relay_name=channel_mapping.pin_or_relay_name,
-                            site=channel_mapping.site,
-                            channel=channel_mapping.channel,
-                        )
-                        for channel_mapping in info.channel_mappings
-                    ],
-                )
-                for info in session_info
-            )
+            sessions=(info._to_grpc_v1() for info in session_info),
         )
         self._get_stub().UnregisterSessions(request)
 
