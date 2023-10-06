@@ -27,6 +27,8 @@ from ni_measurementlink_service.session_management._constants import (
     INSTRUMENT_TYPE_NI_SCOPE,
     INSTRUMENT_TYPE_NI_SWITCH_EXECUTIVE_VIRTUAL_DEVICE,
     INSTRUMENT_TYPE_NONE,
+    SITE_ALL_SITES,
+    SITE_SYSTEM_PINS,
 )
 from ni_measurementlink_service.session_management._reservation import (
     BaseReservation,
@@ -68,6 +70,8 @@ __all__ = [
     "SessionInitializationBehavior",
     "SessionManagementClient",
     "SingleSessionReservation",
+    "SITE_ALL_SITES",
+    "SITE_SYSTEM_PINS",
     "TypedSessionInformation",
 ]
 
