@@ -243,15 +243,11 @@ class Connection(NamedTuple):
         """The instrument session."""
         return self.session_info.session
 
-    def _as_typed(self, session_type: Type[TSession]) -> TypedConnection[TSession]:
-        assert isinstance(self.session, session_type)
-        return cast(TypedConnection[TSession], self)
+    def _check_runtime_type(self, session_type: type) -> None:
+        self.session_info._check_runtime_type(session_type)
 
     def _with_session(self, session: object) -> Connection:
         return self._replace(session_info=self.session_info._with_session(session))
-
-    def _with_typed_session(self, session: TSession) -> TypedConnection[TSession]:
-        return self._with_session(session)._as_typed(type(session))
 
 
 class TypedConnection(Protocol, Generic[TSession_co]):
