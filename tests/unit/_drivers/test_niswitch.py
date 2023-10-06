@@ -24,7 +24,6 @@ except ImportError:
 pytestmark = pytest.mark.skipif(niswitch is None, reason="Requires 'niswitch' package.")
 
 if niswitch:
-    # Note: this reads the Session type before it is patched.
     create_mock_niswitch_session = functools.partial(create_mock_session, niswitch.Session)
     create_mock_niswitch_sessions = functools.partial(create_mock_sessions, niswitch.Session)
     create_niswitch_session_infos = functools.partial(
@@ -33,19 +32,20 @@ if niswitch:
 
 
 def test___single_session_info___create_niswitch_session___session_created(
-    session_type: Mock,
+    session_new: Mock,
     session_management_client: Mock,
 ) -> None:
     reservation = MultiSessionReservation(
         session_management_client, create_niswitch_session_infos(1)
     )
     session = create_mock_niswitch_session()
-    session_type.side_effect = [session]
+    session_new.side_effect = [session]
 
     with reservation.create_niswitch_session() as session_info:
         assert session_info.session is session
 
-    session_type.assert_called_once_with(
+    session_new.assert_called_once_with(
+        niswitch.Session,
         resource_name="Dev0",
         topology="Configured Topology",
         simulate=False,
@@ -55,27 +55,29 @@ def test___single_session_info___create_niswitch_session___session_created(
 
 
 def test___multiple_session_infos___create_niswitch_sessions___sessions_created(
-    session_type: Mock,
+    session_new: Mock,
     session_management_client: Mock,
 ) -> None:
     reservation = MultiSessionReservation(
         session_management_client, create_niswitch_session_infos(2)
     )
     sessions = create_mock_niswitch_sessions(3)
-    session_type.side_effect = sessions
+    session_new.side_effect = sessions
 
     with reservation.create_niswitch_sessions() as session_info:
         assert session_info[0].session == sessions[0]
         assert session_info[1].session == sessions[1]
 
-    session_type.assert_any_call(
+    session_new.assert_any_call(
+        niswitch.Session,
         resource_name="Dev0",
         topology="Configured Topology",
         simulate=False,
         reset_device=False,
         grpc_options=ANY,
     )
-    session_type.assert_any_call(
+    session_new.assert_any_call(
+        niswitch.Session,
         resource_name="Dev1",
         topology="Configured Topology",
         simulate=False,
@@ -85,14 +87,14 @@ def test___multiple_session_infos___create_niswitch_sessions___sessions_created(
 
 
 def test___optional_args___create_niswitch_session___optional_args_passed(
-    session_type: Mock,
+    session_new: Mock,
     session_management_client: Mock,
 ) -> None:
     reservation = MultiSessionReservation(
         session_management_client, create_niswitch_session_infos(1)
     )
     session = create_mock_niswitch_session()
-    session_type.side_effect = [session]
+    session_new.side_effect = [session]
 
     with reservation.create_niswitch_session(
         topology="2567/Independent",
@@ -102,7 +104,8 @@ def test___optional_args___create_niswitch_session___optional_args_passed(
     ):
         pass
 
-    session_type.assert_called_once_with(
+    session_new.assert_called_once_with(
+        niswitch.Session,
         resource_name="Dev0",
         topology="2567/Independent",
         simulate=True,
@@ -110,14 +113,14 @@ def test___optional_args___create_niswitch_session___optional_args_passed(
         grpc_options=ANY,
     )
     assert (
-        session_type.call_args.kwargs["grpc_options"].initialization_behavior
+        session_new.call_args.kwargs["grpc_options"].initialization_behavior
         == niswitch.SessionInitializationBehavior.INITIALIZE_SERVER_SESSION
     )
 
 
 def test___simulation_configured___create_niswitch_session___simulation_options_passed(
     mocker: MockerFixture,
-    session_type: Mock,
+    session_new: Mock,
     session_management_client: Mock,
 ) -> None:
     _set_niswitch_simulation_options(mocker, True, "2567/Independent")
@@ -125,12 +128,13 @@ def test___simulation_configured___create_niswitch_session___simulation_options_
         session_management_client, create_niswitch_session_infos(1)
     )
     session = create_mock_niswitch_session()
-    session_type.side_effect = [session]
+    session_new.side_effect = [session]
 
     with reservation.create_niswitch_session():
         pass
 
-    session_type.assert_called_once_with(
+    session_new.assert_called_once_with(
+        niswitch.Session,
         resource_name="Dev0",
         topology="2567/Independent",
         simulate=True,
@@ -141,7 +145,7 @@ def test___simulation_configured___create_niswitch_session___simulation_options_
 
 def test___optional_args_and_simulation_configured___create_niswitch_session___optional_args_passed(
     mocker: MockerFixture,
-    session_type: Mock,
+    session_new: Mock,
     session_management_client: Mock,
 ) -> None:
     _set_niswitch_simulation_options(mocker, True, "2567/Independent")
@@ -149,14 +153,15 @@ def test___optional_args_and_simulation_configured___create_niswitch_session___o
         session_management_client, create_niswitch_session_infos(1)
     )
     session = create_mock_niswitch_session()
-    session_type.side_effect = [session]
+    session_new.side_effect = [session]
 
     with reservation.create_niswitch_session(
         topology="2529/2-Wire 4x32 Matrix", simulate=False, reset_device=True
     ):
         pass
 
-    session_type.assert_called_once_with(
+    session_new.assert_called_once_with(
+        niswitch.Session,
         resource_name="Dev0",
         topology="2529/2-Wire 4x32 Matrix",
         simulate=False,
@@ -166,9 +171,9 @@ def test___optional_args_and_simulation_configured___create_niswitch_session___o
 
 
 @pytest.fixture
-def session_type(mocker: MockerFixture) -> Mock:
-    """A test fixture that replaces the Session class with a mock."""
-    return mocker.patch("niswitch.Session", autospec=True)
+def session_new(mocker: MockerFixture) -> Mock:
+    """A test fixture that patches the Session class's __new__ method."""
+    return mocker.patch("niswitch.Session.__new__", autospec=True)
 
 
 def _set_niswitch_simulation_options(mocker: MockerFixture, simulate: bool, topology: str) -> None:
