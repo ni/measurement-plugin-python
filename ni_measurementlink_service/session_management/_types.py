@@ -139,7 +139,7 @@ class SessionInformation(NamedTuple):
         if not isinstance(self.session, session_type):
             raise TypeError(
                 f"Incorrect type for session '{self.session_name}'. "
-                f"Expected '{session_type}', got '{type(self.session)}'"
+                f"Expected {session_type}, got {type(self.session)}."
             )
 
     def _with_session(self, session: object) -> SessionInformation:
