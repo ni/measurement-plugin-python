@@ -1,8 +1,13 @@
 import functools
+from contextlib import ExitStack
+from typing import List
 from unittest.mock import Mock
 
 import pytest
 
+from ni_measurementlink_service._internal.stubs.ni.measurementlink.sessionmanagement.v1 import (
+    session_management_service_pb2,
+)
 from ni_measurementlink_service.session_management import (
     MultiSessionReservation,
     SessionInformation,
@@ -72,7 +77,7 @@ def test___no_session_infos___create_session___value_error_raised(
     assert "No reserved sessions matched instrument type ID 'nifake'." in exc_info.value.args[0]
 
 
-def test___multi_session_infos___create_session___value_error_raised(
+def test___multiple_session_infos___create_session___value_error_raised(
     session_management_client: Mock,
 ) -> None:
     reservation = MultiSessionReservation(session_management_client, create_nifake_session_infos(2))
@@ -115,7 +120,7 @@ def test___heterogenous_session_infos___create_session___grouped_by_instrument_t
         assert nibar_info.instrument_type_id == "nibar"
 
 
-def test___multi_session_infos___create_sessions___session_infos_yielded(
+def test___multiple_session_infos___create_sessions___session_infos_yielded(
     session_management_client: Mock,
 ) -> None:
     reservation = MultiSessionReservation(session_management_client, create_nifake_session_infos(3))
@@ -130,7 +135,7 @@ def test___multi_session_infos___create_sessions___session_infos_yielded(
         assert [info.instrument_type_id for info in session_infos] == ["nifake", "nifake", "nifake"]
 
 
-def test___multi_session_infos___create_sessions___sessions_created(
+def test___multiple_session_infos___create_sessions___sessions_created(
     session_management_client: Mock,
 ) -> None:
     reservation = MultiSessionReservation(session_management_client, create_nifake_session_infos(3))
@@ -140,7 +145,7 @@ def test___multi_session_infos___create_sessions___sessions_created(
         assert [info.session.resource_name for info in session_infos] == ["Dev0", "Dev1", "Dev2"]
 
 
-def test___multi_session_infos___create_sessions___session_lifetime_tracked(
+def test___multiple_session_infos___create_sessions___session_lifetime_tracked(
     session_management_client: Mock,
 ) -> None:
     reservation = MultiSessionReservation(session_management_client, create_nifake_session_infos(3))
@@ -208,5 +213,298 @@ def test___heterogenous_session_infos___create_sessions___grouped_by_instrument_
         assert [info.instrument_type_id for info in nibar_infos] == ["nibar"]
 
 
+def test___single_connection___get_connection___connection_returned(
+    session_management_client: Mock,
+) -> None:
+    with ExitStack() as stack:
+        grpc_session_infos = create_nifake_session_infos(1)
+        grpc_session_infos[0].channel_mappings.add(pin_or_relay_name="Pin1", site=2, channel="3")
+        reservation = MultiSessionReservation(session_management_client, grpc_session_infos)
+        session_info = stack.enter_context(reservation.create_session(_construct_session, "nifake"))
+
+        connection = reservation.get_connection(fake_driver.Session)
+
+        assert connection.pin_or_relay_name == "Pin1"
+        assert connection.site == 2
+        assert connection.channel_name == "3"
+        assert connection.session_info == session_info
+
+
+def test___multiple_connections___get_connection___too_many_connections_raised(
+    session_management_client: Mock,
+) -> None:
+    with ExitStack() as stack:
+        grpc_session_infos = create_nifake_session_infos(1)
+        grpc_session_infos[0].channel_mappings.add(pin_or_relay_name="Pin1", site=2, channel="3")
+        grpc_session_infos[0].channel_mappings.add(pin_or_relay_name="Pin4", site=5, channel="6")
+        reservation = MultiSessionReservation(session_management_client, grpc_session_infos)
+        session_info = stack.enter_context(reservation.create_session(_construct_session, "nifake"))
+
+        with pytest.raises(ValueError) as exc_info:
+            _ = reservation.get_connection(fake_driver.Session)
+
+        assert (
+            "Too many reserved connections matched the specified criteria."
+            in exc_info.value.args[0]
+        )
+
+
+@pytest.mark.parametrize("pin_name,site,channel_name", [("Pin1", 2, "3"), ("Pin4", 5, "6")])
+def test___multiple_connections___get_connection_with_pin_name___connection_returned(
+    session_management_client: Mock,
+    pin_name: str,
+    site: int,
+    channel_name: str,
+) -> None:
+    with ExitStack() as stack:
+        grpc_session_infos = create_nifake_session_infos(1)
+        grpc_session_infos[0].channel_mappings.add(pin_or_relay_name="Pin1", site=2, channel="3")
+        grpc_session_infos[0].channel_mappings.add(pin_or_relay_name="Pin4", site=5, channel="6")
+        reservation = MultiSessionReservation(session_management_client, grpc_session_infos)
+        session_info = stack.enter_context(reservation.create_session(_construct_session, "nifake"))
+
+        connection = reservation.get_connection(fake_driver.Session, pin_name)
+
+        assert connection.pin_or_relay_name == pin_name
+        assert connection.site == site
+        assert connection.channel_name == channel_name
+        assert connection.session_info == session_info
+
+
+@pytest.mark.parametrize("pin_name,site,channel_name", [("Pin1", 2, "3"), ("Pin4", 5, "6")])
+def test___multiple_connections___get_connection_with_site___connection_returned(
+    session_management_client: Mock,
+    pin_name: str,
+    site: int,
+    channel_name: str,
+) -> None:
+    with ExitStack() as stack:
+        grpc_session_infos = create_nifake_session_infos(1)
+        grpc_session_infos[0].channel_mappings.add(pin_or_relay_name="Pin1", site=2, channel="3")
+        grpc_session_infos[0].channel_mappings.add(pin_or_relay_name="Pin4", site=5, channel="6")
+        reservation = MultiSessionReservation(session_management_client, grpc_session_infos)
+        session_info = stack.enter_context(reservation.create_session(_construct_session, "nifake"))
+
+        connection = reservation.get_connection(fake_driver.Session, sites=site)
+
+        assert connection.pin_or_relay_name == pin_name
+        assert connection.site == site
+        assert connection.channel_name == channel_name
+        assert connection.session_info == session_info
+
+
+@pytest.mark.parametrize(
+    "instrument_type_id,pin_name,site,channel_name",
+    [("nifoo", "Pin1", 2, "3"), ("nibar", "Pin4", 5, "6")],
+)
+def test___heterogenous_session_infos___get_connection_with_instrument_type_id___connection_returned(
+    session_management_client: Mock,
+    instrument_type_id: str,
+    pin_name: str,
+    site: int,
+    channel_name: str,
+) -> None:
+    with ExitStack() as stack:
+        grpc_session_infos = create_nifoo_session_infos(2)
+        grpc_session_infos[0].channel_mappings.add(pin_or_relay_name="Pin1", site=2, channel="3")
+        grpc_session_infos[1].channel_mappings.add(pin_or_relay_name="Pin4", site=5, channel="6")
+        grpc_session_infos[1].instrument_type_id = "nibar"
+        reservation = MultiSessionReservation(session_management_client, grpc_session_infos)
+        nifoo_info = stack.enter_context(reservation.create_session(_construct_session, "nifoo"))
+        nibar_info = stack.enter_context(reservation.create_session(_construct_session, "nibar"))
+
+        connection = reservation.get_connection(
+            fake_driver.Session, instrument_type_id=instrument_type_id
+        )
+
+        assert connection.pin_or_relay_name == pin_name
+        assert connection.site == site
+        assert connection.channel_name == channel_name
+        if instrument_type_id == "nifoo":
+            assert connection.session_info == nifoo_info
+        else:
+            assert connection.session_info == nibar_info
+
+
+def test___heterogenous_session_infos___get_connections___connections_returned(
+    session_management_client: Mock,
+) -> None:
+    with ExitStack() as stack:
+        grpc_session_infos = create_nifoo_session_infos(2)
+        grpc_session_infos[0].channel_mappings.add(pin_or_relay_name="Pin1", site=2, channel="3")
+        grpc_session_infos[1].channel_mappings.add(pin_or_relay_name="Pin4", site=5, channel="6")
+        grpc_session_infos[1].instrument_type_id = "nibar"
+        reservation = MultiSessionReservation(session_management_client, grpc_session_infos)
+        nifoo_info = stack.enter_context(reservation.create_session(_construct_session, "nifoo"))
+        nibar_info = stack.enter_context(reservation.create_session(_construct_session, "nibar"))
+
+        connections = reservation.get_connections(fake_driver.Session)
+
+        assert [conn.pin_or_relay_name for conn in connections] == ["Pin1", "Pin4"]
+        assert [conn.site for conn in connections] == [2, 5]
+        assert [conn.channel_name for conn in connections] == ["3", "6"]
+        assert [conn.session for conn in connections] == [nifoo_info.session, nibar_info.session]
+
+
+def test___wrong_session_type___get_connection___type_error_raised(
+    session_management_client: Mock,
+) -> None:
+    with ExitStack() as stack:
+        grpc_session_infos = create_nifake_session_infos(1)
+        grpc_session_infos[0].channel_mappings.add(pin_or_relay_name="Pin1", site=2, channel="3")
+        reservation = MultiSessionReservation(session_management_client, grpc_session_infos)
+        session_info = stack.enter_context(reservation.create_session(_construct_session, "nifake"))
+
+        with pytest.raises(TypeError) as exc_info:
+            _ = reservation.get_connection(int)
+
+        assert "Incorrect type for session 'MySession0'." in exc_info.value.args[0]
+        assert (
+            "Expected <class 'int'>, got <class 'tests.utilities.fake_driver.Session'>."
+            in exc_info.value.args[0]
+        )
+
+
+def test___session_not_created___get_connection___type_error_raised(
+    session_management_client: Mock,
+) -> None:
+    grpc_session_infos = create_nifake_session_infos(1)
+    grpc_session_infos[0].channel_mappings.add(pin_or_relay_name="Pin1", site=2, channel="3")
+    reservation = MultiSessionReservation(session_management_client, grpc_session_infos)
+
+    with pytest.raises(TypeError) as exc_info:
+        _ = reservation.get_connection(fake_driver.Session)
+
+    assert "Incorrect type for session 'MySession0'." in exc_info.value.args[0]
+    assert (
+        "Expected <class 'tests.utilities.fake_driver.Session'>, got <class 'NoneType'>."
+        in exc_info.value.args[0]
+    )
+
+
+def test___session_not_created___get_connection_with_session_type_object___connection_returned(
+    session_management_client: Mock,
+) -> None:
+    grpc_session_infos = create_nifake_session_infos(1)
+    grpc_session_infos[0].channel_mappings.add(pin_or_relay_name="Pin1", site=2, channel="3")
+    reservation = MultiSessionReservation(session_management_client, grpc_session_infos)
+
+    connection = reservation.get_connection(object)
+
+    assert connection.pin_or_relay_name == "Pin1"
+    assert connection.site == 2
+    assert connection.channel_name == "3"
+    assert connection.session is None
+
+
+def test___specified_order___get_connections___connections_returned_in_specified_order(
+    session_management_client: Mock,
+) -> None:
+    grpc_session_infos = _create_grpc_session_infos_for_ordering()
+    reservation = MultiSessionReservation(
+        session_management_client,
+        grpc_session_infos,
+        reserved_pin_or_relay_names=["Pin3", "Pin1", "Pin4", "Pin2"],
+        reserved_sites=[1, 0],
+        reserved_instrument_type_ids=["nifoo", "nibar"],
+    )
+
+    nifoo_connections = reservation.get_connections(
+        object,
+        pin_or_relay_names=["Pin1", "Pin3", "Pin2", "Pin4"],
+        sites=[0, 1],
+        instrument_type_id="nifoo",
+    )
+    nibar_connections = reservation.get_connections(
+        object,
+        pin_or_relay_names=["Pin1", "Pin3", "Pin2", "Pin4"],
+        sites=[0, 1],
+        instrument_type_id="nibar",
+    )
+
+    # Group by instrument_type_id. Sort by site, then by pin name.
+    assert [conn.pin_or_relay_name for conn in nifoo_connections] == [
+        "Pin1",
+        "Pin3",
+        "Pin2",
+        "Pin1",
+        "Pin3",
+        "Pin2",
+    ]
+    assert [conn.site for conn in nifoo_connections] == [0, 0, 0, 1, 1, 1]
+    assert [conn.channel_name for conn in nifoo_connections] == ["0", "2", "1", "3", "5", "4"]
+    assert [conn.pin_or_relay_name for conn in nibar_connections] == ["Pin4", "Pin4"]
+    assert [conn.site for conn in nibar_connections] == [0, 1]
+    assert [conn.channel_name for conn in nibar_connections] == ["6", "7"]
+
+
+def test___unspecified_order___get_connections___connections_returned_in_reservation_order(
+    session_management_client: Mock,
+) -> None:
+    grpc_session_infos = _create_grpc_session_infos_for_ordering()
+    reservation = MultiSessionReservation(
+        session_management_client,
+        grpc_session_infos,
+        reserved_pin_or_relay_names=["Pin3", "Pin1", "Pin2", "Pin4"],
+        reserved_sites=[1, 0],
+        reserved_instrument_type_ids=["nibar", "nifoo"],
+    )
+
+    connections = reservation.get_connections(object)
+
+    # Sort by instrument_type_id, then by site, then by pin name.
+    assert [conn.pin_or_relay_name for conn in connections] == [
+        "Pin4",
+        "Pin4",
+        "Pin3",
+        "Pin1",
+        "Pin2",
+        "Pin3",
+        "Pin1",
+        "Pin2",
+    ]
+    assert [conn.site for conn in connections] == [1, 0, 1, 1, 1, 0, 0, 0]
+    assert [conn.channel_name for conn in connections] == ["7", "6", "5", "3", "4", "2", "0", "1"]
+
+
+def test___unspecified_order_with_no_reservation_order___get_connections___connections_returned_in_default_order(
+    session_management_client: Mock,
+) -> None:
+    grpc_session_infos = _create_grpc_session_infos_for_ordering()
+    reservation = MultiSessionReservation(session_management_client, grpc_session_infos)
+
+    connections = reservation.get_connections(object)
+
+    # Sort by instrument_type_id, then by site, then by pin name.
+    assert [conn.pin_or_relay_name for conn in connections] == [
+        "Pin1",
+        "Pin2",
+        "Pin3",
+        "Pin1",
+        "Pin2",
+        "Pin3",
+        "Pin4",
+        "Pin4",
+    ]
+    assert [conn.site for conn in connections] == [0, 0, 0, 1, 1, 1, 0, 1]
+    assert [conn.channel_name for conn in connections] == ["0", "1", "2", "3", "4", "5", "6", "7"]
+
+
 def _construct_session(session_info: SessionInformation) -> fake_driver.Session:
     return fake_driver.Session(session_info.resource_name)
+
+
+def _create_grpc_session_infos_for_ordering() -> (
+    List[session_management_service_pb2.SessionInformation]
+):
+    grpc_session_infos = create_nifoo_session_infos(4)
+    grpc_session_infos[0].channel_mappings.add(pin_or_relay_name="Pin1", site=0, channel="0")
+    grpc_session_infos[0].channel_mappings.add(pin_or_relay_name="Pin2", site=0, channel="1")
+    grpc_session_infos[1].channel_mappings.add(pin_or_relay_name="Pin3", site=0, channel="2")
+    grpc_session_infos[1].channel_mappings.add(pin_or_relay_name="Pin1", site=1, channel="3")
+    grpc_session_infos[2].channel_mappings.add(pin_or_relay_name="Pin2", site=1, channel="4")
+    grpc_session_infos[2].channel_mappings.add(pin_or_relay_name="Pin3", site=1, channel="5")
+    grpc_session_infos[3].channel_mappings.add(pin_or_relay_name="Pin4", site=0, channel="6")
+    grpc_session_infos[3].channel_mappings.add(pin_or_relay_name="Pin4", site=1, channel="7")
+    grpc_session_infos[3].instrument_type_id = "nibar"
+    return grpc_session_infos
