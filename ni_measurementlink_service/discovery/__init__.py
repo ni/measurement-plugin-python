@@ -1,4 +1,4 @@
-"""Client for accessing the MeasurementLink discovery service."""
+"""Public API for accessing the MeasurementLink discovery service."""
 
 from ni_measurementlink_service.discovery._client import DiscoveryClient
 from ni_measurementlink_service.discovery._types import ServiceLocation

@@ -1,4 +1,4 @@
-"""Client for accessing the MeasurementLink session management service."""
+"""Public API for accessing the MeasurementLink session management service."""
 from __future__ import annotations
 
 import warnings
