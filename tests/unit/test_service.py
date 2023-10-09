@@ -35,7 +35,7 @@ def test___measurement_service___register_measurement_method___method_registered
     """Test to validate register_measurement decorator."""
     measurement_service.register_measurement(_fake_measurement_function)
 
-    measurement_service.measure_function == _fake_measurement_function
+    measurement_service._measure_function == _fake_measurement_function
 
 
 @pytest.mark.parametrize(
@@ -69,7 +69,7 @@ def test___measurement_service___add_configuration__configuration_added(
         and param.repeated == data_type_info.repeated
         and param.default_value == default_value
         and param.message_type == data_type_info.message_type
-        for param in measurement_service.configuration_parameter_list
+        for param in measurement_service._configuration_parameter_list
     )
 
 
@@ -102,7 +102,7 @@ def test___measurement_service___add_pin_configuration__pin_configuration_added(
             "ni/type_specialization": TypeSpecialization.Pin.value,
             "ni/pin.instrument_type": instrument_type,
         }
-        for param in measurement_service.configuration_parameter_list
+        for param in measurement_service._configuration_parameter_list
     )
 
 
@@ -131,7 +131,7 @@ def test___measurement_service___add_non_pin_configuration__pin_type_annotations
 
     assert not all(
         param.annotations.get("ni/type_specialization") == TypeSpecialization.Pin.value
-        for param in measurement_service.configuration_parameter_list
+        for param in measurement_service._configuration_parameter_list
     )
 
 
@@ -160,7 +160,7 @@ def test___measurement_service___add_path_configuration__path_configuration_adde
         == {
             "ni/type_specialization": TypeSpecialization.Path.value,
         }
-        for param in measurement_service.configuration_parameter_list
+        for param in measurement_service._configuration_parameter_list
     )
 
 
@@ -189,7 +189,7 @@ def test___measurement_service___add_non_path_configuration__path_type_annotatio
 
     assert not all(
         param.annotations.get("ni/type_specialization") == TypeSpecialization.Path.value
-        for param in measurement_service.configuration_parameter_list
+        for param in measurement_service._configuration_parameter_list
     )
 
 
@@ -250,7 +250,7 @@ def test___measurement_service___add_output__output_added(
         and param.type == data_type_info.grpc_field_type
         and param.repeated == data_type_info.repeated
         and param.message_type == data_type_info.message_type
-        for param in measurement_service.output_parameter_list
+        for param in measurement_service._output_parameter_list
     )
 
 
