@@ -5,6 +5,7 @@ import abc
 import contextlib
 import sys
 from contextlib import ExitStack
+from functools import cached_property
 from types import TracebackType
 from typing import (
     TYPE_CHECKING,
@@ -13,11 +14,15 @@ from typing import (
     ContextManager,
     Dict,
     Generator,
+    Iterable,
     List,
     Literal,
+    NamedTuple,
     Optional,
     Sequence,
     Type,
+    TypeVar,
+    Union,
     cast,
 )
 
@@ -41,9 +46,11 @@ from ni_measurementlink_service.session_management._constants import (
     INSTRUMENT_TYPE_NI_SCOPE,
 )
 from ni_measurementlink_service.session_management._types import (
+    Connection,
     SessionInformation,
     SessionInitializationBehavior,
     TSession,
+    TypedConnection,
     TypedSessionInformation,
 )
 
@@ -67,6 +74,28 @@ if TYPE_CHECKING:
     else:
         from typing_extensions import Self
 
+_T = TypeVar("_T")
+
+
+def _to_iterable(
+    value: Union[_T, Iterable[_T], None], default: Optional[Iterable[_T]] = None
+) -> Iterable[_T]:
+    if value is None:
+        return default or []
+    elif isinstance(value, Iterable):
+        # str implements Iterable[str] for iterating over characters.
+        if isinstance(value, str):
+            return [cast(_T, value)]
+        return value
+    else:
+        return [value]
+
+
+class _ConnectionKey(NamedTuple):
+    pin_or_relay_name: str
+    site: int
+    instrument_type_id: str
+
 
 class BaseReservation(abc.ABC):
     """Manages session reservation."""
@@ -75,6 +104,9 @@ class BaseReservation(abc.ABC):
         self,
         session_manager: SessionManagementClient,
         session_info: Sequence[session_management_service_pb2.SessionInformation],
+        reserved_pin_or_relay_names: Union[str, Iterable[str], None] = None,
+        reserved_sites: Optional[Iterable[int]] = None,
+        reserved_instrument_type_ids: Union[str, Iterable[str], None] = None,
     ) -> None:
         """Initialize reservation object."""
         self._session_manager = session_manager
@@ -83,6 +115,18 @@ class BaseReservation(abc.ABC):
             SessionInformation._from_grpc_v1(info) for info in self._grpc_session_info
         ]
         self._session_cache: Dict[str, object] = {}
+
+        # If __init__ doesn't initialize _reserved_pin_or_relay_names,
+        # _reserved_sites, or _reserved_instrument_type_ids, the cached
+        # properties lazily initialize them.
+        if reserved_pin_or_relay_names is not None:
+            self._reserved_pin_or_relay_names = _to_iterable(reserved_pin_or_relay_names)
+
+        if reserved_sites is not None:
+            self._reserved_sites = reserved_sites
+
+        if reserved_instrument_type_ids is not None:
+            self._reserved_instrument_type_ids = _to_iterable(reserved_instrument_type_ids)
 
     @property
     def _discovery_client(self) -> DiscoveryClient:
@@ -95,6 +139,52 @@ class BaseReservation(abc.ABC):
         if not self._session_manager._grpc_channel_pool:
             raise ValueError("This method requires a gRPC channel pool.")
         return self._session_manager._grpc_channel_pool
+
+    @cached_property
+    def _reserved_pin_or_relay_names(self) -> Iterable[str]:
+        # Use dict keys to preserve insertion order.
+        names = {}
+        for session_info in self._session_info:
+            for channel_mapping in session_info.channel_mappings:
+                names[channel_mapping.pin_or_relay_name] = True
+        return list(names.keys())
+
+    @cached_property
+    def _reserved_sites(self) -> Iterable[int]:
+        # Use dict keys to preserve insertion order.
+        sites = {}
+        for session_info in self._session_info:
+            for channel_mapping in session_info.channel_mappings:
+                sites[channel_mapping.site] = True
+        return list(sites.keys())
+
+    @cached_property
+    def _reserved_instrument_type_ids(self) -> Iterable[str]:
+        # Use dict keys to preserve insertion order.
+        ids = {}
+        for session_info in self._session_info:
+            ids[session_info.instrument_type_id] = True
+        return list(ids.keys())
+
+    @cached_property
+    def _connection_cache(self) -> Dict[_ConnectionKey, Connection]:
+        cache = {}
+        for session_info in self._session_info:
+            for channel_mapping in session_info.channel_mappings:
+                key = _ConnectionKey(
+                    channel_mapping.pin_or_relay_name,
+                    channel_mapping.site,
+                    session_info.instrument_type_id,
+                )
+                value = Connection(
+                    channel_mapping.pin_or_relay_name,
+                    channel_mapping.site,
+                    channel_mapping.channel,
+                    session_info,
+                )
+                assert key not in cache
+                cache[key] = value
+        return cache
 
     def __enter__(self: Self) -> Self:
         """Context management protocol. Returns self."""
@@ -183,6 +273,54 @@ class BaseReservation(abc.ABC):
                 )
             yield typed_session_infos
 
+    def _get_connection_core(
+        self,
+        session_type: Type[TSession],
+        pin_or_relay_names: Union[str, Iterable[str], None] = None,
+        sites: Union[int, Iterable[int], None] = None,
+        instrument_type_id: Optional[str] = None,
+    ) -> TypedConnection[TSession]:
+        results = self._get_connections_core(
+            session_type, pin_or_relay_names, sites, instrument_type_id
+        )
+        if len(results) > 1:
+            raise ValueError(
+                "Too many reserved connections matched the specified criteria. "
+                f"Expected single connection, got {len(results)} connections."
+            )
+        return results[0]
+
+    def _get_connections_core(
+        self,
+        session_type: Type[TSession],
+        pin_or_relay_names: Union[str, Iterable[str], None] = None,
+        sites: Union[int, Iterable[int], None] = None,
+        instrument_type_id: Optional[str] = None,
+    ) -> Sequence[TypedConnection[TSession]]:
+        pin_order = _to_iterable(pin_or_relay_names, self._reserved_pin_or_relay_names)
+        site_order = _to_iterable(sites, self._reserved_sites)
+        instrument_type_id_order = _to_iterable(
+            instrument_type_id, self._reserved_instrument_type_ids
+        )
+
+        results: List[TypedConnection[TSession]] = []
+        for instrument_type in instrument_type_id_order:
+            for site in site_order:
+                for pin in pin_order:
+                    key = _ConnectionKey(pin, site, instrument_type)
+                    value = self._connection_cache.get(key)
+                    if value is not None:
+                        session = self._session_cache.get(value.session_info.session_name)
+                        value = value._with_session(session)
+                        value._check_runtime_type(session_type)
+                        results.append(cast(TypedConnection[TSession], value))
+        if not results:
+            raise ValueError(
+                "No reserved connections matched the specified criteria. "
+                "Expected single or multiple connections, got 0 connections."
+            )
+        return results
+
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def create_session(
         self,
@@ -242,6 +380,79 @@ class BaseReservation(abc.ABC):
                 sessions match the instrument type ID.
         """
         return self._create_sessions_core(session_constructor, instrument_type_id)
+
+    @requires_feature(SESSION_MANAGEMENT_2024Q1)
+    def get_connection(
+        self,
+        session_type: Type[TSession],
+        pin_or_relay_names: Union[str, Iterable[str], None] = None,
+        sites: Union[int, Iterable[int], None] = None,
+        instrument_type_id: Optional[str] = None,
+    ) -> TypedConnection[TSession]:
+        """Get the connection matching the specified criteria.
+
+        This is a generic method that supports any instrument driver.
+
+        Args:
+            session_type: The session type.
+
+            pin_or_relay_names: The pin or relay names to match against. If not
+                specified, all reserved pins or relays will be returned.
+
+            sites: The site numbers to match against. If not specified, all
+                reserved sites will be returned.
+
+            instrument_type_id: Instrument type ID to match against. If not
+                specified, all reserved instrument type IDs will be returned.
+
+        Returns:
+            The matching connection.
+
+        Raises:
+            TypeError: If the matching connections are inconsistent with ``session_type``.
+
+            ValueError: If no reserved connections match or too many reserved
+                connections match.
+        """
+        return self._get_connection_core(
+            session_type, pin_or_relay_names, sites, instrument_type_id
+        )
+
+    @requires_feature(SESSION_MANAGEMENT_2024Q1)
+    def get_connections(
+        self,
+        session_type: Type[TSession],
+        pin_or_relay_names: Union[str, Iterable[str], None] = None,
+        sites: Union[int, Iterable[int], None] = None,
+        instrument_type_id: Optional[str] = None,
+    ) -> Sequence[TypedConnection[TSession]]:
+        """Get all connections matching the specified criteria.
+
+        This is a generic method that supports any instrument driver.
+
+        Args:
+            session_type: The expected session type.
+
+            pin_or_relay_names: The pin or relay names to match against. If not
+                specified, all reserved pins or relays will be returned.
+
+            sites: The site numbers to match against. If not specified, all
+                reserved sites will be returned.
+
+            instrument_type_id: Instrument type ID to match against. If not
+                specified, all reserved instrument type IDs will be returned.
+
+        Returns:
+            The matching connections.
+
+        Raises:
+            TypeError: If the matching connections are inconsistent with ``session_type``.
+
+            ValueError: If no reserved connections match.
+        """
+        return self._get_connections_core(
+            session_type, pin_or_relay_names, sites, instrument_type_id
+        )
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def create_nidaqmx_task(
