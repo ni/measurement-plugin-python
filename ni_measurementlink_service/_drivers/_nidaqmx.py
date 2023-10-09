@@ -8,7 +8,7 @@ from ni_measurementlink_service._channelpool import GrpcChannelPool
 from ni_measurementlink_service._drivers._grpcdevice import (
     get_insecure_grpc_device_channel,
 )
-from ni_measurementlink_service._internal.discovery_client import DiscoveryClient
+from ni_measurementlink_service.discovery import DiscoveryClient
 from ni_measurementlink_service.session_management._types import (
     SessionInformation,
     SessionInitializationBehavior,

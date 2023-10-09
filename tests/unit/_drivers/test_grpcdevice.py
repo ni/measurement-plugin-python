@@ -6,7 +6,7 @@ from ni_measurementlink_service._drivers._grpcdevice import (
     SERVICE_CLASS,
     get_insecure_grpc_device_channel,
 )
-from ni_measurementlink_service._internal.discovery_client import ServiceLocation
+from ni_measurementlink_service.discovery import ServiceLocation
 from tests.utilities import fake_driver
 
 

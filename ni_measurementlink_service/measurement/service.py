@@ -31,16 +31,16 @@ from ni_measurementlink_service import _datatypeinfo
 from ni_measurementlink_service._channelpool import (  # re-export
     GrpcChannelPool as GrpcChannelPool,
 )
-from ni_measurementlink_service._featuretoggles import requires_feature, SESSION_MANAGEMENT_2024Q1
-from ni_measurementlink_service._internal import grpc_servicer
-from ni_measurementlink_service._internal.discovery_client import (
-    DiscoveryClient,
-    ServiceLocation,
+from ni_measurementlink_service._featuretoggles import (
+    SESSION_MANAGEMENT_2024Q1,
+    requires_feature,
 )
+from ni_measurementlink_service._internal import grpc_servicer
 from ni_measurementlink_service._internal.parameter import (
     metadata as parameter_metadata,
 )
 from ni_measurementlink_service._internal.service_manager import GrpcService
+from ni_measurementlink_service.discovery import DiscoveryClient, ServiceLocation
 from ni_measurementlink_service.measurement.info import (
     DataType,
     MeasurementInfo,
@@ -180,12 +180,6 @@ class MeasurementService:
 
         service_info(info.ServiceInfo) : Service Info
 
-        configuration_parameter_list (List): List of configuration parameters.
-
-        output_parameter_list (list): List of output parameters.
-
-        measure_function (Callable): Registered measurement function.
-
         context (MeasurementContext): Accessor for context-local state.
     """
 
@@ -254,15 +248,22 @@ class MeasurementService:
             annotations=service_annotations_string,
         )
 
-        self.configuration_parameter_list: List[Any] = []
-        self.output_parameter_list: List[Any] = []
         self.context = MeasurementContext()
+
+        self._configuration_parameter_list: List[parameter_metadata.ParameterMetadata] = []
+        self._output_parameter_list: List[parameter_metadata.ParameterMetadata] = []
+        self._measure_function: Callable = self._raise_measurement_method_not_registered
 
         self._initialization_lock = threading.RLock()
         self._channel_pool: Optional[GrpcChannelPool] = None
         self._discovery_client: Optional[DiscoveryClient] = None
         self._grpc_service: Optional[GrpcService] = None
         self._session_management_client: Optional[SessionManagementClient] = None
+
+    def _raise_measurement_method_not_registered(self) -> Any:
+        raise RuntimeError(
+            "Measurement method not registered. Use the register_measurement decorator to register it."
+        )
 
     @property
     def channel_pool(self) -> GrpcChannelPool:
@@ -287,9 +288,36 @@ class MeasurementService:
         deprecated_in="1.3.0-dev0",
         details="This property should not be public and will be removed in a later release.",
     )
+    def configuration_parameter_list(self) -> List[Any]:
+        """List of configuration parameters."""
+        return self._configuration_parameter_list
+
+    @property
+    @deprecated(
+        deprecated_in="1.3.0-dev0",
+        details="This property should not be public and will be removed in a later release.",
+    )
     def grpc_service(self) -> Optional[GrpcService]:
         """The gRPC service object. This is a private implementation detail."""
         return self._grpc_service
+
+    @property
+    @deprecated(
+        deprecated_in="1.3.0-dev0",
+        details="This property should not be public and will be removed in a later release.",
+    )
+    def measure_function(self) -> Callable:
+        """Registered measurement function."""
+        return self._measure_function
+
+    @property
+    @deprecated(
+        deprecated_in="1.3.0-dev0",
+        details="This property should not be public and will be removed in a later release.",
+    )
+    def output_parameter_list(self) -> List[Any]:
+        """List of output parameters."""
+        return self._output_parameter_list
 
     @property
     def service_location(self) -> ServiceLocation:
@@ -328,7 +356,7 @@ class MeasurementService:
 
         See also: :func:`.configuration`, :func:`.output`
         """
-        self.measure_function = measurement_function
+        self._measure_function = measurement_function
         return measurement_function
 
     def configuration(
@@ -389,7 +417,7 @@ class MeasurementService:
             data_type_info.message_type,
         )
         parameter_metadata.validate_default_value_type(parameter)
-        self.configuration_parameter_list.append(parameter)
+        self._configuration_parameter_list.append(parameter)
 
         def _configuration(func: _F) -> _F:
             return func
@@ -439,7 +467,7 @@ class MeasurementService:
             annotations,
             data_type_info.message_type,
         )
-        self.output_parameter_list.append(parameter)
+        self._output_parameter_list.append(parameter)
 
         def _output(func: _F) -> _F:
             return func
@@ -457,10 +485,8 @@ class MeasurementService:
             Exception: If register measurement methods not available.
         """
         with self._initialization_lock:
-            if self.measure_function is None:
-                raise RuntimeError(
-                    "Measurement method not registered. Use the register_measurement decorator to register it."
-                )
+            if self._measure_function is self._raise_measurement_method_not_registered:
+                self._raise_measurement_method_not_registered()
             if self._grpc_service is not None:
                 raise RuntimeError("Measurement service already running.")
 
@@ -468,9 +494,9 @@ class MeasurementService:
             self._grpc_service.start(
                 self.measurement_info,
                 self.service_info,
-                self.configuration_parameter_list,
-                self.output_parameter_list,
-                self.measure_function,
+                self._configuration_parameter_list,
+                self._output_parameter_list,
+                self._measure_function,
                 owner=self,
             )
             return self

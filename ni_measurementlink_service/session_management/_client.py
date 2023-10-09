@@ -9,11 +9,11 @@ from typing import Iterable, Optional, Sequence, Union
 import grpc
 
 from ni_measurementlink_service._channelpool import GrpcChannelPool
-from ni_measurementlink_service._internal.discovery_client import DiscoveryClient
 from ni_measurementlink_service._internal.stubs.ni.measurementlink.sessionmanagement.v1 import (
     session_management_service_pb2,
     session_management_service_pb2_grpc,
 )
+from ni_measurementlink_service.discovery import DiscoveryClient
 from ni_measurementlink_service.session_management._constants import (
     GRPC_SERVICE_CLASS,
     GRPC_SERVICE_INTERFACE_NAME,

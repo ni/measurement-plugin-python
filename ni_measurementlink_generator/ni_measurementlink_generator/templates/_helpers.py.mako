@@ -3,26 +3,17 @@
 import logging
 import pathlib
 import types
-from typing import (
-    Any,
-    Callable,
-    List,
-    NamedTuple,
-    Optional,
-    Tuple,
-    TypeVar,
-    Union,
-)
+from typing import Any, Callable, List, NamedTuple, Optional, Tuple, TypeVar, Union
 
 import click
 import grpc
 import ni_measurementlink_service as nims
 from ni_measurementlink_service import session_management
-from ni_measurementlink_service._internal.discovery_client import DiscoveryClient
 from ni_measurementlink_service._internal.stubs.ni.measurementlink.pinmap.v1 import (
     pin_map_service_pb2,
     pin_map_service_pb2_grpc,
 )
+from ni_measurementlink_service.discovery import DiscoveryClient
 from ni_measurementlink_service.measurement.service import (
     GrpcChannelPool,
     MeasurementService,

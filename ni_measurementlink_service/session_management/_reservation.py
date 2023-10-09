@@ -28,10 +28,10 @@ from ni_measurementlink_service._featuretoggles import (
     SESSION_MANAGEMENT_2024Q1,
     requires_feature,
 )
-from ni_measurementlink_service._internal.discovery_client import DiscoveryClient
 from ni_measurementlink_service._internal.stubs.ni.measurementlink.sessionmanagement.v1 import (
     session_management_service_pb2,
 )
+from ni_measurementlink_service.discovery import DiscoveryClient
 from ni_measurementlink_service.session_management._constants import (
     INSTRUMENT_TYPE_NI_DAQMX,
     INSTRUMENT_TYPE_NI_DCPOWER,

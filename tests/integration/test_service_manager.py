@@ -5,7 +5,6 @@ import grpc
 import pytest
 from grpc import RpcError
 
-from ni_measurementlink_service._internal.discovery_client import DiscoveryClient
 from ni_measurementlink_service._internal.service_manager import GrpcService
 from ni_measurementlink_service._internal.stubs.ni.measurementlink.discovery.v1.discovery_service_pb2_grpc import (
     DiscoveryServiceStub,
@@ -14,6 +13,7 @@ from ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v
     measurement_service_pb2,
     measurement_service_pb2_grpc,
 )
+from ni_measurementlink_service.discovery import DiscoveryClient
 from tests.utilities import (
     loopback_measurement,
     unknown_interface_measurement,
@@ -31,9 +31,9 @@ def test___grpc_service___start_service___service_hosted(grpc_service: GrpcServi
     port_number = grpc_service.start(
         loopback_measurement.measurement_service.measurement_info,
         loopback_measurement.measurement_service.service_info,
-        loopback_measurement.measurement_service.configuration_parameter_list,
-        loopback_measurement.measurement_service.output_parameter_list,
-        loopback_measurement.measurement_service.measure_function,
+        loopback_measurement.measurement_service._configuration_parameter_list,
+        loopback_measurement.measurement_service._output_parameter_list,
+        loopback_measurement.measurement_service._measure_function,
     )
 
     _validate_if_service_running_by_making_rpc(port_number)
@@ -45,9 +45,9 @@ def test___grpc_service_without_discovery_service___start_service___service_host
     port_number = grpc_service.start(
         loopback_measurement.measurement_service.measurement_info,
         loopback_measurement.measurement_service.service_info,
-        loopback_measurement.measurement_service.configuration_parameter_list,
-        loopback_measurement.measurement_service.output_parameter_list,
-        loopback_measurement.measurement_service.measure_function,
+        loopback_measurement.measurement_service._configuration_parameter_list,
+        loopback_measurement.measurement_service._output_parameter_list,
+        loopback_measurement.measurement_service._measure_function,
     )
 
     _validate_if_service_running_by_making_rpc(port_number)
@@ -61,9 +61,9 @@ def test___grpc_service___start_service_error_registering_measurement___raises_e
         grpc_service.start(
             loopback_measurement.measurement_service.measurement_info,
             loopback_measurement.measurement_service.service_info,
-            loopback_measurement.measurement_service.configuration_parameter_list,
-            loopback_measurement.measurement_service.output_parameter_list,
-            loopback_measurement.measurement_service.measure_function,
+            loopback_measurement.measurement_service._configuration_parameter_list,
+            loopback_measurement.measurement_service._output_parameter_list,
+            loopback_measurement.measurement_service._measure_function,
         )
 
 
@@ -71,9 +71,9 @@ def test___grpc_service_started___stop_service___service_stopped(grpc_service: G
     port_number = grpc_service.start(
         loopback_measurement.measurement_service.measurement_info,
         loopback_measurement.measurement_service.service_info,
-        loopback_measurement.measurement_service.configuration_parameter_list,
-        loopback_measurement.measurement_service.output_parameter_list,
-        loopback_measurement.measurement_service.measure_function,
+        loopback_measurement.measurement_service._configuration_parameter_list,
+        loopback_measurement.measurement_service._output_parameter_list,
+        loopback_measurement.measurement_service._measure_function,
     )
 
     grpc_service.stop()
@@ -88,9 +88,9 @@ def test___grpc_service_v2_only___start_service_and_check_v1___raises_error(
     port_number = grpc_service.start(
         v2_only_measurement.measurement_service.measurement_info,
         v2_only_measurement.measurement_service.service_info,
-        v2_only_measurement.measurement_service.configuration_parameter_list,
-        v2_only_measurement.measurement_service.output_parameter_list,
-        v2_only_measurement.measurement_service.measure_function,
+        v2_only_measurement.measurement_service._configuration_parameter_list,
+        v2_only_measurement.measurement_service._output_parameter_list,
+        v2_only_measurement.measurement_service._measure_function,
     )
 
     with pytest.raises(RpcError):
@@ -103,9 +103,9 @@ def test___grpc_service_v1_only___start_service_and_check_v1___service_hosted(
     port_number = grpc_service.start(
         v1_only_measurement.measurement_service.measurement_info,
         v1_only_measurement.measurement_service.service_info,
-        v1_only_measurement.measurement_service.configuration_parameter_list,
-        v1_only_measurement.measurement_service.output_parameter_list,
-        v1_only_measurement.measurement_service.measure_function,
+        v1_only_measurement.measurement_service._configuration_parameter_list,
+        v1_only_measurement.measurement_service._output_parameter_list,
+        v1_only_measurement.measurement_service._measure_function,
     )
 
     _validate_if_service_running_by_making_rpc(port_number)
@@ -118,9 +118,9 @@ def test___grpc_service_unknown_interface___start_service_and_check_v1___raises_
         grpc_service.start(
             unknown_interface_measurement.measurement_service.measurement_info,
             unknown_interface_measurement.measurement_service.service_info,
-            unknown_interface_measurement.measurement_service.configuration_parameter_list,
-            unknown_interface_measurement.measurement_service.output_parameter_list,
-            unknown_interface_measurement.measurement_service.measure_function,
+            unknown_interface_measurement.measurement_service._configuration_parameter_list,
+            unknown_interface_measurement.measurement_service._output_parameter_list,
+            unknown_interface_measurement.measurement_service._measure_function,
         )
 
 
