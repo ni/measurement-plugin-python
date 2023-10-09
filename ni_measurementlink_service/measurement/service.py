@@ -180,8 +180,6 @@ class MeasurementService:
 
         service_info(info.ServiceInfo) : Service Info
 
-        measure_function (Callable): Registered measurement function.
-
         context (MeasurementContext): Accessor for context-local state.
     """
 
