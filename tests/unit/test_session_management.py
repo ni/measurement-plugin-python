@@ -6,7 +6,6 @@ import pytest
 from pytest_mock import MockerFixture
 
 from ni_measurementlink_service._channelpool import GrpcChannelPool
-from ni_measurementlink_service._internal.discovery_client import DiscoveryClient
 from ni_measurementlink_service._internal.stubs import session_pb2
 from ni_measurementlink_service._internal.stubs.ni.measurementlink.sessionmanagement.v1 import (
     session_management_service_pb2,
@@ -14,6 +13,7 @@ from ni_measurementlink_service._internal.stubs.ni.measurementlink.sessionmanage
 from ni_measurementlink_service._internal.stubs.ni.measurementlink.sessionmanagement.v1.session_management_service_pb2_grpc import (
     SessionManagementServiceStub,
 )
+from ni_measurementlink_service.discovery import DiscoveryClient
 from ni_measurementlink_service.session_management import (
     MultiSessionReservation,
     PinMapContext,

@@ -31,16 +31,16 @@ from ni_measurementlink_service import _datatypeinfo
 from ni_measurementlink_service._channelpool import (  # re-export
     GrpcChannelPool as GrpcChannelPool,
 )
-from ni_measurementlink_service._featuretoggles import requires_feature, SESSION_MANAGEMENT_2024Q1
-from ni_measurementlink_service._internal import grpc_servicer
-from ni_measurementlink_service._internal.discovery_client import (
-    DiscoveryClient,
-    ServiceLocation,
+from ni_measurementlink_service._featuretoggles import (
+    SESSION_MANAGEMENT_2024Q1,
+    requires_feature,
 )
+from ni_measurementlink_service._internal import grpc_servicer
 from ni_measurementlink_service._internal.parameter import (
     metadata as parameter_metadata,
 )
 from ni_measurementlink_service._internal.service_manager import GrpcService
+from ni_measurementlink_service.discovery import DiscoveryClient, ServiceLocation
 from ni_measurementlink_service.measurement.info import (
     DataType,
     MeasurementInfo,

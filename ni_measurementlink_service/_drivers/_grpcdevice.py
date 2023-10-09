@@ -10,7 +10,7 @@ from ni_measurementlink_service._configuration import (
     GRPC_DEVICE_ADDRESS,
     USE_GRPC_DEVICE_SERVER,
 )
-from ni_measurementlink_service._internal.discovery_client import DiscoveryClient
+from ni_measurementlink_service.discovery import DiscoveryClient
 
 SERVICE_CLASS = "ni.measurementlink.v1.grpcdeviceserver"
 """The service class for NI gRPC Device Server."""

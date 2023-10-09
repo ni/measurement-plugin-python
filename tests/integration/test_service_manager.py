@@ -5,7 +5,6 @@ import grpc
 import pytest
 from grpc import RpcError
 
-from ni_measurementlink_service._internal.discovery_client import DiscoveryClient
 from ni_measurementlink_service._internal.service_manager import GrpcService
 from ni_measurementlink_service._internal.stubs.ni.measurementlink.discovery.v1.discovery_service_pb2_grpc import (
     DiscoveryServiceStub,
@@ -14,6 +13,7 @@ from ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v
     measurement_service_pb2,
     measurement_service_pb2_grpc,
 )
+from ni_measurementlink_service.discovery import DiscoveryClient
 from tests.utilities import (
     loopback_measurement,
     unknown_interface_measurement,
