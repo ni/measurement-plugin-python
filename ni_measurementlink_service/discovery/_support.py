@@ -1,4 +1,4 @@
-"""Client for accessing the MeasurementLink discovery service."""
+"""Support functions for the MeasurementLink discovery service."""
 import json
 import logging
 import os
