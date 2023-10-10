@@ -44,6 +44,8 @@ from ni_measurementlink_service.session_management._constants import (
     INSTRUMENT_TYPE_NI_FGEN,
     INSTRUMENT_TYPE_NI_RELAY_DRIVER,
     INSTRUMENT_TYPE_NI_SCOPE,
+    SITE_ALL_SITES,
+    SITE_SYSTEM_PINS,
 )
 from ni_measurementlink_service.session_management._types import (
     Connection,
@@ -298,7 +300,14 @@ class BaseReservation(abc.ABC):
         instrument_type_id: Optional[str] = None,
     ) -> Sequence[TypedConnection[TSession]]:
         pin_order = _to_iterable(pin_or_relay_names, self._reserved_pin_or_relay_names)
-        site_order = _to_iterable(sites, self._reserved_sites)
+
+        if sites == SITE_ALL_SITES:
+            site_order = self._reserved_sites
+        else:
+            site_order = _to_iterable(sites, self._reserved_sites)
+            if SITE_SYSTEM_PINS in self._reserved_sites and SITE_SYSTEM_PINS not in site_order:
+                site_order = site_order + [SITE_SYSTEM_PINS]
+
         instrument_type_id_order = _to_iterable(
             instrument_type_id, self._reserved_instrument_type_ids
         )
