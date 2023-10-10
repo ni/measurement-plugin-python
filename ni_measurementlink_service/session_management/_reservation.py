@@ -93,6 +93,14 @@ def _to_iterable(
         return [value]
 
 
+def _unique_in_insertion_order(values: Iterable[_T]) -> Iterable[_T]:
+    # The `set` type does not preserve insertion order, so use dict keys.
+    unique_values = {}
+    for value in values:
+        unique_values[value] = True
+    return unique_values.keys()
+
+
 class _ConnectionKey(NamedTuple):
     pin_or_relay_name: str
     site: int
@@ -139,29 +147,35 @@ class BaseReservation(abc.ABC):
 
     @cached_property
     def _reserved_pin_or_relay_names(self) -> Iterable[str]:
-        # Use dict keys to preserve insertion order.
-        names = {}
-        for session_info in self._session_info:
-            for channel_mapping in session_info.channel_mappings:
-                names[channel_mapping.pin_or_relay_name] = True
-        return list(names.keys())
+        # If reserved_pin_or_relay_names is not specified at construction time,
+        # sort by insertion order with no duplicates.
+        return list(
+            _unique_in_insertion_order(
+                channel_mapping.pin_or_relay_name
+                for session_info in self._session_info
+                for channel_mapping in session_info.channel_mappings
+            )
+        )
 
     @cached_property
     def _reserved_sites(self) -> Iterable[int]:
-        # Use dict keys to preserve insertion order.
-        sites = {}
-        for session_info in self._session_info:
-            for channel_mapping in session_info.channel_mappings:
-                sites[channel_mapping.site] = True
-        return list(sites.keys())
+        # If reserved_sites is not specified at construction time, sort by
+        # insertion order with no duplicates.
+        return list(
+            _unique_in_insertion_order(
+                channel_mapping.site
+                for session_info in self._session_info
+                for channel_mapping in session_info.channel_mappings
+            )
+        )
 
     @cached_property
     def _reserved_instrument_type_ids(self) -> Iterable[str]:
-        # Use dict keys to preserve insertion order.
-        ids = {}
-        for session_info in self._session_info:
-            ids[session_info.instrument_type_id] = True
-        return list(ids.keys())
+        # If multiple instruments are connected to the same pin/site, sort
+        # alphabetically by instrument type id.
+        return list(
+            sorted(set(session_info.instrument_type_id for session_info in self._session_info))
+        )
 
     @cached_property
     def _connection_cache(self) -> Dict[_ConnectionKey, Connection]:
