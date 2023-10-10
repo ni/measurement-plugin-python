@@ -9,6 +9,8 @@ from ni_measurementlink_service._internal.stubs.ni.measurementlink.sessionmanage
     session_management_service_pb2,
 )
 from ni_measurementlink_service.session_management import (
+    SITE_ALL_SITES,
+    SITE_SYSTEM_PINS,
     MultiSessionReservation,
     SessionInformation,
 )
@@ -397,7 +399,7 @@ def test___session_not_created___get_connection_with_session_type_object___conne
     assert connection.session is None
 
 
-def test___specified_order___get_connections___connections_returned_in_specified_order(
+def test___reservation_order___get_connections_with_specified_order___connections_returned_in_specified_order(
     session_management_client: Mock,
 ) -> None:
     grpc_session_infos = _create_grpc_session_infos_for_ordering()
@@ -438,7 +440,7 @@ def test___specified_order___get_connections___connections_returned_in_specified
     assert [conn.channel_name for conn in nibar_connections] == ["6", "7"]
 
 
-def test___unspecified_order___get_connections___connections_returned_in_reservation_order(
+def test___reservation_order___get_connections___connections_returned_in_reservation_order(
     session_management_client: Mock,
 ) -> None:
     grpc_session_infos = _create_grpc_session_infos_for_ordering()
@@ -467,7 +469,7 @@ def test___unspecified_order___get_connections___connections_returned_in_reserva
     assert [conn.channel_name for conn in connections] == ["7", "6", "5", "3", "4", "2", "0", "1"]
 
 
-def test___unspecified_order_with_no_reservation_order___get_connections___connections_returned_in_default_order(
+def test___no_reservation_order___get_connections___connections_returned_in_default_order(
     session_management_client: Mock,
 ) -> None:
     grpc_session_infos = _create_grpc_session_infos_for_ordering()
@@ -490,6 +492,97 @@ def test___unspecified_order_with_no_reservation_order___get_connections___conne
     assert [conn.channel_name for conn in connections] == ["0", "1", "2", "3", "4", "5", "6", "7"]
 
 
+def test___system_pins___get_connections___system_pins_returned_in_default_order(
+    session_management_client: Mock,
+) -> None:
+    grpc_session_infos = _create_grpc_session_infos_with_system_pins()
+    reservation = MultiSessionReservation(session_management_client, grpc_session_infos)
+
+    connections = reservation.get_connections(object)
+
+    assert [conn.pin_or_relay_name for conn in connections] == [
+        "SystemPin1",
+        "SystemPin2",
+        "Pin1",
+        "Pin2",
+        "Pin1",
+        "Pin2",
+    ]
+    assert [conn.site for conn in connections] == [-1, -1, 0, 0, 1, 1]
+    assert [conn.channel_name for conn in connections] == ["4", "5", "0", "1", "2", "3"]
+
+
+def test___system_pins___get_connections_with_all_sites_constant___system_pins_returned_in_default_order(
+    session_management_client: Mock,
+) -> None:
+    grpc_session_infos = _create_grpc_session_infos_with_system_pins()
+    reservation = MultiSessionReservation(session_management_client, grpc_session_infos)
+
+    connections = reservation.get_connections(object, sites=SITE_ALL_SITES)
+
+    assert [conn.pin_or_relay_name for conn in connections] == [
+        "SystemPin1",
+        "SystemPin2",
+        "Pin1",
+        "Pin2",
+        "Pin1",
+        "Pin2",
+    ]
+    assert [conn.site for conn in connections] == [-1, -1, 0, 0, 1, 1]
+    assert [conn.channel_name for conn in connections] == ["4", "5", "0", "1", "2", "3"]
+
+
+def test___system_pins___get_connections_with_site___system_pins_also_returned(
+    session_management_client: Mock,
+) -> None:
+    grpc_session_infos = _create_grpc_session_infos_with_system_pins()
+    reservation = MultiSessionReservation(session_management_client, grpc_session_infos)
+
+    connections = reservation.get_connections(object, sites=0)
+
+    assert [conn.pin_or_relay_name for conn in connections] == [
+        "Pin1",
+        "Pin2",
+        "SystemPin1",
+        "SystemPin2",
+    ]
+    assert [conn.site for conn in connections] == [0, 0, -1, -1]
+    assert [conn.channel_name for conn in connections] == ["0", "1", "4", "5"]
+
+
+def test___system_pins___get_connection_with_system_pins_constant___only_system_pins_returned(
+    session_management_client: Mock,
+) -> None:
+    grpc_session_infos = _create_grpc_session_infos_with_system_pins()
+    reservation = MultiSessionReservation(session_management_client, grpc_session_infos)
+
+    connections = reservation.get_connections(object, sites=SITE_SYSTEM_PINS)
+
+    assert [conn.pin_or_relay_name for conn in connections] == ["SystemPin1", "SystemPin2"]
+    assert [conn.site for conn in connections] == [-1, -1]
+    assert [conn.channel_name for conn in connections] == ["4", "5"]
+
+
+def test___system_pins___get_connection_with_site_list___system_pins_returned_in_specified_order(
+    session_management_client: Mock,
+) -> None:
+    grpc_session_infos = _create_grpc_session_infos_with_system_pins()
+    reservation = MultiSessionReservation(session_management_client, grpc_session_infos)
+
+    connections = reservation.get_connections(object, sites=[0, SITE_SYSTEM_PINS, 1])
+
+    assert [conn.pin_or_relay_name for conn in connections] == [
+        "Pin1",
+        "Pin2",
+        "SystemPin1",
+        "SystemPin2",
+        "Pin1",
+        "Pin2",
+    ]
+    assert [conn.site for conn in connections] == [0, 0, -1, -1, 1, 1]
+    assert [conn.channel_name for conn in connections] == ["0", "1", "4", "5", "2", "3"]
+
+
 def _construct_session(session_info: SessionInformation) -> fake_driver.Session:
     return fake_driver.Session(session_info.resource_name)
 
@@ -507,4 +600,17 @@ def _create_grpc_session_infos_for_ordering() -> (
     grpc_session_infos[3].channel_mappings.add(pin_or_relay_name="Pin4", site=0, channel="6")
     grpc_session_infos[3].channel_mappings.add(pin_or_relay_name="Pin4", site=1, channel="7")
     grpc_session_infos[3].instrument_type_id = "nibar"
+    return grpc_session_infos
+
+
+def _create_grpc_session_infos_with_system_pins() -> (
+    List[session_management_service_pb2.SessionInformation]
+):
+    grpc_session_infos = create_nifoo_session_infos(2)
+    grpc_session_infos[0].channel_mappings.add(pin_or_relay_name="SystemPin1", site=-1, channel="4")
+    grpc_session_infos[0].channel_mappings.add(pin_or_relay_name="Pin1", site=0, channel="0")
+    grpc_session_infos[0].channel_mappings.add(pin_or_relay_name="Pin2", site=0, channel="1")
+    grpc_session_infos[1].channel_mappings.add(pin_or_relay_name="Pin1", site=1, channel="2")
+    grpc_session_infos[1].channel_mappings.add(pin_or_relay_name="Pin2", site=1, channel="3")
+    grpc_session_infos[1].channel_mappings.add(pin_or_relay_name="SystemPin2", site=-1, channel="5")
     return grpc_session_infos
