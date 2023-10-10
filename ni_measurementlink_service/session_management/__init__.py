@@ -37,9 +37,11 @@ from ni_measurementlink_service.session_management._reservation import (
 )
 from ni_measurementlink_service.session_management._types import (
     ChannelMapping,
+    Connection,
     PinMapContext,
     SessionInformation,
     SessionInitializationBehavior,
+    TypedConnection,
     TypedSessionInformation,
 )
 
@@ -47,6 +49,7 @@ __all__ = [
     "BaseReservation",
     "ChannelMapping",
     "Client",
+    "Connection",
     "GRPC_SERVICE_CLASS",
     "GRPC_SERVICE_INTERFACE_NAME",
     "INSTRUMENT_TYPE_NI_DAQMX",
@@ -72,6 +75,7 @@ __all__ = [
     "SingleSessionReservation",
     "SITE_ALL_SITES",
     "SITE_SYSTEM_PINS",
+    "TypedConnection",
     "TypedSessionInformation",
 ]
 
