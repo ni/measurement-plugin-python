@@ -312,10 +312,11 @@ class BaseReservation(abc.ABC):
             instrument_type_id, self._reserved_instrument_type_ids
         )
 
+        # Sort the results by site, then by pin, then by instrument type (as a tiebreaker).
         results: List[TypedConnection[TSession]] = []
-        for instrument_type in instrument_type_id_order:
-            for site in site_order:
-                for pin in pin_order:
+        for site in site_order:
+            for pin in pin_order:
+                for instrument_type in instrument_type_id_order:
                     key = _ConnectionKey(pin, site, instrument_type)
                     value = self._connection_cache.get(key)
                     if value is not None:

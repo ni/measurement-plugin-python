@@ -447,26 +447,25 @@ def test___reservation_order___get_connections___connections_returned_in_reserva
     reservation = MultiSessionReservation(
         session_management_client,
         grpc_session_infos,
-        reserved_pin_or_relay_names=["Pin3", "Pin1", "Pin2", "Pin4"],
+        reserved_pin_or_relay_names=["Pin3", "Pin1", "Pin4", "Pin2"],
         reserved_sites=[1, 0],
         reserved_instrument_type_ids=["nibar", "nifoo"],
     )
 
     connections = reservation.get_connections(object)
 
-    # Sort by instrument_type_id, then by site, then by pin name.
     assert [conn.pin_or_relay_name for conn in connections] == [
-        "Pin4",
-        "Pin4",
         "Pin3",
         "Pin1",
+        "Pin4",
         "Pin2",
         "Pin3",
         "Pin1",
+        "Pin4",
         "Pin2",
     ]
-    assert [conn.site for conn in connections] == [1, 0, 1, 1, 1, 0, 0, 0]
-    assert [conn.channel_name for conn in connections] == ["7", "6", "5", "3", "4", "2", "0", "1"]
+    assert [conn.site for conn in connections] == [1, 1, 1, 1, 0, 0, 0, 0]
+    assert [conn.channel_name for conn in connections] == ["5", "3", "7", "4", "2", "0", "6", "1"]
 
 
 def test___no_reservation_order___get_connections___connections_returned_in_default_order(
@@ -477,19 +476,18 @@ def test___no_reservation_order___get_connections___connections_returned_in_defa
 
     connections = reservation.get_connections(object)
 
-    # Sort by instrument_type_id, then by site, then by pin name.
     assert [conn.pin_or_relay_name for conn in connections] == [
         "Pin1",
         "Pin2",
         "Pin3",
+        "Pin4",
         "Pin1",
         "Pin2",
         "Pin3",
         "Pin4",
-        "Pin4",
     ]
-    assert [conn.site for conn in connections] == [0, 0, 0, 1, 1, 1, 0, 1]
-    assert [conn.channel_name for conn in connections] == ["0", "1", "2", "3", "4", "5", "6", "7"]
+    assert [conn.site for conn in connections] == [0, 0, 0, 0, 1, 1, 1, 1]
+    assert [conn.channel_name for conn in connections] == ["0", "1", "2", "6", "3", "4", "5", "7"]
 
 
 def test___system_pins___get_connections___system_pins_returned_in_default_order(
