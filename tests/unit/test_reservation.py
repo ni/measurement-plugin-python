@@ -240,7 +240,7 @@ def test___multiple_connections___get_connection___too_many_connections_raised(
         grpc_session_infos[0].channel_mappings.add(pin_or_relay_name="Pin1", site=2, channel="3")
         grpc_session_infos[0].channel_mappings.add(pin_or_relay_name="Pin4", site=5, channel="6")
         reservation = MultiSessionReservation(session_management_client, grpc_session_infos)
-        session_info = stack.enter_context(reservation.create_session(_construct_session, "nifake"))
+        _ = stack.enter_context(reservation.create_session(_construct_session, "nifake"))
 
         with pytest.raises(ValueError) as exc_info:
             _ = reservation.get_connection(fake_driver.Session)
@@ -355,7 +355,7 @@ def test___wrong_session_type___get_connection___type_error_raised(
         grpc_session_infos = create_nifake_session_infos(1)
         grpc_session_infos[0].channel_mappings.add(pin_or_relay_name="Pin1", site=2, channel="3")
         reservation = MultiSessionReservation(session_management_client, grpc_session_infos)
-        session_info = stack.enter_context(reservation.create_session(_construct_session, "nifake"))
+        _ = stack.enter_context(reservation.create_session(_construct_session, "nifake"))
 
         with pytest.raises(TypeError) as exc_info:
             _ = reservation.get_connection(int)
