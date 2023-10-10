@@ -20,6 +20,7 @@ from typing import (
     NamedTuple,
     Optional,
     Sequence,
+    Set,
     Type,
     TypeVar,
     Union,
@@ -294,11 +295,17 @@ class BaseReservation(abc.ABC):
         results = self._get_connections_core(
             session_type, pin_or_relay_names, sites, instrument_type_id
         )
-        if len(results) > 1:
+        if not results:
+            raise ValueError(
+                "No reserved connections matched the specified criteria. "
+                "Expected single connection, got 0 connections."
+            )
+        elif len(results) > 1:
             raise ValueError(
                 "Too many reserved connections matched the specified criteria. "
                 f"Expected single connection, got {len(results)} connections."
             )
+
         return results[0]
 
     def _get_connections_core(
@@ -308,26 +315,29 @@ class BaseReservation(abc.ABC):
         sites: Union[int, Iterable[int], None] = None,
         instrument_type_id: Optional[str] = None,
     ) -> Sequence[TypedConnection[TSession]]:
-        pin_order = _to_iterable(pin_or_relay_names, self._reserved_pin_or_relay_names)
+        requested_pins = _to_iterable(pin_or_relay_names, self._reserved_pin_or_relay_names)
 
         if sites == SITE_ALL_SITES:
-            site_order = self._reserved_sites
+            requested_sites = self._reserved_sites
         else:
-            site_order = _to_iterable(sites, self._reserved_sites)
+            requested_sites = _to_iterable(sites, self._reserved_sites)
 
-        if SITE_SYSTEM_PINS not in site_order:
-            site_order = list(site_order)
-            site_order.append(SITE_SYSTEM_PINS)
+        requested_sites_with_system = requested_sites
+        if SITE_SYSTEM_PINS not in requested_sites_with_system:
+            requested_sites_with_system = list(requested_sites_with_system)
+            requested_sites_with_system.append(SITE_SYSTEM_PINS)
 
-        instrument_type_id_order = _to_iterable(
+        requested_instrument_type_ids = _to_iterable(
             instrument_type_id, self._reserved_instrument_type_ids
         )
 
         # Sort the results by site, then by pin, then by instrument type (as a tiebreaker).
         results: List[TypedConnection[TSession]] = []
-        for site in site_order:
-            for pin in pin_order:
-                for instrument_type in instrument_type_id_order:
+        matching_pins: Set[str] = set()
+        matching_sites: Set[int] = set()
+        for site in requested_sites_with_system:
+            for pin in requested_pins:
+                for instrument_type in requested_instrument_type_ids:
                     key = _ConnectionKey(pin, site, instrument_type)
                     value = self._connection_cache.get(key)
                     if value is not None:
@@ -335,11 +345,28 @@ class BaseReservation(abc.ABC):
                         value = value._with_session(session)
                         value._check_runtime_type(session_type)
                         results.append(cast(TypedConnection[TSession], value))
-        if not results:
+                        matching_pins.add(pin)
+                        matching_sites.add(site)
+
+        if pin_or_relay_names is not None:
+            missing_pins = set(requested_pins) - matching_pins
+            if missing_pins:
+                missing_pin_list = ", ".join(f"'{pin}'" for pin in sorted(missing_pins))
+                raise ValueError(
+                    f"No reserved connections matched pin or relay name(s) {missing_pin_list}."
+                )
+
+        if sites is not None:
+            missing_sites = set(requested_sites) - matching_sites
+            if missing_sites:
+                missing_site_list = ", ".join(str(site) for site in sorted(missing_sites))
+                raise ValueError(f"No reserved connections matched site(s) {missing_site_list}.")
+
+        if instrument_type_id is not None and not results:
             raise ValueError(
-                "No reserved connections matched the specified criteria. "
-                "Expected single or multiple connections, got 0 connections."
+                f"No reserved connections matched instrument type ID '{instrument_type_id}'."
             )
+
         return results
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
@@ -398,7 +425,7 @@ class BaseReservation(abc.ABC):
 
         Raises:
             ValueError: If the instrument type ID is empty or no reserved
-                sessions match the instrument type ID.
+                sessions matched the instrument type ID.
         """
         return self._create_sessions_core(session_constructor, instrument_type_id)
 
