@@ -137,7 +137,13 @@ class SessionManagementClient(object):
                 f"{len(session_info)} sessions."
             )
         else:
-            return SingleSessionReservation(session_manager=self, session_info=session_info)
+            return SingleSessionReservation(
+                session_manager=self,
+                session_info=session_info,
+                reserved_pin_or_relay_names=pin_or_relay_names,
+                reserved_sites=context.sites,
+                reserved_instrument_type_ids=instrument_type_id,
+            )
 
     def reserve_sessions(
         self,
@@ -184,7 +190,13 @@ class SessionManagementClient(object):
         session_info = self._reserve_sessions(
             context, pin_or_relay_names, instrument_type_id, timeout
         )
-        return MultiSessionReservation(session_manager=self, session_info=session_info)
+        return MultiSessionReservation(
+            session_manager=self,
+            session_info=session_info,
+            reserved_pin_or_relay_names=pin_or_relay_names,
+            reserved_sites=context.sites,
+            reserved_instrument_type_ids=instrument_type_id,
+        )
 
     def _reserve_sessions(
         self,
@@ -274,7 +286,11 @@ class SessionManagementClient(object):
             request.instrument_type_id = instrument_type_id
 
         response = self._get_stub().ReserveAllRegisteredSessions(request)
-        return MultiSessionReservation(session_manager=self, session_info=response.sessions)
+        return MultiSessionReservation(
+            session_manager=self,
+            session_info=response.sessions,
+            reserved_instrument_type_ids=instrument_type_id,
+        )
 
 
 def _timeout_to_milliseconds(timeout: Optional[float]) -> int:
