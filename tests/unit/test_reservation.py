@@ -1,6 +1,6 @@
 import functools
 from contextlib import ExitStack
-from typing import List
+from typing import List, NamedTuple, TypeVar, Union
 from unittest.mock import Mock
 
 import pytest
@@ -11,8 +11,10 @@ from ni_measurementlink_service._internal.stubs.ni.measurementlink.sessionmanage
 from ni_measurementlink_service.session_management import (
     SITE_ALL_SITES,
     SITE_SYSTEM_PINS,
+    Connection,
     MultiSessionReservation,
     SessionInformation,
+    TypedConnection,
 )
 from tests.unit._reservation_utils import create_grpc_session_infos
 from tests.utilities import fake_driver
@@ -342,9 +344,10 @@ def test___heterogenous_session_infos___get_connections___connections_returned(
 
         connections = reservation.get_connections(fake_driver.Session)
 
-        assert [conn.pin_or_relay_name for conn in connections] == ["Pin1", "Pin4"]
-        assert [conn.site for conn in connections] == [2, 5]
-        assert [conn.channel_name for conn in connections] == ["3", "6"]
+        assert [_get_subset(conn) for conn in connections] == [
+            _ConnectionSubset("Pin1", 2, "Dev0", "3"),
+            _ConnectionSubset("Pin4", 5, "Dev1", "6"),
+        ]
         assert [conn.session for conn in connections] == [nifoo_info.session, nibar_info.session]
 
 
@@ -408,36 +411,33 @@ def test___reservation_order___get_connections_with_specified_order___connection
         grpc_session_infos,
         reserved_pin_or_relay_names=["Pin3", "Pin1", "Pin4", "Pin2"],
         reserved_sites=[1, 0],
-        reserved_instrument_type_ids=["nifoo", "nibar"],
+        reserved_instrument_type_ids=["nibar", "nifoo"],
     )
 
-    nifoo_connections = reservation.get_connections(
-        object,
-        pin_or_relay_names=["Pin1", "Pin3", "Pin2", "Pin4"],
-        sites=[0, 1],
-        instrument_type_id="nifoo",
-    )
-    nibar_connections = reservation.get_connections(
-        object,
-        pin_or_relay_names=["Pin1", "Pin3", "Pin2", "Pin4"],
-        sites=[0, 1],
-        instrument_type_id="nibar",
-    )
-
-    # Group by instrument_type_id. Sort by site, then by pin name.
-    assert [conn.pin_or_relay_name for conn in nifoo_connections] == [
-        "Pin1",
-        "Pin3",
-        "Pin2",
-        "Pin1",
-        "Pin3",
-        "Pin2",
+    connections = [
+        reservation.get_connections(
+            object,
+            pin_or_relay_names=["Pin1", "Pin3", "Pin2", "Pin4"],
+            sites=[0, 1],
+            instrument_type_id=instrument_type_id,
+        )
+        for instrument_type_id in ["nifoo", "nibar"]
     ]
-    assert [conn.site for conn in nifoo_connections] == [0, 0, 0, 1, 1, 1]
-    assert [conn.channel_name for conn in nifoo_connections] == ["0", "2", "1", "3", "5", "4"]
-    assert [conn.pin_or_relay_name for conn in nibar_connections] == ["Pin4", "Pin4"]
-    assert [conn.site for conn in nibar_connections] == [0, 1]
-    assert [conn.channel_name for conn in nibar_connections] == ["6", "7"]
+
+    assert [[_get_subset(conn) for conn in group] for group in connections] == [
+        [
+            _ConnectionSubset("Pin1", 0, "Dev0", "0"),
+            _ConnectionSubset("Pin3", 0, "Dev1", "2"),
+            _ConnectionSubset("Pin2", 0, "Dev0", "1"),
+            _ConnectionSubset("Pin1", 1, "Dev1", "3"),
+            _ConnectionSubset("Pin3", 1, "Dev2", "5"),
+            _ConnectionSubset("Pin2", 1, "Dev2", "4"),
+        ],
+        [
+            _ConnectionSubset("Pin4", 0, "Dev3", "6"),
+            _ConnectionSubset("Pin4", 1, "Dev3", "7"),
+        ],
+    ]
 
 
 def test___reservation_order___get_connections___connections_returned_in_reservation_order(
@@ -454,18 +454,16 @@ def test___reservation_order___get_connections___connections_returned_in_reserva
 
     connections = reservation.get_connections(object)
 
-    assert [conn.pin_or_relay_name for conn in connections] == [
-        "Pin3",
-        "Pin1",
-        "Pin4",
-        "Pin2",
-        "Pin3",
-        "Pin1",
-        "Pin4",
-        "Pin2",
+    assert [_get_subset(conn) for conn in connections] == [
+        _ConnectionSubset("Pin3", 1, "Dev2", "5"),
+        _ConnectionSubset("Pin1", 1, "Dev1", "3"),
+        _ConnectionSubset("Pin4", 1, "Dev3", "7"),
+        _ConnectionSubset("Pin2", 1, "Dev2", "4"),
+        _ConnectionSubset("Pin3", 0, "Dev1", "2"),
+        _ConnectionSubset("Pin1", 0, "Dev0", "0"),
+        _ConnectionSubset("Pin4", 0, "Dev3", "6"),
+        _ConnectionSubset("Pin2", 0, "Dev0", "1"),
     ]
-    assert [conn.site for conn in connections] == [1, 1, 1, 1, 0, 0, 0, 0]
-    assert [conn.channel_name for conn in connections] == ["5", "3", "7", "4", "2", "0", "6", "1"]
 
 
 def test___no_reservation_order___get_connections___connections_returned_in_default_order(
@@ -476,18 +474,16 @@ def test___no_reservation_order___get_connections___connections_returned_in_defa
 
     connections = reservation.get_connections(object)
 
-    assert [conn.pin_or_relay_name for conn in connections] == [
-        "Pin1",
-        "Pin2",
-        "Pin3",
-        "Pin4",
-        "Pin1",
-        "Pin2",
-        "Pin3",
-        "Pin4",
+    assert [_get_subset(conn) for conn in connections] == [
+        _ConnectionSubset("Pin1", 0, "Dev0", "0"),
+        _ConnectionSubset("Pin2", 0, "Dev0", "1"),
+        _ConnectionSubset("Pin3", 0, "Dev1", "2"),
+        _ConnectionSubset("Pin4", 0, "Dev3", "6"),
+        _ConnectionSubset("Pin1", 1, "Dev1", "3"),
+        _ConnectionSubset("Pin2", 1, "Dev2", "4"),
+        _ConnectionSubset("Pin3", 1, "Dev2", "5"),
+        _ConnectionSubset("Pin4", 1, "Dev3", "7"),
     ]
-    assert [conn.site for conn in connections] == [0, 0, 0, 0, 1, 1, 1, 1]
-    assert [conn.channel_name for conn in connections] == ["0", "1", "2", "6", "3", "4", "5", "7"]
 
 
 def test___system_pins___get_connections___system_pins_returned_in_default_order(
@@ -498,16 +494,14 @@ def test___system_pins___get_connections___system_pins_returned_in_default_order
 
     connections = reservation.get_connections(object)
 
-    assert [conn.pin_or_relay_name for conn in connections] == [
-        "SystemPin1",
-        "SystemPin2",
-        "Pin1",
-        "Pin2",
-        "Pin1",
-        "Pin2",
+    assert [_get_subset(conn) for conn in connections] == [
+        _ConnectionSubset("SystemPin1", -1, "Dev0", "4"),
+        _ConnectionSubset("SystemPin2", -1, "Dev1", "5"),
+        _ConnectionSubset("Pin1", 0, "Dev0", "0"),
+        _ConnectionSubset("Pin2", 0, "Dev0", "1"),
+        _ConnectionSubset("Pin1", 1, "Dev1", "2"),
+        _ConnectionSubset("Pin2", 1, "Dev1", "3"),
     ]
-    assert [conn.site for conn in connections] == [-1, -1, 0, 0, 1, 1]
-    assert [conn.channel_name for conn in connections] == ["4", "5", "0", "1", "2", "3"]
 
 
 def test___system_pins___get_connections_with_all_sites_constant___system_pins_returned_in_default_order(
@@ -518,34 +512,38 @@ def test___system_pins___get_connections_with_all_sites_constant___system_pins_r
 
     connections = reservation.get_connections(object, sites=SITE_ALL_SITES)
 
-    assert [conn.pin_or_relay_name for conn in connections] == [
-        "SystemPin1",
-        "SystemPin2",
-        "Pin1",
-        "Pin2",
-        "Pin1",
-        "Pin2",
+    assert [_get_subset(conn) for conn in connections] == [
+        _ConnectionSubset("SystemPin1", -1, "Dev0", "4"),
+        _ConnectionSubset("SystemPin2", -1, "Dev1", "5"),
+        _ConnectionSubset("Pin1", 0, "Dev0", "0"),
+        _ConnectionSubset("Pin2", 0, "Dev0", "1"),
+        _ConnectionSubset("Pin1", 1, "Dev1", "2"),
+        _ConnectionSubset("Pin2", 1, "Dev1", "3"),
     ]
-    assert [conn.site for conn in connections] == [-1, -1, 0, 0, 1, 1]
-    assert [conn.channel_name for conn in connections] == ["4", "5", "0", "1", "2", "3"]
 
 
-def test___system_pins___get_connections_with_site___system_pins_also_returned(
+def test___system_pins___get_connections_by_site___system_pins_also_returned(
     session_management_client: Mock,
 ) -> None:
     grpc_session_infos = _create_grpc_session_infos_with_system_pins()
     reservation = MultiSessionReservation(session_management_client, grpc_session_infos)
 
-    connections = reservation.get_connections(object, sites=0)
+    connections = [reservation.get_connections(object, sites=site) for site in [0, 1]]
 
-    assert [conn.pin_or_relay_name for conn in connections] == [
-        "Pin1",
-        "Pin2",
-        "SystemPin1",
-        "SystemPin2",
+    assert [[_get_subset(conn) for conn in group] for group in connections] == [
+        [
+            _ConnectionSubset("Pin1", 0, "Dev0", "0"),
+            _ConnectionSubset("Pin2", 0, "Dev0", "1"),
+            _ConnectionSubset("SystemPin1", -1, "Dev0", "4"),
+            _ConnectionSubset("SystemPin2", -1, "Dev1", "5"),
+        ],
+        [
+            _ConnectionSubset("Pin1", 1, "Dev1", "2"),
+            _ConnectionSubset("Pin2", 1, "Dev1", "3"),
+            _ConnectionSubset("SystemPin1", -1, "Dev0", "4"),
+            _ConnectionSubset("SystemPin2", -1, "Dev1", "5"),
+        ],
     ]
-    assert [conn.site for conn in connections] == [0, 0, -1, -1]
-    assert [conn.channel_name for conn in connections] == ["0", "1", "4", "5"]
 
 
 def test___system_pins___get_connection_with_system_pins_constant___only_system_pins_returned(
@@ -556,9 +554,10 @@ def test___system_pins___get_connection_with_system_pins_constant___only_system_
 
     connections = reservation.get_connections(object, sites=SITE_SYSTEM_PINS)
 
-    assert [conn.pin_or_relay_name for conn in connections] == ["SystemPin1", "SystemPin2"]
-    assert [conn.site for conn in connections] == [-1, -1]
-    assert [conn.channel_name for conn in connections] == ["4", "5"]
+    assert [_get_subset(conn) for conn in connections] == [
+        _ConnectionSubset("SystemPin1", -1, "Dev0", "4"),
+        _ConnectionSubset("SystemPin2", -1, "Dev1", "5"),
+    ]
 
 
 def test___system_pins___get_connection_with_site_list___system_pins_returned_in_specified_order(
@@ -569,16 +568,14 @@ def test___system_pins___get_connection_with_site_list___system_pins_returned_in
 
     connections = reservation.get_connections(object, sites=[0, SITE_SYSTEM_PINS, 1])
 
-    assert [conn.pin_or_relay_name for conn in connections] == [
-        "Pin1",
-        "Pin2",
-        "SystemPin1",
-        "SystemPin2",
-        "Pin1",
-        "Pin2",
+    assert [_get_subset(conn) for conn in connections] == [
+        _ConnectionSubset("Pin1", 0, "Dev0", "0"),
+        _ConnectionSubset("Pin2", 0, "Dev0", "1"),
+        _ConnectionSubset("SystemPin1", -1, "Dev0", "4"),
+        _ConnectionSubset("SystemPin2", -1, "Dev1", "5"),
+        _ConnectionSubset("Pin1", 1, "Dev1", "2"),
+        _ConnectionSubset("Pin2", 1, "Dev1", "3"),
     ]
-    assert [conn.site for conn in connections] == [0, 0, -1, -1, 1, 1]
-    assert [conn.channel_name for conn in connections] == ["0", "1", "4", "5", "2", "3"]
 
 
 def _construct_session(session_info: SessionInformation) -> fake_driver.Session:
@@ -612,3 +609,23 @@ def _create_grpc_session_infos_with_system_pins() -> (
     grpc_session_infos[1].channel_mappings.add(pin_or_relay_name="Pin2", site=1, channel="3")
     grpc_session_infos[1].channel_mappings.add(pin_or_relay_name="SystemPin2", site=-1, channel="5")
     return grpc_session_infos
+
+
+_T = TypeVar("_T")
+
+
+class _ConnectionSubset(NamedTuple):
+    pin_or_relay_name: str
+    site: int
+
+    resource_name: str
+    channel_name: str
+
+
+def _get_subset(connection: Union[Connection, TypedConnection[_T]]) -> _ConnectionSubset:
+    return _ConnectionSubset(
+        connection.pin_or_relay_name,
+        connection.site,
+        connection.session_info.resource_name,
+        connection.channel_name,
+    )
