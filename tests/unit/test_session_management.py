@@ -221,7 +221,6 @@ def test___all_optional_args___reserve_session___args_passed_to_reservation(
 
     assert reservation._reserved_pin_or_relay_names == ["Pin3", "Pin1", "Pin4", "Pin2"]
     assert reservation._reserved_sites == [1, 0, 3, 2]
-    assert reservation._reserved_instrument_type_ids == ["MyInstrumentType"]
 
 
 def test___all_optional_args___reserve_sessions___sends_request_with_args(
@@ -385,7 +384,6 @@ def test___all_optional_args___reserve_sessions___args_passed_to_reservation(
 
     assert reservation._reserved_pin_or_relay_names == ["Pin3", "Pin1", "Pin4", "Pin2"]
     assert reservation._reserved_sites == [1, 0, 3, 2]
-    assert reservation._reserved_instrument_type_ids == ["MyInstrumentType"]
 
 
 @pytest.mark.parametrize("session_count", [0, 1, 2])

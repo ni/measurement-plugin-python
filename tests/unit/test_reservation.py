@@ -411,7 +411,6 @@ def test___reservation_order___get_connections_with_specified_order___connection
         grpc_session_infos,
         reserved_pin_or_relay_names=["Pin3", "Pin1", "Pin4", "Pin2"],
         reserved_sites=[1, 0],
-        reserved_instrument_type_ids=["nibar", "nifoo"],
     )
 
     connections = [
@@ -449,7 +448,6 @@ def test___reservation_order___get_connections___connections_returned_in_reserva
         grpc_session_infos,
         reserved_pin_or_relay_names=["Pin3", "Pin1", "Pin4", "Pin2"],
         reserved_sites=[1, 0],
-        reserved_instrument_type_ids=["nibar", "nifoo"],
     )
 
     connections = reservation.get_connections(object)
