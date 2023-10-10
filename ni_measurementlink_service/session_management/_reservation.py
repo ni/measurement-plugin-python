@@ -300,8 +300,10 @@ class BaseReservation(abc.ABC):
             site_order = self._reserved_sites
         else:
             site_order = _to_iterable(sites, self._reserved_sites)
-            if SITE_SYSTEM_PINS not in site_order:
-                site_order = site_order + [SITE_SYSTEM_PINS]
+
+        if SITE_SYSTEM_PINS not in site_order:
+            site_order = list(site_order)
+            site_order.append(SITE_SYSTEM_PINS)
 
         instrument_type_id_order = _to_iterable(
             instrument_type_id, self._reserved_instrument_type_ids
