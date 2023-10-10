@@ -108,7 +108,6 @@ class BaseReservation(abc.ABC):
         session_info: Sequence[session_management_service_pb2.SessionInformation],
         reserved_pin_or_relay_names: Union[str, Iterable[str], None] = None,
         reserved_sites: Optional[Iterable[int]] = None,
-        reserved_instrument_type_ids: Union[str, Iterable[str], None] = None,
     ) -> None:
         """Initialize reservation object."""
         self._session_manager = session_manager
@@ -118,17 +117,13 @@ class BaseReservation(abc.ABC):
         ]
         self._session_cache: Dict[str, object] = {}
 
-        # If __init__ doesn't initialize _reserved_pin_or_relay_names,
-        # _reserved_sites, or _reserved_instrument_type_ids, the cached
-        # properties lazily initialize them.
+        # If __init__ doesn't initialize _reserved_pin_or_relay_names or
+        # _reserved_sites, the cached properties lazily initialize them.
         if reserved_pin_or_relay_names is not None:
             self._reserved_pin_or_relay_names = _to_iterable(reserved_pin_or_relay_names)
 
         if reserved_sites is not None:
             self._reserved_sites = reserved_sites
-
-        if reserved_instrument_type_ids is not None:
-            self._reserved_instrument_type_ids = _to_iterable(reserved_instrument_type_ids)
 
     @property
     def _discovery_client(self) -> DiscoveryClient:
