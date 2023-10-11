@@ -94,10 +94,52 @@ def _to_iterable(
         return [value]
 
 
+# The `dict_view` type is a set-like type. In Python 3.7 and later, dictionaries
+# preserve insertion order.
+#
+# Note: the set difference operator does not preserve order.
 def _to_ordered_set(values: Iterable[_T]) -> AbstractSet[_T]:
-    # The `dict_view` type is a set-like type. In Python 3.7 and later,
-    # dictionaries preserve insertion order.
     return dict.fromkeys(values).keys()
+
+
+def _check_optional_str_param(name: str, value: Optional[str]) -> None:
+    if value is not None and not isinstance(value, str):
+        raise TypeError(f"The {name} parameter must be a str or None, not {value!r}.")
+
+
+# Why not generic: the error messages differ by "a" vs. "an"
+def _check_optional_int_param(name: str, value: Optional[int]) -> None:
+    if value is not None and not isinstance(value, int):
+        raise TypeError(f"The {name} parameter must be an int or None, not {value!r}.")
+
+
+def _check_matching_criterion(
+    name: str, requested_values: Iterable[_T], expected_values: AbstractSet[_T]
+) -> None:
+    if not all(value in expected_values for value in requested_values):
+        extra_values_str = ", ".join(
+            repr(value) for value in requested_values if value not in expected_values
+        )
+        raise ValueError(f"No reserved connections matched {name} {extra_values_str}.")
+
+
+def _describe_matching_criteria(
+    pin_or_relay_names: Union[str, Iterable[str], None] = None,
+    sites: Union[int, Iterable[int], None] = None,
+    instrument_type_id: Optional[str] = None,
+) -> str:
+    criteria = []
+    if pin_or_relay_names is not None:
+        pin_or_relay_names = _to_iterable(pin_or_relay_names)
+        pin_or_relay_names_str = ", ".join(repr(pin) for pin in pin_or_relay_names)
+        criteria.append(f"pin or relay name(s) {pin_or_relay_names_str}")
+    if sites is not None:
+        sites = _to_iterable(sites)
+        sites_str = ", ".join(repr(site) for site in sites)
+        criteria.append(f"site(s) {sites_str}")
+    if instrument_type_id is not None:
+        criteria.append(f"instrument type ID {instrument_type_id!r}")
+    return "; ".join(criteria)
 
 
 class _ConnectionKey(NamedTuple):
@@ -290,12 +332,8 @@ class BaseReservation(abc.ABC):
         site: Optional[int] = None,
         instrument_type_id: Optional[str] = None,
     ) -> TypedConnection[TSession]:
-        if pin_or_relay_name is not None and not isinstance(pin_or_relay_name, str):
-            raise TypeError(
-                f"The pin_or_relay_name parameter must be a str or None, not {pin_or_relay_name!r}."
-            )
-        if site is not None and not isinstance(site, int):
-            raise TypeError(f"The site parameter must be an int or None, not {site!r}.")
+        _check_optional_str_param("pin_or_relay_name", pin_or_relay_name)
+        _check_optional_int_param("site", site)
         # _get_connections_core() checks instrument_type_id.
 
         results = self._get_connections_core(
@@ -322,16 +360,30 @@ class BaseReservation(abc.ABC):
         sites: Union[int, Iterable[int], None] = None,
         instrument_type_id: Optional[str] = None,
     ) -> Sequence[TypedConnection[TSession]]:
-        if instrument_type_id is not None and not isinstance(instrument_type_id, str):
-            raise TypeError(
-                f"The instrument_type_id parameter must be a str or None, not {instrument_type_id!r}."
-            )
+        _check_optional_str_param("instrument_type_id", instrument_type_id)
 
         requested_pins = _to_iterable(pin_or_relay_names, self._reserved_pin_or_relay_names)
         requested_sites = _to_iterable(sites, self._reserved_sites)
         requested_instrument_type_ids = _to_iterable(
             instrument_type_id, self._reserved_instrument_type_ids
         )
+
+        # Validate that each requested pin, site, or instrument type ID is
+        # present in the reserved pins, reserved sites, and reserved instrument
+        # type IDs. This rejects unknown or invalid inputs such as
+        # pin_or_relay_names="NonExistentPin" or sites=[0, 1, 65535].
+        if pin_or_relay_names is not None:
+            _check_matching_criterion(
+                "pin or relay name(s)", requested_pins, self._reserved_pin_or_relay_names
+            )
+        if sites is not None:
+            _check_matching_criterion("site(s)", requested_sites, self._reserved_sites)
+        if instrument_type_id is not None:
+            _check_matching_criterion(
+                "instrument type ID",
+                requested_instrument_type_ids,
+                self._reserved_instrument_type_ids,
+            )
 
         requested_sites_with_system = requested_sites
         if SITE_SYSTEM_PINS not in requested_sites_with_system:
@@ -341,7 +393,6 @@ class BaseReservation(abc.ABC):
         # Sort the results by site, then by pin, then by instrument type (as a tiebreaker).
         results: List[TypedConnection[TSession]] = []
         matching_pins: Set[str] = set()
-        matching_sites: Set[int] = set()
         for site in requested_sites_with_system:
             for pin in requested_pins:
                 for instrument_type in requested_instrument_type_ids:
@@ -353,26 +404,26 @@ class BaseReservation(abc.ABC):
                         value._check_runtime_type(session_type)
                         results.append(cast(TypedConnection[TSession], value))
                         matching_pins.add(pin)
-                        matching_sites.add(site)
 
-        if pin_or_relay_names is not None:
-            missing_pins = set(requested_pins) - matching_pins
-            if missing_pins:
-                missing_pin_list = ", ".join(f"'{pin}'" for pin in sorted(missing_pins))
-                raise ValueError(
-                    f"No reserved connections matched pin or relay name(s) {missing_pin_list}."
-                )
-
-        if sites is not None:
-            missing_sites = set(requested_sites) - matching_sites
-            if missing_sites:
-                missing_site_list = ", ".join(str(site) for site in sorted(missing_sites))
-                raise ValueError(f"No reserved connections matched site(s) {missing_site_list}.")
-
-        if instrument_type_id is not None and not results:
-            raise ValueError(
-                f"No reserved connections matched instrument type ID '{instrument_type_id}'."
+        # If the user specified pins to match, validate that each one matched a connection.
+        if pin_or_relay_names is not None and not all(
+            pin in matching_pins for pin in requested_pins
+        ):
+            extra_pins_str = ", ".join(
+                repr(pin) for pin in requested_pins if pin not in matching_pins
             )
+            criteria = _describe_matching_criteria(None, sites, instrument_type_id)
+            # Emphasize the extra pin/relay names, but also list the other criteria.
+            raise ValueError(
+                f"No reserved connections matched pin or relay name(s) {extra_pins_str} "
+                f"with the specified criteria: {criteria}"
+            )
+
+        # If the user specified any matching criteria, validate that matches
+        # were found.
+        if (pin_or_relay_names or sites or instrument_type_id) is not None and not results:
+            criteria = _describe_matching_criteria(pin_or_relay_names, sites, instrument_type_id)
+            raise ValueError(f"No reserved connections matched the specified criteria: {criteria}")
 
         return results
 
