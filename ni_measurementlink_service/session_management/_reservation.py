@@ -291,9 +291,18 @@ class BaseReservation(abc.ABC):
         site: Optional[int] = None,
         instrument_type_id: Optional[str] = None,
     ) -> TypedConnection[TSession]:
+        if pin_or_relay_name is not None and not isinstance(pin_or_relay_name, str):
+            raise TypeError(
+                f"The pin_or_relay_name parameter must be a str or None, not {pin_or_relay_name!r}."
+            )
+        if site is not None and not isinstance(site, int):
+            raise TypeError(f"The site parameter must be an int or None, not {site!r}.")
+        # _get_connections_core() checks instrument_type_id.
+
         results = self._get_connections_core(
             session_type, pin_or_relay_name, site, instrument_type_id
         )
+
         if not results:
             raise ValueError(
                 "No reserved connections matched the specified criteria. "
@@ -314,18 +323,21 @@ class BaseReservation(abc.ABC):
         sites: Union[int, Iterable[int], None] = None,
         instrument_type_id: Optional[str] = None,
     ) -> Sequence[TypedConnection[TSession]]:
-        requested_pins = _to_iterable(pin_or_relay_names, self._reserved_pin_or_relay_names)
+        if instrument_type_id is not None and not isinstance(instrument_type_id, str):
+            raise TypeError(
+                f"The instrument_type_id parameter must be a str or None, not {instrument_type_id!r}."
+            )
 
+        requested_pins = _to_iterable(pin_or_relay_names, self._reserved_pin_or_relay_names)
         requested_sites = _to_iterable(sites, self._reserved_sites)
+        requested_instrument_type_ids = _to_iterable(
+            instrument_type_id, self._reserved_instrument_type_ids
+        )
 
         requested_sites_with_system = requested_sites
         if SITE_SYSTEM_PINS not in requested_sites_with_system:
             requested_sites_with_system = list(requested_sites_with_system)
             requested_sites_with_system.append(SITE_SYSTEM_PINS)
-
-        requested_instrument_type_ids = _to_iterable(
-            instrument_type_id, self._reserved_instrument_type_ids
-        )
 
         # Sort the results by site, then by pin, then by instrument type (as a tiebreaker).
         results: List[TypedConnection[TSession]] = []

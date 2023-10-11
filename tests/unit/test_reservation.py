@@ -1,6 +1,6 @@
 import functools
 from contextlib import ExitStack
-from typing import List, NamedTuple, TypeVar, Union
+from typing import Any, Dict, List, NamedTuple, TypeVar, Union
 from unittest.mock import Mock
 
 import pytest
@@ -250,6 +250,37 @@ def test___multiple_connections___get_connection___value_error_raised(
             "Too many reserved connections matched the specified criteria."
             in exc_info.value.args[0]
         )
+
+
+@pytest.mark.parametrize(
+    "kwargs,expected_message",
+    [
+        (
+            {"pin_or_relay_name": ["Pin1"]},
+            "The pin_or_relay_name parameter must be a str or None, not ['Pin1'].",
+        ),
+        ({"site": [2]}, "The site parameter must be an int or None, not [2]."),
+        (
+            {"instrument_type_id": ["nifake"]},
+            "The instrument_type_id parameter must be a str or None, not ['nifake'].",
+        ),
+    ],
+)
+def test___invalid_argument_type___get_connection___type_error_raised(
+    kwargs: Dict[str, Any],
+    expected_message: str,
+    session_management_client: Mock,
+) -> None:
+    with ExitStack() as stack:
+        grpc_session_infos = create_nifake_session_infos(1)
+        grpc_session_infos[0].channel_mappings.add(pin_or_relay_name="Pin1", site=2, channel="3")
+        reservation = MultiSessionReservation(session_management_client, grpc_session_infos)
+        _ = stack.enter_context(reservation.create_session(_construct_session, "nifake"))
+
+        with pytest.raises(TypeError) as exc_info:
+            _ = reservation.get_connection(fake_driver.Session, **kwargs)
+
+        assert expected_message in exc_info.value.args[0]
 
 
 def test___wrong_pins___get_connections___value_error_raised(
