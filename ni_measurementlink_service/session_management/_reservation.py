@@ -45,7 +45,6 @@ from ni_measurementlink_service.session_management._constants import (
     INSTRUMENT_TYPE_NI_FGEN,
     INSTRUMENT_TYPE_NI_RELAY_DRIVER,
     INSTRUMENT_TYPE_NI_SCOPE,
-    SITE_ALL_SITES,
     SITE_SYSTEM_PINS,
 )
 from ni_measurementlink_service.session_management._types import (
@@ -317,10 +316,7 @@ class BaseReservation(abc.ABC):
     ) -> Sequence[TypedConnection[TSession]]:
         requested_pins = _to_iterable(pin_or_relay_names, self._reserved_pin_or_relay_names)
 
-        if sites == SITE_ALL_SITES:
-            requested_sites = self._reserved_sites
-        else:
-            requested_sites = _to_iterable(sites, self._reserved_sites)
+        requested_sites = _to_iterable(sites, self._reserved_sites)
 
         requested_sites_with_system = requested_sites
         if SITE_SYSTEM_PINS not in requested_sites_with_system:

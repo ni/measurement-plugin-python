@@ -21,13 +21,6 @@ INSTRUMENT_TYPE_NI_RELAY_DRIVER = "niRelayDriver"
 INSTRUMENT_TYPE_NI_MODEL_BASED_INSTRUMENT = "niModelBasedInstrument"
 INSTRUMENT_TYPE_NI_SWITCH_EXECUTIVE_VIRTUAL_DEVICE = "niSwitchExecutiveVirtualDevice"
 
-SITE_ALL_SITES = -32768
-"""Site number sentinel used to filter by "all sites".
-
-When querying connections, you can specify a site number of ``SITE_ALL_SITES``
-to disable filtering by site.
-"""
-
 SITE_SYSTEM_PINS = -1
 """Site number used to identify and filter by system pins.
 

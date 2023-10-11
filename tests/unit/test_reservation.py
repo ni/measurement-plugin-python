@@ -9,7 +9,6 @@ from ni_measurementlink_service._internal.stubs.ni.measurementlink.sessionmanage
     session_management_service_pb2,
 )
 from ni_measurementlink_service.session_management import (
-    SITE_ALL_SITES,
     SITE_SYSTEM_PINS,
     Connection,
     MultiSessionReservation,
@@ -566,24 +565,6 @@ def test___system_pins___get_connections___system_pins_returned_in_default_order
     reservation = MultiSessionReservation(session_management_client, grpc_session_infos)
 
     connections = reservation.get_connections(object)
-
-    assert [_get_subset(conn) for conn in connections] == [
-        _ConnectionSubset("SystemPin1", -1, "Dev0", "4"),
-        _ConnectionSubset("SystemPin2", -1, "Dev1", "5"),
-        _ConnectionSubset("Pin1", 0, "Dev0", "0"),
-        _ConnectionSubset("Pin2", 0, "Dev0", "1"),
-        _ConnectionSubset("Pin1", 1, "Dev1", "2"),
-        _ConnectionSubset("Pin2", 1, "Dev1", "3"),
-    ]
-
-
-def test___system_pins___get_connections_with_all_sites_constant___system_pins_returned_in_default_order(
-    session_management_client: Mock,
-) -> None:
-    grpc_session_infos = _create_grpc_session_infos_with_system_pins()
-    reservation = MultiSessionReservation(session_management_client, grpc_session_infos)
-
-    connections = reservation.get_connections(object, sites=SITE_ALL_SITES)
 
     assert [_get_subset(conn) for conn in connections] == [
         _ConnectionSubset("SystemPin1", -1, "Dev0", "4"),
