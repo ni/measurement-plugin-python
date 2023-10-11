@@ -107,9 +107,7 @@ class Session:
         # context manager implicitly upcasts derived class to base class"""
         assert isinstance(self._session, pyvisa.resources.MessageBasedResource)
 
-        self._session.write(
-            "CONF:%s %.g,%.g" % (function_enum, range, resolution_value)
-        )
+        self._session.write("CONF:%s %.g,%.g" % (function_enum, range, resolution_value))
         _check_instrument_error(self._session)
 
     def read(self) -> float:

@@ -64,9 +64,7 @@ def measure(
             reservation.session_info.resource_name,
             use_simulation=service_options.use_simulation,
         ) as session:
-            session.configure_measurement_digits(
-                measurement_type, range, resolution_digits
-            )
+            session.configure_measurement_digits(measurement_type, range, resolution_digits)
             measured_value = session.read()
 
     logging.info("Completed measurement: measured_value=%g", measured_value)
