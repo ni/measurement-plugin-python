@@ -339,7 +339,7 @@ def test___multiple_connections___get_connection_with_site___connection_returned
         reservation = MultiSessionReservation(session_management_client, grpc_session_infos)
         session_info = stack.enter_context(reservation.create_session(_construct_session, "nifake"))
 
-        connection = reservation.get_connection(fake_driver.Session, sites=site)
+        connection = reservation.get_connection(fake_driver.Session, site=site)
 
         assert connection.pin_or_relay_name == pin_name
         assert connection.site == site

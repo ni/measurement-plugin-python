@@ -288,12 +288,12 @@ class BaseReservation(abc.ABC):
     def _get_connection_core(
         self,
         session_type: Type[TSession],
-        pin_or_relay_names: Union[str, Iterable[str], None] = None,
-        sites: Union[int, Iterable[int], None] = None,
+        pin_or_relay_name: Optional[str] = None,
+        site: Optional[int] = None,
         instrument_type_id: Optional[str] = None,
     ) -> TypedConnection[TSession]:
         results = self._get_connections_core(
-            session_type, pin_or_relay_names, sites, instrument_type_id
+            session_type, pin_or_relay_name, site, instrument_type_id
         )
         if not results:
             raise ValueError(
@@ -433,8 +433,8 @@ class BaseReservation(abc.ABC):
     def get_connection(
         self,
         session_type: Type[TSession],
-        pin_or_relay_names: Union[str, Iterable[str], None] = None,
-        sites: Union[int, Iterable[int], None] = None,
+        pin_or_relay_name: Optional[str] = None,
+        site: Optional[int] = None,
         instrument_type_id: Optional[str] = None,
     ) -> TypedConnection[TSession]:
         """Get the connection matching the specified criteria.
@@ -444,27 +444,28 @@ class BaseReservation(abc.ABC):
         Args:
             session_type: The session type.
 
-            pin_or_relay_names: The pin or relay names to match against. If not
-                specified, all reserved pins or relays will be returned.
+            pin_or_relay_name: The pin or relay name to match against. If not
+                specified, the pin or relay name is ignored when matching
+                connections.
 
-            sites: The site numbers to match against. If not specified, all
-                reserved sites will be returned.
+            site: The site number to match against. If not specified, the
+                site number is ignored when matching connections.
 
-            instrument_type_id: Instrument type ID to match against. If not
-                specified, all reserved instrument type IDs will be returned.
+            instrument_type_id: The instrument type ID to match against. If not
+                specified, the instrument type ID is ignored when matching
+                connections.
 
         Returns:
             The matching connection.
 
         Raises:
-            TypeError: If the matching connections are inconsistent with ``session_type``.
+            TypeError: If the matching connections are inconsistent with
+            ``session_type``.
 
             ValueError: If no reserved connections match or too many reserved
                 connections match.
         """
-        return self._get_connection_core(
-            session_type, pin_or_relay_names, sites, instrument_type_id
-        )
+        return self._get_connection_core(session_type, pin_or_relay_name, site, instrument_type_id)
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def get_connections(
@@ -481,14 +482,16 @@ class BaseReservation(abc.ABC):
         Args:
             session_type: The expected session type.
 
-            pin_or_relay_names: The pin or relay names to match against. If not
-                specified, all reserved pins or relays will be returned.
+            pin_or_relay_names: The pin or relay name(s) to match against. If not
+                specified, the pin or relay name is ignored when matching
+                connections.
 
-            sites: The site numbers to match against. If not specified, all
-                reserved sites will be returned.
+            sites: The site number(s) to match against. If not specified, the
+                site number is ignored when matching connections.
 
-            instrument_type_id: Instrument type ID to match against. If not
-                specified, all reserved instrument type IDs will be returned.
+            instrument_type_id: The instrument type ID to match against. If not
+                specified, the instrument type ID is ignored when matching
+                connections.
 
         Returns:
             The matching connections.
