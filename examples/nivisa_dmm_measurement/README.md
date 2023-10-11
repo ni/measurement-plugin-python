@@ -31,7 +31,7 @@ this example directly performs low-level, device-specific commands and queries.
 
 By default, this example does not require hardware; it uses PyVISA-sim to
 simulate the instrument in software.
-[`NIInstrumentSimulatorV2_0.yaml`](./NIInstrumentSimulatorV2_0.yaml) defines the
+[`_visa_dmm_sim.yaml`](./_visa_dmm_sim.yamll) defines the
 behavior of the simulated instrument. 
 
 To use NI Instrument Simulator hardware:

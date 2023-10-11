@@ -4,12 +4,9 @@ from typing import Any
 import pyvisa.resources
 from _constants import USE_SIMULATION
 from _helpers import GrpcChannelPoolHelper, PinMapClient, TestStandSupport
-from _visa_helpers import (
+from _visa_dmm import (
     INSTRUMENT_TYPE_DMM_SIMULATOR,
-    create_visa_resource_manager,
-    create_visa_session,
-    log_instrument_id,
-    reset_instrument,
+    Session
 )
 
 import ni_measurementlink_service as nims
@@ -57,16 +54,14 @@ def create_nivisa_dmm_sessions(sequence_context: Any) -> None:
         with session_management_client.reserve_sessions(
             context=pin_map_context, instrument_type_id=INSTRUMENT_TYPE_DMM_SIMULATOR
         ) as reservation:
-            resource_manager = create_visa_resource_manager(USE_SIMULATION)
-
+            
             for session_info in reservation.session_info:
-                with create_visa_session(resource_manager, session_info.resource_name) as session:
-                    # Work around https://github.com/pyvisa/pyvisa/issues/739 - Type annotation
-                    # for Resource context manager implicitly upcasts derived class to base class
-                    assert isinstance(session, pyvisa.resources.MessageBasedResource)
-                    log_instrument_id(session)
-                    reset_instrument(session)
-
+                with Session(
+                    session_info.resource_name, 
+                    use_simulation=USE_SIMULATION
+                ) as session: 
+                    pass  # Empty with block
+            
             session_management_client.register_sessions(reservation.session_info)
 
 
