@@ -1,4 +1,4 @@
-"""Helper classes and functions for MeasurementLink NI-VISA examples."""
+"""Custom instrument driver for MeasurementLink NI-VISA examples."""
 
 import logging
 import pathlib
@@ -57,17 +57,10 @@ class Session:
         use_simulation: bool = False,
     ) -> None:
         """Create a real or simulated VISA resource manager."""
-        visa_library = f"{SIMULATION_YAML_PATH}@sim" if use_simulation else ""
-        self._resource_manager = pyvisa.ResourceManager(visa_library)
+        self._resource_manager = _create_visa_resource_manager(use_simulation)
 
         """Create session"""
-        self._session = self._resource_manager.open_resource(
-            resource_name, read_termination="\n", write_termination="\n"
-        )
-
-        """Work around https://github.com/pyvisa/pyvisa/issues/739 - Type annotation for Resource
-        # context manager implicitly upcasts derived class to base class"""
-        assert isinstance(self._session, pyvisa.resources.MessageBasedResource)
+        self._session = _create_visa_session(self._resource_manager, resource_name)
 
         """Log the instrument's identification string."""
         if id_query:
@@ -103,20 +96,35 @@ class Session:
         function_enum = FUNCTION_TO_VALUE[measurement_type]
         resolution_value = RESOLUTION_DIGITS_TO_VALUE[str(resolution_digits)]
 
-        """Work around https://github.com/pyvisa/pyvisa/issues/739 - Type annotation for Resource
-        # context manager implicitly upcasts derived class to base class"""
-        assert isinstance(self._session, pyvisa.resources.MessageBasedResource)
-
         self._session.write("CONF:%s %.g,%.g" % (function_enum, range, resolution_value))
         _check_instrument_error(self._session)
 
     def read(self) -> float:
         """Acquires a single measurement and returns the measured value."""
-        assert isinstance(self._session, pyvisa.resources.MessageBasedResource)
-
         response = self._session.query("READ?")
         _check_instrument_error(self._session)
         return float(response)
+
+
+def _create_visa_resource_manager(
+    use_simulation: bool, simulation_yaml_path: pathlib.Path = SIMULATION_YAML_PATH
+) -> pyvisa.ResourceManager:
+    """Create a real or simulated VISA resource manager."""
+    visa_library = f"{simulation_yaml_path}@sim" if use_simulation else ""
+    return pyvisa.ResourceManager(visa_library)
+
+
+def _create_visa_session(
+    resource_manager: pyvisa.ResourceManager, resource_name: str
+) -> pyvisa.resources.MessageBasedResource:
+    """Create a VISA session."""
+    # The NI Instrument Simulator hardware accepts either \r\n or \n but the simulation YAML needs
+    # the newlines to match.
+    session = resource_manager.open_resource(
+        resource_name, read_termination="\n", write_termination="\n"
+    )
+    assert isinstance(session, pyvisa.resources.MessageBasedResource)
+    return session
 
 
 def _check_instrument_error(session: pyvisa.resources.MessageBasedResource) -> None:

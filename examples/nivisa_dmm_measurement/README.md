@@ -1,7 +1,7 @@
 ## NI-VISA DMM Measurement
 
 This is a MeasurementLink example that performs a DMM measurement using NI-VISA
-and an NI Instrument Simulator v2.0. 
+and an VISA DMM Simulator. 
 
 ### Features
 
@@ -24,8 +24,7 @@ and an NI Instrument Simulator v2.0.
 - NI-VISA
 - Optional: NI Instrument Simulator software
 
-Note: there is no Python instrument driver for the NI Instrument Simulator, so
-this example directly performs low-level, device-specific commands and queries.
+Note: This example uses the custom instrument driver `_visa_dmm.py` to perform the device-specific commands and queries.
 
 ### Required Hardware
 
