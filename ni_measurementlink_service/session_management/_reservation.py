@@ -102,6 +102,14 @@ def _to_ordered_set(values: Iterable[_T]) -> AbstractSet[_T]:
     return dict.fromkeys(values).keys()
 
 
+def _quote(value: str) -> str:
+    return f"'{value}'"
+
+
+def _quote_if_str(value: object) -> str:
+    return _quote(value) if isinstance(value, str) else str(value)
+
+
 def _check_optional_str_param(name: str, value: Optional[str]) -> None:
     if value is not None and not isinstance(value, str):
         raise TypeError(f"The {name} parameter must be a str or None, not {value!r}.")
@@ -118,7 +126,7 @@ def _check_matching_criterion(
 ) -> None:
     if not all(value in expected_values for value in requested_values):
         extra_values_str = ", ".join(
-            repr(value) for value in requested_values if value not in expected_values
+            _quote_if_str(value) for value in requested_values if value not in expected_values
         )
         raise ValueError(f"No reserved connections matched {name} {extra_values_str}.")
 
@@ -131,14 +139,14 @@ def _describe_matching_criteria(
     criteria = []
     if pin_or_relay_names is not None:
         pin_or_relay_names = _to_iterable(pin_or_relay_names)
-        pin_or_relay_names_str = ", ".join(repr(pin) for pin in pin_or_relay_names)
+        pin_or_relay_names_str = ", ".join(_quote(pin) for pin in pin_or_relay_names)
         criteria.append(f"pin or relay name(s) {pin_or_relay_names_str}")
     if sites is not None:
         sites = _to_iterable(sites)
-        sites_str = ", ".join(repr(site) for site in sites)
+        sites_str = ", ".join(str(site) for site in sites)
         criteria.append(f"site(s) {sites_str}")
     if instrument_type_id is not None:
-        criteria.append(f"instrument type ID {instrument_type_id!r}")
+        criteria.append(f"instrument type ID '{instrument_type_id}'")
     return "; ".join(criteria)
 
 
@@ -410,7 +418,7 @@ class BaseReservation(abc.ABC):
             pin in matching_pins for pin in requested_pins
         ):
             extra_pins_str = ", ".join(
-                repr(pin) for pin in requested_pins if pin not in matching_pins
+                _quote(pin) for pin in requested_pins if pin not in matching_pins
             )
             criteria = _describe_matching_criteria(None, sites, instrument_type_id)
             # Emphasize the extra pin/relay names, but also list the other criteria.
