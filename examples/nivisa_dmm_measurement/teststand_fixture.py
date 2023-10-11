@@ -1,13 +1,9 @@
 """Functions to set up and tear down NI-VISA DMM sessions in NI TestStand."""
 from typing import Any
 
-import pyvisa.resources
 from _constants import USE_SIMULATION
 from _helpers import GrpcChannelPoolHelper, PinMapClient, TestStandSupport
-from _visa_dmm import (
-    INSTRUMENT_TYPE_DMM_SIMULATOR,
-    Session
-)
+from _visa_dmm import INSTRUMENT_TYPE_DMM_SIMULATOR, Session
 
 import ni_measurementlink_service as nims
 
@@ -50,18 +46,18 @@ def create_nivisa_dmm_sessions(sequence_context: Any) -> None:
         teststand_support = TestStandSupport(sequence_context)
         pin_map_id = teststand_support.get_active_pin_map_id()
 
-        pin_map_context = nims.session_management.PinMapContext(pin_map_id=pin_map_id, sites=None)
+        pin_map_context = nims.session_management.PinMapContext(
+            pin_map_id=pin_map_id, sites=None
+        )
         with session_management_client.reserve_sessions(
             context=pin_map_context, instrument_type_id=INSTRUMENT_TYPE_DMM_SIMULATOR
         ) as reservation:
-            
             for session_info in reservation.session_info:
                 with Session(
-                    session_info.resource_name, 
-                    use_simulation=USE_SIMULATION
-                ) as session: 
-                    pass  # Empty with block
-            
+                    session_info.resource_name, use_simulation=USE_SIMULATION
+                ) as _:
+                    ...
+
             session_management_client.register_sessions(reservation.session_info)
 
 

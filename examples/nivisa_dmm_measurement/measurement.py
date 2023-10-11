@@ -15,11 +15,7 @@ from _helpers import (
     use_simulation_option,
     verbosity_option,
 )
-from _visa_dmm import (
-    INSTRUMENT_TYPE_DMM_SIMULATOR,
-    Function,
-    Session
-)
+from _visa_dmm import INSTRUMENT_TYPE_DMM_SIMULATOR, Function, Session
 
 import ni_measurementlink_service as nims
 
@@ -31,6 +27,7 @@ measurement_service = nims.MeasurementService(
     ui_file_paths=[service_directory / "NIVisaDmmMeasurement.measui"],
 )
 service_options = ServiceOptions()
+
 
 @measurement_service.register_measurement
 @measurement_service.configuration(
@@ -60,15 +57,18 @@ def measure(
     session_management_client = create_session_management_client(measurement_service)
 
     with session_management_client.reserve_session(
-        context=measurement_service.context.pin_map_context, pin_or_relay_names=[pin_name]
+        context=measurement_service.context.pin_map_context,
+        pin_or_relay_names=[pin_name],
     ) as reservation:
         with Session(
-            reservation.session_info.resource_name, 
-            use_simulation=service_options.use_simulation
-        ) as session: 
-            session.configure_measurement_digits(measurement_type, range, resolution_digits)
+            reservation.session_info.resource_name,
+            use_simulation=service_options.use_simulation,
+        ) as session:
+            session.configure_measurement_digits(
+                measurement_type, range, resolution_digits
+            )
             measured_value = session.read()
-       
+
     logging.info("Completed measurement: measured_value=%g", measured_value)
     return (measured_value,)
 
