@@ -51,9 +51,7 @@ def create_nivisa_dmm_sessions(sequence_context: Any) -> None:
             context=pin_map_context, instrument_type_id=INSTRUMENT_TYPE_DMM_SIMULATOR
         ) as reservation:
             for session_info in reservation.session_info:
-                with Session(
-                    session_info.resource_name, use_simulation=USE_SIMULATION
-                ) as _:
+                with Session(session_info.resource_name, use_simulation=USE_SIMULATION) as _:
                     ...
 
             session_management_client.register_sessions(reservation.session_info)

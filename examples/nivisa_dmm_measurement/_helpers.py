@@ -270,9 +270,7 @@ def get_session_and_channel_for_pin(
     )
 
     if len(session_and_channel_info) != 1:
-        raise ValueError(
-            f"Unsupported number of sessions for {pin}: {len(session_info)}"
-        )
+        raise ValueError(f"Unsupported number of sessions for {pin}: {len(session_info)}")
     return session_and_channel_info[0]
 
 
@@ -288,8 +286,7 @@ def get_sessions_and_channels_for_pins(
         channel_list = [
             mapping.channel
             for mapping in session_details.channel_mappings
-            if mapping.pin_or_relay_name in pin_names
-            and (site is None or mapping.site == site)
+            if mapping.pin_or_relay_name in pin_names and (site is None or mapping.site == site)
         ]
         if len(channel_list) != 0:
             session_and_channel_info.append((session_index, channel_list))
