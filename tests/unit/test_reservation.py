@@ -431,6 +431,51 @@ def test___heterogenous_session_infos___get_connections___connections_returned(
         assert [conn.session for conn in connections] == [nifoo_info.session, nibar_info.session]
 
 
+@pytest.mark.parametrize(
+    "kwargs,expected_message",
+    [
+        (
+            {"pin_or_relay_names": "Pin1", "sites": 5},
+            "No reserved connections matched pin or relay name(s) 'Pin1' with the specified criteria: site(s) 5",
+        ),
+        (
+            {"pin_or_relay_names": "Pin4", "sites": 2},
+            "No reserved connections matched pin or relay name(s) 'Pin4' with the specified criteria: site(s) 2",
+        ),
+        (
+            {"pin_or_relay_names": "Pin1", "instrument_type_id": "nibar"},
+            "No reserved connections matched pin or relay name(s) 'Pin1' with the specified criteria: instrument type ID 'nibar'",
+        ),
+        (
+            {"pin_or_relay_names": ["Pin1", "Pin4"], "instrument_type_id": "nibar"},
+            "No reserved connections matched pin or relay name(s) 'Pin1' with the specified criteria: instrument type ID 'nibar'",
+        ),
+        (
+            {"sites": 2, "instrument_type_id": "nibar"},
+            "No reserved connections matched the specified criteria: site(s) 2; instrument type ID 'nibar'",
+        ),
+    ],
+)
+def test___heterogenous_session_infos___get_connections_with_partially_matching_criteria___value_error_raised(
+    kwargs: Dict[str, Any],
+    expected_message: str,
+    session_management_client: Mock,
+) -> None:
+    with ExitStack() as stack:
+        grpc_session_infos = create_nifoo_session_infos(2)
+        grpc_session_infos[0].channel_mappings.add(pin_or_relay_name="Pin1", site=2, channel="3")
+        grpc_session_infos[1].channel_mappings.add(pin_or_relay_name="Pin4", site=5, channel="6")
+        grpc_session_infos[1].instrument_type_id = "nibar"
+        reservation = MultiSessionReservation(session_management_client, grpc_session_infos)
+        _ = stack.enter_context(reservation.create_session(_construct_session, "nifoo"))
+        _ = stack.enter_context(reservation.create_session(_construct_session, "nibar"))
+
+        with pytest.raises(ValueError) as exc_info:
+            _ = reservation.get_connections(fake_driver.Session, **kwargs)
+
+        assert expected_message in exc_info.value.args[0]
+
+
 def test___wrong_session_type___get_connection___type_error_raised(
     session_management_client: Mock,
 ) -> None:
