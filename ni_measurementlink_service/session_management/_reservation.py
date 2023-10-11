@@ -9,6 +9,7 @@ from functools import cached_property
 from types import TracebackType
 from typing import (
     TYPE_CHECKING,
+    AbstractSet,
     Any,
     Callable,
     ContextManager,
@@ -93,12 +94,10 @@ def _to_iterable(
         return [value]
 
 
-def _unique_in_insertion_order(values: Iterable[_T]) -> Iterable[_T]:
-    # The `set` type does not preserve insertion order, so use dict keys.
-    unique_values = {}
-    for value in values:
-        unique_values[value] = True
-    return unique_values.keys()
+def _to_ordered_set(values: Iterable[_T]) -> AbstractSet[_T]:
+    # The `dict_view` type is a set-like type. In Python 3.7 and later,
+    # dictionaries preserve insertion order.
+    return dict.fromkeys(values).keys()
 
 
 class _ConnectionKey(NamedTuple):
@@ -128,10 +127,12 @@ class BaseReservation(abc.ABC):
         # If __init__ doesn't initialize _reserved_pin_or_relay_names or
         # _reserved_sites, the cached properties lazily initialize them.
         if reserved_pin_or_relay_names is not None:
-            self._reserved_pin_or_relay_names = _to_iterable(reserved_pin_or_relay_names)
+            self._reserved_pin_or_relay_names = _to_ordered_set(
+                _to_iterable(reserved_pin_or_relay_names)
+            )
 
         if reserved_sites is not None:
-            self._reserved_sites = reserved_sites
+            self._reserved_sites = _to_ordered_set(reserved_sites)
 
     @property
     def _discovery_client(self) -> DiscoveryClient:
@@ -146,35 +147,33 @@ class BaseReservation(abc.ABC):
         return self._session_manager._grpc_channel_pool
 
     @cached_property
-    def _reserved_pin_or_relay_names(self) -> Iterable[str]:
-        # If reserved_pin_or_relay_names is not specified at construction time,
-        # sort by insertion order with no duplicates.
-        return list(
-            _unique_in_insertion_order(
-                channel_mapping.pin_or_relay_name
-                for session_info in self._session_info
-                for channel_mapping in session_info.channel_mappings
-            )
+    def _reserved_pin_or_relay_names(self) -> AbstractSet[str]:
+        # If __init__ doesn't initialize reserved_pin_or_relay_names, this
+        # cached property initializes it to the pin/relay names listed in the
+        # session info (in insertion order, no duplicates).
+        return _to_ordered_set(
+            channel_mapping.pin_or_relay_name
+            for session_info in self._session_info
+            for channel_mapping in session_info.channel_mappings
         )
 
     @cached_property
-    def _reserved_sites(self) -> Iterable[int]:
-        # If reserved_sites is not specified at construction time, sort by
-        # insertion order with no duplicates.
-        return list(
-            _unique_in_insertion_order(
-                channel_mapping.site
-                for session_info in self._session_info
-                for channel_mapping in session_info.channel_mappings
-            )
+    def _reserved_sites(self) -> AbstractSet[int]:
+        # If __init__ doesn't initialize reserved_sites, this cached property
+        # initializes it to the sites listed in the session info (in insertion
+        # order, no duplicates).
+        return _to_ordered_set(
+            channel_mapping.site
+            for session_info in self._session_info
+            for channel_mapping in session_info.channel_mappings
         )
 
     @cached_property
-    def _reserved_instrument_type_ids(self) -> Iterable[str]:
-        # If multiple instruments are connected to the same pin/site, sort
-        # alphabetically by instrument type id.
-        return list(
-            sorted(set(session_info.instrument_type_id for session_info in self._session_info))
+    def _reserved_instrument_type_ids(self) -> AbstractSet[str]:
+        # Initialize to the instrument type ids listed in the session info (in
+        # alphabetical order, no duplicates).
+        return _to_ordered_set(
+            sorted(session_info.instrument_type_id for session_info in self._session_info)
         )
 
     @cached_property
