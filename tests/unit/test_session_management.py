@@ -203,6 +203,26 @@ def test___too_many_sessions___reserve_session___raises_too_many_sessions_value_
         )
 
 
+def test___all_optional_args___reserve_session___args_passed_to_reservation(
+    session_management_client: SessionManagementClient, session_management_stub: Mock
+) -> None:
+    session_management_stub.ReserveSessions.return_value = (
+        session_management_service_pb2.ReserveSessionsResponse(
+            sessions=_create_grpc_session_infos(1)
+        )
+    )
+
+    reservation = session_management_client.reserve_session(
+        PinMapContext("MyPinMap", [1, 0, 3, 2]),
+        pin_or_relay_names=["Pin3", "Pin1", "Pin4", "Pin2"],
+        instrument_type_id="MyInstrumentType",
+        timeout=123.456,
+    )
+
+    assert list(reservation._reserved_pin_or_relay_names) == ["Pin3", "Pin1", "Pin4", "Pin2"]
+    assert list(reservation._reserved_sites) == [1, 0, 3, 2]
+
+
 def test___all_optional_args___reserve_sessions___sends_request_with_args(
     session_management_client: SessionManagementClient, session_management_stub: Mock
 ) -> None:
@@ -346,6 +366,24 @@ def test___varying_session_count___reserve_sessions___returns_multiple_session_i
     assert [s.session_name for s in reservation.session_info] == [
         f"MySession{i}" for i in range(session_count)
     ]
+
+
+def test___all_optional_args___reserve_sessions___args_passed_to_reservation(
+    session_management_client: SessionManagementClient, session_management_stub: Mock
+) -> None:
+    session_management_stub.ReserveSessions.return_value = (
+        session_management_service_pb2.ReserveSessionsResponse()
+    )
+
+    reservation = session_management_client.reserve_sessions(
+        PinMapContext("MyPinMap", [1, 0, 3, 2]),
+        pin_or_relay_names=["Pin3", "Pin1", "Pin4", "Pin2"],
+        instrument_type_id="MyInstrumentType",
+        timeout=123.456,
+    )
+
+    assert list(reservation._reserved_pin_or_relay_names) == ["Pin3", "Pin1", "Pin4", "Pin2"]
+    assert list(reservation._reserved_sites) == [1, 0, 3, 2]
 
 
 @pytest.mark.parametrize("session_count", [0, 1, 2])
