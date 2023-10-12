@@ -59,7 +59,8 @@ class ChannelMapping(NamedTuple):
     site: int
     """The site on which the pin or relay is mapped to a channel.
             
-    For system pins/relays the site number is -1 as they do not belong to a specific site.
+    For system pins/relays, the site number is :any:`SITE_SYSTEM_PINS` (-1) as they
+    do not belong to a specific site.
     """
 
     channel: str
@@ -138,7 +139,7 @@ class SessionInformation(NamedTuple):
         if not isinstance(self.session, session_type):
             raise TypeError(
                 f"Incorrect type for session '{self.session_name}'. "
-                f"Expected '{session_type}', got '{type(self.session)}'"
+                f"Expected {session_type}, got {type(self.session)}."
             )
 
     def _with_session(self, session: object) -> SessionInformation:
@@ -211,6 +212,77 @@ class TypedSessionInformation(Protocol, Generic[TSession_co]):
     @property
     def session(self) -> TSession_co:
         """The driver session object."""
+        ...
+
+
+class Connection(NamedTuple):
+    """Describes the connection between an instance of a pin and an instrument channel.
+
+    This object maps a pin or relay on a specific site to the corresponding
+    instrument session and channel name.
+    """
+
+    pin_or_relay_name: str
+    """The pin or relay name."""
+
+    site: int
+    """The site number.
+    
+    For system pins/relays, the site number is :any:`SITE_SYSTEM_PINS` (-1) as they
+    do not belong to a specific site.
+    """
+
+    channel_name: str
+    """The instrument channel name."""
+
+    session_info: SessionInformation
+    """The instrument session information."""
+
+    @property
+    def session(self) -> object:
+        """The instrument session."""
+        return self.session_info.session
+
+    def _check_runtime_type(self, session_type: type) -> None:
+        self.session_info._check_runtime_type(session_type)
+
+    def _with_session(self, session: object) -> Connection:
+        return self._replace(session_info=self.session_info._with_session(session))
+
+
+class TypedConnection(Protocol, Generic[TSession_co]):
+    """Generic version of :any:`Connection` that preserves the session type.
+
+    For more details, see the corresponding documentation for :any:`Connection`.
+    """
+
+    @property
+    def pin_or_relay_name(self) -> str:
+        """The pin or relay name."""
+        ...
+
+    @property
+    def site(self) -> int:
+        """The site number.
+
+        For system pins/relays, the site number is :any:`SITE_SYSTEM_PINS` (-1) as they
+        do not belong to a specific site.
+        """
+        ...
+
+    @property
+    def channel_name(self) -> str:
+        """The instrument channel name."""
+        ...
+
+    @property
+    def session_info(self) -> TypedSessionInformation[TSession_co]:
+        """The instrument session information."""
+        ...
+
+    @property
+    def session(self) -> TSession_co:
+        """The instrument session."""
         ...
 
 

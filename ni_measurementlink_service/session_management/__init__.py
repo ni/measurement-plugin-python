@@ -27,6 +27,7 @@ from ni_measurementlink_service.session_management._constants import (
     INSTRUMENT_TYPE_NI_SCOPE,
     INSTRUMENT_TYPE_NI_SWITCH_EXECUTIVE_VIRTUAL_DEVICE,
     INSTRUMENT_TYPE_NONE,
+    SITE_SYSTEM_PINS,
 )
 from ni_measurementlink_service.session_management._reservation import (
     BaseReservation,
@@ -35,9 +36,11 @@ from ni_measurementlink_service.session_management._reservation import (
 )
 from ni_measurementlink_service.session_management._types import (
     ChannelMapping,
+    Connection,
     PinMapContext,
     SessionInformation,
     SessionInitializationBehavior,
+    TypedConnection,
     TypedSessionInformation,
 )
 
@@ -45,6 +48,7 @@ __all__ = [
     "BaseReservation",
     "ChannelMapping",
     "Client",
+    "Connection",
     "GRPC_SERVICE_CLASS",
     "GRPC_SERVICE_INTERFACE_NAME",
     "INSTRUMENT_TYPE_NI_DAQMX",
@@ -68,6 +72,8 @@ __all__ = [
     "SessionInitializationBehavior",
     "SessionManagementClient",
     "SingleSessionReservation",
+    "SITE_SYSTEM_PINS",
+    "TypedConnection",
     "TypedSessionInformation",
 ]
 

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PinMap schemaVersion="1.6" xmlns="http://www.ni.com/TestStand/SemiconductorModule/PinMap.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<Instruments>
+		<NIDCPowerInstrument name="DCPower1" numberOfChannels="4">
+			<ChannelGroup name="CommonDCPowerChannelGroup" />
+		</NIDCPowerInstrument>
+		<NIScopeInstrument name="SCOPE1" numberOfChannels="4" group="Scope" />
+		<NIDCPowerInstrument name="DCPower2" numberOfChannels="4">
+			<ChannelGroup name="CommonDCPowerChannelGroup" />
+		</NIDCPowerInstrument>
+	</Instruments>
+	<Pins>
+		<DUTPin name="A" />
+		<DUTPin name="B" />
+		<SystemPin name="S1" />
+		<SystemPin name="S2" />
+		<DUTPin name="C" />
+	</Pins>
+	<PinGroups></PinGroups>
+	<Sites>
+		<Site siteNumber="0" />
+		<Site siteNumber="1" />
+	</Sites>
+	<Connections>
+		<Connection pin="A" siteNumber="0" instrument="DCPower1" channel="0" />
+		<Connection pin="A" siteNumber="1" instrument="DCPower1" channel="1" />
+		<Connection pin="B" siteNumber="0" instrument="DCPower1" channel="2" />
+		<Connection pin="B" siteNumber="1" instrument="DCPower2" channel="1" />
+		<Connection pin="C" siteNumber="0" instrument="SCOPE1" channel="0" />
+		<Connection pin="C" siteNumber="1" instrument="SCOPE1" channel="1" />
+		<SystemConnection pin="S1" instrument="DCPower1" channel="3" />
+		<SystemConnection pin="S2" instrument="SCOPE1" channel="3" />
+	</Connections>
+</PinMap>
