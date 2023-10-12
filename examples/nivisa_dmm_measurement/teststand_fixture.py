@@ -54,7 +54,7 @@ def create_nivisa_dmm_sessions(sequence_context: Any) -> None:
                 # Reset the device
                 with Session(
                     session_info.resource_name,
-                    use_simulation=USE_SIMULATION,
+                    simulate=USE_SIMULATION,
                     reset_device=True,
                 ) as _:
                     pass

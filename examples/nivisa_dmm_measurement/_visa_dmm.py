@@ -23,7 +23,7 @@ if TYPE_CHECKING:
         from typing_extensions import Self
 
 
-# Pin map instrument type constants for VISA DMM Simulator
+# Pin map instrument type constant for VISA DMM
 INSTRUMENT_TYPE_VISA_DMM = "VisaDmm"
 
 _SIMULATION_YAML_PATH = pathlib.Path(__file__).resolve().parent / "_visa_dmm_sim.yaml"
@@ -31,7 +31,7 @@ _SIMULATION_YAML_PATH = pathlib.Path(__file__).resolve().parent / "_visa_dmm_sim
 _RESOLUTION_DIGITS_TO_VALUE = {"3.5": 0.001, "4.5": 0.0001, "5.5": 1e-5, "6.5": 1e-6}
 
 # Supported NI-VISA DMM instrument IDs, both real and simulated, can be added here
-_VALID_INSTRUMENT_ID = [INSTRUMENT_TYPE_VISA_DMM, "34401"]
+_SUPPORTED_INSTRUMENT_IDS = ["Waveform Generator Simulator", "34401"]
 
 
 class Function(Enum):
@@ -41,7 +41,7 @@ class Function(Enum):
     AC_VOLTS = 1
 
 
-FUNCTION_TO_VALUE = {
+_FUNCTION_TO_VALUE = {
     Function.DC_VOLTS: "VOLT:DC",
     Function.AC_VOLTS: "VOLT:AC",
 }
@@ -55,23 +55,23 @@ class Session:
         resource_name: str,
         id_query: bool = True,
         reset_device: bool = True,
-        use_simulation: bool = False,
+        simulate: bool = False,
     ) -> None:
-        """Open Ni-VISA DMM session."""
+        """Open NI-VISA DMM session."""
         # Create a real or simulated VISA resource manager."""
-        visa_library = f"{_SIMULATION_YAML_PATH}@sim" if use_simulation else ""
+        visa_library = f"{_SIMULATION_YAML_PATH}@sim" if simulate else ""
         resource_manager = pyvisa.ResourceManager(visa_library)
 
         session = resource_manager.open_resource(
             resource_name, read_termination="\n", write_termination="\n"
         )
-        # Work around https://github.com/pyvisa/pyvisa/issues/739 - Type annotation for Resource
-        # context manager implicitly upcasts derived class to base class
-        assert isinstance(session, pyvisa.resources.MessageBasedResource)
-        self._session: pyvisa.resources.MessageBasedResource = session
+
+        if not isinstance(session, pyvisa.resources.MessageBasedResource):
+            raise TypeError("The 'session' object must be an instance of MessageBasedResource.")
+        self._session = session
 
         if id_query:
-            self._validate()
+            self._validate_id()
 
         if reset_device:
             self._reset()
@@ -90,17 +90,17 @@ class Session:
         exc_val: Optional[BaseException],
         traceback: Optional[TracebackType],
     ) -> None:
-        """Context management protocol. Calls _close()."""
+        """Context management protocol. Calls close()."""
         self.close()
 
     def configure_measurement_digits(
-        self, measurement_type: Function, range: float, resolution_digits: float
+        self, function: Function, range: float, resolution_digits: float
     ) -> None:
-        """Configures the common properties of the measurement.
+        """Configure the common properties of the measurement.
 
         These properties include function, range, and resolution_digits.
         """
-        function_enum = FUNCTION_TO_VALUE[measurement_type]
+        function_enum = _FUNCTION_TO_VALUE[function]
         resolution_value = _RESOLUTION_DIGITS_TO_VALUE[str(resolution_digits)]
 
         self._session.write("CONF:%s %.g,%.g" % (function_enum, range, resolution_value))
@@ -120,12 +120,12 @@ class Session:
         if int(fields[0]) != 0:
             raise RuntimeError("Instrument returned error %s: %s" % (fields[0], fields[1]))
 
-    def _validate(self) -> None:
+    def _validate_id(self) -> None:
         """Check the selected instrument is proper and responding.."""
         instrument_id = self._session.query("*IDN?")
-        if not any(id_check in instrument_id for id_check in _VALID_INSTRUMENT_ID):
+        if not any(id_check in instrument_id for id_check in _SUPPORTED_INSTRUMENT_IDS):
             raise RuntimeError(
-                "The Instrument is not responding properly and the returned instrument_id is %s"
+                "The ID query failed. This may mean that you selected the wrong instrument, your instrument did not respond, or you are using a model that is not officially supported by this driver. Instrument ID: %s"
                 % (instrument_id)
             )
 

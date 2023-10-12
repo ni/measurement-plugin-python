@@ -1,7 +1,7 @@
 ## NI-VISA DMM Measurement
 
 This is a MeasurementLink example that performs a DMM measurement using NI-VISA
-and an VISA DMM Simulator. 
+and a DMM that supports SCPI commands.  
 
 ### Features
 
@@ -24,9 +24,13 @@ and an VISA DMM Simulator.
 - NI-VISA
 - Optional: NI Instrument Simulator software
 
-Note: 
-- This example uses the custom instrument driver `_visa_dmm.py` to perform the device-specific commands and queries.
-- The `_visa_dmm.py` driver currently provides support exclusively for the `34401` DMM instrument.
+Supported instrument models:
+- NI Instrument Simulator v2.0
+- HP/Agilent/Keysight 34401A DMM
+
+> **Note:**
+>
+> This example uses the custom instrument driver `_visa_dmm.py` to perform the device-specific commands and queries.
 
 ### Required Hardware
 
@@ -35,19 +39,20 @@ simulate the instrument in software.
 [`_visa_dmm_sim.yaml`](./_visa_dmm_sim.yaml) defines the
 behavior of the simulated instrument. 
 
-To use NI Instrument Simulator hardware:
+To use a physical instrument:
 - Disable software simulation by setting `USE_SIMULATION = False` in
   [`_constants.py`](./_constants.py). 
-- Connect the NI Instrument Simulator over GPIB or serial.
+- Connect the instrument to a supported interface, such as GPIB or serial.
 - By default, the pin map included with this example uses the resource name
   `GPIB0::3::INSTR`, which matches the NI Instrument Simulator's factory default
   settings when connected via GPIB.
-  - If this doesn't match your configuration, edit
+  - If this doesn't match your instrument's configuration, edit
     [`NIVisaDmmMeasurement.pinmap`](./NIVisaDmmMeasurement.pinmap) and replace
     `GPIB0::3::INSTR` with the desired resource name (e.g. `ASRL1::INSTR`).
   - To modify the NI Instrument Simulator configuration (e.g. GPIB address,
     serial configuration), use the `Instrument Simulator Wizard` included with
     the NI Instrument Simulator software.
+  - To configure third party instruments, see the documentation provided with the instrument.
 
 ### Session Management
 

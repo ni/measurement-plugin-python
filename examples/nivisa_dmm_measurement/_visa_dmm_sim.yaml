@@ -8,7 +8,7 @@ devices:
     dialogues:
       - q: "*CLS"
       - q: "*IDN?"
-        r: "National Instruments,VisaDmm (simulated with pyvisa-sim),00000000,2.0.1"
+        r: "National Instruments,Waveform Generator Simulator (simulated with pyvisa-sim),00000000,2.0.1"
       - q: "*RST"
       - q: "READ?"
         r: "1.23456"
