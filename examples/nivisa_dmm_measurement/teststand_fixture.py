@@ -3,7 +3,7 @@ from typing import Any
 
 from _constants import USE_SIMULATION
 from _helpers import GrpcChannelPoolHelper, PinMapClient, TestStandSupport
-from _visa_dmm import INSTRUMENT_TYPE_DMM_SIMULATOR, Session
+from _visa_dmm import INSTRUMENT_TYPE_VISA_DMM, Session
 
 import ni_measurementlink_service as nims
 
@@ -48,11 +48,16 @@ def create_nivisa_dmm_sessions(sequence_context: Any) -> None:
 
         pin_map_context = nims.session_management.PinMapContext(pin_map_id=pin_map_id, sites=None)
         with session_management_client.reserve_sessions(
-            context=pin_map_context, instrument_type_id=INSTRUMENT_TYPE_DMM_SIMULATOR
+            context=pin_map_context, instrument_type_id=INSTRUMENT_TYPE_VISA_DMM
         ) as reservation:
             for session_info in reservation.session_info:
-                with Session(session_info.resource_name, use_simulation=USE_SIMULATION) as _:
-                    ...
+                # Reset the device
+                with Session(
+                    session_info.resource_name,
+                    use_simulation=USE_SIMULATION,
+                    reset_device=True,
+                ) as _:
+                    pass
 
             session_management_client.register_sessions(reservation.session_info)
 
@@ -65,6 +70,6 @@ def destroy_nivisa_dmm_sessions() -> None:
         )
 
         with session_management_client.reserve_all_registered_sessions(
-            instrument_type_id=INSTRUMENT_TYPE_DMM_SIMULATOR,
+            instrument_type_id=INSTRUMENT_TYPE_VISA_DMM,
         ) as reservation:
             session_management_client.unregister_sessions(reservation.session_info)

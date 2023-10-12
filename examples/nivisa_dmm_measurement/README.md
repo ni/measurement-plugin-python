@@ -24,7 +24,9 @@ and an VISA DMM Simulator.
 - NI-VISA
 - Optional: NI Instrument Simulator software
 
-Note: This example uses the custom instrument driver `_visa_dmm.py` to perform the device-specific commands and queries.
+Note: 
+- This example uses the custom instrument driver `_visa_dmm.py` to perform the device-specific commands and queries.
+- The `_visa_dmm.py` driver currently provides support exclusively for the `34401` DMM instrument.
 
 ### Required Hardware
 

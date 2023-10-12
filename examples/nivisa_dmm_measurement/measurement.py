@@ -15,7 +15,7 @@ from _helpers import (
     use_simulation_option,
     verbosity_option,
 )
-from _visa_dmm import INSTRUMENT_TYPE_DMM_SIMULATOR, Function, Session
+from _visa_dmm import INSTRUMENT_TYPE_VISA_DMM, Function, Session
 
 import ni_measurementlink_service as nims
 
@@ -31,7 +31,7 @@ service_options = ServiceOptions()
 
 @measurement_service.register_measurement
 @measurement_service.configuration(
-    "pin_name", nims.DataType.Pin, "Pin1", instrument_type=INSTRUMENT_TYPE_DMM_SIMULATOR
+    "pin_name", nims.DataType.Pin, "Pin1", instrument_type=INSTRUMENT_TYPE_VISA_DMM
 )
 @measurement_service.configuration(
     "measurement_type", nims.DataType.Enum, Function.DC_VOLTS, enum_type=Function

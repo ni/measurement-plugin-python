@@ -1,6 +1,6 @@
 spec: "1.1"
 devices:
-  Digital Multimeter Simulator:
+  VisaDmm:
     eom:
       GPIB INSTR:
         q: "\n"
@@ -8,7 +8,7 @@ devices:
     dialogues:
       - q: "*CLS"
       - q: "*IDN?"
-        r: "National Instruments,Digital Multimeter Simulator (simulated with pyvisa-sim),00000000,2.0.1"
+        r: "National Instruments,VisaDmm (simulated with pyvisa-sim),00000000,2.0.1"
       - q: "*RST"
       - q: "READ?"
         r: "1.23456"
@@ -29,4 +29,4 @@ devices:
 
 resources:
   GPIB0::3::INSTR:
-    device: Digital Multimeter Simulator
+    device: VisaDmm
