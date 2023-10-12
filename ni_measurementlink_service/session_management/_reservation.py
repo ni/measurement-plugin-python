@@ -525,8 +525,7 @@ class BaseReservation(abc.ABC):
             The matching connection.
 
         Raises:
-            TypeError: If the matching connections are inconsistent with
-            ``session_type``.
+            TypeError: If the argument types or session type are incorrect.
 
             ValueError: If no reserved connections match or too many reserved
                 connections match.
@@ -548,8 +547,8 @@ class BaseReservation(abc.ABC):
         Args:
             session_type: The expected session type.
 
-            pin_or_relay_names: The pin or relay name(s) to match against. If not
-                specified, the pin or relay name is ignored when matching
+            pin_or_relay_names: The pin or relay name(s) to match against. If
+                not specified, the pin or relay name is ignored when matching
                 connections.
 
             sites: The site number(s) to match against. If not specified, the
@@ -563,7 +562,7 @@ class BaseReservation(abc.ABC):
             The matching connections.
 
         Raises:
-            TypeError: If the matching connections are inconsistent with ``session_type``.
+            TypeError: If the argument types or session type are incorrect.
 
             ValueError: If no reserved connections match.
         """
@@ -636,6 +635,61 @@ class BaseReservation(abc.ABC):
             self._discovery_client, self._grpc_channel_pool, initialization_behavior
         )
         return self._create_sessions_core(session_constructor, INSTRUMENT_TYPE_NI_DAQMX)
+
+    @requires_feature(SESSION_MANAGEMENT_2024Q1)
+    def get_nidaqmx_connection(
+        self,
+        pin_name: Optional[str] = None,
+        site: Optional[int] = None,
+    ) -> TypedConnection[nidaqmx.Task]:
+        """Get the NI-DAQmx connection matching the specified criteria.
+
+        Args:
+            pin_name: The pin name to match against. If not specified, the pin
+                name is ignored when matching connections.
+
+            site: The site number to match against. If not specified, the
+                site number is ignored when matching connections.
+
+        Returns:
+            The matching connection.
+
+        Raises:
+            TypeError: If the argument types or session type are incorrect.
+
+            ValueError: If no reserved connections match or too many reserved
+                connections match.
+        """
+        import nidaqmx
+
+        return self._get_connection_core(nidaqmx.Task, pin_name, site, INSTRUMENT_TYPE_NI_DAQMX)
+
+    @requires_feature(SESSION_MANAGEMENT_2024Q1)
+    def get_nidaqmx_connections(
+        self,
+        pin_names: Union[str, Iterable[str], None] = None,
+        sites: Union[int, Iterable[int], None] = None,
+    ) -> Sequence[TypedConnection[nidaqmx.Task]]:
+        """Get all NI-DAQmx connections matching the specified criteria.
+
+        Args:
+            pin_names: The pin name(s) to match against. If not specified, the
+                pin name is ignored when matching connections.
+
+            sites: The site number(s) to match against. If not specified, the
+                site number is ignored when matching connections.
+
+        Returns:
+            The matching connections.
+
+        Raises:
+            TypeError: If the argument types or session type are incorrect.
+
+            ValueError: If no reserved connections match.
+        """
+        import nidaqmx
+
+        return self._get_connections_core(nidaqmx.Task, pin_names, sites, INSTRUMENT_TYPE_NI_DAQMX)
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def create_nidcpower_session(
@@ -716,6 +770,65 @@ class BaseReservation(abc.ABC):
             self._discovery_client, self._grpc_channel_pool, reset, options, initialization_behavior
         )
         return self._create_sessions_core(session_constructor, INSTRUMENT_TYPE_NI_DCPOWER)
+
+    @requires_feature(SESSION_MANAGEMENT_2024Q1)
+    def get_nidcpower_connection(
+        self,
+        pin_name: Optional[str] = None,
+        site: Optional[int] = None,
+    ) -> TypedConnection[nidcpower.Session]:
+        """Get the NI-DCPower connection matching the specified criteria.
+
+        Args:
+            pin_name: The pin name to match against. If not specified, the pin
+                name is ignored when matching connections.
+
+            site: The site number to match against. If not specified, the
+                site number is ignored when matching connections.
+
+        Returns:
+            The matching connection.
+
+        Raises:
+            TypeError: If the argument types or session type are incorrect.
+
+            ValueError: If no reserved connections match or too many reserved
+                connections match.
+        """
+        import nidcpower
+
+        return self._get_connection_core(
+            nidcpower.Session, pin_name, site, INSTRUMENT_TYPE_NI_DCPOWER
+        )
+
+    @requires_feature(SESSION_MANAGEMENT_2024Q1)
+    def get_nidcpower_connections(
+        self,
+        pin_names: Union[str, Iterable[str], None] = None,
+        sites: Union[int, Iterable[int], None] = None,
+    ) -> Sequence[TypedConnection[nidcpower.Session]]:
+        """Get all NI-DCPower connections matching the specified criteria.
+
+        Args:
+            pin_names: The pin name(s) to match against. If not specified, the
+                pin name is ignored when matching connections.
+
+            sites: The site number(s) to match against. If not specified, the
+                site number is ignored when matching connections.
+
+        Returns:
+            The matching connections.
+
+        Raises:
+            TypeError: If the argument types or session type are incorrect.
+
+            ValueError: If no reserved connections match.
+        """
+        import nidcpower
+
+        return self._get_connections_core(
+            nidcpower.Session, pin_names, sites, INSTRUMENT_TYPE_NI_DCPOWER
+        )
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def create_nidigital_session(
@@ -806,6 +919,65 @@ class BaseReservation(abc.ABC):
         return self._create_sessions_core(session_constructor, INSTRUMENT_TYPE_NI_DIGITAL_PATTERN)
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
+    def get_nidigital_connection(
+        self,
+        pin_name: Optional[str] = None,
+        site: Optional[int] = None,
+    ) -> TypedConnection[nidigital.Session]:
+        """Get the NI-Digital Pattern connection matching the specified criteria.
+
+        Args:
+            pin_name: The pin name to match against. If not specified, the pin
+                name is ignored when matching connections.
+
+            site: The site number to match against. If not specified, the
+                site number is ignored when matching connections.
+
+        Returns:
+            The matching connection.
+
+        Raises:
+            TypeError: If the argument types or session type are incorrect.
+
+            ValueError: If no reserved connections match or too many reserved
+                connections match.
+        """
+        import nidigital
+
+        return self._get_connection_core(
+            nidigital.Session, pin_name, site, INSTRUMENT_TYPE_NI_DIGITAL_PATTERN
+        )
+
+    @requires_feature(SESSION_MANAGEMENT_2024Q1)
+    def get_nidigital_connections(
+        self,
+        pin_names: Union[str, Iterable[str], None] = None,
+        sites: Union[int, Iterable[int], None] = None,
+    ) -> Sequence[TypedConnection[nidigital.Session]]:
+        """Get all NI-Digital Pattern connections matching the specified criteria.
+
+        Args:
+            pin_names: The pin name(s) to match against. If not specified, the
+                pin name is ignored when matching connections.
+
+            sites: The site number(s) to match against. If not specified, the
+                site number is ignored when matching connections.
+
+        Returns:
+            The matching connections.
+
+        Raises:
+            TypeError: If the argument types or session type are incorrect.
+
+            ValueError: If no reserved connections match.
+        """
+        import nidigital
+
+        return self._get_connections_core(
+            nidigital.Session, pin_names, sites, INSTRUMENT_TYPE_NI_DIGITAL_PATTERN
+        )
+
+    @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def create_nidmm_session(
         self,
         reset_device: bool = False,
@@ -892,6 +1064,61 @@ class BaseReservation(abc.ABC):
             initialization_behavior,
         )
         return self._create_sessions_core(session_constructor, INSTRUMENT_TYPE_NI_DMM)
+
+    @requires_feature(SESSION_MANAGEMENT_2024Q1)
+    def get_nidmm_connection(
+        self,
+        pin_name: Optional[str] = None,
+        site: Optional[int] = None,
+    ) -> TypedConnection[nidmm.Session]:
+        """Get the NI-DMM connection matching the specified criteria.
+
+        Args:
+            pin_name: The pin name to match against. If not specified, the pin
+                name is ignored when matching connections.
+
+            site: The site number to match against. If not specified, the
+                site number is ignored when matching connections.
+
+        Returns:
+            The matching connection.
+
+        Raises:
+            TypeError: If the argument types or session type are incorrect.
+
+            ValueError: If no reserved connections match or too many reserved
+                connections match.
+        """
+        import nidmm
+
+        return self._get_connection_core(nidmm.Session, pin_name, site, INSTRUMENT_TYPE_NI_DMM)
+
+    @requires_feature(SESSION_MANAGEMENT_2024Q1)
+    def get_nidmm_connections(
+        self,
+        pin_names: Union[str, Iterable[str], None] = None,
+        sites: Union[int, Iterable[int], None] = None,
+    ) -> Sequence[TypedConnection[nidmm.Session]]:
+        """Get all NI-DMM connections matching the specified criteria.
+
+        Args:
+            pin_names: The pin name(s) to match against. If not specified, the
+                pin name is ignored when matching connections.
+
+            sites: The site number(s) to match against. If not specified, the
+                site number is ignored when matching connections.
+
+        Returns:
+            The matching connections.
+
+        Raises:
+            TypeError: If the argument types or session type are incorrect.
+
+            ValueError: If no reserved connections match.
+        """
+        import nidmm
+
+        return self._get_connections_core(nidmm.Session, pin_names, sites, INSTRUMENT_TYPE_NI_DMM)
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def create_nifgen_session(
@@ -982,6 +1209,61 @@ class BaseReservation(abc.ABC):
         return self._create_sessions_core(session_constructor, INSTRUMENT_TYPE_NI_FGEN)
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
+    def get_nifgen_connection(
+        self,
+        pin_name: Optional[str] = None,
+        site: Optional[int] = None,
+    ) -> TypedConnection[nifgen.Session]:
+        """Get the NI-FGEN connection matching the specified criteria.
+
+        Args:
+            pin_name: The pin name to match against. If not specified, the pin
+                name is ignored when matching connections.
+
+            site: The site number to match against. If not specified, the
+                site number is ignored when matching connections.
+
+        Returns:
+            The matching connection.
+
+        Raises:
+            TypeError: If the argument types or session type are incorrect.
+
+            ValueError: If no reserved connections match or too many reserved
+                connections match.
+        """
+        import nifgen
+
+        return self._get_connection_core(nifgen.Session, pin_name, site, INSTRUMENT_TYPE_NI_FGEN)
+
+    @requires_feature(SESSION_MANAGEMENT_2024Q1)
+    def get_nifgen_connections(
+        self,
+        pin_names: Union[str, Iterable[str], None] = None,
+        sites: Union[int, Iterable[int], None] = None,
+    ) -> Sequence[TypedConnection[nifgen.Session]]:
+        """Get all NI-FGEN connections matching the specified criteria.
+
+        Args:
+            pin_names: The pin name(s) to match against. If not specified, the
+                pin name is ignored when matching connections.
+
+            sites: The site number(s) to match against. If not specified, the
+                site number is ignored when matching connections.
+
+        Returns:
+            The matching connections.
+
+        Raises:
+            TypeError: If the argument types or session type are incorrect.
+
+            ValueError: If no reserved connections match.
+        """
+        import nifgen
+
+        return self._get_connections_core(nifgen.Session, pin_names, sites, INSTRUMENT_TYPE_NI_FGEN)
+
+    @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def create_niscope_session(
         self,
         reset_device: bool = False,
@@ -1068,6 +1350,63 @@ class BaseReservation(abc.ABC):
             initialization_behavior,
         )
         return self._create_sessions_core(session_constructor, INSTRUMENT_TYPE_NI_SCOPE)
+
+    @requires_feature(SESSION_MANAGEMENT_2024Q1)
+    def get_niscope_connection(
+        self,
+        pin_name: Optional[str] = None,
+        site: Optional[int] = None,
+    ) -> TypedConnection[niscope.Session]:
+        """Get the NI-SCOPE connection matching the specified criteria.
+
+        Args:
+            pin_name: The pin name to match against. If not specified, the pin
+                name is ignored when matching connections.
+
+            site: The site number to match against. If not specified, the
+                site number is ignored when matching connections.
+
+        Returns:
+            The matching connection.
+
+        Raises:
+            TypeError: If the argument types or session type are incorrect.
+
+            ValueError: If no reserved connections match or too many reserved
+                connections match.
+        """
+        import niscope
+
+        return self._get_connection_core(niscope.Session, pin_name, site, INSTRUMENT_TYPE_NI_SCOPE)
+
+    @requires_feature(SESSION_MANAGEMENT_2024Q1)
+    def get_niscope_connections(
+        self,
+        pin_names: Union[str, Iterable[str], None] = None,
+        sites: Union[int, Iterable[int], None] = None,
+    ) -> Sequence[TypedConnection[niscope.Session]]:
+        """Get all NI-SCOPE connections matching the specified criteria.
+
+        Args:
+            pin_names: The pin name(s) to match against. If not specified, the
+                pin name is ignored when matching connections.
+
+            sites: The site number(s) to match against. If not specified, the
+                site number is ignored when matching connections.
+
+        Returns:
+            The matching connections.
+
+        Raises:
+            TypeError: If the argument types or session type are incorrect.
+
+            ValueError: If no reserved connections match.
+        """
+        import niscope
+
+        return self._get_connections_core(
+            niscope.Session, pin_names, sites, INSTRUMENT_TYPE_NI_SCOPE
+        )
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def create_niswitch_session(
@@ -1168,6 +1507,65 @@ class BaseReservation(abc.ABC):
             initialization_behavior,
         )
         return self._create_sessions_core(session_constructor, INSTRUMENT_TYPE_NI_RELAY_DRIVER)
+
+    @requires_feature(SESSION_MANAGEMENT_2024Q1)
+    def get_niswitch_connection(
+        self,
+        relay_name: Optional[str] = None,
+        site: Optional[int] = None,
+    ) -> TypedConnection[niswitch.Session]:
+        """Get the NI-SWITCH relay driver connection matching the specified criteria.
+
+        Args:
+            relay_name: The relay name to match against. If not specified, the
+                relay name is ignored when matching connections.
+
+            site: The site number to match against. If not specified, the
+                site number is ignored when matching connections.
+
+        Returns:
+            The matching connection.
+
+        Raises:
+            TypeError: If the argument types or session type are incorrect.
+
+            ValueError: If no reserved connections match or too many reserved
+                connections match.
+        """
+        import niswitch
+
+        return self._get_connection_core(
+            niswitch.Session, relay_name, site, INSTRUMENT_TYPE_NI_RELAY_DRIVER
+        )
+
+    @requires_feature(SESSION_MANAGEMENT_2024Q1)
+    def get_niswitch_connections(
+        self,
+        relay_names: Union[str, Iterable[str], None] = None,
+        sites: Union[int, Iterable[int], None] = None,
+    ) -> Sequence[TypedConnection[niswitch.Session]]:
+        """Get all NI-SWITCH relay driver connections matching the specified criteria.
+
+        Args:
+            relay_names: The relay name(s) to match against. If not specified,
+                the relay name is ignored when matching connections.
+
+            sites: The site number(s) to match against. If not specified, the
+                site number is ignored when matching connections.
+
+        Returns:
+            The matching connections.
+
+        Raises:
+            TypeError: If the argument types or session type are incorrect.
+
+            ValueError: If no reserved connections match.
+        """
+        import niswitch
+
+        return self._get_connections_core(
+            niswitch.Session, relay_names, sites, INSTRUMENT_TYPE_NI_RELAY_DRIVER
+        )
 
 
 class SingleSessionReservation(BaseReservation):
