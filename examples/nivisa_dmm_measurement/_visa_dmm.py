@@ -125,8 +125,8 @@ class Session:
         instrument_id = self._session.query("*IDN?")
         if not any(id_check in instrument_id for id_check in _SUPPORTED_INSTRUMENT_IDS):
             raise RuntimeError(
-                "The ID query failed. This may mean that you selected the wrong instrument, your instrument did not respond, or you are using a model that is not officially supported by this driver. Instrument ID: %s"
-                % (instrument_id)
+                "The ID query failed. This may mean that you selected the wrong instrument, your instrument did not respond, "
+                f"or you are using a model that is not officially supported by this driver. Instrument ID: {instrument_id}"
             )
 
     def _reset(self) -> None:

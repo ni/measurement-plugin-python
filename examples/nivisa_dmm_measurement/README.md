@@ -24,10 +24,6 @@ and a DMM that supports SCPI commands.
 - NI-VISA
 - Optional: NI Instrument Simulator software
 
-Supported instrument models:
-- NI Instrument Simulator v2.0
-- HP/Agilent/Keysight 34401A DMM
-
 > **Note:**
 >
 > This example uses the custom instrument driver `_visa_dmm.py` to perform the device-specific commands and queries.
@@ -38,6 +34,10 @@ By default, this example does not require hardware; it uses PyVISA-sim to
 simulate the instrument in software.
 [`_visa_dmm_sim.yaml`](./_visa_dmm_sim.yaml) defines the
 behavior of the simulated instrument. 
+
+Supported instrument models:
+- NI Instrument Simulator v2.0
+- HP/Agilent/Keysight 34401A DMM
 
 To use a physical instrument:
 - Disable software simulation by setting `USE_SIMULATION = False` in
