@@ -7,7 +7,6 @@ from typing import Any, Callable, List, NamedTuple, Optional, Tuple, TypeVar, Un
 
 import click
 import grpc
-
 import ni_measurementlink_service as nims
 from ni_measurementlink_service import session_management
 from ni_measurementlink_service._internal.stubs.ni.measurementlink.pinmap.v1 import (
@@ -63,7 +62,8 @@ class PinMapClient(object):
         pin_map_path_obj = pathlib.Path(pin_map_path)
         # By convention, the pin map id is the .pinmap file path.
         request = pin_map_service_pb2.UpdatePinMapFromXmlRequest(
-            pin_map_id=pin_map_path, pin_map_xml=pin_map_path_obj.read_text(encoding="utf-8")
+            pin_map_id=pin_map_path,
+            pin_map_xml=pin_map_path_obj.read_text(encoding="utf-8"),
         )
         response: pin_map_service_pb2.PinMap = self._client.UpdatePinMapFromXml(request)
         return response.pin_map_id
@@ -159,7 +159,13 @@ class TestStandSupport(object):
         """
         if pathlib.Path(file_path).is_absolute():
             return file_path
-        (_, absolute_path, _, _, user_canceled) = self._sequence_context.Engine.FindFileEx(
+        (
+            _,
+            absolute_path,
+            _,
+            _,
+            user_canceled,
+        ) = self._sequence_context.Engine.FindFileEx(
             fileToFind=file_path,
             absolutePath=None,
             srchDirType=None,

@@ -38,6 +38,15 @@ jobs:
             popd
             echo "::endgroup::"
           done
+      - name: Lint examples
+        run: |
+          for example in examples/*/; do
+            echo "::group::$example"
+            pushd $example
+            poetry run ni-python-styleguide lint
+            popd
+            echo "::endgroup::"
+          done
       - name: Mypy static analysis (examples, Linux)
         run: |
           for example in examples/*/; do

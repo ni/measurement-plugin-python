@@ -12,11 +12,10 @@ from typing import TYPE_CHECKING, Iterable, List, NamedTuple, Tuple
 import click
 import grpc
 import hightime
+import ni_measurementlink_service as nims
 import nidcpower
 import nidcpower.session
 from _helpers import configure_logging, verbosity_option
-
-import ni_measurementlink_service as nims
 from ni_measurementlink_service.session_management import TypedConnection
 
 _NIDCPOWER_WAIT_FOR_EVENT_TIMEOUT_ERROR_CODE = -1074116059

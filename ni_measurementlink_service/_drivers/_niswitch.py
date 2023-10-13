@@ -53,8 +53,12 @@ class SessionConstructor:
                 initialization_behavior=self._initialization_behavior,
             )
 
+        # Initializing a nonexistent switch module returns
+        # NISWITCH_ERROR_INVALID_RESOURCE_DESCRIPTOR, even if simulate=True.
+        resource_name = "" if self._simulate else session_info.resource_name
+
         return niswitch.Session(
-            resource_name=session_info.resource_name,
+            resource_name=resource_name,
             topology=self._topology,
             simulate=self._simulate,
             reset_device=self._reset_device,

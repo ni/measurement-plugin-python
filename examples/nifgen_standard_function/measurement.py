@@ -12,10 +12,9 @@ from typing import Sequence, Tuple
 import click
 import grpc
 import hightime
+import ni_measurementlink_service as nims
 import nifgen
 from _helpers import configure_logging, verbosity_option
-
-import ni_measurementlink_service as nims
 
 _NIFGEN_OPERATION_TIMED_OUT_ERROR_CODE = -1074098044
 _NIFGEN_MAX_TIME_EXCEEDED_ERROR_CODE = -1074118637

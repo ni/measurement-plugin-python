@@ -1421,13 +1421,14 @@ class BaseReservation(abc.ABC):
         Args:
             topology: Specifies the switch topology. If this argument is not
                 specified, the default value is "Configured Topology", which you
-                may override by setting ``NISWITCH_TOPOLOGY`` in the
-                configuration file (``.env``).
+                may override by setting ``MEASUREMENTLINK_NISWITCH_TOPOLOGY`` in
+                the configuration file (``.env``).
 
             simulate: Enables or disables simulation of the switch module. If
                 this argument is not specified, the default value is ``False``,
-                which you may override by setting ``NISWITCH_SIMULATE`` in the
-                configuration file (``.env``).
+                which you may override by setting
+                ``MEASUREMENTLINK_NISWITCH_SIMULATE`` in the configuration file
+                (``.env``).
 
             reset_device: Specifies whether to reset the switch module during
                 the initialization procedure.
@@ -1471,13 +1472,14 @@ class BaseReservation(abc.ABC):
         Args:
             topology: Specifies the switch topology. If this argument is not
                 specified, the default value is "Configured Topology", which you
-                may override by setting ``NISWITCH_TOPOLOGY`` in the
-                configuration file (``.env``).
+                may override by setting ``MEASUREMENTLINK_NISWITCH_TOPOLOGY`` in
+                the configuration file (``.env``).
 
             simulate: Enables or disables simulation of the switch module. If
                 this argument is not specified, the default value is ``False``,
-                which you may override by setting ``NISWITCH_SIMULATE`` in the
-                configuration file (``.env``).
+                which you may override by setting
+                ``MEASUREMENTLINK_NISWITCH_SIMULATE`` in the configuration file
+                (``.env``).
 
             reset_device: Specifies whether to reset the switch module during
                 the initialization procedure.

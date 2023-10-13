@@ -6,10 +6,9 @@ import sys
 from typing import Tuple
 
 import click
-from _helpers import configure_logging, verbosity_option
-from niswitch import RelayAction
-
 import ni_measurementlink_service as nims
+from _helpers import configure_logging, verbosity_option
+from niswitch.enums import RelayAction
 
 script_or_exe = sys.executable if getattr(sys, "frozen", False) else __file__
 service_directory = pathlib.Path(script_or_exe).resolve().parent

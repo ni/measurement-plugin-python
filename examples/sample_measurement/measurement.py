@@ -6,14 +6,13 @@ from enum import Enum
 from typing import Iterable, Tuple
 
 import click
+import ni_measurementlink_service as nims
 from _helpers import configure_logging, verbosity_option
 
 try:
     from _stubs import color_pb2
 except ImportError:
     from examples.sample_measurement._stubs import color_pb2  # type: ignore
-
-import ni_measurementlink_service as nims
 
 script_or_exe = sys.executable if getattr(sys, "frozen", False) else __file__
 service_directory = pathlib.Path(script_or_exe).resolve().parent
