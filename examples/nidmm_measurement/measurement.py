@@ -5,23 +5,12 @@ import math
 import pathlib
 import sys
 from enum import Enum
-from typing import Any, Tuple
+from typing import Tuple
 
 import click
 import ni_measurementlink_service as nims
 import nidmm
-from _constants import USE_SIMULATION
-from _helpers import (
-    ServiceOptions,
-    configure_logging,
-    create_session_management_client,
-    get_grpc_device_channel,
-    get_service_options,
-    grpc_device_options,
-    use_simulation_option,
-    verbosity_option,
-)
-from _nidmm_helpers import create_session
+from _helpers import configure_logging, verbosity_option
 
 script_or_exe = sys.executable if getattr(sys, "frozen", False) else __file__
 service_directory = pathlib.Path(script_or_exe).resolve().parent
@@ -30,7 +19,6 @@ measurement_service = nims.MeasurementService(
     version="0.1.0.0",
     ui_file_paths=[service_directory / "NIDmmMeasurement.measui"],
 )
-service_options = ServiceOptions()
 
 
 class Function(Enum):
@@ -84,15 +72,12 @@ def measure(
         resolution_digits,
     )
 
-    session_management_client = create_session_management_client(measurement_service)
+    # If the measurement type is not specified, use DC_VOLTS.
+    nidmm_function = nidmm.Function(measurement_type.value or Function.DC_VOLTS.value)
 
-    with session_management_client.reserve_session(
-        context=measurement_service.context.pin_map_context, pin_or_relay_names=[pin_name]
-    ) as reservation:
-        grpc_device_channel = get_grpc_device_channel(measurement_service, nidmm, service_options)
-        with create_session(reservation.session_info, grpc_device_channel) as session:
-            # If the measurement type is not specified, use DC_VOLTS.
-            nidmm_function = nidmm.Function(measurement_type.value or Function.DC_VOLTS.value)
+    with measurement_service.context.reserve_session(pin_name) as reservation:
+        with reservation.create_nidmm_session() as session_info:
+            session = session_info.session
             session.configure_measurement_digits(nidmm_function, range, resolution_digits)
             measured_value = session.read()
             signal_out_of_range = math.isnan(measured_value) or math.isinf(measured_value)
@@ -109,13 +94,9 @@ def measure(
 
 @click.command
 @verbosity_option
-@grpc_device_options
-@use_simulation_option(default=USE_SIMULATION)
-def main(verbosity: int, **kwargs: Any) -> None:
+def main(verbosity: int) -> None:
     """Perform a measurement using an NI DMM."""
     configure_logging(verbosity)
-    global service_options
-    service_options = get_service_options(**kwargs)
 
     with measurement_service.host_service():
         input("Press enter to close the measurement service.\n")

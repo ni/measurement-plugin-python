@@ -1,34 +1,27 @@
 """Generate a standard function waveform using an NI waveform generator."""
 
-import contextlib
 import logging
 import pathlib
 import sys
 import threading
 import time
+from contextlib import ExitStack
 from enum import Enum
-from typing import Any, Tuple
+from typing import Sequence, Tuple
 
 import click
 import grpc
 import hightime
 import ni_measurementlink_service as nims
 import nifgen
-from _constants import USE_SIMULATION
-from _helpers import (
-    ServiceOptions,
-    configure_logging,
-    create_session_management_client,
-    get_grpc_device_channel,
-    get_service_options,
-    grpc_device_options,
-    use_simulation_option,
-    verbosity_option,
-)
-from _nifgen_helpers import create_session
+from _helpers import configure_logging, verbosity_option
 
-NIFGEN_OPERATION_TIMED_OUT_ERROR_CODE = -1074098044
-NIFGEN_MAX_TIME_EXCEEDED_ERROR_CODE = -1074118637
+_NIFGEN_OPERATION_TIMED_OUT_ERROR_CODE = -1074098044
+_NIFGEN_MAX_TIME_EXCEEDED_ERROR_CODE = -1074118637
+_NIFGEN_TIMEOUT_ERROR_CODES = [
+    _NIFGEN_OPERATION_TIMED_OUT_ERROR_CODE,
+    _NIFGEN_MAX_TIME_EXCEEDED_ERROR_CODE,
+]
 
 script_or_exe = sys.executable if getattr(sys, "frozen", False) else __file__
 service_directory = pathlib.Path(script_or_exe).resolve().parent
@@ -37,7 +30,6 @@ measurement_service = nims.MeasurementService(
     version="0.1.0.0",
     ui_file_paths=[service_directory / "NIFgenStandardFunction.measui"],
 )
-service_options = ServiceOptions()
 
 
 class Waveform(Enum):
@@ -87,83 +79,86 @@ def measure(
     cancellation_event = threading.Event()
     measurement_service.context.add_cancel_callback(cancellation_event.set)
 
-    session_management_client = create_session_management_client(measurement_service)
+    # If the waveform type is not specified, use SINE.
+    nifgen_waveform = nifgen.Waveform(waveform_type.value or Waveform.SINE.value)
 
-    with contextlib.ExitStack() as stack:
-        reservation = stack.enter_context(
-            session_management_client.reserve_sessions(
-                context=measurement_service.context.pin_map_context, pin_or_relay_names=[pin_name]
+    with measurement_service.context.reserve_sessions(pin_name) as reservation:
+        with reservation.create_nifgen_sessions() as session_infos:
+            for session_info in session_infos:
+                # Output mode must be the same for all channels in the session.
+                session_info.session.output_mode = nifgen.OutputMode.FUNC
+
+                # Configure the same waveform settings for all channels
+                # corresponding to the selected pins and sites.
+                channels = session_info.session.channels[session_info.channel_list]
+                channels.configure_standard_waveform(nifgen_waveform, amplitude, frequency)
+
+            with ExitStack() as stack:
+                # Initiate the generation for all sessions. initiate() returns a
+                # context manager that aborts the generation when the function
+                # returns or raises an exception. Use an ExitStack to manage
+                # multiple context managers.
+                for session_info in session_infos:
+                    stack.enter_context(session_info.session.initiate())
+
+                # Wait until the generation is done.
+                sessions = [session_info.session for session_info in session_infos]
+                _wait_until_done(sessions, cancellation_event, duration)
+
+    logging.info("Completed generation")
+    return ()
+
+
+def _wait_until_done(
+    sessions: Sequence[nifgen.Session], cancellation_event: threading.Event, duration: float
+) -> None:
+    """Wait until all sessions are done, the duration expires, or error/cancellation occurs.
+
+    Note that ``duration`` is a minimum time, not a timeout.
+    """
+    is_simulated = any(session.simulate for session in sessions)
+    grpc_deadline = time.time() + measurement_service.context.time_remaining
+    stop_time = time.time() + duration
+
+    while True:
+        if time.time() >= stop_time:
+            break
+        if time.time() > grpc_deadline:
+            measurement_service.context.abort(
+                grpc.StatusCode.DEADLINE_EXCEEDED, "Deadline exceeded."
             )
-        )
+        if cancellation_event.is_set():
+            measurement_service.context.abort(
+                grpc.StatusCode.CANCELLED, "Client requested cancellation."
+            )
 
-        grpc_device_channel = get_grpc_device_channel(measurement_service, nifgen, service_options)
-        sessions = [
-            stack.enter_context(create_session(session_info, grpc_device_channel))
-            for session_info in reservation.session_info
-        ]
-
-        for session, session_info in zip(sessions, reservation.session_info):
-            # Output mode must be the same for all channels in the session.
-            session.output_mode = nifgen.OutputMode.FUNC
-
-            channels = session.channels[session_info.channel_list]
-            # If the waveform type is not specified, use SINE.
-            nifgen_waveform = nifgen.Waveform(waveform_type.value or Waveform.SINE.value)
-            channels.configure_standard_waveform(nifgen_waveform, amplitude, frequency)
-
-            stack.enter_context(session.initiate())
-
-        is_simulated = sessions[0].simulate
-        deadline = time.time() + measurement_service.context.time_remaining
-        stop_time = time.time() + duration
-        while True:
-            if time.time() >= stop_time:
-                break
-            if time.time() > deadline:
-                measurement_service.context.abort(
-                    grpc.StatusCode.DEADLINE_EXCEEDED, "Deadline exceeded."
-                )
-            if cancellation_event.is_set():
-                measurement_service.context.abort(
-                    grpc.StatusCode.CANCELLED, "Client requested cancellation."
-                )
-            if any((session.is_done() for session in sessions)):
-                break
+        if is_simulated:
+            # With simulated NI-FGEN instruments, wait_for_done() succeeds
+            # immediately, so use time.sleep() instead.
             remaining_time = max(stop_time - time.time(), 0.0)
             sleep_time = min(remaining_time, 100e-3)
-            if is_simulated:
-                time.sleep(sleep_time)
-            else:
-                try:
-                    sessions[0].wait_until_done(hightime.timedelta(seconds=sleep_time))
-                except nifgen.errors.DriverError as e:
-                    """
-                    There is no native way to support cancellation when generating a waveform.
-                    To support cancellation, we will be calling wait_until_done
-                    until it succeeds or we have gone past the specified timeout. wait_until_done
-                    will throw an exception if it times out, which is why we are catching
-                    and doing nothing.
-                    """
-                    if (
-                        e.code == NIFGEN_OPERATION_TIMED_OUT_ERROR_CODE
-                        or e.code == NIFGEN_MAX_TIME_EXCEEDED_ERROR_CODE
-                    ):
-                        pass
-                    else:
-                        raise
-
-    return ()
+            time.sleep(sleep_time)
+        else:
+            # Wait until all sessions are done. If any session takes more than
+            # 100 ms, check for cancellation and try again. NI-FGEN does not
+            # support canceling a call to wait_until_done().
+            try:
+                for session in sessions:
+                    remaining_time = max(stop_time - time.time(), 0.0)
+                    sleep_time = min(remaining_time, 100e-3)
+                    session.wait_until_done(hightime.timedelta(seconds=sleep_time))
+                break
+            except nifgen.errors.DriverError as e:
+                if e.code in _NIFGEN_TIMEOUT_ERROR_CODES:
+                    pass
+                raise
 
 
 @click.command
 @verbosity_option
-@grpc_device_options
-@use_simulation_option(default=USE_SIMULATION)
-def main(verbosity: int, **kwargs: Any) -> None:
+def main(verbosity: int) -> None:
     """Generate a standard function waveform using an NI waveform generator."""
     configure_logging(verbosity)
-    global service_options
-    service_options = get_service_options(**kwargs)
 
     with measurement_service.host_service():
         input("Press enter to close the measurement service.\n")
