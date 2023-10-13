@@ -1,25 +1,13 @@
 """Control relays using an NI relay driver (e.g. PXI-2567)."""
 
-import contextlib
 import logging
 import pathlib
 import sys
-from typing import Any, Tuple
+from typing import Tuple
 
 import click
-import niswitch
-from _constants import USE_SIMULATION
-from _helpers import (
-    ServiceOptions,
-    configure_logging,
-    create_session_management_client,
-    get_grpc_device_channel,
-    get_service_options,
-    grpc_device_options,
-    use_simulation_option,
-    verbosity_option,
-)
-from _niswitch_helpers import create_session
+from _helpers import configure_logging, verbosity_option
+from niswitch import RelayAction
 
 import ni_measurementlink_service as nims
 
@@ -30,7 +18,6 @@ measurement_service = nims.MeasurementService(
     version="0.1.0.0",
     ui_file_paths=[service_directory / "NISwitchControlRelays.measui"],
 )
-service_options = ServiceOptions()
 
 
 @measurement_service.register_measurement
@@ -47,31 +34,19 @@ def measure(
         close_relays,
     )
 
-    session_management_client = create_session_management_client(measurement_service)
+    with measurement_service.context.reserve_sessions(relay_names) as reservation:
+        with reservation.create_niswitch_sessions() as session_infos:
+            # Open or close all relays corresponding to the selected pins and
+            # sites.
+            for session_info in session_infos:
+                session_info.session.relay_control(
+                    session_info.channel_list,
+                    RelayAction.CLOSE if close_relays else RelayAction.OPEN,
+                )
 
-    with contextlib.ExitStack() as stack:
-        relay_list = [r.strip() for r in relay_names.split(",")]
-        reservation = stack.enter_context(
-            session_management_client.reserve_sessions(
-                context=measurement_service.context.pin_map_context, pin_or_relay_names=relay_list
-            )
-        )
-
-        grpc_device_channel = get_grpc_device_channel(
-            measurement_service, niswitch, service_options
-        )
-        sessions = [
-            stack.enter_context(create_session(session_info, grpc_device_channel))
-            for session_info in reservation.session_info
-        ]
-
-        for session, session_info in zip(sessions, reservation.session_info):
-            session.relay_control(
-                session_info.channel_list,
-                niswitch.RelayAction.CLOSE if close_relays else niswitch.RelayAction.OPEN,
-            )
-        for session in sessions:
-            session.wait_for_debounce()
+            # Wait for all of the relays to activate and debounce.
+            for session_info in session_infos:
+                session_info.session.wait_for_debounce()
 
     logging.info("Completed operation")
     return ()
@@ -79,13 +54,9 @@ def measure(
 
 @click.command
 @verbosity_option
-@grpc_device_options
-@use_simulation_option(default=USE_SIMULATION)
-def main(verbosity: int, **kwargs: Any) -> None:
+def main(verbosity: int) -> None:
     """Control relays using an NI relay driver (e.g. PXI-2567)."""
     configure_logging(verbosity)
-    global service_options
-    service_options = get_service_options(**kwargs)
 
     with measurement_service.host_service():
         input("Press enter to close the measurement service.\n")
