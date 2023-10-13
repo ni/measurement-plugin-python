@@ -10,6 +10,7 @@ import _nidcpower_helpers
 import click
 import grpc
 import hightime
+import ni_measurementlink_service as nims
 import nidcpower
 import nidcpower.session
 from _constants import USE_SIMULATION
@@ -25,8 +26,6 @@ from _helpers import (
     verbosity_option,
 )
 from _visa_dmm import INSTRUMENT_TYPE_VISA_DMM, Function, Session
-
-import ni_measurementlink_service as nims
 from ni_measurementlink_service.session_management import SessionInformation
 
 
