@@ -1,6 +1,6 @@
 ## Output Voltage Measurement
 
-This is a MeasurementLink example that sources DC voltage as input to the DUT with an NI SMU and measures the DUT output with DMM using NI-VISA.
+This is a MeasurementLink example that sources DC voltage as input to the DUT with an NI SMU and measures the DUT output with a DMM that supports SCPI commands using NI-VISA.
 
 ### Features
 
@@ -27,21 +27,24 @@ This is a MeasurementLink example that sources DC voltage as input to the DUT wi
 - NI-VISA
 - Optional: NI Instrument Simulator software
 
-Note: there is no Python instrument driver for the NI Instrument Simulator, so
-this example directly performs low-level, device-specific commands and queries.
+> **Note:**
+>
+> This example uses the custom instrument driver `_visa_dmm.py` to perform the device-specific commands and queries.
 
 ### Required Hardware
 
-By default, this example does not require hardware; it uses a simulated instrument and PyVISA-sim to simulate NI-DCPower and NI-VISA DMM instruments in software. [`NIInstrumentSimulatorV2_0.yaml`](./NIInstrumentSimulatorV2_0.yaml) defines the behavior of the simulated NI-VISA DMM instrument.
+By default, this example does not require hardware; it uses a simulated instrument and PyVISA-sim to simulate NI-DCPower and NI-VISA DMM instruments in software. [`_visa_dmm_sim.yaml`](./_visa_dmm_sim.yaml) defines the behavior of the simulated NI-VISA DMM instrument.
 
-This example requires an NI SMU that is supported by NI-DCPower (e.g. PXIe-4141).
+Supported instrument models:
+- NI Instrument Simulator v2.0
+- HP/Agilent/Keysight 34401A DMM
 
-By default, this example uses simulated instruments. To use physical instruments, edit
+
+To use a physical instrument:
+- This example requires an NI SMU that is supported by NI-DCPower (e.g. PXIe-4141).
+- By default, this example uses simulated instruments. To use physical instruments, edit
 `_constants.py` to specify `USE_SIMULATION = False`.
-
-To use NI Instrument Simulator hardware:
-
-- Connect the NI Instrument Simulator over GPIB or serial.
+- Connect the instrument to a supported interface, such as GPIB or serial.
 - By default, the pin map included with this example uses the resource name
   `GPIB0::3::INSTR`, which matches the NI Instrument Simulator's factory default
   settings when connected via GPIB.
@@ -53,4 +56,4 @@ To use NI Instrument Simulator hardware:
     the NI Instrument Simulator software.
 
 To use a 3rd party DMM, such as a Keysight 34401A:
-  - Verify the driver specific commands in `_visa_helpers.py` and update them if required.
+  - Verify the driver specific commands in `_visa_dmm.py` and update them if required.

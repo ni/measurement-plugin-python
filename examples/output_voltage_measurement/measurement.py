@@ -4,18 +4,15 @@ import logging
 import pathlib
 import threading
 import time
-from enum import Enum
 from typing import Any, List, Tuple
 
 import _nidcpower_helpers
-import _visa_helpers
 import click
 import grpc
 import hightime
 import ni_measurementlink_service as nims
 import nidcpower
 import nidcpower.session
-import pyvisa
 from _constants import USE_SIMULATION
 from _helpers import (
     ServiceOptions,
@@ -28,12 +25,12 @@ from _helpers import (
     use_simulation_option,
     verbosity_option,
 )
-from _visa_helpers import check_instrument_error, log_instrument_id, reset_instrument
+from _visa_dmm import INSTRUMENT_TYPE_VISA_DMM, Function, Session
 from ni_measurementlink_service.session_management import SessionInformation
+
 
 NIDCPOWER_WAIT_FOR_EVENT_TIMEOUT_ERROR_CODE = -1074116059
 NIDCPOWER_TIMEOUT_EXCEEDED_ERROR_CODE = -1074097933
-RESOLUTION_DIGITS_TO_VALUE = {"3.5": 0.001, "4.5": 0.0001, "5.5": 1e-5, "6.5": 1e-6}
 
 service_directory = pathlib.Path(__file__).resolve().parent
 measurement_service = nims.MeasurementService(
@@ -43,19 +40,6 @@ measurement_service = nims.MeasurementService(
 )
 
 service_options = ServiceOptions()
-
-
-class Function(Enum):
-    """Function that represents the measurement type."""
-
-    DC_VOLTS = 0
-    AC_VOLTS = 1
-
-
-FUNCTION_TO_VALUE = {
-    Function.DC_VOLTS: "VOLT:DC",
-    Function.AC_VOLTS: "VOLT:AC",
-}
 
 
 @measurement_service.register_measurement
@@ -81,7 +65,7 @@ FUNCTION_TO_VALUE = {
     "output_pin",
     nims.DataType.Pin,
     "OutPin",
-    instrument_type=_visa_helpers.INSTRUMENT_TYPE_DMM_SIMULATOR,
+    instrument_type=INSTRUMENT_TYPE_VISA_DMM,
 )
 @measurement_service.output("measured_value", nims.DataType.Double)
 def measure(
@@ -119,22 +103,12 @@ def measure(
         measure_session_info = _get_session_info_for_pin(reservation.session_info, output_pin)
         with _nidcpower_helpers.create_session(
             source_session_info, service_options.use_simulation, grpc_device_channel
-        ) as source_session, _visa_helpers.create_session(
+        ) as source_session, Session(
             measure_session_info.resource_name,
-            use_simulation=service_options.use_simulation,
+            simulate=service_options.use_simulation,
         ) as measure_session:
             cancellation_event = threading.Event()
             measurement_service.context.add_cancel_callback(cancellation_event.set)
-
-            assert isinstance(measure_session, pyvisa.resources.MessageBasedResource)
-
-            log_instrument_id(measure_session)
-
-            # When this measurement is called from outside of TestStand (session_exists == False),
-            # reset the instrument to a known state. In TestStand, ProcessSetup resets the
-            # instrument.
-            if not measure_session_info.session_exists:
-                reset_instrument(measure_session)
 
             channels = source_session.channels[source_session_info.channel_list]
 
@@ -147,17 +121,12 @@ def measure(
             channels.voltage_level = voltage_level
 
             # Configure NI-VISA DMM
-            function_enum = FUNCTION_TO_VALUE[measurement_type]
-            resolution_value = RESOLUTION_DIGITS_TO_VALUE[str(resolution_digits)]
-            measure_session.write("CONF:%s %.g,%.g" % (function_enum, range, resolution_value))
-            check_instrument_error(measure_session)
+            measure_session.configure_measurement_digits(measurement_type, range, resolution_digits)
 
             with channels.initiate():
                 _wait_for_source_complete_event(measurement_service, channels, cancellation_event)
 
-            response = measure_session.query("READ?")
-            check_instrument_error(measure_session)
-            measured_value = float(response)
+            measured_value = measure_session.read()
 
             source_session = None  # Don't abort after this point
 
