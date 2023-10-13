@@ -31,7 +31,16 @@ _SIMULATION_YAML_PATH = pathlib.Path(__file__).resolve().parent / "_visa_dmm_sim
 _RESOLUTION_DIGITS_TO_VALUE = {"3.5": 0.001, "4.5": 0.0001, "5.5": 1e-5, "6.5": 1e-6}
 
 # Supported NI-VISA DMM instrument IDs, both real and simulated, can be added here
-_SUPPORTED_INSTRUMENT_IDS = ["Waveform Generator Simulator", "34401"]
+_SUPPORTED_INSTRUMENT_IDS = [
+    # Keysight/Agilent/HP 34401A
+    "34401",
+    "34410",
+    "34411",
+    "L4411",
+    # NI Instrument Simulator v2.0
+    "Instrument Simulator",  # single instrument
+    "Waveform Generator Simulator",  # multi-instrument
+]
 
 
 class Function(Enum):
