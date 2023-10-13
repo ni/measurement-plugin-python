@@ -4,7 +4,7 @@
 		<NIDCPowerInstrument name="DCPower1" numberOfChannels="4">
 			<ChannelGroup name="CommonDCPowerChannelGroup" />
 		</NIDCPowerInstrument>
-		<Instrument name="GPIB0::3::INSTR" instrumentTypeId="DigitalMultimeterSimulator">
+		<Instrument name="GPIB0::3::INSTR" instrumentTypeId="VisaDmm">
 			<Channel id="0" />
 		</Instrument>
 	</Instruments>
