@@ -3,8 +3,9 @@
 from typing import Any, Dict, Optional
 
 import grpc
-import ni_measurementlink_service as nims
 import nidcpower
+
+import ni_measurementlink_service as nims
 
 
 def create_session(

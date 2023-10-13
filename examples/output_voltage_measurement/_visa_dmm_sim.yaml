@@ -1,0 +1,32 @@
+spec: "1.1"
+devices:
+  VisaDmm:
+    eom:
+      GPIB INSTR:
+        q: "\n"
+        r: "\n"
+    dialogues:
+      - q: "*CLS"
+      - q: "*IDN?"
+        r: "National Instruments,Waveform Generator Simulator (simulated with pyvisa-sim),00000000,2.0.1"
+      - q: "*RST"
+      - q: "READ?"
+        r: "1.23456"
+    error:
+      error_queue:
+        - q: 'SYST:ERR?'
+          default: '0,No Error'
+          command_error: '-100,Command Error'
+          query_error: '-400,Query Error'
+    properties:
+      configuration:
+        default: "VOLT:DC 5.000000,0.001000"
+        getter:
+          q: "CONF?"
+          r: "{:s}"
+        setter:
+          q: "CONF:{:s}"
+
+resources:
+  GPIB0::3::INSTR:
+    device: VisaDmm
