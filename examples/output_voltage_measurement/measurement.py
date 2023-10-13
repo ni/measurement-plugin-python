@@ -4,33 +4,25 @@ import logging
 import pathlib
 import threading
 import time
-from typing import Any, List, Tuple
+from typing import Tuple
 
-import _nidcpower_helpers
+import _visa_dmm
 import click
 import grpc
 import hightime
 import ni_measurementlink_service as nims
 import nidcpower
 import nidcpower.session
-from _constants import USE_SIMULATION
-from _helpers import (
-    ServiceOptions,
-    configure_logging,
-    create_session_management_client,
-    get_grpc_device_channel,
-    get_service_options,
-    get_session_and_channel_for_pin,
-    grpc_device_options,
-    use_simulation_option,
-    verbosity_option,
-)
-from _visa_dmm import INSTRUMENT_TYPE_VISA_DMM, Function, Session
+from _helpers import configure_logging, verbosity_option
+from decouple import AutoConfig
 from ni_measurementlink_service.session_management import SessionInformation
 
-
-NIDCPOWER_WAIT_FOR_EVENT_TIMEOUT_ERROR_CODE = -1074116059
-NIDCPOWER_TIMEOUT_EXCEEDED_ERROR_CODE = -1074097933
+_NIDCPOWER_WAIT_FOR_EVENT_TIMEOUT_ERROR_CODE = -1074116059
+_NIDCPOWER_TIMEOUT_EXCEEDED_ERROR_CODE = -1074097933
+_NIDCPOWER_TIMEOUT_ERROR_CODES = [
+    _NIDCPOWER_WAIT_FOR_EVENT_TIMEOUT_ERROR_CODE,
+    _NIDCPOWER_TIMEOUT_EXCEEDED_ERROR_CODE,
+]
 
 service_directory = pathlib.Path(__file__).resolve().parent
 measurement_service = nims.MeasurementService(
@@ -39,7 +31,9 @@ measurement_service = nims.MeasurementService(
     ui_file_paths=[service_directory / "OutputVoltageMeasurement.measui"],
 )
 
-service_options = ServiceOptions()
+# Search for the `.env` file starting with the current directory.
+_config = AutoConfig(str(pathlib.Path.cwd()))
+_VISA_DMM_SIMULATE: bool = _config("MEASUREMENTLINK_VISA_DMM_SIMULATE", default=False, cast=bool)
 
 
 @measurement_service.register_measurement
@@ -57,7 +51,10 @@ service_options = ServiceOptions()
 )
 # NI-VISA DMM configuration
 @measurement_service.configuration(
-    "measurement_type", nims.DataType.Enum, Function.DC_VOLTS, enum_type=Function
+    "measurement_type",
+    nims.DataType.Enum,
+    _visa_dmm.Function.DC_VOLTS,
+    enum_type=_visa_dmm.Function,
 )
 @measurement_service.configuration("range", nims.DataType.Double, 1.0)
 @measurement_service.configuration("resolution_digits", nims.DataType.Double, 3.5)
@@ -65,7 +62,7 @@ service_options = ServiceOptions()
     "output_pin",
     nims.DataType.Pin,
     "OutPin",
-    instrument_type=INSTRUMENT_TYPE_VISA_DMM,
+    instrument_type=_visa_dmm.INSTRUMENT_TYPE_VISA_DMM,
 )
 @measurement_service.output("measured_value", nims.DataType.Double)
 def measure(
@@ -75,7 +72,7 @@ def measure(
     current_limit_range: float,
     source_delay: float,
     input_pin: str,
-    measurement_type: Function,
+    measurement_type: _visa_dmm.Function,
     range: float,
     resolution_digits: float,
     output_pin: str,
@@ -90,102 +87,99 @@ def measure(
         resolution_digits,
     )
 
-    session_management_client = create_session_management_client(measurement_service)
+    cancellation_event = threading.Event()
+    measurement_service.context.add_cancel_callback(cancellation_event.set)
 
-    with session_management_client.reserve_sessions(
-        context=measurement_service.context.pin_map_context,
-        pin_or_relay_names=[input_pin, output_pin],
-    ) as reservation:
-        grpc_device_channel = get_grpc_device_channel(
-            measurement_service, nidcpower, service_options
-        )
-        source_session_info = _get_session_info_for_pin(reservation.session_info, input_pin)
-        measure_session_info = _get_session_info_for_pin(reservation.session_info, output_pin)
-        with _nidcpower_helpers.create_session(
-            source_session_info, service_options.use_simulation, grpc_device_channel
-        ) as source_session, Session(
-            measure_session_info.resource_name,
-            simulate=service_options.use_simulation,
-        ) as measure_session:
-            cancellation_event = threading.Event()
-            measurement_service.context.add_cancel_callback(cancellation_event.set)
+    with measurement_service.context.reserve_sessions([input_pin, output_pin]) as reservation:
+        with reservation.create_nidcpower_session(), reservation.create_session(
+            _create_visa_dmm_session, _visa_dmm.INSTRUMENT_TYPE_VISA_DMM
+        ):
+            # Configure the SMU channel connected to the input pin.
+            source_connection = reservation.get_nidcpower_connection(input_pin)
+            source_channel = source_connection.session.channels[source_connection.channel_name]
+            source_channel.source_mode = nidcpower.SourceMode.SINGLE_POINT
+            source_channel.output_function = nidcpower.OutputFunction.DC_VOLTAGE
+            source_channel.current_limit = current_limit
+            source_channel.voltage_level_range = voltage_level_range
+            source_channel.current_limit_range = current_limit_range
+            source_channel.source_delay = hightime.timedelta(seconds=source_delay)
+            source_channel.voltage_level = voltage_level
 
-            channels = source_session.channels[source_session_info.channel_list]
-
-            channels.source_mode = nidcpower.SourceMode.SINGLE_POINT
-            channels.output_function = nidcpower.OutputFunction.DC_VOLTAGE
-            channels.current_limit = current_limit
-            channels.voltage_level_range = voltage_level_range
-            channels.current_limit_range = current_limit_range
-            channels.source_delay = hightime.timedelta(seconds=source_delay)
-            channels.voltage_level = voltage_level
-
-            # Configure NI-VISA DMM
+            # Configure the DMM connected to the output pin.
+            measure_connection = reservation.get_connection(_visa_dmm.Session, output_pin)
+            measure_session = measure_connection.session
             measure_session.configure_measurement_digits(measurement_type, range, resolution_digits)
 
-            with channels.initiate():
-                _wait_for_source_complete_event(measurement_service, channels, cancellation_event)
+            # Initiate the source channel to start sourcing a voltage on the
+            # input pin. initiate() returns a context manager that aborts the
+            # measurement when the function returns or raises an exception.
+            with source_channel.initiate():
+                # Wait for the output to settle.
+                timeout = source_delay + 10.0
+                _wait_for_nidcpower_event(
+                    source_channel,
+                    cancellation_event,
+                    nidcpower.enums.Event.SOURCE_COMPLETE,
+                    timeout,
+                )
 
+            # Measure the voltage on the output pin.
             measured_value = measure_session.read()
-
-            source_session = None  # Don't abort after this point
 
     logging.info("Completed measurement: measured_value=%g", measured_value)
     return (measured_value,)
 
 
-def _get_session_info_for_pin(
-    session_info: List[SessionInformation], pin_name: str
-) -> SessionInformation:
-    session_index = get_session_and_channel_for_pin(session_info, pin_name)[0]
-    return session_info[session_index]
+def _create_visa_dmm_session(session_info: SessionInformation) -> _visa_dmm.Session:
+    # When this measurement is called from outside of TestStand (session_exists
+    # == False), reset the instrument to a known state. In TestStand,
+    # ProcessSetup resets the instrument.
+    return _visa_dmm.Session(
+        session_info.resource_name,
+        reset_device=not session_info.session_exists,
+        simulate=_VISA_DMM_SIMULATE,
+    )
 
 
-def _wait_for_source_complete_event(
-    measurement_service: nims.MeasurementService,
+def _wait_for_nidcpower_event(
     channels: nidcpower.session._SessionBase,
     cancellation_event: threading.Event,
+    event_id: nidcpower.enums.Event,
+    timeout: float,
 ) -> None:
-    deadline = time.time() + measurement_service.context.time_remaining
+    """Wait for a NI-DCPower event or until error/cancellation occurs."""
+    grpc_deadline = time.time() + measurement_service.context.time_remaining
+    user_deadline = time.time() + timeout
+
     while True:
-        if time.time() > deadline:
+        if time.time() > user_deadline:
+            raise TimeoutError("User timeout expired.")
+        if time.time() > grpc_deadline:
             measurement_service.context.abort(
-                grpc.StatusCode.DEADLINE_EXCEEDED, "deadline exceeded"
+                grpc.StatusCode.DEADLINE_EXCEEDED, "Deadline exceeded."
             )
         if cancellation_event.is_set():
             measurement_service.context.abort(
-                grpc.StatusCode.CANCELLED, "client requested cancellation"
+                grpc.StatusCode.CANCELLED, "Client requested cancellation."
             )
+
+        # Wait for the NI-DCPower event. If this takes more than 100 ms, check
+        # whether the measurement was canceled and try again. NI-DCPower does
+        # not support canceling a call to wait_for_event().
         try:
-            channels.wait_for_event(nidcpower.enums.Event.SOURCE_COMPLETE, timeout=0.1)
+            channels.wait_for_event(event_id, timeout=100e-3)
             break
         except nidcpower.errors.DriverError as e:
-            """
-            There is no native way to support cancellation when taking a DCPower
-            measurement. To support cancellation, we will be calling WaitForEvent
-            until it succeeds or we have gone past the specified timeout. WaitForEvent
-            will throw an exception if it times out, which is why we are catching
-            and doing nothing.
-            """
-            if (
-                e.code == NIDCPOWER_WAIT_FOR_EVENT_TIMEOUT_ERROR_CODE
-                or e.code == NIDCPOWER_TIMEOUT_EXCEEDED_ERROR_CODE
-            ):
+            if e.code in _NIDCPOWER_TIMEOUT_ERROR_CODES:
                 pass
-            else:
-                raise
+            raise
 
 
 @click.command
 @verbosity_option
-@grpc_device_options
-@use_simulation_option(default=USE_SIMULATION)
-def main(verbosity: int, **kwargs: Any) -> None:
+def main(verbosity: int) -> None:
     """Source DC voltage as input with an NI SMU and measure output using NI-VISA DMM."""
     configure_logging(verbosity)
-
-    global service_options
-    service_options = get_service_options(**kwargs)
 
     with measurement_service.host_service():
         input("Press enter to close the measurement service.\n")

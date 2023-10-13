@@ -12,6 +12,7 @@ PyVISA-sim = "^0.5.1"
 nidcpower = { version = ">=1.4.4", extras = ["grpc"] }
 click = ">=7.1.2"
 grpcio = "*"
+python-decouple = ">=3.8"
 
 [tool.poetry.group.dev.dependencies]
 ni-python-styleguide = ">=0.4.1"
@@ -30,6 +31,7 @@ disallow_untyped_defs = true
 
 [[tool.mypy.overrides]]
 module = [
+    "decouple.*",
     "hightime.*",
     "nidcpower.*",
 ]
