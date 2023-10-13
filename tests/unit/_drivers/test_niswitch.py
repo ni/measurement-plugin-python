@@ -85,7 +85,11 @@ def test___multiple_session_infos___create_niswitch_sessions___sessions_created(
     )
 
 
+# For NI-SWITCH, we set resource_name to "" when simulate is True.
+@pytest.mark.parametrize("simulate,expected_resource_name", [(False, "Dev0"), (True, "")])
 def test___optional_args___create_niswitch_session___optional_args_passed(
+    simulate: bool,
+    expected_resource_name: str,
     session_new: Mock,
     session_management_client: Mock,
 ) -> None:
@@ -97,7 +101,7 @@ def test___optional_args___create_niswitch_session___optional_args_passed(
 
     with reservation.create_niswitch_session(
         topology="2567/Independent",
-        simulate=True,
+        simulate=simulate,
         reset_device=True,
         initialization_behavior=SessionInitializationBehavior.INITIALIZE_SERVER_SESSION,
     ):
@@ -105,9 +109,9 @@ def test___optional_args___create_niswitch_session___optional_args_passed(
 
     session_new.assert_called_once_with(
         niswitch.Session,
-        resource_name="Dev0",
+        resource_name=expected_resource_name,
         topology="2567/Independent",
-        simulate=True,
+        simulate=simulate,
         reset_device=True,
         grpc_options=ANY,
     )
@@ -134,7 +138,7 @@ def test___simulation_configured___create_niswitch_session___simulation_options_
 
     session_new.assert_called_once_with(
         niswitch.Session,
-        resource_name="Dev0",
+        resource_name="",
         topology="2567/Independent",
         simulate=True,
         reset_device=False,
