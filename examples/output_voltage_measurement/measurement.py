@@ -91,9 +91,9 @@ def measure(
     measurement_service.context.add_cancel_callback(cancellation_event.set)
 
     with measurement_service.context.reserve_sessions([input_pin, output_pin]) as reservation:
-        with reservation.create_nidcpower_session() as _, reservation.create_session(
+        with reservation.create_nidcpower_session(), reservation.create_session(
             _create_visa_dmm_session, _visa_dmm.INSTRUMENT_TYPE_VISA_DMM
-        ) as _:
+        ):
             # Configure the SMU channel connected to the input pin.
             source_connection = reservation.get_nidcpower_connection(input_pin)
             source_channel = source_connection.session.channels[source_connection.channel_name]
