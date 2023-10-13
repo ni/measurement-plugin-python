@@ -155,6 +155,19 @@ pycodestyle = ">=2.9.0,<2.10.0"
 pyflakes = ">=2.5.0,<2.6.0"
 
 [[package]]
+name = "flake8"
+version = "6.1.0"
+description = "the modular source code checker: pep8 pyflakes and co"
+category = "dev"
+optional = false
+python-versions = ">=3.8.1"
+
+[package.dependencies]
+mccabe = ">=0.7.0,<0.8.0"
+pycodestyle = ">=2.11.0,<2.12.0"
+pyflakes = ">=3.1.0,<3.2.0"
+
+[[package]]
 name = "flake8-black"
 version = "0.3.6"
 description = "flake8 plugin to call black as a code style validator"
@@ -394,7 +407,7 @@ types-protobuf = ">=4.23.0.2"
 
 [[package]]
 name = "ni-python-styleguide"
-version = "0.4.1"
+version = "0.4.3"
 description = "NI's internal and external Python linter rules and plugins"
 category = "dev"
 optional = false
@@ -403,12 +416,19 @@ python-versions = ">=3.7,<4.0"
 [package.dependencies]
 black = ">=23.1"
 click = ">=7.1.2"
-flake8 = ">=5.0,<6.0"
+flake8 = [
+    {version = ">=5.0,<6.0", markers = "python_version >= \"3.7\" and python_version < \"3.12\""},
+    {version = ">=6.1,<7.0", markers = "python_version >= \"3.12\" and python_version < \"4.0\""},
+]
 flake8-black = ">=0.2.1"
 flake8-docstrings = ">=1.5.0"
 flake8-import-order = ">=0.18.1"
 isort = ">=5.10"
 pep8-naming = ">=0.11.1"
+pycodestyle = [
+    {version = ">=2.9,<3.0", markers = "python_version >= \"3.7\" and python_version < \"3.12\""},
+    {version = ">=2.11,<3.0", markers = "python_version >= \"3.12\" and python_version < \"4.0\""},
+]
 toml = ">=0.10.1"
 
 [[package]]
@@ -634,6 +654,14 @@ optional = false
 python-versions = ">=3.6"
 
 [[package]]
+name = "pycodestyle"
+version = "2.11.1"
+description = "Python style guide checker"
+category = "dev"
+optional = false
+python-versions = ">=3.8"
+
+[[package]]
 name = "pydocstyle"
 version = "6.3.0"
 description = "Python docstring style checker"
@@ -654,6 +682,14 @@ description = "passive checker of Python programs"
 category = "dev"
 optional = false
 python-versions = ">=3.6"
+
+[[package]]
+name = "pyflakes"
+version = "3.1.0"
+description = "passive checker of Python programs"
+category = "dev"
+optional = false
+python-versions = ">=3.8"
 
 [[package]]
 name = "pygments"
@@ -1276,6 +1312,8 @@ exceptiongroup = [
 flake8 = [
     {file = "flake8-5.0.4-py2.py3-none-any.whl", hash = "sha256:7a1cf6b73744f5806ab95e526f6f0d8c01c66d7bbe349562d22dfca20610b248"},
     {file = "flake8-5.0.4.tar.gz", hash = "sha256:6fbe320aad8d6b95cec8b8e47bc933004678dc63095be98528b7bdd2a9f510db"},
+    {file = "flake8-6.1.0-py2.py3-none-any.whl", hash = "sha256:ffdfce58ea94c6580c77888a86506937f9a1a227dfcd15f245d694ae20a6b6e5"},
+    {file = "flake8-6.1.0.tar.gz", hash = "sha256:d5b3857f07c030bdb5bf41c7f53799571d75c4491748a3adcd47de929e34cd23"},
 ]
 flake8-black = [
     {file = "flake8-black-0.3.6.tar.gz", hash = "sha256:0dfbca3274777792a5bcb2af887a4cad72c72d0e86c94e08e3a3de151bb41c34"},
@@ -1589,8 +1627,8 @@ mypy-protobuf = [
     {file = "mypy_protobuf-3.5.0-py3-none-any.whl", hash = "sha256:0d0548c6b9a6faf14ce1a9ce2831c403a5c1f2a9363e85b1e2c51d5d57aa8393"},
 ]
 ni-python-styleguide = [
-    {file = "ni_python_styleguide-0.4.1-py3-none-any.whl", hash = "sha256:aee987fe56ae5c7c05063a0c8acff5fa5dabf22d14436260e203f72616d5be0e"},
-    {file = "ni_python_styleguide-0.4.1.tar.gz", hash = "sha256:12d19b7a53b94ef2803b7008bb14a552e81b299d807b070408c26759e15f14f2"},
+    {file = "ni_python_styleguide-0.4.3-py3-none-any.whl", hash = "sha256:d513d125b390dc7027466dba6e94808fe51420ba3045a76ffef9ac2477a4d603"},
+    {file = "ni_python_styleguide-0.4.3.tar.gz", hash = "sha256:bc68446b4ffd2f6faf9f113b4d1f5ddb77ce08272e327535104f6b88c93bf4ad"},
 ]
 nidaqmx = [
     {file = "nidaqmx-0.8.0-py3-none-any.whl", hash = "sha256:7a5d5b3f78c125d31a8d00349f216f63bb8f6b887d0eca882001b729904d68bc"},
@@ -1740,6 +1778,8 @@ psutil = [
 pycodestyle = [
     {file = "pycodestyle-2.9.1-py2.py3-none-any.whl", hash = "sha256:d1735fc58b418fd7c5f658d28d943854f8a849b01a5d0a1e6f3f3fdd0166804b"},
     {file = "pycodestyle-2.9.1.tar.gz", hash = "sha256:2c9607871d58c76354b697b42f5d57e1ada7d261c261efac224b664affdc5785"},
+    {file = "pycodestyle-2.11.1-py2.py3-none-any.whl", hash = "sha256:44fe31000b2d866f2e41841b18528a505fbd7fef9017b04eff4e2648a0fadc67"},
+    {file = "pycodestyle-2.11.1.tar.gz", hash = "sha256:41ba0e7afc9752dfb53ced5489e89f8186be00e599e712660695b7a75ff2663f"},
 ]
 pydocstyle = [
     {file = "pydocstyle-6.3.0-py3-none-any.whl", hash = "sha256:118762d452a49d6b05e194ef344a55822987a462831ade91ec5c06fd2169d019"},
@@ -1748,6 +1788,8 @@ pydocstyle = [
 pyflakes = [
     {file = "pyflakes-2.5.0-py2.py3-none-any.whl", hash = "sha256:4579f67d887f804e67edb544428f264b7b24f435b263c4614f384135cea553d2"},
     {file = "pyflakes-2.5.0.tar.gz", hash = "sha256:491feb020dca48ccc562a8c0cbe8df07ee13078df59813b83959cbdada312ea3"},
+    {file = "pyflakes-3.1.0-py2.py3-none-any.whl", hash = "sha256:4132f6d49cb4dae6819e5379898f2b8cce3c5f23994194c24b77d5da2e36f774"},
+    {file = "pyflakes-3.1.0.tar.gz", hash = "sha256:a0aae034c444db0071aa077972ba4768d40c830d9539fd45bf4cd3f8f6992efc"},
 ]
 pygments = [
     {file = "Pygments-2.16.1-py3-none-any.whl", hash = "sha256:13fc09fa63bc8d8671a6d247e1eb303c4b343eaee81d861f3404db2935653692"},
