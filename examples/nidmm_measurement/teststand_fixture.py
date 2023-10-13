@@ -1,11 +1,10 @@
 """Functions to set up and tear down sessions of NI-DMM devices in NI TestStand."""
 from typing import Any
 
+import ni_measurementlink_service as nims
 import nidmm
 from _helpers import GrpcChannelPoolHelper, PinMapClient, TestStandSupport
 from _nidmm_helpers import create_session
-
-import ni_measurementlink_service as nims
 
 
 def update_pin_map(pin_map_path: str, sequence_context: Any) -> None:
