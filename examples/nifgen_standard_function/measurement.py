@@ -12,6 +12,7 @@ from typing import Any, Tuple
 import click
 import grpc
 import hightime
+import ni_measurementlink_service as nims
 import nifgen
 from _constants import USE_SIMULATION
 from _helpers import (
@@ -25,8 +26,6 @@ from _helpers import (
     verbosity_option,
 )
 from _nifgen_helpers import create_session
-
-import ni_measurementlink_service as nims
 
 NIFGEN_OPERATION_TIMED_OUT_ERROR_CODE = -1074098044
 NIFGEN_MAX_TIME_EXCEEDED_ERROR_CODE = -1074118637
