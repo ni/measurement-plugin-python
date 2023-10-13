@@ -3,12 +3,10 @@
 import logging
 import pathlib
 import sys
-from enum import Enum
 from typing import Any, Tuple
 
 import click
 import ni_measurementlink_service as nims
-import pyvisa.resources
 from _constants import USE_SIMULATION
 from _helpers import (
     ServiceOptions,
@@ -18,14 +16,7 @@ from _helpers import (
     use_simulation_option,
     verbosity_option,
 )
-from _visa_helpers import (
-    INSTRUMENT_TYPE_DMM_SIMULATOR,
-    check_instrument_error,
-    create_visa_resource_manager,
-    create_visa_session,
-    log_instrument_id,
-    reset_instrument,
-)
+from _visa_dmm import INSTRUMENT_TYPE_VISA_DMM, Function, Session
 
 script_or_exe = sys.executable if getattr(sys, "frozen", False) else __file__
 service_directory = pathlib.Path(script_or_exe).resolve().parent
@@ -37,25 +28,9 @@ measurement_service = nims.MeasurementService(
 service_options = ServiceOptions()
 
 
-RESOLUTION_DIGITS_TO_VALUE = {"3.5": 0.001, "4.5": 0.0001, "5.5": 1e-5, "6.5": 1e-6}
-
-
-class Function(Enum):
-    """Function that represents the measurement type."""
-
-    DC_VOLTS = 0
-    AC_VOLTS = 1
-
-
-FUNCTION_TO_VALUE = {
-    Function.DC_VOLTS: "VOLT:DC",
-    Function.AC_VOLTS: "VOLT:AC",
-}
-
-
 @measurement_service.register_measurement
 @measurement_service.configuration(
-    "pin_name", nims.DataType.Pin, "Pin1", instrument_type=INSTRUMENT_TYPE_DMM_SIMULATOR
+    "pin_name", nims.DataType.Pin, "Pin1", instrument_type=INSTRUMENT_TYPE_VISA_DMM
 )
 @measurement_service.configuration(
     "measurement_type", nims.DataType.Enum, Function.DC_VOLTS, enum_type=Function
@@ -81,32 +56,15 @@ def measure(
     session_management_client = create_session_management_client(measurement_service)
 
     with session_management_client.reserve_session(
-        context=measurement_service.context.pin_map_context, pin_or_relay_names=[pin_name]
+        context=measurement_service.context.pin_map_context,
+        pin_or_relay_names=[pin_name],
     ) as reservation:
-        resource_manager = create_visa_resource_manager(service_options.use_simulation)
-        with create_visa_session(
-            resource_manager, reservation.session_info.resource_name
+        with Session(
+            reservation.session_info.resource_name,
+            simulate=service_options.use_simulation,
         ) as session:
-            # Work around https://github.com/pyvisa/pyvisa/issues/739 - Type annotation for Resource
-            # context manager implicitly upcasts derived class to base class
-            assert isinstance(session, pyvisa.resources.MessageBasedResource)
-
-            log_instrument_id(session)
-
-            # When this measurement is called from outside of TestStand (session_exists == False),
-            # reset the instrument to a known state. In TestStand, ProcessSetup resets the
-            # instrument.
-            if not reservation.session_info.session_exists:
-                reset_instrument(session)
-
-            function_enum = FUNCTION_TO_VALUE[measurement_type]
-            resolution_value = RESOLUTION_DIGITS_TO_VALUE[str(resolution_digits)]
-            session.write("CONF:%s %.g,%.g" % (function_enum, range, resolution_value))
-            check_instrument_error(session)
-
-            response = session.query("READ?")
-            check_instrument_error(session)
-            measured_value = float(response)
+            session.configure_measurement_digits(measurement_type, range, resolution_digits)
+            measured_value = session.read()
 
     logging.info("Completed measurement: measured_value=%g", measured_value)
     return (measured_value,)
