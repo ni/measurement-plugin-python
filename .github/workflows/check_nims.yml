@@ -26,7 +26,7 @@ jobs:
       - name: Check for lock changes (ni-measurementlink-service)
         run: poetry lock --check
       - name: Cache Poetry virtualenv
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ~/.cache/pypoetry/virtualenvs
           key: ${{ runner.os }}-poetry-${{ hashFiles('poetry.lock') }}
