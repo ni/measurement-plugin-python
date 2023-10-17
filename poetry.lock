@@ -407,7 +407,7 @@ types-protobuf = ">=4.23.0.2"
 
 [[package]]
 name = "ni-python-styleguide"
-version = "0.4.3"
+version = "0.4.4"
 description = "NI's internal and external Python linter rules and plugins"
 category = "dev"
 optional = false
@@ -1627,8 +1627,8 @@ mypy-protobuf = [
     {file = "mypy_protobuf-3.5.0-py3-none-any.whl", hash = "sha256:0d0548c6b9a6faf14ce1a9ce2831c403a5c1f2a9363e85b1e2c51d5d57aa8393"},
 ]
 ni-python-styleguide = [
-    {file = "ni_python_styleguide-0.4.3-py3-none-any.whl", hash = "sha256:d513d125b390dc7027466dba6e94808fe51420ba3045a76ffef9ac2477a4d603"},
-    {file = "ni_python_styleguide-0.4.3.tar.gz", hash = "sha256:bc68446b4ffd2f6faf9f113b4d1f5ddb77ce08272e327535104f6b88c93bf4ad"},
+    {file = "ni_python_styleguide-0.4.4-py3-none-any.whl", hash = "sha256:e26dad1d0afc1a0a01a21c2546a7fc6215858e9fb324cdb6b47d29022ebe69a6"},
+    {file = "ni_python_styleguide-0.4.4.tar.gz", hash = "sha256:4c22ebc793bbcfab44fb6973ac286468f47e38b0b6abdc834e72d8a4fb225af1"},
 ]
 nidaqmx = [
     {file = "nidaqmx-0.8.0-py3-none-any.whl", hash = "sha256:7a5d5b3f78c125d31a8d00349f216f63bb8f6b887d0eca882001b729904d68bc"},
