@@ -7,6 +7,7 @@ from typing import Any, Callable, List, NamedTuple, Optional, Tuple, TypeVar, Un
 
 import click
 import grpc
+
 import ni_measurementlink_service as nims
 from ni_measurementlink_service import session_management
 from ni_measurementlink_service._internal.stubs.ni.measurementlink.pinmap.v1 import (
