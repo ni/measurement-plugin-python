@@ -10,7 +10,12 @@ import ni_measurementlink_service as nims
 
 
 def create_nidcpower_sessions(sequence_context: Any) -> None:
-    """Create and register all NI-DCPower sessions."""
+    """Create and register all NI-DCPower sessions.
+    Args:
+        sequence_context:
+            The SequenceContext COM object from the TestStand sequence execution.
+            (Dynamically typed.)
+    """
     with GrpcChannelPoolHelper() as grpc_channel_pool:
         session_management_client = nims.session_management.Client(
             grpc_channel=grpc_channel_pool.session_management_channel
