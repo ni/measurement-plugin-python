@@ -83,7 +83,13 @@ class MeasurementServiceContext:
 
     def abort(self, code: grpc.StatusCode, details: str) -> None:
         """Aborts the RPC."""
-        self._grpc_context.abort(code, details)
+        try:
+            self._grpc_context.abort(code, details)
+        except:
+            e = grpc.RpcError()
+            # Use a lambda function to defer the assignment of the 'code' attribute for 'e' which is a workaround for assigning the 'code' property, as it is restricted by the 'grpc.RpcError' class.
+            e.code = lambda: code
+            raise e
 
 
 measurement_service_context: ContextVar[MeasurementServiceContext] = ContextVar(
