@@ -1,4 +1,6 @@
 import functools
+from contextlib import ExitStack
+from typing import Any, Dict, List
 from unittest.mock import ANY, Mock
 
 import pytest
@@ -150,6 +152,98 @@ def test___optional_args_and_simulation_configured___create_nidcpower_session___
         options=expected_options,
         grpc_options=ANY,
     )
+
+
+# The NI-DCPower version of the get_connection(s) test cases uses fully
+# qualified channel names.
+@pytest.mark.parametrize(
+    "kwargs,expected_channel_name,expected_session_index",
+    [
+        ({"pin_name": "Pin1", "site": 0}, "Dev1/0", 0),
+        ({"pin_name": "Pin2", "site": 0}, "Dev1/1", 0),
+        ({"pin_name": "Pin1", "site": 1}, "Dev2/2", 0),
+        ({"pin_name": "Pin2", "site": 1}, "Dev3/0", 1),
+    ],
+)
+def test___session_created___get_nidcpower_connection___connection_returned(
+    kwargs: Dict[str, Any],
+    expected_channel_name: str,
+    expected_session_index: int,
+    session_new: Mock,
+    session_management_client: Mock,
+) -> None:
+    with ExitStack() as stack:
+        grpc_session_infos = create_nidcpower_session_infos(2)
+        grpc_session_infos[0].channel_mappings.add(
+            pin_or_relay_name="Pin1", site=0, channel="Dev1/0"
+        )
+        grpc_session_infos[0].channel_mappings.add(
+            pin_or_relay_name="Pin2", site=0, channel="Dev1/1"
+        )
+        grpc_session_infos[0].channel_mappings.add(
+            pin_or_relay_name="Pin1", site=1, channel="Dev2/2"
+        )
+        grpc_session_infos[1].channel_mappings.add(
+            pin_or_relay_name="Pin2", site=1, channel="Dev3/0"
+        )
+        reservation = MultiSessionReservation(session_management_client, grpc_session_infos)
+        sessions = create_mock_nidcpower_sessions(2)
+        session_new.side_effect = sessions
+        session_infos = stack.enter_context(reservation.create_nidcpower_sessions())
+
+        connection = reservation.get_nidcpower_connection(**kwargs)
+
+        assert connection.channel_name == expected_channel_name
+        assert connection.session is session_infos[expected_session_index].session
+
+
+@pytest.mark.parametrize(
+    "kwargs,expected_channel_names,expected_session_indices",
+    [
+        ({}, ["Dev1/0", "Dev1/1", "Dev2/2", "Dev3/0"], [0, 0, 0, 1]),
+        ({"pin_names": "Pin1"}, ["Dev1/0", "Dev2/2"], [0, 0]),
+        ({"pin_names": "Pin2"}, ["Dev1/1", "Dev3/0"], [0, 1]),
+        ({"sites": 0}, ["Dev1/0", "Dev1/1"], [0, 0]),
+        ({"sites": 1}, ["Dev2/2", "Dev3/0"], [0, 1]),
+        (
+            {"pin_names": ["Pin2", "Pin1"], "sites": [1, 0]},
+            ["Dev3/0", "Dev2/2", "Dev1/1", "Dev1/0"],
+            [1, 0, 0, 0],
+        ),
+    ],
+)
+def test___session_created___get_nidcpower_connections___connections_returned(
+    kwargs: Dict[str, Any],
+    expected_channel_names: List[str],
+    expected_session_indices: List[int],
+    session_new: Mock,
+    session_management_client: Mock,
+) -> None:
+    with ExitStack() as stack:
+        grpc_session_infos = create_nidcpower_session_infos(2)
+        grpc_session_infos[0].channel_mappings.add(
+            pin_or_relay_name="Pin1", site=0, channel="Dev1/0"
+        )
+        grpc_session_infos[0].channel_mappings.add(
+            pin_or_relay_name="Pin2", site=0, channel="Dev1/1"
+        )
+        grpc_session_infos[0].channel_mappings.add(
+            pin_or_relay_name="Pin1", site=1, channel="Dev2/2"
+        )
+        grpc_session_infos[1].channel_mappings.add(
+            pin_or_relay_name="Pin2", site=1, channel="Dev3/0"
+        )
+        reservation = MultiSessionReservation(session_management_client, grpc_session_infos)
+        sessions = create_mock_nidcpower_sessions(2)
+        session_new.side_effect = sessions
+        session_infos = stack.enter_context(reservation.create_nidcpower_sessions())
+
+        connections = reservation.get_nidcpower_connections(**kwargs)
+
+        assert [conn.channel_name for conn in connections] == expected_channel_names
+        assert [conn.session for conn in connections] == [
+            session_infos[i].session for i in expected_session_indices
+        ]
 
 
 @pytest.fixture

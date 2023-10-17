@@ -137,7 +137,12 @@ class SessionManagementClient(object):
                 f"{len(session_info)} sessions."
             )
         else:
-            return SingleSessionReservation(session_manager=self, session_info=session_info)
+            return SingleSessionReservation(
+                session_manager=self,
+                session_info=session_info,
+                reserved_pin_or_relay_names=pin_or_relay_names,
+                reserved_sites=context.sites,
+            )
 
     def reserve_sessions(
         self,
@@ -184,7 +189,12 @@ class SessionManagementClient(object):
         session_info = self._reserve_sessions(
             context, pin_or_relay_names, instrument_type_id, timeout
         )
-        return MultiSessionReservation(session_manager=self, session_info=session_info)
+        return MultiSessionReservation(
+            session_manager=self,
+            session_info=session_info,
+            reserved_pin_or_relay_names=pin_or_relay_names,
+            reserved_sites=context.sites,
+        )
 
     def _reserve_sessions(
         self,

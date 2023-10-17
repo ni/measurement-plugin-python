@@ -1,11 +1,10 @@
 """Functions to set up and tear down sessions of NI-Daqmx devices in NI TestStand."""
 from typing import Any
 
+import ni_measurementlink_service as nims
 import nidaqmx
 from _helpers import GrpcChannelPoolHelper, TestStandSupport
 from _nidaqmx_helpers import create_task
-
-import ni_measurementlink_service as nims
 
 
 def create_nidaqmx_tasks(sequence_context: Any) -> None:

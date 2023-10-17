@@ -57,6 +57,8 @@ autodoc_typehints = "description"
 # TODO: figure out how to make :canonical: work with autoapi
 def skip_aliases(app, what, name, obj, skip, options):
     """Skip documentation for classes that are exported from multiple modules."""
+    # For names that are defined in a public sub-module and aliased into a
+    # public package, hide the alias.
     if name in [
         "ni_measurementlink_service.DataType",
         "ni_measurementlink_service.MeasurementInfo",
@@ -64,6 +66,12 @@ def skip_aliases(app, what, name, obj, skip, options):
         "ni_measurementlink_service.MeasurementService",
     ]:
         skip = True
+
+    # For names that are defined in a private sub-module and aliased into a
+    # public package, hide the definition.
+    if name.startswith("ni_measurementlink_service.session_management._constants."):
+        skip = True
+
     return skip
 
 

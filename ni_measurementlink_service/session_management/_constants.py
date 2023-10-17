@@ -20,3 +20,13 @@ INSTRUMENT_TYPE_NI_DAQMX = "niDAQmx"
 INSTRUMENT_TYPE_NI_RELAY_DRIVER = "niRelayDriver"
 INSTRUMENT_TYPE_NI_MODEL_BASED_INSTRUMENT = "niModelBasedInstrument"
 INSTRUMENT_TYPE_NI_SWITCH_EXECUTIVE_VIRTUAL_DEVICE = "niSwitchExecutiveVirtualDevice"
+
+SITE_SYSTEM_PINS = -1
+"""Site number used to identify and filter by system pins.
+
+Pins that have a site number of ``SITE_SYSTEM_PINS`` are system pins and do not
+belong to a specific site.
+
+When querying connections, you can specify a site number of ``SITE_SYSTEM_PINS``
+to restrict the query to return only system pins.
+"""

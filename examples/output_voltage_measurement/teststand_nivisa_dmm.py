@@ -1,18 +1,10 @@
 """Functions to set up and tear down NI-VISA DMM sessions in NI TestStand."""
 from typing import Any
 
-import pyvisa.resources
+import ni_measurementlink_service as nims
 from _constants import USE_SIMULATION
 from _helpers import GrpcChannelPoolHelper, TestStandSupport
-from _visa_helpers import (
-    INSTRUMENT_TYPE_DMM_SIMULATOR,
-    create_resource_manager,
-    create_session,
-    log_instrument_id,
-    reset_instrument,
-)
-
-import ni_measurementlink_service as nims
+from _visa_dmm import INSTRUMENT_TYPE_VISA_DMM, Session
 
 
 def create_nivisa_dmm_sessions(sequence_context: Any) -> None:
@@ -33,17 +25,16 @@ def create_nivisa_dmm_sessions(sequence_context: Any) -> None:
 
         pin_map_context = nims.session_management.PinMapContext(pin_map_id=pin_map_id, sites=None)
         with session_management_client.reserve_sessions(
-            context=pin_map_context, instrument_type_id=INSTRUMENT_TYPE_DMM_SIMULATOR
+            context=pin_map_context, instrument_type_id=INSTRUMENT_TYPE_VISA_DMM
         ) as reservation:
-            resource_manager = create_resource_manager(USE_SIMULATION)
-
             for session_info in reservation.session_info:
-                with create_session(session_info.resource_name, resource_manager) as session:
-                    # Work around https://github.com/pyvisa/pyvisa/issues/739 - Type annotation
-                    # for Resource context manager implicitly upcasts derived class to base class
-                    assert isinstance(session, pyvisa.resources.MessageBasedResource)
-                    log_instrument_id(session)
-                    reset_instrument(session)
+                # Reset the device
+                with Session(
+                    session_info.resource_name,
+                    simulate=USE_SIMULATION,
+                    reset_device=True,
+                ) as _:
+                    pass
 
             session_management_client.register_sessions(reservation.session_info)
 
@@ -56,6 +47,6 @@ def destroy_nivisa_dmm_sessions() -> None:
         )
 
         with session_management_client.reserve_all_registered_sessions(
-            instrument_type_id=INSTRUMENT_TYPE_DMM_SIMULATOR,
+            instrument_type_id=INSTRUMENT_TYPE_VISA_DMM,
         ) as reservation:
             session_management_client.unregister_sessions(reservation.session_info)

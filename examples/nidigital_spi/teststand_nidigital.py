@@ -1,11 +1,10 @@
 """Functions to set up and tear down sessions of NI Digital Pattern instruments in NI TestStand."""
 from typing import Any, Iterable
 
+import ni_measurementlink_service as nims
 import nidigital
 from _helpers import GrpcChannelPoolHelper, TestStandSupport
 from _nidigital_helpers import create_session
-
-import ni_measurementlink_service as nims
 from ni_measurementlink_service.session_management import (
     INSTRUMENT_TYPE_NI_DIGITAL_PATTERN,
 )

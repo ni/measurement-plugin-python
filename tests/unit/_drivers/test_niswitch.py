@@ -1,4 +1,6 @@
 import functools
+from contextlib import ExitStack
+from typing import Any, Dict, List
 from unittest.mock import ANY, Mock
 
 import pytest
@@ -10,10 +12,7 @@ from ni_measurementlink_service.session_management import (
     MultiSessionReservation,
     SessionInitializationBehavior,
 )
-from tests.unit._drivers._driver_utils import (
-    create_mock_session,
-    create_mock_sessions,
-)
+from tests.unit._drivers._driver_utils import create_mock_session, create_mock_sessions
 from tests.unit._reservation_utils import create_grpc_session_infos
 
 try:
@@ -86,7 +85,11 @@ def test___multiple_session_infos___create_niswitch_sessions___sessions_created(
     )
 
 
+# For NI-SWITCH, we set resource_name to "" when simulate is True.
+@pytest.mark.parametrize("simulate,expected_resource_name", [(False, "Dev0"), (True, "")])
 def test___optional_args___create_niswitch_session___optional_args_passed(
+    simulate: bool,
+    expected_resource_name: str,
     session_new: Mock,
     session_management_client: Mock,
 ) -> None:
@@ -98,7 +101,7 @@ def test___optional_args___create_niswitch_session___optional_args_passed(
 
     with reservation.create_niswitch_session(
         topology="2567/Independent",
-        simulate=True,
+        simulate=simulate,
         reset_device=True,
         initialization_behavior=SessionInitializationBehavior.INITIALIZE_SERVER_SESSION,
     ):
@@ -106,9 +109,9 @@ def test___optional_args___create_niswitch_session___optional_args_passed(
 
     session_new.assert_called_once_with(
         niswitch.Session,
-        resource_name="Dev0",
+        resource_name=expected_resource_name,
         topology="2567/Independent",
-        simulate=True,
+        simulate=simulate,
         reset_device=True,
         grpc_options=ANY,
     )
@@ -135,7 +138,7 @@ def test___simulation_configured___create_niswitch_session___simulation_options_
 
     session_new.assert_called_once_with(
         niswitch.Session,
-        resource_name="Dev0",
+        resource_name="",
         topology="2567/Independent",
         simulate=True,
         reset_device=False,
@@ -168,6 +171,81 @@ def test___optional_args_and_simulation_configured___create_niswitch_session___o
         reset_device=True,
         grpc_options=ANY,
     )
+
+
+# The NI-SWITCH version of the get_connection(s) test cases uses relay names.
+@pytest.mark.parametrize(
+    "kwargs,expected_channel_name,expected_session_index",
+    [
+        ({"relay_name": "Relay1", "site": 0}, "K0", 0),
+        ({"relay_name": "Relay2", "site": 0}, "K1", 0),
+        ({"relay_name": "Relay1", "site": 1}, "K2", 0),
+        ({"relay_name": "Relay2", "site": 1}, "K0", 1),
+    ],
+)
+def test___session_created___get_niswitch_connection___connection_returned(
+    kwargs: Dict[str, Any],
+    expected_channel_name: str,
+    expected_session_index: int,
+    session_new: Mock,
+    session_management_client: Mock,
+) -> None:
+    with ExitStack() as stack:
+        grpc_session_infos = create_niswitch_session_infos(2)
+        grpc_session_infos[0].channel_mappings.add(pin_or_relay_name="Relay1", site=0, channel="K0")
+        grpc_session_infos[0].channel_mappings.add(pin_or_relay_name="Relay2", site=0, channel="K1")
+        grpc_session_infos[0].channel_mappings.add(pin_or_relay_name="Relay1", site=1, channel="K2")
+        grpc_session_infos[1].channel_mappings.add(pin_or_relay_name="Relay2", site=1, channel="K0")
+        reservation = MultiSessionReservation(session_management_client, grpc_session_infos)
+        sessions = create_mock_niswitch_sessions(2)
+        session_new.side_effect = sessions
+        session_infos = stack.enter_context(reservation.create_niswitch_sessions())
+
+        connection = reservation.get_niswitch_connection(**kwargs)
+
+        assert connection.channel_name == expected_channel_name
+        assert connection.session is session_infos[expected_session_index].session
+
+
+@pytest.mark.parametrize(
+    "kwargs,expected_channel_names,expected_session_indices",
+    [
+        ({}, ["K0", "K1", "K2", "K0"], [0, 0, 0, 1]),
+        ({"relay_names": "Relay1"}, ["K0", "K2"], [0, 0]),
+        ({"relay_names": "Relay2"}, ["K1", "K0"], [0, 1]),
+        ({"sites": 0}, ["K0", "K1"], [0, 0]),
+        ({"sites": 1}, ["K2", "K0"], [0, 1]),
+        (
+            {"relay_names": ["Relay2", "Relay1"], "sites": [1, 0]},
+            ["K0", "K2", "K1", "K0"],
+            [1, 0, 0, 0],
+        ),
+    ],
+)
+def test___session_created___get_niswitch_connections___connections_returned(
+    kwargs: Dict[str, Any],
+    expected_channel_names: List[str],
+    expected_session_indices: List[int],
+    session_new: Mock,
+    session_management_client: Mock,
+) -> None:
+    with ExitStack() as stack:
+        grpc_session_infos = create_niswitch_session_infos(2)
+        grpc_session_infos[0].channel_mappings.add(pin_or_relay_name="Relay1", site=0, channel="K0")
+        grpc_session_infos[0].channel_mappings.add(pin_or_relay_name="Relay2", site=0, channel="K1")
+        grpc_session_infos[0].channel_mappings.add(pin_or_relay_name="Relay1", site=1, channel="K2")
+        grpc_session_infos[1].channel_mappings.add(pin_or_relay_name="Relay2", site=1, channel="K0")
+        reservation = MultiSessionReservation(session_management_client, grpc_session_infos)
+        sessions = create_mock_niswitch_sessions(2)
+        session_new.side_effect = sessions
+        session_infos = stack.enter_context(reservation.create_niswitch_sessions())
+
+        connections = reservation.get_niswitch_connections(**kwargs)
+
+        assert [conn.channel_name for conn in connections] == expected_channel_names
+        assert [conn.session for conn in connections] == [
+            session_infos[i].session for i in expected_session_indices
+        ]
 
 
 @pytest.fixture

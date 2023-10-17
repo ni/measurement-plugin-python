@@ -24,8 +24,8 @@ jobs:
     name: Update API reference docs and Publish NIMS Package to PyPI
     runs-on : ubuntu-latest 
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v4
         with:
           python-version: ${{ env.PYTHON_VERSION }}
       - uses: Gr1N/setup-poetry@v8
@@ -35,7 +35,7 @@ jobs:
       - name: Check for lock changes
         run: poetry lock --check
 
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         with:
           path: ~/.cache/pypoetry/virtualenvs
           key: ${{ runner.os }}-poetry-${{ hashFiles('poetry.lock') }}

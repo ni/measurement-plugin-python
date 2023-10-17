@@ -5,25 +5,13 @@ import pathlib
 import sys
 import threading
 import time
-from typing import Any, List, Tuple
+from typing import List, Tuple
 
 import click
 import grpc
-import niscope
-from _constants import USE_SIMULATION
-from _helpers import (
-    ServiceOptions,
-    configure_logging,
-    create_session_management_client,
-    get_grpc_device_channel,
-    get_service_options,
-    grpc_device_options,
-    use_simulation_option,
-    verbosity_option,
-)
-from _niscope_helpers import create_session
-
 import ni_measurementlink_service as nims
+import niscope
+from _helpers import configure_logging, verbosity_option
 
 script_or_exe = sys.executable if getattr(sys, "frozen", False) else __file__
 service_directory = pathlib.Path(script_or_exe).resolve().parent
@@ -32,7 +20,6 @@ measurement_service = nims.MeasurementService(
     version="0.1.0.0",
     ui_file_paths=[service_directory / "NIScopeAcquireWaveform.measui"],
 )
-service_options = ServiceOptions()
 
 
 @measurement_service.register_measurement
@@ -103,29 +90,30 @@ def measure(
     cancellation_event = threading.Event()
     measurement_service.context.add_cancel_callback(cancellation_event.set)
 
-    session_management_client = create_session_management_client(measurement_service)
+    with measurement_service.context.reserve_session(pin_names) as reservation:
+        with reservation.create_niscope_session() as session_info:
+            # Use connections to map pin names to channel names. This sets the
+            # channel order based on the pin order and allows mapping the
+            # resulting measurements back to the corresponding pins and sites.
+            connections = reservation.get_niscope_connections(pin_names)
+            channel_order = ",".join(connection.channel_name for connection in connections)
+            trigger_connection = reservation.get_niscope_connection(trigger_source)
 
-    with session_management_client.reserve_session(
-        context=measurement_service.context.pin_map_context, pin_or_relay_names=pin_names
-    ) as reservation:
-        channel_names = reservation.session_info.channel_list
-        pin_to_channel = {
-            mapping.pin_or_relay_name: mapping.channel
-            for mapping in reservation.session_info.channel_mappings
-        }
-        if trigger_source in pin_to_channel:
-            trigger_source = pin_to_channel[trigger_source]
-
-        grpc_device_channel = get_grpc_device_channel(measurement_service, niscope, service_options)
-        with create_session(reservation.session_info, grpc_device_channel) as session:
+            # Start with all channels in the session disabled. Some channels may
+            # be connected to other pins or sites.
+            session = session_info.session
             session.channels[""].channel_enabled = False
-            session.channels[channel_names].configure_vertical(
-                vertical_range,
-                vertical_coupling,
+
+            # Enable and configure all channels corresponding to the selected
+            # pins and site(s).
+            session.channels[channel_order].configure_vertical(
+                vertical_range, vertical_coupling, enabled=True
             )
-            session.channels[channel_names].configure_chan_characteristics(
+            session.channels[channel_order].configure_chan_characteristics(
                 input_impedance, max_input_frequency=0.0
             )
+
+            # Configure timing and triggering for the acquisition.
             session.configure_horizontal_timing(
                 min_sample_rate,
                 min_record_length,
@@ -134,7 +122,7 @@ def measure(
                 enforce_realtime=True,
             )
             session.configure_trigger_edge(
-                trigger_source,
+                trigger_connection.channel_name,
                 trigger_level,
                 trigger_coupling,
                 trigger_slope,
@@ -145,39 +133,53 @@ def measure(
                 else niscope.TriggerModifier.NO_TRIGGER_MOD
             )
 
+            # Initiate the acquisition. initiate() returns a context manager
+            # that aborts the measurement when the function returns or raises an
+            # exception.
             with session.initiate():
-                deadline = time.time() + min(measurement_service.context.time_remaining, timeout)
-                while True:
-                    if time.time() > deadline:
-                        measurement_service.context.abort(
-                            grpc.StatusCode.DEADLINE_EXCEEDED, "Deadline exceeded."
-                        )
-                    if cancellation_event.is_set():
-                        measurement_service.context.abort(
-                            grpc.StatusCode.CANCELLED, "Client requested cancellation."
-                        )
-                    status = session.acquisition_status()
-                    if status == niscope.AcquisitionStatus.COMPLETE:
-                        break
-                    remaining_time = max(deadline - time.time(), 0.0)
-                    sleep_time = min(remaining_time, 10e-3)
-                    time.sleep(sleep_time)
+                _wait_until_done(session, cancellation_event, timeout)
+                waveform_infos = session.channels[channel_order].fetch()
 
-                waveform_infos = session.channels[channel_names].fetch()
-                return tuple(w.samples for w in waveform_infos)
+    logging.info("Completed acquisition")
+    return tuple(w.samples for w in waveform_infos)
 
-    return ()
+
+def _wait_until_done(
+    session: niscope.Session,
+    cancellation_event: threading.Event,
+    timeout: float,
+) -> None:
+    """Wait until the acquisition is done or error/cancellation occurs."""
+    grpc_deadline = time.time() + measurement_service.context.time_remaining
+    user_deadline = time.time() + timeout
+    deadline = min(grpc_deadline, user_deadline)
+
+    while True:
+        if time.time() > user_deadline:
+            raise TimeoutError("User timeout expired.")
+        if time.time() > grpc_deadline:
+            measurement_service.context.abort(
+                grpc.StatusCode.DEADLINE_EXCEEDED, "Deadline exceeded."
+            )
+        if cancellation_event.is_set():
+            measurement_service.context.abort(
+                grpc.StatusCode.CANCELLED, "Client requested cancellation."
+            )
+
+        status = session.acquisition_status()
+        if status == niscope.AcquisitionStatus.COMPLETE:
+            break
+
+        remaining_time = max(deadline - time.time(), 0.0)
+        sleep_time = min(remaining_time, 10e-3)
+        time.sleep(sleep_time)
 
 
 @click.command
 @verbosity_option
-@grpc_device_options
-@use_simulation_option(default=USE_SIMULATION)
-def main(verbosity: int, **kwargs: Any) -> None:
+def main(verbosity: int) -> None:
     """Acquire a waveform using an NI oscilloscope."""
     configure_logging(verbosity)
-    global service_options
-    service_options = get_service_options(**kwargs)
 
     with measurement_service.host_service():
         input("Press enter to close the measurement service.\n")

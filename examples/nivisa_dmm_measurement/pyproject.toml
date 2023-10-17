@@ -11,8 +11,10 @@ PyVISA = "^1.13.0"
 PyVISA-sim = "^0.5.1"
 click = ">=7.1.2, !=8.1.4" # mypy fails with click 8.1.4: https://github.com/pallets/click/issues/2558
 grpcio = "*"
+python-decouple = ">=3.8"
 
 [tool.poetry.group.dev.dependencies]
+ni-python-styleguide = ">=0.4.1"
 mypy = ">=1.0"
 grpc-stubs = "^1.53"
 # Uncomment to use prerelease dependencies.
@@ -24,3 +26,10 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.mypy]
 disallow_untyped_defs = true
+
+[[tool.mypy.overrides]]
+module = [
+  # https://github.com/HBNetwork/python-decouple/issues/122 - Add support for type stubs
+  "decouple.*",
+]
+ignore_missing_imports = true

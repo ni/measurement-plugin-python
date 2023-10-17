@@ -1,12 +1,11 @@
 """Functions to set up and tear down sessions of NI-DCPower devices in NI TestStand."""
 from typing import Any
 
+import ni_measurementlink_service as nims
 import nidcpower
 from _constants import USE_SIMULATION
 from _helpers import GrpcChannelPoolHelper, TestStandSupport
 from _nidcpower_helpers import create_session
-
-import ni_measurementlink_service as nims
 
 
 def create_nidcpower_sessions(sequence_context: Any) -> None:

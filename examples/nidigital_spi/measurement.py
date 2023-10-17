@@ -3,24 +3,15 @@
 import logging
 import pathlib
 import sys
-from typing import Any, Iterable, Tuple, Union
+from typing import Iterable, Tuple, Union
 
 import click
+import ni_measurementlink_service as nims
 import nidigital
-from _constants import USE_SIMULATION
 from _helpers import (
-    ServiceOptions,
     configure_logging,
-    create_session_management_client,
-    get_grpc_device_channel,
-    get_service_options,
-    grpc_device_options,
-    use_simulation_option,
     verbosity_option,
 )
-from _nidigital_helpers import create_session
-
-import ni_measurementlink_service as nims
 
 script_or_exe = sys.executable if getattr(sys, "frozen", False) else __file__
 service_directory = pathlib.Path(script_or_exe).resolve().parent
@@ -29,7 +20,6 @@ measurement_service = nims.MeasurementService(
     version="0.1.0.0",
     ui_file_paths=[service_directory / "NIDigitalSPI.measui"],
 )
-service_options = ServiceOptions()
 
 
 @measurement_service.register_measurement
@@ -58,15 +48,9 @@ def measure(
     """Test a SPI device using an NI Digital Pattern instrument."""
     logging.info("Starting test: pin_names=%s", pin_names)
 
-    session_management_client = create_session_management_client(measurement_service)
-
-    with session_management_client.reserve_session(
-        context=measurement_service.context.pin_map_context, pin_or_relay_names=pin_names
-    ) as reservation:
-        grpc_device_channel = get_grpc_device_channel(
-            measurement_service, nidigital, service_options
-        )
-        with create_session(reservation.session_info, grpc_device_channel) as session:
+    with measurement_service.context.reserve_session(pin_names) as reservation:
+        with reservation.create_nidigital_session() as session_info:
+            session = session_info.session
             pin_map_context = measurement_service.context.pin_map_context
             selected_sites_string = ",".join(f"site{i}" for i in pin_map_context.sites or [])
             selected_sites = session.sites[selected_sites_string]
@@ -109,13 +93,9 @@ def _resolve_relative_path(
 
 @click.command
 @verbosity_option
-@grpc_device_options
-@use_simulation_option(default=USE_SIMULATION)
-def main(verbosity: int, **kwargs: Any) -> None:
+def main(verbosity: int) -> None:
     """Test a SPI device using an NI Digital Pattern instrument."""
     configure_logging(verbosity)
-    global service_options
-    service_options = get_service_options(**kwargs)
 
     with measurement_service.host_service():
         input("Press enter to close the measurement service.\n")

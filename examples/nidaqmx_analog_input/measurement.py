@@ -3,23 +3,15 @@
 import logging
 import pathlib
 import sys
-from typing import Any, List, Optional, Tuple
+from typing import List, Tuple
 
 import click
-import nidaqmx
+import ni_measurementlink_service as nims
 from _helpers import (
-    ServiceOptions,
     configure_logging,
-    create_session_management_client,
-    get_grpc_device_channel,
-    get_service_options,
-    grpc_device_options,
     verbosity_option,
 )
-from _nidaqmx_helpers import create_task
 from nidaqmx.constants import TaskMode
-
-import ni_measurementlink_service as nims
 
 script_or_exe = sys.executable if getattr(sys, "frozen", False) else __file__
 service_directory = pathlib.Path(script_or_exe).resolve().parent
@@ -28,7 +20,6 @@ measurement_service = nims.MeasurementService(
     version="0.1.0.0",
     ui_file_paths=[service_directory / "NIDAQmxAnalogInput.measui"],
 )
-service_options = ServiceOptions()
 
 
 @measurement_service.register_measurement
@@ -49,22 +40,18 @@ def measure(pin_name: str, sample_rate: float, number_of_samples: int) -> Tuple[
         sample_rate,
         number_of_samples,
     )
-    session_management_client = create_session_management_client(measurement_service)
-    with session_management_client.reserve_session(
-        context=measurement_service.context.pin_map_context, pin_or_relay_names=[pin_name]
-    ) as reservation:
-        task: Optional[nidaqmx.Task] = None
+    with measurement_service.context.reserve_session(pin_name) as reservation:
+        with reservation.create_nidaqmx_task() as session_info:
+            task = session_info.session
 
-        def cancel_callback() -> None:
-            logging.info("Canceling measurement")
-            task_to_abort = task
-            if task_to_abort is not None:
-                task_to_abort.control(TaskMode.TASK_ABORT)
+            def cancel_callback() -> None:
+                logging.info("Canceling measurement")
+                if (task_to_abort := task) is not None:
+                    task_to_abort.control(TaskMode.TASK_ABORT)
 
-        measurement_service.context.add_cancel_callback(cancel_callback)
+            measurement_service.context.add_cancel_callback(cancel_callback)
 
-        grpc_device_channel = get_grpc_device_channel(measurement_service, nidaqmx, service_options)
-        with create_task(reservation.session_info, grpc_device_channel) as task:
+            # If we created a new DAQmx task, we must also add channels to it.
             if not reservation.session_info.session_exists:
                 task.ai_channels.add_ai_voltage_chan(reservation.session_info.channel_list)
 
@@ -74,9 +61,7 @@ def measure(pin_name: str, sample_rate: float, number_of_samples: int) -> Tuple[
             )
 
             timeout = min(measurement_service.context.time_remaining, 10.0)
-            voltage_values = task.read(
-                number_of_samples_per_channel=number_of_samples, timeout=timeout
-            )
+            voltage_values = task.read(number_of_samples, timeout)
             task = None  # Don't abort after this point
 
     _log_measured_values(voltage_values)
@@ -98,12 +83,9 @@ def _log_measured_values(samples: List[float], max_samples_to_display: int = 5) 
 
 @click.command
 @verbosity_option
-@grpc_device_options
-def main(verbosity: int, **kwargs: Any) -> None:
+def main(verbosity: int) -> None:
     """Perform a finite analog input measurement with NI-DAQmx."""
     configure_logging(verbosity)
-    global service_options
-    service_options = get_service_options(**kwargs)
 
     with measurement_service.host_service():
         input("Press enter to close the measurement service.\n")

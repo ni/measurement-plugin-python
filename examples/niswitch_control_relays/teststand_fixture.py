@@ -1,11 +1,10 @@
 """Functions to set up and tear down sessions of NI-Switch devices in NI TestStand."""
 from typing import Any
 
+import ni_measurementlink_service as nims
 import niswitch
 from _helpers import GrpcChannelPoolHelper, PinMapClient, TestStandSupport
 from _niswitch_helpers import create_session
-
-import ni_measurementlink_service as nims
 
 
 def update_pin_map(pin_map_path: str, sequence_context: Any) -> None:
