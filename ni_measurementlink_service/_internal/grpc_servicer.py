@@ -85,9 +85,10 @@ class MeasurementServiceContext:
         """Aborts the RPC."""
         try:
             self._grpc_context.abort(code, details)
-        except:
+        except Exception as _a:
             e = grpc.RpcError()
-            # Use a lambda function to defer the assignment of the 'code' attribute for 'e' which is a workaround for assigning the 'code' property, as it is restricted by the 'grpc.RpcError' class.
+            # Use a lambda function to defer the assignment of the 'code' attribute for 'e'
+            # Which is a workaround for assigning the 'code' property, as it is restricted by the 'grpc.RpcError' class.
             e.code = lambda: code
             raise e
 
