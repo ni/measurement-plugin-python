@@ -87,10 +87,11 @@ class MeasurementServiceContext:
             self._grpc_context.abort(code, details)
         except Exception:
             e = grpc.RpcError()
-            # Use a lambda function to defer the assignment of the 'code' attribute for 'e'
-            # Which is a workaround for assigning the 'code' property,
-            # As it is restricted by the 'grpc.RpcError' class.
-            e.code = lambda: code
+            # Create a lambda function
+            custom_code = lambda: code
+            # Reference the custom lambda function to defer the assignment of the 'code' attribute
+            # This approach is used because direct assignment is restricted
+            e.code = custom_code
             raise e
 
 
