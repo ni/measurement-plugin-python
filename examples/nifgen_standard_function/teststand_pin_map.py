@@ -8,7 +8,7 @@ def update_pin_map(pin_map_path: str, sequence_context: Any) -> str:
     """Update registered pin map contents.
 
     Create and register a pin map if a pin map resource for the specified pin map id is not found.
-    
+
     Args:
         pin_map_path:
             An absolute or relative path to the pin map file.
