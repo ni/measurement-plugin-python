@@ -1,4 +1,4 @@
-"""Functions to set up and tear down sessions of NI-Daqmx devices in NI TestStand."""
+"""Functions to set up and tear down sessions of NI-DAQmx devices in NI TestStand."""
 from typing import Any
 
 import ni_measurementlink_service as nims
