@@ -89,7 +89,7 @@ class MeasurementServiceContext:
             e = grpc.RpcError()
             e.code = code
             e.details = details
-            raise e     
+            raise e
 
 
 measurement_service_context: ContextVar[MeasurementServiceContext] = ContextVar(
