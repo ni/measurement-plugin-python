@@ -86,10 +86,23 @@ class MeasurementServiceContext:
         try:
             self._grpc_context.abort(code, details)
         except Exception:
-            e = grpc.RpcError()
-            e.code = code
-            e.details = details
-            raise e
+            raise CustomRpcError(code)
+
+
+class CustomRpcError(grpc.RpcError):
+    """A custom exception class for handling gRPC RPC errors.
+
+    gRPC's built-in RpcError is not directly configurable in Python, so this class
+    enables the creation of custom RPC errors with specific error codes.
+    """
+
+    def __init__(self, code):
+        """Initialize a CustomRpcError instance with a specific gRPC status code."""
+        self._code = code
+
+    def code(self):
+        """Get the gRPC status code associated with this custom RPC error."""
+        return self._code
 
 
 measurement_service_context: ContextVar[MeasurementServiceContext] = ContextVar(

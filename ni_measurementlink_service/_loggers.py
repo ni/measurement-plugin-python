@@ -350,7 +350,7 @@ def _get_status_code(exception: BaseException | None) -> grpc.StatusCode:
     if exception is None:
         return grpc.StatusCode.OK
     elif isinstance(exception, grpc.RpcError):
-        return exception.code
+        return exception.code()
     else:
         return grpc.StatusCode.UNKNOWN
 
