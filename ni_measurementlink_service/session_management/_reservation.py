@@ -284,6 +284,7 @@ class BaseReservation(abc.ABC):
         self,
         session_constructor: Callable[[SessionInformation], TSession],
         instrument_type_id: str,
+        initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
     ) -> Generator[TypedSessionInformation[TSession], None, None]:
         if not instrument_type_id:
             raise ValueError("This method requires an instrument type ID.")
@@ -300,7 +301,7 @@ class BaseReservation(abc.ABC):
             )
 
         session_info = session_infos[0]
-        with closing_session(session_constructor(session_info)) as session:
+        with closing_session(session_constructor(session_info), initialization_behavior) as session:
             with self._cache_session(session_info.session_name, session):
                 new_session_info = session_info._with_session(session)
                 yield cast(TypedSessionInformation[TSession], new_session_info)
@@ -310,6 +311,7 @@ class BaseReservation(abc.ABC):
         self,
         session_constructor: Callable[[SessionInformation], TSession],
         instrument_type_id: str,
+        initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
     ) -> Generator[Sequence[TypedSessionInformation[TSession]], None, None]:
         if not instrument_type_id:
             raise ValueError("This method requires an instrument type ID.")
@@ -323,7 +325,9 @@ class BaseReservation(abc.ABC):
         with ExitStack() as stack:
             typed_session_infos: List[TypedSessionInformation[TSession]] = []
             for session_info in session_infos:
-                session = stack.enter_context(closing_session(session_constructor(session_info)))
+                session = stack.enter_context(
+                    closing_session(session_constructor(session_info), initialization_behavior)
+                )
                 stack.enter_context(self._cache_session(session_info.session_name, session))
                 new_session_info = session_info._with_session(session)
                 typed_session_infos.append(
@@ -1350,7 +1354,7 @@ class BaseReservation(abc.ABC):
             options,
             initialization_behavior,
         )
-        return self._initialize_sessions_core(session_constructor, INSTRUMENT_TYPE_NI_SCOPE)
+        return self._create_sessions_core(session_constructor, INSTRUMENT_TYPE_NI_SCOPE)
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def get_niscope_connection(

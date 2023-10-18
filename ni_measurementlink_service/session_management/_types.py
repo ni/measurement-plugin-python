@@ -324,3 +324,21 @@ class SessionInitializationBehavior(IntEnum):
     Note: When using the Session as a context manager and the context exits, it
     will detach from the server session and leave it open.
     """
+
+    INITIALIZE_SERVER_SESSION_THEN_DETACH = 3
+    """
+    Require the NI gRPC Device Server to initialize a new session with the
+    specified name.
+
+    Note: When using the Session as a context manager and the context exits, it
+    will automatically detach the server session and leave it open.
+    """
+
+    ATTACH_TO_SERVER_SESSION_THEN_CLOSE = 4
+    """
+    Require the NI gRPC Device Server to attach to an existing session with the
+    specified name.
+
+    Note: When using the Session as a context manager and the context exits, it
+    will close from the server session.
+    """
