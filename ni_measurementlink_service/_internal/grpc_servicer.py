@@ -85,8 +85,10 @@ class MeasurementServiceContext:
         """Aborts the RPC."""
         try:
             self._grpc_context.abort(code, details)
-        except Exception:
-            raise CustomRpcError(code)
+        except Exception as e:
+            if isinstance(e, Exception):
+                raise CustomRpcError(code)
+            raise e
 
 
 class CustomRpcError(grpc.RpcError):
