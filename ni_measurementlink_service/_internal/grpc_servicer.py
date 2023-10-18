@@ -96,11 +96,11 @@ class CustomRpcError(grpc.RpcError):
     enables the creation of custom RPC errors with specific error codes.
     """
 
-    def __init__(self, code):
+    def __init__(self, code: grpc.StatusCode):
         """Initialize a CustomRpcError instance with a specific gRPC status code."""
         self._code = code
 
-    def code(self):
+    def code(self) -> grpc.StatusCode:
         """Get the gRPC status code associated with this custom RPC error."""
         return self._code
 
