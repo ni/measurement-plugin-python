@@ -10,6 +10,7 @@ from _nidcpower_helpers import create_session
 
 def create_nidcpower_sessions(sequence_context: Any) -> None:
     """Create and register all NI-DCPower sessions.
+
     Args:
         sequence_context:
             The SequenceContext COM object from the TestStand sequence execution.
