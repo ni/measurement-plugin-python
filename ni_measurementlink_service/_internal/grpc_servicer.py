@@ -87,12 +87,9 @@ class MeasurementServiceContext:
             self._grpc_context.abort(code, details)
         except Exception:
             e = grpc.RpcError()
-            # Create a lambda function
-            custom_code = lambda: code
-            # Reference the custom lambda function to defer the assignment of the 'code' attribute
-            # This approach is used because direct assignment is restricted
-            e.code = custom_code
-            raise e
+            e.code = code
+            e.details = details
+            raise e     
 
 
 measurement_service_context: ContextVar[MeasurementServiceContext] = ContextVar(
