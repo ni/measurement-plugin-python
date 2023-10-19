@@ -3,42 +3,18 @@ from typing import Any, Iterable
 
 import ni_measurementlink_service as nims
 import nidigital
-from _helpers import GrpcChannelPoolHelper, PinMapClient, TestStandSupport
+from _helpers import GrpcChannelPoolHelper, TestStandSupport
 from _nidigital_helpers import create_session
 from ni_measurementlink_service.session_management import (
     INSTRUMENT_TYPE_NI_DIGITAL_PATTERN,
 )
 
 
-def update_pin_map(pin_map_path: str, sequence_context: Any) -> str:
-    """Update registered pin map contents.
-
-    Create and register a pin map if a pin map resource for the specified pin map id is not found.
-
-    Args:
-        pin_map_path:
-            An absolute or relative path to the pin map file.
-        sequence_context:
-            The SequenceContext COM object from the TestStand sequence execution.
-            (Dynamically typed.)
-    """
-    teststand_support = TestStandSupport(sequence_context)
-    pin_map_abs_path = teststand_support.resolve_file_path(pin_map_path)
-
-    with GrpcChannelPoolHelper() as grpc_channel_pool:
-        pin_map_client = PinMapClient(grpc_channel=grpc_channel_pool.pin_map_channel)
-        pin_map_id = pin_map_client.update_pin_map(pin_map_abs_path)
-
-    teststand_support.set_active_pin_map_id(pin_map_id)
-    return pin_map_id
-
-
 def create_nidigital_sessions(sequence_context: Any) -> None:
     """Create and register all NI-Digital sessions.
 
     Args:
-        sequence_context:
-            The SequenceContext COM object from the TestStand sequence execution.
+        sequence_context: The SequenceContext COM object from the TestStand sequence execution.
             (Dynamically typed.)
     """
     teststand_support = TestStandSupport(sequence_context)
@@ -62,10 +38,8 @@ def load_nidigital_pin_map(pin_map_path: str, sequence_context: Any) -> None:
     """Load the pin map into the registered NI-Digital sessions.
 
     Args:
-        pin_map_path:
-            An absolute or relative path to the pin map file.
-        sequence_context:
-            The SequenceContext COM object from the TestStand sequence execution.
+        pin_map_path: An absolute or relative path to the pin map file.
+        sequence_context: The SequenceContext COM object from the TestStand sequence execution.
             (Dynamically typed.)
     """
     teststand_support = TestStandSupport(sequence_context)
@@ -93,14 +67,10 @@ def load_nidigital_specifications_levels_and_timing(
     """Load specifications, levels, and timing files into NI-Digital sessions.
 
     Args:
-        specifications_file_paths:
-            Absolute or relative paths to the specifications files.
-        levels_file_paths:
-            Absolute or relative paths to the levels files.
-        timing_file_paths:
-            Absolute or relative paths to the timing files.
-        sequence_context:
-            The SequenceContext COM object from the TestStand sequence execution.
+        specifications_file_paths: Absolute or relative paths to the specifications files.
+        levels_file_paths: Absolute or relative paths to the levels files.
+        timing_file_paths: Absolute or relative paths to the timing files.
+        sequence_context: The SequenceContext COM object from the TestStand sequence execution.
             (Dynamically typed.)
     """
     teststand_support = TestStandSupport(sequence_context)
@@ -132,10 +102,8 @@ def load_nidigital_patterns(
     """Load specifications, levels, and timing files into NI-Digital sessions.
 
     Args:
-        pattern_file_paths:
-            Absolute or relative paths to the pattern files.
-        sequence_context:
-            The SequenceContext COM object from the TestStand sequence execution.
+        pattern_file_paths: Absolute or relative paths to the pattern files.
+        sequence_context: The SequenceContext COM object from the TestStand sequence execution.
             (Dynamically typed.)
     """
     teststand_support = TestStandSupport(sequence_context)

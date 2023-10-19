@@ -3,39 +3,16 @@ from typing import Any
 
 import ni_measurementlink_service as nims
 import nidcpower
-from _helpers import GrpcChannelPoolHelper, PinMapClient, TestStandSupport
+from _constants import USE_SIMULATION
+from _helpers import GrpcChannelPoolHelper, TestStandSupport
 from _nidcpower_helpers import create_session
-
-
-def update_pin_map(pin_map_path: str, sequence_context: Any) -> str:
-    """Update registered pin map contents.
-
-    Create and register a pin map if a pin map resource for the specified pin map id is not found.
-
-    Args:
-        pin_map_path:
-            An absolute or relative path to the pin map file.
-        sequence_context:
-            The SequenceContext COM object from the TestStand sequence execution.
-            (Dynamically typed.)
-    """
-    teststand_support = TestStandSupport(sequence_context)
-    pin_map_abs_path = teststand_support.resolve_file_path(pin_map_path)
-
-    with GrpcChannelPoolHelper() as grpc_channel_pool:
-        pin_map_client = PinMapClient(grpc_channel=grpc_channel_pool.pin_map_channel)
-        pin_map_id = pin_map_client.update_pin_map(pin_map_abs_path)
-
-    teststand_support.set_active_pin_map_id(pin_map_id)
-    return pin_map_id
 
 
 def create_nidcpower_sessions(sequence_context: Any) -> None:
     """Create and register all NI-DCPower sessions.
 
     Args:
-        sequence_context:
-            The SequenceContext COM object from the TestStand sequence execution.
+        sequence_context: The SequenceContext COM object from the TestStand sequence execution.
             (Dynamically typed.)
     """
     with GrpcChannelPoolHelper() as grpc_channel_pool:
@@ -57,6 +34,7 @@ def create_nidcpower_sessions(sequence_context: Any) -> None:
                 # Leave session open
                 _ = create_session(
                     session_info,
+                    USE_SIMULATION,
                     grpc_device_channel,
                     initialization_behavior=nidcpower.SessionInitializationBehavior.INITIALIZE_SERVER_SESSION,
                 )
@@ -80,6 +58,7 @@ def destroy_nidcpower_sessions() -> None:
             for session_info in reservation.session_info:
                 session = create_session(
                     session_info,
+                    USE_SIMULATION,
                     grpc_device_channel,
                     initialization_behavior=nidcpower.SessionInitializationBehavior.ATTACH_TO_SERVER_SESSION,
                 )
