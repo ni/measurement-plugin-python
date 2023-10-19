@@ -11,8 +11,7 @@ def create_nifgen_sessions(sequence_context: Any) -> None:
     """Create and register all NI-FGEN sessions.
 
     Args:
-        sequence_context:
-            The SequenceContext COM object from the TestStand sequence execution.
+        sequence_context: The SequenceContext COM object from the TestStand sequence execution.
             (Dynamically typed.)
     """
     with GrpcChannelPoolHelper() as grpc_channel_pool:
