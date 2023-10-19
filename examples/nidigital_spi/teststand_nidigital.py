@@ -14,7 +14,8 @@ def create_nidigital_sessions(sequence_context: Any) -> None:
     """Create and register all NI-Digital sessions.
 
     Args:
-        sequence_context: The SequenceContext COM object from the TestStand sequence execution. (Dynamically typed.)
+        sequence_context: The SequenceContext COM object from the TestStand sequence execution.
+            (Dynamically typed.)
     """
     teststand_support = TestStandSupport(sequence_context)
     pin_map_id = teststand_support.get_active_pin_map_id()

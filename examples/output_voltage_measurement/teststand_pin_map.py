@@ -11,7 +11,8 @@ def update_pin_map(pin_map_path: str, sequence_context: Any) -> str:
 
     Args:
         pin_map_path: An absolute or relative path to the pin map file.
-        sequence_context: The SequenceContext COM object from the TestStand sequence execution. (Dynamically typed.)
+        sequence_context: The SequenceContext COM object from the TestStand sequence execution.
+            (Dynamically typed.)
     """
     teststand_support = TestStandSupport(sequence_context)
     pin_map_abs_path = teststand_support.resolve_file_path(pin_map_path)
