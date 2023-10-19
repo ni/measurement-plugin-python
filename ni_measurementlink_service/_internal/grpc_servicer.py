@@ -83,7 +83,35 @@ class MeasurementServiceContext:
 
     def abort(self, code: grpc.StatusCode, details: str) -> None:
         """Aborts the RPC."""
-        self._grpc_context.abort(code, details)
+        try:
+            self._grpc_context.abort(code, details)
+        except Exception as e:
+            # If gRPC raises an empty exception, replace it with an RpcError.
+            # This allows our logging interceptors to query the code/details.
+            if type(e) is Exception:
+                raise CustomRpcError(code, details) from e
+            raise
+
+
+class CustomRpcError(grpc.RpcError):
+    """A custom exception class for handling gRPC RPC errors.
+
+    gRPC's built-in RpcError is not directly configurable in Python, so this class
+    enables the creation of custom RPC errors with specific error codes.
+    """
+
+    def __init__(self, code: grpc.StatusCode, details: str) -> None:
+        """Initialize a CustomRpcError instance."""
+        self._code = code
+        self._details = details
+
+    def code(self) -> grpc.StatusCode:
+        """Get the gRPC status code."""
+        return self._code
+
+    def details(self) -> str:
+        """Get the gRPC status details."""
+        return self._details
 
 
 measurement_service_context: ContextVar[MeasurementServiceContext] = ContextVar(
