@@ -11,9 +11,7 @@ def create_nivisa_dmm_sessions(sequence_context: Any) -> None:
     """Create and register all NI-VISA DMM sessions.
 
     Args:
-        sequence_context:
-            The SequenceContext COM object from the TestStand sequence execution.
-            (Dynamically typed.)
+        sequence_context: The SequenceContext COM object from the TestStand sequence execution. (Dynamically typed.)
     """
     with GrpcChannelPoolHelper() as grpc_channel_pool:
         session_management_client = nims.session_management.Client(
