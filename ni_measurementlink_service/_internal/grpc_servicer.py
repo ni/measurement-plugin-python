@@ -90,7 +90,7 @@ class MeasurementServiceContext:
             # This allows our logging interceptors to query the code/details.
             if type(e) is Exception:
                 raise CustomRpcError(code, details) from e
-            raise e
+            raise
 
 
 class CustomRpcError(grpc.RpcError):
