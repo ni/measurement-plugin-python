@@ -96,14 +96,6 @@ class _SessionBase:
         return 0.0
 
 
-class ClosableSession(_SessionBase):
-    """A driver session that supports close()."""
-
-    def close(self) -> None:
-        """Close the session."""
-        self.is_closed = True
-
-
 class ContextManagerSession(_SessionBase):
     """A driver session that supports the context manager protocol."""
 
@@ -118,6 +110,10 @@ class ContextManagerSession(_SessionBase):
         traceback: Optional[TracebackType],
     ) -> None:
         """Exit the session's runtime context."""
+        self.close()
+    
+    def close(self) -> None:
+        """Close the session."""
         self.is_closed = True
 
 
