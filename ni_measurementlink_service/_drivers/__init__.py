@@ -40,7 +40,6 @@ def closing_session(
 
         ValueError: If the initialization behavior is invalid.
     """
-
     if not hasattr(session, "close"):
         raise TypeError("Session must have a close() method.")
     elif initialization_behavior not in SessionInitializationBehavior:

@@ -111,7 +111,7 @@ class ContextManagerSession(_SessionBase):
     ) -> None:
         """Exit the session's runtime context."""
         self.close()
-    
+
     def close(self) -> None:
         """Close the session."""
         self.is_closed = True
