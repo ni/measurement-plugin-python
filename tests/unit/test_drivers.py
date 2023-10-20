@@ -1,5 +1,4 @@
 from ni_measurementlink_service._drivers import closing_session
-from ni_measurementlink_service.session_management._types import SessionInitializationBehavior
 from tests.utilities import fake_driver
 
 
