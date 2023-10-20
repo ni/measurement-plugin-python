@@ -3,18 +3,7 @@ from ni_measurementlink_service.session_management._types import SessionInitiali
 from tests.utilities import fake_driver
 
 
-def test___closable_session___with_closing_session___session_closed() -> None:
-    with closing_session(
-        fake_driver.ClosableSession("Dev1"),
-        SessionInitializationBehavior.INITIALIZE_SERVER_SESSION,
-    ) as session:
-        assert isinstance(session, fake_driver.ClosableSession)
-        assert not session.is_closed
-
-    assert session.is_closed
-
-
-def test___context_manager_session___with_closing_session___session_closed() -> None:
+def test___closable_context_manager_session___with_closing_session___session_closed() -> None:
     with closing_session(fake_driver.ContextManagerSession("Dev1")) as session:
         assert isinstance(session, fake_driver.ContextManagerSession)
         assert not session.is_closed

@@ -285,6 +285,7 @@ class BaseReservation(abc.ABC):
         session_constructor: Callable[[SessionInformation], TSession],
         instrument_type_id: str,
         initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
+        can_emulate: bool = True,
     ) -> Generator[TypedSessionInformation[TSession], None, None]:
         if not instrument_type_id:
             raise ValueError("This method requires an instrument type ID.")
@@ -301,7 +302,9 @@ class BaseReservation(abc.ABC):
             )
 
         session_info = session_infos[0]
-        with closing_session(session_constructor(session_info), initialization_behavior) as session:
+        with closing_session(
+            session_constructor(session_info), initialization_behavior, can_emulate
+        ) as session:
             with self._cache_session(session_info.session_name, session):
                 new_session_info = session_info._with_session(session)
                 yield cast(TypedSessionInformation[TSession], new_session_info)
@@ -312,6 +315,7 @@ class BaseReservation(abc.ABC):
         session_constructor: Callable[[SessionInformation], TSession],
         instrument_type_id: str,
         initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
+        can_emulate: bool = True,
     ) -> Generator[Sequence[TypedSessionInformation[TSession]], None, None]:
         if not instrument_type_id:
             raise ValueError("This method requires an instrument type ID.")
@@ -326,7 +330,9 @@ class BaseReservation(abc.ABC):
             typed_session_infos: List[TypedSessionInformation[TSession]] = []
             for session_info in session_infos:
                 session = stack.enter_context(
-                    closing_session(session_constructor(session_info), initialization_behavior)
+                    closing_session(
+                        session_constructor(session_info), initialization_behavior, can_emulate
+                    )
                 )
                 stack.enter_context(self._cache_session(session_info.session_name, session))
                 new_session_info = session_info._with_session(session)
@@ -442,6 +448,8 @@ class BaseReservation(abc.ABC):
         self,
         session_constructor: Callable[[SessionInformation], TSession],
         instrument_type_id: str,
+        initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
+        can_emulate: bool = False,
     ) -> ContextManager[TypedSessionInformation[TSession]]:
         """Initialize a single instrument session.
 
@@ -455,6 +463,13 @@ class BaseReservation(abc.ABC):
 
                 For custom instruments, use the instrument type id defined in
                 the pin map file.
+
+            initialization_behavior: Specifies whether to initialize a new
+                session or attach to an existing session.
+
+            can_emulate: Specify True, if MeasurementLink must emulate the
+                INITIALIZE_SERVER_SESSION_THEN_DETACH and
+                ATTACH_TO_SERVER_SESSION_THEN_CLOSE behavior. Else, False.
 
         Returns:
             A context manager that yields a session information object. The
@@ -472,6 +487,8 @@ class BaseReservation(abc.ABC):
         self,
         session_constructor: Callable[[SessionInformation], TSession],
         instrument_type_id: str,
+        initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
+        can_emulate: bool = False,
     ) -> ContextManager[Sequence[TypedSessionInformation[TSession]]]:
         """Initialize multiple instrument sessions.
 
@@ -485,6 +502,13 @@ class BaseReservation(abc.ABC):
 
                 For custom instruments, use the instrument type id defined in
                 the pin map file.
+
+            initialization_behavior: Specifies whether to initialize a new
+                session or attach to an existing session.
+
+            can_emulate: Specify True, if MeasurementLink must emulate the
+                INITIALIZE_SERVER_SESSION_THEN_DETACH and
+                ATTACH_TO_SERVER_SESSION_THEN_CLOSE behavior. Else, False.
 
         Returns:
             A context manager that yields a sequence of session information
