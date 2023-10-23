@@ -3,6 +3,7 @@ name:  Update docs and Publish NIMS
 on:
   release:
     types: [published]
+  workflow_dispatch:
 
 concurrency: publish_to_pypi
 
