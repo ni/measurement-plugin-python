@@ -55,7 +55,7 @@ def measure(
             selected_sites_string = ",".join(f"site{i}" for i in pin_map_context.sites or [])
             selected_sites = session.sites[selected_sites_string]
 
-            if not reservation.session_info.session_exists:
+            if not session_info.session_exists:
                 # When running the measurement from TestStand, teststand_fixture.py should have
                 # already loaded the pin map, specifications, levels, timing, and patterns.
                 session.load_pin_map(pin_map_context.pin_map_id)

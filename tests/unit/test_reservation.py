@@ -13,6 +13,7 @@ from ni_measurementlink_service.session_management import (
     Connection,
     MultiSessionReservation,
     SessionInformation,
+    SingleSessionReservation,
     TypedConnection,
 )
 from tests.unit._reservation_utils import create_grpc_session_infos
@@ -706,6 +707,64 @@ def test___system_pins___get_connection_with_site_list___system_pins_returned_in
         _ConnectionSubset("Pin1", 1, "Dev1", "2"),
         _ConnectionSubset("Pin2", 1, "Dev1", "3"),
     ]
+
+
+def test___single_session_reserved___get_session_info___session_info_returned_with_null_session(
+    session_management_client: Mock,
+) -> None:
+    reservation = SingleSessionReservation(
+        session_management_client, create_nifake_session_infos(1)
+    )
+    expected_session_info = SessionInformation("MySession0", "Dev0", "", "nifake", False, [], None)
+
+    assert reservation.session_info == expected_session_info
+    assert reservation.session_info.session is None
+
+
+def test___single_session_created___get_session_info___session_info_returned_with_valid_session(
+    session_management_client: Mock,
+) -> None:
+    with ExitStack() as stack:
+        reservation = SingleSessionReservation(
+            session_management_client, create_nifake_session_infos(1)
+        )
+        expected_session_info = stack.enter_context(
+            reservation.create_session(_construct_session, "nifake")
+        )
+
+        assert reservation.session_info == expected_session_info
+        assert isinstance(reservation.session_info.session, fake_driver.Session)
+
+
+def test___multiple_sessions_reserved___get_session_info___session_info_returned_with_null_session(
+    session_management_client: Mock,
+) -> None:
+    reservation = MultiSessionReservation(session_management_client, create_nifake_session_infos(3))
+    expected_session_infos = [
+        SessionInformation("MySession0", "Dev0", "", "nifake", False, [], None),
+        SessionInformation("MySession1", "Dev1", "", "nifake", False, [], None),
+        SessionInformation("MySession2", "Dev2", "", "nifake", False, [], None),
+    ]
+
+    assert reservation.session_info == expected_session_infos
+    assert all([info.session is None for info in reservation.session_info])
+
+
+def test___multiple_sessions_created___get_session_info___session_info_returned_with_valid_session(
+    session_management_client: Mock,
+) -> None:
+    with ExitStack() as stack:
+        reservation = MultiSessionReservation(
+            session_management_client, create_nifake_session_infos(3)
+        )
+        expected_session_infos = stack.enter_context(
+            reservation.create_sessions(_construct_session, "nifake")
+        )
+
+        assert reservation.session_info == expected_session_infos
+        assert all(
+            [isinstance(info.session, fake_driver.Session) for info in reservation.session_info]
+        )
 
 
 def _construct_session(session_info: SessionInformation) -> fake_driver.Session:

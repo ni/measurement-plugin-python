@@ -52,8 +52,8 @@ def measure(pin_name: str, sample_rate: float, number_of_samples: int) -> Tuple[
             measurement_service.context.add_cancel_callback(cancel_callback)
 
             # If we created a new DAQmx task, we must also add channels to it.
-            if not reservation.session_info.session_exists:
-                task.ai_channels.add_ai_voltage_chan(reservation.session_info.channel_list)
+            if not session_info.session_exists:
+                task.ai_channels.add_ai_voltage_chan(session_info.channel_list)
 
             task.timing.cfg_samp_clk_timing(
                 rate=sample_rate,
