@@ -1,5 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
   "branchPrefix": "users/renovate/",
   "gitAuthor": "Renovate Bot <bot@renovateapp.com>",
   "onboarding": true,
