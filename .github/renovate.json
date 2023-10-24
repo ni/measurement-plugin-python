@@ -1,26 +1,5 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:recommended"],
   "branchPrefix": "users/renovate/",
-  "gitAuthor": "Renovate Bot <bot@renovateapp.com>",
-  "onboarding": true,
-  "platform": "github",
-  "forkProcessing": "disabled",
-  "repositories": ["ni/measurementlink-python"],
-  "packageRules": [
-    {
-      "description": "lockFileMaintenance",
-      "matchUpdateTypes": [
-        "pin",
-        "digest",
-        "patch",
-        "minor",
-        "major",
-        "lockFileMaintenance"
-      ],
-      "dependencyDashboardApproval": false,
-      "minimumReleaseAge": null
-    }
-  ],
-  "lockFileMaintenance": { "enabled": true }
+  "extends": ["config:recommended", ":maintainLockFilesWeekly"]
 }
