@@ -21,5 +21,6 @@
       "dependencyDashboardApproval": false,
       "minimumReleaseAge": null
     }
-  ]
+  ],
+  "lockFileMaintenance": { "enabled": true }
 }
