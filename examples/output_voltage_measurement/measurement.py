@@ -91,8 +91,8 @@ def measure(
     measurement_service.context.add_cancel_callback(cancellation_event.set)
 
     with measurement_service.context.reserve_sessions([input_pin, output_pin]) as reservation:
-        with reservation.create_nidcpower_session(), reservation.create_session(
-            _create_visa_dmm_session, _visa_dmm.INSTRUMENT_TYPE_VISA_DMM
+        with reservation.initialize_nidcpower_session(), reservation.initialize_session(
+            _construct_visa_dmm_session, _visa_dmm.INSTRUMENT_TYPE_VISA_DMM
         ):
             # Configure the SMU channel connected to the input pin.
             source_connection = reservation.get_nidcpower_connection(input_pin)
@@ -130,7 +130,7 @@ def measure(
     return (measured_value,)
 
 
-def _create_visa_dmm_session(session_info: SessionInformation) -> _visa_dmm.Session:
+def _construct_visa_dmm_session(session_info: SessionInformation) -> _visa_dmm.Session:
     # When this measurement is called from outside of TestStand (session_exists
     # == False), reset the instrument to a known state. In TestStand,
     # ProcessSetup resets the instrument.

@@ -76,7 +76,7 @@ def measure(
     nidmm_function = nidmm.Function(measurement_type.value or Function.DC_VOLTS.value)
 
     with measurement_service.context.reserve_session(pin_name) as reservation:
-        with reservation.create_nidmm_session() as session_info:
+        with reservation.initialize_nidmm_session() as session_info:
             session = session_info.session
             session.configure_measurement_digits(nidmm_function, range, resolution_digits)
             measured_value = session.read()
