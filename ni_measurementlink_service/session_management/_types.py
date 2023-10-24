@@ -323,7 +323,7 @@ class SessionInitializationBehavior(IntEnum):
     will detach from the server session and leave it open.
     """
 
-    INITIALIZE_SESSION_NO_CLOSE = 3
+    INITIALIZE_SESSION_THEN_DETACH = 3
     """
     Initialize a new session with the specified name.
 
@@ -331,7 +331,7 @@ class SessionInitializationBehavior(IntEnum):
     will detach from the server session and leave it open.
     """
 
-    ATTACH_TO_SESSION_AUTO_CLOSE = 4
+    ATTACH_TO_SESSION_THEN_CLOSE = 4
     """
     Attach to an existing session with the specified name.
 

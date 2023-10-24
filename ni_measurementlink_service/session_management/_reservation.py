@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import abc
 import contextlib
+import functools
 import sys
 from contextlib import ExitStack
 from functools import cached_property
@@ -279,13 +280,17 @@ class BaseReservation(abc.ABC):
             info for info in self._session_info if instrument_type_id == info.instrument_type_id
         ]
 
+    def _default_closing(self, session: TSession) -> ContextManager[TSession]:
+        if not isinstance(session, ContextManager):
+            raise TypeError("Session must be a context manager.")
+        return session
+
     @contextlib.contextmanager
     def _initialize_session_core(
         self,
         session_constructor: Callable[[SessionInformation], TSession],
         instrument_type_id: str,
-        initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
-        can_emulate: bool = True,
+        closing_function: Optional[Callable[[TSession], ContextManager[TSession]]] = None,
     ) -> Generator[TypedSessionInformation[TSession], None, None]:
         if not instrument_type_id:
             raise ValueError("This method requires an instrument type ID.")
@@ -301,10 +306,11 @@ class BaseReservation(abc.ABC):
                 f"Expected single session, got {len(session_infos)} sessions."
             )
 
+        if closing_function is None:
+            closing_function = self._default_closing
+
         session_info = session_infos[0]
-        with closing_session(
-            session_constructor(session_info), initialization_behavior, can_emulate
-        ) as session:
+        with closing_function(session_constructor(session_info)) as session:
             with self._cache_session(session_info.session_name, session):
                 new_session_info = session_info._with_session(session)
                 yield cast(TypedSessionInformation[TSession], new_session_info)
@@ -314,8 +320,7 @@ class BaseReservation(abc.ABC):
         self,
         session_constructor: Callable[[SessionInformation], TSession],
         instrument_type_id: str,
-        initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
-        can_emulate: bool = True,
+        closing_function: Optional[Callable[[TSession], ContextManager[TSession]]] = None,
     ) -> Generator[Sequence[TypedSessionInformation[TSession]], None, None]:
         if not instrument_type_id:
             raise ValueError("This method requires an instrument type ID.")
@@ -326,14 +331,13 @@ class BaseReservation(abc.ABC):
                 "Expected single or multiple sessions, got 0 sessions."
             )
 
+        if closing_function is None:
+            closing_function = self._default_closing
+
         with ExitStack() as stack:
             typed_session_infos: List[TypedSessionInformation[TSession]] = []
             for session_info in session_infos:
-                session = stack.enter_context(
-                    closing_session(
-                        session_constructor(session_info), initialization_behavior, can_emulate
-                    )
-                )
+                session = stack.enter_context(closing_function(session_constructor(session_info)))
                 stack.enter_context(self._cache_session(session_info.session_name, session))
                 new_session_info = session_info._with_session(session)
                 typed_session_infos.append(
@@ -448,8 +452,6 @@ class BaseReservation(abc.ABC):
         self,
         session_constructor: Callable[[SessionInformation], TSession],
         instrument_type_id: str,
-        initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
-        can_emulate: bool = False,
     ) -> ContextManager[TypedSessionInformation[TSession]]:
         """Initialize a single instrument session.
 
@@ -463,13 +465,6 @@ class BaseReservation(abc.ABC):
 
                 For custom instruments, use the instrument type id defined in
                 the pin map file.
-
-            initialization_behavior: Specifies whether to initialize a new
-                session or attach to an existing session.
-
-            can_emulate: Specify True, if MeasurementLink must emulate the
-                INITIALIZE_SERVER_SESSION_THEN_DETACH and
-                ATTACH_TO_SERVER_SESSION_THEN_CLOSE behavior. Else, False.
 
         Returns:
             A context manager that yields a session information object. The
@@ -487,8 +482,6 @@ class BaseReservation(abc.ABC):
         self,
         session_constructor: Callable[[SessionInformation], TSession],
         instrument_type_id: str,
-        initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
-        can_emulate: bool = False,
     ) -> ContextManager[Sequence[TypedSessionInformation[TSession]]]:
         """Initialize multiple instrument sessions.
 
@@ -502,13 +495,6 @@ class BaseReservation(abc.ABC):
 
                 For custom instruments, use the instrument type id defined in
                 the pin map file.
-
-            initialization_behavior: Specifies whether to initialize a new
-                session or attach to an existing session.
-
-            can_emulate: Specify True, if MeasurementLink must emulate the
-                INITIALIZE_SERVER_SESSION_THEN_DETACH and
-                ATTACH_TO_SERVER_SESSION_THEN_CLOSE behavior. Else, False.
 
         Returns:
             A context manager that yields a sequence of session information
@@ -1334,7 +1320,9 @@ class BaseReservation(abc.ABC):
             options,
             initialization_behavior,
         )
-        return self._initialize_session_core(session_constructor, INSTRUMENT_TYPE_NI_SCOPE)
+        return self._create_session_core(
+            session_constructor, INSTRUMENT_TYPE_NI_SCOPE, initialization_behavior
+        )
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def initialize_niscope_sessions(

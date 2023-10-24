@@ -19,8 +19,8 @@ _INITIALIZATION_BEHAVIOR = {
     SessionInitializationBehavior.AUTO: niscope.SessionInitializationBehavior.AUTO,
     SessionInitializationBehavior.INITIALIZE_SERVER_SESSION: niscope.SessionInitializationBehavior.INITIALIZE_SERVER_SESSION,
     SessionInitializationBehavior.ATTACH_TO_SERVER_SESSION: niscope.SessionInitializationBehavior.ATTACH_TO_SERVER_SESSION,
-    SessionInitializationBehavior.INITIALIZE_SESSION_NO_CLOSE: niscope.SessionInitializationBehavior.INITIALIZE_SERVER_SESSION,
-    SessionInitializationBehavior.ATTACH_TO_SESSION_AUTO_CLOSE: niscope.SessionInitializationBehavior.ATTACH_TO_SERVER_SESSION,
+    SessionInitializationBehavior.INITIALIZE_SESSION_THEN_DETACH: niscope.SessionInitializationBehavior.INITIALIZE_SERVER_SESSION,
+    SessionInitializationBehavior.ATTACH_TO_SESSION_THEN_CLOSE: niscope.SessionInitializationBehavior.ATTACH_TO_SERVER_SESSION,
 }
 
 
