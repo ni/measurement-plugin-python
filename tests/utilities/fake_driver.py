@@ -2,11 +2,9 @@
 from __future__ import annotations
 
 import sys
-from enum import Enum
+from enum import Enum, IntEnum
 from types import TracebackType
 from typing import TYPE_CHECKING, Any, ContextManager, Dict, Optional, Type
-
-from ni_measurementlink_service.session_management._types import SessionInitializationBehavior
 
 if TYPE_CHECKING:
     import grpc
@@ -23,11 +21,14 @@ GRPC_SERVICE_INTERFACE_NAME = "nifake_grpc.NiFake"
 _API_KEY = "00000000-0000-0000-0000-000000000000"
 
 
-_CLOSE_BEHAVIORS = [
-    SessionInitializationBehavior.AUTO,
-    SessionInitializationBehavior.INITIALIZE_SERVER_SESSION,
-    SessionInitializationBehavior.ATTACH_TO_SESSION_THEN_CLOSE,
-]
+class SessionInitializationBehavior(IntEnum):
+    """Specifies whether to initialize a new session or attach to an existing session."""
+
+    AUTO = 0
+    INITIALIZE_SERVER_SESSION = 1
+    ATTACH_TO_SERVER_SESSION = 2
+    INITIALIZE_SESSION_THEN_DETACH = 3
+    ATTACH_TO_SESSION_THEN_CLOSE = 4
 
 
 _CLOSE_BEHAVIORS = [
@@ -81,9 +82,15 @@ class _Acquisition:
 class _SessionBase:
     """Base class for driver sessions."""
 
-    def __init__(self, resource_name: str, options: Dict[str, Any] = {}) -> None:
+    def __init__(
+        self,
+        resource_name: str,
+        initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
+        options: Dict[str, Any] = {},
+    ) -> None:
         """Initialize the session."""
         self.resource_name = resource_name
+        self.initialization_behavior = initialization_behavior
         self.options = options
         self.is_closed = False
 
