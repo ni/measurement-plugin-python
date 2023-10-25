@@ -13,8 +13,8 @@ jobs:
     runs-on:
     if: ${{ startsWith(matrix.os, 'rdss-measlinkbot') }}
      - [self-hosted, windows, x64, rdss-measlinkbot-${{ matrix.os }}]
-    else:
-     - [${{ matrix.os }}]
+    if: ${{ startsWith(matrix.os, 'macos-latest') || startsWith(matrix.os, 'ubuntu-latest') }}
+     - ${{ matrix.os }}
     strategy:
       matrix:
         os: [macos-latest, ubuntu-latest, rdss-measlinkbot-win10-py32, rdss-measlinkbot-win10-py64]
