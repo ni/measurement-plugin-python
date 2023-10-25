@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import abc
 import contextlib
+import functools
 import sys
 from contextlib import ExitStack
 from functools import cached_property
@@ -29,7 +30,10 @@ from typing import (
 )
 
 from ni_measurementlink_service._channelpool import GrpcChannelPool
-from ni_measurementlink_service._drivers import closing_session
+from ni_measurementlink_service._drivers import (
+    closing_session,
+    closing_session_with_ts_code_module_support,
+)
 from ni_measurementlink_service._featuretoggles import (
     SESSION_MANAGEMENT_2024Q1,
     requires_feature,
@@ -284,6 +288,7 @@ class BaseReservation(abc.ABC):
         self,
         session_constructor: Callable[[SessionInformation], TSession],
         instrument_type_id: str,
+        closing_function: Optional[Callable[[TSession], ContextManager[TSession]]] = None,
     ) -> Generator[TypedSessionInformation[TSession], None, None]:
         if not instrument_type_id:
             raise ValueError("This method requires an instrument type ID.")
@@ -299,8 +304,11 @@ class BaseReservation(abc.ABC):
                 f"Expected single session, got {len(session_infos)} sessions."
             )
 
+        if closing_function is None:
+            closing_function = closing_session
+
         session_info = session_infos[0]
-        with closing_session(session_constructor(session_info)) as session:
+        with closing_function(session_constructor(session_info)) as session:
             with self._cache_session(session_info.session_name, session):
                 new_session_info = session_info._with_session(session)
                 yield cast(TypedSessionInformation[TSession], new_session_info)
@@ -310,6 +318,7 @@ class BaseReservation(abc.ABC):
         self,
         session_constructor: Callable[[SessionInformation], TSession],
         instrument_type_id: str,
+        closing_function: Optional[Callable[[TSession], ContextManager[TSession]]] = None,
     ) -> Generator[Sequence[TypedSessionInformation[TSession]], None, None]:
         if not instrument_type_id:
             raise ValueError("This method requires an instrument type ID.")
@@ -320,10 +329,13 @@ class BaseReservation(abc.ABC):
                 "Expected single or multiple sessions, got 0 sessions."
             )
 
+        if closing_function is None:
+            closing_function = closing_session
+
         with ExitStack() as stack:
             typed_session_infos: List[TypedSessionInformation[TSession]] = []
             for session_info in session_infos:
-                session = stack.enter_context(closing_session(session_constructor(session_info)))
+                session = stack.enter_context(closing_function(session_constructor(session_info)))
                 stack.enter_context(self._cache_session(session_info.session_name, session))
                 new_session_info = session_info._with_session(session)
                 typed_session_infos.append(
@@ -1306,7 +1318,12 @@ class BaseReservation(abc.ABC):
             options,
             initialization_behavior,
         )
-        return self._initialize_session_core(session_constructor, INSTRUMENT_TYPE_NI_SCOPE)
+        closing_function = functools.partial(
+            closing_session_with_ts_code_module_support, initialization_behavior
+        )
+        return self._initialize_session_core(
+            session_constructor, INSTRUMENT_TYPE_NI_SCOPE, closing_function
+        )
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def initialize_niscope_sessions(
@@ -1350,7 +1367,12 @@ class BaseReservation(abc.ABC):
             options,
             initialization_behavior,
         )
-        return self._initialize_sessions_core(session_constructor, INSTRUMENT_TYPE_NI_SCOPE)
+        closing_function = functools.partial(
+            closing_session_with_ts_code_module_support, initialization_behavior
+        )
+        return self._initialize_sessions_core(
+            session_constructor, INSTRUMENT_TYPE_NI_SCOPE, closing_function
+        )
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def get_niscope_connection(
