@@ -14,20 +14,20 @@ jobs:
       matrix:
         os: [macos-latest, ubuntu-latest, rdss-measlinkbot-win-10-py32, rdss-measlinkbot-win-10-py64]
     outputs: 
-      runner-label: ${{ steps.set_runner_label.outputs.runner-label }}
+      runner: ${{ steps.set_runner.outputs.runner }}
     steps:
-      - name: Set runner label
-        id: set_runner_label
+      - name: Set runner
+        id: set_runner
         run: |
           if [ "${{ startsWith(matrix.os, 'rdss-measlinkbot') }}" == "true" ]; then
-            echo "::set-output name=runner-label::self-hosted,windows,x64,${{ matrix.os }}"
+            echo "::set-output name=runner::self-hosted,windows,x64,${{ matrix.os }}"
           else
-            echo "::set-output name=runner-label::${{ matrix.os }}"
+            echo "::set-output name=runner::${{ matrix.os }}"
           fi
   run_tests:
     needs: [setup]
     name: Run tests
-    runs-on: ${{ needs.setup.outputs.runner-label }}
+    runs-on: ${{ needs.setup.outputs.runner }}
     strategy:
       matrix:
         os: [macos-latest, ubuntu-latest, rdss-measlinkbot-win-10-py32, rdss-measlinkbot-win-10-py64]
