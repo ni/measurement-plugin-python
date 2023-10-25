@@ -29,6 +29,17 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
+      - name: Set up Poetry
+        if: ${{ ! startsWith(matrix.os, 'rdss-measlinkbot') }}
+        uses: Gr1N/setup-poetry@v8
+        with:
+          poetry-version: ${{ env.POETRY_VERSION }}
+      - name: Cache Poetry virtualenv
+        if: ${{ ! startsWith(matrix.os, 'rdss-measlinkbot') }}
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pypoetry/virtualenvs
+          key: ${{ runner.os }}-poetry-${{ hashFiles('poetry.lock') }}
       - name: Install ni-measurementlink-service (no extras)
         run: poetry install -v
       - name: Run tests and code coverage (ni-measurementlink-service, no extras)
