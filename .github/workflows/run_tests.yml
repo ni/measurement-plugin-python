@@ -10,6 +10,9 @@ env:
 jobs:
   setup:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest, rdss-measlinkbot-win-10-py32, rdss-measlinkbot-win-10-py64]
     outputs: 
       runner-label: ${{ steps.set_runner_label.outputs.runner-label }}
     steps:
