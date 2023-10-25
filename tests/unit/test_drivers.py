@@ -1,8 +1,8 @@
 import pytest
 
 from ni_measurementlink_service._drivers import closing_session_with_ts_code_module_support
+from ni_measurementlink_service.session_management._types import SessionInitializationBehavior
 from tests.utilities import fake_driver
-from tests.utilities.fake_driver import SessionInitializationBehavior
 
 
 @pytest.mark.parametrize(

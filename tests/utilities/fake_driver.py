@@ -2,9 +2,11 @@
 from __future__ import annotations
 
 import sys
-from enum import Enum, IntEnum
+from enum import Enum
 from types import TracebackType
 from typing import TYPE_CHECKING, Any, ContextManager, Dict, Optional, Type
+
+from ni_measurementlink_service.session_management._types import SessionInitializationBehavior
 
 if TYPE_CHECKING:
     import grpc
@@ -19,16 +21,6 @@ GRPC_SERVICE_INTERFACE_NAME = "nifake_grpc.NiFake"
 
 # The GrpcSessionOptions classes in nimi-python and nidaqmx-python have an api_key field.
 _API_KEY = "00000000-0000-0000-0000-000000000000"
-
-
-class SessionInitializationBehavior(IntEnum):
-    """Specifies whether to initialize a new session or attach to an existing session."""
-
-    AUTO = 0
-    INITIALIZE_SERVER_SESSION = 1
-    ATTACH_TO_SERVER_SESSION = 2
-    INITIALIZE_SESSION_THEN_DETACH = 3
-    ATTACH_TO_SESSION_THEN_CLOSE = 4
 
 
 _CLOSE_BEHAVIORS = [
