@@ -17,7 +17,7 @@ jobs:
       - ${{ matrix.os }}
     strategy:
       matrix:
-        os: [rdss-measlinkbot-win10-py32, rdss-measlinkbot-win10-py64]
+        os: [rdss-measlinkbot-win-10-py32, rdss-measlinkbot-win-10-py64]
         python-version: [3.8, 3.9, '3.10', 3.11, 3.12]
       # Fail-fast skews the pass/fail ratio and seems to make pytest produce
       # incomplete JUnit XML results.
