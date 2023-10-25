@@ -276,9 +276,7 @@ class BaseReservation(abc.ABC):
 
     def _get_matching_session_infos(self, instrument_type_id: str) -> List[SessionInformation]:
         return [
-            info._with_session(self._session_cache.get(info.session_name))
-            for info in self._session_info
-            if instrument_type_id and instrument_type_id == info.instrument_type_id
+            info for info in self._session_info if instrument_type_id == info.instrument_type_id
         ]
 
     @contextlib.contextmanager
@@ -1577,7 +1575,8 @@ class SingleSessionReservation(BaseReservation):
     def session_info(self) -> SessionInformation:
         """Single session information object."""
         assert len(self._session_info) == 1
-        return self._session_info[0]
+        info = self._session_info[0]
+        return info._with_session(self._session_cache.get(info.session_name))
 
 
 class MultiSessionReservation(BaseReservation):
@@ -1586,4 +1585,11 @@ class MultiSessionReservation(BaseReservation):
     @property
     def session_info(self) -> List[SessionInformation]:
         """Multiple session information objects."""
-        return self._session_info
+        # If the session cache is empty, return the existing list without copying.
+        if not self._session_cache:
+            return self._session_info
+
+        return [
+            info._with_session(self._session_cache.get(info.session_name))
+            for info in self._session_info
+        ]

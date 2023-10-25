@@ -3,6 +3,7 @@ name:  Update docs and Publish NIMS
 on:
   release:
     types: [published]
+  workflow_dispatch:
 
 concurrency: publish_to_pypi
 
@@ -43,7 +44,7 @@ jobs:
       # If the tag is 0.1.0, this will set the version of NIMS package to 0.1.0
       - name: Store version from Tag
         id: vars
-        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+        run: echo "tag=${GITHUB_REF#refs/*/}" >> $GITHUB_OUTPUT
 
       - name: Update NIMS package version based on tag name.
         run: |
