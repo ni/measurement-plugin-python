@@ -143,6 +143,8 @@ class SessionInformation(NamedTuple):
             )
 
     def _with_session(self, session: object) -> SessionInformation:
+        if self.session is session:
+            return self
         return self._replace(session=session)
 
     @classmethod
@@ -247,6 +249,8 @@ class Connection(NamedTuple):
         self.session_info._check_runtime_type(session_type)
 
     def _with_session(self, session: object) -> Connection:
+        if self.session is session:
+            return self
         return self._replace(session_info=self.session_info._with_session(session))
 
 

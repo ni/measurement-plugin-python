@@ -83,7 +83,7 @@ def measure(
     nifgen_waveform = nifgen.Waveform(waveform_type.value or Waveform.SINE.value)
 
     with measurement_service.context.reserve_sessions(pin_name) as reservation:
-        with reservation.create_nifgen_sessions() as session_infos:
+        with reservation.initialize_nifgen_sessions() as session_infos:
             for session_info in session_infos:
                 # Output mode must be the same for all channels in the session.
                 session_info.session.output_mode = nifgen.OutputMode.FUNC

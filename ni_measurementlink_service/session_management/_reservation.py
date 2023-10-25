@@ -277,13 +277,11 @@ class BaseReservation(abc.ABC):
 
     def _get_matching_session_infos(self, instrument_type_id: str) -> List[SessionInformation]:
         return [
-            info._with_session(self._session_cache.get(info.session_name))
-            for info in self._session_info
-            if instrument_type_id and instrument_type_id == info.instrument_type_id
+            info for info in self._session_info if instrument_type_id == info.instrument_type_id
         ]
 
     @contextlib.contextmanager
-    def _create_session_core(
+    def _initialize_session_core(
         self,
         session_constructor: Callable[[SessionInformation], TSession],
         instrument_type_id: str,
@@ -313,7 +311,7 @@ class BaseReservation(abc.ABC):
                 yield cast(TypedSessionInformation[TSession], new_session_info)
 
     @contextlib.contextmanager
-    def _create_sessions_core(
+    def _initialize_sessions_core(
         self,
         session_constructor: Callable[[SessionInformation], TSession],
         instrument_type_id: str,
@@ -445,12 +443,12 @@ class BaseReservation(abc.ABC):
         return results
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
-    def create_session(
+    def initialize_session(
         self,
         session_constructor: Callable[[SessionInformation], TSession],
         instrument_type_id: str,
     ) -> ContextManager[TypedSessionInformation[TSession]]:
-        """Create a single instrument session.
+        """Initialize a single instrument session.
 
         This is a generic method that supports any instrument driver.
 
@@ -465,22 +463,22 @@ class BaseReservation(abc.ABC):
 
         Returns:
             A context manager that yields a session information object. The
-            created session is available via the ``session`` field.
+            session object is available via the ``session`` field.
 
         Raises:
             ValueError: If the instrument type ID is empty, no reserved sessions
                 match the instrument type ID, or too many reserved sessions
                 match the instrument type ID.
         """
-        return self._create_session_core(session_constructor, instrument_type_id)
+        return self._initialize_session_core(session_constructor, instrument_type_id)
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
-    def create_sessions(
+    def initialize_sessions(
         self,
         session_constructor: Callable[[SessionInformation], TSession],
         instrument_type_id: str,
     ) -> ContextManager[Sequence[TypedSessionInformation[TSession]]]:
-        """Create multiple instrument sessions.
+        """Initialize multiple instrument sessions.
 
         This is a generic method that supports any instrument driver.
 
@@ -495,14 +493,14 @@ class BaseReservation(abc.ABC):
 
         Returns:
             A context manager that yields a sequence of session information
-            objects. The created sessions are available via the ``session``
+            objects. The session objects are available via the ``session``
             field.
 
         Raises:
             ValueError: If the instrument type ID is empty or no reserved
                 sessions matched the instrument type ID.
         """
-        return self._create_sessions_core(session_constructor, instrument_type_id)
+        return self._initialize_sessions_core(session_constructor, instrument_type_id)
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def get_connection(
@@ -587,12 +585,12 @@ class BaseReservation(abc.ABC):
         """Create a single NI-DAQmx task.
 
         Args:
-            initialization_behavior: Specifies whether to initialize a new
-                task or attach to an existing task.
+            initialization_behavior: Specifies whether the NI gRPC Device Server
+                will create a new task or attach to an existing task.
 
         Returns:
-            A context manager that yields a session information object. The
-            created task is available via the ``session`` field.
+            A context manager that yields a session information object. The task
+            object is available via the ``session`` field.
 
         Raises:
             ValueError: If no NI-DAQmx tasks are reserved or too many
@@ -610,7 +608,7 @@ class BaseReservation(abc.ABC):
         session_constructor = SessionConstructor(
             self._discovery_client, self._grpc_channel_pool, initialization_behavior
         )
-        return self._create_session_core(session_constructor, INSTRUMENT_TYPE_NI_DAQMX)
+        return self._initialize_session_core(session_constructor, INSTRUMENT_TYPE_NI_DAQMX)
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def create_nidaqmx_tasks(
@@ -620,13 +618,12 @@ class BaseReservation(abc.ABC):
         """Create multiple NI-DAQmx tasks.
 
         Args:
-            initialization_behavior: Specifies whether to initialize a new
-                task or attach to an existing task.
+            initialization_behavior: Specifies whether the NI gRPC Device Server
+                will create a new task or attach to an existing task.
 
         Returns:
             A context manager that yields a sequence of session information
-            objects. The created tasks are available via the ``session``
-            field.
+            objects. The task objects are available via the ``session`` field.
 
         Raises:
             ValueError: If no NI-DAQmx tasks are reserved.
@@ -643,7 +640,7 @@ class BaseReservation(abc.ABC):
         session_constructor = SessionConstructor(
             self._discovery_client, self._grpc_channel_pool, initialization_behavior
         )
-        return self._create_sessions_core(session_constructor, INSTRUMENT_TYPE_NI_DAQMX)
+        return self._initialize_sessions_core(session_constructor, INSTRUMENT_TYPE_NI_DAQMX)
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def get_nidaqmx_connection(
@@ -701,13 +698,13 @@ class BaseReservation(abc.ABC):
         return self._get_connections_core(nidaqmx.Task, pin_names, sites, INSTRUMENT_TYPE_NI_DAQMX)
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
-    def create_nidcpower_session(
+    def initialize_nidcpower_session(
         self,
         reset: bool = False,
         options: Optional[Dict[str, Any]] = None,
         initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
     ) -> ContextManager[TypedSessionInformation[nidcpower.Session]]:
-        """Create a single NI-DCPower instrument session.
+        """Initialize a single NI-DCPower instrument session.
 
         Args:
             reset: Specifies whether to reset channel(s) during the
@@ -719,12 +716,12 @@ class BaseReservation(abc.ABC):
                 ``NIDCPOWER_SIMULATE``, ``NIDCPOWER_BOARD_TYPE``, and
                 ``NIDCPOWER_MODEL`` in the configuration file (``.env``).
 
-            initialization_behavior: Specifies whether to initialize a new
-                session or attach to an existing session.
+            initialization_behavior: Specifies whether the NI gRPC Device Server
+                will initialize a new session or attach to an existing session.
 
         Returns:
             A context manager that yields a session information object. The
-            created session is available via the ``session`` field.
+            session object is available via the ``session`` field.
 
         Raises:
             ValueError: If no NI-DCPower sessions are reserved or too many
@@ -738,7 +735,7 @@ class BaseReservation(abc.ABC):
         session_constructor = SessionConstructor(
             self._discovery_client, self._grpc_channel_pool, reset, options, initialization_behavior
         )
-        return self._create_session_core(session_constructor, INSTRUMENT_TYPE_NI_DCPOWER)
+        return self._initialize_session_core(session_constructor, INSTRUMENT_TYPE_NI_DCPOWER)
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def create_nidcpower_sessions(
@@ -747,7 +744,7 @@ class BaseReservation(abc.ABC):
         options: Optional[Dict[str, Any]] = None,
         initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
     ) -> ContextManager[Sequence[TypedSessionInformation[nidcpower.Session]]]:
-        """Create multiple NI-DCPower instrument sessions.
+        """Initialize multiple NI-DCPower instrument sessions.
 
         Args:
             reset: Specifies whether to reset channel(s) during the
@@ -759,12 +756,12 @@ class BaseReservation(abc.ABC):
                 ``NIDCPOWER_SIMULATE``, ``NIDCPOWER_BOARD_TYPE``, and
                 ``NIDCPOWER_MODEL`` in the configuration file (``.env``).
 
-            initialization_behavior: Specifies whether to initialize a new
-                session or attach to an existing session.
+            initialization_behavior: Specifies whether the NI gRPC Device Server
+                will initialize a new session or attach to an existing session.
 
         Returns:
             A context manager that yields a sequence of session information
-            objects. The created sessions are available via the ``session``
+            objects. The session objects are available via the ``session``
             field.
 
         Raises:
@@ -778,7 +775,7 @@ class BaseReservation(abc.ABC):
         session_constructor = SessionConstructor(
             self._discovery_client, self._grpc_channel_pool, reset, options, initialization_behavior
         )
-        return self._create_sessions_core(session_constructor, INSTRUMENT_TYPE_NI_DCPOWER)
+        return self._initialize_sessions_core(session_constructor, INSTRUMENT_TYPE_NI_DCPOWER)
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def get_nidcpower_connection(
@@ -840,13 +837,13 @@ class BaseReservation(abc.ABC):
         )
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
-    def create_nidigital_session(
+    def initialize_nidigital_session(
         self,
         reset_device: bool = False,
         options: Optional[Dict[str, Any]] = None,
         initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
     ) -> ContextManager[TypedSessionInformation[nidigital.Session]]:
-        """Create a single NI-Digital Pattern instrument session.
+        """Initialize a single NI-Digital Pattern instrument session.
 
         Args:
             reset_device: Specifies whether to reset the instrument during the
@@ -858,12 +855,12 @@ class BaseReservation(abc.ABC):
                 ``NIDIGITAL_SIMULATE``, ``NIDIGITAL_BOARD_TYPE``, and
                 ``NIDIGITAL_MODEL`` in the configuration file (``.env``).
 
-            initialization_behavior: Specifies whether to initialize a new
-                session or attach to an existing session.
+            initialization_behavior: Specifies whether the NI gRPC Device Server
+                will initialize a new session or attach to an existing session.
 
         Returns:
             A context manager that yields a session information object. The
-            created session is available via the ``session`` field.
+            session object is available via the ``session`` field.
 
         Raises:
             ValueError: If no NI-Digital sessions are reserved or too many
@@ -881,16 +878,18 @@ class BaseReservation(abc.ABC):
             options,
             initialization_behavior,
         )
-        return self._create_session_core(session_constructor, INSTRUMENT_TYPE_NI_DIGITAL_PATTERN)
+        return self._initialize_session_core(
+            session_constructor, INSTRUMENT_TYPE_NI_DIGITAL_PATTERN
+        )
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
-    def create_nidigital_sessions(
+    def initialize_nidigital_sessions(
         self,
         reset_device: bool = False,
         options: Optional[Dict[str, Any]] = None,
         initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
     ) -> ContextManager[Sequence[TypedSessionInformation[nidigital.Session]]]:
-        """Create multiple NI-Digital Pattern instrument sessions.
+        """Initialize multiple NI-Digital Pattern instrument sessions.
 
         Args:
             reset_device: Specifies whether to reset the instrument during the
@@ -902,12 +901,12 @@ class BaseReservation(abc.ABC):
                 ``NIDIGITAL_SIMULATE``, ``NIDIGITAL_BOARD_TYPE``, and
                 ``NIDIGITAL_MODEL`` in the configuration file (``.env``).
 
-            initialization_behavior: Specifies whether to initialize a new
-                session or attach to an existing session.
+            initialization_behavior: Specifies whether the NI gRPC Device Server
+                will initialize a new session or attach to an existing session.
 
         Returns:
             A context manager that yields a sequence of session information
-            objects. The created sessions are available via the ``session``
+            objects. The session objects are available via the ``session``
             field.
 
         Raises:
@@ -925,7 +924,9 @@ class BaseReservation(abc.ABC):
             options,
             initialization_behavior,
         )
-        return self._create_sessions_core(session_constructor, INSTRUMENT_TYPE_NI_DIGITAL_PATTERN)
+        return self._initialize_sessions_core(
+            session_constructor, INSTRUMENT_TYPE_NI_DIGITAL_PATTERN
+        )
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def get_nidigital_connection(
@@ -987,13 +988,13 @@ class BaseReservation(abc.ABC):
         )
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
-    def create_nidmm_session(
+    def initialize_nidmm_session(
         self,
         reset_device: bool = False,
         options: Optional[Dict[str, Any]] = None,
         initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
     ) -> ContextManager[TypedSessionInformation[nidmm.Session]]:
-        """Create a single NI-DMM instrument session.
+        """Initialize a single NI-DMM instrument session.
 
         Args:
             reset_device: Specifies whether to reset the instrument during the
@@ -1002,15 +1003,15 @@ class BaseReservation(abc.ABC):
             options: Specifies the initial value of certain properties for the
                 session. If this argument is not specified, the default value is
                 an empty dict, which you may override by specifying
-                ``NIDMM_SIMULATE``, ``NIDMM_BOARD_TYPE``, and
-                ``NIDMM_MODEL`` in the configuration file (``.env``).
+                ``NIDMM_SIMULATE``, ``NIDMM_BOARD_TYPE``, and ``NIDMM_MODEL`` in
+                the configuration file (``.env``).
 
-            initialization_behavior: Specifies whether to initialize a new
-                session or attach to an existing session.
+            initialization_behavior: Specifies whether the NI gRPC Device Server
+                will initialize a new session or attach to an existing session.
 
         Returns:
             A context manager that yields a session information object. The
-            created session is available via the ``session`` field.
+            session object is available via the ``session`` field.
 
         Raises:
             ValueError: If no NI-DMM sessions are reserved or too many
@@ -1028,16 +1029,16 @@ class BaseReservation(abc.ABC):
             options,
             initialization_behavior,
         )
-        return self._create_session_core(session_constructor, INSTRUMENT_TYPE_NI_DMM)
+        return self._initialize_session_core(session_constructor, INSTRUMENT_TYPE_NI_DMM)
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
-    def create_nidmm_sessions(
+    def initialize_nidmm_sessions(
         self,
         reset_device: bool = False,
         options: Optional[Dict[str, Any]] = None,
         initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
     ) -> ContextManager[Sequence[TypedSessionInformation[nidmm.Session]]]:
-        """Create multiple NI-DMM instrument sessions.
+        """Initialize multiple NI-DMM instrument sessions.
 
         Args:
             reset_device: Specifies whether to reset the instrument during the
@@ -1046,15 +1047,15 @@ class BaseReservation(abc.ABC):
             options: Specifies the initial value of certain properties for the
                 session. If this argument is not specified, the default value is
                 an empty dict, which you may override by specifying
-                ``NIDMM_SIMULATE``, ``NIDMM_BOARD_TYPE``, and
-                ``NIDMM_MODEL`` in the configuration file (``.env``).
+                ``NIDMM_SIMULATE``, ``NIDMM_BOARD_TYPE``, and ``NIDMM_MODEL`` in
+                the configuration file (``.env``).
 
-            initialization_behavior: Specifies whether to initialize a new
-                session or attach to an existing session.
+            initialization_behavior: Specifies whether the NI gRPC Device Server
+                will initialize a new session or attach to an existing session.
 
         Returns:
             A context manager that yields a sequence of session information
-            objects. The created sessions are available via the ``session``
+            objects. The session objects are available via the ``session``
             field.
 
         Raises:
@@ -1072,7 +1073,7 @@ class BaseReservation(abc.ABC):
             options,
             initialization_behavior,
         )
-        return self._create_sessions_core(session_constructor, INSTRUMENT_TYPE_NI_DMM)
+        return self._initialize_sessions_core(session_constructor, INSTRUMENT_TYPE_NI_DMM)
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def get_nidmm_connection(
@@ -1130,13 +1131,13 @@ class BaseReservation(abc.ABC):
         return self._get_connections_core(nidmm.Session, pin_names, sites, INSTRUMENT_TYPE_NI_DMM)
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
-    def create_nifgen_session(
+    def initialize_nifgen_session(
         self,
         reset_device: bool = False,
         options: Optional[Dict[str, Any]] = None,
         initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
     ) -> ContextManager[TypedSessionInformation[nifgen.Session]]:
-        """Create a single NI-FGEN instrument session.
+        """Initialize a single NI-FGEN instrument session.
 
         Args:
             reset_device: Specifies whether to reset the instrument during the
@@ -1148,12 +1149,12 @@ class BaseReservation(abc.ABC):
                 ``NIFGEN_SIMULATE``, ``NIFGEN_BOARD_TYPE``, and ``NIFGEN_MODEL``
                 in the configuration file (``.env``).
 
-            initialization_behavior: Specifies whether to initialize a new
-                session or attach to an existing session.
+            initialization_behavior: Specifies whether the NI gRPC Device Server
+                will initialize a new session or attach to an existing session.
 
         Returns:
             A context manager that yields a session information object. The
-            created session is available via the ``session`` field.
+            session object is available via the ``session`` field.
 
         Raises:
             ValueError: If no NI-FGEN sessions are reserved or too many NI-FGEN
@@ -1171,16 +1172,16 @@ class BaseReservation(abc.ABC):
             options,
             initialization_behavior,
         )
-        return self._create_session_core(session_constructor, INSTRUMENT_TYPE_NI_FGEN)
+        return self._initialize_session_core(session_constructor, INSTRUMENT_TYPE_NI_FGEN)
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
-    def create_nifgen_sessions(
+    def initialize_nifgen_sessions(
         self,
         reset_device: bool = False,
         options: Optional[Dict[str, Any]] = None,
         initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
     ) -> ContextManager[Sequence[TypedSessionInformation[nifgen.Session]]]:
-        """Create multiple NI-FGEN instrument sessions.
+        """Initialize multiple NI-FGEN instrument sessions.
 
         Args:
             reset_device: Specifies whether to reset the instrument during the
@@ -1192,12 +1193,12 @@ class BaseReservation(abc.ABC):
                 ``NIFGEN_SIMULATE``, ``NIFGEN_BOARD_TYPE``, and ``NIFGEN_MODEL``
                 in the configuration file (``.env``).
 
-            initialization_behavior: Specifies whether to initialize a new
-                session or attach to an existing session.
+            initialization_behavior: Specifies whether the NI gRPC Device Server
+                will initialize a new session or attach to an existing session.
 
         Returns:
             A context manager that yields a sequence of session information
-            objects. The created sessions are available via the ``session``
+            objects. The session objects are available via the ``session``
             field.
 
         Raises:
@@ -1215,7 +1216,7 @@ class BaseReservation(abc.ABC):
             options,
             initialization_behavior,
         )
-        return self._create_sessions_core(session_constructor, INSTRUMENT_TYPE_NI_FGEN)
+        return self._initialize_sessions_core(session_constructor, INSTRUMENT_TYPE_NI_FGEN)
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def get_nifgen_connection(
@@ -1273,13 +1274,13 @@ class BaseReservation(abc.ABC):
         return self._get_connections_core(nifgen.Session, pin_names, sites, INSTRUMENT_TYPE_NI_FGEN)
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
-    def create_niscope_session(
+    def initialize_niscope_session(
         self,
         reset_device: bool = False,
         options: Optional[Dict[str, Any]] = None,
         initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
     ) -> ContextManager[TypedSessionInformation[niscope.Session]]:
-        """Create a single NI-SCOPE instrument session.
+        """Initialize a single NI-SCOPE instrument session.
 
         Args:
             reset_device: Specifies whether to reset the instrument during the
@@ -1291,12 +1292,12 @@ class BaseReservation(abc.ABC):
                 ``NISCOPE_SIMULATE``, ``NISCOPE_BOARD_TYPE``, and
                 ``NISCOPE_MODEL`` in the configuration file (``.env``).
 
-            initialization_behavior: Specifies whether to initialize a new
-                session or attach to an existing session.
+            initialization_behavior: Specifies whether the NI gRPC Device Server
+                will initialize a new session or attach to an existing session.
 
         Returns:
             A context manager that yields a session information object. The
-            created session is available via the ``session`` field.
+            session object is available via the ``session`` field.
 
         Raises:
             ValueError: If no NI-SCOPE sessions are reserved or too many
@@ -1315,18 +1316,18 @@ class BaseReservation(abc.ABC):
             initialization_behavior,
         )
         closing_function = functools.partial(closing_session_with_ts_code_module_support, initialization_behavior)
-        return self._create_session_core(
+        return self._initialize_session_core(
             session_constructor, INSTRUMENT_TYPE_NI_SCOPE, closing_function
         )
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
-    def create_niscope_sessions(
+    def initialize_niscope_sessions(
         self,
         reset_device: bool = False,
         options: Optional[Dict[str, Any]] = None,
         initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
     ) -> ContextManager[Sequence[TypedSessionInformation[niscope.Session]]]:
-        """Create multiple NI-SCOPE instrument sessions.
+        """Initialize multiple NI-SCOPE instrument sessions.
 
         Args:
             reset_device: Specifies whether to reset the instrument during the
@@ -1338,12 +1339,12 @@ class BaseReservation(abc.ABC):
                 ``NISCOPE_SIMULATE``, ``NISCOPE_BOARD_TYPE``, and
                 ``NISCOPE_MODEL`` in the configuration file (``.env``).
 
-            initialization_behavior: Specifies whether to initialize a new
-                session or attach to an existing session.
+            initialization_behavior: Specifies whether the NI gRPC Device Server
+                will initialize a new session or attach to an existing session.
 
         Returns:
             A context manager that yields a sequence of session information
-            objects. The created sessions are available via the ``session``
+            objects. The session objects are available via the ``session``
             field.
 
         Raises:
@@ -1362,7 +1363,7 @@ class BaseReservation(abc.ABC):
             initialization_behavior,
         )
         closing_function = functools.partial(closing_session_with_ts_code_module_support, initialization_behavior)
-        return self._create_sessions_core(
+        return self._initialize_sessions_core(
             session_constructor, INSTRUMENT_TYPE_NI_SCOPE, closing_function
         )
 
@@ -1424,14 +1425,14 @@ class BaseReservation(abc.ABC):
         )
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
-    def create_niswitch_session(
+    def initialize_niswitch_session(
         self,
         topology: Optional[str] = None,
         simulate: Optional[bool] = None,
         reset_device: bool = False,
         initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
     ) -> ContextManager[TypedSessionInformation[niswitch.Session]]:
-        """Create a single NI-SWITCH relay driver instrument session.
+        """Initialize a single NI-SWITCH relay driver instrument session.
 
         Args:
             topology: Specifies the switch topology. If this argument is not
@@ -1448,12 +1449,12 @@ class BaseReservation(abc.ABC):
             reset_device: Specifies whether to reset the switch module during
                 the initialization procedure.
 
-            initialization_behavior: Specifies whether to initialize a new
-                session or attach to an existing session.
+            initialization_behavior: Specifies whether the NI gRPC Device Server
+                will initialize a new session or attach to an existing session.
 
         Returns:
             A context manager that yields a session information object. The
-            created session is available via the ``session`` field.
+            session object is available via the ``session`` field.
 
         Raises:
             ValueError: If no relay driver sessions are reserved or
@@ -1472,17 +1473,17 @@ class BaseReservation(abc.ABC):
             reset_device,
             initialization_behavior,
         )
-        return self._create_session_core(session_constructor, INSTRUMENT_TYPE_NI_RELAY_DRIVER)
+        return self._initialize_session_core(session_constructor, INSTRUMENT_TYPE_NI_RELAY_DRIVER)
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
-    def create_niswitch_sessions(
+    def initialize_niswitch_sessions(
         self,
         topology: Optional[str] = None,
         simulate: Optional[bool] = None,
         reset_device: bool = False,
         initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
     ) -> ContextManager[Sequence[TypedSessionInformation[niswitch.Session]]]:
-        """Create multiple NI-SWITCH relay driver instrument sessions.
+        """Initialize multiple NI-SWITCH relay driver instrument sessions.
 
         Args:
             topology: Specifies the switch topology. If this argument is not
@@ -1499,12 +1500,12 @@ class BaseReservation(abc.ABC):
             reset_device: Specifies whether to reset the switch module during
                 the initialization procedure.
 
-            initialization_behavior: Specifies whether to initialize a new
-                session or attach to an existing session.
+            initialization_behavior: Specifies whether the NI gRPC Device Server
+                will initialize a new session or attach to an existing session.
 
         Returns:
             A context manager that yields a sequence of session information
-            objects. The created sessions are available via the ``session``
+            objects. The session objects are available via the ``session``
             field.
 
         Raises:
@@ -1523,7 +1524,7 @@ class BaseReservation(abc.ABC):
             reset_device,
             initialization_behavior,
         )
-        return self._create_sessions_core(session_constructor, INSTRUMENT_TYPE_NI_RELAY_DRIVER)
+        return self._initialize_sessions_core(session_constructor, INSTRUMENT_TYPE_NI_RELAY_DRIVER)
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def get_niswitch_connection(
@@ -1592,7 +1593,8 @@ class SingleSessionReservation(BaseReservation):
     def session_info(self) -> SessionInformation:
         """Single session information object."""
         assert len(self._session_info) == 1
-        return self._session_info[0]
+        info = self._session_info[0]
+        return info._with_session(self._session_cache.get(info.session_name))
 
 
 class MultiSessionReservation(BaseReservation):
@@ -1601,4 +1603,11 @@ class MultiSessionReservation(BaseReservation):
     @property
     def session_info(self) -> List[SessionInformation]:
         """Multiple session information objects."""
-        return self._session_info
+        # If the session cache is empty, return the existing list without copying.
+        if not self._session_cache:
+            return self._session_info
+
+        return [
+            info._with_session(self._session_cache.get(info.session_name))
+            for info in self._session_info
+        ]
