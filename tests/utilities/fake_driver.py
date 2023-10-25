@@ -30,6 +30,13 @@ _CLOSE_BEHAVIORS = [
 ]
 
 
+_CLOSE_BEHAVIORS = [
+    SessionInitializationBehavior.AUTO,
+    SessionInitializationBehavior.INITIALIZE_SERVER_SESSION,
+    SessionInitializationBehavior.ATTACH_TO_SESSION_THEN_CLOSE,
+]
+
+
 class GrpcSessionOptions:
     """gRPC session options."""
 
