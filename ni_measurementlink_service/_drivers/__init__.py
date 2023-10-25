@@ -20,8 +20,9 @@ def closing_session_with_ts_code_module_support(
     session: TSession,
 ) -> ContextManager[TSession]:
     """Create a context manager that closes the session.
-    
-    Emulates the behavior of INITIALIZE_SESSION_THEN_DETACH and ATTACH_TO_SESSION_THEN_CLOSE."""
+
+    Emulates the behavior of INITIALIZE_SESSION_THEN_DETACH and ATTACH_TO_SESSION_THEN_CLOSE.
+    """
     if not hasattr(session, "close"):
         raise TypeError("Session must have a close() method.")
 
@@ -33,7 +34,7 @@ def closing_session_with_ts_code_module_support(
         return contextlib.closing(session)
     else:
         raise ValueError(f"Invalid initialization behavior: '{initialization_behavior}'.")
-    
+
 
 def closing_session(session: TSession) -> ContextManager[TSession]:
     """A context manager that yields the session and closes it."""
