@@ -20,8 +20,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-latest, rdss-measlinkbot-${{ configuration }}, ubuntu-latest]
-        configuration: ["win-10-py32", "win-10-py64"]
+        os: [macos-latest, rdss-measlinkbot-win-10-py32, rdss-measlinkbot-win-10-py64, ubuntu-latest]
         python-version: [3.8, 3.9, '3.10', 3.11, 3.12]
       # Fail-fast skews the pass/fail ratio and seems to make pytest produce
       # incomplete JUnit XML results.
