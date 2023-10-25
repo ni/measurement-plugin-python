@@ -30,7 +30,7 @@ from typing import (
 )
 
 from ni_measurementlink_service._channelpool import GrpcChannelPool
-from ni_measurementlink_service._drivers import closing_session
+from ni_measurementlink_service._drivers import closing_session_with_ts_code_module_support, closing_session
 from ni_measurementlink_service._featuretoggles import (
     SESSION_MANAGEMENT_2024Q1,
     requires_feature,
@@ -282,11 +282,6 @@ class BaseReservation(abc.ABC):
             if instrument_type_id and instrument_type_id == info.instrument_type_id
         ]
 
-    def _default_closing(self, session: TSession) -> ContextManager[TSession]:
-        if not isinstance(session, ContextManager):
-            raise TypeError("Session must be a context manager.")
-        return session
-
     @contextlib.contextmanager
     def _create_session_core(
         self,
@@ -309,7 +304,7 @@ class BaseReservation(abc.ABC):
             )
 
         if closing_function is None:
-            closing_function = self._default_closing
+            closing_function = closing_session
 
         session_info = session_infos[0]
         with closing_function(session_constructor(session_info)) as session:
@@ -334,7 +329,7 @@ class BaseReservation(abc.ABC):
             )
 
         if closing_function is None:
-            closing_function = self._default_closing
+            closing_function = closing_session
 
         with ExitStack() as stack:
             typed_session_infos: List[TypedSessionInformation[TSession]] = []
@@ -1319,7 +1314,7 @@ class BaseReservation(abc.ABC):
             options,
             initialization_behavior,
         )
-        closing_function = functools.partial(closing_session, initialization_behavior)
+        closing_function = functools.partial(closing_session_with_ts_code_module_support, initialization_behavior)
         return self._create_session_core(
             session_constructor, INSTRUMENT_TYPE_NI_SCOPE, closing_function
         )
@@ -1366,7 +1361,7 @@ class BaseReservation(abc.ABC):
             options,
             initialization_behavior,
         )
-        closing_function = functools.partial(closing_session, initialization_behavior)
+        closing_function = functools.partial(closing_session_with_ts_code_module_support, initialization_behavior)
         return self._create_sessions_core(
             session_constructor, INSTRUMENT_TYPE_NI_SCOPE, closing_function
         )
