@@ -10,12 +10,14 @@ env:
 jobs:
   run_tests:
     name: Run tests
+    if: ${{ startsWith(matrix.os, 'rdss-measlinkbot') }}
     runs-on: 
       - ${{ matrix.os }}
-      if: ${{ startsWith(matrix.os, 'rdss-measlinkbot') }}
       - self-hosted
       - windows
       - x64
+    else:
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [macos-latest, ubuntu-latest, rdss-measlinkbot-win-10-py32, rdss-measlinkbot-win-10-py64]
