@@ -10,7 +10,11 @@ env:
 jobs:
   run_tests:
     name: Run tests
-    runs-on: ${{ matrix.os }}
+    runs-on: 
+      - self-hosted
+      - windows
+      - x64
+      - ${{ matrix.os }}
     strategy:
       matrix:
         os: [rdss-measlinkbot-win10-py32, rdss-measlinkbot-win10-py64]
