@@ -18,6 +18,7 @@ jobs:
       - rdss-measlinkbot-${{ matrix.configuration }}
     else:
     runs-on: ${{ matrix.os }}
+    fi
     strategy:
       matrix:
         os: [macos-latest, rdss-measlinkbot-win-10-py32, rdss-measlinkbot-win-10-py64, ubuntu-latest]
