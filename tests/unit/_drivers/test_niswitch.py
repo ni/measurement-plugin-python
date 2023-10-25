@@ -30,7 +30,7 @@ if niswitch:
     )
 
 
-def test___single_session_info___create_niswitch_session___session_created(
+def test___single_session_info___initialize_niswitch_session___session_created(
     session_new: Mock,
     session_management_client: Mock,
 ) -> None:
@@ -40,7 +40,7 @@ def test___single_session_info___create_niswitch_session___session_created(
     session = create_mock_niswitch_session()
     session_new.side_effect = [session]
 
-    with reservation.create_niswitch_session() as session_info:
+    with reservation.initialize_niswitch_session() as session_info:
         assert session_info.session is session
 
     session_new.assert_called_once_with(
@@ -53,7 +53,7 @@ def test___single_session_info___create_niswitch_session___session_created(
     )
 
 
-def test___multiple_session_infos___create_niswitch_sessions___sessions_created(
+def test___multiple_session_infos___initialize_niswitch_sessions___sessions_created(
     session_new: Mock,
     session_management_client: Mock,
 ) -> None:
@@ -63,7 +63,7 @@ def test___multiple_session_infos___create_niswitch_sessions___sessions_created(
     sessions = create_mock_niswitch_sessions(3)
     session_new.side_effect = sessions
 
-    with reservation.create_niswitch_sessions() as session_info:
+    with reservation.initialize_niswitch_sessions() as session_info:
         assert session_info[0].session == sessions[0]
         assert session_info[1].session == sessions[1]
 
@@ -87,7 +87,7 @@ def test___multiple_session_infos___create_niswitch_sessions___sessions_created(
 
 # For NI-SWITCH, we set resource_name to "" when simulate is True.
 @pytest.mark.parametrize("simulate,expected_resource_name", [(False, "Dev0"), (True, "")])
-def test___optional_args___create_niswitch_session___optional_args_passed(
+def test___optional_args___initialize_niswitch_session___optional_args_passed(
     simulate: bool,
     expected_resource_name: str,
     session_new: Mock,
@@ -99,7 +99,7 @@ def test___optional_args___create_niswitch_session___optional_args_passed(
     session = create_mock_niswitch_session()
     session_new.side_effect = [session]
 
-    with reservation.create_niswitch_session(
+    with reservation.initialize_niswitch_session(
         topology="2567/Independent",
         simulate=simulate,
         reset_device=True,
@@ -121,7 +121,7 @@ def test___optional_args___create_niswitch_session___optional_args_passed(
     )
 
 
-def test___simulation_configured___create_niswitch_session___simulation_options_passed(
+def test___simulation_configured___initialize_niswitch_session___simulation_options_passed(
     mocker: MockerFixture,
     session_new: Mock,
     session_management_client: Mock,
@@ -133,7 +133,7 @@ def test___simulation_configured___create_niswitch_session___simulation_options_
     session = create_mock_niswitch_session()
     session_new.side_effect = [session]
 
-    with reservation.create_niswitch_session():
+    with reservation.initialize_niswitch_session():
         pass
 
     session_new.assert_called_once_with(
@@ -146,7 +146,7 @@ def test___simulation_configured___create_niswitch_session___simulation_options_
     )
 
 
-def test___optional_args_and_simulation_configured___create_niswitch_session___optional_args_passed(
+def test___optional_args_and_simulation_configured___initialize_niswitch_session___optional_args_passed(
     mocker: MockerFixture,
     session_new: Mock,
     session_management_client: Mock,
@@ -158,7 +158,7 @@ def test___optional_args_and_simulation_configured___create_niswitch_session___o
     session = create_mock_niswitch_session()
     session_new.side_effect = [session]
 
-    with reservation.create_niswitch_session(
+    with reservation.initialize_niswitch_session(
         topology="2529/2-Wire 4x32 Matrix", simulate=False, reset_device=True
     ):
         pass
@@ -199,7 +199,7 @@ def test___session_created___get_niswitch_connection___connection_returned(
         reservation = MultiSessionReservation(session_management_client, grpc_session_infos)
         sessions = create_mock_niswitch_sessions(2)
         session_new.side_effect = sessions
-        session_infos = stack.enter_context(reservation.create_niswitch_sessions())
+        session_infos = stack.enter_context(reservation.initialize_niswitch_sessions())
 
         connection = reservation.get_niswitch_connection(**kwargs)
 
@@ -238,7 +238,7 @@ def test___session_created___get_niswitch_connections___connections_returned(
         reservation = MultiSessionReservation(session_management_client, grpc_session_infos)
         sessions = create_mock_niswitch_sessions(2)
         session_new.side_effect = sessions
-        session_infos = stack.enter_context(reservation.create_niswitch_sessions())
+        session_infos = stack.enter_context(reservation.initialize_niswitch_sessions())
 
         connections = reservation.get_niswitch_connections(**kwargs)
 

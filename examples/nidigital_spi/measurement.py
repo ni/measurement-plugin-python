@@ -49,7 +49,7 @@ def measure(
     logging.info("Starting test: pin_names=%s", pin_names)
 
     with measurement_service.context.reserve_session(pin_names) as reservation:
-        with reservation.create_nidigital_session() as session_info:
+        with reservation.initialize_nidigital_session() as session_info:
             session = session_info.session
             pin_map_context = measurement_service.context.pin_map_context
             selected_sites_string = ",".join(f"site{i}" for i in pin_map_context.sites or [])

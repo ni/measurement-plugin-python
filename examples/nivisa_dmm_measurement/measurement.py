@@ -51,7 +51,9 @@ def measure(
     )
 
     with measurement_service.context.reserve_session(pin_name) as reservation:
-        with reservation.create_session(_create_session, INSTRUMENT_TYPE_VISA_DMM) as session_info:
+        with reservation.initialize_session(
+            _construct_visa_dmm_session, INSTRUMENT_TYPE_VISA_DMM
+        ) as session_info:
             session = session_info.session
             session.configure_measurement_digits(measurement_type, range, resolution_digits)
             measured_value = session.read()
@@ -60,7 +62,7 @@ def measure(
     return (measured_value,)
 
 
-def _create_session(session_info: SessionInformation) -> Session:
+def _construct_visa_dmm_session(session_info: SessionInformation) -> Session:
     # When this measurement is called from outside of TestStand (session_exists
     # == False), reset the instrument to a known state. In TestStand,
     # ProcessSetup resets the instrument.
