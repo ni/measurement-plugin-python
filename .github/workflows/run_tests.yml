@@ -11,13 +11,14 @@ jobs:
   run_tests:
     name: Run tests
     runs-on: 
+      - ${{ matrix.os }}
+      if: ${{ startsWith(matrix.os, 'rdss-measlinkbot') }}
       - self-hosted
       - windows
       - x64
-      - ${{ matrix.os }}
     strategy:
       matrix:
-        os: [rdss-measlinkbot-win-10-py32, rdss-measlinkbot-win-10-py64]
+        os: [macos-latest, ubuntu-latest, rdss-measlinkbot-win-10-py32, rdss-measlinkbot-win-10-py64]
         python-version: [3.8, 3.9, '3.10', 3.11, 3.12]
       # Fail-fast skews the pass/fail ratio and seems to make pytest produce
       # incomplete JUnit XML results.
