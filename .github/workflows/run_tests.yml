@@ -15,7 +15,7 @@ jobs:
       - self-hosted
       - windows
       - x64
-      - rdss-measlinkbot-${{ matrix.configuration }}
+      - rdss-measlinkbot-${{ matrix.os }}
     else:
       - ${{ matrix.os }}
     strategy:
