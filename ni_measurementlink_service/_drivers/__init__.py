@@ -15,36 +15,28 @@ _EXISTING_BEHAVIORS = [
 ]
 
 
-def closing_session(
+def closing_session_with_ts_code_module_support(
     initialization_behavior: SessionInitializationBehavior,
     session: TSession,
 ) -> ContextManager[TSession]:
     """Create a context manager that closes the session.
-
-    Args:
-        initialization_behavior: Specifies whether to initialize a new
-            session or attach to an existing session.
-
-        session: A driver session.
-
-    Returns:
-        A context manager that yields the session and closes it.
-
-    Raises:
-        TypeError: If the session is not a context manager and if it does not have a close() method.
-
-        ValueError: If the initialization behavior is invalid.
-    """
+    
+    Emulates the behavior of INITIALIZE_SESSION_THEN_DETACH and ATTACH_TO_SESSION_THEN_CLOSE."""
     if not hasattr(session, "close"):
         raise TypeError("Session must have a close() method.")
-    elif initialization_behavior not in SessionInitializationBehavior:
-        raise ValueError(f"Invalid initialization behavior: '{initialization_behavior}'.")
 
     if initialization_behavior in _EXISTING_BEHAVIORS:
-        if not isinstance(session, contextlib.AbstractContextManager):
-            raise TypeError("Session must be a context manager.")
-        return session
-
-    if initialization_behavior == SessionInitializationBehavior.INITIALIZE_SESSION_THEN_DETACH:
+        return closing_session(session)
+    elif initialization_behavior == SessionInitializationBehavior.INITIALIZE_SESSION_THEN_DETACH:
         return contextlib.nullcontext(session)
-    return contextlib.closing(session)
+    elif initialization_behavior == SessionInitializationBehavior.ATTACH_TO_SESSION_THEN_CLOSE:
+        return contextlib.closing(session)
+    else:
+        raise ValueError(f"Invalid initialization behavior: '{initialization_behavior}'.")
+    
+
+def closing_session(session: TSession) -> ContextManager[TSession]:
+    """A context manager that yields the session and closes it."""
+    if not isinstance(session, contextlib.AbstractContextManager):
+        raise TypeError("Session must be a context manager.")
+    return session

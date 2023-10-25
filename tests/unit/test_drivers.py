@@ -2,10 +2,9 @@ from typing import Any, Dict
 
 import pytest
 
-from ni_measurementlink_service._drivers import closing_session
-from ni_measurementlink_service.session_management._types import SessionInitializationBehavior
+from ni_measurementlink_service._drivers import closing_session_with_ts_code_module_support
 from tests.utilities import fake_driver
-
+from tests.utilities.fake_driver import SessionInitializationBehavior
 
 @pytest.mark.parametrize(
     "initialization_behavior",
@@ -15,12 +14,10 @@ from tests.utilities import fake_driver
         (SessionInitializationBehavior.ATTACH_TO_SESSION_THEN_CLOSE),
     ],
 )
-def test___closable_context_manager_session___with_closing_session___session_closed(
+def test___closable_context_manager_session___with_closing_session_with_ts_code_module_support___session_closed(
     initialization_behavior: SessionInitializationBehavior,
 ) -> None:
-    options: Dict[str, Any] = {}
-    options["initialization_behavior"] = initialization_behavior
-    with closing_session(initialization_behavior, fake_driver.Session("Dev1", options)) as session:
+    with closing_session_with_ts_code_module_support(initialization_behavior, fake_driver.Session("Dev1", initialization_behavior)) as session:
         assert isinstance(session, fake_driver.Session)
         assert not session.is_closed
 
@@ -34,12 +31,10 @@ def test___closable_context_manager_session___with_closing_session___session_clo
         (SessionInitializationBehavior.INITIALIZE_SESSION_THEN_DETACH),
     ],
 )
-def test___closable_context_manager_session___with_closing_session___session_detached(
+def test___closable_context_manager_session___with_closing_session_with_ts_code_module_support___session_detached(
     initialization_behavior: SessionInitializationBehavior,
 ) -> None:
-    options: Dict[str, Any] = {}
-    options["initialization_behavior"] = initialization_behavior
-    with closing_session(initialization_behavior, fake_driver.Session("Dev1", options)) as session:
+    with closing_session_with_ts_code_module_support(initialization_behavior, fake_driver.Session("Dev1", initialization_behavior)) as session:
         assert isinstance(session, fake_driver.Session)
         assert not session.is_closed
 
@@ -56,14 +51,12 @@ def test___closable_context_manager_session___with_closing_session___session_det
         (SessionInitializationBehavior.INITIALIZE_SESSION_THEN_DETACH),
     ],
 )
-def test___context_manager_session___with_closing_session___raises_type_error(
+def test___context_manager_session___with_closing_session_with_ts_code_module_support___raises_type_error(
     initialization_behavior: SessionInitializationBehavior,
 ) -> None:
-    options: Dict[str, Any] = {}
-    options["initialization_behavior"] = initialization_behavior
     with pytest.raises(TypeError) as exc_info:
-        with closing_session(
-            initialization_behavior, fake_driver.ContextManagerSession("Dev1", options)
+        with closing_session_with_ts_code_module_support(
+            initialization_behavior, fake_driver.ContextManagerSession("Dev1", initialization_behavior)
         ):
             pass
 
@@ -78,13 +71,11 @@ def test___context_manager_session___with_closing_session___raises_type_error(
         (SessionInitializationBehavior.ATTACH_TO_SERVER_SESSION),
     ],
 )
-def test___closable_session___with_closing_session___raises_value_error(
+def test___closable_session___with_closing_session_with_ts_code_module_support___raises_type_error(
     initialization_behavior: SessionInitializationBehavior,
 ) -> None:
-    options: Dict[str, Any] = {}
-    options["initialization_behavior"] = initialization_behavior
     with pytest.raises(TypeError) as exc_info:
-        with closing_session(initialization_behavior, fake_driver.ClosableSession("Dev1", options)):
+        with closing_session_with_ts_code_module_support(initialization_behavior, fake_driver.ClosableSession("Dev1", initialization_behavior)):
             pass
 
     assert "Session must be a context manager." in exc_info.value.args[0]

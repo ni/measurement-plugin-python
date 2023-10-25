@@ -325,16 +325,14 @@ class SessionInitializationBehavior(IntEnum):
 
     INITIALIZE_SESSION_THEN_DETACH = 3
     """
-    Initialize a new session with the specified name.
+    Initialize a new session. When exiting the context manager, detach instead of closing.
 
-    Note: When using the Session as a context manager and the context exits, it
-    will detach from the server session and leave it open.
+    Note: This initialization behavior is intended for TestStand code modules used in ProcessSetup.
     """
 
     ATTACH_TO_SESSION_THEN_CLOSE = 4
     """
-    Attach to an existing session with the specified name.
+    Attach to an existing session. When exiting the context manager, automatically close the server session.
 
-    Note: When using the Session as a context manager and the context exits, it
-    will automatically close the server session.
+    Note: This initialization behavior is intended for TestStand code modules used in ProcessCleanup.
     """
