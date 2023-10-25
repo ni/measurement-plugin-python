@@ -21,7 +21,6 @@ GRPC_SERVICE_INTERFACE_NAME = "nifake_grpc.NiFake"
 _API_KEY = "00000000-0000-0000-0000-000000000000"
 
 
-
 class SessionInitializationBehavior(IntEnum):
     """Specifies whether to initialize a new session or attach to an existing session."""
 
@@ -134,7 +133,12 @@ class ContextManagerSession(_SessionBase):
 class Session(_SessionBase):
     """A driver session that supports both close() and the context manager protocol."""
 
-    def __init__(self, resource_name: str, initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO, options: Dict[str, Any] = {}) -> None:
+    def __init__(
+        self,
+        resource_name: str,
+        initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
+        options: Dict[str, Any] = {},
+    ) -> None:
         """Initialize the session."""
         self.resource_name = resource_name
         self.initialization_behavior = initialization_behavior

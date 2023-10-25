@@ -30,7 +30,10 @@ from typing import (
 )
 
 from ni_measurementlink_service._channelpool import GrpcChannelPool
-from ni_measurementlink_service._drivers import closing_session_with_ts_code_module_support, closing_session
+from ni_measurementlink_service._drivers import (
+    closing_session,
+    closing_session_with_ts_code_module_support,
+)
 from ni_measurementlink_service._featuretoggles import (
     SESSION_MANAGEMENT_2024Q1,
     requires_feature,
@@ -1315,7 +1318,9 @@ class BaseReservation(abc.ABC):
             options,
             initialization_behavior,
         )
-        closing_function = functools.partial(closing_session_with_ts_code_module_support, initialization_behavior)
+        closing_function = functools.partial(
+            closing_session_with_ts_code_module_support, initialization_behavior
+        )
         return self._initialize_session_core(
             session_constructor, INSTRUMENT_TYPE_NI_SCOPE, closing_function
         )
@@ -1362,7 +1367,9 @@ class BaseReservation(abc.ABC):
             options,
             initialization_behavior,
         )
-        closing_function = functools.partial(closing_session_with_ts_code_module_support, initialization_behavior)
+        closing_function = functools.partial(
+            closing_session_with_ts_code_module_support, initialization_behavior
+        )
         return self._initialize_sessions_core(
             session_constructor, INSTRUMENT_TYPE_NI_SCOPE, closing_function
         )
