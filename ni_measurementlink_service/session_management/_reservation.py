@@ -611,7 +611,12 @@ class BaseReservation(abc.ABC):
         session_constructor = SessionConstructor(
             self._discovery_client, self._grpc_channel_pool, initialization_behavior
         )
-        return self._initialize_session_core(session_constructor, INSTRUMENT_TYPE_NI_DAQMX)
+        closing_function = functools.partial(
+            closing_session_with_ts_code_module_support, initialization_behavior
+        )
+        return self._initialize_session_core(
+            session_constructor, INSTRUMENT_TYPE_NI_DAQMX, closing_function
+        )
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def create_nidaqmx_tasks(
@@ -643,7 +648,12 @@ class BaseReservation(abc.ABC):
         session_constructor = SessionConstructor(
             self._discovery_client, self._grpc_channel_pool, initialization_behavior
         )
-        return self._initialize_sessions_core(session_constructor, INSTRUMENT_TYPE_NI_DAQMX)
+        closing_function = functools.partial(
+            closing_session_with_ts_code_module_support, initialization_behavior
+        )
+        return self._initialize_sessions_core(
+            session_constructor, INSTRUMENT_TYPE_NI_DAQMX, closing_function
+        )
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def get_nidaqmx_connection(
@@ -738,10 +748,15 @@ class BaseReservation(abc.ABC):
         session_constructor = SessionConstructor(
             self._discovery_client, self._grpc_channel_pool, reset, options, initialization_behavior
         )
-        return self._initialize_session_core(session_constructor, INSTRUMENT_TYPE_NI_DCPOWER)
+        closing_function = functools.partial(
+            closing_session_with_ts_code_module_support, initialization_behavior
+        )
+        return self._initialize_session_core(
+            session_constructor, INSTRUMENT_TYPE_NI_DCPOWER, closing_function
+        )
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
-    def create_nidcpower_sessions(
+    def initialize_nidcpower_sessions(
         self,
         reset: bool = False,
         options: Optional[Dict[str, Any]] = None,
@@ -778,7 +793,12 @@ class BaseReservation(abc.ABC):
         session_constructor = SessionConstructor(
             self._discovery_client, self._grpc_channel_pool, reset, options, initialization_behavior
         )
-        return self._initialize_sessions_core(session_constructor, INSTRUMENT_TYPE_NI_DCPOWER)
+        closing_function = functools.partial(
+            closing_session_with_ts_code_module_support, initialization_behavior
+        )
+        return self._initialize_sessions_core(
+            session_constructor, INSTRUMENT_TYPE_NI_DCPOWER, closing_function
+        )
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def get_nidcpower_connection(
@@ -1032,7 +1052,12 @@ class BaseReservation(abc.ABC):
             options,
             initialization_behavior,
         )
-        return self._initialize_session_core(session_constructor, INSTRUMENT_TYPE_NI_DMM)
+        closing_function = functools.partial(
+            closing_session_with_ts_code_module_support, initialization_behavior
+        )
+        return self._initialize_session_core(
+            session_constructor, INSTRUMENT_TYPE_NI_DMM, closing_function
+        )
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def initialize_nidmm_sessions(
@@ -1076,7 +1101,12 @@ class BaseReservation(abc.ABC):
             options,
             initialization_behavior,
         )
-        return self._initialize_sessions_core(session_constructor, INSTRUMENT_TYPE_NI_DMM)
+        closing_function = functools.partial(
+            closing_session_with_ts_code_module_support, initialization_behavior
+        )
+        return self._initialize_sessions_core(
+            session_constructor, INSTRUMENT_TYPE_NI_DMM, closing_function
+        )
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def get_nidmm_connection(

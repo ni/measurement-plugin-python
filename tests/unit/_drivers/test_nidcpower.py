@@ -62,7 +62,7 @@ def test___multiple_session_infos___initialize_nidcpower_sessions___sessions_cre
     sessions = create_mock_nidcpower_sessions(3)
     session_new.side_effect = sessions
 
-    with reservation.create_nidcpower_sessions() as session_info:
+    with reservation.initialize_nidcpower_sessions() as session_info:
         assert session_info[0].session == sessions[0]
         assert session_info[1].session == sessions[1]
 
@@ -189,7 +189,7 @@ def test___session_created___get_nidcpower_connection___connection_returned(
         reservation = MultiSessionReservation(session_management_client, grpc_session_infos)
         sessions = create_mock_nidcpower_sessions(2)
         session_new.side_effect = sessions
-        session_infos = stack.enter_context(reservation.create_nidcpower_sessions())
+        session_infos = stack.enter_context(reservation.initialize_nidcpower_sessions())
 
         connection = reservation.get_nidcpower_connection(**kwargs)
 
@@ -236,7 +236,7 @@ def test___session_created___get_nidcpower_connections___connections_returned(
         reservation = MultiSessionReservation(session_management_client, grpc_session_infos)
         sessions = create_mock_nidcpower_sessions(2)
         session_new.side_effect = sessions
-        session_infos = stack.enter_context(reservation.create_nidcpower_sessions())
+        session_infos = stack.enter_context(reservation.initialize_nidcpower_sessions())
 
         connections = reservation.get_nidcpower_connections(**kwargs)
 
