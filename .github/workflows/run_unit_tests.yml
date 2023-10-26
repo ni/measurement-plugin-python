@@ -8,7 +8,7 @@ env:
   POETRY_VERSION: 1.2.2
 
 jobs:
-  run_tests:
+  run_unit_tests:
     name: Run unit tests
     runs-on: ${{ matrix.os }}
     strategy:
@@ -45,7 +45,7 @@ jobs:
       - name: Install ni-measurementlink-generator
         run: poetry install -v
         working-directory: ./ni_measurementlink_generator
-      - name: Run tests and code coverage (ni-measurementlink-generator)
+      - name: Run unit tests and code coverage (ni-measurementlink-generator)
         run: poetry run pytest -v --cov=ni_measurementlink_generator --junitxml=test_results/nimg-${{ matrix.os }}-py${{ matrix.python-version}}.xml
         working-directory: ./ni_measurementlink_generator
       - name: Upload test results
