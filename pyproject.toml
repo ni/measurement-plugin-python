@@ -1,9 +1,9 @@
 [tool.black]
-extend_exclude = '_pb2(_grpc)?\.(py|pyi)$|ni_measurementlink_generator/|examples/'
+extend_exclude = '.tox,_pb2(_grpc)?\.(py|pyi)$|ni_measurementlink_generator/|examples/'
 line-length = 100
 
 [tool.ni-python-styleguide]
-extend_exclude = '*_pb2_grpc.py,*_pb2_grpc.pyi,*_pb2.py,*_pb2.pyi,ni_measurementlink_generator/,examples/'
+extend_exclude = '.tox,*_pb2_grpc.py,*_pb2_grpc.pyi,*_pb2.py,*_pb2.pyi,ni_measurementlink_generator/,examples/'
 
 [tool.poetry]
 name = "ni_measurementlink_service"
@@ -66,6 +66,7 @@ grpcio-tools = [
 ]
 pytest-cov = ">=3.0.0"
 pytest-mock = ">=3.0"
+tox = ">=3.24"
 mypy = ">=1.0"
 mypy-protobuf = ">=3.4"
 types-protobuf = "^4.21"
