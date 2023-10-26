@@ -18,6 +18,7 @@ jobs:
       # Fail-fast skews the pass/fail ratio and seems to make pytest produce
       # incomplete JUnit XML results.
       fail-fast: false
+    timeout-minutes: 90
     steps:
       - name: Set Runner Environment Variables
         run: |
