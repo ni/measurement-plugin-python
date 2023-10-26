@@ -25,10 +25,6 @@ jobs:
           echo "RUNNER_NAME=rdss-measlinkbot-win-10-${{ matrix.configuration }}" >> $GITHUB_ENV
       - name: Check out repo
         uses: actions/checkout@v3
-      - name: Install dependencies
-        run: poetry install
-      - name: Install tox
-        run: pip install tox
       - name: Run system tests
         run: poetry run tox
         env:
