@@ -8,29 +8,12 @@ env:
   POETRY_VERSION: 1.2.2
 
 jobs:
-  setup:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        os: [macos-latest, ubuntu-latest, rdss-measlinkbot-win-10-py32, rdss-measlinkbot-win-10-py64]
-    outputs: 
-      runner: ${{ steps.set_runner.outputs.runner }}
-    steps:
-      - name: Set runner
-        id: set_runner
-        run: |
-          if [ "${{ startsWith(matrix.os, 'rdss-measlinkbot') }}" == "true" ]; then
-            echo "::set-output name=runner::self-hosted,windows,x64,${{ matrix.os }}"
-          else
-            echo "::set-output name=runner::${{ matrix.os }}"
-          fi
   run_tests:
-    needs: [setup]
     name: Run tests
-    runs-on: ${{ needs.setup.outputs.runner }}
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest, rdss-measlinkbot-win-10-py32, rdss-measlinkbot-win-10-py64]
+        os: [macos-latest, windows-latest, ubuntu-latest]
         python-version: [3.8, 3.9, '3.10', 3.11, 3.12]
       # Fail-fast skews the pass/fail ratio and seems to make pytest produce
       # incomplete JUnit XML results.
@@ -43,12 +26,10 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - name: Set up Poetry
-        if: ${{ ! startsWith(matrix.os, 'rdss-measlinkbot') }}
         uses: Gr1N/setup-poetry@v8
         with:
           poetry-version: ${{ env.POETRY_VERSION }}
       - name: Cache Poetry virtualenv
-        if: ${{ ! startsWith(matrix.os, 'rdss-measlinkbot') }}
         uses: actions/cache@v3
         with:
           path: ~/.cache/pypoetry/virtualenvs
