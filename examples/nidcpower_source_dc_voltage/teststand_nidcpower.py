@@ -30,7 +30,7 @@ def create_nidcpower_sessions(sequence_context: Any) -> None:
         with session_management_client.reserve_sessions(
             pin_map_context, instrument_type_id=INSTRUMENT_TYPE_NI_DCPOWER
         ) as reservation:
-            with reservation.create_nidcpower_sessions(
+            with reservation.initialize_nidcpower_sessions(
                 initialization_behavior=SessionInitializationBehavior.INITIALIZE_SESSION_THEN_DETACH
             ):
                 pass
@@ -52,7 +52,7 @@ def destroy_nidcpower_sessions() -> None:
                 return
 
             session_management_client.unregister_sessions(reservation.session_info)
-            with reservation.create_nidcpower_sessions(
+            with reservation.initialize_nidcpower_sessions(
                 initialization_behavior=SessionInitializationBehavior.ATTACH_TO_SESSION_THEN_CLOSE
             ):
                 pass
