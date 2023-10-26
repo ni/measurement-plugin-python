@@ -22,6 +22,10 @@ jobs:
     name: Run unit tests
     uses: ./.github/workflows/run_unit_tests.yml
     needs: [check_nims, check_nimg]
+  run_system_tests:
+    name: Run system tests
+    uses: ./.github/workflows/run_system_tests.yml
+    needs: [run_unit_tests]
   report_test_results:
     name: Report test results
     uses: ./.github/workflows/report_test_results.yml
