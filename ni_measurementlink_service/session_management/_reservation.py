@@ -1490,7 +1490,12 @@ class BaseReservation(abc.ABC):
             reset_device,
             initialization_behavior,
         )
-        return self._initialize_session_core(session_constructor, INSTRUMENT_TYPE_NI_RELAY_DRIVER)
+        closing_function = functools.partial(
+            closing_session_with_ts_code_module_support, initialization_behavior
+        )
+        return self._initialize_session_core(
+            session_constructor, INSTRUMENT_TYPE_NI_RELAY_DRIVER, closing_function
+        )
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def initialize_niswitch_sessions(
@@ -1541,7 +1546,12 @@ class BaseReservation(abc.ABC):
             reset_device,
             initialization_behavior,
         )
-        return self._initialize_sessions_core(session_constructor, INSTRUMENT_TYPE_NI_RELAY_DRIVER)
+        closing_function = functools.partial(
+            closing_session_with_ts_code_module_support, initialization_behavior
+        )
+        return self._initialize_sessions_core(
+            session_constructor, INSTRUMENT_TYPE_NI_RELAY_DRIVER, closing_function
+        )
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def get_niswitch_connection(
