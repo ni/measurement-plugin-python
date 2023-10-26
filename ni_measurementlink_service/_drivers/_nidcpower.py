@@ -19,6 +19,8 @@ _INITIALIZATION_BEHAVIOR = {
     SessionInitializationBehavior.AUTO: nidcpower.SessionInitializationBehavior.AUTO,
     SessionInitializationBehavior.INITIALIZE_SERVER_SESSION: nidcpower.SessionInitializationBehavior.INITIALIZE_SERVER_SESSION,
     SessionInitializationBehavior.ATTACH_TO_SERVER_SESSION: nidcpower.SessionInitializationBehavior.ATTACH_TO_SERVER_SESSION,
+    SessionInitializationBehavior.INITIALIZE_SESSION_THEN_DETACH: nidcpower.SessionInitializationBehavior.INITIALIZE_SERVER_SESSION,
+    SessionInitializationBehavior.ATTACH_TO_SESSION_THEN_CLOSE: nidcpower.SessionInitializationBehavior.ATTACH_TO_SERVER_SESSION,
 }
 
 

@@ -18,6 +18,8 @@ _INITIALIZATION_BEHAVIOR = {
     SessionInitializationBehavior.AUTO: nidaqmx.SessionInitializationBehavior.AUTO,
     SessionInitializationBehavior.INITIALIZE_SERVER_SESSION: nidaqmx.SessionInitializationBehavior.INITIALIZE_SERVER_SESSION,
     SessionInitializationBehavior.ATTACH_TO_SERVER_SESSION: nidaqmx.SessionInitializationBehavior.ATTACH_TO_SERVER_SESSION,
+    SessionInitializationBehavior.INITIALIZE_SESSION_THEN_DETACH: nidaqmx.SessionInitializationBehavior.INITIALIZE_SERVER_SESSION,
+    SessionInitializationBehavior.ATTACH_TO_SESSION_THEN_CLOSE: nidaqmx.SessionInitializationBehavior.ATTACH_TO_SERVER_SESSION,
 }
 
 
