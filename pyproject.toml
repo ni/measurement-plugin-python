@@ -1,5 +1,5 @@
 [tool.black]
-extend_exclude = '.tox/,_pb2(_grpc)?\.(py|pyi)$|ni_measurementlink_generator/|examples/'
+extend_exclude = '\.tox/|_pb2(_grpc)?\.(py|pyi)$|ni_measurementlink_generator/|examples/'
 line-length = 100
 
 [tool.ni-python-styleguide]
