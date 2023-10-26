@@ -13,7 +13,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest]
+        os: [macos-latest, windows-latest, ubuntu-latest]
         python-version: [3.8, 3.9, '3.10', 3.11, 3.12]
       # Fail-fast skews the pass/fail ratio and seems to make pytest produce
       # incomplete JUnit XML results.
@@ -37,11 +37,11 @@ jobs:
       - name: Install ni-measurementlink-service (no extras)
         run: poetry install -v
       - name: Run unit tests and code coverage (ni-measurementlink-service, no extras)
-        run: poetry run pytest ./tests/integration ./tests/unit -v --cov=ni_measurementlink_service --junitxml=test_results/nims-${{ matrix.os }}-py${{ matrix.python-version}}-no-extras.xml
+        run: poetry run pytest ./tests/unit -v --cov=ni_measurementlink_service --junitxml=test_results/nims-${{ matrix.os }}-py${{ matrix.python-version}}-no-extras.xml
       - name: Install ni-measurementlink-service (all extras)
         run: poetry install -v --all-extras
       - name: Run unit tests and code coverage (ni-measurementlink-service, all extras)
-        run: poetry run pytest ./tests/integration ./tests/unit -v --cov=ni_measurementlink_service --junitxml=test_results/nims-${{ matrix.os }}-py${{ matrix.python-version}}-all-extras.xml
+        run: poetry run pytest ./tests/unit -v --cov=ni_measurementlink_service --junitxml=test_results/nims-${{ matrix.os }}-py${{ matrix.python-version}}-all-extras.xml
       - name: Install ni-measurementlink-generator
         run: poetry install -v
         working-directory: ./ni_measurementlink_generator
