@@ -29,5 +29,5 @@ jobs:
   report_test_results:
     name: Report test results
     uses: ./.github/workflows/report_test_results.yml
-    needs: [run_unit_tests]
+    needs: [run_unit_tests, run_system_tests]
     if: always()
