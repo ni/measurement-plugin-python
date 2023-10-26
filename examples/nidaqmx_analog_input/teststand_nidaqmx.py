@@ -10,6 +10,7 @@ from ni_measurementlink_service.session_management import (
     SessionManagementClient,
 )
 
+
 def create_nidaqmx_tasks(sequence_context: Any) -> None:
     """Create and register all NI-DAQmx tasks.
 
@@ -32,9 +33,9 @@ def create_nidaqmx_tasks(sequence_context: Any) -> None:
         ) as reservation:
             with reservation.create_nidaqmx_tasks(
                 initialization_behavior=SessionInitializationBehavior.INITIALIZE_SESSION_THEN_DETACH
-            ):
-                pass
-
+            ) as tasks:
+                for task in tasks:
+                    task.session.ai_channels.add_ai_voltage_chan(task.channel_list)
 
             session_management_client.register_sessions(reservation.session_info)
 
@@ -51,7 +52,7 @@ def destroy_nidaqmx_tasks() -> None:
         ) as reservation:
             if not reservation.session_info:
                 return
-            
+
             session_management_client.unregister_sessions(reservation.session_info)
             with reservation.create_nidaqmx_tasks(
                 initialization_behavior=SessionInitializationBehavior.ATTACH_TO_SESSION_THEN_CLOSE

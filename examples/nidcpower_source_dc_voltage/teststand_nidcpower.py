@@ -10,6 +10,7 @@ from ni_measurementlink_service.session_management import (
     SessionManagementClient,
 )
 
+
 def create_nidcpower_sessions(sequence_context: Any) -> None:
     """Create and register all NI-DCPower sessions.
 
@@ -18,7 +19,6 @@ def create_nidcpower_sessions(sequence_context: Any) -> None:
             (Dynamically typed.)
     """
     with GrpcChannelPoolHelper() as grpc_channel_pool:
-        
         teststand_support = TestStandSupport(sequence_context)
         pin_map_id = teststand_support.get_active_pin_map_id()
         pin_map_context = PinMapContext(pin_map_id=pin_map_id, sites=None)
@@ -34,7 +34,7 @@ def create_nidcpower_sessions(sequence_context: Any) -> None:
                 initialization_behavior=SessionInitializationBehavior.INITIALIZE_SESSION_THEN_DETACH
             ):
                 pass
-            
+
             session_management_client.register_sessions(reservation.session_info)
 
 
