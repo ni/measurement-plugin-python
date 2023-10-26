@@ -20,9 +20,9 @@ jobs:
       fail-fast: false
     timeout-minutes: 90
     steps:
-      - name: Set Runner Environment Variables
+      - name: Set runner environment variables
         run: |
-          echo "RUNNERNAME=rdss-measlinkbot-win-10-${{ matrix.configuration }}" >> $GITHUB_ENV
+          echo "RUNNER_NAME=rdss-measlinkbot-win-10-${{ matrix.configuration }}" >> $GITHUB_ENV
       - name: Check out repo
         uses: actions/checkout@v3
       - name: Install dependencies
@@ -32,7 +32,7 @@ jobs:
       - name: Run system tests
         run: poetry run tox
         env:
-          passenv: RUNNERNAME
+          passenv: RUNNER_NAME
       - name: Upload test results
         uses: actions/upload-artifact@v3
         with:
