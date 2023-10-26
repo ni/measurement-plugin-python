@@ -19,6 +19,8 @@ _INITIALIZATION_BEHAVIOR = {
     SessionInitializationBehavior.AUTO: nifgen.SessionInitializationBehavior.AUTO,
     SessionInitializationBehavior.INITIALIZE_SERVER_SESSION: nifgen.SessionInitializationBehavior.INITIALIZE_SERVER_SESSION,
     SessionInitializationBehavior.ATTACH_TO_SERVER_SESSION: nifgen.SessionInitializationBehavior.ATTACH_TO_SERVER_SESSION,
+    SessionInitializationBehavior.INITIALIZE_SESSION_THEN_DETACH: nifgen.SessionInitializationBehavior.INITIALIZE_SERVER_SESSION,
+    SessionInitializationBehavior.ATTACH_TO_SESSION_THEN_CLOSE: nifgen.SessionInitializationBehavior.ATTACH_TO_SERVER_SESSION,
 }
 
 
