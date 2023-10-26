@@ -15,24 +15,20 @@ jobs:
     strategy:
       matrix:
         configuration: ["py32", "py64"]
+        python-version: [3.8, 3.9, '3.10', 3.11, 3.12]
       # Fail-fast skews the pass/fail ratio and seems to make pytest produce
       # incomplete JUnit XML results.
       fail-fast: false
     timeout-minutes: 90
     steps:
-      - name: Set Runner Environment Variables
-        run: |
-          echo "RUNNER_NAME=rdss-measlinkbot-win-10-${{ matrix.configuration }}" >> $GITHUB_ENV
-      - name: Check out repo
-        uses: actions/checkout@v3
-      - name: Install dependencies
-        run: poetry install
-      - name: Install tox
-        run: pip install tox
-      - name: Run system tests
-        run: poetry run tox
-        env:
-          passenv: RUNNER_NAME
+      - name: Install ni-measurementlink-service (no extras)
+        run: poetry install -v
+      - name: Run system tests and code coverage (ni-measurementlink-service, no extras)
+        run: poetry run pytest ./tests/acceptance -v --cov=ni_measurementlink_service --junitxml=test_results/nims-rdss-measlinkbot-win-10-${{ matrix.configuration }}-py${{ matrix.python-version}}-no-extras.xml
+      - name: Install ni-measurementlink-service (all extras)
+        run: poetry install -v --all-extras
+      - name: Run system tests and code coverage (ni-measurementlink-service, all extras)
+        run: poetry run pytest ./tests/acceptance -v --cov=ni_measurementlink_service --junitxml=test_results/nims-rdss-measlinkbot-win-10-${{ matrix.configuration }}-py${{ matrix.python-version}}-all-extras.xml
       - name: Upload test results
         uses: actions/upload-artifact@v3
         with:
