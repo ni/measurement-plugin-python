@@ -1,0 +1,56 @@
+name: Run unit tests
+
+on:
+  workflow_call:
+  workflow_dispatch:
+
+env:
+  POETRY_VERSION: 1.2.2
+
+jobs:
+  run_unit_tests:
+    name: Run unit tests
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest, windows-latest]
+        python-version: [3.8, 3.9, '3.10', 3.11, 3.12]
+      # Fail-fast skews the pass/fail ratio and seems to make pytest produce
+      # incomplete JUnit XML results.
+      fail-fast: false
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Set up Poetry
+        uses: Gr1N/setup-poetry@v8
+        with:
+          poetry-version: ${{ env.POETRY_VERSION }}
+      - name: Cache Poetry virtualenv
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pypoetry/virtualenvs
+          key: ${{ runner.os }}-poetry-${{ hashFiles('poetry.lock') }}
+      - name: Install ni-measurementlink-service (no extras)
+        run: poetry install -v
+      - name: Run unit tests and code coverage (ni-measurementlink-service, no extras)
+        run: poetry run pytest ./tests/integration ./tests/unit -v --cov=ni_measurementlink_service --junitxml=test_results/nims-${{ matrix.os }}-py${{ matrix.python-version}}-no-extras.xml
+      - name: Install ni-measurementlink-service (all extras)
+        run: poetry install -v --all-extras
+      - name: Run unit tests and code coverage (ni-measurementlink-service, all extras)
+        run: poetry run pytest ./tests/integration ./tests/unit -v --cov=ni_measurementlink_service --junitxml=test_results/nims-${{ matrix.os }}-py${{ matrix.python-version}}-all-extras.xml
+      - name: Install ni-measurementlink-generator
+        run: poetry install -v
+        working-directory: ./ni_measurementlink_generator
+      - name: Run unit tests and code coverage (ni-measurementlink-generator)
+        run: poetry run pytest -v --cov=ni_measurementlink_generator --junitxml=test_results/nimg-${{ matrix.os }}-py${{ matrix.python-version}}.xml
+        working-directory: ./ni_measurementlink_generator
+      - name: Upload test results
+        uses: actions/upload-artifact@v3
+        with:
+          name: test_results
+          path: test_results/*.xml
+        if: always()
