@@ -34,7 +34,7 @@ def measure(
     )
 
     with measurement_service.context.reserve_sessions(relay_names) as reservation:
-        with reservation.create_niswitch_sessions() as session_infos:
+        with reservation.initialize_niswitch_sessions() as session_infos:
             # Open or close all relays corresponding to the selected pins and
             # sites.
             for session_info in session_infos:

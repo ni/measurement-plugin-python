@@ -27,6 +27,15 @@ class SessionInitializationBehavior(IntEnum):
     AUTO = 0
     INITIALIZE_SERVER_SESSION = 1
     ATTACH_TO_SERVER_SESSION = 2
+    INITIALIZE_SESSION_THEN_DETACH = 3
+    ATTACH_TO_SESSION_THEN_CLOSE = 4
+
+
+_CLOSE_BEHAVIORS = [
+    SessionInitializationBehavior.AUTO,
+    SessionInitializationBehavior.INITIALIZE_SERVER_SESSION,
+    SessionInitializationBehavior.ATTACH_TO_SESSION_THEN_CLOSE,
+]
 
 
 class GrpcSessionOptions:
@@ -73,9 +82,15 @@ class _Acquisition:
 class _SessionBase:
     """Base class for driver sessions."""
 
-    def __init__(self, resource_name: str, options: Dict[str, Any] = {}) -> None:
+    def __init__(
+        self,
+        resource_name: str,
+        initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
+        options: Dict[str, Any] = {},
+    ) -> None:
         """Initialize the session."""
         self.resource_name = resource_name
+        self.initialization_behavior = initialization_behavior
         self.options = options
         self.is_closed = False
 
@@ -124,9 +139,15 @@ class ContextManagerSession(_SessionBase):
 class Session(_SessionBase):
     """A driver session that supports both close() and the context manager protocol."""
 
-    def __init__(self, resource_name: str, options: Dict[str, Any] = {}) -> None:
+    def __init__(
+        self,
+        resource_name: str,
+        initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
+        options: Dict[str, Any] = {},
+    ) -> None:
         """Initialize the session."""
         self.resource_name = resource_name
+        self.initialization_behavior = initialization_behavior
         self.options = options
         self.is_closed = False
 
@@ -145,4 +166,5 @@ class Session(_SessionBase):
         traceback: Optional[TracebackType],
     ) -> None:
         """Exit the session's runtime context."""
-        self.close()
+        if self.initialization_behavior in _CLOSE_BEHAVIORS:
+            self.close()

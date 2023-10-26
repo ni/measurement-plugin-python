@@ -34,7 +34,7 @@ if nifgen:
     set_nifgen_simulation_options = functools.partial(set_simulation_options, "nifgen")
 
 
-def test___single_session_info___create_nifgen_session___session_created(
+def test___single_session_info___initialize_nifgen_session___session_created(
     session_new: Mock,
     session_management_client: Mock,
 ) -> None:
@@ -42,7 +42,7 @@ def test___single_session_info___create_nifgen_session___session_created(
     session = create_mock_nifgen_session()
     session_new.side_effect = [session]
 
-    with reservation.create_nifgen_session() as session_info:
+    with reservation.initialize_nifgen_session() as session_info:
         assert session_info.session is session
 
     session_new.assert_called_once_with(
@@ -50,7 +50,7 @@ def test___single_session_info___create_nifgen_session___session_created(
     )
 
 
-def test___multiple_session_infos___create_nifgen_sessions___sessions_created(
+def test___multiple_session_infos___initialize_nifgen_sessions___sessions_created(
     session_new: Mock,
     session_management_client: Mock,
 ) -> None:
@@ -58,7 +58,7 @@ def test___multiple_session_infos___create_nifgen_sessions___sessions_created(
     sessions = create_mock_nifgen_sessions(3)
     session_new.side_effect = sessions
 
-    with reservation.create_nifgen_sessions() as session_info:
+    with reservation.initialize_nifgen_sessions() as session_info:
         assert session_info[0].session == sessions[0]
         assert session_info[1].session == sessions[1]
 
@@ -70,7 +70,7 @@ def test___multiple_session_infos___create_nifgen_sessions___sessions_created(
     )
 
 
-def test___optional_args___create_nifgen_session___optional_args_passed(
+def test___optional_args___initialize_nifgen_session___optional_args_passed(
     session_new: Mock,
     session_management_client: Mock,
 ) -> None:
@@ -78,7 +78,7 @@ def test___optional_args___create_nifgen_session___optional_args_passed(
     session = create_mock_nifgen_session()
     session_new.side_effect = [session]
 
-    with reservation.create_nifgen_session(
+    with reservation.initialize_nifgen_session(
         reset_device=True,
         options={"simulate": False},
         initialization_behavior=SessionInitializationBehavior.INITIALIZE_SERVER_SESSION,
@@ -98,7 +98,7 @@ def test___optional_args___create_nifgen_session___optional_args_passed(
     )
 
 
-def test___simulation_configured___create_nifgen_session___simulation_options_passed(
+def test___simulation_configured___initialize_nifgen_session___simulation_options_passed(
     mocker: MockerFixture,
     session_new: Mock,
     session_management_client: Mock,
@@ -108,7 +108,7 @@ def test___simulation_configured___create_nifgen_session___simulation_options_pa
     session = create_mock_nifgen_session()
     session_new.side_effect = [session]
 
-    with reservation.create_nifgen_session():
+    with reservation.initialize_nifgen_session():
         pass
 
     expected_options = {
@@ -124,7 +124,7 @@ def test___simulation_configured___create_nifgen_session___simulation_options_pa
     )
 
 
-def test___optional_args_and_simulation_configured___create_nifgen_session___optional_args_passed(
+def test___optional_args_and_simulation_configured___initialize_nifgen_session___optional_args_passed(
     mocker: MockerFixture,
     session_new: Mock,
     session_management_client: Mock,
@@ -134,7 +134,7 @@ def test___optional_args_and_simulation_configured___create_nifgen_session___opt
     session = create_mock_nifgen_session()
     session_new.side_effect = [session]
 
-    with reservation.create_nifgen_session(reset_device=True, options={"simulate": False}):
+    with reservation.initialize_nifgen_session(reset_device=True, options={"simulate": False}):
         pass
 
     expected_options = {"simulate": False}
@@ -174,7 +174,7 @@ def test___session_created___get_nifgen_connection___connection_returned(
         reservation = MultiSessionReservation(session_management_client, grpc_session_infos)
         sessions = create_mock_nifgen_sessions(2)
         session_new.side_effect = sessions
-        session_infos = stack.enter_context(reservation.create_nifgen_sessions())
+        session_infos = stack.enter_context(reservation.initialize_nifgen_sessions())
 
         connection = reservation.get_nifgen_connection(**kwargs)
 
@@ -209,7 +209,7 @@ def test___session_created___get_nifgen_connections___connections_returned(
         reservation = MultiSessionReservation(session_management_client, grpc_session_infos)
         sessions = create_mock_nifgen_sessions(2)
         session_new.side_effect = sessions
-        session_infos = stack.enter_context(reservation.create_nifgen_sessions())
+        session_infos = stack.enter_context(reservation.initialize_nifgen_sessions())
 
         connections = reservation.get_nifgen_connections(**kwargs)
 

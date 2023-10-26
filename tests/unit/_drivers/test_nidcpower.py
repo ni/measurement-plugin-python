@@ -34,7 +34,7 @@ if nidcpower:
     set_nidcpower_simulation_options = functools.partial(set_simulation_options, "nidcpower")
 
 
-def test___single_session_info___create_nidcpower_session___session_created(
+def test___single_session_info___initialize_nidcpower_session___session_created(
     session_new: Mock,
     session_management_client: Mock,
 ) -> None:
@@ -44,7 +44,7 @@ def test___single_session_info___create_nidcpower_session___session_created(
     session = create_mock_nidcpower_session()
     session_new.side_effect = [session]
 
-    with reservation.create_nidcpower_session() as session_info:
+    with reservation.initialize_nidcpower_session() as session_info:
         assert session_info.session is session
 
     session_new.assert_called_once_with(
@@ -52,7 +52,7 @@ def test___single_session_info___create_nidcpower_session___session_created(
     )
 
 
-def test___multiple_session_infos___create_nidcpower_sessions___sessions_created(
+def test___multiple_session_infos___initialize_nidcpower_sessions___sessions_created(
     session_new: Mock,
     session_management_client: Mock,
 ) -> None:
@@ -62,7 +62,7 @@ def test___multiple_session_infos___create_nidcpower_sessions___sessions_created
     sessions = create_mock_nidcpower_sessions(3)
     session_new.side_effect = sessions
 
-    with reservation.create_nidcpower_sessions() as session_info:
+    with reservation.initialize_nidcpower_sessions() as session_info:
         assert session_info[0].session == sessions[0]
         assert session_info[1].session == sessions[1]
 
@@ -74,7 +74,7 @@ def test___multiple_session_infos___create_nidcpower_sessions___sessions_created
     )
 
 
-def test___optional_args___create_nidcpower_session___optional_args_passed(
+def test___optional_args___initialize_nidcpower_session___optional_args_passed(
     session_new: Mock,
     session_management_client: Mock,
 ) -> None:
@@ -84,7 +84,7 @@ def test___optional_args___create_nidcpower_session___optional_args_passed(
     session = create_mock_nidcpower_session()
     session_new.side_effect = [session]
 
-    with reservation.create_nidcpower_session(
+    with reservation.initialize_nidcpower_session(
         reset=True,
         options={"simulate": False},
         initialization_behavior=SessionInitializationBehavior.INITIALIZE_SERVER_SESSION,
@@ -104,7 +104,7 @@ def test___optional_args___create_nidcpower_session___optional_args_passed(
     )
 
 
-def test___simulation_configured___create_nidcpower_session___simulation_options_passed(
+def test___simulation_configured___initialize_nidcpower_session___simulation_options_passed(
     mocker: MockerFixture,
     session_new: Mock,
     session_management_client: Mock,
@@ -116,7 +116,7 @@ def test___simulation_configured___create_nidcpower_session___simulation_options
     session = create_mock_nidcpower_session()
     session_new.side_effect = [session]
 
-    with reservation.create_nidcpower_session():
+    with reservation.initialize_nidcpower_session():
         pass
 
     expected_options = {"simulate": True, "driver_setup": {"BoardType": "PXIe", "Model": "4147"}}
@@ -129,7 +129,7 @@ def test___simulation_configured___create_nidcpower_session___simulation_options
     )
 
 
-def test___optional_args_and_simulation_configured___create_nidcpower_session___optional_args_passed(
+def test___optional_args_and_simulation_configured___initialize_nidcpower_session___optional_args_passed(
     mocker: MockerFixture,
     session_new: Mock,
     session_management_client: Mock,
@@ -141,7 +141,7 @@ def test___optional_args_and_simulation_configured___create_nidcpower_session___
     session = create_mock_nidcpower_session()
     session_new.side_effect = [session]
 
-    with reservation.create_nidcpower_session(reset=True, options={"simulate": False}):
+    with reservation.initialize_nidcpower_session(reset=True, options={"simulate": False}):
         pass
 
     expected_options = {"simulate": False}
@@ -189,7 +189,7 @@ def test___session_created___get_nidcpower_connection___connection_returned(
         reservation = MultiSessionReservation(session_management_client, grpc_session_infos)
         sessions = create_mock_nidcpower_sessions(2)
         session_new.side_effect = sessions
-        session_infos = stack.enter_context(reservation.create_nidcpower_sessions())
+        session_infos = stack.enter_context(reservation.initialize_nidcpower_sessions())
 
         connection = reservation.get_nidcpower_connection(**kwargs)
 
@@ -236,7 +236,7 @@ def test___session_created___get_nidcpower_connections___connections_returned(
         reservation = MultiSessionReservation(session_management_client, grpc_session_infos)
         sessions = create_mock_nidcpower_sessions(2)
         session_new.side_effect = sessions
-        session_infos = stack.enter_context(reservation.create_nidcpower_sessions())
+        session_infos = stack.enter_context(reservation.initialize_nidcpower_sessions())
 
         connections = reservation.get_nidcpower_connections(**kwargs)
 
