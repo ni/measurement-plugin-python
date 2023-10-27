@@ -5,7 +5,6 @@ from typing import Any
 from _helpers import GrpcChannelPoolHelper, TestStandSupport
 from _visa_dmm import Session, INSTRUMENT_TYPE_VISA_DMM
 from decouple import AutoConfig
-
 from ni_measurementlink_service.discovery import DiscoveryClient
 from ni_measurementlink_service.session_management import (
     PinMapContext,
