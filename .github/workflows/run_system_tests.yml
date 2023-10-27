@@ -26,8 +26,6 @@ jobs:
         run: poetry install
       - name: Run system tests
         run: poetry run tox
-        env:
-          passenv: RUNNER_NAME
       - name: Upload test results
         uses: actions/upload-artifact@v3
         with:
