@@ -2,7 +2,6 @@
 from typing import Any, Iterable
 
 from _helpers import GrpcChannelPoolHelper, TestStandSupport
-
 from ni_measurementlink_service.discovery import DiscoveryClient
 from ni_measurementlink_service.session_management import (
     INSTRUMENT_TYPE_NI_DIGITAL_PATTERN,
