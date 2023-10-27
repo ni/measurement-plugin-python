@@ -158,9 +158,9 @@ def _open_key_file(path: str) -> typing.TextIO:
 
 def _get_nipath(name: str) -> pathlib.Path:
     if sys.platform == "win32":
-        access = winreg.KEY_READ
+        access: int = winreg.KEY_READ
         if "64" in name:
-            access = access | winreg.KEY_WOW64_64KEY
+            access |= winreg.KEY_WOW64_64KEY
         with winreg.OpenKey(
             winreg.HKEY_LOCAL_MACHINE,
             r"SOFTWARE\National Instruments\Common\Installer",
