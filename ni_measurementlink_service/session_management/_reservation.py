@@ -901,8 +901,11 @@ class BaseReservation(abc.ABC):
             options,
             initialization_behavior,
         )
+        closing_function = functools.partial(
+            closing_session_with_ts_code_module_support, initialization_behavior
+        )
         return self._initialize_session_core(
-            session_constructor, INSTRUMENT_TYPE_NI_DIGITAL_PATTERN
+            session_constructor, INSTRUMENT_TYPE_NI_DIGITAL_PATTERN, closing_function
         )
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
@@ -947,8 +950,11 @@ class BaseReservation(abc.ABC):
             options,
             initialization_behavior,
         )
+        closing_function = functools.partial(
+            closing_session_with_ts_code_module_support, initialization_behavior
+        )
         return self._initialize_sessions_core(
-            session_constructor, INSTRUMENT_TYPE_NI_DIGITAL_PATTERN
+            session_constructor, INSTRUMENT_TYPE_NI_DIGITAL_PATTERN, closing_function
         )
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)

@@ -1,10 +1,20 @@
 """Functions to set up and tear down NI-VISA DMM sessions in NI TestStand."""
+import pathlib
 from typing import Any
 
-import ni_measurementlink_service as nims
-from _constants import USE_SIMULATION
 from _helpers import GrpcChannelPoolHelper, TestStandSupport
-from _visa_dmm import INSTRUMENT_TYPE_VISA_DMM, Session
+from _visa_dmm import Session, INSTRUMENT_TYPE_VISA_DMM
+from decouple import AutoConfig
+from ni_measurementlink_service.discovery import DiscoveryClient
+from ni_measurementlink_service.session_management import (
+    PinMapContext,
+    SessionManagementClient,
+)
+from ni_measurementlink_service.session_management._types import SessionInformation
+
+# Search for the `.env` file starting with the current directory.
+_config = AutoConfig(str(pathlib.Path.cwd()))
+_VISA_DMM_SIMULATE: bool = _config("MEASUREMENTLINK_VISA_DMM_SIMULATE", default=False, cast=bool)
 
 
 def create_nivisa_dmm_sessions(sequence_context: Any) -> None:
@@ -15,25 +25,22 @@ def create_nivisa_dmm_sessions(sequence_context: Any) -> None:
             (Dynamically typed.)
     """
     with GrpcChannelPoolHelper() as grpc_channel_pool:
-        session_management_client = nims.session_management.Client(
-            grpc_channel=grpc_channel_pool.session_management_channel
-        )
-
         teststand_support = TestStandSupport(sequence_context)
         pin_map_id = teststand_support.get_active_pin_map_id()
+        pin_map_context = PinMapContext(pin_map_id=pin_map_id, sites=None)
 
-        pin_map_context = nims.session_management.PinMapContext(pin_map_id=pin_map_id, sites=None)
+        discovery_client = DiscoveryClient(grpc_channel_pool=grpc_channel_pool)
+        session_management_client = SessionManagementClient(
+            discovery_client=discovery_client, grpc_channel_pool=grpc_channel_pool
+        )
         with session_management_client.reserve_sessions(
             context=pin_map_context, instrument_type_id=INSTRUMENT_TYPE_VISA_DMM
         ) as reservation:
-            for session_info in reservation.session_info:
-                # Reset the device
-                with Session(
-                    session_info.resource_name,
-                    simulate=USE_SIMULATION,
-                    reset_device=True,
-                ) as _:
-                    pass
+            with reservation.initialize_sessions(
+                _construct_visa_dmm_session,
+                instrument_type_id=INSTRUMENT_TYPE_VISA_DMM,
+            ):
+                pass
 
             session_management_client.register_sessions(reservation.session_info)
 
@@ -41,11 +48,22 @@ def create_nivisa_dmm_sessions(sequence_context: Any) -> None:
 def destroy_nivisa_dmm_sessions() -> None:
     """Destroy and unregister all NI-VISA DMM sessions."""
     with GrpcChannelPoolHelper() as grpc_channel_pool:
-        session_management_client = nims.session_management.Client(
-            grpc_channel=grpc_channel_pool.session_management_channel
+        discovery_client = DiscoveryClient(grpc_channel_pool=grpc_channel_pool)
+        session_management_client = SessionManagementClient(
+            discovery_client=discovery_client, grpc_channel_pool=grpc_channel_pool
         )
-
         with session_management_client.reserve_all_registered_sessions(
             instrument_type_id=INSTRUMENT_TYPE_VISA_DMM,
         ) as reservation:
+            if not reservation.session_info:
+                return
+
             session_management_client.unregister_sessions(reservation.session_info)
+
+
+def _construct_visa_dmm_session(session_info: SessionInformation) -> Session:
+    return Session(
+        session_info.resource_name,
+        reset_device=True,
+        simulate=_VISA_DMM_SIMULATE,
+    )

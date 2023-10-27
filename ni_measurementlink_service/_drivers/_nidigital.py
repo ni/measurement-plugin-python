@@ -19,6 +19,8 @@ _INITIALIZATION_BEHAVIOR = {
     SessionInitializationBehavior.AUTO: nidigital.SessionInitializationBehavior.AUTO,
     SessionInitializationBehavior.INITIALIZE_SERVER_SESSION: nidigital.SessionInitializationBehavior.INITIALIZE_SERVER_SESSION,
     SessionInitializationBehavior.ATTACH_TO_SERVER_SESSION: nidigital.SessionInitializationBehavior.ATTACH_TO_SERVER_SESSION,
+    SessionInitializationBehavior.INITIALIZE_SESSION_THEN_DETACH: nidigital.SessionInitializationBehavior.INITIALIZE_SERVER_SESSION,
+    SessionInitializationBehavior.ATTACH_TO_SESSION_THEN_CLOSE: nidigital.SessionInitializationBehavior.ATTACH_TO_SERVER_SESSION,
 }
 
 
