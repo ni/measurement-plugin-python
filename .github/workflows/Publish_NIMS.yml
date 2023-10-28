@@ -25,12 +25,16 @@ jobs:
     name: Update API reference docs and Publish NIMS Package to PyPI
     runs-on : ubuntu-latest 
     steps:
-      - uses: actions/checkout@v4
-      - name: Set up Poetry
-        run: pipx install poetry==${{ env.POETRY_VERSION }}
-      - uses: actions/setup-python@v4
+      - name: Check out repo
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ env.PYTHON_VERSION }}
+      - name: Set up Poetry
+        uses: Gr1N/setup-poetry@v8
+        with:
+          poetry-version: ${{ env.POETRY_VERSION }}
 
       - name: Check for lock changes
         run: poetry lock --check

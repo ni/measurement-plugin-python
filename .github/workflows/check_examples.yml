@@ -15,12 +15,14 @@ jobs:
     steps:
       - name: Check out repo
         uses: actions/checkout@v4
-      - name: Set up Poetry
-        run: pipx install poetry==${{ env.POETRY_VERSION }}
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: ${{ env.PYTHON_VERSION }}
+      - name: Set up Poetry
+        uses: Gr1N/setup-poetry@v8
+        with:
+          poetry-version: ${{ env.POETRY_VERSION }}
       # Updating poetry.lock for all of the examples takes over 6 minutes, so it's worth caching.
       - name: Cache poetry.lock
         uses: actions/cache@v3
