@@ -36,7 +36,6 @@ jobs:
           path: ni_measurementlink_generator/.venv
           key: ni-measurementlink-generator-${{ runner.os }}-py${{ env.PYTHON_VERSION }}-${{ hashFiles('poetry.lock') }}
       - name: Install ni-measurementlink-generator
-        if: steps.cache.outputs.cache-hit != 'true'
         run: poetry install -v
       - name: Lint ni-measurementlink-generator
         run: poetry run ni-python-styleguide lint

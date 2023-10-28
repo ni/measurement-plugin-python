@@ -38,7 +38,6 @@ jobs:
           path: .venv
           key: ni-measurementlink-service-no-extras-${{ runner.os }}-py${{ matrix.python-version }}-${{ hashFiles('poetry.lock') }}
       - name: Install ni-measurementlink-service (no extras)
-        if: steps.restore-nims-no-extras.outputs.cache-hit != 'true'
         run: poetry install -v
       - name: Save cached virtualenv (ni-measurementlink-service, no extras)
         uses: actions/cache/save@v3
@@ -57,7 +56,6 @@ jobs:
           path: .venv
           key: ni-measurementlink-service-all-extras-${{ runner.os }}-py${{ matrix.python-version }}-${{ hashFiles('poetry.lock') }}
       - name: Install ni-measurementlink-service (all extras)
-        if: steps.restore-nims-all-extras.outputs.cache-hit != 'true'
         run: poetry install -v --all-extras
       - name: Save cached ni-measurementlink-service virtualenv (all extras)
         uses: actions/cache/save@v3
@@ -76,7 +74,6 @@ jobs:
           path: ni_measurementlink_generator/.venv
           key: ni-measurementlink-generator-${{ runner.os }}-py${{ matrix.python-version }}-${{ hashFiles('poetry.lock') }}
       - name: Install ni-measurementlink-generator
-        if: steps.restore-nimg.outputs.cache-hit != 'true'
         run: poetry install -v
         working-directory: ./ni_measurementlink_generator
       - name: Save cached virtualenv (ni-measurementlink-generator)

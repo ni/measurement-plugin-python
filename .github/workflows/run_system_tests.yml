@@ -31,8 +31,7 @@ jobs:
             .tox
           key: run-system-tests-${{ runner.os }}-${{ matrix.configuration }}-${{ hashFiles('poetry.lock') }}
       - name: Install dependencies
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: poetry install
+        run: poetry install -v
       - name: Run system tests
         run: poetry run tox
       - name: Upload test results

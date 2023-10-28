@@ -48,7 +48,6 @@ jobs:
           path: 'examples/**/.venv'
           key: examples-venv-${{ runner.os }}-py${{ env.PYTHON_VERSION }}-${{ hashFiles('examples/**/poetry.lock') }}
       - name: Install examples
-        if: steps.cache-venv.outputs.cache-hit != 'true'
         run: |
           for example in examples/*/; do
             echo "::group::$example"
