@@ -27,24 +27,57 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
-          cache: 'poetry'
-          cache-dependency-path: |
-            poetry.lock
-            ni_measurementlink_generator/poetry.lock
+
+      # ni-measurementlink-service, no extras
+      - name: Restore cached virtualenv (ni-measurementlink-service, no extras)
+        uses: actions/cache/restore@v3
+        with:
+          path: .venv
+          key: ni-measurementlink-service-${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('poetry.lock') }}-no-extras
       - name: Install ni-measurementlink-service (no extras)
         run: poetry install -v
+      - name: Save cached virtualenv (ni-measurementlink-service, no extras)
+        uses: actions/cache/save@v3
+        with:
+          path: .venv
+          key: ni-measurementlink-service-${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('poetry.lock') }}-no-extras
       - name: Run unit tests and code coverage (ni-measurementlink-service, no extras)
         run: poetry run pytest ./tests/unit -v --cov=ni_measurementlink_service --junitxml=test_results/nims-${{ matrix.os }}-py${{ matrix.python-version}}-no-extras.xml
+
+      # ni-measurementlink-service, all extras
+      - name: Restore cached virtualenv (ni-measurementlink-service, all extras)
+        uses: actions/cache/restore@v3
+        with:
+          path: .venv
+          key: ni-measurementlink-service-${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('poetry.lock') }}-all-extras
       - name: Install ni-measurementlink-service (all extras)
         run: poetry install -v --all-extras
+      - name: Save cached ni-measurementlink-service virtualenv (all extras)
+        uses: actions/cache/save@v3
+        with:
+          path: .venv
+          key: ni-measurementlink-service-${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('poetry.lock') }}-all-extras
       - name: Run unit tests and code coverage (ni-measurementlink-service, all extras)
         run: poetry run pytest ./tests/unit -v --cov=ni_measurementlink_service --junitxml=test_results/nims-${{ matrix.os }}-py${{ matrix.python-version}}-all-extras.xml
+
+      # ni-measurementlink-generator
+      - name: Restore cached virtualenv (ni-measurementlink-generator)
+        uses: actions/cache/restore@v3
+        with:
+          path: ni_measurementlink_generator/.venv
+          key: ni-measurementlink-generator-${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('poetry.lock') }}
       - name: Install ni-measurementlink-generator
         run: poetry install -v
         working-directory: ./ni_measurementlink_generator
+      - name: Save cached virtualenv (ni-measurementlink-generator)
+        uses: actions/cache/save@v3
+        with:
+          path: ni_measurementlink_generator/.venv
+          key: ni-measurementlink-generator-${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('poetry.lock') }}
       - name: Run tests and code coverage (ni-measurementlink-generator)
         run: poetry run pytest -v --cov=ni_measurementlink_generator --junitxml=test_results/nimg-${{ matrix.os }}-py${{ matrix.python-version}}.xml
         working-directory: ./ni_measurementlink_generator
+
       - name: Upload test results
         uses: actions/upload-artifact@v3
         with:

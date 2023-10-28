@@ -25,10 +25,13 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: ${{ env.PYTHON_VERSION }}
-          cache: 'poetry'
-          cache-dependency-path: ni_measurementlink_generator/poetry.lock
       - name: Check for lock changes (ni-measurementlink-generator)
         run: poetry lock --check
+      - name: Cache virtualenv (ni-measurementlink-generator)
+        uses: actions/cache@v3
+        with:
+          path: ni_measurementlink_generator/.venv
+          key: ni-measurementlink-generator-${{ runner.os }}-${{ env.PYTHON_VERSION }}-${{ hashFiles('poetry.lock') }}
       - name: Install ni-measurementlink-generator
         run: poetry install -v
       - name: Lint ni-measurementlink-generator

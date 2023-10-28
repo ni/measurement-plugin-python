@@ -25,8 +25,20 @@ jobs:
           cache-dependency-path: poetry.lock
       - name: Check for lock changes (ni-measurementlink-service)
         run: poetry lock --check
+
+      # ni-measurementlink-service, all extras
+      - name: Restore cached virtualenv (ni-measurementlink-service, all extras)
+        uses: actions/cache/restore@v3
+        with:
+          path: .venv
+          key: ni-measurementlink-service-${{ runner.os }}-${{ env.PYTHON_VERSION }}-${{ hashFiles('poetry.lock') }}-all-extras
       - name: Install ni-measurementlink-service (all extras)
         run: poetry install -v --all-extras
+      - name: Save cached virtualenv (ni-measurementlink-service, all extras)
+        uses: actions/cache/save@v3
+        with:
+          path: .venv
+          key: ni-measurementlink-service-${{ runner.os }}-${{ env.PYTHON_VERSION }}-${{ hashFiles('poetry.lock') }}-all-extras
       - name: Lint ni-measurementlink-service
         run: poetry run ni-python-styleguide lint
       - name: Mypy static analysis (ni-measurementlink-service, Linux)
@@ -37,8 +49,20 @@ jobs:
         run:  poetry run mypy tests
       - name: Mypy static analysis (tests, Windows)
         run:  poetry run mypy tests --platform win32
+
+      # ni-measurementlink-service, all extras, docs
+      - name: Restore cached virtualenv (ni-measurementlink-service, all extras, docs)
+        uses: actions/cache/restore@v3
+        with:
+          path: .venv
+          key: ni-measurementlink-service-${{ runner.os }}-${{ env.PYTHON_VERSION }}-${{ hashFiles('poetry.lock') }}-all-extras-docs
       - name: Install ni-measurementlink-service (all extras, docs)
         run: poetry install -v --all-extras --with docs
+      - name: Save cached virtualenv (ni-measurementlink-service, all extras, docs)
+        uses: actions/cache/restore@v3
+        with:
+          path: .venv
+          key: ni-measurementlink-service-${{ runner.os }}-${{ env.PYTHON_VERSION }}-${{ hashFiles('poetry.lock') }}-all-extras-docs
       - name: Build docs and check for errors/warnings
         run: |
           rm -rf docs
