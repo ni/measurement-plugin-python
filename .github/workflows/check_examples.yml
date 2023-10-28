@@ -21,7 +21,16 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: ${{ env.PYTHON_VERSION }}
+      # Updating poetry.lock for all of the examples takes over 6 minutes, so it's worth caching.
+      - name: Cache poetry.lock
+        uses: actions/cache@v3
+        id: cache-poetry-lock
+        with:
+          path: 'examples/**/poetry.lock'
+          # Include the main project's poetry.lock in the hash to detect upstream dependency updates.
+          key: examples-poetry-lock-${{ runner.os }}-${{ env.PYTHON_VERSION }}-${{ hashFiles('examples/**/pyproject.toml', 'poetry.lock') }}
       - name: Lock examples
+        if: steps.cache-poetry-lock.outputs.cache-hit != 'true'
         run: |
           for example in examples/*/; do
             echo "::group::$example"
@@ -32,12 +41,12 @@ jobs:
           done
       - name: Cache virtualenvs
         uses: actions/cache@v3
-        id: cache
+        id: cache-venv
         with:
           path: 'examples/**/.venv'
-          key: examples-${{ runner.os }}-${{ env.PYTHON_VERSION }}-${{ hashFiles('examples/**/poetry.lock') }}
+          key: examples-venv-${{ runner.os }}-${{ env.PYTHON_VERSION }}-${{ hashFiles('examples/**/poetry.lock') }}
       - name: Install examples
-        if: steps.cache.outputs.cache-hit != 'true'
+        if: steps.cache-venv.outputs.cache-hit != 'true'
         run: |
           for example in examples/*/; do
             echo "::group::$example"
