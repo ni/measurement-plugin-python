@@ -6,8 +6,8 @@ import ni_measurementlink_service
 from ni_measurementlink_service import _dotenvpath
 
 
-@pytest.mark.parametrize("exists", [False, True])
-def test___exists_varies___has_dotenv_file___returns_exists(
+@pytest.mark.parametrize("dotenv_exists", [False, True])
+def test___dotenv_exists_varies___has_dotenv_file___matches_dotenv_exists(
     dotenv_exists: bool, tmp_path: Path
 ) -> None:
     if dotenv_exists:
@@ -31,4 +31,6 @@ def test___get_nims_path___returns_nims_path() -> None:
 def test___get_script_or_exe_path___returns_pytest_path() -> None:
     path = _dotenvpath._get_script_or_exe_path()
 
-    assert path.parent.name in ["pytest", "pytest.exe"] and path.name == "__main__.py"
+    assert path is not None
+    assert path.parent.name in ["pytest", "pytest.exe"]
+    assert path.name == "__main__.py"
