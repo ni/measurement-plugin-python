@@ -1,0 +1,34 @@
+name: Run system tests
+
+on:
+  workflow_call:
+  workflow_dispatch:
+
+jobs:
+  run_system_tests:
+    name: Run system tests
+    runs-on: 
+      - self-hosted
+      - windows
+      - x64
+      - rdss-measlinkbot-win-10-${{ matrix.configuration }}
+    strategy:
+      matrix:
+        configuration: ["py32", "py64"]
+      # Fail-fast skews the pass/fail ratio and seems to make pytest produce
+      # incomplete JUnit XML results.
+      fail-fast: false
+    timeout-minutes: 90
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v3
+      - name: Install dependencies
+        run: poetry install
+      - name: Run system tests
+        run: poetry run tox
+      - name: Upload test results
+        uses: actions/upload-artifact@v3
+        with:
+          name: test_results
+          path: test_results/*.xml
+        if: always()

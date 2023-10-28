@@ -1,4 +1,4 @@
-name: Run tests
+name: Run unit tests
 
 on:
   workflow_call:
@@ -8,8 +8,8 @@ env:
   POETRY_VERSION: 1.2.2
 
 jobs:
-  run_tests:
-    name: Run tests
+  run_unit_tests:
+    name: Run unit tests
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -36,12 +36,12 @@ jobs:
           key: ${{ runner.os }}-poetry-${{ hashFiles('poetry.lock') }}
       - name: Install ni-measurementlink-service (no extras)
         run: poetry install -v
-      - name: Run tests and code coverage (ni-measurementlink-service, no extras)
-        run: poetry run pytest ./tests -v --cov=ni_measurementlink_service --junitxml=test_results/nims-${{ matrix.os }}-py${{ matrix.python-version}}-no-extras.xml
+      - name: Run unit tests and code coverage (ni-measurementlink-service, no extras)
+        run: poetry run pytest ./tests/unit -v --cov=ni_measurementlink_service --junitxml=test_results/nims-${{ matrix.os }}-py${{ matrix.python-version}}-no-extras.xml
       - name: Install ni-measurementlink-service (all extras)
         run: poetry install -v --all-extras
-      - name: Run tests and code coverage (ni-measurementlink-service, all extras)
-        run: poetry run pytest ./tests -v --cov=ni_measurementlink_service --junitxml=test_results/nims-${{ matrix.os }}-py${{ matrix.python-version}}-all-extras.xml
+      - name: Run unit tests and code coverage (ni-measurementlink-service, all extras)
+        run: poetry run pytest ./tests/unit -v --cov=ni_measurementlink_service --junitxml=test_results/nims-${{ matrix.os }}-py${{ matrix.python-version}}-all-extras.xml
       - name: Install ni-measurementlink-generator
         run: poetry install -v
         working-directory: ./ni_measurementlink_generator
