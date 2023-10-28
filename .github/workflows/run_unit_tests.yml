@@ -21,15 +21,13 @@ jobs:
     steps:
       - name: Check out repo
         uses: actions/checkout@v4
+      - name: Set up Poetry
+        run: pipx install poetry==${{ env.POETRY_VERSION }}
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
           cache: 'poetry'
-      - name: Set up Poetry
-        uses: Gr1N/setup-poetry@v8
-        with:
-          poetry-version: ${{ env.POETRY_VERSION }}
       - name: Install ni-measurementlink-service (no extras)
         run: poetry install -v
       - name: Run unit tests and code coverage (ni-measurementlink-service, no extras)
