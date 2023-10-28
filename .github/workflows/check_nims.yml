@@ -59,7 +59,7 @@ jobs:
       - name: Install ni-measurementlink-service (all extras, docs)
         run: poetry install -v --all-extras --with docs
       - name: Save cached virtualenv (ni-measurementlink-service, all extras, docs)
-        uses: actions/cache/restore@v3
+        uses: actions/cache/save@v3
         with:
           path: .venv
           key: ni-measurementlink-service-${{ runner.os }}-${{ env.PYTHON_VERSION }}-${{ hashFiles('poetry.lock') }}-all-extras-docs
