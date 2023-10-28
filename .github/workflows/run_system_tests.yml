@@ -22,6 +22,8 @@ jobs:
     steps:
       - name: Check out repo
         uses: actions/checkout@v4
+      - name: Add gzip to path so cache can use tar -z
+        run: echo "C:\Program Files\Git\usr\bin" >> $GITHUB_PATH
       - name: Cache virtualenvs
         uses: actions/cache@v3
         id: cache
