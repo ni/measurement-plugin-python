@@ -22,6 +22,7 @@ jobs:
         with:
           python-version: ${{ env.PYTHON_VERSION }}
           cache: 'poetry'
+          cache-dependency-path: poetry.lock
       - name: Check for lock changes (ni-measurementlink-service)
         run: poetry lock --check
       - name: Install ni-measurementlink-service (all extras)

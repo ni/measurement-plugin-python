@@ -28,6 +28,9 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           cache: 'poetry'
+          cache-dependency-path: |
+            poetry.lock
+            ni_measurementlink_generator/poetry.lock
       - name: Install ni-measurementlink-service (no extras)
         run: poetry install -v
       - name: Run unit tests and code coverage (ni-measurementlink-service, no extras)

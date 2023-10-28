@@ -26,6 +26,7 @@ jobs:
         with:
           python-version: ${{ env.PYTHON_VERSION }}
           cache: 'poetry'
+          cache-dependency-path: ni_measurementlink_generator/poetry.lock
       - name: Check for lock changes (ni-measurementlink-generator)
         run: poetry lock --check
       - name: Install ni-measurementlink-generator
