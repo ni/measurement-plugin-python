@@ -32,10 +32,12 @@ jobs:
           done
       - name: Cache virtualenvs
         uses: actions/cache@v3
+        id: cache
         with:
           path: 'examples/**/.venv'
           key: examples-${{ runner.os }}-${{ env.PYTHON_VERSION }}-${{ hashFiles('examples/**/poetry.lock') }}
       - name: Install examples
+        if: steps.cache.outputs.cache-hit != 'true'
         run: |
           for example in examples/*/; do
             echo "::group::$example"

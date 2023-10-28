@@ -24,12 +24,14 @@ jobs:
         uses: actions/checkout@v4
       - name: Cache virtualenvs
         uses: actions/cache@v3
+        id: cache
         with:
           path: |
             .venv
             .tox
           key: run-system-tests-${{ runner.os }}-${{ matrix.configuration }}-${{ hashFiles('poetry.lock') }}
       - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
         run: poetry install
       - name: Run system tests
         run: poetry run tox
