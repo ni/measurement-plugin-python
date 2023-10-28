@@ -21,8 +21,20 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: ${{ env.PYTHON_VERSION }}
-          cache: 'poetry'
-      # Install each example's dependencies so mypy can see their types.
+      - name: Lock examples
+        run: |
+          for example in examples/*/; do
+            echo "::group::$example"
+            pushd $example
+            poetry lock
+            popd
+            echo "::endgroup::"
+          done
+      - name: Cache virtualenvs
+        uses: actions/cache@v3
+        with:
+          path: 'examples/**/.venv'
+          key: examples-${{ runner.os }}-${{ env.PYTHON_VERSION }}-${{ hashFiles('examples/**/poetry.lock') }}
       - name: Install examples
         run: |
           for example in examples/*/; do
