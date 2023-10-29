@@ -63,5 +63,5 @@ def _is_relative_to(path: PurePath, other: PurePath) -> bool:
 def _get_nims_path() -> Path:
     """Get the path of the ni_measurementlink_service package."""
     nims_module = sys.modules["ni_measurementlink_service"]
-    assert nims_module.__file__
-    return Path(nims_module.__file__)
+    assert nims_module.__file__ and nims_module.__file__.endswith("__init__.py")
+    return Path(nims_module.__file__).parent

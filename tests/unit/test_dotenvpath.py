@@ -2,7 +2,6 @@ from pathlib import Path
 
 import pytest
 
-import ni_measurementlink_service
 from ni_measurementlink_service import _dotenvpath
 
 
@@ -24,8 +23,8 @@ def test___get_caller_path___returns_this_modules_path() -> None:
     assert _dotenvpath._get_caller_path() == Path(__file__)
 
 
-def test___get_nims_path___returns_nims_path() -> None:
-    assert _dotenvpath._get_nims_path() == Path(ni_measurementlink_service.__file__)
+def test___get_nims_path___returns_package_dir() -> None:
+    assert _dotenvpath._get_nims_path() == Path(_dotenvpath.__file__).parent
 
 
 def test___get_script_or_exe_path___returns_pytest_path() -> None:
