@@ -1,6 +1,6 @@
 import sys
 import traceback
-from pathlib import Path
+from pathlib import Path, PurePath
 from typing import Optional
 
 
@@ -43,10 +43,21 @@ def _get_caller_path() -> Optional[Path]:
     for frame, _ in traceback.walk_stack(None):
         if frame.f_code.co_filename:
             module_path = Path(frame.f_code.co_filename)
-            if module_path.exists() and not module_path.is_relative_to(nims_path):
+            if module_path.exists() and not _is_relative_to(module_path, nims_path):
                 return module_path
 
     return None
+
+
+def _is_relative_to(path: PurePath, other: PurePath) -> bool:
+    if sys.version_info >= (3, 9):
+        return path.is_relative_to(other)
+    else:
+        try:
+            _ = path.relative_to(other)
+            return True
+        except ValueError:
+            return False
 
 
 def _get_nims_path() -> Path:
