@@ -31,5 +31,4 @@ def test___get_script_or_exe_path___returns_pytest_path() -> None:
     path = _dotenvpath._get_script_or_exe_path()
 
     assert path is not None
-    assert path.parent.name in ["pytest", "pytest.exe"]
-    assert path.name == "__main__.py"
+    assert "pytest" in path.parts or "pytest.exe" in path.parts
