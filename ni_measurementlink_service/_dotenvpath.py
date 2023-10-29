@@ -1,3 +1,4 @@
+import inspect
 import sys
 import traceback
 from pathlib import Path, PurePath
@@ -40,7 +41,7 @@ def _get_script_or_exe_path() -> Optional[Path]:
 def _get_caller_path() -> Optional[Path]:
     """Get the path of the module calling into ni_measurementlink_service, if possible."""
     nims_path = _get_nims_path()
-    for frame, _ in traceback.walk_stack(None):
+    for frame, _ in traceback.walk_stack(inspect.currentframe()):
         if frame.f_code.co_filename:
             module_path = Path(frame.f_code.co_filename)
             if module_path.exists() and not _is_relative_to(module_path, nims_path):
