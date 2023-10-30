@@ -27,12 +27,20 @@ This is a MeasurementLink example that sources and measures a DC voltage with an
 
 - NI-DCPower
 
+By default, this example uses a physical instrument. To use a simulated instrument, follow the steps below:
+- Make sure to create a `.env` file in the current directory of the measurement file or any of its parent directories.
+- Add the following environment variables to the `.env` file to set up the simulation:
+
+  ```
+  MEASUREMENTLINK_NIDCPOWER_SIMULATE=1 
+  MEASUREMENTLINK_NIDCPOWER_BOARD_TYPE=PXIe
+  MEASUREMENTLINK_NIDCPOWER_MODEL=4141
+  ```
+
 ### Required Hardware
 
 This example requires an NI SMU that is supported by NI-DCPower (e.g. PXIe-4141).
 
-By default, this example uses a simulated instrument. To use a physical instrument, edit
-`_constants.py` to specify `USE_SIMULATION = False`.
 
 > **Note**
 > The multi-site pin map, `NIDCPowerSourceDCVoltageMultiSite.pinmap`, requires an
