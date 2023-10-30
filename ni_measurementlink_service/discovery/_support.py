@@ -15,6 +15,7 @@ from ni_measurementlink_service._internal.stubs.ni.measurementlink.discovery.v1 
 
 if sys.platform == "win32":
     import msvcrt
+    import winreg
 
     import win32con
     import win32file
@@ -55,13 +56,7 @@ def _get_discovery_service_location() -> pathlib.PurePath:
 
 def _get_registration_json_file_path() -> pathlib.Path:
     if sys.platform == "win32":
-        return (
-            pathlib.Path(os.environ["ProgramW6432"])
-            / "National Instruments"
-            / "Shared"
-            / "MeasurementLink"
-            / "MeasurementLinkServices.json"
-        )
+        return _get_nipath("NISHAREDDIR64") / "MeasurementLink" / "MeasurementLinkServices.json"
     else:
         raise NotImplementedError("Platform not supported")
 
@@ -123,13 +118,7 @@ def _get_key_file_path(cluster_id: Optional[str] = None) -> pathlib.Path:
 def _get_key_file_directory() -> pathlib.Path:
     version = discovery_service_pb2.DESCRIPTOR.package.split(".")[-1]
     if sys.platform == "win32":
-        return (
-            pathlib.Path(os.environ["ProgramData"])
-            / "National Instruments"
-            / "MeasurementLink"
-            / "Discovery"
-            / version
-        )
+        return _get_nipath("NIPUBAPPDATADIR") / "MeasurementLink" / "Discovery" / version
     else:
         raise NotImplementedError("Platform not supported")
 
@@ -165,3 +154,20 @@ def _open_key_file(path: str) -> typing.TextIO:
         return os.fdopen(crt_file_descriptor, "r", encoding="utf-8-sig")
     else:
         return open(path, "r")
+
+
+def _get_nipath(name: str) -> pathlib.Path:
+    if sys.platform == "win32":
+        access: int = winreg.KEY_READ
+        if "64" in name:
+            access |= winreg.KEY_WOW64_64KEY
+        with winreg.OpenKey(
+            winreg.HKEY_LOCAL_MACHINE,
+            r"SOFTWARE\National Instruments\Common\Installer",
+            access=access,
+        ) as key:
+            value, type = winreg.QueryValueEx(key, name)
+            assert type == winreg.REG_SZ
+            return pathlib.Path(value)
+    else:
+        raise NotImplementedError("Platform not supported")

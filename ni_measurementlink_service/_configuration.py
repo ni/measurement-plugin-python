@@ -1,11 +1,12 @@
 """MeasurementLink configuration options."""
 from __future__ import annotations
 
-import pathlib
 import sys
 from typing import TYPE_CHECKING, Any, Callable, Dict, NamedTuple, TypeVar, Union
 
 from decouple import AutoConfig, Undefined, undefined
+
+from ni_measurementlink_service._dotenvpath import get_dotenv_search_path
 
 if TYPE_CHECKING:
     if sys.version_info >= (3, 11):
@@ -16,8 +17,7 @@ if TYPE_CHECKING:
 
 _PREFIX = "MEASUREMENTLINK"
 
-# Search for the `.env` file starting with the current directory.
-_config = AutoConfig(str(pathlib.Path.cwd()))
+_config = AutoConfig(str(get_dotenv_search_path()))
 
 if TYPE_CHECKING:
     # Work around decouple's lack of type hints.

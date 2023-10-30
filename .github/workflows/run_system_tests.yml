@@ -22,8 +22,16 @@ jobs:
     steps:
       - name: Check out repo
         uses: actions/checkout@v4
+      - name: Cache virtualenvs
+        uses: actions/cache@v3
+        id: cache
+        with:
+          path: |
+            .venv
+            .tox
+          key: run-system-tests-${{ runner.os }}-${{ matrix.configuration }}-${{ hashFiles('poetry.lock') }}
       - name: Install dependencies
-        run: poetry install
+        run: poetry install -v
       - name: Run system tests
         run: poetry run tox
       - name: Upload test results
