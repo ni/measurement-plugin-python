@@ -23,12 +23,30 @@ jobs:
         uses: Gr1N/setup-poetry@v8
         with:
           poetry-version: ${{ env.POETRY_VERSION }}
-      - name: Cache Poetry virtualenv
+      # Updating poetry.lock for all of the examples takes over 6 minutes, so it's worth caching.
+      - name: Cache poetry.lock
         uses: actions/cache@v3
+        id: cache-poetry-lock
         with:
-          path: ~/.cache/pypoetry/virtualenvs
-          key: ${{ runner.os }}-poetry-${{ hashFiles('poetry.lock') }}
-      # Install each example's dependencies so mypy can see their types.
+          path: 'examples/**/poetry.lock'
+          # Include the main project's poetry.lock in the hash to detect upstream dependency updates.
+          key: examples-poetry-lock-${{ runner.os }}-py${{ env.PYTHON_VERSION }}-${{ hashFiles('examples/**/pyproject.toml', 'poetry.lock') }}
+      - name: Lock examples
+        if: steps.cache-poetry-lock.outputs.cache-hit != 'true'
+        run: |
+          for example in examples/*/; do
+            echo "::group::$example"
+            pushd $example
+            poetry lock
+            popd
+            echo "::endgroup::"
+          done
+      - name: Cache virtualenvs
+        uses: actions/cache@v3
+        id: cache-venv
+        with:
+          path: 'examples/**/.venv'
+          key: examples-venv-${{ runner.os }}-py${{ env.PYTHON_VERSION }}-${{ hashFiles('examples/**/poetry.lock') }}
       - name: Install examples
         run: |
           for example in examples/*/; do

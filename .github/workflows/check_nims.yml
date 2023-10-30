@@ -25,13 +25,22 @@ jobs:
           poetry-version: ${{ env.POETRY_VERSION }}
       - name: Check for lock changes (ni-measurementlink-service)
         run: poetry lock --check
-      - name: Cache Poetry virtualenv
-        uses: actions/cache@v3
+
+      # ni-measurementlink-service, all extras
+      - name: Restore cached virtualenv (ni-measurementlink-service, all extras)
+        uses: actions/cache/restore@v3
+        id: restore-nims-all-extras
         with:
-          path: ~/.cache/pypoetry/virtualenvs
-          key: ${{ runner.os }}-poetry-${{ hashFiles('poetry.lock') }}
+          path: .venv
+          key: ni-measurementlink-service-all-extras-${{ runner.os }}-py${{ env.PYTHON_VERSION }}-${{ hashFiles('poetry.lock') }}
       - name: Install ni-measurementlink-service (all extras)
         run: poetry install -v --all-extras
+      - name: Save cached virtualenv (ni-measurementlink-service, all extras)
+        uses: actions/cache/save@v3
+        if: steps.restore-nims-all-extras.outputs.cache-hit != 'true'
+        with:
+          path: .venv
+          key: ${{ steps.restore-nims-all-extras.outputs.cache-primary-key }}
       - name: Lint ni-measurementlink-service
         run: poetry run ni-python-styleguide lint
       - name: Mypy static analysis (ni-measurementlink-service, Linux)
@@ -42,8 +51,22 @@ jobs:
         run:  poetry run mypy tests
       - name: Mypy static analysis (tests, Windows)
         run:  poetry run mypy tests --platform win32
+
+      # ni-measurementlink-service, all extras, docs
+      - name: Restore cached virtualenv (ni-measurementlink-service, all extras, docs)
+        uses: actions/cache/restore@v3
+        id: restore-nims-all-extras-docs
+        with:
+          path: .venv
+          key: ni-measurementlink-service-all-extras-docs-${{ runner.os }}-py${{ env.PYTHON_VERSION }}-${{ hashFiles('poetry.lock') }}
       - name: Install ni-measurementlink-service (all extras, docs)
         run: poetry install -v --all-extras --with docs
+      - name: Save cached virtualenv (ni-measurementlink-service, all extras, docs)
+        uses: actions/cache/save@v3
+        if: steps.restore-nims-all-extras-docs.outputs.cache-hit != 'true'
+        with:
+          path: .venv
+          key: ${{ steps.restore-nims-all-extras-docs.outputs.cache-primary-key }}
       - name: Build docs and check for errors/warnings
         run: |
           rm -rf docs

@@ -25,21 +25,19 @@ jobs:
     name: Update API reference docs and Publish NIMS Package to PyPI
     runs-on : ubuntu-latest 
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v4
+      - name: Check out repo
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ env.PYTHON_VERSION }}
-      - uses: Gr1N/setup-poetry@v8
+      - name: Set up Poetry
+        uses: Gr1N/setup-poetry@v8
         with:
           poetry-version: ${{ env.POETRY_VERSION }}
 
       - name: Check for lock changes
         run: poetry lock --check
-
-      - uses: actions/cache@v3
-        with:
-          path: ~/.cache/pypoetry/virtualenvs
-          key: ${{ runner.os }}-poetry-${{ hashFiles('poetry.lock') }}
 
       # If the tag is 0.1.0, this will set the version of NIMS package to 0.1.0
       - name: Store version from Tag
