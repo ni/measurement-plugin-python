@@ -1,0 +1,19 @@
+{
+  "services": [
+    {
+      "displayName": "NI-DCPower Measurement (Py)",
+      "serviceClass": "ni.tests.NIDCPowerMeasurement_Python",
+      "descriptionUrl": "",
+      "providedInterfaces": [
+        "ni.measurementlink.measurement.v1.MeasurementService",
+        "ni.measurementlink.measurement.v2.MeasurementService"
+      ],
+      "path": "start.bat",
+      "annotations": {
+        "ni/service.description": "NI-DCPower MeasurementLink test service.",
+        "ni/service.collection": "NI.Tests",
+        "ni/service.tags": []
+      }
+    }
+  ]
+}
