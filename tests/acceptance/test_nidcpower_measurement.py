@@ -1,5 +1,5 @@
 import pathlib
-from typing import Generator, Iterable, NamedTuple
+from typing import Generator
 
 import pytest
 
@@ -23,7 +23,6 @@ def test___single_session___measure___single_session_created(
     pin_map_directory: pathlib.Path,
     stub_v2: MeasurementServiceStub,
 ) -> None:
-    
     pin_map_name = "1Smu1ChannelGroup1Pin1Site.pinmap"
     pin_names = ["Pin1"]
     pin_map_id = pin_map_client.update_pin_map(pin_map_directory / pin_map_name)
