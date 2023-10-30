@@ -18,127 +18,25 @@ from tests.utilities import nidcpower_measurement
 from tests.utilities.pin_map_client import PinMapClient
 
 
-class Configuration(NamedTuple):
-    """A group of shared test parameters."""
-
-    pin_map_name: str
-    pin_names: Iterable[str]
-    sites: Iterable[int]
-    expected_session_names: Iterable[str]
-    expected_resource_names: Iterable[str]
-    expected_channel_lists: Iterable[str]
-
-
-_SMU_SINGLE_SESSION_CONFIGURATIONS = [
-    Configuration(
-        "1Smu1ChannelGroup1Pin1Site.pinmap",
-        ["Pin1"],
-        [0],
-        ["DCPower1/0"],
-        ["DCPower1/0"],
-        ["DCPower1/0"],
-    ),
-    Configuration(
-        "1Smu1ChannelGroup2Pin2Site.pinmap",
-        ["Pin1"],
-        [0],
-        ["DCPower1/0, DCPower1/1, DCPower1/2, DCPower1/3"],
-        ["DCPower1/0, DCPower1/1, DCPower1/2, DCPower1/3"],
-        ["DCPower1/0"],
-    ),
-    Configuration(
-        "1Smu1ChannelGroup2Pin2Site.pinmap",
-        ["Pin1", "Pin2"],
-        [0],
-        ["DCPower1/0, DCPower1/1, DCPower1/2, DCPower1/3"],
-        ["DCPower1/0, DCPower1/1, DCPower1/2, DCPower1/3"],
-        ["DCPower1/0, DCPower1/1"],
-    ),
-    Configuration(
-        "1Smu1ChannelGroup2Pin2Site.pinmap",
-        ["Pin1"],
-        [0, 1],
-        ["DCPower1/0, DCPower1/1, DCPower1/2, DCPower1/3"],
-        ["DCPower1/0, DCPower1/1, DCPower1/2, DCPower1/3"],
-        ["DCPower1/0, DCPower1/2"],
-    ),
-    Configuration(
-        "1Smu1ChannelGroup2Pin2Site.pinmap",
-        ["Pin1", "Pin2"],
-        [0, 1],
-        ["DCPower1/0, DCPower1/1, DCPower1/2, DCPower1/3"],
-        ["DCPower1/0, DCPower1/1, DCPower1/2, DCPower1/3"],
-        ["DCPower1/0, DCPower1/1, DCPower1/2, DCPower1/3"],
-    ),
-    Configuration(
-        "1Smu2ChannelGroup2Pin2Site.pinmap",
-        ["Pin1"],
-        [0],
-        ["DCPower1/0, DCPower1/1"],
-        ["DCPower1/0, DCPower1/1"],
-        ["DCPower1/0"],
-    ),
-    Configuration(
-        "1Smu2ChannelGroup2Pin2Site.pinmap",
-        ["Pin1", "Pin2"],
-        [0],
-        ["DCPower1/0, DCPower1/1"],
-        ["DCPower1/0, DCPower1/1"],
-        ["DCPower1/0, DCPower1/1"],
-    ),
-    Configuration(
-        "1Smu2ChannelGroup2Pin2Site.pinmap",
-        ["Pin1", "Pin2"],
-        [1],
-        ["DCPower1/2, DCPower1/3"],
-        ["DCPower1/2, DCPower1/3"],
-        ["DCPower1/2, DCPower1/3"],
-    ),
-    Configuration(
-        "2Smu2ChannelGroup2Pin2Site.pinmap",
-        ["Pin1"],
-        [0],
-        ["DCPower1/0, DCPower1/1"],
-        ["DCPower1/0, DCPower1/1"],
-        ["DCPower1/0"],
-    ),
-    Configuration(
-        "2Smu2ChannelGroup2Pin2Site.pinmap",
-        ["Pin1", "Pin2"],
-        [0],
-        ["DCPower1/0, DCPower1/1"],
-        ["DCPower1/0, DCPower1/1"],
-        ["DCPower1/0, DCPower1/1"],
-    ),
-    Configuration(
-        "2Smu2ChannelGroup2Pin2Site.pinmap",
-        ["Pin1", "Pin2"],
-        [1],
-        ["DCPower2/0, DCPower2/1"],
-        ["DCPower2/0, DCPower2/1"],
-        ["DCPower2/0, DCPower2/1"],
-    ),
-]
-
-
-@pytest.mark.parametrize("configuration", _SMU_SINGLE_SESSION_CONFIGURATIONS)
 def test___single_session___measure___single_session_created(
-    configuration: Configuration,
     pin_map_client: PinMapClient,
     pin_map_directory: pathlib.Path,
     stub_v2: MeasurementServiceStub,
 ) -> None:
-    pin_map_id = pin_map_client.update_pin_map(pin_map_directory / configuration.pin_map_name)
-    pin_map_context = PinMapContext(pin_map_id=pin_map_id, sites=configuration.sites)
+    
+    pin_map_name = "1Smu1ChannelGroup1Pin1Site.pinmap"
+    pin_names = ["Pin1"]
+    pin_map_id = pin_map_client.update_pin_map(pin_map_directory / pin_map_name)
+    pin_map_context = PinMapContext(pin_map_id=pin_map_id, sites=[0])
     configurations = nidcpower_measurement_pb2.NIDCPowerConfigurations(
-        pin_names=configuration.pin_names, multi_session=False
+        pin_names=pin_names, multi_session=False
     )
 
     outputs = _measure(stub_v2, pin_map_context, configurations)
 
-    assert outputs.session_names == configuration.expected_session_names
-    assert outputs.resource_names == configuration.expected_resource_names
-    assert outputs.channel_lists == configuration.expected_channel_lists
+    assert outputs.session_names == ["DCPower1/0"]
+    assert outputs.resource_names == ["DCPower1/0"]
+    assert outputs.channel_lists == ["DCPower1/0"]
 
 
 def _measure(

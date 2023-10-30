@@ -25,8 +25,10 @@ def test___single_session_reserved___initialize_nidcpower_session___single_sessi
         with reservation.initialize_nidcpower_session() as session_info:
             assert session_info.session is not None
 
-        nidcpower_resource = "DCPower1/0, DCPower1/1, DCPower1/2, DCPower1/3, DCPower2/1"
-        assert session_info.session_name == nidcpower_resource
+        assert (
+            session_info.session_name
+            == "DCPower1/0, DCPower1/1, DCPower1/2, DCPower1/3, DCPower2/1"
+        )
 
 
 @pytest.fixture
