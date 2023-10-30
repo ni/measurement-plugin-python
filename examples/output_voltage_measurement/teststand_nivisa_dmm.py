@@ -12,8 +12,8 @@ from ni_measurementlink_service.session_management import (
 )
 from ni_measurementlink_service.session_management._types import SessionInformation
 
-# Search for the `.env` file starting with the current directory.
-_config = AutoConfig(str(pathlib.Path.cwd()))
+# Search for the `.env` file starting with this code module's parent directory.
+_config = AutoConfig(str(pathlib.Path(__file__).resolve().parent))
 _VISA_DMM_SIMULATE: bool = _config("MEASUREMENTLINK_VISA_DMM_SIMULATE", default=False, cast=bool)
 
 
