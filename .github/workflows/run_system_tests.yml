@@ -22,6 +22,8 @@ jobs:
     steps:
       - name: Check out repo
         uses: actions/checkout@v4
+      - name: Rename .env.simulation to .env
+        run: mv .env.simulation .env
       - name: Cache virtualenvs
         uses: actions/cache@v3
         id: cache
@@ -32,12 +34,6 @@ jobs:
           key: run-system-tests-${{ runner.os }}-${{ matrix.configuration }}-${{ hashFiles('poetry.lock') }}
       - name: Install dependencies
         run: poetry install -v
-      - name: Check and rename .env.simulation to .env
-        run: |
-          if [ -f .env.simulation ]; then
-            mv .env.simulation .env
-          fi
-        shell: bash
         working-directory: ${{ github.workspace }}
       - name: Run system tests
         run: poetry run tox
