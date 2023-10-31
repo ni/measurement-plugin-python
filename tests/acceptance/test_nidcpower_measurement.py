@@ -31,7 +31,7 @@ def test___single_session___measure___single_session_created(
 
     outputs = _measure(stub_v2, pin_map_context, configurations)
 
-    assert _get_output(outputs) == [_MeasurementOutput("DCPower1/0", "DCPower1/0", "DCPower1/0")]
+    assert _get_output(outputs) == [_MeasurementOutput("DCPower1/0", "DCPower1/0", "DCPower1/0", "DCPower1/0")]
 
 
 def test___multiple_sessions___measure___multiple_sessions_created(
@@ -48,8 +48,8 @@ def test___multiple_sessions___measure___multiple_sessions_created(
     outputs = _measure(stub_v2, pin_map_context, configurations)
 
     assert _get_output(outputs) == [
-        _MeasurementOutput("DCPower1/0", "DCPower1/0", "DCPower1/0"),
-        _MeasurementOutput("DCPower1/2", "DCPower1/2", "DCPower1/2"),
+        _MeasurementOutput("DCPower1/0", "DCPower1/0", "DCPower1/0", "DCPower1/0"),
+        _MeasurementOutput("DCPower1/2", "DCPower1/2", "DCPower1/2", "DCPower1/2"),
     ]
 
 
@@ -84,15 +84,21 @@ class _MeasurementOutput(NamedTuple):
     session_name: str
     resource_name: str
     channel_list: str
+    connected_chanenls: str
 
 
 def _get_output(
     outputs: NIDCPowerOutputs,
 ) -> Iterable[_MeasurementOutput]:
     measurement_output = []
-    for session_name, resource_name, channel_list in zip(
-        outputs.session_names, outputs.resource_names, outputs.channel_lists
+    for session_name, resource_name, channel_list, channels_connected in zip(
+        outputs.session_names,
+        outputs.resource_names,
+        outputs.channel_lists,
+        outputs.channels_connected,
     ):
-        measurement_output.append(_MeasurementOutput(session_name, resource_name, channel_list))
+        measurement_output.append(
+            _MeasurementOutput(session_name, resource_name, channel_list, channels_connected)
+        )
 
     return measurement_output
