@@ -33,9 +33,9 @@ jobs:
       - name: Install dependencies
         run: poetry install -v
       - name: Check and rename .env.simulation to .env
-        if: Test-Path -Path .env.simulation
+        if: -f .env.simulation
         run: |
-          Rename-Item -Path .env.simulation -NewName .env
+          mv .env.simulation .env
         working-directory: ${{ github.workspace }}
       - name: Run system tests
         run: poetry run tox
