@@ -34,6 +34,7 @@ Functions
 
 .. py:class:: DiscoveryServiceStub(channel)
 
+
    Bases: :py:obj:`object`
 
    The service used as a registry for other services. This service can be used to discover
@@ -41,6 +42,7 @@ Functions
 
 
 .. py:class:: DiscoveryServiceServicer
+
 
    Bases: :py:obj:`object`
 
@@ -91,6 +93,7 @@ Functions
 
 
 .. py:class:: DiscoveryService
+
 
    Bases: :py:obj:`object`
 

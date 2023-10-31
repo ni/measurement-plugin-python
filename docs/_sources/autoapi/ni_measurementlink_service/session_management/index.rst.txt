@@ -5,34 +5,30 @@
 
 .. autoapi-nested-parse::
 
-   Contains methods related to managing driver sessions.
+   Public API for accessing the MeasurementLink session management service.
 
 
 
-Module Contents
----------------
+Package Contents
+----------------
 
 Classes
 ~~~~~~~
 
 .. autoapisummary::
 
-   ni_measurementlink_service.session_management.PinMapContext
-   ni_measurementlink_service.session_management.ChannelMapping
-   ni_measurementlink_service.session_management.SessionInformation
+   ni_measurementlink_service.session_management.SessionManagementClient
    ni_measurementlink_service.session_management.BaseReservation
-   ni_measurementlink_service.session_management.SingleSessionReservation
    ni_measurementlink_service.session_management.MultiSessionReservation
-   ni_measurementlink_service.session_management.Client
+   ni_measurementlink_service.session_management.SingleSessionReservation
+   ni_measurementlink_service.session_management.ChannelMapping
+   ni_measurementlink_service.session_management.Connection
+   ni_measurementlink_service.session_management.PinMapContext
+   ni_measurementlink_service.session_management.SessionInformation
+   ni_measurementlink_service.session_management.SessionInitializationBehavior
+   ni_measurementlink_service.session_management.TypedConnection
+   ni_measurementlink_service.session_management.TypedSessionInformation
 
-
-
-Functions
-~~~~~~~~~
-
-.. autoapisummary::
-
-   ni_measurementlink_service.session_management.__getattr__
 
 
 
@@ -41,232 +37,240 @@ Attributes
 
 .. autoapisummary::
 
-   ni_measurementlink_service.session_management.GRPC_SERVICE_INTERFACE_NAME
    ni_measurementlink_service.session_management.GRPC_SERVICE_CLASS
-   ni_measurementlink_service.session_management.INSTRUMENT_TYPE_NONE
-   ni_measurementlink_service.session_management.INSTRUMENT_TYPE_NI_DCPOWER
-   ni_measurementlink_service.session_management.INSTRUMENT_TYPE_NI_HSDIO
-   ni_measurementlink_service.session_management.INSTRUMENT_TYPE_NI_RFSA
-   ni_measurementlink_service.session_management.INSTRUMENT_TYPE_NI_RFMX
-   ni_measurementlink_service.session_management.INSTRUMENT_TYPE_NI_RFSG
-   ni_measurementlink_service.session_management.INSTRUMENT_TYPE_NI_RFPM
-   ni_measurementlink_service.session_management.INSTRUMENT_TYPE_NI_DMM
-   ni_measurementlink_service.session_management.INSTRUMENT_TYPE_NI_DIGITAL_PATTERN
-   ni_measurementlink_service.session_management.INSTRUMENT_TYPE_NI_SCOPE
-   ni_measurementlink_service.session_management.INSTRUMENT_TYPE_NI_FGEN
+   ni_measurementlink_service.session_management.GRPC_SERVICE_INTERFACE_NAME
    ni_measurementlink_service.session_management.INSTRUMENT_TYPE_NI_DAQMX
-   ni_measurementlink_service.session_management.INSTRUMENT_TYPE_NI_RELAY_DRIVER
+   ni_measurementlink_service.session_management.INSTRUMENT_TYPE_NI_DCPOWER
+   ni_measurementlink_service.session_management.INSTRUMENT_TYPE_NI_DIGITAL_PATTERN
+   ni_measurementlink_service.session_management.INSTRUMENT_TYPE_NI_DMM
+   ni_measurementlink_service.session_management.INSTRUMENT_TYPE_NI_FGEN
+   ni_measurementlink_service.session_management.INSTRUMENT_TYPE_NI_HSDIO
    ni_measurementlink_service.session_management.INSTRUMENT_TYPE_NI_MODEL_BASED_INSTRUMENT
+   ni_measurementlink_service.session_management.INSTRUMENT_TYPE_NI_RELAY_DRIVER
+   ni_measurementlink_service.session_management.INSTRUMENT_TYPE_NI_RFMX
+   ni_measurementlink_service.session_management.INSTRUMENT_TYPE_NI_RFPM
+   ni_measurementlink_service.session_management.INSTRUMENT_TYPE_NI_RFSA
+   ni_measurementlink_service.session_management.INSTRUMENT_TYPE_NI_RFSG
+   ni_measurementlink_service.session_management.INSTRUMENT_TYPE_NI_SCOPE
    ni_measurementlink_service.session_management.INSTRUMENT_TYPE_NI_SWITCH_EXECUTIVE_VIRTUAL_DEVICE
+   ni_measurementlink_service.session_management.INSTRUMENT_TYPE_NONE
+   ni_measurementlink_service.session_management.SITE_SYSTEM_PINS
+   ni_measurementlink_service.session_management.Client
 
 
-.. py:data:: GRPC_SERVICE_INTERFACE_NAME
-   :annotation: = ni.measurementlink.sessionmanagement.v1.SessionManagementService
+.. py:class:: SessionManagementClient(*, discovery_client = None, grpc_channel = None, grpc_channel_pool = None)
 
-   
+
+   Bases: :py:obj:`object`
+
+   Client for accessing the MeasurementLink session management service.
+
+   .. py:method:: reserve_session(context, pin_or_relay_names = None, instrument_type_id = None, timeout = 0.0)
+
+      Reserve a single session.
+
+      Reserve the session matching the given pins, sites, and instrument type ID and return the
+      information needed to create or access the session.
+
+      :param context: Includes the pin map ID for the pin map in the Pin Map Service,
+                      as well as the list of sites for the measurement.
+      :param pin_or_relay_names: One or multiple pins, pin groups, relays, or relay groups to use
+                                 for the measurement.
+
+                                 If unspecified, reserve sessions for all pins and relays in the registered pin map
+                                 resource.
+      :param instrument_type_id: Instrument type ID for the measurement.
+
+                                 If unspecified, this method reserve sessions for all instrument types connected
+                                 in the registered pin map resource.
+
+                                 For NI instruments, use instrument type id constants, such as
+                                 :py:const:`INSTRUMENT_TYPE_NI_DCPOWER` or :py:const:`INSTRUMENT_TYPE_NI_DMM`.
+
+                                 For custom instruments, use the instrument type id defined in the pin map file.
+      :param timeout: Timeout in seconds.
+
+                      Allowed values: 0 (non-blocking, fails immediately if resources cannot be
+                      reserved), -1 (infinite timeout), or any other positive numeric value (wait for
+                      that number of seconds)
+
+      :returns: A reservation object with which you can query information about the session and
+                unreserve it.
+
+
+   .. py:method:: reserve_sessions(context, pin_or_relay_names = None, instrument_type_id = None, timeout = 0.0)
+
+      Reserve multiple sessions.
+
+      Reserve sessions matching the given pins, sites, and instrument type ID and return the
+      information needed to create or access the sessions.
+
+      :param context: Includes the pin map ID for the pin map in the Pin Map Service,
+                      as well as the list of sites for the measurement.
+      :param pin_or_relay_names: One or multiple pins, pin groups, relays, or relay groups to use
+                                 for the measurement.
+
+                                 If unspecified, reserve sessions for all pins and relays in the registered pin map
+                                 resource.
+      :param instrument_type_id: Instrument type ID for the measurement.
+
+                                 If unspecified, this method reserves sessions for all instrument types connected
+                                 in the registered pin map resource.
+
+                                 For NI instruments, use instrument type id constants, such as
+                                 :py:const:`INSTRUMENT_TYPE_NI_DCPOWER` or :py:const:`INSTRUMENT_TYPE_NI_DMM`.
+
+                                 For custom instruments, use the instrument type id defined in the pin map file.
+      :param timeout: Timeout in seconds.
+
+                      Allowed values: 0 (non-blocking, fails immediately if resources cannot be
+                      reserved), -1 (infinite timeout), or any other positive numeric value (wait for
+                      that number of seconds)
+
+      :returns: A reservation object with which you can query information about the sessions and
+                unreserve them.
+
+
+   .. py:method:: register_sessions(session_info)
+
+      Register sessions with the session management service.
+
+      Indicates that the sessions are open and will need to be closed later.
+
+      :param session_info: Sessions to register.
+
+
+   .. py:method:: unregister_sessions(session_info)
+
+      Unregisters sessions from the session management service.
+
+      Indicates that the sessions have been closed and will need to be reopened before they can be
+      used again.
+
+      :param session_info: Sessions to unregister.
+
+
+   .. py:method:: reserve_all_registered_sessions(instrument_type_id = None, timeout = 0.0)
+
+      Reserve all sessions currently registered with the session management service.
+
+      :param instrument_type_id: Instrument type ID for the measurement.
+
+                                 If unspecified, reserve sessions for all instrument types connected in the
+                                 registered pin map resource.
+
+                                 For NI instruments, use instrument type id constants, such as
+                                 :py:const:`INSTRUMENT_TYPE_NI_DCPOWER` or :py:const:`INSTRUMENT_TYPE_NI_DMM`.
+
+                                 For custom instruments, use the instrument type id defined in the pin map file.
+      :param timeout: Timeout in seconds.
+
+                      Allowed values: 0 (non-blocking, fails immediately if resources cannot be
+                      reserved), -1 (infinite timeout), or any other positive numeric value (wait for
+                      that number of seconds)
+
+      :returns: A reservation object with which you can query information about the sessions and
+                unreserve them.
+
+
 
 .. py:data:: GRPC_SERVICE_CLASS
-   :annotation: = ni.measurementlink.sessionmanagement.v1.SessionManagementService
+   :value: 'ni.measurementlink.sessionmanagement.v1.SessionManagementService'
 
    
 
-.. py:data:: INSTRUMENT_TYPE_NONE
-   :annotation: = 
-
-   
-
-.. py:data:: INSTRUMENT_TYPE_NI_DCPOWER
-   :annotation: = niDCPower
-
-   
-
-.. py:data:: INSTRUMENT_TYPE_NI_HSDIO
-   :annotation: = niHSDIO
-
-   
-
-.. py:data:: INSTRUMENT_TYPE_NI_RFSA
-   :annotation: = niRFSA
-
-   
-
-.. py:data:: INSTRUMENT_TYPE_NI_RFMX
-   :annotation: = niRFmx
-
-   
-
-.. py:data:: INSTRUMENT_TYPE_NI_RFSG
-   :annotation: = niRFSG
-
-   
-
-.. py:data:: INSTRUMENT_TYPE_NI_RFPM
-   :annotation: = niRFPM
-
-   
-
-.. py:data:: INSTRUMENT_TYPE_NI_DMM
-   :annotation: = niDMM
-
-   
-
-.. py:data:: INSTRUMENT_TYPE_NI_DIGITAL_PATTERN
-   :annotation: = niDigitalPattern
-
-   
-
-.. py:data:: INSTRUMENT_TYPE_NI_SCOPE
-   :annotation: = niScope
-
-   
-
-.. py:data:: INSTRUMENT_TYPE_NI_FGEN
-   :annotation: = niFGen
+.. py:data:: GRPC_SERVICE_INTERFACE_NAME
+   :value: 'ni.measurementlink.sessionmanagement.v1.SessionManagementService'
 
    
 
 .. py:data:: INSTRUMENT_TYPE_NI_DAQMX
-   :annotation: = niDAQmx
+   :value: 'niDAQmx'
 
    
 
-.. py:data:: INSTRUMENT_TYPE_NI_RELAY_DRIVER
-   :annotation: = niRelayDriver
+.. py:data:: INSTRUMENT_TYPE_NI_DCPOWER
+   :value: 'niDCPower'
+
+   
+
+.. py:data:: INSTRUMENT_TYPE_NI_DIGITAL_PATTERN
+   :value: 'niDigitalPattern'
+
+   
+
+.. py:data:: INSTRUMENT_TYPE_NI_DMM
+   :value: 'niDMM'
+
+   
+
+.. py:data:: INSTRUMENT_TYPE_NI_FGEN
+   :value: 'niFGen'
+
+   
+
+.. py:data:: INSTRUMENT_TYPE_NI_HSDIO
+   :value: 'niHSDIO'
 
    
 
 .. py:data:: INSTRUMENT_TYPE_NI_MODEL_BASED_INSTRUMENT
-   :annotation: = niModelBasedInstrument
+   :value: 'niModelBasedInstrument'
+
+   
+
+.. py:data:: INSTRUMENT_TYPE_NI_RELAY_DRIVER
+   :value: 'niRelayDriver'
+
+   
+
+.. py:data:: INSTRUMENT_TYPE_NI_RFMX
+   :value: 'niRFmx'
+
+   
+
+.. py:data:: INSTRUMENT_TYPE_NI_RFPM
+   :value: 'niRFPM'
+
+   
+
+.. py:data:: INSTRUMENT_TYPE_NI_RFSA
+   :value: 'niRFSA'
+
+   
+
+.. py:data:: INSTRUMENT_TYPE_NI_RFSG
+   :value: 'niRFSG'
+
+   
+
+.. py:data:: INSTRUMENT_TYPE_NI_SCOPE
+   :value: 'niScope'
 
    
 
 .. py:data:: INSTRUMENT_TYPE_NI_SWITCH_EXECUTIVE_VIRTUAL_DEVICE
-   :annotation: = niSwitchExecutiveVirtualDevice
+   :value: 'niSwitchExecutiveVirtualDevice'
 
    
 
-.. py:class:: PinMapContext
+.. py:data:: INSTRUMENT_TYPE_NONE
+   :value: ''
 
-   Bases: :py:obj:`NamedTuple`
+   
 
-   Container for the pin map and sites.
+.. py:data:: SITE_SYSTEM_PINS
 
-   Attributes
-   ----------
-       pin_map_id: The resource id of the pin map in the Pin Map service that should be used for
-           the call.
+   Site number used to identify and filter by system pins.
 
-       sites: List of site numbers being used for the call. If None or empty, use all sites in the
-           pin map.
+   Pins that have a site number of ``SITE_SYSTEM_PINS`` are system pins and do not
+   belong to a specific site.
 
+   When querying connections, you can specify a site number of ``SITE_SYSTEM_PINS``
+   to restrict the query to return only system pins.
 
-   .. py:attribute:: pin_map_id
-      :annotation: :str
+.. py:class:: BaseReservation(session_manager, session_info, reserved_pin_or_relay_names = None, reserved_sites = None)
 
-      
-
-   .. py:attribute:: sites
-      :annotation: :Optional[List[int]]
-
-      
-
-
-.. py:class:: ChannelMapping
-
-   Bases: :py:obj:`NamedTuple`
-
-   Mapping of each channel to the pin and site it is connected to.
-
-   Attributes
-   ----------
-       pin_or_relay_name (str): The pin or relay that is mapped to a channel.
-
-       site (int): The site on which the pin or relay is mapped to a channel.
-           For system pins/relays the site number is -1 as they do not belong to a specific site.
-
-       channel (str): The channel to which the pin or relay is mapped on this site.
-
-
-   .. py:attribute:: pin_or_relay_name
-      :annotation: :str
-
-      
-
-   .. py:attribute:: site
-      :annotation: :int
-
-      
-
-   .. py:attribute:: channel
-      :annotation: :str
-
-      
-
-
-.. py:class:: SessionInformation
-
-   Bases: :py:obj:`NamedTuple`
-
-   Container for the session information.
-
-   Attributes
-   ----------
-       session_name (str): Session identifier used to identify the session in the session
-           management service, as well as in driver services such as grpc-device.
-
-       resource_name (str): Resource name used to open this session in the driver.
-
-       channel_list (str): Channel list used for driver initialization and measurement methods.
-           This field is empty for any SessionInformation returned from
-           Client.reserve_all_registered_sessions.
-
-       instrument_type_id (str): Instrument type ID to identify which type of instrument the
-           session represents. Pin maps have built in instrument definitions using the instrument
-           type id constants such as `INSTRUMENT_TYPE_NI_DCPOWER`. For custom instruments, the
-           user defined instrument type id is defined in the pin map file.
-
-       session_exists (bool): Indicates whether the session exists in the Session Manager. This
-           indicates whether the session has been created.
-
-       channel_mappings (Iterable[ChannelMapping]): List of site and pin/relay mappings that
-           correspond to each channel in the channel_list. Each item contains a mapping
-           for a channel in this instrument resource, in the order of the channel_list.
-           This field is empty for any SessionInformation returned from
-           Client.reserve_all_registered_sessions.
-
-
-   .. py:attribute:: session_name
-      :annotation: :str
-
-      
-
-   .. py:attribute:: resource_name
-      :annotation: :str
-
-      
-
-   .. py:attribute:: channel_list
-      :annotation: :str
-
-      
-
-   .. py:attribute:: instrument_type_id
-      :annotation: :str
-
-      
-
-   .. py:attribute:: session_exists
-      :annotation: :bool
-
-      
-
-   .. py:attribute:: channel_mappings
-      :annotation: :Iterable[ChannelMapping]
-
-      
-
-
-.. py:class:: BaseReservation(session_manager, session_info)
 
    Bases: :py:obj:`abc.ABC`
 
@@ -287,182 +291,956 @@ Attributes
       Unreserve sessions.
 
 
+   .. py:method:: initialize_session(session_constructor, instrument_type_id)
 
-.. py:class:: SingleSessionReservation(session_manager, session_info)
+      Initialize a single instrument session.
 
-   Bases: :py:obj:`BaseReservation`
+      This is a generic method that supports any instrument driver.
 
-   Manages reservation for a single session.
+      :param session_constructor: A function that constructs sessions based on
+                                  session information.
+      :param instrument_type_id: Instrument type ID for the session.
 
-   .. py:method:: session_info()
+                                 For custom instruments, use the instrument type id defined in
+                                 the pin map file.
 
-      Single session information object.
+      :returns: A context manager that yields a session information object. The
+                session object is available via the ``session`` field.
+
+      :raises ValueError: If the instrument type ID is empty, no reserved sessions
+          match the instrument type ID, or too many reserved sessions
+          match the instrument type ID.
+
+
+   .. py:method:: initialize_sessions(session_constructor, instrument_type_id)
+
+      Initialize multiple instrument sessions.
+
+      This is a generic method that supports any instrument driver.
+
+      :param session_constructor: A function that constructs sessions based on
+                                  session information.
+      :param instrument_type_id: Instrument type ID for the session.
+
+                                 For custom instruments, use the instrument type id defined in
+                                 the pin map file.
+
+      :returns: A context manager that yields a sequence of session information
+                objects. The session objects are available via the ``session``
+                field.
+
+      :raises ValueError: If the instrument type ID is empty or no reserved
+          sessions matched the instrument type ID.
+
+
+   .. py:method:: get_connection(session_type, pin_or_relay_name = None, site = None, instrument_type_id = None)
+
+      Get the connection matching the specified criteria.
+
+      This is a generic method that supports any instrument driver.
+
+      :param session_type: The session type.
+      :param pin_or_relay_name: The pin or relay name to match against. If not
+                                specified, the pin or relay name is ignored when matching
+                                connections.
+      :param site: The site number to match against. If not specified, the
+                   site number is ignored when matching connections.
+      :param instrument_type_id: The instrument type ID to match against. If not
+                                 specified, the instrument type ID is ignored when matching
+                                 connections.
+
+      :returns: The matching connection.
+
+      :raises TypeError: If the argument types or session type are incorrect.
+      :raises ValueError: If no reserved connections match or too many reserved
+          connections match.
+
+
+   .. py:method:: get_connections(session_type, pin_or_relay_names = None, sites = None, instrument_type_id = None)
+
+      Get all connections matching the specified criteria.
+
+      This is a generic method that supports any instrument driver.
+
+      :param session_type: The expected session type.
+      :param pin_or_relay_names: The pin or relay name(s) to match against. If
+                                 not specified, the pin or relay name is ignored when matching
+                                 connections.
+      :param sites: The site number(s) to match against. If not specified, the
+                    site number is ignored when matching connections.
+      :param instrument_type_id: The instrument type ID to match against. If not
+                                 specified, the instrument type ID is ignored when matching
+                                 connections.
+
+      :returns: The matching connections.
+
+      :raises TypeError: If the argument types or session type are incorrect.
+      :raises ValueError: If no reserved connections match.
+
+
+   .. py:method:: create_nidaqmx_task(initialization_behavior = SessionInitializationBehavior.AUTO)
+
+      Create a single NI-DAQmx task.
+
+      :param initialization_behavior: Specifies whether the NI gRPC Device Server
+                                      will create a new task or attach to an existing task.
+
+      :returns: A context manager that yields a session information object. The task
+                object is available via the ``session`` field.
+
+      :raises ValueError: If no NI-DAQmx tasks are reserved or too many
+          NI-DAQmx tasks are reserved.
+
+      .. note::
+
+         If the ``session_exists`` field is ``False``, the returned task is
+         empty and the caller is expected to add channels to it.
+
+      .. seealso:: For more details, see :py:class:`nidaqmx.Task`.
+
+
+   .. py:method:: create_nidaqmx_tasks(initialization_behavior = SessionInitializationBehavior.AUTO)
+
+      Create multiple NI-DAQmx tasks.
+
+      :param initialization_behavior: Specifies whether the NI gRPC Device Server
+                                      will create a new task or attach to an existing task.
+
+      :returns: A context manager that yields a sequence of session information
+                objects. The task objects are available via the ``session`` field.
+
+      :raises ValueError: If no NI-DAQmx tasks are reserved.
+
+      .. note::
+
+         If the ``session_exists`` field is ``False``, the returned tasks are
+         empty and the caller is expected to add channels to them.
+
+      .. seealso:: For more details, see :py:class:`nidaqmx.Task`.
+
+
+   .. py:method:: get_nidaqmx_connection(pin_name = None, site = None)
+
+      Get the NI-DAQmx connection matching the specified criteria.
+
+      :param pin_name: The pin name to match against. If not specified, the pin
+                       name is ignored when matching connections.
+      :param site: The site number to match against. If not specified, the
+                   site number is ignored when matching connections.
+
+      :returns: The matching connection.
+
+      :raises TypeError: If the argument types or session type are incorrect.
+      :raises ValueError: If no reserved connections match or too many reserved
+          connections match.
+
+
+   .. py:method:: get_nidaqmx_connections(pin_names = None, sites = None)
+
+      Get all NI-DAQmx connections matching the specified criteria.
+
+      :param pin_names: The pin name(s) to match against. If not specified, the
+                        pin name is ignored when matching connections.
+      :param sites: The site number(s) to match against. If not specified, the
+                    site number is ignored when matching connections.
+
+      :returns: The matching connections.
+
+      :raises TypeError: If the argument types or session type are incorrect.
+      :raises ValueError: If no reserved connections match.
+
+
+   .. py:method:: initialize_nidcpower_session(reset = False, options = None, initialization_behavior = SessionInitializationBehavior.AUTO)
+
+      Initialize a single NI-DCPower instrument session.
+
+      :param reset: Specifies whether to reset channel(s) during the
+                    initialization procedure.
+      :param options: Specifies the initial value of certain properties for the
+                      session. If this argument is not specified, the default value is
+                      an empty dict, which you may override by specifying
+                      ``NIDCPOWER_SIMULATE``, ``NIDCPOWER_BOARD_TYPE``, and
+                      ``NIDCPOWER_MODEL`` in the configuration file (``.env``).
+      :param initialization_behavior: Specifies whether the NI gRPC Device Server
+                                      will initialize a new session or attach to an existing session.
+
+      :returns: A context manager that yields a session information object. The
+                session object is available via the ``session`` field.
+
+      :raises ValueError: If no NI-DCPower sessions are reserved or too many
+          NI-DCPower sessions are reserved.
+
+      .. seealso:: For more details, see :py:class:`nidcpower.Session`.
+
+
+   .. py:method:: initialize_nidcpower_sessions(reset = False, options = None, initialization_behavior = SessionInitializationBehavior.AUTO)
+
+      Initialize multiple NI-DCPower instrument sessions.
+
+      :param reset: Specifies whether to reset channel(s) during the
+                    initialization procedure.
+      :param options: Specifies the initial value of certain properties for the
+                      session. If this argument is not specified, the default value is
+                      an empty dict, which you may override by specifying
+                      ``NIDCPOWER_SIMULATE``, ``NIDCPOWER_BOARD_TYPE``, and
+                      ``NIDCPOWER_MODEL`` in the configuration file (``.env``).
+      :param initialization_behavior: Specifies whether the NI gRPC Device Server
+                                      will initialize a new session or attach to an existing session.
+
+      :returns: A context manager that yields a sequence of session information
+                objects. The session objects are available via the ``session``
+                field.
+
+      :raises ValueError: If no NI-DCPower sessions are reserved.
+
+      .. seealso:: For more details, see :py:class:`nidcpower.Session`.
+
+
+   .. py:method:: get_nidcpower_connection(pin_name = None, site = None)
+
+      Get the NI-DCPower connection matching the specified criteria.
+
+      :param pin_name: The pin name to match against. If not specified, the pin
+                       name is ignored when matching connections.
+      :param site: The site number to match against. If not specified, the
+                   site number is ignored when matching connections.
+
+      :returns: The matching connection.
+
+      :raises TypeError: If the argument types or session type are incorrect.
+      :raises ValueError: If no reserved connections match or too many reserved
+          connections match.
+
+
+   .. py:method:: get_nidcpower_connections(pin_names = None, sites = None)
+
+      Get all NI-DCPower connections matching the specified criteria.
+
+      :param pin_names: The pin name(s) to match against. If not specified, the
+                        pin name is ignored when matching connections.
+      :param sites: The site number(s) to match against. If not specified, the
+                    site number is ignored when matching connections.
+
+      :returns: The matching connections.
+
+      :raises TypeError: If the argument types or session type are incorrect.
+      :raises ValueError: If no reserved connections match.
+
+
+   .. py:method:: initialize_nidigital_session(reset_device = False, options = None, initialization_behavior = SessionInitializationBehavior.AUTO)
+
+      Initialize a single NI-Digital Pattern instrument session.
+
+      :param reset_device: Specifies whether to reset the instrument during the
+                           initialization procedure.
+      :param options: Specifies the initial value of certain properties for the
+                      session. If this argument is not specified, the default value is
+                      an empty dict, which you may override by specifying
+                      ``NIDIGITAL_SIMULATE``, ``NIDIGITAL_BOARD_TYPE``, and
+                      ``NIDIGITAL_MODEL`` in the configuration file (``.env``).
+      :param initialization_behavior: Specifies whether the NI gRPC Device Server
+                                      will initialize a new session or attach to an existing session.
+
+      :returns: A context manager that yields a session information object. The
+                session object is available via the ``session`` field.
+
+      :raises ValueError: If no NI-Digital sessions are reserved or too many
+          NI-Digital sessions are reserved.
+
+      .. seealso:: For more details, see :py:class:`nidigital.Session`.
+
+
+   .. py:method:: initialize_nidigital_sessions(reset_device = False, options = None, initialization_behavior = SessionInitializationBehavior.AUTO)
+
+      Initialize multiple NI-Digital Pattern instrument sessions.
+
+      :param reset_device: Specifies whether to reset the instrument during the
+                           initialization procedure.
+      :param options: Specifies the initial value of certain properties for the
+                      session. If this argument is not specified, the default value is
+                      an empty dict, which you may override by specifying
+                      ``NIDIGITAL_SIMULATE``, ``NIDIGITAL_BOARD_TYPE``, and
+                      ``NIDIGITAL_MODEL`` in the configuration file (``.env``).
+      :param initialization_behavior: Specifies whether the NI gRPC Device Server
+                                      will initialize a new session or attach to an existing session.
+
+      :returns: A context manager that yields a sequence of session information
+                objects. The session objects are available via the ``session``
+                field.
+
+      :raises ValueError: If no NI-Digital sessions are reserved.
+
+      .. seealso:: For more details, see :py:class:`nidigital.Session`.
+
+
+   .. py:method:: get_nidigital_connection(pin_name = None, site = None)
+
+      Get the NI-Digital Pattern connection matching the specified criteria.
+
+      :param pin_name: The pin name to match against. If not specified, the pin
+                       name is ignored when matching connections.
+      :param site: The site number to match against. If not specified, the
+                   site number is ignored when matching connections.
+
+      :returns: The matching connection.
+
+      :raises TypeError: If the argument types or session type are incorrect.
+      :raises ValueError: If no reserved connections match or too many reserved
+          connections match.
+
+
+   .. py:method:: get_nidigital_connections(pin_names = None, sites = None)
+
+      Get all NI-Digital Pattern connections matching the specified criteria.
+
+      :param pin_names: The pin name(s) to match against. If not specified, the
+                        pin name is ignored when matching connections.
+      :param sites: The site number(s) to match against. If not specified, the
+                    site number is ignored when matching connections.
+
+      :returns: The matching connections.
+
+      :raises TypeError: If the argument types or session type are incorrect.
+      :raises ValueError: If no reserved connections match.
+
+
+   .. py:method:: initialize_nidmm_session(reset_device = False, options = None, initialization_behavior = SessionInitializationBehavior.AUTO)
+
+      Initialize a single NI-DMM instrument session.
+
+      :param reset_device: Specifies whether to reset the instrument during the
+                           initialization procedure.
+      :param options: Specifies the initial value of certain properties for the
+                      session. If this argument is not specified, the default value is
+                      an empty dict, which you may override by specifying
+                      ``NIDMM_SIMULATE``, ``NIDMM_BOARD_TYPE``, and ``NIDMM_MODEL`` in
+                      the configuration file (``.env``).
+      :param initialization_behavior: Specifies whether the NI gRPC Device Server
+                                      will initialize a new session or attach to an existing session.
+
+      :returns: A context manager that yields a session information object. The
+                session object is available via the ``session`` field.
+
+      :raises ValueError: If no NI-DMM sessions are reserved or too many
+          NI-DMM sessions are reserved.
+
+      .. seealso:: For more details, see :py:class:`nidmm.Session`.
+
+
+   .. py:method:: initialize_nidmm_sessions(reset_device = False, options = None, initialization_behavior = SessionInitializationBehavior.AUTO)
+
+      Initialize multiple NI-DMM instrument sessions.
+
+      :param reset_device: Specifies whether to reset the instrument during the
+                           initialization procedure.
+      :param options: Specifies the initial value of certain properties for the
+                      session. If this argument is not specified, the default value is
+                      an empty dict, which you may override by specifying
+                      ``NIDMM_SIMULATE``, ``NIDMM_BOARD_TYPE``, and ``NIDMM_MODEL`` in
+                      the configuration file (``.env``).
+      :param initialization_behavior: Specifies whether the NI gRPC Device Server
+                                      will initialize a new session or attach to an existing session.
+
+      :returns: A context manager that yields a sequence of session information
+                objects. The session objects are available via the ``session``
+                field.
+
+      :raises ValueError: If no NI-DMM sessions are reserved.
+
+      .. seealso:: For more details, see :py:class:`nidmm.Session`.
+
+
+   .. py:method:: get_nidmm_connection(pin_name = None, site = None)
+
+      Get the NI-DMM connection matching the specified criteria.
+
+      :param pin_name: The pin name to match against. If not specified, the pin
+                       name is ignored when matching connections.
+      :param site: The site number to match against. If not specified, the
+                   site number is ignored when matching connections.
+
+      :returns: The matching connection.
+
+      :raises TypeError: If the argument types or session type are incorrect.
+      :raises ValueError: If no reserved connections match or too many reserved
+          connections match.
+
+
+   .. py:method:: get_nidmm_connections(pin_names = None, sites = None)
+
+      Get all NI-DMM connections matching the specified criteria.
+
+      :param pin_names: The pin name(s) to match against. If not specified, the
+                        pin name is ignored when matching connections.
+      :param sites: The site number(s) to match against. If not specified, the
+                    site number is ignored when matching connections.
+
+      :returns: The matching connections.
+
+      :raises TypeError: If the argument types or session type are incorrect.
+      :raises ValueError: If no reserved connections match.
+
+
+   .. py:method:: initialize_nifgen_session(reset_device = False, options = None, initialization_behavior = SessionInitializationBehavior.AUTO)
+
+      Initialize a single NI-FGEN instrument session.
+
+      :param reset_device: Specifies whether to reset the instrument during the
+                           initialization procedure.
+      :param options: Specifies the initial value of certain properties for the
+                      session. If this argument is not specified, the default value is
+                      an empty dict, which you may override by specifying
+                      ``NIFGEN_SIMULATE``, ``NIFGEN_BOARD_TYPE``, and ``NIFGEN_MODEL``
+                      in the configuration file (``.env``).
+      :param initialization_behavior: Specifies whether the NI gRPC Device Server
+                                      will initialize a new session or attach to an existing session.
+
+      :returns: A context manager that yields a session information object. The
+                session object is available via the ``session`` field.
+
+      :raises ValueError: If no NI-FGEN sessions are reserved or too many NI-FGEN
+          sessions are reserved.
+
+      .. seealso:: For more details, see :py:class:`nifgen.Session`.
+
+
+   .. py:method:: initialize_nifgen_sessions(reset_device = False, options = None, initialization_behavior = SessionInitializationBehavior.AUTO)
+
+      Initialize multiple NI-FGEN instrument sessions.
+
+      :param reset_device: Specifies whether to reset the instrument during the
+                           initialization procedure.
+      :param options: Specifies the initial value of certain properties for the
+                      session. If this argument is not specified, the default value is
+                      an empty dict, which you may override by specifying
+                      ``NIFGEN_SIMULATE``, ``NIFGEN_BOARD_TYPE``, and ``NIFGEN_MODEL``
+                      in the configuration file (``.env``).
+      :param initialization_behavior: Specifies whether the NI gRPC Device Server
+                                      will initialize a new session or attach to an existing session.
+
+      :returns: A context manager that yields a sequence of session information
+                objects. The session objects are available via the ``session``
+                field.
+
+      :raises ValueError: If no NI-FGEN sessions are reserved.
+
+      .. seealso:: For more details, see :py:class:`nifgen.Session`.
+
+
+   .. py:method:: get_nifgen_connection(pin_name = None, site = None)
+
+      Get the NI-FGEN connection matching the specified criteria.
+
+      :param pin_name: The pin name to match against. If not specified, the pin
+                       name is ignored when matching connections.
+      :param site: The site number to match against. If not specified, the
+                   site number is ignored when matching connections.
+
+      :returns: The matching connection.
+
+      :raises TypeError: If the argument types or session type are incorrect.
+      :raises ValueError: If no reserved connections match or too many reserved
+          connections match.
+
+
+   .. py:method:: get_nifgen_connections(pin_names = None, sites = None)
+
+      Get all NI-FGEN connections matching the specified criteria.
+
+      :param pin_names: The pin name(s) to match against. If not specified, the
+                        pin name is ignored when matching connections.
+      :param sites: The site number(s) to match against. If not specified, the
+                    site number is ignored when matching connections.
+
+      :returns: The matching connections.
+
+      :raises TypeError: If the argument types or session type are incorrect.
+      :raises ValueError: If no reserved connections match.
+
+
+   .. py:method:: initialize_niscope_session(reset_device = False, options = None, initialization_behavior = SessionInitializationBehavior.AUTO)
+
+      Initialize a single NI-SCOPE instrument session.
+
+      :param reset_device: Specifies whether to reset the instrument during the
+                           initialization procedure.
+      :param options: Specifies the initial value of certain properties for the
+                      session. If this argument is not specified, the default value is
+                      an empty dict, which you may override by specifying
+                      ``NISCOPE_SIMULATE``, ``NISCOPE_BOARD_TYPE``, and
+                      ``NISCOPE_MODEL`` in the configuration file (``.env``).
+      :param initialization_behavior: Specifies whether the NI gRPC Device Server
+                                      will initialize a new session or attach to an existing session.
+
+      :returns: A context manager that yields a session information object. The
+                session object is available via the ``session`` field.
+
+      :raises ValueError: If no NI-SCOPE sessions are reserved or too many
+          NI-SCOPE sessions are reserved.
+
+      .. seealso:: For more details, see :py:class:`niscope.Session`.
+
+
+   .. py:method:: initialize_niscope_sessions(reset_device = False, options = None, initialization_behavior = SessionInitializationBehavior.AUTO)
+
+      Initialize multiple NI-SCOPE instrument sessions.
+
+      :param reset_device: Specifies whether to reset the instrument during the
+                           initialization procedure.
+      :param options: Specifies the initial value of certain properties for the
+                      session. If this argument is not specified, the default value is
+                      an empty dict, which you may override by specifying
+                      ``NISCOPE_SIMULATE``, ``NISCOPE_BOARD_TYPE``, and
+                      ``NISCOPE_MODEL`` in the configuration file (``.env``).
+      :param initialization_behavior: Specifies whether the NI gRPC Device Server
+                                      will initialize a new session or attach to an existing session.
+
+      :returns: A context manager that yields a sequence of session information
+                objects. The session objects are available via the ``session``
+                field.
+
+      :raises ValueError: If no NI-SCOPE sessions are reserved.
+
+      .. seealso:: For more details, see :py:class:`niscope.Session`.
+
+
+   .. py:method:: get_niscope_connection(pin_name = None, site = None)
+
+      Get the NI-SCOPE connection matching the specified criteria.
+
+      :param pin_name: The pin name to match against. If not specified, the pin
+                       name is ignored when matching connections.
+      :param site: The site number to match against. If not specified, the
+                   site number is ignored when matching connections.
+
+      :returns: The matching connection.
+
+      :raises TypeError: If the argument types or session type are incorrect.
+      :raises ValueError: If no reserved connections match or too many reserved
+          connections match.
+
+
+   .. py:method:: get_niscope_connections(pin_names = None, sites = None)
+
+      Get all NI-SCOPE connections matching the specified criteria.
+
+      :param pin_names: The pin name(s) to match against. If not specified, the
+                        pin name is ignored when matching connections.
+      :param sites: The site number(s) to match against. If not specified, the
+                    site number is ignored when matching connections.
+
+      :returns: The matching connections.
+
+      :raises TypeError: If the argument types or session type are incorrect.
+      :raises ValueError: If no reserved connections match.
+
+
+   .. py:method:: initialize_niswitch_session(topology = None, simulate = None, reset_device = False, initialization_behavior = SessionInitializationBehavior.AUTO)
+
+      Initialize a single NI-SWITCH relay driver instrument session.
+
+      :param topology: Specifies the switch topology. If this argument is not
+                       specified, the default value is "Configured Topology", which you
+                       may override by setting ``MEASUREMENTLINK_NISWITCH_TOPOLOGY`` in
+                       the configuration file (``.env``).
+      :param simulate: Enables or disables simulation of the switch module. If
+                       this argument is not specified, the default value is ``False``,
+                       which you may override by setting
+                       ``MEASUREMENTLINK_NISWITCH_SIMULATE`` in the configuration file
+                       (``.env``).
+      :param reset_device: Specifies whether to reset the switch module during
+                           the initialization procedure.
+      :param initialization_behavior: Specifies whether the NI gRPC Device Server
+                                      will initialize a new session or attach to an existing session.
+
+      :returns: A context manager that yields a session information object. The
+                session object is available via the ``session`` field.
+
+      :raises ValueError: If no relay driver sessions are reserved or
+          too many relay driver sessions are reserved.
+
+      .. seealso:: For more details, see :py:class:`niswitch.Session`.
+
+
+   .. py:method:: initialize_niswitch_sessions(topology = None, simulate = None, reset_device = False, initialization_behavior = SessionInitializationBehavior.AUTO)
+
+      Initialize multiple NI-SWITCH relay driver instrument sessions.
+
+      :param topology: Specifies the switch topology. If this argument is not
+                       specified, the default value is "Configured Topology", which you
+                       may override by setting ``MEASUREMENTLINK_NISWITCH_TOPOLOGY`` in
+                       the configuration file (``.env``).
+      :param simulate: Enables or disables simulation of the switch module. If
+                       this argument is not specified, the default value is ``False``,
+                       which you may override by setting
+                       ``MEASUREMENTLINK_NISWITCH_SIMULATE`` in the configuration file
+                       (``.env``).
+      :param reset_device: Specifies whether to reset the switch module during
+                           the initialization procedure.
+      :param initialization_behavior: Specifies whether the NI gRPC Device Server
+                                      will initialize a new session or attach to an existing session.
+
+      :returns: A context manager that yields a sequence of session information
+                objects. The session objects are available via the ``session``
+                field.
+
+      :raises ValueError: If no relay driver sessions are reserved.
+
+      .. seealso:: For more details, see :py:class:`niswitch.Session`.
+
+
+   .. py:method:: get_niswitch_connection(relay_name = None, site = None)
+
+      Get the NI-SWITCH relay driver connection matching the specified criteria.
+
+      :param relay_name: The relay name to match against. If not specified, the
+                         relay name is ignored when matching connections.
+      :param site: The site number to match against. If not specified, the
+                   site number is ignored when matching connections.
+
+      :returns: The matching connection.
+
+      :raises TypeError: If the argument types or session type are incorrect.
+      :raises ValueError: If no reserved connections match or too many reserved
+          connections match.
+
+
+   .. py:method:: get_niswitch_connections(relay_names = None, sites = None)
+
+      Get all NI-SWITCH relay driver connections matching the specified criteria.
+
+      :param relay_names: The relay name(s) to match against. If not specified,
+                          the relay name is ignored when matching connections.
+      :param sites: The site number(s) to match against. If not specified, the
+                    site number is ignored when matching connections.
+
+      :returns: The matching connections.
+
+      :raises TypeError: If the argument types or session type are incorrect.
+      :raises ValueError: If no reserved connections match.
 
 
 
-.. py:class:: MultiSessionReservation(session_manager, session_info)
+.. py:class:: MultiSessionReservation(session_manager, session_info, reserved_pin_or_relay_names = None, reserved_sites = None)
+
 
    Bases: :py:obj:`BaseReservation`
 
    Manages reservation for multiple sessions.
 
-   .. py:method:: session_info()
+   .. py:property:: session_info
+      :type: List[ni_measurementlink_service.session_management._types.SessionInformation]
 
       Multiple session information objects.
 
 
-
-.. py:function:: __getattr__(name)
-
-
-.. py:class:: Client(*, grpc_channel)
-
-   Bases: :py:obj:`object`
-
-   Class that manages driver sessions.
-
-   .. py:method:: reserve_session(context, pin_or_relay_names = None, instrument_type_id = None, timeout = None)
-
-      Reserve a single session.
-
-      Reserve the session matching the given pins, sites, and instrument type ID and return the
-      information needed to create or access the session.
-
-      Args
-      ----
-          context (PinMapContext): Includes the pin map ID for the pin map in the Pin Map Service,
-              as well as the list of sites for the measurement.
-
-          pin_or_relay_names (Iterable[str]): List of pins, pin groups, relays, or relay groups to
-              use for the measurement. If unspecified, reserve sessions for all pins and relays in
-              the registered pin map resource.
-
-          instrument_type_id (str): Instrument type ID for the measurement. If unspecified,
-              reserve sessions for all instrument types connected in the registered pin map
-              resource. Pin maps have built in instrument definitions using the following NI
-              driver based instrument type ids:
-                  "niDCPower"
-                  "niDigitalPattern"
-                  "niScope"
-                  "niDMM"
-                  "niDAQmx"
-                  "niFGen"
-                  "niRelayDriver"
-              For custom instruments the user defined instrument type id is defined in the pin
-              map file.
-
-          timeout (float): Timeout in seconds. Allowed values,
-              0 (non-blocking, fails immediately if resources cannot be reserved),
-              -1 or negative (infinite timeout), or
-              any positive numeric value (wait for that number of second).
-
-      Returns
-      -------
-          SingleSessionReservation: Context manager that can be used with a with-statement to
-          unreserve the session.
+.. py:class:: SingleSessionReservation(session_manager, session_info, reserved_pin_or_relay_names = None, reserved_sites = None)
 
 
+   Bases: :py:obj:`BaseReservation`
 
-   .. py:method:: reserve_sessions(context, pin_or_relay_names = None, instrument_type_id = None, timeout = None)
+   Manages reservation for a single session.
 
-      Reserve multiple sessions.
+   .. py:property:: session_info
+      :type: ni_measurementlink_service.session_management._types.SessionInformation
 
-      Reserve sessions matching the given pins, sites, and instrument type ID and return the
-      information needed to create or access the sessions.
-
-      Args
-      ----
-          context (PinMapContext): Includes the pin map ID for the pin map in the Pin Map Service,
-              as well as the list of sites for the measurement.
-
-          pin_or_relay_names (Iterable[str]): List of pins, pin groups, relays, or relay groups to
-              use for the measurement. If unspecified, reserve sessions for all pins and relays in
-              the registered pin map resource.
-
-          instrument_type_id (str): Instrument type ID for the measurement. If unspecified,
-              reserve sessions for all instrument types connected in the registered pin map
-              resource. Pin maps have built in instrument definitions using the following NI
-              driver based instrument type ids:
-                  "niDCPower"
-                  "niDigitalPattern"
-                  "niScope"
-                  "niDMM"
-                  "niDAQmx"
-                  "niFGen"
-                  "niRelayDriver"
-              For custom instruments the user defined instrument type id is defined in the pin
-              map file.
-
-          timeout (float): Timeout in seconds. Allowed values,
-              0 (non-blocking, fails immediately if resources cannot be reserved),
-              -1 or negative (infinite timeout), or
-              any positive numeric value (wait for that number of second).
-
-      Returns
-      -------
-          MultiSessionReservation: Context manager that can be used with a with-statement to
-          unreserve the sessions.
+      Single session information object.
 
 
-
-   .. py:method:: register_sessions(session_info)
-
-      Register the sessions with the Session Manager.
-
-      Indicates that the sessions are open and will need to be closed later.
-
-      Args:
-      ----
-          session_info (Iterable[SessionInformation]): Sessions to register with the session
-          management service to track as the sessions are open.
-
-      Raises
-      ------
-          Exception: If a session by the same name is already registered.
+.. py:class:: ChannelMapping
 
 
+   Bases: :py:obj:`NamedTuple`
 
-   .. py:method:: unregister_sessions(session_info)
+   Mapping of each channel to the pin and site it is connected to.
 
-      Unregisters the sessions from the Session Manager.
+   .. py:attribute:: pin_or_relay_name
+      :type: str
 
-      Indicates that the sessions have been closed and will need to be reopened before they can be
-      used again.
+      The pin or relay that is mapped to a channel.
 
-      :param session_info: Sessions to be registered.
-      :type session_info: Iterable[SessionInformation]
+   .. py:attribute:: site
+      :type: int
 
+      The site on which the pin or relay is mapped to a channel.
 
-   .. py:method:: reserve_all_registered_sessions(instrument_type_id = None, timeout = None)
+      For system pins/relays, the site number is :any:`SITE_SYSTEM_PINS` (-1) as they
+      do not belong to a specific site.
 
-      Reserves and gets all sessions currently registered in the Session Manager.
+   .. py:attribute:: channel
+      :type: str
 
-      Args
-      ----
-          instrument_type_id (str): Instrument type ID for the measurement. If unspecified,
-              reserve sessions for all instrument types connected in the registered pin map
-              resource. Pin maps have built in instrument definitions using the following NI
-              driver based instrument type ids:
-                  "niDCPower"
-                  "niDigitalPattern"
-                  "niScope"
-                  "niDMM"
-                  "niDAQmx"
-                  "niFGen"
-                  "niRelayDriver"
-              For custom instruments the user defined instrument type id is defined in the pin
-              map file.
-
-          timeout (float): Timeout in seconds. Allowed values,
-              0 (non-blocking, fails immediately if resources cannot be reserved),
-              -1 or negative (infinite timeout), or
-              any positive numeric value (wait for that number of second).
-
-      Returns
-      -------
-          MultiSessionReservation: Context manager that can be used with a with-statement to
-          unreserve the sessions.
+      The channel to which the pin or relay is mapped on this site.
 
 
+.. py:class:: Connection
 
+
+   Bases: :py:obj:`NamedTuple`
+
+   Describes the connection between an instance of a pin and an instrument channel.
+
+   This object maps a pin or relay on a specific site to the corresponding
+   instrument session and channel name.
+
+   .. py:property:: session
+      :type: object
+
+      The instrument session.
+
+   .. py:attribute:: pin_or_relay_name
+      :type: str
+
+      The pin or relay name.
+
+   .. py:attribute:: site
+      :type: int
+
+      The site number.
+
+      For system pins/relays, the site number is :any:`SITE_SYSTEM_PINS` (-1) as they
+      do not belong to a specific site.
+
+   .. py:attribute:: channel_name
+      :type: str
+
+      The instrument channel name.
+
+   .. py:attribute:: session_info
+      :type: SessionInformation
+
+      The instrument session information.
+
+
+.. py:class:: PinMapContext
+
+
+   Bases: :py:obj:`NamedTuple`
+
+   Container for the pin map and sites.
+
+   .. py:attribute:: pin_map_id
+      :type: str
+
+      The resource id of the pin map in the Pin Map service that should be used for the call.
+
+   .. py:attribute:: sites
+      :type: Optional[List[int]]
+
+      List of site numbers being used for the call.
+
+      If None or empty, use all sites in the pin map.
+
+
+.. py:class:: SessionInformation
+
+
+   Bases: :py:obj:`NamedTuple`
+
+   Container for the session information.
+
+   .. py:attribute:: session_name
+      :type: str
+
+      Session name used by the session management service and NI gRPC Device Server.
+
+   .. py:attribute:: resource_name
+      :type: str
+
+      Resource name used to open this session in the driver.
+
+   .. py:attribute:: channel_list
+      :type: str
+
+      Channel list used for driver initialization and measurement methods.
+
+      This field is empty for any SessionInformation returned from
+      Client.reserve_all_registered_sessions.
+
+   .. py:attribute:: instrument_type_id
+      :type: str
+
+      Indicates the instrument type for this session.
+
+      Pin maps have built in instrument definitions using the instrument
+      type id constants such as `INSTRUMENT_TYPE_NI_DCPOWER`. For custom instruments, the
+      user defined instrument type id is defined in the pin map file.
+
+   .. py:attribute:: session_exists
+      :type: bool
+
+      Indicates whether the session is registered with the session management service.
+
+      When calling measurements from TestStand, the test sequence's ``ProcessSetup`` callback
+      creates instrument sessions and registers them with the session management service so that
+      they can be shared between multiple measurement steps. In this case, the `session_exists`
+      attribute is ``True``, indicating that the instrument sessions were already created and any
+      one-time setup (such as creating NI-DAQmx channels or loading NI-Digital files) has been
+      performed.
+
+      When calling measurements outside of TestStand, the `session_exists` attribute is ``False``,
+      indicating that the measurement is responsible for creating the instrument sessions and
+      performing any one-time setup.
+
+   .. py:attribute:: channel_mappings
+      :type: Iterable[ChannelMapping]
+
+      List of mappings from channels to pins and sites.
+
+      Each item contains a mapping for a channel in this instrument resource, in the order of the
+      channel_list. This field is empty for any SessionInformation returned from
+      Client.reserve_all_registered_sessions.
+
+   .. py:attribute:: session
+      :type: object
+
+      The driver session object.
+
+      This field is None until the appropriate create_session(s) method is called.
+
+
+.. py:class:: SessionInitializationBehavior
+
+
+   Bases: :py:obj:`enum.IntEnum`
+
+   Specifies whether to initialize a new session or attach to an existing session.
+
+   .. py:attribute:: AUTO
+      :value: 0
+
+      The NI gRPC Device Server will attach to an existing session with the
+      specified name if it exists, otherwise the server will initialize a new
+      session.
+
+      Note: When using the Session as a context manager and the context exits, the
+      behavior depends on what happened when the constructor was called. If it
+      resulted in a new session being initialized on the NI gRPC Device Server,
+      then it will automatically close the server session. If it instead attached
+      to an existing session, then it will detach from the server session and
+      leave it open.
+
+   .. py:attribute:: INITIALIZE_SERVER_SESSION
+      :value: 1
+
+      Initialize a new session with the specified name.
+
+      Note: When using the Session as a context manager and the context exits, it
+      will automatically close the server session.
+
+   .. py:attribute:: ATTACH_TO_SERVER_SESSION
+      :value: 2
+
+      Attach to an existing session with the specified name.
+
+      Note: When using the Session as a context manager and the context exits, it
+      will detach from the server session and leave it open.
+
+   .. py:attribute:: INITIALIZE_SESSION_THEN_DETACH
+      :value: 3
+
+      Initialize a new session.
+
+      When exiting the context manager, detach instead of closing.
+
+      Note: This initialization behavior is intended for TestStand code modules used in
+      ``Setup`` steps or ``ProcessSetup`` callback sequences.
+
+   .. py:attribute:: ATTACH_TO_SESSION_THEN_CLOSE
+      :value: 4
+
+      Attach to an existing session.
+
+      When exiting the context manager, automatically close the server session.
+
+      Note: This initialization behavior is intended for TestStand code modules used in
+      ``Cleanup`` steps or ``ProcessCleanup`` callback sequences.
+
+
+.. py:class:: TypedConnection
+
+
+   Bases: :py:obj:`Protocol`, :py:obj:`Generic`\ [\ :py:obj:`TSession_co`\ ]
+
+   Generic version of :any:`Connection` that preserves the session type.
+
+   For more details, see the corresponding documentation for :any:`Connection`.
+
+   .. py:property:: pin_or_relay_name
+      :type: str
+
+      The pin or relay name.
+
+   .. py:property:: site
+      :type: int
+
+      The site number.
+
+      For system pins/relays, the site number is :any:`SITE_SYSTEM_PINS` (-1) as they
+      do not belong to a specific site.
+
+   .. py:property:: channel_name
+      :type: str
+
+      The instrument channel name.
+
+   .. py:property:: session_info
+      :type: TypedSessionInformation[TSession_co]
+
+      The instrument session information.
+
+   .. py:property:: session
+      :type: TSession_co
+
+      The instrument session.
+
+
+.. py:class:: TypedSessionInformation
+
+
+   Bases: :py:obj:`Protocol`, :py:obj:`Generic`\ [\ :py:obj:`TSession_co`\ ]
+
+   Generic version of :any:`SessionInformation` that preserves the session type.
+
+   For more details, see the corresponding documentation for :any:`SessionInformation`.
+
+   .. py:property:: session_name
+      :type: str
+
+      Session name used by the session management service and NI gRPC Device Server.
+
+   .. py:property:: resource_name
+      :type: str
+
+      Resource name used to open this session in the driver.
+
+   .. py:property:: channel_list
+      :type: str
+
+      Channel list used for driver initialization and measurement methods.
+
+   .. py:property:: instrument_type_id
+      :type: str
+
+      Indicates the instrument type for this session.
+
+   .. py:property:: session_exists
+      :type: bool
+
+      Indicates whether the session is registered with the session management service.
+
+   .. py:property:: channel_mappings
+      :type: Iterable[ChannelMapping]
+
+      List of mappings from channels to pins and sites.
+
+   .. py:property:: session
+      :type: TSession_co
+
+      The driver session object.
+
+
+.. py:data:: Client
+
+   Alias for compatibility with code that uses session_management.Client.
 

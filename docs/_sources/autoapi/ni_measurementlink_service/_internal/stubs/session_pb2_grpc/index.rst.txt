@@ -34,12 +34,14 @@ Functions
 
 .. py:class:: SessionUtilitiesStub(channel)
 
+
    Bases: :py:obj:`object`
 
    Missing associated documentation comment in .proto file.
 
 
 .. py:class:: SessionUtilitiesServicer
+
 
    Bases: :py:obj:`object`
 
@@ -80,6 +82,7 @@ Functions
 
 
 .. py:class:: SessionUtilities
+
 
    Bases: :py:obj:`object`
 

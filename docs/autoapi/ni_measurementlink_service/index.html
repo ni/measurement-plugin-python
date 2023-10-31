@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ni_measurementlink_service &mdash; ni_measurementlink_service 1.2 documentation</title>
+  <title>ni_measurementlink_service &mdash; ni_measurementlink_service 1.3 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -12,16 +12,15 @@
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/underscore.js"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=0264ad83"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="ni_measurementlink_service.measurement" href="measurement/index.html" />
+    <link rel="next" title="ni_measurementlink_service.discovery" href="discovery/index.html" />
     <link rel="prev" title="API Reference" href="../index.html" /> 
 </head>
 
@@ -37,7 +36,7 @@
             ni_measurementlink_service
           </a>
               <div class="version">
-                1.2.0-dev1
+                1.3.0-dev0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -51,96 +50,13 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../index.html">API Reference</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">ni_measurementlink_service</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="discovery/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">ni_measurementlink_service.discovery</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="measurement/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">ni_measurementlink_service.measurement</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="session_management/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">ni_measurementlink_service.session_management</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#package-contents">Package Contents</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#classes">Classes</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="#ni_measurementlink_service.DataType"><code class="docutils literal notranslate"><span class="pre">DataType</span></code></a><ul>
-<li class="toctree-l6"><a class="reference internal" href="#ni_measurementlink_service.DataType.Int32"><code class="docutils literal notranslate"><span class="pre">DataType.Int32</span></code></a></li>
-<li class="toctree-l6"><a class="reference internal" href="#ni_measurementlink_service.DataType.Int64"><code class="docutils literal notranslate"><span class="pre">DataType.Int64</span></code></a></li>
-<li class="toctree-l6"><a class="reference internal" href="#ni_measurementlink_service.DataType.UInt32"><code class="docutils literal notranslate"><span class="pre">DataType.UInt32</span></code></a></li>
-<li class="toctree-l6"><a class="reference internal" href="#ni_measurementlink_service.DataType.UInt64"><code class="docutils literal notranslate"><span class="pre">DataType.UInt64</span></code></a></li>
-<li class="toctree-l6"><a class="reference internal" href="#ni_measurementlink_service.DataType.Float"><code class="docutils literal notranslate"><span class="pre">DataType.Float</span></code></a></li>
-<li class="toctree-l6"><a class="reference internal" href="#ni_measurementlink_service.DataType.Double"><code class="docutils literal notranslate"><span class="pre">DataType.Double</span></code></a></li>
-<li class="toctree-l6"><a class="reference internal" href="#ni_measurementlink_service.DataType.Boolean"><code class="docutils literal notranslate"><span class="pre">DataType.Boolean</span></code></a></li>
-<li class="toctree-l6"><a class="reference internal" href="#ni_measurementlink_service.DataType.String"><code class="docutils literal notranslate"><span class="pre">DataType.String</span></code></a></li>
-<li class="toctree-l6"><a class="reference internal" href="#ni_measurementlink_service.DataType.Pin"><code class="docutils literal notranslate"><span class="pre">DataType.Pin</span></code></a></li>
-<li class="toctree-l6"><a class="reference internal" href="#ni_measurementlink_service.DataType.Path"><code class="docutils literal notranslate"><span class="pre">DataType.Path</span></code></a></li>
-<li class="toctree-l6"><a class="reference internal" href="#ni_measurementlink_service.DataType.Enum"><code class="docutils literal notranslate"><span class="pre">DataType.Enum</span></code></a></li>
-<li class="toctree-l6"><a class="reference internal" href="#ni_measurementlink_service.DataType.DoubleXYData"><code class="docutils literal notranslate"><span class="pre">DataType.DoubleXYData</span></code></a></li>
-<li class="toctree-l6"><a class="reference internal" href="#ni_measurementlink_service.DataType.Int32Array1D"><code class="docutils literal notranslate"><span class="pre">DataType.Int32Array1D</span></code></a></li>
-<li class="toctree-l6"><a class="reference internal" href="#ni_measurementlink_service.DataType.Int64Array1D"><code class="docutils literal notranslate"><span class="pre">DataType.Int64Array1D</span></code></a></li>
-<li class="toctree-l6"><a class="reference internal" href="#ni_measurementlink_service.DataType.UInt32Array1D"><code class="docutils literal notranslate"><span class="pre">DataType.UInt32Array1D</span></code></a></li>
-<li class="toctree-l6"><a class="reference internal" href="#ni_measurementlink_service.DataType.UInt64Array1D"><code class="docutils literal notranslate"><span class="pre">DataType.UInt64Array1D</span></code></a></li>
-<li class="toctree-l6"><a class="reference internal" href="#ni_measurementlink_service.DataType.FloatArray1D"><code class="docutils literal notranslate"><span class="pre">DataType.FloatArray1D</span></code></a></li>
-<li class="toctree-l6"><a class="reference internal" href="#ni_measurementlink_service.DataType.DoubleArray1D"><code class="docutils literal notranslate"><span class="pre">DataType.DoubleArray1D</span></code></a></li>
-<li class="toctree-l6"><a class="reference internal" href="#ni_measurementlink_service.DataType.BooleanArray1D"><code class="docutils literal notranslate"><span class="pre">DataType.BooleanArray1D</span></code></a></li>
-<li class="toctree-l6"><a class="reference internal" href="#ni_measurementlink_service.DataType.StringArray1D"><code class="docutils literal notranslate"><span class="pre">DataType.StringArray1D</span></code></a></li>
-<li class="toctree-l6"><a class="reference internal" href="#ni_measurementlink_service.DataType.PinArray1D"><code class="docutils literal notranslate"><span class="pre">DataType.PinArray1D</span></code></a></li>
-<li class="toctree-l6"><a class="reference internal" href="#ni_measurementlink_service.DataType.PathArray1D"><code class="docutils literal notranslate"><span class="pre">DataType.PathArray1D</span></code></a></li>
-<li class="toctree-l6"><a class="reference internal" href="#ni_measurementlink_service.DataType.EnumArray1D"><code class="docutils literal notranslate"><span class="pre">DataType.EnumArray1D</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l5"><a class="reference internal" href="#ni_measurementlink_service.MeasurementInfo"><code class="docutils literal notranslate"><span class="pre">MeasurementInfo</span></code></a><ul>
-<li class="toctree-l6"><a class="reference internal" href="#ni_measurementlink_service.MeasurementInfo.display_name"><code class="docutils literal notranslate"><span class="pre">MeasurementInfo.display_name</span></code></a></li>
-<li class="toctree-l6"><a class="reference internal" href="#ni_measurementlink_service.MeasurementInfo.version"><code class="docutils literal notranslate"><span class="pre">MeasurementInfo.version</span></code></a></li>
-<li class="toctree-l6"><a class="reference internal" href="#ni_measurementlink_service.MeasurementInfo.ui_file_paths"><code class="docutils literal notranslate"><span class="pre">MeasurementInfo.ui_file_paths</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l5"><a class="reference internal" href="#ni_measurementlink_service.ServiceInfo"><code class="docutils literal notranslate"><span class="pre">ServiceInfo</span></code></a><ul>
-<li class="toctree-l6"><a class="reference internal" href="#ni_measurementlink_service.ServiceInfo.service_class"><code class="docutils literal notranslate"><span class="pre">ServiceInfo.service_class</span></code></a></li>
-<li class="toctree-l6"><a class="reference internal" href="#ni_measurementlink_service.ServiceInfo.description_url"><code class="docutils literal notranslate"><span class="pre">ServiceInfo.description_url</span></code></a></li>
-<li class="toctree-l6"><a class="reference internal" href="#ni_measurementlink_service.ServiceInfo.provided_interfaces"><code class="docutils literal notranslate"><span class="pre">ServiceInfo.provided_interfaces</span></code></a></li>
-<li class="toctree-l6"><a class="reference internal" href="#ni_measurementlink_service.ServiceInfo.annotations"><code class="docutils literal notranslate"><span class="pre">ServiceInfo.annotations</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l5"><a class="reference internal" href="#ni_measurementlink_service.MeasurementService"><code class="docutils literal notranslate"><span class="pre">MeasurementService</span></code></a><ul>
-<li class="toctree-l6"><a class="reference internal" href="#ni_measurementlink_service.MeasurementService.register_measurement"><code class="docutils literal notranslate"><span class="pre">MeasurementService.register_measurement()</span></code></a></li>
-<li class="toctree-l6"><a class="reference internal" href="#ni_measurementlink_service.MeasurementService.configuration"><code class="docutils literal notranslate"><span class="pre">MeasurementService.configuration()</span></code></a></li>
-<li class="toctree-l6"><a class="reference internal" href="#ni_measurementlink_service.MeasurementService.output"><code class="docutils literal notranslate"><span class="pre">MeasurementService.output()</span></code></a></li>
-<li class="toctree-l6"><a class="reference internal" href="#ni_measurementlink_service.MeasurementService.host_service"><code class="docutils literal notranslate"><span class="pre">MeasurementService.host_service()</span></code></a></li>
-<li class="toctree-l6"><a class="reference internal" href="#ni_measurementlink_service.MeasurementService.close_service"><code class="docutils literal notranslate"><span class="pre">MeasurementService.close_service()</span></code></a></li>
-<li class="toctree-l6"><a class="reference internal" href="#ni_measurementlink_service.MeasurementService.__enter__"><code class="docutils literal notranslate"><span class="pre">MeasurementService.__enter__()</span></code></a></li>
-<li class="toctree-l6"><a class="reference internal" href="#ni_measurementlink_service.MeasurementService.__exit__"><code class="docutils literal notranslate"><span class="pre">MeasurementService.__exit__()</span></code></a></li>
-<li class="toctree-l6"><a class="reference internal" href="#ni_measurementlink_service.MeasurementService.get_channel"><code class="docutils literal notranslate"><span class="pre">MeasurementService.get_channel()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l5"><a class="reference internal" href="#ni_measurementlink_service.DataType">DataType</a><ul>
-<li class="toctree-l6"><a class="reference internal" href="#ni_measurementlink_service.DataType.Int32">Int32</a></li>
-<li class="toctree-l6"><a class="reference internal" href="#ni_measurementlink_service.DataType.Int64">Int64</a></li>
-<li class="toctree-l6"><a class="reference internal" href="#ni_measurementlink_service.DataType.UInt32">UInt32</a></li>
-<li class="toctree-l6"><a class="reference internal" href="#ni_measurementlink_service.DataType.UInt64">UInt64</a></li>
-<li class="toctree-l6"><a class="reference internal" href="#ni_measurementlink_service.DataType.Float">Float</a></li>
-<li class="toctree-l6"><a class="reference internal" href="#ni_measurementlink_service.DataType.Double">Double</a></li>
-<li class="toctree-l6"><a class="reference internal" href="#ni_measurementlink_service.DataType.Boolean">Boolean</a></li>
-<li class="toctree-l6"><a class="reference internal" href="#ni_measurementlink_service.DataType.String">String</a></li>
-<li class="toctree-l6"><a class="reference internal" href="#ni_measurementlink_service.DataType.Pin">Pin</a></li>
-<li class="toctree-l6"><a class="reference internal" href="#ni_measurementlink_service.DataType.Path">Path</a></li>
-<li class="toctree-l6"><a class="reference internal" href="#ni_measurementlink_service.DataType.Enum">Enum</a></li>
-<li class="toctree-l6"><a class="reference internal" href="#ni_measurementlink_service.DataType.DoubleXYData">DoubleXYData</a></li>
-<li class="toctree-l6"><a class="reference internal" href="#ni_measurementlink_service.DataType.Int32Array1D">Int32Array1D</a></li>
-<li class="toctree-l6"><a class="reference internal" href="#ni_measurementlink_service.DataType.Int64Array1D">Int64Array1D</a></li>
-<li class="toctree-l6"><a class="reference internal" href="#ni_measurementlink_service.DataType.UInt32Array1D">UInt32Array1D</a></li>
-<li class="toctree-l6"><a class="reference internal" href="#ni_measurementlink_service.DataType.UInt64Array1D">UInt64Array1D</a></li>
-<li class="toctree-l6"><a class="reference internal" href="#ni_measurementlink_service.DataType.FloatArray1D">FloatArray1D</a></li>
-<li class="toctree-l6"><a class="reference internal" href="#ni_measurementlink_service.DataType.DoubleArray1D">DoubleArray1D</a></li>
-<li class="toctree-l6"><a class="reference internal" href="#ni_measurementlink_service.DataType.BooleanArray1D">BooleanArray1D</a></li>
-<li class="toctree-l6"><a class="reference internal" href="#ni_measurementlink_service.DataType.StringArray1D">StringArray1D</a></li>
-<li class="toctree-l6"><a class="reference internal" href="#ni_measurementlink_service.DataType.PinArray1D">PinArray1D</a></li>
-<li class="toctree-l6"><a class="reference internal" href="#ni_measurementlink_service.DataType.PathArray1D">PathArray1D</a></li>
-<li class="toctree-l6"><a class="reference internal" href="#ni_measurementlink_service.DataType.EnumArray1D">EnumArray1D</a></li>
-</ul>
-</li>
-<li class="toctree-l5"><a class="reference internal" href="#ni_measurementlink_service.MeasurementInfo">MeasurementInfo</a></li>
-<li class="toctree-l5"><a class="reference internal" href="#ni_measurementlink_service.ServiceInfo">ServiceInfo</a></li>
-<li class="toctree-l5"><a class="reference internal" href="#ni_measurementlink_service.MeasurementService">MeasurementService</a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="#classes">Classes</a></li>
 </ul>
 </li>
 </ul>
@@ -181,18 +97,12 @@
 <h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this heading"></a></h2>
 <div class="toctree-wrapper compound">
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="discovery/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">ni_measurementlink_service.discovery</span></code></a></li>
 <li class="toctree-l1"><a class="reference internal" href="measurement/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">ni_measurementlink_service.measurement</span></code></a><ul>
 <li class="toctree-l2"><a class="reference internal" href="measurement/info/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">ni_measurementlink_service.measurement.info</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="measurement/service/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">ni_measurementlink_service.measurement.service</span></code></a></li>
 </ul>
 </li>
-</ul>
-</div>
-</section>
-<section id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
-<div class="toctree-wrapper compound">
-<ul>
 <li class="toctree-l1"><a class="reference internal" href="session_management/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">ni_measurementlink_service.session_management</span></code></a></li>
 </ul>
 </div>
@@ -203,389 +113,20 @@
 <h3>Classes<a class="headerlink" href="#classes" title="Permalink to this heading"></a></h3>
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#ni_measurementlink_service.DataType" title="ni_measurementlink_service.DataType"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataType</span></code></a></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataType</span></code></p></td>
 <td><p>Enum that represents the supported data types.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#ni_measurementlink_service.MeasurementInfo" title="ni_measurementlink_service.MeasurementInfo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MeasurementInfo</span></code></a></p></td>
-<td><p>Class that represents the measurement information.</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">MeasurementInfo</span></code></p></td>
+<td><p>A named tuple providing information about a measurement.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#ni_measurementlink_service.ServiceInfo" title="ni_measurementlink_service.ServiceInfo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ServiceInfo</span></code></a></p></td>
-<td><p>Class that represents the service information.</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">ServiceInfo</span></code></p></td>
+<td><p>A named tuple providing information about a registered service.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#ni_measurementlink_service.MeasurementService" title="ni_measurementlink_service.MeasurementService"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MeasurementService</span></code></a></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">MeasurementService</span></code></p></td>
 <td><p>Class that supports registering and hosting a python function as a gRPC service.</p></td>
 </tr>
 </tbody>
 </table>
-<dl class="py class">
-<dt class="sig sig-object py" id="ni_measurementlink_service.DataType">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ni_measurementlink_service.</span></span><span class="sig-name descname"><span class="pre">DataType</span></span><a class="reference internal" href="../../_modules/ni_measurementlink_service/measurement/info.html#DataType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service.DataType" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">enum.Enum</span></code></p>
-<p>Enum that represents the supported data types.</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ni_measurementlink_service.DataType.Int32">
-<span class="sig-name descname"><span class="pre">Int32</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#ni_measurementlink_service.DataType.Int32" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ni_measurementlink_service.DataType.Int64">
-<span class="sig-name descname"><span class="pre">Int64</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#ni_measurementlink_service.DataType.Int64" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ni_measurementlink_service.DataType.UInt32">
-<span class="sig-name descname"><span class="pre">UInt32</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">2</span></em><a class="headerlink" href="#ni_measurementlink_service.DataType.UInt32" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ni_measurementlink_service.DataType.UInt64">
-<span class="sig-name descname"><span class="pre">UInt64</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">3</span></em><a class="headerlink" href="#ni_measurementlink_service.DataType.UInt64" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ni_measurementlink_service.DataType.Float">
-<span class="sig-name descname"><span class="pre">Float</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">4</span></em><a class="headerlink" href="#ni_measurementlink_service.DataType.Float" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ni_measurementlink_service.DataType.Double">
-<span class="sig-name descname"><span class="pre">Double</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">5</span></em><a class="headerlink" href="#ni_measurementlink_service.DataType.Double" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ni_measurementlink_service.DataType.Boolean">
-<span class="sig-name descname"><span class="pre">Boolean</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">6</span></em><a class="headerlink" href="#ni_measurementlink_service.DataType.Boolean" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ni_measurementlink_service.DataType.String">
-<span class="sig-name descname"><span class="pre">String</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">7</span></em><a class="headerlink" href="#ni_measurementlink_service.DataType.String" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ni_measurementlink_service.DataType.Pin">
-<span class="sig-name descname"><span class="pre">Pin</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">8</span></em><a class="headerlink" href="#ni_measurementlink_service.DataType.Pin" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ni_measurementlink_service.DataType.Path">
-<span class="sig-name descname"><span class="pre">Path</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">9</span></em><a class="headerlink" href="#ni_measurementlink_service.DataType.Path" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ni_measurementlink_service.DataType.Enum">
-<span class="sig-name descname"><span class="pre">Enum</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">10</span></em><a class="headerlink" href="#ni_measurementlink_service.DataType.Enum" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ni_measurementlink_service.DataType.DoubleXYData">
-<span class="sig-name descname"><span class="pre">DoubleXYData</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">11</span></em><a class="headerlink" href="#ni_measurementlink_service.DataType.DoubleXYData" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ni_measurementlink_service.DataType.Int32Array1D">
-<span class="sig-name descname"><span class="pre">Int32Array1D</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">100</span></em><a class="headerlink" href="#ni_measurementlink_service.DataType.Int32Array1D" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ni_measurementlink_service.DataType.Int64Array1D">
-<span class="sig-name descname"><span class="pre">Int64Array1D</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">101</span></em><a class="headerlink" href="#ni_measurementlink_service.DataType.Int64Array1D" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ni_measurementlink_service.DataType.UInt32Array1D">
-<span class="sig-name descname"><span class="pre">UInt32Array1D</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">102</span></em><a class="headerlink" href="#ni_measurementlink_service.DataType.UInt32Array1D" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ni_measurementlink_service.DataType.UInt64Array1D">
-<span class="sig-name descname"><span class="pre">UInt64Array1D</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">103</span></em><a class="headerlink" href="#ni_measurementlink_service.DataType.UInt64Array1D" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ni_measurementlink_service.DataType.FloatArray1D">
-<span class="sig-name descname"><span class="pre">FloatArray1D</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">104</span></em><a class="headerlink" href="#ni_measurementlink_service.DataType.FloatArray1D" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ni_measurementlink_service.DataType.DoubleArray1D">
-<span class="sig-name descname"><span class="pre">DoubleArray1D</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">105</span></em><a class="headerlink" href="#ni_measurementlink_service.DataType.DoubleArray1D" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ni_measurementlink_service.DataType.BooleanArray1D">
-<span class="sig-name descname"><span class="pre">BooleanArray1D</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">106</span></em><a class="headerlink" href="#ni_measurementlink_service.DataType.BooleanArray1D" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ni_measurementlink_service.DataType.StringArray1D">
-<span class="sig-name descname"><span class="pre">StringArray1D</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">107</span></em><a class="headerlink" href="#ni_measurementlink_service.DataType.StringArray1D" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ni_measurementlink_service.DataType.PinArray1D">
-<span class="sig-name descname"><span class="pre">PinArray1D</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">108</span></em><a class="headerlink" href="#ni_measurementlink_service.DataType.PinArray1D" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ni_measurementlink_service.DataType.PathArray1D">
-<span class="sig-name descname"><span class="pre">PathArray1D</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">109</span></em><a class="headerlink" href="#ni_measurementlink_service.DataType.PathArray1D" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ni_measurementlink_service.DataType.EnumArray1D">
-<span class="sig-name descname"><span class="pre">EnumArray1D</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">110</span></em><a class="headerlink" href="#ni_measurementlink_service.DataType.EnumArray1D" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="ni_measurementlink_service.MeasurementInfo">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ni_measurementlink_service.</span></span><span class="sig-name descname"><span class="pre">MeasurementInfo</span></span><a class="reference internal" href="../../_modules/ni_measurementlink_service/measurement/info.html#MeasurementInfo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service.MeasurementInfo" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">NamedTuple</span></code></p>
-<p>Class that represents the measurement information.</p>
-<section id="attributes">
-<h4>Attributes<a class="headerlink" href="#attributes" title="Permalink to this heading"></a></h4>
-<blockquote>
-<div><p>display_name (str): The measurement display name for client to display to user.</p>
-<p>version (str): The measurement version that helps to
-maintain versions of a measurement in future.</p>
-<p>ui_file_paths (list): Absolute paths of the UI file(s) linked to the measurement.</p>
-</div></blockquote>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ni_measurementlink_service.MeasurementInfo.display_name">
-<span class="sig-name descname"><span class="pre">display_name</span></span><em class="property"><span class="w"> </span><span class="pre">:str</span></em><a class="headerlink" href="#ni_measurementlink_service.MeasurementInfo.display_name" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ni_measurementlink_service.MeasurementInfo.version">
-<span class="sig-name descname"><span class="pre">version</span></span><em class="property"><span class="w"> </span><span class="pre">:str</span></em><a class="headerlink" href="#ni_measurementlink_service.MeasurementInfo.version" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ni_measurementlink_service.MeasurementInfo.ui_file_paths">
-<span class="sig-name descname"><span class="pre">ui_file_paths</span></span><em class="property"><span class="w"> </span><span class="pre">:List[pathlib.Path]</span></em><a class="headerlink" href="#ni_measurementlink_service.MeasurementInfo.ui_file_paths" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-</section>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="ni_measurementlink_service.ServiceInfo">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ni_measurementlink_service.</span></span><span class="sig-name descname"><span class="pre">ServiceInfo</span></span><a class="reference internal" href="../../_modules/ni_measurementlink_service/measurement/info.html#ServiceInfo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service.ServiceInfo" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">NamedTuple</span></code></p>
-<p>Class that represents the service information.</p>
-<section id="id1">
-<h4>Attributes<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h4>
-<blockquote>
-<div><p>service_class (str): Service class that the measurement belongs to.
-Measurements under same service class expected to perform same logic.
-For e.g., different version of measurement can come under same service class.</p>
-<p>description_url (str): Description URL of the measurement.</p>
-<p>provided_interfaces (List[str]): List of interfaces the service provides.
-For e.g., ni.measurementlink.measurement.v2.MeasurementService.
-Defaults to [“ni.measurementlink.measurement.v1.MeasurementService”].</p>
-<p>annotations (Dict[str,str]): Dict that contains extra information of the measurement.
-As default we added a (str) description, (str) collection and a (List[str]) list of tags.
-Feel free to add your own Annotations as needed.</p>
-</div></blockquote>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ni_measurementlink_service.ServiceInfo.service_class">
-<span class="sig-name descname"><span class="pre">service_class</span></span><em class="property"><span class="w"> </span><span class="pre">:str</span></em><a class="headerlink" href="#ni_measurementlink_service.ServiceInfo.service_class" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ni_measurementlink_service.ServiceInfo.description_url">
-<span class="sig-name descname"><span class="pre">description_url</span></span><em class="property"><span class="w"> </span><span class="pre">:str</span></em><a class="headerlink" href="#ni_measurementlink_service.ServiceInfo.description_url" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ni_measurementlink_service.ServiceInfo.provided_interfaces">
-<span class="sig-name descname"><span class="pre">provided_interfaces</span></span><em class="property"><span class="w"> </span><span class="pre">:List[str]</span> <span class="pre">=</span> <span class="pre">['ni.measurementlink.measurement.v1.MeasurementService']</span></em><a class="headerlink" href="#ni_measurementlink_service.ServiceInfo.provided_interfaces" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ni_measurementlink_service.ServiceInfo.annotations">
-<span class="sig-name descname"><span class="pre">annotations</span></span><em class="property"><span class="w"> </span><span class="pre">:Dict[str,</span> <span class="pre">str]</span></em><a class="headerlink" href="#ni_measurementlink_service.ServiceInfo.annotations" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-</section>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="ni_measurementlink_service.MeasurementService">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ni_measurementlink_service.</span></span><span class="sig-name descname"><span class="pre">MeasurementService</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">service_config_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">version</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ui_file_paths</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">service_class</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ni_measurementlink_service/measurement/service.html#MeasurementService"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service.MeasurementService" title="Permalink to this definition"></a></dt>
-<dd><p>Class that supports registering and hosting a python function as a gRPC service.</p>
-<section id="id2">
-<h4>Attributes<a class="headerlink" href="#id2" title="Permalink to this heading"></a></h4>
-<blockquote>
-<div><p>measurement_info (info.MeasurementInfo): Measurement info</p>
-<p>service_info(info.ServiceInfo) : Service Info</p>
-<p>configuration_parameter_list (List): List of configuration parameters.</p>
-<p>output_parameter_list (list): List of output parameters.</p>
-<p>measure_function (Callable): Registered measurement function.</p>
-<p>context (MeasurementContext): Accessor for context-local state.</p>
-<dl class="simple">
-<dt>discovery_client (DiscoveryClient): Client for accessing the MeasurementLink discovery</dt><dd><p>service.</p>
-</dd>
-</dl>
-<p>channel_pool (GrpcChannelPool): Pool of gRPC channels used by the service.</p>
-</div></blockquote>
-<dl class="py method">
-<dt class="sig sig-object py" id="ni_measurementlink_service.MeasurementService.register_measurement">
-<span class="sig-name descname"><span class="pre">register_measurement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">measurement_function</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ni_measurementlink_service/measurement/service.html#MeasurementService.register_measurement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service.MeasurementService.register_measurement" title="Permalink to this definition"></a></dt>
-<dd><p>Register a function as the measurement function for a measurement service.</p>
-<p>To declare a measurement function, use this idiom:</p>
-<p><a href="#id3"><span class="problematic" id="id4">``</span></a>`
-&#64;measurement_service.register_measurement
-&#64;measurement_service.configuration(“Configuration 1”, …)
-&#64;measurement_service.configuration(“Configuration 2”, …)
-&#64;measurement_service.output(“Output 1”, …)
-&#64;measurement_service.output(“Output 2”, …)
-def measure(configuration1, configuration2):</p>
-<blockquote>
-<div><p>…
-return (output1, output2)</p>
-</div></blockquote>
-<p><a href="#id5"><span class="problematic" id="id6">``</span></a><a href="#id7"><span class="problematic" id="id8">`</span></a></p>
-<p>See also: <code class="xref py py-func docutils literal notranslate"><span class="pre">configuration()</span></code>, <code class="xref py py-func docutils literal notranslate"><span class="pre">output()</span></code></p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ni_measurementlink_service.MeasurementService.configuration">
-<span class="sig-name descname"><span class="pre">configuration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">display_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_value</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instrument_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enum_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ni_measurementlink_service/measurement/service.html#MeasurementService.configuration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service.MeasurementService.configuration" title="Permalink to this definition"></a></dt>
-<dd><p>Add a configuration parameter to a measurement function.</p>
-<p>This decorator maps the measurement service’s configuration parameters
-to Python positional parameters. To add multiple configuration parameters
-to the same measurement function, use this decorator multiple times.
-The order of decorator calls must match the order of positional parameters.</p>
-<p>See also: <code class="xref py py-func docutils literal notranslate"><span class="pre">register_measurement()</span></code></p>
-<section id="args">
-<h5>Args<a class="headerlink" href="#args" title="Permalink to this heading"></a></h5>
-<blockquote>
-<div><p>display_name (str): Display name of the configuration.</p>
-<p>type (DataType): Data type of the configuration.</p>
-<p>default_value (Any): Default value of the configuration.</p>
-<p>instrument_type (Optional[str]):
-Filter pins by instrument type. This is only supported when configuration type
-is DataType.Pin. Pin maps have built in instrument definitions using the
-NI driver based instrument type ids. These can be found as constants
-in <cite>nims.session_management</cite>. For example, for an NI DCPower instrument
-the instrument type is <cite>nims.session_management.INSTRUMENT_TYPE_NI_DCPOWER</cite>.
-For custom instruments the user defined instrument type id is defined in the
-pin map file.</p>
-<p>enum_type (Optional[SupportedEnumType]):
-Defines the enum type associated with this configuration parameter. This is only
-supported when configuration type is DataType.Enum or DataType.EnumArray1D.</p>
-</div></blockquote>
-</section>
-<section id="returns">
-<h5>Returns<a class="headerlink" href="#returns" title="Permalink to this heading"></a></h5>
-<blockquote>
-<div><p>Callable: Callable that takes in Any Python Function
-and returns the same python function.</p>
-</div></blockquote>
-</section>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ni_measurementlink_service.MeasurementService.output">
-<span class="sig-name descname"><span class="pre">output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">display_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enum_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ni_measurementlink_service/measurement/service.html#MeasurementService.output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service.MeasurementService.output" title="Permalink to this definition"></a></dt>
-<dd><p>Add an output parameter to a measurement function.</p>
-<p>This decorator maps the measurement service’s output parameters to
-the elements of the tuple returned by the measurement function.
-To add multiple output parameters to the same measurement function,
-use this decorator multiple times.
-The order of decorator calls must match the order of elements
-returned by the measurement function.</p>
-<p>See also: <code class="xref py py-func docutils literal notranslate"><span class="pre">register_measurement()</span></code></p>
-<section id="id9">
-<h5>Args<a class="headerlink" href="#id9" title="Permalink to this heading"></a></h5>
-<blockquote>
-<div><p>display_name (str): Display name of the output.</p>
-<p>type (DataType): Data type of the output.</p>
-<p>enum_type (Optional[SupportedEnumType]:
-Defines the enum type associated with this configuration parameter. This is only
-supported when configuration type is DataType.Enum or DataType.EnumArray1D.</p>
-</div></blockquote>
-</section>
-<section id="id10">
-<h5>Returns<a class="headerlink" href="#id10" title="Permalink to this heading"></a></h5>
-<blockquote>
-<div><p>Callable: Callable that takes in Any Python Function and
-returns the same python function.</p>
-</div></blockquote>
-</section>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ni_measurementlink_service.MeasurementService.host_service">
-<span class="sig-name descname"><span class="pre">host_service</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ni_measurementlink_service/measurement/service.html#MeasurementService.host_service"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service.MeasurementService.host_service" title="Permalink to this definition"></a></dt>
-<dd><p>Host the registered measurement method as gRPC measurement service.</p>
-<section id="id11">
-<h5>Returns<a class="headerlink" href="#id11" title="Permalink to this heading"></a></h5>
-<blockquote>
-<div><p>MeasurementService: Context manager that can be used with a with-statement to close
-the service.</p>
-</div></blockquote>
-</section>
-<section id="raises">
-<h5>Raises<a class="headerlink" href="#raises" title="Permalink to this heading"></a></h5>
-<blockquote>
-<div><p>Exception: If register measurement methods not available.</p>
-</div></blockquote>
-</section>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ni_measurementlink_service.MeasurementService.close_service">
-<span class="sig-name descname"><span class="pre">close_service</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ni_measurementlink_service/measurement/service.html#MeasurementService.close_service"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service.MeasurementService.close_service" title="Permalink to this definition"></a></dt>
-<dd><p>Close the Service after un-registering with discovery service and cleanups.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ni_measurementlink_service.MeasurementService.__enter__">
-<span class="sig-name descname"><span class="pre">__enter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ni_measurementlink_service/measurement/service.html#MeasurementService.__enter__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service.MeasurementService.__enter__" title="Permalink to this definition"></a></dt>
-<dd><p>Enter the runtime context related to the measurement service.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ni_measurementlink_service.MeasurementService.__exit__">
-<span class="sig-name descname"><span class="pre">__exit__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exc_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exc_val</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">traceback</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ni_measurementlink_service/measurement/service.html#MeasurementService.__exit__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service.MeasurementService.__exit__" title="Permalink to this definition"></a></dt>
-<dd><p>Exit the runtime context related to the measurement service.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ni_measurementlink_service.MeasurementService.get_channel">
-<span class="sig-name descname"><span class="pre">get_channel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">provided_interface</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">service_class</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ni_measurementlink_service/measurement/service.html#MeasurementService.get_channel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service.MeasurementService.get_channel" title="Permalink to this definition"></a></dt>
-<dd><p>Return gRPC channel to specified service.</p>
-<section id="id12">
-<h5>Args<a class="headerlink" href="#id12" title="Permalink to this heading"></a></h5>
-<blockquote>
-<div><p>provided_interface (str): The gRPC Full Name of the service.</p>
-<p>service_class (str): The service “class” that should be matched.</p>
-</div></blockquote>
-</section>
-<section id="id13">
-<h5>Returns<a class="headerlink" href="#id13" title="Permalink to this heading"></a></h5>
-<blockquote>
-<div><p>grpc.Channel: A channel to the gRPC service.</p>
-</div></blockquote>
-</section>
-<section id="id14">
-<h5>Raises<a class="headerlink" href="#id14" title="Permalink to this heading"></a></h5>
-<blockquote>
-<div><dl class="simple">
-<dt>Exception: If service_class is not specified and there is more than one matching service</dt><dd><p>registered.</p>
-</dd>
-</dl>
-</div></blockquote>
-</section>
-</dd></dl>
-
-</section>
-</dd></dl>
-
 </section>
 </section>
 </section>
@@ -595,7 +136,7 @@ the service.</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="../index.html" class="btn btn-neutral float-left" title="API Reference" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="measurement/index.html" class="btn btn-neutral float-right" title="ni_measurementlink_service.measurement" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="discovery/index.html" class="btn btn-neutral float-right" title="ni_measurementlink_service.discovery" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

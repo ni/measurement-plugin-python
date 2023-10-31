@@ -34,6 +34,7 @@ Functions
 
 .. py:class:: MeasurementServiceStub(channel)
 
+
    Bases: :py:obj:`object`
 
    Service that implements a measurement. Unlike other services, a MeasurementService is designed to be a plugin
@@ -41,6 +42,7 @@ Functions
 
 
 .. py:class:: MeasurementServiceServicer
+
 
    Bases: :py:obj:`object`
 
@@ -64,6 +66,7 @@ Functions
 
 
 .. py:class:: MeasurementService
+
 
    Bases: :py:obj:`object`
 

@@ -5,7 +5,7 @@
 
 .. autoapi-nested-parse::
 
-   Contains Measurement Service Implementation class and method to host the service.
+   gRPC servicers for each version of the measurement service interface.
 
 
 
@@ -32,25 +32,34 @@ Attributes
    ni_measurementlink_service._internal.grpc_servicer.measurement_service_context
 
 
-.. py:class:: MeasurementServiceContext(grpc_context, pin_map_context)
+.. py:class:: MeasurementServiceContext(grpc_context, pin_map_context, owner)
 
-   Accessor for the Measurement Service's context-local state.
+
+   Accessor for the measurement service's context-local state.
+
+   .. py:property:: grpc_context
+      :type: grpc.ServicerContext
+
+      Get the context for the RPC.
+
+   .. py:property:: owner
+      :type: object
+
+      The owner of the server (e.g. measurement service).
+
+   .. py:property:: pin_map_context
+      :type: ni_measurementlink_service.session_management.PinMapContext
+
+      Get the pin map context for the RPC.
+
+   .. py:property:: time_remaining
+      :type: float
+
+      Get the time remaining for the RPC.
 
    .. py:method:: mark_complete()
 
       Mark the current RPC as complete.
-
-
-   .. py:method:: grpc_context()
-      :property:
-
-      Get the context for the RPC.
-
-
-   .. py:method:: pin_map_context()
-      :property:
-
-      Get the pin map context for the RPC.
 
 
    .. py:method:: add_cancel_callback(cancel_callback)
@@ -63,76 +72,71 @@ Attributes
       Cancel the RPC.
 
 
-   .. py:method:: time_remaining()
-      :property:
-
-      Get the time remaining for the RPC.
-
-
    .. py:method:: abort(code, details)
 
       Aborts the RPC.
 
 
 
+.. py:exception:: CustomRpcError(code, details)
+
+
+   Bases: :py:obj:`grpc.RpcError`
+
+   A custom exception class for handling gRPC RPC errors.
+
+   gRPC's built-in RpcError is not directly configurable in Python, so this class
+   enables the creation of custom RPC errors with specific error codes.
+
+   .. py:method:: code()
+
+      Get the gRPC status code.
+
+
+   .. py:method:: details()
+
+      Get the gRPC status details.
+
+
+
 .. py:data:: measurement_service_context
-   :annotation: :contextvars.ContextVar[MeasurementServiceContext]
+   :type: contextvars.ContextVar[MeasurementServiceContext]
 
    
 
-.. py:class:: MeasurementServiceServicerV1(measurement_info, configuration_parameter_list, output_parameter_list, measure_function)
+.. py:class:: MeasurementServiceServicerV1(measurement_info, configuration_parameter_list, output_parameter_list, measure_function, owner)
+
 
    Bases: :py:obj:`ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v1.measurement_service_pb2_grpc.MeasurementServiceServicer`
 
-   Implementation of the Measurement Service's gRPC base class.
-
-   Attributes
-   ----------
-       measurement_info (MeasurementInfo): Measurement info
-
-       configuration_parameter_list (List): List of configuration parameters.
-
-       output_parameter_list (List): List of output parameters.
-
-       measure_function (Callable): Registered measurement function.
-
+   Measurement v1 servicer.
 
    .. py:method:: GetMetadata(request, context)
 
-      RPC API to get complete metadata.
+      RPC API to get measurement metadata.
 
 
    .. py:method:: Measure(request, context)
 
-      RPC API that Executes the registered measurement method.
+      RPC API that executes the registered measurement method.
 
 
 
-.. py:class:: MeasurementServiceServicerV2(measurement_info, configuration_parameter_list, output_parameter_list, measure_function)
+.. py:class:: MeasurementServiceServicerV2(measurement_info, configuration_parameter_list, output_parameter_list, measure_function, owner)
+
 
    Bases: :py:obj:`ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v2.measurement_service_pb2_grpc.MeasurementServiceServicer`
 
-   Implementation of the Measurement Service's gRPC base class.
-
-   Attributes
-   ----------
-       measurement_info (MeasurementInfo): Measurement info
-
-       configuration_parameter_list (List): List of configuration parameters.
-
-       output_parameter_list (List): List of output parameters.
-
-       measure_function (Callable): Registered measurement function.
-
+   Measurement v2 servicer.
 
    .. py:method:: GetMetadata(request, context)
 
-      RPC API to get complete metadata.
+      RPC API to get measurement metadata.
 
 
    .. py:method:: Measure(request, context)
 
-      RPC API that Executes the registered measurement method.
+      RPC API that executes the registered measurement method.
 
 
 

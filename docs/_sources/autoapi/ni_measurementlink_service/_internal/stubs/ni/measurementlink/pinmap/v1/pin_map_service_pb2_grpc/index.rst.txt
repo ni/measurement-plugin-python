@@ -34,6 +34,7 @@ Functions
 
 .. py:class:: PinMapServiceStub(channel)
 
+
    Bases: :py:obj:`object`
 
    Service to keep track of pin map resources.
@@ -41,6 +42,7 @@ Functions
 
 
 .. py:class:: PinMapServiceServicer
+
 
    Bases: :py:obj:`object`
 
@@ -101,6 +103,7 @@ Functions
 
 
 .. py:class:: PinMapService
+
 
    Bases: :py:obj:`object`
 

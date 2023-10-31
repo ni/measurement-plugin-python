@@ -1,0 +1,32 @@
+:orphan:
+
+:py:mod:`ni_measurementlink_service._drivers._nidigital`
+========================================================
+
+.. py:module:: ni_measurementlink_service._drivers._nidigital
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   ni_measurementlink_service._drivers._nidigital.SessionConstructor
+
+
+
+
+.. py:class:: SessionConstructor(discovery_client, grpc_channel_pool, reset_device, options, initialization_behavior)
+
+
+   Constructs sessions based on SessionInformation.
+
+   .. py:method:: __call__(session_info)
+
+      Construct a session object.
+
+
+

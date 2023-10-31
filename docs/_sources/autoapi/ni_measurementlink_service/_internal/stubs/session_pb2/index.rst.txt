@@ -13,7 +13,6 @@ Module Contents
 ---------------
 
 .. py:data:: DESCRIPTOR
-   
 
    
 

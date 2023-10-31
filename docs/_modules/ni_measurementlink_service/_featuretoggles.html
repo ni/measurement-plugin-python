@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ni_measurementlink_service._featuretoggles &mdash; ni_measurementlink_service 1.3 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=0264ad83"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            ni_measurementlink_service
+          </a>
+              <div class="version">
+                1.3.0-dev0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../autoapi/index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">ni_measurementlink_service</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ni_measurementlink_service._featuretoggles</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ni_measurementlink_service._featuretoggles</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;MeasurementLink feature toggles.&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span> <span class="nn">functools</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">TypeVar</span>
+
+<span class="kn">from</span> <span class="nn">ni_measurementlink_service._configuration</span> <span class="kn">import</span> <span class="n">_config</span><span class="p">,</span> <span class="n">_PREFIX</span>
+
+<span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">ParamSpec</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="kn">from</span> <span class="nn">typing_extensions</span> <span class="kn">import</span> <span class="n">ParamSpec</span>
+
+    <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">11</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Self</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="kn">from</span> <span class="nn">typing_extensions</span> <span class="kn">import</span> <span class="n">Self</span>
+
+    <span class="n">_P</span> <span class="o">=</span> <span class="n">ParamSpec</span><span class="p">(</span><span class="s2">&quot;_P&quot;</span><span class="p">)</span>
+    <span class="n">_T</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">&quot;_T&quot;</span><span class="p">)</span>
+
+
+<span class="c1"># Based on the recipe at https://docs.python.org/3/howto/enum.html</span>
+<span class="k">class</span> <span class="nc">_OrderedEnum</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__ge__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span> <span class="ow">is</span> <span class="n">other</span><span class="o">.</span><span class="vm">__class__</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&gt;=</span> <span class="n">other</span><span class="o">.</span><span class="n">value</span>
+        <span class="k">return</span> <span class="bp">NotImplemented</span>
+
+    <span class="k">def</span> <span class="fm">__gt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span> <span class="ow">is</span> <span class="n">other</span><span class="o">.</span><span class="vm">__class__</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&gt;</span> <span class="n">other</span><span class="o">.</span><span class="n">value</span>
+        <span class="k">return</span> <span class="bp">NotImplemented</span>
+
+    <span class="k">def</span> <span class="fm">__le__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span> <span class="ow">is</span> <span class="n">other</span><span class="o">.</span><span class="vm">__class__</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&lt;=</span> <span class="n">other</span><span class="o">.</span><span class="n">value</span>
+        <span class="k">return</span> <span class="bp">NotImplemented</span>
+
+    <span class="k">def</span> <span class="fm">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span> <span class="ow">is</span> <span class="n">other</span><span class="o">.</span><span class="vm">__class__</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&lt;</span> <span class="n">other</span><span class="o">.</span><span class="n">value</span>
+        <span class="k">return</span> <span class="bp">NotImplemented</span>
+
+
+<div class="viewcode-block" id="CodeReadiness"><a class="viewcode-back" href="../../autoapi/ni_measurementlink_service/_featuretoggles/index.html#ni_measurementlink_service._featuretoggles.CodeReadiness">[docs]</a><span class="k">class</span> <span class="nc">CodeReadiness</span><span class="p">(</span><span class="n">_OrderedEnum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Indicates whether code is ready to be supported.&quot;&quot;&quot;</span>
+
+    <span class="n">RELEASE</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">NEXT_RELEASE</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">INCOMPLETE</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">PROTOTYPE</span> <span class="o">=</span> <span class="mi">3</span></div>
+
+
+<span class="k">def</span> <span class="nf">_init_code_readiness_level</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">CodeReadiness</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">_config</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">_PREFIX</span><span class="si">}</span><span class="s2">_ALLOW_INCOMPLETE&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">cast</span><span class="o">=</span><span class="nb">bool</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">CodeReadiness</span><span class="o">.</span><span class="n">INCOMPLETE</span>
+    <span class="k">elif</span> <span class="n">_config</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">_PREFIX</span><span class="si">}</span><span class="s2">_ALLOW_NEXT_RELEASE&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">cast</span><span class="o">=</span><span class="nb">bool</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">CodeReadiness</span><span class="o">.</span><span class="n">NEXT_RELEASE</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">CodeReadiness</span><span class="o">.</span><span class="n">RELEASE</span>
+
+
+<span class="c1"># This is not public because `from _featuretoggles import CODE_READINESS_LEVEL`</span>
+<span class="c1"># is incompatible with the patching performed by the use_code_readiness mark.</span>
+<span class="n">_CODE_READINESS_LEVEL</span> <span class="o">=</span> <span class="n">_init_code_readiness_level</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="get_code_readiness_level"><a class="viewcode-back" href="../../autoapi/ni_measurementlink_service/_featuretoggles/index.html#ni_measurementlink_service._featuretoggles.get_code_readiness_level">[docs]</a><span class="k">def</span> <span class="nf">get_code_readiness_level</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">CodeReadiness</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the current code readiness level.</span>
+
+<span class="sd">    You can override this in tests by specifying the ``use_code_readiness``</span>
+<span class="sd">    mark.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">_CODE_READINESS_LEVEL</span></div>
+
+
+<div class="viewcode-block" id="FeatureNotSupportedError"><a class="viewcode-back" href="../../autoapi/ni_measurementlink_service/_featuretoggles/index.html#ni_measurementlink_service._featuretoggles.FeatureNotSupportedError">[docs]</a><span class="k">class</span> <span class="nc">FeatureNotSupportedError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The feature is not supported at the current code readiness level.&quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="FeatureToggle"><a class="viewcode-back" href="../../autoapi/ni_measurementlink_service/_featuretoggles/index.html#ni_measurementlink_service._featuretoggles.FeatureToggle">[docs]</a><span class="k">class</span> <span class="nc">FeatureToggle</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A run-time feature toggle.&quot;&quot;&quot;</span>
+
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The name of the feature.&quot;&quot;&quot;</span>
+
+    <span class="n">readiness</span><span class="p">:</span> <span class="n">CodeReadiness</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The code readiness at which this feature is enabled.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">readiness</span><span class="p">:</span> <span class="n">CodeReadiness</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the feature toggle.&quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">name</span> <span class="o">==</span> <span class="n">name</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">readiness</span> <span class="o">=</span> <span class="n">readiness</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_is_enabled_override</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1"># Only read the env var at initialization time.</span>
+        <span class="k">if</span> <span class="n">_config</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">_PREFIX</span><span class="si">}</span><span class="s2">_ENABLE_</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">cast</span><span class="o">=</span><span class="nb">bool</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_is_enabled_override</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">is_enabled</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Indicates whether the feature is currently enabled.</span>
+
+<span class="sd">        You can enable/disable features in tests by specifying the</span>
+<span class="sd">        ``enable_feature_toggle`` or ``disable_feature_toggle`` marks.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_enabled_override</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_enabled_override</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">readiness</span> <span class="o">&lt;=</span> <span class="n">get_code_readiness_level</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_raise_if_disabled</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_enabled</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="n">env_vars</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">_PREFIX</span><span class="si">}</span><span class="s2">_ENABLE_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">readiness</span> <span class="ow">in</span> <span class="p">[</span><span class="n">CodeReadiness</span><span class="o">.</span><span class="n">NEXT_RELEASE</span><span class="p">,</span> <span class="n">CodeReadiness</span><span class="o">.</span><span class="n">INCOMPLETE</span><span class="p">]:</span>
+            <span class="n">env_vars</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot; or </span><span class="si">{</span><span class="n">_PREFIX</span><span class="si">}</span><span class="s2">_ALLOW_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">readiness</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;The </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> feature is not supported at the current code readiness level. &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot; To enable it, set </span><span class="si">{</span><span class="n">env_vars</span><span class="si">}</span><span class="s2">.&quot;</span>
+        <span class="p">)</span>
+        <span class="k">raise</span> <span class="n">FeatureNotSupportedError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="requires_feature"><a class="viewcode-back" href="../../autoapi/ni_measurementlink_service/_featuretoggles/index.html#ni_measurementlink_service._featuretoggles.requires_feature">[docs]</a><span class="k">def</span> <span class="nf">requires_feature</span><span class="p">(</span>
+    <span class="n">feature_toggle</span><span class="p">:</span> <span class="n">FeatureToggle</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Callable</span><span class="p">[</span><span class="n">_P</span><span class="p">,</span> <span class="n">_T</span><span class="p">]],</span> <span class="n">Callable</span><span class="p">[</span><span class="n">_P</span><span class="p">,</span> <span class="n">_T</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Decorator specifying that the function requires the specified feature toggle.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="n">_P</span><span class="p">,</span> <span class="n">_T</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[</span><span class="n">_P</span><span class="p">,</span> <span class="n">_T</span><span class="p">]:</span>
+        <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+        <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">_P</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">_P</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_T</span><span class="p">:</span>
+            <span class="n">feature_toggle</span><span class="o">.</span><span class="n">_raise_if_disabled</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">wrapper</span>
+
+    <span class="k">return</span> <span class="n">decorator</span></div>
+
+
+<span class="c1"># --------------------------------------</span>
+<span class="c1"># Define feature toggle constants here:</span>
+<span class="c1"># --------------------------------------</span>
+
+<span class="n">SESSION_MANAGEMENT_2024Q1</span> <span class="o">=</span> <span class="n">FeatureToggle</span><span class="p">(</span><span class="s2">&quot;SESSION_MANAGEMENT_2024Q1&quot;</span><span class="p">,</span> <span class="n">CodeReadiness</span><span class="o">.</span><span class="n">RELEASE</span><span class="p">)</span>
+<span class="sd">&quot;&quot;&quot;Simplified session management APIs for the 2024Q1 release.&quot;&quot;&quot;</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, National Instruments.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

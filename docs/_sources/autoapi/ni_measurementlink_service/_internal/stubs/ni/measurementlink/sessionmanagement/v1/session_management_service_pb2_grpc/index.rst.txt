@@ -34,6 +34,7 @@ Functions
 
 .. py:class:: SessionManagementServiceStub(channel)
 
+
    Bases: :py:obj:`object`
 
    Service to keep track of open sessions used by measurement services, and to allow measurement services to access sessions by pin and site.
@@ -41,6 +42,7 @@ Functions
 
 
 .. py:class:: SessionManagementServiceServicer
+
 
    Bases: :py:obj:`object`
 
@@ -99,6 +101,7 @@ Functions
 
 
 .. py:class:: SessionManagementService
+
 
    Bases: :py:obj:`object`
 
