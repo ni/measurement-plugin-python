@@ -50,5 +50,7 @@ follow the steps below:
   MEASUREMENTLINK_NIDCPOWER_MODEL=4141
   ```
 
-> **Note** The multi-site pin map, `NIDCPowerSourceDCVoltageMultiSite.pinmap`,
-> requires an NI SMU with 4 or more channels.
+> **Note** 
+>
+> The multi-site pin map, `NIDCPowerSourceDCVoltageMultiSite.pinmap`, requires
+> an NI SMU with 4 or more channels.
