@@ -39,18 +39,16 @@ commands using NI-VISA.
 
 ### Required Hardware
 
-By default, this example does not require hardware; it uses a simulated
-instrument and PyVISA-sim to simulate NI-DCPower and NI-VISA DMM instruments in
-software. [`_visa_dmm_sim.yaml`](./_visa_dmm_sim.yaml) defines the behavior of
-the simulated NI-VISA DMM instrument.
+Supported SMU instrument models:
+- An NI SMU that is supported by NI-DCPower (e.g. PXIe-4141)
 
-Supported instrument models:
+Supported DMM instrument models:
 - NI Instrument Simulator v2.0
 - HP/Agilent/Keysight 34401A DMM
 
-By default, this example uses a physical instrument or a simulated instrument
-created in NI MAX. To automatically simulate an instrument without using NI MAX,
-follow the steps below:
+By default, this example uses physical instruments (or a simulated SMU created
+in NI MAX). To simulate instruments without using NI MAX, follow the steps
+below:
 - Create a `.env` file in the measurement service's directory or one of its
   parent directories (such as the root of your Git repository or
   `C:\ProgramData\National Instruments\MeasurementLink\Services` for statically
@@ -66,9 +64,11 @@ follow the steps below:
   MEASUREMENTLINK_VISA_DMM_SIMULATE=1
   ```
 
-To use a physical instrument:
-- This example requires an NI SMU that is supported by NI-DCPower (e.g.
-  PXIe-4141).
+The `_visa_dmm.py` instrument driver implements simulation using PyVISA-sim.
+[`_visa_dmm_sim.yaml`](./_visa_dmm_sim.yaml) defines the behavior of the
+simulated instrument.
+
+To use a physical DMM instrument:
 - Connect the instrument to a supported interface, such as GPIB or serial.
 - By default, the pin map included with this example uses the resource name
   `GPIB0::3::INSTR`, which matches the NI Instrument Simulator's factory default
@@ -80,7 +80,5 @@ To use a physical instrument:
   - To modify the NI Instrument Simulator configuration (e.g. GPIB address,
     serial configuration), use the `Instrument Simulator Wizard` included with
     the NI Instrument Simulator software.
-
-To use a 3rd party DMM, such as a Keysight 34401A:
-  - Verify the driver specific commands in `_visa_dmm.py` and update them if
-    required.
+  - To configure third party instruments, see the documentation provided with
+    the instrument.
