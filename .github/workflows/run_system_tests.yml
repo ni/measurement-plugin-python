@@ -34,7 +34,6 @@ jobs:
           key: run-system-tests-${{ runner.os }}-${{ matrix.configuration }}-${{ hashFiles('poetry.lock') }}
       - name: Install dependencies
         run: poetry install -v
-        working-directory: ${{ github.workspace }}
       - name: Run system tests
         run: poetry run tox
       - name: Upload test results
