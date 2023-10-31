@@ -31,7 +31,9 @@ def test___single_session___measure___single_session_created(
 
     outputs = _measure(stub_v2, pin_map_context, configurations)
 
-    assert _get_output(outputs) == [_MeasurementOutput("DCPower1/0", "DCPower1/0", "DCPower1/0", "DCPower1/0")]
+    assert _get_output(outputs) == [
+        _MeasurementOutput("DCPower1/0", "DCPower1/0", "DCPower1/0", "DCPower1/0")
+    ]
 
 
 def test___multiple_sessions___measure___multiple_sessions_created(

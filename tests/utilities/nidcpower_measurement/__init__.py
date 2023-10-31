@@ -40,7 +40,7 @@ def measure(
     else:
         with measurement_service.context.reserve_session(pin_names) as reservation:
             with reservation.initialize_nidcpower_session() as session_info:
-                connection = reservation.get_nidcpower_connection(pin_names[0])
+                connection = reservation.get_nidcpower_connection(list(pin_names)[0])
                 assert session_info.session is not None
                 return (
                     [session_info.resource_name],
