@@ -25,8 +25,9 @@ This is a MeasurementLink example that tests an SPI device using an NI Digital P
 
 This example requires an NI Digital Pattern instrument (e.g. PXIe-6570).
 
-By default, this example uses a physical instrument or a simulated instrument created in NI MAX. To
-automatically simulate an instrument without using NI MAX, follow the steps below:
+By default, this example uses a physical instrument or a simulated instrument
+created in NI MAX. To automatically simulate an instrument without using NI MAX,
+follow the steps below:
 - Create a `.env` file in the measurement service's directory or one of its parent directories (such
   as the root of your Git repository or `C:\ProgramData\National
   Instruments\MeasurementLink\Services` for statically registered measurement services).

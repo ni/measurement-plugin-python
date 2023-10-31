@@ -31,7 +31,9 @@ This is a MeasurementLink example that sources and measures a DC voltage with an
 
 This example requires an NI SMU that is supported by NI-DCPower (e.g. PXIe-4141).
 
-By default, this example uses a physical instrument or a simulated device created in NI MAX. To automatically create a simulated device when running the measurement or TestStand sequence, follow the steps below:
+By default, this example uses a physical instrument or a simulated instrument
+created in NI MAX. To automatically simulate an instrument without using NI MAX,
+follow the steps below:
 - Create a `.env` file in the measurement service's directory or one of its parent directories (such as the root of your Git repository or `C:\ProgramData\National Instruments\MeasurementLink\Services` for statically registered measurement services).
 - Add the following options to the `.env` file to enable simulation via the driver's option string:
 
