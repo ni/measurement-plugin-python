@@ -39,9 +39,14 @@ Supported instrument models:
 - NI Instrument Simulator v2.0
 - HP/Agilent/Keysight 34401A DMM
 
-By default, this example uses a physical instrument or a simulated device created in NI MAX. To automatically create a simulated device when running the measurement or TestStand sequence, follow the steps below:
-- Create a `.env` file in the measurement service's directory or one of its parent directories (such as the root of your Git repository or `C:\ProgramData\National Instruments\MeasurementLink\Services` for statically registered measurement services).
-- Add the following options to the `.env` file to enable simulation via the driver's option string:
+By default, this example uses a physical instrument or a simulated device created in NI MAX. To
+automatically create a simulated device when running the measurement or TestStand sequence, follow
+the steps below:
+- Create a `.env` file in the measurement service's directory or one of its parent directories (such
+  as the root of your Git repository or `C:\ProgramData\National
+  Instruments\MeasurementLink\Services` for statically registered measurement services).
+- Add the following option to the `.env` file to enable simulation via the driver's `simulate`
+  parameter:
 
   ```
   MEASUREMENTLINK_VISA_DMM_SIMULATE=1

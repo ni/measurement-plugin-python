@@ -1,6 +1,7 @@
 ## Output Voltage Measurement
 
-This is a MeasurementLink example that sources DC voltage as input to the DUT with an NI SMU and measures the DUT output with a DMM that supports SCPI commands using NI-VISA.
+This is a MeasurementLink example that sources DC voltage as input to the DUT with an NI SMU and
+measures the DUT output with a DMM that supports SCPI commands using NI-VISA.
 
 ### Features
 
@@ -18,7 +19,8 @@ This is a MeasurementLink example that sources DC voltage as input to the DUT wi
   - Sources the DC voltage level of the DUT input pin
   - Measures the voltage of the DUT output pin
 - Includes InstrumentStudio and MeasurementLink UI Editor project files
-- For NI-DCPower, uses the NI gRPC Device Server to allow sharing the instrument sessions with other measurement services.
+- For NI-DCPower, uses the NI gRPC Device Server to allow sharing the instrument sessions with other
+  measurement services.
 
 ### Required Driver Software
 
@@ -29,19 +31,28 @@ This is a MeasurementLink example that sources DC voltage as input to the DUT wi
 
 > **Note:**
 >
-> This example uses the custom instrument driver `_visa_dmm.py` to perform the device-specific commands and queries.
+> This example uses the custom instrument driver `_visa_dmm.py` to perform the device-specific
+> commands and queries.
 
 ### Required Hardware
 
-By default, this example does not require hardware; it uses a simulated instrument and PyVISA-sim to simulate NI-DCPower and NI-VISA DMM instruments in software. [`_visa_dmm_sim.yaml`](./_visa_dmm_sim.yaml) defines the behavior of the simulated NI-VISA DMM instrument.
+By default, this example does not require hardware; it uses a simulated instrument and PyVISA-sim to
+simulate NI-DCPower and NI-VISA DMM instruments in software.
+[`_visa_dmm_sim.yaml`](./_visa_dmm_sim.yaml) defines the behavior of the simulated NI-VISA DMM
+instrument.
 
 Supported instrument models:
 - NI Instrument Simulator v2.0
 - HP/Agilent/Keysight 34401A DMM
 
-By default, this example uses a physical instrument or a simulated device created in NI MAX. To automatically create a simulated device when running the measurement or TestStand sequence, follow the steps below:
-- Create a `.env` file in the measurement service's directory or one of its parent directories (such as the root of your Git repository or `C:\ProgramData\National Instruments\MeasurementLink\Services` for statically registered measurement services).
-- Add the following options to the `.env` file to enable simulation via the driver's option string:
+By default, this example uses a physical instrument or a simulated device created in NI MAX. To
+automatically create a simulated device when running the measurement or TestStand sequence, follow
+the steps below:
+- Create a `.env` file in the measurement service's directory or one of its parent directories (such
+  as the root of your Git repository or `C:\ProgramData\National
+  Instruments\MeasurementLink\Services` for statically registered measurement services).
+- Add the following options to the `.env` file to enable simulation via the driver's option string
+  or `simulate` parameter:
 
   ```
   MEASUREMENTLINK_NIDCPOWER_SIMULATE=1 
