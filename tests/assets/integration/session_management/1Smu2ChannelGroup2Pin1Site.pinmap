@@ -2,11 +2,13 @@
 <PinMap xmlns="http://www.ni.com/TestStand/SemiconductorModule/PinMap.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" schemaVersion="1.6">
 	<Instruments>
 		<NIDCPowerInstrument name="DCPower1" numberOfChannels="4">
-			<ChannelGroup name="CommonDCPowerChannelGroup" />
+			<ChannelGroup name="DCPowerChannelGroup0" channels="0,1" />
+			<ChannelGroup name="DCPowerChannelGroup1" channels="2,3" />
 		</NIDCPowerInstrument>
 	</Instruments>
 	<Pins>
 		<DUTPin name="Pin1" />
+		<DUTPin name="Pin2" />
 	</Pins>
 	<PinGroups></PinGroups>
 	<Sites>
@@ -14,5 +16,6 @@
 	</Sites>
 	<Connections>
 		<Connection pin="Pin1" siteNumber="0" instrument="DCPower1" channel="0" />
+		<Connection pin="Pin2" siteNumber="0" instrument="DCPower1" channel="2" />
 	</Connections>
 </PinMap>
