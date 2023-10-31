@@ -10,4 +10,5 @@ message NIDCPowerOutputs {
     repeated string session_names = 1;
     repeated string resource_names = 2;
     repeated string channel_lists = 3;
+    repeated string channels_connected = 4;
 }

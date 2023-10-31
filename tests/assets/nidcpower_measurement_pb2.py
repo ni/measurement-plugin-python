@@ -13,7 +13,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x1bnidcpower_measurement.proto\x12$ni.measurementlink.measurement.tests\"C\n\x17NIDCPowerConfigurations\x12\x11\n\tpin_names\x18\x01 \x03(\t\x12\x15\n\rmulti_session\x18\x02 \x01(\x08\"X\n\x10NIDCPowerOutputs\x12\x15\n\rsession_names\x18\x01 \x03(\t\x12\x16\n\x0eresource_names\x18\x02 \x03(\t\x12\x15\n\rchannel_lists\x18\x03 \x03(\tb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x1bnidcpower_measurement.proto\x12$ni.measurementlink.measurement.tests\"C\n\x17NIDCPowerConfigurations\x12\x11\n\tpin_names\x18\x01 \x03(\t\x12\x15\n\rmulti_session\x18\x02 \x01(\x08\"t\n\x10NIDCPowerOutputs\x12\x15\n\rsession_names\x18\x01 \x03(\t\x12\x16\n\x0eresource_names\x18\x02 \x03(\t\x12\x15\n\rchannel_lists\x18\x03 \x03(\t\x12\x1a\n\x12\x63hannels_connected\x18\x04 \x03(\tb\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'nidcpower_measurement_pb2', globals())
@@ -23,5 +23,5 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _NIDCPOWERCONFIGURATIONS._serialized_start=69
   _NIDCPOWERCONFIGURATIONS._serialized_end=136
   _NIDCPOWEROUTPUTS._serialized_start=138
-  _NIDCPOWEROUTPUTS._serialized_end=226
+  _NIDCPOWEROUTPUTS._serialized_end=254
 # @@protoc_insertion_point(module_scope)

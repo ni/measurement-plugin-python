@@ -20,26 +20,31 @@ measurement_service = nims.MeasurementService(
 @measurement_service.output("session_names", nims.DataType.StringArray1D)
 @measurement_service.output("resource_names", nims.DataType.StringArray1D)
 @measurement_service.output("channel_lists", nims.DataType.StringArray1D)
+@measurement_service.output("channels_connected", nims.DataType.StringArray1D)
 def measure(
     pin_names: Iterable[str],
     multi_session: bool,
-) -> Tuple[Iterable[str], Iterable[str], Iterable[str]]:
+) -> Tuple[Iterable[str], Iterable[str], Iterable[str], Iterable[str]]:
     """NI-DCPower MeasurementLink test service."""
     if multi_session:
         with measurement_service.context.reserve_sessions(pin_names) as reservation:
             with reservation.initialize_nidcpower_sessions() as session_infos:
+                connections = reservation.get_nidcpower_connections(pin_names)
                 assert [session_info.session is not None for session_info in session_infos]
                 return (
                     [session_info.session_name for session_info in session_infos],
                     [session_info.resource_name for session_info in session_infos],
                     [session_info.channel_list for session_info in session_infos],
+                    [connection.channel_name for connection in connections],
                 )
     else:
         with measurement_service.context.reserve_session(pin_names) as reservation:
             with reservation.initialize_nidcpower_session() as session_info:
+                connection = reservation.get_nidcpower_connection(pin_names[0])
                 assert session_info.session is not None
                 return (
                     [session_info.resource_name],
                     [session_info.resource_name],
                     [session_info.channel_list],
+                    [connection.channel_name],
                 )

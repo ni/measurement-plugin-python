@@ -14,11 +14,13 @@ class NIDCPowerConfigurations(_message.Message):
     def __init__(self, pin_names: _Optional[_Iterable[str]] = ..., multi_session: bool = ...) -> None: ...
 
 class NIDCPowerOutputs(_message.Message):
-    __slots__ = ["channel_lists", "resource_names", "session_names"]
+    __slots__ = ["channel_lists", "channels_connected", "resource_names", "session_names"]
+    CHANNELS_CONNECTED_FIELD_NUMBER: _ClassVar[int]
     CHANNEL_LISTS_FIELD_NUMBER: _ClassVar[int]
     RESOURCE_NAMES_FIELD_NUMBER: _ClassVar[int]
     SESSION_NAMES_FIELD_NUMBER: _ClassVar[int]
     channel_lists: _containers.RepeatedScalarFieldContainer[str]
+    channels_connected: _containers.RepeatedScalarFieldContainer[str]
     resource_names: _containers.RepeatedScalarFieldContainer[str]
     session_names: _containers.RepeatedScalarFieldContainer[str]
-    def __init__(self, session_names: _Optional[_Iterable[str]] = ..., resource_names: _Optional[_Iterable[str]] = ..., channel_lists: _Optional[_Iterable[str]] = ...) -> None: ...
+    def __init__(self, session_names: _Optional[_Iterable[str]] = ..., resource_names: _Optional[_Iterable[str]] = ..., channel_lists: _Optional[_Iterable[str]] = ..., channels_connected: _Optional[_Iterable[str]] = ...) -> None: ...
