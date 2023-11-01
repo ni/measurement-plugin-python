@@ -297,9 +297,3 @@ def measurement_service(
     """Test fixture that creates and hosts a measurement service."""
     with pin_aware_measurement.measurement_service.host_service() as service:
         yield service
-
-
-@pytest.fixture
-def pin_map_directory(test_assets_directory: pathlib.Path) -> pathlib.Path:
-    """Test fixture that returns the pin map directory."""
-    return test_assets_directory / "acceptance" / "session_management"

@@ -1,4 +1,4 @@
-"""Connection subset utility."""
+"""Utility to create and construct connection subset."""
 from typing import NamedTuple, TypeVar, Union
 
 from ni_measurementlink_service.session_management import (
@@ -9,7 +9,7 @@ from ni_measurementlink_service.session_management import (
 _T = TypeVar("_T")
 
 
-class _ConnectionSubset(NamedTuple):
+class ConnectionSubset(NamedTuple):
     pin_or_relay_name: str
     site: int
 
@@ -17,8 +17,9 @@ class _ConnectionSubset(NamedTuple):
     channel_name: str
 
 
-def _get_subset(connection: Union[Connection, TypedConnection[_T]]) -> _ConnectionSubset:
-    return _ConnectionSubset(
+def get_connection_subset(connection: Union[Connection, TypedConnection[_T]]) -> ConnectionSubset:
+    """Constructs an returns a ConnectionSubset object."""
+    return ConnectionSubset(
         connection.pin_or_relay_name,
         connection.site,
         connection.session_info.resource_name,

@@ -7,7 +7,7 @@ from ni_measurementlink_service.session_management import (
     PinMapContext,
     SessionManagementClient,
 )
-from tests.integration._reservation_utils import _ConnectionSubset, _get_subset
+from tests.utilities.connection_subset import ConnectionSubset, get_connection_subset
 from tests.utilities.pin_map_client import PinMapClient
 
 _SITE = 0
@@ -64,7 +64,7 @@ def test___session_created___get_nidcpower_connection___connection_returned(
 
         connection = reservation.get_nidcpower_connection(pin_name)
 
-        assert _get_subset(connection) == _ConnectionSubset(
+        assert get_connection_subset(connection) == ConnectionSubset(
             pin_name, _SITE, "DCPower1/0", "DCPower1/0"
         )
 
@@ -82,9 +82,9 @@ def test___sessions_created___get_nidcpower_connections___connections_returned(
 
         connections = reservation.get_nidcpower_connections(pin_names)
 
-        assert [_get_subset(connection) for connection in connections] == [
-            _ConnectionSubset(pin_names[0], _SITE, "DCPower1/0", "DCPower1/0"),
-            _ConnectionSubset(pin_names[1], _SITE, "DCPower1/2", "DCPower1/2"),
+        assert [get_connection_subset(connection) for connection in connections] == [
+            ConnectionSubset(pin_names[0], _SITE, "DCPower1/0", "DCPower1/0"),
+            ConnectionSubset(pin_names[1], _SITE, "DCPower1/2", "DCPower1/2"),
         ]
 
 
