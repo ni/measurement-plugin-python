@@ -2,19 +2,15 @@ from __future__ import annotations
 
 import pathlib
 from contextlib import ExitStack
-from typing import NamedTuple, TypeVar, Union
-
-import pytest
 
 from ni_measurementlink_service.session_management import (
     INSTRUMENT_TYPE_NI_DCPOWER,
     INSTRUMENT_TYPE_NI_RELAY_DRIVER,
     INSTRUMENT_TYPE_NI_SCOPE,
-    Connection,
     PinMapContext,
     SessionManagementClient,
-    TypedConnection,
 )
+from tests.integration._reservation_utils import _ConnectionSubset, _get_subset
 from tests.utilities.pin_map_client import PinMapClient
 
 _PIN_MAP_A = "PinMapA_3Instruments_3DutPins_2SystemPins_2Sites.pinmap"
@@ -299,29 +295,3 @@ def test___sessions_reserved_with_relays___get_connections_for_relay_driver_by_s
                 _ConnectionSubset("SystemRelay", -1, "RelayDriver1", "K60"),
             ],
         ]
-
-
-@pytest.fixture
-def pin_map_directory(test_assets_directory: pathlib.Path) -> pathlib.Path:
-    """Test fixture that returns the pin map directory."""
-    return test_assets_directory / "integration" / "session_management"
-
-
-_T = TypeVar("_T")
-
-
-class _ConnectionSubset(NamedTuple):
-    pin_or_relay_name: str
-    site: int
-
-    resource_name: str
-    channel_name: str
-
-
-def _get_subset(connection: Union[Connection, TypedConnection[_T]]) -> _ConnectionSubset:
-    return _ConnectionSubset(
-        connection.pin_or_relay_name,
-        connection.site,
-        connection.session_info.resource_name,
-        connection.channel_name,
-    )
