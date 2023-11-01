@@ -17,17 +17,28 @@ from tests.assets.nidcpower_measurement_pb2 import NIDCPowerConfigurations, NIDC
 from tests.utilities import nidcpower_measurement
 from tests.utilities.pin_map_client import PinMapClient
 
+_SITE = 0
 
-def test___single_session___measure___single_session_created(
-    pin_map_client: PinMapClient,
-    pin_map_directory: pathlib.Path,
+
+def test___single_session___measure___measured_values_returned(
+    pin_map_context: PinMapContext,
     stub_v2: MeasurementServiceStub,
 ) -> None:
-    pin_map_name = "1Smu1ChannelGroup1Pin1Site.pinmap"
     pin_names = ["Pin1"]
-    pin_map_id = pin_map_client.update_pin_map(pin_map_directory / pin_map_name)
-    pin_map_context = PinMapContext(pin_map_id=pin_map_id, sites=[0])
-    configurations = NIDCPowerConfigurations(pin_names=pin_names, multi_session=False)
+    configurations = NIDCPowerConfigurations(pin_names=pin_names, current_limit=0.01)
+
+    outputs = _measure(stub_v2, pin_map_context, configurations)
+
+    assert outputs.voltage_measurements == [5]
+    assert outputs.current_measurements == [0.0001]
+
+
+def test___single_session___measure___single_session_created(
+    pin_map_context: PinMapContext,
+    stub_v2: MeasurementServiceStub,
+) -> None:
+    pin_names = ["Pin1"]
+    configurations = NIDCPowerConfigurations(pin_names=pin_names, current_limit=0.01)
 
     outputs = _measure(stub_v2, pin_map_context, configurations)
 
@@ -37,15 +48,13 @@ def test___single_session___measure___single_session_created(
 
 
 def test___multiple_sessions___measure___multiple_sessions_created(
-    pin_map_client: PinMapClient,
-    pin_map_directory: pathlib.Path,
+    pin_map_context: PinMapContext,
     stub_v2: MeasurementServiceStub,
 ) -> None:
-    pin_map_name = "1Smu2ChannelGroup2Pin1Site.pinmap"
     pin_names = ["Pin1", "Pin2"]
-    pin_map_id = pin_map_client.update_pin_map(pin_map_directory / pin_map_name)
-    pin_map_context = PinMapContext(pin_map_id=pin_map_id, sites=[0])
-    configurations = NIDCPowerConfigurations(pin_names=pin_names, multi_session=True)
+    configurations = NIDCPowerConfigurations(
+        pin_names=pin_names, current_limit=0.01, multi_session=True
+    )
 
     outputs = _measure(stub_v2, pin_map_context, configurations)
 
@@ -77,30 +86,30 @@ def measurement_service() -> Generator[MeasurementService, None, None]:
 
 
 @pytest.fixture
-def pin_map_directory(test_assets_directory: pathlib.Path) -> pathlib.Path:
-    """Test fixture that returns the pin map directory."""
-    return test_assets_directory / "acceptance" / "session_management"
+def pin_map_context(pin_map_client: PinMapClient, pin_map_directory: pathlib.Path) -> PinMapContext:
+    pin_map_name = "1Smu2ChannelGroup2Pin1Site.pinmap"
+    pin_map_id = pin_map_client.update_pin_map(pin_map_directory / pin_map_name)
+
+    return PinMapContext(pin_map_id=pin_map_id, sites=[_SITE])
 
 
 class _MeasurementOutput(NamedTuple):
     session_name: str
     resource_name: str
     channel_list: str
-    connected_chanenls: str
+    connected_channels: str
 
 
-def _get_output(
-    outputs: NIDCPowerOutputs,
-) -> Iterable[_MeasurementOutput]:
+def _get_output(outputs: NIDCPowerOutputs) -> Iterable[_MeasurementOutput]:
     measurement_output = []
-    for session_name, resource_name, channel_list, channels_connected in zip(
+    for session_name, resource_name, channel_list, connected_channels in zip(
         outputs.session_names,
         outputs.resource_names,
         outputs.channel_lists,
-        outputs.channels_connected,
+        outputs.connected_channels,
     ):
         measurement_output.append(
-            _MeasurementOutput(session_name, resource_name, channel_list, channels_connected)
+            _MeasurementOutput(session_name, resource_name, channel_list, connected_channels)
         )
 
     return measurement_output
