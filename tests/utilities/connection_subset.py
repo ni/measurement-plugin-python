@@ -20,7 +20,7 @@ class ConnectionSubset(NamedTuple):
 
 
 def get_connection_subset(connection: Union[Connection, TypedConnection[_T]]) -> ConnectionSubset:
-    """Constructs an returns a ConnectionSubset object."""
+    """Constructs and returns a ConnectionSubset object."""
     return ConnectionSubset(
         connection.pin_or_relay_name,
         connection.site,
