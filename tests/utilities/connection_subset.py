@@ -10,6 +10,8 @@ _T = TypeVar("_T")
 
 
 class ConnectionSubset(NamedTuple):
+    """An object that holds a subset of connection data."""
+
     pin_or_relay_name: str
     site: int
 
