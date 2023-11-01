@@ -124,6 +124,7 @@ module = [
   # https://github.com/briancurtin/deprecation/issues/56 - Add type information (PEP 561)
   "deprecation.*",
   "grpc.framework.foundation.*",
+  "hightime.*",
   # https://github.com/microsoft/tracelogging/issues/57 - Python traceloggingdynamic package is missing py.typed marker file
   "traceloggingdynamic",
   # https://github.com/ni/nidaqmx-python/issues/209 - Support type annotations
