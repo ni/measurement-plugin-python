@@ -56,7 +56,7 @@ _VISA_DMM_SIMULATE: bool = _config("MEASUREMENTLINK_VISA_DMM_SIMULATE", default=
     _visa_dmm.Function.DC_VOLTS,
     enum_type=_visa_dmm.Function,
 )
-@measurement_service.configuration("range", nims.DataType.Double, 1.0)
+@measurement_service.configuration("range", nims.DataType.Double, 10.0)
 @measurement_service.configuration("resolution_digits", nims.DataType.Double, 3.5)
 @measurement_service.configuration(
     "output_pin",
