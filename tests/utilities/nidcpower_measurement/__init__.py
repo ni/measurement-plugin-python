@@ -61,6 +61,7 @@ def measure(
                 voltage_measurements, current_measurements = _source_measure_dc_voltage(
                     [connection], current_limit
                 )
+                
                 return (
                     [session_info.resource_name],
                     [session_info.resource_name],
