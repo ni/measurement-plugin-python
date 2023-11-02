@@ -13,14 +13,17 @@ from ni_measurementlink_service._internal.stubs.ni.measurementlink.pin_map_conte
     PinMapContext,
 )
 from ni_measurementlink_service.measurement.service import MeasurementService
-from tests.assets.nidcpower_measurement_pb2 import NIDCPowerConfigurations, NIDCPowerOutputs
+from tests.assets.stubs.nidcpower_measurement.nidcpower_measurement_pb2  import (
+    NIDCPowerConfigurations,
+    NIDCPowerOutputs,
+)
 from tests.utilities import nidcpower_measurement
 from tests.utilities.pin_map_client import PinMapClient
 
 _SITE = 0
 
 
-def test___single_session___measure___measured_values_returned(
+def test___single_session___measure___returns_measured_values(
     pin_map_context: PinMapContext,
     stub_v2: MeasurementServiceStub,
 ) -> None:
@@ -33,7 +36,7 @@ def test___single_session___measure___measured_values_returned(
     assert outputs.current_measurements == [0.0001]
 
 
-def test___single_session___measure___single_session_created(
+def test___single_session___measure___creates_single_session(
     pin_map_context: PinMapContext,
     stub_v2: MeasurementServiceStub,
 ) -> None:
@@ -47,7 +50,7 @@ def test___single_session___measure___single_session_created(
     ]
 
 
-def test___multiple_sessions___measure___multiple_sessions_created(
+def test___multiple_sessions___measure___creates_multiple_session(
     pin_map_context: PinMapContext,
     stub_v2: MeasurementServiceStub,
 ) -> None:
@@ -86,7 +89,9 @@ def measurement_service() -> Generator[MeasurementService, None, None]:
 
 
 @pytest.fixture
-def pin_map_context(pin_map_client: PinMapClient, pin_map_directory: pathlib.Path) -> PinMapContext:
+def pin_map_context(
+    pin_map_client: PinMapClient, pin_map_directory: pathlib.Path
+) -> PinMapContext:
     pin_map_name = "1Smu2ChannelGroup2Pin1Site.pinmap"
     pin_map_id = pin_map_client.update_pin_map(pin_map_directory / pin_map_name)
 
@@ -101,15 +106,14 @@ class _MeasurementOutput(NamedTuple):
 
 
 def _get_output(outputs: NIDCPowerOutputs) -> Iterable[_MeasurementOutput]:
-    measurement_output = []
-    for session_name, resource_name, channel_list, connected_channels in zip(
-        outputs.session_names,
-        outputs.resource_names,
-        outputs.channel_lists,
-        outputs.connected_channels,
-    ):
-        measurement_output.append(
-            _MeasurementOutput(session_name, resource_name, channel_list, connected_channels)
+    return [
+        _MeasurementOutput(
+            session_name, resource_name, channel_list, connected_channels
         )
-
-    return measurement_output
+        for session_name, resource_name, channel_list, connected_channels in zip(
+            outputs.session_names,
+            outputs.resource_names,
+            outputs.channel_lists,
+            outputs.connected_channels,
+        )
+    ]

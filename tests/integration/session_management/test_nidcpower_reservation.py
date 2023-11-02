@@ -13,7 +13,7 @@ from tests.utilities.pin_map_client import PinMapClient
 _SITE = 0
 
 
-def test___single_session_reserved___initialize_nidcpower_session___single_session_created(
+def test___single_session_reserved___initialize_nidcpower_session___creates_single_session(
     pin_map_context: PinMapContext,
     session_management_client: SessionManagementClient,
 ) -> None:
@@ -29,7 +29,7 @@ def test___single_session_reserved___initialize_nidcpower_session___single_sessi
         assert session_info.session_name == "DCPower1/0"
 
 
-def test___multiple_sessions_reserved___initialize_nidcpower_sessions___multiple_sessions_created(
+def test___multiple_sessions_reserved___initialize_nidcpower_sessions___creates_multiple_session(
     pin_map_context: PinMapContext,
     session_management_client: SessionManagementClient,
 ) -> None:
@@ -51,7 +51,7 @@ def test___multiple_sessions_reserved___initialize_nidcpower_sessions___multiple
         )
 
 
-def test___session_created___get_nidcpower_connection___connection_returned(
+def test___session_created___get_nidcpower_connection___returns_connection(
     pin_map_context: PinMapContext,
     session_management_client: SessionManagementClient,
 ) -> None:
@@ -69,7 +69,7 @@ def test___session_created___get_nidcpower_connection___connection_returned(
         )
 
 
-def test___sessions_created___get_nidcpower_connections___connections_returned(
+def test___sessions_created___get_nidcpower_connections___returns_connections(
     pin_map_context: PinMapContext,
     session_management_client: SessionManagementClient,
 ) -> None:
