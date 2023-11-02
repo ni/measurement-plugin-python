@@ -40,7 +40,7 @@ def test___single_session_info___initialize_niswitch_session___session_created(
     session = create_mock_niswitch_session()
     session_new.side_effect = [session]
 
-    with reservation.initialize_niswitch_session(        
+    with reservation.initialize_niswitch_session(
         topology="Configured Topology",
         simulate=False,
         reset_device=False,
