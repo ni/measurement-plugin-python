@@ -44,7 +44,7 @@ def test___single_session_info___initialize_nidcpower_session___session_created(
     session = create_mock_nidcpower_session()
     session_new.side_effect = [session]
 
-    with reservation.initialize_nidcpower_session() as session_info:
+    with reservation.initialize_nidcpower_session(options={}) as session_info:
         assert session_info.session is session
 
     session_new.assert_called_once_with(
@@ -62,7 +62,7 @@ def test___multiple_session_infos___initialize_nidcpower_sessions___sessions_cre
     sessions = create_mock_nidcpower_sessions(3)
     session_new.side_effect = sessions
 
-    with reservation.initialize_nidcpower_sessions() as session_info:
+    with reservation.initialize_nidcpower_sessions(options={}) as session_info:
         assert session_info[0].session == sessions[0]
         assert session_info[1].session == sessions[1]
 
