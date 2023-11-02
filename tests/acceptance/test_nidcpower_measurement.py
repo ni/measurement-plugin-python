@@ -13,7 +13,7 @@ from ni_measurementlink_service._internal.stubs.ni.measurementlink.pin_map_conte
     PinMapContext,
 )
 from ni_measurementlink_service.measurement.service import MeasurementService
-from tests.assets.stubs.nidcpower_measurement.nidcpower_measurement_pb2  import (
+from tests.assets.stubs.nidcpower_measurement.nidcpower_measurement_pb2 import (
     NIDCPowerConfigurations,
     NIDCPowerOutputs,
 )
@@ -50,7 +50,7 @@ def test___single_session___measure___creates_single_session(
     ]
 
 
-def test___multiple_sessions___measure___creates_multiple_session(
+def test___multiple_sessions___measure___creates_multiple_sessions(
     pin_map_context: PinMapContext,
     stub_v2: MeasurementServiceStub,
 ) -> None:
@@ -89,9 +89,7 @@ def measurement_service() -> Generator[MeasurementService, None, None]:
 
 
 @pytest.fixture
-def pin_map_context(
-    pin_map_client: PinMapClient, pin_map_directory: pathlib.Path
-) -> PinMapContext:
+def pin_map_context(pin_map_client: PinMapClient, pin_map_directory: pathlib.Path) -> PinMapContext:
     pin_map_name = "1Smu2ChannelGroup2Pin1Site.pinmap"
     pin_map_id = pin_map_client.update_pin_map(pin_map_directory / pin_map_name)
 
@@ -107,9 +105,7 @@ class _MeasurementOutput(NamedTuple):
 
 def _get_output(outputs: NIDCPowerOutputs) -> Iterable[_MeasurementOutput]:
     return [
-        _MeasurementOutput(
-            session_name, resource_name, channel_list, connected_channels
-        )
+        _MeasurementOutput(session_name, resource_name, channel_list, connected_channels)
         for session_name, resource_name, channel_list, connected_channels in zip(
             outputs.session_names,
             outputs.resource_names,

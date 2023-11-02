@@ -29,7 +29,7 @@ def test___single_session_reserved___initialize_nidcpower_session___creates_sing
         assert session_info.session_name == "DCPower1/0"
 
 
-def test___multiple_sessions_reserved___initialize_nidcpower_sessions___creates_multiple_session(
+def test___multiple_sessions_reserved___initialize_nidcpower_sessions___creates_multiple_sessions(
     pin_map_context: PinMapContext,
     session_management_client: SessionManagementClient,
 ) -> None:
