@@ -53,7 +53,7 @@ The example measurements are *Poetry-based* projects. Follow the steps below to 
 
 ### Creating Simulated Devices for Example Measurements
 
-- To enable simulation for all the modular instrument and VISA examples, copy `.env.simulation` to `.env` in the `examples` directory.
+- To enable simulation for all the modular instrument and VISA examples, copy `.env.simulation` to `.env` in the root directory.
 
 ### Executing the Example Measurements
 

@@ -23,7 +23,7 @@ jobs:
       - name: Check out repo
         uses: actions/checkout@v4
       - name: Rename .env.simulation to .env
-        run: mv examples/.env.simulation .env
+        run: mv .env.simulation .env
       - name: Cache virtualenvs
         uses: actions/cache@v3
         id: cache
