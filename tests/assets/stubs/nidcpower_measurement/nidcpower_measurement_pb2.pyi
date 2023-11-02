@@ -5,7 +5,7 @@ from typing import ClassVar as _ClassVar, Iterable as _Iterable, Optional as _Op
 
 DESCRIPTOR: _descriptor.FileDescriptor
 
-class NIDCPowerConfigurations(_message.Message):
+class Configurations(_message.Message):
     __slots__ = ["current_limit", "multi_session", "pin_names"]
     CURRENT_LIMIT_FIELD_NUMBER: _ClassVar[int]
     MULTI_SESSION_FIELD_NUMBER: _ClassVar[int]
@@ -15,7 +15,7 @@ class NIDCPowerConfigurations(_message.Message):
     pin_names: _containers.RepeatedScalarFieldContainer[str]
     def __init__(self, pin_names: _Optional[_Iterable[str]] = ..., current_limit: _Optional[float] = ..., multi_session: bool = ...) -> None: ...
 
-class NIDCPowerOutputs(_message.Message):
+class Outputs(_message.Message):
     __slots__ = ["channel_lists", "connected_channels", "current_measurements", "resource_names", "session_names", "voltage_measurements"]
     CHANNEL_LISTS_FIELD_NUMBER: _ClassVar[int]
     CONNECTED_CHANNELS_FIELD_NUMBER: _ClassVar[int]

@@ -14,8 +14,8 @@ from ni_measurementlink_service._internal.stubs.ni.measurementlink.pin_map_conte
 )
 from ni_measurementlink_service.measurement.service import MeasurementService
 from tests.assets.stubs.nidcpower_measurement.nidcpower_measurement_pb2 import (
-    NIDCPowerConfigurations,
-    NIDCPowerOutputs,
+    Configurations,
+    Outputs,
 )
 from tests.utilities import nidcpower_measurement
 from tests.utilities.pin_map_client import PinMapClient
@@ -28,7 +28,7 @@ def test___single_session___measure___returns_measured_values(
     stub_v2: MeasurementServiceStub,
 ) -> None:
     pin_names = ["Pin1"]
-    configurations = NIDCPowerConfigurations(pin_names=pin_names, current_limit=0.01)
+    configurations = Configurations(pin_names=pin_names, current_limit=0.01)
 
     outputs = _measure(stub_v2, pin_map_context, configurations)
 
@@ -41,7 +41,7 @@ def test___single_session___measure___creates_single_session(
     stub_v2: MeasurementServiceStub,
 ) -> None:
     pin_names = ["Pin1"]
-    configurations = NIDCPowerConfigurations(pin_names=pin_names, current_limit=0.01)
+    configurations = Configurations(pin_names=pin_names, current_limit=0.01)
 
     outputs = _measure(stub_v2, pin_map_context, configurations)
 
@@ -55,9 +55,7 @@ def test___multiple_sessions___measure___creates_multiple_sessions(
     stub_v2: MeasurementServiceStub,
 ) -> None:
     pin_names = ["Pin1", "Pin2"]
-    configurations = NIDCPowerConfigurations(
-        pin_names=pin_names, current_limit=0.01, multi_session=True
-    )
+    configurations = Configurations(pin_names=pin_names, current_limit=0.01, multi_session=True)
 
     outputs = _measure(stub_v2, pin_map_context, configurations)
 
@@ -70,14 +68,14 @@ def test___multiple_sessions___measure___creates_multiple_sessions(
 def _measure(
     stub_v2: MeasurementServiceStub,
     pin_map_context: PinMapContext,
-    configurations: NIDCPowerConfigurations,
-) -> NIDCPowerOutputs:
+    configurations: Configurations,
+) -> Outputs:
     request = MeasureRequest(pin_map_context=pin_map_context)
     request.configuration_parameters.Pack(configurations)
     response_iterator = stub_v2.Measure(request)
     responses = list(response_iterator)
     assert len(responses) == 1
-    outputs = NIDCPowerOutputs.FromString(responses[0].outputs.value)
+    outputs = Outputs.FromString(responses[0].outputs.value)
     return outputs
 
 
@@ -103,7 +101,7 @@ class _MeasurementOutput(NamedTuple):
     connected_channels: str
 
 
-def _get_output(outputs: NIDCPowerOutputs) -> Iterable[_MeasurementOutput]:
+def _get_output(outputs: Outputs) -> Iterable[_MeasurementOutput]:
     return [
         _MeasurementOutput(session_name, resource_name, channel_list, connected_channels)
         for session_name, resource_name, channel_list, connected_channels in zip(
