@@ -6,19 +6,27 @@ from typing import ClassVar as _ClassVar, Iterable as _Iterable, Optional as _Op
 DESCRIPTOR: _descriptor.FileDescriptor
 
 class NIDCPowerConfigurations(_message.Message):
-    __slots__ = ["multi_session", "pin_names"]
+    __slots__ = ["current_limit", "multi_session", "pin_names"]
+    CURRENT_LIMIT_FIELD_NUMBER: _ClassVar[int]
     MULTI_SESSION_FIELD_NUMBER: _ClassVar[int]
     PIN_NAMES_FIELD_NUMBER: _ClassVar[int]
+    current_limit: float
     multi_session: bool
     pin_names: _containers.RepeatedScalarFieldContainer[str]
-    def __init__(self, pin_names: _Optional[_Iterable[str]] = ..., multi_session: bool = ...) -> None: ...
+    def __init__(self, pin_names: _Optional[_Iterable[str]] = ..., current_limit: _Optional[float] = ..., multi_session: bool = ...) -> None: ...
 
 class NIDCPowerOutputs(_message.Message):
-    __slots__ = ["channel_lists", "resource_names", "session_names"]
+    __slots__ = ["channel_lists", "connected_channels", "current_measurements", "resource_names", "session_names", "voltage_measurements"]
     CHANNEL_LISTS_FIELD_NUMBER: _ClassVar[int]
+    CONNECTED_CHANNELS_FIELD_NUMBER: _ClassVar[int]
+    CURRENT_MEASUREMENTS_FIELD_NUMBER: _ClassVar[int]
     RESOURCE_NAMES_FIELD_NUMBER: _ClassVar[int]
     SESSION_NAMES_FIELD_NUMBER: _ClassVar[int]
+    VOLTAGE_MEASUREMENTS_FIELD_NUMBER: _ClassVar[int]
     channel_lists: _containers.RepeatedScalarFieldContainer[str]
+    connected_channels: _containers.RepeatedScalarFieldContainer[str]
+    current_measurements: _containers.RepeatedScalarFieldContainer[float]
     resource_names: _containers.RepeatedScalarFieldContainer[str]
     session_names: _containers.RepeatedScalarFieldContainer[str]
-    def __init__(self, session_names: _Optional[_Iterable[str]] = ..., resource_names: _Optional[_Iterable[str]] = ..., channel_lists: _Optional[_Iterable[str]] = ...) -> None: ...
+    voltage_measurements: _containers.RepeatedScalarFieldContainer[float]
+    def __init__(self, session_names: _Optional[_Iterable[str]] = ..., resource_names: _Optional[_Iterable[str]] = ..., channel_lists: _Optional[_Iterable[str]] = ..., connected_channels: _Optional[_Iterable[str]] = ..., voltage_measurements: _Optional[_Iterable[float]] = ..., current_measurements: _Optional[_Iterable[float]] = ...) -> None: ...

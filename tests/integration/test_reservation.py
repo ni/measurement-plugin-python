@@ -2,19 +2,15 @@ from __future__ import annotations
 
 import pathlib
 from contextlib import ExitStack
-from typing import NamedTuple, TypeVar, Union
-
-import pytest
 
 from ni_measurementlink_service.session_management import (
     INSTRUMENT_TYPE_NI_DCPOWER,
     INSTRUMENT_TYPE_NI_RELAY_DRIVER,
     INSTRUMENT_TYPE_NI_SCOPE,
-    Connection,
     PinMapContext,
     SessionManagementClient,
-    TypedConnection,
 )
+from tests.utilities.connection_subset import ConnectionSubset, get_connection_subset
 from tests.utilities.pin_map_client import PinMapClient
 
 _PIN_MAP_A = "PinMapA_3Instruments_3DutPins_2SystemPins_2Sites.pinmap"
@@ -44,15 +40,15 @@ def test___sessions_reserved___get_connections___connections_returned(
         connections = reservation.get_connections(object)
 
         nidcpower_resource = "DCPower1/0, DCPower1/1, DCPower1/2, DCPower1/3, DCPower2/1"
-        assert [_get_subset(conn) for conn in connections] == [
-            _ConnectionSubset("A", 0, nidcpower_resource, "DCPower1/0"),
-            _ConnectionSubset("B", 0, nidcpower_resource, "DCPower1/2"),
-            _ConnectionSubset("C", 0, "SCOPE1", "0"),
-            _ConnectionSubset("A", 1, nidcpower_resource, "DCPower1/1"),
-            _ConnectionSubset("B", 1, nidcpower_resource, "DCPower2/1"),
-            _ConnectionSubset("C", 1, "SCOPE1", "1"),
-            _ConnectionSubset("S1", -1, nidcpower_resource, "DCPower1/3"),
-            _ConnectionSubset("S2", -1, "SCOPE1", "3"),
+        assert [get_connection_subset(conn) for conn in connections] == [
+            ConnectionSubset("A", 0, nidcpower_resource, "DCPower1/0"),
+            ConnectionSubset("B", 0, nidcpower_resource, "DCPower1/2"),
+            ConnectionSubset("C", 0, "SCOPE1", "0"),
+            ConnectionSubset("A", 1, nidcpower_resource, "DCPower1/1"),
+            ConnectionSubset("B", 1, nidcpower_resource, "DCPower2/1"),
+            ConnectionSubset("C", 1, "SCOPE1", "1"),
+            ConnectionSubset("S1", -1, nidcpower_resource, "DCPower1/3"),
+            ConnectionSubset("S2", -1, "SCOPE1", "3"),
         ]
 
 
@@ -73,24 +69,24 @@ def test___sessions_reserved___get_connections_by_pin___connections_returned(
         ]
 
         nidcpower_resource = "DCPower1/0, DCPower1/1, DCPower1/2, DCPower1/3, DCPower2/1"
-        assert [[_get_subset(conn) for conn in group] for group in connections] == [
+        assert [[get_connection_subset(conn) for conn in group] for group in connections] == [
             [
-                _ConnectionSubset("A", 0, nidcpower_resource, "DCPower1/0"),
-                _ConnectionSubset("A", 1, nidcpower_resource, "DCPower1/1"),
+                ConnectionSubset("A", 0, nidcpower_resource, "DCPower1/0"),
+                ConnectionSubset("A", 1, nidcpower_resource, "DCPower1/1"),
             ],
             [
-                _ConnectionSubset("B", 0, nidcpower_resource, "DCPower1/2"),
-                _ConnectionSubset("B", 1, nidcpower_resource, "DCPower2/1"),
+                ConnectionSubset("B", 0, nidcpower_resource, "DCPower1/2"),
+                ConnectionSubset("B", 1, nidcpower_resource, "DCPower2/1"),
             ],
             [
-                _ConnectionSubset("C", 0, "SCOPE1", "0"),
-                _ConnectionSubset("C", 1, "SCOPE1", "1"),
+                ConnectionSubset("C", 0, "SCOPE1", "0"),
+                ConnectionSubset("C", 1, "SCOPE1", "1"),
             ],
             [
-                _ConnectionSubset("S1", -1, nidcpower_resource, "DCPower1/3"),
+                ConnectionSubset("S1", -1, nidcpower_resource, "DCPower1/3"),
             ],
             [
-                _ConnectionSubset("S2", -1, "SCOPE1", "3"),
+                ConnectionSubset("S2", -1, "SCOPE1", "3"),
             ],
         ]
 
@@ -110,20 +106,20 @@ def test___sessions_reserved___get_connections_by_site___connections_returned(
         connections = [reservation.get_connections(object, sites=site) for site in [0, 1]]
 
         nidcpower_resource = "DCPower1/0, DCPower1/1, DCPower1/2, DCPower1/3, DCPower2/1"
-        assert [[_get_subset(conn) for conn in group] for group in connections] == [
+        assert [[get_connection_subset(conn) for conn in group] for group in connections] == [
             [
-                _ConnectionSubset("A", 0, nidcpower_resource, "DCPower1/0"),
-                _ConnectionSubset("B", 0, nidcpower_resource, "DCPower1/2"),
-                _ConnectionSubset("C", 0, "SCOPE1", "0"),
-                _ConnectionSubset("S1", -1, nidcpower_resource, "DCPower1/3"),
-                _ConnectionSubset("S2", -1, "SCOPE1", "3"),
+                ConnectionSubset("A", 0, nidcpower_resource, "DCPower1/0"),
+                ConnectionSubset("B", 0, nidcpower_resource, "DCPower1/2"),
+                ConnectionSubset("C", 0, "SCOPE1", "0"),
+                ConnectionSubset("S1", -1, nidcpower_resource, "DCPower1/3"),
+                ConnectionSubset("S2", -1, "SCOPE1", "3"),
             ],
             [
-                _ConnectionSubset("A", 1, nidcpower_resource, "DCPower1/1"),
-                _ConnectionSubset("B", 1, nidcpower_resource, "DCPower2/1"),
-                _ConnectionSubset("C", 1, "SCOPE1", "1"),
-                _ConnectionSubset("S1", -1, nidcpower_resource, "DCPower1/3"),
-                _ConnectionSubset("S2", -1, "SCOPE1", "3"),
+                ConnectionSubset("A", 1, nidcpower_resource, "DCPower1/1"),
+                ConnectionSubset("B", 1, nidcpower_resource, "DCPower2/1"),
+                ConnectionSubset("C", 1, "SCOPE1", "1"),
+                ConnectionSubset("S1", -1, nidcpower_resource, "DCPower1/3"),
+                ConnectionSubset("S2", -1, "SCOPE1", "3"),
             ],
         ]
 
@@ -146,18 +142,18 @@ def test___sessions_reserved___get_connections_by_instrument_type___connections_
         ]
 
         nidcpower_resource = "DCPower1/0, DCPower1/1, DCPower1/2, DCPower1/3, DCPower2/1"
-        assert [[_get_subset(conn) for conn in group] for group in connections] == [
+        assert [[get_connection_subset(conn) for conn in group] for group in connections] == [
             [
-                _ConnectionSubset("A", 0, nidcpower_resource, "DCPower1/0"),
-                _ConnectionSubset("B", 0, nidcpower_resource, "DCPower1/2"),
-                _ConnectionSubset("A", 1, nidcpower_resource, "DCPower1/1"),
-                _ConnectionSubset("B", 1, nidcpower_resource, "DCPower2/1"),
-                _ConnectionSubset("S1", -1, nidcpower_resource, "DCPower1/3"),
+                ConnectionSubset("A", 0, nidcpower_resource, "DCPower1/0"),
+                ConnectionSubset("B", 0, nidcpower_resource, "DCPower1/2"),
+                ConnectionSubset("A", 1, nidcpower_resource, "DCPower1/1"),
+                ConnectionSubset("B", 1, nidcpower_resource, "DCPower2/1"),
+                ConnectionSubset("S1", -1, nidcpower_resource, "DCPower1/3"),
             ],
             [
-                _ConnectionSubset("C", 0, "SCOPE1", "0"),
-                _ConnectionSubset("C", 1, "SCOPE1", "1"),
-                _ConnectionSubset("S2", -1, "SCOPE1", "3"),
+                ConnectionSubset("C", 0, "SCOPE1", "0"),
+                ConnectionSubset("C", 1, "SCOPE1", "1"),
+                ConnectionSubset("S2", -1, "SCOPE1", "3"),
             ],
         ]
 
@@ -182,12 +178,12 @@ def test___sessions_reserved_with_shared_pins_all_sites___get_connections___conn
         connections = reservation.get_connections(object)
 
         nidcpower_resource = "DCPower1/0, DCPower1/2, DCPower2/1"
-        assert [_get_subset(conn) for conn in connections] == [
-            _ConnectionSubset("A", 0, nidcpower_resource, "DCPower1/0"),
-            _ConnectionSubset("B", 0, nidcpower_resource, "DCPower2/1"),
-            _ConnectionSubset("C", 0, "SCOPE1", "2"),
-            _ConnectionSubset("S1", -1, "SCOPE1", "1"),
-            _ConnectionSubset("S2", -1, nidcpower_resource, "DCPower1/2"),
+        assert [get_connection_subset(conn) for conn in connections] == [
+            ConnectionSubset("A", 0, nidcpower_resource, "DCPower1/0"),
+            ConnectionSubset("B", 0, nidcpower_resource, "DCPower2/1"),
+            ConnectionSubset("C", 0, "SCOPE1", "2"),
+            ConnectionSubset("S1", -1, "SCOPE1", "1"),
+            ConnectionSubset("S2", -1, nidcpower_resource, "DCPower1/2"),
         ]
 
 
@@ -206,12 +202,12 @@ def test___sessions_reserved_with_shared_pins_site0___get_connections___connecti
         connections = reservation.get_connections(object)
 
         nidcpower_resource = "DCPower1/0, DCPower1/2, DCPower2/1"
-        assert [_get_subset(conn) for conn in connections] == [
-            _ConnectionSubset("A", 0, nidcpower_resource, "DCPower1/0"),
-            _ConnectionSubset("B", 0, nidcpower_resource, "DCPower2/1"),
-            _ConnectionSubset("C", 0, "SCOPE1", "2"),
-            _ConnectionSubset("S1", -1, "SCOPE1", "1"),
-            _ConnectionSubset("S2", -1, nidcpower_resource, "DCPower1/2"),
+        assert [get_connection_subset(conn) for conn in connections] == [
+            ConnectionSubset("A", 0, nidcpower_resource, "DCPower1/0"),
+            ConnectionSubset("B", 0, nidcpower_resource, "DCPower2/1"),
+            ConnectionSubset("C", 0, "SCOPE1", "2"),
+            ConnectionSubset("S1", -1, "SCOPE1", "1"),
+            ConnectionSubset("S2", -1, nidcpower_resource, "DCPower1/2"),
         ]
 
 
@@ -230,12 +226,12 @@ def test___sessions_reserved_with_shared_pins_site1___get_connections___connecti
         connections = reservation.get_connections(object)
 
         nidcpower_resource = "DCPower1/0, DCPower1/2, DCPower2/1"
-        assert [_get_subset(conn) for conn in connections] == [
-            _ConnectionSubset("A", 1, nidcpower_resource, "DCPower1/0"),
-            _ConnectionSubset("B", 1, nidcpower_resource, "DCPower2/1"),
-            _ConnectionSubset("C", 1, "SCOPE1", "2"),
-            _ConnectionSubset("S1", -1, "SCOPE1", "1"),
-            _ConnectionSubset("S2", -1, nidcpower_resource, "DCPower1/2"),
+        assert [get_connection_subset(conn) for conn in connections] == [
+            ConnectionSubset("A", 1, nidcpower_resource, "DCPower1/0"),
+            ConnectionSubset("B", 1, nidcpower_resource, "DCPower2/1"),
+            ConnectionSubset("C", 1, "SCOPE1", "2"),
+            ConnectionSubset("S1", -1, "SCOPE1", "1"),
+            ConnectionSubset("S2", -1, nidcpower_resource, "DCPower1/2"),
         ]
 
 
@@ -257,12 +253,12 @@ def test___sessions_reserved_with_relays___get_connections_for_relay_driver___co
             object, instrument_type_id=INSTRUMENT_TYPE_NI_RELAY_DRIVER
         )
 
-        assert [_get_subset(conn) for conn in connections] == [
-            _ConnectionSubset("RelayUsingDifferentDrivers", 0, "RelayDriver1", "K10"),
-            _ConnectionSubset("RelayUsingSameDriver", 0, "RelayDriver1", "K0"),
-            _ConnectionSubset("RelayUsingDifferentDrivers", 1, "RelayDriver2", "K10"),
-            _ConnectionSubset("RelayUsingSameDriver", 1, "RelayDriver1", "K1"),
-            _ConnectionSubset("SystemRelay", -1, "RelayDriver1", "K60"),
+        assert [get_connection_subset(conn) for conn in connections] == [
+            ConnectionSubset("RelayUsingDifferentDrivers", 0, "RelayDriver1", "K10"),
+            ConnectionSubset("RelayUsingSameDriver", 0, "RelayDriver1", "K0"),
+            ConnectionSubset("RelayUsingDifferentDrivers", 1, "RelayDriver2", "K10"),
+            ConnectionSubset("RelayUsingSameDriver", 1, "RelayDriver1", "K1"),
+            ConnectionSubset("SystemRelay", -1, "RelayDriver1", "K60"),
         ]
 
 
@@ -287,41 +283,15 @@ def test___sessions_reserved_with_relays___get_connections_for_relay_driver_by_s
             for site in [0, 1]
         ]
 
-        assert [[_get_subset(conn) for conn in group] for group in connections] == [
+        assert [[get_connection_subset(conn) for conn in group] for group in connections] == [
             [
-                _ConnectionSubset("RelayUsingDifferentDrivers", 0, "RelayDriver1", "K10"),
-                _ConnectionSubset("RelayUsingSameDriver", 0, "RelayDriver1", "K0"),
-                _ConnectionSubset("SystemRelay", -1, "RelayDriver1", "K60"),
+                ConnectionSubset("RelayUsingDifferentDrivers", 0, "RelayDriver1", "K10"),
+                ConnectionSubset("RelayUsingSameDriver", 0, "RelayDriver1", "K0"),
+                ConnectionSubset("SystemRelay", -1, "RelayDriver1", "K60"),
             ],
             [
-                _ConnectionSubset("RelayUsingDifferentDrivers", 1, "RelayDriver2", "K10"),
-                _ConnectionSubset("RelayUsingSameDriver", 1, "RelayDriver1", "K1"),
-                _ConnectionSubset("SystemRelay", -1, "RelayDriver1", "K60"),
+                ConnectionSubset("RelayUsingDifferentDrivers", 1, "RelayDriver2", "K10"),
+                ConnectionSubset("RelayUsingSameDriver", 1, "RelayDriver1", "K1"),
+                ConnectionSubset("SystemRelay", -1, "RelayDriver1", "K60"),
             ],
         ]
-
-
-@pytest.fixture
-def pin_map_directory(test_assets_directory: pathlib.Path) -> pathlib.Path:
-    """Test fixture that returns the pin map directory."""
-    return test_assets_directory / "integration" / "session_management"
-
-
-_T = TypeVar("_T")
-
-
-class _ConnectionSubset(NamedTuple):
-    pin_or_relay_name: str
-    site: int
-
-    resource_name: str
-    channel_name: str
-
-
-def _get_subset(connection: Union[Connection, TypedConnection[_T]]) -> _ConnectionSubset:
-    return _ConnectionSubset(
-        connection.pin_or_relay_name,
-        connection.site,
-        connection.session_info.resource_name,
-        connection.channel_name,
-    )
