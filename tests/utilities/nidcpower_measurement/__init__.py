@@ -99,8 +99,6 @@ def _source_measure_dc_voltage(
         for connection in connections:
             channel = connection.session.channels[connection.channel_name]
             measurement = channel.measure_multiple()[0]
-            in_compliance = channel.query_in_compliance()
-            measurement = measurement._replace(in_compliance=in_compliance)
             voltage_measurements.append(measurement.voltage)
             current_measurements.append(measurement.current)
 
