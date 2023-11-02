@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ni_measurementlink_service._internal.grpc_servicer &mdash; ni_measurementlink_service 1.2 documentation</title>
+  <title>ni_measurementlink_service._internal.grpc_servicer &mdash; ni_measurementlink_service 1.3 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
@@ -12,12 +12,11 @@
     <script src="../../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
-        <script src="../../../../_static/jquery.js"></script>
-        <script src="../../../../_static/underscore.js"></script>
-        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../../_static/doctools.js"></script>
-        <script src="../../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js?v=0264ad83"></script>
+        <script src="../../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../../_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -35,7 +34,7 @@
             ni_measurementlink_service
           </a>
               <div class="version">
-                1.2.0-dev1
+                1.3.0-dev0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
@@ -75,7 +74,7 @@
              
   <section id="module-ni_measurementlink_service._internal.grpc_servicer">
 <span id="ni-measurementlink-service-internal-grpc-servicer"></span><h1><a class="reference internal" href="#module-ni_measurementlink_service._internal.grpc_servicer" title="ni_measurementlink_service._internal.grpc_servicer"><code class="xref py py-mod docutils literal notranslate"><span class="pre">ni_measurementlink_service._internal.grpc_servicer</span></code></a><a class="headerlink" href="#module-ni_measurementlink_service._internal.grpc_servicer" title="Permalink to this heading"></a></h1>
-<p>Contains Measurement Service Implementation class and method to host the service.</p>
+<p>gRPC servicers for each version of the measurement service interface.</p>
 <section id="module-contents">
 <h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this heading"></a></h2>
 <section id="classes">
@@ -83,13 +82,13 @@
 <table class="autosummary longtable docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#ni_measurementlink_service._internal.grpc_servicer.MeasurementServiceContext" title="ni_measurementlink_service._internal.grpc_servicer.MeasurementServiceContext"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MeasurementServiceContext</span></code></a></p></td>
-<td><p>Accessor for the Measurement Service's context-local state.</p></td>
+<td><p>Accessor for the measurement service's context-local state.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#ni_measurementlink_service._internal.grpc_servicer.MeasurementServiceServicerV1" title="ni_measurementlink_service._internal.grpc_servicer.MeasurementServiceServicerV1"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MeasurementServiceServicerV1</span></code></a></p></td>
-<td><p>Implementation of the Measurement Service's gRPC base class.</p></td>
+<td><p>Measurement v1 servicer.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#ni_measurementlink_service._internal.grpc_servicer.MeasurementServiceServicerV2" title="ni_measurementlink_service._internal.grpc_servicer.MeasurementServiceServicerV2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MeasurementServiceServicerV2</span></code></a></p></td>
-<td><p>Implementation of the Measurement Service's gRPC base class.</p></td>
+<td><p>Measurement v2 servicer.</p></td>
 </tr>
 </tbody>
 </table>
@@ -105,111 +104,262 @@
 </table>
 <dl class="py class">
 <dt class="sig sig-object py" id="ni_measurementlink_service._internal.grpc_servicer.MeasurementServiceContext">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ni_measurementlink_service._internal.grpc_servicer.</span></span><span class="sig-name descname"><span class="pre">MeasurementServiceContext</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">grpc_context</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pin_map_context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/ni_measurementlink_service/_internal/grpc_servicer.html#MeasurementServiceContext"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service._internal.grpc_servicer.MeasurementServiceContext" title="Permalink to this definition"></a></dt>
-<dd><p>Accessor for the Measurement Service’s context-local state.</p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ni_measurementlink_service._internal.grpc_servicer.</span></span><span class="sig-name descname"><span class="pre">MeasurementServiceContext</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">grpc_context</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pin_map_context</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">owner</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/ni_measurementlink_service/_internal/grpc_servicer.html#MeasurementServiceContext"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service._internal.grpc_servicer.MeasurementServiceContext" title="Permalink to this definition"></a></dt>
+<dd><p>Accessor for the measurement service’s context-local state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>grpc_context</strong> (<em>grpc.ServicerContext</em>) – </p></li>
+<li><p><strong>pin_map_context</strong> (<a class="reference internal" href="../../session_management/index.html#ni_measurementlink_service.session_management.PinMapContext" title="ni_measurementlink_service.session_management.PinMapContext"><em>ni_measurementlink_service.session_management.PinMapContext</em></a>) – </p></li>
+<li><p><strong>owner</strong> (<em>Optional</em><em>[</em><em>weakref.ReferenceType</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.12)"><em>object</em></a><em>]</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="ni_measurementlink_service._internal.grpc_servicer.MeasurementServiceContext.grpc_context">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">grpc_context</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">grpc.ServicerContext</span></em><a class="headerlink" href="#ni_measurementlink_service._internal.grpc_servicer.MeasurementServiceContext.grpc_context" title="Permalink to this definition"></a></dt>
+<dd><p>Get the context for the RPC.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>grpc.ServicerContext</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="ni_measurementlink_service._internal.grpc_servicer.MeasurementServiceContext.owner">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">owner</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.12)"><span class="pre">object</span></a></em><a class="headerlink" href="#ni_measurementlink_service._internal.grpc_servicer.MeasurementServiceContext.owner" title="Permalink to this definition"></a></dt>
+<dd><p>The owner of the server (e.g. measurement service).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.12)">object</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="ni_measurementlink_service._internal.grpc_servicer.MeasurementServiceContext.pin_map_context">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">pin_map_context</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../../session_management/index.html#ni_measurementlink_service.session_management.PinMapContext" title="ni_measurementlink_service.session_management.PinMapContext"><span class="pre">ni_measurementlink_service.session_management.PinMapContext</span></a></em><a class="headerlink" href="#ni_measurementlink_service._internal.grpc_servicer.MeasurementServiceContext.pin_map_context" title="Permalink to this definition"></a></dt>
+<dd><p>Get the pin map context for the RPC.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../../session_management/index.html#ni_measurementlink_service.session_management.PinMapContext" title="ni_measurementlink_service.session_management.PinMapContext">ni_measurementlink_service.session_management.PinMapContext</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="ni_measurementlink_service._internal.grpc_servicer.MeasurementServiceContext.time_remaining">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">time_remaining</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><span class="pre">float</span></a></em><a class="headerlink" href="#ni_measurementlink_service._internal.grpc_servicer.MeasurementServiceContext.time_remaining" title="Permalink to this definition"></a></dt>
+<dd><p>Get the time remaining for the RPC.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="ni_measurementlink_service._internal.grpc_servicer.MeasurementServiceContext.mark_complete">
 <span class="sig-name descname"><span class="pre">mark_complete</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/ni_measurementlink_service/_internal/grpc_servicer.html#MeasurementServiceContext.mark_complete"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service._internal.grpc_servicer.MeasurementServiceContext.mark_complete" title="Permalink to this definition"></a></dt>
 <dd><p>Mark the current RPC as complete.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ni_measurementlink_service._internal.grpc_servicer.MeasurementServiceContext.grpc_context">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">grpc_context</span></span><a class="headerlink" href="#ni_measurementlink_service._internal.grpc_servicer.MeasurementServiceContext.grpc_context" title="Permalink to this definition"></a></dt>
-<dd><p>Get the context for the RPC.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ni_measurementlink_service._internal.grpc_servicer.MeasurementServiceContext.pin_map_context">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">pin_map_context</span></span><a class="headerlink" href="#ni_measurementlink_service._internal.grpc_servicer.MeasurementServiceContext.pin_map_context" title="Permalink to this definition"></a></dt>
-<dd><p>Get the pin map context for the RPC.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ni_measurementlink_service._internal.grpc_servicer.MeasurementServiceContext.add_cancel_callback">
 <span class="sig-name descname"><span class="pre">add_cancel_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cancel_callback</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/ni_measurementlink_service/_internal/grpc_servicer.html#MeasurementServiceContext.add_cancel_callback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service._internal.grpc_servicer.MeasurementServiceContext.add_cancel_callback" title="Permalink to this definition"></a></dt>
 <dd><p>Add a callback that is invoked when the RPC is canceled.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>cancel_callback</strong> (<em>Callable</em><em>[</em><em>[</em><em>]</em><em>, </em><em>None</em><em>]</em>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ni_measurementlink_service._internal.grpc_servicer.MeasurementServiceContext.cancel">
 <span class="sig-name descname"><span class="pre">cancel</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/ni_measurementlink_service/_internal/grpc_servicer.html#MeasurementServiceContext.cancel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service._internal.grpc_servicer.MeasurementServiceContext.cancel" title="Permalink to this definition"></a></dt>
 <dd><p>Cancel the RPC.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ni_measurementlink_service._internal.grpc_servicer.MeasurementServiceContext.time_remaining">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">time_remaining</span></span><a class="headerlink" href="#ni_measurementlink_service._internal.grpc_servicer.MeasurementServiceContext.time_remaining" title="Permalink to this definition"></a></dt>
-<dd><p>Get the time remaining for the RPC.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ni_measurementlink_service._internal.grpc_servicer.MeasurementServiceContext.abort">
 <span class="sig-name descname"><span class="pre">abort</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">code</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">details</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/ni_measurementlink_service/_internal/grpc_servicer.html#MeasurementServiceContext.abort"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service._internal.grpc_servicer.MeasurementServiceContext.abort" title="Permalink to this definition"></a></dt>
 <dd><p>Aborts the RPC.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>code</strong> (<em>grpc.StatusCode</em>) – </p></li>
+<li><p><strong>details</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="ni_measurementlink_service._internal.grpc_servicer.CustomRpcError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ni_measurementlink_service._internal.grpc_servicer.</span></span><span class="sig-name descname"><span class="pre">CustomRpcError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">code</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">details</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/ni_measurementlink_service/_internal/grpc_servicer.html#CustomRpcError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service._internal.grpc_servicer.CustomRpcError" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">grpc.RpcError</span></code></p>
+<p>A custom exception class for handling gRPC RPC errors.</p>
+<p>gRPC’s built-in RpcError is not directly configurable in Python, so this class
+enables the creation of custom RPC errors with specific error codes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>code</strong> (<em>grpc.StatusCode</em>) – </p></li>
+<li><p><strong>details</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – </p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="ni_measurementlink_service._internal.grpc_servicer.CustomRpcError.code">
+<span class="sig-name descname"><span class="pre">code</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/ni_measurementlink_service/_internal/grpc_servicer.html#CustomRpcError.code"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service._internal.grpc_servicer.CustomRpcError.code" title="Permalink to this definition"></a></dt>
+<dd><p>Get the gRPC status code.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>grpc.StatusCode</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ni_measurementlink_service._internal.grpc_servicer.CustomRpcError.details">
+<span class="sig-name descname"><span class="pre">details</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/ni_measurementlink_service/_internal/grpc_servicer.html#CustomRpcError.details"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service._internal.grpc_servicer.CustomRpcError.details" title="Permalink to this definition"></a></dt>
+<dd><p>Get the gRPC status details.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)">str</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py data">
 <dt class="sig sig-object py" id="ni_measurementlink_service._internal.grpc_servicer.measurement_service_context">
-<span class="sig-prename descclassname"><span class="pre">ni_measurementlink_service._internal.grpc_servicer.</span></span><span class="sig-name descname"><span class="pre">measurement_service_context</span></span><em class="property"><span class="w"> </span><span class="pre">:contextvars.ContextVar[MeasurementServiceContext]</span></em><a class="headerlink" href="#ni_measurementlink_service._internal.grpc_servicer.measurement_service_context" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">ni_measurementlink_service._internal.grpc_servicer.</span></span><span class="sig-name descname"><span class="pre">measurement_service_context</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/contextvars.html#contextvars.ContextVar" title="(in Python v3.12)"><span class="pre">contextvars.ContextVar</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#ni_measurementlink_service._internal.grpc_servicer.MeasurementServiceContext" title="ni_measurementlink_service._internal.grpc_servicer.MeasurementServiceContext"><span class="pre">MeasurementServiceContext</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#ni_measurementlink_service._internal.grpc_servicer.measurement_service_context" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="ni_measurementlink_service._internal.grpc_servicer.MeasurementServiceServicerV1">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ni_measurementlink_service._internal.grpc_servicer.</span></span><span class="sig-name descname"><span class="pre">MeasurementServiceServicerV1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">measurement_info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configuration_parameter_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_parameter_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">measure_function</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/ni_measurementlink_service/_internal/grpc_servicer.html#MeasurementServiceServicerV1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service._internal.grpc_servicer.MeasurementServiceServicerV1" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ni_measurementlink_service._internal.grpc_servicer.</span></span><span class="sig-name descname"><span class="pre">MeasurementServiceServicerV1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">measurement_info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configuration_parameter_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_parameter_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">measure_function</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">owner</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/ni_measurementlink_service/_internal/grpc_servicer.html#MeasurementServiceServicerV1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service._internal.grpc_servicer.MeasurementServiceServicerV1" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="../stubs/ni/measurementlink/measurement/v1/measurement_service_pb2_grpc/index.html#ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v1.measurement_service_pb2_grpc.MeasurementServiceServicer" title="ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v1.measurement_service_pb2_grpc.MeasurementServiceServicer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v1.measurement_service_pb2_grpc.MeasurementServiceServicer</span></code></a></p>
-<p>Implementation of the Measurement Service’s gRPC base class.</p>
-<section id="id1">
-<h4>Attributes<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h4>
-<blockquote>
-<div><p>measurement_info (MeasurementInfo): Measurement info</p>
-<p>configuration_parameter_list (List): List of configuration parameters.</p>
-<p>output_parameter_list (List): List of output parameters.</p>
-<p>measure_function (Callable): Registered measurement function.</p>
-</div></blockquote>
+<p>Measurement v1 servicer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>measurement_info</strong> (<a class="reference internal" href="../../measurement/info/index.html#ni_measurementlink_service.measurement.info.MeasurementInfo" title="ni_measurementlink_service.measurement.info.MeasurementInfo"><em>ni_measurementlink_service.measurement.info.MeasurementInfo</em></a>) – </p></li>
+<li><p><strong>configuration_parameter_list</strong> (<em>List</em><em>[</em><a class="reference internal" href="../parameter/metadata/index.html#ni_measurementlink_service._internal.parameter.metadata.ParameterMetadata" title="ni_measurementlink_service._internal.parameter.metadata.ParameterMetadata"><em>ni_measurementlink_service._internal.parameter.metadata.ParameterMetadata</em></a><em>]</em>) – </p></li>
+<li><p><strong>output_parameter_list</strong> (<em>List</em><em>[</em><a class="reference internal" href="../parameter/metadata/index.html#ni_measurementlink_service._internal.parameter.metadata.ParameterMetadata" title="ni_measurementlink_service._internal.parameter.metadata.ParameterMetadata"><em>ni_measurementlink_service._internal.parameter.metadata.ParameterMetadata</em></a><em>]</em>) – </p></li>
+<li><p><strong>measure_function</strong> (<em>Callable</em>) – </p></li>
+<li><p><strong>owner</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.12)"><em>object</em></a>) – </p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="ni_measurementlink_service._internal.grpc_servicer.MeasurementServiceServicerV1.GetMetadata">
 <span class="sig-name descname"><span class="pre">GetMetadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/ni_measurementlink_service/_internal/grpc_servicer.html#MeasurementServiceServicerV1.GetMetadata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service._internal.grpc_servicer.MeasurementServiceServicerV1.GetMetadata" title="Permalink to this definition"></a></dt>
-<dd><p>RPC API to get complete metadata.</p>
+<dd><p>RPC API to get measurement metadata.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>request</strong> (<em>ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v1.measurement_service_pb2.GetMetadataRequest</em>) – </p></li>
+<li><p><strong>context</strong> (<em>grpc.ServicerContext</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v1.measurement_service_pb2.GetMetadataResponse</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ni_measurementlink_service._internal.grpc_servicer.MeasurementServiceServicerV1.Measure">
 <span class="sig-name descname"><span class="pre">Measure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/ni_measurementlink_service/_internal/grpc_servicer.html#MeasurementServiceServicerV1.Measure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service._internal.grpc_servicer.MeasurementServiceServicerV1.Measure" title="Permalink to this definition"></a></dt>
-<dd><p>RPC API that Executes the registered measurement method.</p>
+<dd><p>RPC API that executes the registered measurement method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>request</strong> (<em>ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v1.measurement_service_pb2.MeasureRequest</em>) – </p></li>
+<li><p><strong>context</strong> (<em>grpc.ServicerContext</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v1.measurement_service_pb2.MeasureResponse</p>
+</dd>
+</dl>
 </dd></dl>
 
-</section>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="ni_measurementlink_service._internal.grpc_servicer.MeasurementServiceServicerV2">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ni_measurementlink_service._internal.grpc_servicer.</span></span><span class="sig-name descname"><span class="pre">MeasurementServiceServicerV2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">measurement_info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configuration_parameter_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_parameter_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">measure_function</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/ni_measurementlink_service/_internal/grpc_servicer.html#MeasurementServiceServicerV2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service._internal.grpc_servicer.MeasurementServiceServicerV2" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ni_measurementlink_service._internal.grpc_servicer.</span></span><span class="sig-name descname"><span class="pre">MeasurementServiceServicerV2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">measurement_info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configuration_parameter_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_parameter_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">measure_function</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">owner</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/ni_measurementlink_service/_internal/grpc_servicer.html#MeasurementServiceServicerV2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service._internal.grpc_servicer.MeasurementServiceServicerV2" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="../stubs/ni/measurementlink/measurement/v2/measurement_service_pb2_grpc/index.html#ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v2.measurement_service_pb2_grpc.MeasurementServiceServicer" title="ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v2.measurement_service_pb2_grpc.MeasurementServiceServicer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v2.measurement_service_pb2_grpc.MeasurementServiceServicer</span></code></a></p>
-<p>Implementation of the Measurement Service’s gRPC base class.</p>
-<section id="id2">
-<h4>Attributes<a class="headerlink" href="#id2" title="Permalink to this heading"></a></h4>
-<blockquote>
-<div><p>measurement_info (MeasurementInfo): Measurement info</p>
-<p>configuration_parameter_list (List): List of configuration parameters.</p>
-<p>output_parameter_list (List): List of output parameters.</p>
-<p>measure_function (Callable): Registered measurement function.</p>
-</div></blockquote>
+<p>Measurement v2 servicer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>measurement_info</strong> (<a class="reference internal" href="../../measurement/info/index.html#ni_measurementlink_service.measurement.info.MeasurementInfo" title="ni_measurementlink_service.measurement.info.MeasurementInfo"><em>ni_measurementlink_service.measurement.info.MeasurementInfo</em></a>) – </p></li>
+<li><p><strong>configuration_parameter_list</strong> (<em>List</em><em>[</em><a class="reference internal" href="../parameter/metadata/index.html#ni_measurementlink_service._internal.parameter.metadata.ParameterMetadata" title="ni_measurementlink_service._internal.parameter.metadata.ParameterMetadata"><em>ni_measurementlink_service._internal.parameter.metadata.ParameterMetadata</em></a><em>]</em>) – </p></li>
+<li><p><strong>output_parameter_list</strong> (<em>List</em><em>[</em><a class="reference internal" href="../parameter/metadata/index.html#ni_measurementlink_service._internal.parameter.metadata.ParameterMetadata" title="ni_measurementlink_service._internal.parameter.metadata.ParameterMetadata"><em>ni_measurementlink_service._internal.parameter.metadata.ParameterMetadata</em></a><em>]</em>) – </p></li>
+<li><p><strong>measure_function</strong> (<em>Callable</em>) – </p></li>
+<li><p><strong>owner</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.12)"><em>object</em></a>) – </p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="ni_measurementlink_service._internal.grpc_servicer.MeasurementServiceServicerV2.GetMetadata">
 <span class="sig-name descname"><span class="pre">GetMetadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/ni_measurementlink_service/_internal/grpc_servicer.html#MeasurementServiceServicerV2.GetMetadata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service._internal.grpc_servicer.MeasurementServiceServicerV2.GetMetadata" title="Permalink to this definition"></a></dt>
-<dd><p>RPC API to get complete metadata.</p>
+<dd><p>RPC API to get measurement metadata.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>request</strong> (<em>ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v2.measurement_service_pb2.GetMetadataRequest</em>) – </p></li>
+<li><p><strong>context</strong> (<em>grpc.ServicerContext</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v2.measurement_service_pb2.GetMetadataResponse</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ni_measurementlink_service._internal.grpc_servicer.MeasurementServiceServicerV2.Measure">
 <span class="sig-name descname"><span class="pre">Measure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/ni_measurementlink_service/_internal/grpc_servicer.html#MeasurementServiceServicerV2.Measure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service._internal.grpc_servicer.MeasurementServiceServicerV2.Measure" title="Permalink to this definition"></a></dt>
-<dd><p>RPC API that Executes the registered measurement method.</p>
+<dd><p>RPC API that executes the registered measurement method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>request</strong> (<em>ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v2.measurement_service_pb2.MeasureRequest</em>) – </p></li>
+<li><p><strong>context</strong> (<em>grpc.ServicerContext</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Generator[ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v2.measurement_service_pb2.MeasureResponse, None, None]</p>
+</dd>
+</dl>
 </dd></dl>
 
-</section>
 </dd></dl>
 
 </section>

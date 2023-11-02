@@ -1,0 +1,63 @@
+:orphan:
+
+:py:mod:`ni_measurementlink_service.discovery._types`
+=====================================================
+
+.. py:module:: ni_measurementlink_service.discovery._types
+
+.. autoapi-nested-parse::
+
+   Data types for the MeasurementLink discovery service.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   ni_measurementlink_service.discovery._types.ServiceLocation
+
+
+
+
+.. py:class:: ServiceLocation
+
+
+   Bases: :py:obj:`NamedTuple`
+
+   Represents the location of a service.
+
+   .. py:property:: insecure_address
+      :type: str
+
+      port.
+
+      :type: Get the service's insecure address in the format host
+
+   .. py:property:: ssl_authenticated_address
+      :type: str
+
+      port.
+
+      :type: Get the service's SSL-authenticated address in the format host
+
+   .. py:attribute:: location
+      :type: str
+
+      
+
+   .. py:attribute:: insecure_port
+      :type: str
+
+      
+
+   .. py:attribute:: ssl_authenticated_port
+      :type: str
+
+      
+
+

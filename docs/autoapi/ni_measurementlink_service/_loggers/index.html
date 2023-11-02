@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ni_measurementlink_service._loggers &mdash; ni_measurementlink_service 1.2 documentation</title>
+  <title>ni_measurementlink_service._loggers &mdash; ni_measurementlink_service 1.3 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
@@ -12,12 +12,11 @@
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=0264ad83"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -35,7 +34,7 @@
             ni_measurementlink_service
           </a>
               <div class="version">
-                1.2.0-dev1
+                1.3.0-dev0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -98,30 +97,83 @@
 <dt class="sig sig-object py" id="ni_measurementlink_service._loggers.ClientLogger.is_enabled">
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_enabled</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/ni_measurementlink_service/_loggers.html#ClientLogger.is_enabled"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service._loggers.ClientLogger.is_enabled" title="Permalink to this definition"></a></dt>
 <dd><p>Indicates whether gRPC client call logging is enabled for the current log level.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)">bool</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ni_measurementlink_service._loggers.ClientLogger.intercept_unary_unary">
 <span class="sig-name descname"><span class="pre">intercept_unary_unary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">continuation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">client_call_details</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/ni_measurementlink_service/_loggers.html#ClientLogger.intercept_unary_unary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service._loggers.ClientLogger.intercept_unary_unary" title="Permalink to this definition"></a></dt>
 <dd><p>Intercept and log a unary call.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>continuation</strong> (<em>Callable</em><em>[</em><em>[</em><em>grpc.ClientCallDetails</em><em>, </em><em>grpc.TRequest</em><em>]</em><em>, </em><em>grpc.CallFuture</em><em>[</em><em>grpc.TResponse</em><em>]</em><em>]</em>) – </p></li>
+<li><p><strong>client_call_details</strong> (<em>grpc.ClientCallDetails</em>) – </p></li>
+<li><p><strong>request</strong> (<em>grpc.TRequest</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>grpc.CallFuture[grpc.TResponse]</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ni_measurementlink_service._loggers.ClientLogger.intercept_unary_stream">
 <span class="sig-name descname"><span class="pre">intercept_unary_stream</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">continuation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">client_call_details</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/ni_measurementlink_service/_loggers.html#ClientLogger.intercept_unary_stream"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service._loggers.ClientLogger.intercept_unary_stream" title="Permalink to this definition"></a></dt>
 <dd><p>Intercept and log a server-streaming call.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>continuation</strong> (<em>Callable</em><em>[</em><em>[</em><em>grpc.ClientCallDetails</em><em>, </em><em>grpc.TRequest</em><em>]</em><em>, </em><em>grpc.CallIterator</em><em>[</em><em>grpc.TResponse</em><em>]</em><em>]</em>) – </p></li>
+<li><p><strong>client_call_details</strong> (<em>grpc.ClientCallDetails</em>) – </p></li>
+<li><p><strong>request</strong> (<em>grpc.TRequest</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>grpc.CallIterator[grpc.TResponse]</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ni_measurementlink_service._loggers.ClientLogger.intercept_stream_unary">
 <span class="sig-name descname"><span class="pre">intercept_stream_unary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">continuation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">client_call_details</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">request_iterator</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/ni_measurementlink_service/_loggers.html#ClientLogger.intercept_stream_unary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service._loggers.ClientLogger.intercept_stream_unary" title="Permalink to this definition"></a></dt>
 <dd><p>Intercept and log a client-streaming call.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>continuation</strong> (<em>Callable</em><em>[</em><em>[</em><em>grpc.ClientCallDetails</em><em>, </em><em>Iterator</em><em>[</em><em>grpc.TRequest</em><em>]</em><em>]</em><em>, </em><em>grpc.CallFuture</em><em>[</em><em>grpc.TResponse</em><em>]</em><em>]</em>) – </p></li>
+<li><p><strong>client_call_details</strong> (<em>grpc.ClientCallDetails</em>) – </p></li>
+<li><p><strong>request_iterator</strong> (<em>Iterator</em><em>[</em><em>grpc.TRequest</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>grpc.CallFuture[grpc.TResponse]</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ni_measurementlink_service._loggers.ClientLogger.intercept_stream_stream">
 <span class="sig-name descname"><span class="pre">intercept_stream_stream</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">continuation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">client_call_details</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">request_iterator</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/ni_measurementlink_service/_loggers.html#ClientLogger.intercept_stream_stream"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service._loggers.ClientLogger.intercept_stream_stream" title="Permalink to this definition"></a></dt>
 <dd><p>Intercept and log a bidirectional streaming call.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>continuation</strong> (<em>Callable</em><em>[</em><em>[</em><em>grpc.ClientCallDetails</em><em>, </em><em>Iterator</em><em>[</em><em>grpc.TRequest</em><em>]</em><em>]</em><em>, </em><em>grpc.CallIterator</em><em>[</em><em>grpc.TResponse</em><em>]</em><em>]</em>) – </p></li>
+<li><p><strong>client_call_details</strong> (<em>grpc.ClientCallDetails</em>) – </p></li>
+<li><p><strong>request_iterator</strong> (<em>Iterator</em><em>[</em><em>grpc.TRequest</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>grpc.CallIterator[grpc.TResponse]</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -135,12 +187,28 @@
 <dt class="sig sig-object py" id="ni_measurementlink_service._loggers.ServerLogger.is_enabled">
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_enabled</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/ni_measurementlink_service/_loggers.html#ServerLogger.is_enabled"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service._loggers.ServerLogger.is_enabled" title="Permalink to this definition"></a></dt>
 <dd><p>Indicates whether gRPC client call logging is enabled for the current log level.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)">bool</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ni_measurementlink_service._loggers.ServerLogger.intercept_service">
 <span class="sig-name descname"><span class="pre">intercept_service</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">continuation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">handler_call_details</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/ni_measurementlink_service/_loggers.html#ServerLogger.intercept_service"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service._loggers.ServerLogger.intercept_service" title="Permalink to this definition"></a></dt>
 <dd><p>Intercept and log a server call.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>continuation</strong> (<em>Callable</em><em>[</em><em>[</em><em>grpc.HandlerCallDetails</em><em>]</em><em>, </em><em>grpc.RpcMethodHandler</em><em>[</em><em>grpc.TRequest</em><em>, </em><em>grpc.TResponse</em><em>] </em><em>| </em><em>None</em><em>]</em>) – </p></li>
+<li><p><strong>handler_call_details</strong> (<em>grpc.HandlerCallDetails</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>grpc.RpcMethodHandler[grpc.TRequest, grpc.TResponse]</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>

@@ -5,7 +5,7 @@
 
 .. autoapi-nested-parse::
 
-   Contains API to register and un-register measurement service with discovery service.
+   Redirect internal discovery client API to the public API.
 
 
 
@@ -17,92 +17,59 @@ Classes
 
 .. autoapisummary::
 
-   ni_measurementlink_service._internal.discovery_client.ServiceLocation
    ni_measurementlink_service._internal.discovery_client.DiscoveryClient
+   ni_measurementlink_service._internal.discovery_client.ServiceLocation
 
 
 
 
-.. py:class:: ServiceLocation
-
-   Bases: :py:obj:`NamedTuple`
-
-   Represents the location of a service.
-
-   .. py:attribute:: location
-      :annotation: :str
-
-      
-
-   .. py:attribute:: insecure_port
-      :annotation: :str
-
-      
-
-   .. py:attribute:: ssl_authenticated_port
-      :annotation: :str
-
-      
-
-   .. py:method:: insecure_address()
-      :property:
-
-      Get the service's insecure address in the format host:port.
+.. py:class:: DiscoveryClient(stub = None, *, grpc_channel_pool = None)
 
 
-   .. py:method:: ssl_authenticated_address()
-      :property:
+   Client for accessing the MeasurementLink discovery service.
 
-      Get the service's SSL-authenticated address in the format host:port.
+   .. py:property:: registration_id
+      :type: str
 
+      "The ID from discovery service upon successful registration.
 
-
-.. py:class:: DiscoveryClient(stub = None)
-
-   Class that contains APIs need to interact with discovery service.
-
-   Attributes
-   ----------
-       stub (DiscoveryServiceStub): The gRPC stub used to interact with the discovery
-       service.
-
-       registration_id(string): The ID from discovery service upon successful registration.
-
-
-   .. py:method:: stub()
-      :property:
+   .. py:property:: stub
+      :type: ni_measurementlink_service._internal.stubs.ni.measurementlink.discovery.v1.discovery_service_pb2_grpc.DiscoveryServiceStub
 
       Get the gRPC stub used to interact with the discovery service.
-
 
    .. py:method:: register_measurement_service(service_port, service_info, measurement_info)
 
       Register the measurement service with the discovery service.
 
-      Args:
-      ----
-          service_port (str): Port Number of the measurement service.
+      :param service_port: The port number of the service.
+      :param service_info: Information describing the service.
+      :param measurement_info: Information describing the measurement.
 
-          service_info (ServiceInfo): Service Info.
-
-          display_name (str): Display name of the service.
-
-      Returns
-      -------
-          bool: Boolean to represent if the registration is successful.
+      :returns: Boolean indicating whether the service was successfully registered.
 
 
+   .. py:method:: register_service(service_info, service_location)
 
-   .. py:method:: unregister_service()
+      Register the specified service with the discovery service.
 
-      Un-registers the measurement service from the discovery service.
+      :param service_info: Information describing the service.
+      :param service_location: The location of the service on the network.
 
-      Should be called before the service is closed.
+      :returns: ID that can be used to unregister the service.
 
-      Returns
-      -------
-          bool: Boolean to represent if the un-registration is successful.
 
+   .. py:method:: unregister_service(registration_id = '')
+
+      Unregisters the specified service from the discovery service.
+
+      This method should be called before the service exits.
+
+      :param registration_id: The registration ID returned from register_service.
+                              This argument should be omitted after calling the deprecated
+                              register_measurement_service method.
+
+      :returns: Boolean indicating whether the service was unregistered.
 
 
    .. py:method:: resolve_service(provided_interface, service_class = '')
@@ -113,17 +80,49 @@ Classes
       communication with that service. If necessary, the service will be started by the
       discovery service if it has not already been started.
 
-      Args:
-      ----
-          provided_interface: The gRPC Full Name of the service.
-          service_class: The service "class" that should be matched. If the value is not
-              specified and there is more than one matching service registered, an error
-              is returned.
+      :param provided_interface: The gRPC full name of the service.
+      :param service_class: The service "class" that should be matched. If the value is not
+                            specified and there is more than one matching service registered, an error
+                            is returned.
 
-      Returns
-      -------
-          A ServiceLocation location object that represents the location of a service.
+      :returns: The service location.
 
 
+
+.. py:class:: ServiceLocation
+
+
+   Bases: :py:obj:`NamedTuple`
+
+   Represents the location of a service.
+
+   .. py:property:: insecure_address
+      :type: str
+
+      port.
+
+      :type: Get the service's insecure address in the format host
+
+   .. py:property:: ssl_authenticated_address
+      :type: str
+
+      port.
+
+      :type: Get the service's SSL-authenticated address in the format host
+
+   .. py:attribute:: location
+      :type: str
+
+      
+
+   .. py:attribute:: insecure_port
+      :type: str
+
+      
+
+   .. py:attribute:: ssl_authenticated_port
+      :type: str
+
+      
 
 

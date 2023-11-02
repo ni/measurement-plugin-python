@@ -19,39 +19,39 @@ Classes
 
 .. py:class:: GrpcService(discovery_client = None)
 
-   Class that manages hosting the measurement as service and closing service.
 
-   Attributes
-   ----------
-       discovery_client (DiscoveryClient, optional): Instance of Discovery Client.
-       Defaults to None.
+   Manages the gRPC server lifetime and registration.
 
+   .. py:property:: discovery_client
+      :type: ni_measurementlink_service.discovery.DiscoveryClient
 
-   .. py:method:: start(measurement_info, service_info, configuration_parameter_list, output_parameter_list, measure_function)
+      Client for accessing the MeasurementLink discovery service.
 
-      Host a gRPC service with the registered measurement method.
+   .. py:property:: port
+      :type: str
 
-      Args:
-      ----
-          measurement_info (MeasurementInfo): Measurement info
+      The insecure port.
 
-          service_info (ServiceInfo): Service info
+   .. py:property:: server
+      :type: Optional[grpc.Server]
 
-          configuration_parameter_list (List): List of configuration parameters.
+      The gRPC server.
 
-          output_parameter_list (List): List of output parameters.
+   .. py:property:: service_location
+      :type: ni_measurementlink_service.discovery.ServiceLocation
 
-          measure_function (Callable): Registered measurement function.
+      The location of the service on the network.
 
-      Returns
-      -------
-          int: The port number of the server
+   .. py:method:: start(measurement_info, service_info, configuration_parameter_list, output_parameter_list, measure_function, owner = None)
 
+      Start the gRPC server and register it with the discovery service.
+
+      :returns: The insecure port.
 
 
    .. py:method:: stop()
 
-      Close the Service after un-registering with discovery service and cleanups.
+      Unregister and stop the gRPC server.
 
 
 

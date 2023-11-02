@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ni_measurementlink_service.session_management._types &mdash; ni_measurementlink_service 1.3 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=0264ad83"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            ni_measurementlink_service
+          </a>
+              <div class="version">
+                1.3.0-dev0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../autoapi/index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">ni_measurementlink_service</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ni_measurementlink_service.session_management._types</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ni_measurementlink_service.session_management._types</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Session management data types.&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">IntEnum</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Generic</span><span class="p">,</span>
+    <span class="n">Iterable</span><span class="p">,</span>
+    <span class="n">List</span><span class="p">,</span>
+    <span class="n">NamedTuple</span><span class="p">,</span>
+    <span class="n">Optional</span><span class="p">,</span>
+    <span class="n">Protocol</span><span class="p">,</span>
+    <span class="n">TypeVar</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">ni_measurementlink_service._internal.stubs</span> <span class="kn">import</span> <span class="n">session_pb2</span>
+<span class="kn">from</span> <span class="nn">ni_measurementlink_service._internal.stubs.ni.measurementlink</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">pin_map_context_pb2</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">ni_measurementlink_service._internal.stubs.ni.measurementlink.sessionmanagement.v1</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">session_management_service_pb2</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">TSession</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">&quot;TSession&quot;</span><span class="p">)</span>
+<span class="n">TSession_co</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">&quot;TSession_co&quot;</span><span class="p">,</span> <span class="n">covariant</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="PinMapContext"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/session_management/index.html#ni_measurementlink_service._drivers.PinMapContext">[docs]</a><span class="k">class</span> <span class="nc">PinMapContext</span><span class="p">(</span><span class="n">NamedTuple</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Container for the pin map and sites.&quot;&quot;&quot;</span>
+
+    <span class="n">pin_map_id</span><span class="p">:</span> <span class="nb">str</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The resource id of the pin map in the Pin Map service that should be used for the call.&quot;&quot;&quot;</span>
+
+    <span class="n">sites</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;List of site numbers being used for the call.</span>
+<span class="sd">    </span>
+<span class="sd">    If None or empty, use all sites in the pin map.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_from_grpc</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span>
+        <span class="n">other</span><span class="p">:</span> <span class="n">pin_map_context_pb2</span><span class="o">.</span><span class="n">PinMapContext</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PinMapContext</span><span class="p">:</span>
+        <span class="c1"># The protobuf PinMapContext sites field is a RepeatedScalarContainer, not a list.</span>
+        <span class="c1"># Constructing a protobuf PinMapContext with sites=None sets sites to an empty</span>
+        <span class="c1"># RepeatedScalarContainer, not None.</span>
+        <span class="k">return</span> <span class="n">PinMapContext</span><span class="p">(</span><span class="n">pin_map_id</span><span class="o">=</span><span class="n">other</span><span class="o">.</span><span class="n">pin_map_id</span><span class="p">,</span> <span class="n">sites</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">sites</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">_to_grpc</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pin_map_context_pb2</span><span class="o">.</span><span class="n">PinMapContext</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">pin_map_context_pb2</span><span class="o">.</span><span class="n">PinMapContext</span><span class="p">(</span><span class="n">pin_map_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pin_map_id</span><span class="p">,</span> <span class="n">sites</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sites</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ChannelMapping"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/session_management/index.html#ni_measurementlink_service._drivers.ChannelMapping">[docs]</a><span class="k">class</span> <span class="nc">ChannelMapping</span><span class="p">(</span><span class="n">NamedTuple</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Mapping of each channel to the pin and site it is connected to.&quot;&quot;&quot;</span>
+
+    <span class="n">pin_or_relay_name</span><span class="p">:</span> <span class="nb">str</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The pin or relay that is mapped to a channel.&quot;&quot;&quot;</span>
+
+    <span class="n">site</span><span class="p">:</span> <span class="nb">int</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The site on which the pin or relay is mapped to a channel.</span>
+<span class="sd">            </span>
+<span class="sd">    For system pins/relays, the site number is :any:`SITE_SYSTEM_PINS` (-1) as they</span>
+<span class="sd">    do not belong to a specific site.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">channel</span><span class="p">:</span> <span class="nb">str</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The channel to which the pin or relay is mapped on this site.&quot;&quot;&quot;</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_from_grpc_v1</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">session_management_service_pb2</span><span class="o">.</span><span class="n">ChannelMapping</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ChannelMapping</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">ChannelMapping</span><span class="p">(</span>
+            <span class="n">pin_or_relay_name</span><span class="o">=</span><span class="n">other</span><span class="o">.</span><span class="n">pin_or_relay_name</span><span class="p">,</span>
+            <span class="n">site</span><span class="o">=</span><span class="n">other</span><span class="o">.</span><span class="n">site</span><span class="p">,</span>
+            <span class="n">channel</span><span class="o">=</span><span class="n">other</span><span class="o">.</span><span class="n">channel</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_to_grpc_v1</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">session_management_service_pb2</span><span class="o">.</span><span class="n">ChannelMapping</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">session_management_service_pb2</span><span class="o">.</span><span class="n">ChannelMapping</span><span class="p">(</span>
+            <span class="n">pin_or_relay_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pin_or_relay_name</span><span class="p">,</span>
+            <span class="n">site</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">site</span><span class="p">,</span>
+            <span class="n">channel</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">channel</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SessionInformation"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/session_management/index.html#ni_measurementlink_service._drivers.SessionInformation">[docs]</a><span class="k">class</span> <span class="nc">SessionInformation</span><span class="p">(</span><span class="n">NamedTuple</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Container for the session information.&quot;&quot;&quot;</span>
+
+    <span class="n">session_name</span><span class="p">:</span> <span class="nb">str</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Session name used by the session management service and NI gRPC Device Server.&quot;&quot;&quot;</span>
+
+    <span class="n">resource_name</span><span class="p">:</span> <span class="nb">str</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Resource name used to open this session in the driver.&quot;&quot;&quot;</span>
+
+    <span class="n">channel_list</span><span class="p">:</span> <span class="nb">str</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Channel list used for driver initialization and measurement methods.</span>
+
+<span class="sd">    This field is empty for any SessionInformation returned from</span>
+<span class="sd">    Client.reserve_all_registered_sessions.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">instrument_type_id</span><span class="p">:</span> <span class="nb">str</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Indicates the instrument type for this session.</span>
+<span class="sd">    </span>
+<span class="sd">    Pin maps have built in instrument definitions using the instrument</span>
+<span class="sd">    type id constants such as `INSTRUMENT_TYPE_NI_DCPOWER`. For custom instruments, the</span>
+<span class="sd">    user defined instrument type id is defined in the pin map file.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">session_exists</span><span class="p">:</span> <span class="nb">bool</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Indicates whether the session is registered with the session management service.</span>
+<span class="sd">    </span>
+<span class="sd">    When calling measurements from TestStand, the test sequence&#39;s ``ProcessSetup`` callback</span>
+<span class="sd">    creates instrument sessions and registers them with the session management service so that</span>
+<span class="sd">    they can be shared between multiple measurement steps. In this case, the `session_exists`</span>
+<span class="sd">    attribute is ``True``, indicating that the instrument sessions were already created and any</span>
+<span class="sd">    one-time setup (such as creating NI-DAQmx channels or loading NI-Digital files) has been</span>
+<span class="sd">    performed.</span>
+<span class="sd">    </span>
+<span class="sd">    When calling measurements outside of TestStand, the `session_exists` attribute is ``False``,</span>
+<span class="sd">    indicating that the measurement is responsible for creating the instrument sessions and</span>
+<span class="sd">    performing any one-time setup.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">channel_mappings</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">ChannelMapping</span><span class="p">]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;List of mappings from channels to pins and sites.</span>
+<span class="sd">     </span>
+<span class="sd">    Each item contains a mapping for a channel in this instrument resource, in the order of the</span>
+<span class="sd">    channel_list. This field is empty for any SessionInformation returned from</span>
+<span class="sd">    Client.reserve_all_registered_sessions.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">session</span><span class="p">:</span> <span class="nb">object</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The driver session object.</span>
+<span class="sd">    </span>
+<span class="sd">    This field is None until the appropriate create_session(s) method is called.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">_check_runtime_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session_type</span><span class="p">:</span> <span class="nb">type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">session_type</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Incorrect type for session &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">session_name</span><span class="si">}</span><span class="s2">&#39;. &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;Expected </span><span class="si">{</span><span class="n">session_type</span><span class="si">}</span><span class="s2">, got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="p">)</span><span class="si">}</span><span class="s2">.&quot;</span>
+            <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_with_session</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SessionInformation</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span> <span class="ow">is</span> <span class="n">session</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_replace</span><span class="p">(</span><span class="n">session</span><span class="o">=</span><span class="n">session</span><span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_from_grpc_v1</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">session_management_service_pb2</span><span class="o">.</span><span class="n">SessionInformation</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SessionInformation</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">SessionInformation</span><span class="p">(</span>
+            <span class="n">session_name</span><span class="o">=</span><span class="n">other</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">resource_name</span><span class="o">=</span><span class="n">other</span><span class="o">.</span><span class="n">resource_name</span><span class="p">,</span>
+            <span class="n">channel_list</span><span class="o">=</span><span class="n">other</span><span class="o">.</span><span class="n">channel_list</span><span class="p">,</span>
+            <span class="n">instrument_type_id</span><span class="o">=</span><span class="n">other</span><span class="o">.</span><span class="n">instrument_type_id</span><span class="p">,</span>
+            <span class="n">session_exists</span><span class="o">=</span><span class="n">other</span><span class="o">.</span><span class="n">session_exists</span><span class="p">,</span>
+            <span class="n">channel_mappings</span><span class="o">=</span><span class="p">[</span><span class="n">ChannelMapping</span><span class="o">.</span><span class="n">_from_grpc_v1</span><span class="p">(</span><span class="n">m</span><span class="p">)</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">other</span><span class="o">.</span><span class="n">channel_mappings</span><span class="p">],</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_to_grpc_v1</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">session_management_service_pb2</span><span class="o">.</span><span class="n">SessionInformation</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">session_management_service_pb2</span><span class="o">.</span><span class="n">SessionInformation</span><span class="p">(</span>
+            <span class="n">session</span><span class="o">=</span><span class="n">session_pb2</span><span class="o">.</span><span class="n">Session</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">session_name</span><span class="p">),</span>
+            <span class="n">resource_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">resource_name</span><span class="p">,</span>
+            <span class="n">channel_list</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">channel_list</span><span class="p">,</span>
+            <span class="n">instrument_type_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">instrument_type_id</span><span class="p">,</span>
+            <span class="n">session_exists</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">session_exists</span><span class="p">,</span>
+            <span class="n">channel_mappings</span><span class="o">=</span><span class="p">[</span><span class="n">m</span><span class="o">.</span><span class="n">_to_grpc_v1</span><span class="p">()</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">channel_mappings</span><span class="p">],</span>
+        <span class="p">)</span></div>
+
+
+<span class="c1"># Python versions &lt;3.11 do not support generic named tuples, so we use a generic</span>
+<span class="c1"># protocol to return typed session information.</span>
+<div class="viewcode-block" id="TypedSessionInformation"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/session_management/index.html#ni_measurementlink_service._drivers.TypedSessionInformation">[docs]</a><span class="k">class</span> <span class="nc">TypedSessionInformation</span><span class="p">(</span><span class="n">Protocol</span><span class="p">,</span> <span class="n">Generic</span><span class="p">[</span><span class="n">TSession_co</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generic version of :any:`SessionInformation` that preserves the session type.</span>
+
+<span class="sd">    For more details, see the corresponding documentation for :any:`SessionInformation`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">session_name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Session name used by the session management service and NI gRPC Device Server.&quot;&quot;&quot;</span>
+        <span class="o">...</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">resource_name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Resource name used to open this session in the driver.&quot;&quot;&quot;</span>
+        <span class="o">...</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">channel_list</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Channel list used for driver initialization and measurement methods.&quot;&quot;&quot;</span>
+        <span class="o">...</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">instrument_type_id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Indicates the instrument type for this session.&quot;&quot;&quot;</span>
+        <span class="o">...</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">session_exists</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Indicates whether the session is registered with the session management service.&quot;&quot;&quot;</span>
+        <span class="o">...</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">channel_mappings</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">ChannelMapping</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;List of mappings from channels to pins and sites.&quot;&quot;&quot;</span>
+        <span class="o">...</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">session</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TSession_co</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The driver session object.&quot;&quot;&quot;</span>
+        <span class="o">...</span></div>
+
+
+<div class="viewcode-block" id="Connection"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/session_management/index.html#ni_measurementlink_service._drivers.Connection">[docs]</a><span class="k">class</span> <span class="nc">Connection</span><span class="p">(</span><span class="n">NamedTuple</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Describes the connection between an instance of a pin and an instrument channel.</span>
+
+<span class="sd">    This object maps a pin or relay on a specific site to the corresponding</span>
+<span class="sd">    instrument session and channel name.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">pin_or_relay_name</span><span class="p">:</span> <span class="nb">str</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The pin or relay name.&quot;&quot;&quot;</span>
+
+    <span class="n">site</span><span class="p">:</span> <span class="nb">int</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The site number.</span>
+<span class="sd">    </span>
+<span class="sd">    For system pins/relays, the site number is :any:`SITE_SYSTEM_PINS` (-1) as they</span>
+<span class="sd">    do not belong to a specific site.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">channel_name</span><span class="p">:</span> <span class="nb">str</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The instrument channel name.&quot;&quot;&quot;</span>
+
+    <span class="n">session_info</span><span class="p">:</span> <span class="n">SessionInformation</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The instrument session information.&quot;&quot;&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">session</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The instrument session.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_info</span><span class="o">.</span><span class="n">session</span>
+
+    <span class="k">def</span> <span class="nf">_check_runtime_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session_type</span><span class="p">:</span> <span class="nb">type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">session_info</span><span class="o">.</span><span class="n">_check_runtime_type</span><span class="p">(</span><span class="n">session_type</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_with_session</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Connection</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span> <span class="ow">is</span> <span class="n">session</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_replace</span><span class="p">(</span><span class="n">session_info</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">session_info</span><span class="o">.</span><span class="n">_with_session</span><span class="p">(</span><span class="n">session</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="TypedConnection"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/session_management/index.html#ni_measurementlink_service._drivers.TypedConnection">[docs]</a><span class="k">class</span> <span class="nc">TypedConnection</span><span class="p">(</span><span class="n">Protocol</span><span class="p">,</span> <span class="n">Generic</span><span class="p">[</span><span class="n">TSession_co</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generic version of :any:`Connection` that preserves the session type.</span>
+
+<span class="sd">    For more details, see the corresponding documentation for :any:`Connection`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">pin_or_relay_name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The pin or relay name.&quot;&quot;&quot;</span>
+        <span class="o">...</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">site</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The site number.</span>
+
+<span class="sd">        For system pins/relays, the site number is :any:`SITE_SYSTEM_PINS` (-1) as they</span>
+<span class="sd">        do not belong to a specific site.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="o">...</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">channel_name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The instrument channel name.&quot;&quot;&quot;</span>
+        <span class="o">...</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">session_info</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TypedSessionInformation</span><span class="p">[</span><span class="n">TSession_co</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The instrument session information.&quot;&quot;&quot;</span>
+        <span class="o">...</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">session</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TSession_co</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The instrument session.&quot;&quot;&quot;</span>
+        <span class="o">...</span></div>
+
+
+<div class="viewcode-block" id="SessionInitializationBehavior"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/session_management/index.html#ni_measurementlink_service._drivers.SessionInitializationBehavior">[docs]</a><span class="k">class</span> <span class="nc">SessionInitializationBehavior</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Specifies whether to initialize a new session or attach to an existing session.&quot;&quot;&quot;</span>
+
+    <span class="n">AUTO</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The NI gRPC Device Server will attach to an existing session with the</span>
+<span class="sd">    specified name if it exists, otherwise the server will initialize a new</span>
+<span class="sd">    session.</span>
+
+<span class="sd">    Note: When using the Session as a context manager and the context exits, the</span>
+<span class="sd">    behavior depends on what happened when the constructor was called. If it</span>
+<span class="sd">    resulted in a new session being initialized on the NI gRPC Device Server,</span>
+<span class="sd">    then it will automatically close the server session. If it instead attached</span>
+<span class="sd">    to an existing session, then it will detach from the server session and</span>
+<span class="sd">    leave it open.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">INITIALIZE_SERVER_SESSION</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Initialize a new session with the specified name.</span>
+
+<span class="sd">    Note: When using the Session as a context manager and the context exits, it</span>
+<span class="sd">    will automatically close the server session.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">ATTACH_TO_SERVER_SESSION</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Attach to an existing session with the specified name.</span>
+
+<span class="sd">    Note: When using the Session as a context manager and the context exits, it</span>
+<span class="sd">    will detach from the server session and leave it open.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">INITIALIZE_SESSION_THEN_DETACH</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Initialize a new session. </span>
+<span class="sd">    </span>
+<span class="sd">    When exiting the context manager, detach instead of closing.</span>
+
+<span class="sd">    Note: This initialization behavior is intended for TestStand code modules used in</span>
+<span class="sd">    ``Setup`` steps or ``ProcessSetup`` callback sequences.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">ATTACH_TO_SESSION_THEN_CLOSE</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Attach to an existing session. </span>
+<span class="sd">    </span>
+<span class="sd">    When exiting the context manager, automatically close the server session.</span>
+
+<span class="sd">    Note: This initialization behavior is intended for TestStand code modules used in</span>
+<span class="sd">    ``Cleanup`` steps or ``ProcessCleanup`` callback sequences.</span>
+<span class="sd">    &quot;&quot;&quot;</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, National Instruments.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

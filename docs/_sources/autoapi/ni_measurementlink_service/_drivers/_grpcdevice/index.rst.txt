@@ -1,0 +1,52 @@
+:orphan:
+
+:py:mod:`ni_measurementlink_service._drivers._grpcdevice`
+=========================================================
+
+.. py:module:: ni_measurementlink_service._drivers._grpcdevice
+
+.. autoapi-nested-parse::
+
+   Shared functions for interacting with NI gRPC Device Server.
+
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   ni_measurementlink_service._drivers._grpcdevice.get_insecure_grpc_device_channel
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   ni_measurementlink_service._drivers._grpcdevice.SERVICE_CLASS
+
+
+.. py:data:: SERVICE_CLASS
+   :value: 'ni.measurementlink.v1.grpcdeviceserver'
+
+   The service class for NI gRPC Device Server.
+
+.. py:function:: get_insecure_grpc_device_channel(discovery_client, grpc_channel_pool, provided_interface)
+
+   Get an unencrypted gRPC channel targeting NI gRPC Device Server.
+
+   :param discovery_client: The discovery client.
+   :param grpc_channel_pool: The gRPC channel pool.
+   :param provided_interface: The driver API's NI gRPC Device Server interface
+   :param name.:
+
+   :returns: A gRPC channel targeting the NI gRPC Device Server, or ``None`` if the
+             configuration file specifies that ``USE_GRPC_DEVICE_SERVER`` is false.
+
+
