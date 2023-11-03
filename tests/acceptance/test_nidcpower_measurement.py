@@ -27,8 +27,7 @@ def test___single_session___measure___returns_measured_values(
     pin_map_context: PinMapContext,
     stub_v2: MeasurementServiceStub,
 ) -> None:
-    pin_names = ["Pin1"]
-    configurations = Configurations(pin_names=pin_names, multi_session=False)
+    configurations = Configurations(pin_names=["Pin1"], multi_session=False)
 
     outputs = _measure(stub_v2, pin_map_context, configurations)
 
@@ -40,8 +39,7 @@ def test___single_session___measure___creates_single_session(
     pin_map_context: PinMapContext,
     stub_v2: MeasurementServiceStub,
 ) -> None:
-    pin_names = ["Pin1"]
-    configurations = Configurations(pin_names=pin_names, multi_session=False)
+    configurations = Configurations(pin_names=["Pin1"], multi_session=False)
 
     outputs = _measure(stub_v2, pin_map_context, configurations)
 
@@ -54,8 +52,7 @@ def test___multiple_sessions___measure___creates_multiple_sessions(
     pin_map_context: PinMapContext,
     stub_v2: MeasurementServiceStub,
 ) -> None:
-    pin_names = ["Pin1", "Pin2"]
-    configurations = Configurations(pin_names=pin_names, multi_session=True)
+    configurations = Configurations(pin_names=["Pin1", "Pin2"], multi_session=True)
 
     outputs = _measure(stub_v2, pin_map_context, configurations)
 
