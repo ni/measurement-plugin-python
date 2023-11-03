@@ -10,14 +10,26 @@
 		<DUTPin name="MOSI" />
 		<DUTPin name="MISO" />
 	</Pins>
-	<PinGroups></PinGroups>
+	<PinGroups>
+		<PinGroup name="SPI_PINS">
+			<PinReference pin="SCLK" />
+			<PinReference pin="CS" />
+			<PinReference pin="MOSI" />
+			<PinReference pin="MISO" />
+		</PinGroup>
+	</PinGroups>
 	<Sites>
 		<Site siteNumber="0" />
+		<Site siteNumber="1" />
 	</Sites>
 	<Connections>
 		<Connection pin="CS" siteNumber="0" instrument="DigitalPattern1" channel="0" />
 		<Connection pin="SCLK" siteNumber="0" instrument="DigitalPattern1" channel="1" />
-		<Connection pin="MOSI" siteNumber="0" instrument="DigitalPattern2" channel="2" />
-		<Connection pin="MISO" siteNumber="0" instrument="DigitalPattern2" channel="3" />
+		<Connection pin="MOSI" siteNumber="0" instrument="DigitalPattern1" channel="2" />
+		<Connection pin="MISO" siteNumber="0" instrument="DigitalPattern1" channel="3" />
+		<Connection pin="CS" siteNumber="1" instrument="DigitalPattern2" channel="0" />
+		<Connection pin="SCLK" siteNumber="1" instrument="DigitalPattern2" channel="1" />
+		<Connection pin="MOSI" siteNumber="1" instrument="DigitalPattern2" channel="2" />
+		<Connection pin="MISO" siteNumber="1" instrument="DigitalPattern2" channel="3" />
 	</Connections>
 </PinMap>
