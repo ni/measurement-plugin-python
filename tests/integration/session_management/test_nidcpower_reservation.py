@@ -55,17 +55,17 @@ def test___session_created___get_nidcpower_connection___returns_connection(
     pin_map_context: PinMapContext,
     session_management_client: SessionManagementClient,
 ) -> None:
-    pin_name = "Pin1"
+    pin_names = ["Pin1"]
     with ExitStack() as stack:
         reservation = stack.enter_context(
-            session_management_client.reserve_session(pin_map_context, pin_name)
+            session_management_client.reserve_session(pin_map_context, pin_names)
         )
         stack.enter_context(reservation.initialize_nidcpower_session())
 
-        connection = reservation.get_nidcpower_connection(pin_name)
+        connection = reservation.get_nidcpower_connection(pin_names[0])
 
         assert get_connection_subset(connection) == ConnectionSubset(
-            pin_name, _SITE, "DCPower1/0", "DCPower1/0"
+            pin_names[0], _SITE, "DCPower1/0", "DCPower1/0"
         )
 
 
