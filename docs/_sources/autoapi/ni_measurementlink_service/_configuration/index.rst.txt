@@ -1,0 +1,147 @@
+:orphan:
+
+:py:mod:`ni_measurementlink_service._configuration`
+===================================================
+
+.. py:module:: ni_measurementlink_service._configuration
+
+.. autoapi-nested-parse::
+
+   MeasurementLink configuration options.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   ni_measurementlink_service._configuration.MIDriverOptions
+   ni_measurementlink_service._configuration.NISwitchOptions
+
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   ni_measurementlink_service._configuration.NIDCPOWER_OPTIONS
+   ni_measurementlink_service._configuration.NIDIGITAL_OPTIONS
+   ni_measurementlink_service._configuration.NIDMM_OPTIONS
+   ni_measurementlink_service._configuration.NIFGEN_OPTIONS
+   ni_measurementlink_service._configuration.NISCOPE_OPTIONS
+   ni_measurementlink_service._configuration.NISWITCH_OPTIONS
+   ni_measurementlink_service._configuration.USE_GRPC_DEVICE_SERVER
+   ni_measurementlink_service._configuration.GRPC_DEVICE_ADDRESS
+
+
+.. py:class:: MIDriverOptions
+
+
+   Bases: :py:obj:`NamedTuple`
+
+   Modular instrument driver options.
+
+   .. py:attribute:: driver_name
+      :type: str
+
+      The driver name.
+
+   .. py:attribute:: simulate
+      :type: bool
+      :value: False
+
+      Specifies whether to simulate session operations.
+
+   .. py:attribute:: board_type
+      :type: str
+      :value: ''
+
+      The simulated board type (bus).
+
+   .. py:attribute:: model
+      :type: str
+      :value: ''
+
+      The simulated instrument model.
+
+   .. py:method:: update_from_config()
+
+      Read options from the configuration file and return a new options object.
+
+
+   .. py:method:: to_dict()
+
+      Convert options to a dict to pass to nimi-python.
+
+
+
+.. py:class:: NISwitchOptions
+
+
+   Bases: :py:obj:`NamedTuple`
+
+   NI-SWITCH driver options.
+
+   .. py:attribute:: driver_name
+      :type: str
+
+      The driver name.
+
+   .. py:attribute:: simulate
+      :type: bool
+      :value: False
+
+      Specifies whether to simulate session operations.
+
+   .. py:attribute:: topology
+      :type: str
+      :value: 'Configured Topology'
+
+      The default topology.
+
+   .. py:method:: update_from_config()
+
+      Read options from the configuration file and return a new options object.
+
+
+
+.. py:data:: NIDCPOWER_OPTIONS
+
+   
+
+.. py:data:: NIDIGITAL_OPTIONS
+
+   
+
+.. py:data:: NIDMM_OPTIONS
+
+   
+
+.. py:data:: NIFGEN_OPTIONS
+
+   
+
+.. py:data:: NISCOPE_OPTIONS
+
+   
+
+.. py:data:: NISWITCH_OPTIONS
+
+   
+
+.. py:data:: USE_GRPC_DEVICE_SERVER
+   :type: bool
+
+   
+
+.. py:data:: GRPC_DEVICE_ADDRESS
+   :type: str
+
+   
+

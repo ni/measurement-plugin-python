@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ni_measurementlink_service.measurement.service &mdash; ni_measurementlink_service 1.2 documentation</title>
+  <title>ni_measurementlink_service.measurement.service &mdash; ni_measurementlink_service 1.3 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
@@ -11,12 +11,11 @@
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=0264ad83"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -34,7 +33,7 @@
             ni_measurementlink_service
           </a>
               <div class="version">
-                1.2.0-dev1
+                1.3.0-dev0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -79,16 +78,17 @@
 
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">threading</span>
 <span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span><span class="p">,</span> <span class="n">EnumMeta</span>
 <span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">path</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span> <span class="nn">threading</span> <span class="kn">import</span> <span class="n">Lock</span>
 <span class="kn">from</span> <span class="nn">types</span> <span class="kn">import</span> <span class="n">TracebackType</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">TYPE_CHECKING</span><span class="p">,</span>
     <span class="n">Any</span><span class="p">,</span>
     <span class="n">Callable</span><span class="p">,</span>
     <span class="n">Dict</span><span class="p">,</span>
+    <span class="n">Iterable</span><span class="p">,</span>
     <span class="n">List</span><span class="p">,</span>
     <span class="n">Literal</span><span class="p">,</span>
     <span class="n">Optional</span><span class="p">,</span>
@@ -98,23 +98,35 @@
 <span class="p">)</span>
 
 <span class="kn">import</span> <span class="nn">grpc</span>
+<span class="kn">from</span> <span class="nn">deprecation</span> <span class="kn">import</span> <span class="n">deprecated</span>
 <span class="kn">from</span> <span class="nn">google.protobuf.descriptor</span> <span class="kn">import</span> <span class="n">EnumDescriptor</span>
 
 <span class="kn">from</span> <span class="nn">ni_measurementlink_service</span> <span class="kn">import</span> <span class="n">_datatypeinfo</span>
+<span class="kn">from</span> <span class="nn">ni_measurementlink_service._channelpool</span> <span class="kn">import</span> <span class="p">(</span>  <span class="c1"># re-export</span>
+    <span class="n">GrpcChannelPool</span> <span class="k">as</span> <span class="n">GrpcChannelPool</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">ni_measurementlink_service._featuretoggles</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">SESSION_MANAGEMENT_2024Q1</span><span class="p">,</span>
+    <span class="n">requires_feature</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">ni_measurementlink_service._internal</span> <span class="kn">import</span> <span class="n">grpc_servicer</span>
-<span class="kn">from</span> <span class="nn">ni_measurementlink_service._internal.discovery_client</span> <span class="kn">import</span> <span class="n">DiscoveryClient</span>
 <span class="kn">from</span> <span class="nn">ni_measurementlink_service._internal.parameter</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">metadata</span> <span class="k">as</span> <span class="n">parameter_metadata</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">ni_measurementlink_service._internal.service_manager</span> <span class="kn">import</span> <span class="n">GrpcService</span>
-<span class="kn">from</span> <span class="nn">ni_measurementlink_service._loggers</span> <span class="kn">import</span> <span class="n">ClientLogger</span>
+<span class="kn">from</span> <span class="nn">ni_measurementlink_service.discovery</span> <span class="kn">import</span> <span class="n">DiscoveryClient</span><span class="p">,</span> <span class="n">ServiceLocation</span>
 <span class="kn">from</span> <span class="nn">ni_measurementlink_service.measurement.info</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">DataType</span><span class="p">,</span>
     <span class="n">MeasurementInfo</span><span class="p">,</span>
     <span class="n">ServiceInfo</span><span class="p">,</span>
     <span class="n">TypeSpecialization</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">ni_measurementlink_service.session_management</span> <span class="kn">import</span> <span class="n">PinMapContext</span>
+<span class="kn">from</span> <span class="nn">ni_measurementlink_service.session_management</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">MultiSessionReservation</span><span class="p">,</span>
+    <span class="n">PinMapContext</span><span class="p">,</span>
+    <span class="n">SessionManagementClient</span><span class="p">,</span>
+    <span class="n">SingleSessionReservation</span><span class="p">,</span>
+<span class="p">)</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">google.protobuf.internal.enum_type_wrapper</span> <span class="kn">import</span> <span class="n">_EnumTypeWrapper</span>
@@ -124,10 +136,15 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="kn">from</span> <span class="nn">typing_extensions</span> <span class="kn">import</span> <span class="n">TypeGuard</span>
 
+    <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">11</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Self</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="kn">from</span> <span class="nn">typing_extensions</span> <span class="kn">import</span> <span class="n">Self</span>
+
     <span class="n">SupportedEnumType</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">Enum</span><span class="p">],</span> <span class="n">_EnumTypeWrapper</span><span class="p">]</span>
 
 
-<div class="viewcode-block" id="MeasurementContext"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/measurement/service/index.html#ni_measurementlink_service.MeasurementContext">[docs]</a><span class="k">class</span> <span class="nc">MeasurementContext</span><span class="p">:</span>
+<div class="viewcode-block" id="MeasurementContext"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/measurement/service/index.html#ni_measurementlink_service.measurement.service.MeasurementContext">[docs]</a><span class="k">class</span> <span class="nc">MeasurementContext</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Proxy for the Measurement Service&#39;s context-local state.&quot;&quot;&quot;</span>
 
     <span class="nd">@property</span>
@@ -140,11 +157,11 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the pin map context for the RPC.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">grpc_servicer</span><span class="o">.</span><span class="n">measurement_service_context</span><span class="o">.</span><span class="n">get</span><span class="p">()</span><span class="o">.</span><span class="n">pin_map_context</span>
 
-<div class="viewcode-block" id="MeasurementContext.add_cancel_callback"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/measurement/service/index.html#ni_measurementlink_service.MeasurementContext.add_cancel_callback">[docs]</a>    <span class="k">def</span> <span class="nf">add_cancel_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cancel_callback</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[],</span> <span class="kc">None</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="MeasurementContext.add_cancel_callback"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/measurement/service/index.html#ni_measurementlink_service.measurement.service.MeasurementContext.add_cancel_callback">[docs]</a>    <span class="k">def</span> <span class="nf">add_cancel_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cancel_callback</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[],</span> <span class="kc">None</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a callback which is invoked when the RPC is canceled.&quot;&quot;&quot;</span>
         <span class="n">grpc_servicer</span><span class="o">.</span><span class="n">measurement_service_context</span><span class="o">.</span><span class="n">get</span><span class="p">()</span><span class="o">.</span><span class="n">add_cancel_callback</span><span class="p">(</span><span class="n">cancel_callback</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="MeasurementContext.cancel"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/measurement/service/index.html#ni_measurementlink_service.MeasurementContext.cancel">[docs]</a>    <span class="k">def</span> <span class="nf">cancel</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="MeasurementContext.cancel"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/measurement/service/index.html#ni_measurementlink_service.measurement.service.MeasurementContext.cancel">[docs]</a>    <span class="k">def</span> <span class="nf">cancel</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Cancel the RPC.&quot;&quot;&quot;</span>
         <span class="n">grpc_servicer</span><span class="o">.</span><span class="n">measurement_service_context</span><span class="o">.</span><span class="n">get</span><span class="p">()</span><span class="o">.</span><span class="n">cancel</span><span class="p">()</span></div>
 
@@ -153,94 +170,91 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the time remaining for the RPC.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">grpc_servicer</span><span class="o">.</span><span class="n">measurement_service_context</span><span class="o">.</span><span class="n">get</span><span class="p">()</span><span class="o">.</span><span class="n">time_remaining</span>
 
-<div class="viewcode-block" id="MeasurementContext.abort"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/measurement/service/index.html#ni_measurementlink_service.MeasurementContext.abort">[docs]</a>    <span class="k">def</span> <span class="nf">abort</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">StatusCode</span><span class="p">,</span> <span class="n">details</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="MeasurementContext.abort"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/measurement/service/index.html#ni_measurementlink_service.measurement.service.MeasurementContext.abort">[docs]</a>    <span class="k">def</span> <span class="nf">abort</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">StatusCode</span><span class="p">,</span> <span class="n">details</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Aborts the RPC.&quot;&quot;&quot;</span>
-        <span class="n">grpc_servicer</span><span class="o">.</span><span class="n">measurement_service_context</span><span class="o">.</span><span class="n">get</span><span class="p">()</span><span class="o">.</span><span class="n">abort</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="n">details</span><span class="p">)</span></div></div>
+        <span class="n">grpc_servicer</span><span class="o">.</span><span class="n">measurement_service_context</span><span class="o">.</span><span class="n">get</span><span class="p">()</span><span class="o">.</span><span class="n">abort</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="n">details</span><span class="p">)</span></div>
 
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">_measurement_service</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MeasurementService</span><span class="p">:</span>
+        <span class="n">owner</span> <span class="o">=</span> <span class="n">grpc_servicer</span><span class="o">.</span><span class="n">measurement_service_context</span><span class="o">.</span><span class="n">get</span><span class="p">()</span><span class="o">.</span><span class="n">owner</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">owner</span><span class="p">,</span> <span class="n">MeasurementService</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">owner</span>
 
-<span class="c1"># Eventually, these can be replaced with typing.Self (Python &gt;= 3.11).</span>
-<span class="n">_TGrpcChannelPool</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">&quot;_TGrpcChannelPool&quot;</span><span class="p">,</span> <span class="n">bound</span><span class="o">=</span><span class="s2">&quot;GrpcChannelPool&quot;</span><span class="p">)</span>
-<span class="n">_TMeasurementService</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">&quot;_TMeasurementService&quot;</span><span class="p">,</span> <span class="n">bound</span><span class="o">=</span><span class="s2">&quot;MeasurementService&quot;</span><span class="p">)</span>
-
-
-<div class="viewcode-block" id="GrpcChannelPool"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/measurement/service/index.html#ni_measurementlink_service.GrpcChannelPool">[docs]</a><span class="k">class</span> <span class="nc">GrpcChannelPool</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class that manages gRPC channel lifetimes.&quot;&quot;&quot;</span>
-
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the GrpcChannelPool object.&quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span> <span class="n">Lock</span> <span class="o">=</span> <span class="n">Lock</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_channel_cache</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">grpc</span><span class="o">.</span><span class="n">Channel</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-
-<div class="viewcode-block" id="GrpcChannelPool.__enter__"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/measurement/service/index.html#ni_measurementlink_service.GrpcChannelPool.__enter__">[docs]</a>    <span class="k">def</span> <span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="n">_TGrpcChannelPool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_TGrpcChannelPool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Enter the runtime context of the GrpcChannelPool.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span></div>
-
-<div class="viewcode-block" id="GrpcChannelPool.__exit__"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/measurement/service/index.html#ni_measurementlink_service.GrpcChannelPool.__exit__">[docs]</a>    <span class="k">def</span> <span class="fm">__exit__</span><span class="p">(</span>
+<div class="viewcode-block" id="MeasurementContext.reserve_session"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/measurement/service/index.html#ni_measurementlink_service.measurement.service.MeasurementContext.reserve_session">[docs]</a>    <span class="nd">@requires_feature</span><span class="p">(</span><span class="n">SESSION_MANAGEMENT_2024Q1</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">reserve_session</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">exc_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="ne">BaseException</span><span class="p">]],</span>
-        <span class="n">exc_val</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="ne">BaseException</span><span class="p">],</span>
-        <span class="n">traceback</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TracebackType</span><span class="p">],</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">False</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Exit the runtime context of the GrpcChannelPool.&quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-        <span class="k">return</span> <span class="kc">False</span></div>
+        <span class="n">pin_or_relay_names</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+        <span class="n">timeout</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SingleSessionReservation</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Reserve a single session.</span>
 
-<div class="viewcode-block" id="GrpcChannelPool.get_channel"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/measurement/service/index.html#ni_measurementlink_service.GrpcChannelPool.get_channel">[docs]</a>    <span class="k">def</span> <span class="nf">get_channel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">grpc</span><span class="o">.</span><span class="n">Channel</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return a gRPC channel.</span>
+<span class="sd">        Reserve the session matching the given pins, sites, and instrument type ID and return</span>
+<span class="sd">        the information needed to create or access the session.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            target (str): The server address</span>
+<span class="sd">            pin_or_relay_names: One or multiple pins, pin groups, relays, or relay groups to</span>
+<span class="sd">                use for the measurement.</span>
 
+<span class="sd">            timeout: Timeout in seconds.</span>
+
+<span class="sd">                Allowed values: 0 (non-blocking, fails immediately if resources cannot be</span>
+<span class="sd">                reserved), -1 (infinite timeout), or any other positive numeric value (wait for</span>
+<span class="sd">                that number of seconds)</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A reservation object with which you can query information about the session and</span>
+<span class="sd">            unreserve it.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">new_channel</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">target</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_channel_cache</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
-                <span class="n">new_channel</span> <span class="o">=</span> <span class="n">grpc</span><span class="o">.</span><span class="n">insecure_channel</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">ClientLogger</span><span class="o">.</span><span class="n">is_enabled</span><span class="p">():</span>
-                    <span class="n">new_channel</span> <span class="o">=</span> <span class="n">grpc</span><span class="o">.</span><span class="n">intercept_channel</span><span class="p">(</span><span class="n">new_channel</span><span class="p">,</span> <span class="n">ClientLogger</span><span class="p">())</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="o">.</span><span class="n">acquire</span><span class="p">()</span>
-                <span class="k">if</span> <span class="n">target</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_channel_cache</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_channel_cache</span><span class="p">[</span><span class="n">target</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_channel</span>
-                    <span class="n">new_channel</span> <span class="o">=</span> <span class="kc">None</span>
-            <span class="n">channel</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_channel_cache</span><span class="p">[</span><span class="n">target</span><span class="p">]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">pin_or_relay_names</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;You must specify at least one pin or relay name.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_measurement_service</span><span class="o">.</span><span class="n">session_management_client</span><span class="o">.</span><span class="n">reserve_session</span><span class="p">(</span>
+            <span class="n">context</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pin_map_context</span><span class="p">,</span> <span class="n">pin_or_relay_names</span><span class="o">=</span><span class="n">pin_or_relay_names</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span>
+        <span class="p">)</span></div>
 
-        <span class="c1"># Close new_channel if it was not stored in _channel_cache.</span>
-        <span class="k">if</span> <span class="n">new_channel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">new_channel</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<div class="viewcode-block" id="MeasurementContext.reserve_sessions"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/measurement/service/index.html#ni_measurementlink_service.measurement.service.MeasurementContext.reserve_sessions">[docs]</a>    <span class="nd">@requires_feature</span><span class="p">(</span><span class="n">SESSION_MANAGEMENT_2024Q1</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">reserve_sessions</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">pin_or_relay_names</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+        <span class="n">timeout</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MultiSessionReservation</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Reserve multiple sessions.</span>
 
-        <span class="k">return</span> <span class="n">channel</span></div>
+<span class="sd">        Reserve sessions matching the given pins, sites, and instrument type ID and return the</span>
+<span class="sd">        information needed to create or access the sessions.</span>
 
-<div class="viewcode-block" id="GrpcChannelPool.close"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/measurement/service/index.html#ni_measurementlink_service.GrpcChannelPool.close">[docs]</a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Close channels opened by get_channel().&quot;&quot;&quot;</span>
-        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">channel</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_channel_cache</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
-                <span class="n">channel</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_channel_cache</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span></div></div>
+<span class="sd">        Args:</span>
+<span class="sd">            pin_or_relay_names: One or multiple pins, pin groups, relays, or relay groups to use</span>
+<span class="sd">                for the measurement.</span>
+
+<span class="sd">            timeout: Timeout in seconds.</span>
+
+<span class="sd">                Allowed values: 0 (non-blocking, fails immediately if resources cannot be</span>
+<span class="sd">                reserved), -1 (infinite timeout), or any other positive numeric value (wait for</span>
+<span class="sd">                that number of seconds)</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A reservation object with which you can query information about the sessions and</span>
+<span class="sd">            unreserve them.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">pin_or_relay_names</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;You must specify at least one pin or relay name.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_measurement_service</span><span class="o">.</span><span class="n">session_management_client</span><span class="o">.</span><span class="n">reserve_sessions</span><span class="p">(</span>
+            <span class="n">context</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pin_map_context</span><span class="p">,</span> <span class="n">pin_or_relay_names</span><span class="o">=</span><span class="n">pin_or_relay_names</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span>
+        <span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="MeasurementService"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/measurement/service/index.html#ni_measurementlink_service.MeasurementService">[docs]</a><span class="k">class</span> <span class="nc">MeasurementService</span><span class="p">:</span>
+<span class="n">_F</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">&quot;_F&quot;</span><span class="p">,</span> <span class="n">bound</span><span class="o">=</span><span class="n">Callable</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="MeasurementService"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/measurement/service/index.html#ni_measurementlink_service.measurement.service.MeasurementService">[docs]</a><span class="k">class</span> <span class="nc">MeasurementService</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Class that supports registering and hosting a python function as a gRPC service.</span>
 
-<span class="sd">    Attributes</span>
-<span class="sd">    ----------</span>
+<span class="sd">    Attributes:</span>
 <span class="sd">        measurement_info (info.MeasurementInfo): Measurement info</span>
 
 <span class="sd">        service_info(info.ServiceInfo) : Service Info</span>
 
-<span class="sd">        configuration_parameter_list (List): List of configuration parameters.</span>
-
-<span class="sd">        output_parameter_list (list): List of output parameters.</span>
-
-<span class="sd">        measure_function (Callable): Registered measurement function.</span>
-
 <span class="sd">        context (MeasurementContext): Accessor for context-local state.</span>
-
-<span class="sd">        discovery_client (DiscoveryClient): Client for accessing the MeasurementLink discovery</span>
-<span class="sd">            service.</span>
-
-<span class="sd">        channel_pool (GrpcChannelPool): Pool of gRPC channels used by the service.</span>
-
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
@@ -263,8 +277,8 @@
 <span class="sd">            ui_file_paths (List[Path]): List of paths to supported UIs.</span>
 
 <span class="sd">            service_class (str): The service class from the .serviceconfig to use.</span>
-<span class="sd">            Default value is None, which will use the first service in the</span>
-<span class="sd">            .serviceconfig file.</span>
+<span class="sd">                Default value is None, which will use the first service in the</span>
+<span class="sd">                .serviceconfig file.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">service_config_path</span><span class="p">):</span>
@@ -301,41 +315,125 @@
         <span class="p">}</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">service_info</span> <span class="o">=</span> <span class="n">ServiceInfo</span><span class="p">(</span>
+            <span class="n">display_name</span><span class="o">=</span><span class="n">service</span><span class="p">[</span><span class="s2">&quot;displayName&quot;</span><span class="p">],</span>
             <span class="n">service_class</span><span class="o">=</span><span class="n">service</span><span class="p">[</span><span class="s2">&quot;serviceClass&quot;</span><span class="p">],</span>
             <span class="n">description_url</span><span class="o">=</span><span class="n">service</span><span class="p">[</span><span class="s2">&quot;descriptionUrl&quot;</span><span class="p">],</span>
             <span class="n">provided_interfaces</span><span class="o">=</span><span class="n">service</span><span class="p">[</span><span class="s2">&quot;providedInterfaces&quot;</span><span class="p">],</span>
             <span class="n">annotations</span><span class="o">=</span><span class="n">service_annotations_string</span><span class="p">,</span>
         <span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">configuration_parameter_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">output_parameter_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">grpc_service</span> <span class="o">=</span> <span class="n">GrpcService</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="p">:</span> <span class="n">MeasurementContext</span> <span class="o">=</span> <span class="n">MeasurementContext</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">channel_pool</span><span class="p">:</span> <span class="n">GrpcChannelPool</span> <span class="o">=</span> <span class="n">GrpcChannelPool</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">discovery_client</span><span class="p">:</span> <span class="n">DiscoveryClient</span> <span class="o">=</span> <span class="n">DiscoveryClient</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">context</span> <span class="o">=</span> <span class="n">MeasurementContext</span><span class="p">()</span>
 
-<div class="viewcode-block" id="MeasurementService.register_measurement"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/measurement/service/index.html#ni_measurementlink_service.MeasurementService.register_measurement">[docs]</a>    <span class="k">def</span> <span class="nf">register_measurement</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">measurement_function</span><span class="p">:</span> <span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_configuration_parameter_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">parameter_metadata</span><span class="o">.</span><span class="n">ParameterMetadata</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_output_parameter_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">parameter_metadata</span><span class="o">.</span><span class="n">ParameterMetadata</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_measure_function</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_raise_measurement_method_not_registered</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_initialization_lock</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">RLock</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_channel_pool</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">GrpcChannelPool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_discovery_client</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">DiscoveryClient</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_grpc_service</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">GrpcService</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_session_management_client</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">SessionManagementClient</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">_raise_measurement_method_not_registered</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+            <span class="s2">&quot;Measurement method not registered. Use the register_measurement decorator to register it.&quot;</span>
+        <span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">channel_pool</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">GrpcChannelPool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Pool of gRPC channels used by the service.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_channel_pool</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initialization_lock</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_channel_pool</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_channel_pool</span> <span class="o">=</span> <span class="n">GrpcChannelPool</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_channel_pool</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">discovery_client</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DiscoveryClient</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Client for accessing the MeasurementLink discovery service.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_discovery_client</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initialization_lock</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_discovery_client</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_discovery_client</span> <span class="o">=</span> <span class="n">DiscoveryClient</span><span class="p">(</span><span class="n">grpc_channel_pool</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">channel_pool</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_discovery_client</span>
+
+    <span class="nd">@property</span>
+    <span class="nd">@deprecated</span><span class="p">(</span>
+        <span class="n">deprecated_in</span><span class="o">=</span><span class="s2">&quot;1.3.0-dev0&quot;</span><span class="p">,</span>
+        <span class="n">details</span><span class="o">=</span><span class="s2">&quot;This property should not be public and will be removed in a later release.&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">def</span> <span class="nf">configuration_parameter_list</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;List of configuration parameters.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_configuration_parameter_list</span>
+
+    <span class="nd">@property</span>
+    <span class="nd">@deprecated</span><span class="p">(</span>
+        <span class="n">deprecated_in</span><span class="o">=</span><span class="s2">&quot;1.3.0-dev0&quot;</span><span class="p">,</span>
+        <span class="n">details</span><span class="o">=</span><span class="s2">&quot;This property should not be public and will be removed in a later release.&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">def</span> <span class="nf">grpc_service</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">GrpcService</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The gRPC service object. This is a private implementation detail.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_grpc_service</span>
+
+    <span class="nd">@property</span>
+    <span class="nd">@deprecated</span><span class="p">(</span>
+        <span class="n">deprecated_in</span><span class="o">=</span><span class="s2">&quot;1.3.0-dev0&quot;</span><span class="p">,</span>
+        <span class="n">details</span><span class="o">=</span><span class="s2">&quot;This property should not be public and will be removed in a later release.&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">def</span> <span class="nf">measure_function</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Registered measurement function.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_measure_function</span>
+
+    <span class="nd">@property</span>
+    <span class="nd">@deprecated</span><span class="p">(</span>
+        <span class="n">deprecated_in</span><span class="o">=</span><span class="s2">&quot;1.3.0-dev0&quot;</span><span class="p">,</span>
+        <span class="n">details</span><span class="o">=</span><span class="s2">&quot;This property should not be public and will be removed in a later release.&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">def</span> <span class="nf">output_parameter_list</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;List of output parameters.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_output_parameter_list</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">service_location</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ServiceLocation</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The location of the service on the network.&quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initialization_lock</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_grpc_service</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Measurement service not running&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_grpc_service</span><span class="o">.</span><span class="n">service_location</span>
+
+    <span class="nd">@property</span>
+    <span class="nd">@requires_feature</span><span class="p">(</span><span class="n">SESSION_MANAGEMENT_2024Q1</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">session_management_client</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SessionManagementClient</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Client for accessing the MeasurementLink session management service.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session_management_client</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initialization_lock</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session_management_client</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_session_management_client</span> <span class="o">=</span> <span class="n">SessionManagementClient</span><span class="p">(</span>
+                        <span class="n">discovery_client</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">discovery_client</span><span class="p">,</span>
+                        <span class="n">grpc_channel_pool</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">channel_pool</span><span class="p">,</span>
+                    <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session_management_client</span>
+
+<div class="viewcode-block" id="MeasurementService.register_measurement"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/measurement/service/index.html#ni_measurementlink_service.measurement.service.MeasurementService.register_measurement">[docs]</a>    <span class="k">def</span> <span class="nf">register_measurement</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">measurement_function</span><span class="p">:</span> <span class="n">_F</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_F</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Register a function as the measurement function for a measurement service.</span>
 
-<span class="sd">        To declare a measurement function, use this idiom:</span>
+<span class="sd">        To declare a measurement function, use this idiom::</span>
 
-<span class="sd">        ```</span>
-<span class="sd">        @measurement_service.register_measurement</span>
-<span class="sd">        @measurement_service.configuration(&quot;Configuration 1&quot;, ...)</span>
-<span class="sd">        @measurement_service.configuration(&quot;Configuration 2&quot;, ...)</span>
-<span class="sd">        @measurement_service.output(&quot;Output 1&quot;, ...)</span>
-<span class="sd">        @measurement_service.output(&quot;Output 2&quot;, ...)</span>
-<span class="sd">        def measure(configuration1, configuration2):</span>
-<span class="sd">            ...</span>
-<span class="sd">            return (output1, output2)</span>
-<span class="sd">        ```</span>
+<span class="sd">            @measurement_service.register_measurement</span>
+<span class="sd">            @measurement_service.configuration(&quot;Configuration 1&quot;, ...)</span>
+<span class="sd">            @measurement_service.configuration(&quot;Configuration 2&quot;, ...)</span>
+<span class="sd">            @measurement_service.output(&quot;Output 1&quot;, ...)</span>
+<span class="sd">            @measurement_service.output(&quot;Output 2&quot;, ...)</span>
+<span class="sd">            def measure(configuration1, configuration2):</span>
+<span class="sd">                ...</span>
+<span class="sd">                return (output1, output2)</span>
 
 <span class="sd">        See also: :func:`.configuration`, :func:`.output`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">measure_function</span> <span class="o">=</span> <span class="n">measurement_function</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_measure_function</span> <span class="o">=</span> <span class="n">measurement_function</span>
         <span class="k">return</span> <span class="n">measurement_function</span></div>
 
-<div class="viewcode-block" id="MeasurementService.configuration"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/measurement/service/index.html#ni_measurementlink_service.MeasurementService.configuration">[docs]</a>    <span class="k">def</span> <span class="nf">configuration</span><span class="p">(</span>
+<div class="viewcode-block" id="MeasurementService.configuration"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/measurement/service/index.html#ni_measurementlink_service.measurement.service.MeasurementService.configuration">[docs]</a>    <span class="k">def</span> <span class="nf">configuration</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">display_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="nb">type</span><span class="p">:</span> <span class="n">DataType</span><span class="p">,</span>
@@ -343,7 +441,7 @@
         <span class="o">*</span><span class="p">,</span>
         <span class="n">instrument_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
         <span class="n">enum_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">SupportedEnumType</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">_F</span><span class="p">],</span> <span class="n">_F</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a configuration parameter to a measurement function.</span>
 
 <span class="sd">        This decorator maps the measurement service&#39;s configuration parameters</span>
@@ -353,8 +451,7 @@
 
 <span class="sd">        See also: :func:`.register_measurement`</span>
 
-<span class="sd">        Args</span>
-<span class="sd">        ----</span>
+<span class="sd">        Args:</span>
 <span class="sd">            display_name (str): Display name of the configuration.</span>
 
 <span class="sd">            type (DataType): Data type of the configuration.</span>
@@ -362,23 +459,24 @@
 <span class="sd">            default_value (Any): Default value of the configuration.</span>
 
 <span class="sd">            instrument_type (Optional[str]):</span>
-<span class="sd">            Filter pins by instrument type. This is only supported when configuration type</span>
-<span class="sd">            is DataType.Pin. Pin maps have built in instrument definitions using the</span>
-<span class="sd">            NI driver based instrument type ids. These can be found as constants</span>
-<span class="sd">            in `nims.session_management`. For example, for an NI DCPower instrument</span>
-<span class="sd">            the instrument type is `nims.session_management.INSTRUMENT_TYPE_NI_DCPOWER`.</span>
-<span class="sd">            For custom instruments the user defined instrument type id is defined in the</span>
-<span class="sd">            pin map file.</span>
+<span class="sd">                Filter pins by instrument type. This is only supported when configuration type</span>
+<span class="sd">                is DataType.Pin.</span>
+
+<span class="sd">                For NI instruments, use instrument type id constants defined by</span>
+<span class="sd">                :py:mod:`ni_measurementlink_service.session_management`, such as</span>
+<span class="sd">                :py:const:`~ni_measurementlink_service.session_management.INSTRUMENT_TYPE_NI_DCPOWER`</span>
+<span class="sd">                or</span>
+<span class="sd">                :py:const:`~ni_measurementlink_service.session_management.INSTRUMENT_TYPE_NI_DMM`.</span>
+
+<span class="sd">                For custom instruments, use the instrument type id defined in the pin map file.</span>
 
 <span class="sd">            enum_type (Optional[SupportedEnumType]):</span>
-<span class="sd">            Defines the enum type associated with this configuration parameter. This is only</span>
-<span class="sd">            supported when configuration type is DataType.Enum or DataType.EnumArray1D.</span>
+<span class="sd">                Defines the enum type associated with this configuration parameter. This is only</span>
+<span class="sd">                supported when configuration type is DataType.Enum or DataType.EnumArray1D.</span>
 
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
+<span class="sd">        Returns:</span>
 <span class="sd">            Callable: Callable that takes in Any Python Function</span>
 <span class="sd">            and returns the same python function.</span>
-
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">data_type_info</span> <span class="o">=</span> <span class="n">_datatypeinfo</span><span class="o">.</span><span class="n">get_type_info</span><span class="p">(</span><span class="nb">type</span><span class="p">)</span>
         <span class="n">annotations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_annotations_dict</span><span class="p">(</span>
@@ -393,20 +491,20 @@
             <span class="n">data_type_info</span><span class="o">.</span><span class="n">message_type</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">parameter_metadata</span><span class="o">.</span><span class="n">validate_default_value_type</span><span class="p">(</span><span class="n">parameter</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">configuration_parameter_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">parameter</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_configuration_parameter_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">parameter</span><span class="p">)</span>
 
-        <span class="k">def</span> <span class="nf">_configuration</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">_configuration</span><span class="p">(</span><span class="n">func</span><span class="p">:</span> <span class="n">_F</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_F</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">func</span>
 
         <span class="k">return</span> <span class="n">_configuration</span></div>
 
-<div class="viewcode-block" id="MeasurementService.output"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/measurement/service/index.html#ni_measurementlink_service.MeasurementService.output">[docs]</a>    <span class="k">def</span> <span class="nf">output</span><span class="p">(</span>
+<div class="viewcode-block" id="MeasurementService.output"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/measurement/service/index.html#ni_measurementlink_service.measurement.service.MeasurementService.output">[docs]</a>    <span class="k">def</span> <span class="nf">output</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">display_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="nb">type</span><span class="p">:</span> <span class="n">DataType</span><span class="p">,</span>
         <span class="o">*</span><span class="p">,</span>
         <span class="n">enum_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">SupportedEnumType</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">_F</span><span class="p">],</span> <span class="n">_F</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add an output parameter to a measurement function.</span>
 
 <span class="sd">        This decorator maps the measurement service&#39;s output parameters to</span>
@@ -418,21 +516,18 @@
 
 <span class="sd">        See also: :func:`.register_measurement`</span>
 
-<span class="sd">        Args</span>
-<span class="sd">        ----</span>
+<span class="sd">        Args:</span>
 <span class="sd">            display_name (str): Display name of the output.</span>
 
 <span class="sd">            type (DataType): Data type of the output.</span>
 
 <span class="sd">            enum_type (Optional[SupportedEnumType]:</span>
-<span class="sd">            Defines the enum type associated with this configuration parameter. This is only</span>
-<span class="sd">            supported when configuration type is DataType.Enum or DataType.EnumArray1D.</span>
+<span class="sd">                Defines the enum type associated with this configuration parameter. This is only</span>
+<span class="sd">                supported when configuration type is DataType.Enum or DataType.EnumArray1D.</span>
 
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
+<span class="sd">        Returns:</span>
 <span class="sd">            Callable: Callable that takes in Any Python Function and</span>
 <span class="sd">            returns the same python function.</span>
-
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">data_type_info</span> <span class="o">=</span> <span class="n">_datatypeinfo</span><span class="o">.</span><span class="n">get_type_info</span><span class="p">(</span><span class="nb">type</span><span class="p">)</span>
         <span class="n">annotations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_annotations_dict</span><span class="p">(</span>
@@ -446,36 +541,39 @@
             <span class="n">annotations</span><span class="p">,</span>
             <span class="n">data_type_info</span><span class="o">.</span><span class="n">message_type</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">output_parameter_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">parameter</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_output_parameter_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">parameter</span><span class="p">)</span>
 
-        <span class="k">def</span> <span class="nf">_output</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">_output</span><span class="p">(</span><span class="n">func</span><span class="p">:</span> <span class="n">_F</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_F</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">func</span>
 
         <span class="k">return</span> <span class="n">_output</span></div>
 
-<div class="viewcode-block" id="MeasurementService.host_service"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/measurement/service/index.html#ni_measurementlink_service.MeasurementService.host_service">[docs]</a>    <span class="k">def</span> <span class="nf">host_service</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MeasurementService</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Host the registered measurement method as gRPC measurement service.</span>
+<div class="viewcode-block" id="MeasurementService.host_service"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/measurement/service/index.html#ni_measurementlink_service.measurement.service.MeasurementService.host_service">[docs]</a>    <span class="k">def</span> <span class="nf">host_service</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MeasurementService</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Host the registered measurement method as a gRPC measurement service.</span>
 
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
+<span class="sd">        Returns:</span>
 <span class="sd">            MeasurementService: Context manager that can be used with a with-statement to close</span>
 <span class="sd">            the service.</span>
 
-<span class="sd">        Raises</span>
-<span class="sd">        ------</span>
+<span class="sd">        Raises:</span>
 <span class="sd">            Exception: If register measurement methods not available.</span>
-
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">measure_function</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Error, must register measurement method.&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">grpc_service</span><span class="o">.</span><span class="n">start</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">measurement_info</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">service_info</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">configuration_parameter_list</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">output_parameter_list</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">measure_function</span><span class="p">,</span>
-        <span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span></div>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initialization_lock</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_measure_function</span> <span class="ow">is</span> <span class="bp">self</span><span class="o">.</span><span class="n">_raise_measurement_method_not_registered</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_raise_measurement_method_not_registered</span><span class="p">()</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_grpc_service</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Measurement service already running.&quot;</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_grpc_service</span> <span class="o">=</span> <span class="n">GrpcService</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">discovery_client</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_grpc_service</span><span class="o">.</span><span class="n">start</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">measurement_info</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">service_info</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_configuration_parameter_list</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_output_parameter_list</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_measure_function</span><span class="p">,</span>
+                <span class="n">owner</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span></div>
 
     <span class="k">def</span> <span class="nf">_make_annotations_dict</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -521,16 +619,31 @@
         <span class="c1"># google.protobuf.internal.</span>
         <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">enum_type</span><span class="p">,</span> <span class="s2">&quot;DESCRIPTOR&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="n">EnumDescriptor</span><span class="p">)</span>
 
-<div class="viewcode-block" id="MeasurementService.close_service"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/measurement/service/index.html#ni_measurementlink_service.MeasurementService.close_service">[docs]</a>    <span class="k">def</span> <span class="nf">close_service</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Close the Service after un-registering with discovery service and cleanups.&quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">grpc_service</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">channel_pool</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+<div class="viewcode-block" id="MeasurementService.close_service"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/measurement/service/index.html#ni_measurementlink_service.measurement.service.MeasurementService.close_service">[docs]</a>    <span class="k">def</span> <span class="nf">close_service</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Stop the gRPC measurement service.</span>
 
-<div class="viewcode-block" id="MeasurementService.__enter__"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/measurement/service/index.html#ni_measurementlink_service.MeasurementService.__enter__">[docs]</a>    <span class="k">def</span> <span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="n">_TMeasurementService</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_TMeasurementService</span><span class="p">:</span>
+<span class="sd">        This method stops the gRPC server, unregisters with the discovery service, and cleans up</span>
+<span class="sd">        the cached discovery client and gRPC channel pool.</span>
+
+<span class="sd">        After calling close_service(), you may call host_service() again.</span>
+
+<span class="sd">        Exiting the measurement service&#39;s runtime context automatically calls close_service().</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initialization_lock</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_grpc_service</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_grpc_service</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_channel_pool</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_channel_pool</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_grpc_service</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_channel_pool</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_discovery_client</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="MeasurementService.__enter__"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/measurement/service/index.html#ni_measurementlink_service.measurement.service.MeasurementService.__enter__">[docs]</a>    <span class="k">def</span> <span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="n">Self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Enter the runtime context related to the measurement service.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="MeasurementService.__exit__"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/measurement/service/index.html#ni_measurementlink_service.MeasurementService.__exit__">[docs]</a>    <span class="k">def</span> <span class="fm">__exit__</span><span class="p">(</span>
+<div class="viewcode-block" id="MeasurementService.__exit__"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/measurement/service/index.html#ni_measurementlink_service.measurement.service.MeasurementService.__exit__">[docs]</a>    <span class="k">def</span> <span class="fm">__exit__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">exc_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="ne">BaseException</span><span class="p">]],</span>
         <span class="n">exc_val</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="ne">BaseException</span><span class="p">],</span>
@@ -540,30 +653,23 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">close_service</span><span class="p">()</span>
         <span class="k">return</span> <span class="kc">False</span></div>
 
-<div class="viewcode-block" id="MeasurementService.get_channel"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/measurement/service/index.html#ni_measurementlink_service.MeasurementService.get_channel">[docs]</a>    <span class="k">def</span> <span class="nf">get_channel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">provided_interface</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">service_class</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">grpc</span><span class="o">.</span><span class="n">Channel</span><span class="p">:</span>
+<div class="viewcode-block" id="MeasurementService.get_channel"><a class="viewcode-back" href="../../../autoapi/ni_measurementlink_service/measurement/service/index.html#ni_measurementlink_service.measurement.service.MeasurementService.get_channel">[docs]</a>    <span class="k">def</span> <span class="nf">get_channel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">provided_interface</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">service_class</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">grpc</span><span class="o">.</span><span class="n">Channel</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return gRPC channel to specified service.</span>
 
-<span class="sd">        Args</span>
-<span class="sd">        ----</span>
+<span class="sd">        Args:</span>
 <span class="sd">            provided_interface (str): The gRPC Full Name of the service.</span>
 
 <span class="sd">            service_class (str): The service &quot;class&quot; that should be matched.</span>
 
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
+<span class="sd">        Returns:</span>
 <span class="sd">            grpc.Channel: A channel to the gRPC service.</span>
 
-<span class="sd">        Raises</span>
-<span class="sd">        ------</span>
+<span class="sd">        Raises:</span>
 <span class="sd">            Exception: If service_class is not specified and there is more than one matching service</span>
 <span class="sd">                registered.</span>
-
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">service_location</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grpc_service</span><span class="o">.</span><span class="n">discovery_client</span><span class="o">.</span><span class="n">resolve_service</span><span class="p">(</span>
-            <span class="n">provided_interface</span><span class="p">,</span> <span class="n">service_class</span>
-        <span class="p">)</span>
-
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">channel_pool</span><span class="o">.</span><span class="n">get_channel</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">service_location</span><span class="o">.</span><span class="n">insecure_address</span><span class="p">)</span></div></div>
+        <span class="n">service_location</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">discovery_client</span><span class="o">.</span><span class="n">resolve_service</span><span class="p">(</span><span class="n">provided_interface</span><span class="p">,</span> <span class="n">service_class</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">channel_pool</span><span class="o">.</span><span class="n">get_channel</span><span class="p">(</span><span class="n">service_location</span><span class="o">.</span><span class="n">insecure_address</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>

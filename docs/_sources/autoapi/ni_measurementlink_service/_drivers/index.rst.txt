@@ -1,0 +1,117 @@
+:orphan:
+
+:py:mod:`ni_measurementlink_service._drivers`
+=============================================
+
+.. py:module:: ni_measurementlink_service._drivers
+
+.. autoapi-nested-parse::
+
+   Shared code for interfacing with driver APIs.
+
+
+
+Package Contents
+----------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   ni_measurementlink_service._drivers.SessionInitializationBehavior
+
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   ni_measurementlink_service._drivers.closing_session_with_ts_code_module_support
+   ni_measurementlink_service._drivers.closing_session
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   ni_measurementlink_service._drivers.TSession
+
+
+.. py:class:: SessionInitializationBehavior
+
+
+   Bases: :py:obj:`enum.IntEnum`
+
+   Specifies whether to initialize a new session or attach to an existing session.
+
+   .. py:attribute:: AUTO
+      :value: 0
+
+      The NI gRPC Device Server will attach to an existing session with the
+      specified name if it exists, otherwise the server will initialize a new
+      session.
+
+      Note: When using the Session as a context manager and the context exits, the
+      behavior depends on what happened when the constructor was called. If it
+      resulted in a new session being initialized on the NI gRPC Device Server,
+      then it will automatically close the server session. If it instead attached
+      to an existing session, then it will detach from the server session and
+      leave it open.
+
+   .. py:attribute:: INITIALIZE_SERVER_SESSION
+      :value: 1
+
+      Initialize a new session with the specified name.
+
+      Note: When using the Session as a context manager and the context exits, it
+      will automatically close the server session.
+
+   .. py:attribute:: ATTACH_TO_SERVER_SESSION
+      :value: 2
+
+      Attach to an existing session with the specified name.
+
+      Note: When using the Session as a context manager and the context exits, it
+      will detach from the server session and leave it open.
+
+   .. py:attribute:: INITIALIZE_SESSION_THEN_DETACH
+      :value: 3
+
+      Initialize a new session.
+
+      When exiting the context manager, detach instead of closing.
+
+      Note: This initialization behavior is intended for TestStand code modules used in
+      ``Setup`` steps or ``ProcessSetup`` callback sequences.
+
+   .. py:attribute:: ATTACH_TO_SESSION_THEN_CLOSE
+      :value: 4
+
+      Attach to an existing session.
+
+      When exiting the context manager, automatically close the server session.
+
+      Note: This initialization behavior is intended for TestStand code modules used in
+      ``Cleanup`` steps or ``ProcessCleanup`` callback sequences.
+
+
+.. py:data:: TSession
+
+   
+
+.. py:function:: closing_session_with_ts_code_module_support(initialization_behavior, session)
+
+   Create a context manager that closes the session.
+
+   Emulates the behavior of INITIALIZE_SESSION_THEN_DETACH and ATTACH_TO_SESSION_THEN_CLOSE.
+
+
+.. py:function:: closing_session(session)
+
+   A context manager that yields the session and closes it.
+
+

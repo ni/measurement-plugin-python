@@ -44,7 +44,7 @@ def test___single_session_info___initialize_niscope_session___session_created(
     session = create_mock_niscope_session()
     session_new.side_effect = [session]
 
-    with reservation.initialize_niscope_session() as session_info:
+    with reservation.initialize_niscope_session(options={}) as session_info:
         assert session_info.session is session
 
     session_new.assert_called_once_with(
@@ -62,7 +62,7 @@ def test___multiple_session_infos___initialize_niscope_sessions___sessions_creat
     sessions = create_mock_niscope_sessions(3)
     session_new.side_effect = sessions
 
-    with reservation.initialize_niscope_sessions() as session_info:
+    with reservation.initialize_niscope_sessions(options={}) as session_info:
         assert session_info[0].session == sessions[0]
         assert session_info[1].session == sessions[1]
 

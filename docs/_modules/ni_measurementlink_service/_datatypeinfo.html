@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ni_measurementlink_service._datatypeinfo &mdash; ni_measurementlink_service 1.2 documentation</title>
+  <title>ni_measurementlink_service._datatypeinfo &mdash; ni_measurementlink_service 1.3 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -11,12 +11,11 @@
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/underscore.js"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=0264ad83"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -34,7 +33,7 @@
             ni_measurementlink_service
           </a>
               <div class="version">
-                1.2.0-dev1
+                1.3.0-dev0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -82,27 +81,23 @@
 
 
 <div class="viewcode-block" id="DataTypeInfo"><a class="viewcode-back" href="../../autoapi/ni_measurementlink_service/_datatypeinfo/index.html#ni_measurementlink_service._datatypeinfo.DataTypeInfo">[docs]</a><span class="k">class</span> <span class="nc">DataTypeInfo</span><span class="p">(</span><span class="n">NamedTuple</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class that represents the information for each of the DataType enum values.</span>
-
-<span class="sd">    Attributes</span>
-<span class="sd">    ----------</span>
-<span class="sd">        grpc_field_type: Field.Kind associated with the DataType</span>
-
-<span class="sd">        repeated: Whether the DataType is a repeated field</span>
-
-<span class="sd">        type_specialization: Specific type when value_type</span>
-<span class="sd">        can have more than one use</span>
-
-<span class="sd">        message_type (str): This is the gRPC full name of the message type.</span>
-<span class="sd">        Required when &#39;grpc_field_type&#39; is Kind.TypeMessage.</span>
-<span class="sd">        Ignored for any other &#39;type&#39;.</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class that represents the information for each of the :any:`DataType` enum values.&quot;&quot;&quot;</span>
 
     <span class="n">grpc_field_type</span><span class="p">:</span> <span class="n">type_pb2</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">Kind</span><span class="o">.</span><span class="n">ValueType</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;`Field.Kind` associated with the :any:`DataType`.&quot;&quot;&quot;</span>
+
     <span class="n">repeated</span><span class="p">:</span> <span class="nb">bool</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Whether the :any:`DataType` is a repeated field.&quot;&quot;&quot;</span>
+
     <span class="n">type_specialization</span><span class="p">:</span> <span class="n">TypeSpecialization</span> <span class="o">=</span> <span class="n">TypeSpecialization</span><span class="o">.</span><span class="n">NoType</span>
-    <span class="n">message_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span></div>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Specific type when :any:`grpc_field_type` can have more than one use.&quot;&quot;&quot;</span>
+
+    <span class="n">message_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The gRPC full name of the message type. </span>
+<span class="sd">    </span>
+<span class="sd">    Required when :any:`grpc_field_type` is `Kind.TypeMessage`.</span>
+<span class="sd">    Ignored for any other :any:`grpc_field_type` value.</span>
+<span class="sd">    &quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="get_type_info"><a class="viewcode-back" href="../../autoapi/ni_measurementlink_service/_datatypeinfo/index.html#ni_measurementlink_service._datatypeinfo.get_type_info">[docs]</a><span class="k">def</span> <span class="nf">get_type_info</span><span class="p">(</span><span class="n">data_type</span><span class="p">:</span> <span class="n">DataType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataTypeInfo</span><span class="p">:</span>

@@ -40,7 +40,11 @@ def test___single_session_info___initialize_niswitch_session___session_created(
     session = create_mock_niswitch_session()
     session_new.side_effect = [session]
 
-    with reservation.initialize_niswitch_session() as session_info:
+    with reservation.initialize_niswitch_session(
+        topology="Configured Topology",
+        simulate=False,
+        reset_device=False,
+    ) as session_info:
         assert session_info.session is session
 
     session_new.assert_called_once_with(
@@ -63,7 +67,11 @@ def test___multiple_session_infos___initialize_niswitch_sessions___sessions_crea
     sessions = create_mock_niswitch_sessions(3)
     session_new.side_effect = sessions
 
-    with reservation.initialize_niswitch_sessions() as session_info:
+    with reservation.initialize_niswitch_sessions(
+        topology="Configured Topology",
+        simulate=False,
+        reset_device=False,
+    ) as session_info:
         assert session_info[0].session == sessions[0]
         assert session_info[1].session == sessions[1]
 

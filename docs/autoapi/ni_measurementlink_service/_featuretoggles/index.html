@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ni_measurementlink_service._featuretoggles &mdash; ni_measurementlink_service 1.3 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=0264ad83"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            ni_measurementlink_service
+          </a>
+              <div class="version">
+                1.3.0-dev0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">ni_measurementlink_service</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active"><code class="xref py py-mod docutils literal notranslate"><span class="pre">ni_measurementlink_service._featuretoggles</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/autoapi/ni_measurementlink_service/_featuretoggles/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-ni_measurementlink_service._featuretoggles">
+<span id="ni-measurementlink-service-featuretoggles"></span><h1><a class="reference internal" href="#module-ni_measurementlink_service._featuretoggles" title="ni_measurementlink_service._featuretoggles"><code class="xref py py-mod docutils literal notranslate"><span class="pre">ni_measurementlink_service._featuretoggles</span></code></a><a class="headerlink" href="#module-ni_measurementlink_service._featuretoggles" title="Permalink to this heading"></a></h1>
+<p>MeasurementLink feature toggles.</p>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this heading"></a></h2>
+<section id="classes">
+<h3>Classes<a class="headerlink" href="#classes" title="Permalink to this heading"></a></h3>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ni_measurementlink_service._featuretoggles.CodeReadiness" title="ni_measurementlink_service._featuretoggles.CodeReadiness"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CodeReadiness</span></code></a></p></td>
+<td><p>Indicates whether code is ready to be supported.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ni_measurementlink_service._featuretoggles.FeatureToggle" title="ni_measurementlink_service._featuretoggles.FeatureToggle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FeatureToggle</span></code></a></p></td>
+<td><p>A run-time feature toggle.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="functions">
+<h3>Functions<a class="headerlink" href="#functions" title="Permalink to this heading"></a></h3>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ni_measurementlink_service._featuretoggles.get_code_readiness_level" title="ni_measurementlink_service._featuretoggles.get_code_readiness_level"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_code_readiness_level</span></code></a>()</p></td>
+<td><p>Get the current code readiness level.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ni_measurementlink_service._featuretoggles.requires_feature" title="ni_measurementlink_service._featuretoggles.requires_feature"><code class="xref py py-obj docutils literal notranslate"><span class="pre">requires_feature</span></code></a>(feature_toggle)</p></td>
+<td><p>Decorator specifying that the function requires the specified feature toggle.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="attributes">
+<h3>Attributes<a class="headerlink" href="#attributes" title="Permalink to this heading"></a></h3>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ni_measurementlink_service._featuretoggles.SESSION_MANAGEMENT_2024Q1" title="ni_measurementlink_service._featuretoggles.SESSION_MANAGEMENT_2024Q1"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SESSION_MANAGEMENT_2024Q1</span></code></a></p></td>
+<td><p>Simplified session management APIs for the 2024Q1 release.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py class">
+<dt class="sig sig-object py" id="ni_measurementlink_service._featuretoggles.CodeReadiness">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ni_measurementlink_service._featuretoggles.</span></span><span class="sig-name descname"><span class="pre">CodeReadiness</span></span><a class="reference internal" href="../../../_modules/ni_measurementlink_service/_featuretoggles.html#CodeReadiness"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service._featuretoggles.CodeReadiness" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">_OrderedEnum</span></code></p>
+<p>Indicates whether code is ready to be supported.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ni_measurementlink_service._featuretoggles.CodeReadiness.RELEASE">
+<span class="sig-name descname"><span class="pre">RELEASE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#ni_measurementlink_service._featuretoggles.CodeReadiness.RELEASE" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ni_measurementlink_service._featuretoggles.CodeReadiness.NEXT_RELEASE">
+<span class="sig-name descname"><span class="pre">NEXT_RELEASE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#ni_measurementlink_service._featuretoggles.CodeReadiness.NEXT_RELEASE" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ni_measurementlink_service._featuretoggles.CodeReadiness.INCOMPLETE">
+<span class="sig-name descname"><span class="pre">INCOMPLETE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#ni_measurementlink_service._featuretoggles.CodeReadiness.INCOMPLETE" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ni_measurementlink_service._featuretoggles.CodeReadiness.PROTOTYPE">
+<span class="sig-name descname"><span class="pre">PROTOTYPE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#ni_measurementlink_service._featuretoggles.CodeReadiness.PROTOTYPE" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ni_measurementlink_service._featuretoggles.get_code_readiness_level">
+<span class="sig-prename descclassname"><span class="pre">ni_measurementlink_service._featuretoggles.</span></span><span class="sig-name descname"><span class="pre">get_code_readiness_level</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/ni_measurementlink_service/_featuretoggles.html#get_code_readiness_level"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service._featuretoggles.get_code_readiness_level" title="Permalink to this definition"></a></dt>
+<dd><p>Get the current code readiness level.</p>
+<p>You can override this in tests by specifying the <code class="docutils literal notranslate"><span class="pre">use_code_readiness</span></code>
+mark.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#ni_measurementlink_service._featuretoggles.CodeReadiness" title="ni_measurementlink_service._featuretoggles.CodeReadiness">CodeReadiness</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="ni_measurementlink_service._featuretoggles.FeatureNotSupportedError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ni_measurementlink_service._featuretoggles.</span></span><span class="sig-name descname"><span class="pre">FeatureNotSupportedError</span></span><a class="reference internal" href="../../../_modules/ni_measurementlink_service/_featuretoggles.html#FeatureNotSupportedError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service._featuretoggles.FeatureNotSupportedError" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Exception</span></code></a></p>
+<p>The feature is not supported at the current code readiness level.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="ni_measurementlink_service._featuretoggles.FeatureToggle">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ni_measurementlink_service._featuretoggles.</span></span><span class="sig-name descname"><span class="pre">FeatureToggle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">readiness</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/ni_measurementlink_service/_featuretoggles.html#FeatureToggle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service._featuretoggles.FeatureToggle" title="Permalink to this definition"></a></dt>
+<dd><p>A run-time feature toggle.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – </p></li>
+<li><p><strong>readiness</strong> (<a class="reference internal" href="#ni_measurementlink_service._featuretoggles.CodeReadiness" title="ni_measurementlink_service._featuretoggles.CodeReadiness"><em>CodeReadiness</em></a>) – </p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="ni_measurementlink_service._featuretoggles.FeatureToggle.is_enabled">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_enabled</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></em><a class="headerlink" href="#ni_measurementlink_service._featuretoggles.FeatureToggle.is_enabled" title="Permalink to this definition"></a></dt>
+<dd><p>Indicates whether the feature is currently enabled.</p>
+<p>You can enable/disable features in tests by specifying the
+<code class="docutils literal notranslate"><span class="pre">enable_feature_toggle</span></code> or <code class="docutils literal notranslate"><span class="pre">disable_feature_toggle</span></code> marks.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ni_measurementlink_service._featuretoggles.FeatureToggle.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></em><a class="headerlink" href="#ni_measurementlink_service._featuretoggles.FeatureToggle.name" title="Permalink to this definition"></a></dt>
+<dd><p>The name of the feature.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ni_measurementlink_service._featuretoggles.FeatureToggle.readiness">
+<span class="sig-name descname"><span class="pre">readiness</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#ni_measurementlink_service._featuretoggles.CodeReadiness" title="ni_measurementlink_service._featuretoggles.CodeReadiness"><span class="pre">CodeReadiness</span></a></em><a class="headerlink" href="#ni_measurementlink_service._featuretoggles.FeatureToggle.readiness" title="Permalink to this definition"></a></dt>
+<dd><p>The code readiness at which this feature is enabled.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ni_measurementlink_service._featuretoggles.requires_feature">
+<span class="sig-prename descclassname"><span class="pre">ni_measurementlink_service._featuretoggles.</span></span><span class="sig-name descname"><span class="pre">requires_feature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feature_toggle</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/ni_measurementlink_service/_featuretoggles.html#requires_feature"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service._featuretoggles.requires_feature" title="Permalink to this definition"></a></dt>
+<dd><p>Decorator specifying that the function requires the specified feature toggle.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>feature_toggle</strong> (<a class="reference internal" href="#ni_measurementlink_service._featuretoggles.FeatureToggle" title="ni_measurementlink_service._featuretoggles.FeatureToggle"><em>FeatureToggle</em></a>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Callable[[Callable[_P, _T]], Callable[_P, _T]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="ni_measurementlink_service._featuretoggles.SESSION_MANAGEMENT_2024Q1">
+<span class="sig-prename descclassname"><span class="pre">ni_measurementlink_service._featuretoggles.</span></span><span class="sig-name descname"><span class="pre">SESSION_MANAGEMENT_2024Q1</span></span><a class="headerlink" href="#ni_measurementlink_service._featuretoggles.SESSION_MANAGEMENT_2024Q1" title="Permalink to this definition"></a></dt>
+<dd><p>Simplified session management APIs for the 2024Q1 release.</p>
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, National Instruments.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -29,43 +29,34 @@ Functions
 
 .. py:class:: DataTypeInfo
 
+
    Bases: :py:obj:`NamedTuple`
 
-   Class that represents the information for each of the DataType enum values.
-
-   Attributes
-   ----------
-       grpc_field_type: Field.Kind associated with the DataType
-
-       repeated: Whether the DataType is a repeated field
-
-       type_specialization: Specific type when value_type
-       can have more than one use
-
-       message_type (str): This is the gRPC full name of the message type.
-       Required when 'grpc_field_type' is Kind.TypeMessage.
-       Ignored for any other 'type'.
-
+   Class that represents the information for each of the :any:`DataType` enum values.
 
    .. py:attribute:: grpc_field_type
-      :annotation: :google.protobuf.type_pb2.Field.Kind.ValueType
+      :type: google.protobuf.type_pb2.Field.Kind.ValueType
 
-      
+      `Field.Kind` associated with the :any:`DataType`.
 
    .. py:attribute:: repeated
-      :annotation: :bool
+      :type: bool
 
-      
+      Whether the :any:`DataType` is a repeated field.
 
    .. py:attribute:: type_specialization
-      :annotation: :ni_measurementlink_service.measurement.info.TypeSpecialization
+      :type: ni_measurementlink_service.measurement.info.TypeSpecialization
 
-      
+      Specific type when :any:`grpc_field_type` can have more than one use.
 
    .. py:attribute:: message_type
-      :annotation: :str = 
+      :type: str
+      :value: ''
 
-      
+      The gRPC full name of the message type.
+
+      Required when :any:`grpc_field_type` is `Kind.TypeMessage`.
+      Ignored for any other :any:`grpc_field_type` value.
 
 
 .. py:function:: get_type_info(data_type)

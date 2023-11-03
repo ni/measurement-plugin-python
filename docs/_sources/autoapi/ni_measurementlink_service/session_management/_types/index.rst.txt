@@ -1,0 +1,342 @@
+:orphan:
+
+:py:mod:`ni_measurementlink_service.session_management._types`
+==============================================================
+
+.. py:module:: ni_measurementlink_service.session_management._types
+
+.. autoapi-nested-parse::
+
+   Session management data types.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   ni_measurementlink_service.session_management._types.PinMapContext
+   ni_measurementlink_service.session_management._types.ChannelMapping
+   ni_measurementlink_service.session_management._types.SessionInformation
+   ni_measurementlink_service.session_management._types.TypedSessionInformation
+   ni_measurementlink_service.session_management._types.Connection
+   ni_measurementlink_service.session_management._types.TypedConnection
+   ni_measurementlink_service.session_management._types.SessionInitializationBehavior
+
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   ni_measurementlink_service.session_management._types.TSession
+   ni_measurementlink_service.session_management._types.TSession_co
+
+
+.. py:data:: TSession
+
+   
+
+.. py:data:: TSession_co
+
+   
+
+.. py:class:: PinMapContext
+
+
+   Bases: :py:obj:`NamedTuple`
+
+   Container for the pin map and sites.
+
+   .. py:attribute:: pin_map_id
+      :type: str
+
+      The resource id of the pin map in the Pin Map service that should be used for the call.
+
+   .. py:attribute:: sites
+      :type: Optional[List[int]]
+
+      List of site numbers being used for the call.
+
+      If None or empty, use all sites in the pin map.
+
+
+.. py:class:: ChannelMapping
+
+
+   Bases: :py:obj:`NamedTuple`
+
+   Mapping of each channel to the pin and site it is connected to.
+
+   .. py:attribute:: pin_or_relay_name
+      :type: str
+
+      The pin or relay that is mapped to a channel.
+
+   .. py:attribute:: site
+      :type: int
+
+      The site on which the pin or relay is mapped to a channel.
+
+      For system pins/relays, the site number is :any:`SITE_SYSTEM_PINS` (-1) as they
+      do not belong to a specific site.
+
+   .. py:attribute:: channel
+      :type: str
+
+      The channel to which the pin or relay is mapped on this site.
+
+
+.. py:class:: SessionInformation
+
+
+   Bases: :py:obj:`NamedTuple`
+
+   Container for the session information.
+
+   .. py:attribute:: session_name
+      :type: str
+
+      Session name used by the session management service and NI gRPC Device Server.
+
+   .. py:attribute:: resource_name
+      :type: str
+
+      Resource name used to open this session in the driver.
+
+   .. py:attribute:: channel_list
+      :type: str
+
+      Channel list used for driver initialization and measurement methods.
+
+      This field is empty for any SessionInformation returned from
+      Client.reserve_all_registered_sessions.
+
+   .. py:attribute:: instrument_type_id
+      :type: str
+
+      Indicates the instrument type for this session.
+
+      Pin maps have built in instrument definitions using the instrument
+      type id constants such as `INSTRUMENT_TYPE_NI_DCPOWER`. For custom instruments, the
+      user defined instrument type id is defined in the pin map file.
+
+   .. py:attribute:: session_exists
+      :type: bool
+
+      Indicates whether the session is registered with the session management service.
+
+      When calling measurements from TestStand, the test sequence's ``ProcessSetup`` callback
+      creates instrument sessions and registers them with the session management service so that
+      they can be shared between multiple measurement steps. In this case, the `session_exists`
+      attribute is ``True``, indicating that the instrument sessions were already created and any
+      one-time setup (such as creating NI-DAQmx channels or loading NI-Digital files) has been
+      performed.
+
+      When calling measurements outside of TestStand, the `session_exists` attribute is ``False``,
+      indicating that the measurement is responsible for creating the instrument sessions and
+      performing any one-time setup.
+
+   .. py:attribute:: channel_mappings
+      :type: Iterable[ChannelMapping]
+
+      List of mappings from channels to pins and sites.
+
+      Each item contains a mapping for a channel in this instrument resource, in the order of the
+      channel_list. This field is empty for any SessionInformation returned from
+      Client.reserve_all_registered_sessions.
+
+   .. py:attribute:: session
+      :type: object
+
+      The driver session object.
+
+      This field is None until the appropriate create_session(s) method is called.
+
+
+.. py:class:: TypedSessionInformation
+
+
+   Bases: :py:obj:`Protocol`, :py:obj:`Generic`\ [\ :py:obj:`TSession_co`\ ]
+
+   Generic version of :any:`SessionInformation` that preserves the session type.
+
+   For more details, see the corresponding documentation for :any:`SessionInformation`.
+
+   .. py:property:: session_name
+      :type: str
+
+      Session name used by the session management service and NI gRPC Device Server.
+
+   .. py:property:: resource_name
+      :type: str
+
+      Resource name used to open this session in the driver.
+
+   .. py:property:: channel_list
+      :type: str
+
+      Channel list used for driver initialization and measurement methods.
+
+   .. py:property:: instrument_type_id
+      :type: str
+
+      Indicates the instrument type for this session.
+
+   .. py:property:: session_exists
+      :type: bool
+
+      Indicates whether the session is registered with the session management service.
+
+   .. py:property:: channel_mappings
+      :type: Iterable[ChannelMapping]
+
+      List of mappings from channels to pins and sites.
+
+   .. py:property:: session
+      :type: TSession_co
+
+      The driver session object.
+
+
+.. py:class:: Connection
+
+
+   Bases: :py:obj:`NamedTuple`
+
+   Describes the connection between an instance of a pin and an instrument channel.
+
+   This object maps a pin or relay on a specific site to the corresponding
+   instrument session and channel name.
+
+   .. py:property:: session
+      :type: object
+
+      The instrument session.
+
+   .. py:attribute:: pin_or_relay_name
+      :type: str
+
+      The pin or relay name.
+
+   .. py:attribute:: site
+      :type: int
+
+      The site number.
+
+      For system pins/relays, the site number is :any:`SITE_SYSTEM_PINS` (-1) as they
+      do not belong to a specific site.
+
+   .. py:attribute:: channel_name
+      :type: str
+
+      The instrument channel name.
+
+   .. py:attribute:: session_info
+      :type: SessionInformation
+
+      The instrument session information.
+
+
+.. py:class:: TypedConnection
+
+
+   Bases: :py:obj:`Protocol`, :py:obj:`Generic`\ [\ :py:obj:`TSession_co`\ ]
+
+   Generic version of :any:`Connection` that preserves the session type.
+
+   For more details, see the corresponding documentation for :any:`Connection`.
+
+   .. py:property:: pin_or_relay_name
+      :type: str
+
+      The pin or relay name.
+
+   .. py:property:: site
+      :type: int
+
+      The site number.
+
+      For system pins/relays, the site number is :any:`SITE_SYSTEM_PINS` (-1) as they
+      do not belong to a specific site.
+
+   .. py:property:: channel_name
+      :type: str
+
+      The instrument channel name.
+
+   .. py:property:: session_info
+      :type: TypedSessionInformation[TSession_co]
+
+      The instrument session information.
+
+   .. py:property:: session
+      :type: TSession_co
+
+      The instrument session.
+
+
+.. py:class:: SessionInitializationBehavior
+
+
+   Bases: :py:obj:`enum.IntEnum`
+
+   Specifies whether to initialize a new session or attach to an existing session.
+
+   .. py:attribute:: AUTO
+      :value: 0
+
+      The NI gRPC Device Server will attach to an existing session with the
+      specified name if it exists, otherwise the server will initialize a new
+      session.
+
+      Note: When using the Session as a context manager and the context exits, the
+      behavior depends on what happened when the constructor was called. If it
+      resulted in a new session being initialized on the NI gRPC Device Server,
+      then it will automatically close the server session. If it instead attached
+      to an existing session, then it will detach from the server session and
+      leave it open.
+
+   .. py:attribute:: INITIALIZE_SERVER_SESSION
+      :value: 1
+
+      Initialize a new session with the specified name.
+
+      Note: When using the Session as a context manager and the context exits, it
+      will automatically close the server session.
+
+   .. py:attribute:: ATTACH_TO_SERVER_SESSION
+      :value: 2
+
+      Attach to an existing session with the specified name.
+
+      Note: When using the Session as a context manager and the context exits, it
+      will detach from the server session and leave it open.
+
+   .. py:attribute:: INITIALIZE_SESSION_THEN_DETACH
+      :value: 3
+
+      Initialize a new session.
+
+      When exiting the context manager, detach instead of closing.
+
+      Note: This initialization behavior is intended for TestStand code modules used in
+      ``Setup`` steps or ``ProcessSetup`` callback sequences.
+
+   .. py:attribute:: ATTACH_TO_SESSION_THEN_CLOSE
+      :value: 4
+
+      Attach to an existing session.
+
+      When exiting the context manager, automatically close the server session.
+
+      Note: This initialization behavior is intended for TestStand code modules used in
+      ``Cleanup`` steps or ``ProcessCleanup`` callback sequences.
+
+

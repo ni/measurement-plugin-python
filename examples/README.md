@@ -51,6 +51,10 @@ The example measurements are *Poetry-based* projects. Follow the steps below to 
     ```
     - If you get a "command not found" error during `poetry install`, make sure that you added the Poetry path to the system path. Refer to [https://python-poetry.org/docs/#installing-with-the-official-installer/Add-poetry-to-your-path](https://python-poetry.org/docs/#installing-with-the-official-installer:~:text=Add%20Poetry%20to%20your%20PATH)
 
+### Creating Simulated Devices for Example Measurements
+
+- To enable simulation for all the modular instrument and VISA examples, copy `.env.simulation` to `.env` in the `examples` directory.
+
 ### Executing the Example Measurements
 
 1. Start the discovery service if not already started.

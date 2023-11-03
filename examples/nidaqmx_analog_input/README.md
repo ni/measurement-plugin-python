@@ -16,7 +16,8 @@ measurement with NI-DAQmx.
     registration and unregistration in the `Setup` and `Cleanup` sections of the main
     sequence. For **Test UUTs** and batch process model use cases, these steps should
     be moved to the `ProcessSetup` and `ProcessCleanup` callbacks.
-- Uses the NI gRPC Device Server to allow sharing instrument sessions with other measurement services when running measurements from TestStand.
+- Uses the NI gRPC Device Server to allow sharing instrument sessions with other measurement
+  services when running measurements from TestStand.
 
 > **Note**
 >

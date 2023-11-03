@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ni_measurementlink_service._tracelogging &mdash; ni_measurementlink_service 1.2 documentation</title>
+  <title>ni_measurementlink_service._tracelogging &mdash; ni_measurementlink_service 1.3 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
@@ -12,12 +12,11 @@
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=0264ad83"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -35,7 +34,7 @@
             ni_measurementlink_service
           </a>
               <div class="version">
-                1.2.0-dev1
+                1.3.0-dev0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -114,54 +113,129 @@
 <dt class="sig sig-object py" id="ni_measurementlink_service._tracelogging.is_enabled">
 <span class="sig-prename descclassname"><span class="pre">ni_measurementlink_service._tracelogging.</span></span><span class="sig-name descname"><span class="pre">is_enabled</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/ni_measurementlink_service/_tracelogging.html#is_enabled"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service._tracelogging.is_enabled" title="Permalink to this definition"></a></dt>
 <dd><p>Queries whether the event provider is enabled.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)">bool</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="ni_measurementlink_service._tracelogging.log_grpc_client_call_start">
 <span class="sig-prename descclassname"><span class="pre">ni_measurementlink_service._tracelogging.</span></span><span class="sig-name descname"><span class="pre">log_grpc_client_call_start</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">method_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/ni_measurementlink_service/_tracelogging.html#log_grpc_client_call_start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service._tracelogging.log_grpc_client_call_start" title="Permalink to this definition"></a></dt>
 <dd><p>Log when starting a gRPC client call.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>method_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Optional[<a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.12)">uuid.UUID</a>]</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="ni_measurementlink_service._tracelogging.log_grpc_client_call_stop">
 <span class="sig-prename descclassname"><span class="pre">ni_measurementlink_service._tracelogging.</span></span><span class="sig-name descname"><span class="pre">log_grpc_client_call_stop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">method_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activity_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/ni_measurementlink_service/_tracelogging.html#log_grpc_client_call_stop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service._tracelogging.log_grpc_client_call_stop" title="Permalink to this definition"></a></dt>
 <dd><p>Log when a gRPC client call has completed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>method_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – </p></li>
+<li><p><strong>activity_id</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.12)"><em>uuid.UUID</em></a><em>]</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="ni_measurementlink_service._tracelogging.log_grpc_client_call_streaming_request">
 <span class="sig-prename descclassname"><span class="pre">ni_measurementlink_service._tracelogging.</span></span><span class="sig-name descname"><span class="pre">log_grpc_client_call_streaming_request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">method_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/ni_measurementlink_service/_tracelogging.html#log_grpc_client_call_streaming_request"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service._tracelogging.log_grpc_client_call_streaming_request" title="Permalink to this definition"></a></dt>
 <dd><p>Log when a gRPC client call is sending a client-streaming request.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>method_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="ni_measurementlink_service._tracelogging.log_grpc_client_call_streaming_response">
 <span class="sig-prename descclassname"><span class="pre">ni_measurementlink_service._tracelogging.</span></span><span class="sig-name descname"><span class="pre">log_grpc_client_call_streaming_response</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">method_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/ni_measurementlink_service/_tracelogging.html#log_grpc_client_call_streaming_response"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service._tracelogging.log_grpc_client_call_streaming_response" title="Permalink to this definition"></a></dt>
 <dd><p>Log when a gRPC client call has received a server-streaming response.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>method_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="ni_measurementlink_service._tracelogging.log_grpc_server_call_start">
 <span class="sig-prename descclassname"><span class="pre">ni_measurementlink_service._tracelogging.</span></span><span class="sig-name descname"><span class="pre">log_grpc_server_call_start</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">method_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/ni_measurementlink_service/_tracelogging.html#log_grpc_server_call_start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service._tracelogging.log_grpc_server_call_start" title="Permalink to this definition"></a></dt>
 <dd><p>Log when starting a gRPC server call.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>method_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Optional[<a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.12)">uuid.UUID</a>]</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="ni_measurementlink_service._tracelogging.log_grpc_server_call_stop">
 <span class="sig-prename descclassname"><span class="pre">ni_measurementlink_service._tracelogging.</span></span><span class="sig-name descname"><span class="pre">log_grpc_server_call_stop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">method_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activity_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/ni_measurementlink_service/_tracelogging.html#log_grpc_server_call_stop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service._tracelogging.log_grpc_server_call_stop" title="Permalink to this definition"></a></dt>
 <dd><p>Log when a gRPC server call has completed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>method_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – </p></li>
+<li><p><strong>activity_id</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.12)"><em>uuid.UUID</em></a><em>]</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="ni_measurementlink_service._tracelogging.log_grpc_server_call_streaming_request">
 <span class="sig-prename descclassname"><span class="pre">ni_measurementlink_service._tracelogging.</span></span><span class="sig-name descname"><span class="pre">log_grpc_server_call_streaming_request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">method_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/ni_measurementlink_service/_tracelogging.html#log_grpc_server_call_streaming_request"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service._tracelogging.log_grpc_server_call_streaming_request" title="Permalink to this definition"></a></dt>
 <dd><p>Log when a gRPC server call is sending a server-streaming request.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>method_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="ni_measurementlink_service._tracelogging.log_grpc_server_call_streaming_response">
 <span class="sig-prename descclassname"><span class="pre">ni_measurementlink_service._tracelogging.</span></span><span class="sig-name descname"><span class="pre">log_grpc_server_call_streaming_response</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">method_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/ni_measurementlink_service/_tracelogging.html#log_grpc_server_call_streaming_response"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ni_measurementlink_service._tracelogging.log_grpc_server_call_streaming_response" title="Permalink to this definition"></a></dt>
 <dd><p>Log when a gRPC server call has received a server-streaming response.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>method_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>

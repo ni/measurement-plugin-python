@@ -10,8 +10,10 @@ This is a MeasurementLink example that generates a predictable stream of data.
     - how much data each response should return
     - whether responses should return data cumulatively or not
     - how long each response should take
-    - a name that can be used to disambiguate between multiple streams when monitoring
-- Can be used to simulate an error occuring after a particular number of successful responses
+    - a name that can be used to disambiguate between multiple streams when
+      monitoring
+- Can be used to simulate an error occuring after a particular number of
+  successful responses
 
 ### Required Driver Software
 
