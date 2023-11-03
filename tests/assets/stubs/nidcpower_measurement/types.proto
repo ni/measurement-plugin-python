@@ -1,10 +1,9 @@
 syntax = "proto3";
-package ni.measurementlink.measurement.tests.nidcpower;
+package ni.measurementlink.measurement.tests.nidcpower_measurement;
 
 message Configurations {
     repeated string pin_names = 1;
-    double current_limit = 2;
-    bool multi_session = 3;
+    bool multi_session = 2;
 }
 
 message Outputs {

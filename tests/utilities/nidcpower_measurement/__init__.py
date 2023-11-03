@@ -20,7 +20,6 @@ measurement_service = nims.MeasurementService(
 
 @measurement_service.register_measurement
 @measurement_service.configuration("pin_names", nims.DataType.PinArray1D, ["Pin1"])
-@measurement_service.configuration("current_limit", nims.DataType.Double, 0.01)
 @measurement_service.configuration("multi_session", nims.DataType.Boolean, False)
 @measurement_service.output("session_names", nims.DataType.StringArray1D)
 @measurement_service.output("resource_names", nims.DataType.StringArray1D)
@@ -30,7 +29,6 @@ measurement_service = nims.MeasurementService(
 @measurement_service.output("current_measurements", nims.DataType.DoubleArray1D)
 def measure(
     pin_names: Iterable[str],
-    current_limit: float,
     multi_session: bool,
 ) -> Tuple[
     Iterable[str], Iterable[str], Iterable[str], Iterable[str], Iterable[float], Iterable[float]
@@ -41,9 +39,7 @@ def measure(
             with reservation.initialize_nidcpower_sessions() as session_infos:
                 connections = reservation.get_nidcpower_connections(pin_names)
                 assert all([session_info.session is not None for session_info in session_infos])
-                voltage_measurements, current_measurements = _source_measure_dc_voltage(
-                    connections, current_limit
-                )
+                voltage_measurements, current_measurements = _source_measure_dc_voltage(connections)
 
                 return (
                     [session_info.session_name for session_info in session_infos],
@@ -59,7 +55,7 @@ def measure(
                 connection = reservation.get_nidcpower_connection(list(pin_names)[0])
                 assert session_info.session is not None
                 voltage_measurements, current_measurements = _source_measure_dc_voltage(
-                    [connection], current_limit
+                    [connection]
                 )
 
                 return (
@@ -74,13 +70,12 @@ def measure(
 
 def _source_measure_dc_voltage(
     connections: Sequence[nims.session_management.TypedConnection[nidcpower.Session]],
-    current_limit: float,
 ) -> Tuple[Iterable[float], Iterable[float]]:
     for connection in connections:
         channel = connection.session.channels[connection.channel_name]
         channel.source_mode = nidcpower.SourceMode.SINGLE_POINT
         channel.output_function = nidcpower.OutputFunction.DC_VOLTAGE
-        channel.current_limit = current_limit
+        channel.current_limit = 0.01
         channel.voltage_level_range = 10.0
         channel.current_limit_range = 0.01
         channel.source_delay = hightime.timedelta(seconds=0.1)

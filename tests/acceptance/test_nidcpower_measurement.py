@@ -13,7 +13,7 @@ from ni_measurementlink_service._internal.stubs.ni.measurementlink.pin_map_conte
     PinMapContext,
 )
 from ni_measurementlink_service.measurement.service import MeasurementService
-from tests.assets.stubs.nidcpower_measurement.nidcpower_measurement_pb2 import (
+from tests.assets.stubs.nidcpower_measurement.types_pb2 import (
     Configurations,
     Outputs,
 )
@@ -28,7 +28,7 @@ def test___single_session___measure___returns_measured_values(
     stub_v2: MeasurementServiceStub,
 ) -> None:
     pin_names = ["Pin1"]
-    configurations = Configurations(pin_names=pin_names, current_limit=0.01)
+    configurations = Configurations(pin_names=pin_names, multi_session=False)
 
     outputs = _measure(stub_v2, pin_map_context, configurations)
 
@@ -41,7 +41,7 @@ def test___single_session___measure___creates_single_session(
     stub_v2: MeasurementServiceStub,
 ) -> None:
     pin_names = ["Pin1"]
-    configurations = Configurations(pin_names=pin_names, current_limit=0.01)
+    configurations = Configurations(pin_names=pin_names, multi_session=False)
 
     outputs = _measure(stub_v2, pin_map_context, configurations)
 
@@ -55,7 +55,7 @@ def test___multiple_sessions___measure___creates_multiple_sessions(
     stub_v2: MeasurementServiceStub,
 ) -> None:
     pin_names = ["Pin1", "Pin2"]
-    configurations = Configurations(pin_names=pin_names, current_limit=0.01, multi_session=True)
+    configurations = Configurations(pin_names=pin_names, multi_session=True)
 
     outputs = _measure(stub_v2, pin_map_context, configurations)
 
