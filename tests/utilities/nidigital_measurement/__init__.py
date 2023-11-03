@@ -1,0 +1,114 @@
+"""NI-Digital MeasurementLink test service."""
+import pathlib
+from typing import Iterable, Sequence, Tuple, Union
+
+import nidigital
+
+import ni_measurementlink_service as nims
+
+service_directory = pathlib.Path(__file__).resolve().parent
+measurement_service = nims.MeasurementService(
+    service_config_path=service_directory / "NIDigitalMeasurement.serviceconfig",
+    version="0.1.0.0",
+    ui_file_paths=[
+        service_directory,
+    ],
+)
+
+
+@measurement_service.register_measurement
+@measurement_service.configuration("pin_names", nims.DataType.StringArray1D, ["SPI_PINS"])
+@measurement_service.configuration("multi_session", nims.DataType.Boolean, False)
+@measurement_service.output("session_names", nims.DataType.StringArray1D)
+@measurement_service.output("resource_names", nims.DataType.StringArray1D)
+@measurement_service.output("channel_lists", nims.DataType.StringArray1D)
+@measurement_service.output("connected_channels", nims.DataType.StringArray1D)
+@measurement_service.output("passing_sites", nims.DataType.Int32Array1D)
+@measurement_service.output("failing_sites", nims.DataType.Int32Array1D)
+def measure(
+    pin_names: Iterable[str],
+    multi_session: bool,
+) -> Tuple[
+    Iterable[str], Iterable[str], Iterable[str], Iterable[str], Iterable[str], Iterable[str]
+]:
+    """NI-Digital MeasurementLink test service."""
+    if multi_session:
+        with measurement_service.context.reserve_sessions(pin_names) as reservation:
+            with reservation.initialize_nidigital_sessions() as session_infos:
+                connections = reservation.get_nidigital_connections(pin_names)
+                assert all([session_info is not None for session_info in session_infos])
+                passing_sites, failing_sites = _spi(session_infos)
+
+                return (
+                    [session_info.session_name for session_info in session_infos],
+                    [session_info.resource_name for session_info in session_infos],
+                    [session_info.channel_list for session_info in session_infos],
+                    [connection.channel_name for connection in connections],
+                    passing_sites,
+                    failing_sites,
+                )
+    else:
+        with measurement_service.context.reserve_session(pin_names) as reservation:
+            with reservation.initialize_nidigital_session() as session_info:
+                connection = reservation.get_nidigital_connection(list(pin_names)[0])
+                assert session_info is not None
+                passing_sites, failing_sites = _spi([session_info])
+
+                return (
+                    [session_info.session_name],
+                    [session_info.resource_name],
+                    [session_info.channel_list],
+                    [connection.channel_name],
+                    passing_sites,
+                    failing_sites,
+                )
+
+
+def _spi(
+    session_infos: Sequence[nims.session_management.TypedSessionInformation[nidigital.Session]],
+) -> Tuple:
+    test_assets_directory = (
+        service_directory.parent.parent / "assets" / "acceptance" / "session_management"
+    )
+    specifications_file_path = "Specifications.specs"
+    levels_file_path = "PinLevels.digilevels"
+    timing_file_path = "Timing.digitiming"
+    pattern_file_path = "Pattern.digipat"
+    pin_map_context = measurement_service.context.pin_map_context
+    passing_sites_list, failing_sites_list = [], []
+    for session_info in session_infos:
+        session = session_info.session
+        selected_sites_string = ",".join(f"site{i}" for i in pin_map_context.sites or [])
+        selected_sites = session.sites[selected_sites_string]
+        session.load_pin_map(pin_map_context.pin_map_id)
+        session.load_specifications_levels_and_timing(
+            str(_resolve_relative_path(test_assets_directory, specifications_file_path)),
+            str(_resolve_relative_path(test_assets_directory, levels_file_path)),
+            str(_resolve_relative_path(test_assets_directory, timing_file_path)),
+        )
+        session.load_pattern(
+            str(_resolve_relative_path(service_directory, pattern_file_path)),
+        )
+
+        levels_file_name = pathlib.Path(levels_file_path).stem
+        timing_file_name = pathlib.Path(timing_file_path).stem
+        selected_sites.apply_levels_and_timing(levels_file_name, timing_file_name)
+        selected_sites.burst_pattern(start_label="SPI_Pattern")
+        site_pass_fail = selected_sites.get_site_pass_fail()
+        passing_sites = [site for site, pass_fail in site_pass_fail.items() if pass_fail]
+        failing_sites = [site for site, pass_fail in site_pass_fail.items() if not pass_fail]
+        passing_sites_list.append(passing_sites)
+        failing_sites_list.append(failing_sites)
+        session.selected_function = nidigital.SelectedFunction.DISCONNECT
+
+    return (passing_sites_list, failing_sites_list)
+
+
+def _resolve_relative_path(
+    directory_path: pathlib.Path, file_path: Union[str, pathlib.Path]
+) -> pathlib.Path:
+    file_path = pathlib.Path(file_path)
+    if file_path.is_absolute():
+        return file_path
+    else:
+        return (directory_path / file_path).resolve()
