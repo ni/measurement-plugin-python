@@ -37,7 +37,7 @@ def measure(
             with reservation.initialize_nidigital_sessions() as session_infos:
                 connections = reservation.get_nidigital_connections(pin_names)
                 assert all([session_info is not None for session_info in session_infos])
-                passing_sites, failing_sites = _spi(session_infos)
+                passing_sites, failing_sites = _burst_spi_pattern(session_infos)
 
                 return (
                     [session_info.session_name for session_info in session_infos],
@@ -52,7 +52,7 @@ def measure(
             with reservation.initialize_nidigital_session() as session_info:
                 connection = reservation.get_nidigital_connection(list(pin_names)[0])
                 assert session_info is not None
-                passing_sites, failing_sites = _spi([session_info])
+                passing_sites, failing_sites = _burst_spi_pattern([session_info])
 
                 return (
                     [session_info.session_name],
@@ -64,7 +64,7 @@ def measure(
                 )
 
 
-def _spi(
+def _burst_spi_pattern(
     session_infos: Sequence[nims.session_management.TypedSessionInformation[nidigital.Session]],
 ) -> Tuple:
     test_assets_directory = (
