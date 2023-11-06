@@ -10,14 +10,7 @@
 		<DUTPin name="MOSI" />
 		<DUTPin name="MISO" />
 	</Pins>
-	<PinGroups>
-		<PinGroup name="SPI_PINS">
-			<PinReference pin="SCLK" />
-			<PinReference pin="CS" />
-			<PinReference pin="MOSI" />
-			<PinReference pin="MISO" />
-		</PinGroup>
-	</PinGroups>
+	<PinGroups></PinGroups>
 	<Sites>
 		<Site siteNumber="0" />
 		<Site siteNumber="1" />

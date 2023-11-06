@@ -2,7 +2,7 @@ syntax = "proto3";
 package ni.measurementlink.measurement.tests.nidigital_measurement;
 
 message Configurations {
-    repeated string relay_names = 1;
+    repeated string pin_names = 1;
     bool multi_session = 2;
 }
 

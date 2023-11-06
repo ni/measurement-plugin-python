@@ -17,7 +17,7 @@ measurement_service = nims.MeasurementService(
 
 
 @measurement_service.register_measurement
-@measurement_service.configuration("pin_names", nims.DataType.StringArray1D, ["SPI_PINS"])
+@measurement_service.configuration("pin_names", nims.DataType.StringArray1D, ["CS"])
 @measurement_service.configuration("multi_session", nims.DataType.Boolean, False)
 @measurement_service.output("session_names", nims.DataType.StringArray1D)
 @measurement_service.output("resource_names", nims.DataType.StringArray1D)
@@ -44,8 +44,8 @@ def measure(
                     [session_info.resource_name for session_info in session_infos],
                     [session_info.channel_list for session_info in session_infos],
                     [connection.channel_name for connection in connections],
-                    passing_sites,
-                    failing_sites,
+                    list(passing_sites),
+                    list(failing_sites),
                 )
     else:
         with measurement_service.context.reserve_session(pin_names) as reservation:
@@ -87,7 +87,7 @@ def _spi(
             str(_resolve_relative_path(test_assets_directory, timing_file_path)),
         )
         session.load_pattern(
-            str(_resolve_relative_path(service_directory, pattern_file_path)),
+            str(_resolve_relative_path(test_assets_directory, pattern_file_path)),
         )
 
         levels_file_name = pathlib.Path(levels_file_path).stem
@@ -97,8 +97,8 @@ def _spi(
         site_pass_fail = selected_sites.get_site_pass_fail()
         passing_sites = [site for site, pass_fail in site_pass_fail.items() if pass_fail]
         failing_sites = [site for site, pass_fail in site_pass_fail.items() if not pass_fail]
-        passing_sites_list.append(passing_sites)
-        failing_sites_list.append(failing_sites)
+        passing_sites_list.extend(passing_sites)
+        failing_sites_list.extend(failing_sites)
         session.selected_function = nidigital.SelectedFunction.DISCONNECT
 
     return (passing_sites_list, failing_sites_list)

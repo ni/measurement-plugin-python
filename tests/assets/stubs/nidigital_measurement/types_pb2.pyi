@@ -20,18 +20,18 @@ DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
 class Configurations(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
-    RELAY_NAMES_FIELD_NUMBER: builtins.int
+    PIN_NAMES_FIELD_NUMBER: builtins.int
     MULTI_SESSION_FIELD_NUMBER: builtins.int
     @property
-    def relay_names(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]: ...
+    def pin_names(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]: ...
     multi_session: builtins.bool
     def __init__(
         self,
         *,
-        relay_names: collections.abc.Iterable[builtins.str] | None = ...,
+        pin_names: collections.abc.Iterable[builtins.str] | None = ...,
         multi_session: builtins.bool = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing_extensions.Literal["multi_session", b"multi_session", "relay_names", b"relay_names"]) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["multi_session", b"multi_session", "pin_names", b"pin_names"]) -> None: ...
 
 global___Configurations = Configurations
 
