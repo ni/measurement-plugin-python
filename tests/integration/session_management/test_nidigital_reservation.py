@@ -68,7 +68,7 @@ def test___session_created___get_nidigital_connection___returns_connection(
         )
 
 
-def test___session_created___get_nidigital_connections_returns_connections(
+def test___session_created___get_nidigital_connections___returns_connections(
     pin_map_id: str,
     session_management_client: SessionManagementClient,
 ) -> None:
