@@ -1,7 +1,6 @@
 """NI-DMM MeasurementLink test service."""
 import math
 import pathlib
-from enum import Enum
 from typing import Iterable, Sequence, Tuple
 
 import nidmm
