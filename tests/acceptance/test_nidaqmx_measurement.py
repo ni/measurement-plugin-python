@@ -31,6 +31,7 @@ def test___single_session___measure___returns_measured_values(
     configurations = Configurations(pin_names=pin_names, multi_session=False)
 
     outputs = _measure(stub_v2, pin_map_context, configurations)
+
     assert outputs.voltage_values == [-0.14969328897976622, 0.019074068422498244]
 
 
@@ -42,6 +43,7 @@ def test___single_session___measure___creates_single_session(
     configurations = Configurations(pin_names=pin_names, multi_session=False)
 
     outputs = _measure(stub_v2, pin_map_context, configurations)
+
     assert _get_output(outputs) == [_MeasurementOutput("Dev1", "Dev1", "Dev1/ai0", "Dev1/ai0")]
 
 
@@ -53,6 +55,7 @@ def test___multiple_sessions___measure___creates_multiple_sessions(
     configurations = Configurations(pin_names=pin_names, multi_session=True)
 
     outputs = _measure(stub_v2, pin_map_context, configurations)
+
     assert _get_output(outputs) == [
         _MeasurementOutput("Dev1", "Dev1", "Dev1/ai0", "Dev1/ai0"),
         _MeasurementOutput("Dev2", "Dev2", "Dev2/ai0", "Dev2/ai0"),

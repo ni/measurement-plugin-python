@@ -19,27 +19,6 @@ measurement_service = nims.MeasurementService(
 )
 
 
-class Function(Enum):
-    """Wrapper enum that contains a zero value."""
-
-    NONE = 0
-    DC_VOLTS = nidmm.Function.DC_VOLTS.value
-    AC_VOLTS = nidmm.Function.AC_VOLTS.value
-    DC_CURRENT = nidmm.Function.DC_CURRENT.value
-    AC_CURRENT = nidmm.Function.AC_CURRENT.value
-    TWO_WIRE_RES = nidmm.Function.TWO_WIRE_RES.value
-    FOUR_WIRE_RES = nidmm.Function.FOUR_WIRE_RES.value
-    FREQ = nidmm.Function.FREQ.value
-    PERIOD = nidmm.Function.PERIOD.value
-    TEMPERATURE = nidmm.Function.TEMPERATURE.value
-    AC_VOLTS_DC_COUPLED = nidmm.Function.AC_VOLTS_DC_COUPLED.value
-    DIODE = nidmm.Function.DIODE.value
-    WAVEFORM_VOLTAGE = nidmm.Function.WAVEFORM_VOLTAGE.value
-    WAVEFORM_CURRENT = nidmm.Function.WAVEFORM_CURRENT.value
-    CAPACITANCE = nidmm.Function.CAPACITANCE.value
-    INDUCTANCE = nidmm.Function.INDUCTANCE.value
-
-
 @measurement_service.register_measurement
 @measurement_service.configuration("pin_names", nims.DataType.PinArray1D, ["Pin1"])
 @measurement_service.configuration("multi_session", nims.DataType.Boolean, False)
@@ -92,7 +71,7 @@ def measure(
 def _get_dmm_readings(
     session_infos: Sequence[nims.session_management.TypedSessionInformation[nidmm.Session]],
 ) -> Tuple[Iterable[bool], Iterable[float]]:
-    nidmm_function = nidmm.Function(Function.DC_VOLTS.value)
+    nidmm_function = nidmm.Function(nidmm.Function.DC_VOLTS.value)
     range = 10.0
     resolution_digits = 5.5
 

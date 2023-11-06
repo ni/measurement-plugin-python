@@ -13,7 +13,7 @@ from tests.utilities.pin_map_client import PinMapClient
 _SITE = 0
 
 
-def test___single_session_reserved___initialize_nidaqmx_session___creates_single_session(
+def test___single_session_reserved___create_nidaqmx_task___creates_task(
     pin_map_context: PinMapContext,
     session_management_client: SessionManagementClient,
 ) -> None:
@@ -29,7 +29,7 @@ def test___single_session_reserved___initialize_nidaqmx_session___creates_single
         assert session_info.session_name == "Dev1"
 
 
-def test___multiple_sessions_reserved___initialize_nidaqmx_sessions___creates_multiple_sessions(
+def test___multiple_sessions_reserved___create_nidaqmx_tasks___creates_tasks(
     pin_map_context: PinMapContext,
     session_management_client: SessionManagementClient,
 ) -> None:
@@ -51,7 +51,7 @@ def test___multiple_sessions_reserved___initialize_nidaqmx_sessions___creates_mu
         )
 
 
-def test___session_created___get_nidaqmx_connection___returns_connection(
+def test___task_created___get_nidaqmx_connection___returns_connection(
     pin_map_context: PinMapContext,
     session_management_client: SessionManagementClient,
 ) -> None:
@@ -69,7 +69,7 @@ def test___session_created___get_nidaqmx_connection___returns_connection(
         )
 
 
-def test___sessions_created___get_nidaqmx_connections___returns_connections(
+def test___tasks_created___get_nidaqmx_connections___returns_connections(
     pin_map_context: PinMapContext,
     session_management_client: SessionManagementClient,
 ) -> None:
