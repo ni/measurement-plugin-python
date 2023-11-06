@@ -622,7 +622,7 @@ class BaseReservation(abc.ABC):
     def create_nidaqmx_tasks(
         self,
         initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
-    ) -> ContextManager[Sequence[TypedSessionInformation[nidcpower.Session]]]:
+    ) -> ContextManager[Sequence[TypedSessionInformation[nidaqmx.Task]]]:
         """Create multiple NI-DAQmx tasks.
 
         Args:

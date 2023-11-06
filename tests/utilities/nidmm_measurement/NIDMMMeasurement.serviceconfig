@@ -1,0 +1,19 @@
+{
+  "services": [
+    {
+      "displayName": "NI-DMM Measurement (Py)",
+      "serviceClass": "ni.tests.NIDMMMeasurement_Python",
+      "descriptionUrl": "",
+      "providedInterfaces": [
+        "ni.measurementlink.measurement.v1.MeasurementService",
+        "ni.measurementlink.measurement.v2.MeasurementService"
+      ],
+      "path": "start.bat",
+      "annotations": {
+        "ni/service.description": "NI-DMM MeasurementLink test service.",
+        "ni/service.collection": "NI.Tests",
+        "ni/service.tags": []
+      }
+    }
+  ]
+}
