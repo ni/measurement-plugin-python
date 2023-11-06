@@ -44,7 +44,7 @@ def test___single_session___measure___creates_single_session(
 
     outputs = _measure(stub_v2, pin_map_context, configurations)
 
-    assert _get_output(outputs) == [_MeasurementOutput("Dev1", "Dev1", "Dev1/ai0", "Dev1/ai0")]
+    assert _get_output(outputs) == [_MeasurementOutput("Dev1a", "Dev1a", "Dev1/ai0", "Dev1/ai0")]
 
 
 def test___multiple_sessions___measure___creates_multiple_sessions(
@@ -57,8 +57,8 @@ def test___multiple_sessions___measure___creates_multiple_sessions(
     outputs = _measure(stub_v2, pin_map_context, configurations)
 
     assert _get_output(outputs) == [
-        _MeasurementOutput("Dev1", "Dev1", "Dev1/ai0", "Dev1/ai0"),
-        _MeasurementOutput("Dev2", "Dev2", "Dev2/ai0", "Dev2/ai0"),
+        _MeasurementOutput("Dev1a", "Dev1a", "Dev1/ai0", "Dev1/ai0"),
+        _MeasurementOutput("Dev1b", "Dev1b", "Dev1/ai2", "Dev1/ai2"),
     ]
 
 
@@ -85,7 +85,7 @@ def measurement_service() -> Generator[MeasurementService, None, None]:
 
 @pytest.fixture
 def pin_map_context(pin_map_client: PinMapClient, pin_map_directory: pathlib.Path) -> PinMapContext:
-    pin_map_name = "2Daqmx2Pin1Site.pinmap"
+    pin_map_name = "1Daqmx2ChannelGroup2Pin1Site.pinmap"
     pin_map_id = pin_map_client.update_pin_map(pin_map_directory / pin_map_name)
 
     return PinMapContext(pin_map_id=pin_map_id, sites=[_SITE])
