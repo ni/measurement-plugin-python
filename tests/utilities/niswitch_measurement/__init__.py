@@ -60,7 +60,9 @@ def _control_relays(
     session_infos: Sequence[nims.session_management.TypedSessionInformation[niswitch.Session]],
 ) -> None:
     for session_info in session_infos:
-        session_info.session.relay_control(session_info.channel_list, niswitch.enums.RelayAction.CLOSE)
+        session_info.session.relay_control(
+            session_info.channel_list, niswitch.enums.RelayAction.CLOSE
+        )
 
     for session_info in session_infos:
         session_info.session.wait_for_debounce()
