@@ -62,7 +62,7 @@ def measure(
 
 
 def _read_voltage_values(
-    session_infos: Sequence[nims.session_management.TypedConnection[nidaqmx.Task]],
+    session_infos: Sequence[nims.session_management.TypedSessionInformation[nidaqmx.Task]],
 ) -> Iterable[float]:
     sample_rate = 1000.0
     number_of_samples = 2

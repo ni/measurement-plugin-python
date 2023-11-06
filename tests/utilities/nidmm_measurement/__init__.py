@@ -90,7 +90,7 @@ def measure(
 
 
 def _get_dmm_readings(
-    session_infos: Sequence[nims.session_management.TypedConnection[nidmm.Session]],
+    session_infos: Sequence[nims.session_management.TypedSessionInformation[nidmm.Session]],
 ) -> Tuple[Iterable[bool], Iterable[float]]:
     nidmm_function = nidmm.Function(Function.DC_VOLTS.value)
     range = 10.0
