@@ -4,8 +4,9 @@ import pathlib
 from enum import Enum
 from typing import Iterable, Sequence, Tuple
 
-import ni_measurementlink_service as nims
 import nidmm
+
+import ni_measurementlink_service as nims
 
 
 service_directory = pathlib.Path(__file__).resolve().parent

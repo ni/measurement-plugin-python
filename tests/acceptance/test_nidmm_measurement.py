@@ -2,6 +2,7 @@ import pathlib
 from typing import Generator, Iterable, NamedTuple
 
 import pytest
+
 from ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v2.measurement_service_pb2 import (
     MeasureRequest,
 )
@@ -12,7 +13,6 @@ from ni_measurementlink_service._internal.stubs.ni.measurementlink.pin_map_conte
     PinMapContext,
 )
 from ni_measurementlink_service.measurement.service import MeasurementService
-
 from tests.assets.stubs.nidmm_measurement.types_pb2 import (
     Configurations,
     Outputs,

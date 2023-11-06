@@ -2,8 +2,9 @@
 import pathlib
 from typing import Iterable, Sequence, Tuple
 
-import ni_measurementlink_service as nims
 import nidaqmx
+
+import ni_measurementlink_service as nims
 
 
 service_directory = pathlib.Path(__file__).resolve().parent
