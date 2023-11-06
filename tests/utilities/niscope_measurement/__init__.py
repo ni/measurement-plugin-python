@@ -34,9 +34,11 @@ def measure(
             with reservation.initialize_niscope_sessions() as session_infos:
                 assert all([session_info.session is not None for session_info in session_infos])
                 connections = reservation.get_niscope_connections(pin_names)
-                channel_order = ",".join(connection.channel_name for connection in connections)
-                for session_info in session_infos:
-                    _ = _acquire_waveform(session_info, channel_order, connections[0].channel_name)
+                for session_info, pin_name in zip(session_infos, pin_names):
+                    connection = reservation.get_niscope_connection(pin_name)
+                    _ = _acquire_waveform(
+                        session_info, connection.channel_name, connections[0].channel_name
+                    )
 
                 return (
                     [session_info.session_name for session_info in session_infos],
@@ -78,7 +80,7 @@ def _acquire_waveform(
 
     session_info.session.configure_horizontal_timing(
         10e6,
-        40000,
+        5,
         ref_position=50.0,
         num_records=1,
         enforce_realtime=True,
