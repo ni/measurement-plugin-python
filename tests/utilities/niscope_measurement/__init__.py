@@ -24,8 +24,7 @@ measurement_service = nims.MeasurementService(
 @measurement_service.output("resource_names", nims.DataType.StringArray1D)
 @measurement_service.output("channel_lists", nims.DataType.StringArray1D)
 @measurement_service.output("connected_channels", nims.DataType.StringArray1D)
-@measurement_service.output("connected_channels", nims.DataType.StringArray1D)
-@measurement_service.output("waveform0", nims.DataType.DoubleArray1D)
+@measurement_service.output("waveform", nims.DataType.DoubleArray1D)
 def measure(
     pin_names: Iterable[str], multi_session: bool
 ) -> Tuple[Iterable[str], Iterable[str], Iterable[str], Iterable[str], Iterable[float]]:
