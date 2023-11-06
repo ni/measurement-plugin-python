@@ -50,7 +50,7 @@ def test___single_session___measure___creates_single_session(
     ]
 
 
-def test___multiple_session___measure___creates_multiple_sessions(
+def test___multiple_sessions___measure___creates_multiple_sessions(
     pin_map_id: str,
     stub_v2: MeasurementServiceStub,
 ) -> None:
