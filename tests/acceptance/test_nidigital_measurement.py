@@ -52,7 +52,7 @@ def test___single_session___measure___creates_single_session(
 
 def test___multiple_session___measure___creates_multiple_sessions(
     pin_map_id: str,
-    stub_v2: MeasurementServiceStub, 
+    stub_v2: MeasurementServiceStub,
 ) -> None:
     pin_map_context = PinMapContext(pin_map_id=pin_map_id, sites=[0, 1])
     configurations = Configurations(pin_names=["CS"], multi_session=True)

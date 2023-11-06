@@ -3,7 +3,6 @@ import pathlib
 from typing import Iterable, Sequence, Tuple
 
 import niswitch
-from niswitch.enums import RelayAction
 
 import ni_measurementlink_service as nims
 
@@ -61,7 +60,7 @@ def _control_relays(
     session_infos: Sequence[nims.session_management.TypedSessionInformation[niswitch.Session]],
 ) -> None:
     for session_info in session_infos:
-        session_info.session.relay_control(session_info.channel_list, RelayAction.CLOSE)
+        session_info.session.relay_control(session_info.channel_list, niswitch.enums.RelayAction.CLOSE)
 
     for session_info in session_infos:
         session_info.session.wait_for_debounce()
