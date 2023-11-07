@@ -5,6 +5,7 @@ from typing import Iterable, Sequence, Tuple
 import niswitch
 
 import ni_measurementlink_service as nims
+from ni_measurementlink_service.session_management import TypedSessionInformation
 
 service_directory = pathlib.Path(__file__).resolve().parent
 measurement_service = nims.MeasurementService(
@@ -57,7 +58,7 @@ def measure(
 
 
 def _control_relays(
-    session_infos: Sequence[nims.session_management.TypedSessionInformation[niswitch.Session]],
+    session_infos: Sequence[TypedSessionInformation[niswitch.Session]],
 ) -> None:
     for session_info in session_infos:
         session_info.session.relay_control(
