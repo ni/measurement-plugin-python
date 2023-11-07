@@ -1,11 +1,12 @@
 """NI-DMM MeasurementLink test service."""
 import math
 import pathlib
-from typing import Iterable, Sequence, Tuple
+from typing import Sequence, Tuple
 
 import nidmm
 
 import ni_measurementlink_service as nims
+from ni_measurementlink_service.session_management import TypedSessionInformation
 
 
 service_directory = pathlib.Path(__file__).resolve().parent
@@ -28,10 +29,10 @@ measurement_service = nims.MeasurementService(
 @measurement_service.output("signals_out_of_range", nims.DataType.BooleanArray1D)
 @measurement_service.output("absolute_resolutions", nims.DataType.DoubleArray1D)
 def measure(
-    pin_names: Iterable[str],
+    pin_names: list[str],
     multi_session: bool,
 ) -> Tuple[
-    Iterable[str], Iterable[str], Iterable[str], Iterable[str], Iterable[bool], Iterable[float]
+    list[str], list[str], list[str], list[str], list[bool], list[float]
 ]:
     """NI-DMM MeasurementLink test service."""
     if multi_session:
@@ -62,22 +63,24 @@ def measure(
                     [session_info.resource_name],
                     [session_info.channel_list],
                     [connection.channel_name],
-                    [list(signals_out_of_range)[0]],
-                    [list(absolute_resolutions)[0]],
+                    [signals_out_of_range[0]],
+                    [absolute_resolutions[0]],
                 )
 
 
 def _get_dmm_readings(
-    session_infos: Sequence[nims.session_management.TypedSessionInformation[nidmm.Session]],
-) -> Tuple[Iterable[bool], Iterable[float]]:
+    session_infos: Sequence[TypedSessionInformation[nidmm.Session]],
+) -> Tuple[list[bool], list[float]]:
     nidmm_function = nidmm.Function(nidmm.Function.DC_VOLTS.value)
     range = 10.0
     resolution_digits = 5.5
 
     signals_out_of_range, absolute_resolutions = [], []
     for session_info in session_infos:
+        session_info.session.configure_measurement_digits(nidmm_function, range, resolution_digits)
+
+    for session_info in session_infos:
         session = session_info.session
-        session.configure_measurement_digits(nidmm_function, range, resolution_digits)
         measured_value = session.read()
         signal_out_of_range = math.isnan(measured_value) or math.isinf(measured_value)
         absolute_resolution = session.resolution_absolute

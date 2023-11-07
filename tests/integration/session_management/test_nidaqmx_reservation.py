@@ -26,7 +26,7 @@ def test___single_session_reserved___create_nidaqmx_task___creates_task(
         session_info = stack.enter_context(reservation.create_nidaqmx_task())
 
         assert session_info.session is not None
-        assert session_info.session_name == "Dev1a"
+        assert session_info.session_name == "Dev1"
 
 
 def test___multiple_sessions_reserved___create_nidaqmx_tasks___creates_tasks(
@@ -34,7 +34,7 @@ def test___multiple_sessions_reserved___create_nidaqmx_tasks___creates_tasks(
     session_management_client: SessionManagementClient,
 ) -> None:
     pin_names = ["Pin1", "Pin2"]
-    nidaqmx_resource = ["Dev1a", "Dev1b"]
+    nidaqmx_resource = ["Dev1", "Dev2"]
     with ExitStack() as stack:
         reservation = stack.enter_context(
             session_management_client.reserve_sessions(pin_map_context, pin_names)
@@ -65,7 +65,7 @@ def test___task_created___get_nidaqmx_connection___returns_connection(
         connection = reservation.get_nidaqmx_connection(pin_name)
 
         assert get_connection_subset(connection) == ConnectionSubset(
-            pin_name, _SITE, "Dev1a", "Dev1/ai0"
+            pin_name, _SITE, "Dev1", "Dev1/ai0"
         )
 
 
@@ -83,14 +83,14 @@ def test___tasks_created___get_nidaqmx_connections___returns_connections(
         connections = reservation.get_nidaqmx_connections(pin_names)
 
         assert [get_connection_subset(connection) for connection in connections] == [
-            ConnectionSubset(pin_names[0], _SITE, "Dev1a", "Dev1/ai0"),
-            ConnectionSubset(pin_names[1], _SITE, "Dev1b", "Dev1/ai2"),
+            ConnectionSubset(pin_names[0], _SITE, "Dev1", "Dev1/ai0"),
+            ConnectionSubset(pin_names[1], _SITE, "Dev2", "Dev2/ai0"),
         ]
 
 
 @pytest.fixture
 def pin_map_context(pin_map_client: PinMapClient, pin_map_directory: pathlib.Path) -> PinMapContext:
-    pin_map_name = "1Daqmx2ChannelGroup2Pin1Site.pinmap"
+    pin_map_name = "2Mio2Pin1Site.pinmap"
     pin_map_id = pin_map_client.update_pin_map(pin_map_directory / pin_map_name)
 
     return PinMapContext(pin_map_id=pin_map_id, sites=[_SITE])

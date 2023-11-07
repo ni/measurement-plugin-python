@@ -33,7 +33,7 @@ def test___single_session___measure___returns_measured_values(
     outputs = _measure(stub_v2, pin_map_context, configurations)
 
     assert outputs.signals_out_of_range == [False]
-    assert outputs.absolute_resolutions == [4.9999999999999996e-05]
+    assert outputs.absolute_resolutions == pytest.approx([4.9999999999999996e-05])
 
 
 def test___single_session___measure___creates_single_session(

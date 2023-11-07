@@ -29,12 +29,13 @@ def test___single_session___measure___returns_measured_values(
     stub_v2: MeasurementServiceStub,
 ) -> None:
     pin_names = ["Pin1"]
+    min_value = -10.5
+    max_value = 10.5
     configurations = Configurations(pin_names=pin_names, multi_session=False)
 
     outputs = _measure(stub_v2, pin_map_context, configurations)
 
-    assert math.isclose(outputs.voltage_values[0], -0.14969328897976622, rel_tol=1e-9)
-    assert math.isclose(outputs.voltage_values[1], 0.019074068422498244, rel_tol=1e-9)
+    assert all(min_value <= value <= max_value for value in outputs.voltage_values)
 
 
 def test___single_session___measure___creates_single_session(
@@ -46,7 +47,7 @@ def test___single_session___measure___creates_single_session(
 
     outputs = _measure(stub_v2, pin_map_context, configurations)
 
-    assert _get_output(outputs) == [_MeasurementOutput("Dev1a", "Dev1a", "Dev1/ai0", "Dev1/ai0")]
+    assert _get_output(outputs) == [_MeasurementOutput("Dev1", "Dev1", "Dev1/ai0", "Dev1/ai0")]
 
 
 def test___multiple_sessions___measure___creates_multiple_sessions(
@@ -59,8 +60,8 @@ def test___multiple_sessions___measure___creates_multiple_sessions(
     outputs = _measure(stub_v2, pin_map_context, configurations)
 
     assert _get_output(outputs) == [
-        _MeasurementOutput("Dev1a", "Dev1a", "Dev1/ai0", "Dev1/ai0"),
-        _MeasurementOutput("Dev1b", "Dev1b", "Dev1/ai2", "Dev1/ai2"),
+        _MeasurementOutput("Dev1", "Dev1", "Dev1/ai0", "Dev1/ai0"),
+        _MeasurementOutput("Dev2", "Dev2", "Dev2/ai0", "Dev2/ai0"),
     ]
 
 
@@ -87,7 +88,7 @@ def measurement_service() -> Generator[MeasurementService, None, None]:
 
 @pytest.fixture
 def pin_map_context(pin_map_client: PinMapClient, pin_map_directory: pathlib.Path) -> PinMapContext:
-    pin_map_name = "1Daqmx2ChannelGroup2Pin1Site.pinmap"
+    pin_map_name = "2Mio2Pin1Site.pinmap"
     pin_map_id = pin_map_client.update_pin_map(pin_map_directory / pin_map_name)
 
     return PinMapContext(pin_map_id=pin_map_id, sites=[_SITE])

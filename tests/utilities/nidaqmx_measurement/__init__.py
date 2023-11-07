@@ -1,10 +1,11 @@
 """NI-DAQmx MeasurementLink test service."""
 import pathlib
-from typing import Iterable, Sequence, Tuple
+from typing import Sequence, Tuple
 
 import nidaqmx
 
 import ni_measurementlink_service as nims
+from ni_measurementlink_service.session_management import TypedSessionInformation
 
 
 service_directory = pathlib.Path(__file__).resolve().parent
@@ -26,9 +27,9 @@ measurement_service = nims.MeasurementService(
 @measurement_service.output("connected_channels", nims.DataType.StringArray1D)
 @measurement_service.output("voltage_values", nims.DataType.DoubleArray1D)
 def measure(
-    pin_names: Iterable[str],
+    pin_names: list[str],
     multi_session: bool,
-) -> Tuple[Iterable[str], Iterable[str], Iterable[str], Iterable[str], Iterable[float]]:
+) -> Tuple[list[str], list[str], list[str], list[str], list[float]]:
     """NI-DAQmx MeasurementLink test service."""
     if multi_session:
         with measurement_service.context.reserve_sessions(pin_names) as reservation:
@@ -62,8 +63,8 @@ def measure(
 
 
 def _read_voltage_values(
-    session_infos: Sequence[nims.session_management.TypedSessionInformation[nidaqmx.Task]],
-) -> Iterable[float]:
+    session_infos: Sequence[TypedSessionInformation[nidaqmx.Task]],
+) -> list[float]:
     sample_rate = 1000.0
     number_of_samples = 2
 
@@ -80,8 +81,17 @@ def _read_voltage_values(
             samps_per_chan=number_of_samples,
         )
 
+    for session_info in session_infos: 
+        session_info.session.start()
+        
+    for session_info in session_infos:    
+        task = session_info.session
         timeout = min(measurement_service.context.time_remaining, 10.0)
         voltage_value = task.read(number_of_samples, timeout)
         voltage_values.extend(voltage_value)
+
+    
+    for session_info in session_infos:   
+        session_info.session.stop()
 
     return voltage_values
