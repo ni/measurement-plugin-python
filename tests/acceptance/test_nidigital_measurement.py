@@ -55,7 +55,7 @@ def test___multiple_sessions___measure___creates_multiple_sessions(
     stub_v2: MeasurementServiceStub,
 ) -> None:
     pin_map_context = PinMapContext(pin_map_id=pin_map_id, sites=[0, 1])
-    configurations = Configurations(pin_names=["CS"], multi_session=True)
+    configurations = Configurations(pin_names=["CS", "SCLK", "MOSI", "MISO"], multi_session=True)
 
     outputs = _measure(stub_v2, pin_map_context, configurations)
 
@@ -63,14 +63,14 @@ def test___multiple_sessions___measure___creates_multiple_sessions(
         _MeasurementOutput(
             "DigitalPattern1",
             "DigitalPattern1",
-            "site0/CS",
-            "site0/CS",
+            "site0/CS, site0/SCLK, site0/MOSI, site0/MISO",
+            "site0/CS, site0/SCLK, site0/MOSI, site0/MISO",
         ),
         _MeasurementOutput(
             "DigitalPattern2",
             "DigitalPattern2",
-            "site1/CS",
-            "site1/CS",
+            "site1/CS, site1/SCLK, site1/MOSI, site1/MISO",
+            "site1/CS, site1/SCLK, site1/MOSI, site1/MISO",
         ),
     ]
 
