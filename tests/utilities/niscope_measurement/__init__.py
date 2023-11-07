@@ -1,11 +1,13 @@
 """NI-Scope MeasurementLink test service."""
 import pathlib
 import time
-from typing import Iterable, List, Tuple
+from contextlib import ExitStack
+from typing import Iterable, List, Sequence, Tuple
 
 import niscope
 
 import ni_measurementlink_service as nims
+from ni_measurementlink_service.session_management import TypedSessionInformation
 
 service_directory = pathlib.Path(__file__).resolve().parent
 measurement_service = nims.MeasurementService(
@@ -34,11 +36,7 @@ def measure(
             with reservation.initialize_niscope_sessions() as session_infos:
                 assert all([session_info.session is not None for session_info in session_infos])
                 connections = reservation.get_niscope_connections(pin_names)
-                for session_info, pin_name in zip(session_infos, pin_names):
-                    connection = reservation.get_niscope_connection(pin_name)
-                    _ = _acquire_waveform(
-                        session_info, connection.channel_name, connections[0].channel_name
-                    )
+                _ = _acquire_waveforms(session_infos)
 
                 return (
                     [session_info.session_name for session_info in session_infos],
@@ -53,9 +51,7 @@ def measure(
                 assert session_info.session is not None
                 reservation.get_niscope_connection(list(pin_names)[0])
                 connection = reservation.get_niscope_connection(list(pin_names)[0])
-                waveforms = _acquire_waveform(
-                    session_info, connection.channel_name, connection.channel_name
-                )
+                waveforms = _acquire_waveforms([session_info])
 
                 return (
                     [session_info.resource_name],
@@ -66,35 +62,49 @@ def measure(
                 )
 
 
-def _acquire_waveform(
-    session_info: nims.session_management.TypedSessionInformation[niscope.Session],
-    channel_order: str,
-    trigger_source: str,
-) -> Tuple[List[float], ...]:
-    session_info.session.channels[channel_order].configure_vertical(
-        5.0, niscope.VerticalCoupling.DC, enabled=True
-    )
-    session_info.session.channels[channel_order].configure_chan_characteristics(
-        1e6, max_input_frequency=0.0
-    )
+def _acquire_waveforms(
+    session_infos: Sequence[TypedSessionInformation[niscope.Session]],
+) -> List[List[float]]:
+    for session_info in session_infos:
+        channel_order = session_info.channel_list
+        trigger_channel = session_info.channel_list.split(",")[0]
 
-    session_info.session.configure_horizontal_timing(
-        10e6,
-        5,
-        ref_position=50.0,
-        num_records=1,
-        enforce_realtime=True,
-    )
-    session_info.session.configure_trigger_edge(
-        trigger_source,
-        0.5,
-        niscope.TriggerCoupling.DC,
-        niscope.TriggerSlope.POSITIVE,
-    )
-    session_info.session.trigger_modifier = niscope.TriggerModifier.NO_TRIGGER_MOD
+        session_info.session.channels[channel_order].configure_vertical(
+            5.0, niscope.VerticalCoupling.DC, enabled=True
+        )
+        session_info.session.channels[channel_order].configure_chan_characteristics(
+            1e6, max_input_frequency=0.0
+        )
+        session_info.session.configure_horizontal_timing(
+            10e6,
+            5,
+            ref_position=50.0,
+            num_records=1,
+            enforce_realtime=True,
+        )
+        session_info.session.configure_trigger_edge(
+            trigger_channel,
+            0.5,
+            niscope.TriggerCoupling.DC,
+            niscope.TriggerSlope.POSITIVE,
+        )
+        session_info.session.trigger_modifier = niscope.TriggerModifier.NO_TRIGGER_MOD
 
-    with session_info.session.initiate():
-        time.sleep(100e-3)
-        waveform_infos = session_info.session.channels[channel_order].fetch()
+    waveforms = []
+    with ExitStack() as stack:
+        for session_info in session_infos:
+            stack.enter_context(session_info.session.initiate())
 
-    return tuple(w.samples for w in waveform_infos)
+        for session_info in session_infos:
+            while True:
+                status = session_info.session.acquisition_status()
+                if status == niscope.AcquisitionStatus.COMPLETE:
+                    break
+                time.sleep(100e-3)
+
+        for session_info in session_infos:
+            waveform_infos = session_info.session.channels[channel_order].fetch()
+            for w in waveform_infos:
+                waveforms.append(w.samples)
+
+    return waveforms
