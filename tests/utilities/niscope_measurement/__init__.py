@@ -36,20 +36,19 @@ def measure(
             with reservation.initialize_niscope_sessions() as session_infos:
                 assert all([session_info.session is not None for session_info in session_infos])
                 connections = reservation.get_niscope_connections(pin_names)
-                _ = _acquire_waveforms(session_infos)
+                waveforms = _acquire_waveforms(session_infos)
 
                 return (
                     [session_info.session_name for session_info in session_infos],
                     [session_info.resource_name for session_info in session_infos],
                     [session_info.channel_list for session_info in session_infos],
                     [connection.channel_name for connection in connections],
-                    [],
+                    waveforms[0],
                 )
     else:
         with measurement_service.context.reserve_session(pin_names) as reservation:
             with reservation.initialize_niscope_session() as session_info:
                 assert session_info.session is not None
-                reservation.get_niscope_connection(list(pin_names)[0])
                 connection = reservation.get_niscope_connection(list(pin_names)[0])
                 waveforms = _acquire_waveforms([session_info])
 
