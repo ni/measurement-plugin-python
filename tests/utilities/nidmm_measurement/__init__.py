@@ -31,9 +31,7 @@ measurement_service = nims.MeasurementService(
 def measure(
     pin_names: list[str],
     multi_session: bool,
-) -> Tuple[
-    list[str], list[str], list[str], list[str], list[bool], list[float]
-]:
+) -> Tuple[list[str], list[str], list[str], list[str], list[bool], list[float]]:
     """NI-DMM MeasurementLink test service."""
     if multi_session:
         with measurement_service.context.reserve_sessions(pin_names) as reservation:

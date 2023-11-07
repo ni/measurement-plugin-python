@@ -1,4 +1,3 @@
-import math
 import pathlib
 from typing import Generator, Iterable, NamedTuple
 
