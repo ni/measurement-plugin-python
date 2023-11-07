@@ -31,7 +31,6 @@ def test___single_session___measure___returns_measured_values(
 
     outputs = _measure(stub_v2, pin_map_context, configurations)
 
-    print(outputs.waveform)
     assert outputs.waveform == [
         0.095672607421875,
         0.1373291015625,
