@@ -5,6 +5,7 @@ from typing import Iterable, Sequence, Tuple, Union
 import nidigital
 
 import ni_measurementlink_service as nims
+from ni_measurementlink_service.session_management import TypedSessionInformation
 
 service_directory = pathlib.Path(__file__).resolve().parent
 measurement_service = nims.MeasurementService(
@@ -38,12 +39,20 @@ def measure(
                 connections = reservation.get_nidigital_connections(pin_names)
                 assert all([session_info is not None for session_info in session_infos])
                 passing_sites, failing_sites = _burst_spi_pattern(session_infos)
+                site0_connections, site1_connections = [], []
+                # Assumption: All pins connected to site0 belongs to one session and
+                # all the pins connected to site1 belongs to the other session.
+                for connection in connections:
+                    if connection.channel_name.startswith("site0"):
+                        site0_connections.append(connection.channel_name)
+                    elif connection.channel_name.startswith("site1"):
+                        site1_connections.append(connection.channel_name)
 
                 return (
                     [session_info.session_name for session_info in session_infos],
                     [session_info.resource_name for session_info in session_infos],
                     [session_info.channel_list for session_info in session_infos],
-                    [connection.channel_name for connection in connections],
+                    [", ".join(site0_connections), ", ".join(site1_connections)],
                     list(passing_sites),
                     list(failing_sites),
                 )
@@ -65,35 +74,45 @@ def measure(
 
 
 def _burst_spi_pattern(
-    session_infos: Sequence[nims.session_management.TypedSessionInformation[nidigital.Session]],
+    session_infos: Sequence[TypedSessionInformation[nidigital.Session]],
 ) -> Tuple:
-    test_assets_directory = (
-        service_directory.parent.parent / "assets" / "acceptance" / "session_management"
-    )
     specifications_file_path = "Specifications.specs"
     levels_file_path = "PinLevels.digilevels"
     timing_file_path = "Timing.digitiming"
     pattern_file_path = "Pattern.digipat"
     pin_map_context = measurement_service.context.pin_map_context
+    selected_sites_string = ",".join(f"site{i}" for i in pin_map_context.sites or [])
+
     passing_sites_list, failing_sites_list = [], []
     for session_info in session_infos:
         session = session_info.session
-        selected_sites_string = ",".join(f"site{i}" for i in pin_map_context.sites or [])
         selected_sites = session.sites[selected_sites_string]
-        session.load_pin_map(pin_map_context.pin_map_id)
-        session.load_specifications_levels_and_timing(
-            str(_resolve_relative_path(test_assets_directory, specifications_file_path)),
-            str(_resolve_relative_path(test_assets_directory, levels_file_path)),
-            str(_resolve_relative_path(test_assets_directory, timing_file_path)),
-        )
-        session.load_pattern(
-            str(_resolve_relative_path(test_assets_directory, pattern_file_path)),
-        )
 
-        levels_file_name = pathlib.Path(levels_file_path).stem
-        timing_file_name = pathlib.Path(timing_file_path).stem
+        if not session_info.session_exists:
+            session.load_pin_map(pin_map_context.pin_map_id)
+            session.load_specifications_levels_and_timing(
+                str(_resolve_relative_path(service_directory, specifications_file_path)),
+                str(_resolve_relative_path(service_directory, levels_file_path)),
+                str(_resolve_relative_path(service_directory, timing_file_path)),
+            )
+            session.load_pattern(
+                str(_resolve_relative_path(service_directory, pattern_file_path)),
+            )
+
+    levels_file_name = pathlib.Path(levels_file_path).stem
+    timing_file_name = pathlib.Path(timing_file_path).stem
+
+    for session_info in session_infos:
+        selected_sites = session_info.session.sites[selected_sites_string]
         selected_sites.apply_levels_and_timing(levels_file_name, timing_file_name)
-        selected_sites.burst_pattern(start_label="SPI_Pattern")
+
+    for session_info in session_infos:
+        selected_sites = session_info.session.sites[selected_sites_string]
+        selected_sites.burst_pattern(start_label="SPI_Pattern", wait_until_done=False)
+
+    for session_info in session_infos:
+        selected_sites = session_info.session.sites[selected_sites_string]
+        session_info.session.wait_until_done()
         site_pass_fail = selected_sites.get_site_pass_fail()
         passing_sites = [site for site, pass_fail in site_pass_fail.items() if pass_fail]
         failing_sites = [site for site, pass_fail in site_pass_fail.items() if not pass_fail]
