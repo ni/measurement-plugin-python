@@ -1,4 +1,4 @@
-"""NI-Switch MeasurementLink test service."""
+"""NI-SWITCH MeasurementLink test service."""
 import pathlib
 from typing import Iterable, Sequence, Tuple
 
@@ -28,12 +28,12 @@ def measure(
     relay_names: Iterable[str],
     multi_session: bool,
 ) -> Tuple[Iterable[str], Iterable[str], Iterable[str], Iterable[str]]:
-    """NI-Switch MeasurementLink test service."""
+    """NI-SWITCH MeasurementLink test service."""
     if multi_session:
         with measurement_service.context.reserve_sessions(relay_names) as reservation:
             with reservation.initialize_niswitch_sessions() as session_infos:
                 connections = reservation.get_niswitch_connections(relay_names)
-                assert all([session_info is not None for session_info in session_infos])
+                assert all([session_info.session is not None for session_info in session_infos])
                 _control_relays(session_infos)
 
                 return (
@@ -46,7 +46,7 @@ def measure(
         with measurement_service.context.reserve_session(relay_names) as reservation:
             with reservation.initialize_niswitch_session() as session_info:
                 connection = reservation.get_niswitch_connection(list(relay_names)[0])
-                assert session_info is not None
+                assert session_info.session is not None
                 _control_relays([session_info])
 
                 return (

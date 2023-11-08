@@ -1,7 +1,7 @@
 {
   "services": [
     {
-      "displayName": "NI-Switch Measurement (Py)",
+      "displayName": "NI-SWITCH Measurement (Py)",
       "serviceClass": "ni.tests.NISwitchMeasurement_Python",
       "descriptionUrl": "",
       "providedInterfaces": [
@@ -10,7 +10,7 @@
       ],
       "path": "start.bat",
       "annotations": {
-        "ni/service.description": "NI-Switch MeasurementLink test service.",
+        "ni/service.description": "NI-SWITCH MeasurementLink test service.",
         "ni/service.collection": "NI.Tests",
         "ni/service.tags": []
       }

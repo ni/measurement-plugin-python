@@ -1,11 +1,12 @@
 """NI-Digital MeasurementLink test service."""
 import pathlib
+from itertools import groupby
 from typing import Iterable, Sequence, Tuple, Union
 
 import nidigital
 
 import ni_measurementlink_service as nims
-from ni_measurementlink_service.session_management import TypedSessionInformation
+from ni_measurementlink_service.session_management import TypedConnection, TypedSessionInformation
 
 service_directory = pathlib.Path(__file__).resolve().parent
 measurement_service = nims.MeasurementService(
@@ -37,22 +38,23 @@ def measure(
         with measurement_service.context.reserve_sessions(pin_names) as reservation:
             with reservation.initialize_nidigital_sessions() as session_infos:
                 connections = reservation.get_nidigital_connections(pin_names)
-                assert all([session_info is not None for session_info in session_infos])
+                assert all([session_info.session is not None for session_info in session_infos])
                 passing_sites, failing_sites = _burst_spi_pattern(session_infos)
-                site0_connections, site1_connections = [], []
-                # Assumption: All pins connected to site0 belongs to one session and
-                # all the pins connected to site1 belongs to the other session.
-                for connection in connections:
-                    if connection.channel_name.startswith("site0"):
-                        site0_connections.append(connection.channel_name)
-                    elif connection.channel_name.startswith("site1"):
-                        site1_connections.append(connection.channel_name)
+                def key_func(connection: TypedConnection[nidigital.Session]):
+                    return connection.session_info.session_name
+
+                connections_by_session = [
+                    list(g) for _, g in groupby(sorted(connections, key=key_func), key=key_func)
+                ]
 
                 return (
                     [session_info.session_name for session_info in session_infos],
                     [session_info.resource_name for session_info in session_infos],
                     [session_info.channel_list for session_info in session_infos],
-                    [", ".join(site0_connections), ", ".join(site1_connections)],
+                    [
+                        ", ".join(conn.channel_name for conn in conns)
+                        for conns in connections_by_session
+                    ],
                     list(passing_sites),
                     list(failing_sites),
                 )
@@ -60,7 +62,7 @@ def measure(
         with measurement_service.context.reserve_session(pin_names) as reservation:
             with reservation.initialize_nidigital_session() as session_info:
                 connection = reservation.get_nidigital_connection(list(pin_names)[0])
-                assert session_info is not None
+                assert session_info.session is not None
                 passing_sites, failing_sites = _burst_spi_pattern([session_info])
 
                 return (
