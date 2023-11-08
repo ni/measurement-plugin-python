@@ -2,40 +2,17 @@
 
 import logging
 import pathlib
-import types
-from typing import Any, Callable, List, NamedTuple, Optional, Tuple, TypeVar, Union
+from typing import Any, Callable, TypeVar
 
 import click
 import grpc
-import ni_measurementlink_service as nims
 from ni_measurementlink_service import session_management
 from ni_measurementlink_service._internal.stubs.ni.measurementlink.pinmap.v1 import (
     pin_map_service_pb2,
     pin_map_service_pb2_grpc,
 )
 from ni_measurementlink_service.discovery import DiscoveryClient
-from ni_measurementlink_service.measurement.service import (
-    GrpcChannelPool,
-    MeasurementService,
-)
-
-
-class ServiceOptions(NamedTuple):
-    """Service options specified on the command line."""
-
-    use_grpc_device: bool = False
-    grpc_device_address: str = ""
-
-    use_simulation: bool = False
-
-
-def get_service_options(**kwargs: Any) -> ServiceOptions:
-    """Get service options from keyword arguments."""
-    return ServiceOptions(
-        use_grpc_device=kwargs.get("use_grpc_device", False),
-        grpc_device_address=kwargs.get("grpc_device_address", ""),
-        use_simulation=kwargs.get("use_simulation", False),
-    )
+from ni_measurementlink_service.measurement.service import GrpcChannelPool
 
 
 class PinMapClient(object):
@@ -201,96 +178,3 @@ def verbosity_option(func: F) -> F:
         count=True,
         help="Enable verbose logging. Repeat to increase verbosity.",
     )(func)
-
-
-def grpc_device_options(func: F) -> F:
-    """Decorator for NI gRPC Device Server command line options."""
-    use_grpc_device_option = click.option(
-        "--use-grpc-device/--no-use-grpc-device",
-        default=True,
-        is_flag=True,
-        help="Use the NI gRPC Device Server.",
-    )
-    grpc_device_address_option = click.option(
-        "--grpc-device-address",
-        default="",
-        help="NI gRPC Device Server address (e.g. localhost:31763). If unspecified, use the discovery service to resolve the address.",
-    )
-    return grpc_device_address_option(use_grpc_device_option(func))
-
-
-def use_simulation_option(default: bool) -> Callable[[F], F]:
-    """Decorator for --use-simulation command line option."""
-    return click.option(
-        "--use-simulation/--no-use-simulation",
-        default=default,
-        is_flag=True,
-        help="Use simulated instruments.",
-    )
-
-
-def get_grpc_device_channel(
-    measurement_service: MeasurementService,
-    driver_module: types.ModuleType,
-    service_options: ServiceOptions,
-) -> Optional[grpc.Channel]:
-    """Returns driver specific grpc device channel."""
-    if service_options.use_grpc_device:
-        if service_options.grpc_device_address:
-            return measurement_service.channel_pool.get_channel(service_options.grpc_device_address)
-
-        return measurement_service.get_channel(
-            provided_interface=getattr(driver_module, "GRPC_SERVICE_INTERFACE_NAME"),
-            service_class="ni.measurementlink.v1.grpcdeviceserver",
-        )
-    return None
-
-
-def create_session_management_client(
-    measurement_service: MeasurementService,
-) -> nims.session_management.Client:
-    """Return created session management client."""
-    return nims.session_management.Client(
-        grpc_channel=measurement_service.get_channel(
-            provided_interface=nims.session_management.GRPC_SERVICE_INTERFACE_NAME,
-            service_class=nims.session_management.GRPC_SERVICE_CLASS,
-        )
-    )
-
-
-def get_session_and_channel_for_pin(
-    session_info: List[nims.session_management.SessionInformation],
-    pin: str,
-    site: Optional[int] = None,
-) -> Tuple[int, List[str]]:
-    """Returns the session information based on the given pin names."""
-    session_and_channel_info = get_sessions_and_channels_for_pins(
-        session_info=session_info, pins=[pin], site=site
-    )
-
-    if len(session_and_channel_info) != 1:
-        raise ValueError(f"Unsupported number of sessions for {pin}: {len(session_info)}")
-    return session_and_channel_info[0]
-
-
-def get_sessions_and_channels_for_pins(
-    session_info: List[nims.session_management.SessionInformation],
-    pins: Union[str, List[str]],
-    site: Optional[int] = None,
-) -> List[Tuple[int, List[str]]]:
-    """Returns the session information based on the given pin names."""
-    pin_names = [pins] if isinstance(pins, str) else pins
-    session_and_channel_info = []
-    for session_index, session_details in enumerate(session_info):
-        channel_list = [
-            mapping.channel
-            for mapping in session_details.channel_mappings
-            if mapping.pin_or_relay_name in pin_names and (site is None or mapping.site == site)
-        ]
-        if len(channel_list) != 0:
-            session_and_channel_info.append((session_index, channel_list))
-
-    if len(session_and_channel_info) == 0:
-        raise KeyError(f"Pin(s) {pins} and site {site} not found")
-
-    return session_and_channel_info
