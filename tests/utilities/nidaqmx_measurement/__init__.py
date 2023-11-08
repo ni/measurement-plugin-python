@@ -88,8 +88,8 @@ def _read_voltage_values(
     for session_info in session_infos:
         task = session_info.session
         timeout = min(measurement_service.context.time_remaining, 10.0)
-        voltage_value = task.read(number_of_samples_to_read, timeout)
-        voltage_values.append(voltage_value[0])
+        voltage_value = task.read(number_of_samples_to_read, timeout)[0]
+        voltage_values.append(voltage_value)
 
     for session_info in session_infos:
         session_info.session.stop()
