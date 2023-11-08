@@ -40,6 +40,7 @@ def measure(
                 connections = reservation.get_nidigital_connections(pin_names)
                 assert all([session_info.session is not None for session_info in session_infos])
                 passing_sites, failing_sites = _burst_spi_pattern(session_infos)
+
                 def key_func(connection: TypedConnection[nidigital.Session]):
                     return connection.session_info.session_name
 
