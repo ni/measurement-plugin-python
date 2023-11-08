@@ -1,7 +1,7 @@
 {
   "services": [
     {
-      "displayName": "NI-Fgen Measurement (Py)",
+      "displayName": "NI-FGEN Measurement (Py)",
       "serviceClass": "ni.tests.NIFgenMeasurement_Python",
       "descriptionUrl": "",
       "providedInterfaces": [
@@ -10,7 +10,7 @@
       ],
       "path": "start.bat",
       "annotations": {
-        "ni/service.description": "NI-Fgen MeasurementLink test service.",
+        "ni/service.description": "NI-FGEN MeasurementLink test service.",
         "ni/service.collection": "NI.Tests",
         "ni/service.tags": []
       }

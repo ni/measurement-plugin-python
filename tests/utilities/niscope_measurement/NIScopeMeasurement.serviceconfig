@@ -1,7 +1,7 @@
 {
   "services": [
     {
-      "displayName": "NI-Scope Measurement (Py)",
+      "displayName": "NI-SCOPE Measurement (Py)",
       "serviceClass": "ni.tests.NIScopeMeasurement_Python",
       "descriptionUrl": "",
       "providedInterfaces": [
@@ -10,7 +10,7 @@
       ],
       "path": "start.bat",
       "annotations": {
-        "ni/service.description": "NI-Scope MeasurementLink test service.",
+        "ni/service.description": "NI-SCOPE MeasurementLink test service.",
         "ni/service.collection": "NI.Tests",
         "ni/service.tags": []
       }

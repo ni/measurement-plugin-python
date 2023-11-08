@@ -1,10 +1,8 @@
-"""NI-Fgen MeasurementLink test service."""
+"""NI-FGEN MeasurementLink test service."""
 import pathlib
-import time
 from contextlib import ExitStack
 from typing import Iterable, Sequence, Tuple
 
-import hightime
 import nifgen
 
 import ni_measurementlink_service as nims
@@ -30,7 +28,7 @@ measurement_service = nims.MeasurementService(
 def measure(
     pin_names: Iterable[str], multi_session: bool
 ) -> Tuple[Iterable[str], Iterable[str], Iterable[str], Iterable[str]]:
-    """NI-Fgen MeasurementLink test service."""
+    """NI-FGEN MeasurementLink test service."""
     if multi_session:
         with measurement_service.context.reserve_sessions(pin_names) as reservation:
             with reservation.initialize_nifgen_sessions() as session_infos:
@@ -70,20 +68,3 @@ def _generate_standard_waveform(
     with ExitStack() as stack:
         for session_info in session_infos:
             stack.enter_context(session_info.session.initiate())
-
-    sessions = [session_info.session for session_info in session_infos]
-    is_simulated = any(session.simulate for session in sessions)
-
-    if is_simulated:
-        time.sleep(100e-3)
-    else:
-        try:
-            stop_time = time.time() + 10
-            for session in sessions:
-                remaining_time = max(stop_time - time.time(), 0.0)
-                sleep_time = min(remaining_time, 100e-3)
-                session.wait_until_done(hightime.timedelta(seconds=sleep_time))
-        except nifgen.errors.DriverError as e:
-            if e.code in [-1074098044, -1074118637]:
-                pass
-            raise

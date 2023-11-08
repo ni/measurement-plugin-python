@@ -1,6 +1,5 @@
-"""NI-Scope MeasurementLink test service."""
+"""NI-SCOPE MeasurementLink test service."""
 import pathlib
-import time
 from contextlib import ExitStack
 from typing import Iterable, List, Sequence, Tuple
 
@@ -30,7 +29,7 @@ measurement_service = nims.MeasurementService(
 def measure(
     pin_names: Iterable[str], multi_session: bool
 ) -> Tuple[Iterable[str], Iterable[str], Iterable[str], Iterable[str], Iterable[float]]:
-    """NI-Scope MeasurementLink test service."""
+    """NI-SCOPE MeasurementLink test service."""
     if multi_session:
         with measurement_service.context.reserve_sessions(pin_names) as reservation:
             with reservation.initialize_niscope_sessions() as session_infos:
@@ -93,13 +92,6 @@ def _acquire_waveforms(
     with ExitStack() as stack:
         for session_info in session_infos:
             stack.enter_context(session_info.session.initiate())
-
-        for session_info in session_infos:
-            while True:
-                status = session_info.session.acquisition_status()
-                if status == niscope.AcquisitionStatus.COMPLETE:
-                    break
-                time.sleep(100e-3)
 
         for session_info in session_infos:
             waveform_infos = session_info.session.channels[channel_order].fetch()
