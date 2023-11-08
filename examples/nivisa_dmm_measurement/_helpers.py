@@ -6,7 +6,6 @@ from typing import Any, Callable, TypeVar
 
 import click
 import grpc
-from ni_measurementlink_service import session_management
 from ni_measurementlink_service._internal.stubs.ni.measurementlink.pinmap.v1 import (
     pin_map_service_pb2,
     pin_map_service_pb2_grpc,
@@ -61,30 +60,6 @@ class GrpcChannelPoolHelper(GrpcChannelPool):
             self._discovery_client.resolve_service(
                 provided_interface="ni.measurementlink.pinmap.v1.PinMapService",
                 service_class="ni.measurementlink.pinmap.v1.PinMapService",
-            ).insecure_address
-        )
-
-    @property
-    def session_management_channel(self) -> grpc.Channel:
-        """Return gRPC channel to session management service."""
-        return self.get_channel(
-            self._discovery_client.resolve_service(
-                provided_interface=session_management.GRPC_SERVICE_INTERFACE_NAME,
-                service_class=session_management.GRPC_SERVICE_CLASS,
-            ).insecure_address
-        )
-
-    def get_grpc_device_channel(self, provided_interface: str) -> grpc.Channel:
-        """Return gRPC channel to specified NI gRPC Device service.
-
-        Args:
-            provided_interface (str): The gRPC Full Name of the service.
-
-        """
-        return self.get_channel(
-            self._discovery_client.resolve_service(
-                provided_interface=provided_interface,
-                service_class="ni.measurementlink.v1.grpcdeviceserver",
             ).insecure_address
         )
 
