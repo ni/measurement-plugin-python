@@ -40,12 +40,8 @@ def measure(
                 connections = reservation.get_nidigital_connections(pin_names)
                 assert all([session_info.session is not None for session_info in session_infos])
                 passing_sites, failing_sites = _burst_spi_pattern(session_infos)
-
-                def key_func(connection: TypedConnection[nidigital.Session]):
-                    return connection.session_info.session_name
-
                 connections_by_session = [
-                    list(g) for _, g in groupby(sorted(connections, key=key_func), key=key_func)
+                    list(g) for _, g in groupby(sorted(connections, key=_key_func), key=_key_func)
                 ]
 
                 return (
@@ -134,3 +130,7 @@ def _resolve_relative_path(
         return file_path
     else:
         return (directory_path / file_path).resolve()
+
+
+def _key_func(conn: TypedConnection[nidigital.Session]) -> str:
+    return conn.session_info.session_name
