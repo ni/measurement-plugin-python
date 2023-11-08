@@ -1,4 +1,4 @@
-name:  Update docs and Publish NIMS
+name:  Publish NIMS
 
 on:
   release:
@@ -22,7 +22,7 @@ jobs:
   # Don't run check_examples.yml because the examples may reference a
   # package version that doesn't exist yet.
   build:
-    name: Update API reference docs and Publish NIMS Package to PyPI
+    name: Build
     runs-on : ubuntu-latest 
     steps:
       - name: Check out repo
@@ -52,15 +52,6 @@ jobs:
         run: |
           poetry version ${{ steps.vars.outputs.tag }}
         working-directory: ./ni_measurementlink_generator
-
-      - name: Install ni-measurementlink-service (all extras, docs)
-        run: poetry install -v --all-extras --with docs
-
-      - name: Build docs
-        run: |
-          rm -rf docs
-          mkdir -p docs       
-          poetry run sphinx-build _docs_source docs -b html
 
       - name: Commit file changes
         if: ${{ startsWith(github.event.release.target_commitish, 'main') || startsWith(github.event.release.target_commitish, 'releases/') }}
