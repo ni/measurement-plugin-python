@@ -61,8 +61,8 @@ def measure(
                     [session_info.resource_name],
                     [session_info.channel_list],
                     [connection.channel_name],
-                    [signals_out_of_range[0]],
-                    [absolute_resolutions[0]],
+                    signals_out_of_range,
+                    absolute_resolutions,
                 )
 
 

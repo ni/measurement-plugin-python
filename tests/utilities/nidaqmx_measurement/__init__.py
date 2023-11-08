@@ -67,6 +67,7 @@ def _read_voltage_values(
 ) -> List[float]:
     sample_rate = 1000.0
     number_of_samples = 2
+    number_of_samples_to_read = 1
 
     voltage_values = []
     for session_info in session_infos:
@@ -87,8 +88,8 @@ def _read_voltage_values(
     for session_info in session_infos:
         task = session_info.session
         timeout = min(measurement_service.context.time_remaining, 10.0)
-        voltage_value = task.read(number_of_samples, timeout)
-        voltage_values.extend(voltage_value)
+        voltage_value = task.read(number_of_samples_to_read, timeout)
+        voltage_values.append(voltage_value[0])
 
     for session_info in session_infos:
         session_info.session.stop()
