@@ -1,0 +1,19 @@
+{
+  "services": [
+    {
+      "displayName": "NI-SCOPE Measurement (Py)",
+      "serviceClass": "ni.tests.NIScopeMeasurement_Python",
+      "descriptionUrl": "",
+      "providedInterfaces": [
+        "ni.measurementlink.measurement.v1.MeasurementService",
+        "ni.measurementlink.measurement.v2.MeasurementService"
+      ],
+      "path": "start.bat",
+      "annotations": {
+        "ni/service.description": "NI-SCOPE MeasurementLink test service.",
+        "ni/service.collection": "NI.Tests",
+        "ni/service.tags": []
+      }
+    }
+  ]
+}
