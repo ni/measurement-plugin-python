@@ -4,6 +4,7 @@ import json
 import pathlib
 import subprocess
 import sys
+from io import TextIOBase
 from typing import Any, Dict, Union, cast
 from unittest.mock import Mock
 
@@ -278,7 +279,7 @@ def test___key_file_exist_after_poll___start_discovery_service___discovery_servi
 
     mocker.patch(
         "ni_measurementlink_service.discovery._support._open_key_file",
-        side_effect=[OSError, OSError, OSError, temp_discovery_key_file_path],
+        side_effect=[OSError, OSError, OSError, TextIOBase()],
     )
     mock_popen = mocker.patch("subprocess.Popen")
 
