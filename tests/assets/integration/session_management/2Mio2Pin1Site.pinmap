@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<PinMap xmlns="http://www.ni.com/TestStand/SemiconductorModule/PinMap.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" schemaVersion="1.1">
+	<Instruments>
+		<NIDAQmxTask name="Dev1" taskType="AnalogInput" channelList="Dev1/ai0" />
+		<NIDAQmxTask name="Dev2" taskType="AnalogInput" channelList="Dev2/ai0" />
+	</Instruments>
+	<Pins>
+		<DUTPin name="Pin1" />
+		<DUTPin name="Pin2" />
+	</Pins>
+	<PinGroups></PinGroups>
+	<Sites>
+		<Site siteNumber="0" />
+	</Sites>
+	<Connections>
+		<Connection pin="Pin1" siteNumber="0" instrument="Dev1" channel="Dev1/ai0" />
+		<Connection pin="Pin2" siteNumber="0" instrument="Dev2" channel="Dev2/ai0" />
+	</Connections>
+</PinMap>

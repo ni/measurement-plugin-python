@@ -1,0 +1,19 @@
+{
+  "services": [
+    {
+      "displayName": "NI-DAQmx Analog Input (Py)",
+      "serviceClass": "ni.tests.NIDAQmxAnalogInput_Python",
+      "descriptionUrl": "",
+      "providedInterfaces": [
+        "ni.measurementlink.measurement.v1.MeasurementService",
+        "ni.measurementlink.measurement.v2.MeasurementService"
+      ],
+      "path": "start.bat",
+      "annotations": {
+        "ni/service.description": "MeasurementLink example that performs a finite analog input measurement with NI-DAQmx.",
+        "ni/service.collection": "NI.Tests",
+        "ni/service.tags": []
+      }
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PinMap xmlns="http://www.ni.com/TestStand/SemiconductorModule/PinMap.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" schemaVersion="1.6">
+	<Instruments>
+		<NIDmmInstrument name="DMM1" />
+		<NIDmmInstrument name="DMM2" />
+	</Instruments>
+	<Pins>
+		<DUTPin name="Pin1" />
+		<DUTPin name="Pin2" />
+	</Pins>
+	<PinGroups></PinGroups>
+	<Sites>
+		<Site siteNumber="0" />
+	</Sites>
+	<Connections>
+		<Connection pin="Pin1" siteNumber="0" instrument="DMM1" channel="0" />
+		<Connection pin="Pin2" siteNumber="0" instrument="DMM2" channel="0" />
+	</Connections>
+</PinMap>
