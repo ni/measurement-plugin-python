@@ -42,7 +42,7 @@ jobs:
       # If the tag is 0.1.0, this will set the version of NIMS package to 0.1.0
       - name: Store version from Tag
         id: vars
-        run: echo "tag=${GITHUB_REF#refs/*/}" >> $GITHUB_OUTPUT
+        run: echo "tag=${GITHUB_REF#refs/*/}" >> "$GITHUB_OUTPUT"
 
       - name: Update NIMS package version based on tag name.
         run: |
@@ -86,8 +86,8 @@ jobs:
           EXAMPLE_ARCHIVE: measurementlink-python-examples-${{ steps.vars.outputs.tag }} 
         run: |
           # Use --prefix for the tarball but not the zip file. Windows zip tools often create a directory automatically.
-          git archive -o dist/${EXAMPLE_ARCHIVE}.zip ${GITHUB_REF}:examples/
-          git archive -o dist/${EXAMPLE_ARCHIVE}.tar.gz --prefix ${EXAMPLE_ARCHIVE}/ ${GITHUB_REF}:examples/
+          git archive -o "dist/${EXAMPLE_ARCHIVE}.zip" "${GITHUB_REF}:examples/"
+          git archive -o "dist/${EXAMPLE_ARCHIVE}.tar.gz" --prefix "${EXAMPLE_ARCHIVE}/" "${GITHUB_REF}:examples/"
 
       - name: Upload release assets
         if: ${{ startsWith(github.event.release.target_commitish, 'main') || startsWith(github.event.release.target_commitish, 'releases/') }}

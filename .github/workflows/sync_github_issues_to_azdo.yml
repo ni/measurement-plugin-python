@@ -17,11 +17,11 @@ jobs:
         id: choose_work_item_type
         run: |
           if [ "${{ contains(github.event.issue.labels.*.name, 'enhancement') || contains(github.event.issue.labels.*.name, 'user story') }}" == "true" ]; then
-            echo "work_item_type=User Story" >> $GITHUB_OUTPUT
+            echo "work_item_type=User Story" >> "$GITHUB_OUTPUT"
           elif [ "${{ contains(github.event.issue.labels.*.name, 'tech debt') }}" == "true" ]; then
-            echo "work_item_type=Technical Debt" >> $GITHUB_OUTPUT
+            echo "work_item_type=Technical Debt" >> "$GITHUB_OUTPUT"
           else
-            echo "work_item_type=Bug" >> $GITHUB_OUTPUT
+            echo "work_item_type=Bug" >> "$GITHUB_OUTPUT"
           fi
       - uses: danhellem/github-actions-issue-to-work-item@v2.2
         env:

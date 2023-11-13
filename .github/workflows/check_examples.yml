@@ -36,7 +36,7 @@ jobs:
         run: |
           for example in examples/*/; do
             echo "::group::$example"
-            pushd $example
+            pushd "$example"
             poetry lock
             popd
             echo "::endgroup::"
@@ -51,7 +51,7 @@ jobs:
         run: |
           for example in examples/*/; do
             echo "::group::$example"
-            pushd $example
+            pushd "$example"
             poetry install -v
             popd
             echo "::endgroup::"
@@ -60,7 +60,7 @@ jobs:
         run: |
           for example in examples/*/; do
             echo "::group::$example"
-            pushd $example
+            pushd "$example"
             poetry run ni-python-styleguide lint
             popd
             echo "::endgroup::"
@@ -69,7 +69,7 @@ jobs:
         run: |
           for example in examples/*/; do
             echo "::group::$example"
-            pushd $example
+            pushd "$example"
             poetry run mypy .
             popd
             echo "::endgroup::"
@@ -78,7 +78,7 @@ jobs:
         run: |
           for example in examples/*/; do
             echo "::group::$example"
-            pushd $example
+            pushd "$example"
             poetry run mypy . --platform win32
             popd
             echo "::endgroup::"
