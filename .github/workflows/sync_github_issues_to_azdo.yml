@@ -10,7 +10,7 @@ on:
 
 jobs:
   alert:
-    if: ${{ !github.event.issue.pull_request && github.event.issue.title != "Dependency Dashboard" }}
+    if: ${{ !github.event.issue.pull_request && github.event.issue.title != 'Dependency Dashboard' }}
     runs-on: ubuntu-latest
     steps:
       - name: Choose work item type
