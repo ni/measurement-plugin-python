@@ -5,19 +5,19 @@ from pytest_mock import MockerFixture
 
 from ni_measurementlink_service._drivers._grpcdevice import (
     SERVICE_CLASS,
-    get_insecure_grpc_device_server_address,
+    get_grpc_device_server_location,
     get_insecure_grpc_device_server_channel,
 )
 from ni_measurementlink_service.discovery import ServiceLocation
 from tests.utilities import fake_driver
 
 
-def test___default_configuration___get_insecure_grpc_device_server_address___resolves_service_and_returns_discovered_address(
+def test___default_configuration___get_grpc_device_server_location___resolves_service_and_returns_discovered_location(
     discovery_client: Mock,
 ) -> None:
     discovery_client.resolve_service.return_value = ServiceLocation("localhost", "1234", "")
 
-    address = get_insecure_grpc_device_server_address(
+    service_location = get_grpc_device_server_location(
         discovery_client, fake_driver.GRPC_SERVICE_INTERFACE_NAME
     )
 
@@ -25,78 +25,79 @@ def test___default_configuration___get_insecure_grpc_device_server_address___res
         provided_interface=fake_driver.GRPC_SERVICE_INTERFACE_NAME,
         service_class=SERVICE_CLASS,
     )
-    assert address == "localhost:1234"
+    assert service_location == ServiceLocation("localhost", "1234", "")
 
 
-def test___use_grpc_device_server_false___get_insecure_grpc_device_server_address___returns_empty_string(
+def test___use_grpc_device_server_false___get_grpc_device_server_location___returns_empty_string(
     discovery_client: Mock,
     mocker: MockerFixture,
 ) -> None:
     mocker.patch("ni_measurementlink_service._drivers._grpcdevice.USE_GRPC_DEVICE_SERVER", False)
 
-    address = get_insecure_grpc_device_server_address(
+    service_location = get_grpc_device_server_location(
         discovery_client, fake_driver.GRPC_SERVICE_INTERFACE_NAME
     )
 
-    assert address == ""
+    assert service_location is None
 
 
 @pytest.mark.parametrize(
-    "grpc_device_server_address,expected_address",
+    "grpc_device_server_address,expected_location",
     [
-        ("http://[::1]:31763", "[::1]:31763"),
-        ("http://localhost:1234", "localhost:1234"),
-        ("http://somehost:31763/", "somehost:31763"),
+        ("http://[::1]:31763", ServiceLocation("[::1]", "31763", "")),
+        ("http://localhost:1234", ServiceLocation("localhost", "1234", "")),
+        ("http://somehost:31763/", ServiceLocation("somehost", "31763", "")),
+        ("https://somehost:31763/", ServiceLocation("somehost", "", "31763")),
     ],
 )
-def test___grpc_device_server_address_set___get_insecure_grpc_device_server_address___returns_configured_address(
+def test___grpc_device_server_address_set___get_grpc_device_server_location___returns_configured_address(
     discovery_client: Mock,
     mocker: MockerFixture,
     grpc_device_server_address: str,
-    expected_address: str,
+    expected_location: ServiceLocation,
 ) -> None:
     mocker.patch(
         "ni_measurementlink_service._drivers._grpcdevice.GRPC_DEVICE_SERVER_ADDRESS",
         grpc_device_server_address,
     )
 
-    address = get_insecure_grpc_device_server_address(
+    service_location = get_grpc_device_server_location(
         discovery_client, fake_driver.GRPC_SERVICE_INTERFACE_NAME
     )
 
-    assert address == expected_address
+    assert service_location == expected_location
 
 
 @pytest.mark.parametrize(
     "grpc_device_server_address,expected_message",
     [
         (
-            "https://[::1]:31763",
-            "Unsupported URL scheme 'https' for GRPC_DEVICE_SERVER_ADDRESS 'https://[::1]:31763'",
-        ),
-        (
             "file:///c:/windows/system.ini",
-            "Unsupported URL scheme 'file' for GRPC_DEVICE_SERVER_ADDRESS 'file:///c:/windows/system.ini'",
+            "Unsupported URL scheme 'file' in 'file:///c:/windows/system.ini'",
         ),
         (
             "http://localhost:1234/index.html",
-            "Unsupported GRPC_DEVICE_SERVER_ADDRESS 'http://localhost:1234/index.html'",
+            "Unsupported path '/index.html' in 'http://localhost:1234/index.html'",
         ),
         (
             "http://localhost:1234/;param=123",
-            "Unsupported GRPC_DEVICE_SERVER_ADDRESS 'http://localhost:1234/;param=123'",
+            "Unsupported path '/;param=123' in 'http://localhost:1234/;param=123'",
         ),
         (
             "http://localhost:1234?query=123",
-            "Unsupported GRPC_DEVICE_SERVER_ADDRESS 'http://localhost:1234?query=123'",
+            "Unsupported query '?query=123' in 'http://localhost:1234?query=123'",
         ),
         (
             "http://localhost:1234#fragment",
-            "Unsupported GRPC_DEVICE_SERVER_ADDRESS 'http://localhost:1234#fragment'",
+            "Unsupported fragment '#fragment' in 'http://localhost:1234#fragment'",
+        ),
+        (
+            "http://localhost",
+            "No port number specified in 'http://localhost'",
         ),
     ],
 )
-def test___grpc_device_server_address_unsupported___get_insecure_grpc_device_server_address___raises_value_error(
+def test___grpc_device_server_address_unsupported___get_grpc_device_server_location___raises_value_error(
     discovery_client: Mock,
     mocker: MockerFixture,
     grpc_device_server_address: str,
@@ -108,7 +109,7 @@ def test___grpc_device_server_address_unsupported___get_insecure_grpc_device_ser
     )
 
     with pytest.raises(ValueError) as exc_info:
-        _ = get_insecure_grpc_device_server_address(
+        _ = get_grpc_device_server_location(
             discovery_client, fake_driver.GRPC_SERVICE_INTERFACE_NAME
         )
 
