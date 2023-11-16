@@ -92,6 +92,10 @@ def test___grpc_device_server_address_set___get_grpc_device_server_location___re
             "Unsupported fragment '#fragment' in 'http://localhost:1234#fragment'",
         ),
         (
+            "http://:1234",
+            "No host specified in 'http://:1234'",
+        ),
+        (
             "http://localhost",
             "No port number specified in 'http://localhost'",
         ),

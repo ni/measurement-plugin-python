@@ -59,6 +59,8 @@ def _parse_url_to_service_location(url: str) -> ServiceLocation:
         raise ValueError(f"Unsupported query '?{parsed_url.query}' in '{url}'")
     if parsed_url.fragment:
         raise ValueError(f"Unsupported fragment '#{parsed_url.fragment}' in '{url}'")
+    if parsed_url.hostname is None:
+        raise ValueError(f"No host specified in '{url}'")
     if parsed_url.port is None:
         raise ValueError(f"No port number specified in '{url}'")
 
