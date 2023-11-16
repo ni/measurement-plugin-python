@@ -105,4 +105,4 @@ NISWITCH_OPTIONS = NISwitchOptions("niswitch").update_from_config()
 # NI gRPC Device Server Configuration
 # ----------------------------------------------------------------------
 USE_GRPC_DEVICE_SERVER: bool = _config(f"{_PREFIX}_USE_GRPC_DEVICE_SERVER", default=True, cast=bool)
-GRPC_DEVICE_ADDRESS: str = _config(f"{_PREFIX}_GRPC_DEVICE_ADDRESS", default="")
+GRPC_DEVICE_SERVER_ADDRESS: str = _config(f"{_PREFIX}_GRPC_DEVICE_SERVER_ADDRESS", default="")

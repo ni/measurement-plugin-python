@@ -10,7 +10,7 @@ from ni_measurementlink_service.discovery import ServiceLocation
 from tests.utilities import fake_driver
 
 
-def test___default_configuration___get_insecure_grpc_device_channel___service_discovered_and_channel_returned(
+def test___default_configuration___get_insecure_grpc_device_channel___returns_service_discovered_and_channel(
     discovery_client: Mock,
     grpc_channel: Mock,
     grpc_channel_pool: Mock,
@@ -30,7 +30,7 @@ def test___default_configuration___get_insecure_grpc_device_channel___service_di
     assert returned_channel is grpc_channel
 
 
-def test___use_grpc_device_server_false___get_insecure_grpc_device_channel___none_returned(
+def test___use_grpc_device_server_false___get_insecure_grpc_device_channel___returns_none(
     discovery_client: Mock,
     grpc_channel_pool: Mock,
     mocker: MockerFixture,
@@ -44,14 +44,14 @@ def test___use_grpc_device_server_false___get_insecure_grpc_device_channel___non
     assert returned_channel is None
 
 
-def test___grpc_device_address_set___get_insecure_grpc_device_channel___address_used_and_channel_returned(
+def test___grpc_device_server_address_set___get_insecure_grpc_device_channel___returns_address_used_and_channel(
     discovery_client: Mock,
     grpc_channel: Mock,
     grpc_channel_pool: Mock,
     mocker: MockerFixture,
 ) -> None:
     mocker.patch(
-        "ni_measurementlink_service._drivers._grpcdevice.GRPC_DEVICE_ADDRESS", "[::1]:31763"
+        "ni_measurementlink_service._drivers._grpcdevice.GRPC_DEVICE_SERVER_ADDRESS", "[::1]:31763"
     )
     grpc_channel_pool.get_channel.return_value = grpc_channel
 

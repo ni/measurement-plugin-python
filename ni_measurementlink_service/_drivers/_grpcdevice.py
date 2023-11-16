@@ -7,7 +7,7 @@ import grpc
 
 from ni_measurementlink_service._channelpool import GrpcChannelPool
 from ni_measurementlink_service._configuration import (
-    GRPC_DEVICE_ADDRESS,
+    GRPC_DEVICE_SERVER_ADDRESS,
     USE_GRPC_DEVICE_SERVER,
 )
 from ni_measurementlink_service.discovery import DiscoveryClient
@@ -38,7 +38,7 @@ def get_insecure_grpc_device_channel(
     if not USE_GRPC_DEVICE_SERVER:
         return None
 
-    address = GRPC_DEVICE_ADDRESS
+    address = GRPC_DEVICE_SERVER_ADDRESS
     if not address:
         service_location = discovery_client.resolve_service(
             provided_interface=provided_interface,
