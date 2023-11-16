@@ -54,7 +54,11 @@ def get_insecure_grpc_device_server_address(
         service_class=SERVICE_CLASS,
     )
     address = service_location.insecure_address
-    _logger.debug("Using NI gRPC Device Server with discovered insecure address '%s'", address)
+    _logger.debug(
+        "Using NI gRPC Device Server interface '%s' with discovered insecure address '%s'",
+        provided_interface,
+        address,
+    )
     return address
 
 
