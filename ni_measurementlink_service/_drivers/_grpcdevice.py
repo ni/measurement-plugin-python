@@ -20,7 +20,7 @@ SERVICE_CLASS = "ni.measurementlink.v1.grpcdeviceserver"
 """The service class for NI gRPC Device Server."""
 
 
-def get_insecure_grpc_device_address(
+def get_insecure_grpc_device_server_address(
     discovery_client: DiscoveryClient,
     provided_interface: str,
 ) -> str:
@@ -58,13 +58,13 @@ def get_insecure_grpc_device_address(
     return address
 
 
-def get_insecure_grpc_device_channel(
+def get_insecure_grpc_device_server_channel(
     discovery_client: DiscoveryClient,
     grpc_channel_pool: GrpcChannelPool,
     provided_interface: str,
 ) -> Optional[grpc.Channel]:
     """Get an unencrypted gRPC channel targeting NI gRPC Device Server."""
-    address = get_insecure_grpc_device_address(discovery_client, provided_interface)
+    address = get_insecure_grpc_device_server_address(discovery_client, provided_interface)
     if address:
         return grpc_channel_pool.get_channel(address)
     else:

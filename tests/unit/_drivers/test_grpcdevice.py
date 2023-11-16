@@ -4,13 +4,13 @@ from pytest_mock import MockerFixture
 
 from ni_measurementlink_service._drivers._grpcdevice import (
     SERVICE_CLASS,
-    get_insecure_grpc_device_channel,
+    get_insecure_grpc_device_server_channel,
 )
 from ni_measurementlink_service.discovery import ServiceLocation
 from tests.utilities import fake_driver
 
 
-def test___default_configuration___get_insecure_grpc_device_channel___returns_service_discovered_and_channel(
+def test___default_configuration___get_insecure_grpc_device_server_channel___returns_discovered_channel(
     discovery_client: Mock,
     grpc_channel: Mock,
     grpc_channel_pool: Mock,
@@ -18,7 +18,7 @@ def test___default_configuration___get_insecure_grpc_device_channel___returns_se
     discovery_client.resolve_service.return_value = ServiceLocation("localhost", "1234", "")
     grpc_channel_pool.get_channel.return_value = grpc_channel
 
-    returned_channel = get_insecure_grpc_device_channel(
+    returned_channel = get_insecure_grpc_device_server_channel(
         discovery_client, grpc_channel_pool, fake_driver.GRPC_SERVICE_INTERFACE_NAME
     )
 
@@ -30,21 +30,21 @@ def test___default_configuration___get_insecure_grpc_device_channel___returns_se
     assert returned_channel is grpc_channel
 
 
-def test___use_grpc_device_server_false___get_insecure_grpc_device_channel___returns_none(
+def test___use_grpc_device_server_false___get_insecure_grpc_device_server_channel___returns_none(
     discovery_client: Mock,
     grpc_channel_pool: Mock,
     mocker: MockerFixture,
 ) -> None:
     mocker.patch("ni_measurementlink_service._drivers._grpcdevice.USE_GRPC_DEVICE_SERVER", False)
 
-    returned_channel = get_insecure_grpc_device_channel(
+    returned_channel = get_insecure_grpc_device_server_channel(
         discovery_client, grpc_channel_pool, fake_driver.GRPC_SERVICE_INTERFACE_NAME
     )
 
     assert returned_channel is None
 
 
-def test___grpc_device_server_address_set___get_insecure_grpc_device_channel___returns_address_used_and_channel(
+def test___grpc_device_server_address_set___get_insecure_grpc_device_server_channel___returns_configured_channel(
     discovery_client: Mock,
     grpc_channel: Mock,
     grpc_channel_pool: Mock,
@@ -56,7 +56,7 @@ def test___grpc_device_server_address_set___get_insecure_grpc_device_channel___r
     )
     grpc_channel_pool.get_channel.return_value = grpc_channel
 
-    returned_channel = get_insecure_grpc_device_channel(
+    returned_channel = get_insecure_grpc_device_server_channel(
         discovery_client, grpc_channel_pool, fake_driver.GRPC_SERVICE_INTERFACE_NAME
     )
 
