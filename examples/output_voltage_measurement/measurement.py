@@ -14,8 +14,8 @@ import ni_measurementlink_service as nims
 import nidcpower
 import nidcpower.session
 from _helpers import configure_logging, verbosity_option
+from _visa_dmm_session_management import VisaDmmSessionConstructor
 from decouple import AutoConfig
-from ni_measurementlink_service.session_management import SessionInformation
 
 _NIDCPOWER_WAIT_FOR_EVENT_TIMEOUT_ERROR_CODE = -1074116059
 _NIDCPOWER_TIMEOUT_EXCEEDED_ERROR_CODE = -1074097933
@@ -33,7 +33,6 @@ measurement_service = nims.MeasurementService(
 
 # Search for the `.env` file starting with the current directory.
 _config = AutoConfig(str(pathlib.Path.cwd()))
-_VISA_DMM_SIMULATE: bool = _config("MEASUREMENTLINK_VISA_DMM_SIMULATE", default=False, cast=bool)
 
 
 @measurement_service.register_measurement
@@ -90,9 +89,13 @@ def measure(
     cancellation_event = threading.Event()
     measurement_service.context.add_cancel_callback(cancellation_event.set)
 
+    dmm_session_constructor = VisaDmmSessionConstructor(
+        _config, measurement_service.discovery_client
+    )
+
     with measurement_service.context.reserve_sessions([input_pin, output_pin]) as reservation:
         with reservation.initialize_nidcpower_session(), reservation.initialize_session(
-            _construct_visa_dmm_session, _visa_dmm.INSTRUMENT_TYPE_VISA_DMM
+            dmm_session_constructor, _visa_dmm.INSTRUMENT_TYPE_VISA_DMM
         ):
             # Configure the SMU channel connected to the input pin.
             source_connection = reservation.get_nidcpower_connection(input_pin)
@@ -128,17 +131,6 @@ def measure(
 
     logging.info("Completed measurement: measured_value=%g", measured_value)
     return (measured_value,)
-
-
-def _construct_visa_dmm_session(session_info: SessionInformation) -> _visa_dmm.Session:
-    # When this measurement is called from outside of TestStand (session_exists
-    # == False), reset the instrument to a known state. In TestStand,
-    # ProcessSetup resets the instrument.
-    return _visa_dmm.Session(
-        session_info.resource_name,
-        reset_device=not session_info.session_exists,
-        simulate=_VISA_DMM_SIMULATE,
-    )
 
 
 def _wait_for_nidcpower_event(
