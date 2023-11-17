@@ -8,9 +8,9 @@ from typing import Tuple
 import click
 import ni_measurementlink_service as nims
 from _helpers import configure_logging, verbosity_option
-from _visa_dmm import INSTRUMENT_TYPE_VISA_DMM, Function, Session
+from _visa_dmm import INSTRUMENT_TYPE_VISA_DMM, Function
+from _visa_dmm_session_management import VisaDmmSessionConstructor
 from decouple import AutoConfig
-from ni_measurementlink_service.session_management import SessionInformation
 
 script_or_exe = sys.executable if getattr(sys, "frozen", False) else __file__
 service_directory = pathlib.Path(script_or_exe).resolve().parent
@@ -22,7 +22,6 @@ measurement_service = nims.MeasurementService(
 
 # Search for the `.env` file starting with the current directory.
 _config = AutoConfig(str(pathlib.Path.cwd()))
-_VISA_DMM_SIMULATE: bool = _config("MEASUREMENTLINK_VISA_DMM_SIMULATE", default=False, cast=bool)
 
 
 @measurement_service.register_measurement
@@ -50,9 +49,11 @@ def measure(
         resolution_digits,
     )
 
+    session_constructor = VisaDmmSessionConstructor(_config, measurement_service.discovery_client)
+
     with measurement_service.context.reserve_session(pin_name) as reservation:
         with reservation.initialize_session(
-            _construct_visa_dmm_session, INSTRUMENT_TYPE_VISA_DMM
+            session_constructor, INSTRUMENT_TYPE_VISA_DMM
         ) as session_info:
             session = session_info.session
             session.configure_measurement_digits(measurement_type, range, resolution_digits)
@@ -60,17 +61,6 @@ def measure(
 
     logging.info("Completed measurement: measured_value=%g", measured_value)
     return (measured_value,)
-
-
-def _construct_visa_dmm_session(session_info: SessionInformation) -> Session:
-    # When this measurement is called from outside of TestStand (session_exists
-    # == False), reset the instrument to a known state. In TestStand,
-    # ProcessSetup resets the instrument.
-    return Session(
-        session_info.resource_name,
-        reset_device=not session_info.session_exists,
-        simulate=_VISA_DMM_SIMULATE,
-    )
 
 
 @click.command

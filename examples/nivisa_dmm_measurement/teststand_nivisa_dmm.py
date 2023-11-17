@@ -3,14 +3,17 @@ import pathlib
 from typing import Any
 
 from _helpers import GrpcChannelPoolHelper, TestStandSupport
-from _visa_dmm import Session, INSTRUMENT_TYPE_VISA_DMM
+from _visa_dmm import INSTRUMENT_TYPE_VISA_DMM
+from _visa_dmm_session_management import VisaDmmSessionConstructor
 from decouple import AutoConfig
 from ni_measurementlink_service.discovery import DiscoveryClient
 from ni_measurementlink_service.session_management import (
     PinMapContext,
     SessionManagementClient,
 )
-from ni_measurementlink_service.session_management._types import SessionInformation
+from ni_measurementlink_service.session_management._types import (
+    SessionInitializationBehavior,
+)
 
 # Search for the `.env` file starting with this code module's parent directory.
 _config = AutoConfig(str(pathlib.Path(__file__).resolve().parent))
@@ -33,12 +36,17 @@ def create_nivisa_dmm_sessions(sequence_context: Any) -> None:
         session_management_client = SessionManagementClient(
             discovery_client=discovery_client, grpc_channel_pool=grpc_channel_pool
         )
+        session_constructor = VisaDmmSessionConstructor(
+            _config,
+            discovery_client,
+            SessionInitializationBehavior.INITIALIZE_SESSION_THEN_DETACH,
+        )
+
         with session_management_client.reserve_sessions(
             context=pin_map_context, instrument_type_id=INSTRUMENT_TYPE_VISA_DMM
         ) as reservation:
             with reservation.initialize_sessions(
-                _construct_visa_dmm_session,
-                instrument_type_id=INSTRUMENT_TYPE_VISA_DMM,
+                session_constructor, instrument_type_id=INSTRUMENT_TYPE_VISA_DMM
             ):
                 pass
 
@@ -52,18 +60,21 @@ def destroy_nivisa_dmm_sessions() -> None:
         session_management_client = SessionManagementClient(
             discovery_client=discovery_client, grpc_channel_pool=grpc_channel_pool
         )
+        session_constructor = VisaDmmSessionConstructor(
+            _config,
+            discovery_client,
+            SessionInitializationBehavior.ATTACH_TO_SESSION_THEN_CLOSE,
+        )
+
         with session_management_client.reserve_all_registered_sessions(
             instrument_type_id=INSTRUMENT_TYPE_VISA_DMM,
         ) as reservation:
             if not reservation.session_info:
                 return
 
+            with reservation.initialize_sessions(
+                session_constructor, instrument_type_id=INSTRUMENT_TYPE_VISA_DMM
+            ):
+                pass
+
             session_management_client.unregister_sessions(reservation.session_info)
-
-
-def _construct_visa_dmm_session(session_info: SessionInformation) -> Session:
-    return Session(
-        session_info.resource_name,
-        reset_device=True,
-        simulate=_VISA_DMM_SIMULATE,
-    )
