@@ -1192,7 +1192,7 @@ niswitch = ["niswitch"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "5dd5d6946778802e0920b2bf9792a5e28615367efdc708c9e1347d70785caf36"
+content-hash = "88ff76a8419a7295f97797c6f1198ef4ade07b1d8151362f9129c2dad23b50fa"
 
 [metadata.files]
 alabaster = [
