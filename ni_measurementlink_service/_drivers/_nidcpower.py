@@ -7,7 +7,7 @@ import nidcpower
 from ni_measurementlink_service._channelpool import GrpcChannelPool
 from ni_measurementlink_service._configuration import NIDCPOWER_OPTIONS
 from ni_measurementlink_service._drivers._grpcdevice import (
-    get_insecure_grpc_device_channel,
+    get_insecure_grpc_device_server_channel,
 )
 from ni_measurementlink_service.discovery import DiscoveryClient
 from ni_measurementlink_service.session_management._types import (
@@ -36,7 +36,7 @@ class SessionConstructor:
         initialization_behavior: SessionInitializationBehavior,
     ) -> None:
         """Initialize the session constructor."""
-        self._grpc_channel = get_insecure_grpc_device_channel(
+        self._grpc_channel = get_insecure_grpc_device_server_channel(
             discovery_client, grpc_channel_pool, nidcpower.GRPC_SERVICE_INTERFACE_NAME
         )
         self._reset = reset
