@@ -5,8 +5,11 @@ in a graph.
 
 ### Features
 
-- Demonstrates a measurement service returning XY data
-- Includes InstrumentStudio and MeasurementLink UI Editor project files
+- Demonstrates a measurement service returning XY data.
+- Demonstrates how to update a measurement UI while the measurement is
+  running.
+- Demonstrates cancellation tokens and deadlines.
+- Includes InstrumentStudio and MeasurementLink UI Editor project files.
 
 ### Required Driver Software
 

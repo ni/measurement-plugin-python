@@ -1,10 +1,12 @@
 """Source the XY data for Conway's Game of Life."""
 import pathlib
 import random
+import threading
 import time
 from typing import Any, Generator, List, Tuple
 
 import click
+import grpc
 import ni_measurementlink_service as nims
 from _helpers import configure_logging, verbosity_option
 from ni_measurementlink_service._internal.stubs.ni.protobuf.types import xydata_pb2
@@ -32,9 +34,13 @@ def measure(
     width: int, height: int, update_interval: int, max_generations: int
 ) -> Generator[Tuple[xydata_pb2.DoubleXYData, int], None, None]:
     """Streaming measurement that returns Conway's Game of Life grid as DoubleXYData."""
+    cancellation_event = threading.Event()
+    measurement_service.context.add_cancel_callback(cancellation_event.set)
     grid = _initialize_grid_with_seeded_data(width, height)
+    update_interval_sec = update_interval / 1000
     generation = 0
     while max_generations == INFINITE_GENERATIONS or generation < max_generations:
+        iteration_start_time = time.monotonic()
         generation += 1
 
         xydata = _initialize_xydata_and_frame(width, height)
@@ -50,7 +56,11 @@ def measure(
         grid = _update_grid(grid)
         xydata_out = xydata
         generation += 1
-        time.sleep(update_interval / 1000)
+        delay = max(0.0, update_interval_sec - (time.monotonic() - iteration_start_time))
+        if cancellation_event.wait(delay):
+            measurement_service.context.abort(
+                grpc.StatusCode.CANCELLED, "Client requested cancellation."
+            )
 
         yield (xydata_out, generation)
 

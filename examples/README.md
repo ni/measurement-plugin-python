@@ -27,7 +27,7 @@ The TestStand sequence files associated with each example are saved in TestStand
 - `niswitch_control_relays`: Controls relays using an NI relay driver (e.g. PXI-2567).
 - `nivisa_dmm_measurement`: Performs a DMM measurement using NI-VISA and an NI Instrument Simulator v2.0.
 - `ui_progress_updates`: Generates random numbers and updates the measurement UI to show progress.
-- `game_of_life`: Displays Conway's Game of Life in a graph.
+- `game_of_life`: Displays Conway's Game of Life in a graph. Shows measurement cancellation and updating the UI during a measurement.
 
 For more details about a specific example, see the `README.md` file included with the example.
 
