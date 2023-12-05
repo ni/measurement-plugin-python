@@ -26,18 +26,18 @@ INFINITE_GENERATIONS = -1
 @measurement_service.register_measurement
 @measurement_service.configuration("width", nims.DataType.UInt32, 100)
 @measurement_service.configuration("height", nims.DataType.UInt32, 100)
-@measurement_service.configuration("update_interval", nims.DataType.UInt32, 100)
+@measurement_service.configuration("update_interval_msec", nims.DataType.UInt32, 100)
 @measurement_service.configuration("max_generations", nims.DataType.Int32, INFINITE_GENERATIONS)
 @measurement_service.output("game_of_life", nims.DataType.DoubleXYData)
 @measurement_service.output("generation", nims.DataType.UInt32)
 def measure(
-    width: int, height: int, update_interval: int, max_generations: int
+    width: int, height: int, update_interval_msec: int, max_generations: int
 ) -> Generator[Tuple[xydata_pb2.DoubleXYData, int], None, None]:
     """Streaming measurement that returns Conway's Game of Life grid as DoubleXYData."""
     cancellation_event = threading.Event()
     measurement_service.context.add_cancel_callback(cancellation_event.set)
     grid = _initialize_grid_with_seeded_data(width, height)
-    update_interval_sec = update_interval / 1000
+    update_interval_sec = update_interval_msec / 1000
     generation = 0
     while max_generations == INFINITE_GENERATIONS or generation < max_generations:
         iteration_start_time = time.monotonic()
@@ -57,12 +57,12 @@ def measure(
         xydata_out = xydata
         generation += 1
         delay = max(0.0, update_interval_sec - (time.monotonic() - iteration_start_time))
+        yield (xydata_out, generation)
+
         if cancellation_event.wait(delay):
             measurement_service.context.abort(
                 grpc.StatusCode.CANCELLED, "Client requested cancellation."
             )
-
-        yield (xydata_out, generation)
 
 
 def _initialize_xydata_and_frame(width: int, height: int) -> xydata_pb2.DoubleXYData:
