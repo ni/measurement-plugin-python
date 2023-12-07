@@ -83,19 +83,8 @@ class TestStandSupport(object):
         Returns:
             The resource id of the pin map that is registered to the pin map service.
         """
-        return self._sequence_context.Engine.TemporaryGlobals.GetValString(
+        return self._sequence_context.Execution.RunTimeVariables.GetValString(
             "NI.MeasurementLink.PinMapId", 0x0
-        )
-
-    def set_active_pin_map_id(self, pin_map_id: str) -> None:
-        """Set the NI.MeasurementLink.PinMapId temporary global variable to the specified id.
-
-        Args:
-            pin_map_id:
-                The resource id of the pin map that is registered to the pin map service.
-        """
-        self._sequence_context.Engine.TemporaryGlobals.SetValString(
-            "NI.MeasurementLink.PinMapId", 0x1, pin_map_id
         )
 
     def resolve_file_path(self, file_path: str) -> str:
