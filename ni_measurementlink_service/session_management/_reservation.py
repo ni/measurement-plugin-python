@@ -29,7 +29,6 @@ from typing import (
     cast,
 )
 
-from ni_measurementlink_service._channelpool import GrpcChannelPool
 from ni_measurementlink_service._drivers import (
     closing_session,
     closing_session_with_ts_code_module_support,
@@ -42,6 +41,7 @@ from ni_measurementlink_service._internal.stubs.ni.measurementlink.sessionmanage
     session_management_service_pb2,
 )
 from ni_measurementlink_service.discovery import DiscoveryClient
+from ni_measurementlink_service.grpc.channelpool import GrpcChannelPool
 from ni_measurementlink_service.session_management._constants import (
     INSTRUMENT_TYPE_NI_DAQMX,
     INSTRUMENT_TYPE_NI_DCPOWER,

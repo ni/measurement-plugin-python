@@ -6,13 +6,13 @@ from typing import Optional
 import grpc
 from deprecation import deprecated
 
-from ni_measurementlink_service._channelpool import GrpcChannelPool
 from ni_measurementlink_service._internal.stubs.ni.measurementlink.discovery.v1 import (
     discovery_service_pb2,
     discovery_service_pb2_grpc,
 )
 from ni_measurementlink_service.discovery._support import _get_discovery_service_address
 from ni_measurementlink_service.discovery._types import ServiceLocation
+from ni_measurementlink_service.grpc.channelpool import GrpcChannelPool
 from ni_measurementlink_service.measurement.info import MeasurementInfo, ServiceInfo
 
 _logger = logging.getLogger(__name__)

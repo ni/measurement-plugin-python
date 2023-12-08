@@ -7,12 +7,12 @@ from urllib.parse import urlsplit
 
 import grpc
 
-from ni_measurementlink_service._channelpool import GrpcChannelPool
 from ni_measurementlink_service._configuration import (
     GRPC_DEVICE_SERVER_ADDRESS,
     USE_GRPC_DEVICE_SERVER,
 )
 from ni_measurementlink_service.discovery import DiscoveryClient, ServiceLocation
+from ni_measurementlink_service.grpc.channelpool import GrpcChannelPool
 
 _logger = logging.getLogger(__name__)
 

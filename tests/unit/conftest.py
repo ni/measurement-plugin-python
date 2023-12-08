@@ -7,10 +7,10 @@ import grpc
 import pytest
 from pytest_mock import MockerFixture
 
-from ni_measurementlink_service._channelpool import GrpcChannelPool
 from ni_measurementlink_service._internal import grpc_servicer
 from ni_measurementlink_service._internal.grpc_servicer import MeasurementServiceContext
 from ni_measurementlink_service.discovery import DiscoveryClient
+from ni_measurementlink_service.grpc.channelpool import GrpcChannelPool
 from ni_measurementlink_service.measurement.service import MeasurementService
 from ni_measurementlink_service.session_management import (
     MultiSessionReservation,
