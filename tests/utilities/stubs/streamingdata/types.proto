@@ -1,0 +1,17 @@
+syntax = "proto3";
+package ni.measurementlink.measurement.tests.streamingdata;
+
+message Configurations {
+  string name = 1;
+  int32 num_responses = 2;
+  int32 data_size = 3;
+  bool cumulative_data = 4;
+  int32 response_interval_in_ms = 5;
+  int32 error_on_index = 6;
+}
+
+message Outputs {
+  string name = 1;
+  int32 index = 2;
+  repeated int32 data = 3;
+}

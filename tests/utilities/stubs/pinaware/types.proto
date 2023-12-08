@@ -1,0 +1,15 @@
+syntax = "proto3";
+package ni.measurementlink.measurement.tests.pinaware;
+
+message Configurations {
+    repeated string pin_names = 1;
+    bool multi_session = 2;
+}
+
+message Outputs {
+    string pin_map_id = 1;
+    repeated int32 sites = 2;
+    repeated string session_names = 3;
+    repeated string resource_names = 4;
+    repeated string channel_lists = 5;
+}

@@ -1,0 +1,26 @@
+syntax = "proto3";
+package ni.measurementlink.measurement.tests.loopback;
+
+enum Color {
+    NONE = 0;
+    RED = 1;
+    GREEN = 2;
+    BLUE = 3;
+}
+
+enum ProtobufColor {
+    COLORLESS = 0;
+    PINK = 1;
+    WHITE = 2;
+    BLACK = 3;
+}
+
+message Parameters {
+    float float_in = 1;
+    repeated double double_array_in = 2;
+    bool bool_in = 3;
+    string string_in = 4;
+    Color enum_in = 5;
+    ProtobufColor protobuf_enum_in = 6;
+    repeated string string_array_in = 7;
+}
