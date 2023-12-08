@@ -14,16 +14,16 @@ from ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v
     measurement_service_pb2_grpc,
 )
 from ni_measurementlink_service.discovery import DiscoveryClient
+from tests.utilities.fake_discovery_service import (
+    FakeDiscoveryServiceError,
+    FakeDiscoveryServiceStub,
+    FakeDiscoveryServiceStubError,
+)
 from tests.utilities.measurements import (
     loopback_measurement,
     unknown_interface_measurement,
     v1_only_measurement,
     v2_only_measurement,
-)
-from tests.utilities.fake_discovery_service import (
-    FakeDiscoveryServiceError,
-    FakeDiscoveryServiceStub,
-    FakeDiscoveryServiceStubError,
 )
 
 
