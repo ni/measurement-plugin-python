@@ -14,7 +14,7 @@ STUBS_PATH = pathlib.Path(__file__).parent.parent / STUBS_NAMESPACE.replace(".",
 PROTO_PATH = STUBS_PATH / "proto"
 PROTO_FILES = list(PROTO_PATH.rglob("*.proto"))
 
-TEST_STUBS_PATH = pathlib.Path(__file__).parent.parent / "tests" / "assets"
+TEST_STUBS_PATH = pathlib.Path(__file__).parent.parent / "tests" / "utilities" / "stubs"
 TEST_PROTO_PATH = TEST_STUBS_PATH
 TEST_PROTO_FILES = list(TEST_PROTO_PATH.rglob("*.proto"))
 
