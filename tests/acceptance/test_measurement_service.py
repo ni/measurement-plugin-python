@@ -18,7 +18,7 @@ from ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v
     measurement_service_pb2_grpc as v2_measurement_service_pb2_grpc,
 )
 from ni_measurementlink_service.measurement.service import MeasurementService
-from tests.utilities import loopback_measurement
+from tests.utilities.measurements import loopback_measurement
 from tests.utilities.stubs.loopback.types_pb2 import Parameters, ProtobufColor
 
 EXPECTED_PARAMETER_COUNT = 7

@@ -10,7 +10,7 @@ from ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v
     measurement_service_pb2_grpc as v2_measurement_service_pb2_grpc,
 )
 from ni_measurementlink_service.measurement.service import MeasurementService
-from tests.utilities import streaming_data_measurement
+from tests.utilities.measurements import streaming_data_measurement
 from tests.utilities.stubs.streamingdata.types_pb2 import Configurations, Outputs
 
 

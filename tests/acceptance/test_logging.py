@@ -16,8 +16,11 @@ from ni_measurementlink_service.session_management import SessionManagementClien
 from tests.acceptance.test_streaming_data_measurement import (
     _get_configuration_parameters as get_streaming_data_configuration_parameters,
 )
-from tests.utilities import loopback_measurement, streaming_data_measurement
 from tests.utilities.discovery_service_process import DiscoveryServiceProcess
+from tests.utilities.measurements import (
+    loopback_measurement,
+    streaming_data_measurement,
+)
 
 
 def test___discovery_client___call___client_call_logged(

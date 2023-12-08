@@ -9,7 +9,7 @@ from ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v
     measurement_service_pb2_grpc as v2_measurement_service_pb2_grpc,
 )
 from ni_measurementlink_service.measurement.service import MeasurementService
-from tests.utilities import yield_vs_return_measurement
+from tests.utilities.measurements import yield_vs_return_measurement
 from tests.utilities.stubs.yieldvsreturn.types_pb2 import Configurations, Outputs
 
 

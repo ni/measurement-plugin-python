@@ -14,7 +14,7 @@ from ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v
     measurement_service_pb2_grpc,
 )
 from ni_measurementlink_service.discovery import DiscoveryClient
-from tests.utilities import (
+from tests.utilities.measurements import (
     loopback_measurement,
     unknown_interface_measurement,
     v1_only_measurement,
