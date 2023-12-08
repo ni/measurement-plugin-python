@@ -9,8 +9,8 @@ from ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v
     measurement_service_pb2_grpc as v2_measurement_service_pb2_grpc,
 )
 from ni_measurementlink_service.measurement.service import MeasurementService
-from tests.assets import ui_progress_updates_test_pb2
 from tests.utilities import yield_vs_return_measurement
+from tests.utilities.stubs.yieldvsreturn.types_pb2 import Configurations, Outputs
 
 
 def test___measurement_utilizing_yield_and_return___call_measurement___receives_responses_from_yield_and_return(
@@ -24,7 +24,7 @@ def test___measurement_utilizing_yield_and_return___call_measurement___receives_
     responses = [response for response in response_iterator]
 
     for index, response in enumerate(responses):
-        output = ui_progress_updates_test_pb2.UIProgressUpdatesOutput()
+        output = Outputs()
         output.ParseFromString(response.outputs.value)
         if index + 1 == len(responses):
             assert output.status == f"Total updates: {index + 1}"
@@ -42,9 +42,7 @@ def _get_configuration_parameters(*args, **kwargs) -> any_pb2.Any:
 def _get_serialized_measurement_configuration_parameters(
     time_in_seconds: float = 1.0,
 ) -> bytes:
-    config_params = ui_progress_updates_test_pb2.UIProgressUpdatesParameter(
-        time_in_seconds=time_in_seconds
-    )
+    config_params = Configurations(time_in_seconds=time_in_seconds)
 
     temp_any = any_pb2.Any()
     temp_any.Pack(config_params)

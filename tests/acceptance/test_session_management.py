@@ -14,10 +14,10 @@ from ni_measurementlink_service._internal.stubs.ni.measurementlink.pin_map_conte
     PinMapContext,
 )
 from ni_measurementlink_service.measurement.service import MeasurementService
-from tests.assets import pin_aware_measurement_pb2
 from tests.utilities import pin_aware_measurement
 from tests.utilities.discovery_service_process import DiscoveryServiceProcess
 from tests.utilities.pin_map_client import PinMapClient
+from tests.utilities.stubs.pinaware.types_pb2 import Configurations, Outputs
 
 
 def test___pin_map_context___measure___sends_pin_map_id_and_sites(
@@ -28,9 +28,7 @@ def test___pin_map_context___measure___sends_pin_map_id_and_sites(
     pin_map_path = pin_map_directory / "1Smu1ChannelGroup2Pin2Site.pinmap"
     pin_map_id = pin_map_client.update_pin_map(pin_map_path)
     pin_map_context = PinMapContext(pin_map_id=pin_map_id, sites=[0, 1])
-    configurations = pin_aware_measurement_pb2.Configurations(
-        pin_names=["Pin1", "Pin2"], multi_session=False
-    )
+    configurations = Configurations(pin_names=["Pin1", "Pin2"], multi_session=False)
 
     outputs = _measure(stub_v2, pin_map_context, configurations)
 
@@ -217,9 +215,7 @@ def test___single_session___measure___reserves_single_session(
 ) -> None:
     pin_map_id = pin_map_client.update_pin_map(pin_map_directory / configuration.pin_map_name)
     pin_map_context = PinMapContext(pin_map_id=pin_map_id, sites=configuration.sites)
-    configurations = pin_aware_measurement_pb2.Configurations(
-        pin_names=configuration.pin_names, multi_session=False
-    )
+    configurations = Configurations(pin_names=configuration.pin_names, multi_session=False)
 
     outputs = _measure(stub_v2, pin_map_context, configurations)
 
@@ -243,9 +239,7 @@ def test___multi_session___measure___reserves_multiple_sessions(
 ) -> None:
     pin_map_id = pin_map_client.update_pin_map(pin_map_directory / configuration.pin_map_name)
     pin_map_context = PinMapContext(pin_map_id=pin_map_id, sites=configuration.sites)
-    configurations = pin_aware_measurement_pb2.Configurations(
-        pin_names=configuration.pin_names, multi_session=True
-    )
+    configurations = Configurations(pin_names=configuration.pin_names, multi_session=True)
 
     outputs = _measure(stub_v2, pin_map_context, configurations)
 
@@ -265,9 +259,7 @@ def test___multi_session_but_expecting_single_session___measure___raises_too_man
 ) -> None:
     pin_map_id = pin_map_client.update_pin_map(pin_map_directory / configuration.pin_map_name)
     pin_map_context = PinMapContext(pin_map_id=pin_map_id, sites=configuration.sites)
-    configurations = pin_aware_measurement_pb2.Configurations(
-        pin_names=configuration.pin_names, multi_session=False
-    )
+    configurations = Configurations(pin_names=configuration.pin_names, multi_session=False)
 
     with pytest.raises(grpc.RpcError) as exc_info:
         _ = _measure(stub_v2, pin_map_context, configurations)
@@ -279,14 +271,14 @@ def test___multi_session_but_expecting_single_session___measure___raises_too_man
 def _measure(
     stub_v2: MeasurementServiceStub,
     pin_map_context: PinMapContext,
-    configurations: pin_aware_measurement_pb2.Configurations,
-) -> pin_aware_measurement_pb2.Outputs:
+    configurations: Configurations,
+) -> Outputs:
     request = MeasureRequest(pin_map_context=pin_map_context)
     request.configuration_parameters.Pack(configurations)
     response_iterator = stub_v2.Measure(request)
     responses = list(response_iterator)
     assert len(responses) == 1
-    outputs = pin_aware_measurement_pb2.Outputs.FromString(responses[0].outputs.value)
+    outputs = Outputs.FromString(responses[0].outputs.value)
     return outputs
 
 

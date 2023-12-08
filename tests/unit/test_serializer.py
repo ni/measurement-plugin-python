@@ -10,7 +10,7 @@ from ni_measurementlink_service._internal.parameter.metadata import (
     TypeSpecialization,
 )
 from ni_measurementlink_service._internal.stubs.ni.protobuf.types import xydata_pb2
-from tests.assets import test_pb2
+from tests.utilities.stubs.serialization import test_pb2
 
 
 class DifferentColor(Enum):

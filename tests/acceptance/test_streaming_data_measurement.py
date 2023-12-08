@@ -10,8 +10,8 @@ from ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v
     measurement_service_pb2_grpc as v2_measurement_service_pb2_grpc,
 )
 from ni_measurementlink_service.measurement.service import MeasurementService
-from tests.assets import sample_streaming_measurement_test_pb2
 from tests.utilities import streaming_data_measurement
+from tests.utilities.stubs.streamingdata.types_pb2 import Configurations, Outputs
 
 
 @pytest.mark.parametrize("num_responses", [1, 10, 100])
@@ -106,7 +106,7 @@ def _get_serialized_measurement_configuration_parameters(
     response_interval_in_ms: int = 1,
     error_on_index: int = -1,
 ) -> bytes:
-    config_params = sample_streaming_measurement_test_pb2.SampleStreamingMeasurementParameter()
+    config_params = Configurations()
     config_params.name = name
     config_params.num_responses = num_responses
     config_params.data_size = data_size
@@ -125,7 +125,7 @@ def _get_serialized_measurement_outputs(
     index: int,
     data: List[int],
 ) -> bytes:
-    config_params = sample_streaming_measurement_test_pb2.SampleStreamingMeasurementOutput()
+    config_params = Outputs()
     config_params.name = name
     config_params.index = index
     config_params.data.extend(data)
