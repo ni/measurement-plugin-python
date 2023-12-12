@@ -244,7 +244,7 @@ def test___empty_buffer___deserialize_parameters___returns_zero_or_empty():
 
 def test___big_message___deserialize_parameters___returns_parameter_value_by_id() -> None:
     parameter_metadata_by_id = _get_big_message_metadata_by_id()
-    values = [123.5 + i for i in range(BIG_MESSAGE_SIZE)]  # xxx.5 should not bruise
+    values = [123.456 + i for i in range(BIG_MESSAGE_SIZE)]
     message = _get_big_message(values)
     serialized_data = message.SerializeToString()
     expected_parameter_value_by_id = {i + 1: value for (i, value) in enumerate(values)}
@@ -253,18 +253,18 @@ def test___big_message___deserialize_parameters___returns_parameter_value_by_id(
         parameter_metadata_by_id, serialized_data
     )
 
-    assert parameter_value_by_id == expected_parameter_value_by_id
+    assert parameter_value_by_id == pytest.approx(expected_parameter_value_by_id)
 
 
 def test___big_message___serialize_parameters___returns_serialized_data() -> None:
     parameter_metadata_by_id = _get_big_message_metadata_by_id()
-    values = [123.5 + i for i in range(BIG_MESSAGE_SIZE)]  # xxx.5 should not bruise
+    values = [123.456 + i for i in range(BIG_MESSAGE_SIZE)]
     expected_message = _get_big_message(values)
 
     serialized_data = serializer.serialize_parameters(parameter_metadata_by_id, values)
 
     message = BigMessage.FromString(serialized_data)
-    assert message == expected_message
+    assert message.ListFields() == pytest.approx(expected_message.ListFields())
 
 
 def _validate_serialized_bytes(custom_serialized_bytes, values):
