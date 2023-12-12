@@ -5,7 +5,9 @@ from io import BytesIO
 from typing import Any, Dict, Sequence, cast
 
 from google.protobuf.descriptor import FieldDescriptor
-from google.protobuf.internal import encoder
+from google.protobuf.internal.decoder import (  # type: ignore[attr-defined]
+    _DecodeSignedVarint32,
+)
 from google.protobuf.message import Message
 
 from ni_measurementlink_service._internal.parameter import serialization_strategy
@@ -110,25 +112,6 @@ def serialize_default_values(parameter_metadata_dict: Dict[int, ParameterMetadat
     return serialize_parameters(parameter_metadata_dict, default_value_parameter_array)
 
 
-def _get_field_index(parameter_bytes: bytes, tag_position: int) -> int:
-    """Get the Filed Index based on the tag's position.
-
-    The tag Position should be the index of the TagValue in the ByteArray for valid field index.
-
-    Args
-    ----
-        parameter_bytes (bytes): Serialized bytes
-
-        tag_position (int): Tag position
-
-    Returns
-    -------
-        int: Filed index of the Tag Position
-
-    """
-    return parameter_bytes[tag_position] >> _GRPC_WIRE_TYPE_BIT_WIDTH
-
-
 def _get_overlapping_parameters(
     parameter_metadata_dict: Dict[int, ParameterMetadata], parameter_bytes: bytes
 ) -> Dict[int, Any]:
@@ -152,8 +135,10 @@ def _get_overlapping_parameters(
     # inner_decoder update the overlapping_parameters
     overlapping_parameters_by_id: Dict[int, Any] = {}
     position = 0
+    parameter_bytes_memory_view = memoryview(parameter_bytes)
     while position < len(parameter_bytes):
-        field_index = _get_field_index(parameter_bytes, position)
+        (tag, position) = _DecodeSignedVarint32(parameter_bytes_memory_view, position)
+        field_index = tag >> _GRPC_WIRE_TYPE_BIT_WIDTH
         if field_index not in parameter_metadata_dict:
             raise Exception(
                 f"Error occurred while reading the parameter - given protobuf index '{field_index}' is invalid."
@@ -163,11 +148,9 @@ def _get_overlapping_parameters(
             field_metadata.type, field_metadata.repeated, field_metadata.message_type
         )
         inner_decoder = decoder(field_index, cast(FieldDescriptor, field_index))
-        parameter_bytes_io = BytesIO(parameter_bytes)
-        parameter_bytes_memory_view = parameter_bytes_io.getbuffer()
         position = inner_decoder(
             parameter_bytes_memory_view,
-            position + encoder._TagSize(field_index),  # type: ignore[attr-defined]
+            position,
             len(parameter_bytes),
             cast(Message, None),  # unused - See serialization_strategy._vector_decoder._new_default
             cast(Dict[FieldDescriptor, Any], overlapping_parameters_by_id),
