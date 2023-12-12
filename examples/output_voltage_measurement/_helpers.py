@@ -43,7 +43,7 @@ class TestStandSupport(object):
         self._sequence_context = sequence_context
 
     def get_active_pin_map_id(self) -> str:
-        """Get the active pin map id from the NI.MeasurementLink.PinMapId temporary global variable.
+        """Get the active pin map id from the NI.MeasurementLink.PinMapId runtime variable.
 
         Returns:
             The resource id of the pin map that is registered to the pin map service.
