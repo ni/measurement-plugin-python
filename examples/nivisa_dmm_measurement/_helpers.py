@@ -65,13 +65,7 @@ class TestStandSupport(object):
         """
         if pathlib.Path(file_path).is_absolute():
             return file_path
-        (
-            _,
-            absolute_path,
-            _,
-            _,
-            user_canceled,
-        ) = self._sequence_context.Engine.FindFileEx(
+        (_, absolute_path, _, _, user_canceled) = self._sequence_context.Engine.FindFileEx(
             fileToFind=file_path,
             absolutePath=None,
             srchDirType=None,
