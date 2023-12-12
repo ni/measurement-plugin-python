@@ -1,5 +1,6 @@
 """Contains tests to validate serializer.py."""
 from enum import Enum, IntEnum
+from typing import Dict, Sequence
 
 import pytest
 from google.protobuf import any_pb2, type_pb2
@@ -11,6 +12,7 @@ from ni_measurementlink_service._internal.parameter.metadata import (
 )
 from ni_measurementlink_service._internal.stubs.ni.protobuf.types import xydata_pb2
 from tests.assets import test_pb2
+from tests.assets.bigmessage_pb2 import BigMessage
 
 
 class DifferentColor(Enum):
@@ -34,6 +36,9 @@ class Countries(IntEnum):
 double_xy_data = xydata_pb2.DoubleXYData()
 double_xy_data.x_data.append(4)
 double_xy_data.y_data.append(6)
+
+# This should match the number of fields in bigmessage.proto.
+BIG_MESSAGE_SIZE = 100
 
 
 @pytest.mark.parametrize(
@@ -235,6 +240,31 @@ def test___empty_buffer___deserialize_parameters___returns_zero_or_empty():
             assert value is None
         else:
             assert value == 0
+
+
+def test___big_message___deserialize_parameters___returns_parameter_value_by_id() -> None:
+    parameter_metadata_by_id = _get_big_message_metadata_by_id()
+    values = [123.5 + i for i in range(BIG_MESSAGE_SIZE)]  # xxx.5 should not bruise
+    message = _get_big_message(values)
+    serialized_data = message.SerializeToString()
+    expected_parameter_value_by_id = {i + 1: value for (i, value) in enumerate(values)}
+
+    parameter_value_by_id = serializer.deserialize_parameters(
+        parameter_metadata_by_id, serialized_data
+    )
+
+    assert parameter_value_by_id == expected_parameter_value_by_id
+
+
+def test___big_message___serialize_parameters___returns_serialized_data() -> None:
+    parameter_metadata_by_id = _get_big_message_metadata_by_id()
+    values = [123.5 + i for i in range(BIG_MESSAGE_SIZE)]  # xxx.5 should not bruise
+    expected_message = _get_big_message(values)
+
+    serialized_data = serializer.serialize_parameters(parameter_metadata_by_id, values)
+
+    message = BigMessage.FromString(serialized_data)
+    assert message == expected_message
 
 
 def _validate_serialized_bytes(custom_serialized_bytes, values):
@@ -442,3 +472,22 @@ def _get_test_grpc_message(test_values):
     parameter.xy_data.x_data.append(test_values[20].x_data[0])
     parameter.xy_data.y_data.append(test_values[20].y_data[0])
     return parameter
+
+
+def _get_big_message_metadata_by_id() -> Dict[int, ParameterMetadata]:
+    return {
+        i
+        + 1: ParameterMetadata(
+            display_name=f"field{i + 1}",
+            type=type_pb2.Field.TYPE_DOUBLE,
+            repeated=False,
+            default_value=-1.0,
+            annotations={},
+        )
+        for i in range(BIG_MESSAGE_SIZE)
+    }
+
+
+def _get_big_message(values: Sequence[float]) -> BigMessage:
+    assert len(values) == BIG_MESSAGE_SIZE
+    return BigMessage(**{f"field{i + 1}": value for (i, value) in enumerate(values)})
