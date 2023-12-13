@@ -1,5 +1,5 @@
 syntax = "proto3";
-package ni.measurementlink.measurement.tests.v1;
+package ni.measurementlink.measurement.tests.serialization;
 
 message BigMessage {
   double field1 = 1;
