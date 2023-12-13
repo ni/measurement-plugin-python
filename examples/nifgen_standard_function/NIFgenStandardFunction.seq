@@ -3132,7 +3132,7 @@
 														</subprops>
 													</Result>
 													<PinMapPath classname='PathValue'>
-														<value>@"NIFgenStandardFunction.pinmap"</value>
+														<value>"NIFgenStandardFunction.pinmap"</value>
 													</PinMapPath>
 												</subprops>
 											</Step>

@@ -3198,7 +3198,7 @@
 														</subprops>
 													</Result>
 													<PinMapPath classname='PathValue'>
-														<value>@"NIDmmMeasurement.pinmap"</value>
+														<value>"NIDmmMeasurement.pinmap"</value>
 													</PinMapPath>
 												</subprops>
 											</Step>

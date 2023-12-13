@@ -6774,7 +6774,7 @@
 														</subprops>
 													</Result>
 													<PinMapPath classname='PathValue'>
-														<value>@"NISwitchControlRelays.pinmap"</value>
+														<value>"NISwitchControlRelays.pinmap"</value>
 													</PinMapPath>
 												</subprops>
 											</Step>
