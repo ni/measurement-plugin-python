@@ -16,8 +16,8 @@ from ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v
 from ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v2 import (
     measurement_service_pb2_grpc as v2_measurement_service_pb2_grpc,
 )
-from ni_measurementlink_service._loggers import ServerLogger
 from ni_measurementlink_service.discovery import DiscoveryClient, ServiceLocation
+from ni_measurementlink_service.grpc.loggers import ServerLogger
 from ni_measurementlink_service.measurement.info import MeasurementInfo, ServiceInfo
 
 _logger = logging.getLogger(__name__)

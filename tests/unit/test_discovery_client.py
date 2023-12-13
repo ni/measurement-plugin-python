@@ -12,7 +12,6 @@ import grpc
 import pytest
 from pytest_mock import MockerFixture
 
-from ni_measurementlink_service._channelpool import GrpcChannelPool
 from ni_measurementlink_service._internal.stubs.ni.measurementlink.discovery.v1.discovery_service_pb2 import (
     RegisterServiceRequest,
     RegisterServiceResponse,
@@ -31,6 +30,7 @@ from ni_measurementlink_service.discovery._support import (
     _open_key_file,
     _start_service,
 )
+from ni_measurementlink_service.grpc.channelpool import GrpcChannelPool
 from ni_measurementlink_service.measurement.info import MeasurementInfo, ServiceInfo
 from tests.utilities.fake_rpc_error import FakeRpcError
 
