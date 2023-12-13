@@ -3333,7 +3333,7 @@
 														</subprops>
 													</Result>
 													<PinMapPath classname='PathValue'>
-														<value>@"NIDCPowerSourceDCVoltage.pinmap"</value>
+														<value>"NIDCPowerSourceDCVoltage.pinmap"</value>
 													</PinMapPath>
 												</subprops>
 											</Step>

@@ -3102,7 +3102,7 @@
 														</subprops>
 													</Result>
 													<PinMapPath classname='PathValue'>
-														<value>@"NIDAQmxAnalogInput.pinmap"</value>
+														<value>"NIDAQmxAnalogInput.pinmap"</value>
 													</PinMapPath>
 												</subprops>
 											</Step>

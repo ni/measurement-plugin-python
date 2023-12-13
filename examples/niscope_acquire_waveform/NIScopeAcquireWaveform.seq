@@ -3495,7 +3495,7 @@
 														</subprops>
 													</Result>
 													<PinMapPath classname='PathValue'>
-														<value>@"NIScopeAcquireWaveform.pinmap"</value>
+														<value>"NIScopeAcquireWaveform.pinmap"</value>
 													</PinMapPath>
 												</subprops>
 											</Step>
