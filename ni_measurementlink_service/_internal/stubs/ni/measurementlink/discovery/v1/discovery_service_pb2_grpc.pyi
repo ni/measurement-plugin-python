@@ -5,15 +5,26 @@ isort:skip_file
 ---------------------------------------------------------------------
 """
 import abc
+import collections.abc
 import grpc
+import grpc.aio
 import ni_measurementlink_service._internal.stubs.ni.measurementlink.discovery.v1.discovery_service_pb2 as ni_measurementlink_discovery_v1_discovery_service_pb2
+import typing
+
+_T = typing.TypeVar('_T')
+
+class _MaybeAsyncIterator(collections.abc.AsyncIterator[_T], collections.abc.Iterator[_T], metaclass=abc.ABCMeta):
+    ...
+
+class _ServicerContext(grpc.ServicerContext, grpc.aio.ServicerContext):  # type: ignore
+    ...
 
 class DiscoveryServiceStub:
     """The service used as a registry for other services. This service can be used to discover
     and activate other services present in the system.
     """
 
-    def __init__(self, channel: grpc.Channel) -> None: ...
+    def __init__(self, channel: typing.Union[grpc.Channel, grpc.aio.Channel]) -> None: ...
     RegisterService: grpc.UnaryUnaryMultiCallable[
         ni_measurementlink_discovery_v1_discovery_service_pb2.RegisterServiceRequest,
         ni_measurementlink_discovery_v1_discovery_service_pb2.RegisterServiceResponse,
@@ -56,6 +67,53 @@ class DiscoveryServiceStub:
     - FAILED_PRECONDITION: More than one service matching the resolve request was found
     """
 
+class DiscoveryServiceAsyncStub:
+    """The service used as a registry for other services. This service can be used to discover
+    and activate other services present in the system.
+    """
+
+    RegisterService: grpc.aio.UnaryUnaryMultiCallable[
+        ni_measurementlink_discovery_v1_discovery_service_pb2.RegisterServiceRequest,
+        ni_measurementlink_discovery_v1_discovery_service_pb2.RegisterServiceResponse,
+    ]
+    """Registers a service instance with the discovery service.
+    Status Codes for errors:
+    - INVALID_ARGUMENT:
+      - ServiceDescriptor.display_name is empty
+      - ServiceDescriptor.provided_interfaces is empty
+      - ServiceDescriptor.service_class is empty
+      - ServiceLocation.location is empty
+      - Both ServiceLocation.insecure_port and ServiceLocation.ssl_authenticated_port are empty
+      - Either ServiceLocation.insecure_port or ServiceLocation.ssl_authenticated_port contain an invalid port number
+    """
+    UnregisterService: grpc.aio.UnaryUnaryMultiCallable[
+        ni_measurementlink_discovery_v1_discovery_service_pb2.UnregisterServiceRequest,
+        ni_measurementlink_discovery_v1_discovery_service_pb2.UnregisterServiceResponse,
+    ]
+    """Unregisters a service instance with the discovery service."""
+    EnumerateServices: grpc.aio.UnaryUnaryMultiCallable[
+        ni_measurementlink_discovery_v1_discovery_service_pb2.EnumerateServicesRequest,
+        ni_measurementlink_discovery_v1_discovery_service_pb2.EnumerateServicesResponse,
+    ]
+    """Enumerate all services which implement a specific service interface.
+    This is useful for plugin type systems where the possible services are not known ahead of time.
+    """
+    ResolveService: grpc.aio.UnaryUnaryMultiCallable[
+        ni_measurementlink_discovery_v1_discovery_service_pb2.ResolveServiceRequest,
+        ni_measurementlink_discovery_v1_discovery_service_pb2.ServiceLocation,
+    ]
+    """Given a description of a service, returns information that can be used to establish communication
+    with that service. If necessary, the service will be started by the discovery service if it has not
+    already been started. Activation of the service is accomplished through use of a .serviceconfig file
+    which includes information describing the service. Services that register a .serviceconfig file must
+    call RegisterService when their service is started or this call will never complete successfully when
+    the discovery service attempts to start it.
+    Status Codes for errors:
+    - INVALID_ARGUMENT: provided_interfaces is empty
+    - NOT_FOUND: No service matching the resolve request was found
+    - FAILED_PRECONDITION: More than one service matching the resolve request was found
+    """
+
 class DiscoveryServiceServicer(metaclass=abc.ABCMeta):
     """The service used as a registry for other services. This service can be used to discover
     and activate other services present in the system.
@@ -65,8 +123,8 @@ class DiscoveryServiceServicer(metaclass=abc.ABCMeta):
     def RegisterService(
         self,
         request: ni_measurementlink_discovery_v1_discovery_service_pb2.RegisterServiceRequest,
-        context: grpc.ServicerContext,
-    ) -> ni_measurementlink_discovery_v1_discovery_service_pb2.RegisterServiceResponse:
+        context: _ServicerContext,
+    ) -> typing.Union[ni_measurementlink_discovery_v1_discovery_service_pb2.RegisterServiceResponse, collections.abc.Awaitable[ni_measurementlink_discovery_v1_discovery_service_pb2.RegisterServiceResponse]]:
         """Registers a service instance with the discovery service.
         Status Codes for errors:
         - INVALID_ARGUMENT:
@@ -81,15 +139,15 @@ class DiscoveryServiceServicer(metaclass=abc.ABCMeta):
     def UnregisterService(
         self,
         request: ni_measurementlink_discovery_v1_discovery_service_pb2.UnregisterServiceRequest,
-        context: grpc.ServicerContext,
-    ) -> ni_measurementlink_discovery_v1_discovery_service_pb2.UnregisterServiceResponse:
+        context: _ServicerContext,
+    ) -> typing.Union[ni_measurementlink_discovery_v1_discovery_service_pb2.UnregisterServiceResponse, collections.abc.Awaitable[ni_measurementlink_discovery_v1_discovery_service_pb2.UnregisterServiceResponse]]:
         """Unregisters a service instance with the discovery service."""
     @abc.abstractmethod
     def EnumerateServices(
         self,
         request: ni_measurementlink_discovery_v1_discovery_service_pb2.EnumerateServicesRequest,
-        context: grpc.ServicerContext,
-    ) -> ni_measurementlink_discovery_v1_discovery_service_pb2.EnumerateServicesResponse:
+        context: _ServicerContext,
+    ) -> typing.Union[ni_measurementlink_discovery_v1_discovery_service_pb2.EnumerateServicesResponse, collections.abc.Awaitable[ni_measurementlink_discovery_v1_discovery_service_pb2.EnumerateServicesResponse]]:
         """Enumerate all services which implement a specific service interface.
         This is useful for plugin type systems where the possible services are not known ahead of time.
         """
@@ -97,8 +155,8 @@ class DiscoveryServiceServicer(metaclass=abc.ABCMeta):
     def ResolveService(
         self,
         request: ni_measurementlink_discovery_v1_discovery_service_pb2.ResolveServiceRequest,
-        context: grpc.ServicerContext,
-    ) -> ni_measurementlink_discovery_v1_discovery_service_pb2.ServiceLocation:
+        context: _ServicerContext,
+    ) -> typing.Union[ni_measurementlink_discovery_v1_discovery_service_pb2.ServiceLocation, collections.abc.Awaitable[ni_measurementlink_discovery_v1_discovery_service_pb2.ServiceLocation]]:
         """Given a description of a service, returns information that can be used to establish communication
         with that service. If necessary, the service will be started by the discovery service if it has not
         already been started. Activation of the service is accomplished through use of a .serviceconfig file
@@ -111,4 +169,4 @@ class DiscoveryServiceServicer(metaclass=abc.ABCMeta):
         - FAILED_PRECONDITION: More than one service matching the resolve request was found
         """
 
-def add_DiscoveryServiceServicer_to_server(servicer: DiscoveryServiceServicer, server: grpc.Server) -> None: ...
+def add_DiscoveryServiceServicer_to_server(servicer: DiscoveryServiceServicer, server: typing.Union[grpc.Server, grpc.aio.Server]) -> None: ...
