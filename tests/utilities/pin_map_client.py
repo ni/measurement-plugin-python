@@ -6,12 +6,12 @@ from typing import Optional, Union
 
 import grpc
 
-from ni_measurementlink_service._channelpool import GrpcChannelPool
 from ni_measurementlink_service._internal.stubs.ni.measurementlink.pinmap.v1 import (
     pin_map_service_pb2,
     pin_map_service_pb2_grpc,
 )
 from ni_measurementlink_service.discovery import DiscoveryClient
+from ni_measurementlink_service.grpc.channelpool import GrpcChannelPool
 
 _logger = logging.getLogger(__name__)
 

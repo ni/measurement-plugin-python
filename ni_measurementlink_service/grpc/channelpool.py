@@ -1,3 +1,5 @@
+"""gRPC channel pool."""
+
 from __future__ import annotations
 
 import sys
@@ -13,7 +15,7 @@ from typing import (
 
 import grpc
 
-from ni_measurementlink_service._loggers import ClientLogger
+from ni_measurementlink_service.grpc.loggers import ClientLogger
 
 if TYPE_CHECKING:
     if sys.version_info >= (3, 11):
