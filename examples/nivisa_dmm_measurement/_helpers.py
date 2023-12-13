@@ -6,43 +6,8 @@ from typing import Any, Callable, TypeVar
 
 import click
 import grpc
-from ni_measurementlink_service._internal.stubs.ni.measurementlink.pinmap.v1 import (
-    pin_map_service_pb2,
-    pin_map_service_pb2_grpc,
-)
 from ni_measurementlink_service.discovery import DiscoveryClient
 from ni_measurementlink_service.measurement.service import GrpcChannelPool
-
-
-class PinMapClient(object):
-    """Class that communicates with the pin map service."""
-
-    def __init__(self, *, grpc_channel: grpc.Channel):
-        """Initialize pin map client."""
-        self._client: pin_map_service_pb2_grpc.PinMapServiceStub = (
-            pin_map_service_pb2_grpc.PinMapServiceStub(grpc_channel)
-        )
-
-    def update_pin_map(self, pin_map_path: str) -> str:
-        """Update registered pin map contents.
-
-        Create and register a pin map if a pin map resource for the specified pin map id is not
-        found.
-
-        Args:
-            pin_map_path: The file path of the pin map to register as a pin map resource.
-
-        Returns:
-            The resource id of the pin map that is registered to the pin map service.
-        """
-        pin_map_path_obj = pathlib.Path(pin_map_path)
-        # By convention, the pin map id is the .pinmap file path.
-        request = pin_map_service_pb2.UpdatePinMapFromXmlRequest(
-            pin_map_id=pin_map_path,
-            pin_map_xml=pin_map_path_obj.read_text(encoding="utf-8"),
-        )
-        response: pin_map_service_pb2.PinMap = self._client.UpdatePinMapFromXml(request)
-        return response.pin_map_id
 
 
 class GrpcChannelPoolHelper(GrpcChannelPool):
@@ -78,7 +43,7 @@ class TestStandSupport(object):
         self._sequence_context = sequence_context
 
     def get_active_pin_map_id(self) -> str:
-        """Get the active pin map id from the NI.MeasurementLink.PinMapId temporary global variable.
+        """Get the active pin map id from the NI.MeasurementLink.PinMapId runtime variable.
 
         Returns:
             The resource id of the pin map that is registered to the pin map service.
@@ -100,13 +65,7 @@ class TestStandSupport(object):
         """
         if pathlib.Path(file_path).is_absolute():
             return file_path
-        (
-            _,
-            absolute_path,
-            _,
-            _,
-            user_canceled,
-        ) = self._sequence_context.Engine.FindFileEx(
+        (_, absolute_path, _, _, user_canceled) = self._sequence_context.Engine.FindFileEx(
             fileToFind=file_path,
             absolutePath=None,
             srchDirType=None,
