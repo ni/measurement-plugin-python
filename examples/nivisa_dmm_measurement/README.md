@@ -20,10 +20,13 @@ and a DMM that supports SCPI commands.
 - Demonstrates how to share instrument resources with other measurement services
   when running measurements from TestStand, without using NI gRPC Device Server
 
-### Required Driver Software
+### Required Software
 
+- MeasurementLink 2024 Q1 or later
 - NI-488.2 and/or NI-Serial
 - NI-VISA
+- Recommended: InstrumentStudio 2024 Q1 or later (matching MeasurementLink)
+- Recommended: TestStand 2021 SP1 or later
 - Optional: NI Instrument Simulator software
 
 > **Note:**

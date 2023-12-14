@@ -17,9 +17,12 @@ This is a MeasurementLink example that performs a measurement using an NI DMM.
 - Uses the NI gRPC Device Server to allow sharing instrument sessions with other
   measurement services when running measurements from TestStand
 
-### Required Driver Software
+### Required Software
 
+- MeasurementLink 2024 Q1 or later
 - NI-DMM
+- Recommended: InstrumentStudio 2024 Q1 or later (matching MeasurementLink)
+- Recommended: TestStand 2021 SP1 or later
 
 ### Required Hardware
 

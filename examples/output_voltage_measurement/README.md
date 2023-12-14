@@ -25,11 +25,14 @@ commands using NI-VISA.
 - For NI-DCPower, uses the NI gRPC Device Server to allow sharing the instrument
   sessions with other measurement services.
 
-### Required Driver Software
+### Required Software
 
+- MeasurementLink 2024 Q1 or later
 - NI-DCPower
 - NI-488.2 and/or NI-Serial
 - NI-VISA
+- Recommended: InstrumentStudio 2024 Q1 or later (matching MeasurementLink)
+- Recommended: TestStand 2021 SP1 or later
 - Optional: NI Instrument Simulator software
 
 > **Note:**
