@@ -17,8 +17,8 @@ and a DMM that supports SCPI commands.
     sections of the main sequence. For **Test UUTs** and batch process model use
     cases, these steps should be moved to the `ProcessSetup` and
     `ProcessCleanup` callbacks.
-- Demonstrates how to share instrument resources with other measurement services
-  when running measurements from TestStand, without using NI gRPC Device Server
+- Uses the NI gRPC Device Server to allow sharing instrument sessions with other
+  measurement services when running measurements from TestStand
 
 ### Required Software
 
@@ -70,30 +70,3 @@ To use a physical instrument:
     the NI Instrument Simulator software.
   - To configure third party instruments, see the documentation provided with
     the instrument.
-
-### Session Management
-
-This example has a slightly different approach to session management than the
-examples for NI PXI modular instruments. 
-
-The examples for NI PXI modular instruments use the NI gRPC Device Server to
-share a single driver session between multiple operating system processes. When
-running measurements outside of TestStand, each measurement re-initalizes the
-instrument. When running measurements in TestStand, the `ProcessSetup` callback
-initializes the instrument once per sequence execution, which avoids the
-overhead of re-initializing the instrument for each measurement.
-
-This VISA example does not use NI gRPC Device Server. The measurement logic and
-TestStand code module open and close VISA driver sessions as needed in multiple
-operating system processes. However, the instrument initialization behavior is
-the same as before: outside of TestStand, each measurement re-initializes the
-instrument; in TestStand, the `ProcessSetup` callback initalizes the instrument
-once per sequence execution. This approach works for VISA because multiple
-processes (TestStand, multiple measurement services) can connect to the same
-instrument without resetting any instrument state.
-
-In both cases, the `ProcessSetup` callback registers the instrument with the
-session management service, the measurement logic uses the session management
-service to reserve and unreserve the instrument, and the `ProcessCleanup`
-callback unregisters the instrument with the session management service. This
-ensures that only one measurement at a time has access to the instrument.

@@ -22,8 +22,8 @@ commands using NI-VISA.
   - Sources the DC voltage level of the DUT input pin
   - Measures the voltage of the DUT output pin
 - Includes InstrumentStudio and MeasurementLink UI Editor project files
-- For NI-DCPower, uses the NI gRPC Device Server to allow sharing the instrument
-  sessions with other measurement services.
+- Uses the NI gRPC Device Server to allow sharing instrument sessions with other
+  measurement services when running measurements from TestStand
 
 ### Required Software
 
