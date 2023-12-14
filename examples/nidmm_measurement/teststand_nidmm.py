@@ -1,8 +1,9 @@
 """Functions to set up and tear down sessions of NI-DMM devices in NI TestStand."""
 from typing import Any
 
-from _helpers import GrpcChannelPoolHelper, TestStandSupport
+from _helpers import TestStandSupport
 from ni_measurementlink_service.discovery import DiscoveryClient
+from ni_measurementlink_service.grpc.channelpool import GrpcChannelPool
 from ni_measurementlink_service.session_management import (
     INSTRUMENT_TYPE_NI_DMM,
     PinMapContext,
@@ -18,7 +19,7 @@ def create_nidmm_sessions(sequence_context: Any) -> None:
         sequence_context: The SequenceContext COM object from the TestStand sequence execution.
             (Dynamically typed.)
     """
-    with GrpcChannelPoolHelper() as grpc_channel_pool:
+    with GrpcChannelPool() as grpc_channel_pool:
         teststand_support = TestStandSupport(sequence_context)
         pin_map_id = teststand_support.get_active_pin_map_id()
         pin_map_context = PinMapContext(pin_map_id=pin_map_id, sites=None)
@@ -41,7 +42,7 @@ def create_nidmm_sessions(sequence_context: Any) -> None:
 
 def destroy_nidmm_sessions() -> None:
     """Destroy and unregister all NI-DMM sessions."""
-    with GrpcChannelPoolHelper() as grpc_channel_pool:
+    with GrpcChannelPool() as grpc_channel_pool:
         discovery_client = DiscoveryClient(grpc_channel_pool=grpc_channel_pool)
         session_management_client = SessionManagementClient(
             discovery_client=discovery_client, grpc_channel_pool=grpc_channel_pool
