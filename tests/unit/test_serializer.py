@@ -11,8 +11,8 @@ from ni_measurementlink_service._internal.parameter.metadata import (
     TypeSpecialization,
 )
 from ni_measurementlink_service._internal.stubs.ni.protobuf.types import xydata_pb2
-from tests.assets import test_pb2
-from tests.assets.bigmessage_pb2 import BigMessage
+from tests.utilities.stubs.serialization import test_pb2
+from tests.utilities.stubs.serialization.bigmessage_pb2 import BigMessage
 
 
 class DifferentColor(Enum):

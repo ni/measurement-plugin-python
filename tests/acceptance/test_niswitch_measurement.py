@@ -13,12 +13,9 @@ from ni_measurementlink_service._internal.stubs.ni.measurementlink.pin_map_conte
     PinMapContext,
 )
 from ni_measurementlink_service.measurement.service import MeasurementService
-from tests.assets.stubs.niswitch_measurement.types_pb2 import (
-    Configurations,
-    Outputs,
-)
-from tests.utilities import niswitch_measurement
+from tests.utilities.measurements import niswitch_measurement
 from tests.utilities.pin_map_client import PinMapClient
+from tests.utilities.stubs.niswitch.types_pb2 import Configurations, Outputs
 
 _SITE = 0
 

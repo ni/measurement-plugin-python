@@ -13,9 +13,9 @@ from ni_measurementlink_service._internal.stubs.ni.measurementlink.pin_map_conte
     PinMapContext,
 )
 from ni_measurementlink_service.measurement.service import MeasurementService
-from tests.assets.stubs.nidigital_measurement.types_pb2 import Configurations, Outputs
-from tests.utilities import nidigital_measurement
+from tests.utilities.measurements import nidigital_measurement
 from tests.utilities.pin_map_client import PinMapClient
+from tests.utilities.stubs.nidigital.types_pb2 import Configurations, Outputs
 
 
 def test___single_session___measure___returns_measured_values(

@@ -1,0 +1,16 @@
+syntax = "proto3";
+package ni.measurementlink.measurement.tests.nidmm;
+
+message Configurations {
+    repeated string pin_names = 1;
+    bool multi_session = 2;
+}
+
+message Outputs {
+    repeated string session_names = 1;
+    repeated string resource_names = 2;
+    repeated string channel_lists = 3;
+    repeated string connected_channels = 4;
+    repeated bool signals_out_of_range = 5;
+    repeated double absolute_resolutions = 6;
+}

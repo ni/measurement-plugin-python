@@ -1,0 +1,44 @@
+syntax = "proto3";
+package ni.measurementlink.measurement.tests.serialization;
+
+import "ni/protobuf/types/xydata.proto";
+
+enum DifferentColor
+{
+  PURPLE = 0;
+  ORANGE = 1;
+  TEAL = 2;
+  BROWN = 3;
+}
+
+enum Countries
+{
+  AMERICA = 0;
+  TAIWAN = 1;
+  AUSTRALIA = 2;
+  CANADA = 3;
+}
+
+message MeasurementParameter {
+    float float_data = 1;
+    double double_data = 2;
+    int32 int32_data = 3;
+    uint32 uint32_data = 4;
+    int64 int64_data = 5;
+    uint64 uint64_data = 6;
+    bool bool_data = 7;
+    string string_data = 8;
+    repeated double double_array_data = 9;
+    repeated float float_array_data = 10;
+    repeated int32 int32_array_data = 11;
+    repeated uint32 uint32_array_data = 12;
+    repeated int64 int64_array_data = 13;
+    repeated uint64 uint64_array_data = 14;
+    repeated bool bool_array_data = 15;
+    repeated string string_array_data = 16;
+    DifferentColor enum_data = 17;
+    repeated DifferentColor enum_array_data = 18;
+    Countries int_enum_data = 19;
+    repeated Countries int_enum_array_data = 20;
+    ni.protobuf.types.DoubleXYData xy_data = 21;
+}

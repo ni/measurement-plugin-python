@@ -1,0 +1,12 @@
+syntax = "proto3";
+package ni.measurementlink.measurement.tests.yieldvsreturn;
+
+message Configurations {
+    double time_in_seconds = 1;
+}
+
+message Outputs {
+    double elapsed_time_in_seconds = 1;
+    repeated double random_numbers = 2;
+    string status = 3;
+}

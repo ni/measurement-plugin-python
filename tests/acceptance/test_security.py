@@ -5,8 +5,8 @@ import psutil
 import pytest
 
 from ni_measurementlink_service.measurement.service import MeasurementService
-from tests.utilities import loopback_measurement
 from tests.utilities.discovery_service_process import DiscoveryServiceProcess
+from tests.utilities.measurements import loopback_measurement
 
 
 def test___loopback_measurement___listening_on_loopback_interface(

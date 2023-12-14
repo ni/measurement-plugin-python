@@ -18,10 +18,8 @@ from ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v
     measurement_service_pb2_grpc as v2_measurement_service_pb2_grpc,
 )
 from ni_measurementlink_service.measurement.service import MeasurementService
-from tests.assets import sample_measurement_test_pb2
-from tests.assets.sample_measurement_test_pb2 import ProtobufColor
-from tests.utilities import loopback_measurement
-
+from tests.utilities.measurements import loopback_measurement
+from tests.utilities.stubs.loopback.types_pb2 import Parameters, ProtobufColor
 
 EXPECTED_PARAMETER_COUNT = 7
 EXPECTED_UI_FILE_COUNT = 1
@@ -227,7 +225,7 @@ def _get_serialized_measurement_signature(
     protobuf_enum_in: ProtobufColor.ValueType,
     string_array_in: List[str],
 ) -> bytes:
-    config_params = sample_measurement_test_pb2.SampleMeasurementParameter()
+    config_params = Parameters()
     config_params.float_in = float_in
     config_params.double_array_in.extend(double_array_in)
     config_params.bool_in = bool_in
