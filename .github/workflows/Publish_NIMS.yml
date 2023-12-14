@@ -101,7 +101,7 @@ jobs:
           omitPrereleaseDuringUpdate: true
           updateOnlyUnreleased: false
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: NIMS Artifacts
           path: dist/ # path/to/artifact
