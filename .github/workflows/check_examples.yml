@@ -17,6 +17,7 @@ jobs:
         uses: actions/checkout@v4
       - name: Set up Python
         uses: actions/setup-python@v5
+        id: setup-python
         with:
           python-version: ${{ env.PYTHON_VERSION }}
       - name: Set up Poetry
@@ -30,7 +31,7 @@ jobs:
         with:
           path: 'examples/**/poetry.lock'
           # Include the main project's poetry.lock in the hash to detect upstream dependency updates.
-          key: examples-poetry-lock-${{ runner.os }}-py${{ env.PYTHON_VERSION }}-${{ hashFiles('examples/**/pyproject.toml', 'poetry.lock') }}
+          key: examples-poetry-lock-${{ runner.os }}-py${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('examples/**/pyproject.toml', 'poetry.lock') }}
       - name: Lock examples
         if: steps.cache-poetry-lock.outputs.cache-hit != 'true'
         run: |
@@ -46,7 +47,7 @@ jobs:
         id: cache-venv
         with:
           path: 'examples/**/.venv'
-          key: examples-venv-${{ runner.os }}-py${{ env.PYTHON_VERSION }}-${{ hashFiles('examples/**/poetry.lock') }}
+          key: examples-venv-${{ runner.os }}-py${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('examples/**/poetry.lock') }}
       - name: Install examples
         run: |
           for example in examples/*/; do
