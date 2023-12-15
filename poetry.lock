@@ -506,7 +506,7 @@ grpc = ["grpcio (>=1.49.1,<2.0)", "protobuf (>=4.21,<5.0)"]
 
 [[package]]
 name = "nidigital"
-version = "1.4.6"
+version = "1.4.7"
 description = "NI-Digital Pattern Driver Python API"
 category = "main"
 optional = true
@@ -1747,8 +1747,8 @@ nidcpower = [
     {file = "nidcpower-1.4.7.tar.gz", hash = "sha256:1afbf2938e8315fb51f62fdd868373290ed91666835a7c2aa078913ae8320c5f"},
 ]
 nidigital = [
-    {file = "nidigital-1.4.6-py3-none-any.whl", hash = "sha256:d79016c45fb41526acd43b92221af6a11f4b8ab5a71b833867cb9934768fcd30"},
-    {file = "nidigital-1.4.6.tar.gz", hash = "sha256:d059aef452a150be842033cd910a5e5ba344acaa4cba109d009c8dde73059550"},
+    {file = "nidigital-1.4.7-py3-none-any.whl", hash = "sha256:c4a1d70eb003e3a5d4539d977c0883f57291b4126c62192b700ed59bbc799bdc"},
+    {file = "nidigital-1.4.7.tar.gz", hash = "sha256:c8221b04e242b956b1fc402e32a6ab9aa01c3328c256a0cf52ea72ebdcf9673b"},
 ]
 nidmm = [
     {file = "nidmm-1.4.6-py3-none-any.whl", hash = "sha256:8ce6724e7c3eff35d83dd0d3bfbe2184b8468027bc440da2c49d24a53d927aed"},
