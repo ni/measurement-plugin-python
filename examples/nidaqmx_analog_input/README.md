@@ -19,13 +19,12 @@ measurement with NI-DAQmx.
 - Uses the NI gRPC Device Server to allow sharing instrument sessions with other measurement
   services when running measurements from TestStand.
 
-> **Note**
->
-> Running this measurement requires MeasurementLink 2023 Q3 or later.
+### Required Software
 
-### Required Driver Software
-
+- MeasurementLink 2024 Q1 or later
 - NI-DAQmx
+- Recommended: InstrumentStudio 2024 Q1 or later (matching MeasurementLink)
+- Recommended: TestStand 2021 SP1 or later
 
 ### Required Hardware
 

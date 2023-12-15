@@ -11,9 +11,10 @@ in a graph.
 - Demonstrates cancellation tokens and deadlines.
 - Includes InstrumentStudio and MeasurementLink UI Editor project files.
 
-### Required Driver Software
+### Required Software
 
-This example does not require any drivers.
+- MeasurementLink 2023 Q4 or later
+- Recommended: InstrumentStudio 2023 Q4 or later (matching MeasurementLink)
 
 ### Required Hardware
 

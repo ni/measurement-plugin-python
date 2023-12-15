@@ -11,9 +11,10 @@ various data types.
   file. To change the UI file used for the example, simply switch the order of
   the `ui_file_paths` array in `measurement.py`
 
-### Required Driver Software
+### Required Software
 
-This example does not require any drivers.
+- MeasurementLink 2023 Q3 or later
+- Recommended: InstrumentStudio 2023 Q3 or later (matching MeasurementLink)
 
 ### Required Hardware
 
