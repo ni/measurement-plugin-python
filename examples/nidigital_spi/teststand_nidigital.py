@@ -1,8 +1,9 @@
 """Functions to set up and tear down sessions of NI Digital Pattern instruments in NI TestStand."""
 from typing import Any, Iterable
 
-from _helpers import GrpcChannelPoolHelper, TestStandSupport
+from _helpers import TestStandSupport
 from ni_measurementlink_service.discovery import DiscoveryClient
+from ni_measurementlink_service.grpc.channelpool import GrpcChannelPool
 from ni_measurementlink_service.session_management import (
     INSTRUMENT_TYPE_NI_DIGITAL_PATTERN,
     PinMapContext,
@@ -22,7 +23,7 @@ def create_nidigital_sessions(sequence_context: Any) -> None:
     teststand_support = TestStandSupport(sequence_context)
     pin_map_id = teststand_support.get_active_pin_map_id()
 
-    with GrpcChannelPoolHelper() as grpc_channel_pool:
+    with GrpcChannelPool() as grpc_channel_pool:
         discovery_client = DiscoveryClient(grpc_channel_pool=grpc_channel_pool)
         session_management_client = SessionManagementClient(
             discovery_client=discovery_client, grpc_channel_pool=grpc_channel_pool
@@ -50,7 +51,7 @@ def load_nidigital_pin_map(pin_map_path: str, sequence_context: Any) -> None:
     pin_map_id = teststand_support.get_active_pin_map_id()
     pin_map_abs_path = teststand_support.resolve_file_path(pin_map_path)
 
-    with GrpcChannelPoolHelper() as grpc_channel_pool:
+    with GrpcChannelPool() as grpc_channel_pool:
         discovery_client = DiscoveryClient(grpc_channel_pool=grpc_channel_pool)
         session_management_client = SessionManagementClient(
             discovery_client=discovery_client, grpc_channel_pool=grpc_channel_pool
@@ -88,7 +89,7 @@ def load_nidigital_specifications_levels_and_timing(
     levels_file_abs_paths = [teststand_support.resolve_file_path(p) for p in levels_file_paths]
     timing_file_abs_paths = [teststand_support.resolve_file_path(p) for p in timing_file_paths]
 
-    with GrpcChannelPoolHelper() as grpc_channel_pool:
+    with GrpcChannelPool() as grpc_channel_pool:
         discovery_client = DiscoveryClient(grpc_channel_pool=grpc_channel_pool)
         session_management_client = SessionManagementClient(
             discovery_client=discovery_client, grpc_channel_pool=grpc_channel_pool
@@ -120,7 +121,7 @@ def load_nidigital_patterns(
     pin_map_id = teststand_support.get_active_pin_map_id()
     pattern_file_abs_paths = [teststand_support.resolve_file_path(p) for p in pattern_file_paths]
 
-    with GrpcChannelPoolHelper() as grpc_channel_pool:
+    with GrpcChannelPool() as grpc_channel_pool:
         discovery_client = DiscoveryClient(grpc_channel_pool=grpc_channel_pool)
         session_management_client = SessionManagementClient(
             discovery_client=discovery_client, grpc_channel_pool=grpc_channel_pool
@@ -138,7 +139,7 @@ def load_nidigital_patterns(
 
 def destroy_nidigital_sessions() -> None:
     """Destroy and unregister all NI-Digital sessions."""
-    with GrpcChannelPoolHelper() as grpc_channel_pool:
+    with GrpcChannelPool() as grpc_channel_pool:
         discovery_client = DiscoveryClient(grpc_channel_pool=grpc_channel_pool)
         session_management_client = SessionManagementClient(
             discovery_client=discovery_client, grpc_channel_pool=grpc_channel_pool

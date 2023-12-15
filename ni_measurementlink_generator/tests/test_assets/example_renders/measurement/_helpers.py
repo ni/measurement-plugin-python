@@ -5,28 +5,6 @@ import pathlib
 from typing import Any, Callable, TypeVar
 
 import click
-import grpc
-from ni_measurementlink_service.discovery import DiscoveryClient
-from ni_measurementlink_service.measurement.service import GrpcChannelPool
-
-
-class GrpcChannelPoolHelper(GrpcChannelPool):
-    """Class that manages gRPC channel lifetimes."""
-
-    def __init__(self) -> None:
-        """Initialize the GrpcChannelPool object."""
-        super().__init__()
-        self._discovery_client = DiscoveryClient()
-
-    @property
-    def pin_map_channel(self) -> grpc.Channel:
-        """Return gRPC channel to pin map service."""
-        return self.get_channel(
-            self._discovery_client.resolve_service(
-                provided_interface="ni.measurementlink.pinmap.v1.PinMapService",
-                service_class="ni.measurementlink.pinmap.v1.PinMapService",
-            ).insecure_address
-        )
 
 
 class TestStandSupport(object):
