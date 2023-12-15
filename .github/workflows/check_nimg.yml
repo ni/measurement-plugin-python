@@ -21,6 +21,7 @@ jobs:
         uses: actions/checkout@v4
       - name: Set up Python
         uses: actions/setup-python@v5
+        id: setup-python
         with:
           python-version: ${{ env.PYTHON_VERSION }}
       - name: Set up Poetry
@@ -34,7 +35,7 @@ jobs:
         id: cache
         with:
           path: ni_measurementlink_generator/.venv
-          key: ni-measurementlink-generator-${{ runner.os }}-py${{ env.PYTHON_VERSION }}-${{ hashFiles('poetry.lock') }}
+          key: ni-measurementlink-generator-${{ runner.os }}-py${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('poetry.lock') }}
       - name: Install ni-measurementlink-generator
         run: poetry install -v
       - name: Lint ni-measurementlink-generator
