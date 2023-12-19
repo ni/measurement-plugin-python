@@ -523,7 +523,7 @@ grpc = ["grpcio (>=1.49.1,<2.0)", "protobuf (>=4.21,<5.0)"]
 
 [[package]]
 name = "nidmm"
-version = "1.4.6"
+version = "1.4.7"
 description = "NI-DMM Python API"
 category = "main"
 optional = true
@@ -1751,8 +1751,8 @@ nidigital = [
     {file = "nidigital-1.4.7.tar.gz", hash = "sha256:c8221b04e242b956b1fc402e32a6ab9aa01c3328c256a0cf52ea72ebdcf9673b"},
 ]
 nidmm = [
-    {file = "nidmm-1.4.6-py3-none-any.whl", hash = "sha256:8ce6724e7c3eff35d83dd0d3bfbe2184b8468027bc440da2c49d24a53d927aed"},
-    {file = "nidmm-1.4.6.tar.gz", hash = "sha256:95ad39272a454d6f5826fed90475de5f670536a41ba767303e6994f0eb36d2a0"},
+    {file = "nidmm-1.4.7-py3-none-any.whl", hash = "sha256:b6616977647dff55b93a1087355a1775fbd4b085716d6e51b65cc91ca41a7ccb"},
+    {file = "nidmm-1.4.7.tar.gz", hash = "sha256:9b688403d3b74304d666ba5123a9bd0cd76bf18e9b5eae210baec2b91d8fcaa7"},
 ]
 nifgen = [
     {file = "nifgen-1.4.6-py3-none-any.whl", hash = "sha256:d484360ddf499ac99fab8fcb54b36a526b9708d022ea8ea9ee50d1591cf11f90"},
