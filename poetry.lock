@@ -556,7 +556,7 @@ grpc = ["grpcio (>=1.49.1,<2.0)", "protobuf (>=4.21,<5.0)"]
 
 [[package]]
 name = "niscope"
-version = "1.4.6"
+version = "1.4.7"
 description = "NI-SCOPE Python API"
 category = "main"
 optional = true
@@ -1759,8 +1759,8 @@ nifgen = [
     {file = "nifgen-1.4.7.tar.gz", hash = "sha256:35648772c5ae48ba336841209fa01a1b68e2ce871ed93a560e77a9ed4a029222"},
 ]
 niscope = [
-    {file = "niscope-1.4.6-py3-none-any.whl", hash = "sha256:b993cf0f1b36605398c5cc879c875eabd95ca44b2738a0265453431a6bdc9901"},
-    {file = "niscope-1.4.6.tar.gz", hash = "sha256:cadb120820c4e531e8dda4751e6bfe6e81838130559a1be94ad18e0361b64246"},
+    {file = "niscope-1.4.7-py3-none-any.whl", hash = "sha256:ab9e1f92beabf3ce28d50c52c1c2685be030d93005b6f2de2fff2af40adc7de9"},
+    {file = "niscope-1.4.7.tar.gz", hash = "sha256:1253418f3f926bf63409d80737b56ff5731c4b790a20827addd819bf123ab1aa"},
 ]
 niswitch = [
     {file = "niswitch-1.4.6-py3-none-any.whl", hash = "sha256:e04b275de01fec29d9a7c602385bd3c56e8160eee9c72b39cc9cdb5756b99426"},
