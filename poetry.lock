@@ -539,7 +539,7 @@ grpc = ["grpcio (>=1.49.1,<2.0)", "protobuf (>=4.21,<5.0)"]
 
 [[package]]
 name = "nifgen"
-version = "1.4.6"
+version = "1.4.7"
 description = "NI-FGEN Python API"
 category = "main"
 optional = true
@@ -1755,8 +1755,8 @@ nidmm = [
     {file = "nidmm-1.4.6.tar.gz", hash = "sha256:95ad39272a454d6f5826fed90475de5f670536a41ba767303e6994f0eb36d2a0"},
 ]
 nifgen = [
-    {file = "nifgen-1.4.6-py3-none-any.whl", hash = "sha256:d484360ddf499ac99fab8fcb54b36a526b9708d022ea8ea9ee50d1591cf11f90"},
-    {file = "nifgen-1.4.6.tar.gz", hash = "sha256:40f81d70046ced9cc3239f71cd7d26332ab68d36ddbe9e2c446874b699ba12e0"},
+    {file = "nifgen-1.4.7-py3-none-any.whl", hash = "sha256:f9631cd737c160fc06d23359456d5c443c4647fdb88a35ec7c7189c17c62d3d2"},
+    {file = "nifgen-1.4.7.tar.gz", hash = "sha256:35648772c5ae48ba336841209fa01a1b68e2ce871ed93a560e77a9ed4a029222"},
 ]
 niscope = [
     {file = "niscope-1.4.6-py3-none-any.whl", hash = "sha256:b993cf0f1b36605398c5cc879c875eabd95ca44b2738a0265453431a6bdc9901"},
