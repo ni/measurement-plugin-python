@@ -573,7 +573,7 @@ grpc = ["grpcio (>=1.49.1,<2.0)", "protobuf (>=4.21,<5.0)"]
 
 [[package]]
 name = "niswitch"
-version = "1.4.6"
+version = "1.4.7"
 description = "NI-SWITCH Python API"
 category = "main"
 optional = true
@@ -1763,8 +1763,8 @@ niscope = [
     {file = "niscope-1.4.6.tar.gz", hash = "sha256:cadb120820c4e531e8dda4751e6bfe6e81838130559a1be94ad18e0361b64246"},
 ]
 niswitch = [
-    {file = "niswitch-1.4.6-py3-none-any.whl", hash = "sha256:e04b275de01fec29d9a7c602385bd3c56e8160eee9c72b39cc9cdb5756b99426"},
-    {file = "niswitch-1.4.6.tar.gz", hash = "sha256:42091a8c1b49186831c0c710c631f8ca0bcaf1b85cbc46f35fd971d0e1fb8d90"},
+    {file = "niswitch-1.4.7-py3-none-any.whl", hash = "sha256:6bb2e24d1358c0a852e38976ae2040bda7d24de516dab50b217961aeb6ec8440"},
+    {file = "niswitch-1.4.7.tar.gz", hash = "sha256:9d82e28f6f3c5c5e1e032c3bd31bc9e0f58630368c671b6a021b672c5cbe19bc"},
 ]
 nitclk = [
     {file = "nitclk-1.4.6-py3-none-any.whl", hash = "sha256:68d5e1761d534c7474d7c55382a624090fac1cfa95e101e58b8a98e30cf659b1"},
