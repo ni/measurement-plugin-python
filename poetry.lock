@@ -472,21 +472,25 @@ toml = ">=0.10.1"
 
 [[package]]
 name = "nidaqmx"
-version = "0.8.0"
+version = "0.9.0"
 description = "NI-DAQmx Python API"
 category = "main"
 optional = true
-python-versions = ">=3.7,<4.0"
+python-versions = ">=3.8,<4.0"
 
 [package.dependencies]
 deprecation = ">=2.1"
-grpcio = {version = ">=1.49.0,<2.0", optional = true, markers = "python_version >= \"3.8\" and python_version < \"4.0\" and extra == \"grpc\""}
-numpy = {version = ">=1.22", markers = "python_version >= \"3.8\" and python_version < \"4.0\""}
+grpcio = {version = ">=1.49.0,<2.0", optional = true, markers = "extra == \"grpc\""}
+hightime = ">=0.2.1,<0.3.0"
+numpy = [
+    {version = ">=1.22", markers = "python_version >= \"3.8\" and python_version < \"3.12\""},
+    {version = ">=1.26", markers = "python_version >= \"3.12\" and python_version < \"3.13\""},
+]
 protobuf = {version = ">=4.21,<5.0", optional = true, markers = "extra == \"grpc\""}
 
 [package.extras]
 docs = ["Sphinx (>=4.3,<5.0)", "sphinx_rtd_theme (>=1.0,<2.0)"]
-grpc = ["grpcio (>=1.49.0,<1.53)", "grpcio (>=1.49.0,<2.0)", "protobuf (>=4.21,<5.0)"]
+grpc = ["grpcio (>=1.49.0,<2.0)", "protobuf (>=4.21,<5.0)"]
 
 [[package]]
 name = "nidcpower"
@@ -1739,8 +1743,8 @@ ni-python-styleguide = [
     {file = "ni_python_styleguide-0.4.4.tar.gz", hash = "sha256:4c22ebc793bbcfab44fb6973ac286468f47e38b0b6abdc834e72d8a4fb225af1"},
 ]
 nidaqmx = [
-    {file = "nidaqmx-0.8.0-py3-none-any.whl", hash = "sha256:7a5d5b3f78c125d31a8d00349f216f63bb8f6b887d0eca882001b729904d68bc"},
-    {file = "nidaqmx-0.8.0.tar.gz", hash = "sha256:6c72ca4ec5da95e8603c1e6d5085d59bb3c1c2ea1f45bdfaa4acac40fe82ae0c"},
+    {file = "nidaqmx-0.9.0-py3-none-any.whl", hash = "sha256:8f79c4929f19f8dca3c19d517ccb7f9a76850e4c80a78ac2a9e7f5f5743cc700"},
+    {file = "nidaqmx-0.9.0.tar.gz", hash = "sha256:08e3f5f3369fb71116df8fb1e5577ecbbda1530058b16bf4b8be3145c2ffcd96"},
 ]
 nidcpower = [
     {file = "nidcpower-1.4.7-py3-none-any.whl", hash = "sha256:ee8a2c93b52507a24ef715fa133667a40ab5b76193b7fccdfb45c356f90fe71b"},
