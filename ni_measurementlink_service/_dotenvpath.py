@@ -1,4 +1,5 @@
 import inspect
+import os
 import sys
 import traceback
 from pathlib import Path, PurePath
@@ -44,7 +45,7 @@ def _get_caller_path() -> Optional[Path]:
     for frame, _ in traceback.walk_stack(inspect.currentframe()):
         if frame.f_code.co_filename:
             module_path = Path(frame.f_code.co_filename)
-            if module_path.exists() and not _is_relative_to(module_path, nims_path):
+            if os.path.exists(module_path) and not _is_relative_to(module_path, nims_path):
                 return module_path
 
     return None
