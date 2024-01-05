@@ -49,6 +49,7 @@ def _get_caller_path() -> Optional[Path]:
 
     return None
 
+
 # Path.exists() throws OSError when the path has invalid file characters.
 # https://github.com/python/cpython/issues/79487
 if sys.version_info >= (3, 10):
