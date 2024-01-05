@@ -44,16 +44,35 @@ def _get_caller_path() -> Optional[Path]:
     for frame, _ in traceback.walk_stack(inspect.currentframe()):
         if frame.f_code.co_filename:
             module_path = Path(frame.f_code.co_filename)
-            if module_path.exists() and not _is_relative_to(module_path, nims_path):
+            if _exists(module_path) and not _is_relative_to(module_path, nims_path):
                 return module_path
 
     return None
 
 
-def _is_relative_to(path: PurePath, other: PurePath) -> bool:
-    if sys.version_info >= (3, 9):
+# Path.exists() throws OSError when the path has invalid file characters.
+# https://github.com/python/cpython/issues/79487
+if sys.version_info >= (3, 10):
+
+    def _exists(path: Path) -> bool:
+        return path.exists()
+
+else:
+
+    def _exists(path: Path) -> bool:
+        import os
+
+        return os.path.exists(path)
+
+
+if sys.version_info >= (3, 9):
+
+    def _is_relative_to(path: PurePath, other: PurePath) -> bool:
         return path.is_relative_to(other)
-    else:
+
+else:
+
+    def _is_relative_to(path: PurePath, other: PurePath) -> bool:
         try:
             _ = path.relative_to(other)
             return True
