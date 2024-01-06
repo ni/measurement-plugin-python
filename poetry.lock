@@ -1123,11 +1123,11 @@ python-versions = ">=3.8"
 
 [[package]]
 name = "types-pywin32"
-version = "306.0.0.8"
+version = "306.0.0.20240106"
 description = "Typing stubs for pywin32"
 category = "dev"
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=3.8"
 
 [[package]]
 name = "typing-extensions"
@@ -2091,8 +2091,8 @@ types-psutil = [
     {file = "types_psutil-5.9.5.20240106-py3-none-any.whl", hash = "sha256:fea169a85b1bb9d9edd0b063a93ad950e37d574290b1bf11ef5e46c9c5d82326"},
 ]
 types-pywin32 = [
-    {file = "types-pywin32-306.0.0.8.tar.gz", hash = "sha256:d6386feba7d2a86ee66294850d998d5bf7dc1d58f782ba4d3333e53063b259b0"},
-    {file = "types_pywin32-306.0.0.8-py3-none-any.whl", hash = "sha256:406307352c66c4050093099da696ed38993ec8e55f8d0c1a658223f37d9caa3a"},
+    {file = "types-pywin32-306.0.0.20240106.tar.gz", hash = "sha256:827a0787afceb1728afbc031fc9e74ffe758a98eff8d3613446cc0474119e9d5"},
+    {file = "types_pywin32-306.0.0.20240106-py3-none-any.whl", hash = "sha256:421859291662cda4ca3ffa305a57c8719b4b35bdd90260f34ce4e3524682f3cf"},
 ]
 typing-extensions = [
     {file = "typing_extensions-4.9.0-py3-none-any.whl", hash = "sha256:af72aea155e91adfc61c3ae9e0e342dbc0cba726d6cba4b6c72c1f34e47291cd"},
