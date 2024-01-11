@@ -66,7 +66,7 @@ jobs:
             echo "version_changed=1" >> $GITHUB_OUTPUT
       
       - name: Push changes to the appropriate branch
-        if: ${{ steps.commit.outputs.version_changed==1 }} && (startsWith(github.event.release.target_commitish, 'main') || startsWith(github.event.release.target_commitish, 'releases/'))
+        if: ${{ steps.commit.outputs.version_changed==1 && (startsWith(github.event.release.target_commitish, 'main') || startsWith(github.event.release.target_commitish, 'releases/')) }}
         uses: CasperWA/push-protected@v2
         with:
           token: ${{ secrets.ADMIN_PAT }}
