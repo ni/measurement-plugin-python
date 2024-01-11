@@ -160,7 +160,30 @@ class _ConnectionKey(NamedTuple):
     instrument_type_id: str
 
 
-class BaseReservation(abc.ABC):
+class _BaseSessionContainer(abc.ABC):
+    """Manages Session Management Client."""
+
+    def __init__(
+        self,
+        session_manager: SessionManagementClient,
+    ) -> None:
+        """Initialize session manager object."""
+        self._session_manager = session_manager
+
+    @property
+    def _discovery_client(self) -> DiscoveryClient:
+        if not self._session_manager._discovery_client:
+            raise ValueError("This method requires a discovery client.")
+        return self._session_manager._discovery_client
+
+    @property
+    def _grpc_channel_pool(self) -> GrpcChannelPool:
+        if not self._session_manager._grpc_channel_pool:
+            raise ValueError("This method requires a gRPC channel pool.")
+        return self._session_manager._grpc_channel_pool
+
+
+class BaseReservation(_BaseSessionContainer):
     """Manages session reservation."""
 
     def __init__(
@@ -171,7 +194,7 @@ class BaseReservation(abc.ABC):
         reserved_sites: Optional[Iterable[int]] = None,
     ) -> None:
         """Initialize reservation object."""
-        self._session_manager = session_manager
+        super().__init__(session_manager)
         self._grpc_session_info = session_info  # needed for unreserve
         self._session_info = [
             SessionInformation._from_grpc_v1(info) for info in self._grpc_session_info
@@ -187,18 +210,6 @@ class BaseReservation(abc.ABC):
 
         if reserved_sites is not None:
             self._reserved_sites = _to_ordered_set(reserved_sites)
-
-    @property
-    def _discovery_client(self) -> DiscoveryClient:
-        if not self._session_manager._discovery_client:
-            raise ValueError("This method requires a discovery client.")
-        return self._session_manager._discovery_client
-
-    @property
-    def _grpc_channel_pool(self) -> GrpcChannelPool:
-        if not self._session_manager._grpc_channel_pool:
-            raise ValueError("This method requires a gRPC channel pool.")
-        return self._session_manager._grpc_channel_pool
 
     @cached_property
     def _reserved_pin_or_relay_names(self) -> AbstractSet[str]:
