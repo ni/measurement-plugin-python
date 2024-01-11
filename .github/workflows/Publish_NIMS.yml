@@ -56,10 +56,14 @@ jobs:
       - name: Commit file changes
         if: ${{ startsWith(github.event.release.target_commitish, 'main') || startsWith(github.event.release.target_commitish, 'releases/') }}
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add .
-          git commit -m "Promote NIMS package version and update Sphinx generated files in _docs" -a
+          if [ -n "$(git status --porcelain)" ]; then
+            git config --local user.email "action@github.com"
+            git config --local user.name "GitHub Action"
+            git add .
+            git commit -m "Promote NIMS and NIMG package version" -a
+          else
+            echo "No changes. Not committing version changes.";
+          fi          
       
       - name: Push changes to the appropriate branch
         if: ${{ startsWith(github.event.release.target_commitish, 'main') || startsWith(github.event.release.target_commitish, 'releases/') }}
