@@ -161,26 +161,26 @@ class _ConnectionKey(NamedTuple):
 
 
 class _BaseSessionContainer(abc.ABC):
-    """Manages Session Management Client."""
+    """Contains session management client and related properties."""
 
     def __init__(
         self,
-        session_manager: SessionManagementClient,
+        session_management_client: SessionManagementClient,
     ) -> None:
-        """Initialize session manager object."""
-        self._session_manager = session_manager
+        """Initialize the base session container."""
+        self._session_management_client = session_management_client
 
     @property
     def _discovery_client(self) -> DiscoveryClient:
-        if not self._session_manager._discovery_client:
+        if not self._session_management_client._discovery_client:
             raise ValueError("This method requires a discovery client.")
-        return self._session_manager._discovery_client
+        return self._session_management_client._discovery_client
 
     @property
     def _grpc_channel_pool(self) -> GrpcChannelPool:
-        if not self._session_manager._grpc_channel_pool:
+        if not self._session_management_client._grpc_channel_pool:
             raise ValueError("This method requires a gRPC channel pool.")
-        return self._session_manager._grpc_channel_pool
+        return self._session_management_client._grpc_channel_pool
 
 
 class BaseReservation(_BaseSessionContainer):
@@ -188,13 +188,13 @@ class BaseReservation(_BaseSessionContainer):
 
     def __init__(
         self,
-        session_manager: SessionManagementClient,
+        session_management_client: SessionManagementClient,
         session_info: Sequence[session_management_service_pb2.SessionInformation],
         reserved_pin_or_relay_names: Union[str, Iterable[str], None] = None,
         reserved_sites: Optional[Iterable[int]] = None,
     ) -> None:
         """Initialize reservation object."""
-        super().__init__(session_manager)
+        super().__init__(session_management_client)
         self._grpc_session_info = session_info  # needed for unreserve
         self._session_info = [
             SessionInformation._from_grpc_v1(info) for info in self._grpc_session_info
@@ -277,7 +277,7 @@ class BaseReservation(_BaseSessionContainer):
 
     def unreserve(self) -> None:
         """Unreserve sessions."""
-        self._session_manager._unreserve_sessions(self._grpc_session_info)
+        self._session_management_client._unreserve_sessions(self._grpc_session_info)
 
     @contextlib.contextmanager
     def _cache_session(self, session_name: str, session: TSession) -> Generator[None, None, None]:
