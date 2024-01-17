@@ -284,7 +284,9 @@ class SessionManagementClient(object):
             request.instrument_type_id = instrument_type_id
 
         response = self._get_stub().ReserveAllRegisteredSessions(request)
-        return MultiSessionReservation(session_management_client=self, session_info=response.sessions)
+        return MultiSessionReservation(
+            session_management_client=self, session_info=response.sessions
+        )
 
 
 def _timeout_to_milliseconds(timeout: Optional[float]) -> int:
