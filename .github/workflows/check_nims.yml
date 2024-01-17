@@ -29,7 +29,7 @@ jobs:
 
       # ni-measurementlink-service, all extras
       - name: Restore cached virtualenv (ni-measurementlink-service, all extras)
-        uses: actions/cache/restore@v3
+        uses: actions/cache/restore@v4
         id: restore-nims-all-extras
         with:
           path: .venv
@@ -37,7 +37,7 @@ jobs:
       - name: Install ni-measurementlink-service (all extras)
         run: poetry install -v --all-extras
       - name: Save cached virtualenv (ni-measurementlink-service, all extras)
-        uses: actions/cache/save@v3
+        uses: actions/cache/save@v4
         if: steps.restore-nims-all-extras.outputs.cache-hit != 'true'
         with:
           path: .venv
@@ -55,7 +55,7 @@ jobs:
 
       # ni-measurementlink-service, all extras, docs
       - name: Restore cached virtualenv (ni-measurementlink-service, all extras, docs)
-        uses: actions/cache/restore@v3
+        uses: actions/cache/restore@v4
         id: restore-nims-all-extras-docs
         with:
           path: .venv
@@ -63,7 +63,7 @@ jobs:
       - name: Install ni-measurementlink-service (all extras, docs)
         run: poetry install -v --all-extras --with docs
       - name: Save cached virtualenv (ni-measurementlink-service, all extras, docs)
-        uses: actions/cache/save@v3
+        uses: actions/cache/save@v4
         if: steps.restore-nims-all-extras-docs.outputs.cache-hit != 'true'
         with:
           path: .venv
