@@ -62,7 +62,7 @@ class SessionInformation(google.protobuf.message.Message):
     @property
     def channel_mappings(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___ChannelMapping]:
         """List of site and pin/relay mappings with the multiplexer info for each channel in the channel_list.
-        Each item represents a channel-to-pin connection in this instrument resource. In the case of shared pins, it has a separate item for each connection.
+        Each item represents a channel-to-pin connection for this instrument resource. In the case of shared pins, there is a separate item for each connection.
         This field is empty for any SessionInformation returned from ReserveAllRegisteredSessions.
         This field is readonly.
         """
