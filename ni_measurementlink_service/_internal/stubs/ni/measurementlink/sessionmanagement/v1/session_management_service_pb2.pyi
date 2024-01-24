@@ -61,8 +61,8 @@ class SessionInformation(google.protobuf.message.Message):
     """
     @property
     def channel_mappings(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___ChannelMapping]:
-        """List of site and pin/relay mappings that correspond to each channel in the channel_list.
-        Each item contains a mapping corresponding to a channel in this instrument resource, in the order of the channel_list.
+        """List of site and pin/relay mappings with the multiplexer info for each channel in the channel_list.
+        Each item represents a channel-to-pin connection in this instrument resource. In the case of shared pins, it has a separate item for each connection.
         This field is empty for any SessionInformation returned from ReserveAllRegisteredSessions.
         This field is readonly.
         """
@@ -88,6 +88,8 @@ class ChannelMapping(google.protobuf.message.Message):
     PIN_OR_RELAY_NAME_FIELD_NUMBER: builtins.int
     SITE_FIELD_NUMBER: builtins.int
     CHANNEL_FIELD_NUMBER: builtins.int
+    MULTIPLEXER_RESOURCE_NAME_FIELD_NUMBER: builtins.int
+    MULTIPLEXER_ROUTE_FIELD_NUMBER: builtins.int
     pin_or_relay_name: builtins.str
     """The pin or relay that is mapped to a channel."""
     site: builtins.int
@@ -96,16 +98,60 @@ class ChannelMapping(google.protobuf.message.Message):
     """
     channel: builtins.str
     """The channel to which the pin or relay is mapped on this site."""
+    multiplexer_resource_name: builtins.str
+    """The multiplexer resource name is used to open the multiplexer session in the driver."""
+    multiplexer_route: builtins.str
+    """The multiplexer route through which the pin is connected to an instrument's channel."""
     def __init__(
         self,
         *,
         pin_or_relay_name: builtins.str = ...,
         site: builtins.int = ...,
         channel: builtins.str = ...,
+        multiplexer_resource_name: builtins.str = ...,
+        multiplexer_route: builtins.str = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing_extensions.Literal["channel", b"channel", "pin_or_relay_name", b"pin_or_relay_name", "site", b"site"]) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["channel", b"channel", "multiplexer_resource_name", b"multiplexer_resource_name", "multiplexer_route", b"multiplexer_route", "pin_or_relay_name", b"pin_or_relay_name", "site", b"site"]) -> None: ...
 
 global___ChannelMapping = ChannelMapping
+
+@typing_extensions.final
+class MultiplexerSessionInformation(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    SESSION_FIELD_NUMBER: builtins.int
+    RESOURCE_NAME_FIELD_NUMBER: builtins.int
+    MULTIPLEXER_TYPE_ID_FIELD_NUMBER: builtins.int
+    SESSION_EXISTS_FIELD_NUMBER: builtins.int
+    @property
+    def session(self) -> session_pb2.Session:
+        """Session identifier used to identify the session in the session management service, as well as in driver services such as grpc-device.
+        This field is readonly.
+        """
+    resource_name: builtins.str
+    """Resource name is used to open this session in the driver.
+    This field is readonly.
+    """
+    multiplexer_type_id: builtins.str
+    """User-defined identifier for the multiplexer type in the pin map editor.
+    This field is readonly.
+    """
+    session_exists: builtins.bool
+    """Indicates whether the session exists in the Session Manager. This indicates whether the session has been created.
+    This field is readonly.
+    """
+    def __init__(
+        self,
+        *,
+        session: session_pb2.Session | None = ...,
+        resource_name: builtins.str = ...,
+        multiplexer_type_id: builtins.str = ...,
+        session_exists: builtins.bool = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing_extensions.Literal["session", b"session"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing_extensions.Literal["multiplexer_type_id", b"multiplexer_type_id", "resource_name", b"resource_name", "session", b"session", "session_exists", b"session_exists"]) -> None: ...
+
+global___MultiplexerSessionInformation = MultiplexerSessionInformation
 
 @typing_extensions.final
 class ReserveSessionsRequest(google.protobuf.message.Message):
@@ -155,17 +201,24 @@ class ReserveSessionsResponse(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
     SESSIONS_FIELD_NUMBER: builtins.int
+    MULTIPLEXER_SESSIONS_FIELD_NUMBER: builtins.int
     @property
     def sessions(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___SessionInformation]:
         """List of information needed to create or use each session for the given pin, site, and instrument type ID.
+        This field is readonly.
+        """
+    @property
+    def multiplexer_sessions(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___MultiplexerSessionInformation]:
+        """List of information needed to create or use each multiplexer session for the given pin, site, and instrument type ID.
         This field is readonly.
         """
     def __init__(
         self,
         *,
         sessions: collections.abc.Iterable[global___SessionInformation] | None = ...,
+        multiplexer_sessions: collections.abc.Iterable[global___MultiplexerSessionInformation] | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing_extensions.Literal["sessions", b"sessions"]) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["multiplexer_sessions", b"multiplexer_sessions", "sessions", b"sessions"]) -> None: ...
 
 global___ReserveSessionsResponse = ReserveSessionsResponse
 
