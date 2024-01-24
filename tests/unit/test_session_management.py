@@ -596,7 +596,7 @@ def test___session_information___type_check___implements_typed_session_informati
 
 
 @pytest.mark.parametrize("multiplexer_session_count", [1, 2, 3])
-def test___single_session_with_varying_multiplexer_count___reserve_session___returns_session_info_and_all_multiplexer_infos(
+def test___single_session_with_varying_multiplexer_count___reserve_session___returns_session_info_and_multiplexer_infos(
     session_management_client: SessionManagementClient,
     session_management_stub: Mock,
     multiplexer_session_count: int,
@@ -624,7 +624,7 @@ def test___single_session_with_varying_multiplexer_count___reserve_session___ret
 
 
 @pytest.mark.parametrize("multiplexer_session_count", [1, 2, 3])
-def test___multiple_sessions_with_varying_multiplexer_count___reserve_sessions___returns_all_session_infos_and_all_multiplexer_infos(
+def test___multiple_sessions_with_varying_multiplexer_count___reserve_sessions___returns_session_infos_and_multiplexer_infos(
     session_management_client: SessionManagementClient,
     session_management_stub: Mock,
     multiplexer_session_count: int,
@@ -654,7 +654,7 @@ def test___multiple_sessions_with_varying_multiplexer_count___reserve_sessions__
 
 
 @pytest.mark.parametrize("multiplexer_session_count", [1, 2])
-def test___single_session_with_shared_pins_and__varying_multiplexer_count___reserve_session___returns_session_and_multiplexer_infos_for_all_sites(
+def test___single_session_with_shared_pins_and_varying_multiplexer_count___reserve_session___returns_session_and_multiplexer_infos_for_all_sites(
     session_management_client: SessionManagementClient,
     session_management_stub: Mock,
     multiplexer_session_count: int,
@@ -682,7 +682,7 @@ def test___single_session_with_shared_pins_and__varying_multiplexer_count___rese
 
 
 @pytest.mark.parametrize("multiplexer_session_count", [1, 2])
-def test___multiple_sessions__with_shared_pins_and_varying_multiplexer_count___reserve_session___returns_session_and_multiplexer_infos_for_all_sites(
+def test___multiple_sessions_with_shared_pins_and_varying_multiplexer_count___reserve_sessions___returns_session_and_multiplexer_infos_for_all_sites(
     session_management_client: SessionManagementClient,
     session_management_stub: Mock,
     multiplexer_session_count: int,
