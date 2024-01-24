@@ -709,7 +709,7 @@ def test___multiple_sessions__with_shared_pins_and_varying_multiplexer_count___r
     ]
 
 
-def test___single_session_without_multiplexer___reserve_session___raises_value_error(
+def test___single_session_without_multiplexer___read_multiplexer_session_info___raises_value_error(
     session_management_client: SessionManagementClient,
     session_management_stub: Mock,
 ) -> None:
@@ -731,7 +731,7 @@ def test___single_session_without_multiplexer___reserve_session___raises_value_e
     assert "No multiplexer session(s) exist." in exc_info.value.args[0]
 
 
-def test___multiple_sessions_without_multiplexer___reserve_sessions___raises_value_error(
+def test___multiple_sessions_without_multiplexer___read_multiplexer_session_info___raises_value_error(
     session_management_client: SessionManagementClient,
     session_management_stub: Mock,
 ) -> None:
