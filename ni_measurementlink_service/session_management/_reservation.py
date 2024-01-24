@@ -54,6 +54,7 @@ from ni_measurementlink_service.session_management._constants import (
 )
 from ni_measurementlink_service.session_management._types import (
     Connection,
+    MultiplexerSessionInformation,
     SessionInformation,
     SessionInitializationBehavior,
     TSession,
@@ -190,16 +191,26 @@ class BaseReservation(_BaseSessionContainer):
         self,
         session_management_client: SessionManagementClient,
         session_info: Sequence[session_management_service_pb2.SessionInformation],
+        multiplexer_session_info: Optional[
+            Sequence[session_management_service_pb2.MultiplexerSessionInformation]
+        ] = None,
         reserved_pin_or_relay_names: Union[str, Iterable[str], None] = None,
         reserved_sites: Optional[Iterable[int]] = None,
     ) -> None:
         """Initialize reservation object."""
         super().__init__(session_management_client)
-        self._grpc_session_info = session_info  # needed for unreserve
+        self._grpc_session_info = session_info  # required for unreserve
         self._session_info = [
             SessionInformation._from_grpc_v1(info) for info in self._grpc_session_info
         ]
         self._session_cache: Dict[str, object] = {}
+
+        self._multiplexer_session_info = []
+        if multiplexer_session_info is not None:
+            self._multiplexer_session_info = [
+                MultiplexerSessionInformation._from_grpc_v1(info)
+                for info in multiplexer_session_info
+            ]
 
         # If __init__ doesn't initialize _reserved_pin_or_relay_names or
         # _reserved_sites, the cached properties lazily initialize them.
@@ -260,6 +271,13 @@ class BaseReservation(_BaseSessionContainer):
                 assert key not in cache
                 cache[key] = value
         return cache
+
+    @property
+    def multiplexer_session_info(self) -> Sequence[MultiplexerSessionInformation]:
+        """Multiplexer session information object."""
+        if not self._multiplexer_session_info:
+            raise ValueError("No multiplexer session(s) exist.")
+        return self._multiplexer_session_info
 
     def __enter__(self: Self) -> Self:
         """Context management protocol. Returns self."""
