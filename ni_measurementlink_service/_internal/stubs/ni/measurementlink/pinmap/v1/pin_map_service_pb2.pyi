@@ -365,8 +365,8 @@ class ResourceAccessInformation(google.protobuf.message.Message):
     """
     @property
     def channel_mappings(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___ChannelMapping]:
-        """List of site and pin/relay mappings that correspond to each channel in the channel_list.
-        Each item contains a mapping corresponding to a channel in this instrument resource, in the order of the channel_list.
+        """List of site and pin/relay mappings with the multiplexer info for each channel in the channel_list.
+        Each item represents a channel-to-pin connection for this instrument resource. In the case of shared pins, there is a separate item for each connection.
         """
     def __init__(
         self,
@@ -387,6 +387,9 @@ class ChannelMapping(google.protobuf.message.Message):
     PIN_OR_RELAY_NAME_FIELD_NUMBER: builtins.int
     SITE_FIELD_NUMBER: builtins.int
     CHANNEL_FIELD_NUMBER: builtins.int
+    MULTIPLEXER_RESOURCE_NAME_FIELD_NUMBER: builtins.int
+    MULTIPLEXER_ROUTE_FIELD_NUMBER: builtins.int
+    MULTIPLEXER_TYPE_ID_FIELD_NUMBER: builtins.int
     pin_or_relay_name: builtins.str
     """The pin or relay that is mapped to a channel."""
     site: builtins.int
@@ -395,13 +398,22 @@ class ChannelMapping(google.protobuf.message.Message):
     """
     channel: builtins.str
     """The channel to which the pin or relay is mapped on this site."""
+    multiplexer_resource_name: builtins.str
+    """The multiplexer resource name is used to open the multiplexer session in the driver."""
+    multiplexer_route: builtins.str
+    """The multiplexer route through which the pin is connected to an instrument's channel."""
+    multiplexer_type_id: builtins.str
+    """User-defined identifier for the multiplexer type in the pin map editor."""
     def __init__(
         self,
         *,
         pin_or_relay_name: builtins.str = ...,
         site: builtins.int = ...,
         channel: builtins.str = ...,
+        multiplexer_resource_name: builtins.str = ...,
+        multiplexer_route: builtins.str = ...,
+        multiplexer_type_id: builtins.str = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing_extensions.Literal["channel", b"channel", "pin_or_relay_name", b"pin_or_relay_name", "site", b"site"]) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["channel", b"channel", "multiplexer_resource_name", b"multiplexer_resource_name", "multiplexer_route", b"multiplexer_route", "multiplexer_type_id", b"multiplexer_type_id", "pin_or_relay_name", b"pin_or_relay_name", "site", b"site"]) -> None: ...
 
 global___ChannelMapping = ChannelMapping

@@ -3,6 +3,8 @@ from __future__ import annotations
 import pathlib
 from contextlib import ExitStack
 
+import pytest
+
 from ni_measurementlink_service.session_management import (
     INSTRUMENT_TYPE_NI_DCPOWER,
     INSTRUMENT_TYPE_NI_RELAY_DRIVER,
@@ -158,12 +160,8 @@ def test___sessions_reserved___get_connections_by_instrument_type___connections_
         ]
 
 
-# AB#2546523: Fully support querying connections for shared pins
-#
-# When you reserve sessions for all sites, the session management service
-# currently only returns shared pins for the 1st site with which they are
-# associated.
-def test___sessions_reserved_with_shared_pins_all_sites___get_connections___connections_returned_for_first_matching_site(
+@pytest.mark.xfail(reason="Requires MeasurementLink 2024Q2 or later.")
+def test___sessions_reserved_with_shared_pins_all_sites___get_connections___returns_connections_for_all_sites(
     pin_map_client: PinMapClient,
     pin_map_directory: pathlib.Path,
     session_management_client: SessionManagementClient,
@@ -182,6 +180,9 @@ def test___sessions_reserved_with_shared_pins_all_sites___get_connections___conn
             ConnectionSubset("A", 0, nidcpower_resource, "DCPower1/0"),
             ConnectionSubset("B", 0, nidcpower_resource, "DCPower2/1"),
             ConnectionSubset("C", 0, "SCOPE1", "2"),
+            ConnectionSubset("A", 1, nidcpower_resource, "DCPower1/0"),
+            ConnectionSubset("B", 1, nidcpower_resource, "DCPower2/1"),
+            ConnectionSubset("C", 1, "SCOPE1", "2"),
             ConnectionSubset("S1", -1, "SCOPE1", "1"),
             ConnectionSubset("S2", -1, nidcpower_resource, "DCPower1/2"),
         ]
