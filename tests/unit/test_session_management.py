@@ -709,7 +709,7 @@ def test___multiple_sessions_with_shared_pins_and_varying_multiplexer_count___re
     ]
 
 
-def test___single_session_without_multiplexer___read_multiplexer_session_info___raises_value_error(
+def test___single_session_without_multiplexer___get_multiplexer_session_info___returns_empty_list(
     session_management_client: SessionManagementClient,
     session_management_stub: Mock,
 ) -> None:
@@ -724,14 +724,13 @@ def test___single_session_without_multiplexer___read_multiplexer_session_info___
         pin_or_relay_names=["Pin1"],
     )
 
-    with pytest.raises(ValueError) as exc_info:
-        reservation.multiplexer_session_info[0].session_name
+    multiplexer_session_info = reservation.multiplexer_session_info
 
     assert isinstance(reservation, SingleSessionReservation)
-    assert "No multiplexer session(s) exist." in exc_info.value.args[0]
+    assert len(multiplexer_session_info) == 0
 
 
-def test___multiple_sessions_without_multiplexer___read_multiplexer_session_info___raises_value_error(
+def test___multiple_sessions_without_multiplexer___get_multiplexer_session_info___returns_empty_list(
     session_management_client: SessionManagementClient,
     session_management_stub: Mock,
 ) -> None:
@@ -746,11 +745,10 @@ def test___multiple_sessions_without_multiplexer___read_multiplexer_session_info
         pin_or_relay_names=["Pin1", "Pin2"],
     )
 
-    with pytest.raises(ValueError) as exc_info:
-        reservation.multiplexer_session_info[0].session_name
+    multiplexer_session_info = reservation.multiplexer_session_info
 
     assert isinstance(reservation, MultiSessionReservation)
-    assert "No multiplexer session(s) exist." in exc_info.value.args[0]
+    assert len(multiplexer_session_info) == 0
 
 
 def _create_session_infos(session_count: int) -> List[SessionInformation]:

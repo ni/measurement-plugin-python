@@ -275,8 +275,6 @@ class BaseReservation(_BaseSessionContainer):
     @property
     def multiplexer_session_info(self) -> Sequence[MultiplexerSessionInformation]:
         """Multiplexer session information object."""
-        if not self._multiplexer_session_info:
-            raise ValueError("No multiplexer session(s) exist.")
         return self._multiplexer_session_info
 
     def __enter__(self: Self) -> Self:

@@ -3,6 +3,8 @@ from __future__ import annotations
 import pathlib
 from contextlib import ExitStack
 
+import pytest
+
 from ni_measurementlink_service.session_management import (
     INSTRUMENT_TYPE_NI_DCPOWER,
     INSTRUMENT_TYPE_NI_RELAY_DRIVER,
@@ -158,6 +160,7 @@ def test___sessions_reserved___get_connections_by_instrument_type___connections_
         ]
 
 
+@pytest.mark.xfail(reason="Requires MeasurementLink 2024Q2 or later.")
 def test___sessions_reserved_with_shared_pins_all_sites___get_connections___returns_connections_for_all_sites(
     pin_map_client: PinMapClient,
     pin_map_directory: pathlib.Path,
