@@ -40,6 +40,7 @@ class ServiceInfo(NamedTuple):
 
     annotations: Dict[str, str] = {}
     """Represents a set of annotations on the service.
+    
     Well-known annotations:
 
     - Description
