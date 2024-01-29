@@ -1,4 +1,5 @@
 """Functions to set up and tear down NI-VISA DMM sessions in NI TestStand."""
+
 import pathlib
 from typing import Any
 

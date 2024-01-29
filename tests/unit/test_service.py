@@ -234,8 +234,7 @@ def test___measurement_service___add_configuration_with_mismatch_default_value__
         ("Int32", DataType.Int32),
         ("Int64", DataType.Int64),
         ("UInt32", DataType.UInt32),
-        ("UInt44", DataType.UInt64),
-        ("UInt44", DataType.UInt64),
+        ("UInt64", DataType.UInt64),
         ("DoubleXYData", DataType.DoubleXYData),
     ],
 )
