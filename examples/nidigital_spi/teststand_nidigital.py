@@ -1,4 +1,5 @@
 """Functions to set up and tear down sessions of NI Digital Pattern instruments in NI TestStand."""
+
 from typing import Any, Iterable
 
 from _helpers import TestStandSupport
@@ -10,7 +11,9 @@ from ni_measurementlink_service.session_management import (
     SessionInitializationBehavior,
     SessionManagementClient,
 )
-from ni_measurementlink_service.session_management._reservation import MultiSessionReservation
+from ni_measurementlink_service.session_management._reservation import (
+    MultiSessionReservation,
+)
 
 
 def create_nidigital_sessions(sequence_context: Any) -> None:
