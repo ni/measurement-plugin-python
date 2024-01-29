@@ -18,7 +18,6 @@ from ni_measurementlink_service.discovery._types import ServiceLocation
 from ni_measurementlink_service.grpc.channelpool import GrpcChannelPool
 from ni_measurementlink_service.measurement.info import MeasurementInfo, ServiceInfo
 
-
 _logger = logging.getLogger(__name__)
 
 
@@ -117,7 +116,6 @@ class DiscoveryClient:
         """
         annotations = service_info.annotations
         annotations[ANNOTATIONS_SERVICE_PROGRAMMINGLANGUAGE_KEY] = "Python"
-
         try:
             grpc_service_description = discovery_service_pb2.ServiceDescriptor(
                 display_name=service_info.display_name,
