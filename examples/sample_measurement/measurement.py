@@ -1,4 +1,5 @@
 """Perform a loopback measurement with various data types."""
+
 import logging
 import pathlib
 import sys

@@ -1,4 +1,5 @@
 """Source the XY data for Conway's Game of Life."""
+
 import pathlib
 import random
 import threading
