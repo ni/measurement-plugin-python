@@ -40,7 +40,6 @@ class ServiceInfo(NamedTuple):
 
     annotations: Dict[str, str] = {}
     """Represents a set of annotations on the service.
-    
     Well-known annotations:
 
     - Description
@@ -56,6 +55,10 @@ class ServiceInfo(NamedTuple):
         - Key: "ni/service.tags"
            - Expected format: serialized JSON string of an array of strings
            - Example: "[\"powerup\", \"current\"]"
+    - Programminglanguage
+        - Key: "ni/service.programminglanguage"
+            - Expected format: string
+            - Example: "Python"
     """
 
     display_name: str = ""

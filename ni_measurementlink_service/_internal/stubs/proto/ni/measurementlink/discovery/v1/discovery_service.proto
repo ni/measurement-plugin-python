@@ -82,6 +82,10 @@ message ServiceDescriptor {
   //   - Key: "ni/service.tags"
   //   - Expected format: serialized JSON string of an array of strings
   //   - Example: "[\"powerup\", \"current\"]"
+  // - Programminglanguage
+  //   - Key: "ni/service.programminglanguage"
+  //   - Expected format: string
+  //   - Example: "Python"
   map<string, string> annotations = 5;
 }
 
