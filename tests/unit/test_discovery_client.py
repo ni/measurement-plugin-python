@@ -24,6 +24,9 @@ from ni_measurementlink_service._internal.stubs.ni.measurementlink.discovery.v1.
 from ni_measurementlink_service._internal.stubs.ni.measurementlink.discovery.v1.discovery_service_pb2_grpc import (
     DiscoveryServiceStub,
 )
+from ni_measurementlink_service._internal.utilities._constants import (
+    ANNOTATIONS_SERVICE_PROGRAMMINGLANGUAGE_KEY,
+)
 from ni_measurementlink_service.discovery import DiscoveryClient, ServiceLocation
 from ni_measurementlink_service.discovery._support import (
     _get_discovery_service_address,
@@ -387,4 +390,4 @@ def _assert_service_info_equal(
     assert set(expected.provided_interfaces) == set(actual.provided_interfaces)
     assert expected.service_class == actual.service_class
     assert expected.annotations == actual.annotations
-    assert actual.annotations["ni/service.programminglanguage"] == "Python"
+    assert actual.annotations[ANNOTATIONS_SERVICE_PROGRAMMINGLANGUAGE_KEY] == "Python"

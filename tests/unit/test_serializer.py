@@ -11,6 +11,10 @@ from ni_measurementlink_service._internal.parameter.metadata import (
     TypeSpecialization,
 )
 from ni_measurementlink_service._internal.stubs.ni.protobuf.types import xydata_pb2
+from ni_measurementlink_service._internal.utilities._constants import (
+    ANNOTATIONS_ENUM_VALUES_KEY,
+    ANNOTATIONS_TYPE_SPECIALIZATION_KEY,
+)
 from tests.utilities.stubs.serialization import test_pb2
 from tests.utilities.stubs.serialization.bigmessage_pb2 import BigMessage
 
@@ -401,8 +405,8 @@ def _get_test_parameter_by_id(default_values):
             repeated=False,
             default_value=default_values[16],
             annotations={
-                "ni/type_specialization": TypeSpecialization.Enum.value,
-                "ni/enum.values": '{"PURPLE": 0, "ORANGE": 1, "TEAL": 2, "BROWN": 3}',
+                ANNOTATIONS_TYPE_SPECIALIZATION_KEY: TypeSpecialization.Enum.value,
+                ANNOTATIONS_ENUM_VALUES_KEY: '{"PURPLE": 0, "ORANGE": 1, "TEAL": 2, "BROWN": 3}',
             },
         ),
         18: ParameterMetadata(
@@ -411,8 +415,8 @@ def _get_test_parameter_by_id(default_values):
             repeated=True,
             default_value=default_values[17],
             annotations={
-                "ni/type_specialization": TypeSpecialization.Enum.value,
-                "ni/enum.values": '{"PURPLE": 0, "ORANGE": 1, "TEAL": 2, "BROWN": 3}',
+                ANNOTATIONS_TYPE_SPECIALIZATION_KEY: TypeSpecialization.Enum.value,
+                ANNOTATIONS_ENUM_VALUES_KEY: '{"PURPLE": 0, "ORANGE": 1, "TEAL": 2, "BROWN": 3}',
             },
         ),
         19: ParameterMetadata(
@@ -421,8 +425,8 @@ def _get_test_parameter_by_id(default_values):
             repeated=False,
             default_value=default_values[18],
             annotations={
-                "ni/type_specialization": TypeSpecialization.Enum.value,
-                "ni/enum.values": '{"AMERICA": 0, "TAIWAN": 1, "AUSTRALIA": 2, "CANADA": 3}',
+                ANNOTATIONS_TYPE_SPECIALIZATION_KEY: TypeSpecialization.Enum.value,
+                ANNOTATIONS_ENUM_VALUES_KEY: '{"AMERICA": 0, "TAIWAN": 1, "AUSTRALIA": 2, "CANADA": 3}',
             },
         ),
         20: ParameterMetadata(
@@ -431,8 +435,8 @@ def _get_test_parameter_by_id(default_values):
             repeated=True,
             default_value=default_values[19],
             annotations={
-                "ni/type_specialization": TypeSpecialization.Enum.value,
-                "ni/enum.values": '{"AMERICA": 0, "TAIWAN": 1, "AUSTRALIA": 2, "CANADA": 3}',
+                ANNOTATIONS_TYPE_SPECIALIZATION_KEY: TypeSpecialization.Enum.value,
+                ANNOTATIONS_ENUM_VALUES_KEY: '{"AMERICA": 0, "TAIWAN": 1, "AUSTRALIA": 2, "CANADA": 3}',
             },
         ),
         21: ParameterMetadata(

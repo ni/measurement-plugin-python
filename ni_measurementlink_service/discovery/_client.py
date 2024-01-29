@@ -10,10 +10,14 @@ from ni_measurementlink_service._internal.stubs.ni.measurementlink.discovery.v1 
     discovery_service_pb2,
     discovery_service_pb2_grpc,
 )
+from ni_measurementlink_service._internal.utilities._constants import (
+    ANNOTATIONS_SERVICE_PROGRAMMINGLANGUAGE_KEY,
+)
 from ni_measurementlink_service.discovery._support import _get_discovery_service_address
 from ni_measurementlink_service.discovery._types import ServiceLocation
 from ni_measurementlink_service.grpc.channelpool import GrpcChannelPool
 from ni_measurementlink_service.measurement.info import MeasurementInfo, ServiceInfo
+
 
 _logger = logging.getLogger(__name__)
 
@@ -111,7 +115,8 @@ class DiscoveryClient:
         Returns:
             ID that can be used to unregister the service.
         """
-        service_info.annotations["ni/service.programminglanguage"] = "Python"
+        annotations = service_info.annotations
+        annotations[ANNOTATIONS_SERVICE_PROGRAMMINGLANGUAGE_KEY] = "Python"
 
         try:
             grpc_service_description = discovery_service_pb2.ServiceDescriptor(
@@ -119,7 +124,7 @@ class DiscoveryClient:
                 description_url=service_info.description_url,
                 provided_interfaces=service_info.provided_interfaces,
                 service_class=service_info.service_class,
-                annotations=service_info.annotations,
+                annotations=annotations,
             )
 
             grpc_service_location = discovery_service_pb2.ServiceLocation(

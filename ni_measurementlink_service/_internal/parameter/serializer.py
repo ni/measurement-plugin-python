@@ -15,6 +15,9 @@ from ni_measurementlink_service._internal.parameter.metadata import (
     ParameterMetadata,
     get_enum_values_annotation,
 )
+from ni_measurementlink_service._internal.utilities._constants import (
+    ANNOTATIONS_TYPE_SPECIALIZATION_KEY,
+)
 from ni_measurementlink_service.measurement.info import TypeSpecialization
 
 _GRPC_WIRE_TYPE_BIT_WIDTH = 3
@@ -76,7 +79,7 @@ def serialize_parameters(
         )
         # Convert enum parameters to their underlying value if necessary.
         if (
-            parameter_metadata.annotations.get("ni/type_specialization")
+            parameter_metadata.annotations.get(ANNOTATIONS_TYPE_SPECIALIZATION_KEY)
             == TypeSpecialization.Enum.value
         ):
             parameter = _get_enum_value(parameter, parameter_metadata.repeated)

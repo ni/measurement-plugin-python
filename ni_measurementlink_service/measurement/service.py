@@ -37,6 +37,10 @@ from ni_measurementlink_service._internal.parameter import (
     metadata as parameter_metadata,
 )
 from ni_measurementlink_service._internal.service_manager import GrpcService
+from ni_measurementlink_service._internal.utilities._constants import (
+    ANNOTATIONS_ENUM_VALUES_KEY,
+    ANNOTATIONS_TYPE_SPECIALIZATION_KEY,
+)
 from ni_measurementlink_service.discovery import DiscoveryClient, ServiceLocation
 from ni_measurementlink_service.grpc.channelpool import (  # re-export
     GrpcChannelPool as GrpcChannelPool,
@@ -512,13 +516,15 @@ class MeasurementService:
         if type_specialization == TypeSpecialization.NoType:
             return annotations
 
-        annotations["ni/type_specialization"] = type_specialization.value
+        annotations[ANNOTATIONS_TYPE_SPECIALIZATION_KEY] = type_specialization.value
         if type_specialization == TypeSpecialization.Pin:
             if instrument_type != "" or instrument_type is not None:
                 annotations["ni/pin.instrument_type"] = instrument_type
         if type_specialization == TypeSpecialization.Enum:
             if enum_type is not None:
-                annotations["ni/enum.values"] = self._enum_to_annotations_value(enum_type)
+                annotations[ANNOTATIONS_ENUM_VALUES_KEY] = self._enum_to_annotations_value(
+                    enum_type
+                )
             else:
                 raise ValueError("enum_type is required for enum parameters.")
 

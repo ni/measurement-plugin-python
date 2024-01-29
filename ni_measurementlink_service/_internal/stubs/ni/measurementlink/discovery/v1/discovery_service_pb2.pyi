@@ -76,10 +76,6 @@ class ServiceDescriptor(google.protobuf.message.Message):
           - Key: "ni/service.tags"
           - Expected format: serialized JSON string of an array of strings
           - Example: "[\\"powerup\\", \\"current\\"]"
-        - Programminglanguage
-          - Key: "ni/service.programminglanguage"
-          - Expected format: string
-          - Example: "Python"
         """
     def __init__(
         self,
