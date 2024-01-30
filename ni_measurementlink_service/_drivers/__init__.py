@@ -1,10 +1,13 @@
 """Shared code for interfacing with driver APIs."""
+
 from __future__ import annotations
 
 import contextlib
 from typing import ContextManager, TypeVar
 
-from ni_measurementlink_service.session_management._types import SessionInitializationBehavior
+from ni_measurementlink_service.session_management._types import (
+    SessionInitializationBehavior,
+)
 
 TSession = TypeVar("TSession")
 

@@ -1,4 +1,5 @@
 """Session management client class."""
+
 from __future__ import annotations
 
 import logging
@@ -52,9 +53,9 @@ class SessionManagementClient(object):
         self._initialization_lock = threading.Lock()
         self._discovery_client = discovery_client
         self._grpc_channel_pool = grpc_channel_pool
-        self._stub: Optional[
-            session_management_service_pb2_grpc.SessionManagementServiceStub
-        ] = None
+        self._stub: Optional[session_management_service_pb2_grpc.SessionManagementServiceStub] = (
+            None
+        )
 
         if grpc_channel is not None:
             self._stub = session_management_service_pb2_grpc.SessionManagementServiceStub(

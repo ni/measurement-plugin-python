@@ -1,4 +1,5 @@
 """Session management data types."""
+
 from __future__ import annotations
 
 from enum import IntEnum

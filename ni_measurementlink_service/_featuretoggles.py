@@ -1,4 +1,5 @@
 """MeasurementLink feature toggles."""
+
 from __future__ import annotations
 
 import functools
@@ -6,7 +7,7 @@ import sys
 from enum import Enum
 from typing import TYPE_CHECKING, Callable, TypeVar
 
-from ni_measurementlink_service._configuration import _config, _PREFIX
+from ni_measurementlink_service._configuration import _PREFIX, _config
 
 if TYPE_CHECKING:
     if sys.version_info >= (3, 10):

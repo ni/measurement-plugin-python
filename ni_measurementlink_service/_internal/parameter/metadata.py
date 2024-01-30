@@ -1,4 +1,5 @@
 """Contains classes that represents metadata."""
+
 import json
 from enum import Enum
 from typing import Any, Dict, Iterable, NamedTuple
