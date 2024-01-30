@@ -28,7 +28,8 @@ if TYPE_CHECKING:
         option: str,
         default: Union[_T, Undefined] = undefined,
         cast: Union[Callable[[str], _T], Undefined] = undefined,
-    ) -> _T: ...
+    ) -> _T:
+        ...
 
 
 # ----------------------------------------------------------------------
