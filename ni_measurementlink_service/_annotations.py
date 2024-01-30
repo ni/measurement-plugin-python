@@ -1,4 +1,4 @@
-# Constants for annotations
+"""Constants for annotations."""
 
 ENUM_VALUES_KEY = "ni/enum.values"
 TYPE_SPECIALIZATION_KEY = "ni/type_specialization"
