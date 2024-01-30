@@ -114,7 +114,7 @@ class DiscoveryClient:
         Returns:
             ID that can be used to unregister the service.
         """
-        annotations = service_info.annotations
+        annotations = service_info.annotations.copy()
         annotations[ANNOTATIONS_SERVICE_PROGRAMMINGLANGUAGE_KEY] = "Python"
         try:
             grpc_service_description = discovery_service_pb2.ServiceDescriptor(
