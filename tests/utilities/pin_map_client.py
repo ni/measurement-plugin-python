@@ -1,4 +1,5 @@
 """Client for accessing the MeasurementLink pin map service."""
+
 import logging
 import pathlib
 import threading

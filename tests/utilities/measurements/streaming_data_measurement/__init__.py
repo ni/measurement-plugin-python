@@ -1,4 +1,5 @@
 """Contains utility functions to test a v2 measurement service that streams data."""
+
 import pathlib
 import threading
 import time

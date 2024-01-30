@@ -1,4 +1,5 @@
 """Tests to validate that yield and return are both supported in v2 measurements."""
+
 from typing import Generator
 
 import pytest

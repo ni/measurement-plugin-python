@@ -1,4 +1,5 @@
 """Pytest configuration file for integration tests."""
+
 import pathlib
 
 import pytest

@@ -1,4 +1,5 @@
 """Tests to validate a v2 measurement service that streams data."""
+
 from typing import Generator, List
 
 import grpc
