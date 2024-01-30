@@ -10,13 +10,13 @@ from google.protobuf.internal.decoder import (  # type: ignore[attr-defined]
 )
 from google.protobuf.message import Message
 
+from ni_measurementlink_service._annotations import (
+    TYPE_SPECIALIZATION_KEY,
+)
 from ni_measurementlink_service._internal.parameter import serialization_strategy
 from ni_measurementlink_service._internal.parameter.metadata import (
     ParameterMetadata,
     get_enum_values_annotation,
-)
-from ni_measurementlink_service._internal.utilities._constants import (
-    ANNOTATIONS_TYPE_SPECIALIZATION_KEY,
 )
 from ni_measurementlink_service.measurement.info import TypeSpecialization
 
@@ -79,7 +79,7 @@ def serialize_parameters(
         )
         # Convert enum parameters to their underlying value if necessary.
         if (
-            parameter_metadata.annotations.get(ANNOTATIONS_TYPE_SPECIALIZATION_KEY)
+            parameter_metadata.annotations.get(TYPE_SPECIALIZATION_KEY)
             == TypeSpecialization.Enum.value
         ):
             parameter = _get_enum_value(parameter, parameter_metadata.repeated)

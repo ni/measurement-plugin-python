@@ -5,11 +5,11 @@ from typing import Any, Dict, Iterable, NamedTuple
 
 from google.protobuf import type_pb2
 
-from ni_measurementlink_service._internal.parameter import serialization_strategy
-from ni_measurementlink_service._internal.utilities._constants import (
-    ANNOTATIONS_ENUM_VALUES_KEY,
-    ANNOTATIONS_TYPE_SPECIALIZATION_KEY,
+from ni_measurementlink_service._annotations import (
+    ENUM_VALUES_KEY,
+    TYPE_SPECIALIZATION_KEY,
 )
+from ni_measurementlink_service._internal.parameter import serialization_strategy
 from ni_measurementlink_service.measurement.info import TypeSpecialization
 
 
@@ -150,11 +150,8 @@ def get_enum_values_annotation(parameter_metadata: ParameterMetadata) -> str:
     Returns:
         str: The value of "ni/enum.values" annotation
     """
-    if (
-        parameter_metadata.annotations.get(ANNOTATIONS_TYPE_SPECIALIZATION_KEY)
-        == TypeSpecialization.Enum.value
-    ):
-        return parameter_metadata.annotations.get(ANNOTATIONS_ENUM_VALUES_KEY, "")
+    if parameter_metadata.annotations.get(TYPE_SPECIALIZATION_KEY) == TypeSpecialization.Enum.value:
+        return parameter_metadata.annotations.get(ENUM_VALUES_KEY, "")
     else:
         return ""
 

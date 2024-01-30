@@ -8,8 +8,8 @@ import pytest
 from pytest_mock import MockerFixture
 
 from ni_measurementlink_service import _datatypeinfo
-from ni_measurementlink_service._internal.utilities._constants import (
-    ANNOTATIONS_TYPE_SPECIALIZATION_KEY,
+from ni_measurementlink_service._annotations import (
+    TYPE_SPECIALIZATION_KEY,
 )
 from ni_measurementlink_service.measurement.info import DataType, TypeSpecialization
 from ni_measurementlink_service.measurement.service import MeasurementService
@@ -102,7 +102,7 @@ def test___measurement_service___add_pin_configuration__pin_configuration_added(
         and param.default_value == default_value
         and param.annotations
         == {
-            ANNOTATIONS_TYPE_SPECIALIZATION_KEY: TypeSpecialization.Pin.value,
+            TYPE_SPECIALIZATION_KEY: TypeSpecialization.Pin.value,
             "ni/pin.instrument_type": instrument_type,
         }
         for param in measurement_service._configuration_parameter_list
@@ -133,7 +133,7 @@ def test___measurement_service___add_non_pin_configuration__pin_type_annotations
     measurement_service.configuration(display_name, type, default_value)(_fake_measurement_function)
 
     assert not all(
-        param.annotations.get(ANNOTATIONS_TYPE_SPECIALIZATION_KEY) == TypeSpecialization.Pin.value
+        param.annotations.get(TYPE_SPECIALIZATION_KEY) == TypeSpecialization.Pin.value
         for param in measurement_service._configuration_parameter_list
     )
 
@@ -161,7 +161,7 @@ def test___measurement_service___add_path_configuration__path_configuration_adde
         and param.default_value == default_value
         and param.annotations
         == {
-            ANNOTATIONS_TYPE_SPECIALIZATION_KEY: TypeSpecialization.Path.value,
+            TYPE_SPECIALIZATION_KEY: TypeSpecialization.Path.value,
         }
         for param in measurement_service._configuration_parameter_list
     )
@@ -191,7 +191,7 @@ def test___measurement_service___add_non_path_configuration__path_type_annotatio
     measurement_service.configuration(display_name, type, default_value)(_fake_measurement_function)
 
     assert not all(
-        param.annotations.get(ANNOTATIONS_TYPE_SPECIALIZATION_KEY) == TypeSpecialization.Path.value
+        param.annotations.get(TYPE_SPECIALIZATION_KEY) == TypeSpecialization.Path.value
         for param in measurement_service._configuration_parameter_list
     )
 

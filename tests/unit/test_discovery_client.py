@@ -12,6 +12,9 @@ import grpc
 import pytest
 from pytest_mock import MockerFixture
 
+from ni_measurementlink_service._annotations import (
+    SERVICE_PROGRAMMINGLANGUAGE_KEY,
+)
 from ni_measurementlink_service._internal.stubs.ni.measurementlink.discovery.v1.discovery_service_pb2 import (
     RegisterServiceRequest,
     RegisterServiceResponse,
@@ -23,9 +26,6 @@ from ni_measurementlink_service._internal.stubs.ni.measurementlink.discovery.v1.
 )
 from ni_measurementlink_service._internal.stubs.ni.measurementlink.discovery.v1.discovery_service_pb2_grpc import (
     DiscoveryServiceStub,
-)
-from ni_measurementlink_service._internal.utilities._constants import (
-    ANNOTATIONS_SERVICE_PROGRAMMINGLANGUAGE_KEY,
 )
 from ni_measurementlink_service.discovery import DiscoveryClient, ServiceLocation
 from ni_measurementlink_service.discovery._support import (
@@ -385,9 +385,9 @@ def _assert_service_location_equal(
 def _assert_service_info_equal(
     expected: ServiceInfo, actual: Union[ServiceInfo, GrpcServiceDescriptor]
 ) -> None:
+    expected.annotations[SERVICE_PROGRAMMINGLANGUAGE_KEY] == "Python"
     assert expected.display_name == actual.display_name
     assert expected.description_url == actual.description_url
     assert set(expected.provided_interfaces) == set(actual.provided_interfaces)
     assert expected.service_class == actual.service_class
     assert expected.annotations == actual.annotations
-    assert actual.annotations[ANNOTATIONS_SERVICE_PROGRAMMINGLANGUAGE_KEY] == "Python"

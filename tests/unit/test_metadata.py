@@ -4,11 +4,11 @@ from enum import Enum, IntEnum
 import pytest
 
 from ni_measurementlink_service import _datatypeinfo
-from ni_measurementlink_service._internal.parameter import metadata
-from ni_measurementlink_service._internal.utilities._constants import (
-    ANNOTATIONS_ENUM_VALUES_KEY,
-    ANNOTATIONS_TYPE_SPECIALIZATION_KEY,
+from ni_measurementlink_service._annotations import (
+    ENUM_VALUES_KEY,
+    TYPE_SPECIALIZATION_KEY,
 )
+from ni_measurementlink_service._internal.parameter import metadata
 from ni_measurementlink_service.measurement.info import DataType, TypeSpecialization
 
 
@@ -53,16 +53,16 @@ class Countries(IntEnum):
             DataType.Enum,
             1.0,
             {
-                ANNOTATIONS_TYPE_SPECIALIZATION_KEY: TypeSpecialization.Enum.value,
-                ANNOTATIONS_ENUM_VALUES_KEY: '{"NONE":0, "RED": 1, "GREEN": 2, "BLUE": 3}',
+                TYPE_SPECIALIZATION_KEY: TypeSpecialization.Enum.value,
+                ENUM_VALUES_KEY: '{"NONE":0, "RED": 1, "GREEN": 2, "BLUE": 3}',
             },
         ),
         (
             DataType.Enum,
             DifferentColor.TEAL,
             {
-                ANNOTATIONS_TYPE_SPECIALIZATION_KEY: TypeSpecialization.Enum.value,
-                ANNOTATIONS_ENUM_VALUES_KEY: '{"NONE":0, "RED": 1, "GREEN": 2, "BLUE": 3}',
+                TYPE_SPECIALIZATION_KEY: TypeSpecialization.Enum.value,
+                ENUM_VALUES_KEY: '{"NONE":0, "RED": 1, "GREEN": 2, "BLUE": 3}',
             },
         ),
         (DataType.EnumArray1D, 1, {}),
@@ -70,8 +70,8 @@ class Countries(IntEnum):
             DataType.EnumArray1D,
             [1.0, 2.0],
             {
-                ANNOTATIONS_TYPE_SPECIALIZATION_KEY: TypeSpecialization.Enum.value,
-                ANNOTATIONS_ENUM_VALUES_KEY: '{"NONE":0, "RED": 1, "GREEN": 2, "BLUE": 3}',
+                TYPE_SPECIALIZATION_KEY: TypeSpecialization.Enum.value,
+                ENUM_VALUES_KEY: '{"NONE":0, "RED": 1, "GREEN": 2, "BLUE": 3}',
             },
         ),
     ],
@@ -104,32 +104,32 @@ def test___default_value_different_from_type___validate___raises_type_exception(
             DataType.Enum,
             Color.BLUE,
             {
-                ANNOTATIONS_TYPE_SPECIALIZATION_KEY: TypeSpecialization.Enum.value,
-                ANNOTATIONS_ENUM_VALUES_KEY: '{"NONE":0, "RED": 1, "GREEN": 2, "BLUE": 3}',
+                TYPE_SPECIALIZATION_KEY: TypeSpecialization.Enum.value,
+                ENUM_VALUES_KEY: '{"NONE":0, "RED": 1, "GREEN": 2, "BLUE": 3}',
             },
         ),
         (
             DataType.EnumArray1D,
             [Color.BLUE, Color.GREEN],
             {
-                ANNOTATIONS_TYPE_SPECIALIZATION_KEY: TypeSpecialization.Enum.value,
-                ANNOTATIONS_ENUM_VALUES_KEY: '{"NONE":0, "RED": 1, "GREEN": 2, "BLUE": 3}',
+                TYPE_SPECIALIZATION_KEY: TypeSpecialization.Enum.value,
+                ENUM_VALUES_KEY: '{"NONE":0, "RED": 1, "GREEN": 2, "BLUE": 3}',
             },
         ),
         (
             DataType.Enum,
             Countries.AUSTRALIA,
             {
-                ANNOTATIONS_TYPE_SPECIALIZATION_KEY: TypeSpecialization.Enum.value,
-                ANNOTATIONS_ENUM_VALUES_KEY: '{"AMERICA":0, "TAIWAN": 1, "AUSTRALIA": 2, "CANADA": 3}',
+                TYPE_SPECIALIZATION_KEY: TypeSpecialization.Enum.value,
+                ENUM_VALUES_KEY: '{"AMERICA":0, "TAIWAN": 1, "AUSTRALIA": 2, "CANADA": 3}',
             },
         ),
         (
             DataType.EnumArray1D,
             [Countries.AUSTRALIA, Countries.CANADA],
             {
-                ANNOTATIONS_TYPE_SPECIALIZATION_KEY: TypeSpecialization.Enum.value,
-                ANNOTATIONS_ENUM_VALUES_KEY: '{"AMERICA":0, "TAIWAN": 1, "AUSTRALIA": 2, "CANADA": 3}',
+                TYPE_SPECIALIZATION_KEY: TypeSpecialization.Enum.value,
+                ENUM_VALUES_KEY: '{"AMERICA":0, "TAIWAN": 1, "AUSTRALIA": 2, "CANADA": 3}',
             },
         ),
     ],
