@@ -1,4 +1,5 @@
 """Sphinx Configuration File."""
+
 import datetime
 import pathlib
 
