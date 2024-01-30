@@ -1,4 +1,5 @@
 """Shared functions for interacting with NI gRPC Device Server."""
+
 from __future__ import annotations
 
 import logging

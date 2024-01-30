@@ -1,4 +1,5 @@
 """NI-Digital MeasurementLink test service."""
+
 import pathlib
 from itertools import groupby
 from typing import Iterable, Sequence, Tuple, Union
@@ -6,7 +7,10 @@ from typing import Iterable, Sequence, Tuple, Union
 import nidigital
 
 import ni_measurementlink_service as nims
-from ni_measurementlink_service.session_management import TypedConnection, TypedSessionInformation
+from ni_measurementlink_service.session_management import (
+    TypedConnection,
+    TypedSessionInformation,
+)
 
 service_directory = pathlib.Path(__file__).resolve().parent
 measurement_service = nims.MeasurementService(

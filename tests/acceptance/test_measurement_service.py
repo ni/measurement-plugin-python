@@ -1,4 +1,5 @@
 """Tests to validate measurement service. Uses the Sample Measurement Example."""
+
 import random
 import urllib.parse
 import urllib.request

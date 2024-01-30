@@ -1,4 +1,5 @@
 """Contains Test Doubles related to Discovery service. """
+
 import uuid
 
 

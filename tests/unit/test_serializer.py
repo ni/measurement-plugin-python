@@ -1,4 +1,5 @@
 """Contains tests to validate serializer.py."""
+
 from enum import Enum, IntEnum
 from typing import Dict, Sequence
 

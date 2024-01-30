@@ -1,4 +1,5 @@
 """Pytest configuration file for acceptance tests."""
+
 import pathlib
 
 import pytest

@@ -1,4 +1,5 @@
 """Contains tests to validate metadata.py."""
+
 from enum import Enum, IntEnum
 
 import pytest

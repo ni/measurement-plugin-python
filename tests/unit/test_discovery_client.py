@@ -1,5 +1,6 @@
 """Contains tests to validate the discovery_client.py.
 """
+
 import json
 import pathlib
 import subprocess

@@ -1,10 +1,8 @@
 """Utility to create and construct connection subset."""
+
 from typing import NamedTuple, TypeVar, Union
 
-from ni_measurementlink_service.session_management import (
-    Connection,
-    TypedConnection,
-)
+from ni_measurementlink_service.session_management import Connection, TypedConnection
 
 _T = TypeVar("_T")
 

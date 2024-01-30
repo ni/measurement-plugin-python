@@ -1,4 +1,5 @@
 """Client for accessing the MeasurementLink discovery service."""
+
 import logging
 import threading
 from typing import Optional

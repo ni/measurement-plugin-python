@@ -1,4 +1,5 @@
 """Pytest configuration file."""
+
 import pathlib
 import sys
 from typing import Generator, List

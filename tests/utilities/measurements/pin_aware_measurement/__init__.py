@@ -1,4 +1,5 @@
 """Pin-aware MeasurementLink test service."""
+
 import pathlib
 from typing import Iterable, Tuple
 

@@ -1,4 +1,5 @@
 """Contains utility functions to test loopback measurement service. """
+
 import pathlib
 from enum import Enum
 from typing import Iterable, Tuple

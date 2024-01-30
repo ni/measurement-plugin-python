@@ -1,4 +1,5 @@
 """Reservation-related unit test utilities."""
+
 from typing import List
 
 from ni_measurementlink_service._internal.stubs import session_pb2

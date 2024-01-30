@@ -1,4 +1,5 @@
 """Data types for the MeasurementLink discovery service."""
+
 import typing
 
 

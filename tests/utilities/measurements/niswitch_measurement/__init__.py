@@ -1,4 +1,5 @@
 """NI-SWITCH MeasurementLink test service."""
+
 import pathlib
 from typing import Iterable, Sequence, Tuple
 

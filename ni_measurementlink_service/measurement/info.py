@@ -1,4 +1,5 @@
 """Measurement service metadata classes and enums."""
+
 from __future__ import annotations
 
 import enum
