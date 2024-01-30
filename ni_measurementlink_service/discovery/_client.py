@@ -7,6 +7,9 @@ from typing import Optional
 import grpc
 from deprecation import deprecated
 
+from ni_measurementlink_service._annotations import (
+    SERVICE_PROGRAMMINGLANGUAGE_KEY,
+)
 from ni_measurementlink_service._internal.stubs.ni.measurementlink.discovery.v1 import (
     discovery_service_pb2,
     discovery_service_pb2_grpc,
@@ -112,13 +115,15 @@ class DiscoveryClient:
         Returns:
             ID that can be used to unregister the service.
         """
+        annotations = service_info.annotations.copy()
+        annotations[SERVICE_PROGRAMMINGLANGUAGE_KEY] = "Python"
         try:
             grpc_service_description = discovery_service_pb2.ServiceDescriptor(
                 display_name=service_info.display_name,
                 description_url=service_info.description_url,
                 provided_interfaces=service_info.provided_interfaces,
                 service_class=service_info.service_class,
-                annotations=service_info.annotations,
+                annotations=annotations,
             )
 
             grpc_service_location = discovery_service_pb2.ServiceLocation(
