@@ -58,8 +58,10 @@ from ni_measurementlink_service.session_management._types import (
     MultiplexerSessionInformation,
     SessionInformation,
     SessionInitializationBehavior,
+    TMultiplexerSession,
     TSession,
     TypedConnection,
+    TypedConnectionWithMultiplexer,
     TypedSessionInformation,
 )
 
@@ -264,10 +266,20 @@ class BaseReservation(_BaseSessionContainer):
                     session_info.instrument_type_id,
                 )
                 value = Connection(
-                    channel_mapping.pin_or_relay_name,
-                    channel_mapping.site,
-                    channel_mapping.channel,
-                    session_info,
+                    pin_or_relay_name=channel_mapping.pin_or_relay_name,
+                    site=channel_mapping.site,
+                    channel_name=channel_mapping.channel,
+                    session_info=session_info,
+                    multiplexer_resource_name=channel_mapping.multiplexer_resource_name,
+                    multiplexer_route=channel_mapping.multiplexer_route,
+                    multiplexer_session_info=next(
+                        (
+                            info
+                            for info in self._multiplexer_session_info
+                            if info.resource_name == channel_mapping.multiplexer_resource_name
+                        ),
+                        None,
+                    ),
                 )
                 assert key not in cache
                 cache[key] = value
@@ -858,6 +870,35 @@ class BaseReservation(_BaseSessionContainer):
             nidcpower.Session, pin_name, site, INSTRUMENT_TYPE_NI_DCPOWER
         )
 
+    def get_nidcpower_connection_with_multiplexer(
+        self,
+        multiplexer_session_type: Type[TMultiplexerSession],
+        pin_name: Optional[str] = None,
+        site: Optional[int] = None,
+    ) -> TypedConnectionWithMultiplexer[nidcpower.Session, TMultiplexerSession]:
+        """Get the NI-DCPower connection matching the specified criteria.
+
+        Args:
+            pin_name: The pin name to match against. If not specified, the pin
+                name is ignored when matching connections.
+
+            site: The site number to match against. If not specified, the
+                site number is ignored when matching connections.
+
+        Returns:
+            The matching connection along with its multiplexer info.
+
+        Raises:
+            TypeError: If the argument types or session type are incorrect.
+
+            ValueError: If no reserved connections match or too many reserved
+                connections match.
+        """
+        return cast(
+            TypedConnectionWithMultiplexer[nidcpower.Session, TMultiplexerSession],
+            self.get_nidcpower_connection(pin_name, site),
+        )
+
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def get_nidcpower_connections(
         self,
@@ -886,6 +927,37 @@ class BaseReservation(_BaseSessionContainer):
         return self._get_connections_core(
             nidcpower.Session, pin_names, sites, INSTRUMENT_TYPE_NI_DCPOWER
         )
+
+    def get_nidcpower_connections_with_multiplexer(
+        self,
+        multiplexer_session_type: Type[TMultiplexerSession],
+        pin_names: Union[str, Iterable[str], None] = None,
+        sites: Union[int, Iterable[int], None] = None,
+    ) -> Sequence[TypedConnectionWithMultiplexer[nidcpower.Session, TMultiplexerSession]]:
+        """Get all NI-DCPower connections matching the specified criteria.
+
+        Args:
+            pin_names: The pin name(s) to match against. If not specified, the
+                pin name is ignored when matching connections.
+
+            sites: The site number(s) to match against. If not specified, the
+                site number is ignored when matching connections.
+
+        Returns:
+            The matching connections along with their multiplexer(s) info.
+
+        Raises:
+            TypeError: If the argument types or session type are incorrect.
+
+            ValueError: If no reserved connections match.
+        """
+        import nidcpower
+
+        connections = self.get_nidcpower_connections(pin_names, sites)
+        return [
+            cast(TypedConnectionWithMultiplexer[nidcpower.Session, TMultiplexerSession], conn)
+            for conn in connections
+        ]
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def initialize_nidigital_session(
