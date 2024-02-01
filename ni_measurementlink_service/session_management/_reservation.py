@@ -593,6 +593,48 @@ class BaseReservation(_BaseSessionContainer):
         """
         return self._get_connection_core(session_type, pin_or_relay_name, site, instrument_type_id)
 
+    def get_connection_with_multiplexer(
+        self,
+        session_type: Type[TSession],
+        multiplexer_session_type: Type[TMultiplexerSession],
+        pin_or_relay_name: Optional[str] = None,
+        site: Optional[int] = None,
+        instrument_type_id: Optional[str] = None,
+    ) -> TypedConnectionWithMultiplexer[TSession, TMultiplexerSession]:
+        """Get the connection matching the specified criteria.
+
+        This is a generic method that supports any instrument driver.
+
+        Args:
+            session_type: The instrument session type.
+
+            multiplexer_session_type: The multiplexer session type.
+
+            pin_or_relay_name: The pin or relay name to match against. If not
+                specified, the pin or relay name is ignored when matching
+                connections.
+
+            site: The site number to match against. If not specified, the
+                site number is ignored when matching connections.
+
+            instrument_type_id: The instrument type ID to match against. If not
+                specified, the instrument type ID is ignored when matching
+                connections.
+
+        Returns:
+            The matching connection along with its multiplexer info.
+
+        Raises:
+            TypeError: If the argument types or session type are incorrect.
+
+            ValueError: If no reserved connections match or too many reserved
+                connections match.
+        """
+        connection = self._get_connection_core(
+            session_type, pin_or_relay_name, site, instrument_type_id, multiplexer_session_type
+        )
+        return cast(TypedConnectionWithMultiplexer[TSession, TMultiplexerSession], connection)
+
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def get_connections(
         self,
@@ -630,6 +672,50 @@ class BaseReservation(_BaseSessionContainer):
         return self._get_connections_core(
             session_type, pin_or_relay_names, sites, instrument_type_id
         )
+
+    def get_connections_with_multiplexer(
+        self,
+        session_type: Type[TSession],
+        multiplexer_session_type: Type[TMultiplexerSession],
+        pin_or_relay_names: Union[str, Iterable[str], None] = None,
+        sites: Union[int, Iterable[int], None] = None,
+        instrument_type_id: Optional[str] = None,
+    ) -> Sequence[TypedConnectionWithMultiplexer[TSession, TMultiplexerSession]]:
+        """Get all connections matching the specified criteria.
+
+        This is a generic method that supports any instrument driver.
+
+        Args:
+            session_type: The instrument session type.
+
+            multiplexer_session_type: The multiplexer session type.
+
+            pin_or_relay_names: The pin or relay name(s) to match against. If
+                not specified, the pin or relay name is ignored when matching
+                connections.
+
+            sites: The site number(s) to match against. If not specified, the
+                site number is ignored when matching connections.
+
+            instrument_type_id: The instrument type ID to match against. If not
+                specified, the instrument type ID is ignored when matching
+                connections.
+
+        Returns:
+            The matching connections along with their multiplexer(s) info.
+
+        Raises:
+            TypeError: If the argument types or session type are incorrect.
+
+            ValueError: If no reserved connections match.
+        """
+        connections = self._get_connections_core(
+            session_type, pin_or_relay_names, sites, instrument_type_id, multiplexer_session_type
+        )
+        return [
+            cast(TypedConnectionWithMultiplexer[TSession, TMultiplexerSession], conn)
+            for conn in connections
+        ]
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def create_nidaqmx_task(
@@ -734,6 +820,39 @@ class BaseReservation(_BaseSessionContainer):
 
         return self._get_connection_core(nidaqmx.Task, pin_name, site, INSTRUMENT_TYPE_NI_DAQMX)
 
+    def get_nidaqmx_connection_with_multiplexer(
+        self,
+        multiplexer_session_type: Type[TMultiplexerSession],
+        pin_name: Optional[str] = None,
+        site: Optional[int] = None,
+    ) -> TypedConnectionWithMultiplexer[nidaqmx.Task, TMultiplexerSession]:
+        """Get the NI-DAQmx connection matching the specified criteria.
+
+        Args:
+            multiplexer_session_type: The multiplexer session type.
+
+            pin_name: The pin name to match against. If not specified, the pin
+                name is ignored when matching connections.
+
+            site: The site number to match against. If not specified, the
+                site number is ignored when matching connections.
+
+        Returns:
+            The matching connection with its multiplexer info.
+
+        Raises:
+            TypeError: If the argument types or session type are incorrect.
+
+            ValueError: If no reserved connections match or too many reserved
+                connections match.
+        """
+        import nidaqmx
+
+        connection = self._get_connection_core(
+            nidaqmx.Task, pin_name, site, INSTRUMENT_TYPE_NI_DAQMX, multiplexer_session_type
+        )
+        return cast(TypedConnectionWithMultiplexer[nidaqmx.Task, TMultiplexerSession], connection)
+
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def get_nidaqmx_connections(
         self,
@@ -760,6 +879,41 @@ class BaseReservation(_BaseSessionContainer):
         import nidaqmx
 
         return self._get_connections_core(nidaqmx.Task, pin_names, sites, INSTRUMENT_TYPE_NI_DAQMX)
+
+    def get_nidaqmx_connections_with_multiplexer(
+        self,
+        multiplexer_session_type: Type[TMultiplexerSession],
+        pin_names: Union[str, Iterable[str], None] = None,
+        sites: Union[int, Iterable[int], None] = None,
+    ) -> Sequence[TypedConnectionWithMultiplexer[nidaqmx.Task, TMultiplexerSession]]:
+        """Get all NI-DAQmx connections matching the specified criteria.
+
+        Args:
+            multiplexer_session_type: The multiplexer session type.
+
+            pin_names: The pin name(s) to match against. If not specified, the
+                pin name is ignored when matching connections.
+
+            sites: The site number(s) to match against. If not specified, the
+                site number is ignored when matching connections.
+
+        Returns:
+            The matching connections with their multiplexer(s) info.
+
+        Raises:
+            TypeError: If the argument types or session type are incorrect.
+
+            ValueError: If no reserved connections match.
+        """
+        import nidaqmx
+
+        connections = self._get_connections_core(
+            nidaqmx.Task, pin_names, sites, INSTRUMENT_TYPE_NI_DAQMX, multiplexer_session_type
+        )
+        return [
+            cast(TypedConnectionWithMultiplexer[nidaqmx.Task, TMultiplexerSession], conn)
+            for conn in connections
+        ]
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def initialize_nidcpower_session(
