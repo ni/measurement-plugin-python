@@ -688,7 +688,7 @@ class BaseReservation(_BaseSessionContainer):
         Args:
             session_type: The instrument session type.
 
-            multiplexer_session_type: The multiplexer session type.
+            multiplexer_session_type: The multiplexer(s) session type.
 
             pin_or_relay_names: The pin or relay name(s) to match against. If
                 not specified, the pin or relay name is ignored when matching
@@ -889,7 +889,7 @@ class BaseReservation(_BaseSessionContainer):
         """Get all NI-DAQmx connections matching the specified criteria.
 
         Args:
-            multiplexer_session_type: The multiplexer session type.
+            multiplexer_session_type: The multiplexer(s) session type.
 
             pin_names: The pin name(s) to match against. If not specified, the
                 pin name is ignored when matching connections.
