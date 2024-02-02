@@ -39,9 +39,11 @@ from ni_measurementlink_service.session_management._types import (
     ChannelMapping,
     Connection,
     PinMapContext,
+    MultiplexerSessionInformation,
     SessionInformation,
     SessionInitializationBehavior,
     TypedConnection,
+    TypedConnectionWithMultiplexer,
     TypedSessionInformation,
 )
 
@@ -69,12 +71,14 @@ __all__ = [
     "INSTRUMENT_TYPE_NONE",
     "MultiSessionReservation",
     "PinMapContext",
+    "MultiplexerSessionInformation",
     "SessionInformation",
     "SessionInitializationBehavior",
     "SessionManagementClient",
     "SingleSessionReservation",
     "SITE_SYSTEM_PINS",
     "TypedConnection",
+    "TypedConnectionWithMultiplexer",
     "TypedSessionInformation",
 ]
 

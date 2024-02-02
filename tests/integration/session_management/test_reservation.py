@@ -12,7 +12,11 @@ from ni_measurementlink_service.session_management import (
     PinMapContext,
     SessionManagementClient,
 )
-from tests.utilities.connection_subset import ConnectionSubset, get_connection_subset
+from tests.utilities.connection_subset import (
+    ConnectionSubset,
+    get_connection_subset,
+    get_connection_subset_with_multiplexer,
+)
 from tests.utilities.pin_map_client import PinMapClient
 
 _PIN_MAP_A = "PinMapA_3Instruments_3DutPins_2SystemPins_2Sites.pinmap"
@@ -25,6 +29,9 @@ _PIN_MAP_C = "PinMapC_MultipleInstrumentsPinsRelaysAndSites.pinmap"
 _PIN_MAP_C_PIN_NAMES = ["A", "B", "C", "S1", "S2"]
 _PIN_MAP_C_RELAY_NAMES = ["RelayUsingDifferentDrivers", "RelayUsingSameDriver", "SystemRelay"]
 _PIN_MAP_C_PIN_OR_RELAY_NAMES = _PIN_MAP_C_PIN_NAMES + _PIN_MAP_C_RELAY_NAMES
+
+_PIN_MAP_D = "PinMapD_3Instruments_4DutPins_2Sites_2Multiplexers.pinmap"
+_PIN_MAP_D_PIN_NAMES = ["A", "B", "C", "D"]
 
 
 def test___sessions_reserved___get_connections___connections_returned(
@@ -156,6 +163,182 @@ def test___sessions_reserved___get_connections_by_instrument_type___connections_
                 ConnectionSubset("C", 0, "SCOPE1", "0"),
                 ConnectionSubset("C", 1, "SCOPE1", "1"),
                 ConnectionSubset("S2", -1, "SCOPE1", "3"),
+            ],
+        ]
+
+
+def test___reserve_sessions_with_multiplexer___get_connections_with_multiplexer___returns_connections(
+    pin_map_client: PinMapClient,
+    pin_map_directory: pathlib.Path,
+    session_management_client: SessionManagementClient,
+) -> None:
+    with ExitStack() as stack:
+        pin_map_id = pin_map_client.update_pin_map(pin_map_directory / _PIN_MAP_D)
+        pin_map_context = PinMapContext(pin_map_id=pin_map_id, sites=[0, 1])
+        reservation = stack.enter_context(
+            session_management_client.reserve_sessions(pin_map_context, _PIN_MAP_D_PIN_NAMES)
+        )
+
+        connections = reservation.get_connections_with_multiplexer(object, object)
+
+        nidcpower_resource = "DCPower1/0, DCPower1/1, DCPower1/3, DCPower2/2"
+        assert [get_connection_subset_with_multiplexer(conn) for conn in connections] == [
+            ConnectionSubset(
+                "A", 0, nidcpower_resource, "DCPower1/0", "Multiplexer1", "C1->r0,C2->r0"
+            ),
+            ConnectionSubset(
+                "B", 0, nidcpower_resource, "DCPower1/0", "Multiplexer1", "C3->r0,C4->r0"
+            ),
+            ConnectionSubset("C", 0, "SCOPE1", "0", "", ""),
+            ConnectionSubset(
+                "D", 0, nidcpower_resource, "DCPower2/2", "Multiplexer2", "C3->r2,C4->r2"
+            ),
+            ConnectionSubset("A", 1, nidcpower_resource, "DCPower1/1", "", ""),
+            ConnectionSubset(
+                "B", 1, nidcpower_resource, "DCPower2/2", "Multiplexer2", "C1->r2,C2->r2"
+            ),
+            ConnectionSubset("C", 1, "SCOPE1", "1", "", ""),
+            ConnectionSubset("D", 1, nidcpower_resource, "DCPower1/3", "", ""),
+        ]
+
+
+def test___reserve_sessions_with_multiplexer___get_connections_with_multiplexer_by_pin___returns_connections(
+    pin_map_client: PinMapClient,
+    pin_map_directory: pathlib.Path,
+    session_management_client: SessionManagementClient,
+) -> None:
+    with ExitStack() as stack:
+        pin_map_id = pin_map_client.update_pin_map(pin_map_directory / _PIN_MAP_D)
+        pin_map_context = PinMapContext(pin_map_id=pin_map_id, sites=[0, 1])
+        reservation = stack.enter_context(
+            session_management_client.reserve_sessions(pin_map_context, _PIN_MAP_D_PIN_NAMES)
+        )
+
+        connections = [
+            reservation.get_connections_with_multiplexer(object, object, pin_name)
+            for pin_name in _PIN_MAP_D_PIN_NAMES
+        ]
+
+        nidcpower_resource = "DCPower1/0, DCPower1/1, DCPower1/3, DCPower2/2"
+        assert [
+            [get_connection_subset_with_multiplexer(conn) for conn in group]
+            for group in connections
+        ] == [
+            [
+                ConnectionSubset(
+                    "A", 0, nidcpower_resource, "DCPower1/0", "Multiplexer1", "C1->r0,C2->r0"
+                ),
+                ConnectionSubset("A", 1, nidcpower_resource, "DCPower1/1", "", ""),
+            ],
+            [
+                ConnectionSubset(
+                    "B", 0, nidcpower_resource, "DCPower1/0", "Multiplexer1", "C3->r0,C4->r0"
+                ),
+                ConnectionSubset(
+                    "B", 1, nidcpower_resource, "DCPower2/2", "Multiplexer2", "C1->r2,C2->r2"
+                ),
+            ],
+            [
+                ConnectionSubset("C", 0, "SCOPE1", "0", "", ""),
+                ConnectionSubset("C", 1, "SCOPE1", "1", "", ""),
+            ],
+            [
+                ConnectionSubset(
+                    "D", 0, nidcpower_resource, "DCPower2/2", "Multiplexer2", "C3->r2,C4->r2"
+                ),
+                ConnectionSubset("D", 1, nidcpower_resource, "DCPower1/3", "", ""),
+            ],
+        ]
+
+
+def test___reserve_sessions_with_multiplexer___get_connections_with_multiplexer_by_site___returns_connections(
+    pin_map_client: PinMapClient,
+    pin_map_directory: pathlib.Path,
+    session_management_client: SessionManagementClient,
+) -> None:
+    with ExitStack() as stack:
+        pin_map_id = pin_map_client.update_pin_map(pin_map_directory / _PIN_MAP_D)
+        pin_map_context = PinMapContext(pin_map_id=pin_map_id, sites=[0, 1])
+        reservation = stack.enter_context(
+            session_management_client.reserve_sessions(pin_map_context, _PIN_MAP_D_PIN_NAMES)
+        )
+
+        connections = [
+            reservation.get_connections_with_multiplexer(object, object, sites=site)
+            for site in [0, 1]
+        ]
+
+        nidcpower_resource = "DCPower1/0, DCPower1/1, DCPower1/3, DCPower2/2"
+        assert [
+            [get_connection_subset_with_multiplexer(conn) for conn in group]
+            for group in connections
+        ] == [
+            [
+                ConnectionSubset(
+                    "A", 0, nidcpower_resource, "DCPower1/0", "Multiplexer1", "C1->r0,C2->r0"
+                ),
+                ConnectionSubset(
+                    "B", 0, nidcpower_resource, "DCPower1/0", "Multiplexer1", "C3->r0,C4->r0"
+                ),
+                ConnectionSubset("C", 0, "SCOPE1", "0", "", ""),
+                ConnectionSubset(
+                    "D", 0, nidcpower_resource, "DCPower2/2", "Multiplexer2", "C3->r2,C4->r2"
+                ),
+            ],
+            [
+                ConnectionSubset("A", 1, nidcpower_resource, "DCPower1/1", "", ""),
+                ConnectionSubset(
+                    "B", 1, nidcpower_resource, "DCPower2/2", "Multiplexer2", "C1->r2,C2->r2"
+                ),
+                ConnectionSubset("C", 1, "SCOPE1", "1", "", ""),
+                ConnectionSubset("D", 1, nidcpower_resource, "DCPower1/3", "", ""),
+            ],
+        ]
+
+
+def test___reserve_session_with_multiplexer___get_connections_with_multiplexer_by_instrument_type___returns_connections(
+    pin_map_client: PinMapClient,
+    pin_map_directory: pathlib.Path,
+    session_management_client: SessionManagementClient,
+) -> None:
+    with ExitStack() as stack:
+        pin_map_id = pin_map_client.update_pin_map(pin_map_directory / _PIN_MAP_D)
+        pin_map_context = PinMapContext(pin_map_id=pin_map_id, sites=[0, 1])
+        reservation = stack.enter_context(
+            session_management_client.reserve_sessions(pin_map_context, _PIN_MAP_D_PIN_NAMES)
+        )
+
+        connections = [
+            reservation.get_connections_with_multiplexer(
+                object, object, instrument_type_id=instrument_type_id
+            )
+            for instrument_type_id in [INSTRUMENT_TYPE_NI_DCPOWER, INSTRUMENT_TYPE_NI_SCOPE]
+        ]
+
+        nidcpower_resource = "DCPower1/0, DCPower1/1, DCPower1/3, DCPower2/2"
+        assert [
+            [get_connection_subset_with_multiplexer(conn) for conn in group]
+            for group in connections
+        ] == [
+            [
+                ConnectionSubset(
+                    "A", 0, nidcpower_resource, "DCPower1/0", "Multiplexer1", "C1->r0,C2->r0"
+                ),
+                ConnectionSubset(
+                    "B", 0, nidcpower_resource, "DCPower1/0", "Multiplexer1", "C3->r0,C4->r0"
+                ),
+                ConnectionSubset(
+                    "D", 0, nidcpower_resource, "DCPower2/2", "Multiplexer2", "C3->r2,C4->r2"
+                ),
+                ConnectionSubset("A", 1, nidcpower_resource, "DCPower1/1", "", ""),
+                ConnectionSubset(
+                    "B", 1, nidcpower_resource, "DCPower2/2", "Multiplexer2", "C1->r2,C2->r2"
+                ),
+                ConnectionSubset("D", 1, nidcpower_resource, "DCPower1/3", "", ""),
+            ],
+            [
+                ConnectionSubset("C", 0, "SCOPE1", "0", "", ""),
+                ConnectionSubset("C", 1, "SCOPE1", "1", "", ""),
             ],
         ]
 
