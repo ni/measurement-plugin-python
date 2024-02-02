@@ -657,7 +657,7 @@ def test___no_reservation_order___get_connections___connections_returned_in_defa
     ]
 
 
-def test___multiplexer_session_not_created___get_connection_with_multiplexer___type_error_raised(
+def test___multiplexer_session_not_created___get_connection_with_multiplexer___raises_type_error(
     session_management_client: Mock,
 ) -> None:
     with ExitStack() as stack:
@@ -685,7 +685,7 @@ def test___multiplexer_session_not_created___get_connection_with_multiplexer___t
         )
 
 
-def test___multiplexer_session_not_created___get_connection_with_multiplexer_with_multiplexer_session_type_object___connection_returned(
+def test___multiplexer_session_not_created___get_connection_with_multiplexer_using_multiplexer_session_type_as_object___returns_connection(
     session_management_client: Mock,
 ) -> None:
     with ExitStack() as stack:
@@ -705,15 +705,13 @@ def test___multiplexer_session_not_created___get_connection_with_multiplexer_wit
 
         connection = reservation.get_connection_with_multiplexer(object, object)
 
-        assert connection.pin_or_relay_name == "Pin1"
-        assert connection.site == 2
-        assert connection.channel_name == "3"
-        assert connection.multiplexer_resource_name == "Mux0"
-        assert connection.multiplexer_route == "route1"
+        assert _get_subset_with_multiplexer(connection) == _ConnectionSubset(
+            "Pin1", 2, "Dev0", "3", "Mux0", "route1"
+        )
         assert connection.multiplexer_session is None
 
 
-def test___no_connection___get_connection_with_multiplexer_with_multiplexer_session_type_object___value_error_raised(
+def test___no_connection___get_connection_with_multiplexer___raises_value_error(
     session_management_client: Mock,
 ) -> None:
     grpc_session_infos = create_nifake_session_infos(0)
@@ -728,7 +726,7 @@ def test___no_connection___get_connection_with_multiplexer_with_multiplexer_sess
     assert "No reserved connections matched the specified criteria." in exc_info.value.args[0]
 
 
-def test___no_connections___get_connections_with_multiplexer_with_session_type_object___empty_list_returned(
+def test___no_connections___get_connections_with_multiplexer_using_object_type___returns_empty_list(
     session_management_client: Mock,
 ) -> None:
     grpc_session_infos = create_nifake_session_infos(0)
@@ -742,7 +740,7 @@ def test___no_connections___get_connections_with_multiplexer_with_session_type_o
     assert connections == []
 
 
-def test___reservation_order___get_connections_with_multiplexer_with_specified_order___connections_returned_in_specified_order(
+def test___reservation_order___get_connections_with_multiplexer_with_specified_order___returns_connections_in_specified_order(
     session_management_client: Mock,
 ) -> None:
     grpc_session_infos = _create_grpc_session_infos_for_ordering()
@@ -784,7 +782,7 @@ def test___reservation_order___get_connections_with_multiplexer_with_specified_o
     ]
 
 
-def test___reservation_order___get_connections_with_multiplexer___connections_returned_in_reservation_order(
+def test___reservation_order___get_connections_with_multiplexer___returns_connections_in_reservation_order(
     session_management_client: Mock,
 ) -> None:
     grpc_session_infos = _create_grpc_session_infos_for_ordering()
@@ -811,7 +809,7 @@ def test___reservation_order___get_connections_with_multiplexer___connections_re
     ]
 
 
-def test___no_reservation_order___get_connections_with_multiplexer___connections_returned_in_default_order(
+def test___no_reservation_order___get_connections_with_multiplexer___returns_connections_in_default_order(
     session_management_client: Mock,
 ) -> None:
     grpc_session_infos = _create_grpc_session_infos_for_ordering()
@@ -834,7 +832,7 @@ def test___no_reservation_order___get_connections_with_multiplexer___connections
     ]
 
 
-def test____partial_multiplexed_connections___get_connections_with_multiplexer_with_session_type___returns_all_specified_pin_connections(
+def test____partial_multiplexed_connections___get_connections_with_multiplexer_using_session_type___returns_all_specified_pin_connections(
     session_management_client: Mock,
 ) -> None:
     grpc_session_infos = create_nifake_session_infos(1)
@@ -871,7 +869,7 @@ def test____partial_multiplexed_connections___get_connections_with_multiplexer_w
     ]
 
 
-def test____connection_with_no_multiplexer___get_connection_with_multiplexer___returns_all_connections(
+def test____connection_with_no_multiplexer___get_connection_with_multiplexer___returns_connection(
     session_management_client: Mock,
 ) -> None:
     grpc_session_infos = create_nifake_session_infos(1)
