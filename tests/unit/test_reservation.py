@@ -859,7 +859,8 @@ def test____partial_multiplexed_connections___get_connections_with_multiplexer_w
         session_management_client, grpc_session_infos, grpc_multiplexer_session_infos
     )
 
-    # TODO: update multiplexer_session_type to fake_driver.Session once, initialize_multiplexer API gets added.
+    # TODO: Update the multiplexer_session_type to fake_driver.Session once the
+    # initialize_multiplexer API gets added.
     connections = reservation.get_connections_with_multiplexer(object, object)
 
     assert [_get_subset_with_multiplexer(conn) for conn in connections] == [
