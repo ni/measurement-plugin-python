@@ -202,6 +202,7 @@ def test___reserve_sessions_with_multiplexer___get_connections_with_multiplexer_
             ConnectionSubset("D", 1, nidcpower_resource, "DCPower1/3", "", ""),
         ]
 
+
 @pytest.mark.xfail(reason="Requires MeasurementLink 2024Q2 or later.")
 def test___reserve_sessions_with_multiplexer___get_connections_with_multiplexer_by_pin___returns_connections(
     pin_map_client: PinMapClient,

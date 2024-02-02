@@ -202,6 +202,7 @@ class BaseReservation(_BaseSessionContainer):
     ) -> None:
         """Initialize reservation object."""
         super().__init__(session_management_client)
+
         self._grpc_session_info = session_info  # required for unreserve
         self._session_info = [
             SessionInformation._from_grpc_v1(info) for info in self._grpc_session_info
