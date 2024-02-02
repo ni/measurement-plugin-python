@@ -1725,6 +1725,42 @@ class BaseReservation(_BaseSessionContainer):
 
         return self._get_connection_core(nifgen.Session, pin_name, site, INSTRUMENT_TYPE_NI_FGEN)
 
+    def get_nifgen_connection_with_multiplexer(
+        self,
+        multiplexer_session_type: Type[TMultiplexerSession],
+        pin_name: Optional[str] = None,
+        site: Optional[int] = None,
+    ) -> TypedConnectionWithMultiplexer[nifgen.Session, TMultiplexerSession]:
+        """Get the NI-FGEN connection matching the specified criteria.
+
+        Args:
+            multiplexer_session_type: The multiplexer session type.
+
+            pin_name: The pin name to match against. If not specified, the pin
+                name is ignored when matching connections.
+
+            site: The site number to match against. If not specified, the
+                site number is ignored when matching connections.
+
+        Returns:
+            The matching connection along with its multiplexer info.
+
+        Raises:
+            TypeError: If the argument types or session type are incorrect.
+
+            ValueError: If no reserved connections match or too many reserved
+                connections match.
+        """
+        import nifgen
+
+        connection = self._get_connection_core(
+            nifgen.Session, pin_name, site, INSTRUMENT_TYPE_NI_FGEN, multiplexer_session_type
+        )
+        return cast(
+            TypedConnectionWithMultiplexer[nifgen.Session, TMultiplexerSession],
+            connection,
+        )
+
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def get_nifgen_connections(
         self,
@@ -1751,6 +1787,41 @@ class BaseReservation(_BaseSessionContainer):
         import nifgen
 
         return self._get_connections_core(nifgen.Session, pin_names, sites, INSTRUMENT_TYPE_NI_FGEN)
+
+    def get_nifgen_connections_with_multiplexer(
+        self,
+        multiplexer_session_type: Type[TMultiplexerSession],
+        pin_names: Union[str, Iterable[str], None] = None,
+        sites: Union[int, Iterable[int], None] = None,
+    ) -> Sequence[TypedConnectionWithMultiplexer[nifgen.Session, TMultiplexerSession]]:
+        """Get all NI-FGEN connections matching the specified criteria.
+
+        Args:
+            multiplexer_session_type: The multiplexer(s) session type.
+
+            pin_names: The pin name(s) to match against. If not specified, the
+                pin name is ignored when matching connections.
+
+            sites: The site number(s) to match against. If not specified, the
+                site number is ignored when matching connections.
+
+        Returns:
+            The matching connections along with their multiplexer(s) info.
+
+        Raises:
+            TypeError: If the argument types or session type are incorrect.
+
+            ValueError: If no reserved connections match.
+        """
+        import nifgen
+
+        connections = self._get_connections_core(
+            nifgen.Session, pin_names, sites, INSTRUMENT_TYPE_NI_FGEN, multiplexer_session_type
+        )
+        return [
+            cast(TypedConnectionWithMultiplexer[nifgen.Session, TMultiplexerSession], conn)
+            for conn in connections
+        ]
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def initialize_niscope_session(
