@@ -1067,8 +1067,7 @@ class BaseReservation(_BaseSessionContainer):
             nidcpower.Session, pin_name, site, INSTRUMENT_TYPE_NI_DCPOWER, multiplexer_session_type
         )
         return cast(
-            TypedConnectionWithMultiplexer[nidcpower.Session, TMultiplexerSession],
-            connection,
+            TypedConnectionWithMultiplexer[nidcpower.Session, TMultiplexerSession], connection
         )
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
@@ -1303,8 +1302,7 @@ class BaseReservation(_BaseSessionContainer):
             multiplexer_session_type,
         )
         return cast(
-            TypedConnectionWithMultiplexer[nidigital.Session, TMultiplexerSession],
-            connection,
+            TypedConnectionWithMultiplexer[nidigital.Session, TMultiplexerSession], connection
         )
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
@@ -1532,10 +1530,7 @@ class BaseReservation(_BaseSessionContainer):
         connection = self._get_connection_core(
             nidmm.Session, pin_name, site, INSTRUMENT_TYPE_NI_DMM, multiplexer_session_type
         )
-        return cast(
-            TypedConnectionWithMultiplexer[nidmm.Session, TMultiplexerSession],
-            connection,
-        )
+        return cast(TypedConnectionWithMultiplexer[nidmm.Session, TMultiplexerSession], connection)
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def get_nidmm_connections(
@@ -1756,10 +1751,7 @@ class BaseReservation(_BaseSessionContainer):
         connection = self._get_connection_core(
             nifgen.Session, pin_name, site, INSTRUMENT_TYPE_NI_FGEN, multiplexer_session_type
         )
-        return cast(
-            TypedConnectionWithMultiplexer[nifgen.Session, TMultiplexerSession],
-            connection,
-        )
+        return cast(TypedConnectionWithMultiplexer[nifgen.Session, TMultiplexerSession], connection)
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def get_nifgen_connections(
