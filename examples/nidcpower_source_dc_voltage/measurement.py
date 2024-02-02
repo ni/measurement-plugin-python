@@ -15,7 +15,6 @@ import hightime
 import ni_measurementlink_service as nims
 import nidcpower
 import nidcpower.session
-import niswitch.session
 from _helpers import configure_logging, verbosity_option
 from ni_measurementlink_service.session_management import TypedConnection
 
@@ -83,21 +82,9 @@ def measure(
             # Use connections to map pin names to channel names. This sets the
             # channel order based on the pin order and allows mapping the
             # resulting measurements back to the corresponding pins and sites.
-            # TODO: initialize niswitch multiplexer(s).
-            connections = reservation.get_nidcpower_connections_with_multiplexer(
-                niswitch.Session, pin_names
-            )
-
+            connections = reservation.get_nidcpower_connections(pin_names)
             channel_order = ",".join(connection.channel_name for connection in connections)
             channels = session_info.session.channels[channel_order]
-
-            # Connect.
-            for connection in connections:
-                connection.multiplexer_session.connect_multiple(connection.multiplexer_route)
-
-            # Wait for debounce.
-            for connection in connections:
-                connection.multiplexer_session.wait_for_debounce()
 
             # Configure the same settings for all of the channels corresponding
             # to the selected pins and sites.
@@ -127,14 +114,6 @@ def measure(
                     channel = connection.session.channels[connection.channel_name]
                     in_compliance = channel.query_in_compliance()
                     measurements[index] = measurements[index]._replace(in_compliance=in_compliance)
-
-            # Disconnect.
-            for connection in connections:
-                connection.multiplexer_session.disconnect_multiple(connection.multiplexer_route)
-
-            # Wait for debounce.
-            for connection in connections:
-                connection.multiplexer_session.wait_for_debounce()
 
     _log_measurements(connections, measurements)
     logging.info("Completed measurement")
