@@ -273,7 +273,7 @@ class BaseReservation(_BaseSessionContainer):
                     session_info=session_info,
                     multiplexer_resource_name=channel_mapping.multiplexer_resource_name,
                     multiplexer_route=channel_mapping.multiplexer_route,
-                    multiplexer_session_info=self._try_get_matching_multiplexer_session_info(
+                    multiplexer_session_info=self._get_matching_multiplexer_session_info(
                         channel_mapping.multiplexer_resource_name
                     ),
                 )
@@ -319,9 +319,9 @@ class BaseReservation(_BaseSessionContainer):
             info for info in self._session_info if instrument_type_id == info.instrument_type_id
         ]
 
-    def _try_get_matching_multiplexer_session_info(
+    def _get_matching_multiplexer_session_info(
         self, multiplexer_resource_name: str
-    ) -> Union[MultiplexerSessionInformation, None]:
+    ) -> Optional[MultiplexerSessionInformation]:
         return next(
             (
                 info
@@ -470,7 +470,7 @@ class BaseReservation(_BaseSessionContainer):
                         session = self._session_cache.get(value.session_info.session_name)
                         value = value._with_session(session)
                         value._check_runtime_type(session_type)
-                        if multiplexer_session_type:
+                        if multiplexer_session_type is not None:
                             value._check_runtime_multiplexer_type(multiplexer_session_type)
                         results.append(cast(TypedConnection[TSession], value))
                         matching_pins.add(pin)
@@ -689,7 +689,7 @@ class BaseReservation(_BaseSessionContainer):
         Args:
             session_type: The instrument session type.
 
-            multiplexer_session_type: The multiplexer(s) session type.
+            multiplexer_session_type: The multiplexer session type.
 
             pin_or_relay_names: The pin or relay name(s) to match against. If
                 not specified, the pin or relay name is ignored when matching
@@ -890,7 +890,7 @@ class BaseReservation(_BaseSessionContainer):
         """Get all NI-DAQmx connections matching the specified criteria.
 
         Args:
-            multiplexer_session_type: The multiplexer(s) session type.
+            multiplexer_session_type: The multiplexer session type.
 
             pin_names: The pin name(s) to match against. If not specified, the
                 pin name is ignored when matching connections.
@@ -1109,7 +1109,7 @@ class BaseReservation(_BaseSessionContainer):
         """Get all NI-DCPower connections matching the specified criteria.
 
         Args:
-            multiplexer_session_type: The multiplexer(s) session type.
+            multiplexer_session_type: The multiplexer session type.
 
             pin_names: The pin name(s) to match against. If not specified, the
                 pin name is ignored when matching connections.
@@ -1344,7 +1344,7 @@ class BaseReservation(_BaseSessionContainer):
         """Get all NI-Digital Pattern connections matching the specified criteria.
 
         Args:
-            multiplexer_session_type: The multiplexer(s) session type.
+            multiplexer_session_type: The multiplexer session type.
 
             pin_names: The pin name(s) to match against. If not specified, the
                 pin name is ignored when matching connections.
@@ -1569,7 +1569,7 @@ class BaseReservation(_BaseSessionContainer):
         """Get all NI-DMM connections matching the specified criteria.
 
         Args:
-            multiplexer_session_type: The multiplexer(s) session type.
+            multiplexer_session_type: The multiplexer session type.
 
             pin_names: The pin name(s) to match against. If not specified, the
                 pin name is ignored when matching connections.
@@ -1790,7 +1790,7 @@ class BaseReservation(_BaseSessionContainer):
         """Get all NI-FGEN connections matching the specified criteria.
 
         Args:
-            multiplexer_session_type: The multiplexer(s) session type.
+            multiplexer_session_type: The multiplexer session type.
 
             pin_names: The pin name(s) to match against. If not specified, the
                 pin name is ignored when matching connections.
@@ -2015,7 +2015,7 @@ class BaseReservation(_BaseSessionContainer):
         """Get all NI-SCOPE connections matching the specified criteria.
 
         Args:
-            multiplexer_session_type: The multiplexer(s) session type.
+            multiplexer_session_type: The multiplexer session type.
 
             pin_names: The pin name(s) to match against. If not specified, the
                 pin name is ignored when matching connections.
