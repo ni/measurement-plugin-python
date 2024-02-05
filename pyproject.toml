@@ -86,7 +86,10 @@ numpy = [
 optional = true
 
 [tool.poetry.group.docs.dependencies]
-Sphinx = ">=5.0.1"
+Sphinx = [
+  {version = ">=7.1.2", python = ">=3.8,<3.9"},
+  {version = ">=7.2.0", python = ">=3.9,<3.13"},
+]
 sphinx-rtd-theme = ">=1.0.0"
 sphinx-autoapi = ">=1.8.4"
 m2r2 = ">=0.3.2"
