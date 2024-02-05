@@ -113,7 +113,7 @@ def test___no_connections___get_connections_with_multiplexer_using_object_type__
     assert connections == []
 
 
-def test___reservation_order___get_connections_with_multiplexer_with_specified_order___returns_connections_in_specified_order(
+def test___reservation_order___get_connections_with_multiplexer_in_specific_order___returns_connections_in_specified_order(
     session_management_client: Mock,
 ) -> None:
     (
