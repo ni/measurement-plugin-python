@@ -1,4 +1,5 @@
 """Contains test to validate service_manager.py."""
+
 from typing import cast
 
 import grpc

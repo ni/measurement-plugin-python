@@ -208,8 +208,8 @@ message ResourceAccessInformation {
     // For custom instruments the user defined instrument type id is defined in the pin map file.
     string instrument_type_id = 3;
 
-    // List of site and pin/relay mappings that correspond to each channel in the channel_list.
-    // Each item contains a mapping corresponding to a channel in this instrument resource, in the order of the channel_list.
+    // List of site and pin/relay mappings with the multiplexer info for each channel in the channel_list.
+    // Each item represents a channel-to-pin connection for this instrument resource. In the case of shared pins, there is a separate item for each connection.
     repeated ChannelMapping channel_mappings = 4;
 }
 
@@ -223,4 +223,13 @@ message ChannelMapping {
 
     // The channel to which the pin or relay is mapped on this site.
     string channel = 3;
+
+    // The multiplexer resource name is used to open the multiplexer session in the driver.
+    string multiplexer_resource_name = 4;
+
+    // The multiplexer route through which the pin is connected to an instrument's channel.
+    string multiplexer_route = 5;
+
+    // User-defined identifier for the multiplexer type in the pin map editor.
+    string multiplexer_type_id = 6;
 }

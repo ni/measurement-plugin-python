@@ -28,6 +28,10 @@ from deprecation import deprecated
 from google.protobuf.descriptor import EnumDescriptor
 
 from ni_measurementlink_service import _datatypeinfo
+from ni_measurementlink_service._annotations import (
+    ENUM_VALUES_KEY,
+    TYPE_SPECIALIZATION_KEY,
+)
 from ni_measurementlink_service._featuretoggles import (
     SESSION_MANAGEMENT_2024Q1,
     requires_feature,
@@ -512,13 +516,13 @@ class MeasurementService:
         if type_specialization == TypeSpecialization.NoType:
             return annotations
 
-        annotations["ni/type_specialization"] = type_specialization.value
+        annotations[TYPE_SPECIALIZATION_KEY] = type_specialization.value
         if type_specialization == TypeSpecialization.Pin:
             if instrument_type != "" or instrument_type is not None:
                 annotations["ni/pin.instrument_type"] = instrument_type
         if type_specialization == TypeSpecialization.Enum:
             if enum_type is not None:
-                annotations["ni/enum.values"] = self._enum_to_annotations_value(enum_type)
+                annotations[ENUM_VALUES_KEY] = self._enum_to_annotations_value(enum_type)
             else:
                 raise ValueError("enum_type is required for enum parameters.")
 

@@ -1,10 +1,11 @@
 """Session management client class."""
+
 from __future__ import annotations
 
 import logging
 import threading
 import warnings
-from typing import Iterable, Optional, Sequence, Union
+from typing import Iterable, Optional, Union
 
 import grpc
 
@@ -125,21 +126,20 @@ class SessionManagementClient(object):
             A reservation object with which you can query information about the session and
             unreserve it.
         """
-        session_info = self._reserve_sessions(
-            context, pin_or_relay_names, instrument_type_id, timeout
-        )
-        if len(session_info) == 0:
+        response = self._reserve_sessions(context, pin_or_relay_names, instrument_type_id, timeout)
+        if len(response.sessions) == 0:
             raise ValueError("No sessions reserved. Expected single session, got 0 sessions.")
-        elif len(session_info) > 1:
-            self._unreserve_sessions(session_info)
+        elif len(response.sessions) > 1:
+            self._unreserve_sessions(response.sessions)
             raise ValueError(
                 "Too many sessions reserved. Expected single session, got "
-                f"{len(session_info)} sessions."
+                f"{len(response.sessions)} sessions."
             )
         else:
             return SingleSessionReservation(
                 session_management_client=self,
-                session_info=session_info,
+                session_info=response.sessions,
+                multiplexer_session_info=response.multiplexer_sessions,
                 reserved_pin_or_relay_names=pin_or_relay_names,
                 reserved_sites=context.sites,
             )
@@ -186,12 +186,11 @@ class SessionManagementClient(object):
             A reservation object with which you can query information about the sessions and
             unreserve them.
         """
-        session_info = self._reserve_sessions(
-            context, pin_or_relay_names, instrument_type_id, timeout
-        )
+        response = self._reserve_sessions(context, pin_or_relay_names, instrument_type_id, timeout)
         return MultiSessionReservation(
             session_management_client=self,
-            session_info=session_info,
+            session_info=response.sessions,
+            multiplexer_session_info=response.multiplexer_sessions,
             reserved_pin_or_relay_names=pin_or_relay_names,
             reserved_sites=context.sites,
         )
@@ -202,7 +201,7 @@ class SessionManagementClient(object):
         pin_or_relay_names: Union[str, Iterable[str], None] = None,
         instrument_type_id: Optional[str] = None,
         timeout: Optional[float] = 0.0,
-    ) -> Sequence[session_management_service_pb2.SessionInformation]:
+    ) -> session_management_service_pb2.ReserveSessionsResponse:
         request = session_management_service_pb2.ReserveSessionsRequest(
             pin_map_context=context._to_grpc(),
             timeout_in_milliseconds=_timeout_to_milliseconds(timeout),
@@ -214,8 +213,7 @@ class SessionManagementClient(object):
         elif pin_or_relay_names is not None:
             request.pin_or_relay_names.extend(pin_or_relay_names)
 
-        response = self._get_stub().ReserveSessions(request)
-        return response.sessions
+        return self._get_stub().ReserveSessions(request)
 
     def _unreserve_sessions(
         self, session_info: Iterable[session_management_service_pb2.SessionInformation]

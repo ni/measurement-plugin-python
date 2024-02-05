@@ -1,4 +1,5 @@
 """Contains utility functions to test loopback measurement service. """
+
 import pathlib
 
 import ni_measurementlink_service as nims

@@ -1,20 +1,16 @@
 """Custom instrument driver for MeasurementLink NI-VISA DMM examples."""
+
 from __future__ import annotations
 
 import pathlib
 import sys
 from enum import Enum
 from types import TracebackType
-from typing import (
-    TYPE_CHECKING,
-    Optional,
-    Type,
-)
+from typing import TYPE_CHECKING, Optional, Type
 
 import pyvisa
 import pyvisa.resources
 import pyvisa.typing
-
 
 if TYPE_CHECKING:
     if sys.version_info >= (3, 11):

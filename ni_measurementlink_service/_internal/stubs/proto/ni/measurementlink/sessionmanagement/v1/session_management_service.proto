@@ -84,8 +84,8 @@ message SessionInformation{
     // This field is readonly.
     bool session_exists = 5;
 
-    // List of site and pin/relay mappings that correspond to each channel in the channel_list.
-    // Each item contains a mapping corresponding to a channel in this instrument resource, in the order of the channel_list.
+    // List of site and pin/relay mappings with the multiplexer info for each channel in the channel_list.
+    // Each item represents a channel-to-pin connection for this instrument resource. In the case of shared pins, there is a separate item for each connection.
     // This field is empty for any SessionInformation returned from ReserveAllRegisteredSessions.
     // This field is readonly.
     repeated ChannelMapping channel_mappings = 6;
@@ -101,6 +101,30 @@ message ChannelMapping {
 
     // The channel to which the pin or relay is mapped on this site.
     string channel = 3;
+
+    // The multiplexer resource name is used to open the multiplexer session in the driver.
+    string multiplexer_resource_name = 4;
+
+    // The multiplexer route through which the pin is connected to an instrument's channel.
+    string multiplexer_route = 5;
+}
+
+message MultiplexerSessionInformation {
+   // Session identifier used to identify the session in the session management service, as well as in driver services such as grpc-device.
+   // This field is readonly.
+   nidevice_grpc.Session session = 1;
+
+   // Resource name is used to open this session in the driver.
+   // This field is readonly.
+   string resource_name = 2;
+
+   // User-defined identifier for the multiplexer type in the pin map editor.
+   // This field is readonly.
+   string multiplexer_type_id = 3;
+
+   // Indicates whether the session exists in the Session Manager. This indicates whether the session has been created.
+   // This field is readonly.
+   bool session_exists = 4;
 }
 
 message ReserveSessionsRequest {
@@ -131,6 +155,10 @@ message ReserveSessionsResponse{
     // List of information needed to create or use each session for the given pin, site, and instrument type ID.
     // This field is readonly.
     repeated SessionInformation sessions = 1;
+
+    // List of information needed to create or use each multiplexer session for the given pin, site, and instrument type ID.
+    // This field is readonly.
+    repeated MultiplexerSessionInformation multiplexer_sessions = 2;
 }
 
 message UnreserveSessionsRequest {

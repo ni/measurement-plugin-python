@@ -1,4 +1,5 @@
 """gRPC servicers for each version of the measurement service interface."""
+
 from __future__ import annotations
 
 import collections.abc

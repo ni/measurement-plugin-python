@@ -1,4 +1,5 @@
 """Driver-related unit test utilities."""
+
 from typing import List, Type, TypeVar
 from unittest.mock import Mock, create_autospec
 

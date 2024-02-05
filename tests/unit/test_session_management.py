@@ -595,6 +595,162 @@ def test___session_information___type_check___implements_typed_session_informati
     f(SessionInformation("MySession", "Dev1", "0", "niDCPower", False, []))
 
 
+@pytest.mark.parametrize("multiplexer_session_count", [1, 2, 3])
+def test___single_session_with_varying_multiplexer_count___reserve_session___returns_session_info_and_multiplexer_infos(
+    session_management_client: SessionManagementClient,
+    session_management_stub: Mock,
+    multiplexer_session_count: int,
+) -> None:
+    session_management_stub.ReserveSessions.return_value = (
+        session_management_service_pb2.ReserveSessionsResponse(
+            sessions=_create_grpc_session_infos(1),
+            multiplexer_sessions=_create_grpc_multiplexer_session_infos(multiplexer_session_count),
+        )
+    )
+
+    reservation = session_management_client.reserve_session(
+        PinMapContext("MyPinMap", [0]),
+        pin_or_relay_names=["Pin1", "Pin2", "Pin3"],
+    )
+
+    assert isinstance(reservation, SingleSessionReservation)
+    assert reservation.session_info.session_name == "MySession0"
+    assert [info.session_name for info in reservation.multiplexer_session_info] == [
+        f"MyMultiplexer{i}" for i in range(multiplexer_session_count)
+    ]
+    assert [info.multiplexer_type_id for info in reservation.multiplexer_session_info] == [
+        f"MyMultiplexerType{i}" for i in range(multiplexer_session_count)
+    ]
+
+
+@pytest.mark.parametrize("multiplexer_session_count", [1, 2, 3])
+def test___multiple_sessions_with_varying_multiplexer_count___reserve_sessions___returns_session_infos_and_multiplexer_infos(
+    session_management_client: SessionManagementClient,
+    session_management_stub: Mock,
+    multiplexer_session_count: int,
+) -> None:
+    session_management_stub.ReserveSessions.return_value = (
+        session_management_service_pb2.ReserveSessionsResponse(
+            sessions=_create_grpc_session_infos(2),
+            multiplexer_sessions=_create_grpc_multiplexer_session_infos(multiplexer_session_count),
+        )
+    )
+
+    reservation = session_management_client.reserve_sessions(
+        PinMapContext("MyPinMap", [0]),
+        pin_or_relay_names=["Pin1", "Pin2", "Pin3"],
+    )
+
+    assert isinstance(reservation, MultiSessionReservation)
+    assert [info.session_name for info in reservation.session_info] == [
+        f"MySession{i}" for i in range(2)
+    ]
+    assert [info.session_name for info in reservation.multiplexer_session_info] == [
+        f"MyMultiplexer{i}" for i in range(multiplexer_session_count)
+    ]
+    assert [info.multiplexer_type_id for info in reservation.multiplexer_session_info] == [
+        f"MyMultiplexerType{i}" for i in range(multiplexer_session_count)
+    ]
+
+
+@pytest.mark.parametrize("multiplexer_session_count", [1, 2])
+def test___single_session_with_shared_pins_and_varying_multiplexer_count___reserve_session___returns_session_and_multiplexer_infos_for_all_sites(
+    session_management_client: SessionManagementClient,
+    session_management_stub: Mock,
+    multiplexer_session_count: int,
+) -> None:
+    session_management_stub.ReserveSessions.return_value = (
+        session_management_service_pb2.ReserveSessionsResponse(
+            sessions=_create_grpc_session_infos(1),
+            multiplexer_sessions=_create_grpc_multiplexer_session_infos(multiplexer_session_count),
+        )
+    )
+
+    reservation = session_management_client.reserve_session(
+        PinMapContext("MyPinMap", [0, 1]),
+        pin_or_relay_names=["Pin1"],
+    )
+
+    assert isinstance(reservation, SingleSessionReservation)
+    assert list(reservation._reserved_sites) == [0, 1]
+    assert [info.session_name for info in reservation.multiplexer_session_info] == [
+        f"MyMultiplexer{i}" for i in range(multiplexer_session_count)
+    ]
+    assert [info.multiplexer_type_id for info in reservation.multiplexer_session_info] == [
+        f"MyMultiplexerType{i}" for i in range(multiplexer_session_count)
+    ]
+
+
+@pytest.mark.parametrize("multiplexer_session_count", [1, 2])
+def test___multiple_sessions_with_shared_pins_and_varying_multiplexer_count___reserve_sessions___returns_session_and_multiplexer_infos_for_all_sites(
+    session_management_client: SessionManagementClient,
+    session_management_stub: Mock,
+    multiplexer_session_count: int,
+) -> None:
+    session_management_stub.ReserveSessions.return_value = (
+        session_management_service_pb2.ReserveSessionsResponse(
+            sessions=_create_grpc_session_infos(2),
+            multiplexer_sessions=_create_grpc_multiplexer_session_infos(multiplexer_session_count),
+        )
+    )
+
+    reservation = session_management_client.reserve_sessions(
+        PinMapContext("MyPinMap", [0, 1]),
+        pin_or_relay_names=["Pin1"],
+    )
+
+    assert isinstance(reservation, MultiSessionReservation)
+    assert list(reservation._reserved_sites) == [0, 1]
+    assert [info.session_name for info in reservation.multiplexer_session_info] == [
+        f"MyMultiplexer{i}" for i in range(multiplexer_session_count)
+    ]
+    assert [info.multiplexer_type_id for info in reservation.multiplexer_session_info] == [
+        f"MyMultiplexerType{i}" for i in range(multiplexer_session_count)
+    ]
+
+
+def test___single_session_without_multiplexer___get_multiplexer_session_info___returns_empty_list(
+    session_management_client: SessionManagementClient,
+    session_management_stub: Mock,
+) -> None:
+    session_management_stub.ReserveSessions.return_value = (
+        session_management_service_pb2.ReserveSessionsResponse(
+            sessions=_create_grpc_session_infos(1),
+            multiplexer_sessions=_create_grpc_multiplexer_session_infos(0),
+        )
+    )
+    reservation = session_management_client.reserve_session(
+        PinMapContext("MyPinMap", [0]),
+        pin_or_relay_names=["Pin1"],
+    )
+
+    multiplexer_session_info = reservation.multiplexer_session_info
+
+    assert isinstance(reservation, SingleSessionReservation)
+    assert len(multiplexer_session_info) == 0
+
+
+def test___multiple_sessions_without_multiplexer___get_multiplexer_session_info___returns_empty_list(
+    session_management_client: SessionManagementClient,
+    session_management_stub: Mock,
+) -> None:
+    session_management_stub.ReserveSessions.return_value = (
+        session_management_service_pb2.ReserveSessionsResponse(
+            sessions=_create_grpc_session_infos(2),
+            multiplexer_sessions=_create_grpc_multiplexer_session_infos(0),
+        )
+    )
+    reservation = session_management_client.reserve_sessions(
+        PinMapContext("MyPinMap", [0]),
+        pin_or_relay_names=["Pin1", "Pin2"],
+    )
+
+    multiplexer_session_info = reservation.multiplexer_session_info
+
+    assert isinstance(reservation, MultiSessionReservation)
+    assert len(multiplexer_session_info) == 0
+
+
 def _create_session_infos(session_count: int) -> List[SessionInformation]:
     return [
         SessionInformation(f"MySession{i}", "", "", "", False, []) for i in range(session_count)
@@ -607,6 +763,18 @@ def _create_grpc_session_infos(
     return [
         session_management_service_pb2.SessionInformation(
             session=session_pb2.Session(name=f"MySession{i}")
+        )
+        for i in range(session_count)
+    ]
+
+
+def _create_grpc_multiplexer_session_infos(
+    session_count: int,
+) -> List[session_management_service_pb2.MultiplexerSessionInformation]:
+    return [
+        session_management_service_pb2.MultiplexerSessionInformation(
+            session=session_pb2.Session(name=f"MyMultiplexer{i}"),
+            multiplexer_type_id=f"MyMultiplexerType{i}",
         )
         for i in range(session_count)
     ]

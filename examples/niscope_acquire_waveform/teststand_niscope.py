@@ -1,4 +1,5 @@
 """Functions to set up and tear down sessions of NI-Scope devices in NI TestStand."""
+
 from typing import Any
 
 from _helpers import TestStandSupport

@@ -1,16 +1,9 @@
 """Session management data types."""
+
 from __future__ import annotations
 
 from enum import IntEnum
-from typing import (
-    Generic,
-    Iterable,
-    List,
-    NamedTuple,
-    Optional,
-    Protocol,
-    TypeVar,
-)
+from typing import Generic, Iterable, List, NamedTuple, Optional, Protocol, TypeVar
 
 from ni_measurementlink_service._internal.stubs import session_pb2
 from ni_measurementlink_service._internal.stubs.ni.measurementlink import (
@@ -66,12 +59,20 @@ class ChannelMapping(NamedTuple):
     channel: str
     """The channel to which the pin or relay is mapped on this site."""
 
+    multiplexer_resource_name: str
+    """The multiplexer resource name used to open this session in the driver."""
+
+    multiplexer_route: str
+    """The multiplexer route through which the pin is connected to an instrument's channel."""
+
     @classmethod
     def _from_grpc_v1(cls, other: session_management_service_pb2.ChannelMapping) -> ChannelMapping:
         return ChannelMapping(
             pin_or_relay_name=other.pin_or_relay_name,
             site=other.site,
             channel=other.channel,
+            multiplexer_resource_name=other.multiplexer_resource_name,
+            multiplexer_route=other.multiplexer_route,
         )
 
     def _to_grpc_v1(self) -> session_management_service_pb2.ChannelMapping:
@@ -79,6 +80,8 @@ class ChannelMapping(NamedTuple):
             pin_or_relay_name=self.pin_or_relay_name,
             site=self.site,
             channel=self.channel,
+            multiplexer_resource_name=self.multiplexer_resource_name,
+            multiplexer_route=self.multiplexer_route,
         )
 
 
@@ -132,7 +135,7 @@ class SessionInformation(NamedTuple):
     session: object = None
     """The driver session object.
     
-    This field is None until the appropriate create_session(s) method is called.
+    This field is None until the appropriate initialize_session(s) method is called.
     """
 
     def _check_runtime_type(self, session_type: type) -> None:
@@ -215,6 +218,50 @@ class TypedSessionInformation(Protocol, Generic[TSession_co]):
     def session(self) -> TSession_co:
         """The driver session object."""
         ...
+
+
+class MultiplexerSessionInformation(NamedTuple):
+    """Container for the multiplexer session information."""
+
+    session_name: str
+    """Session name used by the session management service and NI gRPC Device Server."""
+
+    resource_name: str
+    """Resource name used to open this session in the driver."""
+
+    multiplexer_type_id: str
+    """User-defined identifier for the multiplexer type in the pin map editor."""
+
+    session_exists: bool
+    """Indicates whether the session is registered with the session management service.
+    
+    When calling measurements from TestStand, the test sequence's ``ProcessSetup`` callback
+    creates instrument sessions and registers them with the session management service so that
+    they can be shared between multiple measurement steps. In this case, the `session_exists`
+    attribute is ``True``, indicating that the instrument sessions were already created and any
+    one-time setup has been performed.
+    
+    When calling measurements outside of TestStand, the `session_exists` attribute is ``False``,
+    indicating that the measurement is responsible for creating the instrument sessions and
+    performing any one-time setup.
+    """
+
+    session: object = None
+    """The driver session object.
+    
+    This field is None until the appropriate initialize_multiplexer_session(s) method is called.
+    """
+
+    @classmethod
+    def _from_grpc_v1(
+        cls, other: session_management_service_pb2.MultiplexerSessionInformation
+    ) -> MultiplexerSessionInformation:
+        return MultiplexerSessionInformation(
+            session_name=other.session.name,
+            resource_name=other.resource_name,
+            multiplexer_type_id=other.multiplexer_type_id,
+            session_exists=other.session_exists,
+        )
 
 
 class Connection(NamedTuple):
