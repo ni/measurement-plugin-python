@@ -353,7 +353,7 @@ class Connection(NamedTuple):
         self.session_info._check_runtime_type(session_type)
 
     def _check_runtime_multiplexer_type(self, multiplexer_session_type: type) -> None:
-        if self.multiplexer_session_info:
+        if self.multiplexer_session_info is not None:
             self.multiplexer_session_info._check_runtime_type(multiplexer_session_type)
 
     def _with_session(self, session: object) -> Connection:
