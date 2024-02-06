@@ -15,6 +15,7 @@ from ni_measurementlink_service._internal.stubs.ni.measurementlink.sessionmanage
 from ni_measurementlink_service.discovery import DiscoveryClient
 from ni_measurementlink_service.grpc.channelpool import GrpcChannelPool
 from ni_measurementlink_service.session_management import (
+    MultiplexerSessionInformation,
     MultiSessionReservation,
     PinMapContext,
     SessionInformation,
@@ -751,9 +752,51 @@ def test___multiple_sessions_without_multiplexer___get_multiplexer_session_info_
     assert len(multiplexer_session_info) == 0
 
 
+@pytest.mark.parametrize("multiplexer_session_count", [0, 1, 2])
+def test___varying_multiplexer_session_count___register_multiplexer_sessions___sends_request(
+    session_management_client: SessionManagementClient,
+    session_management_stub: Mock,
+    multiplexer_session_count: int,
+) -> None:
+    session_management_stub.RegisterMultiplexerSessions.return_value = (
+        session_management_service_pb2.RegisterMultiplexerSessionsResponse()
+    )
+    session_management_client.register_multiplexer_sessions(_create_multiplexer_session_infos(multiplexer_session_count))
+    session_management_stub.RegisterMultiplexerSessions.assert_called_once()
+    (request,) = session_management_stub.RegisterMultiplexerSessions.call_args.args
+    assert len(request.multiplexer_sessions) == multiplexer_session_count
+    assert [s.session.name for s in request.multiplexer_sessions] == [
+        f"MyMultiplexerSession{i}" for i in range(multiplexer_session_count)
+    ]
+
+
+@pytest.mark.parametrize("multiplexer_session_count", [0, 1, 2])
+def test___varying_multiplexer_session_count___unregister_multiplexer_sessions___sends_request(
+    session_management_client: SessionManagementClient,
+    session_management_stub: Mock,
+    multiplexer_session_count: int,
+) -> None:
+    session_management_stub.UnregisterMultiplexerSessions.return_value = (
+        session_management_service_pb2.UnregisterMultiplexerSessionsResponse()
+    )
+    session_management_client.unregister_multiplexer_sessions(_create_multiplexer_session_infos(multiplexer_session_count))
+    session_management_stub.UnregisterMultiplexerSessions.assert_called_once()
+    (request,) = session_management_stub.UnregisterMultiplexerSessions.call_args.args
+    assert len(request.multiplexer_sessions) == multiplexer_session_count
+    assert [s.session.name for s in request.multiplexer_sessions] == [
+        f"MyMultiplexerSession{i}" for i in range(multiplexer_session_count)
+    ]
+
+
 def _create_session_infos(session_count: int) -> List[SessionInformation]:
     return [
         SessionInformation(f"MySession{i}", "", "", "", False, []) for i in range(session_count)
+    ]
+
+
+def _create_multiplexer_session_infos(multiplexer_session_count: int) -> List[MultiplexerSessionInformation]:
+    return [
+        MultiplexerSessionInformation(f"MyMultiplexerSession{i}", "", "", False) for i in range(multiplexer_session_count)
     ]
 
 
@@ -808,4 +851,6 @@ def session_management_stub(mocker: MockerFixture) -> Mock:
     stub.RegisterSessions = mocker.create_autospec(grpc.UnaryUnaryMultiCallable)
     stub.UnregisterSessions = mocker.create_autospec(grpc.UnaryUnaryMultiCallable)
     stub.ReserveAllRegisteredSessions = mocker.create_autospec(grpc.UnaryUnaryMultiCallable)
+    stub.RegisterMultiplexerSessions = mocker.create_autospec(grpc.UnaryUnaryMultiCallable)
+    stub.UnregisterMultiplexerSessions = mocker.create_autospec(grpc.UnaryUnaryMultiCallable)
     return stub

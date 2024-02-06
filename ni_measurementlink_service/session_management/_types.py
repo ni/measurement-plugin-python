@@ -272,6 +272,16 @@ class MultiplexerSessionInformation(NamedTuple):
             session_exists=other.session_exists,
         )
 
+    def _to_grpc_v1(
+        self
+    ) -> session_management_service_pb2.MultiplexerSessionInformation:
+        return session_management_service_pb2.MultiplexerSessionInformation(
+            session=session_pb2.Session(name=self.session_name),
+            resource_name=self.resource_name,
+            multiplexer_type_id=self.multiplexer_type_id,
+            session_exists=self.session_exists,
+        )
+
 
 class TypedMultiplexerSessionInformation(Protocol, Generic[TMultiplexerSession_co]):
     """Generic version of :any:`MultiplexerSessionInformation` that preserves the session type.
