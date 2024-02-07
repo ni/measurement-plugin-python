@@ -6,8 +6,11 @@ from ni_measurementlink_service._internal.stubs import session_pb2
 from ni_measurementlink_service._internal.stubs.ni.measurementlink.sessionmanagement.v1 import (
     session_management_service_pb2,
 )
-from ni_measurementlink_service.session_management import SessionInformation
-from tests.utilities import fake_driver
+from ni_measurementlink_service.session_management import (
+    MultiplexerSessionInformation,
+    SessionInformation,
+)
+from tests.utilities import fake_driver, fake_multiplexer_driver
 
 
 def create_grpc_session_infos(
@@ -43,3 +46,10 @@ def create_grpc_multiplexer_session_infos(
 def construct_session(session_info: SessionInformation) -> fake_driver.Session:
     """Constructs a session object."""
     return fake_driver.Session(session_info.resource_name)
+
+
+def construct_multiplexer_session(
+    session_info: MultiplexerSessionInformation,
+) -> fake_multiplexer_driver.Session:
+    """Constructs a multiplexer session object."""
+    return fake_multiplexer_driver.Session(session_info.resource_name)

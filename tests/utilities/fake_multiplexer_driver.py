@@ -70,7 +70,7 @@ class _MultiplexerSessionBase:
     def __init__(
         self,
         resource_name: str,
-        topology: str,
+        topology: Optional[str] = None,
         reset_device: bool = True,
         initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
     ) -> None:
@@ -133,7 +133,7 @@ class Session(_MultiplexerSessionBase):
     def __init__(
         self,
         resource_name: str,
-        topology: str,
+        topology: Optional[str] = None,
         reset_device: bool = True,
         initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
     ) -> None:

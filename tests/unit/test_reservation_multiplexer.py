@@ -1,6 +1,6 @@
 import functools
 from contextlib import ExitStack
-from typing import List, Tuple
+from typing import Any, Dict, List, Tuple
 from unittest.mock import Mock
 
 import pytest
@@ -14,6 +14,7 @@ from ni_measurementlink_service.session_management import (
     SingleSessionReservation,
 )
 from tests.unit._reservation_utils import (
+    construct_multiplexer_session,
     construct_session,
     create_grpc_multiplexer_session_infos,
     create_grpc_session_infos,
@@ -28,6 +29,419 @@ create_nifake_session_infos = functools.partial(create_grpc_session_infos, "nifa
 create_nimultiplexer_session_infos = functools.partial(
     create_grpc_multiplexer_session_infos, "nimultiplexer"
 )
+
+
+@pytest.mark.parametrize(
+    "kwargs,expected_message",
+    [
+        (
+            {"multiplexer_resource_name": ["Mux0"]},
+            "The multiplexer_resource_name parameter must be a str or None, not ['Mux0'].",
+        ),
+        (
+            {"multiplexer_resource_name": "Mux0", "multiplexer_type_id": ["nimultiplexer"]},
+            "The multiplexer_type_id parameter must be a str or None, not ['nimultiplexer'].",
+        ),
+    ],
+)
+def test___invalid_argument_type___intialize_multiplexer_session___raises_type_error(
+    kwargs: Dict[str, Any],
+    expected_message: str,
+    session_management_client: Mock,
+) -> None:
+    with ExitStack() as stack:
+        grpc_session_infos = create_nifake_session_infos(1)
+        grpc_multiplexer_session_infos = create_nimultiplexer_session_infos(1)
+        grpc_session_infos[0].channel_mappings.add(
+            pin_or_relay_name="Pin1",
+            site=2,
+            channel="3",
+            multiplexer_resource_name="Mux0",
+            multiplexer_route="route0",
+        )
+        reservation = MultiSessionReservation(
+            session_management_client, grpc_session_infos, grpc_multiplexer_session_infos
+        )
+
+        with pytest.raises(TypeError) as exc_info:
+            _ = stack.enter_context(
+                reservation.initialize_multiplexer_session(construct_multiplexer_session, **kwargs)
+            )
+
+        assert expected_message in exc_info.value.args[0]
+
+
+def test___single_multiplexer_session_info___initialize_multiplexer_session___yeilds_session_info(
+    session_management_client: Mock,
+) -> None:
+    reservation = MultiSessionReservation(
+        session_management_client,
+        create_nifake_session_infos(1),
+        create_nimultiplexer_session_infos(1),
+    )
+
+    with reservation.initialize_multiplexer_session(construct_multiplexer_session) as session_info:
+        assert session_info.session_name == "MyMultiplexer0"
+        assert session_info.resource_name == "Mux0"
+        assert session_info.multiplexer_type_id == "nimultiplexer"
+
+
+def test___single_multiplexer_session_info___initialize_multiplexer_session___creates_session(
+    session_management_client: Mock,
+) -> None:
+    reservation = MultiSessionReservation(
+        session_management_client,
+        create_nifake_session_infos(1),
+        create_nimultiplexer_session_infos(1),
+    )
+
+    with reservation.initialize_multiplexer_session(construct_multiplexer_session) as session_info:
+        assert isinstance(session_info.session, fake_multiplexer_driver.Session)
+        assert session_info.session.resource_name == "Mux0"
+
+
+def test___single_multiplexer_session_info___initialize_multiplexer_session___session_lifetime_tracked(
+    session_management_client: Mock,
+) -> None:
+    reservation = MultiSessionReservation(
+        session_management_client,
+        create_nifake_session_infos(1),
+        create_nimultiplexer_session_infos(1),
+    )
+
+    with reservation.initialize_multiplexer_session(construct_multiplexer_session) as session_info:
+        assert reservation._multiplexer_session_cache["MyMultiplexer0"] is session_info.session
+        assert not session_info.session.is_closed
+
+    assert len(reservation._multiplexer_session_cache) == 0
+    assert session_info.session.is_closed
+
+
+def test___no_multiplexer_session_infos___initialize_multiplexer_session___raises_value_error(
+    session_management_client: Mock,
+) -> None:
+    reservation = MultiSessionReservation(
+        session_management_client,
+        create_nifake_session_infos(0),
+        create_nimultiplexer_session_infos(0),
+    )
+
+    with pytest.raises(ValueError) as exc_info:
+        with reservation.initialize_multiplexer_session(construct_multiplexer_session):
+            pass
+
+    assert (
+        "No multiplexer sessions available in the reservation for initialization."
+        in exc_info.value.args[0]
+    )
+
+
+def test___multiple_multiplexer_session_infos___initialize_multiplexer_session___raises_value_error(
+    session_management_client: Mock,
+) -> None:
+    reservation = MultiSessionReservation(
+        session_management_client,
+        create_nifake_session_infos(2),
+        create_nimultiplexer_session_infos(2),
+    )
+
+    with pytest.raises(ValueError) as exc_info:
+        with reservation.initialize_multiplexer_session(construct_multiplexer_session):
+            pass
+
+    assert (
+        "Too many multiplexer sessions matched the specified criteria. Expected single multiplexer session, got 2 sessions."
+        in exc_info.value.args[0]
+    )
+
+
+def test___heterogenous_multiplexer_session_infos___initialize_multiplexer_session_without_resource_name_or_type_id___raises_value_error(
+    session_management_client: Mock,
+) -> None:
+    grpc_session_infos = create_nifake_session_infos(1)
+    grpc_multiplexer_session_infos = create_nimultiplexer_session_infos(2)
+    grpc_multiplexer_session_infos[1].multiplexer_type_id = "nibar"
+    reservation = MultiSessionReservation(
+        session_management_client, grpc_session_infos, grpc_multiplexer_session_infos
+    )
+
+    with pytest.raises(ValueError) as exc_info:
+        with reservation.initialize_multiplexer_session(construct_multiplexer_session):
+            pass
+
+    assert (
+        "Too many multiplexer sessions matched the specified criteria. Expected single multiplexer session, got 2 sessions."
+        in exc_info.value.args[0]
+    )
+
+
+def test___multiplexer_session_already_exists___initialize_multiplexer_session___raises_runtime_error(
+    session_management_client: Mock,
+) -> None:
+    reservation = MultiSessionReservation(
+        session_management_client,
+        create_nifake_session_infos(1),
+        create_nimultiplexer_session_infos(1),
+    )
+
+    with reservation.initialize_multiplexer_session(construct_multiplexer_session):
+        with pytest.raises(RuntimeError) as exc_info:
+            with reservation.initialize_multiplexer_session(construct_multiplexer_session):
+                pass
+
+    assert "Multiplexer session 'MyMultiplexer0' already exists." in exc_info.value.args[0]
+
+
+def test___multiple_multiplexer_session_infos___initialize_multiplexer_session_with_resource_name___creates_session_for_specified_resource(
+    session_management_client: Mock,
+) -> None:
+    grpc_session_infos = create_nifake_session_infos(1)
+    grpc_multiplexer_session_infos = create_nimultiplexer_session_infos(3)
+    reservation = MultiSessionReservation(
+        session_management_client, grpc_session_infos, grpc_multiplexer_session_infos
+    )
+
+    with reservation.initialize_multiplexer_session(
+        construct_multiplexer_session, "Mux0"
+    ) as session_info:
+        assert session_info.session_name == "MyMultiplexer0"
+        assert session_info.multiplexer_type_id == "nimultiplexer"
+
+
+def test___heterogenous_multiplexer_session_infos___initialize_multiplexer_session_with_type_id___creates_session_for_specified_type_id(
+    session_management_client: Mock,
+) -> None:
+    grpc_session_infos = create_nifake_session_infos(1)
+    grpc_multiplexer_session_infos = create_nimultiplexer_session_infos(3)
+    grpc_multiplexer_session_infos[1].multiplexer_type_id = "nibar"
+    reservation = MultiSessionReservation(
+        session_management_client, grpc_session_infos, grpc_multiplexer_session_infos
+    )
+
+    with reservation.initialize_multiplexer_session(
+        construct_multiplexer_session, multiplexer_type_id="nibar"
+    ) as session_info:
+        assert session_info.session_name == "MyMultiplexer1"
+        assert session_info.multiplexer_type_id == "nibar"
+
+
+def test___multiple_multiplexer_session_infos___initialize_multiplexer_sessions___yeilds_session_infos(
+    session_management_client: Mock,
+) -> None:
+    reservation = MultiSessionReservation(
+        session_management_client,
+        create_nifake_session_infos(1),
+        create_nimultiplexer_session_infos(3),
+    )
+
+    with reservation.initialize_multiplexer_sessions(
+        construct_multiplexer_session
+    ) as session_infos:
+        assert [info.session_name for info in session_infos] == [
+            "MyMultiplexer0",
+            "MyMultiplexer1",
+            "MyMultiplexer2",
+        ]
+        assert [info.resource_name for info in session_infos] == ["Mux0", "Mux1", "Mux2"]
+        assert [info.multiplexer_type_id for info in session_infos] == [
+            "nimultiplexer",
+            "nimultiplexer",
+            "nimultiplexer",
+        ]
+
+
+def test___multiple_multiplexer_session_infos___initialize_multiplexer_sessions___creates_sessions(
+    session_management_client: Mock,
+) -> None:
+    reservation = MultiSessionReservation(
+        session_management_client,
+        create_nifake_session_infos(1),
+        create_nimultiplexer_session_infos(3),
+    )
+
+    with reservation.initialize_multiplexer_sessions(
+        construct_multiplexer_session
+    ) as session_infos:
+        assert all(
+            [isinstance(info.session, fake_multiplexer_driver.Session) for info in session_infos]
+        )
+        assert [info.session.resource_name for info in session_infos] == ["Mux0", "Mux1", "Mux2"]
+
+
+def test___multiple_multiplexer_session_infos___initialize_multiplexer_sessions___session_lifetime_tracked(
+    session_management_client: Mock,
+) -> None:
+    reservation = MultiSessionReservation(
+        session_management_client,
+        create_nifake_session_infos(1),
+        create_nimultiplexer_session_infos(3),
+    )
+
+    with reservation.initialize_multiplexer_sessions(
+        construct_multiplexer_session
+    ) as session_infos:
+        assert reservation._multiplexer_session_cache["MyMultiplexer0"] is session_infos[0].session
+        assert reservation._multiplexer_session_cache["MyMultiplexer1"] is session_infos[1].session
+        assert reservation._multiplexer_session_cache["MyMultiplexer2"] is session_infos[2].session
+        assert all([not info.session.is_closed for info in session_infos])
+
+    assert len(reservation._multiplexer_session_cache) == 0
+    assert all([info.session.is_closed for info in session_infos])
+
+
+def test___no_multiplexer_session_infos___initialize_multiplexer_sessions___raises_value_error(
+    session_management_client: Mock,
+) -> None:
+    reservation = MultiSessionReservation(session_management_client, [])
+
+    with pytest.raises(ValueError) as exc_info:
+        with reservation.initialize_multiplexer_sessions(construct_multiplexer_session):
+            pass
+
+    assert (
+        "No multiplexer sessions available in the reservation for initialization."
+        in exc_info.value.args[0]
+    )
+
+
+def test___session_already_exists___initialize_multiplexer_sessions___raises_runtime_error(
+    session_management_client: Mock,
+) -> None:
+    reservation = MultiSessionReservation(
+        session_management_client,
+        create_nifake_session_infos(1),
+        create_nimultiplexer_session_infos(2),
+    )
+
+    with reservation.initialize_multiplexer_sessions(construct_multiplexer_session):
+        with pytest.raises(RuntimeError) as exc_info:
+            with reservation.initialize_multiplexer_sessions(construct_multiplexer_session):
+                pass
+
+    assert "Multiplexer session 'MyMultiplexer0' already exists." in exc_info.value.args[0]
+
+
+def test___heterogenous_multiplexer_session_infos___initialize_multiplexer_sessions_without_resource_name_or_type_id___creates_all_sessions(
+    session_management_client: Mock,
+) -> None:
+    grpc_session_infos = create_nifake_session_infos(1)
+    grpc_multiplexer_session_infos = create_nimultiplexer_session_infos(2)
+    grpc_multiplexer_session_infos[1].multiplexer_type_id = "nibar"
+    reservation = MultiSessionReservation(
+        session_management_client, grpc_session_infos, grpc_multiplexer_session_infos
+    )
+
+    with reservation.initialize_multiplexer_sessions(
+        construct_multiplexer_session
+    ) as session_infos:
+        assert session_infos[0].session_name == "MyMultiplexer0"
+        assert session_infos[0].multiplexer_type_id == "nimultiplexer"
+        assert session_infos[1].session_name == "MyMultiplexer1"
+        assert session_infos[1].multiplexer_type_id == "nibar"
+
+
+def test___heterogenous_multiplexer_session_infos___initialize_multiplexer_sessions_with_resource_names___creates_sessions_for_specified_resources(
+    session_management_client: Mock,
+) -> None:
+    grpc_session_infos = create_nifake_session_infos(1)
+    grpc_multiplexer_session_infos = create_nimultiplexer_session_infos(3)
+    reservation = MultiSessionReservation(
+        session_management_client, grpc_session_infos, grpc_multiplexer_session_infos
+    )
+
+    with reservation.initialize_multiplexer_sessions(
+        construct_multiplexer_session, ["Mux0", "Mux1"]
+    ) as session_infos:
+        assert len(session_infos) == 2
+        assert [info.session_name for info in session_infos] == ["MyMultiplexer0", "MyMultiplexer1"]
+
+
+def test___heterogenous_multiplexer_session_infos___initialize_multiplexer_sessions_with_type_id___creates_sessions_for_specified_type_id(
+    session_management_client: Mock,
+) -> None:
+    grpc_session_infos = create_nifake_session_infos(1)
+    grpc_multiplexer_session_infos = create_nimultiplexer_session_infos(3)
+    grpc_multiplexer_session_infos[1].multiplexer_type_id = "nibar"
+    reservation = MultiSessionReservation(
+        session_management_client, grpc_session_infos, grpc_multiplexer_session_infos
+    )
+
+    with reservation.initialize_multiplexer_sessions(
+        construct_multiplexer_session, multiplexer_type_id="nimultiplexer"
+    ) as session_infos:
+        assert len(session_infos) == 2
+        assert session_infos[0].session_name == "MyMultiplexer0"
+        assert session_infos[1].session_name == "MyMultiplexer2"
+        assert [info.multiplexer_type_id for info in session_infos] == [
+            "nimultiplexer",
+            "nimultiplexer",
+        ]
+
+
+def test___single_connection___get_connection_with_multiplexer___returns_connection(
+    session_management_client: Mock,
+) -> None:
+    with ExitStack() as stack:
+        grpc_session_infos = create_nifake_session_infos(1)
+        grpc_multiplexer_session_infos = create_nimultiplexer_session_infos(1)
+        grpc_session_infos[0].channel_mappings.add(
+            pin_or_relay_name="Pin1",
+            site=2,
+            channel="3",
+            multiplexer_resource_name="Mux0",
+            multiplexer_route="route0",
+        )
+        reservation = MultiSessionReservation(
+            session_management_client, grpc_session_infos, grpc_multiplexer_session_infos
+        )
+        session_info = stack.enter_context(
+            reservation.initialize_multiplexer_session(construct_multiplexer_session)
+        )
+
+        connection = reservation.get_connection_with_multiplexer(
+            object, fake_multiplexer_driver.Session
+        )
+
+        assert get_connection_subset_with_multiplexer(connection) == ConnectionSubset(
+            "Pin1", 2, "Dev0", "3", "Mux0", "route0"
+        )
+        assert connection.multiplexer_session_info == session_info
+
+
+def test___multiple_connections___get_connections_with_multiplexer___raises_value_error(
+    session_management_client: Mock,
+) -> None:
+    with ExitStack() as stack:
+        grpc_session_infos = create_nifake_session_infos(1)
+        grpc_multiplexer_session_infos = create_nimultiplexer_session_infos(1)
+        grpc_session_infos[0].channel_mappings.add(
+            pin_or_relay_name="Pin1",
+            site=2,
+            channel="3",
+            multiplexer_resource_name="Mux0",
+            multiplexer_route="route0",
+        )
+        grpc_session_infos[0].channel_mappings.add(
+            pin_or_relay_name="Pin4",
+            site=5,
+            channel="6",
+            multiplexer_resource_name="Mux0",
+            multiplexer_route="route1",
+        )
+        reservation = MultiSessionReservation(
+            session_management_client, grpc_session_infos, grpc_multiplexer_session_infos
+        )
+        _ = stack.enter_context(
+            reservation.initialize_multiplexer_session(construct_multiplexer_session)
+        )
+
+        with pytest.raises(ValueError) as exc_info:
+            _ = reservation.get_connection_with_multiplexer(object, fake_multiplexer_driver.Session)
+
+        assert (
+            "Too many reserved connections matched the specified criteria."
+            in exc_info.value.args[0]
+        )
 
 
 def test___multiplexer_session_not_created___get_connection_with_multiplexer___raises_type_error(
@@ -320,6 +734,25 @@ def test___reserved_single_session_with_multiple_multiplexers___get_multiplexer_
     assert all([info.session is None for info in reservation.multiplexer_session_info])
 
 
+def test___created_single_multiplexer_session___get_multiplexer_session_info___returns_multiplexer_session_info_with_valid_session(
+    session_management_client: Mock,
+) -> None:
+    with ExitStack() as stack:
+        reservation = SingleSessionReservation(
+            session_management_client,
+            create_nifake_session_infos(1),
+            create_nimultiplexer_session_infos(1),
+        )
+        expected_session_info = stack.enter_context(
+            reservation.initialize_multiplexer_session(construct_multiplexer_session)
+        )
+
+        assert reservation.multiplexer_session_info[0] == expected_session_info
+        assert isinstance(
+            reservation.multiplexer_session_info[0].session, fake_multiplexer_driver.Session
+        )
+
+
 def test___reserved_multiple_sessions_with_single_multiplexer___get_multiplexer_session_info___returns_multiplexer_session_info_with_null_session(
     session_management_client: Mock,
 ) -> None:
@@ -352,6 +785,28 @@ def test___reserved_multiple_sessions_with_multiple_multiplexers___get_multiplex
 
     assert reservation.multiplexer_session_info == expected_multiplexer_session_infos
     assert all([info.session is None for info in reservation.multiplexer_session_info])
+
+
+def test___created_multiple_multiplexer_sessions___get_multiplexer_session_info___returns_multiplexer_session_info_with_valid_session(
+    session_management_client: Mock,
+) -> None:
+    with ExitStack() as stack:
+        reservation = MultiSessionReservation(
+            session_management_client,
+            create_nifake_session_infos(2),
+            create_nimultiplexer_session_infos(2),
+        )
+        expected_session_infos = stack.enter_context(
+            reservation.initialize_multiplexer_sessions(construct_multiplexer_session)
+        )
+
+        assert reservation.multiplexer_session_info == expected_session_infos
+        assert all(
+            [
+                isinstance(info.session, fake_multiplexer_driver.Session)
+                for info in reservation.multiplexer_session_info
+            ]
+        )
 
 
 def _create_grpc_session_and_multiplexer_session_infos_for_ordering() -> Tuple[
