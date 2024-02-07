@@ -2545,7 +2545,7 @@ class BaseReservation(_BaseSessionContainer):
         simulate: Optional[bool] = None,
         reset_device: bool = False,
         initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
-        multiplexer_resource_names: Optional[Iterable[str]] = None,
+        multiplexer_resource_names: Union[str, Iterable[str], None] = None,
         multiplexer_type_id: Optional[str] = None,
     ) -> ContextManager[Sequence[TypedMultiplexerSessionInformation[niswitch.Session]]]:
         """Initialize multiple NI-SWITCH multiplexer sessions.
