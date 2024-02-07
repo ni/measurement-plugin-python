@@ -361,7 +361,29 @@ class BaseReservation(_BaseSessionContainer):
             None,
         )
 
-    def _get_multiplexer_session_infos_for_multiplexer_type_id(
+    def _validate_and_get_multiplexer_session_infos_for_resource_names(
+        self, multiplexer_resource_names: Optional[Iterable[str]]
+    ) -> List[MultiplexerSessionInformation]:
+        if multiplexer_resource_names is not None:
+            _check_matching_multiplexer_criterion(
+                "multiplexer resource name(s)",
+                multiplexer_resource_names,
+                [session_info.resource_name for session_info in self.multiplexer_session_info],
+            )
+
+            # filter() is only used to satisfy type checking.
+            return list(
+                filter(
+                    None,
+                    map(
+                        self._get_multiplexer_session_info_for_resource_name,
+                        multiplexer_resource_names,
+                    ),
+                )
+            )
+        return []
+
+    def _get_multiplexer_session_infos_for_type_id(
         self, multiplexer_type_id: str
     ) -> List[MultiplexerSessionInformation]:
         return [
@@ -370,6 +392,21 @@ class BaseReservation(_BaseSessionContainer):
             if info.multiplexer_type_id == multiplexer_type_id
         ]
 
+    def _validate_and_get_multiplexer_session_infos_for_type_id(
+        self, multiplexer_type_id: Optional[str]
+    ) -> List[MultiplexerSessionInformation]:
+        if multiplexer_type_id is not None:
+            _check_matching_multiplexer_criterion(
+                "multiplexer type id",
+                [multiplexer_type_id],
+                [
+                    session_info.multiplexer_type_id
+                    for session_info in self.multiplexer_session_info
+                ],
+            )
+            return self._get_multiplexer_session_infos_for_type_id(multiplexer_type_id)
+        return []
+
     def _validate_and_get_matching_multiplexer_session_infos(
         self,
         multiplexer_resource_names: Optional[Iterable[str]],
@@ -377,48 +414,22 @@ class BaseReservation(_BaseSessionContainer):
     ) -> List[MultiplexerSessionInformation]:
         if len(self.multiplexer_session_info) == 0:
             raise ValueError(
-                f"No multiplexer session available in the reservation for initialization."
+                f"No multiplexer sessions available in the reservation for initialization."
             )
-
-        if multiplexer_resource_names is not None:
-            for resource_name in multiplexer_resource_names:
-                _check_optional_str_param("multiplexer_resource_name", resource_name)
-
         _check_optional_str_param("multiplexer_type_id", multiplexer_type_id)
 
         multiplexer_session_infos: List[MultiplexerSessionInformation] = []
-        if multiplexer_resource_names is None and multiplexer_type_id is None:
+        if not multiplexer_resource_names and multiplexer_type_id is None:
             multiplexer_session_infos = list(self.multiplexer_session_info)
         else:
-            if multiplexer_resource_names is not None:
-                _check_matching_multiplexer_criterion(
-                    "multiplexer resource name",
-                    multiplexer_resource_names,
-                    [session_info.resource_name for session_info in self.multiplexer_session_info],
+            multiplexer_session_infos.extend(
+                self._validate_and_get_multiplexer_session_infos_for_resource_names(
+                    multiplexer_resource_names
                 )
-
-                multiplexer_session_infos.extend(
-                    filter(
-                        None,
-                        map(
-                            self._get_multiplexer_session_info_for_resource_name,
-                            multiplexer_resource_names,
-                        ),
-                    )
-                )
-
-            if multiplexer_type_id is not None:
-                _check_matching_multiplexer_criterion(
-                    "multiplexer type id",
-                    [multiplexer_type_id],
-                    [
-                        session_info.multiplexer_type_id
-                        for session_info in self.multiplexer_session_info
-                    ],
-                )
-                multiplexer_session_infos.extend(
-                    self._get_multiplexer_session_infos_for_multiplexer_type_id(multiplexer_type_id)
-                )
+            )
+            multiplexer_session_infos.extend(
+                self._validate_and_get_multiplexer_session_infos_for_type_id(multiplexer_type_id)
+            )
         return list(set(multiplexer_session_infos))
 
     @contextlib.contextmanager
@@ -461,14 +472,21 @@ class BaseReservation(_BaseSessionContainer):
             Callable[[TMultiplexerSession], ContextManager[TMultiplexerSession]]
         ] = None,
     ) -> Generator[TypedMultiplexerSessionInformation[TMultiplexerSession], None, None]:
+        _check_optional_str_param("multiplexer_resource_name", multiplexer_resource_name)
         multiplexer_session_infos = self._validate_and_get_matching_multiplexer_session_infos(
             _to_iterable(multiplexer_resource_name), multiplexer_type_id
         )
-        multiplexer_sessions_count = len(multiplexer_session_infos)
-        if multiplexer_sessions_count != 1:
+
+        multiplexer_session_info_count = len(multiplexer_session_infos)
+        if multiplexer_session_info_count == 0:
             raise ValueError(
-                f"Too many multiplexer sessions matched multiplexer type ID '{multiplexer_type_id}'"
-                f"Expected single multiplexer session, got {multiplexer_sessions_count} sessions."
+                f"No multiplexer sessions matched the specified criteria. "
+                "Expected single session, got 0 sessions."
+            )
+        if multiplexer_session_info_count > 1:
+            raise ValueError(
+                f"Too many multiplexer sessions matched the specified criteria. "
+                f"Expected single multiplexer session, got {multiplexer_session_info_count} sessions."
             )
 
         if closing_function is None:
@@ -516,25 +534,28 @@ class BaseReservation(_BaseSessionContainer):
     def _initialize_multiplexer_sessions_core(
         self,
         session_constructor: Callable[[MultiplexerSessionInformation], TMultiplexerSession],
-        multiplexer_resource_names: Optional[Iterable[str]],
+        multiplexer_resource_names: Union[str, Iterable[str], None],
         multiplexer_type_id: Optional[str],
         closing_function: Optional[
             Callable[[TMultiplexerSession], ContextManager[TMultiplexerSession]]
         ] = None,
     ) -> Generator[Sequence[TypedMultiplexerSessionInformation[TMultiplexerSession]], None, None]:
         multiplexer_session_infos = self._validate_and_get_matching_multiplexer_session_infos(
-            multiplexer_resource_names, multiplexer_type_id
+            _to_iterable(multiplexer_resource_names), multiplexer_type_id
         )
 
         if len(multiplexer_session_infos) == 0:
             raise ValueError(
-                f"No multiplexer sessions matched multiplexer type ID '{multiplexer_type_id}'. "
+                f"No multiplexer sessions matched the specified criteria. "
                 "Expected single or multiple multiplexer sessions, got 0 sessions."
             )
 
         if closing_function is None:
             closing_function = closing_session
 
+        multiplexer_session_infos = sorted(
+            multiplexer_session_infos, key=lambda x: (x.resource_name)
+        )
         with ExitStack() as stack:
             typed_multiplexer_session_infos: List[
                 TypedMultiplexerSessionInformation[TMultiplexerSession]
@@ -696,7 +717,7 @@ class BaseReservation(_BaseSessionContainer):
     def initialize_multiplexer_session(
         self,
         session_constructor: Callable[[MultiplexerSessionInformation], TMultiplexerSession],
-        multipexer_resource_name: Optional[str] = None,
+        multiplexer_resource_name: Optional[str] = None,
         multiplexer_type_id: Optional[str] = None,
     ) -> ContextManager[TypedMultiplexerSessionInformation[TMultiplexerSession]]:
         """Initialize a single multiplexer session.
@@ -724,7 +745,7 @@ class BaseReservation(_BaseSessionContainer):
                 too many multiplexer sessions are available.
         """
         return self._initialize_multiplexer_session_core(
-            session_constructor, multipexer_resource_name, multiplexer_type_id
+            session_constructor, multiplexer_resource_name, multiplexer_type_id
         )
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
@@ -760,7 +781,7 @@ class BaseReservation(_BaseSessionContainer):
     def initialize_multiplexer_sessions(
         self,
         session_constructor: Callable[[MultiplexerSessionInformation], TMultiplexerSession],
-        multiplexer_resource_names: Optional[Iterable[str]] = None,
+        multiplexer_resource_names: Union[str, Iterable[str], None] = None,
         multiplexer_type_id: Optional[str] = None,
     ) -> ContextManager[Sequence[TypedMultiplexerSessionInformation[TMultiplexerSession]]]:
         """Initialize multiple multiplexer sessions.
