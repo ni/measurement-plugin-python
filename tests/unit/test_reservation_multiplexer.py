@@ -155,26 +155,6 @@ def test___multiple_multiplexer_session_infos___initialize_multiplexer_session__
     )
 
 
-def test___heterogenous_multiplexer_session_infos___initialize_multiplexer_session_without_resource_name_or_type_id___raises_value_error(
-    session_management_client: Mock,
-) -> None:
-    grpc_session_infos = create_nifake_session_infos(1)
-    grpc_multiplexer_session_infos = create_nimultiplexer_session_infos(2)
-    grpc_multiplexer_session_infos[1].multiplexer_type_id = "nibar"
-    reservation = MultiSessionReservation(
-        session_management_client, grpc_session_infos, grpc_multiplexer_session_infos
-    )
-
-    with pytest.raises(ValueError) as exc_info:
-        with reservation.initialize_multiplexer_session(construct_multiplexer_session):
-            pass
-
-    assert (
-        "Too many multiplexer sessions matched the specified criteria. Expected single multiplexer session, got 2 sessions."
-        in exc_info.value.args[0]
-    )
-
-
 def test___multiplexer_session_already_exists___initialize_multiplexer_session___raises_runtime_error(
     session_management_client: Mock,
 ) -> None:
@@ -273,7 +253,7 @@ def test___multiple_multiplexer_session_infos___initialize_multiplexer_session_w
         assert session_info.multiplexer_type_id == "nimultiplexer"
 
 
-def test___heterogenous_multiplexer_session_infos___initialize_multiplexer_session_with_type_id___creates_session_for_specified_type_id(
+def test___multiple_multiplexer_session_infos___initialize_multiplexer_session_with_type_id___creates_session_for_specified_type_id(
     session_management_client: Mock,
 ) -> None:
     grpc_session_infos = create_nifake_session_infos(1)
@@ -386,7 +366,7 @@ def test___session_already_exists___initialize_multiplexer_sessions___raises_run
     assert "Multiplexer session 'MyMultiplexer0' already exists." in exc_info.value.args[0]
 
 
-def test___heterogenous_multiplexer_session_infos___initialize_multiplexer_sessions_without_resource_name_or_type_id___creates_all_sessions(
+def test___heterogenous_multiplexer_session_infos___initialize_multiplexer_sessions___creates_all_sessions(
     session_management_client: Mock,
 ) -> None:
     grpc_session_infos = create_nifake_session_infos(1)
@@ -410,6 +390,7 @@ def test___heterogenous_multiplexer_session_infos___initialize_multiplexer_sessi
 ) -> None:
     grpc_session_infos = create_nifake_session_infos(1)
     grpc_multiplexer_session_infos = create_nimultiplexer_session_infos(3)
+    grpc_multiplexer_session_infos[1].multiplexer_type_id = "nibar"
     reservation = MultiSessionReservation(
         session_management_client, grpc_session_infos, grpc_multiplexer_session_infos
     )
