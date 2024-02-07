@@ -62,6 +62,7 @@ from ni_measurementlink_service.session_management._types import (
     TSession,
     TypedConnection,
     TypedConnectionWithMultiplexer,
+    TypedMultiplexerSessionInformation,
     TypedSessionInformation,
 )
 
@@ -139,6 +140,16 @@ def _check_matching_criterion(
         raise ValueError(f"No reserved connections matched {name} {extra_values_str}.")
 
 
+def _check_matching_multiplexer_criterion(
+    name: str, requested_values: Iterable[_T], expected_values: Iterable[_T]
+) -> None:
+    if not all(value in expected_values for value in requested_values):
+        extra_values_str = ", ".join(
+            _quote_if_str(value) for value in requested_values if value not in expected_values
+        )
+        raise ValueError(f"No multiplexer sessions matched {name} {extra_values_str}.")
+
+
 def _describe_matching_criteria(
     pin_or_relay_names: Union[str, Iterable[str], None] = None,
     sites: Union[int, Iterable[int], None] = None,
@@ -208,6 +219,7 @@ class BaseReservation(_BaseSessionContainer):
             SessionInformation._from_grpc_v1(info) for info in self._grpc_session_info
         ]
         self._session_cache: Dict[str, object] = {}
+        self._multiplexer_session_cache: Dict[str, object] = {}
 
         self._multiplexer_session_info = []
         if multiplexer_session_info is not None:
@@ -273,7 +285,7 @@ class BaseReservation(_BaseSessionContainer):
                     session_info=session_info,
                     multiplexer_resource_name=channel_mapping.multiplexer_resource_name,
                     multiplexer_route=channel_mapping.multiplexer_route,
-                    multiplexer_session_info=self._get_matching_multiplexer_session_info(
+                    multiplexer_session_info=self._get_multiplexer_session_info_for_resource_name(
                         channel_mapping.multiplexer_resource_name
                     ),
                 )
@@ -284,7 +296,13 @@ class BaseReservation(_BaseSessionContainer):
     @property
     def multiplexer_session_info(self) -> Sequence[MultiplexerSessionInformation]:
         """Multiplexer session information object."""
-        return self._multiplexer_session_info
+        if not self._multiplexer_session_cache:
+            return self._multiplexer_session_info
+
+        return [
+            info._with_session(self._multiplexer_session_cache.get(info.session_name))
+            for info in self._multiplexer_session_info
+        ]
 
     def __enter__(self: Self) -> Self:
         """Context management protocol. Returns self."""
@@ -314,12 +332,24 @@ class BaseReservation(_BaseSessionContainer):
         finally:
             del self._session_cache[session_name]
 
+    @contextlib.contextmanager
+    def _cache_multiplexer_session(
+        self, session_name: str, session: TMultiplexerSession
+    ) -> Generator[None, None, None]:
+        if session_name in self._multiplexer_session_cache:
+            raise RuntimeError(f"Multiplexer session '{session_name}' already exists.")
+        self._multiplexer_session_cache[session_name] = session
+        try:
+            yield
+        finally:
+            del self._multiplexer_session_cache[session_name]
+
     def _get_matching_session_infos(self, instrument_type_id: str) -> List[SessionInformation]:
         return [
             info for info in self._session_info if instrument_type_id == info.instrument_type_id
         ]
 
-    def _get_matching_multiplexer_session_info(
+    def _get_multiplexer_session_info_for_resource_name(
         self, multiplexer_resource_name: str
     ) -> Optional[MultiplexerSessionInformation]:
         return next(
@@ -330,6 +360,66 @@ class BaseReservation(_BaseSessionContainer):
             ),
             None,
         )
+
+    def _get_multiplexer_session_infos_for_multiplexer_type_id(
+        self, multiplexer_type_id: str
+    ) -> List[MultiplexerSessionInformation]:
+        return [
+            info
+            for info in self._multiplexer_session_info
+            if info.multiplexer_type_id == multiplexer_type_id
+        ]
+
+    def _validate_and_get_matching_multiplexer_session_infos(
+        self,
+        multiplexer_resource_names: Optional[Iterable[str]],
+        multiplexer_type_id: Optional[str],
+    ) -> List[MultiplexerSessionInformation]:
+        if len(self.multiplexer_session_info) == 0:
+            raise ValueError(
+                f"No multiplexer session available in the reservation for initialization."
+            )
+
+        if multiplexer_resource_names is not None:
+            for resource_name in multiplexer_resource_names:
+                _check_optional_str_param("multiplexer_resource_name", resource_name)
+
+        _check_optional_str_param("multiplexer_type_id", multiplexer_type_id)
+
+        multiplexer_session_infos: List[MultiplexerSessionInformation] = []
+        if multiplexer_resource_names is None and multiplexer_type_id is None:
+            multiplexer_session_infos = list(self.multiplexer_session_info)
+        else:
+            if multiplexer_resource_names is not None:
+                _check_matching_multiplexer_criterion(
+                    "multiplexer resource name",
+                    multiplexer_resource_names,
+                    [session_info.resource_name for session_info in self.multiplexer_session_info],
+                )
+
+                multiplexer_session_infos.extend(
+                    filter(
+                        None,
+                        map(
+                            self._get_multiplexer_session_info_for_resource_name,
+                            multiplexer_resource_names,
+                        ),
+                    )
+                )
+
+            if multiplexer_type_id is not None:
+                _check_matching_multiplexer_criterion(
+                    "multiplexer type id",
+                    [multiplexer_type_id],
+                    [
+                        session_info.multiplexer_type_id
+                        for session_info in self.multiplexer_session_info
+                    ],
+                )
+                multiplexer_session_infos.extend(
+                    self._get_multiplexer_session_infos_for_multiplexer_type_id(multiplexer_type_id)
+                )
+        return list(set(multiplexer_session_infos))
 
     @contextlib.contextmanager
     def _initialize_session_core(
@@ -362,6 +452,37 @@ class BaseReservation(_BaseSessionContainer):
                 yield cast(TypedSessionInformation[TSession], new_session_info)
 
     @contextlib.contextmanager
+    def _initialize_multiplexer_session_core(
+        self,
+        session_constructor: Callable[[MultiplexerSessionInformation], TMultiplexerSession],
+        multiplexer_resource_name: Optional[str] = None,
+        multiplexer_type_id: Optional[str] = None,
+        closing_function: Optional[
+            Callable[[TMultiplexerSession], ContextManager[TMultiplexerSession]]
+        ] = None,
+    ) -> Generator[TypedMultiplexerSessionInformation[TMultiplexerSession], None, None]:
+        multiplexer_session_infos = self._validate_and_get_matching_multiplexer_session_infos(
+            _to_iterable(multiplexer_resource_name), multiplexer_type_id
+        )
+        multiplexer_sessions_count = len(multiplexer_session_infos)
+        if multiplexer_sessions_count != 1:
+            raise ValueError(
+                f"Too many multiplexer sessions matched multiplexer type ID '{multiplexer_type_id}'"
+                f"Expected single multiplexer session, got {multiplexer_sessions_count} sessions."
+            )
+
+        if closing_function is None:
+            closing_function = closing_session
+
+        multiplexer_session_info = multiplexer_session_infos[0]
+        with closing_function(session_constructor(multiplexer_session_info)) as session:
+            with self._cache_multiplexer_session(multiplexer_session_info.session_name, session):
+                new_session_info = multiplexer_session_info._with_session(session)
+                yield cast(
+                    TypedMultiplexerSessionInformation[TMultiplexerSession], new_session_info
+                )
+
+    @contextlib.contextmanager
     def _initialize_sessions_core(
         self,
         session_constructor: Callable[[SessionInformation], TSession],
@@ -390,6 +511,46 @@ class BaseReservation(_BaseSessionContainer):
                     cast(TypedSessionInformation[TSession], new_session_info)
                 )
             yield typed_session_infos
+
+    @contextlib.contextmanager
+    def _initialize_multiplexer_sessions_core(
+        self,
+        session_constructor: Callable[[MultiplexerSessionInformation], TMultiplexerSession],
+        multiplexer_resource_names: Optional[Iterable[str]],
+        multiplexer_type_id: Optional[str],
+        closing_function: Optional[
+            Callable[[TMultiplexerSession], ContextManager[TMultiplexerSession]]
+        ] = None,
+    ) -> Generator[Sequence[TypedMultiplexerSessionInformation[TMultiplexerSession]], None, None]:
+        multiplexer_session_infos = self._validate_and_get_matching_multiplexer_session_infos(
+            multiplexer_resource_names, multiplexer_type_id
+        )
+
+        if len(multiplexer_session_infos) == 0:
+            raise ValueError(
+                f"No multiplexer sessions matched multiplexer type ID '{multiplexer_type_id}'. "
+                "Expected single or multiple multiplexer sessions, got 0 sessions."
+            )
+
+        if closing_function is None:
+            closing_function = closing_session
+
+        with ExitStack() as stack:
+            typed_multiplexer_session_infos: List[
+                TypedMultiplexerSessionInformation[TMultiplexerSession]
+            ] = []
+            for multiplexer_session_info in multiplexer_session_infos:
+                session = stack.enter_context(
+                    closing_function(session_constructor(multiplexer_session_info))
+                )
+                stack.enter_context(
+                    self._cache_multiplexer_session(multiplexer_session_info.session_name, session)
+                )
+                new_session_info = multiplexer_session_info._with_session(session)
+                typed_multiplexer_session_infos.append(
+                    cast(TypedMultiplexerSessionInformation[TMultiplexerSession], new_session_info)
+                )
+            yield typed_multiplexer_session_infos
 
     def _get_connection_core(
         self,
@@ -471,6 +632,11 @@ class BaseReservation(_BaseSessionContainer):
                         value = value._with_session(session)
                         value._check_runtime_type(session_type)
                         if multiplexer_session_type is not None:
+                            if value.multiplexer_session_info is not None:
+                                multiplexer_session = self._multiplexer_session_cache.get(
+                                    value.multiplexer_session_info.session_name
+                                )
+                                value = value._with_multiplexer_session(multiplexer_session)
                             value._check_runtime_multiplexer_type(multiplexer_session_type)
                         results.append(cast(TypedConnection[TSession], value))
                         matching_pins.add(pin)
@@ -527,6 +693,40 @@ class BaseReservation(_BaseSessionContainer):
         """
         return self._initialize_session_core(session_constructor, instrument_type_id)
 
+    def initialize_multiplexer_session(
+        self,
+        session_constructor: Callable[[MultiplexerSessionInformation], TMultiplexerSession],
+        multipexer_resource_name: Optional[str] = None,
+        multiplexer_type_id: Optional[str] = None,
+    ) -> ContextManager[TypedMultiplexerSessionInformation[TMultiplexerSession]]:
+        """Initialize a single multiplexer session.
+
+        This is a generic method that supports any multiplexer driver.
+
+        Args:
+            session_constructor: A function that constructs multiplexer sessions
+                based on multiplexer session information.
+
+            multiplexer_resource_name: Multiplexer resource names. If not
+                specified, the multiplexer resource name is ignored when
+                matching multiplexer sessions.
+
+            multiplexer_type_id: User-defined identifier for the multiplexer
+                type in the pin map editor. If not specified, the multiplexer
+                type id is ignored when matching multiplexer sessions.
+
+        Returns:
+            A context manager that yields a multiplexer session information
+                object. The session object is available via the ``session`` field.
+
+        Raises:
+            ValueError: If no multiplexer sessions are available or
+                too many multiplexer sessions are available.
+        """
+        return self._initialize_multiplexer_session_core(
+            session_constructor, multipexer_resource_name, multiplexer_type_id
+        )
+
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def initialize_sessions(
         self,
@@ -556,6 +756,39 @@ class BaseReservation(_BaseSessionContainer):
                 sessions matched the instrument type ID.
         """
         return self._initialize_sessions_core(session_constructor, instrument_type_id)
+
+    def initialize_multiplexer_sessions(
+        self,
+        session_constructor: Callable[[MultiplexerSessionInformation], TMultiplexerSession],
+        multiplexer_resource_names: Optional[Iterable[str]] = None,
+        multiplexer_type_id: Optional[str] = None,
+    ) -> ContextManager[Sequence[TypedMultiplexerSessionInformation[TMultiplexerSession]]]:
+        """Initialize multiple multiplexer sessions.
+
+        This is a generic method that supports any multiplexer driver.
+
+        Args:
+            session_constructor: A function that constructs multiplexer sessions
+                based on multiplexer session information.
+
+            multiplexer_resource_names: Multiplexer resource names. If not
+                specified, the multiplexer resource name is ignored when
+                matching multiplexer sessions.
+
+            multiplexer_type_id: User-defined identifier for the multiplexer
+                type in the pin map editor. If not specified, the multiplexer
+                type id is ignored when matching multiplexer sessions.
+
+        Returns:
+            A context manager that yields a sequence of multiplexer session information
+                objects. The session objects are available via the ``session`` field.
+
+        Raises:
+            ValueError: If no multiplexer sessions are available.
+        """
+        return self._initialize_multiplexer_sessions_core(
+            session_constructor, multiplexer_resource_names, multiplexer_type_id
+        )
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def get_connection(
@@ -2210,6 +2443,140 @@ class BaseReservation(_BaseSessionContainer):
 
         return self._get_connections_core(
             niswitch.Session, relay_names, sites, INSTRUMENT_TYPE_NI_RELAY_DRIVER
+        )
+
+    def initialize_switch_multiplexer_session(
+        self,
+        topology: Optional[str] = None,
+        simulate: Optional[bool] = None,
+        reset_device: bool = False,
+        initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
+        multiplexer_resource_name: Optional[str] = None,
+        multiplexer_type_id: Optional[str] = None,
+    ) -> ContextManager[TypedMultiplexerSessionInformation[niswitch.Session]]:
+        """Initialize a single NI-SWITCH multiplexer session.
+
+        Args:
+            topology: Specifies the switch topology. If this argument is not
+                specified, the default value is "Configured Topology", which you
+                may override by setting ``MEASUREMENTLINK_NISWITCH_TOPOLOGY`` in
+                the configuration file (``.env``).
+
+            simulate: Enables or disables simulation of the switch module. If
+                this argument is not specified, the default value is ``False``,
+                which you may override by setting
+                ``MEASUREMENTLINK_NISWITCH_SIMULATE`` in the configuration file
+                (``.env``).
+
+            reset_device: Specifies whether to reset the switch module during
+                the initialization procedure.
+
+            initialization_behavior: Specifies whether the NI gRPC Device Server
+                will initialize a new session or attach to an existing session.
+
+            multiplexer_resource_name: Multiplexer resource name. If not
+                specified, the multiplexer resource name is ignored when
+                matching multiplexer sessions.
+
+            multiplexer_type_id: User-defined identifier for the multiplexer
+                type in the pin map editor. If not specified, the multiplexer
+                type id is ignored when matching multiplexer sessions.
+
+        Returns:
+            A context manager that yields a session information object. The
+                multiplexer session object is available via the ``session`` field.
+
+        Raises:
+            ValueError: If no multiplexer sessions are available or
+                too many multiplexer sessions are available.
+
+        See Also:
+            For more details, see :py:class:`niswitch.Session`.
+        """
+        from ni_measurementlink_service._drivers._niswitch_multiplexer import (
+            MultiplexerSessionConstructor,
+        )
+
+        session_constructor = MultiplexerSessionConstructor(
+            self._discovery_client,
+            self._grpc_channel_pool,
+            topology,
+            simulate,
+            reset_device,
+            initialization_behavior,
+        )
+        closing_function = functools.partial(
+            closing_session_with_ts_code_module_support, initialization_behavior
+        )
+        return self._initialize_multiplexer_session_core(
+            session_constructor, multiplexer_resource_name, multiplexer_type_id, closing_function
+        )
+
+    def initialize_niswitch_multiplexer_sessions(
+        self,
+        topology: Optional[str] = None,
+        simulate: Optional[bool] = None,
+        reset_device: bool = False,
+        initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
+        multiplexer_resource_names: Optional[Iterable[str]] = None,
+        multiplexer_type_id: Optional[str] = None,
+    ) -> ContextManager[Sequence[TypedMultiplexerSessionInformation[niswitch.Session]]]:
+        """Initialize multiple NI-SWITCH multiplexer sessions.
+
+        Args:
+            topology: Specifies the switch topology. If this argument is not
+                specified, the default value is "Configured Topology", which you
+                may override by setting ``MEASUREMENTLINK_NISWITCH_TOPOLOGY`` in
+                the configuration file (``.env``).
+
+            simulate: Enables or disables simulation of the switch module. If
+                this argument is not specified, the default value is ``False``,
+                which you may override by setting
+                ``MEASUREMENTLINK_NISWITCH_SIMULATE`` in the configuration file
+                (``.env``).
+
+            reset_device: Specifies whether to reset the switch module during
+                the initialization procedure.
+
+            initialization_behavior: Specifies whether the NI gRPC Device Server
+                will initialize a new session or attach to an existing session.
+
+            multiplexer_resource_names: Multiplexer resource names. If not
+                specified, the multiplexer resource name is ignored when
+                matching multiplexer sessions.
+
+            multiplexer_type_id: User-defined identifier for the multiplexer
+                type in the pin map editor. If not specified, the multiplexer
+                type id is ignored when matching multiplexer sessions.
+
+        Returns:
+            A context manager that yields a sequence of multiplexer session
+                information objects. The session objects are available via
+                the ``session`` field.
+
+        Raises:
+            ValueError: If no multiplexer sessions are available.
+
+        See Also:
+            For more details, see :py:class:`niswitch.Session`.
+        """
+        from ni_measurementlink_service._drivers._niswitch_multiplexer import (
+            MultiplexerSessionConstructor,
+        )
+
+        session_constructor = MultiplexerSessionConstructor(
+            self._discovery_client,
+            self._grpc_channel_pool,
+            topology,
+            simulate,
+            reset_device,
+            initialization_behavior,
+        )
+        closing_function = functools.partial(
+            closing_session_with_ts_code_module_support, initialization_behavior
+        )
+        return self._initialize_multiplexer_sessions_core(
+            session_constructor, multiplexer_resource_names, multiplexer_type_id, closing_function
         )
 
 
