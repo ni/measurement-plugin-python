@@ -728,7 +728,7 @@ class BaseReservation(_BaseSessionContainer):
             session_constructor: A function that constructs multiplexer sessions
                 based on multiplexer session information.
 
-            multiplexer_resource_name: Multiplexer resource names. If not
+            multiplexer_resource_name: Multiplexer resource name. If not
                 specified, the multiplexer resource name is ignored when
                 matching multiplexer sessions.
 
@@ -741,6 +741,8 @@ class BaseReservation(_BaseSessionContainer):
                 object. The session object is available via the ``session`` field.
 
         Raises:
+            TypeError: If the argument types are incorrect.
+
             ValueError: If no multiplexer sessions are available or
                 too many multiplexer sessions are available.
         """
@@ -805,6 +807,8 @@ class BaseReservation(_BaseSessionContainer):
                 objects. The session objects are available via the ``session`` field.
 
         Raises:
+            TypeError: If the argument types are incorrect.
+
             ValueError: If no multiplexer sessions are available.
         """
         return self._initialize_multiplexer_sessions_core(
@@ -2508,6 +2512,8 @@ class BaseReservation(_BaseSessionContainer):
                 multiplexer session object is available via the ``session`` field.
 
         Raises:
+            TypeError: If the argument types are incorrect.
+
             ValueError: If no multiplexer sessions are available or
                 too many multiplexer sessions are available.
 
@@ -2576,6 +2582,8 @@ class BaseReservation(_BaseSessionContainer):
                 the ``session`` field.
 
         Raises:
+            TypeError: If the argument types are incorrect.
+
             ValueError: If no multiplexer sessions are available.
 
         See Also:
