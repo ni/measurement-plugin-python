@@ -71,6 +71,22 @@ class SessionManagementServiceStub:
     - UNAVAILABLE:
         - Session(s) were already reserved and didn't become available before the specified timeout expired.
     """
+    RegisterMultiplexerSessions: grpc.UnaryUnaryMultiCallable[
+        ni_measurementlink_sessionmanagement_v1_session_management_service_pb2.RegisterMultiplexerSessionsRequest,
+        ni_measurementlink_sessionmanagement_v1_session_management_service_pb2.RegisterMultiplexerSessionsResponse,
+    ]
+    """Registers the multiplexer sessions with this service. Indicates that the sessions are open and will need to be closed later.
+    Status Codes for errors:
+    - ALREADY_EXISTS:
+        - Session by the same name is already registered.
+    - INVALID_ARGUMENT:
+        - Session names list has an empty string.
+    """
+    UnregisterMultiplexerSessions: grpc.UnaryUnaryMultiCallable[
+        ni_measurementlink_sessionmanagement_v1_session_management_service_pb2.UnregisterMultiplexerSessionsRequest,
+        ni_measurementlink_sessionmanagement_v1_session_management_service_pb2.UnregisterMultiplexerSessionsResponse,
+    ]
+    """Unregisters the multiplexer sessions with this service. Indicates that the sessions have been closed and will need to be reopened before they can be used again."""
 
 class SessionManagementServiceAsyncStub:
     """Service to keep track of open sessions used by measurement services, and to allow measurement services to access sessions by pin and site."""
@@ -125,6 +141,22 @@ class SessionManagementServiceAsyncStub:
     - UNAVAILABLE:
         - Session(s) were already reserved and didn't become available before the specified timeout expired.
     """
+    RegisterMultiplexerSessions: grpc.aio.UnaryUnaryMultiCallable[
+        ni_measurementlink_sessionmanagement_v1_session_management_service_pb2.RegisterMultiplexerSessionsRequest,
+        ni_measurementlink_sessionmanagement_v1_session_management_service_pb2.RegisterMultiplexerSessionsResponse,
+    ]
+    """Registers the multiplexer sessions with this service. Indicates that the sessions are open and will need to be closed later.
+    Status Codes for errors:
+    - ALREADY_EXISTS:
+        - Session by the same name is already registered.
+    - INVALID_ARGUMENT:
+        - Session names list has an empty string.
+    """
+    UnregisterMultiplexerSessions: grpc.aio.UnaryUnaryMultiCallable[
+        ni_measurementlink_sessionmanagement_v1_session_management_service_pb2.UnregisterMultiplexerSessionsRequest,
+        ni_measurementlink_sessionmanagement_v1_session_management_service_pb2.UnregisterMultiplexerSessionsResponse,
+    ]
+    """Unregisters the multiplexer sessions with this service. Indicates that the sessions have been closed and will need to be reopened before they can be used again."""
 
 class SessionManagementServiceServicer(metaclass=abc.ABCMeta):
     """Service to keep track of open sessions used by measurement services, and to allow measurement services to access sessions by pin and site."""
@@ -189,5 +221,25 @@ class SessionManagementServiceServicer(metaclass=abc.ABCMeta):
         - UNAVAILABLE:
             - Session(s) were already reserved and didn't become available before the specified timeout expired.
         """
+    @abc.abstractmethod
+    def RegisterMultiplexerSessions(
+        self,
+        request: ni_measurementlink_sessionmanagement_v1_session_management_service_pb2.RegisterMultiplexerSessionsRequest,
+        context: _ServicerContext,
+    ) -> typing.Union[ni_measurementlink_sessionmanagement_v1_session_management_service_pb2.RegisterMultiplexerSessionsResponse, collections.abc.Awaitable[ni_measurementlink_sessionmanagement_v1_session_management_service_pb2.RegisterMultiplexerSessionsResponse]]:
+        """Registers the multiplexer sessions with this service. Indicates that the sessions are open and will need to be closed later.
+        Status Codes for errors:
+        - ALREADY_EXISTS:
+            - Session by the same name is already registered.
+        - INVALID_ARGUMENT:
+            - Session names list has an empty string.
+        """
+    @abc.abstractmethod
+    def UnregisterMultiplexerSessions(
+        self,
+        request: ni_measurementlink_sessionmanagement_v1_session_management_service_pb2.UnregisterMultiplexerSessionsRequest,
+        context: _ServicerContext,
+    ) -> typing.Union[ni_measurementlink_sessionmanagement_v1_session_management_service_pb2.UnregisterMultiplexerSessionsResponse, collections.abc.Awaitable[ni_measurementlink_sessionmanagement_v1_session_management_service_pb2.UnregisterMultiplexerSessionsResponse]]:
+        """Unregisters the multiplexer sessions with this service. Indicates that the sessions have been closed and will need to be reopened before they can be used again."""
 
 def add_SessionManagementServiceServicer_to_server(servicer: SessionManagementServiceServicer, server: typing.Union[grpc.Server, grpc.aio.Server]) -> None: ...

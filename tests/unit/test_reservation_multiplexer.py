@@ -354,12 +354,10 @@ def test___reserved_multiple_sessions_with_multiple_multiplexers___get_multiplex
     assert all([info.session is None for info in reservation.multiplexer_session_info])
 
 
-def _create_grpc_session_and_multiplexer_session_infos_for_ordering() -> (
-    Tuple[
-        List[session_management_service_pb2.SessionInformation],
-        List[session_management_service_pb2.MultiplexerSessionInformation],
-    ]
-):
+def _create_grpc_session_and_multiplexer_session_infos_for_ordering() -> Tuple[
+    List[session_management_service_pb2.SessionInformation],
+    List[session_management_service_pb2.MultiplexerSessionInformation],
+]:
     grpc_session_infos = create_nifake_session_infos(4)
     grpc_session_infos[0].channel_mappings.add(
         pin_or_relay_name="Pin1",

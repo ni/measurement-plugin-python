@@ -365,7 +365,7 @@ class ResourceAccessInformation(google.protobuf.message.Message):
     """
     @property
     def channel_mappings(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___ChannelMapping]:
-        """List of site and pin/relay mappings with the multiplexer info for each channel in the channel_list.
+        """List of site and pin/relay mappings with optional multiplexer information for each channel in the channel_list.
         Each item represents a channel-to-pin connection for this instrument resource. In the case of shared pins, there is a separate item for each connection.
         """
     def __init__(

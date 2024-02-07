@@ -26,6 +26,7 @@ from ni_measurementlink_service.session_management._reservation import (
 from ni_measurementlink_service.session_management._types import (
     PinMapContext,
     SessionInformation,
+    MultiplexerSessionInformation,
 )
 
 _logger = logging.getLogger(__name__)
@@ -285,6 +286,37 @@ class SessionManagementClient(object):
         return MultiSessionReservation(
             session_management_client=self, session_info=response.sessions
         )
+
+    def register_multiplexer_sessions(
+        self, multiplexer_session_info: Iterable[MultiplexerSessionInformation]
+    ) -> None:
+        """Register multiplexer sessions with the session management service.
+
+        Indicates that the sessions are open and will need to be closed later.
+
+        Args:
+            multiplexer_session_info: Sessions to register.
+        """
+        request = session_management_service_pb2.RegisterMultiplexerSessionsRequest(
+            multiplexer_sessions=(info._to_grpc_v1() for info in multiplexer_session_info),
+        )
+        self._get_stub().RegisterMultiplexerSessions(request)
+
+    def unregister_multiplexer_sessions(
+        self, multiplexer_session_info: Iterable[MultiplexerSessionInformation]
+    ) -> None:
+        """Unregisters multiplexer sessions from the session management service.
+
+        Indicates that the sessions have been closed and will need to be reopened before they can be
+        used again.
+
+        Args:
+            multiplexer_session_info: Sessions to unregister.
+        """
+        request = session_management_service_pb2.UnregisterMultiplexerSessionsRequest(
+            multiplexer_sessions=(info._to_grpc_v1() for info in multiplexer_session_info),
+        )
+        self._get_stub().UnregisterMultiplexerSessions(request)
 
 
 def _timeout_to_milliseconds(timeout: Optional[float]) -> int:

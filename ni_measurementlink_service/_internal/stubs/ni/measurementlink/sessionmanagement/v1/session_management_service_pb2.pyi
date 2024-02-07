@@ -61,7 +61,7 @@ class SessionInformation(google.protobuf.message.Message):
     """
     @property
     def channel_mappings(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___ChannelMapping]:
-        """List of site and pin/relay mappings with the multiplexer info for each channel in the channel_list.
+        """List of site and pin/relay mappings with optional multiplexer information for each channel in the channel_list.
         Each item represents a channel-to-pin connection for this instrument resource. In the case of shared pins, there is a separate item for each connection.
         This field is empty for any SessionInformation returned from ReserveAllRegisteredSessions.
         This field is readonly.
@@ -351,3 +351,57 @@ class ReserveAllRegisteredSessionsResponse(google.protobuf.message.Message):
     def ClearField(self, field_name: typing_extensions.Literal["sessions", b"sessions"]) -> None: ...
 
 global___ReserveAllRegisteredSessionsResponse = ReserveAllRegisteredSessionsResponse
+
+@typing_extensions.final
+class RegisterMultiplexerSessionsRequest(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    MULTIPLEXER_SESSIONS_FIELD_NUMBER: builtins.int
+    @property
+    def multiplexer_sessions(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___MultiplexerSessionInformation]:
+        """Required. List of multiplexer sessions to register with the session management service to track as the sessions are open."""
+    def __init__(
+        self,
+        *,
+        multiplexer_sessions: collections.abc.Iterable[global___MultiplexerSessionInformation] | None = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["multiplexer_sessions", b"multiplexer_sessions"]) -> None: ...
+
+global___RegisterMultiplexerSessionsRequest = RegisterMultiplexerSessionsRequest
+
+@typing_extensions.final
+class RegisterMultiplexerSessionsResponse(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    def __init__(
+        self,
+    ) -> None: ...
+
+global___RegisterMultiplexerSessionsResponse = RegisterMultiplexerSessionsResponse
+
+@typing_extensions.final
+class UnregisterMultiplexerSessionsRequest(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    MULTIPLEXER_SESSIONS_FIELD_NUMBER: builtins.int
+    @property
+    def multiplexer_sessions(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___MultiplexerSessionInformation]:
+        """Required. List of multiplexer sessions to unregister with the session management service to mark them as sessions were closed."""
+    def __init__(
+        self,
+        *,
+        multiplexer_sessions: collections.abc.Iterable[global___MultiplexerSessionInformation] | None = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["multiplexer_sessions", b"multiplexer_sessions"]) -> None: ...
+
+global___UnregisterMultiplexerSessionsRequest = UnregisterMultiplexerSessionsRequest
+
+@typing_extensions.final
+class UnregisterMultiplexerSessionsResponse(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    def __init__(
+        self,
+    ) -> None: ...
+
+global___UnregisterMultiplexerSessionsResponse = UnregisterMultiplexerSessionsResponse

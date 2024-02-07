@@ -208,7 +208,7 @@ message ResourceAccessInformation {
     // For custom instruments the user defined instrument type id is defined in the pin map file.
     string instrument_type_id = 3;
 
-    // List of site and pin/relay mappings with the multiplexer info for each channel in the channel_list.
+    // List of site and pin/relay mappings with optional multiplexer information for each channel in the channel_list.
     // Each item represents a channel-to-pin connection for this instrument resource. In the case of shared pins, there is a separate item for each connection.
     repeated ChannelMapping channel_mappings = 4;
 }

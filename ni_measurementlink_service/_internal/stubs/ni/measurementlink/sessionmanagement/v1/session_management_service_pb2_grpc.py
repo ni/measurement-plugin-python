@@ -40,6 +40,16 @@ class SessionManagementServiceStub(object):
                 request_serializer=ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.ReserveAllRegisteredSessionsRequest.SerializeToString,
                 response_deserializer=ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.ReserveAllRegisteredSessionsResponse.FromString,
                 )
+        self.RegisterMultiplexerSessions = channel.unary_unary(
+                '/ni.measurementlink.sessionmanagement.v1.SessionManagementService/RegisterMultiplexerSessions',
+                request_serializer=ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.RegisterMultiplexerSessionsRequest.SerializeToString,
+                response_deserializer=ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.RegisterMultiplexerSessionsResponse.FromString,
+                )
+        self.UnregisterMultiplexerSessions = channel.unary_unary(
+                '/ni.measurementlink.sessionmanagement.v1.SessionManagementService/UnregisterMultiplexerSessions',
+                request_serializer=ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.UnregisterMultiplexerSessionsRequest.SerializeToString,
+                response_deserializer=ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.UnregisterMultiplexerSessionsResponse.FromString,
+                )
 
 
 class SessionManagementServiceServicer(object):
@@ -102,6 +112,25 @@ class SessionManagementServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def RegisterMultiplexerSessions(self, request, context):
+        """Registers the multiplexer sessions with this service. Indicates that the sessions are open and will need to be closed later.
+        Status Codes for errors:
+        - ALREADY_EXISTS:
+        - Session by the same name is already registered.
+        - INVALID_ARGUMENT:
+        - Session names list has an empty string.
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def UnregisterMultiplexerSessions(self, request, context):
+        """Unregisters the multiplexer sessions with this service. Indicates that the sessions have been closed and will need to be reopened before they can be used again.
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_SessionManagementServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -129,6 +158,16 @@ def add_SessionManagementServiceServicer_to_server(servicer, server):
                     servicer.ReserveAllRegisteredSessions,
                     request_deserializer=ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.ReserveAllRegisteredSessionsRequest.FromString,
                     response_serializer=ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.ReserveAllRegisteredSessionsResponse.SerializeToString,
+            ),
+            'RegisterMultiplexerSessions': grpc.unary_unary_rpc_method_handler(
+                    servicer.RegisterMultiplexerSessions,
+                    request_deserializer=ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.RegisterMultiplexerSessionsRequest.FromString,
+                    response_serializer=ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.RegisterMultiplexerSessionsResponse.SerializeToString,
+            ),
+            'UnregisterMultiplexerSessions': grpc.unary_unary_rpc_method_handler(
+                    servicer.UnregisterMultiplexerSessions,
+                    request_deserializer=ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.UnregisterMultiplexerSessionsRequest.FromString,
+                    response_serializer=ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.UnregisterMultiplexerSessionsResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -223,5 +262,39 @@ class SessionManagementService(object):
         return grpc.experimental.unary_unary(request, target, '/ni.measurementlink.sessionmanagement.v1.SessionManagementService/ReserveAllRegisteredSessions',
             ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.ReserveAllRegisteredSessionsRequest.SerializeToString,
             ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.ReserveAllRegisteredSessionsResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def RegisterMultiplexerSessions(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ni.measurementlink.sessionmanagement.v1.SessionManagementService/RegisterMultiplexerSessions',
+            ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.RegisterMultiplexerSessionsRequest.SerializeToString,
+            ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.RegisterMultiplexerSessionsResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def UnregisterMultiplexerSessions(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ni.measurementlink.sessionmanagement.v1.SessionManagementService/UnregisterMultiplexerSessions',
+            ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.UnregisterMultiplexerSessionsRequest.SerializeToString,
+            ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.UnregisterMultiplexerSessionsResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

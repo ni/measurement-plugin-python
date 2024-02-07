@@ -51,6 +51,17 @@ service SessionManagementService {
     // - UNAVAILABLE:
     //     - Session(s) were already reserved and didn't become available before the specified timeout expired.
     rpc ReserveAllRegisteredSessions(ReserveAllRegisteredSessionsRequest) returns (ReserveAllRegisteredSessionsResponse);
+
+    // Registers the multiplexer sessions with this service. Indicates that the sessions are open and will need to be closed later.
+    // Status Codes for errors:
+    // - ALREADY_EXISTS:
+    //     - Session by the same name is already registered.
+    // - INVALID_ARGUMENT:
+    //     - Session names list has an empty string.
+    rpc RegisterMultiplexerSessions(RegisterMultiplexerSessionsRequest) returns (RegisterMultiplexerSessionsResponse);
+
+    // Unregisters the multiplexer sessions with this service. Indicates that the sessions have been closed and will need to be reopened before they can be used again.
+    rpc UnregisterMultiplexerSessions(UnregisterMultiplexerSessionsRequest) returns (UnregisterMultiplexerSessionsResponse);
 }
 
 message SessionInformation{
@@ -84,7 +95,7 @@ message SessionInformation{
     // This field is readonly.
     bool session_exists = 5;
 
-    // List of site and pin/relay mappings with the multiplexer info for each channel in the channel_list.
+    // List of site and pin/relay mappings with optional multiplexer information for each channel in the channel_list.
     // Each item represents a channel-to-pin connection for this instrument resource. In the case of shared pins, there is a separate item for each connection.
     // This field is empty for any SessionInformation returned from ReserveAllRegisteredSessions.
     // This field is readonly.
@@ -206,4 +217,20 @@ message ReserveAllRegisteredSessionsRequest {
 message ReserveAllRegisteredSessionsResponse{
     // Sessions currently registered in the session management service.
     repeated SessionInformation sessions = 1;
+}
+
+message RegisterMultiplexerSessionsRequest {
+   // Required. List of multiplexer sessions to register with the session management service to track as the sessions are open.
+   repeated MultiplexerSessionInformation multiplexer_sessions = 1;
+}
+
+message RegisterMultiplexerSessionsResponse{
+}
+
+message UnregisterMultiplexerSessionsRequest {
+    // Required. List of multiplexer sessions to unregister with the session management service to mark them as sessions were closed.
+    repeated MultiplexerSessionInformation multiplexer_sessions = 1;
+}
+
+message UnregisterMultiplexerSessionsResponse{
 }
