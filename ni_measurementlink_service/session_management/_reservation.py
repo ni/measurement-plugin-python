@@ -393,7 +393,6 @@ class BaseReservation(_BaseSessionContainer):
             raise ValueError(
                 f"No multiplexer sessions available in the reservation for initialization."
             )
-
         _check_matching_multiplexer_criterion(
             "multiplexer resource name(s)",
             multiplexer_resource_names,
@@ -404,16 +403,13 @@ class BaseReservation(_BaseSessionContainer):
         )
 
         multiplexer_session_infos: List[MultiplexerSessionInformation] = []
-        matching_resource_names: Set[str] = set()
         for resource_name in multiplexer_resource_names:
             for type_id in multiplexer_type_ids:
                 matching_session_info = self._get_matching_multiplexer_session_info(
                     resource_name, type_id
                 )
                 if matching_session_info is not None:
-                    matching_resource_names.add(matching_session_info.resource_name)
                     multiplexer_session_infos.append(matching_session_info)
-
         return multiplexer_session_infos
 
     def _validate_matched_multiplexer_sessions_with_resource_names(
@@ -425,14 +421,14 @@ class BaseReservation(_BaseSessionContainer):
         if multiplexer_resource_names and not all(
             resource_name in matched_resource_names for resource_name in multiplexer_resource_names
         ):
-            extra_type_id_str = ", ".join(
+            extra_resource_names_str = ", ".join(
                 _quote(resource_name)
                 for resource_name in multiplexer_resource_names
                 if resource_name not in matched_resource_names
             )
             raise ValueError(
-                f"No multiplexer sessions matched multiplexer resource name(s) {extra_type_id_str} "
-                f"with the specified criteria."
+                f"No multiplexer sessions matched multiplexer resource name(s) "
+                f"{extra_resource_names_str} with the specified criteria."
             )
 
     @contextlib.contextmanager
@@ -482,6 +478,7 @@ class BaseReservation(_BaseSessionContainer):
             _to_iterable(multiplexer_type_id, self._multiplexer_type_ids),
         )
 
+        # If the user specified both the matching criteria, validate that matches were found.
         self._validate_matched_multiplexer_sessions_with_resource_names(
             multiplexer_session_infos, _to_iterable(multiplexer_resource_name)
         )
@@ -549,6 +546,7 @@ class BaseReservation(_BaseSessionContainer):
             _to_iterable(multiplexer_type_id, self._multiplexer_type_ids),
         )
 
+        # If the user specified both the matching criteria, validate that matches were found.
         self._validate_matched_multiplexer_sessions_with_resource_names(
             multiplexer_session_infos, _to_iterable(multiplexer_resource_names)
         )
