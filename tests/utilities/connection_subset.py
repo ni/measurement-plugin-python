@@ -2,9 +2,14 @@
 
 from typing import NamedTuple, TypeVar, Union
 
-from ni_measurementlink_service.session_management import Connection, TypedConnection
+from ni_measurementlink_service.session_management import (
+    Connection,
+    TypedConnection,
+    TypedConnectionWithMultiplexer,
+)
 
 _T = TypeVar("_T")
+_TMultiplexer = TypeVar("_TMultiplexer")
 
 
 class ConnectionSubset(NamedTuple):
@@ -12,9 +17,11 @@ class ConnectionSubset(NamedTuple):
 
     pin_or_relay_name: str
     site: int
-
     resource_name: str
     channel_name: str
+
+    multiplexer_resource_name: str = ""
+    multiplexer_route: str = ""
 
 
 def get_connection_subset(connection: Union[Connection, TypedConnection[_T]]) -> ConnectionSubset:
@@ -24,4 +31,18 @@ def get_connection_subset(connection: Union[Connection, TypedConnection[_T]]) ->
         connection.site,
         connection.session_info.resource_name,
         connection.channel_name,
+    )
+
+
+def get_connection_subset_with_multiplexer(
+    connection: Union[Connection, TypedConnectionWithMultiplexer[_T, _TMultiplexer]]
+) -> ConnectionSubset:
+    """Constructs and returns a ConnectionSubset object with multiplexer data."""
+    return ConnectionSubset(
+        connection.pin_or_relay_name,
+        connection.site,
+        connection.session_info.resource_name,
+        connection.channel_name,
+        connection.multiplexer_resource_name,
+        connection.multiplexer_route,
     )

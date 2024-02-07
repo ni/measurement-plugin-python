@@ -58,8 +58,10 @@ from ni_measurementlink_service.session_management._types import (
     MultiplexerSessionInformation,
     SessionInformation,
     SessionInitializationBehavior,
+    TMultiplexerSession,
     TSession,
     TypedConnection,
+    TypedConnectionWithMultiplexer,
     TypedSessionInformation,
 )
 
@@ -200,6 +202,7 @@ class BaseReservation(_BaseSessionContainer):
     ) -> None:
         """Initialize reservation object."""
         super().__init__(session_management_client)
+
         self._grpc_session_info = session_info  # required for unreserve
         self._session_info = [
             SessionInformation._from_grpc_v1(info) for info in self._grpc_session_info
@@ -264,10 +267,15 @@ class BaseReservation(_BaseSessionContainer):
                     session_info.instrument_type_id,
                 )
                 value = Connection(
-                    channel_mapping.pin_or_relay_name,
-                    channel_mapping.site,
-                    channel_mapping.channel,
-                    session_info,
+                    pin_or_relay_name=channel_mapping.pin_or_relay_name,
+                    site=channel_mapping.site,
+                    channel_name=channel_mapping.channel,
+                    session_info=session_info,
+                    multiplexer_resource_name=channel_mapping.multiplexer_resource_name,
+                    multiplexer_route=channel_mapping.multiplexer_route,
+                    multiplexer_session_info=self._get_matching_multiplexer_session_info(
+                        channel_mapping.multiplexer_resource_name
+                    ),
                 )
                 assert key not in cache
                 cache[key] = value
@@ -310,6 +318,18 @@ class BaseReservation(_BaseSessionContainer):
         return [
             info for info in self._session_info if instrument_type_id == info.instrument_type_id
         ]
+
+    def _get_matching_multiplexer_session_info(
+        self, multiplexer_resource_name: str
+    ) -> Optional[MultiplexerSessionInformation]:
+        return next(
+            (
+                info
+                for info in self._multiplexer_session_info
+                if info.resource_name == multiplexer_resource_name
+            ),
+            None,
+        )
 
     @contextlib.contextmanager
     def _initialize_session_core(
@@ -377,13 +397,14 @@ class BaseReservation(_BaseSessionContainer):
         pin_or_relay_name: Optional[str] = None,
         site: Optional[int] = None,
         instrument_type_id: Optional[str] = None,
+        multiplexer_session_type: Optional[Type[TMultiplexerSession]] = None,
     ) -> TypedConnection[TSession]:
         _check_optional_str_param("pin_or_relay_name", pin_or_relay_name)
         _check_optional_int_param("site", site)
         # _get_connections_core() checks instrument_type_id.
 
         results = self._get_connections_core(
-            session_type, pin_or_relay_name, site, instrument_type_id
+            session_type, pin_or_relay_name, site, instrument_type_id, multiplexer_session_type
         )
 
         if not results:
@@ -405,6 +426,7 @@ class BaseReservation(_BaseSessionContainer):
         pin_or_relay_names: Union[str, Iterable[str], None] = None,
         sites: Union[int, Iterable[int], None] = None,
         instrument_type_id: Optional[str] = None,
+        multiplexer_session_type: Optional[Type[TMultiplexerSession]] = None,
     ) -> Sequence[TypedConnection[TSession]]:
         _check_optional_str_param("instrument_type_id", instrument_type_id)
 
@@ -448,6 +470,8 @@ class BaseReservation(_BaseSessionContainer):
                         session = self._session_cache.get(value.session_info.session_name)
                         value = value._with_session(session)
                         value._check_runtime_type(session_type)
+                        if multiplexer_session_type is not None:
+                            value._check_runtime_multiplexer_type(multiplexer_session_type)
                         results.append(cast(TypedConnection[TSession], value))
                         matching_pins.add(pin)
 
@@ -570,6 +594,48 @@ class BaseReservation(_BaseSessionContainer):
         """
         return self._get_connection_core(session_type, pin_or_relay_name, site, instrument_type_id)
 
+    def get_connection_with_multiplexer(
+        self,
+        session_type: Type[TSession],
+        multiplexer_session_type: Type[TMultiplexerSession],
+        pin_or_relay_name: Optional[str] = None,
+        site: Optional[int] = None,
+        instrument_type_id: Optional[str] = None,
+    ) -> TypedConnectionWithMultiplexer[TSession, TMultiplexerSession]:
+        """Get the connection matching the specified criteria.
+
+        This is a generic method that supports any instrument driver.
+
+        Args:
+            session_type: The instrument session type.
+
+            multiplexer_session_type: The multiplexer session type.
+
+            pin_or_relay_name: The pin or relay name to match against. If not
+                specified, the pin or relay name is ignored when matching
+                connections.
+
+            site: The site number to match against. If not specified, the
+                site number is ignored when matching connections.
+
+            instrument_type_id: The instrument type ID to match against. If not
+                specified, the instrument type ID is ignored when matching
+                connections.
+
+        Returns:
+            The matching connection along with its multiplexer info.
+
+        Raises:
+            TypeError: If the argument types or session type are incorrect.
+
+            ValueError: If no reserved connections match or too many reserved
+                connections match.
+        """
+        connection = self._get_connection_core(
+            session_type, pin_or_relay_name, site, instrument_type_id, multiplexer_session_type
+        )
+        return cast(TypedConnectionWithMultiplexer[TSession, TMultiplexerSession], connection)
+
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def get_connections(
         self,
@@ -607,6 +673,50 @@ class BaseReservation(_BaseSessionContainer):
         return self._get_connections_core(
             session_type, pin_or_relay_names, sites, instrument_type_id
         )
+
+    def get_connections_with_multiplexer(
+        self,
+        session_type: Type[TSession],
+        multiplexer_session_type: Type[TMultiplexerSession],
+        pin_or_relay_names: Union[str, Iterable[str], None] = None,
+        sites: Union[int, Iterable[int], None] = None,
+        instrument_type_id: Optional[str] = None,
+    ) -> Sequence[TypedConnectionWithMultiplexer[TSession, TMultiplexerSession]]:
+        """Get all connections matching the specified criteria.
+
+        This is a generic method that supports any instrument driver.
+
+        Args:
+            session_type: The instrument session type.
+
+            multiplexer_session_type: The multiplexer session type.
+
+            pin_or_relay_names: The pin or relay name(s) to match against. If
+                not specified, the pin or relay name is ignored when matching
+                connections.
+
+            sites: The site number(s) to match against. If not specified, the
+                site number is ignored when matching connections.
+
+            instrument_type_id: The instrument type ID to match against. If not
+                specified, the instrument type ID is ignored when matching
+                connections.
+
+        Returns:
+            The matching connections along with their multiplexer(s) info.
+
+        Raises:
+            TypeError: If the argument types or session type are incorrect.
+
+            ValueError: If no reserved connections match.
+        """
+        connections = self._get_connections_core(
+            session_type, pin_or_relay_names, sites, instrument_type_id, multiplexer_session_type
+        )
+        return [
+            cast(TypedConnectionWithMultiplexer[TSession, TMultiplexerSession], conn)
+            for conn in connections
+        ]
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def create_nidaqmx_task(
@@ -711,6 +821,39 @@ class BaseReservation(_BaseSessionContainer):
 
         return self._get_connection_core(nidaqmx.Task, pin_name, site, INSTRUMENT_TYPE_NI_DAQMX)
 
+    def get_nidaqmx_connection_with_multiplexer(
+        self,
+        multiplexer_session_type: Type[TMultiplexerSession],
+        pin_name: Optional[str] = None,
+        site: Optional[int] = None,
+    ) -> TypedConnectionWithMultiplexer[nidaqmx.Task, TMultiplexerSession]:
+        """Get the NI-DAQmx connection matching the specified criteria.
+
+        Args:
+            multiplexer_session_type: The multiplexer session type.
+
+            pin_name: The pin name to match against. If not specified, the pin
+                name is ignored when matching connections.
+
+            site: The site number to match against. If not specified, the
+                site number is ignored when matching connections.
+
+        Returns:
+            The matching connection with its multiplexer info.
+
+        Raises:
+            TypeError: If the argument types or session type are incorrect.
+
+            ValueError: If no reserved connections match or too many reserved
+                connections match.
+        """
+        import nidaqmx
+
+        connection = self._get_connection_core(
+            nidaqmx.Task, pin_name, site, INSTRUMENT_TYPE_NI_DAQMX, multiplexer_session_type
+        )
+        return cast(TypedConnectionWithMultiplexer[nidaqmx.Task, TMultiplexerSession], connection)
+
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def get_nidaqmx_connections(
         self,
@@ -737,6 +880,41 @@ class BaseReservation(_BaseSessionContainer):
         import nidaqmx
 
         return self._get_connections_core(nidaqmx.Task, pin_names, sites, INSTRUMENT_TYPE_NI_DAQMX)
+
+    def get_nidaqmx_connections_with_multiplexer(
+        self,
+        multiplexer_session_type: Type[TMultiplexerSession],
+        pin_names: Union[str, Iterable[str], None] = None,
+        sites: Union[int, Iterable[int], None] = None,
+    ) -> Sequence[TypedConnectionWithMultiplexer[nidaqmx.Task, TMultiplexerSession]]:
+        """Get all NI-DAQmx connections matching the specified criteria.
+
+        Args:
+            multiplexer_session_type: The multiplexer session type.
+
+            pin_names: The pin name(s) to match against. If not specified, the
+                pin name is ignored when matching connections.
+
+            sites: The site number(s) to match against. If not specified, the
+                site number is ignored when matching connections.
+
+        Returns:
+            The matching connections with their multiplexer(s) info.
+
+        Raises:
+            TypeError: If the argument types or session type are incorrect.
+
+            ValueError: If no reserved connections match.
+        """
+        import nidaqmx
+
+        connections = self._get_connections_core(
+            nidaqmx.Task, pin_names, sites, INSTRUMENT_TYPE_NI_DAQMX, multiplexer_session_type
+        )
+        return [
+            cast(TypedConnectionWithMultiplexer[nidaqmx.Task, TMultiplexerSession], conn)
+            for conn in connections
+        ]
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def initialize_nidcpower_session(
@@ -858,6 +1036,41 @@ class BaseReservation(_BaseSessionContainer):
             nidcpower.Session, pin_name, site, INSTRUMENT_TYPE_NI_DCPOWER
         )
 
+    def get_nidcpower_connection_with_multiplexer(
+        self,
+        multiplexer_session_type: Type[TMultiplexerSession],
+        pin_name: Optional[str] = None,
+        site: Optional[int] = None,
+    ) -> TypedConnectionWithMultiplexer[nidcpower.Session, TMultiplexerSession]:
+        """Get the NI-DCPower connection matching the specified criteria.
+
+        Args:
+            multiplexer_session_type: The multiplexer session type.
+
+            pin_name: The pin name to match against. If not specified, the pin
+                name is ignored when matching connections.
+
+            site: The site number to match against. If not specified, the
+                site number is ignored when matching connections.
+
+        Returns:
+            The matching connection along with its multiplexer info.
+
+        Raises:
+            TypeError: If the argument types or session type are incorrect.
+
+            ValueError: If no reserved connections match or too many reserved
+                connections match.
+        """
+        import nidcpower
+
+        connection = self._get_connection_core(
+            nidcpower.Session, pin_name, site, INSTRUMENT_TYPE_NI_DCPOWER, multiplexer_session_type
+        )
+        return cast(
+            TypedConnectionWithMultiplexer[nidcpower.Session, TMultiplexerSession], connection
+        )
+
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def get_nidcpower_connections(
         self,
@@ -886,6 +1099,45 @@ class BaseReservation(_BaseSessionContainer):
         return self._get_connections_core(
             nidcpower.Session, pin_names, sites, INSTRUMENT_TYPE_NI_DCPOWER
         )
+
+    def get_nidcpower_connections_with_multiplexer(
+        self,
+        multiplexer_session_type: Type[TMultiplexerSession],
+        pin_names: Union[str, Iterable[str], None] = None,
+        sites: Union[int, Iterable[int], None] = None,
+    ) -> Sequence[TypedConnectionWithMultiplexer[nidcpower.Session, TMultiplexerSession]]:
+        """Get all NI-DCPower connections matching the specified criteria.
+
+        Args:
+            multiplexer_session_type: The multiplexer session type.
+
+            pin_names: The pin name(s) to match against. If not specified, the
+                pin name is ignored when matching connections.
+
+            sites: The site number(s) to match against. If not specified, the
+                site number is ignored when matching connections.
+
+        Returns:
+            The matching connections along with their multiplexer(s) info.
+
+        Raises:
+            TypeError: If the argument types or session type are incorrect.
+
+            ValueError: If no reserved connections match.
+        """
+        import nidcpower
+
+        connections = self._get_connections_core(
+            nidcpower.Session,
+            pin_names,
+            sites,
+            INSTRUMENT_TYPE_NI_DCPOWER,
+            multiplexer_session_type,
+        )
+        return [
+            cast(TypedConnectionWithMultiplexer[nidcpower.Session, TMultiplexerSession], conn)
+            for conn in connections
+        ]
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def initialize_nidigital_session(
@@ -1015,6 +1267,45 @@ class BaseReservation(_BaseSessionContainer):
             nidigital.Session, pin_name, site, INSTRUMENT_TYPE_NI_DIGITAL_PATTERN
         )
 
+    def get_nidigital_connection_with_multiplexer(
+        self,
+        multiplexer_session_type: Type[TMultiplexerSession],
+        pin_name: Optional[str] = None,
+        site: Optional[int] = None,
+    ) -> TypedConnectionWithMultiplexer[nidigital.Session, TMultiplexerSession]:
+        """Get the NI-Digital Pattern connection matching the specified criteria.
+
+        Args:
+            multiplexer_session_type: The multiplexer session type.
+
+            pin_name: The pin name to match against. If not specified, the pin
+                name is ignored when matching connections.
+
+            site: The site number to match against. If not specified, the
+                site number is ignored when matching connections.
+
+        Returns:
+            The matching connection along with its multiplexer info.
+
+        Raises:
+            TypeError: If the argument types or session type are incorrect.
+
+            ValueError: If no reserved connections match or too many reserved
+                connections match.
+        """
+        import nidigital
+
+        connection = self._get_connection_core(
+            nidigital.Session,
+            pin_name,
+            site,
+            INSTRUMENT_TYPE_NI_DIGITAL_PATTERN,
+            multiplexer_session_type,
+        )
+        return cast(
+            TypedConnectionWithMultiplexer[nidigital.Session, TMultiplexerSession], connection
+        )
+
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def get_nidigital_connections(
         self,
@@ -1043,6 +1334,45 @@ class BaseReservation(_BaseSessionContainer):
         return self._get_connections_core(
             nidigital.Session, pin_names, sites, INSTRUMENT_TYPE_NI_DIGITAL_PATTERN
         )
+
+    def get_nidigital_connections_with_multiplexer(
+        self,
+        multiplexer_session_type: Type[TMultiplexerSession],
+        pin_names: Union[str, Iterable[str], None] = None,
+        sites: Union[int, Iterable[int], None] = None,
+    ) -> Sequence[TypedConnectionWithMultiplexer[nidigital.Session, TMultiplexerSession]]:
+        """Get all NI-Digital Pattern connections matching the specified criteria.
+
+        Args:
+            multiplexer_session_type: The multiplexer session type.
+
+            pin_names: The pin name(s) to match against. If not specified, the
+                pin name is ignored when matching connections.
+
+            sites: The site number(s) to match against. If not specified, the
+                site number is ignored when matching connections.
+
+        Returns:
+            The matching connections along with their multiplexer(s) info.
+
+        Raises:
+            TypeError: If the argument types or session type are incorrect.
+
+            ValueError: If no reserved connections match.
+        """
+        import nidigital
+
+        connections = self._get_connections_core(
+            nidigital.Session,
+            pin_names,
+            sites,
+            INSTRUMENT_TYPE_NI_DIGITAL_PATTERN,
+            multiplexer_session_type,
+        )
+        return [
+            cast(TypedConnectionWithMultiplexer[nidigital.Session, TMultiplexerSession], conn)
+            for conn in connections
+        ]
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def initialize_nidmm_session(
@@ -1170,6 +1500,39 @@ class BaseReservation(_BaseSessionContainer):
 
         return self._get_connection_core(nidmm.Session, pin_name, site, INSTRUMENT_TYPE_NI_DMM)
 
+    def get_nidmm_connection_with_multiplexer(
+        self,
+        multiplexer_session_type: Type[TMultiplexerSession],
+        pin_name: Optional[str] = None,
+        site: Optional[int] = None,
+    ) -> TypedConnectionWithMultiplexer[nidmm.Session, TMultiplexerSession]:
+        """Get the NI-DMM connection matching the specified criteria.
+
+        Args:
+            multiplexer_session_type: The multiplexer session type.
+
+            pin_name: The pin name to match against. If not specified, the pin
+                name is ignored when matching connections.
+
+            site: The site number to match against. If not specified, the
+                site number is ignored when matching connections.
+
+        Returns:
+            The matching connection along with its multiplexer info.
+
+        Raises:
+            TypeError: If the argument types or session type are incorrect.
+
+            ValueError: If no reserved connections match or too many reserved
+                connections match.
+        """
+        import nidmm
+
+        connection = self._get_connection_core(
+            nidmm.Session, pin_name, site, INSTRUMENT_TYPE_NI_DMM, multiplexer_session_type
+        )
+        return cast(TypedConnectionWithMultiplexer[nidmm.Session, TMultiplexerSession], connection)
+
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def get_nidmm_connections(
         self,
@@ -1196,6 +1559,41 @@ class BaseReservation(_BaseSessionContainer):
         import nidmm
 
         return self._get_connections_core(nidmm.Session, pin_names, sites, INSTRUMENT_TYPE_NI_DMM)
+
+    def get_nidmm_connections_with_multiplexer(
+        self,
+        multiplexer_session_type: Type[TMultiplexerSession],
+        pin_names: Union[str, Iterable[str], None] = None,
+        sites: Union[int, Iterable[int], None] = None,
+    ) -> Sequence[TypedConnectionWithMultiplexer[nidmm.Session, TMultiplexerSession]]:
+        """Get all NI-DMM connections matching the specified criteria.
+
+        Args:
+            multiplexer_session_type: The multiplexer session type.
+
+            pin_names: The pin name(s) to match against. If not specified, the
+                pin name is ignored when matching connections.
+
+            sites: The site number(s) to match against. If not specified, the
+                site number is ignored when matching connections.
+
+        Returns:
+            The matching connections along with their multiplexer(s) info.
+
+        Raises:
+            TypeError: If the argument types or session type are incorrect.
+
+            ValueError: If no reserved connections match.
+        """
+        import nidmm
+
+        connections = self._get_connections_core(
+            nidmm.Session, pin_names, sites, INSTRUMENT_TYPE_NI_DMM, multiplexer_session_type
+        )
+        return [
+            cast(TypedConnectionWithMultiplexer[nidmm.Session, TMultiplexerSession], conn)
+            for conn in connections
+        ]
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def initialize_nifgen_session(
@@ -1323,6 +1721,39 @@ class BaseReservation(_BaseSessionContainer):
 
         return self._get_connection_core(nifgen.Session, pin_name, site, INSTRUMENT_TYPE_NI_FGEN)
 
+    def get_nifgen_connection_with_multiplexer(
+        self,
+        multiplexer_session_type: Type[TMultiplexerSession],
+        pin_name: Optional[str] = None,
+        site: Optional[int] = None,
+    ) -> TypedConnectionWithMultiplexer[nifgen.Session, TMultiplexerSession]:
+        """Get the NI-FGEN connection matching the specified criteria.
+
+        Args:
+            multiplexer_session_type: The multiplexer session type.
+
+            pin_name: The pin name to match against. If not specified, the pin
+                name is ignored when matching connections.
+
+            site: The site number to match against. If not specified, the
+                site number is ignored when matching connections.
+
+        Returns:
+            The matching connection along with its multiplexer info.
+
+        Raises:
+            TypeError: If the argument types or session type are incorrect.
+
+            ValueError: If no reserved connections match or too many reserved
+                connections match.
+        """
+        import nifgen
+
+        connection = self._get_connection_core(
+            nifgen.Session, pin_name, site, INSTRUMENT_TYPE_NI_FGEN, multiplexer_session_type
+        )
+        return cast(TypedConnectionWithMultiplexer[nifgen.Session, TMultiplexerSession], connection)
+
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def get_nifgen_connections(
         self,
@@ -1349,6 +1780,41 @@ class BaseReservation(_BaseSessionContainer):
         import nifgen
 
         return self._get_connections_core(nifgen.Session, pin_names, sites, INSTRUMENT_TYPE_NI_FGEN)
+
+    def get_nifgen_connections_with_multiplexer(
+        self,
+        multiplexer_session_type: Type[TMultiplexerSession],
+        pin_names: Union[str, Iterable[str], None] = None,
+        sites: Union[int, Iterable[int], None] = None,
+    ) -> Sequence[TypedConnectionWithMultiplexer[nifgen.Session, TMultiplexerSession]]:
+        """Get all NI-FGEN connections matching the specified criteria.
+
+        Args:
+            multiplexer_session_type: The multiplexer session type.
+
+            pin_names: The pin name(s) to match against. If not specified, the
+                pin name is ignored when matching connections.
+
+            sites: The site number(s) to match against. If not specified, the
+                site number is ignored when matching connections.
+
+        Returns:
+            The matching connections along with their multiplexer(s) info.
+
+        Raises:
+            TypeError: If the argument types or session type are incorrect.
+
+            ValueError: If no reserved connections match.
+        """
+        import nifgen
+
+        connections = self._get_connections_core(
+            nifgen.Session, pin_names, sites, INSTRUMENT_TYPE_NI_FGEN, multiplexer_session_type
+        )
+        return [
+            cast(TypedConnectionWithMultiplexer[nifgen.Session, TMultiplexerSession], conn)
+            for conn in connections
+        ]
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def initialize_niscope_session(
@@ -1476,6 +1942,41 @@ class BaseReservation(_BaseSessionContainer):
 
         return self._get_connection_core(niscope.Session, pin_name, site, INSTRUMENT_TYPE_NI_SCOPE)
 
+    def get_niscope_connection_with_multiplexer(
+        self,
+        multiplexer_session_type: Type[TMultiplexerSession],
+        pin_name: Optional[str] = None,
+        site: Optional[int] = None,
+    ) -> TypedConnectionWithMultiplexer[niscope.Session, TMultiplexerSession]:
+        """Get the NI-SCOPE connection matching the specified criteria.
+
+        Args:
+            multiplexer_session_type: The multiplexer session type.
+
+            pin_name: The pin name to match against. If not specified, the pin
+                name is ignored when matching connections.
+
+            site: The site number to match against. If not specified, the
+                site number is ignored when matching connections.
+
+        Returns:
+            The matching connection along with its multiplexer info.
+
+        Raises:
+            TypeError: If the argument types or session type are incorrect.
+
+            ValueError: If no reserved connections match or too many reserved
+                connections match.
+        """
+        import niscope
+
+        connection = self._get_connection_core(
+            niscope.Session, pin_name, site, INSTRUMENT_TYPE_NI_SCOPE, multiplexer_session_type
+        )
+        return cast(
+            TypedConnectionWithMultiplexer[niscope.Session, TMultiplexerSession], connection
+        )
+
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def get_niscope_connections(
         self,
@@ -1504,6 +2005,41 @@ class BaseReservation(_BaseSessionContainer):
         return self._get_connections_core(
             niscope.Session, pin_names, sites, INSTRUMENT_TYPE_NI_SCOPE
         )
+
+    def get_niscope_connections_with_multiplexer(
+        self,
+        multiplexer_session_type: Type[TMultiplexerSession],
+        pin_names: Union[str, Iterable[str], None] = None,
+        sites: Union[int, Iterable[int], None] = None,
+    ) -> Sequence[TypedConnectionWithMultiplexer[niscope.Session, TMultiplexerSession]]:
+        """Get all NI-SCOPE connections matching the specified criteria.
+
+        Args:
+            multiplexer_session_type: The multiplexer session type.
+
+            pin_names: The pin name(s) to match against. If not specified, the
+                pin name is ignored when matching connections.
+
+            sites: The site number(s) to match against. If not specified, the
+                site number is ignored when matching connections.
+
+        Returns:
+            The matching connections along with their multiplexer(s) info.
+
+        Raises:
+            TypeError: If the argument types or session type are incorrect.
+
+            ValueError: If no reserved connections match.
+        """
+        import niscope
+
+        connections = self._get_connections_core(
+            niscope.Session, pin_names, sites, INSTRUMENT_TYPE_NI_SCOPE, multiplexer_session_type
+        )
+        return [
+            cast(TypedConnectionWithMultiplexer[niscope.Session, TMultiplexerSession], conn)
+            for conn in connections
+        ]
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def initialize_niswitch_session(

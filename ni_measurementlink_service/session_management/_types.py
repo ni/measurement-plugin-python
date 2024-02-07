@@ -15,6 +15,8 @@ from ni_measurementlink_service._internal.stubs.ni.measurementlink.sessionmanage
 
 TSession = TypeVar("TSession")
 TSession_co = TypeVar("TSession_co", covariant=True)
+TMultiplexerSession = TypeVar("TMultiplexerSession")
+TMultiplexerSession_co = TypeVar("TMultiplexerSession_co", covariant=True)
 
 
 class PinMapContext(NamedTuple):
@@ -252,6 +254,13 @@ class MultiplexerSessionInformation(NamedTuple):
     This field is None until the appropriate initialize_multiplexer_session(s) method is called.
     """
 
+    def _check_runtime_type(self, multiplexer_session_type: type) -> None:
+        if not isinstance(self.session, multiplexer_session_type):
+            raise TypeError(
+                f"Incorrect type for multiplexer session '{self.session_name}'. "
+                f"Expected {multiplexer_session_type}, got {type(self.session)}."
+            )
+
     @classmethod
     def _from_grpc_v1(
         cls, other: session_management_service_pb2.MultiplexerSessionInformation
@@ -262,6 +271,38 @@ class MultiplexerSessionInformation(NamedTuple):
             multiplexer_type_id=other.multiplexer_type_id,
             session_exists=other.session_exists,
         )
+
+
+class TypedMultiplexerSessionInformation(Protocol, Generic[TMultiplexerSession_co]):
+    """Generic version of :any:`MultiplexerSessionInformation` that preserves the session type.
+
+    For more details, see the corresponding documentation of :any:`MultiplexerSessionInformation`.
+    """
+
+    @property
+    def session_name(self) -> str:
+        """Session name used by the session management service and NI gRPC Device Server."""
+        ...
+
+    @property
+    def resource_name(self) -> str:
+        """Resource name used to open this session in the driver."""
+        ...
+
+    @property
+    def multiplexer_type_id(self) -> str:
+        """User-defined identifier for the multiplexer type in the pin map editor."""
+        ...
+
+    @property
+    def session_exists(self) -> bool:
+        """Indicates whether the session is registered with the session management service."""
+        ...
+
+    @property
+    def session(self) -> TMultiplexerSession_co:
+        """The driver session object."""
+        ...
 
 
 class Connection(NamedTuple):
@@ -287,13 +328,33 @@ class Connection(NamedTuple):
     session_info: SessionInformation
     """The instrument session information."""
 
+    multiplexer_resource_name: str
+    """Resource name used to open this session in the driver."""
+
+    multiplexer_route: str
+    """The multiplexer route through which the pin is connected to an instrument's channel."""
+
+    multiplexer_session_info: Optional[MultiplexerSessionInformation]
+    """The multiplexer session information."""
+
     @property
     def session(self) -> object:
         """The instrument session."""
         return self.session_info.session
 
+    @property
+    def multiplexer_session(self) -> object:
+        """The multiplexer session."""
+        if self.multiplexer_session_info:
+            return self.multiplexer_session_info.session
+        return None
+
     def _check_runtime_type(self, session_type: type) -> None:
         self.session_info._check_runtime_type(session_type)
+
+    def _check_runtime_multiplexer_type(self, multiplexer_session_type: type) -> None:
+        if self.multiplexer_session_info is not None:
+            self.multiplexer_session_info._check_runtime_type(multiplexer_session_type)
 
     def _with_session(self, session: object) -> Connection:
         if self.session is session:
@@ -334,6 +395,42 @@ class TypedConnection(Protocol, Generic[TSession_co]):
     @property
     def session(self) -> TSession_co:
         """The instrument session."""
+        ...
+
+
+class TypedConnectionWithMultiplexer(
+    TypedConnection[TSession_co], Protocol, Generic[TSession_co, TMultiplexerSession_co]
+):
+    """Generic version of `Connection` that preserves the instrument and multiplexer session type.
+
+    For more details, see the corresponding documentation for `Connection`.
+    """
+
+    @property
+    def multiplexer_resource_name(self) -> str:
+        """Resource name used to open this session in the driver."""
+        ...
+
+    @property
+    def multiplexer_type_id(self) -> str:
+        """User-defined identifier for the multiplexer type in the pin map editor."""
+        ...
+
+    @property
+    def multiplexer_route(self) -> str:
+        """The multiplexer route through which the pin is connected to an instrument's channel."""
+        ...
+
+    @property
+    def multiplexer_session_info(
+        self,
+    ) -> TypedMultiplexerSessionInformation[TMultiplexerSession_co]:
+        """The multiplexer session information."""
+        ...
+
+    @property
+    def multiplexer_session(self) -> TMultiplexerSession_co:
+        """The multiplexer session."""
         ...
 
 
