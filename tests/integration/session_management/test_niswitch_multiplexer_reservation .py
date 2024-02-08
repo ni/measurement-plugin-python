@@ -13,6 +13,7 @@ from tests.utilities.pin_map_client import PinMapClient
 _SITE = 0
 
 
+@pytest.mark.xfail(reason="Requires MeasurementLink 2024Q2 or later.")
 def test___reserved_single_session_with_single_multiplexer___initialize_niswitch_multiplexer_session___creates_single_multiplexer_session(
     pin_map_context: PinMapContext,
     session_management_client: SessionManagementClient,
@@ -29,6 +30,7 @@ def test___reserved_single_session_with_single_multiplexer___initialize_niswitch
         assert multiplexer_session_info.session_name == "Multiplexer2"
 
 
+@pytest.mark.xfail(reason="Requires MeasurementLink 2024Q2 or later.")
 def test___reserved_single_session_with_multiple_multiplexer___initialize_niswitch_multiplexer_sessions___creates_multiple_multiplexer_sessions(
     pin_map_context: PinMapContext,
     session_management_client: SessionManagementClient,
@@ -49,6 +51,7 @@ def test___reserved_single_session_with_multiple_multiplexer___initialize_niswit
         ]
 
 
+@pytest.mark.xfail(reason="Requires MeasurementLink 2024Q2 or later.")
 def test___created_multiplexer_session___get_nidcpower_connection_with_multiplexer___returns_connection_with_multiplexer_session(
     pin_map_context: PinMapContext,
     session_management_client: SessionManagementClient,
@@ -69,6 +72,7 @@ def test___created_multiplexer_session___get_nidcpower_connection_with_multiplex
         )
 
 
+@pytest.mark.xfail(reason="Requires MeasurementLink 2024Q2 or later.")
 def test___created_multiplexer_sessions___get_nidcpower_connections_with_multiplexer___returns_connections_with_multiplexer_sessions(
     pin_map_context: PinMapContext,
     session_management_client: SessionManagementClient,
