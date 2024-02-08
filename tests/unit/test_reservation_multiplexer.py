@@ -59,7 +59,7 @@ def test___invalid_argument_type___intialize_multiplexer_session___raises_type_e
             multiplexer_resource_name="Mux0",
             multiplexer_route="route0",
         )
-        reservation = MultiSessionReservation(
+        reservation = SingleSessionReservation(
             session_management_client, grpc_session_infos, grpc_multiplexer_session_infos
         )
 
@@ -74,22 +74,22 @@ def test___invalid_argument_type___intialize_multiplexer_session___raises_type_e
 def test___single_multiplexer_session_info___initialize_multiplexer_session___yeilds_session_info(
     session_management_client: Mock,
 ) -> None:
-    reservation = MultiSessionReservation(
+    reservation = SingleSessionReservation(
         session_management_client,
         create_nifake_session_infos(1),
         create_nimultiplexer_session_infos(1),
     )
 
     with reservation.initialize_multiplexer_session(construct_multiplexer_session) as session_info:
+        assert session_info.session is not None
         assert session_info.session_name == "MyMultiplexer0"
         assert session_info.resource_name == "Mux0"
-        assert session_info.multiplexer_type_id == "nimultiplexer"
 
 
 def test___single_multiplexer_session_info___initialize_multiplexer_session___creates_session(
     session_management_client: Mock,
 ) -> None:
-    reservation = MultiSessionReservation(
+    reservation = SingleSessionReservation(
         session_management_client,
         create_nifake_session_infos(1),
         create_nimultiplexer_session_infos(1),
@@ -103,7 +103,7 @@ def test___single_multiplexer_session_info___initialize_multiplexer_session___cr
 def test___single_multiplexer_session_info___initialize_multiplexer_session___session_lifetime_tracked(
     session_management_client: Mock,
 ) -> None:
-    reservation = MultiSessionReservation(
+    reservation = SingleSessionReservation(
         session_management_client,
         create_nifake_session_infos(1),
         create_nimultiplexer_session_infos(1),
@@ -158,7 +158,7 @@ def test___multiple_multiplexer_session_infos___initialize_multiplexer_session__
 def test___multiplexer_session_already_exists___initialize_multiplexer_session___raises_runtime_error(
     session_management_client: Mock,
 ) -> None:
-    reservation = MultiSessionReservation(
+    reservation = SingleSessionReservation(
         session_management_client,
         create_nifake_session_infos(1),
         create_nimultiplexer_session_infos(1),
@@ -177,7 +177,7 @@ def test___wrong_multiplexer_resource_name___initialize_multiplexer_session___ra
 ) -> None:
     grpc_session_infos = create_nifake_session_infos(1)
     grpc_multiplexer_session_infos = create_nimultiplexer_session_infos(1)
-    reservation = MultiSessionReservation(
+    reservation = SingleSessionReservation(
         session_management_client, grpc_session_infos, grpc_multiplexer_session_infos
     )
 
@@ -198,7 +198,7 @@ def test___wrong_multiplexer_type_id___initialize_multiplexer_session___raises_v
 ) -> None:
     grpc_session_infos = create_nifake_session_infos(1)
     grpc_multiplexer_session_infos = create_nimultiplexer_session_infos(1)
-    reservation = MultiSessionReservation(
+    reservation = SingleSessionReservation(
         session_management_client, grpc_session_infos, grpc_multiplexer_session_infos
     )
 
@@ -219,7 +219,7 @@ def test___wrong_multiplexer_resource_name_and_type_id_combo___initialize_multip
 ) -> None:
     grpc_session_infos = create_nifake_session_infos(1)
     grpc_multiplexer_session_infos = create_nimultiplexer_session_infos(1)
-    reservation = MultiSessionReservation(
+    reservation = SingleSessionReservation(
         session_management_client, grpc_session_infos, grpc_multiplexer_session_infos
     )
 
@@ -242,7 +242,7 @@ def test___multiple_multiplexer_session_infos___initialize_multiplexer_session_w
 ) -> None:
     grpc_session_infos = create_nifake_session_infos(1)
     grpc_multiplexer_session_infos = create_nimultiplexer_session_infos(3)
-    reservation = MultiSessionReservation(
+    reservation = SingleSessionReservation(
         session_management_client, grpc_session_infos, grpc_multiplexer_session_infos
     )
 
@@ -259,7 +259,7 @@ def test___multiple_multiplexer_session_infos___initialize_multiplexer_session_w
     grpc_session_infos = create_nifake_session_infos(1)
     grpc_multiplexer_session_infos = create_nimultiplexer_session_infos(3)
     grpc_multiplexer_session_infos[1].multiplexer_type_id = "nibar"
-    reservation = MultiSessionReservation(
+    reservation = SingleSessionReservation(
         session_management_client, grpc_session_infos, grpc_multiplexer_session_infos
     )
 
@@ -273,7 +273,7 @@ def test___multiple_multiplexer_session_infos___initialize_multiplexer_session_w
 def test___multiple_multiplexer_session_infos___initialize_multiplexer_sessions___yeilds_session_infos(
     session_management_client: Mock,
 ) -> None:
-    reservation = MultiSessionReservation(
+    reservation = SingleSessionReservation(
         session_management_client,
         create_nifake_session_infos(1),
         create_nimultiplexer_session_infos(3),
@@ -298,7 +298,7 @@ def test___multiple_multiplexer_session_infos___initialize_multiplexer_sessions_
 def test___multiple_multiplexer_session_infos___initialize_multiplexer_sessions___creates_sessions(
     session_management_client: Mock,
 ) -> None:
-    reservation = MultiSessionReservation(
+    reservation = SingleSessionReservation(
         session_management_client,
         create_nifake_session_infos(1),
         create_nimultiplexer_session_infos(3),
@@ -316,7 +316,7 @@ def test___multiple_multiplexer_session_infos___initialize_multiplexer_sessions_
 def test___multiple_multiplexer_session_infos___initialize_multiplexer_sessions___session_lifetime_tracked(
     session_management_client: Mock,
 ) -> None:
-    reservation = MultiSessionReservation(
+    reservation = SingleSessionReservation(
         session_management_client,
         create_nifake_session_infos(1),
         create_nimultiplexer_session_infos(3),
@@ -352,7 +352,7 @@ def test___no_multiplexer_session_infos___initialize_multiplexer_sessions___rais
 def test___session_already_exists___initialize_multiplexer_sessions___raises_runtime_error(
     session_management_client: Mock,
 ) -> None:
-    reservation = MultiSessionReservation(
+    reservation = SingleSessionReservation(
         session_management_client,
         create_nifake_session_infos(1),
         create_nimultiplexer_session_infos(2),
@@ -372,7 +372,7 @@ def test___heterogenous_multiplexer_session_infos___initialize_multiplexer_sessi
     grpc_session_infos = create_nifake_session_infos(1)
     grpc_multiplexer_session_infos = create_nimultiplexer_session_infos(2)
     grpc_multiplexer_session_infos[1].multiplexer_type_id = "nibar"
-    reservation = MultiSessionReservation(
+    reservation = SingleSessionReservation(
         session_management_client, grpc_session_infos, grpc_multiplexer_session_infos
     )
 
@@ -391,7 +391,7 @@ def test___heterogenous_multiplexer_session_infos___initialize_multiplexer_sessi
     grpc_session_infos = create_nifake_session_infos(1)
     grpc_multiplexer_session_infos = create_nimultiplexer_session_infos(3)
     grpc_multiplexer_session_infos[1].multiplexer_type_id = "nibar"
-    reservation = MultiSessionReservation(
+    reservation = SingleSessionReservation(
         session_management_client, grpc_session_infos, grpc_multiplexer_session_infos
     )
 
@@ -408,7 +408,7 @@ def test___heterogenous_multiplexer_session_infos___initialize_multiplexer_sessi
     grpc_session_infos = create_nifake_session_infos(1)
     grpc_multiplexer_session_infos = create_nimultiplexer_session_infos(3)
     grpc_multiplexer_session_infos[1].multiplexer_type_id = "nibar"
-    reservation = MultiSessionReservation(
+    reservation = SingleSessionReservation(
         session_management_client, grpc_session_infos, grpc_multiplexer_session_infos
     )
 
@@ -429,7 +429,7 @@ def test___wrong_multiplexer_resource_name___initialize_multiplexer_sessions___r
 ) -> None:
     grpc_session_infos = create_nifake_session_infos(1)
     grpc_multiplexer_session_infos = create_nimultiplexer_session_infos(1)
-    reservation = MultiSessionReservation(
+    reservation = SingleSessionReservation(
         session_management_client, grpc_session_infos, grpc_multiplexer_session_infos
     )
 
@@ -450,7 +450,7 @@ def test___wrong_multiplexer_type_id___initialize_multiplexer_sessions___raises_
 ) -> None:
     grpc_session_infos = create_nifake_session_infos(1)
     grpc_multiplexer_session_infos = create_nimultiplexer_session_infos(1)
-    reservation = MultiSessionReservation(
+    reservation = SingleSessionReservation(
         session_management_client, grpc_session_infos, grpc_multiplexer_session_infos
     )
 
@@ -471,7 +471,7 @@ def test___wrong_multiplexer_resource_name_and_type_id_combo___initialize_multip
 ) -> None:
     grpc_session_infos = create_nifake_session_infos(1)
     grpc_multiplexer_session_infos = create_nimultiplexer_session_infos(1)
-    reservation = MultiSessionReservation(
+    reservation = SingleSessionReservation(
         session_management_client, grpc_session_infos, grpc_multiplexer_session_infos
     )
 
@@ -495,7 +495,7 @@ def test___list_of_multiplexer_resource_names_with_wrong_multiplexer_type_id___i
     grpc_session_infos = create_nifake_session_infos(1)
     grpc_multiplexer_session_infos = create_nimultiplexer_session_infos(3)
     grpc_multiplexer_session_infos[2].multiplexer_type_id = "nibar"
-    reservation = MultiSessionReservation(
+    reservation = SingleSessionReservation(
         session_management_client, grpc_session_infos, grpc_multiplexer_session_infos
     )
 
@@ -519,7 +519,7 @@ def test___list_of_multiplexer_resource_names_with_partially_wrong_multiplexer_t
     grpc_session_infos = create_nifake_session_infos(1)
     grpc_multiplexer_session_infos = create_nimultiplexer_session_infos(3)
     grpc_multiplexer_session_infos[2].multiplexer_type_id = "nibar"
-    reservation = MultiSessionReservation(
+    reservation = SingleSessionReservation(
         session_management_client, grpc_session_infos, grpc_multiplexer_session_infos
     )
 
@@ -567,7 +567,7 @@ def test___single_connection___get_connection_with_multiplexer___returns_connect
         assert connection.multiplexer_session_info == session_info
 
 
-def test___multiple_connections___get_connections_with_multiplexer___raises_value_error(
+def test___multiple_connections___get_connection_with_multiplexer___raises_value_error(
     session_management_client: Mock,
 ) -> None:
     with ExitStack() as stack:
