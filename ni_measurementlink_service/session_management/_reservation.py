@@ -2471,7 +2471,7 @@ class BaseReservation(_BaseSessionContainer):
             niswitch.Session, relay_names, sites, INSTRUMENT_TYPE_NI_RELAY_DRIVER
         )
 
-    def initialize_switch_multiplexer_session(
+    def initialize_niswitch_multiplexer_session(
         self,
         topology: Optional[str] = None,
         simulate: Optional[bool] = None,
