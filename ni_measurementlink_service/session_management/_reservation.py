@@ -2521,11 +2521,9 @@ class BaseReservation(_BaseSessionContainer):
         See Also:
             For more details, see :py:class:`niswitch.Session`.
         """
-        from ni_measurementlink_service._drivers._niswitch_multiplexer import (
-            MultiplexerSessionConstructor,
-        )
+        from ni_measurementlink_service._drivers._niswitch import SessionConstructor
 
-        session_constructor = MultiplexerSessionConstructor(
+        session_constructor = SessionConstructor(
             self._discovery_client,
             self._grpc_channel_pool,
             topology,
@@ -2590,11 +2588,9 @@ class BaseReservation(_BaseSessionContainer):
         See Also:
             For more details, see :py:class:`niswitch.Session`.
         """
-        from ni_measurementlink_service._drivers._niswitch_multiplexer import (
-            MultiplexerSessionConstructor,
-        )
+        from ni_measurementlink_service._drivers._niswitch import SessionConstructor
 
-        session_constructor = MultiplexerSessionConstructor(
+        session_constructor = SessionConstructor(
             self._discovery_client,
             self._grpc_channel_pool,
             topology,

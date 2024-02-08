@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Union
 
 import niswitch
 
@@ -11,6 +11,7 @@ from ni_measurementlink_service._drivers._grpcdevice import (
 from ni_measurementlink_service.discovery import DiscoveryClient
 from ni_measurementlink_service.grpc.channelpool import GrpcChannelPool
 from ni_measurementlink_service.session_management._types import (
+    MultiplexerSessionInformation,
     SessionInformation,
     SessionInitializationBehavior,
 )
@@ -45,7 +46,9 @@ class SessionConstructor:
         self._reset_device = reset_device
         self._initialization_behavior = _INITIALIZATION_BEHAVIOR[initialization_behavior]
 
-    def __call__(self, session_info: SessionInformation) -> niswitch.Session:
+    def __call__(
+        self, session_info: Union[SessionInformation, MultiplexerSessionInformation]
+    ) -> niswitch.Session:
         """Construct a session object."""
         kwargs: Dict[str, Any] = {}
         if self._grpc_channel:
