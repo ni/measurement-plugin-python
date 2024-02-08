@@ -1,13 +1,17 @@
 import pathlib
 from contextlib import ExitStack
 
-import pytest
 import niswitch
+import pytest
+
 from ni_measurementlink_service.session_management import (
     PinMapContext,
     SessionManagementClient,
 )
-from tests.utilities.connection_subset import ConnectionSubset, get_connection_subset_with_multiplexer
+from tests.utilities.connection_subset import (
+    ConnectionSubset,
+    get_connection_subset_with_multiplexer,
+)
 from tests.utilities.pin_map_client import PinMapClient
 
 _SITE = 0
@@ -24,7 +28,9 @@ def test___reserved_single_session_with_single_multiplexer___initialize_niswitch
             session_management_client.reserve_session(pin_map_context, pin_names)
         )
 
-        multiplexer_session_info = stack.enter_context(reservation.initialize_niswitch_multiplexer_session())
+        multiplexer_session_info = stack.enter_context(
+            reservation.initialize_niswitch_multiplexer_session()
+        )
 
         assert multiplexer_session_info.session is not None
         assert multiplexer_session_info.session_name == "Multiplexer2"
@@ -42,12 +48,16 @@ def test___reserved_single_session_with_multiple_multiplexer___initialize_niswit
             session_management_client.reserve_sessions(pin_map_context, pin_names)
         )
 
-        multiplexer_session_infos = stack.enter_context(reservation.initialize_niswitch_multiplexer_sessions())
+        multiplexer_session_infos = stack.enter_context(
+            reservation.initialize_niswitch_multiplexer_sessions()
+        )
 
         assert all([session_info.session is not None for session_info in multiplexer_session_infos])
         assert [
             session_info.session_name == expected_resource
-            for session_info, expected_resource in zip(multiplexer_session_infos, niswitch_multiplexer_resources)
+            for session_info, expected_resource in zip(
+                multiplexer_session_infos, niswitch_multiplexer_resources
+            )
         ]
 
 
@@ -64,11 +74,18 @@ def test___created_multiplexer_session___get_nidcpower_connection_with_multiplex
         stack.enter_context(reservation.initialize_nidcpower_session())
         stack.enter_context(reservation.initialize_niswitch_multiplexer_session())
 
-        connection = reservation.get_nidcpower_connection_with_multiplexer(niswitch.Session, pin_names[0])
+        connection = reservation.get_nidcpower_connection_with_multiplexer(
+            niswitch.Session, pin_names[0]
+        )
 
         assert connection.multiplexer_session is not None
         assert get_connection_subset_with_multiplexer(connection) == ConnectionSubset(
-            pin_names[0], _SITE, "DCPower1/0, DCPower1/1", "DCPower1/0", "Multiplexer2", "C1->r2, C2->r2"
+            pin_names[0],
+            _SITE,
+            "DCPower1/0, DCPower1/1",
+            "DCPower1/0",
+            "Multiplexer2",
+            "C1->r2, C2->r2",
         )
 
 
@@ -85,12 +102,30 @@ def test___created_multiplexer_sessions___get_nidcpower_connections_with_multipl
         stack.enter_context(reservation.initialize_nidcpower_sessions())
         stack.enter_context(reservation.initialize_niswitch_multiplexer_sessions())
 
-        connections = reservation.get_nidcpower_connections_with_multiplexer(niswitch.Session, pin_names)
+        connections = reservation.get_nidcpower_connections_with_multiplexer(
+            niswitch.Session, pin_names
+        )
 
         assert all([conn.multiplexer_session is not None for conn in connections])
-        assert [get_connection_subset_with_multiplexer(connection) for connection in connections] == [
-            ConnectionSubset(pin_names[0], _SITE, "DCPower1/0, DCPower1/1", "DCPower1/0", "Multiplexer2", "C1->r2, C2->r2"),
-            ConnectionSubset(pin_names[1], _SITE, "DCPower1/0, DCPower1/1", "DCPower1/1", "Multiplexer1", "C3->r1, C4->r1"),
+        assert [
+            get_connection_subset_with_multiplexer(connection) for connection in connections
+        ] == [
+            ConnectionSubset(
+                pin_names[0],
+                _SITE,
+                "DCPower1/0, DCPower1/1",
+                "DCPower1/0",
+                "Multiplexer2",
+                "C1->r2, C2->r2",
+            ),
+            ConnectionSubset(
+                pin_names[1],
+                _SITE,
+                "DCPower1/0, DCPower1/1",
+                "DCPower1/1",
+                "Multiplexer1",
+                "C3->r1, C4->r1",
+            ),
         ]
 
 
