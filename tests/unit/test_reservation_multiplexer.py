@@ -821,7 +821,7 @@ def test___partial_multiplexed_connections___get_connections_with_multiplexer_us
     ]
 
 
-def test____connection_with_no_multiplexer___get_connection_with_multiplexer___returns_connection(
+def test____connection_with_no_multiplexers___get_connection_with_multiplexer___returns_connection(
     session_management_client: Mock,
 ) -> None:
     grpc_session_infos = create_nifake_session_infos(1)
@@ -838,7 +838,7 @@ def test____connection_with_no_multiplexer___get_connection_with_multiplexer___r
     )
 
 
-def test____connections_with_no_multiplexer___get_connections_with_multiplexer___returns_all_connections(
+def test____connections_with_no_multiplexers___get_connections_with_multiplexer___returns_all_connections(
     session_management_client: Mock,
 ) -> None:
     grpc_session_infos = create_nifake_session_infos(1)
@@ -881,6 +881,7 @@ def test___created_multiplexer_session___get_connection_with_multiplexer___retur
             object, fake_multiplexer_driver.Session
         )
 
+        assert isinstance(connection.multiplexer_session, fake_multiplexer_driver.Session)
         assert get_connection_subset_with_multiplexer(connection) == ConnectionSubset(
             "Pin1", 0, "Dev0", "1", "Mux0", "route1"
         )
@@ -917,16 +918,16 @@ def test___created_multiplexer_sessions___get_connections_with_multiplexer___ret
             object, fake_multiplexer_driver.Session
         )
 
-        assert [get_connection_subset_with_multiplexer(conn) for conn in connections] == [
-            ConnectionSubset("Pin1", 0, "Dev0", "1", "Mux0", "route1"),
-            ConnectionSubset("Pin2", 1, "Dev0", "1", "Mux1", "route2"),
-        ]
         assert all(
             [
                 isinstance(conn.multiplexer_session, fake_multiplexer_driver.Session)
                 for conn in connections
             ]
         )
+        assert [get_connection_subset_with_multiplexer(conn) for conn in connections] == [
+            ConnectionSubset("Pin1", 0, "Dev0", "1", "Mux0", "route1"),
+            ConnectionSubset("Pin2", 1, "Dev0", "1", "Mux1", "route2"),
+        ]
 
 
 def test___reserved_single_session_with_single_multiplexer___get_multiplexer_session_info___returns_multiplexer_session_info_with_null_session(
