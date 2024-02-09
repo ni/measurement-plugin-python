@@ -226,8 +226,8 @@ def test___wrong_multiplexer_resource_name_and_type_id_combo___initialize_multip
     with pytest.raises(ValueError) as exc_info:
         with reservation.initialize_multiplexer_session(
             construct_multiplexer_session,
-            multiplexer_resource_name="invalid_resource_name",
             multiplexer_type_id="invalid_type_id",
+            multiplexer_resource_name="invalid_resource_name",
         ):
             pass
 
@@ -247,7 +247,7 @@ def test___multiple_multiplexer_session_infos___initialize_multiplexer_session_w
     )
 
     with reservation.initialize_multiplexer_session(
-        construct_multiplexer_session, "Mux0"
+        construct_multiplexer_session, multiplexer_resource_name="Mux0"
     ) as session_info:
         assert session_info.session_name == "MyMultiplexer0"
         assert session_info.multiplexer_type_id == "nimultiplexer"
@@ -396,7 +396,7 @@ def test___heterogenous_multiplexer_session_infos___initialize_multiplexer_sessi
     )
 
     with reservation.initialize_multiplexer_sessions(
-        construct_multiplexer_session, ["Mux0", "Mux1"]
+        construct_multiplexer_session, multiplexer_resource_names=["Mux0", "Mux1"]
     ) as session_infos:
         assert len(session_infos) == 2
         assert [info.session_name for info in session_infos] == ["MyMultiplexer0", "MyMultiplexer1"]
@@ -478,8 +478,8 @@ def test___wrong_multiplexer_resource_name_and_type_id_combo___initialize_multip
     with pytest.raises(ValueError) as exc_info:
         with reservation.initialize_multiplexer_sessions(
             construct_multiplexer_session,
-            multiplexer_resource_names="invalid_resource_name",
             multiplexer_type_id="invalid_type_id",
+            multiplexer_resource_names="invalid_resource_name",
         ):
             pass
 
@@ -502,8 +502,8 @@ def test___list_of_multiplexer_resource_names_with_wrong_multiplexer_type_id___i
     with pytest.raises(ValueError) as exc_info:
         with reservation.initialize_multiplexer_sessions(
             construct_multiplexer_session,
-            multiplexer_resource_names=["Mux0", "Mux1"],
             multiplexer_type_id="nibar",
+            multiplexer_resource_names=["Mux0", "Mux1"],
         ):
             pass
 
@@ -526,8 +526,8 @@ def test___list_of_multiplexer_resource_names_with_partially_wrong_multiplexer_t
     with pytest.raises(ValueError) as exc_info:
         with reservation.initialize_multiplexer_sessions(
             construct_multiplexer_session,
-            multiplexer_resource_names=["Mux0", "Mux2"],
             multiplexer_type_id="nimultiplexer",
+            multiplexer_resource_names=["Mux0", "Mux2"],
         ):
             pass
 
@@ -811,8 +811,6 @@ def test___partial_multiplexed_connections___get_connections_with_multiplexer_us
         session_management_client, grpc_session_infos, grpc_multiplexer_session_infos
     )
 
-    # TODO: Update the multiplexer_session_type to fake_multiplexer_driver.Session once the
-    # initialize_multiplexer API gets added.
     connections = reservation.get_connections_with_multiplexer(object, object)
 
     assert [get_connection_subset_with_multiplexer(conn) for conn in connections] == [
@@ -857,6 +855,78 @@ def test____connections_with_no_multiplexer___get_connections_with_multiplexer__
         ConnectionSubset("Pin1", 0, "Dev0", "0", "", ""),
         ConnectionSubset("Pin2", 1, "Dev0", "2", "", ""),
     ]
+
+
+def test___created_multiplexer_session___get_connection_with_multiplexer___returns_connection_with_multiplexer_session(
+    session_management_client: Mock,
+) -> None:
+    with ExitStack() as stack:
+        grpc_session_infos = create_nifake_session_infos(1)
+        grpc_multiplexer_session_infos = create_nimultiplexer_session_infos(1)
+        grpc_session_infos[0].channel_mappings.add(
+            pin_or_relay_name="Pin1",
+            site=0,
+            channel="1",
+            multiplexer_resource_name="Mux0",
+            multiplexer_route="route1",
+        )
+        reservation = MultiSessionReservation(
+            session_management_client, grpc_session_infos, grpc_multiplexer_session_infos
+        )
+        _ = stack.enter_context(
+            reservation.initialize_multiplexer_session(construct_multiplexer_session)
+        )
+
+        connection = reservation.get_connection_with_multiplexer(
+            object, fake_multiplexer_driver.Session
+        )
+
+        assert get_connection_subset_with_multiplexer(connection) == ConnectionSubset(
+            "Pin1", 0, "Dev0", "1", "Mux0", "route1"
+        )
+
+
+def test___created_multiplexer_sessions___get_connections_with_multiplexer___returns_connections_with_multiplexer_sessions(
+    session_management_client: Mock,
+) -> None:
+    with ExitStack() as stack:
+        grpc_session_infos = create_nifake_session_infos(1)
+        grpc_multiplexer_session_infos = create_nimultiplexer_session_infos(2)
+        grpc_session_infos[0].channel_mappings.add(
+            pin_or_relay_name="Pin1",
+            site=0,
+            channel="1",
+            multiplexer_resource_name="Mux0",
+            multiplexer_route="route1",
+        )
+        grpc_session_infos[0].channel_mappings.add(
+            pin_or_relay_name="Pin2",
+            site=1,
+            channel="1",
+            multiplexer_resource_name="Mux1",
+            multiplexer_route="route2",
+        )
+        reservation = MultiSessionReservation(
+            session_management_client, grpc_session_infos, grpc_multiplexer_session_infos
+        )
+        _ = stack.enter_context(
+            reservation.initialize_multiplexer_sessions(construct_multiplexer_session)
+        )
+
+        connections = reservation.get_connections_with_multiplexer(
+            object, fake_multiplexer_driver.Session
+        )
+
+        assert [get_connection_subset_with_multiplexer(conn) for conn in connections] == [
+            ConnectionSubset("Pin1", 0, "Dev0", "1", "Mux0", "route1"),
+            ConnectionSubset("Pin2", 1, "Dev0", "1", "Mux1", "route2"),
+        ]
+        assert all(
+            [
+                isinstance(conn.multiplexer_session, fake_multiplexer_driver.Session)
+                for conn in connections
+            ]
+        )
 
 
 def test___reserved_single_session_with_single_multiplexer___get_multiplexer_session_info___returns_multiplexer_session_info_with_null_session(

@@ -465,14 +465,14 @@ class BaseReservation(_BaseSessionContainer):
     def _initialize_multiplexer_session_core(
         self,
         session_constructor: Callable[[MultiplexerSessionInformation], TMultiplexerSession],
-        multiplexer_resource_name: Optional[str] = None,
         multiplexer_type_id: Optional[str] = None,
+        multiplexer_resource_name: Optional[str] = None,
         closing_function: Optional[
             Callable[[TMultiplexerSession], ContextManager[TMultiplexerSession]]
         ] = None,
     ) -> Generator[TypedMultiplexerSessionInformation[TMultiplexerSession], None, None]:
-        _check_optional_str_param("multiplexer_resource_name", multiplexer_resource_name)
         _check_optional_str_param("multiplexer_type_id", multiplexer_type_id)
+        _check_optional_str_param("multiplexer_resource_name", multiplexer_resource_name)
         multiplexer_session_infos = self._validate_and_get_matching_multiplexer_session_infos(
             _to_iterable(multiplexer_resource_name, self._multiplexer_resource_names),
             _to_iterable(multiplexer_type_id, self._multiplexer_type_ids),
@@ -534,8 +534,8 @@ class BaseReservation(_BaseSessionContainer):
     def _initialize_multiplexer_sessions_core(
         self,
         session_constructor: Callable[[MultiplexerSessionInformation], TMultiplexerSession],
-        multiplexer_resource_names: Union[str, Iterable[str], None],
         multiplexer_type_id: Optional[str],
+        multiplexer_resource_names: Union[str, Iterable[str], None],
         closing_function: Optional[
             Callable[[TMultiplexerSession], ContextManager[TMultiplexerSession]]
         ] = None,
@@ -718,8 +718,9 @@ class BaseReservation(_BaseSessionContainer):
     def initialize_multiplexer_session(
         self,
         session_constructor: Callable[[MultiplexerSessionInformation], TMultiplexerSession],
-        multiplexer_resource_name: Optional[str] = None,
         multiplexer_type_id: Optional[str] = None,
+        *,
+        multiplexer_resource_name: Optional[str] = None,
     ) -> ContextManager[TypedMultiplexerSessionInformation[TMultiplexerSession]]:
         """Initialize a single multiplexer session.
 
@@ -729,13 +730,13 @@ class BaseReservation(_BaseSessionContainer):
             session_constructor: A function that constructs multiplexer sessions
                 based on multiplexer session information.
 
-            multiplexer_resource_name: Multiplexer resource name. If not
-                specified, the multiplexer resource name is ignored when
-                matching multiplexer sessions.
-
             multiplexer_type_id: User-defined identifier for the multiplexer
                 type in the pin map editor. If not specified, the multiplexer
                 type id is ignored when matching multiplexer sessions.
+
+            multiplexer_resource_name: Multiplexer resource name. If not
+                specified, the multiplexer resource name is ignored when
+                matching multiplexer sessions.
 
         Returns:
             A context manager that yields a multiplexer session information
@@ -748,7 +749,7 @@ class BaseReservation(_BaseSessionContainer):
                 too many multiplexer sessions are available.
         """
         return self._initialize_multiplexer_session_core(
-            session_constructor, multiplexer_resource_name, multiplexer_type_id
+            session_constructor, multiplexer_type_id, multiplexer_resource_name
         )
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
@@ -784,8 +785,9 @@ class BaseReservation(_BaseSessionContainer):
     def initialize_multiplexer_sessions(
         self,
         session_constructor: Callable[[MultiplexerSessionInformation], TMultiplexerSession],
-        multiplexer_resource_names: Union[str, Iterable[str], None] = None,
         multiplexer_type_id: Optional[str] = None,
+        *,
+        multiplexer_resource_names: Union[str, Iterable[str], None] = None,
     ) -> ContextManager[Sequence[TypedMultiplexerSessionInformation[TMultiplexerSession]]]:
         """Initialize multiple multiplexer sessions.
 
@@ -795,13 +797,13 @@ class BaseReservation(_BaseSessionContainer):
             session_constructor: A function that constructs multiplexer sessions
                 based on multiplexer session information.
 
-            multiplexer_resource_names: Multiplexer resource names. If not
-                specified, the multiplexer resource name is ignored when
-                matching multiplexer sessions.
-
             multiplexer_type_id: User-defined identifier for the multiplexer
                 type in the pin map editor. If not specified, the multiplexer
                 type id is ignored when matching multiplexer sessions.
+
+            multiplexer_resource_names: Multiplexer resource names. If not
+                specified, the multiplexer resource name is ignored when
+                matching multiplexer sessions.
 
         Returns:
             A context manager that yields a sequence of multiplexer session information
@@ -813,7 +815,7 @@ class BaseReservation(_BaseSessionContainer):
             ValueError: If no multiplexer sessions are available.
         """
         return self._initialize_multiplexer_sessions_core(
-            session_constructor, multiplexer_resource_names, multiplexer_type_id
+            session_constructor, multiplexer_type_id, multiplexer_resource_names
         )
 
     @requires_feature(SESSION_MANAGEMENT_2024Q1)
@@ -2477,8 +2479,9 @@ class BaseReservation(_BaseSessionContainer):
         simulate: Optional[bool] = None,
         reset_device: bool = False,
         initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
-        multiplexer_resource_name: Optional[str] = None,
         multiplexer_type_id: Optional[str] = None,
+        *,
+        multiplexer_resource_name: Optional[str] = None,
     ) -> ContextManager[TypedMultiplexerSessionInformation[niswitch.Session]]:
         """Initialize a single NI-SWITCH multiplexer session.
 
@@ -2500,13 +2503,13 @@ class BaseReservation(_BaseSessionContainer):
             initialization_behavior: Specifies whether the NI gRPC Device Server
                 will initialize a new session or attach to an existing session.
 
-            multiplexer_resource_name: Multiplexer resource name. If not
-                specified, the multiplexer resource name is ignored when
-                matching multiplexer sessions.
-
             multiplexer_type_id: User-defined identifier for the multiplexer
                 type in the pin map editor. If not specified, the multiplexer
                 type id is ignored when matching multiplexer sessions.
+
+            multiplexer_resource_name: Multiplexer resource name. If not
+                specified, the multiplexer resource name is ignored when
+                matching multiplexer sessions.
 
         Returns:
             A context manager that yields a session information object. The
@@ -2535,7 +2538,7 @@ class BaseReservation(_BaseSessionContainer):
             closing_session_with_ts_code_module_support, initialization_behavior
         )
         return self._initialize_multiplexer_session_core(
-            session_constructor, multiplexer_resource_name, multiplexer_type_id, closing_function
+            session_constructor, multiplexer_type_id, multiplexer_resource_name, closing_function
         )
 
     def initialize_niswitch_multiplexer_sessions(
@@ -2544,8 +2547,9 @@ class BaseReservation(_BaseSessionContainer):
         simulate: Optional[bool] = None,
         reset_device: bool = False,
         initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
-        multiplexer_resource_names: Union[str, Iterable[str], None] = None,
         multiplexer_type_id: Optional[str] = None,
+        *,
+        multiplexer_resource_names: Union[str, Iterable[str], None] = None,
     ) -> ContextManager[Sequence[TypedMultiplexerSessionInformation[niswitch.Session]]]:
         """Initialize multiple NI-SWITCH multiplexer sessions.
 
@@ -2567,13 +2571,13 @@ class BaseReservation(_BaseSessionContainer):
             initialization_behavior: Specifies whether the NI gRPC Device Server
                 will initialize a new session or attach to an existing session.
 
-            multiplexer_resource_names: Multiplexer resource names. If not
-                specified, the multiplexer resource name is ignored when
-                matching multiplexer sessions.
-
             multiplexer_type_id: User-defined identifier for the multiplexer
                 type in the pin map editor. If not specified, the multiplexer
                 type id is ignored when matching multiplexer sessions.
+
+            multiplexer_resource_names: Multiplexer resource names. If not
+                specified, the multiplexer resource name is ignored when
+                matching multiplexer sessions.
 
         Returns:
             A context manager that yields a sequence of multiplexer session
@@ -2602,7 +2606,7 @@ class BaseReservation(_BaseSessionContainer):
             closing_session_with_ts_code_module_support, initialization_behavior
         )
         return self._initialize_multiplexer_sessions_core(
-            session_constructor, multiplexer_resource_names, multiplexer_type_id, closing_function
+            session_constructor, multiplexer_type_id, multiplexer_resource_names, closing_function
         )
 
 
