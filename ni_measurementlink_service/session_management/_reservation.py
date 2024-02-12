@@ -439,11 +439,6 @@ class BaseReservation(_BaseSessionContainer):
         multiplexer_session_infos = self._validate_and_get_matching_multiplexer_session_infos(
             _to_iterable(multiplexer_type_id, self._multiplexer_type_ids),
         )
-        if len(multiplexer_session_infos) == 0:
-            raise ValueError(
-                f"No multiplexer sessions matched type ID '{multiplexer_type_id}'. "
-                "Expected single session, got 0 sessions."
-            )
         if len(multiplexer_session_infos) > 1:
             raise ValueError(
                 f"Too many multiplexer sessions matched the specified criteria. "
@@ -504,11 +499,6 @@ class BaseReservation(_BaseSessionContainer):
         multiplexer_session_infos = self._validate_and_get_matching_multiplexer_session_infos(
             _to_iterable(multiplexer_type_id, self._multiplexer_type_ids),
         )
-        if len(multiplexer_session_infos) == 0:
-            raise ValueError(
-                f"No multiplexer sessions matched type ID '{multiplexer_type_id}'. "
-                "Expected single session, got 0 sessions."
-            )
 
         if closing_function is None:
             closing_function = closing_session
