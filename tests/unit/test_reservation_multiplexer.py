@@ -35,11 +35,7 @@ create_nimultiplexer_session_infos = functools.partial(
     "kwargs,expected_message",
     [
         (
-            {"multiplexer_resource_name": ["Mux0"]},
-            "The multiplexer_resource_name parameter must be a str or None, not ['Mux0'].",
-        ),
-        (
-            {"multiplexer_resource_name": "Mux0", "multiplexer_type_id": ["nimultiplexer"]},
+            {"multiplexer_type_id": ["nimultiplexer"]},
             "The multiplexer_type_id parameter must be a str or None, not ['nimultiplexer'].",
         ),
     ],
@@ -172,27 +168,6 @@ def test___multiplexer_session_already_exists___initialize_multiplexer_session__
     assert "Multiplexer session 'MyMultiplexer0' already exists." in exc_info.value.args[0]
 
 
-def test___wrong_multiplexer_resource_name___initialize_multiplexer_session___raises_value_error(
-    session_management_client: Mock,
-) -> None:
-    grpc_session_infos = create_nifake_session_infos(1)
-    grpc_multiplexer_session_infos = create_nimultiplexer_session_infos(1)
-    reservation = SingleSessionReservation(
-        session_management_client, grpc_session_infos, grpc_multiplexer_session_infos
-    )
-
-    with pytest.raises(ValueError) as exc_info:
-        with reservation.initialize_multiplexer_session(
-            construct_multiplexer_session, multiplexer_resource_name="invalid_resource_name"
-        ):
-            pass
-
-    assert (
-        "No multiplexer sessions matched multiplexer resource name(s) 'invalid_resource_name'."
-        in exc_info.value.args[0]
-    )
-
-
 def test___wrong_multiplexer_type_id___initialize_multiplexer_session___raises_value_error(
     session_management_client: Mock,
 ) -> None:
@@ -212,45 +187,6 @@ def test___wrong_multiplexer_type_id___initialize_multiplexer_session___raises_v
         "No multiplexer sessions matched multiplexer type id 'invalid_type_id'."
         in exc_info.value.args[0]
     )
-
-
-def test___wrong_multiplexer_resource_name_and_type_id_combo___initialize_multiplexer_session___raises_value_error(
-    session_management_client: Mock,
-) -> None:
-    grpc_session_infos = create_nifake_session_infos(1)
-    grpc_multiplexer_session_infos = create_nimultiplexer_session_infos(1)
-    reservation = SingleSessionReservation(
-        session_management_client, grpc_session_infos, grpc_multiplexer_session_infos
-    )
-
-    with pytest.raises(ValueError) as exc_info:
-        with reservation.initialize_multiplexer_session(
-            construct_multiplexer_session,
-            multiplexer_type_id="invalid_type_id",
-            multiplexer_resource_name="invalid_resource_name",
-        ):
-            pass
-
-    assert (
-        "No multiplexer sessions matched multiplexer resource name(s) 'invalid_resource_name'."
-        in exc_info.value.args[0]
-    )
-
-
-def test___multiple_multiplexer_session_infos___initialize_multiplexer_session_with_resource_name___creates_session_for_specified_resource(
-    session_management_client: Mock,
-) -> None:
-    grpc_session_infos = create_nifake_session_infos(1)
-    grpc_multiplexer_session_infos = create_nimultiplexer_session_infos(3)
-    reservation = SingleSessionReservation(
-        session_management_client, grpc_session_infos, grpc_multiplexer_session_infos
-    )
-
-    with reservation.initialize_multiplexer_session(
-        construct_multiplexer_session, multiplexer_resource_name="Mux0"
-    ) as session_info:
-        assert session_info.session_name == "MyMultiplexer0"
-        assert session_info.multiplexer_type_id == "nimultiplexer"
 
 
 def test___multiple_multiplexer_session_infos___initialize_multiplexer_session_with_type_id___creates_session_for_specified_type_id(
@@ -385,23 +321,6 @@ def test___heterogenous_multiplexer_session_infos___initialize_multiplexer_sessi
         assert session_infos[1].multiplexer_type_id == "nibar"
 
 
-def test___heterogenous_multiplexer_session_infos___initialize_multiplexer_sessions_with_resource_names___creates_sessions_for_specified_resources(
-    session_management_client: Mock,
-) -> None:
-    grpc_session_infos = create_nifake_session_infos(1)
-    grpc_multiplexer_session_infos = create_nimultiplexer_session_infos(3)
-    grpc_multiplexer_session_infos[1].multiplexer_type_id = "nibar"
-    reservation = SingleSessionReservation(
-        session_management_client, grpc_session_infos, grpc_multiplexer_session_infos
-    )
-
-    with reservation.initialize_multiplexer_sessions(
-        construct_multiplexer_session, multiplexer_resource_names=["Mux0", "Mux1"]
-    ) as session_infos:
-        assert len(session_infos) == 2
-        assert [info.session_name for info in session_infos] == ["MyMultiplexer0", "MyMultiplexer1"]
-
-
 def test___heterogenous_multiplexer_session_infos___initialize_multiplexer_sessions_with_type_id___creates_sessions_for_specified_type_id(
     session_management_client: Mock,
 ) -> None:
@@ -424,27 +343,6 @@ def test___heterogenous_multiplexer_session_infos___initialize_multiplexer_sessi
         ]
 
 
-def test___wrong_multiplexer_resource_name___initialize_multiplexer_sessions___raises_value_error(
-    session_management_client: Mock,
-) -> None:
-    grpc_session_infos = create_nifake_session_infos(1)
-    grpc_multiplexer_session_infos = create_nimultiplexer_session_infos(1)
-    reservation = SingleSessionReservation(
-        session_management_client, grpc_session_infos, grpc_multiplexer_session_infos
-    )
-
-    with pytest.raises(ValueError) as exc_info:
-        with reservation.initialize_multiplexer_sessions(
-            construct_multiplexer_session, multiplexer_resource_names="invalid_resource_name"
-        ):
-            pass
-
-    assert (
-        "No multiplexer sessions matched multiplexer resource name(s) 'invalid_resource_name'."
-        in exc_info.value.args[0]
-    )
-
-
 def test___wrong_multiplexer_type_id___initialize_multiplexer_sessions___raises_value_error(
     session_management_client: Mock,
 ) -> None:
@@ -462,77 +360,6 @@ def test___wrong_multiplexer_type_id___initialize_multiplexer_sessions___raises_
 
     assert (
         "No multiplexer sessions matched multiplexer type id 'invalid_type_id'."
-        in exc_info.value.args[0]
-    )
-
-
-def test___wrong_multiplexer_resource_name_and_type_id_combo___initialize_multiplexer_sessions___raises_value_error(
-    session_management_client: Mock,
-) -> None:
-    grpc_session_infos = create_nifake_session_infos(1)
-    grpc_multiplexer_session_infos = create_nimultiplexer_session_infos(1)
-    reservation = SingleSessionReservation(
-        session_management_client, grpc_session_infos, grpc_multiplexer_session_infos
-    )
-
-    with pytest.raises(ValueError) as exc_info:
-        with reservation.initialize_multiplexer_sessions(
-            construct_multiplexer_session,
-            multiplexer_type_id="invalid_type_id",
-            multiplexer_resource_names="invalid_resource_name",
-        ):
-            pass
-
-    assert (
-        "No multiplexer sessions matched multiplexer resource name(s) 'invalid_resource_name'."
-        in exc_info.value.args[0]
-    )
-
-
-def test___list_of_multiplexer_resource_names_with_wrong_multiplexer_type_id___initialize_multiplexer_sessions___raises_value_error(
-    session_management_client: Mock,
-) -> None:
-    grpc_session_infos = create_nifake_session_infos(1)
-    grpc_multiplexer_session_infos = create_nimultiplexer_session_infos(3)
-    grpc_multiplexer_session_infos[2].multiplexer_type_id = "nibar"
-    reservation = SingleSessionReservation(
-        session_management_client, grpc_session_infos, grpc_multiplexer_session_infos
-    )
-
-    with pytest.raises(ValueError) as exc_info:
-        with reservation.initialize_multiplexer_sessions(
-            construct_multiplexer_session,
-            multiplexer_type_id="nibar",
-            multiplexer_resource_names=["Mux0", "Mux1"],
-        ):
-            pass
-
-    assert (
-        "No multiplexer sessions matched multiplexer resource name(s) 'Mux0', 'Mux1' with the specified criteria."
-        in exc_info.value.args[0]
-    )
-
-
-def test___list_of_multiplexer_resource_names_with_partially_wrong_multiplexer_type_id___initialize_multiplexer_sessions___raises_value_error(
-    session_management_client: Mock,
-) -> None:
-    grpc_session_infos = create_nifake_session_infos(1)
-    grpc_multiplexer_session_infos = create_nimultiplexer_session_infos(3)
-    grpc_multiplexer_session_infos[2].multiplexer_type_id = "nibar"
-    reservation = SingleSessionReservation(
-        session_management_client, grpc_session_infos, grpc_multiplexer_session_infos
-    )
-
-    with pytest.raises(ValueError) as exc_info:
-        with reservation.initialize_multiplexer_sessions(
-            construct_multiplexer_session,
-            multiplexer_type_id="nimultiplexer",
-            multiplexer_resource_names=["Mux0", "Mux2"],
-        ):
-            pass
-
-    assert (
-        "No multiplexer sessions matched multiplexer resource name(s) 'Mux2' with the specified criteria."
         in exc_info.value.args[0]
     )
 
