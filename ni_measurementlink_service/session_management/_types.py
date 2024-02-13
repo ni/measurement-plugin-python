@@ -261,6 +261,11 @@ class MultiplexerSessionInformation(NamedTuple):
                 f"Expected {multiplexer_session_type}, got {type(self.session)}."
             )
 
+    def _with_session(self, session: object) -> MultiplexerSessionInformation:
+        if self.session is session:
+            return self
+        return self._replace(session=session)
+
     @classmethod
     def _from_grpc_v1(
         cls, other: session_management_service_pb2.MultiplexerSessionInformation
@@ -368,6 +373,13 @@ class Connection(NamedTuple):
         if self.session is session:
             return self
         return self._replace(session_info=self.session_info._with_session(session))
+
+    def _with_multiplexer_session(self, session: object) -> Connection:
+        if self.multiplexer_session_info is None or self.multiplexer_session is session:
+            return self
+        return self._replace(
+            multiplexer_session_info=self.multiplexer_session_info._with_session(session)
+        )
 
 
 class TypedConnection(Protocol, Generic[TSession_co]):
