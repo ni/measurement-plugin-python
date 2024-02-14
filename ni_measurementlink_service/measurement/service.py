@@ -32,10 +32,6 @@ from ni_measurementlink_service._annotations import (
     ENUM_VALUES_KEY,
     TYPE_SPECIALIZATION_KEY,
 )
-from ni_measurementlink_service._featuretoggles import (
-    SESSION_MANAGEMENT_2024Q1,
-    requires_feature,
-)
 from ni_measurementlink_service._internal import grpc_servicer
 from ni_measurementlink_service._internal.parameter import (
     metadata as parameter_metadata,
@@ -110,7 +106,6 @@ class MeasurementContext:
         assert isinstance(owner, MeasurementService)
         return owner
 
-    @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def reserve_session(
         self,
         pin_or_relay_names: Union[str, Iterable[str]],
@@ -141,7 +136,6 @@ class MeasurementContext:
             context=self.pin_map_context, pin_or_relay_names=pin_or_relay_names, timeout=timeout
         )
 
-    @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def reserve_sessions(
         self,
         pin_or_relay_names: Union[str, Iterable[str]],
@@ -332,7 +326,6 @@ class MeasurementService:
             return self._grpc_service.service_location
 
     @property
-    @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def session_management_client(self) -> SessionManagementClient:
         """Client for accessing the MeasurementLink session management service."""
         if self._session_management_client is None:

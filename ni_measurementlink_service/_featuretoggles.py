@@ -146,6 +146,3 @@ def requires_feature(
 # --------------------------------------
 # Define feature toggle constants here:
 # --------------------------------------
-
-SESSION_MANAGEMENT_2024Q1 = FeatureToggle("SESSION_MANAGEMENT_2024Q1", CodeReadiness.RELEASE)
-"""Simplified session management APIs for the 2024Q1 release."""

@@ -34,10 +34,6 @@ from ni_measurementlink_service._drivers import (
     closing_session,
     closing_session_with_ts_code_module_support,
 )
-from ni_measurementlink_service._featuretoggles import (
-    SESSION_MANAGEMENT_2024Q1,
-    requires_feature,
-)
 from ni_measurementlink_service._internal.stubs.ni.measurementlink.sessionmanagement.v1 import (
     session_management_service_pb2,
 )
@@ -634,7 +630,6 @@ class BaseReservation(_BaseSessionContainer):
 
         return results
 
-    @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def initialize_session(
         self,
         session_constructor: Callable[[SessionInformation], TSession],
@@ -693,7 +688,6 @@ class BaseReservation(_BaseSessionContainer):
         """
         return self._initialize_multiplexer_session_core(session_constructor, multiplexer_type_id)
 
-    @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def initialize_sessions(
         self,
         session_constructor: Callable[[SessionInformation], TSession],
@@ -751,7 +745,6 @@ class BaseReservation(_BaseSessionContainer):
         """
         return self._initialize_multiplexer_sessions_core(session_constructor, multiplexer_type_id)
 
-    @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def get_connection(
         self,
         session_type: Type[TSession],
@@ -830,7 +823,6 @@ class BaseReservation(_BaseSessionContainer):
         )
         return cast(TypedConnectionWithMultiplexer[TSession, TMultiplexerSession], connection)
 
-    @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def get_connections(
         self,
         session_type: Type[TSession],
@@ -912,7 +904,6 @@ class BaseReservation(_BaseSessionContainer):
             for conn in connections
         ]
 
-    @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def create_nidaqmx_task(
         self,
         initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
@@ -950,7 +941,6 @@ class BaseReservation(_BaseSessionContainer):
             session_constructor, INSTRUMENT_TYPE_NI_DAQMX, closing_function
         )
 
-    @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def create_nidaqmx_tasks(
         self,
         initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
@@ -987,7 +977,6 @@ class BaseReservation(_BaseSessionContainer):
             session_constructor, INSTRUMENT_TYPE_NI_DAQMX, closing_function
         )
 
-    @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def get_nidaqmx_connection(
         self,
         pin_name: Optional[str] = None,
@@ -1048,7 +1037,6 @@ class BaseReservation(_BaseSessionContainer):
         )
         return cast(TypedConnectionWithMultiplexer[nidaqmx.Task, TMultiplexerSession], connection)
 
-    @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def get_nidaqmx_connections(
         self,
         pin_names: Union[str, Iterable[str], None] = None,
@@ -1110,7 +1098,6 @@ class BaseReservation(_BaseSessionContainer):
             for conn in connections
         ]
 
-    @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def initialize_nidcpower_session(
         self,
         reset: bool = False,
@@ -1155,7 +1142,6 @@ class BaseReservation(_BaseSessionContainer):
             session_constructor, INSTRUMENT_TYPE_NI_DCPOWER, closing_function
         )
 
-    @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def initialize_nidcpower_sessions(
         self,
         reset: bool = False,
@@ -1200,7 +1186,6 @@ class BaseReservation(_BaseSessionContainer):
             session_constructor, INSTRUMENT_TYPE_NI_DCPOWER, closing_function
         )
 
-    @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def get_nidcpower_connection(
         self,
         pin_name: Optional[str] = None,
@@ -1265,7 +1250,6 @@ class BaseReservation(_BaseSessionContainer):
             TypedConnectionWithMultiplexer[nidcpower.Session, TMultiplexerSession], connection
         )
 
-    @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def get_nidcpower_connections(
         self,
         pin_names: Union[str, Iterable[str], None] = None,
@@ -1333,7 +1317,6 @@ class BaseReservation(_BaseSessionContainer):
             for conn in connections
         ]
 
-    @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def initialize_nidigital_session(
         self,
         reset_device: bool = False,
@@ -1382,7 +1365,6 @@ class BaseReservation(_BaseSessionContainer):
             session_constructor, INSTRUMENT_TYPE_NI_DIGITAL_PATTERN, closing_function
         )
 
-    @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def initialize_nidigital_sessions(
         self,
         reset_device: bool = False,
@@ -1431,7 +1413,6 @@ class BaseReservation(_BaseSessionContainer):
             session_constructor, INSTRUMENT_TYPE_NI_DIGITAL_PATTERN, closing_function
         )
 
-    @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def get_nidigital_connection(
         self,
         pin_name: Optional[str] = None,
@@ -1500,7 +1481,6 @@ class BaseReservation(_BaseSessionContainer):
             TypedConnectionWithMultiplexer[nidigital.Session, TMultiplexerSession], connection
         )
 
-    @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def get_nidigital_connections(
         self,
         pin_names: Union[str, Iterable[str], None] = None,
@@ -1568,7 +1548,6 @@ class BaseReservation(_BaseSessionContainer):
             for conn in connections
         ]
 
-    @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def initialize_nidmm_session(
         self,
         reset_device: bool = False,
@@ -1617,7 +1596,6 @@ class BaseReservation(_BaseSessionContainer):
             session_constructor, INSTRUMENT_TYPE_NI_DMM, closing_function
         )
 
-    @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def initialize_nidmm_sessions(
         self,
         reset_device: bool = False,
@@ -1666,7 +1644,6 @@ class BaseReservation(_BaseSessionContainer):
             session_constructor, INSTRUMENT_TYPE_NI_DMM, closing_function
         )
 
-    @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def get_nidmm_connection(
         self,
         pin_name: Optional[str] = None,
@@ -1727,7 +1704,6 @@ class BaseReservation(_BaseSessionContainer):
         )
         return cast(TypedConnectionWithMultiplexer[nidmm.Session, TMultiplexerSession], connection)
 
-    @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def get_nidmm_connections(
         self,
         pin_names: Union[str, Iterable[str], None] = None,
@@ -1789,7 +1765,6 @@ class BaseReservation(_BaseSessionContainer):
             for conn in connections
         ]
 
-    @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def initialize_nifgen_session(
         self,
         reset_device: bool = False,
@@ -1838,7 +1813,6 @@ class BaseReservation(_BaseSessionContainer):
             session_constructor, INSTRUMENT_TYPE_NI_FGEN, closing_function
         )
 
-    @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def initialize_nifgen_sessions(
         self,
         reset_device: bool = False,
@@ -1887,7 +1861,6 @@ class BaseReservation(_BaseSessionContainer):
             session_constructor, INSTRUMENT_TYPE_NI_FGEN, closing_function
         )
 
-    @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def get_nifgen_connection(
         self,
         pin_name: Optional[str] = None,
@@ -1948,7 +1921,6 @@ class BaseReservation(_BaseSessionContainer):
         )
         return cast(TypedConnectionWithMultiplexer[nifgen.Session, TMultiplexerSession], connection)
 
-    @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def get_nifgen_connections(
         self,
         pin_names: Union[str, Iterable[str], None] = None,
@@ -2010,7 +1982,6 @@ class BaseReservation(_BaseSessionContainer):
             for conn in connections
         ]
 
-    @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def initialize_niscope_session(
         self,
         reset_device: bool = False,
@@ -2059,7 +2030,6 @@ class BaseReservation(_BaseSessionContainer):
             session_constructor, INSTRUMENT_TYPE_NI_SCOPE, closing_function
         )
 
-    @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def initialize_niscope_sessions(
         self,
         reset_device: bool = False,
@@ -2108,7 +2078,6 @@ class BaseReservation(_BaseSessionContainer):
             session_constructor, INSTRUMENT_TYPE_NI_SCOPE, closing_function
         )
 
-    @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def get_niscope_connection(
         self,
         pin_name: Optional[str] = None,
@@ -2171,7 +2140,6 @@ class BaseReservation(_BaseSessionContainer):
             TypedConnectionWithMultiplexer[niscope.Session, TMultiplexerSession], connection
         )
 
-    @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def get_niscope_connections(
         self,
         pin_names: Union[str, Iterable[str], None] = None,
@@ -2235,7 +2203,6 @@ class BaseReservation(_BaseSessionContainer):
             for conn in connections
         ]
 
-    @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def initialize_niswitch_session(
         self,
         topology: Optional[str] = None,
@@ -2291,7 +2258,6 @@ class BaseReservation(_BaseSessionContainer):
             session_constructor, INSTRUMENT_TYPE_NI_RELAY_DRIVER, closing_function
         )
 
-    @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def initialize_niswitch_sessions(
         self,
         topology: Optional[str] = None,
@@ -2347,7 +2313,6 @@ class BaseReservation(_BaseSessionContainer):
             session_constructor, INSTRUMENT_TYPE_NI_RELAY_DRIVER, closing_function
         )
 
-    @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def get_niswitch_connection(
         self,
         relay_name: Optional[str] = None,
@@ -2377,7 +2342,6 @@ class BaseReservation(_BaseSessionContainer):
             niswitch.Session, relay_name, site, INSTRUMENT_TYPE_NI_RELAY_DRIVER
         )
 
-    @requires_feature(SESSION_MANAGEMENT_2024Q1)
     def get_niswitch_connections(
         self,
         relay_names: Union[str, Iterable[str], None] = None,
