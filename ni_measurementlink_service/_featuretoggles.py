@@ -141,3 +141,8 @@ def requires_feature(
         return wrapper
 
     return decorator
+
+
+# --------------------------------------
+# Define feature toggle constants here:
+# --------------------------------------
