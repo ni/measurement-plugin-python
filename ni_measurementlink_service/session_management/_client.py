@@ -328,7 +328,8 @@ class SessionManagementClient(object):
                 as well as the list of sites for the measurement.
 
             multiplexer_type_id: User-defined identifier for the multiplexer
-                type in the pin map editor.
+                type in the pin map editor. If not specified, the multiplexer
+                type id is ignored when matching multiplexer sessions.
 
         Returns:
             The matching multiplexer session infos.
@@ -352,7 +353,8 @@ class SessionManagementClient(object):
 
         Args:
             multiplexer_type_id: User-defined identifier for the multiplexer
-                type in the pin map editor.
+                type in the pin map editor. If not specified, the multiplexer
+                type id is ignored when matching multiplexer sessions.
 
         Returns:
             The matching multiplexer session infos registered with the session management service.
