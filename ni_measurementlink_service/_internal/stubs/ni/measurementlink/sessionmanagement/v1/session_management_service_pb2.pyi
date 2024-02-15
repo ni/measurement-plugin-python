@@ -405,3 +405,79 @@ class UnregisterMultiplexerSessionsResponse(google.protobuf.message.Message):
     ) -> None: ...
 
 global___UnregisterMultiplexerSessionsResponse = UnregisterMultiplexerSessionsResponse
+
+@typing_extensions.final
+class GetMultiplexerSessionsRequest(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    PIN_MAP_CONTEXT_FIELD_NUMBER: builtins.int
+    MULTIPLEXER_TYPE_ID_FIELD_NUMBER: builtins.int
+    @property
+    def pin_map_context(self) -> ni_measurementlink_pin_map_context_pb2.PinMapContext:
+        """Required. Includes the pin map ID for the pin map in the Pin Map Service, as well as the list of sites for the measurement."""
+    multiplexer_type_id: builtins.str
+    """Optional. User-defined identifier for the multiplexer type in the pin map editor.
+    If unspecified, information for all multiplexer types is returned.
+    """
+    def __init__(
+        self,
+        *,
+        pin_map_context: ni_measurementlink_pin_map_context_pb2.PinMapContext | None = ...,
+        multiplexer_type_id: builtins.str = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing_extensions.Literal["pin_map_context", b"pin_map_context"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing_extensions.Literal["multiplexer_type_id", b"multiplexer_type_id", "pin_map_context", b"pin_map_context"]) -> None: ...
+
+global___GetMultiplexerSessionsRequest = GetMultiplexerSessionsRequest
+
+@typing_extensions.final
+class GetMultiplexerSessionsResponse(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    MULTIPLEXER_SESSIONS_FIELD_NUMBER: builtins.int
+    @property
+    def multiplexer_sessions(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___MultiplexerSessionInformation]:
+        """List of information needed to create or use each multiplexer session for the given pin map context and multiplexer type ID."""
+    def __init__(
+        self,
+        *,
+        multiplexer_sessions: collections.abc.Iterable[global___MultiplexerSessionInformation] | None = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["multiplexer_sessions", b"multiplexer_sessions"]) -> None: ...
+
+global___GetMultiplexerSessionsResponse = GetMultiplexerSessionsResponse
+
+@typing_extensions.final
+class GetAllRegisteredMultiplexerSessionsRequest(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    MULTIPLEXER_TYPE_ID_FIELD_NUMBER: builtins.int
+    multiplexer_type_id: builtins.str
+    """Optional. User-defined identifier for the multiplexer type in the pin map editor.
+    If unspecified, information for all registered multiplexer types is returned.
+    """
+    def __init__(
+        self,
+        *,
+        multiplexer_type_id: builtins.str = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["multiplexer_type_id", b"multiplexer_type_id"]) -> None: ...
+
+global___GetAllRegisteredMultiplexerSessionsRequest = GetAllRegisteredMultiplexerSessionsRequest
+
+@typing_extensions.final
+class GetAllRegisteredMultiplexerSessionsResponse(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    MULTIPLEXER_SESSIONS_FIELD_NUMBER: builtins.int
+    @property
+    def multiplexer_sessions(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___MultiplexerSessionInformation]:
+        """Multiplexer sessions currently registered in the session management service."""
+    def __init__(
+        self,
+        *,
+        multiplexer_sessions: collections.abc.Iterable[global___MultiplexerSessionInformation] | None = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["multiplexer_sessions", b"multiplexer_sessions"]) -> None: ...
+
+global___GetAllRegisteredMultiplexerSessionsResponse = GetAllRegisteredMultiplexerSessionsResponse

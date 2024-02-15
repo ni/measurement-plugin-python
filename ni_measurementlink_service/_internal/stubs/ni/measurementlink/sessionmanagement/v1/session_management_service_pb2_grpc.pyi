@@ -26,7 +26,7 @@ class SessionManagementServiceStub:
         ni_measurementlink_sessionmanagement_v1_session_management_service_pb2.ReserveSessionsResponse,
     ]
     """Reserve session(s) for the given pins or relays, sites, and instrument type ID and returns the information needed to create or access the session.
-    (Will be implemented in AB#2046548) Also reserves the session so other processes cannot access it with a ReserveSessions() call.
+    Also reserves the session so other processes cannot access it with a ReserveSessions() call.
     Status Codes for errors:
     - INVALID_ARGUMENT:
         - Pin Map Context references a site number that is not defined in the pin map
@@ -87,6 +87,22 @@ class SessionManagementServiceStub:
         ni_measurementlink_sessionmanagement_v1_session_management_service_pb2.UnregisterMultiplexerSessionsResponse,
     ]
     """Unregisters the multiplexer sessions with this service. Indicates that the sessions have been closed and will need to be reopened before they can be used again."""
+    GetMultiplexerSessions: grpc.UnaryUnaryMultiCallable[
+        ni_measurementlink_sessionmanagement_v1_session_management_service_pb2.GetMultiplexerSessionsRequest,
+        ni_measurementlink_sessionmanagement_v1_session_management_service_pb2.GetMultiplexerSessionsResponse,
+    ]
+    """Gets all the connected multiplexer session(s) for the given pin map context and returns information needed to create or access the session.
+    Status Codes for errors:
+    - INVALID_ARGUMENT:
+        - Pin Map Context references a site number that is not defined in the pin map.
+    - NOT_FOUND:
+        - Pin Map Context has a pin map ID that does not match any pin maps registered with the Pin Map Service.
+    """
+    GetAllRegisteredMultiplexerSessions: grpc.UnaryUnaryMultiCallable[
+        ni_measurementlink_sessionmanagement_v1_session_management_service_pb2.GetAllRegisteredMultiplexerSessionsRequest,
+        ni_measurementlink_sessionmanagement_v1_session_management_service_pb2.GetAllRegisteredMultiplexerSessionsResponse,
+    ]
+    """Gets all multiplexer sessions currently registered with this service."""
 
 class SessionManagementServiceAsyncStub:
     """Service to keep track of open sessions used by measurement services, and to allow measurement services to access sessions by pin and site."""
@@ -96,7 +112,7 @@ class SessionManagementServiceAsyncStub:
         ni_measurementlink_sessionmanagement_v1_session_management_service_pb2.ReserveSessionsResponse,
     ]
     """Reserve session(s) for the given pins or relays, sites, and instrument type ID and returns the information needed to create or access the session.
-    (Will be implemented in AB#2046548) Also reserves the session so other processes cannot access it with a ReserveSessions() call.
+    Also reserves the session so other processes cannot access it with a ReserveSessions() call.
     Status Codes for errors:
     - INVALID_ARGUMENT:
         - Pin Map Context references a site number that is not defined in the pin map
@@ -157,6 +173,22 @@ class SessionManagementServiceAsyncStub:
         ni_measurementlink_sessionmanagement_v1_session_management_service_pb2.UnregisterMultiplexerSessionsResponse,
     ]
     """Unregisters the multiplexer sessions with this service. Indicates that the sessions have been closed and will need to be reopened before they can be used again."""
+    GetMultiplexerSessions: grpc.aio.UnaryUnaryMultiCallable[
+        ni_measurementlink_sessionmanagement_v1_session_management_service_pb2.GetMultiplexerSessionsRequest,
+        ni_measurementlink_sessionmanagement_v1_session_management_service_pb2.GetMultiplexerSessionsResponse,
+    ]
+    """Gets all the connected multiplexer session(s) for the given pin map context and returns information needed to create or access the session.
+    Status Codes for errors:
+    - INVALID_ARGUMENT:
+        - Pin Map Context references a site number that is not defined in the pin map.
+    - NOT_FOUND:
+        - Pin Map Context has a pin map ID that does not match any pin maps registered with the Pin Map Service.
+    """
+    GetAllRegisteredMultiplexerSessions: grpc.aio.UnaryUnaryMultiCallable[
+        ni_measurementlink_sessionmanagement_v1_session_management_service_pb2.GetAllRegisteredMultiplexerSessionsRequest,
+        ni_measurementlink_sessionmanagement_v1_session_management_service_pb2.GetAllRegisteredMultiplexerSessionsResponse,
+    ]
+    """Gets all multiplexer sessions currently registered with this service."""
 
 class SessionManagementServiceServicer(metaclass=abc.ABCMeta):
     """Service to keep track of open sessions used by measurement services, and to allow measurement services to access sessions by pin and site."""
@@ -168,7 +200,7 @@ class SessionManagementServiceServicer(metaclass=abc.ABCMeta):
         context: _ServicerContext,
     ) -> typing.Union[ni_measurementlink_sessionmanagement_v1_session_management_service_pb2.ReserveSessionsResponse, collections.abc.Awaitable[ni_measurementlink_sessionmanagement_v1_session_management_service_pb2.ReserveSessionsResponse]]:
         """Reserve session(s) for the given pins or relays, sites, and instrument type ID and returns the information needed to create or access the session.
-        (Will be implemented in AB#2046548) Also reserves the session so other processes cannot access it with a ReserveSessions() call.
+        Also reserves the session so other processes cannot access it with a ReserveSessions() call.
         Status Codes for errors:
         - INVALID_ARGUMENT:
             - Pin Map Context references a site number that is not defined in the pin map
@@ -241,5 +273,25 @@ class SessionManagementServiceServicer(metaclass=abc.ABCMeta):
         context: _ServicerContext,
     ) -> typing.Union[ni_measurementlink_sessionmanagement_v1_session_management_service_pb2.UnregisterMultiplexerSessionsResponse, collections.abc.Awaitable[ni_measurementlink_sessionmanagement_v1_session_management_service_pb2.UnregisterMultiplexerSessionsResponse]]:
         """Unregisters the multiplexer sessions with this service. Indicates that the sessions have been closed and will need to be reopened before they can be used again."""
+    @abc.abstractmethod
+    def GetMultiplexerSessions(
+        self,
+        request: ni_measurementlink_sessionmanagement_v1_session_management_service_pb2.GetMultiplexerSessionsRequest,
+        context: _ServicerContext,
+    ) -> typing.Union[ni_measurementlink_sessionmanagement_v1_session_management_service_pb2.GetMultiplexerSessionsResponse, collections.abc.Awaitable[ni_measurementlink_sessionmanagement_v1_session_management_service_pb2.GetMultiplexerSessionsResponse]]:
+        """Gets all the connected multiplexer session(s) for the given pin map context and returns information needed to create or access the session.
+        Status Codes for errors:
+        - INVALID_ARGUMENT:
+            - Pin Map Context references a site number that is not defined in the pin map.
+        - NOT_FOUND:
+            - Pin Map Context has a pin map ID that does not match any pin maps registered with the Pin Map Service.
+        """
+    @abc.abstractmethod
+    def GetAllRegisteredMultiplexerSessions(
+        self,
+        request: ni_measurementlink_sessionmanagement_v1_session_management_service_pb2.GetAllRegisteredMultiplexerSessionsRequest,
+        context: _ServicerContext,
+    ) -> typing.Union[ni_measurementlink_sessionmanagement_v1_session_management_service_pb2.GetAllRegisteredMultiplexerSessionsResponse, collections.abc.Awaitable[ni_measurementlink_sessionmanagement_v1_session_management_service_pb2.GetAllRegisteredMultiplexerSessionsResponse]]:
+        """Gets all multiplexer sessions currently registered with this service."""
 
 def add_SessionManagementServiceServicer_to_server(servicer: SessionManagementServiceServicer, server: typing.Union[grpc.Server, grpc.aio.Server]) -> None: ...
