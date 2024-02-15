@@ -336,7 +336,6 @@ class SessionManagementClient(object):
         request = session_management_service_pb2.GetMultiplexerSessionsRequest(
             pin_map_context=pin_map_context._to_grpc()
         )
-
         if multiplexer_type_id is not None:
             request.multiplexer_type_id = multiplexer_type_id
 
