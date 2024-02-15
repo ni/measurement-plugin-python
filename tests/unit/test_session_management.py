@@ -796,6 +796,148 @@ def test___varying_multiplexer_session_count___unregister_multiplexer_sessions__
     ]
 
 
+def test___optional_arg___get_multiplexer_sessions___sends_request_with_args(
+    session_management_client: SessionManagementClient,
+    session_management_stub: Mock,
+) -> None:
+    session_management_stub.GetMultiplexerSessions.return_value = (
+        session_management_service_pb2.GetMultiplexerSessionsResponse()
+    )
+
+    session_management_client.get_multiplexer_sessions(
+        PinMapContext("MyPinMap", [0, 1]), "multiplexer_type_id"
+    )
+
+    session_management_stub.GetMultiplexerSessions.assert_called_once()
+    (request,) = session_management_stub.GetMultiplexerSessions.call_args.args
+    assert request.pin_map_context.pin_map_id == "MyPinMap"
+    assert request.pin_map_context.sites == [0, 1]
+    assert request.multiplexer_type_id == "multiplexer_type_id"
+
+
+def test___no_optional_args___get_multiplexer_sessions___sends_request_with_default(
+    session_management_client: SessionManagementClient,
+    session_management_stub: Mock,
+) -> None:
+    session_management_stub.GetMultiplexerSessions.return_value = (
+        session_management_service_pb2.GetMultiplexerSessionsResponse()
+    )
+
+    session_management_client.get_multiplexer_sessions(PinMapContext("MyPinMap", [0, 1]))
+
+    session_management_stub.GetMultiplexerSessions.assert_called_once()
+    (request,) = session_management_stub.GetMultiplexerSessions.call_args.args
+    assert request.pin_map_context.pin_map_id == "MyPinMap"
+    assert request.pin_map_context.sites == [0, 1]
+    assert request.multiplexer_type_id == ""
+
+
+def test___explicit_none___get_multiplexer_sessions___sends_request_with_default(
+    session_management_client: SessionManagementClient,
+    session_management_stub: Mock,
+) -> None:
+    session_management_stub.GetMultiplexerSessions.return_value = (
+        session_management_service_pb2.GetMultiplexerSessionsResponse()
+    )
+
+    session_management_client.get_multiplexer_sessions(PinMapContext("MyPinMap", [0, 1]), None)
+
+    session_management_stub.GetMultiplexerSessions.assert_called_once()
+    (request,) = session_management_stub.GetMultiplexerSessions.call_args.args
+    assert request.pin_map_context.pin_map_id == "MyPinMap"
+    assert request.pin_map_context.sites == [0, 1]
+    assert request.multiplexer_type_id == ""
+
+
+@pytest.mark.parametrize("multiplexer_session_count", [0, 1, 2])
+def test___varying_multiplexers___get_multiplexer_sessions___returns_multiplexer_session_infos(
+    session_management_client: SessionManagementClient,
+    session_management_stub: Mock,
+    multiplexer_session_count: int,
+) -> None:
+    session_management_stub.GetMultiplexerSessions.return_value = (
+        session_management_service_pb2.GetMultiplexerSessionsResponse(
+            multiplexer_sessions=_create_grpc_multiplexer_session_infos(multiplexer_session_count)
+        )
+    )
+
+    response = session_management_client.get_multiplexer_sessions(PinMapContext("MyPinMap", [0, 1]))
+
+    session_management_stub.GetMultiplexerSessions.assert_called_once()
+    assert len(response) == multiplexer_session_count
+    assert [info.session_name for info in response] == [
+        f"MyMultiplexer{i}" for i in range(multiplexer_session_count)
+    ]
+
+
+def test___optional_arg___get_all_registered_multiplexer_sessions___sends_request_with_args(
+    session_management_client: SessionManagementClient,
+    session_management_stub: Mock,
+) -> None:
+    session_management_stub.GetAllRegisteredMultiplexerSessions.return_value = (
+        session_management_service_pb2.GetAllRegisteredMultiplexerSessionsResponse()
+    )
+
+    session_management_client.get_all_registered_multiplexer_sessions("multiplexer_type_id")
+
+    session_management_stub.GetAllRegisteredMultiplexerSessions.assert_called_once()
+    (request,) = session_management_stub.GetAllRegisteredMultiplexerSessions.call_args.args
+    assert request.multiplexer_type_id == "multiplexer_type_id"
+
+
+def test___no_optional_args___get_all_registered_multiplexer_sessions___sends_request_with_default(
+    session_management_client: SessionManagementClient,
+    session_management_stub: Mock,
+) -> None:
+    session_management_stub.GetAllRegisteredMultiplexerSessions.return_value = (
+        session_management_service_pb2.GetAllRegisteredMultiplexerSessionsResponse()
+    )
+
+    session_management_client.get_all_registered_multiplexer_sessions()
+
+    session_management_stub.GetAllRegisteredMultiplexerSessions.assert_called_once()
+    (request,) = session_management_stub.GetAllRegisteredMultiplexerSessions.call_args.args
+    assert request.multiplexer_type_id == ""
+
+
+def test___explicit_none___get_all_registered_multiplexer_sessions___sends_request_with_default(
+    session_management_client: SessionManagementClient,
+    session_management_stub: Mock,
+) -> None:
+    session_management_stub.GetAllRegisteredMultiplexerSessions.return_value = (
+        session_management_service_pb2.GetAllRegisteredMultiplexerSessionsResponse()
+    )
+
+    session_management_client.get_all_registered_multiplexer_sessions(None)
+
+    session_management_stub.GetAllRegisteredMultiplexerSessions.assert_called_once()
+    (request,) = session_management_stub.GetAllRegisteredMultiplexerSessions.call_args.args
+    assert request.multiplexer_type_id == ""
+
+
+@pytest.mark.parametrize("multiplexer_session_count", [0, 1, 2])
+def test___varying_registered_multiplexers___get_all_registered_multiplexer_sessions___returns_multiplexer_session_infos(
+    session_management_client: SessionManagementClient,
+    session_management_stub: Mock,
+    multiplexer_session_count: int,
+) -> None:
+    session_management_stub.GetAllRegisteredMultiplexerSessions.return_value = (
+        session_management_service_pb2.GetMultiplexerSessionsResponse(
+            multiplexer_sessions=_create_grpc_multiplexer_session_infos(multiplexer_session_count)
+        )
+    )
+
+    response = session_management_client.get_all_registered_multiplexer_sessions(
+        "multiplexer_type_id"
+    )
+
+    session_management_stub.GetAllRegisteredMultiplexerSessions.assert_called_once()
+    assert len(response) == multiplexer_session_count
+    assert [info.session_name for info in response] == [
+        f"MyMultiplexer{i}" for i in range(multiplexer_session_count)
+    ]
+
+
 def _create_session_infos(session_count: int) -> List[SessionInformation]:
     return [
         SessionInformation(f"MySession{i}", "", "", "", False, []) for i in range(session_count)
@@ -864,4 +1006,6 @@ def session_management_stub(mocker: MockerFixture) -> Mock:
     stub.ReserveAllRegisteredSessions = mocker.create_autospec(grpc.UnaryUnaryMultiCallable)
     stub.RegisterMultiplexerSessions = mocker.create_autospec(grpc.UnaryUnaryMultiCallable)
     stub.UnregisterMultiplexerSessions = mocker.create_autospec(grpc.UnaryUnaryMultiCallable)
+    stub.GetMultiplexerSessions = mocker.create_autospec(grpc.UnaryUnaryMultiCallable)
+    stub.GetAllRegisteredMultiplexerSessions = mocker.create_autospec(grpc.UnaryUnaryMultiCallable)
     return stub
