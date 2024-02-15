@@ -927,9 +927,7 @@ def test___varying_registered_multiplexers___get_all_registered_multiplexer_sess
         )
     )
 
-    response = session_management_client.get_all_registered_multiplexer_sessions(
-        "multiplexer_type_id"
-    )
+    response = session_management_client.get_all_registered_multiplexer_sessions()
 
     session_management_stub.GetAllRegisteredMultiplexerSessions.assert_called_once()
     assert len(response) == multiplexer_session_count
