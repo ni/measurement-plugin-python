@@ -9,6 +9,10 @@ from typing import Iterable, Optional, Sequence, Union
 
 import grpc
 
+from ni_measurementlink_service._featuretoggles import (
+    MULTIPLEXER_SUPPORT_2024Q2,
+    requires_feature,
+)
 from ni_measurementlink_service._internal.stubs.ni.measurementlink.sessionmanagement.v1 import (
     session_management_service_pb2,
     session_management_service_pb2_grpc,
@@ -287,6 +291,7 @@ class SessionManagementClient(object):
             session_management_client=self, session_info=response.sessions
         )
 
+    @requires_feature(MULTIPLEXER_SUPPORT_2024Q2)
     def register_multiplexer_sessions(
         self, multiplexer_session_info: Iterable[MultiplexerSessionInformation]
     ) -> None:
@@ -302,6 +307,7 @@ class SessionManagementClient(object):
         )
         self._get_stub().RegisterMultiplexerSessions(request)
 
+    @requires_feature(MULTIPLEXER_SUPPORT_2024Q2)
     def unregister_multiplexer_sessions(
         self, multiplexer_session_info: Iterable[MultiplexerSessionInformation]
     ) -> None:
@@ -318,10 +324,14 @@ class SessionManagementClient(object):
         )
         self._get_stub().UnregisterMultiplexerSessions(request)
 
+    @requires_feature(MULTIPLEXER_SUPPORT_2024Q2)
     def get_multiplexer_sessions(
         self, pin_map_context: PinMapContext, multiplexer_type_id: Optional[str] = None
     ) -> Sequence[MultiplexerSessionInformation]:
-        """Gets all the connected multiplexer session infos.
+        """Get all multiplexer session infos matching the specified criteria.
+
+        Returns the information needed to create or access the multiplexer sessions
+        without reserving the connected instruments.
 
         Args:
             pin_map_context: Includes the pin map ID for the pin map in the pin map service,
@@ -346,10 +356,11 @@ class SessionManagementClient(object):
             for session in response.multiplexer_sessions
         ]
 
+    @requires_feature(MULTIPLEXER_SUPPORT_2024Q2)
     def get_all_registered_multiplexer_sessions(
         self, multiplexer_type_id: Optional[str] = None
     ) -> Sequence[MultiplexerSessionInformation]:
-        """Gets all multiplexer sessions currently registered with the session management service.
+        """Get all multiplexer session infos registered with the session management service.
 
         Args:
             multiplexer_type_id: User-defined identifier for the multiplexer

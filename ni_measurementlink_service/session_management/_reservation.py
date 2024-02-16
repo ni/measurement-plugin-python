@@ -34,6 +34,10 @@ from ni_measurementlink_service._drivers import (
     closing_session,
     closing_session_with_ts_code_module_support,
 )
+from ni_measurementlink_service._featuretoggles import (
+    MULTIPLEXER_SUPPORT_2024Q2,
+    requires_feature,
+)
 from ni_measurementlink_service._internal.stubs.ni.measurementlink.sessionmanagement.v1 import (
     session_management_service_pb2,
 )
@@ -297,6 +301,7 @@ class BaseReservation(_BaseSessionContainer):
         )
 
     @property
+    @requires_feature(MULTIPLEXER_SUPPORT_2024Q2)
     def multiplexer_session_info(self) -> Sequence[MultiplexerSessionInformation]:
         """Multiplexer session information object."""
         if not self._multiplexer_session_cache:
@@ -659,6 +664,7 @@ class BaseReservation(_BaseSessionContainer):
         """
         return self._initialize_session_core(session_constructor, instrument_type_id)
 
+    @requires_feature(MULTIPLEXER_SUPPORT_2024Q2)
     def initialize_multiplexer_session(
         self,
         session_constructor: Callable[[MultiplexerSessionInformation], TMultiplexerSession],
@@ -717,6 +723,7 @@ class BaseReservation(_BaseSessionContainer):
         """
         return self._initialize_sessions_core(session_constructor, instrument_type_id)
 
+    @requires_feature(MULTIPLEXER_SUPPORT_2024Q2)
     def initialize_multiplexer_sessions(
         self,
         session_constructor: Callable[[MultiplexerSessionInformation], TMultiplexerSession],
@@ -781,6 +788,7 @@ class BaseReservation(_BaseSessionContainer):
         """
         return self._get_connection_core(session_type, pin_or_relay_name, site, instrument_type_id)
 
+    @requires_feature(MULTIPLEXER_SUPPORT_2024Q2)
     def get_connection_with_multiplexer(
         self,
         session_type: Type[TSession],
@@ -860,6 +868,7 @@ class BaseReservation(_BaseSessionContainer):
             session_type, pin_or_relay_names, sites, instrument_type_id
         )
 
+    @requires_feature(MULTIPLEXER_SUPPORT_2024Q2)
     def get_connections_with_multiplexer(
         self,
         session_type: Type[TSession],
@@ -1004,6 +1013,7 @@ class BaseReservation(_BaseSessionContainer):
 
         return self._get_connection_core(nidaqmx.Task, pin_name, site, INSTRUMENT_TYPE_NI_DAQMX)
 
+    @requires_feature(MULTIPLEXER_SUPPORT_2024Q2)
     def get_nidaqmx_connection_with_multiplexer(
         self,
         multiplexer_session_type: Type[TMultiplexerSession],
@@ -1063,6 +1073,7 @@ class BaseReservation(_BaseSessionContainer):
 
         return self._get_connections_core(nidaqmx.Task, pin_names, sites, INSTRUMENT_TYPE_NI_DAQMX)
 
+    @requires_feature(MULTIPLEXER_SUPPORT_2024Q2)
     def get_nidaqmx_connections_with_multiplexer(
         self,
         multiplexer_session_type: Type[TMultiplexerSession],
@@ -1215,6 +1226,7 @@ class BaseReservation(_BaseSessionContainer):
             nidcpower.Session, pin_name, site, INSTRUMENT_TYPE_NI_DCPOWER
         )
 
+    @requires_feature(MULTIPLEXER_SUPPORT_2024Q2)
     def get_nidcpower_connection_with_multiplexer(
         self,
         multiplexer_session_type: Type[TMultiplexerSession],
@@ -1278,6 +1290,7 @@ class BaseReservation(_BaseSessionContainer):
             nidcpower.Session, pin_names, sites, INSTRUMENT_TYPE_NI_DCPOWER
         )
 
+    @requires_feature(MULTIPLEXER_SUPPORT_2024Q2)
     def get_nidcpower_connections_with_multiplexer(
         self,
         multiplexer_session_type: Type[TMultiplexerSession],
@@ -1442,6 +1455,7 @@ class BaseReservation(_BaseSessionContainer):
             nidigital.Session, pin_name, site, INSTRUMENT_TYPE_NI_DIGITAL_PATTERN
         )
 
+    @requires_feature(MULTIPLEXER_SUPPORT_2024Q2)
     def get_nidigital_connection_with_multiplexer(
         self,
         multiplexer_session_type: Type[TMultiplexerSession],
@@ -1509,6 +1523,7 @@ class BaseReservation(_BaseSessionContainer):
             nidigital.Session, pin_names, sites, INSTRUMENT_TYPE_NI_DIGITAL_PATTERN
         )
 
+    @requires_feature(MULTIPLEXER_SUPPORT_2024Q2)
     def get_nidigital_connections_with_multiplexer(
         self,
         multiplexer_session_type: Type[TMultiplexerSession],
@@ -1671,6 +1686,7 @@ class BaseReservation(_BaseSessionContainer):
 
         return self._get_connection_core(nidmm.Session, pin_name, site, INSTRUMENT_TYPE_NI_DMM)
 
+    @requires_feature(MULTIPLEXER_SUPPORT_2024Q2)
     def get_nidmm_connection_with_multiplexer(
         self,
         multiplexer_session_type: Type[TMultiplexerSession],
@@ -1730,6 +1746,7 @@ class BaseReservation(_BaseSessionContainer):
 
         return self._get_connections_core(nidmm.Session, pin_names, sites, INSTRUMENT_TYPE_NI_DMM)
 
+    @requires_feature(MULTIPLEXER_SUPPORT_2024Q2)
     def get_nidmm_connections_with_multiplexer(
         self,
         multiplexer_session_type: Type[TMultiplexerSession],
@@ -1888,6 +1905,7 @@ class BaseReservation(_BaseSessionContainer):
 
         return self._get_connection_core(nifgen.Session, pin_name, site, INSTRUMENT_TYPE_NI_FGEN)
 
+    @requires_feature(MULTIPLEXER_SUPPORT_2024Q2)
     def get_nifgen_connection_with_multiplexer(
         self,
         multiplexer_session_type: Type[TMultiplexerSession],
@@ -1947,6 +1965,7 @@ class BaseReservation(_BaseSessionContainer):
 
         return self._get_connections_core(nifgen.Session, pin_names, sites, INSTRUMENT_TYPE_NI_FGEN)
 
+    @requires_feature(MULTIPLEXER_SUPPORT_2024Q2)
     def get_nifgen_connections_with_multiplexer(
         self,
         multiplexer_session_type: Type[TMultiplexerSession],
@@ -2105,6 +2124,7 @@ class BaseReservation(_BaseSessionContainer):
 
         return self._get_connection_core(niscope.Session, pin_name, site, INSTRUMENT_TYPE_NI_SCOPE)
 
+    @requires_feature(MULTIPLEXER_SUPPORT_2024Q2)
     def get_niscope_connection_with_multiplexer(
         self,
         multiplexer_session_type: Type[TMultiplexerSession],
@@ -2168,6 +2188,7 @@ class BaseReservation(_BaseSessionContainer):
             niscope.Session, pin_names, sites, INSTRUMENT_TYPE_NI_SCOPE
         )
 
+    @requires_feature(MULTIPLEXER_SUPPORT_2024Q2)
     def get_niscope_connections_with_multiplexer(
         self,
         multiplexer_session_type: Type[TMultiplexerSession],
@@ -2370,6 +2391,7 @@ class BaseReservation(_BaseSessionContainer):
             niswitch.Session, relay_names, sites, INSTRUMENT_TYPE_NI_RELAY_DRIVER
         )
 
+    @requires_feature(MULTIPLEXER_SUPPORT_2024Q2)
     def initialize_niswitch_multiplexer_session(
         self,
         topology: Optional[str] = None,
@@ -2432,6 +2454,7 @@ class BaseReservation(_BaseSessionContainer):
             session_constructor, multiplexer_type_id, closing_function
         )
 
+    @requires_feature(MULTIPLEXER_SUPPORT_2024Q2)
     def initialize_niswitch_multiplexer_sessions(
         self,
         topology: Optional[str] = None,
