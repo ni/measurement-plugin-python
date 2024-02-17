@@ -88,7 +88,7 @@ jobs:
         working-directory: ./ni_measurementlink_generator
 
       - name: Upload test results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: test_results
           path: test_results/*.xml
