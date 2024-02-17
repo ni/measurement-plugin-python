@@ -922,7 +922,7 @@ def test___varying_registered_multiplexers___get_all_registered_multiplexer_sess
     multiplexer_session_count: int,
 ) -> None:
     session_management_stub.GetAllRegisteredMultiplexerSessions.return_value = (
-        session_management_service_pb2.GetMultiplexerSessionsResponse(
+        session_management_service_pb2.GetAllRegisteredMultiplexerSessions(
             multiplexer_sessions=_create_grpc_multiplexer_session_infos(multiplexer_session_count)
         )
     )
