@@ -1,4 +1,5 @@
 """A default measurement with an array in and out."""
+
 import logging
 import pathlib
 import sys
