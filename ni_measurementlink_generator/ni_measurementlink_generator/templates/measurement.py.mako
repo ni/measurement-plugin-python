@@ -1,6 +1,7 @@
 <%page args="display_name, version, ui_file, ui_file_type, service_class, description_url, serviceconfig_file"/>\
 \
 """A default measurement with an array in and out."""
+
 import logging
 import pathlib
 import sys
