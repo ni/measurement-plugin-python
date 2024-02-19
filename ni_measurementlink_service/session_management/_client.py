@@ -5,10 +5,14 @@ from __future__ import annotations
 import logging
 import threading
 import warnings
-from typing import Iterable, Optional, Union
+from typing import Iterable, Optional, Sequence, Union
 
 import grpc
 
+from ni_measurementlink_service._featuretoggles import (
+    MULTIPLEXER_SUPPORT_2024Q2,
+    requires_feature,
+)
 from ni_measurementlink_service._internal.stubs.ni.measurementlink.sessionmanagement.v1 import (
     session_management_service_pb2,
     session_management_service_pb2_grpc,
@@ -24,9 +28,9 @@ from ni_measurementlink_service.session_management._reservation import (
     SingleSessionReservation,
 )
 from ni_measurementlink_service.session_management._types import (
+    MultiplexerSessionInformation,
     PinMapContext,
     SessionInformation,
-    MultiplexerSessionInformation,
 )
 
 _logger = logging.getLogger(__name__)
@@ -287,6 +291,7 @@ class SessionManagementClient(object):
             session_management_client=self, session_info=response.sessions
         )
 
+    @requires_feature(MULTIPLEXER_SUPPORT_2024Q2)
     def register_multiplexer_sessions(
         self, multiplexer_session_info: Iterable[MultiplexerSessionInformation]
     ) -> None:
@@ -302,6 +307,7 @@ class SessionManagementClient(object):
         )
         self._get_stub().RegisterMultiplexerSessions(request)
 
+    @requires_feature(MULTIPLEXER_SUPPORT_2024Q2)
     def unregister_multiplexer_sessions(
         self, multiplexer_session_info: Iterable[MultiplexerSessionInformation]
     ) -> None:
@@ -317,6 +323,62 @@ class SessionManagementClient(object):
             multiplexer_sessions=(info._to_grpc_v1() for info in multiplexer_session_info),
         )
         self._get_stub().UnregisterMultiplexerSessions(request)
+
+    @requires_feature(MULTIPLEXER_SUPPORT_2024Q2)
+    def get_multiplexer_sessions(
+        self, pin_map_context: PinMapContext, multiplexer_type_id: Optional[str] = None
+    ) -> Sequence[MultiplexerSessionInformation]:
+        """Get all multiplexer session infos matching the specified criteria.
+
+        Returns the information needed to create or access the multiplexer sessions
+        without reserving the connected instruments.
+
+        Args:
+            pin_map_context: Includes the pin map ID for the pin map in the pin map service,
+                as well as the list of sites for the measurement.
+
+            multiplexer_type_id: User-defined identifier for the multiplexer
+                type in the pin map editor. If not specified, the multiplexer
+                type id is ignored when matching multiplexer sessions.
+
+        Returns:
+            The matching multiplexer session infos.
+        """
+        request = session_management_service_pb2.GetMultiplexerSessionsRequest(
+            pin_map_context=pin_map_context._to_grpc()
+        )
+        if multiplexer_type_id is not None:
+            request.multiplexer_type_id = multiplexer_type_id
+
+        response = self._get_stub().GetMultiplexerSessions(request)
+        return [
+            MultiplexerSessionInformation._from_grpc_v1(session)
+            for session in response.multiplexer_sessions
+        ]
+
+    @requires_feature(MULTIPLEXER_SUPPORT_2024Q2)
+    def get_all_registered_multiplexer_sessions(
+        self, multiplexer_type_id: Optional[str] = None
+    ) -> Sequence[MultiplexerSessionInformation]:
+        """Get all multiplexer session infos registered with the session management service.
+
+        Args:
+            multiplexer_type_id: User-defined identifier for the multiplexer
+                type in the pin map editor. If not specified, the multiplexer
+                type id is ignored when matching multiplexer sessions.
+
+        Returns:
+            The matching multiplexer session infos registered with the session management service.
+        """
+        request = session_management_service_pb2.GetAllRegisteredMultiplexerSessionsRequest()
+        if multiplexer_type_id is not None:
+            request.multiplexer_type_id = multiplexer_type_id
+
+        response = self._get_stub().GetAllRegisteredMultiplexerSessions(request)
+        return [
+            MultiplexerSessionInformation._from_grpc_v1(session)
+            for session in response.multiplexer_sessions
+        ]
 
 
 def _timeout_to_milliseconds(timeout: Optional[float]) -> int:

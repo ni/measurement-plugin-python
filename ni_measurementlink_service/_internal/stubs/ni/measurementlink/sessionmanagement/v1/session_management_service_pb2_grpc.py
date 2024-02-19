@@ -50,6 +50,16 @@ class SessionManagementServiceStub(object):
                 request_serializer=ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.UnregisterMultiplexerSessionsRequest.SerializeToString,
                 response_deserializer=ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.UnregisterMultiplexerSessionsResponse.FromString,
                 )
+        self.GetMultiplexerSessions = channel.unary_unary(
+                '/ni.measurementlink.sessionmanagement.v1.SessionManagementService/GetMultiplexerSessions',
+                request_serializer=ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.GetMultiplexerSessionsRequest.SerializeToString,
+                response_deserializer=ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.GetMultiplexerSessionsResponse.FromString,
+                )
+        self.GetAllRegisteredMultiplexerSessions = channel.unary_unary(
+                '/ni.measurementlink.sessionmanagement.v1.SessionManagementService/GetAllRegisteredMultiplexerSessions',
+                request_serializer=ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.GetAllRegisteredMultiplexerSessionsRequest.SerializeToString,
+                response_deserializer=ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.GetAllRegisteredMultiplexerSessionsResponse.FromString,
+                )
 
 
 class SessionManagementServiceServicer(object):
@@ -58,7 +68,7 @@ class SessionManagementServiceServicer(object):
 
     def ReserveSessions(self, request, context):
         """Reserve session(s) for the given pins or relays, sites, and instrument type ID and returns the information needed to create or access the session.
-        (Will be implemented in AB#2046548) Also reserves the session so other processes cannot access it with a ReserveSessions() call.
+        Also reserves the session so other processes cannot access it with a ReserveSessions() call.
         Status Codes for errors:
         - INVALID_ARGUMENT:
         - Pin Map Context references a site number that is not defined in the pin map
@@ -131,6 +141,25 @@ class SessionManagementServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def GetMultiplexerSessions(self, request, context):
+        """Gets all the connected multiplexer session(s) for the given pin map context and returns information needed to create or access the session.
+        Status Codes for errors:
+        - INVALID_ARGUMENT:
+        - Pin Map Context references a site number that is not defined in the pin map.
+        - NOT_FOUND:
+        - Pin Map Context has a pin map ID that does not match any pin maps registered with the Pin Map Service.
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetAllRegisteredMultiplexerSessions(self, request, context):
+        """Gets all multiplexer sessions currently registered with this service.
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_SessionManagementServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -168,6 +197,16 @@ def add_SessionManagementServiceServicer_to_server(servicer, server):
                     servicer.UnregisterMultiplexerSessions,
                     request_deserializer=ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.UnregisterMultiplexerSessionsRequest.FromString,
                     response_serializer=ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.UnregisterMultiplexerSessionsResponse.SerializeToString,
+            ),
+            'GetMultiplexerSessions': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetMultiplexerSessions,
+                    request_deserializer=ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.GetMultiplexerSessionsRequest.FromString,
+                    response_serializer=ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.GetMultiplexerSessionsResponse.SerializeToString,
+            ),
+            'GetAllRegisteredMultiplexerSessions': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetAllRegisteredMultiplexerSessions,
+                    request_deserializer=ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.GetAllRegisteredMultiplexerSessionsRequest.FromString,
+                    response_serializer=ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.GetAllRegisteredMultiplexerSessionsResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -296,5 +335,39 @@ class SessionManagementService(object):
         return grpc.experimental.unary_unary(request, target, '/ni.measurementlink.sessionmanagement.v1.SessionManagementService/UnregisterMultiplexerSessions',
             ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.UnregisterMultiplexerSessionsRequest.SerializeToString,
             ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.UnregisterMultiplexerSessionsResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetMultiplexerSessions(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ni.measurementlink.sessionmanagement.v1.SessionManagementService/GetMultiplexerSessions',
+            ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.GetMultiplexerSessionsRequest.SerializeToString,
+            ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.GetMultiplexerSessionsResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetAllRegisteredMultiplexerSessions(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ni.measurementlink.sessionmanagement.v1.SessionManagementService/GetAllRegisteredMultiplexerSessions',
+            ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.GetAllRegisteredMultiplexerSessionsRequest.SerializeToString,
+            ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.GetAllRegisteredMultiplexerSessionsResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
