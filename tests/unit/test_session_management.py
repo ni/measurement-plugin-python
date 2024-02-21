@@ -214,9 +214,7 @@ def test___all_optional_args___reserve_session___args_passed_to_reservation(
     session[0].channel_mappings.add(pin_or_relay_name="Pin4")
     session[0].channel_mappings.add(pin_or_relay_name="Pin2")
     session_management_stub.ReserveSessions.return_value = (
-        session_management_service_pb2.ReserveSessionsResponse(
-            sessions=session
-        )
+        session_management_service_pb2.ReserveSessionsResponse(sessions=session)
     )
 
     reservation = session_management_client.reserve_session(
@@ -384,9 +382,7 @@ def test___all_optional_args___reserve_sessions___args_passed_to_reservation(
     sessions[1].channel_mappings.add(pin_or_relay_name="Pin4")
     sessions[1].channel_mappings.add(pin_or_relay_name="Pin2")
     session_management_stub.ReserveSessions.return_value = (
-        session_management_service_pb2.ReserveSessionsResponse(
-            sessions=sessions
-        )
+        session_management_service_pb2.ReserveSessionsResponse(sessions=sessions)
     )
 
     reservation = session_management_client.reserve_sessions(
