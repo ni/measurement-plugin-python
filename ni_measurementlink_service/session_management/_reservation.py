@@ -199,7 +199,7 @@ class _BaseSessionContainer(abc.ABC):
         return self._session_management_client._grpc_channel_pool
 
 
-class Multiplexer(_BaseSessionContainer):
+class MultiplexerSessionHandler(_BaseSessionContainer):
     """Manages multiplexer session information."""
 
     def __init__(
@@ -563,7 +563,9 @@ class BaseReservation(_BaseSessionContainer):
             SessionInformation._from_grpc_v1(info) for info in self._grpc_session_info
         ]
         self._session_cache: Dict[str, object] = {}
-        self._multiplexer = Multiplexer(session_management_client, multiplexer_session_info)
+        self._multiplexer_session_handler = MultiplexerSessionHandler(
+            session_management_client, multiplexer_session_info
+        )
 
         # If __init__ doesn't initialize _reserved_pin_or_relay_names or
         # _reserved_sites, the cached properties lazily initialize them.
@@ -622,8 +624,10 @@ class BaseReservation(_BaseSessionContainer):
                     session_info=session_info,
                     multiplexer_resource_name=channel_mapping.multiplexer_resource_name,
                     multiplexer_route=channel_mapping.multiplexer_route,
-                    multiplexer_session_info=self._multiplexer._get_multiplexer_session_info_for_resource_name(
-                        channel_mapping.multiplexer_resource_name
+                    multiplexer_session_info=(
+                        self._multiplexer_session_handler._get_multiplexer_session_info_for_resource_name(
+                            channel_mapping.multiplexer_resource_name
+                        )
                     ),
                 )
                 assert key not in cache
@@ -632,12 +636,12 @@ class BaseReservation(_BaseSessionContainer):
 
     @property
     def _multiplexer_session_cache(self) -> Dict[str, object]:
-        return self._multiplexer._multiplexer_session_cache
+        return self._multiplexer_session_handler._multiplexer_session_cache
 
     @property
     def multiplexer_session_info(self) -> Sequence[MultiplexerSessionInformation]:
         """Multiplexer session information object."""
-        return self._multiplexer.multiplexer_session_info
+        return self._multiplexer_session_handler.multiplexer_session_info
 
     def __enter__(self: Self) -> Self:
         """Context management protocol. Returns self."""
@@ -899,7 +903,7 @@ class BaseReservation(_BaseSessionContainer):
             ValueError: If no multiplexer sessions are available or
                 too many multiplexer sessions are available.
         """
-        return self._multiplexer.initialize_multiplexer_session(
+        return self._multiplexer_session_handler.initialize_multiplexer_session(
             session_constructor, multiplexer_type_id
         )
 
@@ -958,7 +962,7 @@ class BaseReservation(_BaseSessionContainer):
 
             ValueError: If no multiplexer sessions are available.
         """
-        return self._multiplexer.initialize_multiplexer_sessions(
+        return self._multiplexer_session_handler.initialize_multiplexer_sessions(
             session_constructor, multiplexer_type_id
         )
 
@@ -2646,7 +2650,7 @@ class BaseReservation(_BaseSessionContainer):
         See Also:
             For more details, see :py:class:`niswitch.Session`.
         """
-        return self._multiplexer.initialize_niswitch_multiplexer_session(
+        return self._multiplexer_session_handler.initialize_niswitch_multiplexer_session(
             topology, simulate, reset_device, initialization_behavior, multiplexer_type_id
         )
 
@@ -2695,7 +2699,7 @@ class BaseReservation(_BaseSessionContainer):
         See Also:
             For more details, see :py:class:`niswitch.Session`.
         """
-        return self._multiplexer.initialize_niswitch_multiplexer_sessions(
+        return self._multiplexer_session_handler.initialize_niswitch_multiplexer_sessions(
             topology, simulate, reset_device, initialization_behavior, multiplexer_type_id
         )
 
