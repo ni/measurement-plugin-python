@@ -209,7 +209,6 @@ class BaseReservation(_BaseSessionContainer):
         multiplexer_session_info: Optional[
             Sequence[session_management_service_pb2.MultiplexerSessionInformation]
         ] = None,
-        reserved_pin_or_relay_names: Union[str, Iterable[str], None] = None,
         reserved_sites: Optional[Iterable[int]] = None,
     ) -> None:
         """Initialize reservation object."""
