@@ -126,10 +126,7 @@ def test___no_multiplexer_session_infos___initialize_multiplexer_session___raise
         with reservation.initialize_multiplexer_session(construct_multiplexer_session):
             pass
 
-    assert (
-        "No multiplexer sessions available to initialize."
-        in exc_info.value.args[0]
-    )
+    assert "No multiplexer sessions available to initialize." in exc_info.value.args[0]
 
 
 def test___multiple_multiplexer_session_infos___initialize_multiplexer_session___raises_value_error(
@@ -279,10 +276,7 @@ def test___no_multiplexer_session_infos___initialize_multiplexer_sessions___rais
         with reservation.initialize_multiplexer_sessions(construct_multiplexer_session):
             pass
 
-    assert (
-        "No multiplexer sessions available to initialize."
-        in exc_info.value.args[0]
-    )
+    assert "No multiplexer sessions available to initialize." in exc_info.value.args[0]
 
 
 def test___session_already_exists___initialize_multiplexer_sessions___raises_runtime_error(
