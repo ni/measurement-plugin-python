@@ -50,14 +50,14 @@ def test___sessions_reserved___get_connections___connections_returned(
 
         nidcpower_resource = "DCPower1/0, DCPower1/1, DCPower1/2, DCPower1/3, DCPower2/1"
         assert [get_connection_subset(conn) for conn in connections] == [
+            ConnectionSubset("C", 0, "SCOPE1", "0"),
             ConnectionSubset("A", 0, nidcpower_resource, "DCPower1/0"),
             ConnectionSubset("B", 0, nidcpower_resource, "DCPower1/2"),
-            ConnectionSubset("C", 0, "SCOPE1", "0"),
+            ConnectionSubset("C", 1, "SCOPE1", "1"),
             ConnectionSubset("A", 1, nidcpower_resource, "DCPower1/1"),
             ConnectionSubset("B", 1, nidcpower_resource, "DCPower2/1"),
-            ConnectionSubset("C", 1, "SCOPE1", "1"),
-            ConnectionSubset("S1", -1, nidcpower_resource, "DCPower1/3"),
             ConnectionSubset("S2", -1, "SCOPE1", "3"),
+            ConnectionSubset("S1", -1, nidcpower_resource, "DCPower1/3"),
         ]
 
 
@@ -117,18 +117,18 @@ def test___sessions_reserved___get_connections_by_site___connections_returned(
         nidcpower_resource = "DCPower1/0, DCPower1/1, DCPower1/2, DCPower1/3, DCPower2/1"
         assert [[get_connection_subset(conn) for conn in group] for group in connections] == [
             [
+                ConnectionSubset("C", 0, "SCOPE1", "0"),
                 ConnectionSubset("A", 0, nidcpower_resource, "DCPower1/0"),
                 ConnectionSubset("B", 0, nidcpower_resource, "DCPower1/2"),
-                ConnectionSubset("C", 0, "SCOPE1", "0"),
-                ConnectionSubset("S1", -1, nidcpower_resource, "DCPower1/3"),
                 ConnectionSubset("S2", -1, "SCOPE1", "3"),
+                ConnectionSubset("S1", -1, nidcpower_resource, "DCPower1/3"),
             ],
             [
+                ConnectionSubset("C", 1, "SCOPE1", "1"),
                 ConnectionSubset("A", 1, nidcpower_resource, "DCPower1/1"),
                 ConnectionSubset("B", 1, nidcpower_resource, "DCPower2/1"),
-                ConnectionSubset("C", 1, "SCOPE1", "1"),
-                ConnectionSubset("S1", -1, nidcpower_resource, "DCPower1/3"),
                 ConnectionSubset("S2", -1, "SCOPE1", "3"),
+                ConnectionSubset("S1", -1, nidcpower_resource, "DCPower1/3"),
             ],
         ]
 
@@ -184,21 +184,21 @@ def test___reserve_sessions_with_multiplexer___get_connections_with_multiplexer_
 
         nidcpower_resource = "DCPower1/0, DCPower1/1, DCPower1/3, DCPower2/2"
         assert [get_connection_subset_with_multiplexer(conn) for conn in connections] == [
+            ConnectionSubset("C", 0, "SCOPE1", "0", "", ""),
             ConnectionSubset(
                 "A", 0, nidcpower_resource, "DCPower1/0", "Multiplexer1", "C1->r0,C2->r0"
             ),
             ConnectionSubset(
                 "B", 0, nidcpower_resource, "DCPower1/0", "Multiplexer1", "C3->r0,C4->r0"
             ),
-            ConnectionSubset("C", 0, "SCOPE1", "0", "", ""),
             ConnectionSubset(
                 "D", 0, nidcpower_resource, "DCPower2/2", "Multiplexer2", "C3->r2,C4->r2"
             ),
+            ConnectionSubset("C", 1, "SCOPE1", "1", "", ""),
             ConnectionSubset("A", 1, nidcpower_resource, "DCPower1/1", "", ""),
             ConnectionSubset(
                 "B", 1, nidcpower_resource, "DCPower2/2", "Multiplexer2", "C1->r2,C2->r2"
             ),
-            ConnectionSubset("C", 1, "SCOPE1", "1", "", ""),
             ConnectionSubset("D", 1, nidcpower_resource, "DCPower1/3", "", ""),
         ]
 
@@ -277,23 +277,23 @@ def test___reserve_sessions_with_multiplexer___get_connections_with_multiplexer_
             for group in connections
         ] == [
             [
+                ConnectionSubset("C", 0, "SCOPE1", "0", "", ""),
                 ConnectionSubset(
                     "A", 0, nidcpower_resource, "DCPower1/0", "Multiplexer1", "C1->r0,C2->r0"
                 ),
                 ConnectionSubset(
                     "B", 0, nidcpower_resource, "DCPower1/0", "Multiplexer1", "C3->r0,C4->r0"
                 ),
-                ConnectionSubset("C", 0, "SCOPE1", "0", "", ""),
                 ConnectionSubset(
                     "D", 0, nidcpower_resource, "DCPower2/2", "Multiplexer2", "C3->r2,C4->r2"
                 ),
             ],
             [
+                ConnectionSubset("C", 1, "SCOPE1", "1", "", ""),
                 ConnectionSubset("A", 1, nidcpower_resource, "DCPower1/1", "", ""),
                 ConnectionSubset(
                     "B", 1, nidcpower_resource, "DCPower2/2", "Multiplexer2", "C1->r2,C2->r2"
                 ),
-                ConnectionSubset("C", 1, "SCOPE1", "1", "", ""),
                 ConnectionSubset("D", 1, nidcpower_resource, "DCPower1/3", "", ""),
             ],
         ]
@@ -364,12 +364,12 @@ def test___sessions_reserved_with_shared_pins_all_sites___get_connections___retu
 
         nidcpower_resource = "DCPower1/0, DCPower1/2, DCPower2/1"
         assert [get_connection_subset(conn) for conn in connections] == [
+            ConnectionSubset("C", 0, "SCOPE1", "2"),
             ConnectionSubset("A", 0, nidcpower_resource, "DCPower1/0"),
             ConnectionSubset("B", 0, nidcpower_resource, "DCPower2/1"),
-            ConnectionSubset("C", 0, "SCOPE1", "2"),
+            ConnectionSubset("C", 1, "SCOPE1", "2"),
             ConnectionSubset("A", 1, nidcpower_resource, "DCPower1/0"),
             ConnectionSubset("B", 1, nidcpower_resource, "DCPower2/1"),
-            ConnectionSubset("C", 1, "SCOPE1", "2"),
             ConnectionSubset("S1", -1, "SCOPE1", "1"),
             ConnectionSubset("S2", -1, nidcpower_resource, "DCPower1/2"),
         ]
@@ -391,9 +391,9 @@ def test___sessions_reserved_with_shared_pins_site0___get_connections___connecti
 
         nidcpower_resource = "DCPower1/0, DCPower1/2, DCPower2/1"
         assert [get_connection_subset(conn) for conn in connections] == [
+            ConnectionSubset("C", 0, "SCOPE1", "2"),
             ConnectionSubset("A", 0, nidcpower_resource, "DCPower1/0"),
             ConnectionSubset("B", 0, nidcpower_resource, "DCPower2/1"),
-            ConnectionSubset("C", 0, "SCOPE1", "2"),
             ConnectionSubset("S1", -1, "SCOPE1", "1"),
             ConnectionSubset("S2", -1, nidcpower_resource, "DCPower1/2"),
         ]
@@ -415,9 +415,9 @@ def test___sessions_reserved_with_shared_pins_site1___get_connections___connecti
 
         nidcpower_resource = "DCPower1/0, DCPower1/2, DCPower2/1"
         assert [get_connection_subset(conn) for conn in connections] == [
+            ConnectionSubset("C", 1, "SCOPE1", "2"),
             ConnectionSubset("A", 1, nidcpower_resource, "DCPower1/0"),
             ConnectionSubset("B", 1, nidcpower_resource, "DCPower2/1"),
-            ConnectionSubset("C", 1, "SCOPE1", "2"),
             ConnectionSubset("S1", -1, "SCOPE1", "1"),
             ConnectionSubset("S2", -1, nidcpower_resource, "DCPower1/2"),
         ]
