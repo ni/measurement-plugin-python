@@ -477,7 +477,7 @@ class MultiplexerSessionContainer(_BaseSessionContainer):
         """
         from ni_measurementlink_service._drivers._niswitch import SessionConstructor
 
-        session_constructor = SessionConstructor(
+        session_constructor = SessionConstructor._for_multiplexer(
             self._discovery_client,
             self._grpc_channel_pool,
             topology,
@@ -540,7 +540,7 @@ class MultiplexerSessionContainer(_BaseSessionContainer):
         """
         from ni_measurementlink_service._drivers._niswitch import SessionConstructor
 
-        session_constructor = SessionConstructor(
+        session_constructor = SessionConstructor._for_multiplexer(
             self._discovery_client,
             self._grpc_channel_pool,
             topology,
@@ -2495,7 +2495,7 @@ class BaseReservation(_BaseSessionContainer):
         """
         from ni_measurementlink_service._drivers._niswitch import SessionConstructor
 
-        session_constructor = SessionConstructor(
+        session_constructor = SessionConstructor._for_relay_driver(
             self._discovery_client,
             self._grpc_channel_pool,
             topology,
@@ -2550,7 +2550,7 @@ class BaseReservation(_BaseSessionContainer):
         """
         from ni_measurementlink_service._drivers._niswitch import SessionConstructor
 
-        session_constructor = SessionConstructor(
+        session_constructor = SessionConstructor._for_relay_driver(
             self._discovery_client,
             self._grpc_channel_pool,
             topology,
