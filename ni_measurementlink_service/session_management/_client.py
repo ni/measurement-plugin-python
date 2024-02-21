@@ -24,7 +24,7 @@ from ni_measurementlink_service.session_management._constants import (
     GRPC_SERVICE_INTERFACE_NAME,
 )
 from ni_measurementlink_service.session_management._reservation import (
-    Multiplexer,
+    MultiplexerSessionHandler,
     MultiSessionReservation,
     SingleSessionReservation,
 )
@@ -328,7 +328,7 @@ class SessionManagementClient(object):
     @requires_feature(MULTIPLEXER_SUPPORT_2024Q2)
     def get_multiplexer_sessions(
         self, pin_map_context: PinMapContext, multiplexer_type_id: Optional[str] = None
-    ) -> Multiplexer:
+    ) -> MultiplexerSessionHandler:
         """Get all multiplexer session infos matching the specified criteria.
 
         Returns the information needed to create or access the multiplexer sessions
@@ -343,7 +343,7 @@ class SessionManagementClient(object):
                 type id is ignored when matching multiplexer sessions.
 
         Returns:
-            The multiplexer object containing the matching multiplexer session infos.
+            The multiplexer session handler containing the matching session infos.
         """
         request = session_management_service_pb2.GetMultiplexerSessionsRequest(
             pin_map_context=pin_map_context._to_grpc()
@@ -353,12 +353,12 @@ class SessionManagementClient(object):
 
         response = self._get_stub().GetMultiplexerSessions(request)
         session_infos = [session for session in response.multiplexer_sessions]
-        return Multiplexer(self, session_infos)
+        return MultiplexerSessionHandler(self, session_infos)
 
     @requires_feature(MULTIPLEXER_SUPPORT_2024Q2)
     def get_all_registered_multiplexer_sessions(
         self, multiplexer_type_id: Optional[str] = None
-    ) -> Multiplexer:
+    ) -> MultiplexerSessionHandler:
         """Get all multiplexer session infos registered with the session management service.
 
         Args:
@@ -367,7 +367,7 @@ class SessionManagementClient(object):
                 type id is ignored when matching multiplexer sessions.
 
         Returns:
-            The multiplexer object containing the matching multiplexer session infos registered
+            The multiplexer session handler containing the matching session infos registered
             with the session management service.
         """
         request = session_management_service_pb2.GetAllRegisteredMultiplexerSessionsRequest()
@@ -376,7 +376,7 @@ class SessionManagementClient(object):
 
         response = self._get_stub().GetAllRegisteredMultiplexerSessions(request)
         session_infos = [session for session in response.multiplexer_sessions]
-        return Multiplexer(self, session_infos)
+        return MultiplexerSessionHandler(self, session_infos)
 
 
 def _timeout_to_milliseconds(timeout: Optional[float]) -> int:
