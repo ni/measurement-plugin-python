@@ -864,8 +864,8 @@ def test___varying_multiplexers___get_multiplexer_sessions___returns_multiplexer
     response = session_management_client.get_multiplexer_sessions(PinMapContext("MyPinMap", [0, 1]))
 
     session_management_stub.GetMultiplexerSessions.assert_called_once()
-    assert len(response) == multiplexer_session_count
-    assert [info.session_name for info in response] == [
+    assert len(response.multiplexer_session_info) == multiplexer_session_count
+    assert [info.session_name for info in response.multiplexer_session_info] == [
         f"MyMultiplexer{i}" for i in range(multiplexer_session_count)
     ]
 
@@ -930,8 +930,8 @@ def test___varying_registered_multiplexers___get_all_registered_multiplexer_sess
     response = session_management_client.get_all_registered_multiplexer_sessions()
 
     session_management_stub.GetAllRegisteredMultiplexerSessions.assert_called_once()
-    assert len(response) == multiplexer_session_count
-    assert [info.session_name for info in response] == [
+    assert len(response.multiplexer_session_info) == multiplexer_session_count
+    assert [info.session_name for info in response.multiplexer_session_info] == [
         f"MyMultiplexer{i}" for i in range(multiplexer_session_count)
     ]
 
