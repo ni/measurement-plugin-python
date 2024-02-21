@@ -127,7 +127,7 @@ def test___no_multiplexer_session_infos___initialize_multiplexer_session___raise
             pass
 
     assert (
-        "No multiplexer sessions available in the reservation for initialization."
+        "No multiplexer sessions available to initialize."
         in exc_info.value.args[0]
     )
 
@@ -280,7 +280,7 @@ def test___no_multiplexer_session_infos___initialize_multiplexer_sessions___rais
             pass
 
     assert (
-        "No multiplexer sessions available in the reservation for initialization."
+        "No multiplexer sessions available to initialize."
         in exc_info.value.args[0]
     )
 
