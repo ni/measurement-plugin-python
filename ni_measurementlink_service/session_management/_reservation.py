@@ -229,26 +229,18 @@ class BaseReservation(_BaseSessionContainer):
                 for info in multiplexer_session_info
             ]
 
-        # If __init__ doesn't initialize _reserved_pin_or_relay_names or
-        # _reserved_sites, the cached properties lazily initialize them.
-        if reserved_pin_or_relay_names is not None:
-            self._reserved_pin_or_relay_names = _to_ordered_set(
-                _to_iterable(reserved_pin_or_relay_names)
-            )
-
-        if reserved_sites is not None:
-            self._reserved_sites = _to_ordered_set(reserved_sites)
-
-    @cached_property
-    def _reserved_pin_or_relay_names(self) -> AbstractSet[str]:
-        # If __init__ doesn't initialize reserved_pin_or_relay_names, this
-        # cached property initializes it to the pin/relay names listed in the
+        # Initialize the property with the pin/relay names listed in the
         # session info (in insertion order, no duplicates).
-        return _to_ordered_set(
+        self._reserved_pin_or_relay_names = _to_ordered_set(
             channel_mapping.pin_or_relay_name
             for session_info in self._session_info
             for channel_mapping in session_info.channel_mappings
         )
+
+        # If __init__ doesn't initialize _reserved_sites,
+        # the cached properties lazily initialize them.
+        if reserved_sites is not None:
+            self._reserved_sites = _to_ordered_set(reserved_sites)
 
     @cached_property
     def _reserved_sites(self) -> AbstractSet[int]:

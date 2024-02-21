@@ -207,9 +207,15 @@ def test___too_many_sessions___reserve_session___raises_too_many_sessions_value_
 def test___all_optional_args___reserve_session___args_passed_to_reservation(
     session_management_client: SessionManagementClient, session_management_stub: Mock
 ) -> None:
+
+    session = _create_grpc_session_infos(1)
+    session[0].channel_mappings.add(pin_or_relay_name="Pin3")
+    session[0].channel_mappings.add(pin_or_relay_name="Pin1")
+    session[0].channel_mappings.add(pin_or_relay_name="Pin4")
+    session[0].channel_mappings.add(pin_or_relay_name="Pin2")
     session_management_stub.ReserveSessions.return_value = (
         session_management_service_pb2.ReserveSessionsResponse(
-            sessions=_create_grpc_session_infos(1)
+            sessions=session
         )
     )
 
@@ -372,8 +378,15 @@ def test___varying_session_count___reserve_sessions___returns_multiple_session_i
 def test___all_optional_args___reserve_sessions___args_passed_to_reservation(
     session_management_client: SessionManagementClient, session_management_stub: Mock
 ) -> None:
+    sessions = _create_grpc_session_infos(2)
+    sessions[0].channel_mappings.add(pin_or_relay_name="Pin3")
+    sessions[0].channel_mappings.add(pin_or_relay_name="Pin1")
+    sessions[1].channel_mappings.add(pin_or_relay_name="Pin4")
+    sessions[1].channel_mappings.add(pin_or_relay_name="Pin2")
     session_management_stub.ReserveSessions.return_value = (
-        session_management_service_pb2.ReserveSessionsResponse()
+        session_management_service_pb2.ReserveSessionsResponse(
+            sessions=sessions
+        )
     )
 
     reservation = session_management_client.reserve_sessions(

@@ -145,7 +145,6 @@ class SessionManagementClient(object):
                 session_management_client=self,
                 session_info=response.sessions,
                 multiplexer_session_info=response.multiplexer_sessions,
-                reserved_pin_or_relay_names=pin_or_relay_names,
                 reserved_sites=context.sites,
             )
 
@@ -196,7 +195,6 @@ class SessionManagementClient(object):
             session_management_client=self,
             session_info=response.sessions,
             multiplexer_session_info=response.multiplexer_sessions,
-            reserved_pin_or_relay_names=pin_or_relay_names,
             reserved_sites=context.sites,
         )
 

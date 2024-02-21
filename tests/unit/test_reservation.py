@@ -563,7 +563,6 @@ def test___reservation_order___get_connections_with_specified_order___connection
     reservation = MultiSessionReservation(
         session_management_client,
         grpc_session_infos,
-        reserved_pin_or_relay_names=["Pin3", "Pin1", "Pin4", "Pin2"],
         reserved_sites=[1, 0],
     )
 
@@ -582,10 +581,10 @@ def test___reservation_order___get_connections_with_specified_order___connection
     assert [[get_connection_subset(conn) for conn in group] for group in connections] == [
         [
             ConnectionSubset("Pin1", 0, "Dev0", "0"),
-            ConnectionSubset("Pin3", 0, "Dev1", "2"),
-            ConnectionSubset("Pin2", 0, "Dev0", "1"),
-            ConnectionSubset("Pin1", 1, "Dev1", "3"),
-            ConnectionSubset("Pin3", 1, "Dev2", "5"),
+            ConnectionSubset("Pin3", 0, "Dev0", "2"),
+            ConnectionSubset("Pin2", 0, "Dev1", "1"),
+            ConnectionSubset("Pin1", 1, "Dev2", "3"),
+            ConnectionSubset("Pin3", 1, "Dev1", "5"),
             ConnectionSubset("Pin2", 1, "Dev2", "4"),
         ],
         [
@@ -602,21 +601,20 @@ def test___reservation_order___get_connections___connections_returned_in_reserva
     reservation = MultiSessionReservation(
         session_management_client,
         grpc_session_infos,
-        reserved_pin_or_relay_names=["Pin3", "Pin1", "Pin4", "Pin2"],
         reserved_sites=[1, 0],
     )
 
     connections = reservation.get_connections(object)
 
     assert [get_connection_subset(conn) for conn in connections] == [
-        ConnectionSubset("Pin3", 1, "Dev2", "5"),
-        ConnectionSubset("Pin1", 1, "Dev1", "3"),
-        ConnectionSubset("Pin4", 1, "Dev3", "7"),
+        ConnectionSubset("Pin3", 1, "Dev1", "5"),
+        ConnectionSubset("Pin1", 1, "Dev2", "3"),
         ConnectionSubset("Pin2", 1, "Dev2", "4"),
-        ConnectionSubset("Pin3", 0, "Dev1", "2"),
+        ConnectionSubset("Pin4", 1, "Dev3", "7"),
+        ConnectionSubset("Pin3", 0, "Dev0", "2"),
         ConnectionSubset("Pin1", 0, "Dev0", "0"),
+        ConnectionSubset("Pin2", 0, "Dev1", "1"),
         ConnectionSubset("Pin4", 0, "Dev3", "6"),
-        ConnectionSubset("Pin2", 0, "Dev0", "1"),
     ]
 
 
@@ -629,13 +627,13 @@ def test___no_reservation_order___get_connections___connections_returned_in_defa
     connections = reservation.get_connections(object)
 
     assert [get_connection_subset(conn) for conn in connections] == [
+        ConnectionSubset("Pin3", 0, "Dev0", "2"),
         ConnectionSubset("Pin1", 0, "Dev0", "0"),
-        ConnectionSubset("Pin2", 0, "Dev0", "1"),
-        ConnectionSubset("Pin3", 0, "Dev1", "2"),
+        ConnectionSubset("Pin2", 0, "Dev1", "1"),
         ConnectionSubset("Pin4", 0, "Dev3", "6"),
-        ConnectionSubset("Pin1", 1, "Dev1", "3"),
+        ConnectionSubset("Pin3", 1, "Dev1", "5"),
+        ConnectionSubset("Pin1", 1, "Dev2", "3"),
         ConnectionSubset("Pin2", 1, "Dev2", "4"),
-        ConnectionSubset("Pin3", 1, "Dev2", "5"),
         ConnectionSubset("Pin4", 1, "Dev3", "7"),
     ]
 
@@ -776,12 +774,12 @@ def _create_grpc_session_infos_for_ordering() -> (
     List[session_management_service_pb2.SessionInformation]
 ):
     grpc_session_infos = create_nifoo_session_infos(4)
+    grpc_session_infos[0].channel_mappings.add(pin_or_relay_name="Pin3", site=0, channel="2")
     grpc_session_infos[0].channel_mappings.add(pin_or_relay_name="Pin1", site=0, channel="0")
-    grpc_session_infos[0].channel_mappings.add(pin_or_relay_name="Pin2", site=0, channel="1")
-    grpc_session_infos[1].channel_mappings.add(pin_or_relay_name="Pin3", site=0, channel="2")
-    grpc_session_infos[1].channel_mappings.add(pin_or_relay_name="Pin1", site=1, channel="3")
+    grpc_session_infos[1].channel_mappings.add(pin_or_relay_name="Pin2", site=0, channel="1")
+    grpc_session_infos[1].channel_mappings.add(pin_or_relay_name="Pin3", site=1, channel="5")
+    grpc_session_infos[2].channel_mappings.add(pin_or_relay_name="Pin1", site=1, channel="3")
     grpc_session_infos[2].channel_mappings.add(pin_or_relay_name="Pin2", site=1, channel="4")
-    grpc_session_infos[2].channel_mappings.add(pin_or_relay_name="Pin3", site=1, channel="5")
     grpc_session_infos[3].channel_mappings.add(pin_or_relay_name="Pin4", site=0, channel="6")
     grpc_session_infos[3].channel_mappings.add(pin_or_relay_name="Pin4", site=1, channel="7")
     grpc_session_infos[3].instrument_type_id = "nibar"

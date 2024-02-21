@@ -524,7 +524,6 @@ def test___reservation_order___get_connections_with_multiplexer_in_specific_orde
         session_management_client,
         grpc_session_infos,
         grpc_multiplexer_session_infos,
-        reserved_pin_or_relay_names=["Pin3", "Pin1", "Pin4", "Pin2"],
         reserved_sites=[1, 0],
     )
 
@@ -545,16 +544,16 @@ def test___reservation_order___get_connections_with_multiplexer_in_specific_orde
         [get_connection_subset_with_multiplexer(conn) for conn in group] for group in connections
     ] == [
         [
-            ConnectionSubset("Pin1", 0, "Dev0", "0", "Mux0", "route1"),
-            ConnectionSubset("Pin3", 0, "Dev1", "2", "Mux0", "route3"),
-            ConnectionSubset("Pin2", 0, "Dev0", "1", "Mux0", "route2"),
-            ConnectionSubset("Pin1", 1, "Dev1", "3", "Mux0", "route4"),
-            ConnectionSubset("Pin3", 1, "Dev2", "5", "Mux0", "route6"),
-            ConnectionSubset("Pin2", 1, "Dev2", "4", "Mux0", "route5"),
+            ConnectionSubset("Pin1", 0, "Dev0", "0", "Mux0", "route0"),
+            ConnectionSubset("Pin3", 0, "Dev0", "2", "Mux0", "route2"),
+            ConnectionSubset("Pin2", 0, "Dev1", "1", "Mux0", "route1"),
+            ConnectionSubset("Pin1", 1, "Dev2", "3", "Mux0", "route3"),
+            ConnectionSubset("Pin3", 1, "Dev1", "5", "Mux0", "route5"),
+            ConnectionSubset("Pin2", 1, "Dev2", "4", "Mux0", "route4"),
         ],
         [
-            ConnectionSubset("Pin4", 0, "Dev3", "6", "Mux0", "route7"),
-            ConnectionSubset("Pin4", 1, "Dev3", "7", "Mux0", "route8"),
+            ConnectionSubset("Pin4", 0, "Dev3", "6", "Mux0", "route6"),
+            ConnectionSubset("Pin4", 1, "Dev3", "7", "Mux0", "route7"),
         ],
     ]
 
@@ -570,21 +569,20 @@ def test___reservation_order___get_connections_with_multiplexer___returns_connec
         session_management_client,
         grpc_session_infos,
         grpc_multiplexer_session_infos,
-        reserved_pin_or_relay_names=["Pin3", "Pin1", "Pin4", "Pin2"],
         reserved_sites=[1, 0],
     )
 
     connections = reservation.get_connections_with_multiplexer(object, object)
 
     assert [get_connection_subset_with_multiplexer(conn) for conn in connections] == [
-        ConnectionSubset("Pin3", 1, "Dev2", "5", "Mux0", "route6"),
-        ConnectionSubset("Pin1", 1, "Dev1", "3", "Mux0", "route4"),
-        ConnectionSubset("Pin4", 1, "Dev3", "7", "Mux0", "route8"),
-        ConnectionSubset("Pin2", 1, "Dev2", "4", "Mux0", "route5"),
-        ConnectionSubset("Pin3", 0, "Dev1", "2", "Mux0", "route3"),
-        ConnectionSubset("Pin1", 0, "Dev0", "0", "Mux0", "route1"),
-        ConnectionSubset("Pin4", 0, "Dev3", "6", "Mux0", "route7"),
-        ConnectionSubset("Pin2", 0, "Dev0", "1", "Mux0", "route2"),
+        ConnectionSubset("Pin3", 1, "Dev1", "5", "Mux0", "route5"),
+        ConnectionSubset("Pin1", 1, "Dev2", "3", "Mux0", "route3"),
+        ConnectionSubset("Pin2", 1, "Dev2", "4", "Mux0", "route4"),
+        ConnectionSubset("Pin4", 1, "Dev3", "7", "Mux0", "route7"),
+        ConnectionSubset("Pin3", 0, "Dev0", "2", "Mux0", "route2"),
+        ConnectionSubset("Pin1", 0, "Dev0", "0", "Mux0", "route0"),
+        ConnectionSubset("Pin2", 0, "Dev1", "1", "Mux0", "route1"),
+        ConnectionSubset("Pin4", 0, "Dev3", "6", "Mux0", "route6"),
     ]
 
 
@@ -602,14 +600,14 @@ def test___no_reservation_order___get_connections_with_multiplexer___returns_con
     connections = reservation.get_connections_with_multiplexer(object, object)
 
     assert [get_connection_subset_with_multiplexer(conn) for conn in connections] == [
-        ConnectionSubset("Pin1", 0, "Dev0", "0", "Mux0", "route1"),
-        ConnectionSubset("Pin2", 0, "Dev0", "1", "Mux0", "route2"),
-        ConnectionSubset("Pin3", 0, "Dev1", "2", "Mux0", "route3"),
-        ConnectionSubset("Pin4", 0, "Dev3", "6", "Mux0", "route7"),
-        ConnectionSubset("Pin1", 1, "Dev1", "3", "Mux0", "route4"),
-        ConnectionSubset("Pin2", 1, "Dev2", "4", "Mux0", "route5"),
-        ConnectionSubset("Pin3", 1, "Dev2", "5", "Mux0", "route6"),
-        ConnectionSubset("Pin4", 1, "Dev3", "7", "Mux0", "route8"),
+        ConnectionSubset("Pin3", 0, "Dev0", "2", "Mux0", "route2"),
+        ConnectionSubset("Pin1", 0, "Dev0", "0", "Mux0", "route0"),
+        ConnectionSubset("Pin2", 0, "Dev1", "1", "Mux0", "route1"),
+        ConnectionSubset("Pin4", 0, "Dev3", "6", "Mux0", "route6"),
+        ConnectionSubset("Pin3", 1, "Dev1", "5", "Mux0", "route5"),
+        ConnectionSubset("Pin1", 1, "Dev2", "3", "Mux0", "route3"),
+        ConnectionSubset("Pin2", 1, "Dev2", "4", "Mux0", "route4"),
+        ConnectionSubset("Pin4", 1, "Dev3", "7", "Mux0", "route7"),
     ]
 
 
@@ -872,60 +870,60 @@ def _create_grpc_session_and_multiplexer_session_infos_for_ordering() -> Tuple[
 ]:
     grpc_session_infos = create_nifake_session_infos(4)
     grpc_session_infos[0].channel_mappings.add(
-        pin_or_relay_name="Pin1",
-        site=0,
-        channel="0",
-        multiplexer_resource_name="Mux0",
-        multiplexer_route="route1",
-    )
-    grpc_session_infos[0].channel_mappings.add(
-        pin_or_relay_name="Pin2",
-        site=0,
-        channel="1",
-        multiplexer_resource_name="Mux0",
-        multiplexer_route="route2",
-    )
-    grpc_session_infos[1].channel_mappings.add(
         pin_or_relay_name="Pin3",
         site=0,
         channel="2",
         multiplexer_resource_name="Mux0",
-        multiplexer_route="route3",
+        multiplexer_route="route2",
+    )
+    grpc_session_infos[0].channel_mappings.add(
+        pin_or_relay_name="Pin1",
+        site=0,
+        channel="0",
+        multiplexer_resource_name="Mux0",
+        multiplexer_route="route0",
     )
     grpc_session_infos[1].channel_mappings.add(
+        pin_or_relay_name="Pin2",
+        site=0,
+        channel="1",
+        multiplexer_resource_name="Mux0",
+        multiplexer_route="route1",
+    )
+    grpc_session_infos[1].channel_mappings.add(
+        pin_or_relay_name="Pin3",
+        site=1,
+        channel="5",
+        multiplexer_resource_name="Mux0",
+        multiplexer_route="route5",
+    )
+    grpc_session_infos[2].channel_mappings.add(
         pin_or_relay_name="Pin1",
         site=1,
         channel="3",
         multiplexer_resource_name="Mux0",
-        multiplexer_route="route4",
+        multiplexer_route="route3",
     )
     grpc_session_infos[2].channel_mappings.add(
         pin_or_relay_name="Pin2",
         site=1,
         channel="4",
         multiplexer_resource_name="Mux0",
-        multiplexer_route="route5",
-    )
-    grpc_session_infos[2].channel_mappings.add(
-        pin_or_relay_name="Pin3",
-        site=1,
-        channel="5",
-        multiplexer_resource_name="Mux0",
-        multiplexer_route="route6",
+        multiplexer_route="route4",
     )
     grpc_session_infos[3].channel_mappings.add(
         pin_or_relay_name="Pin4",
         site=0,
         channel="6",
         multiplexer_resource_name="Mux0",
-        multiplexer_route="route7",
+        multiplexer_route="route6",
     )
     grpc_session_infos[3].channel_mappings.add(
         pin_or_relay_name="Pin4",
         site=1,
         channel="7",
         multiplexer_resource_name="Mux0",
-        multiplexer_route="route8",
+        multiplexer_route="route7",
     )
     grpc_session_infos[3].instrument_type_id = "nibar"
 
