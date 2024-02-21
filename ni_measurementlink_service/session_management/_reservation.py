@@ -239,6 +239,19 @@ class MultiplexerSessionHandler(_BaseSessionContainer):
             for info in self._multiplexer_session_info
         ]
 
+    def __enter__(self: Self) -> Self:
+        """Context management protocol. Returns self."""
+        return self
+
+    def __exit__(
+        self,
+        exc_type: Optional[Type[BaseException]],
+        exc_val: Optional[BaseException],
+        traceback: Optional[TracebackType],
+    ) -> None:
+        """Context management protocol."""
+        pass
+
     def _get_multiplexer_session_info_for_resource_name(
         self, multiplexer_resource_name: str
     ) -> Optional[MultiplexerSessionInformation]:
