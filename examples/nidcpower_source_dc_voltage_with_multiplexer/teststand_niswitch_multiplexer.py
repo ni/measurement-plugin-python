@@ -1,4 +1,4 @@
-"""Functions to set up and tear down sessions of NI-DCPower devices in NI TestStand."""
+"""Functions to set up and tear down sessions of NI-SWITCH multiplexers in NI TestStand."""
 
 from typing import Any
 
@@ -34,10 +34,12 @@ def create_niswitch_multiplexer_sessions(sequence_context: Any) -> None:
             ):
                 pass
 
-            session_management_client.register_sessions(session_handler.multiplexer_session_info)
+            session_management_client.register_multiplexer_sessions(
+                session_handler.multiplexer_session_info
+            )
 
 
-def destroy_nidcpower_sessions() -> None:
+def destroy_niswitch_multiplexer_sessions() -> None:
     """Destroy and unregister all NI-SWITCH multiplexer sessions."""
     with GrpcChannelPool() as grpc_channel_pool:
         discovery_client = DiscoveryClient(grpc_channel_pool=grpc_channel_pool)
