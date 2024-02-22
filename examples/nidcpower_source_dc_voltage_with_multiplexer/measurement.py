@@ -28,11 +28,11 @@ _NIDCPOWER_TIMEOUT_ERROR_CODES = [
 script_or_exe = sys.executable if getattr(sys, "frozen", False) else __file__
 service_directory = pathlib.Path(script_or_exe).resolve().parent
 measurement_service = nims.MeasurementService(
-    service_config_path=service_directory / "NIDCPowerSourceDCVoltage.serviceconfig",
+    service_config_path=service_directory / "NIDCPowerSourceDCVoltageWithMultiplexer.serviceconfig",
     version="0.1.0.0",
     ui_file_paths=[
-        service_directory / "NIDCPowerSourceDCVoltage.measui",
-        service_directory / "NIDCPowerSourceDCVoltageUI.vi",
+        service_directory / "NIDCPowerSourceDCVoltageWithMultiplexer.measui",
+        service_directory / "NIDCPowerSourceDCVoltageWithMultiplexerUI.vi",
     ],
 )
 
@@ -48,7 +48,7 @@ if TYPE_CHECKING:
 
 @measurement_service.register_measurement
 @measurement_service.configuration(
-    "pin_names",
+    "pin_name",
     nims.DataType.Pin,
     "Pin1",
     instrument_type=nims.session_management.INSTRUMENT_TYPE_NI_DCPOWER,
@@ -58,29 +58,27 @@ if TYPE_CHECKING:
 @measurement_service.configuration("current_limit", nims.DataType.Double, 0.01)
 @measurement_service.configuration("current_limit_range", nims.DataType.Double, 0.01)
 @measurement_service.configuration("source_delay", nims.DataType.Double, 0.0)
-@measurement_service.output("measurement_site", nims.DataType.Int32)
-@measurement_service.output("measurement_pin_name", nims.DataType.String)
 @measurement_service.output("voltage_measurement", nims.DataType.Double)
 @measurement_service.output("current_measurement", nims.DataType.Double)
 def measure(
-    pin_names: str,
+    pin_name: str,
     voltage_level: float,
     voltage_level_range: float,
     current_limit: float,
     current_limit_range: float,
     source_delay: float,
-) -> Tuple[int, str, float, float]:
+) -> Tuple[float, float]:
     """Source and measure a DC voltage with an NI SMU connected via an NI-SWITCH multiplexer."""
-    logging.info("Executing measurement: pin_names=%s voltage_level=%g", pin_names, voltage_level)
+    logging.info("Executing measurement: pin_name=%s voltage_level=%g", pin_name, voltage_level)
 
     cancellation_event = threading.Event()
     measurement_service.context.add_cancel_callback(cancellation_event.set)
 
-    with measurement_service.context.reserve_session(pin_names) as reservation:
+    with measurement_service.context.reserve_session(pin_name) as reservation:
         with reservation.initialize_nidcpower_session(), reservation.initialize_niswitch_multiplexer_session():
             # Configure the SMU channel connected to the input pin.
             connection = reservation.get_nidcpower_connection_with_multiplexer(
-                niswitch.Session, pin_names
+                niswitch.Session, pin_name
             )
             source_channel = connection.session.channels[connection.channel_name]
             source_channel.source_mode = nidcpower.SourceMode.SINGLE_POINT
@@ -120,8 +118,6 @@ def measure(
         measurement.current,
     )
     return (
-        connection.site,
-        connection.pin_or_relay_name,
         measurement.voltage,
         measurement.current,
     )

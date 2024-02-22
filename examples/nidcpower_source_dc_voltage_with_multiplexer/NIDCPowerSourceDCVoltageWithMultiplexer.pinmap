@@ -8,6 +8,7 @@
 	</Instruments>
 	<Pins>
 		<DUTPin name="Pin1" />
+		<DUTPin name="Pin2" />
 	</Pins>
 	<PinGroups></PinGroups>
 	<Sites>
@@ -16,6 +17,7 @@
 	<Connections>
 		<MultiplexedConnection instrument="DCPower1" channel="0">
 			<MultiplexedDUTPinRoute pin="Pin1" siteNumber="0" multiplexer="SWITCH1" routeName="b0c0-&gt;b0r0" />
+			<MultiplexedDUTPinRoute pin="Pin2" siteNumber="0" multiplexer="SWITCH1" routeName="b0c0-&gt;b0r1" />
 		</MultiplexedConnection>
 	</Connections>
 </PinMap>

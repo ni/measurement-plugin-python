@@ -2338,7 +2338,7 @@
 								<Main classname='Objs' valueflags='4194304'>
 									<value lbound='[0]' ubound='[0]'>
 										<value>
-											<Step typename='NI_Measurement' xsi:type='NI_Measurement' name='Source DC voltage and measure voltage/current'>
+											<Step typename='NI_Measurement' xsi:type='NI_Measurement' name='Source DC voltage and measure voltage/current via multiplexer'>
 												<subprops>
 													<TS classname='Obj'>
 														<subprops>
@@ -2629,10 +2629,10 @@
 													<Measurement classname='Obj'>
 														<subprops>
 															<Name classname='Str'>
-																<value>ni.examples.NIDCPowerSourceDCVoltage_Python</value>
+																<value>ni.examples.NIDCPowerSourceDCVoltageWithMultiplexer_Python</value>
 															</Name>
 															<Parameters classname='Objs'>
-																<value lbound='[0]' ubound='[9]'>
+																<value lbound='[0]' ubound='[7]'>
 																	<elemproto>
 																		<_NAME_IN_ATTRIBUTE_ name='' classname='Obj'>
 																			<subprops>
@@ -2673,7 +2673,7 @@
 																					<value/>
 																				</MessageType>
 																				<Name classname='Str'>
-																					<value>pin_names</value>
+																					<value>pin_name</value>
 																				</Name>
 																				<ArgumentValue classname='ExprValue'>
 																					<value>"Pin1"</value>
@@ -2889,78 +2889,6 @@
 																					<value/>
 																				</MessageType>
 																				<Name classname='Str'>
-																					<value>measurement_site</value>
-																				</Name>
-																				<ArgumentValue classname='ExprValue'>
-																					<value/>
-																				</ArgumentValue>
-																				<Direction classname='Str'>
-																					<value>Out</value>
-																				</Direction>
-																				<Log classname='Bool'>
-																					<value>true</value>
-																				</Log>
-																				<Dimension classname='Num'>
-																					<value representation='UInt64'>0</value>
-																				</Dimension>
-																				<Type classname='Str'>
-																					<value>TypeInt32</value>
-																				</Type>
-																				<ID classname='Num'>
-																					<value representation='Int64'>1</value>
-																				</ID>
-																				<TypeSpecialization classname='Str'>
-																					<value>None</value>
-																				</TypeSpecialization>
-																				<EnumDefinition classname='Objs'>
-																					<value lbound='[0]' ubound='[]'/>
-																				</EnumDefinition>
-																			</subprops>
-																		</Obj>
-																	</value>
-																	<value>
-																		<Obj typename='NI_MeasurementParameter' name=''>
-																			<subprops>
-																				<MessageType classname='Str'>
-																					<value/>
-																				</MessageType>
-																				<Name classname='Str'>
-																					<value>measurement_pin_name</value>
-																				</Name>
-																				<ArgumentValue classname='ExprValue'>
-																					<value/>
-																				</ArgumentValue>
-																				<Direction classname='Str'>
-																					<value>Out</value>
-																				</Direction>
-																				<Log classname='Bool'>
-																					<value>true</value>
-																				</Log>
-																				<Dimension classname='Num'>
-																					<value representation='UInt64'>0</value>
-																				</Dimension>
-																				<Type classname='Str'>
-																					<value>TypeString</value>
-																				</Type>
-																				<ID classname='Num'>
-																					<value representation='Int64'>2</value>
-																				</ID>
-																				<TypeSpecialization classname='Str'>
-																					<value>None</value>
-																				</TypeSpecialization>
-																				<EnumDefinition classname='Objs'>
-																					<value lbound='[0]' ubound='[]'/>
-																				</EnumDefinition>
-																			</subprops>
-																		</Obj>
-																	</value>
-																	<value>
-																		<Obj typename='NI_MeasurementParameter' name=''>
-																			<subprops>
-																				<MessageType classname='Str'>
-																					<value/>
-																				</MessageType>
-																				<Name classname='Str'>
 																					<value>voltage_measurement</value>
 																				</Name>
 																				<ArgumentValue classname='ExprValue'>
@@ -2979,7 +2907,7 @@
 																					<value>TypeDouble</value>
 																				</Type>
 																				<ID classname='Num'>
-																					<value representation='Int64'>3</value>
+																					<value representation='Int64'>1</value>
 																				</ID>
 																				<TypeSpecialization classname='Str'>
 																					<value>None</value>
@@ -3015,7 +2943,7 @@
 																					<value>TypeDouble</value>
 																				</Type>
 																				<ID classname='Num'>
-																					<value representation='Int64'>4</value>
+																					<value representation='Int64'>2</value>
 																				</ID>
 																				<TypeSpecialization classname='Str'>
 																					<value>None</value>
@@ -3330,13 +3258,13 @@
 														</subprops>
 													</Result>
 													<PinMapPath classname='PathValue'>
-														<value>"NIDCPowerSourceDCVoltage.pinmap"</value>
+														<value>"NIDCPowerSourceDCVoltageWithMultiplexer.pinmap"</value>
 													</PinMapPath>
 												</subprops>
 											</Step>
 										</value>
 										<value>
-											<Step typename='Action' xsi:type='Action' name='Create and register NI-DCPower Sessions'>
+											<Step typename='Action' xsi:type='Action' name='Create and register NI-DCPower sessions'>
 												<subprops>
 													<TS classname='Obj'>
 														<subprops>
@@ -3781,7 +3709,7 @@
 											</Step>
 										</value>
 										<value>
-											<Step typename='Action' xsi:type='Action' name='Create and register NI-SWITCH Sessions'>
+											<Step typename='Action' xsi:type='Action' name='Create and register NI-SWITCH multiplexer sessions'>
 												<subprops>
 													<TS classname='Obj'>
 														<subprops>
@@ -4627,7 +4555,7 @@
 											</Step>
 										</value>
 										<value>
-											<Step typename='Action' xsi:type='Action' name='Destroy and unregister NI-SWITCH sessions'>
+											<Step typename='Action' xsi:type='Action' name='Destroy and unregister NI-SWITCH multiplexer sessions'>
 												<subprops>
 													<TS classname='Obj'>
 														<subprops>
