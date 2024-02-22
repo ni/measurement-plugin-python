@@ -32,6 +32,7 @@ from ni_measurementlink_service.session_management._constants import (
 )
 from ni_measurementlink_service.session_management._reservation import (
     BaseReservation,
+    MultiplexerSessionContainer,
     MultiSessionReservation,
     SingleSessionReservation,
 )
@@ -71,6 +72,7 @@ __all__ = [
     "INSTRUMENT_TYPE_NONE",
     "MultiSessionReservation",
     "PinMapContext",
+    "MultiplexerSessionContainer",
     "MultiplexerSessionInformation",
     "SessionInformation",
     "SessionInitializationBehavior",

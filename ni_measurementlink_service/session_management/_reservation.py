@@ -199,9 +199,10 @@ class _BaseSessionContainer(abc.ABC):
         return self._session_management_client._grpc_channel_pool
 
 
-class MultiplexerSessionHandler(_BaseSessionContainer):
+class MultiplexerSessionContainer(_BaseSessionContainer):
     """Manages multiplexer session information."""
 
+    @requires_feature(MULTIPLEXER_SUPPORT_2024Q2)
     def __init__(
         self,
         session_management_client: SessionManagementClient,
@@ -212,14 +213,14 @@ class MultiplexerSessionHandler(_BaseSessionContainer):
         """Initialize multiplexer object."""
         super().__init__(session_management_client)
         self._multiplexer_session_cache: Dict[str, object] = {}
-        self._multiplexer_session_info: Sequence[MultiplexerSessionInformation] = []
 
-        self._multiplexer_session_info = []
         if multiplexer_session_info is not None:
             self._multiplexer_session_info = [
                 MultiplexerSessionInformation._from_grpc_v1(info)
                 for info in multiplexer_session_info
             ]
+        else:
+            self._multiplexer_session_info = []
 
     @cached_property
     def _multiplexer_type_ids(self) -> AbstractSet[str]:
@@ -576,7 +577,7 @@ class BaseReservation(_BaseSessionContainer):
             SessionInformation._from_grpc_v1(info) for info in self._grpc_session_info
         ]
         self._session_cache: Dict[str, object] = {}
-        self._multiplexer_session_handler = MultiplexerSessionHandler(
+        self._multiplexer_session_handler = MultiplexerSessionContainer(
             session_management_client, multiplexer_session_info
         )
 
