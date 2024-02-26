@@ -5,7 +5,7 @@ from __future__ import annotations
 import logging
 import threading
 import warnings
-from typing import Iterable, Optional, Sequence, Union
+from typing import Iterable, Optional, Union
 
 import grpc
 
@@ -24,6 +24,7 @@ from ni_measurementlink_service.session_management._constants import (
     GRPC_SERVICE_INTERFACE_NAME,
 )
 from ni_measurementlink_service.session_management._reservation import (
+    MultiplexerSessionContainer,
     MultiSessionReservation,
     SingleSessionReservation,
 )
@@ -327,7 +328,7 @@ class SessionManagementClient(object):
     @requires_feature(MULTIPLEXER_SUPPORT_2024Q2)
     def get_multiplexer_sessions(
         self, pin_map_context: PinMapContext, multiplexer_type_id: Optional[str] = None
-    ) -> Sequence[MultiplexerSessionInformation]:
+    ) -> MultiplexerSessionContainer:
         """Get all multiplexer session infos matching the specified criteria.
 
         Returns the information needed to create or access the multiplexer sessions
@@ -342,7 +343,7 @@ class SessionManagementClient(object):
                 type id is ignored when matching multiplexer sessions.
 
         Returns:
-            The matching multiplexer session infos.
+            The multiplexer session container with the matching session infos.
         """
         request = session_management_service_pb2.GetMultiplexerSessionsRequest(
             pin_map_context=pin_map_context._to_grpc()
@@ -351,15 +352,13 @@ class SessionManagementClient(object):
             request.multiplexer_type_id = multiplexer_type_id
 
         response = self._get_stub().GetMultiplexerSessions(request)
-        return [
-            MultiplexerSessionInformation._from_grpc_v1(session)
-            for session in response.multiplexer_sessions
-        ]
+        session_infos = [session for session in response.multiplexer_sessions]
+        return MultiplexerSessionContainer(self, session_infos)
 
     @requires_feature(MULTIPLEXER_SUPPORT_2024Q2)
     def get_all_registered_multiplexer_sessions(
         self, multiplexer_type_id: Optional[str] = None
-    ) -> Sequence[MultiplexerSessionInformation]:
+    ) -> MultiplexerSessionContainer:
         """Get all multiplexer session infos registered with the session management service.
 
         Args:
@@ -368,17 +367,16 @@ class SessionManagementClient(object):
                 type id is ignored when matching multiplexer sessions.
 
         Returns:
-            The matching multiplexer session infos registered with the session management service.
+            The multiplexer session container with the matching session infos registered
+            with the session management service.
         """
         request = session_management_service_pb2.GetAllRegisteredMultiplexerSessionsRequest()
         if multiplexer_type_id is not None:
             request.multiplexer_type_id = multiplexer_type_id
 
         response = self._get_stub().GetAllRegisteredMultiplexerSessions(request)
-        return [
-            MultiplexerSessionInformation._from_grpc_v1(session)
-            for session in response.multiplexer_sessions
-        ]
+        session_infos = [session for session in response.multiplexer_sessions]
+        return MultiplexerSessionContainer(self, session_infos)
 
 
 def _timeout_to_milliseconds(timeout: Optional[float]) -> int:
