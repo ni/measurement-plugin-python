@@ -3742,7 +3742,7 @@
 																				<value>true</value>
 																			</CreateIfInterpreterDoesNotExist>
 																			<ModulePath classname='PathValue'>
-																				<value>teststand_niswitch_multiplexer.py</value>
+																				<value>teststand_niswitch.py</value>
 																			</ModulePath>
 																			<OperationType classname='Num'>
 																				<value>1</value>
@@ -4588,7 +4588,7 @@
 																				<value>true</value>
 																			</CreateIfInterpreterDoesNotExist>
 																			<ModulePath classname='PathValue'>
-																				<value>teststand_niswitch_multiplexer.py</value>
+																				<value>teststand_niswitch.py</value>
 																			</ModulePath>
 																			<OperationType classname='Num'>
 																				<value>1</value>

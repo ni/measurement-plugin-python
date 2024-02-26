@@ -30,10 +30,7 @@ service_directory = pathlib.Path(script_or_exe).resolve().parent
 measurement_service = nims.MeasurementService(
     service_config_path=service_directory / "NIDCPowerSourceDCVoltageWithMultiplexer.serviceconfig",
     version="0.1.0.0",
-    ui_file_paths=[
-        service_directory / "NIDCPowerSourceDCVoltageWithMultiplexer.measui",
-        service_directory / "NIDCPowerSourceDCVoltageWithMultiplexerUI.vi",
-    ],
+    ui_file_paths=[service_directory / "NIDCPowerSourceDCVoltageWithMultiplexer.measui"],
 )
 
 if TYPE_CHECKING:

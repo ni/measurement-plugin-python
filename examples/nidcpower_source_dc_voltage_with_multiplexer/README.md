@@ -8,9 +8,6 @@ NI SMU via an NI-SWITCH multiplexer.
 - Uses the `nidcpower` package to access NI-DCPower from Python
 - Uses the `niswitch` package to access NI-SWITCH from Python
 - Includes InstrumentStudio and MeasurementLink UI Editor project files
-- Includes multiple UI files. Note: InstrumentStudio only displays the 1st UI
-  file. To change the UI file used for the example, simply switch the order of
-  the `ui_file_paths` array in `measurement.py`
 - Includes a TestStand sequence showing how to configure the pin map, register
   instrument sessions with the session management service, and run a measurement
   - For the sake of simplicity, the TestStand sequence handles pin map and
