@@ -653,6 +653,7 @@ class BaseReservation(_BaseSessionContainer):
         return self._multiplexer_session_handler._multiplexer_session_cache
 
     @property
+    @requires_feature(MULTIPLEXER_SUPPORT_2024Q2)
     def multiplexer_session_info(self) -> Sequence[MultiplexerSessionInformation]:
         """Multiplexer session information object."""
         return self._multiplexer_session_handler.multiplexer_session_info
@@ -890,6 +891,7 @@ class BaseReservation(_BaseSessionContainer):
         """
         return self._initialize_session_core(session_constructor, instrument_type_id)
 
+    @requires_feature(MULTIPLEXER_SUPPORT_2024Q2)
     def initialize_multiplexer_session(
         self,
         session_constructor: Callable[[MultiplexerSessionInformation], TMultiplexerSession],
@@ -950,6 +952,7 @@ class BaseReservation(_BaseSessionContainer):
         """
         return self._initialize_sessions_core(session_constructor, instrument_type_id)
 
+    @requires_feature(MULTIPLEXER_SUPPORT_2024Q2)
     def initialize_multiplexer_sessions(
         self,
         session_constructor: Callable[[MultiplexerSessionInformation], TMultiplexerSession],
@@ -2619,6 +2622,7 @@ class BaseReservation(_BaseSessionContainer):
             niswitch.Session, relay_names, sites, INSTRUMENT_TYPE_NI_RELAY_DRIVER
         )
 
+    @requires_feature(MULTIPLEXER_SUPPORT_2024Q2)
     def initialize_niswitch_multiplexer_session(
         self,
         topology: Optional[str] = None,
@@ -2668,6 +2672,7 @@ class BaseReservation(_BaseSessionContainer):
             topology, simulate, reset_device, initialization_behavior, multiplexer_type_id
         )
 
+    @requires_feature(MULTIPLEXER_SUPPORT_2024Q2)
     def initialize_niswitch_multiplexer_sessions(
         self,
         topology: Optional[str] = None,
