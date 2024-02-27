@@ -41,4 +41,5 @@ message MeasurementParameter {
     Countries int_enum_data = 19;
     repeated Countries int_enum_array_data = 20;
     ni.protobuf.types.DoubleXYData xy_data = 21;
+    repeated ni.protobuf.types.DoubleXYData xy_data_array = 22;
 }
