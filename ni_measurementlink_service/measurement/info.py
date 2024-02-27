@@ -99,3 +99,4 @@ class DataType(enum.Enum):
     PinArray1D = 108
     PathArray1D = 109
     EnumArray1D = 110
+    DoubleXYDataArray1D = 111

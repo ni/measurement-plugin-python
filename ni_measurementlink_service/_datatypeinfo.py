@@ -62,4 +62,9 @@ _DATATYPE_TO_DATATYPEINFO_LOOKUP = {
     DataType.PinArray1D: DataTypeInfo(type_pb2.Field.TYPE_STRING, True, TypeSpecialization.Pin),
     DataType.PathArray1D: DataTypeInfo(type_pb2.Field.TYPE_STRING, True, TypeSpecialization.Path),
     DataType.EnumArray1D: DataTypeInfo(type_pb2.Field.TYPE_ENUM, True, TypeSpecialization.Enum),
+    DataType.DoubleXYDataArray1D: DataTypeInfo(
+        type_pb2.Field.TYPE_MESSAGE,
+        True,
+        message_type=xydata_pb2.DoubleXYData.DESCRIPTOR.full_name,
+    ),
 }

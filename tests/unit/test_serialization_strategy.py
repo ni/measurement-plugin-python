@@ -20,6 +20,7 @@ from ni_measurementlink_service._internal.stubs.ni.protobuf.types import xydata_
         (type_pb2.Field.TYPE_STRING, False, serialization_strategy.StringEncoder),
         (type_pb2.Field.TYPE_ENUM, False, serialization_strategy.IntEncoder),
         (type_pb2.Field.TYPE_MESSAGE, False, serialization_strategy.MessageEncoder),
+        (type_pb2.Field.TYPE_MESSAGE, True, serialization_strategy.MessageArrayEncoder),
     ],
 )
 def test___serialization_strategy___get_encoder___returns_expected_encoder(
@@ -48,6 +49,12 @@ def test___serialization_strategy___get_encoder___returns_expected_encoder(
             xydata_pb2.DoubleXYData.DESCRIPTOR.full_name,
             serialization_strategy.XYDataDecoder,
         ),
+        (
+            type_pb2.Field.TYPE_MESSAGE,
+            True,
+            xydata_pb2.DoubleXYData.DESCRIPTOR.full_name,
+            serialization_strategy.XYDataArrayDecoder,
+        ),
     ],
 )
 def test___serialization_strategy___get_decoder___returns_expected_decoder(
@@ -71,6 +78,7 @@ def test___serialization_strategy___get_decoder___returns_expected_decoder(
         (type_pb2.Field.TYPE_STRING, False, ""),
         (type_pb2.Field.TYPE_ENUM, False, 0),
         (type_pb2.Field.TYPE_MESSAGE, False, None),
+        (type_pb2.Field.TYPE_MESSAGE, True, []),
     ],
 )
 def test___serialization_strategy___get_default_value___returns_type_defaults(
