@@ -72,3 +72,9 @@ def _control_relays(
 
     for connection in connections:
         connection.multiplexer_session.wait_for_debounce()
+
+    for connection in connections:
+        connection.multiplexer_session.disconnect_multiple(connection.multiplexer_route)
+
+    for connection in connections:
+        connection.multiplexer_session.wait_for_debounce()
