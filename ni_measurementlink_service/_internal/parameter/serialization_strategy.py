@@ -193,6 +193,7 @@ _TYPE_DEFAULT_MAPPING = {
     type_pb2.Field.TYPE_BOOL: bool(),
     type_pb2.Field.TYPE_STRING: str(),
     type_pb2.Field.TYPE_ENUM: int(),
+    type_pb2.Field.TYPE_MESSAGE: Message(),
 }
 
 _MESSAGE_TYPE_TO_DECODER = {
