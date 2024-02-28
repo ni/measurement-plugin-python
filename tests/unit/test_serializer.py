@@ -43,7 +43,11 @@ double_xy_data = xydata_pb2.DoubleXYData()
 double_xy_data.x_data.append(4)
 double_xy_data.y_data.append(6)
 
-double_xy_data_array = [double_xy_data]
+double_xy_data2 = xydata_pb2.DoubleXYData()
+double_xy_data2.x_data.append(8)
+double_xy_data2.y_data.append(10)
+
+double_xy_data_array = [double_xy_data, double_xy_data2]
 
 # This should match the number of fields in bigmessage.proto.
 BIG_MESSAGE_SIZE = 100

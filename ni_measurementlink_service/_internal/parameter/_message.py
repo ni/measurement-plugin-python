@@ -32,7 +32,7 @@ def _message_encoder_constructor(
                 write(tag)
                 bytes = element.SerializeToString()
                 encode_varint(write, len(bytes), deterministic)
-                return write(bytes)
+                write(bytes)
             
         return _encode_repeated_message
     else:
@@ -79,6 +79,9 @@ def _message_decoder_constructor(
     """
 
     if is_repeated:
+        tag_bytes = encoder.TagBytes(field_index,
+                                    wire_format.WIRETYPE_LENGTH_DELIMITED)
+        tag_len = len(tag_bytes)
         def _decode_repeated_message(
             buffer: memoryview, pos: int, end: int, message: Message, field_dict: Dict[Key, Any]
         ) -> int:
@@ -97,7 +100,10 @@ def _message_decoder_constructor(
                 if parsed_bytes != size:
                     raise ValueError("Parsed incorrect number of bytes.")
                 value.append(parsed_value)
-                if new_pos == end:
+                # Predict that the next tag is another copy of the same repeated field.
+                pos = new_pos + tag_len
+                if buffer[new_pos:pos] != tag_bytes or new_pos == end:
+                    # Prediction failed.  Return.
                     return new_pos
 
         return _decode_repeated_message
