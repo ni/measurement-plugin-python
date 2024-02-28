@@ -15,7 +15,7 @@ mypy = ">=1.0"
 grpc-stubs = "^1.53"
 types-protobuf = "^4.21"
 # Uncomment to use prerelease dependencies.
-ni-measurementlink-service = {path = "../..", develop = true}
+# ni-measurementlink-service = {path = "../..", develop = true}
 
 [tool.mypy]
 disallow_untyped_defs = true
