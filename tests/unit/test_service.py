@@ -59,8 +59,8 @@ def test___measurement_service___register_measurement_method___method_registered
         ("UInt32", DataType.UInt32, 3994),
         ("UInt64", DataType.UInt64, 3456),
         ("UInt64", DataType.UInt64, False),
-        ("DoubleXYData", DataType.DoubleXYData, double_xy_data),
-        ("DoubleXYDataArray", DataType.DoubleXYDataArray1D, [double_xy_data, double_xy_data]),
+        ("DoubleXYData", DataType.DoubleXYData, None),
+        ("DoubleXYDataArray", DataType.DoubleXYDataArray1D, None),
     ],
 )
 def test___measurement_service___add_configuration__configuration_added(
