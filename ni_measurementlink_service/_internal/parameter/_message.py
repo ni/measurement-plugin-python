@@ -1,5 +1,5 @@
 import struct
-from typing import Any, Callable, Dict, Optional, Tuple, Type, TypeVar
+from typing import Any, Callable, Dict, List, Optional, Tuple, Type, TypeVar
 
 from google.protobuf.internal import encoder, wire_format
 from google.protobuf.message import Message
@@ -26,13 +26,23 @@ def _message_encoder_constructor(
     tag = encoder.TagBytes(field_index, wire_format.WIRETYPE_LENGTH_DELIMITED)
     encode_varint = _varint_encoder()
 
-    def _encode_message(write: WriteFunction, value: Message, deterministic: bool) -> int:
-        write(tag)
-        bytes = value.SerializeToString()
-        encode_varint(write, len(bytes), deterministic)
-        return write(bytes)
+    if is_repeated:
+        def _encode_repeated_message(write: WriteFunction, value: List[Message], deterministic: bool) -> int:
+            for element in value:
+                write(tag)
+                bytes = element.SerializeToString()
+                encode_varint(write, len(bytes), deterministic)
+                return write(bytes)
+            
+        return _encode_repeated_message
+    else:
+        def _encode_message(write: WriteFunction, value: Message, deterministic: bool) -> int:
+            write(tag)
+            bytes = value.SerializeToString()
+            encode_varint(write, len(bytes), deterministic)
+            return write(bytes)
 
-    return _encode_message
+        return _encode_message
 
 
 def _varint_encoder() -> Callable[[WriteFunction, int, Optional[bool]], int]:
@@ -68,25 +78,48 @@ def _message_decoder_constructor(
     that google.protobuf.internal.api_implementation chooses (usually upb).
     """
 
-    def _decode_message(
-        buffer: memoryview, pos: int, end: int, message: Message, field_dict: Dict[Key, Any]
-    ) -> int:
-        decode_varint = _varint_decoder(mask=(1 << 64) - 1, result_type=int)
-        value = field_dict.get(key)
-        if value is None:
-            value = field_dict.setdefault(key, new_default(message))
-        # Read length.
-        (size, pos) = decode_varint(buffer, pos)
-        new_pos = pos + size
-        if new_pos > end:
-            raise ValueError("Error decoding a message. Message is truncated.")
-        parsed_bytes = value.ParseFromString(buffer[pos:new_pos])
-        if parsed_bytes != size:
-            raise ValueError("Parsed incorrect number of bytes.")
-        return new_pos
+    if is_repeated:
+        def _decode_repeated_message(
+            buffer: memoryview, pos: int, end: int, message: Message, field_dict: Dict[Key, Any]
+        ) -> int:
+            decode_varint = _varint_decoder(mask=(1 << 64) - 1, result_type=int)
+            value = field_dict.get(key)
+            if value is None:
+                value = field_dict.setdefault(key, [])
+            while 1:
+                parsed_value = new_default(message)
+                # Read length.
+                (size, pos) = decode_varint(buffer, pos)
+                new_pos = pos + size
+                if new_pos > end:
+                    raise ValueError("Error decoding a message. Message is truncated.")
+                parsed_bytes = parsed_value.ParseFromString(buffer[pos:new_pos])
+                if parsed_bytes != size:
+                    raise ValueError("Parsed incorrect number of bytes.")
+                value.append(parsed_value)
+                if new_pos == end:
+                    return new_pos
 
-    return _decode_message
+        return _decode_repeated_message
+    else:
+        def _decode_message(
+            buffer: memoryview, pos: int, end: int, message: Message, field_dict: Dict[Key, Any]
+        ) -> int:
+            decode_varint = _varint_decoder(mask=(1 << 64) - 1, result_type=int)
+            value = field_dict.get(key)
+            if value is None:
+                value = field_dict.setdefault(key, new_default(message))
+            # Read length.
+            (size, pos) = decode_varint(buffer, pos)
+            new_pos = pos + size
+            if new_pos > end:
+                raise ValueError("Error decoding a message. Message is truncated.")
+            parsed_bytes = value.ParseFromString(buffer[pos:new_pos])
+            if parsed_bytes != size:
+                raise ValueError("Parsed incorrect number of bytes.")
+            return new_pos
 
+        return _decode_message
 
 T = TypeVar("T", bound="int")
 

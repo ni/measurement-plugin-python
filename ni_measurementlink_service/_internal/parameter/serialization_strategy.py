@@ -99,7 +99,7 @@ def _vector_decoder(
     return vector_decoder
 
 
-def _double_xy_data_decoder(decoder: DecoderConstructor) -> PartialDecoderConstructor:
+def _double_xy_data_decoder(decoder: DecoderConstructor, is_repeated: bool) -> PartialDecoderConstructor:
     """Constructs a DoubleXYData decoder constructor.
 
     Takes a field index and a key and returns a Decoder for DoubleXYData.
@@ -109,7 +109,6 @@ def _double_xy_data_decoder(decoder: DecoderConstructor) -> PartialDecoderConstr
         return xydata_pb2.DoubleXYData()
 
     def message_decoder(field_index: int, key: Key) -> Decoder:
-        is_repeated = True
         is_packed = True
         return decoder(field_index, is_repeated, is_packed, key, _new_default)
 
@@ -144,7 +143,7 @@ Int64Decoder = _scalar_decoder(cast(DecoderConstructor, decoder.Int64Decoder))
 UInt64Decoder = _scalar_decoder(cast(DecoderConstructor, decoder.UInt64Decoder))
 BoolDecoder = _scalar_decoder(cast(DecoderConstructor, decoder.BoolDecoder))
 StringDecoder = _scalar_decoder(cast(DecoderConstructor, decoder.StringDecoder))
-XYDataDecoder = _double_xy_data_decoder(_message._message_decoder_constructor)
+XYDataDecoder = _double_xy_data_decoder(_message._message_decoder_constructor, is_repeated=False)
 
 FloatArrayDecoder = _vector_decoder(cast(DecoderConstructor, decoder.FloatDecoder))
 DoubleArrayDecoder = _vector_decoder(cast(DecoderConstructor, decoder.DoubleDecoder))
@@ -156,7 +155,7 @@ BoolArrayDecoder = _vector_decoder(cast(DecoderConstructor, decoder.BoolDecoder)
 StringArrayDecoder = _vector_decoder(
     cast(DecoderConstructor, decoder.StringDecoder), is_packed=False
 )
-XYDataArrayDecoder = _vector_decoder(_message._message_decoder_constructor)
+XYDataArrayDecoder = _double_xy_data_decoder(_message._message_decoder_constructor, is_repeated=True)
 
 
 _FIELD_TYPE_TO_ENCODER_MAPPING = {

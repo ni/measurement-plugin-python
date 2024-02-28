@@ -43,6 +43,8 @@ double_xy_data = xydata_pb2.DoubleXYData()
 double_xy_data.x_data.append(4)
 double_xy_data.y_data.append(6)
 
+double_xy_data_array = [double_xy_data]
+
 # This should match the number of fields in bigmessage.proto.
 BIG_MESSAGE_SIZE = 100
 
@@ -72,6 +74,7 @@ BIG_MESSAGE_SIZE = 100
             Countries.AUSTRALIA,
             [Countries.AUSTRALIA, Countries.CANADA],
             double_xy_data,
+            double_xy_data_array
         ],
         [
             -0.9999,
@@ -95,6 +98,7 @@ BIG_MESSAGE_SIZE = 100
             Countries.AUSTRALIA,
             [Countries.AUSTRALIA, Countries.CANADA],
             double_xy_data,
+            double_xy_data_array
         ],
     ],
 )
@@ -133,6 +137,7 @@ def test___serializer___serialize_parameter___successful_serialization(test_valu
             Countries.AUSTRALIA,
             [Countries.AUSTRALIA, Countries.CANADA],
             double_xy_data,
+            double_xy_data_array
         ],
         [
             -0.9999,
@@ -156,6 +161,7 @@ def test___serializer___serialize_parameter___successful_serialization(test_valu
             Countries.AUSTRALIA,
             [Countries.AUSTRALIA, Countries.CANADA],
             double_xy_data,
+            double_xy_data_array
         ],
     ],
 )
@@ -193,6 +199,7 @@ def test___serializer___serialize_default_parameter___successful_serialization(d
             Countries.AUSTRALIA,
             [Countries.AUSTRALIA, Countries.CANADA],
             double_xy_data,
+            double_xy_data_array
         ]
     ],
 )
@@ -230,6 +237,7 @@ def test___empty_buffer___deserialize_parameters___returns_zero_or_empty():
         Countries.AUSTRALIA,
         [Countries.AUSTRALIA, Countries.CANADA],
         double_xy_data,
+        double_xy_data_array
     ]
     parameter = _get_test_parameter_by_id(nonzero_defaults)
     parameter_value_by_id = serializer.deserialize_parameters(parameter, bytes())
@@ -449,6 +457,14 @@ def _get_test_parameter_by_id(default_values):
             annotations={},
             message_type=xydata_pb2.DoubleXYData.DESCRIPTOR.full_name,
         ),
+        22: ParameterMetadata(
+            display_name="xy_data_array",
+            type=type_pb2.Field.TYPE_MESSAGE,
+            repeated=True,
+            default_value=default_values[21],
+            annotations={},
+            message_type=xydata_pb2.DoubleXYData.DESCRIPTOR.full_name,
+        ),
     }
     return parameter_by_id
 
@@ -477,6 +493,7 @@ def _get_test_grpc_message(test_values):
     parameter.int_enum_array_data.extend(list(map(lambda x: x.value, test_values[19])))
     parameter.xy_data.x_data.append(test_values[20].x_data[0])
     parameter.xy_data.y_data.append(test_values[20].y_data[0])
+    parameter.xy_data_array.extend(test_values[21])
     return parameter
 
 
