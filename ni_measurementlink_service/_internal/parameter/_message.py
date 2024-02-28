@@ -81,7 +81,6 @@ def _message_decoder_constructor(
     (like DoubleXYData) are defined in .proto files, so they use whichever protobuf implementation
     that google.protobuf.internal.api_implementation chooses (usually upb).
     """
-
     if is_repeated:
         tag_bytes = encoder.TagBytes(field_index, wire_format.WIRETYPE_LENGTH_DELIMITED)
         tag_len = len(tag_bytes)
