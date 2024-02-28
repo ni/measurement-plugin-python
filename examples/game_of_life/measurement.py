@@ -16,7 +16,7 @@ service_directory = pathlib.Path(__file__).resolve().parent
 measurement_service = nims.MeasurementService(
     service_config_path=service_directory / "game_of_life.serviceconfig",
     version="1.0.0.0",
-    ui_file_paths=[service_directory / "game_of_life.measui"],
+    ui_file_paths=[service_directory / "game_of_life.vi"],
 )
 
 Grid = List[List[bool]]
@@ -29,22 +29,24 @@ INFINITE_GENERATIONS = -1
 @measurement_service.configuration("height", nims.DataType.UInt32, 100)
 @measurement_service.configuration("update_interval_msec", nims.DataType.UInt32, 100)
 @measurement_service.configuration("max_generations", nims.DataType.Int32, INFINITE_GENERATIONS)
-@measurement_service.output("game_of_life", nims.DataType.DoubleXYData)
+@measurement_service.output("game_of_life", nims.DataType.DoubleXYDataArray1D)
 @measurement_service.output("generation", nims.DataType.UInt32)
 def measure(
     width: int, height: int, update_interval_msec: int, max_generations: int
-) -> Generator[Tuple[xydata_pb2.DoubleXYData, int], None, None]:
+) -> Generator[Tuple[List[xydata_pb2.DoubleXYData], int], None, None]:
     """Streaming measurement that returns Conway's Game of Life grid as DoubleXYData."""
     cancellation_event = threading.Event()
     measurement_service.context.add_cancel_callback(cancellation_event.set)
     grid = _initialize_grid_with_seeded_data(width, height)
+    grid2 = _initialize_grid_with_seeded_data(width, height)
     update_interval_sec = update_interval_msec / 1000
     generation = 0
     while max_generations == INFINITE_GENERATIONS or generation < max_generations:
         iteration_start_time = time.monotonic()
         generation += 1
 
-        xydata = _initialize_xydata_and_frame(width, height)
+        xydata = _initialize_xydata_and_frame(width, height, 0, 0)
+        xydata2 = _initialize_xydata_and_frame(width, height, width, 0)
         row_index = 0
         for row in grid:
             col_index = 0
@@ -54,8 +56,17 @@ def measure(
                     xydata.y_data.append(col_index)
                 col_index += 1
             row_index += 1
+        for row in grid2:
+            col_index = 0
+            for cell in row:
+                if cell:
+                    xydata2.x_data.append(row_index)
+                    xydata2.y_data.append(col_index)
+                col_index += 1
+            row_index += 1
         grid = _update_grid(grid)
-        xydata_out = xydata
+        grid2 = _update_grid(grid2)
+        xydata_out = [xydata, xydata2]
         generation += 1
         delay = max(0.0, update_interval_sec - (time.monotonic() - iteration_start_time))
         yield (xydata_out, generation)
@@ -66,18 +77,18 @@ def measure(
             )
 
 
-def _initialize_xydata_and_frame(width: int, height: int) -> xydata_pb2.DoubleXYData:
+def _initialize_xydata_and_frame(width: int, height: int, xOffset: int, yOffset: int) -> xydata_pb2.DoubleXYData:
     xydata = xydata_pb2.DoubleXYData()
 
     # Frame To keep the graph stable
-    xydata.x_data.append(-1)
-    xydata.y_data.append(-1)
-    xydata.x_data.append(-1)
-    xydata.y_data.append(height + 1)
-    xydata.x_data.append(width + 1)
-    xydata.y_data.append(-1)
-    xydata.x_data.append(width + 1)
-    xydata.y_data.append(height + 1)
+    xydata.x_data.append(-1 + xOffset)
+    xydata.y_data.append(-1 + yOffset)
+    xydata.x_data.append(-1 + xOffset)
+    xydata.y_data.append(height + 1 + yOffset)
+    xydata.x_data.append(width + 1 + xOffset)
+    xydata.y_data.append(-1 + yOffset)
+    xydata.x_data.append(width + 1 + xOffset)
+    xydata.y_data.append(height + 1 + yOffset)
     return xydata
 
 

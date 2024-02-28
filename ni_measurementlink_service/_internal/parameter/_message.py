@@ -1,5 +1,16 @@
 import struct
-from typing import Any, Callable, Dict, List, Optional, Tuple, Type, TypeVar
+from typing import (
+    Any,
+    Callable,
+    Dict,
+    List,
+    Optional,
+    Tuple,
+    Type,
+    TypeVar,
+    Union,
+    cast,
+)
 
 from google.protobuf.internal import encoder, wire_format
 from google.protobuf.message import Message
@@ -14,7 +25,7 @@ from ni_measurementlink_service._internal.parameter._serializer_types import (
 
 def _message_encoder_constructor(
     field_index: int, is_repeated: bool, is_packed: bool
-) -> Callable[[WriteFunction, Message, bool], int]:
+) -> Callable[[WriteFunction, Union[Message, List[Message]], bool], int]:
     """Mimics google.protobuf.internal.MessageEncoder.
 
     This function was forked in order to call SerializeToString instead of _InternalSerialize.
@@ -29,20 +40,24 @@ def _message_encoder_constructor(
     if is_repeated:
 
         def _encode_repeated_message(
-            write: WriteFunction, value: List[Message], deterministic: bool
+            write: WriteFunction, value: Union[Message, List[Message]], deterministic: bool
         ) -> int:
-            for element in value:
+            bytes_written = 0
+            for element in cast(List[Message], value):
                 write(tag)
                 bytes = element.SerializeToString()
                 encode_varint(write, len(bytes), deterministic)
-                write(bytes)
+                bytes_written += write(bytes)
+            return bytes_written
 
         return _encode_repeated_message
     else:
 
-        def _encode_message(write: WriteFunction, value: Message, deterministic: bool) -> int:
+        def _encode_message(
+            write: WriteFunction, value: Union[Message, List[Message]], deterministic: bool
+        ) -> int:
             write(tag)
-            bytes = value.SerializeToString()
+            bytes = cast(Message, value).SerializeToString()
             encode_varint(write, len(bytes), deterministic)
             return write(bytes)
 
