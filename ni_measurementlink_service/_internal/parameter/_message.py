@@ -27,15 +27,19 @@ def _message_encoder_constructor(
     encode_varint = _varint_encoder()
 
     if is_repeated:
-        def _encode_repeated_message(write: WriteFunction, value: List[Message], deterministic: bool) -> int:
+
+        def _encode_repeated_message(
+            write: WriteFunction, value: List[Message], deterministic: bool
+        ) -> int:
             for element in value:
                 write(tag)
                 bytes = element.SerializeToString()
                 encode_varint(write, len(bytes), deterministic)
                 write(bytes)
-            
+
         return _encode_repeated_message
     else:
+
         def _encode_message(write: WriteFunction, value: Message, deterministic: bool) -> int:
             write(tag)
             bytes = value.SerializeToString()
@@ -79,9 +83,9 @@ def _message_decoder_constructor(
     """
 
     if is_repeated:
-        tag_bytes = encoder.TagBytes(field_index,
-                                    wire_format.WIRETYPE_LENGTH_DELIMITED)
+        tag_bytes = encoder.TagBytes(field_index, wire_format.WIRETYPE_LENGTH_DELIMITED)
         tag_len = len(tag_bytes)
+
         def _decode_repeated_message(
             buffer: memoryview, pos: int, end: int, message: Message, field_dict: Dict[Key, Any]
         ) -> int:
@@ -108,6 +112,7 @@ def _message_decoder_constructor(
 
         return _decode_repeated_message
     else:
+
         def _decode_message(
             buffer: memoryview, pos: int, end: int, message: Message, field_dict: Dict[Key, Any]
         ) -> int:
@@ -126,6 +131,7 @@ def _message_decoder_constructor(
             return new_pos
 
         return _decode_message
+
 
 T = TypeVar("T", bound="int")
 

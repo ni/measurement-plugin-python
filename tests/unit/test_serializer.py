@@ -6,7 +6,6 @@ from typing import Dict, Sequence
 import pytest
 from google.protobuf import any_pb2, type_pb2
 
-
 from ni_measurementlink_service._annotations import (
     ENUM_VALUES_KEY,
     TYPE_SPECIALIZATION_KEY,
@@ -78,7 +77,7 @@ BIG_MESSAGE_SIZE = 100
             Countries.AUSTRALIA,
             [Countries.AUSTRALIA, Countries.CANADA],
             double_xy_data,
-            double_xy_data_array
+            double_xy_data_array,
         ],
         [
             -0.9999,
@@ -102,7 +101,7 @@ BIG_MESSAGE_SIZE = 100
             Countries.AUSTRALIA,
             [Countries.AUSTRALIA, Countries.CANADA],
             double_xy_data,
-            double_xy_data_array
+            double_xy_data_array,
         ],
     ],
 )
@@ -141,7 +140,7 @@ def test___serializer___serialize_parameter___successful_serialization(test_valu
             Countries.AUSTRALIA,
             [Countries.AUSTRALIA, Countries.CANADA],
             double_xy_data,
-            double_xy_data_array
+            double_xy_data_array,
         ],
         [
             -0.9999,
@@ -165,7 +164,7 @@ def test___serializer___serialize_parameter___successful_serialization(test_valu
             Countries.AUSTRALIA,
             [Countries.AUSTRALIA, Countries.CANADA],
             double_xy_data,
-            double_xy_data_array
+            double_xy_data_array,
         ],
     ],
 )
@@ -203,7 +202,7 @@ def test___serializer___serialize_default_parameter___successful_serialization(d
             Countries.AUSTRALIA,
             [Countries.AUSTRALIA, Countries.CANADA],
             double_xy_data,
-            double_xy_data_array
+            double_xy_data_array,
         ]
     ],
 )
@@ -241,7 +240,7 @@ def test___empty_buffer___deserialize_parameters___returns_zero_or_empty():
         Countries.AUSTRALIA,
         [Countries.AUSTRALIA, Countries.CANADA],
         double_xy_data,
-        double_xy_data_array
+        double_xy_data_array,
     ]
     parameter = _get_test_parameter_by_id(nonzero_defaults)
     parameter_value_by_id = serializer.deserialize_parameters(parameter, bytes())

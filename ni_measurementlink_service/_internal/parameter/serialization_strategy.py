@@ -99,7 +99,9 @@ def _vector_decoder(
     return vector_decoder
 
 
-def _double_xy_data_decoder(decoder: DecoderConstructor, is_repeated: bool) -> PartialDecoderConstructor:
+def _double_xy_data_decoder(
+    decoder: DecoderConstructor, is_repeated: bool
+) -> PartialDecoderConstructor:
     """Constructs a DoubleXYData decoder constructor.
 
     Takes a field index and a key and returns a Decoder for DoubleXYData.
@@ -131,7 +133,9 @@ IntArrayEncoder = _vector_encoder(cast(EncoderConstructor, encoder.Int32Encoder)
 UIntArrayEncoder = _vector_encoder(cast(EncoderConstructor, encoder.UInt32Encoder))
 BoolArrayEncoder = _vector_encoder(encoder.BoolEncoder)
 StringArrayEncoder = _vector_encoder(encoder.StringEncoder, is_packed=False)
-MessageArrayEncoder = _vector_encoder(cast(EncoderConstructor, _message._message_encoder_constructor))
+MessageArrayEncoder = _vector_encoder(
+    cast(EncoderConstructor, _message._message_encoder_constructor)
+)
 
 # Cast works around this issue in typeshed
 # https://github.com/python/typeshed/issues/10697
@@ -155,7 +159,9 @@ BoolArrayDecoder = _vector_decoder(cast(DecoderConstructor, decoder.BoolDecoder)
 StringArrayDecoder = _vector_decoder(
     cast(DecoderConstructor, decoder.StringDecoder), is_packed=False
 )
-XYDataArrayDecoder = _double_xy_data_decoder(_message._message_decoder_constructor, is_repeated=True)
+XYDataArrayDecoder = _double_xy_data_decoder(
+    _message._message_decoder_constructor, is_repeated=True
+)
 
 
 _FIELD_TYPE_TO_ENCODER_MAPPING = {

@@ -9,9 +9,7 @@ import pytest
 from pytest_mock import MockerFixture
 
 from ni_measurementlink_service import _datatypeinfo
-from ni_measurementlink_service._annotations import (
-    TYPE_SPECIALIZATION_KEY,
-)
+from ni_measurementlink_service._annotations import TYPE_SPECIALIZATION_KEY
 from ni_measurementlink_service._internal.stubs.ni.protobuf.types import xydata_pb2
 from ni_measurementlink_service.measurement.info import DataType, TypeSpecialization
 from ni_measurementlink_service.measurement.service import MeasurementService
@@ -33,9 +31,11 @@ class ColorWithoutZeroValue(Enum):
     GREEN = 2
     BLUE = 3
 
+
 double_xy_data = xydata_pb2.DoubleXYData()
 double_xy_data.x_data.append(4)
 double_xy_data.y_data.append(6)
+
 
 def test___measurement_service___register_measurement_method___method_registered(
     measurement_service: MeasurementService,
