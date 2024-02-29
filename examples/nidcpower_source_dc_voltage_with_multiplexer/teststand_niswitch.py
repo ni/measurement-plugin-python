@@ -78,7 +78,9 @@ def create_niswitch_multiplexer_sessions(sequence_context: Any) -> None:
         session_management_client = SessionManagementClient(
             discovery_client=discovery_client, grpc_channel_pool=grpc_channel_pool
         )
-        with session_management_client.get_multiplexer_sessions(pin_map_context) as session_container:
+        with session_management_client.get_multiplexer_sessions(
+            pin_map_context
+        ) as session_container:
             with session_container.initialize_niswitch_multiplexer_sessions(
                 initialization_behavior=SessionInitializationBehavior.INITIALIZE_SESSION_THEN_DETACH
             ):
