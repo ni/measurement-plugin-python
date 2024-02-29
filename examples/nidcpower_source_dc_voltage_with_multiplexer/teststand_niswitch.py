@@ -78,14 +78,14 @@ def create_niswitch_multiplexer_sessions(sequence_context: Any) -> None:
         session_management_client = SessionManagementClient(
             discovery_client=discovery_client, grpc_channel_pool=grpc_channel_pool
         )
-        with session_management_client.get_multiplexer_sessions(pin_map_context) as session_handler:
-            with session_handler.initialize_niswitch_multiplexer_sessions(
+        with session_management_client.get_multiplexer_sessions(pin_map_context) as session_container:
+            with session_container.initialize_niswitch_multiplexer_sessions(
                 initialization_behavior=SessionInitializationBehavior.INITIALIZE_SESSION_THEN_DETACH
             ):
                 pass
 
             session_management_client.register_multiplexer_sessions(
-                session_handler.multiplexer_session_info
+                session_container.multiplexer_session_info
             )
 
 
@@ -96,14 +96,14 @@ def destroy_niswitch_multiplexer_sessions() -> None:
         session_management_client = SessionManagementClient(
             discovery_client=discovery_client, grpc_channel_pool=grpc_channel_pool
         )
-        with session_management_client.get_all_registered_multiplexer_sessions() as session_handler:
-            if not session_handler.multiplexer_session_info:
+        with session_management_client.get_all_registered_multiplexer_sessions() as session_container:
+            if not session_container.multiplexer_session_info:
                 return
 
             session_management_client.unregister_multiplexer_sessions(
-                session_handler.multiplexer_session_info
+                session_container.multiplexer_session_info
             )
-            with session_handler.initialize_niswitch_multiplexer_sessions(
+            with session_container.initialize_niswitch_multiplexer_sessions(
                 initialization_behavior=SessionInitializationBehavior.ATTACH_TO_SESSION_THEN_CLOSE
             ):
                 pass
