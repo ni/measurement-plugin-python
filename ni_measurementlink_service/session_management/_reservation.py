@@ -477,13 +477,14 @@ class MultiplexerSessionContainer(_BaseSessionContainer):
         """
         from ni_measurementlink_service._drivers._niswitch import SessionConstructor
 
-        session_constructor = SessionConstructor._for_multiplexer(
+        session_constructor = SessionConstructor(
             self._discovery_client,
             self._grpc_channel_pool,
             topology,
             simulate,
             reset_device,
             initialization_behavior,
+            is_multiplexer=True,
         )
         closing_function = functools.partial(
             closing_session_with_ts_code_module_support, initialization_behavior
@@ -540,13 +541,14 @@ class MultiplexerSessionContainer(_BaseSessionContainer):
         """
         from ni_measurementlink_service._drivers._niswitch import SessionConstructor
 
-        session_constructor = SessionConstructor._for_multiplexer(
+        session_constructor = SessionConstructor(
             self._discovery_client,
             self._grpc_channel_pool,
             topology,
             simulate,
             reset_device,
             initialization_behavior,
+            is_multiplexer=True,
         )
         closing_function = functools.partial(
             closing_session_with_ts_code_module_support, initialization_behavior
@@ -2495,7 +2497,7 @@ class BaseReservation(_BaseSessionContainer):
         """
         from ni_measurementlink_service._drivers._niswitch import SessionConstructor
 
-        session_constructor = SessionConstructor._for_relay_driver(
+        session_constructor = SessionConstructor(
             self._discovery_client,
             self._grpc_channel_pool,
             topology,
@@ -2550,7 +2552,7 @@ class BaseReservation(_BaseSessionContainer):
         """
         from ni_measurementlink_service._drivers._niswitch import SessionConstructor
 
-        session_constructor = SessionConstructor._for_relay_driver(
+        session_constructor = SessionConstructor(
             self._discovery_client,
             self._grpc_channel_pool,
             topology,

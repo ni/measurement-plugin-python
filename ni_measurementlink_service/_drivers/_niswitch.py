@@ -32,61 +32,27 @@ class SessionConstructor:
         self,
         discovery_client: DiscoveryClient,
         grpc_channel_pool: GrpcChannelPool,
-        topology: str,
-        simulate: bool,
+        topology: Optional[str],
+        simulate: Optional[bool],
         reset_device: bool,
         initialization_behavior: SessionInitializationBehavior,
+        *,
+        is_multiplexer: bool = False,
     ) -> None:
         """Initialize the session constructor."""
         self._grpc_channel = get_insecure_grpc_device_server_channel(
             discovery_client, grpc_channel_pool, niswitch.GRPC_SERVICE_INTERFACE_NAME
         )
-        self._topology = topology
-        self._simulate = simulate
+
+        if is_multiplexer:
+            self._topology = NISWITCH_MULTIPLEXER_OPTIONS.topology if topology is None else topology
+            self._simulate = NISWITCH_MULTIPLEXER_OPTIONS.simulate if simulate is None else simulate
+        else:
+            self._topology = NISWITCH_OPTIONS.topology if topology is None else topology
+            self._simulate = NISWITCH_OPTIONS.simulate if simulate is None else simulate
+
         self._reset_device = reset_device
         self._initialization_behavior = _INITIALIZATION_BEHAVIOR[initialization_behavior]
-
-    @classmethod
-    def _for_multiplexer(
-        cls,
-        discovery_client: DiscoveryClient,
-        grpc_channel_pool: GrpcChannelPool,
-        topology: Optional[str],
-        simulate: Optional[bool],
-        reset_device: bool,
-        initialization_behavior: SessionInitializationBehavior,
-    ) -> SessionConstructor:
-        topology = NISWITCH_MULTIPLEXER_OPTIONS.topology if topology is None else topology
-        simulate = NISWITCH_MULTIPLEXER_OPTIONS.simulate if simulate is None else simulate
-        return cls(
-            discovery_client,
-            grpc_channel_pool,
-            topology,
-            simulate,
-            reset_device,
-            initialization_behavior,
-        )
-
-    @classmethod
-    def _for_relay_driver(
-        cls,
-        discovery_client: DiscoveryClient,
-        grpc_channel_pool: GrpcChannelPool,
-        topology: Optional[str],
-        simulate: Optional[bool],
-        reset_device: bool,
-        initialization_behavior: SessionInitializationBehavior,
-    ) -> SessionConstructor:
-        topology = NISWITCH_OPTIONS.topology if topology is None else topology
-        simulate = NISWITCH_OPTIONS.simulate if simulate is None else simulate
-        return cls(
-            discovery_client,
-            grpc_channel_pool,
-            topology,
-            simulate,
-            reset_device,
-            initialization_behavior,
-        )
 
     def __call__(
         self, session_info: Union[SessionInformation, MultiplexerSessionInformation]
