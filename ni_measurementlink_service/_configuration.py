@@ -99,6 +99,7 @@ NIDMM_OPTIONS = MIDriverOptions("nidmm").update_from_config()
 NIFGEN_OPTIONS = MIDriverOptions("nifgen").update_from_config()
 NISCOPE_OPTIONS = MIDriverOptions("niscope").update_from_config()
 NISWITCH_OPTIONS = NISwitchOptions("niswitch").update_from_config()
+NISWITCH_MULTIPLEXER_OPTIONS = NISwitchOptions("niswitch_multiplexer").update_from_config()
 
 
 # ----------------------------------------------------------------------

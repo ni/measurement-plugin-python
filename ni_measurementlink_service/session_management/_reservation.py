@@ -484,6 +484,7 @@ class MultiplexerSessionContainer(_BaseSessionContainer):
             simulate,
             reset_device,
             initialization_behavior,
+            is_multiplexer=True,
         )
         closing_function = functools.partial(
             closing_session_with_ts_code_module_support, initialization_behavior
@@ -547,6 +548,7 @@ class MultiplexerSessionContainer(_BaseSessionContainer):
             simulate,
             reset_device,
             initialization_behavior,
+            is_multiplexer=True,
         )
         closing_function = functools.partial(
             closing_session_with_ts_code_module_support, initialization_behavior

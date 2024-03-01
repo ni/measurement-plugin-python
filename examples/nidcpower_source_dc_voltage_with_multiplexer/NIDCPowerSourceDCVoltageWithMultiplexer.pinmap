@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<PinMap xmlns="http://www.ni.com/TestStand/SemiconductorModule/PinMap.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" schemaVersion="1.6">
+	<Instruments>
+		<NIDCPowerInstrument name="DCPower1" numberOfChannels="4">
+			<ChannelGroup name="CommonDCPowerChannelGroup" />
+		</NIDCPowerInstrument>
+		<Multiplexer name="SWITCH1" multiplexerTypeId="" />
+	</Instruments>
+	<Pins>
+		<DUTPin name="Pin1" />
+		<DUTPin name="Pin2" />
+	</Pins>
+	<PinGroups></PinGroups>
+	<Sites>
+		<Site siteNumber="0" />
+	</Sites>
+	<Connections>
+		<MultiplexedConnection instrument="DCPower1" channel="0">
+			<MultiplexedDUTPinRoute pin="Pin1" siteNumber="0" multiplexer="SWITCH1" routeName="b0c0-&gt;b0r0" />
+			<MultiplexedDUTPinRoute pin="Pin2" siteNumber="0" multiplexer="SWITCH1" routeName="b0c0-&gt;b0r1" />
+		</MultiplexedConnection>
+	</Connections>
+</PinMap>
