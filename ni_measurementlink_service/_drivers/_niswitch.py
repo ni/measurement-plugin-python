@@ -4,7 +4,7 @@ from typing import Any, Dict, Optional, Union
 
 import niswitch
 
-from ni_measurementlink_service._configuration import NISWITCH_OPTIONS
+from ni_measurementlink_service._configuration import NISWITCH_OPTIONS, NISWITCH_MULTIPLEXER_OPTIONS
 from ni_measurementlink_service._drivers._grpcdevice import (
     get_insecure_grpc_device_server_channel,
 )
@@ -36,13 +36,21 @@ class SessionConstructor:
         simulate: Optional[bool],
         reset_device: bool,
         initialization_behavior: SessionInitializationBehavior,
+        *,
+        is_multiplexer: bool = False,
     ) -> None:
         """Initialize the session constructor."""
         self._grpc_channel = get_insecure_grpc_device_server_channel(
             discovery_client, grpc_channel_pool, niswitch.GRPC_SERVICE_INTERFACE_NAME
         )
-        self._topology = NISWITCH_OPTIONS.topology if topology is None else topology
-        self._simulate = NISWITCH_OPTIONS.simulate if simulate is None else simulate
+
+        if is_multiplexer:
+            self._topology = NISWITCH_MULTIPLEXER_OPTIONS.topology if topology is None else topology
+            self._simulate = NISWITCH_MULTIPLEXER_OPTIONS.simulate if simulate is None else simulate
+        else:
+            self._topology = NISWITCH_OPTIONS.topology if topology is None else topology
+            self._simulate = NISWITCH_OPTIONS.simulate if simulate is None else simulate
+
         self._reset_device = reset_device
         self._initialization_behavior = _INITIALIZATION_BEHAVIOR[initialization_behavior]
 
