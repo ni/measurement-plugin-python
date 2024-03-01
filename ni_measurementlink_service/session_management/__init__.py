@@ -45,6 +45,7 @@ from ni_measurementlink_service.session_management._types import (
     SessionInitializationBehavior,
     TypedConnection,
     TypedConnectionWithMultiplexer,
+    TypedMultiplexerSessionInformation,
     TypedSessionInformation,
 )
 
@@ -81,6 +82,7 @@ __all__ = [
     "SITE_SYSTEM_PINS",
     "TypedConnection",
     "TypedConnectionWithMultiplexer",
+    "TypedMultiplexerSessionInformation",
     "TypedSessionInformation",
 ]
 

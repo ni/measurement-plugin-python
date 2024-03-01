@@ -1,0 +1,14 @@
+syntax = "proto3";
+package ni.measurementlink.measurement.tests.niswitchmultiplexer;
+
+message Configurations {
+    repeated string pin_names = 1;
+    bool multi_session = 2;
+}
+
+message Outputs {
+    repeated string multiplexer_session_names = 1;
+    repeated string multiplexer_resource_names = 2;
+    repeated string multiplexer_routes = 3;
+    repeated string connected_channels = 4;
+}
