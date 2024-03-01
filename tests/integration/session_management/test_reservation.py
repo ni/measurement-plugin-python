@@ -3,8 +3,6 @@ from __future__ import annotations
 import pathlib
 from contextlib import ExitStack
 
-import pytest
-
 from ni_measurementlink_service.session_management import (
     INSTRUMENT_TYPE_NI_DCPOWER,
     INSTRUMENT_TYPE_NI_RELAY_DRIVER,
@@ -167,7 +165,6 @@ def test___sessions_reserved___get_connections_by_instrument_type___connections_
         ]
 
 
-@pytest.mark.xfail(reason="Requires MeasurementLink 2024Q2 or later.")
 def test___reserve_sessions_with_multiplexer___get_connections_with_multiplexer___returns_connections(
     pin_map_client: PinMapClient,
     pin_map_directory: pathlib.Path,
@@ -203,7 +200,6 @@ def test___reserve_sessions_with_multiplexer___get_connections_with_multiplexer_
         ]
 
 
-@pytest.mark.xfail(reason="Requires MeasurementLink 2024Q2 or later.")
 def test___reserve_sessions_with_multiplexer___get_connections_with_multiplexer_by_pin___returns_connections(
     pin_map_client: PinMapClient,
     pin_map_directory: pathlib.Path,
@@ -253,7 +249,6 @@ def test___reserve_sessions_with_multiplexer___get_connections_with_multiplexer_
         ]
 
 
-@pytest.mark.xfail(reason="Requires MeasurementLink 2024Q2 or later.")
 def test___reserve_sessions_with_multiplexer___get_connections_with_multiplexer_by_site___returns_connections(
     pin_map_client: PinMapClient,
     pin_map_directory: pathlib.Path,
@@ -299,7 +294,6 @@ def test___reserve_sessions_with_multiplexer___get_connections_with_multiplexer_
         ]
 
 
-@pytest.mark.xfail(reason="Requires MeasurementLink 2024Q2 or later.")
 def test___reserve_session_with_multiplexer___get_connections_with_multiplexer_by_instrument_type___returns_connections(
     pin_map_client: PinMapClient,
     pin_map_directory: pathlib.Path,
@@ -347,7 +341,6 @@ def test___reserve_session_with_multiplexer___get_connections_with_multiplexer_b
         ]
 
 
-@pytest.mark.xfail(reason="Requires MeasurementLink 2024Q2 or later.")
 def test___sessions_reserved_with_shared_pins_all_sites___get_connections___returns_connections_for_all_sites(
     pin_map_client: PinMapClient,
     pin_map_directory: pathlib.Path,
