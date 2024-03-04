@@ -175,12 +175,13 @@ message ReserveSessionsRequest {
 
 message ReserveSessionsResponse{
     // List of information needed to create or use each session for the given pin, site, and instrument type ID.
-    // This field is readonly.
     repeated SessionInformation sessions = 1;
 
     // List of information needed to create or use each multiplexer session for the given pin, site, and instrument type ID.
-    // This field is readonly.
     repeated MultiplexerSessionInformation multiplexer_sessions = 2;
+    
+    // Represents the mapping between pin or relay groups and their respective pin or relay names.
+    map<string, ResolvedPinsOrRelays> group_mappings = 3;
 }
 
 message UnreserveSessionsRequest {
@@ -269,4 +270,9 @@ message GetAllRegisteredMultiplexerSessionsRequest{
 message GetAllRegisteredMultiplexerSessionsResponse{
     // Multiplexer sessions currently registered in the session management service.
     repeated MultiplexerSessionInformation multiplexer_sessions = 1;
+}
+
+message ResolvedPinsOrRelays {
+  // List of pin or relay names in the pin or relay group.
+  repeated string pin_or_relay_names = 1;
 }
