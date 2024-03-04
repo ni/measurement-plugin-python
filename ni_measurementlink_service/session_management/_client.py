@@ -5,8 +5,9 @@ from __future__ import annotations
 import logging
 import threading
 import warnings
-from typing import Iterable, Optional, Union
+from typing import Dict, Iterable, Optional, Union
 
+import google.protobuf.internal.containers
 import grpc
 
 from ni_measurementlink_service._featuretoggles import (
@@ -146,7 +147,7 @@ class SessionManagementClient(object):
                 session_management_client=self,
                 session_info=response.sessions,
                 multiplexer_session_info=response.multiplexer_sessions,
-                pin_or_relay_group_mappings=response.group_mappings,
+                pin_or_relay_group_mappings=_to_dict(response.group_mappings),
                 reserved_pin_or_relay_names=pin_or_relay_names,
                 reserved_sites=context.sites,
             )
@@ -198,7 +199,7 @@ class SessionManagementClient(object):
             session_management_client=self,
             session_info=response.sessions,
             multiplexer_session_info=response.multiplexer_sessions,
-            pin_or_relay_group_mappings=response.group_mappings,
+            pin_or_relay_group_mappings=_to_dict(response.group_mappings),
             reserved_pin_or_relay_names=pin_or_relay_names,
             reserved_sites=context.sites,
         )
@@ -391,3 +392,16 @@ def _timeout_to_milliseconds(timeout: Optional[float]) -> int:
         return -1
     else:
         return round(timeout * 1000)
+
+
+def _to_dict(
+    mappings: google.protobuf.internal.containers.MessageMap[
+        str, session_management_service_pb2.ResolvedPinsOrRelays
+    ]
+) -> Dict[str, Iterable[str]]:
+    group_mappings: Dict[str, Iterable[str]] = {}
+    if mappings is not None:
+        for key, value in mappings.items():
+            group_mappings[key] = value.pin_or_relay_names
+
+    return group_mappings
