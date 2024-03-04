@@ -30,6 +30,8 @@ from typing import (
     cast,
 )
 
+import google.protobuf.internal.containers
+
 from ni_measurementlink_service._drivers import (
     closing_session,
     closing_session_with_ts_code_module_support,
@@ -569,7 +571,9 @@ class BaseReservation(_BaseSessionContainer):
             Sequence[session_management_service_pb2.MultiplexerSessionInformation]
         ] = None,
         pin_or_relay_group_mappings: Optional[
-            Dict[str, session_management_service_pb2.ResolvedPinsOrRelays]
+            google.protobuf.internal.containers.MessageMap[
+                str, session_management_service_pb2.ResolvedPinsOrRelays
+            ]
         ] = None,
         reserved_pin_or_relay_names: Union[str, Iterable[str], None] = None,
         reserved_sites: Optional[Iterable[int]] = None,
@@ -594,8 +598,8 @@ class BaseReservation(_BaseSessionContainer):
         # If __init__ doesn't initialize _reserved_pin_or_relay_names or
         # _reserved_sites, the cached properties lazily initialize them.
         if reserved_pin_or_relay_names is not None:
-            self._reserved_pin_or_relay_names = self._resolve_reserved_pin_or_relay_names(
-                _to_iterable(reserved_pin_or_relay_names)
+            self._reserved_pin_or_relay_names = _to_ordered_set(
+                self._resolve_reserved_pin_or_relay_names(_to_iterable(reserved_pin_or_relay_names))
             )
 
         if reserved_sites is not None:
@@ -704,7 +708,7 @@ class BaseReservation(_BaseSessionContainer):
     def _resolve_reserved_pin_or_relay_names(
         self, reserved_pin_or_relay_names: Iterable[str]
     ) -> Iterable[str]:
-        resolved_pin_or_relay_names = []
+        resolved_pin_or_relay_names: list = []
         for pin_or_relay_name in reserved_pin_or_relay_names:
             if pin_or_relay_name in self._pin_or_relay_group_mappings:
                 resolved_pin_or_relay_names.extend(
