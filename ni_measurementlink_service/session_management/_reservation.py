@@ -700,7 +700,7 @@ class BaseReservation(_BaseSessionContainer):
     def _resolve_reserved_pin_or_relay_names(
         self, reserved_pin_or_relay_names: Iterable[str]
     ) -> Iterable[str]:
-        resolved_pin_or_relay_names: list = []
+        resolved_pin_or_relay_names: List[str] = []
         for pin_or_relay_name in reserved_pin_or_relay_names:
             if pin_or_relay_name in self._pin_or_relay_group_mappings:
                 resolved_pin_or_relay_names.extend(
