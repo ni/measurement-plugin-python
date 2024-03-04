@@ -223,7 +223,9 @@ def test___sessions_reserved_by_relay_group___get_connections_by_relays___connec
             session_management_client.reserve_sessions(pin_map_context, ["RelayGroup1"])
         )
 
-        connections = reservation.get_connections(object, pin_or_relay_names=["RelayUsingSameDriver", "SystemRelay"])
+        connections = reservation.get_connections(
+            object, pin_or_relay_names=["RelayUsingSameDriver", "SystemRelay"]
+        )
 
         assert [get_connection_subset(conn) for conn in connections] == [
             ConnectionSubset("RelayUsingSameDriver", 0, "RelayDriver1", "K0"),
