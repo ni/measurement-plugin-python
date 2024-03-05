@@ -147,7 +147,7 @@ class SessionManagementClient(object):
                 session_management_client=self,
                 session_info=response.sessions,
                 multiplexer_session_info=response.multiplexer_sessions,
-                pin_or_relay_group_mappings=_to_dict(response.group_mappings),
+                pin_or_relay_group_mappings=_to_group_mappings_dict(response.group_mappings),
                 reserved_pin_or_relay_names=pin_or_relay_names,
                 reserved_sites=context.sites,
             )
@@ -199,7 +199,7 @@ class SessionManagementClient(object):
             session_management_client=self,
             session_info=response.sessions,
             multiplexer_session_info=response.multiplexer_sessions,
-            pin_or_relay_group_mappings=_to_dict(response.group_mappings),
+            pin_or_relay_group_mappings=_to_group_mappings_dict(response.group_mappings),
             reserved_pin_or_relay_names=pin_or_relay_names,
             reserved_sites=context.sites,
         )
@@ -394,7 +394,7 @@ def _timeout_to_milliseconds(timeout: Optional[float]) -> int:
         return round(timeout * 1000)
 
 
-def _to_dict(
+def _to_group_mappings_dict(
     mappings: google.protobuf.internal.containers.MessageMap[
         str, session_management_service_pb2.ResolvedPinsOrRelays
     ]
