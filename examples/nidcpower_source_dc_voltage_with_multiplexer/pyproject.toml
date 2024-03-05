@@ -8,7 +8,7 @@ authors = ["National Instruments"]
 python = "^3.8"
 nidcpower = { version = ">=1.4.4", extras = ["grpc"] }
 niswitch = { version = ">=1.4.4", extras = ["grpc"] }
-# ni-measurementlink-service = {version = "^1.4.0"}
+ni-measurementlink-service = {version = "^1.4.0-dev0", prerelease = true}
 click = ">=7.1.2, !=8.1.4" # mypy fails with click 8.1.4: https://github.com/pallets/click/issues/2558
 grpcio = "*"
 
@@ -19,7 +19,7 @@ grpc-stubs = "^1.53"
 # Uncomment to use prerelease dependencies.
 # nidcpower = { git = "https://github.com/ni/nimi-python.git", subdirectory = "generated/nidcpower"}
 # niswitch = { git = "https://github.com/ni/nimi-python.git", subdirectory = "generated/niswitch"}
-ni-measurementlink-service = {path = "../..", develop = true}
+# ni-measurementlink-service = {path = "../..", develop = true}
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
