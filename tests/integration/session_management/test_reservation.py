@@ -3,8 +3,6 @@ from __future__ import annotations
 import pathlib
 from contextlib import ExitStack
 
-import pytest
-
 from ni_measurementlink_service.session_management import (
     INSTRUMENT_TYPE_NI_DCPOWER,
     INSTRUMENT_TYPE_NI_RELAY_DRIVER,
