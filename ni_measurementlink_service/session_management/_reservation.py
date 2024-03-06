@@ -591,7 +591,7 @@ class BaseReservation(_BaseSessionContainer):
         # _reserved_sites, the cached properties lazily initialize them.
         if reserved_pin_or_relay_names is not None:
             self._reserved_pin_or_relay_names = _to_ordered_set(
-                self._to_resolved_pin_or_relay_names(_to_iterable(reserved_pin_or_relay_names))
+                self._get_resolved_pin_or_relay_names(_to_iterable(reserved_pin_or_relay_names))
             )
 
         if reserved_sites is not None:
@@ -697,7 +697,7 @@ class BaseReservation(_BaseSessionContainer):
             info for info in self._session_info if instrument_type_id == info.instrument_type_id
         ]
 
-    def _to_resolved_pin_or_relay_names(
+    def _get_resolved_pin_or_relay_names(
         self, reserved_pin_or_relay_names: Iterable[str]
     ) -> Iterable[str]:
         resolved_pin_or_relay_names: List[str] = []
