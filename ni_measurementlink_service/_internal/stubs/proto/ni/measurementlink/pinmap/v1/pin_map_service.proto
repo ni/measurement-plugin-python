@@ -181,6 +181,9 @@ message QueryResourceAccessInformationRequest {
 message QueryResourceAccessInformationResponse {
     // List of ResourceAccessInformation objects with instrument resource names and channels.
     repeated ResourceAccessInformation resource_access_information = 1;
+
+    // Represents the mapping between pin or relay groups and their respective pin or relay names.
+    map<string, ResolvedPinsOrRelays> group_mappings = 2;
 }
 
 message ResourceAccessInformation {
@@ -232,4 +235,9 @@ message ChannelMapping {
 
     // User-defined identifier for the multiplexer type in the pin map editor.
     string multiplexer_type_id = 6;
+}
+
+message ResolvedPinsOrRelays {
+  // List of pin or relay names in the pin or relay group.
+  repeated string pin_or_relay_names = 1;
 }

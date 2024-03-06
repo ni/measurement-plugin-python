@@ -568,6 +568,7 @@ class BaseReservation(_BaseSessionContainer):
         multiplexer_session_info: Optional[
             Sequence[session_management_service_pb2.MultiplexerSessionInformation]
         ] = None,
+        pin_or_relay_group_mappings: Optional[Dict[str, Iterable[str]]] = None,
         reserved_pin_or_relay_names: Union[str, Iterable[str], None] = None,
         reserved_sites: Optional[Iterable[int]] = None,
     ) -> None:
@@ -582,12 +583,15 @@ class BaseReservation(_BaseSessionContainer):
         self._multiplexer_session_container = MultiplexerSessionContainer(
             session_management_client, multiplexer_session_info
         )
+        self._pin_or_relay_group_mappings: Dict[str, Iterable[str]] = {}
+        if pin_or_relay_group_mappings is not None:
+            self._pin_or_relay_group_mappings = pin_or_relay_group_mappings
 
         # If __init__ doesn't initialize _reserved_pin_or_relay_names or
         # _reserved_sites, the cached properties lazily initialize them.
         if reserved_pin_or_relay_names is not None:
             self._reserved_pin_or_relay_names = _to_ordered_set(
-                _to_iterable(reserved_pin_or_relay_names)
+                self._get_resolved_pin_or_relay_names(_to_iterable(reserved_pin_or_relay_names))
             )
 
         if reserved_sites is not None:
@@ -692,6 +696,20 @@ class BaseReservation(_BaseSessionContainer):
         return [
             info for info in self._session_info if instrument_type_id == info.instrument_type_id
         ]
+
+    def _get_resolved_pin_or_relay_names(
+        self, reserved_pin_or_relay_names: Iterable[str]
+    ) -> Iterable[str]:
+        resolved_pin_or_relay_names: List[str] = []
+        for pin_or_relay_name in reserved_pin_or_relay_names:
+            if pin_or_relay_name in self._pin_or_relay_group_mappings:
+                resolved_pin_or_relay_names.extend(
+                    self._pin_or_relay_group_mappings[pin_or_relay_name]
+                )
+            else:
+                resolved_pin_or_relay_names.append(pin_or_relay_name)
+
+        return resolved_pin_or_relay_names
 
     @contextlib.contextmanager
     def _initialize_session_core(

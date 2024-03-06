@@ -200,25 +200,44 @@ global___ReserveSessionsRequest = ReserveSessionsRequest
 class ReserveSessionsResponse(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
+    @typing_extensions.final
+    class GroupMappingsEntry(google.protobuf.message.Message):
+        DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+        KEY_FIELD_NUMBER: builtins.int
+        VALUE_FIELD_NUMBER: builtins.int
+        key: builtins.str
+        @property
+        def value(self) -> global___ResolvedPinsOrRelays: ...
+        def __init__(
+            self,
+            *,
+            key: builtins.str = ...,
+            value: global___ResolvedPinsOrRelays | None = ...,
+        ) -> None: ...
+        def HasField(self, field_name: typing_extensions.Literal["value", b"value"]) -> builtins.bool: ...
+        def ClearField(self, field_name: typing_extensions.Literal["key", b"key", "value", b"value"]) -> None: ...
+
     SESSIONS_FIELD_NUMBER: builtins.int
     MULTIPLEXER_SESSIONS_FIELD_NUMBER: builtins.int
+    GROUP_MAPPINGS_FIELD_NUMBER: builtins.int
     @property
     def sessions(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___SessionInformation]:
-        """List of information needed to create or use each session for the given pin, site, and instrument type ID.
-        This field is readonly.
-        """
+        """List of information needed to create or use each session for the given pin, site, and instrument type ID."""
     @property
     def multiplexer_sessions(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___MultiplexerSessionInformation]:
-        """List of information needed to create or use each multiplexer session for the given pin, site, and instrument type ID.
-        This field is readonly.
-        """
+        """List of information needed to create or use each multiplexer session for the given pin, site, and instrument type ID."""
+    @property
+    def group_mappings(self) -> google.protobuf.internal.containers.MessageMap[builtins.str, global___ResolvedPinsOrRelays]:
+        """Represents the mapping between pin or relay groups and their respective pin or relay names."""
     def __init__(
         self,
         *,
         sessions: collections.abc.Iterable[global___SessionInformation] | None = ...,
         multiplexer_sessions: collections.abc.Iterable[global___MultiplexerSessionInformation] | None = ...,
+        group_mappings: collections.abc.Mapping[builtins.str, global___ResolvedPinsOrRelays] | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing_extensions.Literal["multiplexer_sessions", b"multiplexer_sessions", "sessions", b"sessions"]) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["group_mappings", b"group_mappings", "multiplexer_sessions", b"multiplexer_sessions", "sessions", b"sessions"]) -> None: ...
 
 global___ReserveSessionsResponse = ReserveSessionsResponse
 
@@ -481,3 +500,20 @@ class GetAllRegisteredMultiplexerSessionsResponse(google.protobuf.message.Messag
     def ClearField(self, field_name: typing_extensions.Literal["multiplexer_sessions", b"multiplexer_sessions"]) -> None: ...
 
 global___GetAllRegisteredMultiplexerSessionsResponse = GetAllRegisteredMultiplexerSessionsResponse
+
+@typing_extensions.final
+class ResolvedPinsOrRelays(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    PIN_OR_RELAY_NAMES_FIELD_NUMBER: builtins.int
+    @property
+    def pin_or_relay_names(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]:
+        """List of pin or relay names in the pin or relay group."""
+    def __init__(
+        self,
+        *,
+        pin_or_relay_names: collections.abc.Iterable[builtins.str] | None = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["pin_or_relay_names", b"pin_or_relay_names"]) -> None: ...
+
+global___ResolvedPinsOrRelays = ResolvedPinsOrRelays

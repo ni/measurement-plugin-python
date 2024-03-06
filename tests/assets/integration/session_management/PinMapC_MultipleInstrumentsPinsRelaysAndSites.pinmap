@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <PinMap schemaVersion="1.6" xmlns="http://www.ni.com/TestStand/SemiconductorModule/PinMap.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<Instruments>
 		<NIDCPowerInstrument name="DCPower1" numberOfChannels="4">
@@ -18,7 +18,16 @@
 		<SystemPin name="S2" />
 		<DUTPin name="C" />
 	</Pins>
-	<PinGroups></PinGroups>
+	<PinGroups>
+		<PinGroup name="PinGroup1">
+			<PinReference pin="A" />
+			<PinReference pin="S1" />
+		</PinGroup>
+		<PinGroup name="PinGroup2">
+			<PinReference pin="C" />
+			<PinReference pin="PinGroup1" />
+		</PinGroup>
+	</PinGroups>
 	<Relays>
 		<SiteRelay name="RelayUsingSameDriver" />
 		<SiteRelay name="RelayUsingDifferentDrivers" />

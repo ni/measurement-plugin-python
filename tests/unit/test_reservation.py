@@ -1,6 +1,6 @@
 import functools
 from contextlib import ExitStack
-from typing import Any, Dict, List
+from typing import Any, Dict, Iterable, List
 from unittest.mock import Mock
 
 import pytest
@@ -232,6 +232,32 @@ def test___single_connection___get_connection___connection_returned(
         assert connection.pin_or_relay_name == "Pin1"
         assert connection.site == 2
         assert connection.channel_name == "3"
+        assert connection.session_info == session_info
+
+
+def test___session_reserved_using_pin_group___get_connection_by_pin___returns_connection(
+    session_management_client: Mock,
+) -> None:
+    with ExitStack() as stack:
+        grpc_session_infos = create_nifake_session_infos(1)
+        grpc_session_infos[0].channel_mappings.add(pin_or_relay_name="Pin1", site=2, channel="3")
+        grpc_session_infos[0].channel_mappings.add(pin_or_relay_name="Pin2", site=2, channel="2")
+        group_mappings: Dict[str, Iterable[str]] = {"PinGroup1": ["Pin1", "Pin2"]}
+        reservation = MultiSessionReservation(
+            session_management_client,
+            grpc_session_infos,
+            pin_or_relay_group_mappings=group_mappings,
+            reserved_pin_or_relay_names=["PinGroup1"],
+        )
+        session_info = stack.enter_context(
+            reservation.initialize_session(construct_session, "nifake")
+        )
+
+        connection = reservation.get_connection(fake_driver.Session, pin_or_relay_name="Pin2")
+
+        assert connection.pin_or_relay_name == "Pin2"
+        assert connection.site == 2
+        assert connection.channel_name == "2"
         assert connection.session_info == session_info
 
 
