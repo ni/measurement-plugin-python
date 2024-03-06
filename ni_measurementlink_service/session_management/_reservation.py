@@ -20,6 +20,7 @@ from typing import (
     Iterable,
     List,
     Literal,
+    Mapping,
     NamedTuple,
     Optional,
     Sequence,
@@ -568,7 +569,7 @@ class BaseReservation(_BaseSessionContainer):
         multiplexer_session_info: Optional[
             Sequence[session_management_service_pb2.MultiplexerSessionInformation]
         ] = None,
-        pin_or_relay_group_mappings: Optional[Dict[str, Iterable[str]]] = None,
+        pin_or_relay_group_mappings: Optional[Mapping[str, Iterable[str]]] = None,
         reserved_pin_or_relay_names: Union[str, Iterable[str], None] = None,
         reserved_sites: Optional[Iterable[int]] = None,
     ) -> None:
@@ -583,7 +584,7 @@ class BaseReservation(_BaseSessionContainer):
         self._multiplexer_session_container = MultiplexerSessionContainer(
             session_management_client, multiplexer_session_info
         )
-        self._pin_or_relay_group_mappings: Dict[str, Iterable[str]] = {}
+        self._pin_or_relay_group_mappings: Mapping[str, Iterable[str]] = {}
         if pin_or_relay_group_mappings is not None:
             self._pin_or_relay_group_mappings = pin_or_relay_group_mappings
 
@@ -810,10 +811,16 @@ class BaseReservation(_BaseSessionContainer):
     ) -> Sequence[TypedConnection[TSession]]:
         _check_optional_str_param("instrument_type_id", instrument_type_id)
 
-        requested_pins = _to_iterable(pin_or_relay_names, self._reserved_pin_or_relay_names)
+        requested_pin_or_relay_names = _to_iterable(
+            pin_or_relay_names, self._reserved_pin_or_relay_names
+        )
         requested_sites = _to_iterable(sites, self._reserved_sites)
         requested_instrument_type_ids = _to_iterable(
             instrument_type_id, self._reserved_instrument_type_ids
+        )
+
+        resolved_pin_or_relay_names = _to_ordered_set(
+            self._get_resolved_pin_or_relay_names(requested_pin_or_relay_names)
         )
 
         # Validate that each requested pin, site, or instrument type ID is
@@ -822,7 +829,9 @@ class BaseReservation(_BaseSessionContainer):
         # pin_or_relay_names="NonExistentPin" or sites=[0, 1, 65535].
         if pin_or_relay_names is not None:
             _check_matching_criterion(
-                "pin or relay name(s)", requested_pins, self._reserved_pin_or_relay_names
+                "pin or relay name(s)",
+                resolved_pin_or_relay_names,
+                self._reserved_pin_or_relay_names,
             )
         if sites is not None:
             _check_matching_criterion("site(s)", requested_sites, self._reserved_sites)
@@ -842,7 +851,7 @@ class BaseReservation(_BaseSessionContainer):
         results: List[TypedConnection[TSession]] = []
         matching_pins: Set[str] = set()
         for site in requested_sites_with_system:
-            for pin in requested_pins:
+            for pin in resolved_pin_or_relay_names:
                 for instrument_type in requested_instrument_type_ids:
                     key = _ConnectionKey(pin, site, instrument_type)
                     value = self._connection_cache.get(key)
@@ -862,10 +871,10 @@ class BaseReservation(_BaseSessionContainer):
 
         # If the user specified pins to match, validate that each one matched a connection.
         if pin_or_relay_names is not None and not all(
-            pin in matching_pins for pin in requested_pins
+            pin in matching_pins for pin in resolved_pin_or_relay_names
         ):
             extra_pins_str = ", ".join(
-                _quote(pin) for pin in requested_pins if pin not in matching_pins
+                _quote(pin) for pin in resolved_pin_or_relay_names if pin not in matching_pins
             )
             criteria = _describe_matching_criteria(None, sites, instrument_type_id)
             # Emphasize the extra pin/relay names, but also list the other criteria.

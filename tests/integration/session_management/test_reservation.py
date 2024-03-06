@@ -254,6 +254,92 @@ def test___sessions_reserved_using_nested_relay_group___get_connections_by_relay
         ]
 
 
+def test___sessions_reserved___get_connections_by_pin_group___returns_connections(
+    pin_map_client: PinMapClient,
+    pin_map_directory: pathlib.Path,
+    session_management_client: SessionManagementClient,
+) -> None:
+    with ExitStack() as stack:
+        pin_map_id = pin_map_client.update_pin_map(pin_map_directory / _PIN_MAP_C)
+        pin_map_context = PinMapContext(pin_map_id=pin_map_id, sites=[0])
+        pin_group = ["PinGroup1"]
+        reservation = stack.enter_context(
+            session_management_client.reserve_sessions(pin_map_context, pin_group)
+        )
+
+        connections = reservation.get_connections(object, pin_or_relay_names=pin_group)
+
+        assert [get_connection_subset(conn) for conn in connections] == [
+            ConnectionSubset("A", 0, "DCPower1/0, DCPower1/2, DCPower2/1", "DCPower1/0"),
+            ConnectionSubset("S1", -1, "SCOPE1", "1"),
+        ]
+
+
+def test___sessions_reserved___get_connections_by_nested_pin_group___returns_connections(
+    pin_map_client: PinMapClient,
+    pin_map_directory: pathlib.Path,
+    session_management_client: SessionManagementClient,
+) -> None:
+    with ExitStack() as stack:
+        pin_map_id = pin_map_client.update_pin_map(pin_map_directory / _PIN_MAP_C)
+        pin_map_context = PinMapContext(pin_map_id=pin_map_id, sites=[0])
+        pin_groups = ["PinGroup1", "PinGroup2"]
+        reservation = stack.enter_context(
+            session_management_client.reserve_sessions(pin_map_context, pin_groups)
+        )
+
+        connections = reservation.get_connections(object, pin_or_relay_names=pin_groups)
+
+        assert [get_connection_subset(conn) for conn in connections] == [
+            ConnectionSubset("A", 0, "DCPower1/0, DCPower1/2, DCPower2/1", "DCPower1/0"),
+            ConnectionSubset("C", 0, "SCOPE1", "2"),
+            ConnectionSubset("S1", -1, "SCOPE1", "1"),
+        ]
+
+
+def test___sessions_reserved___get_connections_by_relay_group___returns_connections(
+    pin_map_client: PinMapClient,
+    pin_map_directory: pathlib.Path,
+    session_management_client: SessionManagementClient,
+) -> None:
+    with ExitStack() as stack:
+        pin_map_id = pin_map_client.update_pin_map(pin_map_directory / _PIN_MAP_C)
+        pin_map_context = PinMapContext(pin_map_id=pin_map_id, sites=[0])
+        relay_group = ["RelayGroup1"]
+        reservation = stack.enter_context(
+            session_management_client.reserve_sessions(pin_map_context, relay_group)
+        )
+
+        connections = reservation.get_connections(object, pin_or_relay_names=relay_group)
+
+        assert [get_connection_subset(conn) for conn in connections] == [
+            ConnectionSubset("RelayUsingSameDriver", 0, "RelayDriver1", "K0"),
+            ConnectionSubset("SystemRelay", -1, "RelayDriver1", "K60"),
+        ]
+
+
+def test___sessions_reserved___get_connections_by_nested_relay_groups___returns_connections(
+    pin_map_client: PinMapClient,
+    pin_map_directory: pathlib.Path,
+    session_management_client: SessionManagementClient,
+) -> None:
+    with ExitStack() as stack:
+        pin_map_id = pin_map_client.update_pin_map(pin_map_directory / _PIN_MAP_C)
+        pin_map_context = PinMapContext(pin_map_id=pin_map_id, sites=[0])
+        relay_groups = ["RelayGroup1", "RelayGroup2"]
+        reservation = stack.enter_context(
+            session_management_client.reserve_sessions(pin_map_context, relay_groups)
+        )
+
+        connections = reservation.get_connections(object, pin_or_relay_names=relay_groups)
+
+        assert [get_connection_subset(conn) for conn in connections] == [
+            ConnectionSubset("RelayUsingSameDriver", 0, "RelayDriver1", "K0"),
+            ConnectionSubset("RelayUsingDifferentDrivers", 0, "RelayDriver1", "K10"),
+            ConnectionSubset("SystemRelay", -1, "RelayDriver1", "K60"),
+        ]
+
+
 def test___reserve_sessions_with_multiplexer___get_connections_with_multiplexer___returns_connections(
     pin_map_client: PinMapClient,
     pin_map_directory: pathlib.Path,
