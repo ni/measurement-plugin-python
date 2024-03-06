@@ -5,7 +5,7 @@ from __future__ import annotations
 import logging
 import threading
 import warnings
-from typing import Dict, Iterable, Optional, Union
+from typing import Dict, Iterable, Mapping, Optional, Union
 
 import google.protobuf.internal.containers
 import grpc
@@ -398,7 +398,7 @@ def _to_group_mappings_dict(
     mappings: google.protobuf.internal.containers.MessageMap[
         str, session_management_service_pb2.ResolvedPinsOrRelays
     ]
-) -> Dict[str, Iterable[str]]:
+) -> Mapping[str, Iterable[str]]:
     group_mappings: Dict[str, Iterable[str]] = {}
     if mappings is not None:
         for key, value in mappings.items():

@@ -20,6 +20,7 @@ from typing import (
     Iterable,
     List,
     Literal,
+    Mapping,
     NamedTuple,
     Optional,
     Sequence,
@@ -568,7 +569,7 @@ class BaseReservation(_BaseSessionContainer):
         multiplexer_session_info: Optional[
             Sequence[session_management_service_pb2.MultiplexerSessionInformation]
         ] = None,
-        pin_or_relay_group_mappings: Optional[Dict[str, Iterable[str]]] = None,
+        pin_or_relay_group_mappings: Optional[Mapping[str, Iterable[str]]] = None,
         reserved_pin_or_relay_names: Union[str, Iterable[str], None] = None,
         reserved_sites: Optional[Iterable[int]] = None,
     ) -> None:
