@@ -817,7 +817,7 @@ class BaseReservation(_BaseSessionContainer):
         )
 
         requested_pin_or_relay_names = _to_ordered_set(
-            self._to_resolved_pin_or_relay_names(requested_pins)
+            self._get_resolved_pin_or_relay_names(requested_pins)
         )
 
         # Validate that each requested pin, site, or instrument type ID is
