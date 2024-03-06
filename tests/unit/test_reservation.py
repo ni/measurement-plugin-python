@@ -1,6 +1,6 @@
 import functools
 from contextlib import ExitStack
-from typing import Any, Dict, Iterable, List, Mapping
+from typing import Any, Dict, List
 from unittest.mock import Mock
 
 import pytest
