@@ -584,7 +584,7 @@ class BaseReservation(_BaseSessionContainer):
         self._multiplexer_session_container = MultiplexerSessionContainer(
             session_management_client, multiplexer_session_info
         )
-        self._pin_or_relay_group_mappings: Dict[str, Iterable[str]] = {}
+        self._pin_or_relay_group_mappings: Mapping[str, Iterable[str]] = {}
         if pin_or_relay_group_mappings is not None:
             self._pin_or_relay_group_mappings = pin_or_relay_group_mappings
 

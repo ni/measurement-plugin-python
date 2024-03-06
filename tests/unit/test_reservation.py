@@ -242,7 +242,7 @@ def test___session_reserved_using_pin_group___get_connection_by_pin___returns_co
         grpc_session_infos = create_nifake_session_infos(1)
         grpc_session_infos[0].channel_mappings.add(pin_or_relay_name="Pin1", site=2, channel="3")
         grpc_session_infos[0].channel_mappings.add(pin_or_relay_name="Pin2", site=2, channel="2")
-        group_mappings: Mapping[str, Iterable[str]] = {"PinGroup1": ["Pin1", "Pin2"]}
+        group_mappings = {"PinGroup1": ["Pin1", "Pin2"]}
         reservation = MultiSessionReservation(
             session_management_client,
             grpc_session_infos,
@@ -290,7 +290,7 @@ def test___session_reserved___get_connections_by_pin_group___returns_connections
         grpc_session_infos = create_nifake_session_infos(1)
         grpc_session_infos[0].channel_mappings.add(pin_or_relay_name="Pin1", site=2, channel="3")
         grpc_session_infos[0].channel_mappings.add(pin_or_relay_name="Pin2", site=2, channel="2")
-        group_mappings: Mapping[str, Iterable[str]] = {"PinGroup1": ["Pin1", "Pin2"]}
+        group_mappings = {"PinGroup1": ["Pin1", "Pin2"]}
         reservation = MultiSessionReservation(
             session_management_client,
             grpc_session_infos,
