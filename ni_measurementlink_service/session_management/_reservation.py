@@ -810,14 +810,14 @@ class BaseReservation(_BaseSessionContainer):
     ) -> Sequence[TypedConnection[TSession]]:
         _check_optional_str_param("instrument_type_id", instrument_type_id)
 
-        requested_pins = _to_iterable(pin_or_relay_names, self._reserved_pin_or_relay_names)
+        requested_pin_or_relay_names = _to_iterable(pin_or_relay_names, self._reserved_pin_or_relay_names)
         requested_sites = _to_iterable(sites, self._reserved_sites)
         requested_instrument_type_ids = _to_iterable(
             instrument_type_id, self._reserved_instrument_type_ids
         )
 
-        requested_pin_or_relay_names = _to_ordered_set(
-            self._get_resolved_pin_or_relay_names(requested_pins)
+        resolved_pin_or_relay_names = _to_ordered_set(
+            self._get_resolved_pin_or_relay_names(requested_pin_or_relay_names)
         )
 
         # Validate that each requested pin, site, or instrument type ID is
@@ -827,7 +827,7 @@ class BaseReservation(_BaseSessionContainer):
         if pin_or_relay_names is not None:
             _check_matching_criterion(
                 "pin or relay name(s)",
-                requested_pin_or_relay_names,
+                resolved_pin_or_relay_names,
                 self._reserved_pin_or_relay_names,
             )
         if sites is not None:
@@ -848,7 +848,7 @@ class BaseReservation(_BaseSessionContainer):
         results: List[TypedConnection[TSession]] = []
         matching_pins: Set[str] = set()
         for site in requested_sites_with_system:
-            for pin in requested_pin_or_relay_names:
+            for pin in resolved_pin_or_relay_names:
                 for instrument_type in requested_instrument_type_ids:
                     key = _ConnectionKey(pin, site, instrument_type)
                     value = self._connection_cache.get(key)
@@ -868,10 +868,10 @@ class BaseReservation(_BaseSessionContainer):
 
         # If the user specified pins to match, validate that each one matched a connection.
         if pin_or_relay_names is not None and not all(
-            pin in matching_pins for pin in requested_pin_or_relay_names
+            pin in matching_pins for pin in resolved_pin_or_relay_names
         ):
             extra_pins_str = ", ".join(
-                _quote(pin) for pin in requested_pin_or_relay_names if pin not in matching_pins
+                _quote(pin) for pin in resolved_pin_or_relay_names if pin not in matching_pins
             )
             criteria = _describe_matching_criteria(None, sites, instrument_type_id)
             # Emphasize the extra pin/relay names, but also list the other criteria.
