@@ -235,7 +235,7 @@ def test___single_connection___get_connection___connection_returned(
         assert connection.session_info == session_info
 
 
-def test___session_reserved_by_pin_group___get_connection_by_pin___connection_returned(
+def test___session_reserved_using_pin_group___get_connection_by_pin___returns_connection(
     session_management_client: Mock,
 ) -> None:
     with ExitStack() as stack:
