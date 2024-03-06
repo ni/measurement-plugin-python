@@ -810,7 +810,9 @@ class BaseReservation(_BaseSessionContainer):
     ) -> Sequence[TypedConnection[TSession]]:
         _check_optional_str_param("instrument_type_id", instrument_type_id)
 
-        requested_pin_or_relay_names = _to_iterable(pin_or_relay_names, self._reserved_pin_or_relay_names)
+        requested_pin_or_relay_names = _to_iterable(
+            pin_or_relay_names, self._reserved_pin_or_relay_names
+        )
         requested_sites = _to_iterable(sites, self._reserved_sites)
         requested_instrument_type_ids = _to_iterable(
             instrument_type_id, self._reserved_instrument_type_ids
