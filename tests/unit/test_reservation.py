@@ -261,7 +261,7 @@ def test___session_reserved_using_pin_group___get_connection_by_pin___returns_co
         assert connection.session_info == session_info
 
 
-def test___duplicate_pins___get_connections___single_connection_returned(
+def test___duplicate_pins___get_connections___returns_single_connection(
     session_management_client: Mock,
 ) -> None:
     with ExitStack() as stack:
@@ -283,7 +283,7 @@ def test___duplicate_pins___get_connections___single_connection_returned(
         assert connections[0].session_info == session_info
 
 
-def test___session_reserved___get_connections_by_pin_group___connections_returned(
+def test___session_reserved___get_connections_by_pin_group___returns_connections(
     session_management_client: Mock,
 ) -> None:
     with ExitStack() as stack:

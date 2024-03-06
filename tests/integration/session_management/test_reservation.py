@@ -254,7 +254,7 @@ def test___sessions_reserved_using_nested_relay_group___get_connections_by_relay
         ]
 
 
-def test___sessions_reserved___get_connections_by_pin_group___connections_returned(
+def test___sessions_reserved___get_connections_by_pin_group___returns_connections(
     pin_map_client: PinMapClient,
     pin_map_directory: pathlib.Path,
     session_management_client: SessionManagementClient,
@@ -269,14 +269,13 @@ def test___sessions_reserved___get_connections_by_pin_group___connections_return
 
         connections = reservation.get_connections(object, pin_or_relay_names=pin_group)
 
-        nidcpower_resource = "DCPower1/0, DCPower1/2, DCPower2/1"
         assert [get_connection_subset(conn) for conn in connections] == [
-            ConnectionSubset("A", 0, nidcpower_resource, "DCPower1/0"),
+            ConnectionSubset("A", 0, "DCPower1/0, DCPower1/2, DCPower2/1", "DCPower1/0"),
             ConnectionSubset("S1", -1, "SCOPE1", "1"),
         ]
 
 
-def test___sessions_reserved___get_connections_by_nested_pin_group___connections_returned(
+def test___sessions_reserved___get_connections_by_nested_pin_group___returns_connections(
     pin_map_client: PinMapClient,
     pin_map_directory: pathlib.Path,
     session_management_client: SessionManagementClient,
@@ -291,15 +290,14 @@ def test___sessions_reserved___get_connections_by_nested_pin_group___connections
 
         connections = reservation.get_connections(object, pin_or_relay_names=pin_groups)
 
-        nidcpower_resource = "DCPower1/0, DCPower1/2, DCPower2/1"
         assert [get_connection_subset(conn) for conn in connections] == [
-            ConnectionSubset("A", 0, nidcpower_resource, "DCPower1/0"),
+            ConnectionSubset("A", 0, "DCPower1/0, DCPower1/2, DCPower2/1", "DCPower1/0"),
             ConnectionSubset("C", 0, "SCOPE1", "2"),
             ConnectionSubset("S1", -1, "SCOPE1", "1"),
         ]
 
 
-def test___sessions_reserved___get_connections_by_relay_group___connections_returned(
+def test___sessions_reserved___get_connections_by_relay_group___returns_connections(
     pin_map_client: PinMapClient,
     pin_map_directory: pathlib.Path,
     session_management_client: SessionManagementClient,
@@ -320,7 +318,7 @@ def test___sessions_reserved___get_connections_by_relay_group___connections_retu
         ]
 
 
-def test___sessions_reserved___get_connections_by_nested_relay_groups___connections_returned(
+def test___sessions_reserved___get_connections_by_nested_relay_groups___returns_connections(
     pin_map_client: PinMapClient,
     pin_map_directory: pathlib.Path,
     session_management_client: SessionManagementClient,
