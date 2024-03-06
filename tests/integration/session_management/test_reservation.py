@@ -167,7 +167,6 @@ def test___sessions_reserved___get_connections_by_instrument_type___connections_
         ]
 
 
-@pytest.mark.xfail(reason="Requires MeasurementLink 2024Q2 or later.")
 def test___sessions_reserved_by_pin_group___get_connections_by_pins___connections_returned(
     pin_map_client: PinMapClient,
     pin_map_directory: pathlib.Path,
@@ -190,7 +189,6 @@ def test___sessions_reserved_by_pin_group___get_connections_by_pins___connection
         ]
 
 
-@pytest.mark.xfail(reason="Requires MeasurementLink 2024Q2 or later.")
 def test___sessions_reserved_by_nested_pin_group___get_connections_by_pins___connections_returned(
     pin_map_client: PinMapClient,
     pin_map_directory: pathlib.Path,
@@ -215,7 +213,6 @@ def test___sessions_reserved_by_nested_pin_group___get_connections_by_pins___con
         ]
 
 
-@pytest.mark.xfail(reason="Requires MeasurementLink 2024Q2 or later.")
 def test___sessions_reserved_by_relay_group___get_connections_by_relays___connections_returned(
     pin_map_client: PinMapClient,
     pin_map_directory: pathlib.Path,
@@ -238,7 +235,6 @@ def test___sessions_reserved_by_relay_group___get_connections_by_relays___connec
         ]
 
 
-@pytest.mark.xfail(reason="Requires MeasurementLink 2024Q2 or later.")
 def test___sessions_reserved_by_nested_relay_group___get_connections_by_relays___connections_returned(
     pin_map_client: PinMapClient,
     pin_map_directory: pathlib.Path,
