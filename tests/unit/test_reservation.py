@@ -261,6 +261,54 @@ def test___session_reserved_by_pin_group___get_connection_by_pin___connection_re
         assert connection.session_info == session_info
 
 
+def test___duplicate_pins___get_connections___single_connection_returned(
+    session_management_client: Mock,
+) -> None:
+    with ExitStack() as stack:
+        grpc_session_infos = create_nifake_session_infos(1)
+        grpc_session_infos[0].channel_mappings.add(pin_or_relay_name="Pin1", site=2, channel="3")
+        reservation = MultiSessionReservation(session_management_client, grpc_session_infos)
+        session_info = stack.enter_context(
+            reservation.initialize_session(construct_session, "nifake")
+        )
+
+        connections = reservation.get_connections(
+            fake_driver.Session, pin_or_relay_names=["Pin1", "Pin1"]
+        )
+
+        assert len(connections) == 1
+        assert connections[0].pin_or_relay_name == "Pin1"
+        assert connections[0].site == 2
+        assert connections[0].channel_name == "3"
+        assert connections[0].session_info == session_info
+
+
+def test___session_reserved___get_connections_by_pin_group___connections_returned(
+    session_management_client: Mock,
+) -> None:
+    with ExitStack() as stack:
+        grpc_session_infos = create_nifake_session_infos(1)
+        grpc_session_infos[0].channel_mappings.add(pin_or_relay_name="Pin1", site=2, channel="3")
+        grpc_session_infos[0].channel_mappings.add(pin_or_relay_name="Pin2", site=2, channel="2")
+        group_mappings: Dict[str, Iterable[str]] = {"PinGroup1": ["Pin1", "Pin2"]}
+        reservation = MultiSessionReservation(
+            session_management_client,
+            grpc_session_infos,
+            pin_or_relay_group_mappings=group_mappings,
+            reserved_pin_or_relay_names=["PinGroup1"],
+        )
+        _ = stack.enter_context(reservation.initialize_session(construct_session, "nifake"))
+
+        connections = reservation.get_connections(
+            fake_driver.Session, pin_or_relay_names=["PinGroup1"]
+        )
+
+        assert [get_connection_subset(conn) for conn in connections] == [
+            ConnectionSubset("Pin1", 2, "Dev0", "3"),
+            ConnectionSubset("Pin2", 2, "Dev0", "2"),
+        ]
+
+
 def test___multiple_connections___get_connection___value_error_raised(
     session_management_client: Mock,
 ) -> None:
