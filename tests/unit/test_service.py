@@ -9,9 +9,8 @@ import pytest
 from pytest_mock import MockerFixture
 
 from ni_measurementlink_service import _datatypeinfo
-from ni_measurementlink_service._annotations import (
-    TYPE_SPECIALIZATION_KEY,
-)
+from ni_measurementlink_service._annotations import TYPE_SPECIALIZATION_KEY
+from ni_measurementlink_service._internal.stubs.ni.protobuf.types import xydata_pb2
 from ni_measurementlink_service.measurement.info import DataType, TypeSpecialization
 from ni_measurementlink_service.measurement.service import MeasurementService
 
@@ -31,6 +30,11 @@ class ColorWithoutZeroValue(Enum):
     RED = 1
     GREEN = 2
     BLUE = 3
+
+
+double_xy_data = xydata_pb2.DoubleXYData()
+double_xy_data.x_data.append(4)
+double_xy_data.y_data.append(6)
 
 
 def test___measurement_service___register_measurement_method___method_registered(
@@ -56,6 +60,7 @@ def test___measurement_service___register_measurement_method___method_registered
         ("UInt64", DataType.UInt64, 3456),
         ("UInt64", DataType.UInt64, False),
         ("DoubleXYData", DataType.DoubleXYData, None),
+        ("DoubleXYDataArray", DataType.DoubleXYDataArray1D, None),
     ],
 )
 def test___measurement_service___add_configuration__configuration_added(
@@ -213,6 +218,7 @@ def test___measurement_service___add_non_path_configuration__path_type_annotatio
         ("Pin1DArray", DataType.PinArray1D, [1.009, -1.0009]),
         ("Path", DataType.Path, 1.0),
         ("Path1DArray", DataType.PathArray1D, [1.009, -1.0009]),
+        ("DoubleXYDataArray", DataType.DoubleXYDataArray1D, [1.009, -1.0009]),
     ],
 )
 def test___measurement_service___add_configuration_with_mismatch_default_value__raises_type_error(
@@ -240,6 +246,7 @@ def test___measurement_service___add_configuration_with_mismatch_default_value__
         ("UInt32", DataType.UInt32),
         ("UInt64", DataType.UInt64),
         ("DoubleXYData", DataType.DoubleXYData),
+        ("DoubleXYDataArray", DataType.DoubleXYDataArray1D),
     ],
 )
 def test___measurement_service___add_output__output_added(

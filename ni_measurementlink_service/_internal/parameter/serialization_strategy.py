@@ -56,10 +56,6 @@ def _vector_encoder(
     return vector_encoder
 
 
-def _unsupported_encoder(field_index: int, is_repeated: bool, is_packed: bool) -> Encoder:
-    raise NotImplementedError(f"Unsupported data type for field {field_index}")
-
-
 def _scalar_decoder(decoder: DecoderConstructor) -> PartialDecoderConstructor:
     """Constructs a scalar decoder constructor.
 
@@ -103,7 +99,9 @@ def _vector_decoder(
     return vector_decoder
 
 
-def _double_xy_data_decoder(decoder: DecoderConstructor) -> PartialDecoderConstructor:
+def _double_xy_data_decoder(
+    decoder: DecoderConstructor, is_repeated: bool
+) -> PartialDecoderConstructor:
     """Constructs a DoubleXYData decoder constructor.
 
     Takes a field index and a key and returns a Decoder for DoubleXYData.
@@ -113,7 +111,6 @@ def _double_xy_data_decoder(decoder: DecoderConstructor) -> PartialDecoderConstr
         return xydata_pb2.DoubleXYData()
 
     def message_decoder(field_index: int, key: Key) -> Decoder:
-        is_repeated = True
         is_packed = True
         return decoder(field_index, is_repeated, is_packed, key, _new_default)
 
@@ -136,7 +133,9 @@ IntArrayEncoder = _vector_encoder(cast(EncoderConstructor, encoder.Int32Encoder)
 UIntArrayEncoder = _vector_encoder(cast(EncoderConstructor, encoder.UInt32Encoder))
 BoolArrayEncoder = _vector_encoder(encoder.BoolEncoder)
 StringArrayEncoder = _vector_encoder(encoder.StringEncoder, is_packed=False)
-UnsupportedMessageArrayEncoder = _vector_encoder(_unsupported_encoder)
+MessageArrayEncoder = _vector_encoder(
+    cast(EncoderConstructor, _message._message_encoder_constructor)
+)
 
 # Cast works around this issue in typeshed
 # https://github.com/python/typeshed/issues/10697
@@ -148,7 +147,7 @@ Int64Decoder = _scalar_decoder(cast(DecoderConstructor, decoder.Int64Decoder))
 UInt64Decoder = _scalar_decoder(cast(DecoderConstructor, decoder.UInt64Decoder))
 BoolDecoder = _scalar_decoder(cast(DecoderConstructor, decoder.BoolDecoder))
 StringDecoder = _scalar_decoder(cast(DecoderConstructor, decoder.StringDecoder))
-XYDataDecoder = _double_xy_data_decoder(_message._message_decoder_constructor)
+XYDataDecoder = _double_xy_data_decoder(_message._message_decoder_constructor, is_repeated=False)
 
 FloatArrayDecoder = _vector_decoder(cast(DecoderConstructor, decoder.FloatDecoder))
 DoubleArrayDecoder = _vector_decoder(cast(DecoderConstructor, decoder.DoubleDecoder))
@@ -159,6 +158,9 @@ UInt64ArrayDecoder = _vector_decoder(cast(DecoderConstructor, decoder.UInt64Deco
 BoolArrayDecoder = _vector_decoder(cast(DecoderConstructor, decoder.BoolDecoder))
 StringArrayDecoder = _vector_decoder(
     cast(DecoderConstructor, decoder.StringDecoder), is_packed=False
+)
+XYDataArrayDecoder = _double_xy_data_decoder(
+    _message._message_decoder_constructor, is_repeated=True
 )
 
 
@@ -172,7 +174,7 @@ _FIELD_TYPE_TO_ENCODER_MAPPING = {
     type_pb2.Field.TYPE_BOOL: (BoolEncoder, BoolArrayEncoder),
     type_pb2.Field.TYPE_STRING: (StringEncoder, StringArrayEncoder),
     type_pb2.Field.TYPE_ENUM: (IntEncoder, IntArrayEncoder),
-    type_pb2.Field.TYPE_MESSAGE: (MessageEncoder, UnsupportedMessageArrayEncoder),
+    type_pb2.Field.TYPE_MESSAGE: (MessageEncoder, MessageArrayEncoder),
 }
 
 _FIELD_TYPE_TO_DECODER_MAPPING = {
@@ -203,6 +205,10 @@ _MESSAGE_TYPE_TO_DECODER = {
     xydata_pb2.DoubleXYData.DESCRIPTOR.full_name: XYDataDecoder,
 }
 
+_ARRAY_MESSAGE_TYPE_TO_DECODER = {
+    xydata_pb2.DoubleXYData.DESCRIPTOR.full_name: XYDataArrayDecoder,
+}
+
 
 def get_encoder(type: type_pb2.Field.Kind.ValueType, repeated: bool) -> PartialEncoderConstructor:
     """Get the appropriate partial encoder constructor for the specified type.
@@ -227,8 +233,9 @@ def get_decoder(
         return array_decoder if repeated else scalar_decoder
     elif type == type_pb2.Field.Kind.TYPE_MESSAGE:
         if repeated:
-            raise ValueError(f"Repeated message types are not supported '{message_type}'")
-        decoder = _MESSAGE_TYPE_TO_DECODER.get(message_type)
+            decoder = _ARRAY_MESSAGE_TYPE_TO_DECODER.get(message_type)
+        else:
+            decoder = _MESSAGE_TYPE_TO_DECODER.get(message_type)
         if decoder is None:
             raise ValueError(f"Unknown message type '{message_type}'")
         return decoder
