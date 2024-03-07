@@ -1,4 +1,4 @@
-## NI-DCPower Source DC Voltage
+## NI-DCPower Source DC Voltage with Multiplexer
 
 This is a MeasurementLink example that sources and measures a DC voltage with an
 NI SMU via an NI-SWITCH multiplexer.

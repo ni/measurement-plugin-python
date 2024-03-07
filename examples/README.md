@@ -22,6 +22,7 @@ The TestStand sequence files associated with each example are saved in TestStand
 - Instrument-specific
   - `nidaqmx_analog_input`: Performs a finite analog input measurement with NI-DAQmx.
   - `nidcpower_source_dc_voltage`: Sources and measures a DC voltage with an NI SMU. Provides a Measurement UI and a LabVIEW UI.
+  - `nidcpower_source_dc_voltage_with_multiplexer`: Sources and measures a DC voltage with an NI SMU via an NI-SWITCH multiplexer.
   - `nidigital_spi`: Tests an SPI device using an NI Digital Pattern instrument.
   - `nidmm_measurement`: Performs a measurement using an NI DMM.
   - `nifgen_standard_function`: Generates a standard function waveform using an NI waveform generator.
