@@ -203,7 +203,6 @@ class _BaseSessionContainer(abc.ABC):
 class MultiplexerSessionContainer(_BaseSessionContainer):
     """Manages multiplexer session information."""
 
-    @requires_feature(MULTIPLEXER_SUPPORT_2024Q2)
     def __init__(
         self,
         session_management_client: SessionManagementClient,
