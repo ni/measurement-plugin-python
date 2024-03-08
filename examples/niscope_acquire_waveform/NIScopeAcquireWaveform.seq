@@ -2673,7 +2673,7 @@
 																					<value>pin_names</value>
 																				</Name>
 																				<ArgumentValue classname='ExprValue'>
-																					<value>{"Pin1","Pin2","Pin3","Pin4"}</value>
+																					<value>{"PinGroup1"}</value>
 																				</ArgumentValue>
 																				<Direction classname='Str'>
 																					<value>In</value>

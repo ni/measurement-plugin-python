@@ -26,7 +26,7 @@ measurement_service = nims.MeasurementService(
 @measurement_service.configuration(
     "pin_names",
     nims.DataType.PinArray1D,
-    ["Pin1", "Pin2", "Pin3", "Pin4"],
+    ["PinGroup1"],
     instrument_type=nims.session_management.INSTRUMENT_TYPE_NI_SCOPE,
 )
 @measurement_service.configuration("vertical_range", nims.DataType.Double, 5.0)
