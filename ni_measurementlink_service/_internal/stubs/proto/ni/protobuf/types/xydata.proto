@@ -23,6 +23,6 @@ option ruby_package = "NI::Protobuf::Types";
 // the number of XY points.
 message DoubleXYData
 {
-    repeated double x_data = 1;
-    repeated double y_data = 2;
+  repeated double x_data = 1;
+  repeated double y_data = 2;
 }
