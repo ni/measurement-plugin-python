@@ -179,7 +179,7 @@ message ReserveSessionsResponse{
 
   // List of information needed to create or use each multiplexer session for the given pin, site, and instrument type ID.
   repeated MultiplexerSessionInformation multiplexer_sessions = 2;
-  
+
   // Represents the mapping between pin or relay groups and their respective pin or relay names.
   map<string, ResolvedPinsOrRelays> group_mappings = 3;
 }
