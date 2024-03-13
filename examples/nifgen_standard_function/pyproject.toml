@@ -16,7 +16,7 @@ ni-python-styleguide = ">=0.4.1"
 mypy = ">=1.0"
 grpc-stubs = "^1.53"
 # Uncomment to use prerelease dependencies.
-# nifgen = { git = "https://github.com/ni/nimi-python.git", subdirectory = "generated/nifgen"}
+# nifgen = { git = "https://github.com/ni/nimi-python.git", subdirectory = "generated/nifgen", extras = ["grpc"] }
 # ni-measurementlink-service = {path = "../..", develop = true}
 
 [build-system]
