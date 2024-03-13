@@ -47,11 +47,10 @@ class Waveform(Enum):
 
 
 @measurement_service.register_measurement
-# TODO: Rename pin_name to pin_names and make it PinArray1D
 @measurement_service.configuration(
-    "pin_name",
-    nims.DataType.Pin,
-    "Pin1",
+    "pin_names",
+    nims.DataType.PinArray1D,
+    ["Pin1"],
     instrument_type=nims.session_management.INSTRUMENT_TYPE_NI_FGEN,
 )
 @measurement_service.configuration(
@@ -61,7 +60,7 @@ class Waveform(Enum):
 @measurement_service.configuration("amplitude", nims.DataType.Double, 2.0)
 @measurement_service.configuration("duration", nims.DataType.Double, 10.0)
 def measure(
-    pin_name: str,
+    pin_names: str,
     waveform_type: Waveform,
     frequency: float,
     amplitude: float,
@@ -69,8 +68,8 @@ def measure(
 ) -> Tuple[()]:
     """Generate a standard function waveform using an NI waveform generator."""
     logging.info(
-        "Starting generation: pin_name=%s waveform_type=%s frequency=%g amplitude=%g",
-        pin_name,
+        "Starting generation: pin_names=%s waveform_type=%s frequency=%g amplitude=%g",
+        pin_names,
         waveform_type,
         frequency,
         amplitude,
@@ -82,7 +81,7 @@ def measure(
     # If the waveform type is not specified, use SINE.
     nifgen_waveform = nifgen.Waveform(waveform_type.value or Waveform.SINE.value)
 
-    with measurement_service.context.reserve_sessions(pin_name) as reservation:
+    with measurement_service.context.reserve_sessions(pin_names) as reservation:
         with reservation.initialize_nifgen_sessions() as session_infos:
             for session_info in session_infos:
                 # Output mode must be the same for all channels in the session.
