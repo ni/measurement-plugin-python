@@ -31,7 +31,7 @@ python = "^3.8"
 # below. Please keep the minimum grpcio version in sync with the grpcio-tools version. Otherwise,
 # the generated gRPC stubs may not work with the minimum grpcio version.
 grpcio = "^1.49.1"
-protobuf = "^4.21"
+protobuf = "^5.0.0"
 pywin32 = {version = ">=303", platform = "win32"}
 deprecation = ">=2.1"
 # https://github.com/microsoft/tracelogging/issues/58 - traceloggingdynamic raises TypeError with Python 3.8
