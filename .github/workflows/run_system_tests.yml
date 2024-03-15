@@ -24,6 +24,14 @@ jobs:
         uses: actions/checkout@v4
       - name: Copy and rename .env.simulation to .env
         run: cp examples/.env.simulation .env
+      - name: Cache virtualenvs
+        uses: actions/cache@v4
+        id: cache
+        with:
+          path: |
+            .venv
+            .tox
+          key: run-system-tests-${{ runner.os }}-${{ matrix.configuration }}-${{ hashFiles('poetry.lock') }}
       - name: Install dependencies
         run: poetry install -v
       - name: Run system tests
