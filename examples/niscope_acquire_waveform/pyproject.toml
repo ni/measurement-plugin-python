@@ -1,6 +1,7 @@
 [tool.poetry]
 name = "niscope_acquire_waveform"
 version = "0.5.0"
+package-mode = false
 description = "MeasurementLink example that acquires a waveform using an NI oscilloscope."
 authors = ["National Instruments"]
 
