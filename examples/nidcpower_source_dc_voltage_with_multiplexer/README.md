@@ -7,6 +7,9 @@ NI SMU via an NI-SWITCH multiplexer.
 
 - Uses the `nidcpower` package to access NI-DCPower from Python
 - Uses the `niswitch` package to access NI-SWITCH from Python
+- Pin-aware, supporting single session, one pin and one selected site
+  - Sources the same DC voltage level on all selected pin/site combinations
+  - Measures the DC voltage and current for each selected pin/site combination
 - Includes InstrumentStudio and MeasurementLink UI Editor project files
 - Includes a TestStand sequence showing how to configure the pin map, register
   instrument sessions with the session management service, and run a measurement

@@ -9,6 +9,9 @@ commands using NI-VISA.
 - Uses the `nidcpower` package to access NI-DCPower from Python
 - Uses the open-source `PyVISA` package to access NI-VISA from Python
 - Uses the open-source `PyVISA-sim` package to simulate instruments in software
+- Pin-aware, supporting one session and pin per instrument and a single site
+  - Sources the DC voltage level of the DUT input pin
+  - Measures the voltage of the DUT output pin
 - Includes InstrumentStudio and MeasurementLink UI Editor project files
 - Includes a TestStand sequence showing how to configure the pin map, register
   instrument resources with the session management service, and run a
@@ -18,10 +21,6 @@ commands using NI-VISA.
     sections of the main sequence. For **Test UUTs** and batch process model use
     cases, these steps should be moved to the `ProcessSetup` and
     `ProcessCleanup` callbacks.
-- Pin-aware, supporting one session and pin per instrument and a single site
-  - Sources the DC voltage level of the DUT input pin
-  - Measures the voltage of the DUT output pin
-- Includes InstrumentStudio and MeasurementLink UI Editor project files
 - Uses the NI gRPC Device Server to allow sharing instrument sessions with other
   measurement services when running measurements from TestStand
 
