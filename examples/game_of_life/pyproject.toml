@@ -1,6 +1,7 @@
 [tool.poetry]
 name = "game_of_life"
 version = "1.0.0"
+package-mode = false
 description = "MeasurementLink example that displays Conway's Game of Life in a graph."
 authors = ["National Instruments"]
 

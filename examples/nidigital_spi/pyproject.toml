@@ -1,6 +1,7 @@
 [tool.poetry]
 name = "nidigital_spi"
 version = "0.5.0"
+package-mode = false
 description = "MeasurementLink example that tests a SPI device using an NI Digital Pattern instrument."
 authors = ["National Instruments"]
 
