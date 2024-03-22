@@ -147,4 +147,4 @@ def requires_feature(
 # Define feature toggle constants here:
 # --------------------------------------
 
-MULTIPLEXER_SUPPORT_2024Q2 = FeatureToggle("MULTIPLEXER_SUPPORT_2024Q2", CodeReadiness.NEXT_RELEASE)
+MULTIPLEXER_SUPPORT_2024Q2 = FeatureToggle("MULTIPLEXER_SUPPORT_2024Q2", CodeReadiness.RELEASE)
