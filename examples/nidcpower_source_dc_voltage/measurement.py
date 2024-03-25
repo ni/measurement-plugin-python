@@ -17,7 +17,6 @@ import ni_measurementlink_service as nims
 import nidcpower
 import nidcpower.session
 from _helpers import configure_logging, verbosity_option
-from ni_measurementlink_service.session_management import TypedConnection
 
 _NIDCPOWER_WAIT_FOR_EVENT_TIMEOUT_ERROR_CODE = -1074116059
 _NIDCPOWER_TIMEOUT_EXCEEDED_ERROR_CODE = -1074097933
@@ -32,8 +31,8 @@ measurement_service = nims.MeasurementService(
     service_config_path=service_directory / "NIDCPowerSourceDCVoltage.serviceconfig",
     version="0.1.0.0",
     ui_file_paths=[
-        service_directory / "NIDCPowerSourceDCVoltage.measui",
         service_directory / "NIDCPowerSourceDCVoltageUI.vi",
+        service_directory / "NIDCPowerSourceDCVoltage.measui",
     ],
 )
 
@@ -80,7 +79,6 @@ def measure(
 
     with measurement_service.context.reserve_sessions(pin_names) as reservation:
         with reservation.initialize_nidcpower_sessions() as session_infos:
-            connections = reservation.get_nidcpower_connections(pin_names)
             # Configure the same channel settings for all of the sessions corresponding
             # to the selected pins and sites.
             for session_info in session_infos:
@@ -108,30 +106,32 @@ def measure(
                         channels, cancellation_event, nidcpower.enums.Event.SOURCE_COMPLETE, timeout
                     )
 
-                measurements_list: List[_Measurement] = []
+                measurements: List[_Measurement] = []
+                measured_sites, measured_pins = [], []
                 for session_info in session_infos:
                     channels = session_info.session.channels[session_info.channel_list]
-                    measurements: List[_Measurement] = channels.measure_multiple()
-                    in_compliance = [
-                        session_info.session.channels[channel.channel].query_in_compliance()
-                        for channel in session_info.channel_mappings
-                    ]
+                    session_measurements: List[_Measurement] = channels.measure_multiple()
 
-                    measurements_list.extend(
-                        [
-                            meas._replace(in_compliance=in_comp)
-                            for meas, in_comp in zip(measurements, in_compliance)
-                        ]
-                    )
+                    for measurement, channel_mapping in zip(
+                        session_measurements, session_info.channel_mappings
+                    ):
+                        measured_pins.append(channel_mapping.pin_or_relay_name)
+                        measured_sites.append(channel_mapping.site)
+                        in_compliance = session_info.session.channels[
+                            channel_mapping.channel
+                        ].query_in_compliance()
+                        measurement._replace(in_compliance=in_compliance)
 
-    _log_measurements(connections, measurements_list)
+                    measurements.extend(session_measurements)
+
+    _log_measurements(measured_pins, measured_sites, measurements)
     logging.info("Completed measurement")
     return (
-        [connection.site for connection in connections],
-        [connection.pin_or_relay_name for connection in connections],
-        [measurement.voltage for measurement in measurements_list],
-        [measurement.current for measurement in measurements_list],
-        [measurement.in_compliance for measurement in measurements_list],
+        [site for site in measured_sites],
+        [pin for pin in measured_pins],
+        [measurement.voltage for measurement in measurements],
+        [measurement.current for measurement in measurements],
+        [measurement.in_compliance for measurement in measurements],
     )
 
 
@@ -170,12 +170,13 @@ def _wait_for_event(
 
 
 def _log_measurements(
-    connections: Iterable[TypedConnection[nidcpower.Session]],
+    measured_pins: Iterable[str],
+    measured_sites: Iterable[int],
     measured_values: Iterable[_Measurement],
 ) -> None:
     """Log the measured values."""
-    for connection, measurement in zip(connections, measured_values):
-        logging.info("site%s/%s:", connection.site, connection.pin_or_relay_name)
+    for pin, site, measurement in zip(measured_pins, measured_sites, measured_values):
+        logging.info("site%s/%s:", site, pin)
         logging.info("  Voltage: %g V", measurement.voltage)
         logging.info("  Current: %g A", measurement.current)
         logging.info("  In compliance: %s", str(measurement.in_compliance))
