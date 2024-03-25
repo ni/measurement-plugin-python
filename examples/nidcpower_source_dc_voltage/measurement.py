@@ -31,8 +31,8 @@ measurement_service = nims.MeasurementService(
     service_config_path=service_directory / "NIDCPowerSourceDCVoltage.serviceconfig",
     version="0.1.0.0",
     ui_file_paths=[
-        service_directory / "NIDCPowerSourceDCVoltageUI.vi",
         service_directory / "NIDCPowerSourceDCVoltage.measui",
+        service_directory / "NIDCPowerSourceDCVoltageUI.vi",
     ],
 )
 
