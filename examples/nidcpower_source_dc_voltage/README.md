@@ -8,7 +8,8 @@ NI SMU.
 - Uses the `nidcpower` package to access NI-DCPower from Python
 - Demonstrates how to cancel a running measurement by breaking a long wait into
   multiple short waits
-- Pin-aware, supporting one session and multiple pins
+- Pin-aware, supporting multiple sessions, multiple pins, and multiple selected
+  sites
   - Sources the same DC voltage level on all selected pin/site combinations
   - Measures the DC voltage and current for each selected pin/site combination
 - Includes InstrumentStudio and MeasurementLink UI Editor project files
