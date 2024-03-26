@@ -91,14 +91,15 @@ def measure(
                 channels.source_delay = hightime.timedelta(seconds=source_delay)
                 channels.voltage_level = voltage_level
 
-            # Initiate the channels to start sourcing the outputs. initiate()
-            # returns a context manager that aborts the measurement when the
-            # function returns or raises an exception.
             with ExitStack() as stack:
+                # Initiate the channels to start sourcing the outputs. initiate()
+                # returns a context manager that aborts the measurement when the
+                # function returns or raises an exception.
                 for session_info in session_infos:
                     channels = session_info.session.channels[session_info.channel_list]
                     stack.enter_context(channels.initiate())
 
+                # Wait for the outputs to settle.
                 for session_info in session_infos:
                     channels = session_info.session.channels[session_info.channel_list]
                     timeout = source_delay + 10.0
@@ -110,13 +111,15 @@ def measure(
                 measured_sites, measured_pins = [], []
                 for session_info in session_infos:
                     channels = session_info.session.channels[session_info.channel_list]
+                    # Measure the voltage and current for each output of the session.
                     session_measurements: List[_Measurement] = channels.measure_multiple()
 
                     for measurement, channel_mapping in zip(
                         session_measurements, session_info.channel_mappings
                     ):
-                        measured_pins.append(channel_mapping.pin_or_relay_name)
                         measured_sites.append(channel_mapping.site)
+                        measured_pins.append(channel_mapping.pin_or_relay_name)
+                        # Determine whether the outputs are in compliance.
                         in_compliance = session_info.session.channels[
                             channel_mapping.channel
                         ].query_in_compliance()
@@ -124,11 +127,11 @@ def measure(
 
                     measurements.extend(session_measurements)
 
-    _log_measurements(measured_pins, measured_sites, measurements)
+    _log_measurements(measured_sites, measured_pins, measurements)
     logging.info("Completed measurement")
     return (
-        [site for site in measured_sites],
-        [pin for pin in measured_pins],
+        measured_sites,
+        measured_pins,
         [measurement.voltage for measurement in measurements],
         [measurement.current for measurement in measurements],
         [measurement.in_compliance for measurement in measurements],
@@ -170,12 +173,12 @@ def _wait_for_event(
 
 
 def _log_measurements(
-    measured_pins: Iterable[str],
     measured_sites: Iterable[int],
+    measured_pins: Iterable[str],
     measured_values: Iterable[_Measurement],
 ) -> None:
     """Log the measured values."""
-    for pin, site, measurement in zip(measured_pins, measured_sites, measured_values):
+    for site, pin, measurement in zip(measured_sites, measured_pins, measured_values):
         logging.info("site%s/%s:", site, pin)
         logging.info("  Voltage: %g V", measurement.voltage)
         logging.info("  Current: %g A", measurement.current)
