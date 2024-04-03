@@ -4,6 +4,7 @@ isort:skip_file
 ---------------------------------------------------------------------
 ---------------------------------------------------------------------
 """
+
 import abc
 import collections.abc
 import grpc
@@ -11,12 +12,11 @@ import grpc.aio
 import ni_measurementlink_service._internal.stubs.ni.measurementlink.discovery.v1.discovery_service_pb2 as ni_measurementlink_discovery_v1_discovery_service_pb2
 import typing
 
-_T = typing.TypeVar('_T')
+_T = typing.TypeVar("_T")
 
-class _MaybeAsyncIterator(collections.abc.AsyncIterator[_T], collections.abc.Iterator[_T], metaclass=abc.ABCMeta):
-    ...
+class _MaybeAsyncIterator(collections.abc.AsyncIterator[_T], collections.abc.Iterator[_T], metaclass=abc.ABCMeta): ...
 
-class _ServicerContext(grpc.ServicerContext, grpc.aio.ServicerContext):  # type: ignore
+class _ServicerContext(grpc.ServicerContext, grpc.aio.ServicerContext):  # type: ignore[misc, type-arg]
     ...
 
 class DiscoveryServiceStub:
@@ -39,11 +39,13 @@ class DiscoveryServiceStub:
       - Both ServiceLocation.insecure_port and ServiceLocation.ssl_authenticated_port are empty
       - Either ServiceLocation.insecure_port or ServiceLocation.ssl_authenticated_port contain an invalid port number
     """
+
     UnregisterService: grpc.UnaryUnaryMultiCallable[
         ni_measurementlink_discovery_v1_discovery_service_pb2.UnregisterServiceRequest,
         ni_measurementlink_discovery_v1_discovery_service_pb2.UnregisterServiceResponse,
     ]
     """Unregisters a service instance with the discovery service."""
+
     EnumerateServices: grpc.UnaryUnaryMultiCallable[
         ni_measurementlink_discovery_v1_discovery_service_pb2.EnumerateServicesRequest,
         ni_measurementlink_discovery_v1_discovery_service_pb2.EnumerateServicesResponse,
@@ -51,6 +53,7 @@ class DiscoveryServiceStub:
     """Enumerate all services which implement a specific service interface.
     This is useful for plugin type systems where the possible services are not known ahead of time.
     """
+
     ResolveService: grpc.UnaryUnaryMultiCallable[
         ni_measurementlink_discovery_v1_discovery_service_pb2.ResolveServiceRequest,
         ni_measurementlink_discovery_v1_discovery_service_pb2.ServiceLocation,
@@ -86,11 +89,13 @@ class DiscoveryServiceAsyncStub:
       - Both ServiceLocation.insecure_port and ServiceLocation.ssl_authenticated_port are empty
       - Either ServiceLocation.insecure_port or ServiceLocation.ssl_authenticated_port contain an invalid port number
     """
+
     UnregisterService: grpc.aio.UnaryUnaryMultiCallable[
         ni_measurementlink_discovery_v1_discovery_service_pb2.UnregisterServiceRequest,
         ni_measurementlink_discovery_v1_discovery_service_pb2.UnregisterServiceResponse,
     ]
     """Unregisters a service instance with the discovery service."""
+
     EnumerateServices: grpc.aio.UnaryUnaryMultiCallable[
         ni_measurementlink_discovery_v1_discovery_service_pb2.EnumerateServicesRequest,
         ni_measurementlink_discovery_v1_discovery_service_pb2.EnumerateServicesResponse,
@@ -98,6 +103,7 @@ class DiscoveryServiceAsyncStub:
     """Enumerate all services which implement a specific service interface.
     This is useful for plugin type systems where the possible services are not known ahead of time.
     """
+
     ResolveService: grpc.aio.UnaryUnaryMultiCallable[
         ni_measurementlink_discovery_v1_discovery_service_pb2.ResolveServiceRequest,
         ni_measurementlink_discovery_v1_discovery_service_pb2.ServiceLocation,
@@ -135,6 +141,7 @@ class DiscoveryServiceServicer(metaclass=abc.ABCMeta):
           - Both ServiceLocation.insecure_port and ServiceLocation.ssl_authenticated_port are empty
           - Either ServiceLocation.insecure_port or ServiceLocation.ssl_authenticated_port contain an invalid port number
         """
+
     @abc.abstractmethod
     def UnregisterService(
         self,
@@ -142,6 +149,7 @@ class DiscoveryServiceServicer(metaclass=abc.ABCMeta):
         context: _ServicerContext,
     ) -> typing.Union[ni_measurementlink_discovery_v1_discovery_service_pb2.UnregisterServiceResponse, collections.abc.Awaitable[ni_measurementlink_discovery_v1_discovery_service_pb2.UnregisterServiceResponse]]:
         """Unregisters a service instance with the discovery service."""
+
     @abc.abstractmethod
     def EnumerateServices(
         self,
@@ -151,6 +159,7 @@ class DiscoveryServiceServicer(metaclass=abc.ABCMeta):
         """Enumerate all services which implement a specific service interface.
         This is useful for plugin type systems where the possible services are not known ahead of time.
         """
+
     @abc.abstractmethod
     def ResolveService(
         self,

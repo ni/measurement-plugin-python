@@ -4,6 +4,7 @@ isort:skip_file
 ---------------------------------------------------------------------
 ---------------------------------------------------------------------
 """
+
 import abc
 import collections.abc
 import grpc
@@ -11,12 +12,11 @@ import grpc.aio
 import ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v2.measurement_service_pb2 as ni_measurementlink_measurement_v2_measurement_service_pb2
 import typing
 
-_T = typing.TypeVar('_T')
+_T = typing.TypeVar("_T")
 
-class _MaybeAsyncIterator(collections.abc.AsyncIterator[_T], collections.abc.Iterator[_T], metaclass=abc.ABCMeta):
-    ...
+class _MaybeAsyncIterator(collections.abc.AsyncIterator[_T], collections.abc.Iterator[_T], metaclass=abc.ABCMeta): ...
 
-class _ServicerContext(grpc.ServicerContext, grpc.aio.ServicerContext):  # type: ignore
+class _ServicerContext(grpc.ServicerContext, grpc.aio.ServicerContext):  # type: ignore[misc, type-arg]
     ...
 
 class MeasurementServiceStub:
@@ -30,6 +30,7 @@ class MeasurementServiceStub:
         ni_measurementlink_measurement_v2_measurement_service_pb2.GetMetadataResponse,
     ]
     """Returns information that describes the measurement."""
+
     Measure: grpc.UnaryStreamMultiCallable[
         ni_measurementlink_measurement_v2_measurement_service_pb2.MeasureRequest,
         ni_measurementlink_measurement_v2_measurement_service_pb2.MeasureResponse,
@@ -46,6 +47,7 @@ class MeasurementServiceAsyncStub:
         ni_measurementlink_measurement_v2_measurement_service_pb2.GetMetadataResponse,
     ]
     """Returns information that describes the measurement."""
+
     Measure: grpc.aio.UnaryStreamMultiCallable[
         ni_measurementlink_measurement_v2_measurement_service_pb2.MeasureRequest,
         ni_measurementlink_measurement_v2_measurement_service_pb2.MeasureResponse,
@@ -64,6 +66,7 @@ class MeasurementServiceServicer(metaclass=abc.ABCMeta):
         context: _ServicerContext,
     ) -> typing.Union[ni_measurementlink_measurement_v2_measurement_service_pb2.GetMetadataResponse, collections.abc.Awaitable[ni_measurementlink_measurement_v2_measurement_service_pb2.GetMetadataResponse]]:
         """Returns information that describes the measurement."""
+
     @abc.abstractmethod
     def Measure(
         self,

@@ -4,21 +4,17 @@ isort:skip_file
 ---------------------------------------------------------------------
 ---------------------------------------------------------------------
 """
+
 import builtins
 import collections.abc
 import google.protobuf.descriptor
 import google.protobuf.internal.containers
 import google.protobuf.message
-import sys
-
-if sys.version_info >= (3, 8):
-    import typing as typing_extensions
-else:
-    import typing_extensions
+import typing
 
 DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
 
-@typing_extensions.final
+@typing.final
 class DoubleXYData(google.protobuf.message.Message):
     """XYData for a cartesian graph.
     x_data and y_data should contain the same number of values.
@@ -40,6 +36,6 @@ class DoubleXYData(google.protobuf.message.Message):
         x_data: collections.abc.Iterable[builtins.float] | None = ...,
         y_data: collections.abc.Iterable[builtins.float] | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing_extensions.Literal["x_data", b"x_data", "y_data", b"y_data"]) -> None: ...
+    def ClearField(self, field_name: typing.Literal["x_data", b"x_data", "y_data", b"y_data"]) -> None: ...
 
 global___DoubleXYData = DoubleXYData
