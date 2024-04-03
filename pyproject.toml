@@ -144,6 +144,11 @@ module = [
 ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
+# mypy-protobuf codegen has some unused ignores.
+module = ["ni_measurementlink_service._internal.stubs.*"]
+warn_unused_ignores = false
+
+[[tool.mypy.overrides]]
 # The tests are not yet ready for --disallow-untyped-defs (or even --disallow-incomplete-defs)
 module = ["tests.*"]
 check_untyped_defs = true
