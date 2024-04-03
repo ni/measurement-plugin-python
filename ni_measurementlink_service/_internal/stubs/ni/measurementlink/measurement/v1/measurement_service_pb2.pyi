@@ -4,6 +4,7 @@ isort:skip_file
 ---------------------------------------------------------------------
 ---------------------------------------------------------------------
 """
+
 import builtins
 import collections.abc
 import google.protobuf.any_pb2
@@ -12,16 +13,11 @@ import google.protobuf.internal.containers
 import google.protobuf.message
 import google.protobuf.type_pb2
 import ni_measurementlink_service._internal.stubs.ni.measurementlink.pin_map_context_pb2 as ni_measurementlink_pin_map_context_pb2
-import sys
-
-if sys.version_info >= (3, 8):
-    import typing as typing_extensions
-else:
-    import typing_extensions
+import typing
 
 DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
 
-@typing_extensions.final
+@typing.final
 class GetMetadataRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -31,7 +27,7 @@ class GetMetadataRequest(google.protobuf.message.Message):
 
 global___GetMetadataRequest = GetMetadataRequest
 
-@typing_extensions.final
+@typing.final
 class GetMetadataResponse(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -41,12 +37,15 @@ class GetMetadataResponse(google.protobuf.message.Message):
     @property
     def measurement_details(self) -> global___MeasurementDetails:
         """Required. Specifies basic information about the measurement."""
+
     @property
     def measurement_signature(self) -> global___MeasurementSignature:
         """Required. Specifies the signature of the measurement."""
+
     @property
     def user_interface_details(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___UserInterfaceDetails]:
         """Optional. Specifies the user interfaces available for use with the measurement, if any."""
+
     def __init__(
         self,
         *,
@@ -54,12 +53,12 @@ class GetMetadataResponse(google.protobuf.message.Message):
         measurement_signature: global___MeasurementSignature | None = ...,
         user_interface_details: collections.abc.Iterable[global___UserInterfaceDetails] | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing_extensions.Literal["measurement_details", b"measurement_details", "measurement_signature", b"measurement_signature"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing_extensions.Literal["measurement_details", b"measurement_details", "measurement_signature", b"measurement_signature", "user_interface_details", b"user_interface_details"]) -> None: ...
+    def HasField(self, field_name: typing.Literal["measurement_details", b"measurement_details", "measurement_signature", b"measurement_signature"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["measurement_details", b"measurement_details", "measurement_signature", b"measurement_signature", "user_interface_details", b"user_interface_details"]) -> None: ...
 
 global___GetMetadataResponse = GetMetadataResponse
 
-@typing_extensions.final
+@typing.final
 class MeasureRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -71,24 +70,26 @@ class MeasureRequest(google.protobuf.message.Message):
         of required and optional parameters and generate errors as appropriate if the configuration does not conform
         to valid input ranges.
         """
+
     @property
     def pin_map_context(self) -> ni_measurementlink_pin_map_context_pb2.PinMapContext:
         """Optional. Specifies the pin map context for the measurement, if any. This field is optional in that callers
         may not always have a pin map context available to include in the request message. Each measurement will
         define if a valid pin map context is required in order to run or not and generate errors appropriately.
         """
+
     def __init__(
         self,
         *,
         configuration_parameters: google.protobuf.any_pb2.Any | None = ...,
         pin_map_context: ni_measurementlink_pin_map_context_pb2.PinMapContext | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing_extensions.Literal["configuration_parameters", b"configuration_parameters", "pin_map_context", b"pin_map_context"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing_extensions.Literal["configuration_parameters", b"configuration_parameters", "pin_map_context", b"pin_map_context"]) -> None: ...
+    def HasField(self, field_name: typing.Literal["configuration_parameters", b"configuration_parameters", "pin_map_context", b"pin_map_context"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["configuration_parameters", b"configuration_parameters", "pin_map_context", b"pin_map_context"]) -> None: ...
 
 global___MeasureRequest = MeasureRequest
 
-@typing_extensions.final
+@typing.final
 class MeasureResponse(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -99,17 +100,18 @@ class MeasureResponse(google.protobuf.message.Message):
         should return a valid output message even if it is just an empty message with no fields. Each measurement will define
         which of its output fields are required and which are optional based on the configuration for the measurement.
         """
+
     def __init__(
         self,
         *,
         outputs: google.protobuf.any_pb2.Any | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing_extensions.Literal["outputs", b"outputs"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing_extensions.Literal["outputs", b"outputs"]) -> None: ...
+    def HasField(self, field_name: typing.Literal["outputs", b"outputs"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["outputs", b"outputs"]) -> None: ...
 
 global___MeasureResponse = MeasureResponse
 
-@typing_extensions.final
+@typing.final
 class MeasurementDetails(google.protobuf.message.Message):
     """Message that contains standard information reported by a measurement."""
 
@@ -127,11 +129,11 @@ class MeasurementDetails(google.protobuf.message.Message):
         display_name: builtins.str = ...,
         version: builtins.str = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing_extensions.Literal["display_name", b"display_name", "version", b"version"]) -> None: ...
+    def ClearField(self, field_name: typing.Literal["display_name", b"display_name", "version", b"version"]) -> None: ...
 
 global___MeasurementDetails = MeasurementDetails
 
-@typing_extensions.final
+@typing.final
 class MeasurementSignature(google.protobuf.message.Message):
     """Message that defines the signature of a measurement."""
 
@@ -146,22 +148,25 @@ class MeasurementSignature(google.protobuf.message.Message):
     """Required. The type name of the message used to define the measurement's configuration.
     This is the gRPC full name for the message.
     """
+    outputs_message_type: builtins.str
+    """Required. The type name of the message used to define the measurement's outputs.
+    This is the gRPC full name for the message.
+    """
     @property
     def configuration_parameters(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___ConfigurationParameter]:
         """Required. Defines the configuration parameters for the measurement."""
+
     @property
     def configuration_defaults(self) -> google.protobuf.any_pb2.Any:
         """Optional. The default values to use for the configuration parameters. Caller can use these default values
         rather than specifying their own. These values should be supplied using the message type defined by
         configuration_parameters_message_type.
         """
-    outputs_message_type: builtins.str
-    """Required. The type name of the message used to define the measurement's outputs.
-    This is the gRPC full name for the message.
-    """
+
     @property
     def outputs(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___Output]:
         """Required. Defines the outputs for the measurement."""
+
     def __init__(
         self,
         *,
@@ -171,12 +176,12 @@ class MeasurementSignature(google.protobuf.message.Message):
         outputs_message_type: builtins.str = ...,
         outputs: collections.abc.Iterable[global___Output] | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing_extensions.Literal["configuration_defaults", b"configuration_defaults"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing_extensions.Literal["configuration_defaults", b"configuration_defaults", "configuration_parameters", b"configuration_parameters", "configuration_parameters_message_type", b"configuration_parameters_message_type", "outputs", b"outputs", "outputs_message_type", b"outputs_message_type"]) -> None: ...
+    def HasField(self, field_name: typing.Literal["configuration_defaults", b"configuration_defaults"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["configuration_defaults", b"configuration_defaults", "configuration_parameters", b"configuration_parameters", "configuration_parameters_message_type", b"configuration_parameters_message_type", "outputs", b"outputs", "outputs_message_type", b"outputs_message_type"]) -> None: ...
 
 global___MeasurementSignature = MeasurementSignature
 
-@typing_extensions.final
+@typing.final
 class UserInterfaceDetails(google.protobuf.message.Message):
     """Contains measurement User Interface details."""
 
@@ -190,17 +195,17 @@ class UserInterfaceDetails(google.protobuf.message.Message):
         *,
         file_url: builtins.str = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing_extensions.Literal["file_url", b"file_url"]) -> None: ...
+    def ClearField(self, field_name: typing.Literal["file_url", b"file_url"]) -> None: ...
 
 global___UserInterfaceDetails = UserInterfaceDetails
 
-@typing_extensions.final
+@typing.final
 class ConfigurationParameter(google.protobuf.message.Message):
     """Message that defines a configuration parameter for the measurement."""
 
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
-    @typing_extensions.final
+    @typing.final
     class AnnotationsEntry(google.protobuf.message.Message):
         DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -214,7 +219,7 @@ class ConfigurationParameter(google.protobuf.message.Message):
             key: builtins.str = ...,
             value: builtins.str = ...,
         ) -> None: ...
-        def ClearField(self, field_name: typing_extensions.Literal["key", b"key", "value", b"value"]) -> None: ...
+        def ClearField(self, field_name: typing.Literal["key", b"key", "value", b"value"]) -> None: ...
 
     FIELD_NUMBER_FIELD_NUMBER: builtins.int
     TYPE_FIELD_NUMBER: builtins.int
@@ -244,6 +249,7 @@ class ConfigurationParameter(google.protobuf.message.Message):
           - Key: "ni/pin.instrument_type"
           - Common Values: "niDCPower", "niScope"...
         """
+
     def __init__(
         self,
         *,
@@ -253,11 +259,11 @@ class ConfigurationParameter(google.protobuf.message.Message):
         repeated: builtins.bool = ...,
         annotations: collections.abc.Mapping[builtins.str, builtins.str] | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing_extensions.Literal["annotations", b"annotations", "field_number", b"field_number", "name", b"name", "repeated", b"repeated", "type", b"type"]) -> None: ...
+    def ClearField(self, field_name: typing.Literal["annotations", b"annotations", "field_number", b"field_number", "name", b"name", "repeated", b"repeated", "type", b"type"]) -> None: ...
 
 global___ConfigurationParameter = ConfigurationParameter
 
-@typing_extensions.final
+@typing.final
 class Output(google.protobuf.message.Message):
     """Message that defines an output of the measurement."""
 
@@ -287,6 +293,6 @@ class Output(google.protobuf.message.Message):
         name: builtins.str = ...,
         repeated: builtins.bool = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing_extensions.Literal["field_number", b"field_number", "name", b"name", "repeated", b"repeated", "type", b"type"]) -> None: ...
+    def ClearField(self, field_name: typing.Literal["field_number", b"field_number", "name", b"name", "repeated", b"repeated", "type", b"type"]) -> None: ...
 
 global___Output = Output
