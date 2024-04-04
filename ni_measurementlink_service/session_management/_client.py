@@ -10,10 +10,6 @@ from typing import Dict, Iterable, Mapping, Optional, Union
 import google.protobuf.internal.containers
 import grpc
 
-from ni_measurementlink_service._featuretoggles import (
-    MULTIPLEXER_SUPPORT_2024Q2,
-    requires_feature,
-)
 from ni_measurementlink_service._internal.stubs.ni.measurementlink.sessionmanagement.v1 import (
     session_management_service_pb2,
     session_management_service_pb2_grpc,
@@ -295,7 +291,6 @@ class SessionManagementClient(object):
             session_management_client=self, session_info=response.sessions
         )
 
-    @requires_feature(MULTIPLEXER_SUPPORT_2024Q2)
     def register_multiplexer_sessions(
         self, multiplexer_session_info: Iterable[MultiplexerSessionInformation]
     ) -> None:
@@ -311,7 +306,6 @@ class SessionManagementClient(object):
         )
         self._get_stub().RegisterMultiplexerSessions(request)
 
-    @requires_feature(MULTIPLEXER_SUPPORT_2024Q2)
     def unregister_multiplexer_sessions(
         self, multiplexer_session_info: Iterable[MultiplexerSessionInformation]
     ) -> None:
@@ -328,7 +322,6 @@ class SessionManagementClient(object):
         )
         self._get_stub().UnregisterMultiplexerSessions(request)
 
-    @requires_feature(MULTIPLEXER_SUPPORT_2024Q2)
     def get_multiplexer_sessions(
         self, pin_map_context: PinMapContext, multiplexer_type_id: Optional[str] = None
     ) -> MultiplexerSessionContainer:
@@ -358,7 +351,6 @@ class SessionManagementClient(object):
         session_infos = [session for session in response.multiplexer_sessions]
         return MultiplexerSessionContainer(self, session_infos)
 
-    @requires_feature(MULTIPLEXER_SUPPORT_2024Q2)
     def get_all_registered_multiplexer_sessions(
         self, multiplexer_type_id: Optional[str] = None
     ) -> MultiplexerSessionContainer:
