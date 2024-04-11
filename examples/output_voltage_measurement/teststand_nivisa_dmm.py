@@ -67,9 +67,11 @@ def destroy_nivisa_dmm_sessions() -> None:
             discovery_client,
             SessionInitializationBehavior.ATTACH_TO_SESSION_THEN_CLOSE,
         )
-
+        # Timeout is added when destroying sessions to ensure that if a cancellation is performed
+        # for the measurement, session is closed within an appropriate timeframe.
         with session_management_client.reserve_all_registered_sessions(
             instrument_type_id=INSTRUMENT_TYPE_VISA_DMM,
+            timeout=10,
         ) as reservation:
             if not reservation.session_info:
                 return

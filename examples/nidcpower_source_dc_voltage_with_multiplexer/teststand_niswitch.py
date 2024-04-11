@@ -48,8 +48,11 @@ def destroy_niswitch_sessions() -> None:
         session_management_client = SessionManagementClient(
             discovery_client=discovery_client, grpc_channel_pool=grpc_channel_pool
         )
+        # Timeout is added when destroying sessions to ensure that if a cancellation is performed
+        # for the measurement, session is closed within an appropriate timeframe.
         with session_management_client.reserve_all_registered_sessions(
             instrument_type_id=INSTRUMENT_TYPE_NI_RELAY_DRIVER,
+            timeout=10,
         ) as reservation:
             if not reservation.session_info:
                 return
