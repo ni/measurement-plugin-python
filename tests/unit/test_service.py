@@ -88,7 +88,12 @@ def test___measurement_service___add_configuration__configuration_added(
         ("PinConfiguration", DataType.Pin, "Pin1", "test instrument"),
         ("PinArrayConfiguration", DataType.PinArray1D, ["Pin1", "Pin2"], "test instrument 2"),
         ("IOResourceConfiguration", DataType.IOResource, "Pin1", "test instrument"),
-        ("IOResourceArrayConfiguration", DataType.IOResourceArray1D, ["Pin1", "Pin2"], "test instrument 2"),
+        (
+            "IOResourceArrayConfiguration",
+            DataType.IOResourceArray1D,
+            ["Pin1", "Pin2"],
+            "test instrument 2",
+        ),
     ],
 )
 @pytest.mark.filterwarnings("ignore:.*Pin.*:DeprecationWarning")

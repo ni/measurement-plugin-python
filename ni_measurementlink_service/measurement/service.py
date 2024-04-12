@@ -408,7 +408,8 @@ class MeasurementService:
             )
         if type == DataType.PinArray1D:
             warnings.warn(
-                "DataType.PinArray1D is deprecated. Use DataType.IOResourceArray1D instead.", DeprecationWarning
+                "DataType.PinArray1D is deprecated. Use DataType.IOResourceArray1D instead.",
+                DeprecationWarning,
             )
         data_type_info = _datatypeinfo.get_type_info(type)
         annotations = self._make_annotations_dict(
@@ -467,7 +468,8 @@ class MeasurementService:
             )
         if type == DataType.PinArray1D:
             warnings.warn(
-                "DataType.PinArray1D is deprecated. Use DataType.IOResourceArray1D instead.", DeprecationWarning
+                "DataType.PinArray1D is deprecated. Use DataType.IOResourceArray1D instead.",
+                DeprecationWarning,
             )
         data_type_info = _datatypeinfo.get_type_info(type)
         annotations = self._make_annotations_dict(
