@@ -67,9 +67,10 @@ class TypeSpecialization(enum.Enum):
     """Enum that represents the type specializations for measurement parameters."""
 
     NoType = ""
-    IOResource = "ioresource"
+    Pin = "pin"
     Path = "path"
     Enum = "enum"
+    IOResource = "ioresource"
 
 
 class DataType(enum.Enum):
