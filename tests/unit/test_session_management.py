@@ -503,7 +503,7 @@ def test___no_optional_args___reserve_all_registered_sessions___sends_request_wi
     session_management_stub.ReserveAllRegisteredSessions.assert_called_once()
     (request,) = session_management_stub.ReserveAllRegisteredSessions.call_args.args
     assert request.instrument_type_id == ""
-    assert request.timeout_in_milliseconds == 0
+    assert request.timeout_in_milliseconds == 10000
 
 
 def test___explicit_none___reserve_all_registered_sessions___sends_request_with_defaults(

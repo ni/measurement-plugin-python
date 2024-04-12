@@ -272,7 +272,7 @@ class SessionManagementClient(object):
 
             timeout: Timeout in seconds.
 
-                Use a timeout in order to wait for the measurement to complete or be canceled.
+                An arbitrary timeout to wait for the measurement to complete or be canceled.
 
                 Allowed values: 0 (non-blocking, fails immediately if resources cannot be
                 reserved), -1 (infinite timeout), or any other positive numeric value (wait for
