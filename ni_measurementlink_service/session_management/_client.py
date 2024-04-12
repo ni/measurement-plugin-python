@@ -271,7 +271,7 @@ class SessionManagementClient(object):
                 For custom instruments, use the instrument type id defined in the pin map file.
 
             timeout: Timeout in seconds.
-            
+
                 Use a timeout in order to wait for the measurement to complete or be canceled.
 
                 Allowed values: 0 (non-blocking, fails immediately if resources cannot be
