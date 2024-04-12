@@ -255,7 +255,7 @@ class SessionManagementClient(object):
         self._get_stub().UnregisterSessions(request)
 
     def reserve_all_registered_sessions(
-        self, instrument_type_id: Optional[str] = None, timeout: Optional[float] = 0.0
+        self, instrument_type_id: Optional[str] = None, timeout: Optional[float] = 10.0
     ) -> MultiSessionReservation:
         """Reserve all sessions currently registered with the session management service.
 
@@ -270,7 +270,7 @@ class SessionManagementClient(object):
 
                 For custom instruments, use the instrument type id defined in the pin map file.
 
-            timeout: Timeout in seconds.
+            timeout: Timeout in seconds. Use a timeout in order to wait for the measurement to complete or be canceled.
 
                 Allowed values: 0 (non-blocking, fails immediately if resources cannot be
                 reserved), -1 (infinite timeout), or any other positive numeric value (wait for
