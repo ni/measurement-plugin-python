@@ -510,9 +510,9 @@ class MeasurementService:
             return annotations
 
         annotations[TYPE_SPECIALIZATION_KEY] = type_specialization.value
-        if type_specialization == TypeSpecialization.Pin:
+        if type_specialization == TypeSpecialization.IOResource:
             if instrument_type != "" or instrument_type is not None:
-                annotations["ni/pin.instrument_type"] = instrument_type
+                annotations["ni/ioresource.instrument_type"] = instrument_type
         if type_specialization == TypeSpecialization.Enum:
             if enum_type is not None:
                 annotations[ENUM_VALUES_KEY] = self._enum_to_annotations_value(enum_type)

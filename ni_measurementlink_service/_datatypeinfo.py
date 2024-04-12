@@ -43,7 +43,7 @@ _DATATYPE_TO_DATATYPEINFO_LOOKUP = {
     DataType.Double: DataTypeInfo(type_pb2.Field.TYPE_DOUBLE, False),
     DataType.Boolean: DataTypeInfo(type_pb2.Field.TYPE_BOOL, False),
     DataType.String: DataTypeInfo(type_pb2.Field.TYPE_STRING, False),
-    DataType.Pin: DataTypeInfo(type_pb2.Field.TYPE_STRING, False, TypeSpecialization.Pin),
+    DataType.Pin: DataTypeInfo(type_pb2.Field.TYPE_STRING, False, TypeSpecialization.IOResource),
     DataType.Path: DataTypeInfo(type_pb2.Field.TYPE_STRING, False, TypeSpecialization.Path),
     DataType.Enum: DataTypeInfo(type_pb2.Field.TYPE_ENUM, False, TypeSpecialization.Enum),
     DataType.DoubleXYData: DataTypeInfo(
@@ -51,6 +51,7 @@ _DATATYPE_TO_DATATYPEINFO_LOOKUP = {
         False,
         message_type=xydata_pb2.DoubleXYData.DESCRIPTOR.full_name,
     ),
+    DataType.IOResource: DataTypeInfo(type_pb2.Field.TYPE_STRING, False, TypeSpecialization.IOResource),
     DataType.Int32Array1D: DataTypeInfo(type_pb2.Field.TYPE_INT32, True),
     DataType.Int64Array1D: DataTypeInfo(type_pb2.Field.TYPE_INT64, True),
     DataType.UInt32Array1D: DataTypeInfo(type_pb2.Field.TYPE_UINT32, True),
@@ -59,7 +60,7 @@ _DATATYPE_TO_DATATYPEINFO_LOOKUP = {
     DataType.DoubleArray1D: DataTypeInfo(type_pb2.Field.TYPE_DOUBLE, True),
     DataType.BooleanArray1D: DataTypeInfo(type_pb2.Field.TYPE_BOOL, True),
     DataType.StringArray1D: DataTypeInfo(type_pb2.Field.TYPE_STRING, True),
-    DataType.PinArray1D: DataTypeInfo(type_pb2.Field.TYPE_STRING, True, TypeSpecialization.Pin),
+    DataType.PinArray1D: DataTypeInfo(type_pb2.Field.TYPE_STRING, True, TypeSpecialization.IOResource),
     DataType.PathArray1D: DataTypeInfo(type_pb2.Field.TYPE_STRING, True, TypeSpecialization.Path),
     DataType.EnumArray1D: DataTypeInfo(type_pb2.Field.TYPE_ENUM, True, TypeSpecialization.Enum),
     DataType.DoubleXYDataArray1D: DataTypeInfo(
@@ -67,4 +68,5 @@ _DATATYPE_TO_DATATYPEINFO_LOOKUP = {
         True,
         message_type=xydata_pb2.DoubleXYData.DESCRIPTOR.full_name,
     ),
+    DataType.IOResourceArray1D: DataTypeInfo(type_pb2.Field.TYPE_STRING, True, TypeSpecialization.IOResource),
 }
