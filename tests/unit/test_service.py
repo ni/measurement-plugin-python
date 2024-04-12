@@ -87,9 +87,11 @@ def test___measurement_service___add_configuration__configuration_added(
     [
         ("PinConfiguration", DataType.Pin, "Pin1", "test instrument"),
         ("PinArrayConfiguration", DataType.PinArray1D, ["Pin1", "Pin2"], "test instrument 2"),
+        ("IOResourceConfiguration", DataType.IOResource, "Pin1", "test instrument"),
+        ("IOResourceArrayConfiguration", DataType.IOResourceArray1D, ["Pin1", "Pin2"], "test instrument 2"),
     ],
 )
-def test___measurement_service___add_pin_configuration__pin_configuration_added(
+def test___measurement_service___add_pin_or_ioresource_configuration__ioresource_configuration_added(
     measurement_service: MeasurementService,
     display_name: str,
     type: DataType,
@@ -108,8 +110,8 @@ def test___measurement_service___add_pin_configuration__pin_configuration_added(
         and param.default_value == default_value
         and param.annotations
         == {
-            TYPE_SPECIALIZATION_KEY: TypeSpecialization.Pin.value,
-            "ni/pin.instrument_type": instrument_type,
+            TYPE_SPECIALIZATION_KEY: TypeSpecialization.IOResource.value,
+            "ni/ioresource.instrument_type": instrument_type,
         }
         for param in measurement_service._configuration_parameter_list
     )
@@ -130,7 +132,7 @@ def test___measurement_service___add_pin_configuration__pin_configuration_added(
         ("UInt44", DataType.UInt64, False),
     ],
 )
-def test___measurement_service___add_non_pin_configuration__pin_type_annotations_not_added(
+def test___measurement_service___add_non_ioresource_configuration__ioresource_type_annotations_not_added(
     measurement_service: MeasurementService,
     display_name: str,
     type: DataType,
@@ -139,7 +141,7 @@ def test___measurement_service___add_non_pin_configuration__pin_type_annotations
     measurement_service.configuration(display_name, type, default_value)(_fake_measurement_function)
 
     assert not all(
-        param.annotations.get(TYPE_SPECIALIZATION_KEY) == TypeSpecialization.Pin.value
+        param.annotations.get(TYPE_SPECIALIZATION_KEY) == TypeSpecialization.IOResource.value
         for param in measurement_service._configuration_parameter_list
     )
 

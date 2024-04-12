@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import sys
 import threading
+import warnings
 from enum import Enum, EnumMeta
 from os import path
 from pathlib import Path
@@ -24,7 +25,6 @@ from typing import (
 )
 
 import grpc
-import warnings
 from deprecation import deprecated
 from google.protobuf.descriptor import EnumDescriptor
 
@@ -402,7 +402,14 @@ class MeasurementService:
             Callable: Callable that takes in Any Python Function
             and returns the same python function.
         """
-        if type == DataType.Pin: warnings.warn(DeprecationWarning, "DataType.Pin is deprecated. Use DataType.IOResource instead.")
+        if type == DataType.Pin:
+            warnings.warn(
+                "DataType.Pin is deprecated. Use DataType.IOResource instead.", DeprecationWarning
+            )
+        if type == DataType.PinArray1D:
+            warnings.warn(
+                "DataType.PinArray1D is deprecated. Use DataType.IOResourceArray1D instead.", DeprecationWarning
+            )
         data_type_info = _datatypeinfo.get_type_info(type)
         annotations = self._make_annotations_dict(
             data_type_info.type_specialization, instrument_type=instrument_type, enum_type=enum_type
@@ -454,7 +461,14 @@ class MeasurementService:
             Callable: Callable that takes in Any Python Function and
             returns the same python function.
         """
-        if type == DataType.Pin: warnings.warn(DeprecationWarning, "DataType.Pin is deprecated. Use DataType.IOResource instead.")
+        if type == DataType.Pin:
+            warnings.warn(
+                "DataType.Pin is deprecated. Use DataType.IOResource instead.", DeprecationWarning
+            )
+        if type == DataType.PinArray1D:
+            warnings.warn(
+                "DataType.PinArray1D is deprecated. Use DataType.IOResourceArray1D instead.", DeprecationWarning
+            )
         data_type_info = _datatypeinfo.get_type_info(type)
         annotations = self._make_annotations_dict(
             data_type_info.type_specialization, enum_type=enum_type

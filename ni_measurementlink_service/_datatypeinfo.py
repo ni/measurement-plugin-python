@@ -51,7 +51,9 @@ _DATATYPE_TO_DATATYPEINFO_LOOKUP = {
         False,
         message_type=xydata_pb2.DoubleXYData.DESCRIPTOR.full_name,
     ),
-    DataType.IOResource: DataTypeInfo(type_pb2.Field.TYPE_STRING, False, TypeSpecialization.IOResource),
+    DataType.IOResource: DataTypeInfo(
+        type_pb2.Field.TYPE_STRING, False, TypeSpecialization.IOResource
+    ),
     DataType.Int32Array1D: DataTypeInfo(type_pb2.Field.TYPE_INT32, True),
     DataType.Int64Array1D: DataTypeInfo(type_pb2.Field.TYPE_INT64, True),
     DataType.UInt32Array1D: DataTypeInfo(type_pb2.Field.TYPE_UINT32, True),
@@ -60,7 +62,9 @@ _DATATYPE_TO_DATATYPEINFO_LOOKUP = {
     DataType.DoubleArray1D: DataTypeInfo(type_pb2.Field.TYPE_DOUBLE, True),
     DataType.BooleanArray1D: DataTypeInfo(type_pb2.Field.TYPE_BOOL, True),
     DataType.StringArray1D: DataTypeInfo(type_pb2.Field.TYPE_STRING, True),
-    DataType.PinArray1D: DataTypeInfo(type_pb2.Field.TYPE_STRING, True, TypeSpecialization.IOResource),
+    DataType.PinArray1D: DataTypeInfo(
+        type_pb2.Field.TYPE_STRING, True, TypeSpecialization.IOResource
+    ),
     DataType.PathArray1D: DataTypeInfo(type_pb2.Field.TYPE_STRING, True, TypeSpecialization.Path),
     DataType.EnumArray1D: DataTypeInfo(type_pb2.Field.TYPE_ENUM, True, TypeSpecialization.Enum),
     DataType.DoubleXYDataArray1D: DataTypeInfo(
@@ -68,5 +72,7 @@ _DATATYPE_TO_DATATYPEINFO_LOOKUP = {
         True,
         message_type=xydata_pb2.DoubleXYData.DESCRIPTOR.full_name,
     ),
-    DataType.IOResourceArray1D: DataTypeInfo(type_pb2.Field.TYPE_STRING, True, TypeSpecialization.IOResource),
+    DataType.IOResourceArray1D: DataTypeInfo(
+        type_pb2.Field.TYPE_STRING, True, TypeSpecialization.IOResource
+    ),
 }
