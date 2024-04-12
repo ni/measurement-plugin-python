@@ -62,9 +62,7 @@ _DATATYPE_TO_DATATYPEINFO_LOOKUP = {
     DataType.DoubleArray1D: DataTypeInfo(type_pb2.Field.TYPE_DOUBLE, True),
     DataType.BooleanArray1D: DataTypeInfo(type_pb2.Field.TYPE_BOOL, True),
     DataType.StringArray1D: DataTypeInfo(type_pb2.Field.TYPE_STRING, True),
-    DataType.PinArray1D: DataTypeInfo(
-        type_pb2.Field.TYPE_STRING, True, TypeSpecialization.Pin
-    ),
+    DataType.PinArray1D: DataTypeInfo(type_pb2.Field.TYPE_STRING, True, TypeSpecialization.Pin),
     DataType.PathArray1D: DataTypeInfo(type_pb2.Field.TYPE_STRING, True, TypeSpecialization.Path),
     DataType.EnumArray1D: DataTypeInfo(type_pb2.Field.TYPE_ENUM, True, TypeSpecialization.Enum),
     DataType.DoubleXYDataArray1D: DataTypeInfo(
