@@ -91,6 +91,7 @@ def test___measurement_service___add_configuration__configuration_added(
         ("IOResourceArrayConfiguration", DataType.IOResourceArray1D, ["Pin1", "Pin2"], "test instrument 2"),
     ],
 )
+@pytest.mark.filterwarnings("ignore:.*Pin.*:DeprecationWarning")
 def test___measurement_service___add_pin_or_ioresource_configuration__ioresource_configuration_added(
     measurement_service: MeasurementService,
     display_name: str,
@@ -218,11 +219,14 @@ def test___measurement_service___add_non_path_configuration__path_type_annotatio
         ("UInt44", DataType.UInt64, ""),
         ("Pin", DataType.Pin, 1.0),
         ("Pin1DArray", DataType.PinArray1D, [1.009, -1.0009]),
+        ("IOResource", DataType.IOResource, 1.0),
+        ("IOResource1DArray", DataType.IOResourceArray1D, [1.009, -1.0009]),
         ("Path", DataType.Path, 1.0),
         ("Path1DArray", DataType.PathArray1D, [1.009, -1.0009]),
         ("DoubleXYDataArray", DataType.DoubleXYDataArray1D, [1.009, -1.0009]),
     ],
 )
+@pytest.mark.filterwarnings("ignore:.*Pin.*:DeprecationWarning")
 def test___measurement_service___add_configuration_with_mismatch_default_value__raises_type_error(
     measurement_service: MeasurementService,
     display_name: str,

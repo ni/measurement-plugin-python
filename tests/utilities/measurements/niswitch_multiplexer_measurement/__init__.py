@@ -19,7 +19,7 @@ measurement_service = nims.MeasurementService(
 
 
 @measurement_service.register_measurement
-@measurement_service.configuration("pin_names", nims.DataType.PinArray1D, ["Pin1"])
+@measurement_service.configuration("pin_names", nims.DataType.IOResourceArray1D, ["Pin1"])
 @measurement_service.configuration("multi_session", nims.DataType.Boolean, False)
 @measurement_service.output("multiplexer_session_names", nims.DataType.StringArray1D)
 @measurement_service.output("multiplexer_resource_names", nims.DataType.StringArray1D)
