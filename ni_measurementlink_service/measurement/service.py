@@ -24,6 +24,7 @@ from typing import (
 )
 
 import grpc
+import warnings
 from deprecation import deprecated
 from google.protobuf.descriptor import EnumDescriptor
 
@@ -401,6 +402,7 @@ class MeasurementService:
             Callable: Callable that takes in Any Python Function
             and returns the same python function.
         """
+        if type == DataType.Pin: warnings.warn(DeprecationWarning, "DataType.Pin is deprecated. Use DataType.IOResource instead.")
         data_type_info = _datatypeinfo.get_type_info(type)
         annotations = self._make_annotations_dict(
             data_type_info.type_specialization, instrument_type=instrument_type, enum_type=enum_type
@@ -452,6 +454,7 @@ class MeasurementService:
             Callable: Callable that takes in Any Python Function and
             returns the same python function.
         """
+        if type == DataType.Pin: warnings.warn(DeprecationWarning, "DataType.Pin is deprecated. Use DataType.IOResource instead.")
         data_type_info = _datatypeinfo.get_type_info(type)
         annotations = self._make_annotations_dict(
             data_type_info.type_specialization, enum_type=enum_type
