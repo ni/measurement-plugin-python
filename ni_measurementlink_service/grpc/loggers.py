@@ -183,7 +183,7 @@ class ServerLogger(grpc.ServerInterceptor):
             else:
                 raise RuntimeError("Invalid RpcMethodHandler")
         else:
-            return continuation(handler_call_details)  # type: ignore[return-value]
+            return continuation(handler_call_details)
 
     def _log_unary_unary(
         self,
