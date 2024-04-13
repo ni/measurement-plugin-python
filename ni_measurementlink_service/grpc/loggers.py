@@ -155,9 +155,7 @@ class ServerLogger(grpc.ServerInterceptor):
             call_logger = _ServerCallLogger(handler_call_details.method)
             handler = continuation(handler_call_details)
             if handler is None:
-                # ServerInterceptor.intercept_service return type doesn't match continuation return
-                # type -- https://github.com/shabbyrobe/grpc-stubs/issues/48
-                return handler  # type: ignore[return-value]
+                return handler
             elif handler.unary_unary:
                 return grpc.unary_unary_rpc_method_handler(
                     functools.partial(self._log_unary_unary, call_logger, handler.unary_unary),
