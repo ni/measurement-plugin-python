@@ -149,7 +149,7 @@ class ServerLogger(grpc.ServerInterceptor):
             [grpc.HandlerCallDetails], grpc.RpcMethodHandler[grpc.TRequest, grpc.TResponse] | None
         ],
         handler_call_details: grpc.HandlerCallDetails,
-    ) -> grpc.RpcMethodHandler[grpc.TRequest, grpc.TResponse]:
+    ) -> Optional[grpc.RpcMethodHandler[grpc.TRequest, grpc.TResponse]]:
         """Intercept and log a server call."""
         if _ServerCallLogger.is_enabled():
             call_logger = _ServerCallLogger(handler_call_details.method)
