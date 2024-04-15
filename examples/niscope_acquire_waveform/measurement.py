@@ -90,7 +90,9 @@ def measure(
     cancellation_event = threading.Event()
     measurement_service.context.add_cancel_callback(cancellation_event.set)
 
-    with measurement_service.context.reserve_session(measure_pins + [trigger_source]) as reservation:
+    with measurement_service.context.reserve_session(
+        measure_pins + [trigger_source]
+    ) as reservation:
         with reservation.initialize_niscope_session() as session_info:
             # Use connections to map pin names to channel names. This sets the
             # channel order based on the pin order and allows mapping the
