@@ -5,7 +5,7 @@ import pathlib
 import sys
 import threading
 import time
-from typing import Iterable, List, Tuple
+from typing import List, Tuple
 
 import click
 import grpc
@@ -65,7 +65,7 @@ measurement_service = nims.MeasurementService(
 @measurement_service.output("waveform2", nims.DataType.DoubleArray1D)
 @measurement_service.output("waveform3", nims.DataType.DoubleArray1D)
 def measure(
-    measure_pins: Iterable[str],
+    measure_pins: List[str],
     vertical_range: float,
     vertical_coupling: str,
     input_impedance: float,
