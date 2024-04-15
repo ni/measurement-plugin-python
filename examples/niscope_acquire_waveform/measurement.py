@@ -5,7 +5,7 @@ import pathlib
 import sys
 import threading
 import time
-from typing import List, Tuple
+from typing import Iterable, List, Tuple
 
 import click
 import grpc
@@ -24,7 +24,7 @@ measurement_service = nims.MeasurementService(
 
 @measurement_service.register_measurement
 @measurement_service.configuration(
-    "pin_names",
+    "measure_pins",
     nims.DataType.PinArray1D,
     ["PinGroup1"],
     instrument_type=nims.session_management.INSTRUMENT_TYPE_NI_SCOPE,
@@ -65,7 +65,7 @@ measurement_service = nims.MeasurementService(
 @measurement_service.output("waveform2", nims.DataType.DoubleArray1D)
 @measurement_service.output("waveform3", nims.DataType.DoubleArray1D)
 def measure(
-    pin_names: str,
+    measure_pins: Iterable[str],
     vertical_range: float,
     vertical_coupling: str,
     input_impedance: float,
@@ -80,8 +80,8 @@ def measure(
 ) -> Tuple[List[float], ...]:
     """Acquire a waveform using an NI oscilloscope."""
     logging.info(
-        "Starting acquisition: pin_or_relay_names=%s vertical_range=%g trigger_source=%s trigger_level=%g",
-        pin_names,
+        "Starting acquisition: measure_pins=%s vertical_range=%g trigger_source=%s trigger_level=%g",
+        measure_pins,
         vertical_range,
         trigger_source,
         trigger_level,
@@ -90,12 +90,12 @@ def measure(
     cancellation_event = threading.Event()
     measurement_service.context.add_cancel_callback(cancellation_event.set)
 
-    with measurement_service.context.reserve_session(pin_names) as reservation:
+    with measurement_service.context.reserve_session(measure_pins + [trigger_source]) as reservation:
         with reservation.initialize_niscope_session() as session_info:
             # Use connections to map pin names to channel names. This sets the
             # channel order based on the pin order and allows mapping the
             # resulting measurements back to the corresponding pins and sites.
-            connections = reservation.get_niscope_connections(pin_names)
+            connections = reservation.get_niscope_connections(measure_pins)
             channel_order = ",".join(connection.channel_name for connection in connections)
             trigger_connection = reservation.get_niscope_connection(trigger_source)
 
