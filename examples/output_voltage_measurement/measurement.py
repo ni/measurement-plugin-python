@@ -129,6 +129,9 @@ def measure(
             # Measure the voltage on the output pin.
             measured_value = measure_session.read()
 
+            # Reset the channel to a known state
+            source_channel.reset()
+
     logging.info("Completed measurement: measured_value=%g", measured_value)
     return (measured_value,)
 
