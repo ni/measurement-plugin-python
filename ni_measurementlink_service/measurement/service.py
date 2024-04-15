@@ -384,7 +384,7 @@ class MeasurementService:
 
             instrument_type (Optional[str]):
                 Filter pins by instrument type. This is only supported when configuration type
-                is DataType.Pin.
+                is DataType.IOResource or DataType.Pin (deprecated).
 
                 For NI instruments, use instrument type id constants defined by
                 :py:mod:`ni_measurementlink_service.session_management`, such as
