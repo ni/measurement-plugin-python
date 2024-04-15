@@ -49,7 +49,7 @@ if TYPE_CHECKING:
 @measurement_service.register_measurement
 @measurement_service.configuration(
     "pin_names",
-    nims.DataType.PinArray1D,
+    nims.DataType.IOResourceArray1D,
     ["Pin1"],
     instrument_type=nims.session_management.INSTRUMENT_TYPE_NI_DCPOWER,
 )

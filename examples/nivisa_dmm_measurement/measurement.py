@@ -26,7 +26,7 @@ _config = AutoConfig(str(pathlib.Path.cwd()))
 
 @measurement_service.register_measurement
 @measurement_service.configuration(
-    "pin_name", nims.DataType.Pin, "Pin1", instrument_type=INSTRUMENT_TYPE_VISA_DMM
+    "pin_name", nims.DataType.IOResource, "Pin1", instrument_type=INSTRUMENT_TYPE_VISA_DMM
 )
 @measurement_service.configuration(
     "measurement_type", nims.DataType.Enum, Function.DC_VOLTS, enum_type=Function

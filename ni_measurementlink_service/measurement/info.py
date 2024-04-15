@@ -70,6 +70,7 @@ class TypeSpecialization(enum.Enum):
     Pin = "pin"
     Path = "path"
     Enum = "enum"
+    IOResource = "ioresource"
 
 
 class DataType(enum.Enum):
@@ -87,6 +88,7 @@ class DataType(enum.Enum):
     Path = 9
     Enum = 10
     DoubleXYData = 11
+    IOResource = 12
 
     Int32Array1D = 100
     Int64Array1D = 101
@@ -100,3 +102,4 @@ class DataType(enum.Enum):
     PathArray1D = 109
     EnumArray1D = 110
     DoubleXYDataArray1D = 111
+    IOResourceArray1D = 112

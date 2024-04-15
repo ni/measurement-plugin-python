@@ -44,7 +44,7 @@ _config = AutoConfig(str(pathlib.Path.cwd()))
 @measurement_service.configuration("source_delay", nims.DataType.Double, 0.0)
 @measurement_service.configuration(
     "input_pin",
-    nims.DataType.Pin,
+    nims.DataType.IOResource,
     "InPin",
     instrument_type=nims.session_management.INSTRUMENT_TYPE_NI_DCPOWER,
 )
@@ -59,7 +59,7 @@ _config = AutoConfig(str(pathlib.Path.cwd()))
 @measurement_service.configuration("resolution_digits", nims.DataType.Double, 3.5)
 @measurement_service.configuration(
     "output_pin",
-    nims.DataType.Pin,
+    nims.DataType.IOResource,
     "OutPin",
     instrument_type=_visa_dmm.INSTRUMENT_TYPE_VISA_DMM,
 )
