@@ -89,17 +89,17 @@ def test___measurement_service___add_configuration__configuration_added(
         ("PinArrayConfiguration", DataType.PinArray1D, ["Pin1", "Pin2"], "test instrument 2"),
     ],
 )
-@pytest.mark.filterwarnings("ignore:.*Pin.*:DeprecationWarning")
-def test___measurement_service___add_pin_configuration__pin_configuration_added(
+def test___measurement_service___add_pin_configuration__pin_configuration_added_with_deprecation_warning(
     measurement_service: MeasurementService,
     display_name: str,
     type: DataType,
     default_value: object,
     instrument_type: str,
 ):
-    measurement_service.configuration(
-        display_name, type, default_value, instrument_type=instrument_type
-    )(_fake_measurement_function)
+    with pytest.deprecated_call():
+        measurement_service.configuration(
+            display_name, type, default_value, instrument_type=instrument_type
+        )(_fake_measurement_function)
     data_type_info = _datatypeinfo.get_type_info(type)
 
     assert any(
