@@ -24,7 +24,7 @@ measurement_service = nims.MeasurementService(
 
 @measurement_service.register_measurement
 @measurement_service.configuration(
-    "measure_pins",
+    "measurement_pins",
     nims.DataType.PinArray1D,
     ["PinGroup1"],
     instrument_type=nims.session_management.INSTRUMENT_TYPE_NI_SCOPE,
@@ -40,7 +40,7 @@ measurement_service = nims.MeasurementService(
 @measurement_service.configuration("min_sample_rate", nims.DataType.Double, 10e6)
 @measurement_service.configuration("min_record_length", nims.DataType.Int32, 40000)
 @measurement_service.configuration(
-    "trigger_source",
+    "trigger_pin",
     nims.DataType.Pin,
     "Pin1",
     instrument_type=nims.session_management.INSTRUMENT_TYPE_NI_SCOPE,
@@ -65,13 +65,13 @@ measurement_service = nims.MeasurementService(
 @measurement_service.output("waveform2", nims.DataType.DoubleArray1D)
 @measurement_service.output("waveform3", nims.DataType.DoubleArray1D)
 def measure(
-    measure_pins: List[str],
+    measurement_pins: List[str],
     vertical_range: float,
     vertical_coupling: str,
     input_impedance: float,
     min_sample_rate: float,
     min_record_length: int,
-    trigger_source: str,
+    trigger_pin: str,
     trigger_level: float,
     trigger_slope: str,
     auto_trigger: bool,
@@ -80,10 +80,10 @@ def measure(
 ) -> Tuple[List[float], ...]:
     """Acquire a waveform using an NI oscilloscope."""
     logging.info(
-        "Starting acquisition: measure_pins=%s vertical_range=%g trigger_source=%s trigger_level=%g",
-        measure_pins,
+        "Starting acquisition: measurement_pins=%s vertical_range=%g trigger_pin=%s trigger_level=%g",
+        measurement_pins,
         vertical_range,
-        trigger_source,
+        trigger_pin,
         trigger_level,
     )
 
@@ -91,15 +91,15 @@ def measure(
     measurement_service.context.add_cancel_callback(cancellation_event.set)
 
     with measurement_service.context.reserve_session(
-        measure_pins + [trigger_source]
+        measurement_pins + [trigger_pin]
     ) as reservation:
         with reservation.initialize_niscope_session() as session_info:
             # Use connections to map pin names to channel names. This sets the
             # channel order based on the pin order and allows mapping the
             # resulting measurements back to the corresponding pins and sites.
-            connections = reservation.get_niscope_connections(measure_pins)
+            connections = reservation.get_niscope_connections(measurement_pins)
             channel_order = ",".join(connection.channel_name for connection in connections)
-            trigger_connection = reservation.get_niscope_connection(trigger_source)
+            trigger_connection = reservation.get_niscope_connection(trigger_pin)
 
             # Start with all channels in the session disabled. Some channels may
             # be connected to other pins or sites.
