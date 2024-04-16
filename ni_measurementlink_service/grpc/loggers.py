@@ -149,15 +149,13 @@ class ServerLogger(grpc.ServerInterceptor):
             [grpc.HandlerCallDetails], grpc.RpcMethodHandler[grpc.TRequest, grpc.TResponse] | None
         ],
         handler_call_details: grpc.HandlerCallDetails,
-    ) -> grpc.RpcMethodHandler[grpc.TRequest, grpc.TResponse]:
+    ) -> Optional[grpc.RpcMethodHandler[grpc.TRequest, grpc.TResponse]]:
         """Intercept and log a server call."""
         if _ServerCallLogger.is_enabled():
             call_logger = _ServerCallLogger(handler_call_details.method)
             handler = continuation(handler_call_details)
             if handler is None:
-                # ServerInterceptor.intercept_service return type doesn't match continuation return
-                # type -- https://github.com/shabbyrobe/grpc-stubs/issues/48
-                return handler  # type: ignore[return-value]
+                return handler
             elif handler.unary_unary:
                 return grpc.unary_unary_rpc_method_handler(
                     functools.partial(self._log_unary_unary, call_logger, handler.unary_unary),
@@ -185,7 +183,7 @@ class ServerLogger(grpc.ServerInterceptor):
             else:
                 raise RuntimeError("Invalid RpcMethodHandler")
         else:
-            return continuation(handler_call_details)  # type: ignore[return-value]
+            return continuation(handler_call_details)
 
     def _log_unary_unary(
         self,

@@ -25,7 +25,7 @@ measurement_service = nims.MeasurementService(
 @measurement_service.register_measurement
 @measurement_service.configuration(
     "pin_names",
-    nims.DataType.PinArray1D,
+    nims.DataType.IOResourceArray1D,
     ["SPI_PINS"],
     instrument_type=nims.session_management.INSTRUMENT_TYPE_NI_DIGITAL_PATTERN,
 )

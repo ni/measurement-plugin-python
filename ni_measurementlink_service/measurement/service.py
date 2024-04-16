@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import sys
 import threading
+import warnings
 from enum import Enum, EnumMeta
 from os import path
 from pathlib import Path
@@ -383,7 +384,7 @@ class MeasurementService:
 
             instrument_type (Optional[str]):
                 Filter pins by instrument type. This is only supported when configuration type
-                is DataType.Pin.
+                is DataType.IOResource or DataType.Pin (deprecated).
 
                 For NI instruments, use instrument type id constants defined by
                 :py:mod:`ni_measurementlink_service.session_management`, such as
@@ -401,6 +402,15 @@ class MeasurementService:
             Callable: Callable that takes in Any Python Function
             and returns the same python function.
         """
+        if type == DataType.Pin:
+            warnings.warn(
+                "DataType.Pin is deprecated. Use DataType.IOResource instead.", DeprecationWarning
+            )
+        if type == DataType.PinArray1D:
+            warnings.warn(
+                "DataType.PinArray1D is deprecated. Use DataType.IOResourceArray1D instead.",
+                DeprecationWarning,
+            )
         data_type_info = _datatypeinfo.get_type_info(type)
         annotations = self._make_annotations_dict(
             data_type_info.type_specialization, instrument_type=instrument_type, enum_type=enum_type
@@ -452,6 +462,15 @@ class MeasurementService:
             Callable: Callable that takes in Any Python Function and
             returns the same python function.
         """
+        if type == DataType.Pin:
+            warnings.warn(
+                "DataType.Pin is deprecated. Use DataType.IOResource instead.", DeprecationWarning
+            )
+        if type == DataType.PinArray1D:
+            warnings.warn(
+                "DataType.PinArray1D is deprecated. Use DataType.IOResourceArray1D instead.",
+                DeprecationWarning,
+            )
         data_type_info = _datatypeinfo.get_type_info(type)
         annotations = self._make_annotations_dict(
             data_type_info.type_specialization, enum_type=enum_type
@@ -513,6 +532,9 @@ class MeasurementService:
         if type_specialization == TypeSpecialization.Pin:
             if instrument_type != "" or instrument_type is not None:
                 annotations["ni/pin.instrument_type"] = instrument_type
+        if type_specialization == TypeSpecialization.IOResource:
+            if instrument_type != "" or instrument_type is not None:
+                annotations["ni/ioresource.instrument_type"] = instrument_type
         if type_specialization == TypeSpecialization.Enum:
             if enum_type is not None:
                 annotations[ENUM_VALUES_KEY] = self._enum_to_annotations_value(enum_type)

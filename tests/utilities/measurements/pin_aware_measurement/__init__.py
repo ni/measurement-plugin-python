@@ -16,7 +16,7 @@ measurement_service = nims.MeasurementService(
 
 
 @measurement_service.register_measurement
-@measurement_service.configuration("pin_names", nims.DataType.PinArray1D, ["Pin1"])
+@measurement_service.configuration("pin_names", nims.DataType.IOResourceArray1D, ["Pin1"])
 @measurement_service.configuration("multi_session", nims.DataType.Boolean, False)
 @measurement_service.output("pin_map_id", nims.DataType.String)
 @measurement_service.output("sites", nims.DataType.Int32Array1D)
