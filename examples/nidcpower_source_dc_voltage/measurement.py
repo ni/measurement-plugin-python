@@ -127,6 +127,10 @@ def measure(
 
                     measurements.extend(session_measurements)
 
+                # Reset the channels to a known state
+                for session_info in session_infos:
+                    session_info.session.channels[session_info.channel_list].reset()
+
     _log_measurements(measured_sites, measured_pins, measurements)
     logging.info("Completed measurement")
     return (
