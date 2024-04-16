@@ -7,7 +7,7 @@ import threading
 import time
 from contextlib import ExitStack
 from enum import Enum
-from typing import Sequence, Tuple
+from typing import Iterable, Sequence, Tuple
 
 import click
 import grpc
@@ -60,7 +60,7 @@ class Waveform(Enum):
 @measurement_service.configuration("amplitude", nims.DataType.Double, 2.0)
 @measurement_service.configuration("duration", nims.DataType.Double, 10.0)
 def measure(
-    pin_names: str,
+    pin_names: Iterable[str],
     waveform_type: Waveform,
     frequency: float,
     amplitude: float,
