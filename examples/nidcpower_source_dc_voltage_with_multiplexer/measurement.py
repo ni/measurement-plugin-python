@@ -105,6 +105,9 @@ def measure(
 
                 measurement: _Measurement = source_channel.measure_multiple()[0]
 
+            # Reset the channel to a known state
+            source_channel.reset()
+
             # Disconnect the connected route.
             connection.multiplexer_session.disconnect_multiple(connection.multiplexer_route)
             connection.multiplexer_session.wait_for_debounce()
