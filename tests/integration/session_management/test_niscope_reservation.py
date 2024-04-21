@@ -87,7 +87,7 @@ def test___no_pin_map___session_created___get_niscope_connection___returns_conne
     session_management_client: SessionManagementClient,
 ) -> None:
     channel_names = ["SCOPE1/0"]
-    empty_pin_map_context = PinMapContext(pin_map_id='', sites=[])
+    empty_pin_map_context = PinMapContext(pin_map_id="", sites=[])
     with ExitStack() as stack:
         reservation = stack.enter_context(
             session_management_client.reserve_session(empty_pin_map_context, channel_names)
