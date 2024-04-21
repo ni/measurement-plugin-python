@@ -83,6 +83,24 @@ def test___sessions_created___get_niscope_connections___returns_connections(
         ]
 
 
+def test___no_pin_map___session_created___get_niscope_connection___returns_connection(
+    session_management_client: SessionManagementClient,
+) -> None:
+    channel_names = ["SCOPE1/0"]
+    empty_pin_map_context = PinMapContext(pin_map_id='', sites=[])
+    with ExitStack() as stack:
+        reservation = stack.enter_context(
+            session_management_client.reserve_session(empty_pin_map_context, channel_names)
+        )
+        stack.enter_context(reservation.initialize_niscope_session())
+
+        connection = reservation.get_niscope_connection(channel_names[0])
+
+        assert get_connection_subset(connection) == ConnectionSubset(
+            channel_names[0], _SITE, "SCOPE1", "0"
+        )
+
+
 @pytest.fixture
 def pin_map_context(pin_map_client: PinMapClient, pin_map_directory: pathlib.Path) -> PinMapContext:
     pin_map_name = "2Scope2Pin2Group1Site.pinmap"
