@@ -1,9 +1,18 @@
 """Data types for the MeasurementLink discovery service."""
 
-import typing
+from typing import Iterable, NamedTuple
 
 
-class ServiceLocation(typing.NamedTuple):
+class ServiceDescriptor(NamedTuple):
+    """Represents the service."""
+
+    display_name: str
+    description_url: str
+    provided_interfaces: Iterable[str]
+    service_class: str
+
+
+class ServiceLocation(NamedTuple):
     """Represents the location of a service."""
 
     location: str

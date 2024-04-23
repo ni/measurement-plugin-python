@@ -2,20 +2,18 @@
 
 import logging
 import threading
-from typing import Optional
+from typing import Optional, Sequence
 
 import grpc
 from deprecation import deprecated
 
-from ni_measurementlink_service._annotations import (
-    SERVICE_PROGRAMMINGLANGUAGE_KEY,
-)
+from ni_measurementlink_service._annotations import SERVICE_PROGRAMMINGLANGUAGE_KEY
 from ni_measurementlink_service._internal.stubs.ni.measurementlink.discovery.v1 import (
     discovery_service_pb2,
     discovery_service_pb2_grpc,
 )
 from ni_measurementlink_service.discovery._support import _get_discovery_service_address
-from ni_measurementlink_service.discovery._types import ServiceLocation
+from ni_measurementlink_service.discovery._types import ServiceDescriptor, ServiceLocation
 from ni_measurementlink_service.grpc.channelpool import GrpcChannelPool
 from ni_measurementlink_service.measurement.info import MeasurementInfo, ServiceInfo
 
@@ -232,3 +230,28 @@ class DiscoveryClient:
             insecure_port=response.insecure_port,
             ssl_authenticated_port=response.ssl_authenticated_port,
         )
+
+    def enumerate_services(self, provided_interface: str) -> Sequence[ServiceDescriptor]:
+        """Enumerates all the services for the provided interface.
+
+        Args:
+            provided_interface: Interface to filter the services.
+
+        Returns:
+            The service details matching the provided interface.
+        """
+        request = discovery_service_pb2.EnumerateServicesRequest(
+            provided_interface=provided_interface
+        )
+
+        response = self._get_stub().EnumerateServices(request)
+
+        return [
+            ServiceDescriptor(
+                service.display_name,
+                service.description_url,
+                service.provided_interfaces,
+                service.service_class,
+            )
+            for service in response.available_services
+        ]
