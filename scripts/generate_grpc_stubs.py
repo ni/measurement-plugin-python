@@ -15,7 +15,9 @@ PROTO_PATH = pathlib.Path(__file__).parent.parent / "third_party" / "ni-apis"
 STUBS_PROTO_PATH = STUBS_PATH / "proto"
 STUBS_PROTO_FILES = list(STUBS_PROTO_PATH.rglob("*.proto"))
 GRPC_DEVICE_PROTO_PATH = PROTO_PATH / "ni" / "grpcdevice" / "v1"
-NI_API_PROTO_FILES = list(path for path in PROTO_PATH.rglob("*.proto") if not path.is_relative_to(GRPC_DEVICE_PROTO_PATH))
+NI_API_PROTO_FILES = list(
+    path for path in PROTO_PATH.rglob("*.proto") if not path.is_relative_to(GRPC_DEVICE_PROTO_PATH)
+)
 
 TEST_STUBS_PATH = pathlib.Path(__file__).parent.parent / "tests" / "utilities" / "stubs"
 TEST_PROTO_PATH = TEST_STUBS_PATH
