@@ -70,6 +70,16 @@ class DiscoveryServiceStub:
     - FAILED_PRECONDITION: More than one service matching the resolve request was found
     """
 
+    EnumerateComputeNodes: grpc.UnaryUnaryMultiCallable[
+        ni_measurementlink_discovery_v1_discovery_service_pb2.EnumerateComputeNodesRequest,
+        ni_measurementlink_discovery_v1_discovery_service_pb2.EnumerateComputeNodesResponse,
+    ]
+    """Enumerate all compute nodes that have registered themselves in the current session.
+    These compute nodes are targets available for execution of services.
+    A compute node can be used as an argument to the ResolveService method to
+    get the service location for a service running on that compute node.
+    """
+
 class DiscoveryServiceAsyncStub:
     """The service used as a registry for other services. This service can be used to discover
     and activate other services present in the system.
@@ -118,6 +128,16 @@ class DiscoveryServiceAsyncStub:
     - INVALID_ARGUMENT: provided_interfaces is empty
     - NOT_FOUND: No service matching the resolve request was found
     - FAILED_PRECONDITION: More than one service matching the resolve request was found
+    """
+
+    EnumerateComputeNodes: grpc.aio.UnaryUnaryMultiCallable[
+        ni_measurementlink_discovery_v1_discovery_service_pb2.EnumerateComputeNodesRequest,
+        ni_measurementlink_discovery_v1_discovery_service_pb2.EnumerateComputeNodesResponse,
+    ]
+    """Enumerate all compute nodes that have registered themselves in the current session.
+    These compute nodes are targets available for execution of services.
+    A compute node can be used as an argument to the ResolveService method to
+    get the service location for a service running on that compute node.
     """
 
 class DiscoveryServiceServicer(metaclass=abc.ABCMeta):
@@ -176,6 +196,18 @@ class DiscoveryServiceServicer(metaclass=abc.ABCMeta):
         - INVALID_ARGUMENT: provided_interfaces is empty
         - NOT_FOUND: No service matching the resolve request was found
         - FAILED_PRECONDITION: More than one service matching the resolve request was found
+        """
+
+    @abc.abstractmethod
+    def EnumerateComputeNodes(
+        self,
+        request: ni_measurementlink_discovery_v1_discovery_service_pb2.EnumerateComputeNodesRequest,
+        context: _ServicerContext,
+    ) -> typing.Union[ni_measurementlink_discovery_v1_discovery_service_pb2.EnumerateComputeNodesResponse, collections.abc.Awaitable[ni_measurementlink_discovery_v1_discovery_service_pb2.EnumerateComputeNodesResponse]]:
+        """Enumerate all compute nodes that have registered themselves in the current session.
+        These compute nodes are targets available for execution of services.
+        A compute node can be used as an argument to the ResolveService method to
+        get the service location for a service running on that compute node.
         """
 
 def add_DiscoveryServiceServicer_to_server(servicer: DiscoveryServiceServicer, server: typing.Union[grpc.Server, grpc.aio.Server]) -> None: ...

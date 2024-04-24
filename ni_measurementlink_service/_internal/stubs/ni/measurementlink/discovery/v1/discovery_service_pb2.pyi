@@ -210,16 +210,26 @@ class EnumerateServicesResponse(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
     AVAILABLE_SERVICES_FIELD_NUMBER: builtins.int
+    UNREACHABLE_FIELD_NUMBER: builtins.int
     @property
     def available_services(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___ServiceDescriptor]:
         """The list of available services which implement the specified service interface."""
+
+    @property
+    def unreachable(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]:
+        """Information about any unreachable resources. Each string in the list will be a
+        'ServiceDescriptor.service_class' entry for each of the unreachable resources.
+        To get extended information about the unreachable resources, use ResolveService
+        and handle the resulting error.
+        """
 
     def __init__(
         self,
         *,
         available_services: collections.abc.Iterable[global___ServiceDescriptor] | None = ...,
+        unreachable: collections.abc.Iterable[builtins.str] | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["available_services", b"available_services"]) -> None: ...
+    def ClearField(self, field_name: typing.Literal["available_services", b"available_services", "unreachable", b"unreachable"]) -> None: ...
 
 global___EnumerateServicesResponse = EnumerateServicesResponse
 
@@ -229,6 +239,7 @@ class ResolveServiceRequest(google.protobuf.message.Message):
 
     PROVIDED_INTERFACE_FIELD_NUMBER: builtins.int
     SERVICE_CLASS_FIELD_NUMBER: builtins.int
+    DEPLOYMENT_TARGET_FIELD_NUMBER: builtins.int
     provided_interface: builtins.str
     """Required. This corresponds to the gRPC Full Name of the service and should match the information
     that was supplied in the RegisterServiceRequest message.
@@ -237,12 +248,74 @@ class ResolveServiceRequest(google.protobuf.message.Message):
     """Optional. The service "class" that should be matched. If the value of this field is not specified and there
     is more than one matching service registered, an error is returned.
     """
+    deployment_target: builtins.str
+    """Optional. Indicates the deployment target from which the service should be resolved.
+    The value of this field can be obtained from the results of the EnumerateComputeNodes method.
+    If the value of this field is not specified, the service will be resolved from the
+    local deployment target.  If the service cannot be resolved from the specified deployment
+    target, an error is returned.
+    """
     def __init__(
         self,
         *,
         provided_interface: builtins.str = ...,
         service_class: builtins.str = ...,
+        deployment_target: builtins.str = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["provided_interface", b"provided_interface", "service_class", b"service_class"]) -> None: ...
+    def ClearField(self, field_name: typing.Literal["deployment_target", b"deployment_target", "provided_interface", b"provided_interface", "service_class", b"service_class"]) -> None: ...
 
 global___ResolveServiceRequest = ResolveServiceRequest
+
+@typing.final
+class ComputeNodeDescriptor(google.protobuf.message.Message):
+    """Represents a location capable resolving and running a service."""
+
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    URL_FIELD_NUMBER: builtins.int
+    IS_LOCAL_FIELD_NUMBER: builtins.int
+    url: builtins.str
+    """The resolvable name of the compute node."""
+    is_local: builtins.bool
+    """indicates whether the compute node is considered the local node."""
+    def __init__(
+        self,
+        *,
+        url: builtins.str = ...,
+        is_local: builtins.bool = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["is_local", b"is_local", "url", b"url"]) -> None: ...
+
+global___ComputeNodeDescriptor = ComputeNodeDescriptor
+
+@typing.final
+class EnumerateComputeNodesRequest(google.protobuf.message.Message):
+    """Message sent to enumerate the compute nodes that have registered themselves in the current session."""
+
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    def __init__(
+        self,
+    ) -> None: ...
+
+global___EnumerateComputeNodesRequest = EnumerateComputeNodesRequest
+
+@typing.final
+class EnumerateComputeNodesResponse(google.protobuf.message.Message):
+    """Message returned from the EnumerateComputeNodes method."""
+
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    COMPUTE_NODES_FIELD_NUMBER: builtins.int
+    @property
+    def compute_nodes(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___ComputeNodeDescriptor]:
+        """The list of compute nodes that have registered themselves in the current session."""
+
+    def __init__(
+        self,
+        *,
+        compute_nodes: collections.abc.Iterable[global___ComputeNodeDescriptor] | None = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["compute_nodes", b"compute_nodes"]) -> None: ...
+
+global___EnumerateComputeNodesResponse = EnumerateComputeNodesResponse

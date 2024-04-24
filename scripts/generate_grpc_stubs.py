@@ -11,8 +11,11 @@ import pkg_resources
 STUBS_NAMESPACE = "ni_measurementlink_service._internal.stubs"
 PROTO_PARENT_NAMESPACES = ["ni.measurementlink", "nidevice_grpc", "ni.protobuf.types"]
 STUBS_PATH = pathlib.Path(__file__).parent.parent / STUBS_NAMESPACE.replace(".", "/")
-PROTO_PATH = STUBS_PATH / "proto"
-PROTO_FILES = list(PROTO_PATH.rglob("*.proto"))
+PROTO_PATH = pathlib.Path(__file__).parent.parent / "third_party" / "ni-apis"
+STUBS_PROTO_PATH = STUBS_PATH / "proto"
+STUBS_PROTO_FILES = list(STUBS_PROTO_PATH.rglob("*.proto"))
+GRPC_DEVICE_PROTO_PATH = PROTO_PATH / "ni" / "grpcdevice" / "v1"
+NI_API_PROTO_FILES = list(path for path in PROTO_PATH.rglob("*.proto") if not path.is_relative_to(GRPC_DEVICE_PROTO_PATH))
 
 TEST_STUBS_PATH = pathlib.Path(__file__).parent.parent / "tests" / "utilities" / "stubs"
 TEST_PROTO_PATH = TEST_STUBS_PATH
@@ -21,8 +24,9 @@ TEST_PROTO_FILES = list(TEST_PROTO_PATH.rglob("*.proto"))
 
 def main():
     """Generate and fixup gRPC Python stubs."""
-    remove_generated_files(STUBS_PATH, PROTO_PATH)
-    generate_python_files(STUBS_PATH, PROTO_PATH, PROTO_FILES)
+    remove_generated_files(STUBS_PATH, STUBS_PROTO_PATH)
+    generate_python_files(STUBS_PATH, PROTO_PATH, NI_API_PROTO_FILES)
+    generate_python_files(STUBS_PATH, STUBS_PROTO_PATH, STUBS_PROTO_FILES)
     fix_import_paths(STUBS_PATH, STUBS_PATH, STUBS_NAMESPACE, PROTO_PARENT_NAMESPACES)
     add_init_files(STUBS_PATH, PROTO_PATH)
 
@@ -59,6 +63,7 @@ def generate_python_files(
     arguments = [
         "protoc",
         f"--proto_path={str(proto_path)}",
+        f"--proto_path={str(STUBS_PROTO_PATH)}",
         f"--proto_path={pkg_resources.resource_filename('grpc_tools', '_proto')}",
         f"--python_out={str(stubs_path)}",
         f"--mypy_out={str(stubs_path)}",
