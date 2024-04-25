@@ -1,6 +1,5 @@
 """Python measurement client."""
 
-from collections import defaultdict
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Sequence, Tuple
 
@@ -25,7 +24,7 @@ from ni_measurementlink_service.pin_map import PinMapClient
 MEASUREMENT_SERVICE_INTERFACE = "ni.measurementlink.measurement.v2.MeasurementService"
 
 # NOTE: Ensure that the below file path is updated before starting the application.
-PIN_MAP_PATH = r"D:\Odyssey\measurementlink-python\examples\nidcpower_source_dc_voltage\NIDCPowerSourceDCVoltage.pinmap"
+DEFAULT_PIN_MAP_PATH = r"D:\Odyssey\measurementlink-python\examples\nidcpower_source_dc_voltage\NIDCPowerSourceDCVoltage.pinmap"
 SITES = [0]
 
 
@@ -45,6 +44,16 @@ def display_and_get_available_measurement_services(
     print("-------------------------------------------------------------------------------")
     print("Press Ctrl + C to stop the application!\n")
     return available_services
+
+
+def get_measurement_selection() -> int:
+    try:
+        return int(input("Select a measurement service to run: "))
+    except ValueError:
+        print("WARN: Invalid input! Going ahead with the first measurement.")
+        return 1
+    except KeyboardInterrupt:
+        return -1
 
 
 def get_insecure_grpc_channel_for(discovery_client: DiscoveryClient, service_class: str) -> Channel:
@@ -114,6 +123,20 @@ def deserialize_output_parameters(
     return output_metadata_by_id
 
 
+def get_active_pin_map() -> str:
+    print("\nNote: Site '0' will be used for the measurement execution.")
+    try:
+        path = input("Provide the pin map file's absolute path (without quotes): ")
+    except KeyboardInterrupt:
+        return ""
+
+    if not Path.is_file(Path(path)):
+        print(f"WARN: Couldn't find the file. Going ahead with the default pin map file: {DEFAULT_PIN_MAP_PATH}")
+        path = DEFAULT_PIN_MAP_PATH
+
+    return path
+
+
 def get_measure_request(
     configuration_metadata: Dict[int, ParameterMetadata], values: Sequence[Any]
 ):
@@ -127,30 +150,6 @@ def get_measure_request(
             sites=SITES,
         ),
     )
-
-
-def get_measurement_selection() -> int:
-    try:
-        return int(input("Select a measurement service to run: "))
-    except ValueError:
-        print("WARN: Invalid input! Going ahead with the first measurement.")
-        return 1
-    except KeyboardInterrupt:
-        return -1
-
-
-def get_active_pin_map() -> str:
-    print("\nNote: Site '0' will be used for the measurement execution.")
-    try:
-        path = input("Provide the pin map file's absolute path (without quotes): ")
-    except KeyboardInterrupt:
-        return ""
-
-    if not Path.is_file(Path(path)):
-        print(f"WARN: Couldn't find the file. Going ahead with the default pin map file: {PIN_MAP_PATH}")
-        path = PIN_MAP_PATH
-
-    return path
 
 
 if __name__ == "__main__":
