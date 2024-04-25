@@ -1,5 +1,17 @@
 # Python Measurement Client
 
+## Expected Workflow
+
+1. Get the list of measurement services.
+2. Resolve the measurement which is selected for execution.
+3. Validate and construct a configuration and output metadata dictionary with the measurement's input-output
+   parameters.
+4. Deserialize the default values.
+5. In case of pin-centric measurement, register the pin map file with the pin map service
+6. Serialize the measurement configuration values.
+7. Invoke the measurement.
+8. Deserialize the measurement output values.
+
 ## Things needed to Create a Measurement Client
 
 1. Discovery Client
@@ -41,19 +53,7 @@
   parameters. This requires us to pass in a default value for the enum parameter which could just be
   0 for simplicity.
 
-## Expected Workflow
-
-1. Get the list of measurement services.
-2. Resolve the measurement which is selected for execution.
-3. Validate and construct a configuration and output metadata dictionary with the measurement's input-output
-   parameters.
-4. Deserialize the default values.
-5. In case of pin-centric measurement, register the pin map file with the pin map service
-6. Serialize the measurement configuration values.
-7. Invoke the measurement.
-8. Deserialize the measurement output values.
-
-## Pending Items
+## Things to be added
 
 - Exposing `enumerate_services` API in the discovery client and support class (Service Descriptor).
 - Creating a pin map client.
