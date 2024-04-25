@@ -1,18 +1,19 @@
-# Python Measurement Client
+# Python Script to Run Measurements
 
-## Implementation Workflow
+## Problem Statement
 
-1. Get the list of active measurement services.
-2. For a selected measurement, resolve its address to interact with the corresponding service.
-3. Get the measurement's parameter metadata.
-4. Construct a configuration and output metadata dictionary for the measurement's parameters as
-   described in the [Parameter Serialization and Deserialization](#4-parameter-serialization-and-deserialization) section.
-5. Deserialize the default configuration values received from the measurement service in Step 3 by
-   using the metadata constructed in Step 4.
-6. In case of pin-centric measurement, get and register the pin map file with the pin map service
-7. Serialize the measurement configuration values by using the metadata constructed in Step 4.
-8. Run the measurement.
-9. Deserialize the measurement output values by using the metadata constructed in Step 4.
+- Currently, the users can run LabVIEW and Python measurements from InstrumentStudio and TestStand.
+- If they want to run measurements say using LabVIEW or Python, the current workflow requires
+  expertise on Python and gRPC technologies along with a very good understanding of
+  MeasurementLink.
+
+## Implementation
+
+1. Using the discovery client, get the list of active measurement services.
+2. Using the measurement client, for a selected measurement, get the measurement's parameter metadata.
+3. If the measurement is pin-centric, get and register the pin map file with the pin map service by
+  using the pin map client
+4. Run the measurement.
 
 ## Things needed to Create a Measurement Client
 
@@ -62,7 +63,7 @@
 - Exposing `enumerate_services` API in the discovery client and support class (Service Descriptor).
 - Creating a fully fledged pin map client.
 - A measurement client library wrapping the RPC APIs with required helper APIs say for validating
-  the metadata, abstracting the v1 and v2 versions, data parsing etc.
+  the metadata, abstracting the v1 and v2 versions, parsing data, etc.
   - Preferably generalize or specialize the serialization and deserialization API implementation.
   - Possibly explore ways to easily facilitate editing the configuration parameter values for any
-    selected measurement.
+    datatype in a selected measurement.
