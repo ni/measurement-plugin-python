@@ -23,12 +23,10 @@ from ni_measurementlink_service.discovery import DiscoveryClient, ServiceDescrip
 from ni_measurementlink_service.pin_map import PinMapClient
 
 MEASUREMENT_SERVICE_INTERFACE = "ni.measurementlink.measurement.v2.MeasurementService"
+
+# NOTE: Ensure that the below file path is updated before starting the application.
 PIN_MAP_PATH = r"D:\Odyssey\measurementlink-python\examples\nidcpower_source_dc_voltage\NIDCPowerSourceDCVoltage.pinmap"
 SITES = [0]
-DEFAULT_VALUES = defaultdict(
-    lambda: None,  # Default factory for unknown types
-    {1: 0.0, 2: 0.0, 3: 0, 8: False, 9: "", 14: 0},
-)
 
 
 def display_and_get_available_measurement_services(
@@ -64,6 +62,9 @@ def get_measurement_service_stub(
         return None
 
     selected_measurement_index = get_measurement_selection()
+    if selected_measurement_index == -1:
+        return None
+    
     channel = get_insecure_grpc_channel_for(
         discovery_client, available_services[selected_measurement_index - 1].service_class
     )
@@ -74,43 +75,43 @@ def get_measurement_service_stub(
 def deserialize_configuration_parameters(
     metadata: v2_measurement_service_pb2.GetMetadataResponse,
 ) -> Tuple[Dict[int, ParameterMetadata], List[Any]]:
-    configuration_parameter = {}
-    for res in metadata.measurement_signature.configuration_parameters:
-        configuration_parameter[res.field_number] = ParameterMetadata(
-            res.name,
-            res.type,
-            res.repeated,
-            DEFAULT_VALUES[res.type],
-            res.annotations,
-            res.message_type,
+    configuration_metadata_by_id = {}
+    for configuration in metadata.measurement_signature.configuration_parameters:
+        configuration_metadata_by_id[configuration.field_number] = ParameterMetadata(
+            configuration.name,
+            configuration.type,
+            configuration.repeated,
+            0,
+            configuration.annotations,
+            configuration.message_type,
         )
 
     params = deserialize_parameters(
-        configuration_parameter, metadata.measurement_signature.configuration_defaults.value
+        configuration_metadata_by_id, metadata.measurement_signature.configuration_defaults.value
     )
     values = [None] * params.__len__()
     for k, v in params.items():
-        configuration_parameter[k] = configuration_parameter[k]._replace(default_value=v)
+        configuration_metadata_by_id[k] = configuration_metadata_by_id[k]._replace(default_value=v)
         values[k - 1] = v
 
-    return (configuration_parameter, values)
+    return (configuration_metadata_by_id, values)
 
 
 def deserialize_output_parameters(
     metadata: v2_measurement_service_pb2.GetMetadataResponse,
 ) -> Dict[int, ParameterMetadata]:
-    output_parameters = {}
-    for res in metadata.measurement_signature.outputs:
-        output_parameters[res.field_number] = ParameterMetadata(
-            res.name,
-            res.type,
-            res.repeated,
-            DEFAULT_VALUES[res.type],
-            res.annotations,
-            res.message_type,
+    output_metadata_by_id = {}
+    for output in metadata.measurement_signature.outputs:
+        output_metadata_by_id[output.field_number] = ParameterMetadata(
+            output.name,
+            output.type,
+            output.repeated,
+            0,
+            output.annotations,
+            output.message_type,
         )
 
-    return output_parameters
+    return output_metadata_by_id
 
 
 def get_measure_request(
@@ -132,17 +133,23 @@ def get_measurement_selection() -> int:
     try:
         return int(input("Select a measurement service to run: "))
     except ValueError:
-        print("ERROR: Invalid input! Going ahead with the first measurement.")
+        print("WARN: Invalid input! Going ahead with the first measurement.")
         return 1
+    except KeyboardInterrupt:
+        return -1
 
 
 def get_active_pin_map() -> str:
-    path = input("\nEnter the active pin map file's absolute path (without quotes): ")
+    print("\nNote: Site '0' will be used for the measurement execution.")
+    try:
+        path = input("Provide the pin map file's absolute path (without quotes): ")
+    except KeyboardInterrupt:
+        return ""
+
     if not Path.is_file(Path(path)):
-        print("ERROR: Invalid file path. Going ahead with the default pin map file.")
+        print(f"WARN: Couldn't find the file. Going ahead with the default pin map file: {PIN_MAP_PATH}")
         path = PIN_MAP_PATH
 
-    print("Note: Site '0' will be used for the measurement.")
     return path
 
 
@@ -158,23 +165,26 @@ if __name__ == "__main__":
                 v2_measurement_service_pb2.GetMetadataRequest()
             )
 
-            configuration_metadata, default_values = deserialize_configuration_parameters(metadata)
-            output_metadata = deserialize_output_parameters(metadata)
+            configuration_metadata_by_id, default_values = deserialize_configuration_parameters(metadata)
+            output_metadata_by_id = deserialize_output_parameters(metadata)
+
+            print("\nDefault input values:")
+            for k, _ in configuration_metadata_by_id.items():
+                print(f"{configuration_metadata_by_id[k].display_name}: {default_values[k-1]}")
 
             pin_map_path = get_active_pin_map()
+            if pin_map_path == "":
+                break
+            
             pin_map_client.update_pin_map(pin_map_path)
 
-            print("\nInput values:")
-            for k, _ in configuration_metadata.items():
-                print(f"{configuration_metadata[k].display_name}: {default_values[k-1]}")
-
-            request = get_measure_request(configuration_metadata, default_values)
+            request = get_measure_request(configuration_metadata_by_id, default_values)
 
             print("\nMeasured values:")
             for response in measurement_service_stub.Measure(request):
-                output_values = deserialize_parameters(output_metadata, response.outputs.value)
+                output_values = deserialize_parameters(output_metadata_by_id, response.outputs.value)
                 for k, v in output_values.items():
-                    print(f"{output_metadata[k].display_name}: {v}")
+                    print(f"{output_metadata_by_id[k].display_name}: {v}")
         else:
-            print("Try again after starting a measurement service!")
+            print("\n\nClosing the application either because user requested or there's no active measurement.")
             break
