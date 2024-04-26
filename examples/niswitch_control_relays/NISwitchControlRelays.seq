@@ -5672,6 +5672,9 @@
 																				<TypeSpecialization classname='Str'>
 																					<value>None</value>
 																				</TypeSpecialization>
+																				<EnumDefinition classname='Objs'>
+																					<value lbound='[0]' ubound='[]'/>
+																				</EnumDefinition>
 																			</subprops>
 																		</Obj>
 																	</value>
@@ -5705,6 +5708,9 @@
 																				<TypeSpecialization classname='Str'>
 																					<value>None</value>
 																				</TypeSpecialization>
+																				<EnumDefinition classname='Objs'>
+																					<value lbound='[0]' ubound='[]'/>
+																				</EnumDefinition>
 																			</subprops>
 																		</Obj>
 																	</value>
@@ -6434,6 +6440,9 @@
 																				<TypeSpecialization classname='Str'>
 																					<value>None</value>
 																				</TypeSpecialization>
+																				<EnumDefinition classname='Objs'>
+																					<value lbound='[0]' ubound='[]'/>
+																				</EnumDefinition>
 																			</subprops>
 																		</Obj>
 																	</value>
@@ -6467,6 +6476,9 @@
 																				<TypeSpecialization classname='Str'>
 																					<value>None</value>
 																				</TypeSpecialization>
+																				<EnumDefinition classname='Objs'>
+																					<value lbound='[0]' ubound='[]'/>
+																				</EnumDefinition>
 																			</subprops>
 																		</Obj>
 																	</value>
