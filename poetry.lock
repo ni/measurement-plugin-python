@@ -1016,22 +1016,22 @@ grpc = ["grpcio (>=1.49.0,<2.0)", "protobuf (>=4.21,<5.0)"]
 
 [[package]]
 name = "nidcpower"
-version = "1.4.7"
+version = "1.4.8"
 description = "NI-DCPower Python API"
 optional = true
 python-versions = "*"
 files = [
-    {file = "nidcpower-1.4.7-py3-none-any.whl", hash = "sha256:ee8a2c93b52507a24ef715fa133667a40ab5b76193b7fccdfb45c356f90fe71b"},
-    {file = "nidcpower-1.4.7.tar.gz", hash = "sha256:1afbf2938e8315fb51f62fdd868373290ed91666835a7c2aa078913ae8320c5f"},
+    {file = "nidcpower-1.4.8-py3-none-any.whl", hash = "sha256:35b2094f66c594893e37fd50c07e8a4bb711f31f5bd4b0540f3e168e3376e0c1"},
+    {file = "nidcpower-1.4.8.tar.gz", hash = "sha256:6880777ec6138c4bad812339b96107f0351573bcf701391e4443b44021b2a392"},
 ]
 
 [package.dependencies]
-grpcio = {version = ">=1.49.1,<2.0", optional = true, markers = "extra == \"grpc\""}
+grpcio = {version = ">=1.59.0,<2.0", optional = true, markers = "extra == \"grpc\""}
 hightime = ">=0.2.0"
-protobuf = {version = ">=4.21,<5.0", optional = true, markers = "extra == \"grpc\""}
+protobuf = {version = ">=4.21.6,<5.0", optional = true, markers = "extra == \"grpc\""}
 
 [package.extras]
-grpc = ["grpcio (>=1.49.1,<2.0)", "protobuf (>=4.21,<5.0)"]
+grpc = ["grpcio (>=1.59.0,<2.0)", "protobuf (>=4.21.6,<5.0)"]
 
 [[package]]
 name = "nidigital"
