@@ -1055,22 +1055,22 @@ grpc = ["grpcio (>=1.49.1,<2.0)", "protobuf (>=4.21,<5.0)"]
 
 [[package]]
 name = "nidmm"
-version = "1.4.7"
+version = "1.4.8"
 description = "NI-DMM Python API"
 optional = true
 python-versions = "*"
 files = [
-    {file = "nidmm-1.4.7-py3-none-any.whl", hash = "sha256:b6616977647dff55b93a1087355a1775fbd4b085716d6e51b65cc91ca41a7ccb"},
-    {file = "nidmm-1.4.7.tar.gz", hash = "sha256:9b688403d3b74304d666ba5123a9bd0cd76bf18e9b5eae210baec2b91d8fcaa7"},
+    {file = "nidmm-1.4.8-py3-none-any.whl", hash = "sha256:6c0a4da4e4b6898d3e490148643142cc56e5135d400f4957e384da10c6ca346a"},
+    {file = "nidmm-1.4.8.tar.gz", hash = "sha256:17526b0d22cde02409632adf6cef739fe5605f237c19b0f679853d3fd323d1ce"},
 ]
 
 [package.dependencies]
-grpcio = {version = ">=1.49.1,<2.0", optional = true, markers = "extra == \"grpc\""}
+grpcio = {version = ">=1.59.0,<2.0", optional = true, markers = "extra == \"grpc\""}
 hightime = ">=0.2.0"
-protobuf = {version = ">=4.21,<5.0", optional = true, markers = "extra == \"grpc\""}
+protobuf = {version = ">=4.21.6,<5.0", optional = true, markers = "extra == \"grpc\""}
 
 [package.extras]
-grpc = ["grpcio (>=1.49.1,<2.0)", "protobuf (>=4.21,<5.0)"]
+grpc = ["grpcio (>=1.59.0,<2.0)", "protobuf (>=4.21.6,<5.0)"]
 
 [[package]]
 name = "nifgen"
