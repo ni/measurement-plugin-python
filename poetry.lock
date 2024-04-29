@@ -1035,23 +1035,23 @@ grpc = ["grpcio (>=1.59.0,<2.0)", "protobuf (>=4.21.6,<5.0)"]
 
 [[package]]
 name = "nidigital"
-version = "1.4.7"
+version = "1.4.8"
 description = "NI-Digital Pattern Driver Python API"
 optional = true
 python-versions = "*"
 files = [
-    {file = "nidigital-1.4.7-py3-none-any.whl", hash = "sha256:c4a1d70eb003e3a5d4539d977c0883f57291b4126c62192b700ed59bbc799bdc"},
-    {file = "nidigital-1.4.7.tar.gz", hash = "sha256:c8221b04e242b956b1fc402e32a6ab9aa01c3328c256a0cf52ea72ebdcf9673b"},
+    {file = "nidigital-1.4.8-py3-none-any.whl", hash = "sha256:21ee2588e0908e4b96b572b77e7212b0425922e4487175f1af4eaf7f5c96c87b"},
+    {file = "nidigital-1.4.8.tar.gz", hash = "sha256:479b489540e8473db0b90977d0a764c7bf0ededfc94e1677217d04d4e12f51c8"},
 ]
 
 [package.dependencies]
-grpcio = {version = ">=1.49.1,<2.0", optional = true, markers = "extra == \"grpc\""}
+grpcio = {version = ">=1.59.0,<2.0", optional = true, markers = "extra == \"grpc\""}
 hightime = ">=0.2.0"
 nitclk = "*"
-protobuf = {version = ">=4.21,<5.0", optional = true, markers = "extra == \"grpc\""}
+protobuf = {version = ">=4.21.6,<5.0", optional = true, markers = "extra == \"grpc\""}
 
 [package.extras]
-grpc = ["grpcio (>=1.49.1,<2.0)", "protobuf (>=4.21,<5.0)"]
+grpc = ["grpcio (>=1.59.0,<2.0)", "protobuf (>=4.21.6,<5.0)"]
 
 [[package]]
 name = "nidmm"
