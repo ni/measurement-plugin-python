@@ -1094,23 +1094,23 @@ grpc = ["grpcio (>=1.49.1,<2.0)", "protobuf (>=4.21,<5.0)"]
 
 [[package]]
 name = "niscope"
-version = "1.4.7"
+version = "1.4.8"
 description = "NI-SCOPE Python API"
 optional = true
 python-versions = "*"
 files = [
-    {file = "niscope-1.4.7-py3-none-any.whl", hash = "sha256:ab9e1f92beabf3ce28d50c52c1c2685be030d93005b6f2de2fff2af40adc7de9"},
-    {file = "niscope-1.4.7.tar.gz", hash = "sha256:1253418f3f926bf63409d80737b56ff5731c4b790a20827addd819bf123ab1aa"},
+    {file = "niscope-1.4.8-py3-none-any.whl", hash = "sha256:43e35b0c2c636360e21c366dee6cff8d42bd34eeca185d4ad1b4a7819e742b90"},
+    {file = "niscope-1.4.8.tar.gz", hash = "sha256:990df6e08dee77e4ea4e5a2e815ef08e30044c5b0688d9fbdcf9ce461ad4caa3"},
 ]
 
 [package.dependencies]
-grpcio = {version = ">=1.49.1,<2.0", optional = true, markers = "extra == \"grpc\""}
+grpcio = {version = ">=1.59.0,<2.0", optional = true, markers = "extra == \"grpc\""}
 hightime = ">=0.2.0"
 nitclk = "*"
-protobuf = {version = ">=4.21,<5.0", optional = true, markers = "extra == \"grpc\""}
+protobuf = {version = ">=4.21.6,<5.0", optional = true, markers = "extra == \"grpc\""}
 
 [package.extras]
-grpc = ["grpcio (>=1.49.1,<2.0)", "protobuf (>=4.21,<5.0)"]
+grpc = ["grpcio (>=1.59.0,<2.0)", "protobuf (>=4.21.6,<5.0)"]
 
 [[package]]
 name = "niswitch"
