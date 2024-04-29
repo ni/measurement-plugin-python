@@ -1114,22 +1114,22 @@ grpc = ["grpcio (>=1.49.1,<2.0)", "protobuf (>=4.21,<5.0)"]
 
 [[package]]
 name = "niswitch"
-version = "1.4.7"
+version = "1.4.8"
 description = "NI-SWITCH Python API"
 optional = true
 python-versions = "*"
 files = [
-    {file = "niswitch-1.4.7-py3-none-any.whl", hash = "sha256:6bb2e24d1358c0a852e38976ae2040bda7d24de516dab50b217961aeb6ec8440"},
-    {file = "niswitch-1.4.7.tar.gz", hash = "sha256:9d82e28f6f3c5c5e1e032c3bd31bc9e0f58630368c671b6a021b672c5cbe19bc"},
+    {file = "niswitch-1.4.8-py3-none-any.whl", hash = "sha256:a5c8926d2d06f5f595898799e3e29d5be4682c3c99b3b7ced4806c37eca8d546"},
+    {file = "niswitch-1.4.8.tar.gz", hash = "sha256:f53b10ef33b33f54000f96064c3e901d77b01c387cb7e8a7ea2d763f89616dfc"},
 ]
 
 [package.dependencies]
-grpcio = {version = ">=1.49.1,<2.0", optional = true, markers = "extra == \"grpc\""}
+grpcio = {version = ">=1.59.0,<2.0", optional = true, markers = "extra == \"grpc\""}
 hightime = ">=0.2.0"
-protobuf = {version = ">=4.21,<5.0", optional = true, markers = "extra == \"grpc\""}
+protobuf = {version = ">=4.21.6,<5.0", optional = true, markers = "extra == \"grpc\""}
 
 [package.extras]
-grpc = ["grpcio (>=1.49.1,<2.0)", "protobuf (>=4.21,<5.0)"]
+grpc = ["grpcio (>=1.59.0,<2.0)", "protobuf (>=4.21.6,<5.0)"]
 
 [[package]]
 name = "nitclk"
