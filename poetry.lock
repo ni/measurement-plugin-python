@@ -1074,23 +1074,23 @@ grpc = ["grpcio (>=1.59.0,<2.0)", "protobuf (>=4.21.6,<5.0)"]
 
 [[package]]
 name = "nifgen"
-version = "1.4.7"
+version = "1.4.8"
 description = "NI-FGEN Python API"
 optional = true
 python-versions = "*"
 files = [
-    {file = "nifgen-1.4.7-py3-none-any.whl", hash = "sha256:f9631cd737c160fc06d23359456d5c443c4647fdb88a35ec7c7189c17c62d3d2"},
-    {file = "nifgen-1.4.7.tar.gz", hash = "sha256:35648772c5ae48ba336841209fa01a1b68e2ce871ed93a560e77a9ed4a029222"},
+    {file = "nifgen-1.4.8-py3-none-any.whl", hash = "sha256:e256e6a09af5d2e20ed0819f008a0b115f5d0c435847bfd021060308346e54e9"},
+    {file = "nifgen-1.4.8.tar.gz", hash = "sha256:80edf6f36b6df1c4395637faf050c7e16c55b84f9f1f14ca6736c2dc28a51f10"},
 ]
 
 [package.dependencies]
-grpcio = {version = ">=1.49.1,<2.0", optional = true, markers = "extra == \"grpc\""}
+grpcio = {version = ">=1.59.0,<2.0", optional = true, markers = "extra == \"grpc\""}
 hightime = ">=0.2.0"
 nitclk = "*"
-protobuf = {version = ">=4.21,<5.0", optional = true, markers = "extra == \"grpc\""}
+protobuf = {version = ">=4.21.6,<5.0", optional = true, markers = "extra == \"grpc\""}
 
 [package.extras]
-grpc = ["grpcio (>=1.49.1,<2.0)", "protobuf (>=4.21,<5.0)"]
+grpc = ["grpcio (>=1.59.0,<2.0)", "protobuf (>=4.21.6,<5.0)"]
 
 [[package]]
 name = "niscope"
