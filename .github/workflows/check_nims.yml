@@ -45,7 +45,7 @@ jobs:
           path: .venv
           key: ${{ steps.restore-nims-all-extras.outputs.cache-primary-key }}
       - name: Lint ni-measurementlink-service
-        run: poetry run ni-python-styleguide lint ./ni_measurementlink_service/ ./tests/ ./ni_measurementlink_generator/
+        run: poetry run ni-python-styleguide lint
       - name: Mypy static analysis (ni-measurementlink-service, Linux)
         run:  poetry run mypy -p ni_measurementlink_service
       - name: Mypy static analysis (ni-measurementlink-service, Windows)

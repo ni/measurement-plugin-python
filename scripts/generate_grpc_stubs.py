@@ -14,6 +14,9 @@ STUBS_PATH = pathlib.Path(__file__).parent.parent / STUBS_NAMESPACE.replace(".",
 PROTO_PATH = pathlib.Path(__file__).parent.parent / "third_party" / "ni-apis"
 STUBS_PROTO_PATH = STUBS_PATH / "proto"
 STUBS_PROTO_FILES = list(STUBS_PROTO_PATH.rglob("*.proto"))
+# We still want to use session.proto from STUBS_PATH / "proto" until
+# we can upgrade in sync with nimi-python and nidaqmx-python
+# AB#2730545
 GRPC_DEVICE_PROTO_PATH = PROTO_PATH / "ni" / "grpcdevice" / "v1"
 NI_API_PROTO_FILES = list(
     path for path in PROTO_PATH.rglob("*.proto") if not path.is_relative_to(GRPC_DEVICE_PROTO_PATH)
