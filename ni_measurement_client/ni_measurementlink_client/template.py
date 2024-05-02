@@ -126,6 +126,7 @@ def _create_file(
 @click.command()
 @click.argument("package_name", type=str, default="")
 @click.option(
+    "-l",
     "--list-measurements",
     is_flag=True,
     help="Lists all the active measurement's service name and service class.",
