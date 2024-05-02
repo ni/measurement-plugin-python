@@ -1,6 +1,6 @@
 """Data types for the MeasurementLink discovery service."""
 
-from typing import Iterable, NamedTuple
+from typing import Dict, Iterable, NamedTuple
 
 
 class ServiceDescriptor(NamedTuple):
@@ -10,6 +10,7 @@ class ServiceDescriptor(NamedTuple):
     description_url: str
     provided_interfaces: Iterable[str]
     service_class: str
+    annotations: Dict[str, str]
 
 
 class ServiceLocation(NamedTuple):

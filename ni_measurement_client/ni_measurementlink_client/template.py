@@ -1,3 +1,4 @@
+"""Python measurement client template generator."""
 
 import pathlib
 from typing import Any, Dict, List, Tuple
@@ -5,16 +6,16 @@ from typing import Any, Dict, List, Tuple
 import click
 import grpc
 from google.protobuf.type_pb2 import Field
-
 from mako.template import Template
 
 from ni_measurementlink_service._internal.parameter.metadata import ParameterMetadata
-
+from ni_measurementlink_service._internal.parameter.serializer import (
+    deserialize_parameters,
+)
 from ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v2 import (
     measurement_service_pb2 as v2_measurement_service_pb2,
     measurement_service_pb2_grpc as v2_measurement_service_pb2_grpc,
 )
-from ni_measurementlink_service._internal.parameter.serializer import deserialize_parameters
 from ni_measurementlink_service.discovery import DiscoveryClient
 
 MEASUREMENT_SERVICE_INTERFACE = "ni.measurementlink.measurement.v2.MeasurementService"
@@ -37,12 +38,13 @@ def _check_measurement_service(
     ctx: click.Context, param: click.Parameter, service_class: str
 ) -> str:
     try:
-        DiscoveryClient().resolve_service(
-            MEASUREMENT_SERVICE_INTERFACE, service_class
-        )
+        if service_class:
+            DiscoveryClient().resolve_service(MEASUREMENT_SERVICE_INTERFACE, service_class)
         return service_class
-    except Exception as e:
-        raise click.BadParameter(f"Error while resolving the measurement service with service class: {service_class}.")
+    except Exception:
+        raise click.BadParameter(
+            f"Error while resolving the measurement service with service class: {service_class}."
+        )
 
 
 def _get_measurement_stub(
@@ -122,14 +124,21 @@ def _create_file(
 
 
 @click.command()
-@click.argument("package_name")
+@click.argument("package_name", type=str, default="")
+@click.option(
+    "--list-measurements",
+    is_flag=True,
+    help="Lists all the active measurement's service name and service class.",
+)
 @click.option(
     "-m",
     "--measurement-service-class",
     callback=_check_measurement_service,
     help="The service class of your measurement.",
 )
-def create_client(package_name: str, measurement_service_class: str) -> None:
+def create_client(
+    list_measurements: bool, package_name: str, measurement_service_class: str
+) -> None:
     """Creates a Python measurement client for the measurement service class.
 
     Args:
@@ -140,57 +149,84 @@ def create_client(package_name: str, measurement_service_class: str) -> None:
         Exception: If the type of the configuration or output parameter couldn't be found.
     """
     discovery_client = DiscoveryClient()
+    available_measurement_services = discovery_client.enumerate_services(
+        MEASUREMENT_SERVICE_INTERFACE
+    )
+
+    if list_measurements:
+        for services in available_measurement_services:
+            print(
+                f"Measurement service: {services.display_name:40s} | Service class: {services.service_class}"
+            )
+        return
+
+    if package_name == "" or not measurement_service_class:
+        raise Exception("Package name and/or measurement service class cannot be empty.")
+
+    services = [
+        serv
+        for serv in available_measurement_services
+        if serv.service_class == measurement_service_class
+    ]
+    description = services[0].annotations["ni/service.description"]
+
     stub = _get_measurement_stub(discovery_client, measurement_service_class)
     metadata = stub.GetMetadata(v2_measurement_service_pb2.GetMetadataRequest())
     configuration_metadata_by_id, default_values = _deserialize_configuration_parameters(metadata)
     output_metadata_by_id = _deserialize_output_parameters(metadata)
 
-    method_params_with_type = list()
-    param_names = list()
+    method_params_with_type = []
+    param_names = []
     for i in range(configuration_metadata_by_id.__len__()):
-        param_name = configuration_metadata_by_id[i+1].display_name.lower()
+        param_name = configuration_metadata_by_id[i + 1].display_name.lower()
         if not param_name.isidentifier():
-            if param_name.__contains__(' '):
-                param_name = param_name.replace(' ', '_')
+            if param_name.__contains__(" "):
+                param_name = param_name.replace(" ", "_")
             else:
                 param_name = param_name + "1"
         param_type = ""
-        py_type = _PROTODATATYPE_TO_PYTYPE_LOOKUP.get(configuration_metadata_by_id[i+1].type)
+        py_type = _PROTODATATYPE_TO_PYTYPE_LOOKUP.get(configuration_metadata_by_id[i + 1].type)
         if py_type is None:
             raise Exception(
                 f"Data type information not found '{configuration_metadata_by_id[i+1].type}'"
             )
 
-        if (configuration_metadata_by_id[i+1].repeated):
-            param_type=f"List[{py_type.__name__}]"
+        if configuration_metadata_by_id[i + 1].repeated:
+            param_type = f"List[{py_type.__name__}]"
         else:
-            param_type= py_type.__name__
+            param_type = py_type.__name__
 
         param_names.append(param_name)
         default_value = default_values[i]
         if isinstance(default_value, str):
-            default_value = f"'{default_value}'"
+            default_value = f'"{default_value}"'
         method_params_with_type.append(f"{param_name}: {param_type} = {default_value}")
 
-    method_signature = ',\n\t'.join(method_params_with_type)
-    params = ',\n\t\t'.join(param_names)
+    method_signature = ",\n\t".join(method_params_with_type)
+    params = ",\n\t\t".join(param_names)
 
-    output_list = list()
+    output_names_with_type = []
     for i in range(output_metadata_by_id.__len__()):
+        param_name = output_metadata_by_id[i + 1].display_name.lower()
+        if not param_name.isidentifier():
+            if param_name.__contains__(" "):
+                param_name = param_name.replace(" ", "_")
+            else:
+                param_name = param_name + "1"
         param_type = ""
-        py_type = _PROTODATATYPE_TO_PYTYPE_LOOKUP.get(output_metadata_by_id[i+1].type)
+        py_type = _PROTODATATYPE_TO_PYTYPE_LOOKUP.get(output_metadata_by_id[i + 1].type)
         if py_type is None:
             raise Exception(
                 f"Data type information not found '{configuration_metadata_by_id[i+1].type}'"
             )
 
-        if (output_metadata_by_id[i+1].repeated):
+        if output_metadata_by_id[i + 1].repeated:
             param_type = f"List[{py_type.__name__}]"
         else:
             param_type = py_type.__name__
-        output_list.append(param_type)
+        output_names_with_type.append(f"{param_name}: {param_type}")
 
-    ret_types = ', '.join(output_list)
+    return_values_with_type = "\n    ".join(output_names_with_type)
 
     directory_out_path = pathlib.Path.cwd() / package_name
     directory_out_path.mkdir(exist_ok=True, parents=True)
@@ -199,9 +235,11 @@ def create_client(package_name: str, measurement_service_class: str) -> None:
         "measurement_client.py.mako",
         f"{package_name}.py",
         directory_out_path,
+        description=description,
         configuration_metadata=configuration_metadata_by_id,
         output_metadata=output_metadata_by_id,
         service_class=measurement_service_class,
-        method_signature=method_signature, params=params,
-        return_types=ret_types,
+        method_signature=method_signature,
+        input_params=params,
+        return_types=return_values_with_type,
     )

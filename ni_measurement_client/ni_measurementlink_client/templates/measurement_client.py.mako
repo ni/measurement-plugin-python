@@ -1,8 +1,8 @@
-<%page args="configuration_metadata, output_metadata, service_class, method_signature, params, return_types"/>\
+<%page args="description, configuration_metadata, output_metadata, service_class, method_signature, input_params, return_types"/>\
 \
 """Python measurement client."""
 
-from typing import Any, List, Tuple
+from typing import Any, Dict, List, NamedTuple, Tuple
 
 import grpc
 from google.protobuf import any_pb2
@@ -29,6 +29,7 @@ configuration_metadata_by_id = ${configuration_metadata}
 output_metadata_by_id = ${output_metadata}
 pin_map_path = ""
 
+
 def _get_measurement_stub(
     discovery_client: DiscoveryClient,
     service_class: str,
@@ -40,9 +41,12 @@ def _get_measurement_stub(
     return v2_measurement_service_pb2_grpc.MeasurementServiceStub(channel)
 
 
-def _get_measure_request(config_data, args) -> v2_measurement_service_pb2.MeasureRequest:
-    values = [arg for arg in args]
-    serialized_configuration = any_pb2.Any(value=serialize_parameters(config_data, values))
+def _get_measure_request(
+    configuration_metadata: Dict[int, ParameterMetadata], args: Any
+) -> v2_measurement_service_pb2.MeasureRequest:
+    serialized_configuration = any_pb2.Any(
+        value=serialize_parameters(configuration_metadata, list(args))
+    )
     return v2_measurement_service_pb2.MeasureRequest(
         configuration_parameters=serialized_configuration,
         pin_map_context=PinMapContext(
@@ -52,31 +56,38 @@ def _get_measure_request(config_data, args) -> v2_measurement_service_pb2.Measur
     )
 
 
-def _measure(service_class: str, *args) -> Tuple[Any]:
+def _measure(service_class: str, *args: Any) -> Tuple[Any]:
     discovery_client = DiscoveryClient()
     stub = _get_measurement_stub(discovery_client, service_class)
     request = _get_measure_request(configuration_metadata_by_id, args)
-    result: Tuple = ()
+    result = [None] * max(output_metadata_by_id.keys())
     for response in stub.Measure(request):
         output_values = deserialize_parameters(output_metadata_by_id, response.outputs.value)
         for k, v in output_values.items():
-            result = result + (v,)
+            result[k - 1] = v
 
-    return result
+    return tuple(result)
+
+
+class Output(NamedTuple):
+    """Measurement result container."""
+
+    ${return_types}
 
 
 def measure(
     ${method_signature}
-) -> Tuple[${return_types}]:
-    """Runs the measurement with the parameter values.
+) -> Output:
+    """${description}
 
     Returns:
         Measurement output.
     """
-    return _measure(
+    response = _measure(
         "${service_class}",
-        ${params}
+        ${input_params}
     )
+    return Output._make(response)
 
 
 def register_pin_map(pin_map_absolute_path: str) -> str:
@@ -89,7 +100,7 @@ def register_pin_map(pin_map_absolute_path: str) -> str:
         str: Pin map id.
     """
     pin_map_client = PinMapClient()
-    global pin_map_path 
+    global pin_map_path
     pin_map_path = pin_map_absolute_path
-    
+
     return pin_map_client.update_pin_map(pin_map_path)

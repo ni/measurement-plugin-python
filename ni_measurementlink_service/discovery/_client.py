@@ -252,6 +252,7 @@ class DiscoveryClient:
                 service.description_url,
                 service.provided_interfaces,
                 service.service_class,
+                service.annotations,
             )
             for service in response.available_services
         ]
