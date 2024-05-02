@@ -126,10 +126,10 @@ def _create_file(
 @click.command()
 @click.argument("package_name", type=str, default="")
 @click.option(
-    "-l",
-    "--list-measurements",
+    "-i",
+    "--interactive-mode",
     is_flag=True,
-    help="Lists all the active measurement's service name and service class.",
+    help="Use to interactively provide the details to create a Python measurement client for a measurement service.",
 )
 @click.option(
     "-m",
@@ -138,38 +138,48 @@ def _create_file(
     help="The service class of your measurement.",
 )
 def create_client(
-    list_measurements: bool, package_name: str, measurement_service_class: str
+    interactive_mode: bool, package_name: str, measurement_service_class: str
 ) -> None:
     """Creates a Python measurement client for the measurement service class.
 
-    Args:
-        package_name: Name of the measurement client package.
-        measurement_service_class: Measurement service class name.
-
     Raises:
-        Exception: If the type of the configuration or output parameter couldn't be found.
+        Exception: If the package name is empty or the configuration or output parameter type
+            couldn't be found.
     """
     discovery_client = DiscoveryClient()
     available_measurement_services = discovery_client.enumerate_services(
         MEASUREMENT_SERVICE_INTERFACE
     )
 
-    if list_measurements:
-        for services in available_measurement_services:
-            print(
-                f"Measurement service: {services.display_name:40s} | Service class: {services.service_class}"
+    if interactive_mode:
+        print("List of active measurements: ")
+        for i, service in enumerate(available_measurement_services):
+            print(f"{i+1}. Measurement service: {service.display_name}")
+
+        try:
+            index = int(
+                input(
+                    "\nPlease enter the serial number of the measurement service that you wish to create a client for: "
+                )
             )
-        return
+        except Exception:
+            return
+
+        if 0 >= index > len(available_measurement_services):
+            print("The input is invalid.")
+
+        measurement_service_class = available_measurement_services[index - 1].service_class
+        package_name = input("Please provide the name for the measurement client package: ")
 
     if package_name == "" or not measurement_service_class:
         raise Exception("Package name and/or measurement service class cannot be empty.")
 
-    services = [
-        serv
-        for serv in available_measurement_services
-        if serv.service_class == measurement_service_class
-    ]
-    description = services[0].annotations["ni/service.description"]
+    selected_service = next(
+        meas_service
+        for meas_service in available_measurement_services
+        if meas_service.service_class == measurement_service_class
+    )
+    description = selected_service.annotations["ni/service.description"]
 
     stub = _get_measurement_stub(discovery_client, measurement_service_class)
     metadata = stub.GetMetadata(v2_measurement_service_pb2.GetMetadataRequest())
