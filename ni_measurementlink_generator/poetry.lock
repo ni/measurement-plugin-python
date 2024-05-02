@@ -211,11 +211,11 @@ python-versions = ">=3.5"
 
 [[package]]
 name = "ni-python-styleguide"
-version = "0.4.4"
+version = "0.4.5"
 description = "NI's internal and external Python linter rules and plugins"
 category = "dev"
 optional = false
-python-versions = ">=3.7,<4.0"
+python-versions = "<4.0,>=3.7"
 
 [package.dependencies]
 black = ">=23.1"
@@ -638,8 +638,8 @@ mypy-extensions = [
     {file = "mypy_extensions-1.0.0.tar.gz", hash = "sha256:75dbf8955dc00442a438fc4d0666508a9a97b6bd41aa2f0ffe9d2f2725af0782"},
 ]
 ni-python-styleguide = [
-    {file = "ni_python_styleguide-0.4.4-py3-none-any.whl", hash = "sha256:e26dad1d0afc1a0a01a21c2546a7fc6215858e9fb324cdb6b47d29022ebe69a6"},
-    {file = "ni_python_styleguide-0.4.4.tar.gz", hash = "sha256:4c22ebc793bbcfab44fb6973ac286468f47e38b0b6abdc834e72d8a4fb225af1"},
+    {file = "ni_python_styleguide-0.4.5-py3-none-any.whl", hash = "sha256:a46298342523f1e665e027df443ad882556259e430d7fa867f2703aa68028704"},
+    {file = "ni_python_styleguide-0.4.5.tar.gz", hash = "sha256:0ff8899cea1deed6a2d458765c1d645f85cc563089904c78bbafcba03bea2f91"},
 ]
 packaging = [
     {file = "packaging-24.0-py3-none-any.whl", hash = "sha256:2ddfb553fdf02fb784c234c7ba6ccc288296ceabec964ad2eae3777778130bc5"},
