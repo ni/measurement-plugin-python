@@ -244,9 +244,9 @@ class ConfigurationParameter(google.protobuf.message.Message):
         Well-known annotations:
         - Type specialization. The keys to other annotations will be read based on the value of `ni/type_specialization` annotation.
           - Key: "ni/type_specialization"
-          - Common Values: "pin" ...    
-        - For string parameter with ni/type_specialization annotation equals "pin"
-          - Key: "ni/pin.instrument_type"
+          - Common Values: "ioresource" ...    
+        - For string parameter with ni/type_specialization annotation equals "ioresource", the "ni/ioresource.instrument_type" annotation will be used by UIs to limit selection of I/O to the specified instrument type.
+          - Key: "ni/ioresource.instrument_type"
           - Common Values: "niDCPower", "niScope"...
         """
 

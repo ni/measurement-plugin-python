@@ -252,11 +252,11 @@ class ConfigurationParameter(google.protobuf.message.Message):
         Well-known annotations:
         - Type specialization. The keys to other annotations will be read based on the value of `ni/type_specialization` annotation.
           - Key: "ni/type_specialization"
-          - Common Values: "pin", "path", "enum", ...
-          - "pin" and "path" parameters require the type field to be TYPE_STRING.
+          - Common Values: "ioresource", "path", "enum"...
+          - "ioresource" and "path" parameters require the type field to be TYPE_STRING.
           - "enum" parameters requires the type field to be TYPE_ENUM.
-        - For string parameter with ni/type_specialization annotation equals "pin"
-          - Key: "ni/pin.instrument_type"
+        - For string parameter with ni/type_specialization annotation equals "ioresource", the "ni/ioresource.instrument_type" annotation will be used by UIs to limit selection of I/O to the specified instrument type.
+          - Key: "ni/ioresource.instrument_type"
           - Common Values: "niDCPower", "niScope"...
         - For enum parameter with ni/type_specialization annotation equals "enum"
           - Key: "ni/enum.values"
