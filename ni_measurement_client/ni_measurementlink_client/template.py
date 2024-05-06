@@ -143,8 +143,9 @@ def create_client(
     """Creates a Python measurement client for the measurement service class.
 
     Raises:
-        Exception: If the package name is empty or the configuration or output parameter type
-            couldn't be found.
+        Exception: If the package name is empty or if it misses any configuration or output type.
+
+    [PACKAGE_NAME]: Name for the Python measurement client package.
     """
     discovery_client = DiscoveryClient()
     available_measurement_services = discovery_client.enumerate_services(
@@ -154,7 +155,7 @@ def create_client(
     if interactive_mode:
         print("List of active measurements: ")
         for i, service in enumerate(available_measurement_services):
-            print(f"{i+1}. Measurement service: {service.display_name}")
+            print(f"{i+1}. {service.display_name}")
 
         try:
             index = int(
