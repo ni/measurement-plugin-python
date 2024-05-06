@@ -29,7 +29,7 @@ build = "^1.2.1"
 pytest = ">=7.2.0"
 pytest-cov = ">=3.0.0"
 ni-python-styleguide = ">=0.4.1"
-ni-measurementlink-service = {version = "^1.5.0-dev0", allow-prereleases = true}
+ni-measurementlink-service = {path = "..", develop = true}
 mypy = ">=1.0"
 grpcio-tools = [
   {version = "1.49.1", python = ">=3.8,<3.12"},
