@@ -673,6 +673,21 @@ files = [
 ]
 
 [[package]]
+name = "mypy-protobuf"
+version = "3.6.0"
+description = "Generate mypy stub files from protobuf specs"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "mypy-protobuf-3.6.0.tar.gz", hash = "sha256:02f242eb3409f66889f2b1a3aa58356ec4d909cdd0f93115622e9e70366eca3c"},
+    {file = "mypy_protobuf-3.6.0-py3-none-any.whl", hash = "sha256:56176e4d569070e7350ea620262478b49b7efceba4103d468448f1d21492fd6c"},
+]
+
+[package.dependencies]
+protobuf = ">=4.25.3"
+types-protobuf = ">=4.24"
+
+[[package]]
 name = "ni-measurementlink-service"
 version = "1.5.0-dev0"
 description = "MeasurementLink Support for Python"
@@ -1025,6 +1040,17 @@ files = [
 ]
 
 [[package]]
+name = "types-protobuf"
+version = "4.25.0.20240417"
+description = "Typing stubs for protobuf"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "types-protobuf-4.25.0.20240417.tar.gz", hash = "sha256:c34eff17b9b3a0adb6830622f0f302484e4c089f533a46e3f147568313544352"},
+    {file = "types_protobuf-4.25.0.20240417-py3-none-any.whl", hash = "sha256:e9b613227c2127e3d4881d75d93c93b4d6fd97b5f6a099a0b654a05351c8685d"},
+]
+
+[[package]]
 name = "typing-extensions"
 version = "4.11.0"
 description = "Backported and Experimental Type Hints for Python 3.8+"
@@ -1053,4 +1079,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "f0d444fdaf0be3af543a5949146095c1bd77d344d21945e6bc598da1d75af4da"
+content-hash = "f3dc21d7e2c208718e3a87d18148d0684b68cf4176b531f4378e747742c43a8c"

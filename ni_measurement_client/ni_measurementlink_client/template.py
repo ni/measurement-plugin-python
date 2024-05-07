@@ -2,41 +2,39 @@
 
 import json
 import pathlib
-from typing import Any, Dict, List, Optional, Sequence, Tuple
+from typing import Any, Dict, Optional, Sequence, Tuple
 
 import click
 import grpc
 from google.protobuf.type_pb2 import Field
 from mako.template import Template
-
 from ni_measurementlink_service._internal.parameter.metadata import ParameterMetadata
 from ni_measurementlink_service._internal.parameter.serializer import (
     deserialize_parameters,
 )
-from ni_measurementlink_service._internal.stubs.ni.measurementlink.discovery.v1.discovery_service_pb2 import ServiceDescriptor
 from ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v2 import (
     measurement_service_pb2 as v2_measurement_service_pb2,
     measurement_service_pb2_grpc as v2_measurement_service_pb2_grpc,
 )
-from ni_measurementlink_service.discovery import DiscoveryClient
+from ni_measurementlink_service.discovery import DiscoveryClient, ServiceDescriptor
 
 _V2_MEASUREMENT_SERVICE_INTERFACE = "ni.measurementlink.measurement.v2.MeasurementService"
 _PROTO_DATATYPE_TO_PYTYPE_LOOKUP = {
-    Field.Kind.TYPE_ENUM: int,
-    Field.Kind.TYPE_INT32: int,
-    Field.Kind.TYPE_INT64: int,
-    Field.Kind.TYPE_UINT32: int,
-    Field.Kind.TYPE_UINT64: int,
-    Field.Kind.TYPE_FIXED32: int,
-    Field.Kind.TYPE_FIXED64: int,
-    Field.Kind.TYPE_FLOAT: float,
-    Field.Kind.TYPE_DOUBLE: float,
-    Field.Kind.TYPE_BOOL: bool,
-    Field.Kind.TYPE_STRING: str,
+    Field.TYPE_ENUM: int,
+    Field.TYPE_INT32: int,
+    Field.TYPE_INT64: int,
+    Field.TYPE_UINT32: int,
+    Field.TYPE_UINT64: int,
+    Field.TYPE_FIXED32: int,
+    Field.TYPE_FIXED64: int,
+    Field.TYPE_FLOAT: float,
+    Field.TYPE_DOUBLE: float,
+    Field.TYPE_BOOL: bool,
+    Field.TYPE_STRING: str,
 }
 
 
-def _check_measurement_service(
+def _check_if_measurement_service_running(
     ctx: click.Context, param: click.Parameter, service_class: str
 ) -> str:
     try:
@@ -49,7 +47,7 @@ def _check_measurement_service(
         )
 
 
-def _get_measurement_stub(
+def _get_measurement_service_stub(
     discovery_client: DiscoveryClient,
     service_class: str,
 ) -> v2_measurement_service_pb2_grpc.MeasurementServiceStub:
@@ -60,31 +58,33 @@ def _get_measurement_stub(
     return v2_measurement_service_pb2_grpc.MeasurementServiceStub(channel)
 
 
-def _get_user_inputs(available_measurement_services: Sequence[ServiceDescriptor]) -> Tuple[str, str]:
-        print("List of active measurements: ")
-        for i, service in enumerate(available_measurement_services):
-            print(f"{i+1}. {service.display_name}")
+def _get_package_name_and_service_class(
+    available_measurement_services: Sequence[ServiceDescriptor],
+) -> Tuple[str, str]:
+    print("List of active measurements: ")
+    for i, service in enumerate(available_measurement_services):
+        print(f"{i+1}. {service.display_name}")
 
-        try:
-            index = int(
-                input(
-                    "\nPlease enter the serial number of the measurement service that you wish to create a client for: "
-                )
+    try:
+        index = int(
+            input(
+                "\nPlease enter the serial number of the measurement service that you wish to create a client for: "
             )
-        except Exception:
-            return
+        )
+    except Exception:
+        return ("", "")
 
-        if 0 >= index > len(available_measurement_services):
-            print("The input is invalid.")
+    if 0 >= index > len(available_measurement_services):
+        print("The input is invalid.")
 
-        measurement_service_class = available_measurement_services[index - 1].service_class
-        package_name = input("Please provide the name for the measurement client package: ")
-        return (package_name, measurement_service_class)
+    measurement_service_class = available_measurement_services[index - 1].service_class
+    package_name = input("Please provide the name for the measurement client package: ")
+    return (package_name, measurement_service_class)
 
 
-def _deserialize_configuration_parameters(
+def _get_configuration_metadata_by_id(
     metadata: v2_measurement_service_pb2.GetMetadataResponse,
-) -> Tuple[Dict[int, ParameterMetadata], List[Any]]:
+) -> Dict[int, ParameterMetadata]:
     configuration_metadata_by_id = {}
     for configuration in metadata.measurement_signature.configuration_parameters:
         configuration_metadata_by_id[configuration.field_number] = ParameterMetadata(
@@ -99,15 +99,15 @@ def _deserialize_configuration_parameters(
     params = deserialize_parameters(
         configuration_metadata_by_id, metadata.measurement_signature.configuration_defaults.value
     )
-    values = [None] * params.__len__()
+    default_values = [None] * params.__len__()
     for k, v in params.items():
         configuration_metadata_by_id[k] = configuration_metadata_by_id[k]._replace(default_value=v)
-        values[k - 1] = v
+        default_values[k - 1] = v
 
-    return (configuration_metadata_by_id, values)
+    return configuration_metadata_by_id
 
 
-def _deserialize_output_parameters(
+def _get_output_metadata_by_id(
     metadata: v2_measurement_service_pb2.GetMetadataResponse,
 ) -> Dict[int, ParameterMetadata]:
     output_metadata_by_id = {}
@@ -124,92 +124,95 @@ def _deserialize_output_parameters(
     return output_metadata_by_id
 
 
-def _get_measure_parameters_with_type(configuration_metadata_by_id: Dict[int, ParameterMetadata], default_values: List[Any])-> Tuple[str, str, Dict[str, Dict[str, Any]]]:
-    method_params_with_type = []
-    param_names = []
-    enums_by_class : Dict[str, Dict[str, Any]] = dict()
-    for i in range(configuration_metadata_by_id.__len__()):
-        enum_name = configuration_metadata_by_id[i + 1].display_name.replace("_", " ")
-        enum_name = enum_name.title().replace(" ", "")
-        enum_name = enum_name + "Enum"
-        param_name = configuration_metadata_by_id[i + 1].display_name.lower()
-        if not param_name.isidentifier():
-            if param_name.__contains__(" "):
-                param_name = param_name.replace(" ", "_")
-            else:
-                param_name = param_name + "1"
-        param_type = ""
-        py_type = _PROTO_DATATYPE_TO_PYTYPE_LOOKUP.get(configuration_metadata_by_id[i + 1].type)
-        if py_type is None:
-            raise Exception(
-                f"Data type information not found '{configuration_metadata_by_id[i+1].type}'"
-            )
-
-        if configuration_metadata_by_id[i + 1].repeated:
-            param_type = f"List[{py_type.__name__}]"
+def _get_python_identifier(name: str) -> str:
+    param_name = name.lower()
+    if not param_name.isidentifier():
+        if param_name.__contains__(" "):
+            param_name = param_name.replace(" ", "_")
         else:
-            param_type = py_type.__name__
+            param_name = param_name + "_1"
+    return param_name
 
-        param_names.append(param_name)
-        default_value = default_values[i]
+
+def _get_python_type_as_str(type: Field.Kind.ValueType, is_array: bool) -> str:
+    py_type = _PROTO_DATATYPE_TO_PYTYPE_LOOKUP.get(type)
+    if py_type is None:
+        raise Exception(f"Data type information is not found for type: '{type}'.")
+    if is_array:
+        return f"List[{py_type.__name__}]"
+    else:
+        return py_type.__name__
+
+
+def _get_enum_values(parameter_metadata: ParameterMetadata) -> Dict[str, Any]:
+    enum_values_in_json = parameter_metadata.annotations["ni/enum.values"]
+    return json.loads(enum_values_in_json)
+
+
+def _get_measure_arguments_with_type_and_default_value(
+    configuration_metadata_by_id: Dict[int, ParameterMetadata]
+) -> Tuple[str, str, Dict[str, Dict[str, Any]]]:
+    method_args_with_type_and_value = []
+    argument_names = []
+    enum_values_by_name: Dict[str, Dict[str, Any]] = dict()
+    for metadata in configuration_metadata_by_id.values():
+        param_name = _get_python_identifier(metadata.display_name)
+        argument_names.append(param_name)
+
+        default_value = metadata.default_value
         if isinstance(default_value, str):
             default_value = f'"{default_value}"'
 
-        if configuration_metadata_by_id[i+1].annotations and configuration_metadata_by_id[i+1].annotations["ni/type_specialization"] == "enum":
-            enum_values_in_json = configuration_metadata_by_id[i+1].annotations["ni/enum.values"]
-            enum_values_dict : Dict[str, Any] = json.loads(enum_values_in_json)
-            enums_by_class[enum_name] = enum_values_dict
-            method_params_with_type.append(f"{param_name}: {enum_name} = {enum_name}.{next(key for key, val in enum_values_dict.items() if val == default_value)}")
-        else:
-            method_params_with_type.append(f"{param_name}: {param_type} = {default_value}")
-
-    method_signature = ",\n\t".join(method_params_with_type)
-    params_names_as_str = ",\n\t\t".join(param_names)
-    return method_signature, params_names_as_str, enums_by_class
-
-
-def _get_measure_return_fields_with_type(output_metadata_by_id: Dict[int, ParameterMetadata], enums_by_class: Dict[str, Dict[str, Any]]):
-    output_names_with_type = []
-    for i in range(output_metadata_by_id.__len__()):
-        param_name = output_metadata_by_id[i + 1].display_name.lower()
-        if not param_name.isidentifier():
-            if param_name.__contains__(" "):
-                param_name = param_name.replace(" ", "_")
-            else:
-                param_name = param_name + "1"
-        param_type = ""
-        py_type = _PROTO_DATATYPE_TO_PYTYPE_LOOKUP.get(output_metadata_by_id[i + 1].type)
-        if py_type is None:
-            raise Exception(
-                f"Data type information not found '{output_metadata_by_id[i+1].type}'"
+        param_type = _get_python_type_as_str(metadata.type, metadata.repeated)
+        if metadata.annotations and metadata.annotations["ni/type_specialization"] == "enum":
+            enum_values = _get_enum_values(metadata)
+            enum_name = metadata.display_name.replace("_", " ").title().replace(" ", "") + "Enum"
+            enum_values_by_name[enum_name] = enum_values
+            enum_value = next(key for key, val in enum_values.items() if val == default_value)
+            method_args_with_type_and_value.append(
+                f"{param_name}: {enum_name} = {enum_name}.{enum_value}"
             )
-
-        if output_metadata_by_id[i + 1].repeated:
-            param_type = f"List[{py_type.__name__}]"
         else:
-            param_type = py_type.__name__
+            method_args_with_type_and_value.append(f"{param_name}: {param_type} = {default_value}")
 
-        if output_metadata_by_id[i+1].annotations and output_metadata_by_id[i+1].annotations["ni/type_specialization"] == "enum":
-            enum_values_in_json = output_metadata_by_id[i+1].annotations["ni/enum.values"]
-            enum_values_dict : Dict[str, Any] = json.loads(enum_values_in_json)
-            for enum_name, enum_dict in enums_by_class.items():
+    method_arguments_with_type_and_value = ",\n    ".join(method_args_with_type_and_value)
+    argument_names_as_str = ",\n        ".join(argument_names)
+
+    return (method_arguments_with_type_and_value, argument_names_as_str, enum_values_by_name)
+
+
+def _get_measure_output_fields_with_type(
+    output_metadata_by_id: Dict[int, ParameterMetadata],
+    enum_values_by_type_name: Dict[str, Dict[str, Any]],
+) -> str:
+    output_names_with_type = []
+    for metadata in output_metadata_by_id.values():
+        param_name = _get_python_identifier(metadata.display_name)
+
+        param_type = _get_python_type_as_str(metadata.type, metadata.repeated)
+        if metadata.annotations and metadata.annotations["ni/type_specialization"] == "enum":
+            enum_values_dict: Dict[str, Any] = _get_enum_values(metadata)
+            for enum_name, enum_dict in enum_values_by_type_name.items():
                 if enum_values_dict == enum_dict:
                     param_type = enum_name
 
         output_names_with_type.append(f"{param_name}: {param_type}")
 
-    return_values_with_type = "\n    ".join(output_names_with_type)
-    return return_values_with_type
+    return "\n    ".join(output_names_with_type)
 
 
-def _update_enum_default_values(configuration_metadata_by_id: Dict[int, ParameterMetadata], output_metadata_by_id: Dict[int, ParameterMetadata], enums_by_class: Dict[str, Dict[str, Any]]):
-    for key, config_data in output_metadata_by_id.items():
-        if config_data.annotations and config_data.annotations["ni/type_specialization"] == "enum":
-            enum_values_in_json = config_data.annotations["ni/enum.values"]
-            enum_values_dict : Dict[str, Any] = json.loads(enum_values_in_json)
-            for enum_name, enum_dict in enums_by_class.items():
-                if enum_values_dict == enum_dict:
-                    output_metadata_by_id[key] = output_metadata_by_id[key]._replace(default_value=f"{enum_name}.{list(enum_dict.keys())[0]}")
+def _add_default_values_for_output_enum_parameters(
+    output_metadata_by_id: Dict[int, ParameterMetadata],
+    enum_values_by_name: Dict[str, Dict[str, Any]],
+) -> None:
+    for key, metadata in output_metadata_by_id.items():
+        if metadata.annotations and metadata.annotations["ni/type_specialization"] == "enum":
+            enum_values_dict: Dict[str, Any] = _get_enum_values(metadata)
+            for enum_name, values in enum_values_by_name.items():
+                if enum_values_dict == values:
+                    output_metadata_by_id[key] = output_metadata_by_id[key]._replace(
+                        default_value=f"{enum_name}.{list(values.keys())[0]}"
+                    )
 
 
 def _render_template(template_name: str, **template_args: Any) -> bytes:
@@ -240,7 +243,7 @@ def _create_file(
 @click.option(
     "-m",
     "--measurement-service-class",
-    callback=_check_measurement_service,
+    callback=_check_if_measurement_service_running,
     help="The service class of your measurement.",
 )
 @click.option(
@@ -271,27 +274,35 @@ def create_client(
         return
 
     if interactive_mode:
-        package_name, measurement_service_class = _get_user_inputs(available_measurement_services)
+        package_name, measurement_service_class = _get_package_name_and_service_class(
+            available_measurement_services
+        )
 
-    if package_name == "" or not measurement_service_class:
-        raise Exception("Package name and/or measurement service class cannot be empty.")
+    if not package_name or not package_name.isidentifier():
+        raise Exception("Package name must follow Python module conventions and cannot be empty.")
 
-    selected_service = next(
-        meas_service
+    if not measurement_service_class:
+        raise Exception("Please try again with a valid measurement service class.")
+
+    selected_service_description = next(
+        meas_service.annotations["ni/service.description"]
         for meas_service in available_measurement_services
         if meas_service.service_class == measurement_service_class
     )
-    measure_docstring = selected_service.annotations["ni/service.description"]
 
-    stub = _get_measurement_stub(discovery_client, measurement_service_class)
+    stub = _get_measurement_service_stub(discovery_client, measurement_service_class)
     metadata = stub.GetMetadata(v2_measurement_service_pb2.GetMetadataRequest())
-    configuration_metadata_by_id, default_values = _deserialize_configuration_parameters(metadata)
-    output_metadata_by_id = _deserialize_output_parameters(metadata)
+    configuration_metadata_by_id = _get_configuration_metadata_by_id(metadata)
+    output_metadata_by_id = _get_output_metadata_by_id(metadata)
 
-    measure_parameters_with_type, measure_param_names, enums_by_class = _get_measure_parameters_with_type(configuration_metadata_by_id, default_values)
-    measure_return_values_with_type = _get_measure_return_fields_with_type(output_metadata_by_id, enums_by_class)
+    measure_parameters_with_type, measure_param_names, enum_values_by_type_name = (
+        _get_measure_arguments_with_type_and_default_value(configuration_metadata_by_id)
+    )
+    measure_return_values_with_type = _get_measure_output_fields_with_type(
+        output_metadata_by_id, enum_values_by_type_name
+    )
 
-    _update_enum_default_values(configuration_metadata_by_id, output_metadata_by_id, enums_by_class)
+    _add_default_values_for_output_enum_parameters(output_metadata_by_id, enum_values_by_type_name)
 
     directory_out_path = pathlib.Path.cwd() / package_name
     directory_out_path.mkdir(exist_ok=True, parents=True)
@@ -300,12 +311,12 @@ def create_client(
         "measurement_client.py.mako",
         f"{package_name}.py",
         directory_out_path,
-        measure_docstring=measure_docstring,
+        measure_docstring=selected_service_description,
         configuration_metadata=configuration_metadata_by_id,
         output_metadata=output_metadata_by_id,
         service_class=measurement_service_class,
         measure_parameters_with_type=measure_parameters_with_type,
         measure_parameters=measure_param_names,
-        enum_by_class_name=enums_by_class,
+        enum_by_class_name=enum_values_by_type_name,
         measure_return_values_with_type=measure_return_values_with_type,
     )

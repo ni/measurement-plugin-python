@@ -1,13 +1,13 @@
 [tool.poetry]
 name = "ni_measurementlink_client"
-version = "1.0.0-dev0"
+version = "0.1.0-dev0"
 description = "MeasurementLink Client Generator for Python"
 authors = ["NI <opensource@ni.com>"]
 readme = "README.md"
 repository = "https://github.com/ni/measurementlink-python/"
 license = "MIT"
 classifiers = [
-    "Development Status :: 5 - Production/Stable",
+    "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
     "Intended Audience :: Manufacturing",
     "Intended Audience :: Science/Research",
@@ -31,6 +31,8 @@ pytest-cov = ">=3.0.0"
 ni-python-styleguide = ">=0.4.1"
 ni-measurementlink-service = {path = "..", develop = true}
 mypy = ">=1.0"
+mypy-protobuf = ">=3.4"
+types-protobuf = "^4.21"
 grpcio-tools = [
   {version = "1.49.1", python = ">=3.8,<3.12"},
   {version = "1.59.0", python = "^3.12"},
