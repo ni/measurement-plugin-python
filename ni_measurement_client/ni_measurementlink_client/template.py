@@ -1,6 +1,7 @@
 """Python measurement client template generator."""
 
 import json
+import keyword
 import pathlib
 from typing import Any, Dict, Optional, Sequence, Tuple
 
@@ -32,6 +33,7 @@ _PROTO_DATATYPE_TO_PYTYPE_LOOKUP = {
     Field.TYPE_BOOL: bool,
     Field.TYPE_STRING: str,
 }
+_INVALID_CHARS = "`~!@#$%^&*()-+={}[]\|:;',<>.?/ \n"
 
 
 def _check_if_measurement_service_running(
@@ -125,13 +127,25 @@ def _get_output_metadata_by_id(
 
 
 def _get_python_identifier(name: str) -> str:
-    param_name = name.lower()
-    if not param_name.isidentifier():
-        if param_name.__contains__(" "):
-            param_name = param_name.replace(" ", "_")
-        else:
-            param_name = param_name + "_1"
-    return param_name
+    var_name = name.lower()
+
+    if not var_name.isidentifier():
+        for ch in _INVALID_CHARS:
+            var_name = var_name.replace(ch, "_")
+
+    if keyword.iskeyword(var_name):
+        var_name = var_name + "_"
+
+    return var_name
+
+def _get_python_class_name(name: str) -> str:
+    class_name = name.replace("_", " ").title().replace(" ", "")
+
+    if not class_name.isidentifier():
+        for ch in _INVALID_CHARS:
+            class_name = class_name.replace(ch, "")
+
+    return class_name + "Enum"
 
 
 def _get_python_type_as_str(type: Field.Kind.ValueType, is_array: bool) -> str:
@@ -156,8 +170,8 @@ def _get_measure_arguments_with_type_and_default_value(
     argument_names = []
     enum_values_by_name: Dict[str, Dict[str, Any]] = dict()
     for metadata in configuration_metadata_by_id.values():
-        param_name = _get_python_identifier(metadata.display_name)
-        argument_names.append(param_name)
+        arg_name = _get_python_identifier(metadata.display_name)
+        argument_names.append(arg_name)
 
         default_value = metadata.default_value
         if isinstance(default_value, str):
@@ -166,14 +180,14 @@ def _get_measure_arguments_with_type_and_default_value(
         param_type = _get_python_type_as_str(metadata.type, metadata.repeated)
         if metadata.annotations and metadata.annotations["ni/type_specialization"] == "enum":
             enum_values = _get_enum_values(metadata)
-            enum_name = metadata.display_name.replace("_", " ").title().replace(" ", "") + "Enum"
-            enum_values_by_name[enum_name] = enum_values
+            enum_type_name = _get_python_class_name(metadata.display_name)
+            enum_values_by_name[enum_type_name] = enum_values
             enum_value = next(key for key, val in enum_values.items() if val == default_value)
             method_args_with_type_and_value.append(
-                f"{param_name}: {enum_name} = {enum_name}.{enum_value}"
+                f"{arg_name}: {enum_type_name} = {enum_type_name}.{enum_value}"
             )
         else:
-            method_args_with_type_and_value.append(f"{param_name}: {param_type} = {default_value}")
+            method_args_with_type_and_value.append(f"{arg_name}: {param_type} = {default_value}")
 
     method_arguments_with_type_and_value = ",\n    ".join(method_args_with_type_and_value)
     argument_names_as_str = ",\n        ".join(argument_names)
