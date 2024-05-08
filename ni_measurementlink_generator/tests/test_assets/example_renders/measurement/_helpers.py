@@ -32,9 +32,11 @@ class TestStandSupport(object):
             )
         except Exception as e:
             if e.hresult == -2147352567:
-                raise RuntimeError("The 'Update Pin Map' step is missing from the setup group. Please make sure the sequence includes this step for proper functionality.")
+                raise RuntimeError(
+                    "The 'Update Pin Map' step is missing from the setup group. Please make sure the sequence includes this step for proper functionality."
+                )
             raise RuntimeError("Error occurred: " + str(e))
-        return pin_map_id 
+        return pin_map_id
 
     def resolve_file_path(self, file_path: str) -> str:
         """Resolve the absolute path to a file using the TestStand search directories.

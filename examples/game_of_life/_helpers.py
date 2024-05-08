@@ -19,7 +19,7 @@ class TestStandSupport(object):
                 (Dynamically typed.)
         """
         self._sequence_context = sequence_context
-    
+
     def get_active_pin_map_id(self) -> str:
         """Get the active pin map id from the NI.MeasurementLink.PinMapId runtime variable.
 
@@ -31,10 +31,11 @@ class TestStandSupport(object):
                 "NI.MeasurementLink.PinMapId", 0x0
             )
         except Exception as e:
-            if e.hresult == -2147352567:
-                raise RuntimeError("The 'Update Pin Map' step is missing from the setup group. Please make sure the sequence includes this step for proper functionality.")
-            raise RuntimeError("Error occurred: " + str(e))
-        return pin_map_id 
+            raise RuntimeError(
+                "Failed to retrieve the active pin map ID. Please check Update Pin Map step"
+                + str(e)
+            )
+        return pin_map_id
 
     def resolve_file_path(self, file_path: str) -> str:
         """Resolve the absolute path to a file using the TestStand search directories.
