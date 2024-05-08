@@ -40,9 +40,17 @@ class _MeasurementClient:
 
     @cached_property
     def _measurement_service_stub(self) -> v2_measurement_service_pb2_grpc.MeasurementServiceStub:
-        resolved_service = self._discovery_client.resolve_service(
-            _V2_MEASUREMENT_SERVICE_INTERFACE, self._service_class
-        )
+        try:
+            resolved_service = self._discovery_client.resolve_service(
+                _V2_MEASUREMENT_SERVICE_INTERFACE, self._service_class
+            )
+        except grpc.RpcError as e:
+            if e.code() == grpc.StatusCode.NOT_FOUND:
+                raise RuntimeError(
+                    "Failed to connect to the measurement service. Ensure if the measurement is running."
+                )
+            raise
+
         channel = grpc.insecure_channel(resolved_service.insecure_address)
         return v2_measurement_service_pb2_grpc.MeasurementServiceStub(channel)
 
@@ -59,7 +67,7 @@ class _MeasurementClient:
             ),
         )
 
-    % if enum_by_class_name:
+    % if output_metadata:
 
     def _get_enum_type(self, value: Any, is_array: bool) -> type:
         if is_array and len(value) > 0:
@@ -86,12 +94,16 @@ class _MeasurementClient:
 
     def _measure(self, *args: Any) -> Tuple[Any]:
         request = self._get_measure_request(args)
+        % if output_metadata:
         result = [None] * max(self._output_metadata_by_id.keys())
+        % else:
+        result = []
+        % endif
         for response in self._measurement_service_stub.Measure(request):
             output_values = deserialize_parameters(
                 self._output_metadata_by_id, response.outputs.value
             )
-            % if enum_by_class_name:
+            % if output_metadata:
             output_values = self._parse_enum_values(output_values)
             % endif
             for k, v in output_values.items():
@@ -108,16 +120,20 @@ class ${enum_name}(Enum):
     % endfor
 
 % endfor
+<% output_type = "None" %>\
+% if output_metadata:
 
 class Output(NamedTuple):
     """Measurement result container."""
 
     ${measure_return_values_with_type}
 
+<% output_type = "Output" %>\
+% endif
 
 def measure(
     ${measure_parameters_with_type}
-) -> Output:
+) -> ${output_type}:
     """${measure_docstring}
 
     Returns:
@@ -128,7 +144,9 @@ def measure(
     response = client._measure(
         ${measure_parameters}
     )
+    % if output_metadata:
     return Output._make(response)
+    % endif
 
 
 def register_pin_map(pin_map_absolute_path: str) -> str:

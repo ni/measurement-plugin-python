@@ -21,17 +21,21 @@ from ni_measurementlink_service.discovery import DiscoveryClient, ServiceDescrip
 
 _V2_MEASUREMENT_SERVICE_INTERFACE = "ni.measurementlink.measurement.v2.MeasurementService"
 _PROTO_DATATYPE_TO_PYTYPE_LOOKUP = {
-    Field.TYPE_ENUM: int,
     Field.TYPE_INT32: int,
     Field.TYPE_INT64: int,
     Field.TYPE_UINT32: int,
     Field.TYPE_UINT64: int,
+    Field.TYPE_SINT32: int,
+    Field.TYPE_SINT64: int,
     Field.TYPE_FIXED32: int,
     Field.TYPE_FIXED64: int,
+    Field.TYPE_SFIXED32: int,
+    Field.TYPE_SFIXED64: int,
     Field.TYPE_FLOAT: float,
     Field.TYPE_DOUBLE: float,
     Field.TYPE_BOOL: bool,
     Field.TYPE_STRING: str,
+    Field.TYPE_ENUM: int,
 }
 _INVALID_CHARS = "`~!@#$%^&*()-+={}[]\|:;',<>.?/ \n"
 
@@ -45,7 +49,7 @@ def _check_if_measurement_service_running(
         return service_class
     except Exception:
         raise click.BadParameter(
-            f"Error while resolving the measurement service with service class: {service_class}."
+            f"Could not find any active measurement with service class: '{service_class}'."
         )
 
 
@@ -60,28 +64,28 @@ def _get_measurement_service_stub(
     return v2_measurement_service_pb2_grpc.MeasurementServiceStub(channel)
 
 
-def _get_package_name_and_service_class(
+def _get_module_name_and_service_class(
     available_measurement_services: Sequence[ServiceDescriptor],
 ) -> Tuple[str, str]:
-    print("List of active measurements: ")
+    print("List of available measurements: ")
     for i, service in enumerate(available_measurement_services):
         print(f"{i+1}. {service.display_name}")
 
     try:
         index = int(
             input(
-                "\nPlease enter the serial number of the measurement service that you wish to create a client for: "
+                "\nEnter the serial number for the desired measurement service client creation: "
             )
         )
     except Exception:
-        return ("", "")
+        raise Exception("Invalid input. Please try again by entering a valid serial number.")
 
-    if 0 >= index > len(available_measurement_services):
-        print("The input is invalid.")
+    if 0 <= index > len(available_measurement_services):
+        raise Exception("Input out of bounds. Please try again by entering a valid serial number.")
 
     measurement_service_class = available_measurement_services[index - 1].service_class
-    package_name = input("Please provide the name for the measurement client package: ")
-    return (package_name, measurement_service_class)
+    module_name = input("Please provide the name for the measurement client module: ")
+    return (module_name, measurement_service_class)
 
 
 def _get_configuration_metadata_by_id(
@@ -133,6 +137,9 @@ def _get_python_identifier(name: str) -> str:
         for ch in _INVALID_CHARS:
             var_name = var_name.replace(ch, "_")
 
+    if var_name[0].isdigit():
+        var_name = "_" + var_name
+
     if keyword.iskeyword(var_name):
         var_name = var_name + "_"
 
@@ -145,13 +152,16 @@ def _get_python_class_name(name: str) -> str:
         for ch in _INVALID_CHARS:
             class_name = class_name.replace(ch, "")
 
+    if class_name[0].isdigit():
+        class_name = "_" + class_name
+
     return class_name + "Enum"
 
 
 def _get_python_type_as_str(type: Field.Kind.ValueType, is_array: bool) -> str:
     py_type = _PROTO_DATATYPE_TO_PYTYPE_LOOKUP.get(type)
     if py_type is None:
-        raise Exception(f"Data type information is not found for type: '{type}'.")
+        raise Exception(f"Some data types for config or output parameters are unsupported.")
     if is_array:
         return f"List[{py_type.__name__}]"
     else:
@@ -160,7 +170,18 @@ def _get_python_type_as_str(type: Field.Kind.ValueType, is_array: bool) -> str:
 
 def _get_enum_values(parameter_metadata: ParameterMetadata) -> Dict[str, Any]:
     enum_values_in_json = parameter_metadata.annotations["ni/enum.values"]
-    return json.loads(enum_values_in_json)
+    enum_values: Dict[str, Any] = json.loads(enum_values_in_json)
+
+    pythonic_enum_values : Dict[str, Any] = {}
+    for k, v in enum_values.items():
+        for ch in _INVALID_CHARS:
+            k = k.replace(ch, "")
+        if k[0].isdigit():
+            k = "_" + k
+
+        pythonic_enum_values[k] = v
+
+    return pythonic_enum_values
 
 
 def _get_measure_arguments_with_type_and_default_value(
@@ -175,7 +196,11 @@ def _get_measure_arguments_with_type_and_default_value(
 
         default_value = metadata.default_value
         if isinstance(default_value, str):
-            default_value = f'"{default_value}"'
+            if metadata.annotations and metadata.annotations["ni/type_specialization"] == "path":
+                default_value = f'r"{default_value}"'
+            else:
+                default_value = f'"{default_value}"'
+                
 
         param_type = _get_python_type_as_str(metadata.type, metadata.repeated)
         if metadata.annotations and metadata.annotations["ni/type_specialization"] == "enum":
@@ -253,7 +278,7 @@ def _create_file(
 
 
 @click.command()
-@click.argument("package_name", type=str, default="")
+@click.argument("module_name", type=str, default="")
 @click.option(
     "-m",
     "--measurement-service-class",
@@ -267,16 +292,13 @@ def _create_file(
     help="Utilize interactive input for Python measurement client creation.",
 )
 def create_client(
-    package_name: str, measurement_service_class: Optional[str], interactive_mode: bool
+    module_name: str, measurement_service_class: Optional[str], interactive_mode: bool
 ) -> None:
-    """Generates a Python measurement client for a measurement service.
+    """Generates a Python measurement client module for a measurement service.
 
     You can use the generated module to interact with the corresponding measurement service.
 
-    PACKAGE_NAME: Name for the Python measurement client package.
-
-    Raises:
-        Exception: If the package name is empty or if it misses any configuration or output type.
+    MODULE_NAME: Name for the generated Python measurement client module.
     """
     discovery_client = DiscoveryClient()
     available_measurement_services = discovery_client.enumerate_services(
@@ -288,15 +310,15 @@ def create_client(
         return
 
     if interactive_mode:
-        package_name, measurement_service_class = _get_package_name_and_service_class(
+        module_name, measurement_service_class = _get_module_name_and_service_class(
             available_measurement_services
         )
 
-    if not package_name or not package_name.isidentifier():
-        raise Exception("Package name must follow Python module conventions and cannot be empty.")
+    if not module_name or not module_name.isidentifier():
+        raise Exception("Module name must follow Python module conventions and cannot be empty.")
 
     if not measurement_service_class:
-        raise Exception("Please try again with a valid measurement service class.")
+        raise Exception("Invalid input. Please try again with a valid measurement service class.")
 
     selected_service_description = next(
         meas_service.annotations["ni/service.description"]
@@ -318,12 +340,12 @@ def create_client(
 
     _add_default_values_for_output_enum_parameters(output_metadata_by_id, enum_values_by_type_name)
 
-    directory_out_path = pathlib.Path.cwd() / package_name
+    directory_out_path = pathlib.Path.cwd() / module_name
     directory_out_path.mkdir(exist_ok=True, parents=True)
 
     _create_file(
         "measurement_client.py.mako",
-        f"{package_name}.py",
+        f"{module_name}.py",
         directory_out_path,
         measure_docstring=selected_service_description,
         configuration_metadata=configuration_metadata_by_id,
