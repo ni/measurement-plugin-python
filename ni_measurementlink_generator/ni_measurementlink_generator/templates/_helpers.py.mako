@@ -26,16 +26,12 @@ class TestStandSupport(object):
         Returns:
             The resource id of the pin map that is registered to the pin map service.
         """
-        try:
-            pin_map_id = self._sequence_context.Execution.RunTimeVariables.GetValString(
-                "NI.MeasurementLink.PinMapId", 0x0
-            )
-        except Exception as e:
+        execution = self._sequence_context.Execution.RunTimeVariables
+        if not execution.Exists("NI.MeasurementLink.PinMapId", 0x0):
             raise RuntimeError(
-                "Failed to retrieve the active pin map ID. Please check Update Pin Map step"
-                + str(e)
+                "Failed to retrieve the active pin map ID .Please check the Update Pin Map step ."
             )
-        return pin_map_id
+        return execution.GetValString("NI.MeasurementLink.PinMapId", 0x0)
 
     def resolve_file_path(self, file_path: str) -> str:
         """Resolve the absolute path to a file using the TestStand search directories.
