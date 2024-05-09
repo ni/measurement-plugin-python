@@ -133,13 +133,16 @@ def _get_output_metadata_by_id(
 def _get_python_identifier(name: str) -> str:
     var_name = name.lower()
 
+    # Replace any spaces or special characters with an '_'.
     if not var_name.isidentifier():
         for ch in _INVALID_CHARS:
             var_name = var_name.replace(ch, "_")
 
+    # Python identifiers cannot begin with an integer. So prefix '_' if it does.
     if var_name[0].isdigit():
         var_name = "_" + var_name
 
+    # Check and append a '_' if the name resembles a python keyword.
     if keyword.iskeyword(var_name):
         var_name = var_name + "_"
 
@@ -148,10 +151,12 @@ def _get_python_identifier(name: str) -> str:
 def _get_python_class_name(name: str) -> str:
     class_name = name.replace("_", " ").title().replace(" ", "")
 
+    # Replace any spaces or special characters with an '_'.
     if not class_name.isidentifier():
         for ch in _INVALID_CHARS:
             class_name = class_name.replace(ch, "")
 
+    # Python identifiers cannot begin with an integer. So prefix '_' if it does.
     if class_name[0].isdigit():
         class_name = "_" + class_name
 
@@ -172,10 +177,13 @@ def _get_enum_values(parameter_metadata: ParameterMetadata) -> Dict[str, Any]:
     enum_values_in_json = parameter_metadata.annotations["ni/enum.values"]
     enum_values: Dict[str, Any] = json.loads(enum_values_in_json)
 
+    # Replace any spaces or special characters with an '_'.
     pythonic_enum_values : Dict[str, Any] = {}
     for k, v in enum_values.items():
         for ch in _INVALID_CHARS:
             k = k.replace(ch, "")
+
+        # Python identifiers cannot begin with an integer. So prefix '_' if it does.
         if k[0].isdigit():
             k = "_" + k
 
@@ -184,23 +192,23 @@ def _get_enum_values(parameter_metadata: ParameterMetadata) -> Dict[str, Any]:
     return pythonic_enum_values
 
 
-def _get_measure_arguments_with_type_and_default_value(
+def _get_measure_parameters_with_type_and_default_value(
     configuration_metadata_by_id: Dict[int, ParameterMetadata]
 ) -> Tuple[str, str, Dict[str, Dict[str, Any]]]:
-    method_args_with_type_and_value = []
-    argument_names = []
+    method_params_with_type_and_value = []
+    parameter_names = []
     enum_values_by_name: Dict[str, Dict[str, Any]] = dict()
     for metadata in configuration_metadata_by_id.values():
-        arg_name = _get_python_identifier(metadata.display_name)
-        argument_names.append(arg_name)
+        parameter_name = _get_python_identifier(metadata.display_name)
+        parameter_names.append(parameter_name)
 
         default_value = metadata.default_value
         if isinstance(default_value, str):
+            default_value = f'"{default_value}"'
+
+            # If it's path type, make the value as raw string literal to ignore escape characters.
             if metadata.annotations and metadata.annotations["ni/type_specialization"] == "path":
-                default_value = f'r"{default_value}"'
-            else:
-                default_value = f'"{default_value}"'
-                
+                default_value = f'r{default_value}'
 
         param_type = _get_python_type_as_str(metadata.type, metadata.repeated)
         if metadata.annotations and metadata.annotations["ni/type_specialization"] == "enum":
@@ -208,16 +216,17 @@ def _get_measure_arguments_with_type_and_default_value(
             enum_type_name = _get_python_class_name(metadata.display_name)
             enum_values_by_name[enum_type_name] = enum_values
             enum_value = next(key for key, val in enum_values.items() if val == default_value)
-            method_args_with_type_and_value.append(
-                f"{arg_name}: {enum_type_name} = {enum_type_name}.{enum_value}"
+            method_params_with_type_and_value.append(
+                f"{parameter_name}: {enum_type_name} = {enum_type_name}.{enum_value}"
             )
         else:
-            method_args_with_type_and_value.append(f"{arg_name}: {param_type} = {default_value}")
+            method_params_with_type_and_value.append(f"{parameter_name}: {param_type} = {default_value}")
 
-    method_arguments_with_type_and_value = ",\n    ".join(method_args_with_type_and_value)
-    argument_names_as_str = ",\n        ".join(argument_names)
+    # Use newline and spaces to align the method parameters appropriately in the generated file.
+    method_parameters_with_type_and_value = ",\n    ".join(method_params_with_type_and_value)
+    parameter_names_as_str = ",\n        ".join(parameter_names)
 
-    return (method_arguments_with_type_and_value, argument_names_as_str, enum_values_by_name)
+    return (method_parameters_with_type_and_value, parameter_names_as_str, enum_values_by_name)
 
 
 def _get_measure_output_fields_with_type(
@@ -332,7 +341,7 @@ def create_client(
     output_metadata_by_id = _get_output_metadata_by_id(metadata)
 
     measure_parameters_with_type, measure_param_names, enum_values_by_type_name = (
-        _get_measure_arguments_with_type_and_default_value(configuration_metadata_by_id)
+        _get_measure_parameters_with_type_and_default_value(configuration_metadata_by_id)
     )
     measure_return_values_with_type = _get_measure_output_fields_with_type(
         output_metadata_by_id, enum_values_by_type_name
@@ -355,4 +364,10 @@ def create_client(
         measure_parameters=measure_param_names,
         enum_by_class_name=enum_values_by_type_name,
         measure_return_values_with_type=measure_return_values_with_type,
+    )
+    _create_file("pyproject.toml.mako",
+        "pyproject.toml",
+        directory_out_path,
+        module_name=module_name,
+        description=selected_service_description,
     )
