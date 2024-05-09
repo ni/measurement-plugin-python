@@ -93,11 +93,13 @@ def _get_configuration_metadata_by_id(
 ) -> Dict[int, ParameterMetadata]:
     configuration_metadata_by_id = {}
     for configuration in metadata.measurement_signature.configuration_parameters:
+        # Only the enum parameters make use of this default value.
+        default_value = [0] if configuration.repeated else 0
         configuration_metadata_by_id[configuration.field_number] = ParameterMetadata(
             configuration.name,
             configuration.type,
             configuration.repeated,
-            0,
+            default_value,
             configuration.annotations,
             configuration.message_type,
         )
@@ -215,10 +217,22 @@ def _get_measure_parameters_with_type_and_default_value(
             enum_values = _get_enum_values(metadata)
             enum_type_name = _get_python_class_name(metadata.display_name)
             enum_values_by_name[enum_type_name] = enum_values
-            enum_value = next(key for key, val in enum_values.items() if val == default_value)
-            method_params_with_type_and_value.append(
-                f"{parameter_name}: {enum_type_name} = {enum_type_name}.{enum_value}"
-            )
+            param_type = f"List[{enum_type_name}]" if metadata.repeated else enum_type_name
+            if metadata.repeated:
+                values = []
+                for val in default_value:
+                    enum_value = next(k for k, v in enum_values.items() if v == val)
+                    values.append(f"{enum_type_name}.{enum_value}")
+                concatenated_default_value = ", ".join(values)
+                concatenated_default_value = f"[{concatenated_default_value}]"
+                method_params_with_type_and_value.append(
+                    f"{parameter_name}: {param_type} = {concatenated_default_value}"
+                )
+            else:
+                enum_value = next(k for k, v in enum_values.items() if v == default_value)
+                method_params_with_type_and_value.append(
+                    f"{parameter_name}: {param_type} = {enum_type_name}.{enum_value}"
+                )
         else:
             method_params_with_type_and_value.append(f"{parameter_name}: {param_type} = {default_value}")
 
@@ -243,6 +257,10 @@ def _get_measure_output_fields_with_type(
             for enum_name, enum_dict in enum_values_by_type_name.items():
                 if enum_values_dict == enum_dict:
                     param_type = enum_name
+                    break
+
+            if metadata.repeated:
+                param_type = f"List[{param_type}]"
 
         output_names_with_type.append(f"{param_name}: {param_type}")
 

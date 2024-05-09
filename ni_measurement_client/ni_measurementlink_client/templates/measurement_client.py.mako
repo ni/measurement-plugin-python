@@ -69,25 +69,19 @@ class _MeasurementClient:
 
     % if output_metadata:
 
-    def _get_enum_type(self, value: Any, is_array: bool) -> type:
-        if is_array and len(value) > 0:
-            if isinstance(value[0], str):
-                return type(eval(value[0]))
-            return type(value[0])
-        elif isinstance(value, str):
-            return type(eval(value))
-        else:
-            return type(value)
-
-
-    def _parse_enum_values(
+    def _parse_enum_values_if_any(
         self, output_values: Dict[int, Any]
     ) -> Dict[int, Any]:
         for key, metadata in self._output_metadata_by_id.items():
             if metadata.annotations and metadata.annotations["ni/type_specialization"] == "enum":
-                enum_type = self._get_enum_type(metadata.default_value, metadata.repeated)
-                output_values[key] = enum_type(int(output_values[key]))
-
+                enum_type = type(eval(metadata.default_value))
+                if metadata.repeated:
+                    enum_values = []
+                    for value in output_values[key]:
+                        enum_values.append(enum_type(int(value)))
+                    output_values[key] = enum_values
+                else:
+                    output_values[key] = enum_type(int(output_values[key]))
         return output_values
 
     % endif
@@ -104,7 +98,7 @@ class _MeasurementClient:
                 self._output_metadata_by_id, response.outputs.value
             )
             % if output_metadata:
-            output_values = self._parse_enum_values(output_values)
+            output_values = self._parse_enum_values_if_any(output_values)
             % endif
             for k, v in output_values.items():
                 result[k - 1] = v

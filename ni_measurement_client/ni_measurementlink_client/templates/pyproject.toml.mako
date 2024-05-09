@@ -3,7 +3,6 @@
 [tool.poetry]
 name = "${module_name}"
 version = "0.1.0"
-package-mode = false
 description = "${description}"
 authors = ["National Instruments"]
 
