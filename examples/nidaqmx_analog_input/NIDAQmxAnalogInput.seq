@@ -2694,7 +2694,7 @@
 																					<value representation='Int64'>1</value>
 																				</ID>
 																				<TypeSpecialization classname='Str'>
-																					<value>None</value>
+																					<value>IOResource</value>
 																				</TypeSpecialization>
 																				<EnumDefinition classname='Objs'>
 																					<value lbound='[0]' ubound='[]'/>
@@ -3135,7 +3135,7 @@
 																	<PythonCall classname='CPythonCall'>
 																		<subprops>
 																			<UseAdapterSettingsForInterpreterSession classname='Bool'>
-																				<value>true</value>
+																				<value>false</value>
 																			</UseAdapterSettingsForInterpreterSession>
 																			<InterpreterSessionScope classname='Num'>
 																				<value>2</value>
@@ -3584,7 +3584,7 @@
 																	<PythonCall classname='CPythonCall'>
 																		<subprops>
 																			<UseAdapterSettingsForInterpreterSession classname='Bool'>
-																				<value>true</value>
+																				<value>false</value>
 																			</UseAdapterSettingsForInterpreterSession>
 																			<InterpreterSessionScope classname='Num'>
 																				<value>2</value>
