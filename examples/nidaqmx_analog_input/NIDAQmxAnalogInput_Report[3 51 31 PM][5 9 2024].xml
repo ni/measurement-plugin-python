@@ -1,0 +1,488 @@
+<?xml version="1.0" encoding="iso-8859-1" ?><?xml-stylesheet type="text/xsl" href="C:\Program Files\National Instruments\TestStand 2021\Components\Models\TestStandModels\ATML\StyleSheets\tr5_horizontal.xsl"?>
+
+<trc:TestResultsCollection xmlns:trc="urn:IEEE-1636.1:2011:01:TestResultsCollection" xmlns:tr="urn:IEEE-1636.1:2011:01:TestResults" xmlns:c="urn:IEEE-1671:2010:Common" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ts="www.ni.com/TestStand/ATMLTestResults/2.0">
+<trc:TestResults uuid="ea4358ea-0ded-11ef-b74a-34735ae25b33" xmlns:trc="urn:IEEE-1636.1:2011:01:TestResultsCollection" xmlns:tr="urn:IEEE-1636.1:2011:01:TestResults" xmlns:c="urn:IEEE-1671:2010:Common" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ts="www.ni.com/TestStand/ATMLTestResults/2.0">
+	<tr:Personnel>
+		<tr:SystemOperator ID = "administrator" name = "administrator"/>
+	</tr:Personnel>
+	<tr:ResultSet ID="4" name = "C:\Users\prathana.mahendran\Downloads\measurementlink-python\examples\nidaqmx_analog_input\NIDAQmxAnalogInput.seq#MainSequence" startDateTime = "2024-05-09T15:51:31.831" endDateTime = "2024-05-09T15:51:36.831">
+	<tr:Events>
+		<tr:Event ID = "Error Message" severity="4" source="Error.Msg">
+			<tr:Data name="Error Message" >
+				<c:Datum xsi:type="ts:TS_string" flags = "0x0000">
+					<c:Value><![CDATA[<class 'RuntimeError'>
+Failed to retrieve the active pin map ID .Please check the Update Pin Map step .
+
+Call Stack information:
+  File "C:\Users\prathana.mahendran\Downloads\measurementlink-python\examples\nidaqmx_analog_input\teststand_nidaqmx.py", line 25, in create_nidaqmx_tasks
+    pin_map_id = teststand_support.get_active_pin_map_id()
+  File "C:\Users\prathana.mahendran\Downloads\measurementlink-python\examples\nidaqmx_analog_input\_helpers.py", line 31, in get_active_pin_map_id
+    raise RuntimeError(
+
+
+RuntimeError: Failed to retrieve the active pin map ID .Please check the Update Pin Map step .
+]]></c:Value>
+				</c:Datum>
+			</tr:Data>
+		</tr:Event>
+		<tr:Event ID = "Error Code" severity="0" source="Error.Code">
+			<tr:Message>
+				Operation Failed.
+			</tr:Message>
+			<tr:Data name="Error Code" >
+				<c:Datum value = "-17500" xsi:type="c:double" />
+			</tr:Data>
+		</tr:Event>
+	</tr:Events>
+		<tr:Extension>
+			<ts:TSStepProperties>
+				<ts:StepType>SequenceCall</ts:StepType>
+				<ts:StepGroup>Main</ts:StepGroup>
+				<ts:BlockLevel value='0'/>
+				<ts:Index value='8'/>
+				<ts:TotalTime value='5.00036'/>
+				<ts:ModuleTime value='5.00026'/>
+			</ts:TSStepProperties>
+		</tr:Extension>
+		<tr:Outcome value="Aborted" qualifier="Error" />
+	</tr:ResultSet>
+	<tr:TestProgram>
+		<c:SerialNumber>
+			BLR-DLT-131
+		</c:SerialNumber>
+		<tr:Configuration>
+			<c:Collection xsi:type="ts:TS_Collection" flags = "0x0000">
+				<c:Item name = "IncludeTSExtensionElements">
+					<c:Datum value = "true" xsi:type="ts:TS_boolean" flags = "0x0000"/>
+				</c:Item>
+				<c:Item name = "IncludeAttributes">
+					<c:Datum value = "false" xsi:type="ts:TS_boolean" flags = "0x0000"/>
+				</c:Item>
+				<c:Item name = "IncludeLimits">
+					<c:Datum value = "true" xsi:type="ts:TS_boolean" flags = "0x0000"/>
+				</c:Item>
+				<c:Item name = "IncludeMeasurements">
+					<c:Datum value = "true" xsi:type="ts:TS_boolean" flags = "0x0000"/>
+				</c:Item>
+				<c:Item name = "IncludeArrayMeasurement">
+					<c:Datum value = "2" xsi:type="ts:TS_double" flags = "0x0000"/>
+				</c:Item>
+				<c:Item name = "ArrayMeasurementFilter">
+					<c:Datum value = "3" xsi:type="ts:TS_double" flags = "0x0000"/>
+				</c:Item>
+				<c:Item name = "ArrayMeasurementMax">
+					<c:Datum value = "100" xsi:type="ts:TS_double" flags = "0x0000"/>
+				</c:Item>
+				<c:Item name = "IncludeTimes">
+					<c:Datum value = "true" xsi:type="ts:TS_boolean" flags = "0x0000"/>
+				</c:Item>
+				<c:Item name = "Format">
+					<c:Datum xsi:type="ts:TS_string" flags = "0x0000">
+						<c:Value>xml</c:Value>
+					</c:Datum>
+				</c:Item>
+				<c:Item name = "NumericFormat">
+					<c:Datum xsi:type="ts:TS_string" flags = "0x0000">
+						<c:Value>%$.13g</c:Value>
+					</c:Datum>
+				</c:Item>
+				<c:Item name = "ResultFilterExpression">
+					<c:Datum xsi:type="ts:TS_string" flags = "0x0000">
+						<c:Value>True</c:Value>
+					</c:Datum>
+				</c:Item>
+				<c:Item name = "GeneratePath">
+					<c:Datum value = "true" xsi:type="ts:TS_boolean" flags = "0x0000"/>
+				</c:Item>
+				<c:Item name = "UseTemporaryFile">
+					<c:Datum value = "false" xsi:type="ts:TS_boolean" flags = "0x0000"/>
+				</c:Item>
+				<c:Item name = "UseSequenceFileNameAsPrefix">
+					<c:Datum value = "true" xsi:type="ts:TS_boolean" flags = "0x0000"/>
+				</c:Item>
+				<c:Item name = "AddTimeAndDateToFileName">
+					<c:Datum value = "true" xsi:type="ts:TS_boolean" flags = "0x0000"/>
+				</c:Item>
+				<c:Item name = "NewFileNameForEachUUT">
+					<c:Datum value = "false" xsi:type="ts:TS_boolean" flags = "0x0000"/>
+				</c:Item>
+				<c:Item name = "ForceFileNameToBeUnique">
+					<c:Datum value = "true" xsi:type="ts:TS_boolean" flags = "0x0000"/>
+				</c:Item>
+				<c:Item name = "AppendToFileIfItExists">
+					<c:Datum value = "false" xsi:type="ts:TS_boolean" flags = "0x0000"/>
+				</c:Item>
+				<c:Item name = "DirectoryType">
+					<c:Datum xsi:type="ts:TS_string" flags = "0x0000">
+						<c:Value>SequenceFileDirectory</c:Value>
+					</c:Datum>
+				</c:Item>
+				<c:Item name = "Directory">
+					<c:Datum xsi:type="ts:TS_string" flags = "0x0000">
+						<c:Value></c:Value>
+					</c:Datum>
+				</c:Item>
+				<c:Item name = "BaseName">
+					<c:Datum xsi:type="ts:TS_string" flags = "0x0000">
+						<c:Value>Report</c:Value>
+					</c:Datum>
+				</c:Item>
+				<c:Item name = "UseFormatForExtension">
+					<c:Datum value = "true" xsi:type="ts:TS_boolean" flags = "0x0000"/>
+				</c:Item>
+				<c:Item name = "Extension">
+					<c:Datum xsi:type="ts:TS_string" flags = "0x0000">
+						<c:Value></c:Value>
+					</c:Datum>
+				</c:Item>
+				<c:Item name = "ReportFilePath">
+					<c:Datum xsi:type="ts:TS_string" flags = "0x0000">
+						<c:Value></c:Value>
+					</c:Datum>
+				</c:Item>
+				<c:Item name = "DisableReportGeneration">
+					<c:Datum value = "false" xsi:type="ts:TS_boolean" flags = "0x0000"/>
+				</c:Item>
+				<c:Item name = "IncludeStepResults">
+					<c:Datum value = "true" xsi:type="ts:TS_boolean" flags = "0x0000"/>
+				</c:Item>
+				<c:Item name = "BodyGenerator">
+					<c:Datum xsi:type="ts:TS_string" flags = "0x0000">
+						<c:Value>DLL</c:Value>
+					</c:Datum>
+				</c:Item>
+				<c:Item name = "SaveTransformedHtmlForXmlReport">
+					<c:Datum value = "true" xsi:type="ts:TS_boolean" flags = "0x0000"/>
+				</c:Item>
+				<c:Item name = "Colors">
+					<c:Collection xsi:type="ts:TS_Collection" flags = "0x0000">
+						<c:Item name = "LabelBg">
+							<c:Datum xsi:type="ts:TS_string" flags = "0x0000">
+								<c:Value>#FFFFFF</c:Value>
+							</c:Datum>
+						</c:Item>
+						<c:Item name = "ValueBg">
+							<c:Datum xsi:type="ts:TS_string" flags = "0x0000">
+								<c:Value>#32FFFF</c:Value>
+							</c:Datum>
+						</c:Item>
+						<c:Item name = "UUTSeparator">
+							<c:Datum xsi:type="ts:TS_string" flags = "0x0000">
+								<c:Value>#0000E0</c:Value>
+							</c:Datum>
+						</c:Item>
+						<c:Item name = "HeaderSeparator">
+							<c:Datum xsi:type="ts:TS_string" flags = "0x0000">
+								<c:Value>#8000CC</c:Value>
+							</c:Datum>
+						</c:Item>
+						<c:Item name = "TableBorder">
+							<c:Datum xsi:type="ts:TS_string" flags = "0x0000">
+								<c:Value>#000000</c:Value>
+							</c:Datum>
+						</c:Item>
+						<c:Item name = "MainBg">
+							<c:Datum xsi:type="ts:TS_string" flags = "0x0000">
+								<c:Value>#00C4C4</c:Value>
+							</c:Datum>
+						</c:Item>
+						<c:Item name = "SetupBg">
+							<c:Datum xsi:type="ts:TS_string" flags = "0x0000">
+								<c:Value>#FF8000</c:Value>
+							</c:Datum>
+						</c:Item>
+						<c:Item name = "CleanupBg">
+							<c:Datum xsi:type="ts:TS_string" flags = "0x0000">
+								<c:Value>#ADD8E6</c:Value>
+							</c:Datum>
+						</c:Item>
+						<c:Item name = "ReportTextBg">
+							<c:Datum xsi:type="ts:TS_string" flags = "0x0000">
+								<c:Value>#FF32CC</c:Value>
+							</c:Datum>
+						</c:Item>
+						<c:Item name = "Terminated">
+							<c:Datum xsi:type="ts:TS_string" flags = "0x0000">
+								<c:Value>#000080</c:Value>
+							</c:Datum>
+						</c:Item>
+						<c:Item name = "Failed">
+							<c:Datum xsi:type="ts:TS_string" flags = "0x0000">
+								<c:Value>#FF0000</c:Value>
+							</c:Datum>
+						</c:Item>
+						<c:Item name = "Error">
+							<c:Datum xsi:type="ts:TS_string" flags = "0x0000">
+								<c:Value>#FF0000</c:Value>
+							</c:Datum>
+						</c:Item>
+						<c:Item name = "Passed">
+							<c:Datum xsi:type="ts:TS_string" flags = "0x0000">
+								<c:Value>#008000</c:Value>
+							</c:Datum>
+						</c:Item>
+						<c:Item name = "Skipped">
+							<c:Datum xsi:type="ts:TS_string" flags = "0x0000">
+								<c:Value>#B98028</c:Value>
+							</c:Datum>
+						</c:Item>
+						<c:Item name = "Done">
+							<c:Datum xsi:type="ts:TS_string" flags = "0x0000">
+								<c:Value>#008000</c:Value>
+							</c:Datum>
+						</c:Item>
+						<c:Item name = "Running">
+							<c:Datum xsi:type="ts:TS_string" flags = "0x0000">
+								<c:Value>#FFCC33</c:Value>
+							</c:Datum>
+						</c:Item>
+						<c:Item name = "TerminatedBg">
+							<c:Datum xsi:type="ts:TS_string" flags = "0x0000">
+								<c:Value>#0000FF</c:Value>
+							</c:Datum>
+						</c:Item>
+						<c:Item name = "FailedBg">
+							<c:Datum xsi:type="ts:TS_string" flags = "0x0000">
+								<c:Value>#FF0000</c:Value>
+							</c:Datum>
+						</c:Item>
+						<c:Item name = "ErrorBg">
+							<c:Datum xsi:type="ts:TS_string" flags = "0x0000">
+								<c:Value>#FF0000</c:Value>
+							</c:Datum>
+						</c:Item>
+						<c:Item name = "PassedBg">
+							<c:Datum xsi:type="ts:TS_string" flags = "0x0000">
+								<c:Value>#00FF00</c:Value>
+							</c:Datum>
+						</c:Item>
+						<c:Item name = "SkippedBg">
+							<c:Datum xsi:type="ts:TS_string" flags = "0x0000">
+								<c:Value>#FFFF00</c:Value>
+							</c:Datum>
+						</c:Item>
+						<c:Item name = "DoneBg">
+							<c:Datum xsi:type="ts:TS_string" flags = "0x0000">
+								<c:Value>#00FFCC</c:Value>
+							</c:Datum>
+						</c:Item>
+						<c:Item name = "RunningBg">
+							<c:Datum xsi:type="ts:TS_string" flags = "0x0000">
+								<c:Value>#FFCC33</c:Value>
+							</c:Datum>
+						</c:Item>
+						<c:Item name = "FailureStackLabelBg">
+							<c:Datum xsi:type="ts:TS_string" flags = "0x0000">
+								<c:Value>#FF2020</c:Value>
+							</c:Datum>
+						</c:Item>
+						<c:Item name = "FailureStackValueBg">
+							<c:Datum xsi:type="ts:TS_string" flags = "0x0000">
+								<c:Value>#D0D0D0</c:Value>
+							</c:Datum>
+						</c:Item>
+						<c:Item name = "BatchHeadingBg">
+							<c:Datum xsi:type="ts:TS_string" flags = "0x0000">
+								<c:Value>#00C4C4</c:Value>
+							</c:Datum>
+						</c:Item>
+					</c:Collection>
+				</c:Item>
+				<c:Item name = "DateAndTimeFormat">
+					<c:Datum xsi:type="ts:TS_string" flags = "0x0000">
+						<c:Value>TimeFirst</c:Value>
+					</c:Datum>
+				</c:Item>
+				<c:Item name = "NewFileNameForEachBatch">
+					<c:Datum value = "false" xsi:type="ts:TS_boolean" flags = "0x0000"/>
+				</c:Item>
+				<c:Item name = "NewBatchFileNameForEachBatch">
+					<c:Datum value = "false" xsi:type="ts:TS_boolean" flags = "0x0000"/>
+				</c:Item>
+				<c:Item name = "NewFileNameForEachTestSocket">
+					<c:Datum value = "false" xsi:type="ts:TS_boolean" flags = "0x0000"/>
+				</c:Item>
+				<c:Item name = "StoreUUTReportWithBatchReport">
+					<c:Datum value = "true" xsi:type="ts:TS_boolean" flags = "0x0000"/>
+				</c:Item>
+				<c:Item name = "BatchBaseName">
+					<c:Datum xsi:type="ts:TS_string" flags = "0x0000">
+						<c:Value>BatchReport</c:Value>
+					</c:Datum>
+				</c:Item>
+				<c:Item name = "LabelSize">
+					<c:Datum value = "26" xsi:type="ts:TS_double" flags = "0x0000"/>
+				</c:Item>
+				<c:Item name = "RelStylesheetPath">
+					<c:Datum xsi:type="ts:TS_string" flags = "0x0000">
+						<c:Value>tr5_horizontal.xsl</c:Value>
+					</c:Datum>
+				</c:Item>
+				<c:Item name = "StylesheetPath">
+					<c:Datum xsi:type="ts:TS_string" flags = "0x0000">
+						<c:Value>C:\Program Files\National Instruments\TestStand 2021\Components\Models\TestStandModels\ATML\StyleSheets\tr5_horizontal.xsl</c:Value>
+					</c:Datum>
+				</c:Item>
+				<c:Item name = "StylesheetMRU">
+					<c:IndexedArray dimensions="[5]" lowerBounds="[0]" upperBounds="[4]" xsi:type="ts:TS_stringArray" flags = "0x0000">
+						<ts:Element position ="[0]">
+							<c:Value>horizontal.xsl</c:Value>
+						</ts:Element>
+						<ts:Element position ="[1]">
+							<c:Value>report.xsl</c:Value>
+						</ts:Element>
+						<ts:Element position ="[2]">
+							<c:Value>expand.xsl</c:Value>
+						</ts:Element>
+						<ts:Element position ="[3]">
+							<c:Value></c:Value>
+						</ts:Element>
+						<ts:Element position ="[4]">
+							<c:Value></c:Value>
+						</ts:Element>
+					</c:IndexedArray>
+				</c:Item>
+				<c:Item name = "ATMLStylesheetMRU">
+					<c:IndexedArray dimensions="[3]" lowerBounds="[0]" upperBounds="[2]" xsi:type="ts:TS_stringArray" flags = "0x0000">
+						<ts:Element position ="[0]">
+							<c:Value>TR_horizontal.xsl</c:Value>
+						</ts:Element>
+						<ts:Element position ="[1]">
+							<c:Value>trml.xsl</c:Value>
+						</ts:Element>
+						<ts:Element position ="[2]">
+							<c:Value></c:Value>
+						</ts:Element>
+					</c:IndexedArray>
+				</c:Item>
+				<c:Item name = "StoreStylesheetAbsolutePath">
+					<c:Datum value = "true" xsi:type="ts:TS_boolean" flags = "0x0000"/>
+				</c:Item>
+				<c:Item name = "UseOnTheFlyReporting">
+					<c:Datum value = "false" xsi:type="ts:TS_boolean" flags = "0x0000"/>
+				</c:Item>
+				<c:Item name = "PurgeOnTheFlyResults">
+					<c:Datum value = "false" xsi:type="ts:TS_boolean" flags = "0x0000"/>
+				</c:Item>
+				<c:Item name = "GeneratePDFReport">
+					<c:Datum value = "false" xsi:type="ts:TS_boolean" flags = "0x0000"/>
+				</c:Item>
+				<c:Item name = "IncludeStepResultComments">
+					<c:Datum value = "true" xsi:type="ts:TS_boolean" flags = "0x0000"/>
+				</c:Item>
+				<c:Item name = "UseLocalizedDecimalPoint">
+					<c:Datum value = "false" xsi:type="ts:TS_boolean" flags = "0x0000"/>
+				</c:Item>
+				<c:Item name = "ReportStyle">
+					<c:Datum xsi:type="ts:TS_string" flags = "0x0000">
+						<c:Value>atml5</c:Value>
+					</c:Datum>
+				</c:Item>
+				<c:Item name = "ReportFileSequentialModelExpression">
+					<c:Datum xsi:type="ts:TS_string" flags = "0x0000">
+						<c:Value>"$(ClientFileDir)\\$(ClientFileName)_Report[$(FileTime)][$(FileDate)]$(Unique).$(FileExtension)"</c:Value>
+					</c:Datum>
+				</c:Item>
+				<c:Item name = "ReportFileParallelModelExpression">
+					<c:Datum xsi:type="ts:TS_string" flags = "0x0000">
+						<c:Value>"$(ClientFileDir)\\$(ClientFileName)_Report[$(FileTime)][$(FileDate)]$(Unique).$(FileExtension)"</c:Value>
+					</c:Datum>
+				</c:Item>
+				<c:Item name = "ReportFileBatchModelExpression">
+					<c:Datum xsi:type="ts:TS_string" flags = "0x0000">
+						<c:Value>"$(ClientFileDir)\\$(ClientFileName)_BatchReport[$(FileTime)][$(FileDate)]$(Unique).$(FileExtension)"</c:Value>
+					</c:Datum>
+				</c:Item>
+				<c:Item name = "BatchFileBatchModelExpression">
+					<c:Datum xsi:type="ts:TS_string" flags = "0x0000">
+						<c:Value>"$(ClientFileDir)\\$(ClientFileName)_BatchReport[$(FileTime)][$(FileDate)]$(Unique).$(FileExtension)"</c:Value>
+					</c:Datum>
+				</c:Item>
+				<c:Item name = "NewFileNameForEachUUTStatus">
+					<c:Datum value = "false" xsi:type="ts:TS_boolean" flags = "0x0000"/>
+				</c:Item>
+				<c:Item name = "ReportPathMacroListString">
+					<c:Datum xsi:type="ts:TS_string" flags = "0x0000">
+						<c:Value></c:Value>
+					</c:Datum>
+				</c:Item>
+				<c:Item name = "BatchReportPathMacroListString">
+					<c:Datum xsi:type="ts:TS_string" flags = "0x0000">
+						<c:Value></c:Value>
+					</c:Datum>
+				</c:Item>
+				<c:Item name = "CheckIfMacroListIsUnchanged">
+					<c:Datum value = "true" xsi:type="ts:TS_boolean" flags = "0x0000"/>
+				</c:Item>
+				<c:Item name = "ATML5StylesheetMRU">
+					<c:IndexedArray dimensions="[5]" lowerBounds="[0]" upperBounds="[4]" xsi:type="ts:TS_stringArray" flags = "0x0000">
+						<ts:Element position ="[0]">
+							<c:Value>tr5_horizontal.xsl</c:Value>
+						</ts:Element>
+						<ts:Element position ="[1]">
+							<c:Value>tr5_report.xsl</c:Value>
+						</ts:Element>
+						<ts:Element position ="[2]">
+							<c:Value>tr5_expand.xsl</c:Value>
+						</ts:Element>
+						<ts:Element position ="[3]">
+							<c:Value></c:Value>
+						</ts:Element>
+						<ts:Element position ="[4]">
+							<c:Value></c:Value>
+						</ts:Element>
+					</c:IndexedArray>
+				</c:Item>
+				<c:Item name = "Atml_Rpt_Options">
+					<c:Collection xsi:type="ts:TS_Collection" flags = "0x0000">
+						<c:Item name = "AddReportText">
+							<c:Datum value = "true" xsi:type="ts:TS_boolean" flags = "0x0000"/>
+						</c:Item>
+						<c:Item name = "ExtensionDLLAbsolutePath">
+							<c:Datum xsi:type="ts:TS_string" flags = "0x0000">
+								<c:Value></c:Value>
+							</c:Datum>
+						</c:Item>
+						<c:Item name = "TestResultsSchemaPath">
+							<c:Datum xsi:type="ts:TS_string" flags = "0x0000">
+								<c:Value></c:Value>
+							</c:Datum>
+						</c:Item>
+					</c:Collection>
+				</c:Item>
+				<c:Item name = "ATML6StylesheetMRU">
+					<c:IndexedArray dimensions="[5]" lowerBounds="[0]" upperBounds="[4]" xsi:type="ts:TS_stringArray" flags = "0x0000">
+						<ts:Element position ="[0]">
+							<c:Value>tr6_horizontal.xsl</c:Value>
+						</ts:Element>
+						<ts:Element position ="[1]">
+							<c:Value>tr6_report.xsl</c:Value>
+						</ts:Element>
+						<ts:Element position ="[2]">
+							<c:Value>tr6_expand.xsl</c:Value>
+						</ts:Element>
+						<ts:Element position ="[3]">
+							<c:Value></c:Value>
+						</ts:Element>
+						<ts:Element position ="[4]">
+							<c:Value></c:Value>
+						</ts:Element>
+					</c:IndexedArray>
+				</c:Item>
+			</c:Collection>
+		</tr:Configuration>
+	</tr:TestProgram>
+	<tr:TestStation>
+		<c:SerialNumber>BLR-DLT-131</c:SerialNumber>
+	</tr:TestStation>
+	<tr:UUT>
+		<c:SerialNumber>NONE</c:SerialNumber>
+	</tr:UUT>
+	<tr:Extension>
+		<ts:TSResultSetProperties>
+			<ts:NumOfResults value = '0'/>
+			<ts:ResultListPresent value="true"/>
+		</ts:TSResultSetProperties>
+	</tr:Extension>
+</trc:TestResults>
+</trc:TestResultsCollection>
