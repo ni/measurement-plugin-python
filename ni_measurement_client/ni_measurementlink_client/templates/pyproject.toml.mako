@@ -10,7 +10,7 @@ authors = ["National Instruments"]
 python = "^3.8"
 grpcio = "^1.49.1"
 protobuf = "^4.21"
-ni-measurementlink-service = { git = "https://github.com/ni/measurementlink-python.git", branch = "users/jay/python-measurement-client"}
+ni-measurementlink-service = {git = "https://github.com/ni/measurementlink-python.git", branch = "users/jay/python-measurement-client"}
 
 [tool.poetry.group.dev.dependencies]
 ni-python-styleguide = ">=0.4.1"
