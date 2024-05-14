@@ -67,7 +67,7 @@ def _get_measurement_service_stub(
 def _get_module_name_and_service_class(
     available_measurement_services: Sequence[ServiceDescriptor],
 ) -> Tuple[str, str]:
-    print("List of available measurements: ")
+    print("List of registered measurements: ")
     for i, service in enumerate(available_measurement_services):
         print(f"{i+1}. {service.display_name}")
 
@@ -84,7 +84,7 @@ def _get_module_name_and_service_class(
         raise Exception("Input out of bounds. Please try again by entering a valid serial number.")
 
     measurement_service_class = available_measurement_services[index - 1].service_class
-    module_name = input("Please provide the name for the measurement client module: ")
+    module_name = input("Enter the name for the Python measurement client module: ")
     return (module_name, measurement_service_class)
 
 
@@ -168,7 +168,7 @@ def _get_python_class_name(name: str) -> str:
 def _get_python_type_as_str(type: Field.Kind.ValueType, is_array: bool) -> str:
     py_type = _PROTO_DATATYPE_TO_PYTYPE_LOOKUP.get(type)
     if py_type is None:
-        raise Exception(f"Some data types for config or output parameters are unsupported.")
+        raise Exception(f"The following datatypes are not supported:\n1. XY Data\n2. XY Data 1D array")
     if is_array:
         return f"List[{py_type.__name__}]"
     else:
@@ -382,10 +382,4 @@ def create_client(
         measure_parameters=measure_param_names,
         enum_by_class_name=enum_values_by_type_name,
         measure_return_values_with_type=measure_return_values_with_type,
-    )
-    _create_file("pyproject.toml.mako",
-        "pyproject.toml",
-        directory_out_path,
-        module_name=module_name,
-        description=selected_service_description,
     )
