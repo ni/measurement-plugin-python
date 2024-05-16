@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+package external_driver_wrapper;
+
+service InstrumentInteraction {
+  rpc Initialize(InitializeRequest) returns (InitializeResponse);
+
+  rpc ConfigureMeasurementDigits(ConfigureMeasurementDigitsRequest) returns (ConfigureMeasurementDigitsResponse);
+
+  rpc Read(ReadRequest) returns (ReadResponse);
+
+  rpc Close(CloseRequest) returns (CloseResponse);
+}
+
+message InitializeRequest{
+  string resource_name = 1;
+  bool id_query = 2;
+  bool reset_device = 3;
+  bool simulate = 4;
+}
+
+message InitializeResponse{
+  bool is_initialized = 1;
+}
+
+message ConfigureMeasurementDigitsRequest{
+  int32 function = 1;
+  double range = 2;
+  double resolution_digits = 3;
+}
+
+message ConfigureMeasurementDigitsResponse{}
+
+message ReadRequest{}
+
+message ReadResponse{
+  double value = 1;
+}
+
+message CloseRequest{}
+
+message CloseResponse{}
