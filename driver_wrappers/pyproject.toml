@@ -1,0 +1,64 @@
+[tool.black]
+extend_exclude = '\.tox/|_pb2(_grpc)?\.(py|pyi)$|ni_measurementlink_generator/|examples/|third_party/'
+line-length = 100
+
+[tool.ni-python-styleguide]
+extend_exclude = '.tox/,*_pb2_grpc.py,*_pb2_grpc.pyi,*_pb2.py,*_pb2.pyi,ni_measurementlink_generator/,examples/,third_party/'
+
+[tool.poetry]
+name = "driver_wrappers"
+version = "0.1.0-dev0"
+description = "Hosting drivers as gRPC services."
+authors = ["NI <opensource@ni.com>"]
+readme = "README.md" # apply the repo readme to the package as well
+repository = "https://github.com/ni/measurementlink-python/"
+package-mode = false
+license = "MIT"
+
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Manufacturing",
+    "Intended Audience :: Science/Research",
+    "Operating System :: Microsoft :: Windows",
+    # Poetry automatically adds classifiers for the license and the supported Python versions.
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Topic :: Scientific/Engineering",
+    "Topic :: System :: Hardware",
+]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+# This package includes gRPC stubs that were generated with the version of grpcio-tools specified
+# below. Please keep the minimum grpcio version in sync with the grpcio-tools version. Otherwise,
+# the generated gRPC stubs may not work with the minimum grpcio version.
+grpcio = "^1.49.1"
+protobuf = "^4.21"
+pymeasure = "^0.13.1"
+PyVISA = "^1.13.0"
+PyVISA-sim = "^0.5.1"
+
+[tool.poetry.group.dev.dependencies]
+ni-python-styleguide = ">=0.4.1"
+# When you update the grpcio-tools version, you should update the minimum grpcio version
+# and regenerate gRPC stubs.
+grpcio-tools = [
+  {version = "1.49.1", python = ">=3.8,<3.12"},
+  {version = "1.59.0", python = "^3.12"},
+]
+mypy = ">=1.0"
+mypy-protobuf = ">=3.4"
+types-protobuf = "^4.21"
+grpc-stubs = "^1.53"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.mypy]
+disallow_untyped_defs = true
+namespace_packages = true
+plugins = "numpy.typing.mypy_plugin"
+warn_redundant_casts = true
+warn_unused_configs = true
+warn_unused_ignores = true
