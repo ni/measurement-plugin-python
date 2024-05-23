@@ -8,10 +8,7 @@ from typing import Iterable, Tuple, Union
 import click
 import ni_measurementlink_service as nims
 import nidigital
-from _helpers import (
-    configure_logging,
-    verbosity_option,
-)
+from _helpers import configure_logging, verbosity_option
 
 script_or_exe = sys.executable if getattr(sys, "frozen", False) else __file__
 service_directory = pathlib.Path(script_or_exe).resolve().parent
@@ -45,7 +42,7 @@ def measure(
     levels_file_path: str,
     timing_file_path: str,
     pattern_file_path: str,
-    do_first_run_setup: bool
+    do_first_run_setup: bool,
 ) -> Tuple:
     """Test a SPI device using an NI Digital Pattern instrument."""
     logging.info("Starting test: pin_names=%s", pin_names)
