@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<teststandfileheader type='SequenceFile' fileversion='962' productname='TestStand' productversion='2021 SP1 (21.1.0.49154)' compatibleversion='21.0.0.0' buildversion='21.0.0.49156' xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.ni.com/TestStand/21.0.0/SequenceFile">
+<teststandfileheader type='SequenceFile' fileversion='962' productname='TestStand' productversion='2021 (21.0.0.49156)' compatibleversion='21.0.0.0' buildversion='21.0.0.49156' xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.ni.com/TestStand/21.0.0/SequenceFile">
 	<typelist>
 		<typedef alwayssavetype='false' additionaltypeflags='0' typelistordernum='1'>
-			<Expression classname='ExprValue' isroottypedef='true' typecategory='3' timestamp='1650060499' typeversion='21.0.0.49156' typelastmodversion='21.1.0.49154' typeminprodversion='21.0.0.0' typeflags='33554436'>
+			<Expression classname='ExprValue' isroottypedef='true' typecategory='3' timestamp='1650060499' typeversion='21.0.0.49156' typelastmodversion='21.0.0.49156' typeminprodversion='21.0.0.0' typeflags='33554436'>
 				<value/>
 			</Expression>
 		</typedef>
 		<typedef alwayssavetype='false' additionaltypeflags='0' typelistordernum='2'>
-			<StepTypeMenu classname='Obj' isroottypedef='true' typecategory='3' timestamp='1650060499' typeversion='21.0.0.49156' typelastmodversion='21.1.0.49154' typeminprodversion='21.0.0.0' typeflags='33554436' flagsforinstances='4718616' instanceoverrideflags='4718616' valueflags='24'>
+			<StepTypeMenu classname='Obj' isroottypedef='true' typecategory='3' timestamp='1650060499' typeversion='21.0.0.49156' typelastmodversion='21.0.0.49156' typeminprodversion='21.0.0.0' typeflags='33554436' flagsforinstances='4718616' instanceoverrideflags='4718616' valueflags='24'>
 				<subprops>
 					<CanBeSubstepType classname='Bool'>
 						<value>false</value>
@@ -37,12 +37,12 @@
 			</StepTypeMenu>
 		</typedef>
 		<typedef alwayssavetype='false' additionaltypeflags='0' typelistordernum='3'>
-			<StepTypeSubstepsArray classname='Objs' isroottypedef='true' typecategory='3' timestamp='1650060499' typeversion='21.0.0.49156' typelastmodversion='21.1.0.49154' typeminprodversion='21.0.0.0' typeflags='33554436' flagsforinstances='4718616' instanceoverrideflags='4849688' valueflags='24'>
+			<StepTypeSubstepsArray classname='Objs' isroottypedef='true' typecategory='3' timestamp='1650060499' typeversion='21.0.0.49156' typelastmodversion='21.0.0.49156' typeminprodversion='21.0.0.0' typeflags='33554436' flagsforinstances='4718616' instanceoverrideflags='4849688' valueflags='24'>
 				<value lbound='[0]' ubound='[]'/>
 			</StepTypeSubstepsArray>
 		</typedef>
 		<typedef alwayssavetype='false' additionaltypeflags='0' typelistordernum='4'>
-			<NI_ArrayDimensions classname='ArrayDimensions' isroottypedef='true' typecategory='3' timestamp='1650060499' typeversion='21.0.0.49156' typelastmodversion='21.1.0.49154' typeminprodversion='21.0.0.0' typeflags='33554436' valueflags='24'>
+			<NI_ArrayDimensions classname='ArrayDimensions' isroottypedef='true' typecategory='3' timestamp='1650060499' typeversion='21.0.0.49156' typelastmodversion='21.0.0.49156' typeminprodversion='21.0.0.0' typeflags='33554436' valueflags='24'>
 				<subprops>
 					<LowerBounds classname='Nums'>
 						<value lbound='[0]' ubound='[]'/>
@@ -54,7 +54,7 @@
 			</NI_ArrayDimensions>
 		</typedef>
 		<typedef alwayssavetype='false' additionaltypeflags='0' typelistordernum='5'>
-			<NI_PropertyObjectType classname='PropertyObjectType' isroottypedef='true' typecategory='3' timestamp='1650060499' typeversion='21.0.0.49156' typelastmodversion='21.1.0.49154' typeminprodversion='21.0.0.0' typeflags='33554436' valueflags='24'>
+			<NI_PropertyObjectType classname='PropertyObjectType' isroottypedef='true' typecategory='3' timestamp='1650060499' typeversion='21.0.0.49156' typelastmodversion='21.0.0.49156' typeminprodversion='21.0.0.0' typeflags='33554436' valueflags='24'>
 				<subprops>
 					<ValueType classname='Num'>
 						<value>3</value>
@@ -88,7 +88,7 @@
 			</NI_PropertyObjectType>
 		</typedef>
 		<typedef alwayssavetype='false' additionaltypeflags='0' typelistordernum='6'>
-			<NI_CustomResult classname='CustomResult' isroottypedef='true' typecategory='3' timestamp='1650060499' typeversion='21.0.0.49156' typelastmodversion='21.1.0.49154' typeminprodversion='21.0.0.0' typeflags='33554436' valueflags='24'>
+			<NI_CustomResult classname='CustomResult' isroottypedef='true' typecategory='3' timestamp='1650060499' typeversion='21.0.0.49156' typelastmodversion='21.0.0.49156' typeminprodversion='21.0.0.0' typeflags='33554436' valueflags='24'>
 				<subprops>
 					<Name typename='Expression' xsi:type='Expression' classname='ExprValue'>
 						<value/>
@@ -148,7 +148,7 @@
 			</NI_CustomResult>
 		</typedef>
 		<typedef alwayssavetype='false' additionaltypeflags='0' typelistordernum='7'>
-			<TEInf classname='Obj' isroottypedef='true' typecategory='3' timestamp='1650060499' typeversion='21.0.0.49156' typelastmodversion='21.1.0.49154' typeminprodversion='21.0.0.0' typeflags='33554436' flagsforinstances='4456472' instanceoverrideflags='4456472' valueflags='24'>
+			<TEInf classname='Obj' isroottypedef='true' typecategory='3' timestamp='1650060499' typeversion='21.0.0.49156' typelastmodversion='21.0.0.49156' typeminprodversion='21.0.0.0' typeflags='33554436' flagsforinstances='4456472' instanceoverrideflags='4456472' valueflags='24'>
 				<subprops>
 					<Id classname='Str' flagsforinstances='1' instanceoverrideflags='5046297'>
 						<value/>
@@ -423,7 +423,7 @@
 			</TEInf>
 		</typedef>
 		<typedef alwayssavetype='false' additionaltypeflags='0' typelistordernum='8'>
-			<StepTypeNIData classname='Obj' isroottypedef='true' typecategory='3' timestamp='1650060499' typeversion='21.0.0.49156' typelastmodversion='21.1.0.49154' typeminprodversion='21.0.0.0' typeflags='33554436' flagsforinstances='4718616' instanceoverrideflags='4718616' valueflags='24'>
+			<StepTypeNIData classname='Obj' isroottypedef='true' typecategory='3' timestamp='1650060499' typeversion='21.0.0.49156' typelastmodversion='21.0.0.49156' typeminprodversion='21.0.0.0' typeflags='33554436' flagsforinstances='4718616' instanceoverrideflags='4718616' valueflags='24'>
 				<subprops>
 					<EditPanels classname='Strs'>
 						<value lbound='[0]' ubound='[]'/>
@@ -432,7 +432,7 @@
 			</StepTypeNIData>
 		</typedef>
 		<typedef alwayssavetype='false' additionaltypeflags='0' typelistordernum='9'>
-			<Error classname='Obj' isroottypedef='true' typecategory='3' timestamp='1650060499' typeversion='21.0.0.49156' typelastmodversion='21.1.0.49154' typeminprodversion='21.0.0.0' typeflags='33554436'>
+			<Error classname='Obj' isroottypedef='true' typecategory='3' timestamp='1650060499' typeversion='21.0.0.49156' typelastmodversion='21.0.0.49156' typeminprodversion='21.0.0.0' typeflags='33554436'>
 				<extdata controllername='STRUCT' allowstructpassing='true' packingoption='8' exclude='false' type='0' arraystorage='0' strbuffersize='256' strstorage='0'/>
 				<extdata controllername='CLUST' allowclusterpassing='true' exclude='false' memberlabel=''/>
 				<extdata controllername='DNSTRUCT' allowstructpassing='true' exclude='false' membername=''/>
@@ -463,10 +463,10 @@
 			</Error>
 		</typedef>
 		<typedef alwayssavetype='false' additionaltypeflags='0' typelistordernum='10'>
-			<CommonResults classname='Obj' isroottypedef='true' typecategory='3' timestamp='1465572565' typeversion='3.1.0.100' typelastmodversion='21.1.0.49154' typeminprodversion='3.1.0.0' typeflags='33554432' flagsforinstances='4194304' valueflags='4194304'/>
+			<CommonResults classname='Obj' isroottypedef='true' typecategory='3' timestamp='1465572565' typeversion='3.1.0.100' typelastmodversion='21.0.0.49156' typeminprodversion='3.1.0.0' typeflags='33554432' flagsforinstances='4194304' valueflags='4194304'/>
 		</typedef>
 		<typedef alwayssavetype='false' additionaltypeflags='0' typelistordernum='11'>
-			<Substep classname='StepType' isroottypedef='true' typecategory='1' timestamp='1650060499' typeversion='21.0.0.49156' typelastmodversion='21.1.0.49154' typeminprodversion='21.0.0.0' typeflags='33554438' flagsforinstances='4194304' instanceoverrideflags='4194304'>
+			<Substep classname='StepType' isroottypedef='true' typecategory='1' timestamp='1650060499' typeversion='21.0.0.49156' typelastmodversion='21.0.0.49156' typeminprodversion='21.0.0.0' typeflags='33554438' flagsforinstances='4194304' instanceoverrideflags='4194304'>
 				<subprops>
 					<DescriptionFormat typename='Expression' xsi:type='Expression' classname='ExprValue' flagsforinstances='4718616' instanceoverrideflags='4718616' valueflags='4194328' structureflags='524288'>
 						<value>"%ModuleDescription"</value>
@@ -891,7 +891,7 @@
 			</Substep>
 		</typedef>
 		<typedef alwayssavetype='false' additionaltypeflags='0' typelistordernum='12'>
-			<NI_DotNetParameterResult classname='DotNetParameterResult' isroottypedef='true' typecategory='3' timestamp='1650060499' typeversion='21.0.0.49156' typelastmodversion='21.1.0.49154' typeminprodversion='21.0.0.0' typeflags='33554436' valueflags='24'>
+			<NI_DotNetParameterResult classname='DotNetParameterResult' isroottypedef='true' typecategory='3' timestamp='1650060499' typeversion='21.0.0.49156' typelastmodversion='21.0.0.49156' typeminprodversion='21.0.0.0' typeflags='33554436' valueflags='24'>
 				<subprops>
 					<Condition typename='Expression' xsi:type='Expression' classname='ExprValue'>
 						<value/>
@@ -907,7 +907,7 @@
 			</NI_DotNetParameterResult>
 		</typedef>
 		<typedef alwayssavetype='false' additionaltypeflags='0' typelistordernum='13'>
-			<DotNetParameter classname='DotNetParameter' isroottypedef='true' typecategory='3' timestamp='1650061192' typeversion='21.0.0.49156' typelastmodversion='21.1.0.49154' typeminprodversion='21.0.0.0' typeflags='33554436' valueflags='24'>
+			<DotNetParameter classname='DotNetParameter' isroottypedef='true' typecategory='3' timestamp='1650061192' typeversion='21.0.0.49156' typelastmodversion='21.0.0.49156' typeminprodversion='21.0.0.0' typeflags='33554436' valueflags='24'>
 				<subprops>
 					<Name classname='Str'>
 						<value>_notNamed</value>
@@ -974,7 +974,7 @@
 			</DotNetParameter>
 		</typedef>
 		<typedef alwayssavetype='false' additionaltypeflags='0' typelistordernum='14'>
-			<NI_DotNetCallResult classname='DotNetCallResult' isroottypedef='true' typecategory='3' timestamp='1650060499' typeversion='21.0.0.49156' typelastmodversion='21.1.0.49154' typeminprodversion='21.0.0.0' typeflags='33554436' valueflags='24'>
+			<NI_DotNetCallResult classname='DotNetCallResult' isroottypedef='true' typecategory='3' timestamp='1650060499' typeversion='21.0.0.49156' typelastmodversion='21.0.0.49156' typeminprodversion='21.0.0.0' typeflags='33554436' valueflags='24'>
 				<subprops>
 					<Condition typename='Expression' xsi:type='Expression' classname='ExprValue'>
 						<value/>
@@ -990,7 +990,7 @@
 			</NI_DotNetCallResult>
 		</typedef>
 		<typedef alwayssavetype='false' additionaltypeflags='0' typelistordernum='15'>
-			<DotNetCall classname='DotNetCall' isroottypedef='true' typecategory='3' timestamp='1650061192' typeversion='21.0.0.49156' typelastmodversion='21.1.0.49154' typeminprodversion='21.0.0.0' typeflags='33554436' valueflags='24'>
+			<DotNetCall classname='DotNetCall' isroottypedef='true' typecategory='3' timestamp='1650061192' typeversion='21.0.0.49156' typelastmodversion='21.0.0.49156' typeminprodversion='21.0.0.0' typeflags='33554436' valueflags='24'>
 				<subprops>
 					<ClassName classname='Str'>
 						<value/>
@@ -1091,12 +1091,12 @@
 			</DotNetCall>
 		</typedef>
 		<typedef alwayssavetype='false' additionaltypeflags='0' typelistordernum='0'>
-			<Path classname='PathValue' isroottypedef='true' typecategory='3' timestamp='1650060499' typeversion='21.0.0.49156' typelastmodversion='21.1.0.49154' typeminprodversion='21.0.0.0' typeflags='33554436'>
+			<Path classname='PathValue' isroottypedef='true' typecategory='3' timestamp='1650060499' typeversion='21.0.0.49156' typelastmodversion='21.0.0.49156' typeminprodversion='21.0.0.0' typeflags='33554436'>
 				<value/>
 			</Path>
 		</typedef>
 		<typedef alwayssavetype='false' additionaltypeflags='0' typelistordernum='16'>
-			<DotNetStepAdditions classname='DotNetModule' isroottypedef='true' typecategory='3' timestamp='1650061192' typeversion='21.0.0.49156' typelastmodversion='21.1.0.49154' typeminprodversion='21.0.0.0' typeflags='33554436' valueflags='24'>
+			<DotNetStepAdditions classname='DotNetModule' isroottypedef='true' typecategory='3' timestamp='1650061192' typeversion='21.0.0.49156' typelastmodversion='21.0.0.49156' typeminprodversion='21.0.0.0' typeflags='33554436' valueflags='24'>
 				<subprops>
 					<Calls classname='Objs'>
 						<value lbound='[0]' ubound='[]'>
@@ -1241,7 +1241,7 @@
 			</DotNetStepAdditions>
 		</typedef>
 		<typedef alwayssavetype='false' additionaltypeflags='0' typelistordernum='17'>
-			<PostSubstep classname='StepType' isroottypedef='true' typecategory='1' timestamp='1650060499' typeversion='21.0.0.49156' typelastmodversion='21.1.0.49154' typeminprodversion='21.0.0.0' typeflags='33554438' flagsforinstances='4194304' instanceoverrideflags='4194304'>
+			<PostSubstep classname='StepType' isroottypedef='true' typecategory='1' timestamp='1650060499' typeversion='21.0.0.49156' typelastmodversion='21.0.0.49156' typeminprodversion='21.0.0.0' typeflags='33554438' flagsforinstances='4194304' instanceoverrideflags='4194304'>
 				<subprops>
 					<DescriptionFormat typename='Expression' xsi:type='Expression' classname='ExprValue' flagsforinstances='4718616' instanceoverrideflags='4718616' valueflags='4194328' structureflags='524288'>
 						<value>"%ModuleDescription"</value>
@@ -1666,7 +1666,7 @@
 			</PostSubstep>
 		</typedef>
 		<typedef alwayssavetype='false' additionaltypeflags='0' typelistordernum='18'>
-			<NoneStepAdditions classname='NoneModule' isroottypedef='true' typecategory='3' timestamp='1650060850' typeversion='21.0.0.49156' typelastmodversion='21.1.0.49154' typeminprodversion='21.0.0.0' typeflags='33554436' valueflags='24'/>
+			<NoneStepAdditions classname='NoneModule' isroottypedef='true' typecategory='3' timestamp='1650060850' typeversion='21.0.0.49156' typelastmodversion='21.0.0.49156' typeminprodversion='21.0.0.0' typeflags='33554436' valueflags='24'/>
 		</typedef>
 		<protected>E@=3HJL4100hYLEDF=_K@0@mKCYo_1KN2&lt;dfASB`]CF^aUXa]Y\4WmD]203VfR;kS;KgdGgF285WU]RaSJgcjNlM7MFC4LiX=a48\7dW:L403mZ4BUAT82I&gt;KQH8\T8QFE`DA2\LAVbMD5YRMT13fTiE^i&lt;boIle7[=C_LeZbKM2QXhVTH;?4hTX]A[17:2T;Dh\^Co3kY9PA5QK23^C]l262h09La1?5^k3J0BQZ@@EeDRZTO=\cKd?XKjmGb1N\X&lt;J[IS9OXJj22Qc=R\WEEn\IKCaHCAUNi97;EVjaJCX4&gt;UU36B3oib::mkjjIJFOY^^C_gK;?Ngamc6b1^HOM^Rl@oHoiaG802US0o36;lHiif[]oe&lt;FRliGlo^CMk69OeFDNDnIQUXNS=iA3JmW&lt;KbcFOCL6bWF;DdY7d2\SSH4mB7[^9gAb5EgM5G;l^DR5mXURj&lt;_=4b_aTDS965fd7ACLdkeA7kamDL&gt;;lWi[PA07_B@&gt;cR[mGK`_XMGdK4NmjkVR8?micjQcMS=oX^9@cW^5\93S[[2ZkFbBiZ=Q@AM0FkKdo:gUd&lt;lVVcfi&gt;bV3&gt;kl[1UR_FW&gt;JkW]_EREPX34oO2LYb;J&gt;k9nWLWBEg6Tk&gt;koggGTQ&gt;kL6kJL@dKQ2_E0Z</protected>
 		<protected>E@=3HJB4110h]L]MDk_K3gBocK7LAg@bF0m7:L\7mUH^jTPf8UWji4?JObL37e`G1BU_]bJEEgG9OLd39Oi??^9QJSUTD=2428\B0kcT_7T&lt;Q@obH[[G3o^A&lt;D=J_&gt;g1Hi&lt;R`WmR7Y7K&gt;c7;g@f3WI&gt;MaH=lc7S9&gt;c?IG77K\]]6niUiBAL4CCDj_[5AJfWeomR_OoKJmJZM?&lt;_&gt;RAC]I2d0NnLHDh&gt;Dli&gt;23CM5CXi6DO^g`LX&lt;Q2hSHndMR7[D8BMh8aJ7oQSA@fKWPh;Dm5&gt;RW9o]Rgj]F^W_JkHFKk?2&gt;8;5iifgAJkk=k]f8VDCi5;PF:WC?2M3dfNg9]a`emUH&lt;]ARooBLZ\:kUkkkmM^^;g[CAF?o9BS9X&lt;V_06oLo]n`VOa[dMZmhLlJ^=?^T^nMbojKJkCSoWN4WIgV\ckgWCOWb7&gt;jno&gt;;[OS_oVacNOW7jg77?7OooD2OombloUnEI9_InB&lt;HI4[kZLf&lt;]bOKRmn::VQk1Tm`8F4;5W&gt;TA&lt;Kcd`aI[R8DKQka6aboN?k=I&gt;UJRNToCflBd:9=GW1XijhYcm92_e]^Rg?N[eOQO^9B&lt;2LjSQk=KKS8Eo?8kT9]m3^^fWPk?AQN^K4hZkc&lt;Vm&gt;gFc`@RgL^O5bET;[D_=R`WO?&gt;&gt;77S_K[1miPR@lgJ;?^^n6om3JliJgSBbAO&lt;J&gt;_7OGSQoU5Mo5ainP9oNj=DL&lt;NdI=^]VXFK0i[_\n0emoFJc]\=:4K&lt;HYHRl[4;=V_6SaC6ETl6dE1KV^E5NV9OgQBU&gt;n`WYOLgi&gt;S84nN^1mG5`SPC1]S:d;`B=4NjKmH&lt;UULW:0\;?2W8FOA:^K?M9TIFdMZj?UgUemK:5BfZf19WV&gt;o2K6[k;XS0HEj\8[[9QY;;_Z:UlBgN&gt;g897SGQPF^OS\Ba8&lt;Nl5AB?;oWBQ6aJP@1SQNGhXj:1DK9OHN&lt;6lGSkolg=dM`l2hG?AKRH2^5E7fbmmi:cJ2A056EVl9@Ll@B9;Ml6POPlacQAcKJf4N0AbVYZdLjl=5el2I6[[UbiSJdAiTCbBdeiYEk9g6Sa7[CFB8`Nkc\S4`dNB53K4Y@M`QAkbIdlgkPUJ??fmoGj]cMHcUoJH_X:heHfm2bQ96d\&gt;Y;:5diBn6JoC0O8DGdkT9VIPBjN^1cB`TcbjfVBJNQ[?b\onSkg@kON1onmnGNoOnYOo&gt;kc^Ofm]G7mB&gt;Qba^I&gt;6iVCm0GSnGTYgQ_Ig4AOR9MZMAk1Il1RgBV7TIAM`A=\k&lt;V4O9c?_3Y:O3l:dCYMk^gg;jl0L0CVKCUWH5`j7aeFkA[b&gt;CTQ95a^731VBF_IoV`TDggl4NO?G?^6Y3k&lt;P]4e7VRbee]]ZcM@Jf4&lt;;aWfGU&gt;9^:[`SDoKE?YZ:Vd8[TTU\cVW7EE&lt;cK2Y;_LD3MKjVT98S3E]O@NF=[GoXgC=`=OMNoZQ@@l2P:F[`T0:[LS53m:IMEkRTe@8gJE`&lt;]Y2:U`M8HkClI4_aPZN:4ZLOC2BoZFX8GCf8_I0;U^`[:e@:ILD&lt;808A]97NXjMJdHVK5&lt;6@ZRfV:AX6kPcgf@:31?M9dKQa?=RA:`f5TCI^bQLjbA?jYd&lt;_1^@Iek6[helE6RFL:EWA[cHLkB2l7QLeCBJX]0hDPWUWlCJ=:^m5gJjn&gt;SW9DRT1Q[Y5`gAf&lt;OdDdj1YNo:`NeELR3c2mU`G:e&gt;j8@]gAR?Ad48]8;:;&lt;S;EUJcjMiOVF1m50TbUD\Tl58jH?d\X8T^08T=W9[Z683aTA&gt;]W[5Oi5M?52E\:71[03U?V`4l_1WVH4j:GKI9hcEGRk3?_;k:;F_ej5SiN:WT:RF=Gmdl:=knc:UD^Hj9obj;AE\I7HC&gt;FB&gt;jYl8f56nJ&lt;UcI=fiN&lt;i;VXUJ55KE9jS9S_DR5N1k`PSNZVY0Z0iTYNej0?V_@UDHkL6Co5UCKBGPJYGR_Ti@1C@\A6TiIe;E\]e=ZZKd\ZVfURZTM50e8JQ[&lt;TMTUjFdJKR_9CXd\N38JN&gt;Q&gt;\UNF]@;FB8LQX@?dbU@[8mfDU3:S0dI&gt;?SmaPSHhfe6&lt;gV@A0JSZnmSECILX[AB98eHXQ9`R?5E3I6[4N=mYUREb_5jZURE5lhN6VZ\P`:`^;AQONF8O:Plbm4XSolW7VZN&lt;?OL8@0JK^m:5oh&lt;AR[a:BRlMniCM&lt;Q^\X\Nkg7G3ZMAi7nm:9PFFe3mCA1\]DY\Df;6aG&lt;iI]h2G6MG`BA\[I]008f:U6XXSNH2jcIXFSGI5Q2bBEKA`&lt;X]h_:@RfNklLbR7Sji9F_895&lt;R=Q572IULj=^noMWZiZ`ddKH`@`He:jliNb34YNl9[QT6cAlE&lt;6LflQ9e?nUMDFlcJBlA3?PP6fSobc@Of_fBSccJNY=&gt;?N3lZRDPO[EVgdA&lt;FBDB`XE&lt;^e]0&lt;&gt;VkM0OT@X&gt;YTBh&lt;5IL&lt;3?]`D2\9TbD=P9XH933VJR1BePO?6H6&lt;2;Rb:@82Hbj[IF&gt;5Pl5;dH0QG4:@48T&lt;39AjLjU172J17:JNl=j0P6NHX8U6RT@@_R0PglmF;;HX\i:jV^ULZBDKEBVfUTf9YQgX[9IDjjfT&gt;:iY`4VU&gt;jmJ&gt;^lE2G:UodJJ0?kJBH?eL@[95RbKJUIOlaNeJ04aJ?]A4YMiXMjb8EdSS:FQ@7jO^6V2_52W:f:]&lt;6e5Cd?=1I1S`LR^aZ9L?2:i8gKEhKfCL5bbPaMloUSe;o9aiAW[oE2DcNMo=]V3VZ3j=;eK0o5HDY[@\W;=e@Vl8XLFANQC9E&gt;QSA=CQY79hkh3K&lt;7T?;nR9;Z6LT?Nc&gt;S&lt;VnOhN&gt;A7dhl]K:oLi0N`lo`P8XYbiZhgEiMHkPY4;7?ho]9J`Z9g^0o=n=LSnOn?ieOB64nHAQFTK8PM_MC[JSeR8@G2bZIEdgH&lt;RZ;OM]&gt;@_LW:9G&lt;i8_M&lt;G0iefC[hgQ3@MR?7jB\Tc1Tf;FbZLgF5X3L[[i7=`i99aTj6Bf9hoc4f&gt;K\mAKJU5HVOhmaTQmdX?THaTcA20&lt;o\eFYJL5Fl`OaV0Lg^m=dM8dKEXZbi_aM`N4iNOTmgWYL3]hN6L7iae8^GXbD:O\Y6CH3&gt;KSj1^`C4a]&gt;WQ7OESNDVeoS81il`C&lt;lI\h;BR2o8`kOIUYaC_UM6UhYa5^:Vn4Tg@DYb3U\b\fAFX]aIIO3S\LG^&lt;VA[9&lt;di1?XH4d]PXFb[&lt;mS6WM1H7n4QOPX3V8JcaJ3Bc2f`3kS9^djl1&lt;NFQDkA93Ufmf&lt;amc=`80X1e3HkQ:L]YabEBD05fi1W2^:CkBEDcH^&lt;iZ;L:\8jH][;VZj4R5VRdB6F7g=a:g99Z[d9NoQ89XZfYU6Ej\lMNK`GXE8]&gt;kb1[e?Qc4mH:lRM9\OK7F\j_JGQ2X&lt;8nV91\\ReIUTd4;L6nZ4o7O&gt;5To5e:L?2S2kY98YfOPONej0UZd28\R5Kk_&gt;WnN^DH2Ra&gt;8JPmDGUT4BS3E6S6N6PXQ^o?DU4hlJ1V&gt;V1L?:__=@EIUOn9X7KR2Lo=2KmV9A8=\\T\C=1?n1D=@?IkA\=f2ii0CCN:&lt;9RPOFL`NU8DSQ&lt;`;_2&lt;nB]=6e51SI8613fMTW3Oj[L^R]8&gt;Pi:a`A2D=\4K&gt;il^UBR7P9]^G5NXA2^X7951G[YT\OKLGG4l=UQn;H7@B;8&gt;da:ibOD[XBR`]o&gt;VZ6DOCdK3AP?3A_33UbkQTneQOg=b`jYf;]h]AolQHPG^On43=0kIj9]cNR^:eSCY@7J3d:fE\We:Vb01HQD:H^8XDCNhWA\A:WD1Gl3&lt;U7dkK=5DgXUKgD\cnF6@[17\Fk=:4E@TUiP?Fl@0i9ZoM2bEb`155W4J=3T3DML1\aF:FfPQ_KUbIc:4Ya3JFAmR\aJMI0a[C4^ef5m^Fi4&gt;XZHB6?JU:=DZ87J56eH&gt;DmEMhP4D2oO3SJP&gt;1jMO2&lt;naOX3XeHoDCM;;J:PJlY8lXGAERILBl6Ze45f=C_H1EH@IjHR`mDHLk&gt;RloAEY7C[?GIk&gt;fJcE8?]mNG9gjfLehW\mLW]iM[?]hJNCWK\EIR0P]hk6`E4NUFW`L?jP9&lt;3@in]\&gt;b[aNQRj1@R1@lHWUO7cje0A&gt;LK;JhC[BgiI]\2@eSX:;QfRU@U&gt;]@_lm`4NmBZ\:ZoSFUb?TlhO5;?&gt;B1H?gA7=g=C1ji=292Ke0J\FnE9DeX&gt;CIC;iJ0Q`DXj&gt;W\&lt;PEOYPYk5m[A0\aN8N8UXTPGU[n]bW5n:`?nZlnnf\Imkoebbigkc`ofP\eP3l@ZOUX`?B@DZR_DX[^jV=gj=d1Ym4Z&lt;ob`?C`SLo9T5_eOKONeoF]7?koVKmXXP&gt;@mOLEB_KIcmYAEE:TPO\X\:IW;;f\GU_9nGfb7gkm2FX@_m\=LZKGW]]fQbgkjIKFn:Z?7OkIIKJ[SO\hURRIoOHS?5Im13fdEU3GX6A:fkd1W=WEW;WIRW;nf8PFKmj0I6c\Ol161GZUA]d;MJ:ZYK=VEA5\=d;6WchfDOoda;nMHPO^dHdLa@nRM@8^2Oa`S?HXLF4nDR@[gd@3ZWg?=HDeoV\ekeE:jne_Z_g?4HH]X`?HL\fA&gt;3IiNAk6W1m3G0_2TCL=LYO`T`_HK@l\3K6f3=3kY61mh3P6N;k6W1m37PK&lt;`\K6`f=3Y6;mn30n@QPPL_O`T`_HNXdTNm3PcB7f3=3k]61F3f^\2K6J51o9_dONJi[aZ=PgGoQ_YlegmNBlj]Mg1Y9kjW]mhcf\AE?5N[_l]E?eCjcMOO`&gt;NKk6j1FegWdiGIk&gt;gJcF[NcfKLeBjFNcffLFL[]in=6bC_H8^oNbA_H\`Ig&lt;[Zjc\IO`GPnSnRYk245=G437EhljgHLTJJgAIlMMmTC]5Ofg3k7l1=okWM^WiPP\Tb&lt;_gjXVbPjlMb^O2?7g2GoojlSJ\BolCmm&lt;eolmTbca0HGIPS7WELFBRNnUKon6]o_boQc4&lt;O7WakMAfZ1;@;]BVhfZ6d;A]\Y;]^C\2JNWl@EDkjHUD]8Gj3k:Gg9M]64UVIhV`0kFZjnXDXH9Ul?3UgC&lt;4E`da=l&lt;6aYaK?YSB&lt;ZlK8AkLXPga:L6Y9WXb^R2:;XfCCXg46QgO@OonCH=04lnD]G?@JU0oW&gt;8R[cd5WUn`Lj&gt;_L4H7acI]&lt;]SYiCVkXMEcP^ab7Tf\&lt;L36cdmoD7?&gt;U&gt;FXnG58NQBfkE`&gt;Y&gt;ZXN^;LUDk^0CT`]]YcV503o2&lt;9aY76Tb5=h;3n^l@;GR:DEml&lt;HjcCj]?2BHSYcAH8LcPLdmXLfl9&lt;R?P&gt;m[d_OAF47OMiiSBYLBDIO:B2mBEQejeLI1_lDOkc^TPmOSR;N?RhN=R3X@`aEX13VmJG`^nJRDXYeb7QSJiLJ`NX5Qkf=]imm&gt;nKg_CV6OK]RK94GkTDXQ&gt;HaT13fb00I9PG6JX1RmPQA@CXT2Ci9A4;\8804oTS3&gt;9F@3jQ0Q`Yb6PH2J8=QIl&lt;U65fY12^T^l2@8TQ51B^@UA:oVP&lt;O1`X1PnPjXO0`P3GQkdBQm:cV001le`9l2VYAPg8&lt;0k8Bm6`QjeP@j2ciUhWLj@0LY?3AP784;S@YWHX1S?Qn1m1kHbJS6f811fJb&lt;=99l6:nE1PPJ=8l=&lt;a\P0dAX0LXTD&gt;iH&lt;5QR6^dF;Bab60@I1@Q0HZS?9?A@TRA`J1PHiRc:Q:_jX1GeY=N[B&lt;3V2Pd60J^Y3@[1hD0XF2MP;&lt;B3RX2_H4PG43R;`1ZV@8E0R&lt;KHgh4VHe2B0H4:Y&lt;H5&lt;Q723C@d@1WBS^63LMX3=h4n91c3XeS;4aDhDR99PE40@14SA4S8Z_QlfJ^kenOQMQl\MFkQ32aVj``BUAmNDAB3?\R55J4A\37PAhR]3=KA6W&lt;86890Ck1NP@_[g:D6dV4Q49fS?IJ_C2;S^7mbE9SkO2G9Ii^ggHKkT`F370_j7b?jkWkEQ]:?XVf6A2ilo3@QYRZ82LV4K6^KABIXe``g6B7e1HCJK8hP9k^0X&gt;O;4j2^RRM3c2=aH8f`YUfUlb`B&lt;3I37=]e&gt;@JZ?KI:?@GJMZ]DOXZDNYX\cVFBbZ1RmDIF82=NNZDMK0dibVYa6E8b@nBP&lt;5Tl&lt;05lIDYhX^b6F\?\XfTjW:PUgjFJNIm\aeD&lt;eoRAhT`S]9IT7:LUghEY&gt;2fJODYDMFWDNBTdof=ITOaPAL59FVSX7NGk\MRM]DU&gt;&lt;nm39CJKab2S9fP&gt;SbRPR`h&lt;R0@D@5P9ZV08\FAR=6B[D?`iF9Xa6Q9e:U\ARX=B]93S4;17PliCP_8N5h`&gt;i6V3&gt;38TciG@Te@WT`HL8`hPj;\D6gSlTdaAYJMc8Hiaf&gt;[[@NAUBeHhFNTm7NYnXia&gt;:JBgQ?oS?;U9jT\\=AYoUTMCT\81ZYRXNJb\lbEEL&gt;e79ib&gt;:2`]U2jToCY]80BfV:4``\X1a4BL&lt;9?9ATRQ4bcK7^1A4RoX@7_2@S;hfe90M;0D;DJ]?I]5@0Y`&gt;NV3LF5`I1LYCFZTJU@=fTdVb2IPfC6dDZZ8JGTc2QOh;^L8HnSlnS?YbH5TGiYN5i9a8XWVIV]cK^:A]LH[5Lm2L34ZfLDn&lt;hgf2IHQJV6o[CK&gt;:33MOAcD5k&gt;LcEW&lt;&gt;D1CTFD^e69IAD3mLk&gt;C56YaKeFci;[THhLnK]V7iaZ:O5@PcUHH0f];^:5a0o2@FhcUKMQ5D&gt;nJn?Ija2clJo0KQ0:6Z&lt;7KD=:2I^YmJGE@ELPHG[9N\9mCc046gh\;[KBUd_I=RJbRBo&gt;kD8\BUXbUB8c&lt;]fF[BViXJSLNm=oWLlRY</protected>
@@ -2100,7 +2100,7 @@
 			</Action>
 		</typedef>
 		<typedef alwayssavetype='false' additionaltypeflags='0' typelistordernum='24'>
-			<NI_PythonParameterResult classname='PythonParameterResult' isroottypedef='true' typecategory='3' timestamp='1650060499' typeversion='21.0.0.49156' typelastmodversion='21.1.0.49154' typeminprodversion='21.0.0.0' typeflags='33554436' valueflags='24'>
+			<NI_PythonParameterResult classname='PythonParameterResult' isroottypedef='true' typecategory='3' timestamp='1650060499' typeversion='21.0.0.49156' typelastmodversion='21.0.0.49156' typeminprodversion='21.0.0.0' typeflags='33554436' valueflags='24'>
 				<subprops>
 					<Condition typename='Expression' xsi:type='Expression' classname='ExprValue'>
 						<value/>
@@ -2116,7 +2116,7 @@
 			</NI_PythonParameterResult>
 		</typedef>
 		<typedef alwayssavetype='false' additionaltypeflags='0' typelistordernum='23'>
-			<NI_PythonParameter classname='CPythonParameter' isroottypedef='true' typecategory='3' timestamp='1650060872' typeversion='21.0.0.49156' typelastmodversion='21.1.0.49154' typeminprodversion='21.0.0.0' typeflags='33554436' valueflags='24'>
+			<NI_PythonParameter classname='CPythonParameter' isroottypedef='true' typecategory='3' timestamp='1650060872' typeversion='21.0.0.49156' typelastmodversion='21.0.0.49156' typeminprodversion='21.0.0.0' typeflags='33554436' valueflags='24'>
 				<subprops>
 					<Name classname='Str'>
 						<value>_notNamed</value>
@@ -2164,7 +2164,7 @@
 			</NI_PythonParameter>
 		</typedef>
 		<typedef alwayssavetype='false' additionaltypeflags='0' typelistordernum='22'>
-			<PythonStepAdditions classname='CPythonModule' isroottypedef='true' typecategory='3' timestamp='1650060872' typeversion='21.0.0.49156' typelastmodversion='21.1.0.49154' typeminprodversion='21.0.0.0' typeflags='33554436' valueflags='24'>
+			<PythonStepAdditions classname='CPythonModule' isroottypedef='true' typecategory='3' timestamp='1650060872' typeversion='21.0.0.49156' typelastmodversion='21.0.0.49156' typeminprodversion='21.0.0.0' typeflags='33554436' valueflags='24'>
 				<subprops>
 					<PythonCall classname='CPythonCall'>
 						<subprops>
@@ -2629,7 +2629,7 @@
 																<value>ni.examples.NIDigitalSPI_Python</value>
 															</Name>
 															<Parameters classname='Objs'>
-																<value lbound='[0]' ubound='[6]'>
+																<value lbound='[0]' ubound='[7]'>
 																	<elemproto>
 																		<_NAME_IN_ATTRIBUTE_ name='' classname='Obj'>
 																			<subprops>
@@ -2836,6 +2836,42 @@
 																				</ID>
 																				<TypeSpecialization classname='Str'>
 																					<value>Path</value>
+																				</TypeSpecialization>
+																				<EnumDefinition classname='Objs'>
+																					<value lbound='[0]' ubound='[]'/>
+																				</EnumDefinition>
+																			</subprops>
+																		</Obj>
+																	</value>
+																	<value>
+																		<Obj typename='NI_MeasurementParameter' name=''>
+																			<subprops>
+																				<MessageType classname='Str'>
+																					<value/>
+																				</MessageType>
+																				<Name classname='Str'>
+																					<value>do_first_run_setup</value>
+																				</Name>
+																				<ArgumentValue classname='ExprValue'>
+																					<value>False</value>
+																				</ArgumentValue>
+																				<Direction classname='Str'>
+																					<value>In</value>
+																				</Direction>
+																				<Log classname='Bool'>
+																					<value>true</value>
+																				</Log>
+																				<Dimension classname='Num'>
+																					<value representation='UInt64'>0</value>
+																				</Dimension>
+																				<Type classname='Str'>
+																					<value>TypeBool</value>
+																				</Type>
+																				<ID classname='Num'>
+																					<value representation='Int64'>6</value>
+																				</ID>
+																				<TypeSpecialization classname='Str'>
+																					<value>None</value>
 																				</TypeSpecialization>
 																				<EnumDefinition classname='Objs'>
 																					<value lbound='[0]' ubound='[]'/>

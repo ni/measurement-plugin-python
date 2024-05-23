@@ -35,6 +35,7 @@ measurement_service = nims.MeasurementService(
 @measurement_service.configuration("levels_file_path", nims.DataType.Path, "PinLevels.digilevels")
 @measurement_service.configuration("timing_file_path", nims.DataType.Path, "Timing.digitiming")
 @measurement_service.configuration("pattern_file_path", nims.DataType.Path, "Pattern.digipat")
+@measurement_service.configuration("do_first_run_setup", nims.DataType.Boolean, True)
 # TODO: MeasurementLink UI Editor doesn't support arrays of Booleans
 @measurement_service.output("passing_sites", nims.DataType.Int32Array1D)
 @measurement_service.output("failing_sites", nims.DataType.Int32Array1D)
@@ -44,6 +45,7 @@ def measure(
     levels_file_path: str,
     timing_file_path: str,
     pattern_file_path: str,
+    do_first_run_setup: bool
 ) -> Tuple:
     """Test a SPI device using an NI Digital Pattern instrument."""
     logging.info("Starting test: pin_names=%s", pin_names)
@@ -55,7 +57,7 @@ def measure(
             selected_sites_string = ",".join(f"site{i}" for i in pin_map_context.sites or [])
             selected_sites = session.sites[selected_sites_string]
 
-            if not session_info.session_exists:
+            if do_first_run_setup:
                 # When running the measurement from TestStand, teststand_fixture.py should have
                 # already loaded the pin map, specifications, levels, timing, and patterns.
                 session.load_pin_map(pin_map_context.pin_map_id)
