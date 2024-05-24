@@ -23,6 +23,10 @@ def create_nidaqmx_tasks(sequence_context: Any) -> None:
     with GrpcChannelPool() as grpc_channel_pool:
         teststand_support = TestStandSupport(sequence_context)
         pin_map_id = teststand_support.get_active_pin_map_id()
+
+        if not pin_map_id:
+            return
+
         pin_map_context = PinMapContext(pin_map_id=pin_map_id, sites=None)
 
         discovery_client = DiscoveryClient(grpc_channel_pool=grpc_channel_pool)
