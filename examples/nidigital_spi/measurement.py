@@ -8,10 +8,7 @@ from typing import Iterable, Tuple, Union
 import click
 import ni_measurementlink_service as nims
 import nidigital
-from _helpers import (
-    configure_logging,
-    verbosity_option,
-)
+from _helpers import configure_logging, verbosity_option
 
 script_or_exe = sys.executable if getattr(sys, "frozen", False) else __file__
 service_directory = pathlib.Path(script_or_exe).resolve().parent
@@ -35,6 +32,7 @@ measurement_service = nims.MeasurementService(
 @measurement_service.configuration("levels_file_path", nims.DataType.Path, "PinLevels.digilevels")
 @measurement_service.configuration("timing_file_path", nims.DataType.Path, "Timing.digitiming")
 @measurement_service.configuration("pattern_file_path", nims.DataType.Path, "Pattern.digipat")
+@measurement_service.configuration("load_files", nims.DataType.Boolean, True)
 # TODO: MeasurementLink UI Editor doesn't support arrays of Booleans
 @measurement_service.output("passing_sites", nims.DataType.Int32Array1D)
 @measurement_service.output("failing_sites", nims.DataType.Int32Array1D)
@@ -44,6 +42,7 @@ def measure(
     levels_file_path: str,
     timing_file_path: str,
     pattern_file_path: str,
+    load_files: bool,
 ) -> Tuple:
     """Test a SPI device using an NI Digital Pattern instrument."""
     logging.info("Starting test: pin_names=%s", pin_names)
@@ -55,7 +54,7 @@ def measure(
             selected_sites_string = ",".join(f"site{i}" for i in pin_map_context.sites or [])
             selected_sites = session.sites[selected_sites_string]
 
-            if not session_info.session_exists:
+            if load_files:
                 # When running the measurement from TestStand, teststand_fixture.py should have
                 # already loaded the pin map, specifications, levels, timing, and patterns.
                 session.load_pin_map(pin_map_context.pin_map_id)
