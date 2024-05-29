@@ -106,7 +106,7 @@ In order to run the `ni-measurementlink-service` tests locally:
 
 ## Using Command Line
 
-1. Install production dependencies and development dependencies into a venv by running `poetry install`.
+1. Install production dependencies and development dependencies into a venv by running `poetry install --all-extras`.
 2. Execute the command `poetry run pytest -v` to run the tests, from the repo's root directory.
 
     ``` ps
