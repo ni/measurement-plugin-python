@@ -741,11 +741,6 @@ class BaseReservation(_BaseSessionContainer):
         if not instrument_type_id:
             raise ValueError("This method requires an instrument type ID.")
         session_infos = self._get_matching_session_infos(instrument_type_id)
-        if len(session_infos) == 0:
-            raise ValueError(
-                f"No reserved sessions matched instrument type ID '{instrument_type_id}'. "
-                "Expected single or multiple sessions, got 0 sessions."
-            )
 
         if closing_function is None:
             closing_function = closing_session
