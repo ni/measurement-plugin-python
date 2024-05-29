@@ -2850,7 +2850,7 @@
 																					<value/>
 																				</MessageType>
 																				<Name classname='Str'>
-																					<value>do_first_run_setup</value>
+																					<value>load_files</value>
 																				</Name>
 																				<ArgumentValue classname='ExprValue'>
 																					<value>False</value>
