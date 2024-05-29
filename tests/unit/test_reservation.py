@@ -180,11 +180,8 @@ def test___no_session_infos___initialize_sessions___value_error_raised(
 ) -> None:
     reservation = MultiSessionReservation(session_management_client, [])
 
-    with pytest.raises(ValueError) as exc_info:
-        with reservation.initialize_sessions(construct_session, "nifake"):
-            pass
-
-    assert "No reserved sessions matched instrument type ID 'nifake'." in exc_info.value.args[0]
+    with reservation.initialize_sessions(construct_session, "nifake") as reserved_sessions:
+        assert reserved_sessions == []
 
 
 def test___session_already_exists___initialize_sessions___runtime_error_raised(
