@@ -106,8 +106,26 @@ In order to run the `ni-measurementlink-service` tests locally:
 
 ## Using Command Line
 
-1. Install production dependencies and development dependencies into a venv by running `poetry install --all-extras`.
-2. Execute the command `poetry run pytest -v` to run the tests, from the repo's root directory.
+1. Install production dependencies and development dependencies into a venv by
+running `poetry install --all-extras`.
+2. Some tests will be skipped if the required components included with
+InstrumentStudio is not installed. Install the latest version of
+InstrumentStudio to run all tests.
+3. Some tests require simulated hardware. Copy `examples\.env.simulation`
+to the root measurementlink-python directory and rename it to `.env` to simulate
+the required devices.
+
+    ```ps
+    cp .\examples\.env.simulation .env
+    ```
+4. Some DAQmx tests require persistent simulated devices created using `NI MAX` or
+the `NI Hardware Configuration Utility`. They require a DAQmx device that supports
+AI voltage measurements (e.g. PCIe-6363 or other X Series device). To simulate a
+DAQmx device in software: open `NI MAX`, right-click `Devices and Interfaces`,
+select `Create New...`, and select `Simulated NI-DAQmx Device or Modular
+Instrument`.
+5. Execute the command `poetry run pytest -v` to run the tests, from the repo's
+   root directory.
 
     ``` ps
     (.venv) PS D:\TAF\measurementlink-python> poetry run pytest -v
@@ -115,7 +133,10 @@ In order to run the `ni-measurementlink-service` tests locally:
 
 ## Using VS Code Test Explorer extension (UI)
 
-Install and configure the `Python Test Explorer for Visual Studio Code` extension to execute/debug the tests using UI. For more details related to the extension, refer [here](https://marketplace.visualstudio.com/items?itemName=LittleFoxTeam.vscode-python-test-adapter).
+Install and configure the `Python Test Explorer for Visual Studio Code`
+extension to execute/debug the tests using UI. For more details related to the
+extension, refer
+[here](https://marketplace.visualstudio.com/items?itemName=LittleFoxTeam.vscode-python-test-adapter).
 
 ## Steps to generate code coverage report
 
