@@ -109,7 +109,7 @@ In order to run the `ni-measurementlink-service` tests locally:
 1. Install production dependencies and development dependencies into a venv by
 running `poetry install --all-extras`.
 2. Some tests will be skipped if the required components included with
-InstrumentStudio is not installed. Install the latest version of
+InstrumentStudio are not installed. Install the latest version of
 InstrumentStudio to run all tests.
 3. Some tests require simulated hardware. Copy `examples\.env.simulation`
 to the root measurementlink-python directory and rename it to `.env` to simulate
