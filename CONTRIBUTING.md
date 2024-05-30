@@ -123,7 +123,8 @@ the `NI Hardware Configuration Utility`. They require a DAQmx device that suppor
 AI voltage measurements (e.g. PCIe-6363 or other X Series device). To simulate a
 DAQmx device in software: open `NI MAX`, right-click `Devices and Interfaces`,
 select `Create New...`, and select `Simulated NI-DAQmx Device or Modular
-Instrument`.
+Instrument`. For the DAQmx tests to pass, you will need two DAQmx devices named 'Dev1'
+and 'Dev2'.
 5. Execute the command `poetry run pytest -v` to run the tests, from the repo's
    root directory.
 
