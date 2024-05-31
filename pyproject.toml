@@ -44,6 +44,7 @@ nidmm = {version = ">=1.4.4", extras = ["grpc"], optional = true}
 nifgen = {version = ">=1.4.4", extras = ["grpc"], optional = true}
 niscope = {version = ">=1.4.4", extras = ["grpc"], optional = true}
 niswitch = {version = ">=1.4.4", extras = ["grpc"], optional = true}
+docutils = ">=0.16, !=0.21.post1"
 
 [tool.poetry.extras]
 drivers = ["nidaqmx", "nidcpower", "nidigital", "nidmm", "nifgen", "niscope", "niswitch"]
