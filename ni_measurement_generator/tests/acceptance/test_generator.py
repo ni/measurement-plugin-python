@@ -2,7 +2,7 @@ import pathlib
 
 import pytest
 
-from ni_measurementlink_generator import template
+from ni_measurement_generator import template
 
 
 def test___command_line_args___create_measurement___render_without_exception(
