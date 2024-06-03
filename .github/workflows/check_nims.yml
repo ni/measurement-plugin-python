@@ -47,9 +47,9 @@ jobs:
       - name: Lint ni-measurementlink-service
         run: poetry run ni-python-styleguide lint
       - name: Mypy static analysis (ni-measurementlink-service, Linux)
-        run:  poetry run mypy -p ni_measurementlink_service
+        run:  poetry run mypy -p ni_measurement_plugin
       - name: Mypy static analysis (ni-measurementlink-service, Windows)
-        run:  poetry run mypy -p ni_measurementlink_service --platform win32
+        run:  poetry run mypy -p ni_measurement_plugin --platform win32
       - name: Mypy static analysis (tests, Linux)
         run:  poetry run mypy tests
       - name: Mypy static analysis (tests, Windows)
