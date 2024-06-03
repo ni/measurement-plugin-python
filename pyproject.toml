@@ -145,7 +145,7 @@ ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
 # mypy-protobuf codegen has some unused ignores.
-module = ["ni_measurementlink_plugin._internal.stubs.*","tests.utilities.stubs.*"]
+module = ["ni_measurement_plugin._internal.stubs.*","tests.utilities.stubs.*"]
 warn_unused_ignores = false
 
 [[tool.mypy.overrides]]
