@@ -13,9 +13,7 @@ import grpc
 import pytest
 from pytest_mock import MockerFixture
 
-from ni_measurement_plugin._annotations import (
-    SERVICE_PROGRAMMINGLANGUAGE_KEY,
-)
+from ni_measurement_plugin._annotations import SERVICE_PROGRAMMINGLANGUAGE_KEY
 from ni_measurement_plugin._internal.stubs.ni.measurementlink.discovery.v1.discovery_service_pb2 import (
     RegisterServiceRequest,
     RegisterServiceResponse,
@@ -241,9 +239,7 @@ def test___key_file_never_created___get_discovery_service_address___throws_timeo
         return_value=temp_discovery_key_file_path,
     )
     mocker.patch("ni_measurement_plugin.discovery._support._START_SERVICE_TIMEOUT", 5.0)
-    mocker.patch(
-        "ni_measurement_plugin.discovery._support._open_key_file", side_effect=OSError
-    )
+    mocker.patch("ni_measurement_plugin.discovery._support._open_key_file", side_effect=OSError)
     mocker.patch(
         "ni_measurement_plugin.discovery._support._get_registration_json_file_path",
         return_value=temp_registration_json_file_path,
