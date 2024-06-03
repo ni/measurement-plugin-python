@@ -50,7 +50,7 @@ The example measurements are *Poetry-based* projects. Follow the steps below to 
     REM Example: cd "..\measurementlink-python\examples\dc_measurement"
     ```
 
-3. Run `poetry install`. This command creates/updates the virtual environment (`.venv`) and installs the needed dependencies (including `ni-measurementlink-service` package) into the virtual environment.
+3. Run `poetry install`. This command creates/updates the virtual environment (`.venv`) and installs the needed dependencies (including `ni-measurement-plugin` package) into the virtual environment.
 
     ``` cmd
     poetry install
