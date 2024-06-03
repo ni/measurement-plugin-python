@@ -5,16 +5,16 @@ import grpc
 import pytest
 from pytest_mock import MockerFixture
 
-from ni_measurementlink_service._internal.stubs import session_pb2
-from ni_measurementlink_service._internal.stubs.ni.measurementlink.sessionmanagement.v1 import (
+from ni_measurement_plugin._internal.stubs import session_pb2
+from ni_measurement_plugin._internal.stubs.ni.measurementlink.sessionmanagement.v1 import (
     session_management_service_pb2,
 )
-from ni_measurementlink_service._internal.stubs.ni.measurementlink.sessionmanagement.v1.session_management_service_pb2_grpc import (
+from ni_measurement_plugin._internal.stubs.ni.measurementlink.sessionmanagement.v1.session_management_service_pb2_grpc import (
     SessionManagementServiceStub,
 )
-from ni_measurementlink_service.discovery import DiscoveryClient
-from ni_measurementlink_service.grpc.channelpool import GrpcChannelPool
-from ni_measurementlink_service.session_management import (
+from ni_measurement_plugin.discovery import DiscoveryClient
+from ni_measurement_plugin.grpc.channelpool import GrpcChannelPool
+from ni_measurement_plugin.session_management import (
     MultiplexerSessionInformation,
     MultiSessionReservation,
     PinMapContext,
@@ -581,7 +581,7 @@ def test___use_reservation_type___reports_deprecated_warning_and_aliases_to_mult
     session_management_client: SessionManagementClient,
 ) -> None:
     with pytest.deprecated_call():
-        from ni_measurementlink_service.session_management import Reservation
+        from ni_measurement_plugin.session_management import Reservation
 
         reservation = Reservation(session_management_client, _create_grpc_session_infos(3))
 

@@ -4,7 +4,7 @@ from contextlib import ExitStack
 import niswitch
 import pytest
 
-from ni_measurementlink_service.session_management import (
+from ni_measurement_plugin.session_management import (
     PinMapContext,
     SessionManagementClient,
 )

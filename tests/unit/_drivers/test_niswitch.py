@@ -6,8 +6,8 @@ from unittest.mock import ANY, Mock
 import pytest
 from pytest_mock import MockerFixture
 
-from ni_measurementlink_service._configuration import NISwitchOptions
-from ni_measurementlink_service.session_management import (
+from ni_measurement_plugin._configuration import NISwitchOptions
+from ni_measurement_plugin.session_management import (
     INSTRUMENT_TYPE_NI_RELAY_DRIVER,
     MultiSessionReservation,
     SessionInitializationBehavior,

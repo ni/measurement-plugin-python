@@ -5,7 +5,7 @@ from typing import Optional, Type
 
 from typing_extensions import Self
 
-from ni_measurementlink_service.discovery._support import (
+from ni_measurement_plugin.discovery._support import (
     _get_discovery_service_location,
     _get_key_file_path,
     _service_already_running,

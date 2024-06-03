@@ -13,10 +13,10 @@ import grpc
 import pytest
 from pytest_mock import MockerFixture
 
-from ni_measurementlink_service._annotations import (
+from ni_measurement_plugin._annotations import (
     SERVICE_PROGRAMMINGLANGUAGE_KEY,
 )
-from ni_measurementlink_service._internal.stubs.ni.measurementlink.discovery.v1.discovery_service_pb2 import (
+from ni_measurement_plugin._internal.stubs.ni.measurementlink.discovery.v1.discovery_service_pb2 import (
     RegisterServiceRequest,
     RegisterServiceResponse,
     ResolveServiceRequest,
@@ -25,17 +25,17 @@ from ni_measurementlink_service._internal.stubs.ni.measurementlink.discovery.v1.
     UnregisterServiceRequest,
     UnregisterServiceResponse,
 )
-from ni_measurementlink_service._internal.stubs.ni.measurementlink.discovery.v1.discovery_service_pb2_grpc import (
+from ni_measurement_plugin._internal.stubs.ni.measurementlink.discovery.v1.discovery_service_pb2_grpc import (
     DiscoveryServiceStub,
 )
-from ni_measurementlink_service.discovery import DiscoveryClient, ServiceLocation
-from ni_measurementlink_service.discovery._support import (
+from ni_measurement_plugin.discovery import DiscoveryClient, ServiceLocation
+from ni_measurement_plugin.discovery._support import (
     _get_discovery_service_address,
     _open_key_file,
     _start_service,
 )
-from ni_measurementlink_service.grpc.channelpool import GrpcChannelPool
-from ni_measurementlink_service.measurement.info import MeasurementInfo, ServiceInfo
+from ni_measurement_plugin.grpc.channelpool import GrpcChannelPool
+from ni_measurement_plugin.measurement.info import MeasurementInfo, ServiceInfo
 from tests.utilities.fake_rpc_error import FakeRpcError
 
 if sys.platform == "win32":

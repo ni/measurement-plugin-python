@@ -4,7 +4,7 @@ from unittest.mock import Mock
 import pytest
 from pytest_mock import MockerFixture
 
-from ni_measurementlink_service._configuration import MIDriverOptions, NISwitchOptions
+from ni_measurement_plugin._configuration import MIDriverOptions, NISwitchOptions
 
 
 def test___mi_driver_options___update_from_config___reads_config(config: Mock) -> None:

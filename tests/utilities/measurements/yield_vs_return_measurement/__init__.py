@@ -8,7 +8,7 @@ from typing import Generator, List, Tuple
 
 import grpc
 
-import ni_measurementlink_service as nims
+import ni_measurement_plugin as nims
 
 RANDOM_NUMBERS_PER_SECOND = 100.0
 RANDOM_NUMBER_RANGE = 10.0

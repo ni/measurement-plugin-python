@@ -3,7 +3,7 @@
 import pathlib
 from typing import Iterable, Tuple
 
-import ni_measurementlink_service as nims
+import ni_measurement_plugin as nims
 
 service_directory = pathlib.Path(__file__).resolve().parent
 measurement_service = nims.MeasurementService(

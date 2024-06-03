@@ -8,11 +8,11 @@ from typing import List, Type
 import pytest
 from pytest_mock import MockerFixture
 
-from ni_measurementlink_service import _datatypeinfo
-from ni_measurementlink_service._annotations import TYPE_SPECIALIZATION_KEY
-from ni_measurementlink_service._internal.stubs.ni.protobuf.types import xydata_pb2
-from ni_measurementlink_service.measurement.info import DataType, TypeSpecialization
-from ni_measurementlink_service.measurement.service import MeasurementService
+from ni_measurement_plugin import _datatypeinfo
+from ni_measurement_plugin._annotations import TYPE_SPECIALIZATION_KEY
+from ni_measurement_plugin._internal.stubs.ni.protobuf.types import xydata_pb2
+from ni_measurement_plugin.measurement.info import DataType, TypeSpecialization
+from ni_measurement_plugin.measurement.service import MeasurementService
 
 
 class Color(Enum):

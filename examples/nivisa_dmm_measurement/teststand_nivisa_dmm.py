@@ -7,13 +7,13 @@ from _helpers import TestStandSupport
 from _visa_dmm import INSTRUMENT_TYPE_VISA_DMM
 from _visa_dmm_session_management import VisaDmmSessionConstructor
 from decouple import AutoConfig
-from ni_measurementlink_service.discovery import DiscoveryClient
-from ni_measurementlink_service.grpc.channelpool import GrpcChannelPool
-from ni_measurementlink_service.session_management import (
+from ni_measurement_plugin.discovery import DiscoveryClient
+from ni_measurement_plugin.grpc.channelpool import GrpcChannelPool
+from ni_measurement_plugin.session_management import (
     PinMapContext,
     SessionManagementClient,
 )
-from ni_measurementlink_service.session_management._types import (
+from ni_measurement_plugin.session_management._types import (
     SessionInitializationBehavior,
 )
 

@@ -5,7 +5,7 @@ from unittest.mock import Mock, create_autospec
 
 from pytest_mock import MockerFixture
 
-from ni_measurementlink_service._configuration import MIDriverOptions
+from ni_measurement_plugin._configuration import MIDriverOptions
 
 TSession = TypeVar("TSession")
 

@@ -3,12 +3,12 @@ from unittest.mock import Mock
 import pytest
 from pytest_mock import MockerFixture
 
-from ni_measurementlink_service._drivers._grpcdevice import (
+from ni_measurement_plugin._drivers._grpcdevice import (
     SERVICE_CLASS,
     get_grpc_device_server_location,
     get_insecure_grpc_device_server_channel,
 )
-from ni_measurementlink_service.discovery import ServiceLocation
+from ni_measurement_plugin.discovery import ServiceLocation
 from tests.utilities import fake_driver
 
 
