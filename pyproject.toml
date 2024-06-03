@@ -44,7 +44,6 @@ nidmm = {version = ">=1.4.4", extras = ["grpc"], optional = true}
 nifgen = {version = ">=1.4.4", extras = ["grpc"], optional = true}
 niscope = {version = ">=1.4.4", extras = ["grpc"], optional = true}
 niswitch = {version = ">=1.4.4", extras = ["grpc"], optional = true}
-docutils = ">=0.16, !=0.21.post1"
 
 [tool.poetry.extras]
 drivers = ["nidaqmx", "nidcpower", "nidigital", "nidmm", "nifgen", "niscope", "niswitch"]
@@ -97,6 +96,8 @@ m2r2 = ">=0.3.2"
 toml = ">=0.10.2"
 tomlkit = ">=0.11.0"
 sphinx-click = ">=4.1.0"
+# Workaround to docutils error with 0.21.post1 release
+docutils = ">=0.16, !=0.21.post1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
