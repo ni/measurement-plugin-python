@@ -28,6 +28,6 @@ def set_simulation_options(
 ) -> None:
     """Set simulation options for the specified driver."""
     mocker.patch(
-        f"ni_measurementlink_service._drivers._{driver_name}.{driver_name.upper()}_OPTIONS",
+        f"ni_measurement_plugin._drivers._{driver_name}.{driver_name.upper()}_OPTIONS",
         MIDriverOptions(driver_name, simulate, board_type, model),
     )

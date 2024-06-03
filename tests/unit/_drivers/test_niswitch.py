@@ -264,6 +264,6 @@ def session_new(mocker: MockerFixture) -> Mock:
 
 def _set_niswitch_simulation_options(mocker: MockerFixture, simulate: bool, topology: str) -> None:
     mocker.patch(
-        "ni_measurementlink_service._drivers._niswitch.NISWITCH_OPTIONS",
+        "ni_measurement_plugin._drivers._niswitch.NISWITCH_OPTIONS",
         NISwitchOptions("niswitch", simulate, topology),
     )

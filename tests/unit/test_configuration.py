@@ -58,4 +58,4 @@ def test___niswitch_options___update_from_config___reads_config(config: Mock) ->
 @pytest.fixture
 def config(mocker: MockerFixture) -> Mock:
     """Test fixture that creates a mock decouple config."""
-    return mocker.patch("ni_measurementlink_service._configuration._config")
+    return mocker.patch("ni_measurement_plugin._configuration._config")

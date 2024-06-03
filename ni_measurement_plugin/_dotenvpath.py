@@ -82,6 +82,6 @@ else:
 
 def _get_nims_path() -> Path:
     """Get the path of the ni_measurementlink_service package."""
-    nims_module = sys.modules["ni_measurementlink_service"]
+    nims_module = sys.modules["ni_measurement_plugin"]
     assert nims_module.__file__ and nims_module.__file__.endswith("__init__.py")
     return Path(nims_module.__file__).parent

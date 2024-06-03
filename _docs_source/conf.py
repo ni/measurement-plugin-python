@@ -46,7 +46,7 @@ htmlhelp_basename = "{}doc".format(project)
 # tell autoapi to doc the public options
 autoapi_options = list(autoapi.extension._DEFAULT_OPTIONS)
 autoapi_options.remove("private-members")  # note: remove this to include "_" members in docs
-autoapi_dirs = [root_path / "ni_measurementlink_service"]
+autoapi_dirs = [root_path / "ni_measurement_plugin"]
 autoapi_type = "python"
 autodoc_typehints = "description"
 
@@ -61,16 +61,16 @@ def skip_aliases(app, what, name, obj, skip, options):
     # For names that are defined in a public sub-module and aliased into a
     # public package, hide the alias.
     if name in [
-        "ni_measurementlink_service.DataType",
-        "ni_measurementlink_service.MeasurementInfo",
-        "ni_measurementlink_service.ServiceInfo",
-        "ni_measurementlink_service.MeasurementService",
+        "ni_measurement_plugin.DataType",
+        "ni_measurement_plugin.MeasurementInfo",
+        "ni_measurement_plugin.ServiceInfo",
+        "ni_measurement_plugin.MeasurementService",
     ]:
         skip = True
 
     # For names that are defined in a private sub-module and aliased into a
     # public package, hide the definition.
-    if name.startswith("ni_measurementlink_service.session_management._constants."):
+    if name.startswith("ni_measurement_plugin.session_management._constants."):
         skip = True
 
     return skip

@@ -11,7 +11,7 @@ __all__ = ["DiscoveryClient", "ServiceLocation"]
 
 warnings.warn(
     DeprecatedWarning(
-        "ni_measurementlink_service._internal.discovery_client",
+        "ni_measurement_plugin._internal.discovery_client",
         deprecated_in="1.3.0",
         removed_in=None,
         details="Use ni_measurementlink_service.discovery instead.",

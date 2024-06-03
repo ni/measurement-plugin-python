@@ -204,15 +204,15 @@ def test___discovery_service_not_running___get_discovery_service_address___start
     subprocess_popen_kwargs: Dict[str, Any],
 ):
     mocker.patch(
-        "ni_measurementlink_service.discovery._support._get_key_file_path",
+        "ni_measurement_plugin.discovery._support._get_key_file_path",
         return_value=temp_discovery_key_file_path,
     )
     mocker.patch(
-        "ni_measurementlink_service.discovery._support._service_already_running",
+        "ni_measurement_plugin.discovery._support._service_already_running",
         return_value=False,
     )
     mocker.patch(
-        "ni_measurementlink_service.discovery._support._get_registration_json_file_path",
+        "ni_measurement_plugin.discovery._support._get_registration_json_file_path",
         return_value=temp_registration_json_file_path,
     )
     mock_popen = mocker.patch("subprocess.Popen")
@@ -237,15 +237,15 @@ def test___key_file_never_created___get_discovery_service_address___throws_timeo
     temp_registration_json_file_path: pathlib.Path,
 ):
     mocker.patch(
-        "ni_measurementlink_service.discovery._support._get_key_file_path",
+        "ni_measurement_plugin.discovery._support._get_key_file_path",
         return_value=temp_discovery_key_file_path,
     )
-    mocker.patch("ni_measurementlink_service.discovery._support._START_SERVICE_TIMEOUT", 5.0)
+    mocker.patch("ni_measurement_plugin.discovery._support._START_SERVICE_TIMEOUT", 5.0)
     mocker.patch(
-        "ni_measurementlink_service.discovery._support._open_key_file", side_effect=OSError
+        "ni_measurement_plugin.discovery._support._open_key_file", side_effect=OSError
     )
     mocker.patch(
-        "ni_measurementlink_service.discovery._support._get_registration_json_file_path",
+        "ni_measurement_plugin.discovery._support._get_registration_json_file_path",
         return_value=temp_registration_json_file_path,
     )
     mocker.patch("subprocess.Popen")
@@ -282,7 +282,7 @@ def test___key_file_exist_after_poll___start_discovery_service___discovery_servi
     exe_file_path = temp_directory / _MOCK_REGISTRATION_FILE_CONTENT["discovery"]["path"]
 
     mocker.patch(
-        "ni_measurementlink_service.discovery._support._open_key_file",
+        "ni_measurement_plugin.discovery._support._open_key_file",
         side_effect=[OSError, OSError, OSError, StringIO()],
     )
     mock_popen = mocker.patch("subprocess.Popen")
@@ -304,11 +304,11 @@ def test___discovery_service_exe_unavailable___register_service___raises_file_no
     temp_registration_json_file_path: pathlib.Path,
 ):
     mocker.patch(
-        "ni_measurementlink_service.discovery._support._get_key_file_path",
+        "ni_measurement_plugin.discovery._support._get_key_file_path",
         return_value=temp_discovery_key_file_path,
     )
     mocker.patch(
-        "ni_measurementlink_service.discovery._support._get_registration_json_file_path",
+        "ni_measurement_plugin.discovery._support._get_registration_json_file_path",
         return_value=temp_registration_json_file_path,
     )
     mocker.patch("subprocess.Popen", side_effect=FileNotFoundError)
@@ -332,7 +332,7 @@ def discovery_client(
 ) -> DiscoveryClient:
     """Create a DiscoveryClient."""
     mocker.patch(
-        "ni_measurementlink_service.discovery._client.DiscoveryClient._get_stub",
+        "ni_measurement_plugin.discovery._client.DiscoveryClient._get_stub",
         return_value=discovery_service_stub,
     )
     return DiscoveryClient(grpc_channel_pool=cast(GrpcChannelPool, grpc_channel_pool))
