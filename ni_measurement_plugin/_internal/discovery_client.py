@@ -14,6 +14,6 @@ warnings.warn(
         "ni_measurement_plugin._internal.discovery_client",
         deprecated_in="1.3.0",
         removed_in=None,
-        details="Use ni_measurementlink_service.discovery instead.",
+        details="Use ni_measurement_plugin.discovery instead.",
     ),
 )

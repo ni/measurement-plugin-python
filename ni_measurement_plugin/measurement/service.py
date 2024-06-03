@@ -387,10 +387,10 @@ class MeasurementService:
                 is DataType.IOResource or DataType.Pin (deprecated).
 
                 For NI instruments, use instrument type id constants defined by
-                :py:mod:`ni_measurementlink_service.session_management`, such as
-                :py:const:`~ni_measurementlink_service.session_management.INSTRUMENT_TYPE_NI_DCPOWER`
+                :py:mod:`ni_measurement_plugin.session_management`, such as
+                :py:const:`~ni_measurement_plugin.session_management.INSTRUMENT_TYPE_NI_DCPOWER`
                 or
-                :py:const:`~ni_measurementlink_service.session_management.INSTRUMENT_TYPE_NI_DMM`.
+                :py:const:`~ni_measurement_plugin.session_management.INSTRUMENT_TYPE_NI_DMM`.
 
                 For custom instruments, use the instrument type id defined in the pin map file.
 

@@ -52,8 +52,8 @@ autodoc_typehints = "description"
 
 
 # WARNING: more than one target found for cross-reference 'MeasurementInfo':
-# ni_measurementlink_service.MeasurementInfo,
-# ni_measurementlink_service.measurement.info.MeasurementInfo
+# ni_measurement_plugin.MeasurementInfo,
+# ni_measurement_plugin.measurement.info.MeasurementInfo
 #
 # TODO: figure out how to make :canonical: work with autoapi
 def skip_aliases(app, what, name, obj, skip, options):

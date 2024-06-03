@@ -7,7 +7,7 @@ import pathlib
 import sys
 
 import click
-import ni_measurementlink_service as nims
+import ni_measurement_plugin as nims
 
 script_or_exe = sys.executable if getattr(sys, "frozen", False) else __file__
 service_directory = pathlib.Path(script_or_exe).resolve().parent

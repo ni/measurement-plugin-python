@@ -39,7 +39,7 @@ def _get_script_or_exe_path() -> Optional[Path]:
 
 
 def _get_caller_path() -> Optional[Path]:
-    """Get the path of the module calling into ni_measurementlink_service, if possible."""
+    """Get the path of the module calling into ni_measurement_plugin, if possible."""
     nims_path = _get_nims_path()
     for frame, _ in traceback.walk_stack(inspect.currentframe()):
         if frame.f_code.co_filename:
@@ -81,7 +81,7 @@ else:
 
 
 def _get_nims_path() -> Path:
-    """Get the path of the ni_measurementlink_service package."""
+    """Get the path of the ni_measurement_plugin package."""
     nims_module = sys.modules["ni_measurement_plugin"]
     assert nims_module.__file__ and nims_module.__file__.endswith("__init__.py")
     return Path(nims_module.__file__).parent
