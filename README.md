@@ -102,30 +102,30 @@ pip show ni-measurementlink-service
 
 ### Developing a minimal Python measurement
 
-1. Install the `ni-measurement-generator` package.
+1. Install the `ni-measurement-plugin-generator` package.
 
 ``` cmd
 REM Activate the required virtual environment if any.
-pip install ni-measurement-generator
+pip install ni-measurement-plugin-generator
 ```
 
-2. Run the `ni-measurement-generator` tool. Use command line arguments to specify the `display-name` and optionally the `version`, `measurement-type`, and `product-type`.
+2. Run the `ni-measurement-plugin-generator` tool. Use command line arguments to specify the `display-name` and optionally the `version`, `measurement-type`, and `product-type`.
 
-    1. Running `ni-measurement-generator` without optional arguments:
+    1. Running `ni-measurement-plugin-generator` without optional arguments:
 
-    `ni-measurement-generator SampleMeasurement`
+    `ni-measurement-plugin-generator SampleMeasurement`
 
     'SampleMeasurement' is the display name of your measurement service. Without the optional arguments,
     the other arguments are generated for you based on the display name.
 
-    2. Running `ni-measurement-generator` with optional arguments for `measurement-version`, `ui-file`,
+    2. Running `ni-measurement-plugin-generator` with optional arguments for `measurement-version`, `ui-file`,
     `service-class`, and `description-url`:
 
-    `ni-measurement-generator SampleMeasurement --measurement-version 0.1.0.0 --ui-file MeasurementUI.measui --service-class SampleMeasurement_Python --description-url https://www.example.com/SampleMeasurement.html`
+    `ni-measurement-plugin-generator SampleMeasurement --measurement-version 0.1.0.0 --ui-file MeasurementUI.measui --service-class SampleMeasurement_Python --description-url https://www.example.com/SampleMeasurement.html`
 
-    3. Running `ni-measurement-generator` with optional argument for `directory-out`
+    3. Running `ni-measurement-plugin-generator` with optional argument for `directory-out`
 
-    `ni-measurement-generator SampleMeasurement --directory-out <new_path_for_created_files>`
+    `ni-measurement-plugin-generator SampleMeasurement --directory-out <new_path_for_created_files>`
 
     If no output directory is specified, the files will
     be placed in a new folder under the current directory

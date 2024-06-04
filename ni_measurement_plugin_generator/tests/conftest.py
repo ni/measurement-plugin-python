@@ -1,4 +1,4 @@
-"""Shared fixtures for ni-measurement-generator tests."""
+"""Shared fixtures for ni-measurement-plugin-generator tests."""
 
 import pathlib
 

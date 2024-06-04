@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "ni_measurement_generator"
+name = "ni_measurement_plugin_generator"
 version = "1.5.0-dev0"
 description = "Measurement Plugin Code Generator for Python"
 authors = ["NI <opensource@ni.com>"]
@@ -30,7 +30,7 @@ ni-python-styleguide = ">=0.4.1"
 mypy = ">=1.0"
 
 [tool.poetry.scripts]
-ni-measurement-generator = "ni_measurement_generator.template:create_measurement"
+ni-measurement-plugin-generator = "ni_measurement_plugin_generator.template:create_measurement"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

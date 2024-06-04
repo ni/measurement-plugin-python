@@ -51,7 +51,7 @@ jobs:
       - name: Update NIMG package version based on tag name.
         run: |
           poetry version ${{ steps.vars.outputs.tag }}
-        working-directory: ./ni_measurement_generator
+        working-directory: ./ni_measurement_plugin_generator
 
       - name: Commit file changes
         id: commit
@@ -84,7 +84,7 @@ jobs:
         if: ${{ startsWith(github.event.release.target_commitish, 'main') || startsWith(github.event.release.target_commitish, 'releases/') }}
         run: |
           poetry publish --build --username __token__ --password ${{ secrets.PYPI_TOKEN }}
-        working-directory: ./ni_measurement_generator
+        working-directory: ./ni_measurement_plugin_generator
 
       - name: Create archives of the examples
         env:
