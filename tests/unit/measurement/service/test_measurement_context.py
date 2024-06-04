@@ -3,7 +3,7 @@ from unittest.mock import Mock
 
 import pytest
 
-from ni_measurement_plugin.measurement.service import MeasurementContext
+from ni_measurement_plugin_sdk.measurement.service import MeasurementContext
 
 pytestmark = pytest.mark.usefixtures("measurement_service_context")
 

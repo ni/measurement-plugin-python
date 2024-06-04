@@ -6,7 +6,7 @@ import sys
 from typing import Tuple
 
 import click
-import ni_measurement_plugin as nims
+import ni_measurement_plugin_sdk as nims
 from _helpers import configure_logging, verbosity_option
 from _visa_dmm import INSTRUMENT_TYPE_VISA_DMM, Function
 from _visa_dmm_session_management import VisaDmmSessionConstructor

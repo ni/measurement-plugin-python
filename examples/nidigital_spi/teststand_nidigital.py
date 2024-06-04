@@ -3,15 +3,15 @@
 from typing import Any, Iterable
 
 from _helpers import TestStandSupport
-from ni_measurement_plugin.discovery import DiscoveryClient
-from ni_measurement_plugin.grpc.channelpool import GrpcChannelPool
-from ni_measurement_plugin.session_management import (
+from ni_measurement_plugin_sdk.discovery import DiscoveryClient
+from ni_measurement_plugin_sdk.grpc.channelpool import GrpcChannelPool
+from ni_measurement_plugin_sdk.session_management import (
     INSTRUMENT_TYPE_NI_DIGITAL_PATTERN,
     PinMapContext,
     SessionInitializationBehavior,
     SessionManagementClient,
 )
-from ni_measurement_plugin.session_management._reservation import (
+from ni_measurement_plugin_sdk.session_management._reservation import (
     MultiSessionReservation,
 )
 

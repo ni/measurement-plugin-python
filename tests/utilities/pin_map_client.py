@@ -7,12 +7,12 @@ from typing import Optional, Union
 
 import grpc
 
-from ni_measurement_plugin._internal.stubs.ni.measurementlink.pinmap.v1 import (
+from ni_measurement_plugin_sdk._internal.stubs.ni.measurementlink.pinmap.v1 import (
     pin_map_service_pb2,
     pin_map_service_pb2_grpc,
 )
-from ni_measurement_plugin.discovery import DiscoveryClient
-from ni_measurement_plugin.grpc.channelpool import GrpcChannelPool
+from ni_measurement_plugin_sdk.discovery import DiscoveryClient
+from ni_measurement_plugin_sdk.grpc.channelpool import GrpcChannelPool
 
 _logger = logging.getLogger(__name__)
 

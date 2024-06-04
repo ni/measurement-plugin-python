@@ -6,7 +6,7 @@ import sys
 from typing import Tuple
 
 import click
-import ni_measurement_plugin as nims
+import ni_measurement_plugin_sdk as nims
 from _helpers import configure_logging, verbosity_option
 from niswitch.enums import RelayAction
 

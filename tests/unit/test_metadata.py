@@ -4,13 +4,13 @@ from enum import Enum, IntEnum
 
 import pytest
 
-from ni_measurement_plugin import _datatypeinfo
-from ni_measurement_plugin._annotations import (
+from ni_measurement_plugin_sdk import _datatypeinfo
+from ni_measurement_plugin_sdk._annotations import (
     ENUM_VALUES_KEY,
     TYPE_SPECIALIZATION_KEY,
 )
-from ni_measurement_plugin._internal.parameter import metadata
-from ni_measurement_plugin.measurement.info import DataType, TypeSpecialization
+from ni_measurement_plugin_sdk._internal.parameter import metadata
+from ni_measurement_plugin_sdk.measurement.info import DataType, TypeSpecialization
 
 
 class Color(Enum):

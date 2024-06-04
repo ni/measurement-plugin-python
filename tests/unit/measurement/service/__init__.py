@@ -1,1 +1,1 @@
-"""Unit tests for ni_measurement_plugin.measurement.service."""
+"""Unit tests for ni_measurement_plugin_sdk.measurement.service."""

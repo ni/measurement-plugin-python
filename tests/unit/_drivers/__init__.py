@@ -1,1 +1,1 @@
-"""Unit tests for ni_measurement_plugin._drivers."""
+"""Unit tests for ni_measurement_plugin_sdk._drivers."""

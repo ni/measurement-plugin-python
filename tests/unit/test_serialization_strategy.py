@@ -3,8 +3,8 @@
 import pytest
 from google.protobuf import type_pb2
 
-from ni_measurement_plugin._internal.parameter import serialization_strategy
-from ni_measurement_plugin._internal.stubs.ni.protobuf.types import xydata_pb2
+from ni_measurement_plugin_sdk._internal.parameter import serialization_strategy
+from ni_measurement_plugin_sdk._internal.stubs.ni.protobuf.types import xydata_pb2
 
 
 @pytest.mark.parametrize(

@@ -5,14 +5,14 @@ from typing import Generator
 import pytest
 from pytest import FixtureRequest, LogCaptureFixture
 
-from ni_measurement_plugin import session_management
-from ni_measurement_plugin._internal.stubs.ni.measurementlink.measurement.v2 import (
+from ni_measurement_plugin_sdk import session_management
+from ni_measurement_plugin_sdk._internal.stubs.ni.measurementlink.measurement.v2 import (
     measurement_service_pb2 as v2_measurement_service_pb2,
     measurement_service_pb2_grpc as v2_measurement_service_pb2_grpc,
 )
-from ni_measurement_plugin.discovery import DiscoveryClient
-from ni_measurement_plugin.measurement.service import MeasurementService
-from ni_measurement_plugin.session_management import SessionManagementClient
+from ni_measurement_plugin_sdk.discovery import DiscoveryClient
+from ni_measurement_plugin_sdk.measurement.service import MeasurementService
+from ni_measurement_plugin_sdk.session_management import SessionManagementClient
 from tests.acceptance.test_streaming_data_measurement import (
     _get_configuration_parameters as get_streaming_data_configuration_parameters,
 )

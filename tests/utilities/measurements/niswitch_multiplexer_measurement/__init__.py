@@ -5,8 +5,8 @@ from typing import Iterable, Sequence, Tuple
 
 import niswitch
 
-import ni_measurement_plugin as nims
-from ni_measurement_plugin.session_management import TypedConnectionWithMultiplexer
+import ni_measurement_plugin_sdk as nims
+from ni_measurement_plugin_sdk.session_management import TypedConnectionWithMultiplexer
 
 service_directory = pathlib.Path(__file__).resolve().parent
 measurement_service = nims.MeasurementService(

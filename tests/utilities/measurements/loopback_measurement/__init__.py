@@ -6,7 +6,7 @@ from typing import Iterable, Tuple
 
 from examples.sample_measurement._stubs import color_pb2
 
-import ni_measurement_plugin as nims
+import ni_measurement_plugin_sdk as nims
 
 
 class Color(Enum):

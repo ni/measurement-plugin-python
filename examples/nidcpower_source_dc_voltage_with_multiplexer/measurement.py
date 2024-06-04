@@ -12,7 +12,7 @@ from typing import TYPE_CHECKING, NamedTuple, Tuple
 import click
 import grpc
 import hightime
-import ni_measurement_plugin as nims
+import ni_measurement_plugin_sdk as nims
 import nidcpower
 import nidcpower.session
 import niswitch.session

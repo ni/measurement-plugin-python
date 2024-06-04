@@ -8,9 +8,9 @@ from typing import Any, Generator, List, Tuple
 
 import click
 import grpc
-import ni_measurement_plugin as nims
+import ni_measurement_plugin_sdk as nims
 from _helpers import configure_logging, verbosity_option
-from ni_measurement_plugin._internal.stubs.ni.protobuf.types import xydata_pb2
+from ni_measurement_plugin_sdk._internal.stubs.ni.protobuf.types import xydata_pb2
 
 service_directory = pathlib.Path(__file__).resolve().parent
 measurement_service = nims.MeasurementService(

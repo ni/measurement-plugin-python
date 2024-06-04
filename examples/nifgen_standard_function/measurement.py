@@ -12,7 +12,7 @@ from typing import Iterable, Sequence, Tuple
 import click
 import grpc
 import hightime
-import ni_measurement_plugin as nims
+import ni_measurement_plugin_sdk as nims
 import nifgen
 from _helpers import configure_logging, verbosity_option
 
