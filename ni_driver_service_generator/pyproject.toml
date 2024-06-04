@@ -6,13 +6,12 @@ line-length = 100
 extend_exclude = '.tox/,*_pb2_grpc.py,*_pb2_grpc.pyi,*_pb2.py,*_pb2.pyi,ni_measurementlink_generator/,examples/,third_party/'
 
 [tool.poetry]
-name = "driver_wrappers"
-version = "0.1.0-dev0"
+name = "ni_driver_service_generator"
+version = "0.0.1-dev0"
 description = "Hosting drivers as gRPC services."
 authors = ["NI <opensource@ni.com>"]
 readme = "README.md" # apply the repo readme to the package as well
 repository = "https://github.com/ni/measurementlink-python/"
-package-mode = false
 license = "MIT"
 
 classifiers = [
@@ -37,6 +36,8 @@ protobuf = "^4.21"
 pymeasure = "^0.13.1"
 PyVISA = "^1.13.0"
 PyVISA-sim = "^0.5.1"
+mako = "^1.3.5"
+ni-measurementlink-service = "^1.4.0"
 
 [tool.poetry.group.dev.dependencies]
 ni-python-styleguide = ">=0.4.1"
@@ -50,6 +51,9 @@ mypy = ">=1.0"
 mypy-protobuf = ">=3.4"
 types-protobuf = "^4.21"
 grpc-stubs = "^1.53"
+
+[tool.poetry.scripts]
+ni-driver-service-generator = "ni_driver_service_generator.template:create_template"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
