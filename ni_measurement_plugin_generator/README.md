@@ -4,7 +4,7 @@
 
 ## Introduction
 
-MeasurementLink Code Generator for Python (`ni-measurementlink-generator`) is a
+MeasurementLink Code Generator for Python (`ni-measurement-plugin-generator`) is a
 tool for generating reusable measurement plug-ins using gRPC services.
 
 For installation and usage, see [MeasurementLink Support for Python (`ni-measurementlink-service`)](https://pypi.org/project/ni-measurementlink-service/).
