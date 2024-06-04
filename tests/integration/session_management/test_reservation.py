@@ -3,7 +3,7 @@ from __future__ import annotations
 import pathlib
 from contextlib import ExitStack
 
-from ni_measurementlink_service.session_management import (
+from ni_measurement_plugin_sdk.session_management import (
     INSTRUMENT_TYPE_NI_DCPOWER,
     INSTRUMENT_TYPE_NI_RELAY_DRIVER,
     INSTRUMENT_TYPE_NI_SCOPE,

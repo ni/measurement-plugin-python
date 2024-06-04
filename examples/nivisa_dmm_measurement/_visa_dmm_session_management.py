@@ -3,8 +3,8 @@ import logging
 from _visa_dmm import Session
 from _visa_grpc import build_visa_grpc_resource_string, get_visa_grpc_insecure_address
 from decouple import AutoConfig
-from ni_measurementlink_service.discovery import DiscoveryClient
-from ni_measurementlink_service.session_management import (
+from ni_measurement_plugin_sdk.discovery import DiscoveryClient
+from ni_measurement_plugin_sdk.session_management import (
     SessionInformation,
     SessionInitializationBehavior,
 )

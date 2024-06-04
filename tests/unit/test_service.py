@@ -8,11 +8,11 @@ from typing import List, Type
 import pytest
 from pytest_mock import MockerFixture
 
-from ni_measurementlink_service import _datatypeinfo
-from ni_measurementlink_service._annotations import TYPE_SPECIALIZATION_KEY
-from ni_measurementlink_service._internal.stubs.ni.protobuf.types import xydata_pb2
-from ni_measurementlink_service.measurement.info import DataType, TypeSpecialization
-from ni_measurementlink_service.measurement.service import MeasurementService
+from ni_measurement_plugin_sdk import _datatypeinfo
+from ni_measurement_plugin_sdk._annotations import TYPE_SPECIALIZATION_KEY
+from ni_measurement_plugin_sdk._internal.stubs.ni.protobuf.types import xydata_pb2
+from ni_measurement_plugin_sdk.measurement.info import DataType, TypeSpecialization
+from ni_measurement_plugin_sdk.measurement.service import MeasurementService
 
 
 class Color(Enum):
@@ -447,7 +447,7 @@ def test___measurement_service___host_service_with_grpc_service_not_started___ra
 ):
     measurement_service.register_measurement(_fake_measurement_function)
     mocker.patch(
-        "ni_measurementlink_service._internal.service_manager.GrpcService.start",
+        "ni_measurement_plugin_sdk._internal.service_manager.GrpcService.start",
         side_effect=Exception,
     )
 
