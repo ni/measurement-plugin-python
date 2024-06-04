@@ -3,16 +3,16 @@ from typing import Generator, Iterable, NamedTuple
 
 import pytest
 
-from ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v2.measurement_service_pb2 import (
+from ni_measurement_plugin_sdk._internal.stubs.ni.measurementlink.measurement.v2.measurement_service_pb2 import (
     MeasureRequest,
 )
-from ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v2.measurement_service_pb2_grpc import (
+from ni_measurement_plugin_sdk._internal.stubs.ni.measurementlink.measurement.v2.measurement_service_pb2_grpc import (
     MeasurementServiceStub,
 )
-from ni_measurementlink_service._internal.stubs.ni.measurementlink.pin_map_context_pb2 import (
+from ni_measurement_plugin_sdk._internal.stubs.ni.measurementlink.pin_map_context_pb2 import (
     PinMapContext,
 )
-from ni_measurementlink_service.measurement.service import MeasurementService
+from ni_measurement_plugin_sdk.measurement.service import MeasurementService
 from tests.utilities.measurements import niscope_measurement
 from tests.utilities.pin_map_client import PinMapClient
 from tests.utilities.stubs.niscope.types_pb2 import Configurations, Outputs

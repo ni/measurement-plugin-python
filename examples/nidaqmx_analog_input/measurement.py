@@ -6,7 +6,7 @@ import sys
 from typing import List, Tuple
 
 import click
-import ni_measurementlink_service as nims
+import ni_measurement_plugin_sdk as nims
 from _helpers import (
     configure_logging,
     verbosity_option,

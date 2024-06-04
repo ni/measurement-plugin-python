@@ -47,7 +47,7 @@ jobs:
           path: .venv
           key: ${{ steps.restore-nims-no-extras.outputs.cache-primary-key }}
       - name: Run unit tests and code coverage (ni-measurementlink-service, no extras)
-        run: poetry run pytest ./tests/unit -v --cov=ni_measurementlink_service --junitxml=test_results/nims-${{ matrix.os }}-py${{ matrix.python-version}}-no-extras.xml
+        run: poetry run pytest ./tests/unit -v --cov=ni_measurement_plugin_sdk --junitxml=test_results/nims-${{ matrix.os }}-py${{ matrix.python-version}}-no-extras.xml
 
       # ni-measurementlink-service, all extras
       - name: Restore cached virtualenv (ni-measurementlink-service, all extras)
@@ -65,7 +65,7 @@ jobs:
           path: .venv
           key: ${{ steps.restore-nims-all-extras.outputs.cache-primary-key }}
       - name: Run unit tests and code coverage (ni-measurementlink-service, all extras)
-        run: poetry run pytest ./tests/unit -v --cov=ni_measurementlink_service --junitxml=test_results/nims-${{ matrix.os }}-py${{ matrix.python-version}}-all-extras.xml
+        run: poetry run pytest ./tests/unit -v --cov=ni_measurement_plugin_sdk --junitxml=test_results/nims-${{ matrix.os }}-py${{ matrix.python-version}}-all-extras.xml
 
       # ni-measurementlink-generator
       - name: Restore cached virtualenv (ni-measurementlink-generator)

@@ -13,7 +13,7 @@ from typing import TYPE_CHECKING, Iterable, List, NamedTuple, Tuple
 import click
 import grpc
 import hightime
-import ni_measurementlink_service as nims
+import ni_measurement_plugin_sdk as nims
 import nidcpower
 import nidcpower.session
 from _helpers import configure_logging, verbosity_option

@@ -3,9 +3,9 @@
 from typing import Any
 
 from _helpers import TestStandSupport
-from ni_measurementlink_service.discovery import DiscoveryClient
-from ni_measurementlink_service.grpc.channelpool import GrpcChannelPool
-from ni_measurementlink_service.session_management import (
+from ni_measurement_plugin_sdk.discovery import DiscoveryClient
+from ni_measurement_plugin_sdk.grpc.channelpool import GrpcChannelPool
+from ni_measurement_plugin_sdk.session_management import (
     INSTRUMENT_TYPE_NI_DAQMX,
     PinMapContext,
     SessionInitializationBehavior,
