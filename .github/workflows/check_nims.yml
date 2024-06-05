@@ -26,45 +26,45 @@ jobs:
         uses: Gr1N/setup-poetry@v9
         with:
           poetry-version: ${{ env.POETRY_VERSION }}
-      - name: Check for lock changes (ni-measurementlink-service)
+      - name: Check for lock changes (ni-measurement-plugin-sdk)
         run: poetry lock --check
 
-      # ni-measurementlink-service, all extras
-      - name: Restore cached virtualenv (ni-measurementlink-service, all extras)
+      # ni-measurement-plugin-sdk, all extras
+      - name: Restore cached virtualenv (ni-measurement-plugin-sdk, all extras)
         uses: actions/cache/restore@v4
         id: restore-nims-all-extras
         with:
           path: .venv
-          key: ni-measurementlink-service-all-extras-${{ runner.os }}-py${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('poetry.lock') }}
-      - name: Install ni-measurementlink-service (all extras)
+          key: ni-measurement-plugin-sdk-all-extras-${{ runner.os }}-py${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('poetry.lock') }}
+      - name: Install ni-measurement-plugin-sdk (all extras)
         run: poetry install -v --all-extras
-      - name: Save cached virtualenv (ni-measurementlink-service, all extras)
+      - name: Save cached virtualenv (ni-measurement-plugin-sdk, all extras)
         uses: actions/cache/save@v4
         if: steps.restore-nims-all-extras.outputs.cache-hit != 'true'
         with:
           path: .venv
           key: ${{ steps.restore-nims-all-extras.outputs.cache-primary-key }}
-      - name: Lint ni-measurementlink-service
+      - name: Lint ni-measurement-plugin-sdk
         run: poetry run ni-python-styleguide lint
-      - name: Mypy static analysis (ni-measurementlink-service, Linux)
+      - name: Mypy static analysis (ni-measurement-plugin-sdk, Linux)
         run:  poetry run mypy -p ni_measurement_plugin_sdk
-      - name: Mypy static analysis (ni-measurementlink-service, Windows)
+      - name: Mypy static analysis (ni-measurement-plugin-sdk, Windows)
         run:  poetry run mypy -p ni_measurement_plugin_sdk --platform win32
       - name: Mypy static analysis (tests, Linux)
         run:  poetry run mypy tests
       - name: Mypy static analysis (tests, Windows)
         run:  poetry run mypy tests --platform win32
 
-      # ni-measurementlink-service, all extras, docs
-      - name: Restore cached virtualenv (ni-measurementlink-service, all extras, docs)
+      # ni-measurement-plugin-sdk, all extras, docs
+      - name: Restore cached virtualenv (ni-measurement-plugin-sdk, all extras, docs)
         uses: actions/cache/restore@v4
         id: restore-nims-all-extras-docs
         with:
           path: .venv
-          key: ni-measurementlink-service-all-extras-docs-${{ runner.os }}-py${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('poetry.lock') }}
-      - name: Install ni-measurementlink-service (all extras, docs)
+          key: ni-measurement-plugin-sdk-all-extras-docs-${{ runner.os }}-py${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('poetry.lock') }}
+      - name: Install ni-measurement-plugin-sdk (all extras, docs)
         run: poetry install -v --all-extras --with docs
-      - name: Save cached virtualenv (ni-measurementlink-service, all extras, docs)
+      - name: Save cached virtualenv (ni-measurement-plugin-sdk, all extras, docs)
         uses: actions/cache/save@v4
         if: steps.restore-nims-all-extras-docs.outputs.cache-hit != 'true'
         with:
