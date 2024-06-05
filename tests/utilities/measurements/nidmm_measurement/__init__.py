@@ -6,8 +6,8 @@ from typing import List, Sequence, Tuple
 
 import nidmm
 
-import ni_measurementlink_service as nims
-from ni_measurementlink_service.session_management import TypedSessionInformation
+import ni_measurement_plugin_sdk as nims
+from ni_measurement_plugin_sdk.session_management import TypedSessionInformation
 
 service_directory = pathlib.Path(__file__).resolve().parent
 measurement_service = nims.MeasurementService(

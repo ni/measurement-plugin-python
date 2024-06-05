@@ -4,7 +4,7 @@ from typing import Generator
 import psutil
 import pytest
 
-from ni_measurementlink_service.measurement.service import MeasurementService
+from ni_measurement_plugin_sdk.measurement.service import MeasurementService
 from tests.utilities.discovery_service_process import DiscoveryServiceProcess
 from tests.utilities.measurements import loopback_measurement
 

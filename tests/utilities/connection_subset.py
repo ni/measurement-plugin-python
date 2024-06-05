@@ -2,7 +2,7 @@
 
 from typing import NamedTuple, TypeVar, Union
 
-from ni_measurementlink_service.session_management import (
+from ni_measurement_plugin_sdk.session_management import (
     Connection,
     TypedConnection,
     TypedConnectionWithMultiplexer,

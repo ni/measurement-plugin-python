@@ -5,10 +5,10 @@ from unittest.mock import Mock
 
 import pytest
 
-from ni_measurementlink_service._internal.stubs.ni.measurementlink.sessionmanagement.v1 import (
+from ni_measurement_plugin_sdk._internal.stubs.ni.measurementlink.sessionmanagement.v1 import (
     session_management_service_pb2,
 )
-from ni_measurementlink_service.session_management import (
+from ni_measurement_plugin_sdk.session_management import (
     SITE_SYSTEM_PINS,
     MultiSessionReservation,
     SessionInformation,

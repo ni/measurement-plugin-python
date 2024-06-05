@@ -6,15 +6,15 @@ import grpc
 import pytest
 from grpc import RpcError
 
-from ni_measurementlink_service._internal.service_manager import GrpcService
-from ni_measurementlink_service._internal.stubs.ni.measurementlink.discovery.v1.discovery_service_pb2_grpc import (
+from ni_measurement_plugin_sdk._internal.service_manager import GrpcService
+from ni_measurement_plugin_sdk._internal.stubs.ni.measurementlink.discovery.v1.discovery_service_pb2_grpc import (
     DiscoveryServiceStub,
 )
-from ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v1 import (
+from ni_measurement_plugin_sdk._internal.stubs.ni.measurementlink.measurement.v1 import (
     measurement_service_pb2,
     measurement_service_pb2_grpc,
 )
-from ni_measurementlink_service.discovery import DiscoveryClient
+from ni_measurement_plugin_sdk.discovery import DiscoveryClient
 from tests.utilities.fake_discovery_service import (
     FakeDiscoveryServiceError,
     FakeDiscoveryServiceStub,

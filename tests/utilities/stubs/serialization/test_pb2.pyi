@@ -9,7 +9,7 @@ import google.protobuf.descriptor
 import google.protobuf.internal.containers
 import google.protobuf.internal.enum_type_wrapper
 import google.protobuf.message
-import ni_measurementlink_service._internal.stubs.ni.protobuf.types.xydata_pb2 as ni_protobuf_types_xydata_pb2
+import ni_measurement_plugin_sdk._internal.stubs.ni.protobuf.types.xydata_pb2 as ni_protobuf_types_xydata_pb2
 import sys
 import typing
 
