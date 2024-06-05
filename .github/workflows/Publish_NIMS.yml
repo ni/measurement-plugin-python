@@ -88,7 +88,7 @@ jobs:
 
       - name: Create archives of the examples
         env:
-          EXAMPLE_ARCHIVE: measurementlink-python-examples-${{ steps.vars.outputs.tag }} 
+          EXAMPLE_ARCHIVE: measurement-plugin-python-examples-${{ steps.vars.outputs.tag }} 
         run: |
           # Use --prefix for the tarball but not the zip file. Windows zip tools often create a directory automatically.
           git archive -o dist/${EXAMPLE_ARCHIVE}.zip ${GITHUB_REF}:examples/
@@ -98,7 +98,7 @@ jobs:
         if: ${{ startsWith(github.event.release.target_commitish, 'main') || startsWith(github.event.release.target_commitish, 'releases/') }}
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "dist/measurementlink-python-examples-*"
+          artifacts: "dist/measurement-plugin-python-examples-*"
           allowUpdates: true
           omitBodyDuringUpdate: true
           omitDraftDuringUpdate: true
