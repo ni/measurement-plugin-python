@@ -52,7 +52,7 @@ poetry install
 
 # Adding dependencies
 
-Add dependency package for `ni_measurementlink_service`  using the [`poetry add`](https://python-poetry.org/docs/cli/#add) command.
+Add dependency package for `ni_measurement_plugin_sdk`  using the [`poetry add`](https://python-poetry.org/docs/cli/#add) command.
 
 ```cmd
 poetry add <name_of_dependency>:<version>
@@ -66,7 +66,7 @@ poetry add -D <name_of_dev_dependency>:<version>
 
 # Updating gRPC stubs when a .proto file is modified
 
-The `ni_measurementlink_service\_internal\stubs` directory contains the auto-generated Python files based on MeasurementLink protobuf (`.proto`) files. The file needs to be replaced whenever there is a change to these `.proto` files:
+The `ni_measurement_plugin_sdk\_internal\stubs` directory contains the auto-generated Python files based on MeasurementLink protobuf (`.proto`) files. The file needs to be replaced whenever there is a change to these `.proto` files:
 
 - ni/measurementlink/pin_map_context.proto
 - ni/measurementlink/discovery/v1/discovery_service.proto
@@ -76,7 +76,7 @@ The `ni_measurementlink_service\_internal\stubs` directory contains the auto-gen
 - nidevice_grpc/README.md
 - nidevice_grpc/session.proto
 
-The latest .proto files are available in [Azure Repo](https://dev.azure.com/ni/DevCentral/_git/ASW?path=/Source/Protos). From the Azure Repo manually download and overwrite the `.proto` files under the `ni_measurementlink_service\_internal\stubs\proto` folder.
+The latest .proto files are available in [Azure Repo](https://dev.azure.com/ni/DevCentral/_git/ASW?path=/Source/Protos). From the Azure Repo manually download and overwrite the `.proto` files under the `ni_measurement_plugin_sdk\_internal\stubs\proto` folder.
 
 Run `poetry run python scripts/generate_grpc_stubs.py`. This generates the required `.py` files for the listed `.proto` files. The required `grpcio-tools` package is already added as a development dependency in pyproject.toml.
 
@@ -96,13 +96,13 @@ poetry run ni-python-styleguide fix
 poetry build
 ```
 
-Running this command from the repo's root directory will generate the tar.gz file and .whl file of ni_measurementlink_service package to the `dist` directory.
+Running this command from the repo's root directory will generate the tar.gz file and .whl file of ni_measurement_plugin_sdk package to the `dist` directory.
 
 # Testing
 
-`ni-measurementlink-service` includes regression tests under the `tests/` directory. The GitHub CI runs these tests for PRs targeting the main branch. It is recommended that during development you run the tests locally before creating a PR.
+`ni-measurement-plugin-sdk` includes regression tests under the `tests/` directory. The GitHub CI runs these tests for PRs targeting the main branch. It is recommended that during development you run the tests locally before creating a PR.
 
-In order to run the `ni-measurementlink-service` tests locally:
+In order to run the `ni-measurement-plugin-sdk` tests locally:
 
 ## Using Command Line
 
@@ -143,8 +143,8 @@ extension, refer
 
 - Install the required dependency by running `poetry install`
 - Activate the virtual environment if not already activated : `.venv\Scripts\activate`
-- Run the command `pytest --cov=ni_measurementlink_service`, from the repo's root directory **to get the summary of test coverage** in the console.
-- Run the command `pytest --cov-report html:cov_html --cov=ni_measurementlink_service`, from the repo's root directory **to generate detailed HTML based coverage report**. Upon running, the coverage reports will be created under `<repo_root>\cov_html` directory.
+- Run the command `pytest --cov=ni_measurement_plugin_sdk`, from the repo's root directory **to get the summary of test coverage** in the console.
+- Run the command `pytest --cov-report html:cov_html --cov=ni_measurement_plugin_sdk`, from the repo's root directory **to generate detailed HTML based coverage report**. Upon running, the coverage reports will be created under `<repo_root>\cov_html` directory.
 
 # Developer Certificate of Origin (DCO)
 
