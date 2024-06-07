@@ -1,6 +1,6 @@
-# MeasurementLink™ Support for Python
+# Measurement Plugin Support for Python
 
-- [MeasurementLink™ Support for Python](#measurementlink--support-for-python)
+- [Measurement Plugin Support for Python](#measurement-plugin-support-for-python)
   - [Introduction](#introduction)
   - [Dependencies](#dependencies)
   - [Documentation](#documentation)
@@ -21,7 +21,7 @@
 
 ## Introduction
 
-MeasurementLink Support for Python (`ni-measurementlink-service`) is a Python
+Measurement Plugin Support for Python (`ni-measurementlink-service`) is a Python
 framework that helps you create reusable measurement plug-ins using gRPC
 services. Deploy your measurement plug-ins to perform interactive validation in
 InstrumentStudio and automated testing in TestStand.
@@ -83,18 +83,18 @@ versions of MeasurementLink.
 
 ## Developing Measurements: Quick Start
 
-This section provides instructions to develop custom measurement services in Python using MeasurementLink Support for Python.
+This section provides instructions to develop custom measurement services in Python using Measurement Plugin Support for Python.
 
 ### Installation
 
-Make sure the system has the recommended Python version is installed. Install MeasurementLink Support for Python using [pip](https://pip.pypa.io/).
+Make sure the system has the recommended Python version is installed. Install Measurement Plugin Support for Python using [pip](https://pip.pypa.io/).
 
 ``` cmd
 REM Activate the required virtual environment if any.
 pip install ni-measurementlink-service
 ```
 
-Check if you have installed the expected version of MeasurementLink Support for Python installed by running the below command:
+Check if you have installed the expected version of Measurement Plugin Support for Python installed by running the below command:
 
 ```cmd
 pip show ni-measurementlink-service

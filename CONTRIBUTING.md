@@ -1,11 +1,11 @@
-# Contributing to MeasurementLink™ Support for Python
+# Contributing to Measurement Plugin Support for Python
 
-Contributions to MeasurementLink Support for Python are welcome from all!
+Contributions to Measurement Plugin Support for Python are welcome from all!
 
-MeasurementLink Support for Python is managed via [git](https://git-scm.com), with the canonical upstream
+Measurement Plugin Support for Python is managed via [git](https://git-scm.com), with the canonical upstream
 repository hosted on [GitHub](https://github.com/ni/measurementlink-python/). The repo contains templates and examples for developing MeasurementLink services in Python.
 
-MeasurementLink Support for Python follows a pull-request model for development.  If you wish to
+Measurement Plugin Support for Python follows a pull-request model for development.  If you wish to
 contribute, you will need to create a GitHub account, fork this project, push a
 branch with your changes to your project, and then submit a pull request.
 
@@ -30,7 +30,7 @@ See [GitHub's official documentation](https://help.github.com/articles/using-pul
 
 ## Clone Repo
 
-Clone the repo, this will pull the MeasurementLink Support for Python components and related components.
+Clone the repo, this will pull the Measurement Plugin Support for Python components and related components.
 
 ```cmd
 git clone https://github.com/ni/measurementlink-python.git
@@ -177,4 +177,4 @@ extension, refer
 (taken from [developercertificate.org](https://developercertificate.org/))
 
 See [LICENSE](https://github.com/ni/measurementlink-python/blob/master/LICENSE)
-for details about how MeasurementLink Support for Python is licensed.
+for details about how Measurement Plugin Support for Python is licensed.
