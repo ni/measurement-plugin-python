@@ -211,7 +211,7 @@ python-versions = ">=3.5"
 
 [[package]]
 name = "ni-python-styleguide"
-version = "0.4.5"
+version = "0.4.6"
 description = "NI's internal and external Python linter rules and plugins"
 category = "dev"
 optional = false
@@ -228,6 +228,7 @@ flake8-black = ">=0.2.1"
 flake8-docstrings = ">=1.5.0"
 flake8-import-order = ">=0.18.1"
 isort = ">=5.10"
+pathspec = ">=0.11.1"
 pep8-naming = ">=0.11.1"
 pycodestyle = [
     {version = ">=2.9,<3.0", markers = "python_version >= \"3.7\" and python_version < \"3.12\""},
@@ -637,8 +638,8 @@ mypy-extensions = [
     {file = "mypy_extensions-1.0.0.tar.gz", hash = "sha256:75dbf8955dc00442a438fc4d0666508a9a97b6bd41aa2f0ffe9d2f2725af0782"},
 ]
 ni-python-styleguide = [
-    {file = "ni_python_styleguide-0.4.5-py3-none-any.whl", hash = "sha256:a46298342523f1e665e027df443ad882556259e430d7fa867f2703aa68028704"},
-    {file = "ni_python_styleguide-0.4.5.tar.gz", hash = "sha256:0ff8899cea1deed6a2d458765c1d645f85cc563089904c78bbafcba03bea2f91"},
+    {file = "ni_python_styleguide-0.4.6-py3-none-any.whl", hash = "sha256:0ffa8bd5de38d96779ad0e83e49a3db3620a31742247be10f6471961ab6fa246"},
+    {file = "ni_python_styleguide-0.4.6.tar.gz", hash = "sha256:26d7ebd5acce0b29a6209ef9950f369327cbfd7ffd8404ade3e9a7c0f0aa6bcb"},
 ]
 packaging = [
     {file = "packaging-24.1-py3-none-any.whl", hash = "sha256:5b8f2217dbdbd2f7f384c41c628544e6d52f2d0f53c6d0c3ea61aa5d1d7ff124"},

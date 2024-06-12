@@ -943,13 +943,13 @@ types-protobuf = ">=4.24"
 
 [[package]]
 name = "ni-python-styleguide"
-version = "0.4.5"
+version = "0.4.6"
 description = "NI's internal and external Python linter rules and plugins"
 optional = false
 python-versions = "<4.0,>=3.7"
 files = [
-    {file = "ni_python_styleguide-0.4.5-py3-none-any.whl", hash = "sha256:a46298342523f1e665e027df443ad882556259e430d7fa867f2703aa68028704"},
-    {file = "ni_python_styleguide-0.4.5.tar.gz", hash = "sha256:0ff8899cea1deed6a2d458765c1d645f85cc563089904c78bbafcba03bea2f91"},
+    {file = "ni_python_styleguide-0.4.6-py3-none-any.whl", hash = "sha256:0ffa8bd5de38d96779ad0e83e49a3db3620a31742247be10f6471961ab6fa246"},
+    {file = "ni_python_styleguide-0.4.6.tar.gz", hash = "sha256:26d7ebd5acce0b29a6209ef9950f369327cbfd7ffd8404ade3e9a7c0f0aa6bcb"},
 ]
 
 [package.dependencies]
@@ -963,6 +963,7 @@ flake8-black = ">=0.2.1"
 flake8-docstrings = ">=1.5.0"
 flake8-import-order = ">=0.18.1"
 isort = ">=5.10"
+pathspec = ">=0.11.1"
 pep8-naming = ">=0.11.1"
 pycodestyle = [
     {version = ">=2.9,<3.0", markers = "python_version >= \"3.7\" and python_version < \"3.12\""},
