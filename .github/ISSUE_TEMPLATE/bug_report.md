@@ -44,6 +44,6 @@ Search open/closed issues before submitting. Someone may have reported the same 
 <!--- Include as many relevant details as possible about the environment you experienced the bug in -->
 
 * OS & Device: [e.g. macOS, Windows, Linux] on [Mac, PC]
-* `ni-measurement-plugin-sdk` version [e.g. 2.0.0]
+* `ni-measurement-plugin-sdk-service` version [e.g. 2.0.0]
 * MeasurementLink version [e.g. 23.0.0d123]
 * Python version [e.g. 3.9]
