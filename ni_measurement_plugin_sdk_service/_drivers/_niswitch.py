@@ -4,7 +4,10 @@ from typing import Any, Dict, Optional, Union
 
 import niswitch
 
-from ni_measurement_plugin_sdk_service._configuration import NISWITCH_OPTIONS, NISWITCH_MULTIPLEXER_OPTIONS
+from ni_measurement_plugin_sdk_service._configuration import (
+    NISWITCH_MULTIPLEXER_OPTIONS,
+    NISWITCH_OPTIONS,
+)
 from ni_measurement_plugin_sdk_service._drivers._grpcdevice import (
     get_insecure_grpc_device_server_channel,
 )

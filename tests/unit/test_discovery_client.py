@@ -13,7 +13,9 @@ import grpc
 import pytest
 from pytest_mock import MockerFixture
 
-from ni_measurement_plugin_sdk_service._annotations import SERVICE_PROGRAMMINGLANGUAGE_KEY
+from ni_measurement_plugin_sdk_service._annotations import (
+    SERVICE_PROGRAMMINGLANGUAGE_KEY,
+)
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.discovery.v1.discovery_service_pb2 import (
     RegisterServiceRequest,
     RegisterServiceResponse,
@@ -33,7 +35,10 @@ from ni_measurement_plugin_sdk_service.discovery._support import (
     _start_service,
 )
 from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
-from ni_measurement_plugin_sdk_service.measurement.info import MeasurementInfo, ServiceInfo
+from ni_measurement_plugin_sdk_service.measurement.info import (
+    MeasurementInfo,
+    ServiceInfo,
+)
 from tests.utilities.fake_rpc_error import FakeRpcError
 
 if sys.platform == "win32":
@@ -239,7 +244,9 @@ def test___key_file_never_created___get_discovery_service_address___throws_timeo
         return_value=temp_discovery_key_file_path,
     )
     mocker.patch("ni_measurement_plugin_sdk_service.discovery._support._START_SERVICE_TIMEOUT", 5.0)
-    mocker.patch("ni_measurement_plugin_sdk_service.discovery._support._open_key_file", side_effect=OSError)
+    mocker.patch(
+        "ni_measurement_plugin_sdk_service.discovery._support._open_key_file", side_effect=OSError
+    )
     mocker.patch(
         "ni_measurement_plugin_sdk_service.discovery._support._get_registration_json_file_path",
         return_value=temp_registration_json_file_path,
