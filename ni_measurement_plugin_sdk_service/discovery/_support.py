@@ -57,7 +57,7 @@ def _get_discovery_service_location() -> pathlib.PurePath:
 
 def _get_registration_json_file_path() -> pathlib.Path:
     if sys.platform == "win32":
-        json_path = _get_nipath("NISHAREDDIR") / "Services" / "Services.json"
+        json_path = _get_nipath("NISHAREDDIR64") / "Services" / "Services.json"
         if not json_path.exists():
             json_path = (
                 _get_nipath("NISHAREDDIR64") / "MeasurementLink" / "MeasurementLinkServices.json"
