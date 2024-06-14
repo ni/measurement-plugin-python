@@ -7,7 +7,7 @@ from ni_measurement_plugin_sdk._internal.parameter import serializer
 @pytest.mark.parametrize(
     "test_values",
                 [
-                    [                    
+                    [
                         2.0,
                         19.2,
                         3,
@@ -15,7 +15,15 @@ from ni_measurement_plugin_sdk._internal.parameter import serializer
                         2,
                         2,
                         True,
-                        "TestString"
+                        "TestString",
+                        [5.5, 3.3, 1],
+                        [5.5, 3.3, 1],
+                        [1, 2, 3, 4],
+                        [0, 1, 399],
+                        [1, 2, 3, 4],
+                        [0, 1, 399],
+                        [True, False, True],
+                        ["String1, String2"],
                     ],
                 ]
 )
@@ -37,3 +45,9 @@ def test___serializer___serialize_parameter___successful_serialization(test_valu
     print(f"New Serializer: {new_serialize}")
 
     assert new_serialize == current_serialize
+
+def main() -> None:
+    test___serializer___serialize_parameter___successful_serialization(0)
+
+if __name__ == "__main__":
+    main()
