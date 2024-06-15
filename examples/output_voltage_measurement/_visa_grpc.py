@@ -1,8 +1,8 @@
 from urllib.parse import urlencode, urlsplit
 
 from decouple import AutoConfig
-from ni_measurement_plugin_sdk.discovery import DiscoveryClient
-from ni_measurement_plugin_sdk.session_management import SessionInitializationBehavior
+from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
+from ni_measurement_plugin_sdk_service.session_management import SessionInitializationBehavior
 
 _INITIALIZATION_BEHAVIOR = {
     SessionInitializationBehavior.AUTO: 0,

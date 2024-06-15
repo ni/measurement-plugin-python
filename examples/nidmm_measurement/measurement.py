@@ -8,7 +8,7 @@ from enum import Enum
 from typing import Tuple
 
 import click
-import ni_measurement_plugin_sdk as nims
+import ni_measurement_plugin_sdk_service as nims
 import nidmm
 from _helpers import configure_logging, verbosity_option
 

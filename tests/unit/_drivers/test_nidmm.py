@@ -6,7 +6,7 @@ from unittest.mock import ANY, Mock
 import pytest
 from pytest_mock import MockerFixture
 
-from ni_measurement_plugin_sdk.session_management import (
+from ni_measurement_plugin_sdk_service.session_management import (
     INSTRUMENT_TYPE_NI_DMM,
     MultiSessionReservation,
     SessionInitializationBehavior,

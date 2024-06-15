@@ -15,13 +15,13 @@
   - [Appendix: Managing Measurement with Python](#appendix-managing-measurement-with-python)
     - [Create and Manage Python Measurement using Poetry](#create-and-manage-python-measurement-using-poetry)
     - [Create and Manage Python Measurement using `venv`](#create-and-manage-python-measurement-using-venv)
-    - [Create and Manage Python Measurement by directly installing `ni-measurement-plugin-sdk` as a system-level package](#create-and-manage-python-measurement-by-directly-installing-ni-measurement-plugin-sdk-as-a-system-level-package)
+    - [Create and Manage Python Measurement by directly installing `ni-measurement-plugin-sdk-service` as a system-level package](#create-and-manage-python-measurement-by-directly-installing-ni-measurement-plugin-sdk-service-as-a-system-level-package)
 
 ---
 
 ## Introduction
 
-Measurement Plugin Support for Python (`ni-measurement-plugin-sdk`) is a Python
+Measurement Plugin Support for Python (`ni-measurement-plugin-sdk-service`) is a Python
 framework that helps you create reusable measurement plug-ins using gRPC
 services. Deploy your measurement plug-ins to perform interactive validation in
 InstrumentStudio and automated testing in TestStand.
@@ -91,13 +91,13 @@ Make sure the system has the recommended Python version is installed. Install Me
 
 ``` cmd
 REM Activate the required virtual environment if any.
-pip install ni-measurement-plugin-sdk
+pip install ni-measurement-plugin-sdk-service
 ```
 
 Check if you have installed the expected version of Measurement Plugin Support for Python installed by running the below command:
 
 ```cmd
-pip show ni-measurement-plugin-sdk
+pip show ni-measurement-plugin-sdk-service
 ```
 
 ### Developing a minimal Python measurement
@@ -273,7 +273,7 @@ Python communities have different ways of managing Python projects and their dep
 
     2. Install `poetry` using the installation steps given in <https://python-poetry.org/docs/#installation>.
 
-2. Create a new Python project and add `ni-measurement-plugin-sdk` as a dependency to the project.
+2. Create a new Python project and add `ni-measurement-plugin-sdk-service` as a dependency to the project.
 
     1. Open a command prompt, and change the working directory to the directory of your choice where you want to create the project.
 
@@ -287,11 +287,11 @@ Python communities have different ways of managing Python projects and their dep
         poetry new <name_of_the_project>
         ```
 
-    3. Add the `ni-measurement-plugin-sdk` package as a dependency using the [`poetry add`](https://python-poetry.org/docs/cli/#add) command.
+    3. Add the `ni-measurement-plugin-sdk-service` package as a dependency using the [`poetry add`](https://python-poetry.org/docs/cli/#add) command.
 
         ``` cmd
         cd <name_of_the_project>
-        poetry add ni-measurement-plugin-sdk
+        poetry add ni-measurement-plugin-sdk-service
         ```
 
     4. The virtual environment will be auto-created by poetry.
@@ -330,10 +330,10 @@ For detailed info on managing projects using poetry [refer to the official docum
     python -m pip install -U pip
     ```
 
-5. Install the `ni-measurement-plugin-sdk` package into the virtual environment.
+5. Install the `ni-measurement-plugin-sdk-service` package into the virtual environment.
 
     ``` cmd
-    pip install ni-measurement-plugin-sdk
+    pip install ni-measurement-plugin-sdk-service
     ```
 
 6. Create measurement modules as described in ["Developing a minimal Python measurement"](#developing-a-minimal-python-measurement)
@@ -345,14 +345,14 @@ For detailed info on managing projects using poetry [refer to the official docum
 
 For detailed info on managing projects with a virtual environment, refer to the [official documentation](https://docs.python.org/3/tutorial/venv.html).
 
-### Create and Manage Python Measurement by directly installing `ni-measurement-plugin-sdk` as a system-level package
+### Create and Manage Python Measurement by directly installing `ni-measurement-plugin-sdk-service` as a system-level package
 
-Measurement developers can also install `ni-measurement-plugin-sdk` as a system package if necessary.
+Measurement developers can also install `ni-measurement-plugin-sdk-service` as a system package if necessary.
 
-1. Install the `ni-measurement-plugin-sdk` package from the command prompt
+1. Install the `ni-measurement-plugin-sdk-service` package from the command prompt
 
     ``` cmd
-    pip install ni-measurement-plugin-sdk
+    pip install ni-measurement-plugin-sdk-service
     ```
 
 2. Create measurement modules as described in ["Developing a minimal Python measurement"](#developing-a-minimal-python-measurement)
