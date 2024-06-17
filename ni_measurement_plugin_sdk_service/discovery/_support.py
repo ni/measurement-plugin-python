@@ -57,7 +57,7 @@ def _get_discovery_service_location() -> pathlib.PurePath:
 
 def _get_registration_json_file_path() -> pathlib.Path:
     if sys.platform == "win32":
-        return _get_nipath("NISHAREDDIR64") / "Services" / "Services.json"
+        return _get_nipath("NISHAREDDIR64") / "Services" / "NIServices.json"
     else:
         raise NotImplementedError("Platform not supported")
 
