@@ -1,20 +1,11 @@
 
 ## Example Measurements
 
-These are example measurements for MeasurementLink 2024 Q2 or later.
+These are example measurements for use with InstrumentStudio 2024 Q3 or later.
 
-If you are using a previous version of MeasurementLink, download the appropriate examples:
-
-- MeasurementLink 2023 Q1: [measurementlink-python-examples-1.0.1.zip](https://github.com/ni/measurementlink-python/releases/download/1.0.1/measurementlink-python-examples-1.0.1.zip)
-- MeasurementLink 2023 Q2: [measurementlink-python-examples-1.0.1.zip](https://github.com/ni/measurementlink-python/releases/download/1.0.1/measurementlink-python-examples-1.0.1.zip)
-- MeasurementLink 2023 Q3: [measurementlink-python-examples-1.1.0.zip](https://github.com/ni/measurementlink-python/releases/download/1.1.0/measurementlink-python-examples-1.1.0.zip)
-- MeasurementLink 2023 Q4: [measurementlink-python-examples-1.2.0.zip](https://github.com/ni/measurementlink-python/releases/download/1.2.0/measurementlink-python-examples-1.2.0.zip)
-- MeasurementLink 2024 Q1: [measurementlink-python-examples-1.3.0.zip](https://github.com/ni/measurementlink-python/releases/download/1.3.0/measurementlink-python-examples-1.3.0.zip)
-- MeasurementLink 2024 Q2: [measurementlink-python-examples-1.4.0.zip](https://github.com/ni/measurementlink-python/releases/download/1.4.0/measurementlink-python-examples-1.4.0.zip)
-
-For best results, use the example measurements corresponding to the version of MeasurementLink
+For best results, use the example measurements corresponding to the version of InstrumentStudio
 that you are using. Newer examples may demonstrate features that are not available in older
-versions of MeasurementLink.
+versions of InstrumentStudio.
 
 The TestStand sequence files associated with each example are saved in TestStand 2021 SP1.
 
@@ -72,20 +63,20 @@ The example measurements are *Poetry-based* projects. Follow the steps below to 
 
 ### Static Registration of Example Measurements
 
-To statically register an example measurement service with the MeasurementLink discovery service, do the following:
+To statically register an example measurement service with the NI Discovery Service, do the following:
 
-1. Copy the example measurement's directory (including the `.serviceconfig` file and startup batch file) to a subdirectory of `C:\ProgramData\National Instruments\MeasurementLink\Services`.
+1. Copy the example measurement's directory (including the `.serviceconfig` file and startup batch file) to a subdirectory of `C:\ProgramData\National Instruments\Plug-Ins\Measurements`.
 > **Note**
 > Do not copy the `.venv` subdirectory&mdash;the virtual environment must be re-created in the new location.
 2. Create a virtual environment in the new location by opening a command prompt to the new example directory under `C:\ProgramData` and running `poetry install`.
 
     ``` cmd
     cd <path_of_example_measurement>
-    REM Example: cd "C:\ProgramData\National Instruments\MeasurementLink\Services\dc_measurement"
+    REM Example: cd "C:\ProgramData\National Instruments\Plug-Ins\Measurements\dc_measurement"
     poetry install
     ```
 
-Once the example measurement service is statically registered, the MeasurementLink discovery service makes it visible in supported NI applications.
+Once the example measurement service is statically registered, the NI Discovery Service makes it visible in supported NI applications.
 
 > **Note**
 > To set up and statically register all of the example measurements, run [`install_examples.py`](../scripts/install_examples.py).

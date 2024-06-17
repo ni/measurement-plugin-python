@@ -1,20 +1,19 @@
 ## Sample Measurement
 
-This is a MeasurementLink example that performs a loopback measurement with
+This is a measurement plug-in example that performs a loopback measurement with
 various data types.
 
 ### Features
 
 - Demonstrates various data types
-- Includes InstrumentStudio and MeasurementLink UI Editor project files
+- Includes InstrumentStudio and Measurement Plug-In UI Editor project files
 - Includes multiple UI files. Note: InstrumentStudio only displays the 1st UI
   file. To change the UI file used for the example, simply switch the order of
   the `ui_file_paths` array in `measurement.py`
 
 ### Required Software
 
-- MeasurementLink 2023 Q3 or later
-- Recommended: InstrumentStudio 2023 Q3 or later (matching MeasurementLink)
+- InstrumentStudio 2024 Q3 or later
 
 ### Required Hardware
 

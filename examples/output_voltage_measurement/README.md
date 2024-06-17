@@ -1,6 +1,6 @@
 ## Output Voltage Measurement
 
-This is a MeasurementLink example that sources DC voltage as input to the DUT
+This is a measurement plug-in example that sources DC voltage as input to the DUT
 with an NI SMU and measures the DUT output with a DMM that supports SCPI
 commands using NI-VISA.
 
@@ -12,7 +12,7 @@ commands using NI-VISA.
 - Pin-aware, supporting one session and pin per instrument and a single site
   - Sources the DC voltage level of the DUT input pin
   - Measures the voltage of the DUT output pin
-- Includes InstrumentStudio and MeasurementLink UI Editor project files
+- Includes InstrumentStudio and Measurement Plug-In UI Editor project files
 - Includes a TestStand sequence showing how to configure the pin map, register
   instrument resources with the session management service, and run a
   measurement
@@ -26,11 +26,10 @@ commands using NI-VISA.
 
 ### Required Software
 
-- MeasurementLink 2024 Q1 or later
+- InstrumentStudio 2024 Q3 or later
 - NI-DCPower
 - NI-488.2 and/or NI-Serial
 - NI-VISA
-- Recommended: InstrumentStudio 2024 Q1 or later (matching MeasurementLink)
 - Recommended: TestStand 2021 SP1 or later
 - Optional: NI Instrument Simulator software
 
@@ -53,13 +52,13 @@ in NI MAX). To simulate instruments without using NI MAX, follow the steps
 below:
 - Create a `.env` file in the measurement service's directory or one of its
   parent directories (such as the root of your Git repository or
-  `C:\ProgramData\National Instruments\MeasurementLink\Services` for statically
+  `C:\ProgramData\National Instruments\Plug-Ins\Measurements` for statically
   registered measurement services).
 - Add the following options to the `.env` file to enable simulation via the
   driver's option string or `simulate` parameter:
 
   ```
-  MEASUREMENTLINK_NIDCPOWER_SIMULATE=1 
+  MEASUREMENTLINK_NIDCPOWER_SIMULATE=1
   MEASUREMENTLINK_NIDCPOWER_BOARD_TYPE=PXIe
   MEASUREMENTLINK_NIDCPOWER_MODEL=4141
 
