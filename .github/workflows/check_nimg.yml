@@ -15,7 +15,7 @@ jobs:
     defaults:
       run:
         # Set the working-directory for all steps in this job.
-        working-directory: ./ni_measurement_plugin_generator
+        working-directory: ./ni_measurement_plugin_sdk_generator
     steps:
       - name: Check out repo
         uses: actions/checkout@v4
@@ -28,19 +28,19 @@ jobs:
         uses: Gr1N/setup-poetry@v9
         with:
           poetry-version: ${{ env.POETRY_VERSION }}
-      - name: Check for lock changes (ni-measurement-plugin-generator)
+      - name: Check for lock changes (ni-measurement-plugin-sdk-generator)
         run: poetry lock --check
-      - name: Cache virtualenv (ni-measurement-plugin-generator)
+      - name: Cache virtualenv (ni-measurement-plugin-sdk-generator)
         uses: actions/cache@v4
         id: cache
         with:
-          path: ni_measurement_plugin_generator/.venv
-          key: ni-measurement-plugin-generator-${{ runner.os }}-py${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('poetry.lock') }}
-      - name: Install ni-measurement-plugin-generator
+          path: ni_measurement_plugin_sdk_generator/.venv
+          key: ni-measurement-plugin-sdk-generator-${{ runner.os }}-py${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('poetry.lock') }}
+      - name: Install ni-measurement-plugin-sdk-generator
         run: poetry install -v
-      - name: Lint ni-measurement-plugin-generator
+      - name: Lint ni-measurement-plugin-sdk-generator
         run: poetry run ni-python-styleguide lint
-      - name: Mypy static analysis (ni-measurement-plugin-generator, Linux)
-        run:  poetry run mypy -p ni_measurement_plugin_generator
-      - name: Mypy static analysis (ni-measurement-plugin-generator, Windows)
-        run:  poetry run mypy -p ni_measurement_plugin_generator --platform win32
+      - name: Mypy static analysis (ni-measurement-plugin-sdk-generator, Linux)
+        run:  poetry run mypy -p ni_measurement_plugin_sdk_generator
+      - name: Mypy static analysis (ni-measurement-plugin-sdk-generator, Windows)
+        run:  poetry run mypy -p ni_measurement_plugin_sdk_generator --platform win32
