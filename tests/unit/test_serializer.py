@@ -6,16 +6,16 @@ from typing import Dict, Sequence
 import pytest
 from google.protobuf import any_pb2, type_pb2
 
-from ni_measurement_plugin_sdk._annotations import (
+from ni_measurement_plugin_sdk_service._annotations import (
     ENUM_VALUES_KEY,
     TYPE_SPECIALIZATION_KEY,
 )
-from ni_measurement_plugin_sdk._internal.parameter import serializer
-from ni_measurement_plugin_sdk._internal.parameter.metadata import (
+from ni_measurement_plugin_sdk_service._internal.parameter import serializer
+from ni_measurement_plugin_sdk_service._internal.parameter.metadata import (
     ParameterMetadata,
     TypeSpecialization,
 )
-from ni_measurement_plugin_sdk._internal.stubs.ni.protobuf.types import xydata_pb2
+from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types import xydata_pb2
 from tests.utilities.stubs.serialization import test_pb2
 from tests.utilities.stubs.serialization.bigmessage_pb2 import BigMessage
 

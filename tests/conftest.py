@@ -7,23 +7,23 @@ from typing import Generator, List
 import grpc
 import pytest
 
-from ni_measurement_plugin_sdk import _featuretoggles
-from ni_measurement_plugin_sdk._featuretoggles import CodeReadiness, FeatureToggle
-from ni_measurement_plugin_sdk._internal.stubs.ni.measurementlink.measurement.v1 import (
+from ni_measurement_plugin_sdk_service import _featuretoggles
+from ni_measurement_plugin_sdk_service._featuretoggles import CodeReadiness, FeatureToggle
+from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v1 import (
     measurement_service_pb2_grpc as v1_measurement_service_pb2_grpc,
 )
-from ni_measurement_plugin_sdk._internal.stubs.ni.measurementlink.measurement.v2 import (
+from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v2 import (
     measurement_service_pb2_grpc as v2_measurement_service_pb2_grpc,
 )
-from ni_measurement_plugin_sdk.discovery import DiscoveryClient
-from ni_measurement_plugin_sdk.discovery._support import (
+from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
+from ni_measurement_plugin_sdk_service.discovery._support import (
     _get_registration_json_file_path,
 )
-from ni_measurement_plugin_sdk.measurement.service import (
+from ni_measurement_plugin_sdk_service.measurement.service import (
     GrpcChannelPool,
     MeasurementService,
 )
-from ni_measurement_plugin_sdk.session_management import SessionManagementClient
+from ni_measurement_plugin_sdk_service.session_management import SessionManagementClient
 from tests.utilities.discovery_service_process import DiscoveryServiceProcess
 from tests.utilities.pin_map_client import PinMapClient
 
