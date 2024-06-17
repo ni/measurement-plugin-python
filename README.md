@@ -1,6 +1,6 @@
-# Measurement Plug-In Support for Python
+# Measurement Plug-In SDK for Python
 
-- [Measurement Plug-In Support for Python](#measurement-plug-in-support-for-python)
+- [Measurement Plug-In SDK for Python](#measurement-plug-in-sdk-for-python)
   - [Introduction](#introduction)
   - [Dependencies](#dependencies)
   - [Documentation](#documentation)
@@ -21,7 +21,7 @@
 
 ## Introduction
 
-Measurement Plug-In Support for Python (`ni-measurement-plugin-sdk-service`) is a Python
+Measurement Plug-In SDK for Python (`ni-measurement-plugin-sdk-service`) is a Python
 framework that helps you create reusable measurement plug-ins using gRPC
 services. Deploy your measurement plug-ins to perform interactive validation in
 InstrumentStudio and automated testing in TestStand.
@@ -74,18 +74,18 @@ versions of InstrumentStudio.
 
 ## Developing Measurements: Quick Start
 
-This section provides instructions to develop custom measurement services in Python using Measurement Plug-In Support for Python.
+This section provides instructions to develop custom measurement services in Python using Measurement Plug-In SDK for Python.
 
 ### Installation
 
-Make sure the system has the recommended Python version is installed. Install Measurement Plug-In Support for Python using [pip](https://pip.pypa.io/).
+Make sure the system has the recommended Python version is installed. Install Measurement Plug-In SDK for Python using [pip](https://pip.pypa.io/).
 
 ``` cmd
 REM Activate the required virtual environment if any.
 pip install ni-measurement-plugin-sdk-service
 ```
 
-Check if you have installed the expected version of Measurement Plug-In Support for Python installed by running the below command:
+Check if you have installed the expected version of Measurement Plug-In SDK for Python installed by running the below command:
 
 ```cmd
 pip show ni-measurement-plugin-sdk-service
