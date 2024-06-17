@@ -1,5 +1,5 @@
 NI Measurement Plug-In SDK
-----------------------
+--------------------------
 .. toctree::
    :maxdepth: 3
 
