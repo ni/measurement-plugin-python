@@ -1,6 +1,6 @@
 ## NI-DCPower Source DC Voltage
 
-This is a MeasurementLink example that sources and measures a DC voltage with an
+This is a measurement plug-in example that sources and measures a DC voltage with an
 NI SMU.
 
 ### Features
@@ -12,7 +12,7 @@ NI SMU.
   sites
   - Sources the same DC voltage level on all selected pin/site combinations
   - Measures the DC voltage and current for each selected pin/site combination
-- Includes InstrumentStudio and MeasurementLink UI Editor project files
+- Includes InstrumentStudio and Measurement Plug-In UI Editor project files
 - Includes multiple UI files. Note: InstrumentStudio only displays the 1st UI
   file. To change the UI file used for the example, simply switch the order of
   the `ui_file_paths` array in `measurement.py`
@@ -28,9 +28,8 @@ NI SMU.
 
 ### Required Software
 
-- MeasurementLink 2024 Q1 or later
+- InstrumentStudio 2024 Q3 or later
 - NI-DCPower
-- Recommended: InstrumentStudio 2024 Q1 or later (matching MeasurementLink)
 - Recommended: TestStand 2021 SP1 or later
 
 ### Required Hardware
@@ -43,18 +42,18 @@ created in NI MAX. To automatically simulate an instrument without using NI MAX,
 follow the steps below:
 - Create a `.env` file in the measurement service's directory or one of its
   parent directories (such as the root of your Git repository or
-  `C:\ProgramData\National Instruments\MeasurementLink\Services` for statically
+  `C:\ProgramData\National Instruments\Plug-Ins\Measurements` for statically
   registered measurement services).
 - Add the following options to the `.env` file to enable simulation via the
   driver's option string:
 
   ```
-  MEASUREMENTLINK_NIDCPOWER_SIMULATE=1 
+  MEASUREMENTLINK_NIDCPOWER_SIMULATE=1
   MEASUREMENTLINK_NIDCPOWER_BOARD_TYPE=PXIe
   MEASUREMENTLINK_NIDCPOWER_MODEL=4141
   ```
 
-> **Note** 
+> **Note**
 >
 > The multi-site pin map, `NIDCPowerSourceDCVoltageMultiSite.pinmap`, requires
 > an NI SMU with 4 or more channels.

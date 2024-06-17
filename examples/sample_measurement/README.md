@@ -1,6 +1,6 @@
 ## Sample Measurement
 
-This is a MeasurementLink example that performs a loopback measurement with
+This is a measurement plug-in example that performs a loopback measurement with
 various data types.
 
 ### Features
@@ -13,8 +13,7 @@ various data types.
 
 ### Required Software
 
-- MeasurementLink 2023 Q3 or later
-- Recommended: InstrumentStudio 2023 Q3 or later (matching MeasurementLink)
+- InstrumentStudio 2024 Q3 or later
 
 ### Required Hardware
 

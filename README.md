@@ -1,6 +1,6 @@
-# Measurement Plugin Support for Python
+# Measurement Plug-In Support for Python
 
-- [Measurement Plugin Support for Python](#measurement-plugin-support-for-python)
+- [Measurement Plug-In Support for Python](#measurement-plug-in-support-for-python)
   - [Introduction](#introduction)
   - [Dependencies](#dependencies)
   - [Documentation](#documentation)
@@ -21,7 +21,7 @@
 
 ## Introduction
 
-Measurement Plugin Support for Python (`ni-measurement-plugin-sdk-service`) is a Python
+Measurement Plug-In Support for Python (`ni-measurement-plugin-sdk-service`) is a Python
 framework that helps you create reusable measurement plug-ins using gRPC
 services. Deploy your measurement plug-ins to perform interactive validation in
 InstrumentStudio and automated testing in TestStand.
@@ -39,7 +39,7 @@ InstrumentStudio and automated testing in TestStand.
 
 ## Documentation
 
-- [MeasurementLink Manual](https://www.ni.com/docs/en-US/bundle/measurementlink)
+- [Measurement Plug-In SDK Manual](https://www.ni.com/docs/en-US/bundle/measurementlink)
 - [API Reference](https://ni.github.io/measurementlink-python/)
 
 ---
@@ -48,7 +48,7 @@ InstrumentStudio and automated testing in TestStand.
 
 ### Enable Win32 Long Paths
 
-By default, Windows has a path length limit of 260 characters. NI recommends enabling support for long paths when developing and deploying Python measurement services. 
+By default, Windows has a path length limit of 260 characters. NI recommends enabling support for long paths when developing and deploying Python measurement services.
 
 There are three ways to do this:
 - When installing Python using the Python for Windows installer, click `Disable path length limit` at the end of the installation.
@@ -62,39 +62,30 @@ There are three ways to do this:
 
 ## Examples
 
-The `examples` directory contains example measurements for MeasurementLink 2024 Q2 or later. If
-you are using a previous version of MeasurementLink, download the appropriate examples:
-
-- MeasurementLink 2023 Q1: [measurementlink-python-examples-1.0.1.zip](https://github.com/ni/measurementlink-python/releases/download/1.0.1/measurementlink-python-examples-1.0.1.zip)
-- MeasurementLink 2023 Q2: [measurementlink-python-examples-1.0.1.zip](https://github.com/ni/measurementlink-python/releases/download/1.0.1/measurementlink-python-examples-1.0.1.zip)
-- MeasurementLink 2023 Q3: [measurementlink-python-examples-1.1.0.zip](https://github.com/ni/measurementlink-python/releases/download/1.1.0/measurementlink-python-examples-1.1.0.zip)
-- MeasurementLink 2023 Q4: [measurementlink-python-examples-1.2.0.zip](https://github.com/ni/measurementlink-python/releases/download/1.2.0/measurementlink-python-examples-1.2.0.zip)
-- MeasurementLink 2024 Q1: [measurementlink-python-examples-1.3.0.zip](https://github.com/ni/measurementlink-python/releases/download/1.3.0/measurementlink-python-examples-1.3.0.zip)
-- MeasurementLink 2024 Q2: [measurementlink-python-examples-1.4.0.zip](https://github.com/ni/measurementlink-python/releases/download/1.4.0/measurementlink-python-examples-1.4.0.zip)
-
+The `examples` directory contains example measurements for use with InstrumentStudio 2024 Q3 or later.
 
 For more information on setting up and running the example measurements, see the included `README.md` file.
 
-For best results, use the example measurements corresponding to the version of MeasurementLink
+For best results, use the example measurements corresponding to the version of InstrumentStudio
 that you are using. Newer examples may demonstrate features that are not available in older
-versions of MeasurementLink.
+versions of InstrumentStudio.
 
 ---
 
 ## Developing Measurements: Quick Start
 
-This section provides instructions to develop custom measurement services in Python using Measurement Plugin Support for Python.
+This section provides instructions to develop custom measurement services in Python using Measurement Plug-In Support for Python.
 
 ### Installation
 
-Make sure the system has the recommended Python version is installed. Install Measurement Plugin Support for Python using [pip](https://pip.pypa.io/).
+Make sure the system has the recommended Python version is installed. Install Measurement Plug-In Support for Python using [pip](https://pip.pypa.io/).
 
 ``` cmd
 REM Activate the required virtual environment if any.
 pip install ni-measurement-plugin-sdk-service
 ```
 
-Check if you have installed the expected version of Measurement Plugin Support for Python installed by running the below command:
+Check if you have installed the expected version of Measurement Plug-In Support for Python installed by running the below command:
 
 ```cmd
 pip show ni-measurement-plugin-sdk-service
@@ -174,7 +165,7 @@ pip install ni-measurement-plugin-sdk-generator
     - If you face an access issue when trying to activate, retry after allowing scripts to run as Administrator by executing the below command in Windows PowerShell:
 
         ```cmd
-        Set-ExecutionPolicy RemoteSigned 
+        Set-ExecutionPolicy RemoteSigned
         ```
 
 3. [Run](https://code.visualstudio.com/docs/python/python-tutorial#_run-hello-world)/[Debug](https://code.visualstudio.com/docs/python/debugging#_basic-debugging) the measurement Python file.
@@ -191,19 +182,19 @@ pip install ni-measurement-plugin-sdk-generator
 
 ## Static Registration of Python Measurements
 
-The MeasurementLink discovery service provides a registry of other services, and can discover and activate other services on the system. These features allow the discovery service to distinguish, manage, and describe measurement services on the system.
+The NI Discovery Service provides a registry of other services, and can discover and activate other services on the system. These features allow the discovery service to distinguish, manage, and describe measurement services on the system.
 
-To statically register a measurement service with the MeasurementLink discovery service, do the following:
+To statically register a measurement service with the NI Discovery Service, do the following:
 
 1. Create a [startup batch file](#create-a-batch-file-that-runs-a-python-measurement) or [executable](#create-executable-for-python-scripts) for the measurement service.
 
 2. Edit the measurement service's `.serviceconfig` file and set the `path` value to the filename of the startup batch file or executable.
 
-3. Copy the measurement service's directory (including the `.serviceconfig` file and startup batch file) to a subdirectory of `C:\ProgramData\National Instruments\MeasurementLink\Services`.
+3. Copy the measurement service's directory (including the `.serviceconfig` file and startup batch file) to a subdirectory of `C:\ProgramData\National Instruments\Plug-Ins\Measurements`.
 > **Note**
 > If you are using a virtual environment, do not copy the `.venv` subdirectory&mdash;the virtual environment must be re-created in the new location.
 
-Once your measurement service is statically registered, the MeasurementLink discovery service makes it visible in supported NI applications.
+Once your measurement service is statically registered, the NI Discovery Service makes it visible in supported NI applications.
 
 ### Create a batch file that runs a Python measurement
 
@@ -229,7 +220,7 @@ Examples to start the fictitious file named `foo_measurement.py`:
     REM Windows
     .\.venv\Scripts\python.exe foo_measurement.py
 
-    REM Linux 
+    REM Linux
     .venv/bin/python foo_measurement.py
     ```
 
@@ -259,7 +250,7 @@ A measurement and its related files can be maintained in different ways in Pytho
 
 2. UI File
     - UI file for the measurement. Types of supported UI files are:
-        - Measurement UI (`.measui`): created using the **MeasurementLink UI Editor** application.
+        - Measurement UI (`.measui`): created using the **Measurement Plug-In UI Editor** application.
         - LabVIEW UI (`.vi`)
     - The path of this file is configured by `ui_file_path` in `measurement_info` variable definition in measurement Python module (`.py`).
 
