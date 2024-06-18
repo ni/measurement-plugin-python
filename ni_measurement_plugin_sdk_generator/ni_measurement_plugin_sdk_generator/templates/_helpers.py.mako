@@ -1,4 +1,4 @@
-"""Helper classes and functions for MeasurementLink examples."""
+"""Helper classes and functions for measurement plug-in examples."""
 
 import logging
 import pathlib
@@ -10,7 +10,7 @@ import click
 class TestStandSupport(object):
     """Class that communicates with TestStand."""
 
-    _PIN_MAP_ID_VAR = "NI.MeasurementLink.PinMapId"
+    _PIN_MAP_ID_VAR = "NI.MeasurementPlugIns.PinMapId"
 
     def __init__(self, sequence_context: Any) -> None:
         """Initialize the TestStandSupport object.
@@ -23,7 +23,7 @@ class TestStandSupport(object):
         self._sequence_context = sequence_context
 
     def get_active_pin_map_id(self) -> str:
-        """Get the active pin map id from the NI.MeasurementLink.PinMapId runtime variable.
+        """Get the active pin map id from the NI.MeasurementPlugIns.PinMapId runtime variable.
 
         Returns:
             The resource id of the pin map that is registered to the pin map service.
