@@ -4,6 +4,25 @@ from ni_measurement_plugin_sdk._internal.parameter.message_serializer import Ser
 from tests.unit.test_serializer import _get_test_parameter_by_id as currentParameter
 from ni_measurement_plugin_sdk._internal.parameter import serializer
 
+from enum import Enum, IntEnum
+
+class DifferentColor(Enum):
+    """Non-primary colors used for testing enum-typed config and output."""
+
+    PURPLE = 0
+    ORANGE = 1
+    TEAL = 2
+    BROWN = 3
+
+
+class Countries(IntEnum):
+    """Countries enum used for testing enum-typed config and output."""
+
+    AMERICA = 0
+    TAIWAN = 1
+    AUSTRALIA = 2
+    CANADA = 3
+
 @pytest.mark.parametrize(
     "test_values",
                 [
@@ -24,17 +43,21 @@ from ni_measurement_plugin_sdk._internal.parameter import serializer
                         [0, 1, 399],
                         [True, False, True],
                         ["String1, String2"],
+                        DifferentColor.ORANGE,
+                        [DifferentColor.TEAL, DifferentColor.BROWN],
+                        Countries.AUSTRALIA,
+                        [Countries.AUSTRALIA, Countries.CANADA],
                     ],
                 ]
 )
 
 def test___serializer___serialize_parameter___successful_serialization(test_values):
-    default_values = test_values
-    parameter = currentParameter(default_values)
+    parameter = currentParameter(test_values)
 
     new_serialize = new_serializer(
         parameter_metadata_dict=parameter, 
-        parameter_values=test_values)
+        parameter_values=test_values,
+        current_encoded_value=0)
     current_serialize = serializer.serialize_parameters(
         parameter_metadata_dict=parameter, 
         parameter_values=test_values)
