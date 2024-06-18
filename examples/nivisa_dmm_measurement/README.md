@@ -1,14 +1,14 @@
 ## NI-VISA DMM Measurement
 
-This is a MeasurementLink example that performs a DMM measurement using NI-VISA
-and a DMM that supports SCPI commands.  
+This is a measurement plug-in example that performs a DMM measurement using NI-VISA
+and a DMM that supports SCPI commands.
 
 ### Features
 
 - Uses the open-source `PyVISA` package to access NI-VISA from Python
 - Uses the open-source `PyVISA-sim` package to simulate instruments in software
 - Pin-aware, supporting a custom instrument type and a single session/pin/site
-- Includes InstrumentStudio and MeasurementLink UI Editor project files
+- Includes InstrumentStudio and Measurement Plug-In UI Editor project files
 - Includes a TestStand sequence showing how to configure the pin map, register
   instrument resources with the session management service, and run a
   measurement
@@ -22,10 +22,9 @@ and a DMM that supports SCPI commands.
 
 ### Required Software
 
-- MeasurementLink 2024 Q1 or later
+- InstrumentStudio 2024 Q3 or later
 - NI-488.2 and/or NI-Serial
 - NI-VISA
-- Recommended: InstrumentStudio 2024 Q1 or later (matching MeasurementLink)
 - Recommended: TestStand 2021 SP1 or later
 - Optional: NI Instrument Simulator software
 
@@ -44,7 +43,7 @@ By default, this example uses a physical instrument. To simulate an instrument
 in software, follow the steps below:
 - Create a `.env` file in the measurement service's directory or one of its
   parent directories (such as the root of your Git repository or
-  `C:\ProgramData\National Instruments\MeasurementLink\Services` for statically
+  `C:\ProgramData\National Instruments\Plug-Ins\Measurements` for statically
   registered measurement services).
 - Add the following option to the `.env` file to enable simulation via the
   driver's `simulate` parameter:

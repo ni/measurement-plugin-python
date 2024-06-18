@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from ni_measurementlink_service import _dotenvpath
+from ni_measurement_plugin_sdk_service import _dotenvpath
 
 
 @pytest.mark.parametrize("dotenv_exists", [False, True])

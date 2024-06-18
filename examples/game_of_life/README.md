@@ -1,6 +1,6 @@
 ## Game of Life
 
-This is a MeasurementLink example that displays Conway's Game of Life
+This is a measurement plug-in example that displays Conway's Game of Life
 in a graph.
 
 ### Features
@@ -9,12 +9,11 @@ in a graph.
 - Demonstrates how to update a measurement UI while the measurement is
   running.
 - Demonstrates cancellation tokens and deadlines.
-- Includes InstrumentStudio and MeasurementLink UI Editor project files.
+- Includes InstrumentStudio and Measurement Plug-In UI Editor project files.
 
 ### Required Software
 
-- MeasurementLink 2023 Q4 or later
-- Recommended: InstrumentStudio 2023 Q4 or later (matching MeasurementLink)
+- InstrumentStudio 2024 Q3 or later
 
 ### Required Hardware
 

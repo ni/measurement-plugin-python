@@ -6,8 +6,8 @@ from unittest.mock import ANY, Mock
 import pytest
 from pytest_mock import MockerFixture
 
-from ni_measurementlink_service._configuration import NISwitchOptions
-from ni_measurementlink_service.session_management import (
+from ni_measurement_plugin_sdk_service._configuration import NISwitchOptions
+from ni_measurement_plugin_sdk_service.session_management import (
     INSTRUMENT_TYPE_NI_RELAY_DRIVER,
     MultiSessionReservation,
     SessionInitializationBehavior,
@@ -264,6 +264,6 @@ def session_new(mocker: MockerFixture) -> Mock:
 
 def _set_niswitch_simulation_options(mocker: MockerFixture, simulate: bool, topology: str) -> None:
     mocker.patch(
-        "ni_measurementlink_service._drivers._niswitch.NISWITCH_OPTIONS",
+        "ni_measurement_plugin_sdk_service._drivers._niswitch.NISWITCH_OPTIONS",
         NISwitchOptions("niswitch", simulate, topology),
     )

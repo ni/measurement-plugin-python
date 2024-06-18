@@ -5022,13 +5022,13 @@
 			</Seq>
 			<FileGlobalDefaults classname='Obj' valueflags='4194304'>
 				<subprops>
-					<MeasurementLink classname='Obj'>
+					<MeasurementPlugIns classname='Obj'>
 						<subprops>
 							<EnableMonitoring classname='Bool'>
 								<value>false</value>
 							</EnableMonitoring>
 						</subprops>
-					</MeasurementLink>
+					</MeasurementPlugIns>
 				</subprops>
 			</FileGlobalDefaults>
 			<ModelFile typename='Path' xsi:type='Path' classname='PathValue' valueflags='4194312'>

@@ -26,45 +26,45 @@ jobs:
         uses: Gr1N/setup-poetry@v9
         with:
           poetry-version: ${{ env.POETRY_VERSION }}
-      - name: Check for lock changes (ni-measurementlink-service)
+      - name: Check for lock changes (ni-measurement-plugin-sdk-service)
         run: poetry lock --check
 
-      # ni-measurementlink-service, all extras
-      - name: Restore cached virtualenv (ni-measurementlink-service, all extras)
+      # ni-measurement-plugin-sdk-service, all extras
+      - name: Restore cached virtualenv (ni-measurement-plugin-sdk-service, all extras)
         uses: actions/cache/restore@v4
         id: restore-nims-all-extras
         with:
           path: .venv
-          key: ni-measurementlink-service-all-extras-${{ runner.os }}-py${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('poetry.lock') }}
-      - name: Install ni-measurementlink-service (all extras)
+          key: ni-measurement-plugin-sdk-service-all-extras-${{ runner.os }}-py${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('poetry.lock') }}
+      - name: Install ni-measurement-plugin-sdk-service (all extras)
         run: poetry install -v --all-extras
-      - name: Save cached virtualenv (ni-measurementlink-service, all extras)
+      - name: Save cached virtualenv (ni-measurement-plugin-sdk-service, all extras)
         uses: actions/cache/save@v4
         if: steps.restore-nims-all-extras.outputs.cache-hit != 'true'
         with:
           path: .venv
           key: ${{ steps.restore-nims-all-extras.outputs.cache-primary-key }}
-      - name: Lint ni-measurementlink-service
+      - name: Lint ni-measurement-plugin-sdk-service
         run: poetry run ni-python-styleguide lint
-      - name: Mypy static analysis (ni-measurementlink-service, Linux)
-        run:  poetry run mypy -p ni_measurementlink_service
-      - name: Mypy static analysis (ni-measurementlink-service, Windows)
-        run:  poetry run mypy -p ni_measurementlink_service --platform win32
+      - name: Mypy static analysis (ni-measurement-plugin-sdk-service, Linux)
+        run:  poetry run mypy -p ni_measurement_plugin_sdk_service
+      - name: Mypy static analysis (ni-measurement-plugin-sdk-service, Windows)
+        run:  poetry run mypy -p ni_measurement_plugin_sdk_service --platform win32
       - name: Mypy static analysis (tests, Linux)
         run:  poetry run mypy tests
       - name: Mypy static analysis (tests, Windows)
         run:  poetry run mypy tests --platform win32
 
-      # ni-measurementlink-service, all extras, docs
-      - name: Restore cached virtualenv (ni-measurementlink-service, all extras, docs)
+      # ni-measurement-plugin-sdk-service, all extras, docs
+      - name: Restore cached virtualenv (ni-measurement-plugin-sdk-service, all extras, docs)
         uses: actions/cache/restore@v4
         id: restore-nims-all-extras-docs
         with:
           path: .venv
-          key: ni-measurementlink-service-all-extras-docs-${{ runner.os }}-py${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('poetry.lock') }}
-      - name: Install ni-measurementlink-service (all extras, docs)
+          key: ni-measurement-plugin-sdk-service-all-extras-docs-${{ runner.os }}-py${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('poetry.lock') }}
+      - name: Install ni-measurement-plugin-sdk-service (all extras, docs)
         run: poetry install -v --all-extras --with docs
-      - name: Save cached virtualenv (ni-measurementlink-service, all extras, docs)
+      - name: Save cached virtualenv (ni-measurement-plugin-sdk-service, all extras, docs)
         uses: actions/cache/save@v4
         if: steps.restore-nims-all-extras-docs.outputs.cache-hit != 'true'
         with:
@@ -79,12 +79,12 @@ jobs:
         run:  git clean -dfx docs/ && git restore docs/
       - name: Generate gRPC stubs
         run: |
-          find ni_measurementlink_service/_internal/stubs/ -name \*_pb2.py\* -o -name \*_pb2_grpc.py\* -delete
+          find ni_measurement_plugin_sdk_service/_internal/stubs/ -name \*_pb2.py\* -o -name \*_pb2_grpc.py\* -delete
           find tests/utilities/stubs/ -name \*_pb2.py\* -o -name \*_pb2_grpc.py\* -delete
           poetry run python scripts/generate_grpc_stubs.py
       - name: Check for out-of-date gRPC stubs
         run:  git diff --exit-code
       - name: Revert gRPC stubs
         run: |
-          git clean -dfx ni_measurementlink_service/_internal/stubs/ tests/utilities/stubs/
-          git restore ni_measurementlink_service/_internal/stubs/ tests/utilities/stubs/
+          git clean -dfx ni_measurement_plugin_sdk_service/_internal/stubs/ tests/utilities/stubs/
+          git restore ni_measurement_plugin_sdk_service/_internal/stubs/ tests/utilities/stubs/

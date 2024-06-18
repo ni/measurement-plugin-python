@@ -8,7 +8,7 @@ from typing import Sequence
 import grpc_tools.protoc
 import pkg_resources
 
-STUBS_NAMESPACE = "ni_measurementlink_service._internal.stubs"
+STUBS_NAMESPACE = "ni_measurement_plugin_sdk_service._internal.stubs"
 PROTO_PARENT_NAMESPACES = ["ni.measurementlink", "nidevice_grpc", "ni.protobuf.types"]
 STUBS_PATH = pathlib.Path(__file__).parent.parent / STUBS_NAMESPACE.replace(".", "/")
 PROTO_PATH = pathlib.Path(__file__).parent.parent / "third_party" / "ni-apis"

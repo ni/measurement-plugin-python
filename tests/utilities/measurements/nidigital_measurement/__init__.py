@@ -6,8 +6,8 @@ from typing import Iterable, Sequence, Tuple, Union
 
 import nidigital
 
-import ni_measurementlink_service as nims
-from ni_measurementlink_service.session_management import (
+import ni_measurement_plugin_sdk_service as nims
+from ni_measurement_plugin_sdk_service.session_management import (
     TypedConnection,
     TypedSessionInformation,
 )

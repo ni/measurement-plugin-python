@@ -1,11 +1,11 @@
-# Contributing to MeasurementLink™ Support for Python
+# Contributing to Measurement Plug-In SDK for Python
 
-Contributions to MeasurementLink Support for Python are welcome from all!
+Contributions to Measurement Plug-In SDK for Python are welcome from all!
 
-MeasurementLink Support for Python is managed via [git](https://git-scm.com), with the canonical upstream
-repository hosted on [GitHub](https://github.com/ni/measurementlink-python/). The repo contains templates and examples for developing MeasurementLink services in Python.
+Measurement Plug-In SDK for Python is managed via [git](https://git-scm.com), with the canonical upstream
+repository hosted on [GitHub](https://github.com/ni/measurement-plugin-python/). The repo contains templates and examples for developing measurement plug-ins in Python.
 
-MeasurementLink Support for Python follows a pull-request model for development.  If you wish to
+Measurement Plug-In SDK for Python follows a pull-request model for development.  If you wish to
 contribute, you will need to create a GitHub account, fork this project, push a
 branch with your changes to your project, and then submit a pull request.
 
@@ -30,10 +30,10 @@ See [GitHub's official documentation](https://help.github.com/articles/using-pul
 
 ## Clone Repo
 
-Clone the repo, this will pull the MeasurementLink Support for Python components and related components.
+Clone the repo, this will pull the Measurement Plug-In SDK for Python components and related components.
 
 ```cmd
-git clone https://github.com/ni/measurementlink-python.git
+git clone https://github.com/ni/measurement-plugin-python.git
 ```
 
 ## Initializing the repo with .venv
@@ -41,7 +41,7 @@ git clone https://github.com/ni/measurementlink-python.git
 From the root directory of the repo, initialize the project using the [`poetry install`](https://python-poetry.org/docs/cli/#install) command. This will set up a virtual environment (`.venv`) with the required dependencies based on the `poetry.lock` file and `pyproject.toml`.
 
 ```cmd
-poetry install 
+poetry install
 ```
 
 ## Ensure that the `./.venv` virtual environment is activated
@@ -52,7 +52,7 @@ poetry install
 
 # Adding dependencies
 
-Add dependency package for `ni_measurementlink_service`  using the [`poetry add`](https://python-poetry.org/docs/cli/#add) command.
+Add dependency package for `ni_measurement_plugin_sdk_service`  using the [`poetry add`](https://python-poetry.org/docs/cli/#add) command.
 
 ```cmd
 poetry add <name_of_dependency>:<version>
@@ -66,7 +66,7 @@ poetry add -D <name_of_dev_dependency>:<version>
 
 # Updating gRPC stubs when a .proto file is modified
 
-The `ni_measurementlink_service\_internal\stubs` directory contains the auto-generated Python files based on MeasurementLink protobuf (`.proto`) files. The file needs to be replaced whenever there is a change to these `.proto` files:
+The `ni_measurement_plugin_sdk_service\_internal\stubs` directory contains the auto-generated Python files based on Measurement Plug-In protobuf (`.proto`) files. The file needs to be replaced whenever there is a change to these `.proto` files:
 
 - ni/measurementlink/pin_map_context.proto
 - ni/measurementlink/discovery/v1/discovery_service.proto
@@ -76,7 +76,7 @@ The `ni_measurementlink_service\_internal\stubs` directory contains the auto-gen
 - nidevice_grpc/README.md
 - nidevice_grpc/session.proto
 
-The latest .proto files are available in [Azure Repo](https://dev.azure.com/ni/DevCentral/_git/ASW?path=/Source/Protos). From the Azure Repo manually download and overwrite the `.proto` files under the `ni_measurementlink_service\_internal\stubs\proto` folder.
+The latest .proto files are available in [Azure Repo](https://dev.azure.com/ni/DevCentral/_git/ASW?path=/Source/Protos). From the Azure Repo manually download and overwrite the `.proto` files under the `ni_measurement_plugin_sdk_service\_internal\stubs\proto` folder.
 
 Run `poetry run python scripts/generate_grpc_stubs.py`. This generates the required `.py` files for the listed `.proto` files. The required `grpcio-tools` package is already added as a development dependency in pyproject.toml.
 
@@ -96,33 +96,55 @@ poetry run ni-python-styleguide fix
 poetry build
 ```
 
-Running this command from the repo's root directory will generate the tar.gz file and .whl file of ni_measurementlink_service package to the `dist` directory.
+Running this command from the repo's root directory will generate the tar.gz file and .whl file of ni_measurement_plugin_sdk_service package to the `dist` directory.
 
 # Testing
 
-`ni-measurementlink-service` includes regression tests under the `tests/` directory. The GitHub CI runs these tests for PRs targeting the main branch. It is recommended that during development you run the tests locally before creating a PR.
+`ni-measurement-plugin-sdk-service` includes regression tests under the `tests/` directory. The GitHub CI runs these tests for PRs targeting the main branch. It is recommended that during development you run the tests locally before creating a PR.
 
-In order to run the `ni-measurementlink-service` tests locally:
+In order to run the `ni-measurement-plugin-sdk-service` tests locally:
 
 ## Using Command Line
 
-1. Install production dependencies and development dependencies into a venv by running `poetry install`.
-2. Execute the command `poetry run pytest -v` to run the tests, from the repo's root directory.
+1. Install production dependencies and development dependencies into a venv by
+running `poetry install --all-extras`.
+2. Some tests will be skipped if the required components included with
+InstrumentStudio are not installed. Install the latest version of
+InstrumentStudio to run all tests.
+3. Some tests require simulated hardware. Copy `examples\.env.simulation`
+to the root measurement-plugin-python directory and rename it to `.env` to simulate
+the required devices.
+
+    ```ps
+    cp .\examples\.env.simulation .env
+    ```
+4. Some DAQmx tests require persistent simulated devices created using `NI MAX` or
+the `NI Hardware Configuration Utility`. They require a DAQmx device that supports
+AI voltage measurements (e.g. PCIe-6363 or other X Series device). To simulate a
+DAQmx device in software: open `NI MAX`, right-click `Devices and Interfaces`,
+select `Create New...`, and select `Simulated NI-DAQmx Device or Modular
+Instrument`. For the DAQmx tests to pass, you will need two DAQmx devices named 'Dev1'
+and 'Dev2'.
+5. Execute the command `poetry run pytest -v` to run the tests, from the repo's
+   root directory.
 
     ``` ps
-    (.venv) PS D:\TAF\measurementlink-python> poetry run pytest -v
+    (.venv) PS D:\git\measurement-plugin-python> poetry run pytest -v
     ```
 
 ## Using VS Code Test Explorer extension (UI)
 
-Install and configure the `Python Test Explorer for Visual Studio Code` extension to execute/debug the tests using UI. For more details related to the extension, refer [here](https://marketplace.visualstudio.com/items?itemName=LittleFoxTeam.vscode-python-test-adapter).
+Install and configure the `Python Test Explorer for Visual Studio Code`
+extension to execute/debug the tests using UI. For more details related to the
+extension, refer
+[here](https://marketplace.visualstudio.com/items?itemName=LittleFoxTeam.vscode-python-test-adapter).
 
 ## Steps to generate code coverage report
 
 - Install the required dependency by running `poetry install`
 - Activate the virtual environment if not already activated : `.venv\Scripts\activate`
-- Run the command `pytest --cov=ni_measurementlink_service`, from the repo's root directory **to get the summary of test coverage** in the console.
-- Run the command `pytest --cov-report html:cov_html --cov=ni_measurementlink_service`, from the repo's root directory **to generate detailed HTML based coverage report**. Upon running, the coverage reports will be created under `<repo_root>\cov_html` directory.
+- Run the command `pytest --cov=ni_measurement_plugin_sdk_service`, from the repo's root directory **to get the summary of test coverage** in the console.
+- Run the command `pytest --cov-report html:cov_html --cov=ni_measurement_plugin_sdk_service`, from the repo's root directory **to generate detailed HTML based coverage report**. Upon running, the coverage reports will be created under `<repo_root>\cov_html` directory.
 
 # Developer Certificate of Origin (DCO)
 
@@ -154,5 +176,5 @@ Install and configure the `Python Test Explorer for Visual Studio Code` extensio
 
 (taken from [developercertificate.org](https://developercertificate.org/))
 
-See [LICENSE](https://github.com/ni/measurementlink-python/blob/master/LICENSE)
-for details about how MeasurementLink Support for Python is licensed.
+See [LICENSE](https://github.com/ni/measurement-plugin-python/blob/master/LICENSE)
+for details about how Measurement Plug-In SDK for Python is licensed.
