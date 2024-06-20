@@ -2426,14 +2426,14 @@
 ((Step.WaitForTarget == 0) ? LocalizeExpression(Step.TimeExpr):
  (Step.WaitForTarget == 1) ? LocalizeExpression(Step.TimeExpr):
  (Step.WaitForTarget == 2) ?
-       (Step.SpecifyBySeqCall 
-         ? ((Step.SeqCallName == "") 
+       (Step.SpecifyBySeqCall
+         ? ((Step.SeqCallName == "")
              ? ResStr("NI_WAIT_STEP_TYPE", "UNSPECIFIED")
              : TargetName(RunState.Sequence, Step.SeqCallName, false, true, Step.SeqCallStepGroupIdx, RunState.StepGroup))
          : LocalizeExpression(Step.ThreadRefExpr)) :
  (Step.WaitForTarget == 3) ?
-       (Step.SpecifyBySeqCall 
-         ? ((Step.SeqCallName == "") 
+       (Step.SpecifyBySeqCall
+         ? ((Step.SeqCallName == "")
              ? ResStr("NI_WAIT_STEP_TYPE", "UNSPECIFIED")
              : TargetName(RunState.Sequence, Step.SeqCallName, false, true, Step.SeqCallStepGroupIdx, RunState.StepGroup))
          : LocalizeExpression(Step.ExecutionRefExpr)) :
@@ -7708,13 +7708,13 @@
 			</Seq>
 			<FileGlobalDefaults classname='Obj' valueflags='4194304'>
 				<subprops>
-					<MeasurementLink classname='Obj'>
+					<MeasurementPlugIns classname='Obj'>
 						<subprops>
 							<EnableMonitoring classname='Bool'>
 								<value>false</value>
 							</EnableMonitoring>
 						</subprops>
-					</MeasurementLink>
+					</MeasurementPlugIns>
 				</subprops>
 			</FileGlobalDefaults>
 			<ModelFile typename='Path' xsi:type='Path' classname='PathValue' valueflags='4194312'>
