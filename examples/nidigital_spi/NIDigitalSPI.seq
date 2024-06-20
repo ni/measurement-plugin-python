@@ -3255,7 +3255,7 @@
 														</subprops>
 													</Result>
 													<PinMapPath classname='PathValue'>
-														<value>FileGlobals.MeasurementLink.PinMapPath</value>
+														<value>FileGlobals.MeasurementPlugIns.PinMapPath</value>
 													</PinMapPath>
 												</subprops>
 											</Step>
@@ -3819,7 +3819,7 @@
 																									<value>7</value>
 																								</Type>
 																								<ArgumentValue classname='ExprValue'>
-																									<value>FileGlobals.MeasurementLink.PinMapPath</value>
+																									<value>FileGlobals.MeasurementPlugIns.PinMapPath</value>
 																								</ArgumentValue>
 																								<ArgumentDisplayValue classname='ExprValue'>
 																									<value/>
@@ -4312,7 +4312,7 @@
 																									<value>7</value>
 																								</Type>
 																								<ArgumentValue classname='ExprValue'>
-																									<value>FileGlobals.MeasurementLink.SpecificationsFilePaths</value>
+																									<value>FileGlobals.MeasurementPlugIns.SpecificationsFilePaths</value>
 																								</ArgumentValue>
 																								<ArgumentDisplayValue classname='ExprValue'>
 																									<value/>
@@ -4360,7 +4360,7 @@
 																									<value>7</value>
 																								</Type>
 																								<ArgumentValue classname='ExprValue'>
-																									<value>FileGlobals.MeasurementLink.LevelsFilePaths</value>
+																									<value>FileGlobals.MeasurementPlugIns.LevelsFilePaths</value>
 																								</ArgumentValue>
 																								<ArgumentDisplayValue classname='ExprValue'>
 																									<value/>
@@ -4408,7 +4408,7 @@
 																									<value>7</value>
 																								</Type>
 																								<ArgumentValue classname='ExprValue'>
-																									<value>FileGlobals.MeasurementLink.TimingFilePaths</value>
+																									<value>FileGlobals.MeasurementPlugIns.TimingFilePaths</value>
 																								</ArgumentValue>
 																								<ArgumentDisplayValue classname='ExprValue'>
 																									<value/>
@@ -4901,7 +4901,7 @@
 																									<value>7</value>
 																								</Type>
 																								<ArgumentValue classname='ExprValue'>
-																									<value>FileGlobals.MeasurementLink.PatternFilePaths</value>
+																									<value>FileGlobals.MeasurementPlugIns.PatternFilePaths</value>
 																								</ArgumentValue>
 																								<ArgumentDisplayValue classname='ExprValue'>
 																									<value/>
@@ -5752,7 +5752,7 @@
 			</Seq>
 			<FileGlobalDefaults classname='Obj' valueflags='4194304'>
 				<subprops>
-					<MeasurementLink classname='Obj'>
+					<MeasurementPlugIns classname='Obj'>
 						<subprops>
 							<EnableMonitoring classname='Bool'>
 								<value>false</value>
@@ -5781,7 +5781,7 @@
 								</value>
 							</PatternFilePaths>
 						</subprops>
-					</MeasurementLink>
+					</MeasurementPlugIns>
 				</subprops>
 			</FileGlobalDefaults>
 			<ModelFile typename='Path' xsi:type='Path' classname='PathValue' valueflags='4194312'>
