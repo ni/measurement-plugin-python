@@ -1,12 +1,12 @@
-"""NI-DAQmx MeasurementLink test service."""
+"""NI-DAQmx measurement plug-in test service."""
 
 import pathlib
 from typing import List, Sequence, Tuple
 
 import nidaqmx
 
-import ni_measurement_plugin_sdk as nims
-from ni_measurement_plugin_sdk.session_management import TypedSessionInformation
+import ni_measurement_plugin_sdk_service as nims
+from ni_measurement_plugin_sdk_service.session_management import TypedSessionInformation
 
 service_directory = pathlib.Path(__file__).resolve().parent
 measurement_service = nims.MeasurementService(
@@ -30,7 +30,7 @@ def measure(
     pin_names: List[str],
     multi_session: bool,
 ) -> Tuple[List[str], List[str], List[str], List[str], List[float]]:
-    """NI-DAQmx MeasurementLink test service."""
+    """NI-DAQmx measurement plug-in test service."""
     if multi_session:
         with measurement_service.context.reserve_sessions(pin_names) as reservation:
             with reservation.create_nidaqmx_tasks() as session_infos:

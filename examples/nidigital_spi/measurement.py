@@ -6,7 +6,7 @@ import sys
 from typing import Iterable, Tuple, Union
 
 import click
-import ni_measurement_plugin_sdk as nims
+import ni_measurement_plugin_sdk_service as nims
 import nidigital
 from _helpers import configure_logging, verbosity_option
 
@@ -33,7 +33,7 @@ measurement_service = nims.MeasurementService(
 @measurement_service.configuration("timing_file_path", nims.DataType.Path, "Timing.digitiming")
 @measurement_service.configuration("pattern_file_path", nims.DataType.Path, "Pattern.digipat")
 @measurement_service.configuration("load_files", nims.DataType.Boolean, True)
-# TODO: MeasurementLink UI Editor doesn't support arrays of Booleans
+# TODO: Measurement Plug-In UI Editor doesn't support arrays of Booleans
 @measurement_service.output("passing_sites", nims.DataType.Int32Array1D)
 @measurement_service.output("failing_sites", nims.DataType.Int32Array1D)
 def measure(

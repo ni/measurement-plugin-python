@@ -1,13 +1,13 @@
 [tool.black]
-extend_exclude = '\.tox/|_pb2(_grpc)?\.(py|pyi)$|ni_measurement_plugin_generator/|examples/|third_party/'
+extend_exclude = '\.tox/|_pb2(_grpc)?\.(py|pyi)$|ni_measurement_plugin_sdk_generator/|examples/|third_party/'
 line-length = 100
 
 [tool.ni-python-styleguide]
-extend_exclude = '.tox/,*_pb2_grpc.py,*_pb2_grpc.pyi,*_pb2.py,*_pb2.pyi,ni_measurement_plugin_generator/,examples/,third_party/'
+extend_exclude = '.tox/,*_pb2_grpc.py,*_pb2_grpc.pyi,*_pb2.py,*_pb2.pyi,ni_measurement_plugin_sdk_generator/,examples/,third_party/'
 
 [tool.poetry]
-name = "ni_measurement_plugin_sdk"
-version = "2.0.0-dev0"
+name = "ni_measurement_plugin_sdk_service"
+version = "2.0.0-dev1"
 description = "Measurement Plugin Support for Python"
 authors = ["NI <opensource@ni.com>"]
 readme = "README.md" # apply the repo readme to the package as well
@@ -147,7 +147,7 @@ ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
 # mypy-protobuf codegen has some unused ignores.
-module = ["ni_measurement_plugin_sdk._internal.stubs.*","tests.utilities.stubs.*"]
+module = ["ni_measurement_plugin_sdk_service._internal.stubs.*","tests.utilities.stubs.*"]
 warn_unused_ignores = false
 
 [[tool.mypy.overrides]]

@@ -9,7 +9,7 @@
       ],
       "path": "start.bat",
       "annotations": {
-        "ni/service.description": "MeasurementLink test service that only supports a v2 measurement.",
+        "ni/service.description": "Measurement plug-in test service that only supports a v2 measurement.",
         "ni/service.collection": "NI.Tests",
         "ni/service.tags": []
       }

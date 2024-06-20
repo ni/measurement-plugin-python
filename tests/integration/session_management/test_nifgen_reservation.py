@@ -3,7 +3,7 @@ from contextlib import ExitStack
 
 import pytest
 
-from ni_measurement_plugin_sdk.session_management import (
+from ni_measurement_plugin_sdk_service.session_management import (
     PinMapContext,
     SessionManagementClient,
 )

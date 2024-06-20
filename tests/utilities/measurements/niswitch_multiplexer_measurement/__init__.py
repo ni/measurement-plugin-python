@@ -1,12 +1,12 @@
-"""NI-SWITCH multiplexer MeasurementLink test service."""
+"""NI-SWITCH multiplexer measurement plug-in test service."""
 
 import pathlib
 from typing import Iterable, Sequence, Tuple
 
 import niswitch
 
-import ni_measurement_plugin_sdk as nims
-from ni_measurement_plugin_sdk.session_management import TypedConnectionWithMultiplexer
+import ni_measurement_plugin_sdk_service as nims
+from ni_measurement_plugin_sdk_service.session_management import TypedConnectionWithMultiplexer
 
 service_directory = pathlib.Path(__file__).resolve().parent
 measurement_service = nims.MeasurementService(
@@ -29,7 +29,7 @@ def measure(
     pin_names: Iterable[str],
     multi_session: bool,
 ) -> Tuple[Iterable[str], Iterable[str], Iterable[str], Iterable[str]]:
-    """NI-SWITCH multiplexer MeasurementLink test service."""
+    """NI-SWITCH multiplexer measurement plug-in test service."""
     if multi_session:
         with measurement_service.context.reserve_session(pin_names) as reservation:
             with reservation.initialize_niswitch_multiplexer_sessions() as multiplexer_session_infos:

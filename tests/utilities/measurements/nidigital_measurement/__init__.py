@@ -1,4 +1,4 @@
-"""NI-Digital MeasurementLink test service."""
+"""NI-Digital measurement plug-in test service."""
 
 import pathlib
 from itertools import groupby
@@ -6,8 +6,8 @@ from typing import Iterable, Sequence, Tuple, Union
 
 import nidigital
 
-import ni_measurement_plugin_sdk as nims
-from ni_measurement_plugin_sdk.session_management import (
+import ni_measurement_plugin_sdk_service as nims
+from ni_measurement_plugin_sdk_service.session_management import (
     TypedConnection,
     TypedSessionInformation,
 )
@@ -37,7 +37,7 @@ def measure(
 ) -> Tuple[
     Iterable[str], Iterable[str], Iterable[str], Iterable[str], Iterable[str], Iterable[str]
 ]:
-    """NI-Digital MeasurementLink test service."""
+    """NI-Digital measurement plug-in test service."""
     if multi_session:
         with measurement_service.context.reserve_sessions(pin_names) as reservation:
             with reservation.initialize_nidigital_sessions() as session_infos:

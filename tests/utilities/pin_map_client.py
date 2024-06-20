@@ -1,4 +1,4 @@
-"""Client for accessing the MeasurementLink pin map service."""
+"""Client for accessing the measurement pin map service."""
 
 import logging
 import pathlib
@@ -7,12 +7,12 @@ from typing import Optional, Union
 
 import grpc
 
-from ni_measurement_plugin_sdk._internal.stubs.ni.measurementlink.pinmap.v1 import (
+from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.pinmap.v1 import (
     pin_map_service_pb2,
     pin_map_service_pb2_grpc,
 )
-from ni_measurement_plugin_sdk.discovery import DiscoveryClient
-from ni_measurement_plugin_sdk.grpc.channelpool import GrpcChannelPool
+from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
+from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
 
 _logger = logging.getLogger(__name__)
 
@@ -21,7 +21,7 @@ GRPC_SERVICE_CLASS = "ni.measurementlink.pinmap.v1.PinMapService"
 
 
 class PinMapClient(object):
-    """Client for accessing the MeasurementLink pin map service."""
+    """Client for accessing the measurement pin map service."""
 
     def __init__(
         self,

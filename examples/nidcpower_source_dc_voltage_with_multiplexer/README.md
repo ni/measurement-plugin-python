@@ -1,6 +1,6 @@
 ## NI-DCPower Source DC Voltage with Multiplexer
 
-This is a MeasurementLink example that sources and measures a DC voltage with an
+This is a measurement plug-in example that sources and measures a DC voltage with an
 NI SMU via an NI-SWITCH multiplexer.
 
 ### Features
@@ -10,7 +10,7 @@ NI SMU via an NI-SWITCH multiplexer.
 - Pin-aware, supporting single session, one pin and one selected site
   - Sources the same DC voltage level on all selected pin/site combinations
   - Measures the DC voltage and current for each selected pin/site combination
-- Includes InstrumentStudio and MeasurementLink UI Editor project files
+- Includes InstrumentStudio and Measurement Plug-In UI Editor project files
 - Includes a TestStand sequence showing how to configure the pin map, register
   instrument sessions with the session management service, and run a measurement
   - For the sake of simplicity, the TestStand sequence handles pin map and
@@ -23,10 +23,9 @@ NI SMU via an NI-SWITCH multiplexer.
 
 ### Required Software
 
-- MeasurementLink 2024 Q2 or later
+- InstrumentStudio 2024 Q3 or later
 - NI-DCPower
 - NI-SWITCH
-- Recommended: InstrumentStudio 2024 Q2 or later (matching MeasurementLink)
 - Recommended: TestStand 2021 SP1 or later
 
 ### Required Hardware
@@ -39,13 +38,13 @@ created in NI MAX. To automatically simulate an instrument without using NI MAX,
 follow the steps below:
 - Create a `.env` file in the measurement service's directory or one of its
   parent directories (such as the root of your Git repository or
-  `C:\ProgramData\National Instruments\MeasurementLink\Services` for statically
+  `C:\ProgramData\National Instruments\Plug-Ins\Measurements` for statically
   registered measurement services).
 - Add the following options to the `.env` file to enable simulation via the
   driver's option string:
 
   ```
-  MEASUREMENTLINK_NIDCPOWER_SIMULATE=1 
+  MEASUREMENTLINK_NIDCPOWER_SIMULATE=1
   MEASUREMENTLINK_NIDCPOWER_BOARD_TYPE=PXIe
   MEASUREMENTLINK_NIDCPOWER_MODEL=4141
   MEASUREMENTLINK_NISWITCH_MULTIPLEXER_SIMULATE=1

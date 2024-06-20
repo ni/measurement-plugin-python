@@ -1,6 +1,6 @@
-# Measurement Plugin Support for Python
+# Measurement Plug-In SDK for Python
 
-- [Measurement Plugin Support for Python](#measurement-plugin-support-for-python)
+- [Measurement Plug-In SDK for Python](#measurement-plug-in-sdk-for-python)
   - [Introduction](#introduction)
   - [Dependencies](#dependencies)
   - [Documentation](#documentation)
@@ -15,13 +15,13 @@
   - [Appendix: Managing Measurement with Python](#appendix-managing-measurement-with-python)
     - [Create and Manage Python Measurement using Poetry](#create-and-manage-python-measurement-using-poetry)
     - [Create and Manage Python Measurement using `venv`](#create-and-manage-python-measurement-using-venv)
-    - [Create and Manage Python Measurement by directly installing `ni-measurement-plugin-sdk` as a system-level package](#create-and-manage-python-measurement-by-directly-installing-ni-measurement-plugin-sdk-as-a-system-level-package)
+    - [Create and Manage Python Measurement by directly installing `ni-measurement-plugin-sdk-service` as a system-level package](#create-and-manage-python-measurement-by-directly-installing-ni-measurement-plugin-sdk-service-as-a-system-level-package)
 
 ---
 
 ## Introduction
 
-Measurement Plugin Support for Python (`ni-measurement-plugin-sdk`) is a Python
+Measurement Plug-In SDK for Python (`ni-measurement-plugin-sdk-service`) is a Python
 framework that helps you create reusable measurement plug-ins using gRPC
 services. Deploy your measurement plug-ins to perform interactive validation in
 InstrumentStudio and automated testing in TestStand.
@@ -39,7 +39,7 @@ InstrumentStudio and automated testing in TestStand.
 
 ## Documentation
 
-- [MeasurementLink Manual](https://www.ni.com/docs/en-US/bundle/measurementlink)
+- [Measurement Plug-In SDK Manual](https://www.ni.com/docs/en-US/bundle/measurementlink)
 - [API Reference](https://ni.github.io/measurementlink-python/)
 
 ---
@@ -48,7 +48,7 @@ InstrumentStudio and automated testing in TestStand.
 
 ### Enable Win32 Long Paths
 
-By default, Windows has a path length limit of 260 characters. NI recommends enabling support for long paths when developing and deploying Python measurement services. 
+By default, Windows has a path length limit of 260 characters. NI recommends enabling support for long paths when developing and deploying Python measurement services.
 
 There are three ways to do this:
 - When installing Python using the Python for Windows installer, click `Disable path length limit` at the end of the installation.
@@ -62,70 +62,61 @@ There are three ways to do this:
 
 ## Examples
 
-The `examples` directory contains example measurements for MeasurementLink 2024 Q2 or later. If
-you are using a previous version of MeasurementLink, download the appropriate examples:
-
-- MeasurementLink 2023 Q1: [measurementlink-python-examples-1.0.1.zip](https://github.com/ni/measurementlink-python/releases/download/1.0.1/measurementlink-python-examples-1.0.1.zip)
-- MeasurementLink 2023 Q2: [measurementlink-python-examples-1.0.1.zip](https://github.com/ni/measurementlink-python/releases/download/1.0.1/measurementlink-python-examples-1.0.1.zip)
-- MeasurementLink 2023 Q3: [measurementlink-python-examples-1.1.0.zip](https://github.com/ni/measurementlink-python/releases/download/1.1.0/measurementlink-python-examples-1.1.0.zip)
-- MeasurementLink 2023 Q4: [measurementlink-python-examples-1.2.0.zip](https://github.com/ni/measurementlink-python/releases/download/1.2.0/measurementlink-python-examples-1.2.0.zip)
-- MeasurementLink 2024 Q1: [measurementlink-python-examples-1.3.0.zip](https://github.com/ni/measurementlink-python/releases/download/1.3.0/measurementlink-python-examples-1.3.0.zip)
-- MeasurementLink 2024 Q2: [measurementlink-python-examples-1.4.0.zip](https://github.com/ni/measurementlink-python/releases/download/1.4.0/measurementlink-python-examples-1.4.0.zip)
-
+The `examples` directory contains example measurements for use with InstrumentStudio 2024 Q3 or later.
 
 For more information on setting up and running the example measurements, see the included `README.md` file.
 
-For best results, use the example measurements corresponding to the version of MeasurementLink
+For best results, use the example measurements corresponding to the version of InstrumentStudio
 that you are using. Newer examples may demonstrate features that are not available in older
-versions of MeasurementLink.
+versions of InstrumentStudio.
 
 ---
 
 ## Developing Measurements: Quick Start
 
-This section provides instructions to develop custom measurement services in Python using Measurement Plugin Support for Python.
+This section provides instructions to develop custom measurement services in Python using Measurement Plug-In SDK for Python.
 
 ### Installation
 
-Make sure the system has the recommended Python version is installed. Install Measurement Plugin Support for Python using [pip](https://pip.pypa.io/).
+Make sure the system has the recommended Python version is installed. Install Measurement Plug-In SDK for Python using [pip](https://pip.pypa.io/).
 
 ``` cmd
 REM Activate the required virtual environment if any.
-pip install ni-measurement-plugin-sdk
+pip install ni-measurement-plugin-sdk-service
 ```
 
-Check if you have installed the expected version of Measurement Plugin Support for Python installed by running the below command:
+Check if you have installed the expected version of Measurement Plug-In SDK for Python installed by running the below command:
 
 ```cmd
-pip show ni-measurement-plugin-sdk
+pip show ni-measurement-plugin-sdk-service
 ```
 
 ### Developing a minimal Python measurement
 
-1. Install the `ni-measurement-plugin-generator` package.
+1. Install the `ni-measurement-plugin-sdk-generator` package.
 
 ``` cmd
 REM Activate the required virtual environment if any.
-pip install ni-measurement-plugin-generator
+pip install ni-measurement-plugin-sdk-generator
 ```
 
-2. Run the `ni-measurement-plugin-generator` tool. Use command line arguments to specify the `display-name` and optionally the `version`, `measurement-type`, and `product-type`.
+2. Run the `ni-measurement-plugin-sdk-generator` tool. Use command line arguments to specify the `display-name` and optionally the `version`, `measurement-type`, and `product-type`.
 
-    1. Running `ni-measurement-plugin-generator` without optional arguments:
+    1. Running `ni-measurement-plugin-sdk-generator` without optional arguments:
 
-    `ni-measurement-plugin-generator SampleMeasurement`
+    `ni-measurement-plugin-sdk-generator SampleMeasurement`
 
     'SampleMeasurement' is the display name of your measurement service. Without the optional arguments,
     the other arguments are generated for you based on the display name.
 
-    2. Running `ni-measurement-plugin-generator` with optional arguments for `measurement-version`, `ui-file`,
+    2. Running `ni-measurement-plugin-sdk-generator` with optional arguments for `measurement-version`, `ui-file`,
     `service-class`, and `description-url`:
 
-    `ni-measurement-plugin-generator SampleMeasurement --measurement-version 0.1.0.0 --ui-file MeasurementUI.measui --service-class SampleMeasurement_Python --description-url https://www.example.com/SampleMeasurement.html`
+    `ni-measurement-plugin-sdk-generator SampleMeasurement --measurement-version 0.1.0.0 --ui-file MeasurementUI.measui --service-class SampleMeasurement_Python --description-url https://www.example.com/SampleMeasurement.html`
 
-    3. Running `ni-measurement-plugin-generator` with optional argument for `directory-out`
+    3. Running `ni-measurement-plugin-sdk-generator` with optional argument for `directory-out`
 
-    `ni-measurement-plugin-generator SampleMeasurement --directory-out <new_path_for_created_files>`
+    `ni-measurement-plugin-sdk-generator SampleMeasurement --directory-out <new_path_for_created_files>`
 
     If no output directory is specified, the files will
     be placed in a new folder under the current directory
@@ -174,7 +165,7 @@ pip install ni-measurement-plugin-generator
     - If you face an access issue when trying to activate, retry after allowing scripts to run as Administrator by executing the below command in Windows PowerShell:
 
         ```cmd
-        Set-ExecutionPolicy RemoteSigned 
+        Set-ExecutionPolicy RemoteSigned
         ```
 
 3. [Run](https://code.visualstudio.com/docs/python/python-tutorial#_run-hello-world)/[Debug](https://code.visualstudio.com/docs/python/debugging#_basic-debugging) the measurement Python file.
@@ -191,19 +182,19 @@ pip install ni-measurement-plugin-generator
 
 ## Static Registration of Python Measurements
 
-The MeasurementLink discovery service provides a registry of other services, and can discover and activate other services on the system. These features allow the discovery service to distinguish, manage, and describe measurement services on the system.
+The NI Discovery Service provides a registry of other services, and can discover and activate other services on the system. These features allow the discovery service to distinguish, manage, and describe measurement services on the system.
 
-To statically register a measurement service with the MeasurementLink discovery service, do the following:
+To statically register a measurement service with the NI Discovery Service, do the following:
 
 1. Create a [startup batch file](#create-a-batch-file-that-runs-a-python-measurement) or [executable](#create-executable-for-python-scripts) for the measurement service.
 
 2. Edit the measurement service's `.serviceconfig` file and set the `path` value to the filename of the startup batch file or executable.
 
-3. Copy the measurement service's directory (including the `.serviceconfig` file and startup batch file) to a subdirectory of `C:\ProgramData\National Instruments\MeasurementLink\Services`.
+3. Copy the measurement service's directory (including the `.serviceconfig` file and startup batch file) to a subdirectory of `C:\ProgramData\National Instruments\Plug-Ins\Measurements`.
 > **Note**
 > If you are using a virtual environment, do not copy the `.venv` subdirectory&mdash;the virtual environment must be re-created in the new location.
 
-Once your measurement service is statically registered, the MeasurementLink discovery service makes it visible in supported NI applications.
+Once your measurement service is statically registered, the NI Discovery Service makes it visible in supported NI applications.
 
 ### Create a batch file that runs a Python measurement
 
@@ -229,7 +220,7 @@ Examples to start the fictitious file named `foo_measurement.py`:
     REM Windows
     .\.venv\Scripts\python.exe foo_measurement.py
 
-    REM Linux 
+    REM Linux
     .venv/bin/python foo_measurement.py
     ```
 
@@ -259,7 +250,7 @@ A measurement and its related files can be maintained in different ways in Pytho
 
 2. UI File
     - UI file for the measurement. Types of supported UI files are:
-        - Measurement UI (`.measui`): created using the **MeasurementLink UI Editor** application.
+        - Measurement UI (`.measui`): created using the **Measurement Plug-In UI Editor** application.
         - LabVIEW UI (`.vi`)
     - The path of this file is configured by `ui_file_path` in `measurement_info` variable definition in measurement Python module (`.py`).
 
@@ -273,7 +264,7 @@ Python communities have different ways of managing Python projects and their dep
 
     2. Install `poetry` using the installation steps given in <https://python-poetry.org/docs/#installation>.
 
-2. Create a new Python project and add `ni-measurement-plugin-sdk` as a dependency to the project.
+2. Create a new Python project and add `ni-measurement-plugin-sdk-service` as a dependency to the project.
 
     1. Open a command prompt, and change the working directory to the directory of your choice where you want to create the project.
 
@@ -287,11 +278,11 @@ Python communities have different ways of managing Python projects and their dep
         poetry new <name_of_the_project>
         ```
 
-    3. Add the `ni-measurement-plugin-sdk` package as a dependency using the [`poetry add`](https://python-poetry.org/docs/cli/#add) command.
+    3. Add the `ni-measurement-plugin-sdk-service` package as a dependency using the [`poetry add`](https://python-poetry.org/docs/cli/#add) command.
 
         ``` cmd
         cd <name_of_the_project>
-        poetry add ni-measurement-plugin-sdk
+        poetry add ni-measurement-plugin-sdk-service
         ```
 
     4. The virtual environment will be auto-created by poetry.
@@ -330,10 +321,10 @@ For detailed info on managing projects using poetry [refer to the official docum
     python -m pip install -U pip
     ```
 
-5. Install the `ni-measurement-plugin-sdk` package into the virtual environment.
+5. Install the `ni-measurement-plugin-sdk-service` package into the virtual environment.
 
     ``` cmd
-    pip install ni-measurement-plugin-sdk
+    pip install ni-measurement-plugin-sdk-service
     ```
 
 6. Create measurement modules as described in ["Developing a minimal Python measurement"](#developing-a-minimal-python-measurement)
@@ -345,14 +336,14 @@ For detailed info on managing projects using poetry [refer to the official docum
 
 For detailed info on managing projects with a virtual environment, refer to the [official documentation](https://docs.python.org/3/tutorial/venv.html).
 
-### Create and Manage Python Measurement by directly installing `ni-measurement-plugin-sdk` as a system-level package
+### Create and Manage Python Measurement by directly installing `ni-measurement-plugin-sdk-service` as a system-level package
 
-Measurement developers can also install `ni-measurement-plugin-sdk` as a system package if necessary.
+Measurement developers can also install `ni-measurement-plugin-sdk-service` as a system package if necessary.
 
-1. Install the `ni-measurement-plugin-sdk` package from the command prompt
+1. Install the `ni-measurement-plugin-sdk-service` package from the command prompt
 
     ``` cmd
-    pip install ni-measurement-plugin-sdk
+    pip install ni-measurement-plugin-sdk-service
     ```
 
 2. Create measurement modules as described in ["Developing a minimal Python measurement"](#developing-a-minimal-python-measurement)

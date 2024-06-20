@@ -1,6 +1,6 @@
 ## NI-FGEN Standard Function
 
-This is a MeasurementLink example that generates a standard function waveform
+This is a measurement plug-in example that generates a standard function waveform
 using an NI waveform generator.
 
 ### Features
@@ -13,7 +13,7 @@ using an NI waveform generator.
   - Outputs the same waveform configuration on all selected pin/site
     combinations
   - Does not synchronize waveforms
-- Includes InstrumentStudio and MeasurementLink UI Editor project files
+- Includes InstrumentStudio and Measurement Plug-In UI Editor project files
 - Includes a TestStand sequence showing how to configure the pin map, register
   instrument sessions with the session management service, and run a measurement
   - For the sake of simplicity, the TestStand sequence handles pin map and
@@ -26,9 +26,8 @@ using an NI waveform generator.
 
 ### Required Software
 
-- MeasurementLink 2024 Q1 or later
-- NI-FGEN
-- Recommended: InstrumentStudio 2024 Q1 or later (matching MeasurementLink)
+- InstrumentStudio 2024 Q3 or later
+ NI-FGEN
 - Recommended: TestStand 2021 SP1 or later
 
 ### Required Hardware
@@ -40,7 +39,7 @@ created in NI MAX. To automatically simulate an instrument without using NI MAX,
 follow the steps below:
 - Create a `.env` file in the measurement service's directory or one of its
   parent directories (such as the root of your Git repository or
-  `C:\ProgramData\National Instruments\MeasurementLink\Services` for statically
+  `C:\ProgramData\National Instruments\Plug-Ins\Measurements` for statically
   registered measurement services).
 - Add the following options to the `.env` file to enable simulation via the
   driver's option string:

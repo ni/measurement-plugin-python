@@ -1,13 +1,13 @@
 ## NI-DAQmx Analog Input Measurement
 
-This is a MeasurementLink example that performs a finite analog input
+This is a measurement plug-in example that performs a finite analog input
 measurement with NI-DAQmx.
 
 ### Features
 
 - Uses the `nidaqmx-python` package to access NI-DAQmx from Python
 - Pin-aware, supporting one session, one pin, and one selected site
-- Includes InstrumentStudio and MeasurementLink UI Editor project files
+- Includes InstrumentStudio and Measurement Plug-In UI Editor project files
 - Uses the NI gRPC Device Server to allow sharing instrument sessions with other
   measurement services when running measurements from TestStand
 - Includes a TestStand sequence showing how to configure the pin map, register
@@ -21,9 +21,8 @@ measurement with NI-DAQmx.
 
 ### Required Software
 
-- MeasurementLink 2024 Q1 or later
+- InstrumentStudio 2024 Q3 or later
 - NI-DAQmx
-- Recommended: InstrumentStudio 2024 Q1 or later (matching MeasurementLink)
 - Recommended: TestStand 2021 SP1 or later
 
 ### Required Hardware

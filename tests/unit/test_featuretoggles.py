@@ -3,7 +3,7 @@ from typing import List
 import pytest
 from pytest_mock import MockerFixture
 
-from ni_measurement_plugin_sdk._featuretoggles import (
+from ni_measurement_plugin_sdk_service._featuretoggles import (
     CodeReadiness,
     FeatureNotSupportedError,
     FeatureToggle,

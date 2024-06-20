@@ -1,4 +1,4 @@
-"""Helper classes and functions for MeasurementLink examples."""
+"""Helper classes and functions for measurement plug-in examples."""
 
 import logging
 import pathlib
@@ -10,7 +10,7 @@ import click
 class TestStandSupport(object):
     """Class that communicates with TestStand."""
 
-    _PIN_MAP_ID_VAR = "NI.MeasurementLink.PinMapId"
+    _PIN_MAP_ID_VAR = "NI.MeasurementPlugIns.PinMapId"
 
     def __init__(self, sequence_context: Any) -> None:
         """Initialize the TestStandSupport object.
@@ -23,16 +23,15 @@ class TestStandSupport(object):
         self._sequence_context = sequence_context
 
     def get_active_pin_map_id(self) -> str:
-        """Get the active pin map id from the NI.MeasurementLink.PinMapId runtime variable.
+        """Get the active pin map id from the NI.MeasurementPlugIns.PinMapId runtime variable.
 
         Returns:
-            The resource id of the pin map that is registered to the pin map service.
+            The resource id of the pin map if one is registered to the pin map service,
+            otherwise an empty string.
         """
         run_time_variables = self._sequence_context.Execution.RunTimeVariables
         if not run_time_variables.Exists(self._PIN_MAP_ID_VAR, 0x0):
-            raise RuntimeError(
-                "Failed to retrieve the registered pin map ID. Possible reason: The sequence might not include an 'Update Pin Map' step."
-            )
+            return ""
         return run_time_variables.GetValString(self._PIN_MAP_ID_VAR, 0x0)
 
     def resolve_file_path(self, file_path: str) -> str:

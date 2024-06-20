@@ -10,7 +10,7 @@
       ],
       "path": "start.bat",
       "annotations": {
-        "ni/service.description": "MeasurementLink example that performs a measurement using an NI DMM.",
+        "ni/service.description": "Measurement plug-in example that performs a measurement using an NI DMM.",
         "ni/service.collection": "NI.Examples",
         "ni/service.tags": []
       }
