@@ -1,4 +1,4 @@
-"""Custom instrument driver for MeasurementLink NI-VISA DMM examples."""
+"""Custom instrument driver for measurement plug-in NI-VISA DMM examples."""
 
 from __future__ import annotations
 

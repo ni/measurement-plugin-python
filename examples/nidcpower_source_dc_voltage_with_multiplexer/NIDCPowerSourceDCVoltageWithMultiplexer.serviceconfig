@@ -10,7 +10,7 @@
       ],
       "path": "start.bat",
       "annotations": {
-        "ni/service.description": "MeasurementLink example that sources and measures a DC voltage with an NI SMU via an NI-SWITCH multiplexer.",
+        "ni/service.description": "Measurement plug-in example that sources and measures a DC voltage with an NI SMU via an NI-SWITCH multiplexer.",
         "ni/service.collection": "NI.Examples",
         "ni/service.tags": []
       }

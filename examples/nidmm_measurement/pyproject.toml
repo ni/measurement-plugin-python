@@ -2,7 +2,7 @@
 name = "nidmm_measurement"
 version = "0.5.0"
 package-mode = false
-description = "MeasurementLink example that performs a measurement using an NI DMM."
+description = "Measurement plug-in example that performs a measurement using an NI DMM."
 authors = ["National Instruments"]
 
 [tool.poetry.dependencies]

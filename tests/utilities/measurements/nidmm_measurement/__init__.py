@@ -1,4 +1,4 @@
-"""NI-DMM MeasurementLink test service."""
+"""NI-DMM measurement plug-in test service."""
 
 import math
 import pathlib
@@ -32,7 +32,7 @@ def measure(
     pin_names: List[str],
     multi_session: bool,
 ) -> Tuple[List[str], List[str], List[str], List[str], List[bool], List[float]]:
-    """NI-DMM MeasurementLink test service."""
+    """NI-DMM measurement plug-in test service."""
     if multi_session:
         with measurement_service.context.reserve_sessions(pin_names) as reservation:
             with reservation.initialize_nidmm_sessions() as session_infos:

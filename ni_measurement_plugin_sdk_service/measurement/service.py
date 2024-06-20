@@ -275,7 +275,7 @@ class MeasurementService:
 
     @property
     def discovery_client(self) -> DiscoveryClient:
-        """Client for accessing the MeasurementLink discovery service."""
+        """Client for accessing the NI Discovery Service."""
         if self._discovery_client is None:
             with self._initialization_lock:
                 if self._discovery_client is None:
@@ -328,7 +328,7 @@ class MeasurementService:
 
     @property
     def session_management_client(self) -> SessionManagementClient:
-        """Client for accessing the MeasurementLink session management service."""
+        """Client for accessing the measurement plug-in session management service."""
         if self._session_management_client is None:
             with self._initialization_lock:
                 if self._session_management_client is None:

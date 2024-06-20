@@ -1,4 +1,4 @@
-"""NI-DCPower MeasurementLink test service."""
+"""NI-DCPower measurement plug-in test service."""
 
 import pathlib
 from contextlib import ExitStack
@@ -34,7 +34,7 @@ def measure(
 ) -> Tuple[
     Iterable[str], Iterable[str], Iterable[str], Iterable[str], Iterable[float], Iterable[float]
 ]:
-    """NI-DCPower MeasurementLink test service."""
+    """NI-DCPower measurement plug-in test service."""
     if multi_session:
         with measurement_service.context.reserve_sessions(pin_names) as reservation:
             with reservation.initialize_nidcpower_sessions() as session_infos:

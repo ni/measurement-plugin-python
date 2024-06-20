@@ -1,4 +1,4 @@
-"""NI-Digital MeasurementLink test service."""
+"""NI-Digital measurement plug-in test service."""
 
 import pathlib
 from itertools import groupby
@@ -37,7 +37,7 @@ def measure(
 ) -> Tuple[
     Iterable[str], Iterable[str], Iterable[str], Iterable[str], Iterable[str], Iterable[str]
 ]:
-    """NI-Digital MeasurementLink test service."""
+    """NI-Digital measurement plug-in test service."""
     if multi_session:
         with measurement_service.context.reserve_sessions(pin_names) as reservation:
             with reservation.initialize_nidigital_sessions() as session_infos:

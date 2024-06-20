@@ -35,7 +35,7 @@ _logger = logging.getLogger(__name__)
 
 
 class SessionManagementClient(object):
-    """Client for accessing the MeasurementLink session management service."""
+    """Client for accessing the measurement plug-in session management service."""
 
     def __init__(
         self,

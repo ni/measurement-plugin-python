@@ -10,7 +10,7 @@
       ],
       "path": "start.bat",
       "annotations": {
-        "ni/service.description": "NI-FGEN MeasurementLink test service.",
+        "ni/service.description": "NI-FGEN measurement plug-in test service.",
         "ni/service.collection": "NI.Tests",
         "ni/service.tags": []
       }

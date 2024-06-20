@@ -1,4 +1,4 @@
-"""MeasurementLink configuration options."""
+"""Measurement plug-in configuration options."""
 
 from __future__ import annotations
 

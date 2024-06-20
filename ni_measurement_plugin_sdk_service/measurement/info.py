@@ -24,8 +24,7 @@ class MeasurementInfo(NamedTuple):
 class ServiceInfo(NamedTuple):
     """A named tuple providing information about a registered service.
 
-    This class is used with the MeasurementLink discovery service when registering and enumerating
-    services.
+    This class is used with the NI Discovery Service when registering and enumerating services.
     """
 
     service_class: str

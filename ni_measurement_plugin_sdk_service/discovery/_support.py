@@ -1,4 +1,4 @@
-"""Support functions for the MeasurementLink discovery service."""
+"""Support functions for the NI Discovery Service."""
 
 import json
 import logging

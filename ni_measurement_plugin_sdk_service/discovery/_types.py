@@ -1,4 +1,4 @@
-"""Data types for the MeasurementLink discovery service."""
+"""Data types for the NI Discovery Service."""
 
 import typing
 

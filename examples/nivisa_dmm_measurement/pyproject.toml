@@ -2,7 +2,7 @@
 name = "nivisa_dmm_measurement"
 version = "0.5.0"
 package-mode = false
-description = "MeasurementLink example that performs a DMM measurement using NI-VISA and an NI Instrument Simulator v2.0."
+description = "Measurement plug-in example that performs a DMM measurement using NI-VISA and an NI Instrument Simulator v2.0."
 authors = ["National Instruments"]
 
 [tool.poetry.dependencies]

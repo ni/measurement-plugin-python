@@ -10,7 +10,7 @@
       ],
       "path": "start.bat",
       "annotations": {
-        "ni/service.description": "MeasurementLink example that generates a standard function waveform using an NI waveform generator.",
+        "ni/service.description": "Measurement plug-in example that generates a standard function waveform using an NI waveform generator.",
         "ni/service.collection": "NI.Examples",
         "ni/service.tags": []
       }

@@ -41,7 +41,7 @@ class GrpcService:
         details="This property should not be public and will be removed in a later release.",
     )
     def discovery_client(self) -> DiscoveryClient:
-        """Client for accessing the MeasurementLink discovery service."""
+        """Client for accessing the NI Discovery Service."""
         return self._discovery_client
 
     @property
