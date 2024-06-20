@@ -81,7 +81,7 @@ _TEST_MEASUREMENT_INFO = MeasurementInfo(
 
 _MOCK_KEY_FILE_CONTENT = {"SecurePort": "", "InsecurePort": _TEST_SERVICE_PORT}
 _MOCK_REGISTRATION_FILE_CONTENT = {
-    "discovery": {"path": "Discovery/NationalInstruments.MeasurementLink.DiscoveryService.exe"}
+    "discovery": {"path": "Discovery/NI.Discovery.V1.Service.exe"}
 }
 
 

@@ -12,8 +12,8 @@ EXAMPLES_PATH = ROOT_DIR / "examples"
 SERVICES_PATH = (
     pathlib.Path(os.environ["ProgramData"])
     / "National Instruments"
-    / "MeasurementLink"
-    / "Services"
+    / "Plug-Ins"
+    / "Measurements"
 )
 
 
