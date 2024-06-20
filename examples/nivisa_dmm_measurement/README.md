@@ -49,7 +49,7 @@ in software, follow the steps below:
   driver's `simulate` parameter:
 
   ```
-  MEASUREMENTLINK_VISA_DMM_SIMULATE=1
+  MEASUREMENT_PLUGIN_VISA_DMM_SIMULATE=1
   ```
 
 The `_visa_dmm.py` instrument driver implements simulation using PyVISA-sim.

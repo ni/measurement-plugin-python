@@ -34,10 +34,10 @@ def get_visa_grpc_insecure_address(config: AutoConfig, discovery_client: Discove
     """Get the insecure address of NI gRPC Device Server's VISA interface in host:port format."""
     # Hack: config is a parameter for now so TestStand code modules use the right config path.
     use_grpc_device_server: bool = config(
-        "MEASUREMENTLINK_USE_GRPC_DEVICE_SERVER", default=True, cast=bool
+        "MEASUREMENT_PLUGIN_USE_GRPC_DEVICE_SERVER", default=True, cast=bool
     )
     grpc_device_server_address: str = config(
-        "MEASUREMENTLINK_GRPC_DEVICE_SERVER_ADDRESS", default=""
+        "MEASUREMENT_PLUGIN_GRPC_DEVICE_SERVER_ADDRESS", default=""
     )
 
     if not use_grpc_device_server:

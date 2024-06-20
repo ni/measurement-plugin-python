@@ -28,7 +28,7 @@ class VisaDmmSessionConstructor:
 
         # Hack: config is a parameter for now so TestStand code modules use the right config path.
         self._visa_dmm_simulate: bool = config(
-            "MEASUREMENTLINK_VISA_DMM_SIMULATE", default=False, cast=bool
+            "MEASUREMENT_PLUGIN_VISA_DMM_SIMULATE", default=False, cast=bool
         )
 
         if self._visa_dmm_simulate:

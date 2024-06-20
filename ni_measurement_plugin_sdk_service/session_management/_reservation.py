@@ -435,13 +435,13 @@ class MultiplexerSessionContainer(_BaseSessionContainer):
         Args:
             topology: Specifies the switch topology. If this argument is not
                 specified, the default value is "Configured Topology", which you
-                may override by setting ``MEASUREMENTLINK_NISWITCH_TOPOLOGY`` in
+                may override by setting ``MEASUREMENT_PLUGIN_NISWITCH_TOPOLOGY`` in
                 the configuration file (``.env``).
 
             simulate: Enables or disables simulation of the switch module. If
                 this argument is not specified, the default value is ``False``,
                 which you may override by setting
-                ``MEASUREMENTLINK_NISWITCH_MULTIPLEXER_SIMULATE`` in the
+                ``MEASUREMENT_PLUGIN_NISWITCH_MULTIPLEXER_SIMULATE`` in the
                 configuration file (``.env``).
 
             reset_device: Specifies whether to reset the switch module during
@@ -498,13 +498,13 @@ class MultiplexerSessionContainer(_BaseSessionContainer):
         Args:
             topology: Specifies the switch topology. If this argument is not
                 specified, the default value is "Configured Topology", which you
-                may override by setting ``MEASUREMENTLINK_NISWITCH_TOPOLOGY`` in
+                may override by setting ``MEASUREMENT_PLUGIN_NISWITCH_TOPOLOGY`` in
                 the configuration file (``.env``).
 
             simulate: Enables or disables simulation of the switch module. If
                 this argument is not specified, the default value is ``False``,
                 which you may override by setting
-                ``MEASUREMENTLINK_NISWITCH_MULTIPLEXER_SIMULATE`` in the
+                ``MEASUREMENT_PLUGIN_NISWITCH_MULTIPLEXER_SIMULATE`` in the
                 configuration file (``.env``).
 
             reset_device: Specifies whether to reset the switch module during
@@ -2469,13 +2469,13 @@ class BaseReservation(_BaseSessionContainer):
         Args:
             topology: Specifies the switch topology. If this argument is not
                 specified, the default value is "Configured Topology", which you
-                may override by setting ``MEASUREMENTLINK_NISWITCH_TOPOLOGY`` in
+                may override by setting ``MEASUREMENT_PLUGIN_NISWITCH_TOPOLOGY`` in
                 the configuration file (``.env``).
 
             simulate: Enables or disables simulation of the switch module. If
                 this argument is not specified, the default value is ``False``,
                 which you may override by setting
-                ``MEASUREMENTLINK_NISWITCH_SIMULATE`` in the configuration file
+                ``MEASUREMENT_PLUGIN_NISWITCH_SIMULATE`` in the configuration file
                 (``.env``).
 
             reset_device: Specifies whether to reset the switch module during
@@ -2524,13 +2524,13 @@ class BaseReservation(_BaseSessionContainer):
         Args:
             topology: Specifies the switch topology. If this argument is not
                 specified, the default value is "Configured Topology", which you
-                may override by setting ``MEASUREMENTLINK_NISWITCH_TOPOLOGY`` in
+                may override by setting ``MEASUREMENT_PLUGIN_NISWITCH_TOPOLOGY`` in
                 the configuration file (``.env``).
 
             simulate: Enables or disables simulation of the switch module. If
                 this argument is not specified, the default value is ``False``,
                 which you may override by setting
-                ``MEASUREMENTLINK_NISWITCH_SIMULATE`` in the configuration file
+                ``MEASUREMENT_PLUGIN_NISWITCH_SIMULATE`` in the configuration file
                 (``.env``).
 
             reset_device: Specifies whether to reset the switch module during
@@ -2637,13 +2637,13 @@ class BaseReservation(_BaseSessionContainer):
         Args:
             topology: Specifies the switch topology. If this argument is not
                 specified, the default value is "Configured Topology", which you
-                may override by setting ``MEASUREMENTLINK_NISWITCH_TOPOLOGY`` in
+                may override by setting ``MEASUREMENT_PLUGIN_NISWITCH_TOPOLOGY`` in
                 the configuration file (``.env``).
 
             simulate: Enables or disables simulation of the switch module. If
                 this argument is not specified, the default value is ``False``,
                 which you may override by setting
-                ``MEASUREMENTLINK_NISWITCH_SIMULATE`` in the configuration file
+                ``MEASUREMENT_PLUGIN_NISWITCH_SIMULATE`` in the configuration file
                 (``.env``).
 
             reset_device: Specifies whether to reset the switch module during
@@ -2686,13 +2686,13 @@ class BaseReservation(_BaseSessionContainer):
         Args:
             topology: Specifies the switch topology. If this argument is not
                 specified, the default value is "Configured Topology", which you
-                may override by setting ``MEASUREMENTLINK_NISWITCH_TOPOLOGY`` in
+                may override by setting ``MEASUREMENT_PLUGIN_NISWITCH_TOPOLOGY`` in
                 the configuration file (``.env``).
 
             simulate: Enables or disables simulation of the switch module. If
                 this argument is not specified, the default value is ``False``,
                 which you may override by setting
-                ``MEASUREMENTLINK_NISWITCH_SIMULATE`` in the configuration file
+                ``MEASUREMENT_PLUGIN_NISWITCH_SIMULATE`` in the configuration file
                 (``.env``).
 
             reset_device: Specifies whether to reset the switch module during

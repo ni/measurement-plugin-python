@@ -105,4 +105,4 @@ def test___feature_toggle_disabled___call_decorated_function___error_raised(
         _ = _prototype_function(123, "abc", [4, 5, 6])
 
     impl.assert_not_called()
-    assert "set MEASUREMENTLINK_ENABLE_PROTOTYPE_FEATURE" in exc_info.value.args[0]
+    assert "set MEASUREMENT_PLUGIN_ENABLE_PROTOTYPE_FEATURE" in exc_info.value.args[0]

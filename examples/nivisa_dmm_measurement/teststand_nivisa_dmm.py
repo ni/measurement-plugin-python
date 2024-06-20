@@ -19,7 +19,7 @@ from ni_measurement_plugin_sdk_service.session_management._types import (
 
 # Search for the `.env` file starting with this code module's parent directory.
 _config = AutoConfig(str(pathlib.Path(__file__).resolve().parent))
-_VISA_DMM_SIMULATE: bool = _config("MEASUREMENTLINK_VISA_DMM_SIMULATE", default=False, cast=bool)
+_VISA_DMM_SIMULATE: bool = _config("MEASUREMENT_PLUGIN_VISA_DMM_SIMULATE", default=False, cast=bool)
 
 
 def create_nivisa_dmm_sessions(sequence_context: Any) -> None:
