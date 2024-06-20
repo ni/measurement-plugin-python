@@ -80,9 +80,7 @@ _TEST_MEASUREMENT_INFO = MeasurementInfo(
 )
 
 _MOCK_KEY_FILE_CONTENT = {"SecurePort": "", "InsecurePort": _TEST_SERVICE_PORT}
-_MOCK_REGISTRATION_FILE_CONTENT = {
-    "discovery": {"path": "Discovery/NI.Discovery.V1.Service.exe"}
-}
+_MOCK_REGISTRATION_FILE_CONTENT = {"discovery": {"path": "Discovery/NI.Discovery.V1.Service.exe"}}
 
 
 def test___service_not_registered___register_service___sends_request_and_returns_id(
