@@ -1,4 +1,4 @@
-"""NI-FGEN MeasurementLink test service."""
+"""NI-FGEN measurement plug-in test service."""
 
 import pathlib
 from contextlib import ExitStack
@@ -29,7 +29,7 @@ measurement_service = nims.MeasurementService(
 def measure(
     pin_names: Iterable[str], multi_session: bool
 ) -> Tuple[Iterable[str], Iterable[str], Iterable[str], Iterable[str]]:
-    """NI-FGEN MeasurementLink test service."""
+    """NI-FGEN measurement plug-in test service."""
     if multi_session:
         with measurement_service.context.reserve_sessions(pin_names) as reservation:
             with reservation.initialize_nifgen_sessions() as session_infos:

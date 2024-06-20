@@ -1,4 +1,4 @@
-"""Client for accessing the MeasurementLink pin map service."""
+"""Client for accessing the measurement pin map service."""
 
 import logging
 import pathlib
@@ -21,7 +21,7 @@ GRPC_SERVICE_CLASS = "ni.measurementlink.pinmap.v1.PinMapService"
 
 
 class PinMapClient(object):
-    """Client for accessing the MeasurementLink pin map service."""
+    """Client for accessing the measurement pin map service."""
 
     def __init__(
         self,

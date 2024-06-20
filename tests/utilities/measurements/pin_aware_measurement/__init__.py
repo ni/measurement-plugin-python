@@ -1,4 +1,4 @@
-"""Pin-aware MeasurementLink test service."""
+"""Pin-aware measurement plug-in test service."""
 
 import pathlib
 from typing import Iterable, Tuple
@@ -27,7 +27,7 @@ def measure(
     pin_names: Iterable[str],
     multi_session: bool,
 ) -> Tuple[str, Iterable[int], Iterable[str], Iterable[str], Iterable[str]]:
-    """Pin-aware MeasurementLink test service."""
+    """Pin-aware measurement plug-in test service."""
     pin_map_context = measurement_service.context.pin_map_context
     if multi_session:
         with measurement_service.context.reserve_sessions(pin_names) as reservation:

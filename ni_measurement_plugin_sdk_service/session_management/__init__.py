@@ -1,4 +1,4 @@
-"""Public API for accessing the MeasurementLink session management service."""
+"""Public API for accessing the measurement plug-in management service."""
 
 from __future__ import annotations
 

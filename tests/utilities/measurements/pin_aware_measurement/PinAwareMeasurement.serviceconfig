@@ -10,7 +10,7 @@
       ],
       "path": "start.bat",
       "annotations": {
-        "ni/service.description": "Pin-aware MeasurementLink test service.",
+        "ni/service.description": "Pin-aware measurement plug-in test service.",
         "ni/service.collection": "NI.Tests",
         "ni/service.tags": []
       }

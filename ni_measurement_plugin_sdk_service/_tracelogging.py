@@ -8,7 +8,7 @@ from typing import Optional
 try:
     import traceloggingdynamic
 
-    _event_provider = traceloggingdynamic.Provider(b"NI-MeasurementLink-Python")
+    _event_provider = traceloggingdynamic.Provider(b"NI-Measurement-Plug-In-Python")
 except ImportError:
     _event_provider = None
 

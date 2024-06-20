@@ -69,7 +69,7 @@ def discovery_service_process() -> Generator[DiscoveryServiceProcess, None, None
     except FileNotFoundError:  # registry key not found
         registration_json_file_exists = False
     if not registration_json_file_exists:
-        pytest.skip("Registration file not found. Ensure that MeasurementLink is installed.")
+        pytest.skip("Registration file not found. Ensure the Measurement Plug-In SDK is installed.")
 
     with DiscoveryServiceProcess() as proc:
         yield proc

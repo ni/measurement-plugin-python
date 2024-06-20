@@ -2,7 +2,7 @@
 name = "sample_measurement"
 version = "0.5.0"
 package-mode = false
-description = "MeasurementLink example that performs a loopback measurement with various data types."
+description = "Measurement plug-in example that performs a loopback measurement with various data types."
 authors = ["National Instruments"]
 
 [tool.poetry.dependencies]

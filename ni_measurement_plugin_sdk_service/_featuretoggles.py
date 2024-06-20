@@ -1,4 +1,4 @@
-"""MeasurementLink feature toggles."""
+"""Measurement plug-in feature toggles."""
 
 from __future__ import annotations
 

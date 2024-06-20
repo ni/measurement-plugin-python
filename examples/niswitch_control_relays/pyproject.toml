@@ -2,7 +2,7 @@
 name = "niswitch_control_relays"
 version = "0.5.0"
 package-mode = false
-description = "MeasurementLink example that controls relays using an NI relay driver (e.g. PXI-2567)."
+description = "Measurement plug-in example that controls relays using an NI relay driver (e.g. PXI-2567)."
 authors = ["National Instruments"]
 
 [tool.poetry.dependencies]

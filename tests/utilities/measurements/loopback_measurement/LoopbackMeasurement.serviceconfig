@@ -10,7 +10,7 @@
       ],
       "path": "start.bat",
       "annotations": {
-        "ni/service.description": "MeasurementLink test service that performs a loopback measurement with various data types.",
+        "ni/service.description": "Measurement plug-in test service that performs a loopback measurement with various data types.",
         "ni/service.collection": "NI.Tests",
         "ni/service.tags": []
       }

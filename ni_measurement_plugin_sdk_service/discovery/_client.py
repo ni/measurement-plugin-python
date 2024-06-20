@@ -1,4 +1,4 @@
-"""Client for accessing the MeasurementLink discovery service."""
+"""Client for accessing the NI Discovery Service."""
 
 import logging
 import threading
@@ -23,7 +23,7 @@ _logger = logging.getLogger(__name__)
 
 
 class DiscoveryClient:
-    """Client for accessing the MeasurementLink discovery service."""
+    """Client for accessing the NI Discovery Service."""
 
     def __init__(
         self,

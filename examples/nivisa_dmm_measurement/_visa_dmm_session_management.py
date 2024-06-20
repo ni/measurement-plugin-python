@@ -13,7 +13,7 @@ _logger = logging.getLogger(__name__)
 
 
 class VisaDmmSessionConstructor:
-    """MeasurementLink session constructor for VISA DMM sessions."""
+    """Measurement plug-in constructor for VISA DMM sessions."""
 
     def __init__(
         self,
@@ -43,7 +43,7 @@ class VisaDmmSessionConstructor:
                 _logger.debug("Not using NI gRPC Device Server")
 
     def __call__(self, session_info: SessionInformation) -> Session:
-        """Construct a VISA DMM session based on MeasurementLink session info."""
+        """Construct a VISA DMM session based on measurement plug-in info."""
         resource_name = session_info.resource_name
         if self._address:
             resource_name = build_visa_grpc_resource_string(

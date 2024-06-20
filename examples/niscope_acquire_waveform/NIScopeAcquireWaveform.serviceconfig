@@ -10,7 +10,7 @@
       ],
       "path": "start.bat",
       "annotations": {
-        "ni/service.description": "MeasurementLink example that acquires a waveform using an NI oscilloscope.",
+        "ni/service.description": "Measurement plug-in example that acquires a waveform using an NI oscilloscope.",
         "ni/service.collection": "NI.Examples",
         "ni/service.tags": []
       }
