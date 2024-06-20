@@ -1,6 +1,7 @@
 from typing import Any, Dict, Sequence
 from uuid import uuid4
 from google.protobuf import descriptor_pb2, descriptor_pool, message_factory
+from google.protobuf.descriptor_pb2 import FieldDescriptorProto as field
 
 # metadata
 from ni_measurement_plugin_sdk._internal.parameter.metadata import ParameterMetadata
@@ -8,6 +9,7 @@ from tests.unit.test_serializer import _get_test_parameter_by_id as currentParam
 
 # enums and default values
 from enum import Enum, IntEnum
+from ni_measurement_plugin_sdk._internal.stubs.ni.protobuf.types import xydata_pb2
 from ni_measurement_plugin_sdk._internal.parameter.serialization_strategy import get_type_default
 
 def test() -> None:
@@ -32,20 +34,22 @@ def test() -> None:
                     [DifferentColor.TEAL, DifferentColor.BROWN],
                     Countries.AUSTRALIA,
                     [Countries.AUSTRALIA, Countries.CANADA],
+                    double_xy_data,
+                    double_xy_data_array
                 ]
     
     # Serialize parameter_values using ParameterMetaData
-    encoded_value_with_message = SerializeWithMessageInstance(
+    message_serializer = SerializeWithMessageInstance(
         parameter_metadata_dict=currentParameter(cur_values),
         parameter_values=cur_values)
 
     print()
-    print(f"New Serialized value: {encoded_value_with_message}")
+    print(f"Message Serialized value: {message_serializer}")
 
 
 def SerializeWithMessageInstance(
     parameter_metadata_dict: Dict[int, ParameterMetadata],
-    parameter_values: Sequence[Any]
+    parameter_values: Sequence[Any],
 ) -> bytes:
 
     # Creates a protobuf file to put descriptor stuff in
@@ -60,55 +64,61 @@ def SerializeWithMessageInstance(
     message_proto = file_descriptor_proto.message_type.add()
     message_proto.name = str(new_guid)
 
-    # Define fields in message
+    # Initialize the message with fields defined
     for i, parameter in enumerate(parameter_values, start=1):
         parameter_metadata = parameter_metadata_dict[i]
-        is_enum = parameter_metadata.type == descriptor_pb2.FieldDescriptorProto.TYPE_ENUM
+        is_enum = parameter_metadata.type == field.TYPE_ENUM
+        # Define fields
+        field_descriptor = _define_fields(
+            message_proto=message_proto,
+            parameter_metadata=parameter_metadata,
+            i=i,
+            param=parameter,
+            is_enum=is_enum)
+        # define enums if it's an enum and there's a field
+        if is_enum and field_descriptor is not None:
+            _define_enums(
+                file_descriptor=file_descriptor_proto,
+                param=parameter,
+                field_descriptor=field_descriptor)
 
-        # if value is an enum and a list, set parameter to the 1st element in value
-        if is_enum and isinstance(parameter, list):
-            parameter = parameter[0]
-        # if value is not an enum and doesn't equal to it's default value, define fields
-        if not is_enum or parameter.value != get_type_default(parameter_metadata.type, parameter_metadata.repeated):
-            field_descriptor = message_proto.field.add()
-            define_fields(
-                field_descriptor=field_descriptor,
-                metadata=parameter_metadata_dict,
-                i=i
-            )
-            if is_enum:
-                define_enums(
-                    file_descriptor=file_descriptor_proto,
-                    param=parameter,
-                    field_descriptor=field_descriptor
-                )
-        
-    # TODO: Learn how nested messages encode
-
-    # Add fields to message and assign the message to a variable
+    # Get message and add fields to it
     pool.Add(file_descriptor_proto)
     message_descriptor = pool.FindMessageTypeByName(str(new_guid) + '.' + str(new_guid))
-    DynamicMessage = message_factory.GetMessageClass(message_descriptor)
-    message_instance = DynamicMessage()
+    message_instance = message_factory.GetMessageClass(message_descriptor)()
 
-    #set fields to values and then serialize them
+    #assign values to fields
     for i, parameter in enumerate(parameter_values, start=1):
-        try: 
-            field_name = f"field_{i}"
-            parameter = get_enum_values(param=parameter)
-            if isinstance(parameter, list):
-                repeated_field = getattr(message_instance, field_name)
-                repeated_field.extend(parameter)
+        field_name = f"field_{i}"
+        parameter_metadata = parameter_metadata_dict[i]
+        parameter = _get_enum_values(param=parameter)
+        try:
+            if parameter_metadata.repeated:
+                getattr(message_instance, field_name).extend(parameter)
+            elif parameter_metadata.type == field.TYPE_MESSAGE:
+                getattr(message_instance, field_name).CopyFrom(parameter)
             else:
                 setattr(message_instance, field_name, parameter)
         except:
-            # goes here if enum is equal to it's default value
-            i += 1
+            i += 1 # no field: parameter is None or equal to default value
+    return message_instance.SerializeToString()
 
-    serialized_value = message_instance.SerializeToString()
-    return serialized_value
+def _equal_to_default_value(metadata, param, is_enum):
+    default_value = get_type_default(
+        metadata.type,
+        metadata.repeated)
+    # gets value of enum
+    if is_enum:
+        if metadata.repeated:
+            param = param[0].value
+        else:
+            param = param.value
+    # return true if param is None or eqaul to default value
+    if param == default_value or param == None:
+        return True
+    return False
 
-def get_enum_values(param):
+def _get_enum_values(param):
     # if param is a list of enums, return values of them in a list 
     # or param is an enum, returns the value of it 
     # else it doesn nothing to param
@@ -118,7 +128,10 @@ def get_enum_values(param):
         return param.value
     return param
 
-def define_enums(file_descriptor, param, field_descriptor):
+def _define_enums(file_descriptor, param, field_descriptor):
+    # if param is a list, then it sets param to 1st element in list
+    if isinstance(param, list):
+        param = param[0]
     # if there are no enums or param is a different enum from ones defined before, creates a new enum
     if file_descriptor.enum_type == [] or param.__class__.__name__ not in [enum.name for enum in file_descriptor.enum_type]:
         # Define a enum class
@@ -134,20 +147,27 @@ def define_enums(file_descriptor, param, field_descriptor):
     else:
         field_descriptor.type_name = param.__class__.__name__ 
 
-def define_fields(field_descriptor, metadata, i):
-    parameter_metadata = metadata[i]
+def _define_fields(message_proto, parameter_metadata, i, param, is_enum):
+    # exits if param is None or eqaul to default value
+    if not _equal_to_default_value(
+        metadata=parameter_metadata,
+        param=param,
+        is_enum=is_enum):
+        field_descriptor = message_proto.field.add()
 
-    field_descriptor.number = i
-    field_descriptor.name = f"field_{i}"
-    field_descriptor.type = parameter_metadata.type
-    # if a value is an array then it's labled as repeated and packed
-    if parameter_metadata.repeated:
-        field_descriptor.label = descriptor_pb2.FieldDescriptorProto.LABEL_REPEATED
-        field_descriptor.options.packed = True 
-    else:
-        field_descriptor.label = descriptor_pb2.FieldDescriptorProto.LABEL_OPTIONAL
-
-
+        field_descriptor.number = i
+        field_descriptor.name = f"field_{i}"
+        field_descriptor.type = parameter_metadata.type
+        # if a value is an array then it's labled as repeated and packed
+        if parameter_metadata.repeated:
+            field_descriptor.label = field.LABEL_REPEATED
+            field_descriptor.options.packed = True 
+        else:
+            field_descriptor.label = field.LABEL_OPTIONAL
+        # if a value is a message then assign type name to it's full name
+        if parameter_metadata.type == field.TYPE_MESSAGE:
+            field_descriptor.type_name = parameter_metadata.message_type
+        return field_descriptor
 
 class DifferentColor(Enum):
     """Non-primary colors used for testing enum-typed config and output."""
@@ -166,8 +186,17 @@ class Countries(IntEnum):
     AUSTRALIA = 2
     CANADA = 3
 
-def main(**kwargs: Any) -> None:
-    test()
+double_xy_data = xydata_pb2.DoubleXYData()
+double_xy_data.x_data.append(4)
+double_xy_data.y_data.append(6)
+
+double_xy_data2 = xydata_pb2.DoubleXYData()
+double_xy_data2.x_data.append(8)
+double_xy_data2.y_data.append(10)
+
+double_xy_data_array = [double_xy_data, double_xy_data2]
+# This should match the number of fields in bigmessage.proto.
+BIG_MESSAGE_SIZE = 100
 
 if __name__ == "__main__":
-    main()
+    test()
