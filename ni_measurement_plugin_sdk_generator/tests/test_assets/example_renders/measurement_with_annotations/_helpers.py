@@ -26,13 +26,12 @@ class TestStandSupport(object):
         """Get the active pin map id from the NI.MeasurementPlugIns.PinMapId runtime variable.
 
         Returns:
-            The resource id of the pin map that is registered to the pin map service.
+            The resource id of the pin map if one is registered to the pin map service,
+            otherwise an empty string.
         """
         run_time_variables = self._sequence_context.Execution.RunTimeVariables
         if not run_time_variables.Exists(self._PIN_MAP_ID_VAR, 0x0):
-            raise RuntimeError(
-                "Failed to retrieve the registered pin map ID. Possible reason: The sequence might not include an 'Update Pin Map' step."
-            )
+            return ""
         return run_time_variables.GetValString(self._PIN_MAP_ID_VAR, 0x0)
 
     def resolve_file_path(self, file_path: str) -> str:
