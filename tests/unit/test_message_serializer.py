@@ -1,11 +1,11 @@
 import pytest
 
-from ni_measurement_plugin_sdk._internal.parameter.message_serializer import SerializeWithMessageInstance as new_serializer
+from ni_measurement_plugin_sdk_service._internal.parameter.message_serializer import serialize_parameters as new_serializer
 from tests.unit.test_serializer import _get_test_parameter_by_id as currentParameter
-from ni_measurement_plugin_sdk._internal.parameter import serializer
+from ni_measurement_plugin_sdk_service._internal.parameter import serializer
 
 from enum import Enum, IntEnum
-from ni_measurement_plugin_sdk._internal.stubs.ni.protobuf.types import xydata_pb2
+from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types import xydata_pb2
 
 class DifferentColor(Enum):
     """Non-primary colors used for testing enum-typed config and output."""
@@ -101,12 +101,6 @@ def test___serializer___serialize_parameter___successful_serialization(test_valu
     print()
     print(f"Current Serializer: {current_serialize}")
     print()
-    print(f"New Serializer: {new_serialize}")
+    print(f"Message Serializer: {new_serialize}")
 
     assert new_serialize == current_serialize
-
-def main() -> None:
-    test___serializer___serialize_parameter___successful_serialization(0)
-
-if __name__ == "__main__":
-    main()

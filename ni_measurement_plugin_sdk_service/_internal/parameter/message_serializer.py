@@ -4,13 +4,15 @@ from google.protobuf import descriptor_pb2, descriptor_pool, message_factory
 from google.protobuf.descriptor_pb2 import FieldDescriptorProto as field
 
 # metadata
-from ni_measurement_plugin_sdk._internal.parameter.metadata import ParameterMetadata
+from ni_measurement_plugin_sdk_service._internal.parameter.metadata import ParameterMetadata
 from tests.unit.test_serializer import _get_test_parameter_by_id as currentParameter
 
 # enums and default values
 from enum import Enum, IntEnum
-from ni_measurement_plugin_sdk._internal.stubs.ni.protobuf.types import xydata_pb2
-from ni_measurement_plugin_sdk._internal.parameter.serialization_strategy import get_type_default
+from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types import xydata_pb2
+from ni_measurement_plugin_sdk_service._internal.parameter.serialization_strategy import get_type_default, _TYPE_DEFAULT_MAPPING
+
+from tests.utilities.stubs.loopback.types_pb2 import ProtobufColor
 
 def test() -> None:
     cur_values = [
@@ -39,7 +41,7 @@ def test() -> None:
                 ]
     
     # Serialize parameter_values using ParameterMetaData
-    message_serializer = SerializeWithMessageInstance(
+    message_serializer = serialize_parameters(
         parameter_metadata_dict=currentParameter(cur_values),
         parameter_values=cur_values)
 
@@ -47,7 +49,7 @@ def test() -> None:
     print(f"Message Serialized value: {message_serializer}")
 
 
-def SerializeWithMessageInstance(
+def serialize_parameters(
     parameter_metadata_dict: Dict[int, ParameterMetadata],
     parameter_values: Sequence[Any],
 ) -> bytes:
@@ -67,16 +69,16 @@ def SerializeWithMessageInstance(
     # Initialize the message with fields defined
     for i, parameter in enumerate(parameter_values, start=1):
         parameter_metadata = parameter_metadata_dict[i]
-        is_enum = parameter_metadata.type == field.TYPE_ENUM
+        is_python_enum = isinstance(parameter, Enum)
         # Define fields
         field_descriptor = _define_fields(
             message_proto=message_proto,
             parameter_metadata=parameter_metadata,
             i=i,
             param=parameter,
-            is_enum=is_enum)
-        # define enums if it's an enum and there's a field
-        if is_enum and field_descriptor is not None:
+            is_python_enum=is_python_enum)
+        # define enums if it's a regular or a protobuf enum and there's a field
+        if parameter_metadata.type == field.TYPE_ENUM and field_descriptor is not None:
             _define_enums(
                 file_descriptor=file_descriptor_proto,
                 param=parameter,
@@ -103,12 +105,12 @@ def SerializeWithMessageInstance(
             i += 1 # no field: parameter is None or equal to default value
     return message_instance.SerializeToString()
 
-def _equal_to_default_value(metadata, param, is_enum):
+def _equal_to_default_value(metadata, param, is_python_enum):
     default_value = get_type_default(
         metadata.type,
         metadata.repeated)
-    # gets value of enum
-    if is_enum:
+    # gets value from a regular python enum
+    if is_python_enum:
         if metadata.repeated:
             param = param[0].value
         else:
@@ -119,6 +121,8 @@ def _equal_to_default_value(metadata, param, is_enum):
     return False
 
 def _get_enum_values(param):
+    if param == []:
+        return param
     # if param is a list of enums, return values of them in a list 
     # or param is an enum, returns the value of it 
     # else it doesn nothing to param
@@ -132,27 +136,29 @@ def _define_enums(file_descriptor, param, field_descriptor):
     # if param is a list, then it sets param to 1st element in list
     if isinstance(param, list):
         param = param[0]
-    # if there are no enums or param is a different enum from ones defined before, creates a new enum
-    if file_descriptor.enum_type == [] or param.__class__.__name__ not in [enum.name for enum in file_descriptor.enum_type]:
+    # if there are no enums/param is a different enum and is a python enum, defines a enum field
+    if param.__class__.__name__ not in [enum.name for enum in file_descriptor.enum_type] and isinstance(param, Enum):
         # Define a enum class
         enum_descriptor = file_descriptor.enum_type.add()
         enum_descriptor.name = param.__class__.__name__
-        field_descriptor.type_name = enum_descriptor.name
 
         # Add constants to enum class
         for name, number in param.__class__.__members__.items():
             enum_value_descriptor = enum_descriptor.value.add()
             enum_value_descriptor.name = name
             enum_value_descriptor.number = number.value
-    else:
+    # checks enum if it's protobuf or python
+    try:
+        field_descriptor.type_name = ProtobufColor.DESCRIPTOR.full_name
+    except:
         field_descriptor.type_name = param.__class__.__name__ 
 
-def _define_fields(message_proto, parameter_metadata, i, param, is_enum):
+def _define_fields(message_proto, parameter_metadata, i, param, is_python_enum):
     # exits if param is None or eqaul to default value
     if not _equal_to_default_value(
         metadata=parameter_metadata,
         param=param,
-        is_enum=is_enum):
+        is_python_enum=is_python_enum):
         field_descriptor = message_proto.field.add()
 
         field_descriptor.number = i
