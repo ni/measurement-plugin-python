@@ -10,10 +10,7 @@ import subprocess
 ROOT_DIR = pathlib.Path(__file__).parent.parent
 EXAMPLES_PATH = ROOT_DIR / "examples"
 SERVICES_PATH = (
-    pathlib.Path(os.environ["ProgramData"])
-    / "National Instruments"
-    / "MeasurementLink"
-    / "Services"
+    pathlib.Path(os.environ["ProgramData"]) / "National Instruments" / "Plug-Ins" / "Measurements"
 )
 
 
