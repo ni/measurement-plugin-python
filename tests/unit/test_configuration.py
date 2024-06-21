@@ -9,9 +9,9 @@ from ni_measurement_plugin_sdk_service._configuration import MIDriverOptions, NI
 
 def test___mi_driver_options___update_from_config___reads_config(config: Mock) -> None:
     config_options = {
-        "MEASUREMENTLINK_NIFAKE_SIMULATE": True,
-        "MEASUREMENTLINK_NIFAKE_BOARD_TYPE": "PXI",
-        "MEASUREMENTLINK_NIFAKE_MODEL": "5678",
+        "MEASUREMENT_PLUGIN_NIFAKE_SIMULATE": True,
+        "MEASUREMENT_PLUGIN_NIFAKE_BOARD_TYPE": "PXI",
+        "MEASUREMENT_PLUGIN_NIFAKE_MODEL": "5678",
     }
     config.side_effect = lambda option, default=None, cast=None: config_options[option]
 
@@ -44,8 +44,8 @@ def test___mi_driver_options___to_dict___returns_options_dict(
 
 def test___niswitch_options___update_from_config___reads_config(config: Mock) -> None:
     config_options = {
-        "MEASUREMENTLINK_NIFAKE_SIMULATE": True,
-        "MEASUREMENTLINK_NIFAKE_TOPOLOGY": "5678/Independent",
+        "MEASUREMENT_PLUGIN_NIFAKE_SIMULATE": True,
+        "MEASUREMENT_PLUGIN_NIFAKE_TOPOLOGY": "5678/Independent",
     }
     config.side_effect = lambda option, default=None, cast=None: config_options[option]
 

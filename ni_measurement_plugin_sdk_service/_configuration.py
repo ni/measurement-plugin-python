@@ -16,7 +16,7 @@ if TYPE_CHECKING:
         from typing_extensions import Self
 
 
-_PREFIX = "MEASUREMENTLINK"
+_PREFIX = "MEASUREMENT_PLUGIN"
 
 _config = AutoConfig(str(get_dotenv_search_path()))
 
