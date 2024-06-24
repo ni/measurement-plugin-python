@@ -56,7 +56,6 @@ def measure(
             row_index += 1
         grid = _update_grid(grid)
         xydata_out = xydata
-        generation += 1
         delay = max(0.0, update_interval_sec - (time.monotonic() - iteration_start_time))
         yield (xydata_out, generation)
 
