@@ -17,7 +17,16 @@ def serialize_parameters(
     parameter_metadata_dict: Dict[int, ParameterMetadata],
     parameter_values: Sequence[Any],
 ) -> bytes:
-    """Test doc string?"""
+    """Serialize the parameter values in same order based on the metadata_dict.
+
+    Args:
+        parameter_metadata_dict (Dict[int, ParameterMetadata]): Parameter metadata by ID.
+
+        parameter_value (Sequence[Any]): Parameter values to serialize.
+
+    Returns:
+        bytes: Serialized byte string containing parameter values.
+    """
     pool = descriptor_pool.Default()
     file_descriptor_proto = descriptor_pb2.FileDescriptorProto()
     original_guid = uuid4()
@@ -36,8 +45,8 @@ def serialize_parameters(
         # Define fields
         field_descriptor = _define_fields(
             message_proto=message_proto,
-            parameter_metadata=parameter_metadata,
-            i=i,
+            metadata=parameter_metadata,
+            index=i,
             param=parameter,
             is_python_enum=is_python_enum,
         )
@@ -89,7 +98,19 @@ def serialize_default_values(parameter_metadata_dict: Dict[int, ParameterMetadat
     return serialize_parameters(parameter_metadata_dict, default_value_parameter_array)
 
 
-def _equal_to_default_value(metadata, param, is_python_enum):
+def _equal_to_default_value(metadata: ParameterMetadata, param: Any, is_python_enum: bool) -> bool:
+    """Determine if 'param' is equal to it's default value.
+
+    Args:
+        metadata (ParameterMetadata): Metadata of 'param'.
+
+        param (Any): A value/parameter of parameter_values.
+
+        is_python_enum (boolean): True if 'param' is a enum from python's libraries.
+
+    Returns:
+        boolean: True if 'param' is equal it's default value or is None.
+    """
     default_value = get_type_default(metadata.type, metadata.repeated)
     # gets value from a regular python enum
     if is_python_enum:
@@ -97,13 +118,21 @@ def _equal_to_default_value(metadata, param, is_python_enum):
             param = param[0].value
         else:
             param = param.value
-    # return true if param is None or eqaul to default value
     if param == default_value or param is None:
         return True
     return False
 
 
-def _get_enum_values(param):
+def _get_enum_values(param: Any) -> Any:
+    """Get's value of an enum.
+
+    Args:
+        param (Any): A value/parameter of parameter_values.
+
+    Returns:
+        Any: An enum value or a list of enums or the 'param'.
+
+    """
     if param == []:
         return param
     # if param is a list of enums, return values of them in a list
@@ -116,7 +145,20 @@ def _get_enum_values(param):
     return param
 
 
-def _define_enums(file_descriptor, param, field_descriptor):
+def _define_enums(
+    file_descriptor: descriptor_pb2.FileDescriptorProto,
+    param: Any,
+    field_descriptor: FieldDescriptorProto,
+) -> None:
+    """Implement a enum class in 'file_descriptor'.
+
+    Args:
+        file_descriptor (FileDescriptorProto): Descriptor of a proto file.
+
+        param (Any): A value/parameter of parameter_values.
+
+        field_descriptor (FieldDescriptorProto): Descriptor of a field.
+    """
     # if param is a list, then it sets param to 1st element in list
     if isinstance(param, list):
         param = param[0]
@@ -136,30 +178,45 @@ def _define_enums(file_descriptor, param, field_descriptor):
     # checks enum if it's protobuf or python
     try:
         field_descriptor.type_name = ProtobufColor.DESCRIPTOR.full_name
-        # TODO: Add error type to except thing
     except TypeError:
         field_descriptor.type_name = param.__class__.__name__
 
 
-def _define_fields(message_proto, parameter_metadata, i, param, is_python_enum):
+def _define_fields(
+    message_proto: Any, metadata: ParameterMetadata, index: int, param: Any, is_python_enum: bool
+) -> Any:
+    """Implement a field in 'message_proto'.
+
+    Args:
+        message_proto (message_type): A message instance in 'file_descriptor_proto'.
+
+        metadata (ParameterMetadata): Metadata of 'param'.
+
+        index (int): 'param' index in parameter_values
+
+        param (Any): A value/parameter of parameter_values.
+
+        is_python_enum (boolean): True if 'param' is a enum from python's libraries.
+
+    Returns:
+        Any: field_descriptor of 'param' or None if 'param' is not equal_to_default_value.
+    """
     # exits if param is None or eqaul to default value
-    if not _equal_to_default_value(
-        metadata=parameter_metadata, param=param, is_python_enum=is_python_enum
-    ):
+    if not _equal_to_default_value(metadata=metadata, param=param, is_python_enum=is_python_enum):
         field_descriptor = message_proto.field.add()
 
-        field_descriptor.number = i
-        field_descriptor.name = f"field_{i}"
-        field_descriptor.type = parameter_metadata.type
+        field_descriptor.number = index
+        field_descriptor.name = f"field_{index}"
+        field_descriptor.type = metadata.type
         # if a value is an array then it's labled as repeated and packed
-        if parameter_metadata.repeated:
+        if metadata.repeated:
             field_descriptor.label = FieldDescriptorProto.LABEL_REPEATED
             field_descriptor.options.packed = True
         else:
             field_descriptor.label = FieldDescriptorProto.LABEL_OPTIONAL
         # if a value is a message then assign type name to it's full name
-        if parameter_metadata.type == FieldDescriptorProto.TYPE_MESSAGE:
-            field_descriptor.type_name = parameter_metadata.message_type
+        if metadata.type == FieldDescriptorProto.TYPE_MESSAGE:
+            field_descriptor.type_name = metadata.message_type
         return field_descriptor
 
 
