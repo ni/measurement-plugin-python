@@ -13,8 +13,13 @@ from typing import Any, Callable, Dict, Generator, List, Optional
 import grpc
 from google.protobuf import any_pb2
 
-from ni_measurement_plugin_sdk_service._internal.parameter import serializer
-from ni_measurement_plugin_sdk_service._internal.parameter.metadata import ParameterMetadata
+from ni_measurement_plugin_sdk_service._internal.parameter import (
+    message_serializer,
+    serializer,
+)
+from ni_measurement_plugin_sdk_service._internal.parameter.metadata import (
+    ParameterMetadata,
+)
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v1 import (
     measurement_service_pb2 as v1_measurement_service_pb2,
     measurement_service_pb2_grpc as v1_measurement_service_pb2_grpc,
@@ -133,7 +138,7 @@ def _get_mapping_by_parameter_name(
 
 def _serialize_outputs(output_metadata: Dict[int, ParameterMetadata], outputs: Any) -> any_pb2.Any:
     if isinstance(outputs, collections.abc.Sequence):
-        return any_pb2.Any(value=serializer.serialize_parameters(output_metadata, outputs))
+        return any_pb2.Any(value=message_serializer.serialize_parameters(output_metadata, outputs))
     elif outputs is None:
         raise ValueError(f"Measurement function returned None")
     else:
@@ -193,8 +198,8 @@ class MeasurementServiceServicerV1(v1_measurement_service_pb2_grpc.MeasurementSe
             )
             measurement_signature.configuration_parameters.append(configuration_parameter)
 
-        measurement_signature.configuration_defaults.value = serializer.serialize_default_values(
-            self._configuration_metadata
+        measurement_signature.configuration_defaults.value = (
+            message_serializer.serialize_default_values(self._configuration_metadata)
         )
 
         for field_number, output_metadata in self._output_metadata.items():
@@ -301,8 +306,8 @@ class MeasurementServiceServicerV2(v2_measurement_service_pb2_grpc.MeasurementSe
             )
             measurement_signature.configuration_parameters.append(configuration_parameter)
 
-        measurement_signature.configuration_defaults.value = serializer.serialize_default_values(
-            self._configuration_metadata
+        measurement_signature.configuration_defaults.value = (
+            message_serializer.serialize_default_values(self._configuration_metadata)
         )
 
         for field_number, output_metadata in self._output_metadata.items():
