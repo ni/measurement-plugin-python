@@ -4,8 +4,7 @@ import pytest
 from google.protobuf import type_pb2
 
 from ni_measurement_plugin_sdk_service._internal.parameter import (
-    serialization_strategy,
-    message_serializer,
+    decoder_strategy,
 )
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types import (
     xydata_pb2,
@@ -15,33 +14,33 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types import 
 @pytest.mark.parametrize(
     "type,is_repeated,message_type,expected_decoder",
     [
-        (type_pb2.Field.TYPE_FLOAT, False, "", serialization_strategy.FloatDecoder),
-        (type_pb2.Field.TYPE_DOUBLE, False, "", serialization_strategy.DoubleDecoder),
-        (type_pb2.Field.TYPE_INT32, False, "", serialization_strategy.Int32Decoder),
-        (type_pb2.Field.TYPE_INT64, False, "", serialization_strategy.Int64Decoder),
-        (type_pb2.Field.TYPE_UINT32, False, "", serialization_strategy.UInt32Decoder),
-        (type_pb2.Field.TYPE_UINT64, False, "", serialization_strategy.UInt64Decoder),
-        (type_pb2.Field.TYPE_BOOL, False, "", serialization_strategy.BoolDecoder),
-        (type_pb2.Field.TYPE_STRING, False, "", serialization_strategy.StringDecoder),
-        (type_pb2.Field.TYPE_ENUM, False, "", serialization_strategy.Int32Decoder),
+        (type_pb2.Field.TYPE_FLOAT, False, "", decoder_strategy.FloatDecoder),
+        (type_pb2.Field.TYPE_DOUBLE, False, "", decoder_strategy.DoubleDecoder),
+        (type_pb2.Field.TYPE_INT32, False, "", decoder_strategy.Int32Decoder),
+        (type_pb2.Field.TYPE_INT64, False, "", decoder_strategy.Int64Decoder),
+        (type_pb2.Field.TYPE_UINT32, False, "", decoder_strategy.UInt32Decoder),
+        (type_pb2.Field.TYPE_UINT64, False, "", decoder_strategy.UInt64Decoder),
+        (type_pb2.Field.TYPE_BOOL, False, "", decoder_strategy.BoolDecoder),
+        (type_pb2.Field.TYPE_STRING, False, "", decoder_strategy.StringDecoder),
+        (type_pb2.Field.TYPE_ENUM, False, "", decoder_strategy.Int32Decoder),
         (
             type_pb2.Field.TYPE_MESSAGE,
             False,
             xydata_pb2.DoubleXYData.DESCRIPTOR.full_name,
-            serialization_strategy.XYDataDecoder,
+            decoder_strategy.XYDataDecoder,
         ),
         (
             type_pb2.Field.TYPE_MESSAGE,
             True,
             xydata_pb2.DoubleXYData.DESCRIPTOR.full_name,
-            serialization_strategy.XYDataArrayDecoder,
+            decoder_strategy.XYDataArrayDecoder,
         ),
     ],
 )
 def test___serialization_strategy___get_decoder___returns_expected_decoder(
     type, is_repeated, message_type, expected_decoder
 ):
-    decoder = serialization_strategy.get_decoder(type, is_repeated, message_type)
+    decoder = decoder_strategy.get_decoder(type, is_repeated, message_type)
 
     assert decoder == expected_decoder
 
@@ -65,6 +64,6 @@ def test___serialization_strategy___get_decoder___returns_expected_decoder(
 def test___serialization_strategy___get_default_value___returns_type_defaults(
     type, is_repeated, expected_default_value
 ):
-    default_value = message_serializer.get_type_default(type, is_repeated)
+    default_value = decoder_strategy.get_type_default(type, is_repeated)
 
     assert default_value == expected_default_value

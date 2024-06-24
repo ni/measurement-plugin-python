@@ -10,7 +10,7 @@ from ni_measurement_plugin_sdk_service._annotations import (
     ENUM_VALUES_KEY,
     TYPE_SPECIALIZATION_KEY,
 )
-from ni_measurement_plugin_sdk_service._internal.parameter import serializer, message_serializer
+from ni_measurement_plugin_sdk_service._internal.parameter import decoder, encoder
 from ni_measurement_plugin_sdk_service._internal.parameter.metadata import (
     ParameterMetadata,
     TypeSpecialization,
@@ -110,7 +110,7 @@ def test___serializer___serialize_parameter___successful_serialization(test_valu
     parameter = _get_test_parameter_by_id(default_values)
 
     # Custom Serialization
-    custom_serialized_bytes = message_serializer.serialize_parameters(parameter, test_values)
+    custom_serialized_bytes = encoder.serialize_parameters(parameter, test_values)
 
     _validate_serialized_bytes(custom_serialized_bytes, test_values)
 
@@ -172,7 +172,7 @@ def test___serializer___serialize_default_parameter___successful_serialization(d
     parameter = _get_test_parameter_by_id(default_values)
 
     # Custom Serialization
-    custom_serialized_bytes = message_serializer.serialize_default_values(parameter)
+    custom_serialized_bytes = encoder.serialize_default_values(parameter)
 
     _validate_serialized_bytes(custom_serialized_bytes, default_values)
 
@@ -210,7 +210,7 @@ def test___serializer___deserialize_parameter___successful_deserialization(value
     parameter = _get_test_parameter_by_id(values)
     grpc_serialized_data = _get_grpc_serialized_data(values)
 
-    parameter_value_by_id = serializer.deserialize_parameters(parameter, grpc_serialized_data)
+    parameter_value_by_id = decoder.deserialize_parameters(parameter, grpc_serialized_data)
 
     assert list(parameter_value_by_id.values()) == values
 
@@ -243,7 +243,7 @@ def test___empty_buffer___deserialize_parameters___returns_zero_or_empty():
         double_xy_data_array,
     ]
     parameter = _get_test_parameter_by_id(nonzero_defaults)
-    parameter_value_by_id = serializer.deserialize_parameters(parameter, bytes())
+    parameter_value_by_id = decoder.deserialize_parameters(parameter, bytes())
 
     for key, value in parameter_value_by_id.items():
         parameter_metadata = parameter[key]
@@ -266,7 +266,7 @@ def test___big_message___deserialize_parameters___returns_parameter_value_by_id(
     serialized_data = message.SerializeToString()
     expected_parameter_value_by_id = {i + 1: value for (i, value) in enumerate(values)}
 
-    parameter_value_by_id = serializer.deserialize_parameters(
+    parameter_value_by_id = decoder.deserialize_parameters(
         parameter_metadata_by_id, serialized_data
     )
 
@@ -278,7 +278,7 @@ def test___big_message___serialize_parameters___returns_serialized_data() -> Non
     values = [123.456 + i for i in range(BIG_MESSAGE_SIZE)]
     expected_message = _get_big_message(values)
 
-    serialized_data = message_serializer.serialize_parameters(parameter_metadata_by_id, values)
+    serialized_data = encoder.serialize_parameters(parameter_metadata_by_id, values)
 
     message = BigMessage.FromString(serialized_data)
     assert message.ListFields() == pytest.approx(expected_message.ListFields())

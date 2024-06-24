@@ -13,10 +13,7 @@ from typing import Any, Callable, Dict, Generator, List, Optional
 import grpc
 from google.protobuf import any_pb2
 
-from ni_measurement_plugin_sdk_service._internal.parameter import (
-    message_serializer,
-    serializer,
-)
+from ni_measurement_plugin_sdk_service._internal.parameter import decoder, encoder
 from ni_measurement_plugin_sdk_service._internal.parameter.metadata import (
     ParameterMetadata,
 )
@@ -138,7 +135,7 @@ def _get_mapping_by_parameter_name(
 
 def _serialize_outputs(output_metadata: Dict[int, ParameterMetadata], outputs: Any) -> any_pb2.Any:
     if isinstance(outputs, collections.abc.Sequence):
-        return any_pb2.Any(value=message_serializer.serialize_parameters(output_metadata, outputs))
+        return any_pb2.Any(value=encoder.serialize_parameters(output_metadata, outputs))
     elif outputs is None:
         raise ValueError(f"Measurement function returned None")
     else:
@@ -198,8 +195,8 @@ class MeasurementServiceServicerV1(v1_measurement_service_pb2_grpc.MeasurementSe
             )
             measurement_signature.configuration_parameters.append(configuration_parameter)
 
-        measurement_signature.configuration_defaults.value = (
-            message_serializer.serialize_default_values(self._configuration_metadata)
+        measurement_signature.configuration_defaults.value = encoder.serialize_default_values(
+            self._configuration_metadata
         )
 
         for field_number, output_metadata in self._output_metadata.items():
@@ -229,7 +226,7 @@ class MeasurementServiceServicerV1(v1_measurement_service_pb2_grpc.MeasurementSe
         self, request: v1_measurement_service_pb2.MeasureRequest, context: grpc.ServicerContext
     ) -> v1_measurement_service_pb2.MeasureResponse:
         """RPC API that executes the registered measurement method."""
-        mapping_by_id = serializer.deserialize_parameters(
+        mapping_by_id = decoder.deserialize_parameters(
             self._configuration_metadata, request.configuration_parameters.value
         )
         mapping_by_variable_name = _get_mapping_by_parameter_name(
@@ -306,8 +303,8 @@ class MeasurementServiceServicerV2(v2_measurement_service_pb2_grpc.MeasurementSe
             )
             measurement_signature.configuration_parameters.append(configuration_parameter)
 
-        measurement_signature.configuration_defaults.value = (
-            message_serializer.serialize_default_values(self._configuration_metadata)
+        measurement_signature.configuration_defaults.value = encoder.serialize_default_values(
+            self._configuration_metadata
         )
 
         for field_number, output_metadata in self._output_metadata.items():
@@ -339,7 +336,7 @@ class MeasurementServiceServicerV2(v2_measurement_service_pb2_grpc.MeasurementSe
         self, request: v2_measurement_service_pb2.MeasureRequest, context: grpc.ServicerContext
     ) -> Generator[v2_measurement_service_pb2.MeasureResponse, None, None]:
         """RPC API that executes the registered measurement method."""
-        mapping_by_id = serializer.deserialize_parameters(
+        mapping_by_id = decoder.deserialize_parameters(
             self._configuration_metadata, request.configuration_parameters.value
         )
         mapping_by_variable_name = _get_mapping_by_parameter_name(

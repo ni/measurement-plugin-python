@@ -10,6 +10,7 @@ from ni_measurement_plugin_sdk_service._annotations import (
     ENUM_VALUES_KEY,
     TYPE_SPECIALIZATION_KEY,
 )
+from ni_measurement_plugin_sdk_service._internal.parameter.decoder_strategy import get_type_default
 from ni_measurement_plugin_sdk_service.measurement.info import TypeSpecialization
 
 
@@ -49,10 +50,6 @@ def validate_default_value_type(parameter_metadata: ParameterMetadata) -> None:
     Raises:
         TypeError: If default value does not match the Datatype.
     """
-    from ni_measurement_plugin_sdk_service._internal.parameter.message_serializer import (
-        get_type_default,
-    )
-
     default_value = parameter_metadata.default_value
     if default_value is None:
         return None

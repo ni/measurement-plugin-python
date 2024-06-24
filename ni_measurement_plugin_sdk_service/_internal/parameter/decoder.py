@@ -8,10 +8,7 @@ from google.protobuf.internal.decoder import (  # type: ignore[attr-defined]
 )
 from google.protobuf.message import Message
 
-from ni_measurement_plugin_sdk_service._internal.parameter import serialization_strategy
-from ni_measurement_plugin_sdk_service._internal.parameter.message_serializer import (
-    get_type_default,
-)
+from ni_measurement_plugin_sdk_service._internal.parameter import decoder_strategy
 from ni_measurement_plugin_sdk_service._internal.parameter.metadata import (
     ParameterMetadata,
     get_enum_values_annotation,
@@ -77,7 +74,7 @@ def _get_overlapping_parameters(
                 f"Error occurred while reading the parameter - given protobuf index '{field_index}' is invalid."
             )
         field_metadata = parameter_metadata_dict[field_index]
-        decoder = serialization_strategy.get_decoder(
+        decoder = decoder_strategy.get_decoder(
             field_metadata.type, field_metadata.repeated, field_metadata.message_type
         )
         inner_decoder = decoder(field_index, cast(FieldDescriptor, field_index))
@@ -112,7 +109,9 @@ def _get_missing_parameters(
                 enum_type = _get_enum_type(value)
                 missing_parameters[key] = enum_type(0)
             else:
-                missing_parameters[key] = get_type_default(value.type, value.repeated)
+                missing_parameters[key] = decoder_strategy.get_type_default(
+                    value.type, value.repeated
+                )
     return missing_parameters
 
 

@@ -3,10 +3,10 @@ from enum import Enum
 from typing import Any, Dict, Sequence
 from uuid import uuid4
 
-from google.protobuf import descriptor_pb2, descriptor_pool, message_factory, type_pb2
+from google.protobuf import descriptor_pb2, descriptor_pool, message_factory
 from google.protobuf.descriptor_pb2 import FieldDescriptorProto
 
-# metadata
+from ni_measurement_plugin_sdk_service._internal.parameter.decoder_strategy import get_type_default
 from ni_measurement_plugin_sdk_service._internal.parameter.metadata import (
     ParameterMetadata,
 )
@@ -29,14 +29,14 @@ def serialize_parameters(
     """
     pool = descriptor_pool.Default()
     file_descriptor_proto = descriptor_pb2.FileDescriptorProto()
-    original_guid = uuid4()
-    new_guid = "msg" + "".join(filter(str.isalnum, str(original_guid)))[:16]
-    file_descriptor_proto.name = str(new_guid)
-    file_descriptor_proto.package = str(new_guid)
+    original_guid = str(uuid4())
+    unique_descriptor_name = "msg" + "".join(filter(str.isalnum, original_guid))[:16]
+    file_descriptor_proto.name = str(unique_descriptor_name)
+    file_descriptor_proto.package = str(unique_descriptor_name)
 
     # Create a DescriptorProto for the message
     message_proto = file_descriptor_proto.message_type.add()
-    message_proto.name = str(new_guid)
+    message_proto.name = str(unique_descriptor_name)
 
     # Initialize the message with fields defined
     for i, parameter in enumerate(parameter_values, start=1):
@@ -63,7 +63,9 @@ def serialize_parameters(
 
     # Get message and add fields to it
     pool.Add(file_descriptor_proto)
-    message_descriptor = pool.FindMessageTypeByName(str(new_guid) + "." + str(new_guid))
+    message_descriptor = pool.FindMessageTypeByName(
+        f"{unique_descriptor_name}.{unique_descriptor_name}"
+    )
     message_instance = message_factory.GetMessageClass(message_descriptor)()
 
     # assign values to fields
@@ -218,21 +220,3 @@ def _define_fields(
         if metadata.type == FieldDescriptorProto.TYPE_MESSAGE:
             field_descriptor.type_name = metadata.message_type
         return field_descriptor
-
-
-def get_type_default(type: type_pb2.Field.Kind.ValueType, repeated: bool) -> Any:
-    """Get the default value for the give type."""
-    _type_default_mapping = {
-        type_pb2.Field.TYPE_FLOAT: float(),
-        type_pb2.Field.TYPE_DOUBLE: float(),
-        type_pb2.Field.TYPE_INT32: int(),
-        type_pb2.Field.TYPE_INT64: int(),
-        type_pb2.Field.TYPE_UINT32: int(),
-        type_pb2.Field.TYPE_UINT64: int(),
-        type_pb2.Field.TYPE_BOOL: bool(),
-        type_pb2.Field.TYPE_STRING: str(),
-        type_pb2.Field.TYPE_ENUM: int(),
-    }
-    if repeated:
-        return list()
-    return _type_default_mapping.get(type)
