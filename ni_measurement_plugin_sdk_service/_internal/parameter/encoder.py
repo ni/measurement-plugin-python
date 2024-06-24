@@ -30,13 +30,13 @@ def serialize_parameters(
     pool = descriptor_pool.Default()
     file_descriptor_proto = descriptor_pb2.FileDescriptorProto()
     original_guid = str(uuid4())
-    unique_descriptor_name = "msg" + "".join(filter(str.isalnum, original_guid))[:16]
-    file_descriptor_proto.name = str(unique_descriptor_name)
-    file_descriptor_proto.package = str(unique_descriptor_name)
+    unique_descriptor_name = str("msg" + "".join(filter(str.isalnum, original_guid))[:16])
+    file_descriptor_proto.name = unique_descriptor_name
+    file_descriptor_proto.package = unique_descriptor_name
 
     # Create a DescriptorProto for the message
     message_proto = file_descriptor_proto.message_type.add()
-    message_proto.name = str(unique_descriptor_name)
+    message_proto.name = unique_descriptor_name
 
     # Initialize the message with fields defined
     for i, parameter in enumerate(parameter_values, start=1):
