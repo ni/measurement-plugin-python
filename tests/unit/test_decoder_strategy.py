@@ -37,7 +37,7 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types import 
         ),
     ],
 )
-def test___serialization_strategy___get_decoder___returns_expected_decoder(
+def test___decoder_strategy___get_decoder___returns_expected_decoder(
     type, is_repeated, message_type, expected_decoder
 ):
     decoder = decoder_strategy.get_decoder(type, is_repeated, message_type)
@@ -61,7 +61,7 @@ def test___serialization_strategy___get_decoder___returns_expected_decoder(
         (type_pb2.Field.TYPE_MESSAGE, True, []),
     ],
 )
-def test___serialization_strategy___get_default_value___returns_type_defaults(
+def test___decoder_strategy___get_default_value___returns_type_defaults(
     type, is_repeated, expected_default_value
 ):
     default_value = decoder_strategy.get_type_default(type, is_repeated)

@@ -10,7 +10,7 @@ from ni_measurement_plugin_sdk_service._annotations import (
     ENUM_VALUES_KEY,
     TYPE_SPECIALIZATION_KEY,
 )
-from ni_measurement_plugin_sdk_service._internal.parameter import decoder, encoder
+from ni_measurement_plugin_sdk_service._internal.parameter import decoder
 from ni_measurement_plugin_sdk_service._internal.parameter.metadata import (
     ParameterMetadata,
     TypeSpecialization,
@@ -50,131 +50,6 @@ double_xy_data_array = [double_xy_data, double_xy_data2]
 
 # This should match the number of fields in bigmessage.proto.
 BIG_MESSAGE_SIZE = 100
-
-
-@pytest.mark.parametrize(
-    "test_values",
-    [
-        [
-            2.0,
-            19.2,
-            3,
-            1,
-            2,
-            2,
-            True,
-            "TestString",
-            [5.5, 3.3, 1],
-            [5.5, 3.3, 1],
-            [1, 2, 3, 4],
-            [0, 1, 399],
-            [1, 2, 3, 4],
-            [0, 1, 399],
-            [True, False, True],
-            ["String1, String2"],
-            DifferentColor.ORANGE,
-            [DifferentColor.TEAL, DifferentColor.BROWN],
-            Countries.AUSTRALIA,
-            [Countries.AUSTRALIA, Countries.CANADA],
-            double_xy_data,
-            double_xy_data_array,
-        ],
-        [
-            -0.9999,
-            -0.9999,
-            -13,
-            1,
-            1000,
-            2,
-            True,
-            "////",
-            [5.5, -13.3, 1, 0.0, -99.9999],
-            [5.5, 3.3, 1],
-            [1, 2, 3, 4],
-            [0, 1, 399],
-            [1, 2, 3, 4],
-            [0, 1, 399],
-            [True, False, True],
-            ["String1, String2"],
-            DifferentColor.ORANGE,
-            [DifferentColor.TEAL, DifferentColor.BROWN],
-            Countries.AUSTRALIA,
-            [Countries.AUSTRALIA, Countries.CANADA],
-            double_xy_data,
-            double_xy_data_array,
-        ],
-    ],
-)
-def test___serializer___serialize_parameter___successful_serialization(test_values):
-    default_values = test_values
-    parameter = _get_test_parameter_by_id(default_values)
-
-    # Custom Serialization
-    custom_serialized_bytes = encoder.serialize_parameters(parameter, test_values)
-
-    _validate_serialized_bytes(custom_serialized_bytes, test_values)
-
-
-@pytest.mark.parametrize(
-    "default_values",
-    [
-        [
-            2.0,
-            19.2,
-            3,
-            1,
-            2,
-            2,
-            True,
-            "TestString",
-            [5.5, 3.3, 1],
-            [5.5, 3.3, 1],
-            [1, 2, 3, 4],
-            [0, 1, 399],
-            [1, 2, 3, 4],
-            [0, 1, 399],
-            [True, False, True],
-            ["String1, String2"],
-            DifferentColor.ORANGE,
-            [DifferentColor.TEAL, DifferentColor.BROWN],
-            Countries.AUSTRALIA,
-            [Countries.AUSTRALIA, Countries.CANADA],
-            double_xy_data,
-            double_xy_data_array,
-        ],
-        [
-            -0.9999,
-            -0.9999,
-            -13,
-            1,
-            1000,
-            2,
-            True,
-            "////",
-            [5.5, -13.3, 1, 0.0, -99.9999],
-            [5.5, 3.3, 1],
-            [1, 2, 3, 4],
-            [0, 1, 399],
-            [1, 2, 3, 4],
-            [0, 1, 399],
-            [True, False, True],
-            ["String1, String2"],
-            DifferentColor.ORANGE,
-            [DifferentColor.TEAL, DifferentColor.BROWN],
-            Countries.AUSTRALIA,
-            [Countries.AUSTRALIA, Countries.CANADA],
-            double_xy_data,
-            double_xy_data_array,
-        ],
-    ],
-)
-def test___serializer___serialize_default_parameter___successful_serialization(default_values):
-    parameter = _get_test_parameter_by_id(default_values)
-
-    # Custom Serialization
-    custom_serialized_bytes = encoder.serialize_default_values(parameter)
-
-    _validate_serialized_bytes(custom_serialized_bytes, default_values)
 
 
 @pytest.mark.parametrize(
@@ -271,23 +146,6 @@ def test___big_message___deserialize_parameters___returns_parameter_value_by_id(
     )
 
     assert parameter_value_by_id == pytest.approx(expected_parameter_value_by_id)
-
-
-def test___big_message___serialize_parameters___returns_serialized_data() -> None:
-    parameter_metadata_by_id = _get_big_message_metadata_by_id()
-    values = [123.456 + i for i in range(BIG_MESSAGE_SIZE)]
-    expected_message = _get_big_message(values)
-
-    serialized_data = encoder.serialize_parameters(parameter_metadata_by_id, values)
-
-    message = BigMessage.FromString(serialized_data)
-    assert message.ListFields() == pytest.approx(expected_message.ListFields())
-
-
-def _validate_serialized_bytes(custom_serialized_bytes, values):
-    # Serialization using gRPC Any
-    grpc_serialized_data = _get_grpc_serialized_data(values)
-    assert grpc_serialized_data == custom_serialized_bytes
 
 
 def _get_grpc_serialized_data(values):

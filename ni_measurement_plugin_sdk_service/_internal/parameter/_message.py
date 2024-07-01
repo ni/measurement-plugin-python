@@ -15,7 +15,7 @@ from typing import (
 from google.protobuf.internal import encoder, wire_format
 from google.protobuf.message import Message
 
-from ni_measurement_plugin_sdk_service._internal.parameter._serializer_types import (
+from ni_measurement_plugin_sdk_service._internal.parameter._decoder_types import (
     Decoder,
     Key,
     NewDefault,

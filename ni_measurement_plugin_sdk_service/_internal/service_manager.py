@@ -9,7 +9,9 @@ from ni_measurement_plugin_sdk_service._internal.grpc_servicer import (
     MeasurementServiceServicerV1,
     MeasurementServiceServicerV2,
 )
-from ni_measurement_plugin_sdk_service._internal.parameter.metadata import ParameterMetadata
+from ni_measurement_plugin_sdk_service._internal.parameter.metadata import (
+    ParameterMetadata,
+)
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v1 import (
     measurement_service_pb2_grpc as v1_measurement_service_pb2_grpc,
 )
@@ -18,7 +20,10 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measur
 )
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient, ServiceLocation
 from ni_measurement_plugin_sdk_service.grpc.loggers import ServerLogger
-from ni_measurement_plugin_sdk_service.measurement.info import MeasurementInfo, ServiceInfo
+from ni_measurement_plugin_sdk_service.measurement.info import (
+    MeasurementInfo,
+    ServiceInfo,
+)
 
 _logger = logging.getLogger(__name__)
 _V1_INTERFACE = "ni.measurementlink.measurement.v1.MeasurementService"
@@ -102,6 +107,7 @@ class GrpcService:
                     output_parameter_list,
                     measure_function,
                     owner,
+                    service_info,
                 )
                 v1_measurement_service_pb2_grpc.add_MeasurementServiceServicer_to_server(
                     servicer_v1, self._server
@@ -113,6 +119,7 @@ class GrpcService:
                     output_parameter_list,
                     measure_function,
                     owner,
+                    service_info,
                 )
                 v2_measurement_service_pb2_grpc.add_MeasurementServiceServicer_to_server(
                     servicer_v2, self._server

@@ -25,7 +25,10 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measur
     measurement_service_pb2 as v2_measurement_service_pb2,
     measurement_service_pb2_grpc as v2_measurement_service_pb2_grpc,
 )
-from ni_measurement_plugin_sdk_service.measurement.info import MeasurementInfo
+from ni_measurement_plugin_sdk_service.measurement.info import (
+    MeasurementInfo,
+    ServiceInfo,
+)
 from ni_measurement_plugin_sdk_service.session_management import PinMapContext
 
 
@@ -133,9 +136,13 @@ def _get_mapping_by_parameter_name(
     return mapping_by_variable_name
 
 
-def _serialize_outputs(output_metadata: Dict[int, ParameterMetadata], outputs: Any) -> any_pb2.Any:
+def _serialize_outputs(
+    output_metadata: Dict[int, ParameterMetadata], outputs: Any, service_info: ServiceInfo
+) -> any_pb2.Any:
     if isinstance(outputs, collections.abc.Sequence):
-        return any_pb2.Any(value=encoder.serialize_parameters(output_metadata, outputs))
+        return any_pb2.Any(
+            value=encoder.serialize_parameters(output_metadata, outputs, service_info)
+        )
     elif outputs is None:
         raise ValueError(f"Measurement function returned None")
     else:
@@ -163,6 +170,7 @@ class MeasurementServiceServicerV1(v1_measurement_service_pb2_grpc.MeasurementSe
         output_parameter_list: List[ParameterMetadata],
         measure_function: Callable,
         owner: object,
+        service_info: ServiceInfo,
     ) -> None:
         """Initialize the measurement v1 servicer."""
         super().__init__()
@@ -171,6 +179,7 @@ class MeasurementServiceServicerV1(v1_measurement_service_pb2_grpc.MeasurementSe
         self._measurement_info = measurement_info
         self._measure_function = measure_function
         self._owner = weakref.ref(owner) if owner is not None else None  # avoid reference cycle
+        self._service_info = service_info
 
     def GetMetadata(  # noqa: N802 - function name should be lowercase
         self, request: v1_measurement_service_pb2.GetMetadataRequest, context: grpc.ServicerContext
@@ -196,7 +205,7 @@ class MeasurementServiceServicerV1(v1_measurement_service_pb2_grpc.MeasurementSe
             measurement_signature.configuration_parameters.append(configuration_parameter)
 
         measurement_signature.configuration_defaults.value = encoder.serialize_default_values(
-            self._configuration_metadata
+            self._configuration_metadata, self._service_info
         )
 
         for field_number, output_metadata in self._output_metadata.items():
@@ -256,7 +265,7 @@ class MeasurementServiceServicerV1(v1_measurement_service_pb2_grpc.MeasurementSe
 
     def _serialize_response(self, outputs: Any) -> v1_measurement_service_pb2.MeasureResponse:
         return v1_measurement_service_pb2.MeasureResponse(
-            outputs=_serialize_outputs(self._output_metadata, outputs)
+            outputs=_serialize_outputs(self._output_metadata, outputs, self._service_info)
         )
 
 
@@ -270,6 +279,7 @@ class MeasurementServiceServicerV2(v2_measurement_service_pb2_grpc.MeasurementSe
         output_parameter_list: List[ParameterMetadata],
         measure_function: Callable,
         owner: object,
+        service_info: ServiceInfo,
     ) -> None:
         """Initialize the measurement v2 servicer."""
         super().__init__()
@@ -278,6 +288,7 @@ class MeasurementServiceServicerV2(v2_measurement_service_pb2_grpc.MeasurementSe
         self._measurement_info = measurement_info
         self._measure_function = measure_function
         self._owner = weakref.ref(owner) if owner is not None else None  # avoid reference cycle
+        self._service_info = service_info
 
     def GetMetadata(  # noqa: N802 - function name should be lowercase
         self, request: v2_measurement_service_pb2.GetMetadataRequest, context: grpc.ServicerContext
@@ -304,7 +315,7 @@ class MeasurementServiceServicerV2(v2_measurement_service_pb2_grpc.MeasurementSe
             measurement_signature.configuration_parameters.append(configuration_parameter)
 
         measurement_signature.configuration_defaults.value = encoder.serialize_default_values(
-            self._configuration_metadata
+            self._configuration_metadata, self._service_info
         )
 
         for field_number, output_metadata in self._output_metadata.items():
@@ -365,5 +376,5 @@ class MeasurementServiceServicerV2(v2_measurement_service_pb2_grpc.MeasurementSe
 
     def _serialize_response(self, outputs: Any) -> v2_measurement_service_pb2.MeasureResponse:
         return v2_measurement_service_pb2.MeasureResponse(
-            outputs=_serialize_outputs(self._output_metadata, outputs)
+            outputs=_serialize_outputs(self._output_metadata, outputs, self._service_info)
         )
