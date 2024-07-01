@@ -16,9 +16,6 @@ if typing.TYPE_CHECKING:
 
 Key: TypeAlias = FieldDescriptor
 WriteFunction: TypeAlias = Callable[[bytes], int]
-Encoder: TypeAlias = Callable[[WriteFunction, bytes, bool], int]
-PartialEncoderConstructor: TypeAlias = Callable[[int], Encoder]
-EncoderConstructor: TypeAlias = Callable[[int, bool, bool], Encoder]
 
 Decoder: TypeAlias = Callable[[memoryview, int, int, Message, Dict[Key, Any]], int]
 PartialDecoderConstructor: TypeAlias = Callable[[int, Key], Decoder]

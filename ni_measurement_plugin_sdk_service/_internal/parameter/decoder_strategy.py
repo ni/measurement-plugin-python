@@ -5,55 +5,19 @@ from __future__ import annotations
 from typing import Any, Optional, cast
 
 from google.protobuf import type_pb2
-from google.protobuf.internal import decoder, encoder
+from google.protobuf.internal import decoder
 from google.protobuf.message import Message
 
 from ni_measurement_plugin_sdk_service._internal.parameter import _message
-from ni_measurement_plugin_sdk_service._internal.parameter._serializer_types import (
+from ni_measurement_plugin_sdk_service._internal.parameter._decoder_types import (
     Decoder,
     DecoderConstructor,
-    Encoder,
-    EncoderConstructor,
     Key,
     PartialDecoderConstructor,
-    PartialEncoderConstructor,
 )
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types import xydata_pb2
-
-
-def _scalar_encoder(encoder: EncoderConstructor) -> PartialEncoderConstructor:
-    """Constructs a scalar encoder constructor.
-
-    Takes a field index and returns an Encoder.
-
-    This class returns the Encoder with is_repeated set to False
-    and is_packed set to False.
-    """
-
-    def scalar_encoder(field_index: int) -> Encoder:
-        is_repeated = False
-        is_packed = False
-        return encoder(field_index, is_repeated, is_packed)
-
-    return scalar_encoder
-
-
-def _vector_encoder(
-    encoder: EncoderConstructor, is_packed: bool = True
-) -> PartialEncoderConstructor:
-    """Constructs a vector (array) encoder constructor.
-
-    Takes a field index and returns an Encoder.
-
-    This class returns the Encoder with is_repeated set to True
-    and is_packed defaulting to True.
-    """
-
-    def vector_encoder(field_index: int) -> Encoder:
-        is_repeated = True
-        return encoder(field_index, is_repeated, is_packed)
-
-    return vector_encoder
+from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types import (
+    xydata_pb2,
+)
 
 
 def _scalar_decoder(decoder: DecoderConstructor) -> PartialDecoderConstructor:
@@ -118,26 +82,6 @@ def _double_xy_data_decoder(
 
 
 # Cast works around this issue in typeshed
-# https://github.com/python/typeshed/issues/10695
-FloatEncoder = _scalar_encoder(cast(EncoderConstructor, encoder.FloatEncoder))
-DoubleEncoder = _scalar_encoder(cast(EncoderConstructor, encoder.DoubleEncoder))
-IntEncoder = _scalar_encoder(cast(EncoderConstructor, encoder.Int32Encoder))
-UIntEncoder = _scalar_encoder(cast(EncoderConstructor, encoder.UInt32Encoder))
-BoolEncoder = _scalar_encoder(encoder.BoolEncoder)
-StringEncoder = _scalar_encoder(encoder.StringEncoder)
-MessageEncoder = _scalar_encoder(cast(EncoderConstructor, _message._message_encoder_constructor))
-
-FloatArrayEncoder = _vector_encoder(cast(EncoderConstructor, encoder.FloatEncoder))
-DoubleArrayEncoder = _vector_encoder(cast(EncoderConstructor, encoder.DoubleEncoder))
-IntArrayEncoder = _vector_encoder(cast(EncoderConstructor, encoder.Int32Encoder))
-UIntArrayEncoder = _vector_encoder(cast(EncoderConstructor, encoder.UInt32Encoder))
-BoolArrayEncoder = _vector_encoder(encoder.BoolEncoder)
-StringArrayEncoder = _vector_encoder(encoder.StringEncoder, is_packed=False)
-MessageArrayEncoder = _vector_encoder(
-    cast(EncoderConstructor, _message._message_encoder_constructor)
-)
-
-# Cast works around this issue in typeshed
 # https://github.com/python/typeshed/issues/10697
 FloatDecoder = _scalar_decoder(cast(DecoderConstructor, decoder.FloatDecoder))
 DoubleDecoder = _scalar_decoder(cast(DecoderConstructor, decoder.DoubleDecoder))
@@ -163,20 +107,6 @@ XYDataArrayDecoder = _double_xy_data_decoder(
     _message._message_decoder_constructor, is_repeated=True
 )
 
-
-_FIELD_TYPE_TO_ENCODER_MAPPING = {
-    type_pb2.Field.TYPE_FLOAT: (FloatEncoder, FloatArrayEncoder),
-    type_pb2.Field.TYPE_DOUBLE: (DoubleEncoder, DoubleArrayEncoder),
-    type_pb2.Field.TYPE_INT32: (IntEncoder, IntArrayEncoder),
-    type_pb2.Field.TYPE_INT64: (IntEncoder, IntArrayEncoder),
-    type_pb2.Field.TYPE_UINT32: (UIntEncoder, UIntArrayEncoder),
-    type_pb2.Field.TYPE_UINT64: (UIntEncoder, UIntArrayEncoder),
-    type_pb2.Field.TYPE_BOOL: (BoolEncoder, BoolArrayEncoder),
-    type_pb2.Field.TYPE_STRING: (StringEncoder, StringArrayEncoder),
-    type_pb2.Field.TYPE_ENUM: (IntEncoder, IntArrayEncoder),
-    type_pb2.Field.TYPE_MESSAGE: (MessageEncoder, MessageArrayEncoder),
-}
-
 _FIELD_TYPE_TO_DECODER_MAPPING = {
     type_pb2.Field.TYPE_FLOAT: (FloatDecoder, FloatArrayDecoder),
     type_pb2.Field.TYPE_DOUBLE: (DoubleDecoder, DoubleArrayDecoder),
@@ -189,18 +119,6 @@ _FIELD_TYPE_TO_DECODER_MAPPING = {
     type_pb2.Field.TYPE_ENUM: (Int32Decoder, Int32ArrayDecoder),
 }
 
-_TYPE_DEFAULT_MAPPING = {
-    type_pb2.Field.TYPE_FLOAT: float(),
-    type_pb2.Field.TYPE_DOUBLE: float(),
-    type_pb2.Field.TYPE_INT32: int(),
-    type_pb2.Field.TYPE_INT64: int(),
-    type_pb2.Field.TYPE_UINT32: int(),
-    type_pb2.Field.TYPE_UINT64: int(),
-    type_pb2.Field.TYPE_BOOL: bool(),
-    type_pb2.Field.TYPE_STRING: str(),
-    type_pb2.Field.TYPE_ENUM: int(),
-}
-
 _MESSAGE_TYPE_TO_DECODER = {
     xydata_pb2.DoubleXYData.DESCRIPTOR.full_name: XYDataDecoder,
 }
@@ -208,19 +126,6 @@ _MESSAGE_TYPE_TO_DECODER = {
 _ARRAY_MESSAGE_TYPE_TO_DECODER = {
     xydata_pb2.DoubleXYData.DESCRIPTOR.full_name: XYDataArrayDecoder,
 }
-
-
-def get_encoder(type: type_pb2.Field.Kind.ValueType, repeated: bool) -> PartialEncoderConstructor:
-    """Get the appropriate partial encoder constructor for the specified type.
-
-    A scalar or vector constructor is returned based on the 'repeated' parameter.
-    """
-    if type not in _FIELD_TYPE_TO_ENCODER_MAPPING:
-        raise ValueError(f"Error can not encode type '{type}'")
-    scalar, array = _FIELD_TYPE_TO_ENCODER_MAPPING[type]
-    if repeated:
-        return array
-    return scalar
 
 
 def get_decoder(
@@ -243,9 +148,21 @@ def get_decoder(
         raise ValueError(f"Error can not decode type '{type}'")
 
 
+_type_default_mapping = {
+    type_pb2.Field.TYPE_FLOAT: float(),
+    type_pb2.Field.TYPE_DOUBLE: float(),
+    type_pb2.Field.TYPE_INT32: int(),
+    type_pb2.Field.TYPE_INT64: int(),
+    type_pb2.Field.TYPE_UINT32: int(),
+    type_pb2.Field.TYPE_UINT64: int(),
+    type_pb2.Field.TYPE_BOOL: bool(),
+    type_pb2.Field.TYPE_STRING: str(),
+    type_pb2.Field.TYPE_ENUM: int(),
+}
+
+
 def get_type_default(type: type_pb2.Field.Kind.ValueType, repeated: bool) -> Any:
     """Get the default value for the give type."""
     if repeated:
         return list()
-    type_default_value = _TYPE_DEFAULT_MAPPING.get(type)
-    return type_default_value
+    return _type_default_mapping.get(type)

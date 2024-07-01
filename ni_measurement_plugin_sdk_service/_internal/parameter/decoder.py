@@ -1,8 +1,6 @@
 """Parameter Serializer."""
 
-from enum import Enum
-from io import BytesIO
-from typing import Any, Dict, Sequence, cast
+from typing import Any, Dict, cast
 
 from google.protobuf.descriptor import FieldDescriptor
 from google.protobuf.internal.decoder import (  # type: ignore[attr-defined]
@@ -10,15 +8,11 @@ from google.protobuf.internal.decoder import (  # type: ignore[attr-defined]
 )
 from google.protobuf.message import Message
 
-from ni_measurement_plugin_sdk_service._annotations import (
-    TYPE_SPECIALIZATION_KEY,
-)
-from ni_measurement_plugin_sdk_service._internal.parameter import serialization_strategy
+from ni_measurement_plugin_sdk_service._internal.parameter import decoder_strategy
 from ni_measurement_plugin_sdk_service._internal.parameter.metadata import (
     ParameterMetadata,
     get_enum_values_annotation,
 )
-from ni_measurement_plugin_sdk_service.measurement.info import TypeSpecialization
 
 _GRPC_WIRE_TYPE_BIT_WIDTH = 3
 
@@ -52,60 +46,6 @@ def deserialize_parameters(
     return overlapping_parameter_by_id
 
 
-def serialize_parameters(
-    parameter_metadata_dict: Dict[int, ParameterMetadata],
-    parameter_values: Sequence[Any],
-) -> bytes:
-    """Serialize the parameter values in same order based on the metadata_dict.
-
-    Args:
-        parameter_metadata_dict (Dict[int, ParameterMetadata]): Parameter metadata by ID.
-
-        parameter_value (Sequence[Any]): Parameter values to serialize.
-
-    Returns:
-        bytes: Serialized byte string containing parameter values.
-    """
-    serialize_buffer = BytesIO()  # inner_encoder updates the serialize_buffer
-    for i, parameter in enumerate(parameter_values):
-        parameter_metadata = parameter_metadata_dict[i + 1]
-        encoder = serialization_strategy.get_encoder(
-            parameter_metadata.type,
-            parameter_metadata.repeated,
-        )
-        type_default_value = serialization_strategy.get_type_default(
-            parameter_metadata.type,
-            parameter_metadata.repeated,
-        )
-        # Convert enum parameters to their underlying value if necessary.
-        if (
-            parameter_metadata.annotations.get(TYPE_SPECIALIZATION_KEY)
-            == TypeSpecialization.Enum.value
-        ):
-            parameter = _get_enum_value(parameter, parameter_metadata.repeated)
-        # Skipping serialization if the value is None or if its a type default value.
-        if parameter is not None and parameter != type_default_value:
-            inner_encoder = encoder(i + 1)
-            inner_encoder(serialize_buffer.write, parameter, False)
-    return serialize_buffer.getvalue()
-
-
-def serialize_default_values(parameter_metadata_dict: Dict[int, ParameterMetadata]) -> bytes:
-    """Serialize the Default values in the Metadata.
-
-    Args:
-        parameter_metadata_dict (Dict[int, ParameterMetadata]): Configuration metadata.
-
-    Returns:
-        bytes: Serialized byte string containing default values.
-    """
-    default_value_parameter_array = list()
-    default_value_parameter_array = [
-        parameter.default_value for parameter in parameter_metadata_dict.values()
-    ]
-    return serialize_parameters(parameter_metadata_dict, default_value_parameter_array)
-
-
 def _get_overlapping_parameters(
     parameter_metadata_dict: Dict[int, ParameterMetadata], parameter_bytes: bytes
 ) -> Dict[int, Any]:
@@ -134,7 +74,7 @@ def _get_overlapping_parameters(
                 f"Error occurred while reading the parameter - given protobuf index '{field_index}' is invalid."
             )
         field_metadata = parameter_metadata_dict[field_index]
-        decoder = serialization_strategy.get_decoder(
+        decoder = decoder_strategy.get_decoder(
             field_metadata.type, field_metadata.repeated, field_metadata.message_type
         )
         inner_decoder = decoder(field_index, cast(FieldDescriptor, field_index))
@@ -169,7 +109,7 @@ def _get_missing_parameters(
                 enum_type = _get_enum_type(value)
                 missing_parameters[key] = enum_type(0)
             else:
-                missing_parameters[key] = serialization_strategy.get_type_default(
+                missing_parameters[key] = decoder_strategy.get_type_default(
                     value.type, value.repeated
                 )
     return missing_parameters
@@ -201,16 +141,6 @@ def _deserialize_enum_parameters(
                     parameter_by_id[id] = value
                 else:
                     parameter_by_id[id] = enum_type(value)
-
-
-def _get_enum_value(parameter: Any, repeated: bool) -> Any:
-    if repeated:
-        if len(parameter) > 0 and isinstance(parameter[0], Enum):
-            return [x.value for x in parameter]
-    else:
-        if isinstance(parameter, Enum):
-            return parameter.value
-    return parameter
 
 
 def _get_enum_type(parameter_metadata: ParameterMetadata) -> type:

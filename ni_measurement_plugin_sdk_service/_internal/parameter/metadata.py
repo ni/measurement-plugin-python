@@ -10,7 +10,7 @@ from ni_measurement_plugin_sdk_service._annotations import (
     ENUM_VALUES_KEY,
     TYPE_SPECIALIZATION_KEY,
 )
-from ni_measurement_plugin_sdk_service._internal.parameter import serialization_strategy
+from ni_measurement_plugin_sdk_service._internal.parameter.decoder_strategy import get_type_default
 from ni_measurement_plugin_sdk_service.measurement.info import TypeSpecialization
 
 
@@ -54,18 +54,12 @@ def validate_default_value_type(parameter_metadata: ParameterMetadata) -> None:
     if default_value is None:
         return None
 
-    expected_type = type(
-        serialization_strategy.get_type_default(
-            parameter_metadata.type, parameter_metadata.repeated
-        )
-    )
+    expected_type = type(get_type_default(parameter_metadata.type, parameter_metadata.repeated))
     display_name = parameter_metadata.display_name
     enum_values_annotation = get_enum_values_annotation(parameter_metadata)
 
     if parameter_metadata.repeated:
-        expected_element_type = type(
-            serialization_strategy.get_type_default(parameter_metadata.type, False)
-        )
+        expected_element_type = type(get_type_default(parameter_metadata.type, False))
         _validate_default_value_type_for_repeated_type(
             default_value,
             expected_type,
