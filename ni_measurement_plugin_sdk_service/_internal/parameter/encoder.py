@@ -27,6 +27,8 @@ def serialize_parameters(
 
         parameter_value (Sequence[Any]): Parameter values to serialize.
 
+        Service_info (ServiceInfo): Unique service name.
+
     Returns:
         bytes: Serialized byte string containing parameter values.
     """
@@ -58,6 +60,27 @@ def serialize_parameters(
     return message_instance.SerializeToString()
 
 
+def serialize_default_values(
+    parameter_metadata_dict: Dict[int, ParameterMetadata], service_info: ServiceInfo
+) -> bytes:
+    """Serialize the Default values in the Metadata.
+
+    Args:
+        parameter_metadata_dict (Dict[int, ParameterMetadata]): Configuration metadata.
+
+        Service_info (ServiceInfo): Unique service name.
+
+    Returns:
+        bytes: Serialized byte string containing default values.
+    """
+    default_value_parameter_array = [
+        parameter.default_value for parameter in parameter_metadata_dict.values()
+    ]
+    return serialize_parameters(
+        parameter_metadata_dict, default_value_parameter_array, service_info
+    )
+
+
 def _create_message_type(
     parameter_values: Sequence[Any],
     parameter_metadata_dict: Dict[int, ParameterMetadata],
@@ -73,8 +96,10 @@ def _create_message_type(
 
         message_name (str): Service class name.
 
+        pool (descriptor_pool.DescriptorPool): Descriptor pool holding file descriptors.
+
     Returns:
-        Any: A message class based on a defined message_descriptor
+        Any: A message descriptor based on a defined message_descriptor
     """
     file_descriptor = descriptor_pb2.FileDescriptorProto()
     file_descriptor.name = message_name
@@ -85,7 +110,7 @@ def _create_message_type(
     # Initialize the message with fields defined
     for i, parameter in enumerate(parameter_values, start=1):
         parameter_metadata = parameter_metadata_dict[i]
-        field_descriptor = _create_fields(
+        field_descriptor = _create_field(
             message_proto=message_proto, metadata=parameter_metadata, index=i
         )
         if parameter_metadata.type == FieldDescriptorProto.TYPE_ENUM:
@@ -96,25 +121,6 @@ def _create_message_type(
             )
     pool.Add(file_descriptor)
     return pool.FindMessageTypeByName(f"{file_descriptor.package}.{message_proto.name}")
-
-
-def serialize_default_values(
-    parameter_metadata_dict: Dict[int, ParameterMetadata], service_info: ServiceInfo
-) -> bytes:
-    """Serialize the Default values in the Metadata.
-
-    Args:
-        parameter_metadata_dict (Dict[int, ParameterMetadata]): Configuration metadata.
-
-    Returns:
-        bytes: Serialized byte string containing default values.
-    """
-    default_value_parameter_array = [
-        parameter.default_value for parameter in parameter_metadata_dict.values()
-    ]
-    return serialize_parameters(
-        parameter_metadata_dict, default_value_parameter_array, service_info
-    )
 
 
 def _get_enum_values(param: Any) -> Any:
@@ -169,7 +175,9 @@ def _create_enum_type(
         field_descriptor.type_name = param.__class__.__name__
 
 
-def _create_fields(message_proto: Any, metadata: ParameterMetadata, index: int) -> Any:
+def _create_field(
+    message_proto: Any, metadata: ParameterMetadata, index: int
+) -> FieldDescriptorProto:
     """Implement a field in 'message_proto'.
 
     Args:
@@ -179,12 +187,8 @@ def _create_fields(message_proto: Any, metadata: ParameterMetadata, index: int) 
 
         index (int): 'param' index in parameter_values
 
-        param (Any): A value/parameter of parameter_values.
-
-        is_python_enum (boolean): True if 'param' is a enum from python's libraries.
-
     Returns:
-        Any: field_descriptor of 'param' or None if 'param' is not equal_to_default_value.
+        Any: field_descriptor of 'param'.
     """
     field_descriptor = message_proto.field.add()
     field_descriptor.number = index
