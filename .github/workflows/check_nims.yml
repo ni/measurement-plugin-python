@@ -79,6 +79,7 @@ jobs:
           rm -rf docs
           mkdir -p docs   
           poetry run sphinx-build _docs_source docs -b html -W --keep-going
+        working-directory: ./
       - name: Revert docs
         run:  git clean -dfx docs/ && git restore docs/
       - name: Generate gRPC stubs
