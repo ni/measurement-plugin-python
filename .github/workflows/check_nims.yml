@@ -12,6 +12,10 @@ jobs:
   check_nims:
     name: Check NIMS
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        # Set the working-directory for all steps in this job.
+        working-directory: ./packages/service
     steps:
       - name: Check out repo
         uses: actions/checkout@v4
