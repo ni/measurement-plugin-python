@@ -1,0 +1,30 @@
+[tool.poetry]
+name = "ni_measurement_plugin_sdk"
+version = "3.0.0"
+description = "Measurement Plugin SDK for Python"
+authors = ["NI <opensource@ni.com>"]
+readme = "README.md"
+repository = "https://github.com/ni/measurementlink-python/"
+license = "MIT"
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Manufacturing",
+    "Intended Audience :: Science/Research",
+    "Operating System :: Microsoft :: Windows",
+    # Poetry automatically adds classifiers for the license and the supported Python versions.
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Topic :: Scientific/Engineering",
+    "Topic :: System :: Hardware",
+]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+Mako = "^1.2.1"
+click = ">=8.1.3"
+ni-measurement-plugin-sdk-service = "*"
+ni-measurement-plugin-sdk-generator = "*"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
