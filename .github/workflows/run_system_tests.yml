@@ -42,7 +42,7 @@ jobs:
         working-directory: ./packages/service
       - name: Run system tests
         run: poetry run tox
-        working-directory: ./packages/sdk
+        working-directory: ./packages/service
       - name: Upload test results
         uses: actions/upload-artifact@v3
         with:
