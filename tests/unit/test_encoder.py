@@ -230,7 +230,7 @@ def test___serialize_parameter_multiple_times___returns_one_message_type(test_va
     for i in range(100):
         test___serializer___serialize_parameter___successful_serialization(test_values)
     pool = descriptor_pool.Default()
-    file_descriptor = pool.FindFileByName("serializeparameters")
+    file_descriptor = pool.FindFileByName("serializeparametersSERIALIZE")
     message_dict = file_descriptor.message_types_by_name
     assert len(message_dict) == 1
 

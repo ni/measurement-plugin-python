@@ -10,7 +10,7 @@ from ni_measurement_plugin_sdk_service._annotations import (
     ENUM_VALUES_KEY,
     TYPE_SPECIALIZATION_KEY,
 )
-from ni_measurement_plugin_sdk_service._internal.parameter.decoder_strategy import get_type_default
+from ni_measurement_plugin_sdk_service._internal.parameter.default_value import get_type_default
 from ni_measurement_plugin_sdk_service.measurement.info import TypeSpecialization
 
 

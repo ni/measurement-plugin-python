@@ -236,7 +236,7 @@ class MeasurementServiceServicerV1(v1_measurement_service_pb2_grpc.MeasurementSe
     ) -> v1_measurement_service_pb2.MeasureResponse:
         """RPC API that executes the registered measurement method."""
         mapping_by_id = decoder.deserialize_parameters(
-            self._configuration_metadata, request.configuration_parameters.value
+            self._configuration_metadata, request.configuration_parameters.value, self._service_info
         )
         mapping_by_variable_name = _get_mapping_by_parameter_name(
             mapping_by_id, self._measure_function
@@ -348,7 +348,7 @@ class MeasurementServiceServicerV2(v2_measurement_service_pb2_grpc.MeasurementSe
     ) -> Generator[v2_measurement_service_pb2.MeasureResponse, None, None]:
         """RPC API that executes the registered measurement method."""
         mapping_by_id = decoder.deserialize_parameters(
-            self._configuration_metadata, request.configuration_parameters.value
+            self._configuration_metadata, request.configuration_parameters.value, self._service_info
         )
         mapping_by_variable_name = _get_mapping_by_parameter_name(
             mapping_by_id, self._measure_function
