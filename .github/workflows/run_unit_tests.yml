@@ -76,7 +76,7 @@ jobs:
           key: ni-measurement-plugin-sdk-generator-${{ runner.os }}-py${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('poetry.lock') }}
       - name: Install ni-measurement-plugin-sdk-generator
         run: poetry install -v
-        working-directory: ./ni_measurement_plugin_sdk_generator
+        working-directory: ./packages/generator
       - name: Save cached virtualenv (ni-measurement-plugin-sdk-generator)
         uses: actions/cache/save@v4
         if: steps.restore-nimg.outputs.cache-hit != 'true'
@@ -85,7 +85,7 @@ jobs:
           key: ${{ steps.restore-nimg.outputs.cache-primary-key }}
       - name: Run tests and code coverage (ni-measurement-plugin-sdk-generator)
         run: poetry run pytest -v --cov=ni_measurement_plugin_sdk_generator --junitxml=test_results/nimg-${{ matrix.os }}-py${{ matrix.python-version}}.xml
-        working-directory: ./ni_measurement_plugin_sdk_generator
+        working-directory: ./packages/generator
 
       - name: Upload test results
         uses: actions/upload-artifact@v3

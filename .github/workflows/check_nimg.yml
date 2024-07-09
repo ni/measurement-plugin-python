@@ -15,7 +15,7 @@ jobs:
     defaults:
       run:
         # Set the working-directory for all steps in this job.
-        working-directory: ./ni_measurement_plugin_sdk_generator
+        working-directory: ./packages/generator
     steps:
       - name: Check out repo
         uses: actions/checkout@v4
