@@ -12,6 +12,10 @@ jobs:
       - windows
       - x64
       - rdss-measlinkbot-win-10-${{ matrix.configuration }}
+    defaults:
+      run:
+        # Set the working-directory for all steps in this job.
+        working-directory: ./packages/service
     strategy:
       matrix:
         configuration: ["py32", "py64"]
