@@ -40,6 +40,7 @@ jobs:
           key: ni-measurement-plugin-sdk-service-no-extras-${{ runner.os }}-py${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('poetry.lock') }}
       - name: Install ni-measurement-plugin-sdk-service (no extras)
         run: poetry install -v
+        working-directory: ./packages/service
       - name: Save cached virtualenv (ni-measurement-plugin-sdk-service, no extras)
         uses: actions/cache/save@v4
         if: steps.restore-nims-no-extras.outputs.cache-hit != 'true'
@@ -48,6 +49,7 @@ jobs:
           key: ${{ steps.restore-nims-no-extras.outputs.cache-primary-key }}
       - name: Run unit tests and code coverage (ni-measurement-plugin-sdk-service, no extras)
         run: poetry run pytest ./tests/unit -v --cov=ni_measurement_plugin_sdk_service --junitxml=test_results/nims-${{ matrix.os }}-py${{ matrix.python-version}}-no-extras.xml
+        working-directory: ./packages/service
 
       # ni-measurement-plugin-sdk-service, all extras
       - name: Restore cached virtualenv (ni-measurement-plugin-sdk-service, all extras)
@@ -58,6 +60,7 @@ jobs:
           key: ni-measurement-plugin-sdk-service-all-extras-${{ runner.os }}-py${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('poetry.lock') }}
       - name: Install ni-measurement-plugin-sdk-service (all extras)
         run: poetry install -v --all-extras
+        working-directory: ./packages/service
       - name: Save cached ni-measurement-plugin-sdk-service virtualenv (all extras)
         uses: actions/cache/save@v4
         if: steps.restore-nims-all-extras.outputs.cache-hit != 'true'
@@ -66,6 +69,7 @@ jobs:
           key: ${{ steps.restore-nims-all-extras.outputs.cache-primary-key }}
       - name: Run unit tests and code coverage (ni-measurement-plugin-sdk-service, all extras)
         run: poetry run pytest ./tests/unit -v --cov=ni_measurement_plugin_sdk_service --junitxml=test_results/nims-${{ matrix.os }}-py${{ matrix.python-version}}-all-extras.xml
+        working-directory: ./packages/service
 
       # ni-measurement-plugin-sdk-generator
       - name: Restore cached virtualenv (ni-measurement-plugin-sdk-generator)
