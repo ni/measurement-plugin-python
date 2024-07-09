@@ -86,6 +86,12 @@ jobs:
           poetry publish --build --username __token__ --password ${{ secrets.PYPI_TOKEN }}
         working-directory: ./ni_measurement_plugin_sdk_generator
 
+      - name: Build SDK Python package and publish to PyPI
+        if: ${{ startsWith(github.event.release.target_commitish, 'main') || startsWith(github.event.release.target_commitish, 'releases/') }}
+        run: |
+          poetry publish --build --username __token__ --password ${{ secrets.PYPI_TOKEN }}
+        working-directory: ./ni_measurement_plugin_sdk
+
       - name: Create archives of the examples
         env:
           EXAMPLE_ARCHIVE: measurement-plugin-python-examples-${{ steps.vars.outputs.tag }} 
