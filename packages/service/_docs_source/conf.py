@@ -46,7 +46,7 @@ htmlhelp_basename = "{}doc".format(project)
 # tell autoapi to doc the public options
 autoapi_options = list(autoapi.extension._DEFAULT_OPTIONS)
 autoapi_options.remove("private-members")  # note: remove this to include "_" members in docs
-autoapi_dirs = [root_path / "packages" / "service" / "ni_measurement_plugin_sdk_service"]
+autoapi_dirs = [root_path / "ni_measurement_plugin_sdk_service"]
 autoapi_type = "python"
 autodoc_typehints = "description"
 
