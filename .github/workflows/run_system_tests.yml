@@ -39,13 +39,11 @@ jobs:
           key: run-system-tests-${{ runner.os }}-${{ matrix.configuration }}-${{ hashFiles('poetry.lock') }}
       - name: Install dependencies
         run: poetry install -v
-        working-directory: ./packages/service
       - name: Run system tests
         run: poetry run tox
-        working-directory: ./packages/service
       - name: Upload test results
         uses: actions/upload-artifact@v3
         with:
           name: test_results
-          path: test_results/*.xml
+          path: ./packages/service/test_results/*.xml
         if: always()
