@@ -80,7 +80,7 @@ jobs:
           mkdir -p docs   
           poetry run sphinx-build _docs_source docs -b html -W --keep-going
       - name: Revert docs
-        run:  git clean -dfx ../../docs/ && git restore ../../docs/
+        run:  git clean -dfx docs/ && git restore docs/
       - name: Generate gRPC stubs
         run: |
           find ni_measurement_plugin_sdk_service/_internal/stubs/ -name \*_pb2.py\* -o -name \*_pb2_grpc.py\* -delete
