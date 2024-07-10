@@ -8,7 +8,7 @@ tool for generating and writing reusable measurement plug-ins using gRPC service
 
 The purpose of this package is as a meta-package that depends on `ni-measurement-plugin-sdk-generator`
 and `ni-measurement-plugin-sdk-service` so as to easily install all the things needed for the
-Measurmeent Plug-In SDK.
+Measurement Plug-In SDK.
 
 For installation and usage, see [Measurement Plug-In SDK for Python (`ni-measurement-plugin-sdk-service`)](https://pypi.org/project/ni-measurement-plugin-sdk-service/).
 
