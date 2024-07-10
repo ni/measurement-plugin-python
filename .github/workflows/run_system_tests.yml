@@ -34,8 +34,8 @@ jobs:
         id: cache
         with:
           path: |
-            .venv
-            .tox
+            packages/service/.venv
+            packages/service/.tox
           key: run-system-tests-${{ runner.os }}-${{ matrix.configuration }}-${{ hashFiles('packages/service/poetry.lock') }}
       - name: Install dependencies
         run: poetry install -v

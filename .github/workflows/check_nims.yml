@@ -38,15 +38,15 @@ jobs:
         uses: actions/cache/restore@v4
         id: restore-nims-all-extras
         with:
-          path: .venv
-          key: ni-measurement-plugin-sdk-service-all-extras-${{ runner.os }}-py${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('poetry.lock') }}
+          path: packages/service/.venv
+          key: ni-measurement-plugin-sdk-service-all-extras-${{ runner.os }}-py${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('packages/service/poetry.lock') }}
       - name: Install ni-measurement-plugin-sdk-service (all extras)
         run: poetry install -v --all-extras
       - name: Save cached virtualenv (ni-measurement-plugin-sdk-service, all extras)
         uses: actions/cache/save@v4
         if: steps.restore-nims-all-extras.outputs.cache-hit != 'true'
         with:
-          path: .venv
+          path: packages/service/.venv
           key: ${{ steps.restore-nims-all-extras.outputs.cache-primary-key }}
       - name: Lint ni-measurement-plugin-sdk-service
         run: poetry run ni-python-styleguide lint
@@ -64,15 +64,15 @@ jobs:
         uses: actions/cache/restore@v4
         id: restore-nims-all-extras-docs
         with:
-          path: .venv
-          key: ni-measurement-plugin-sdk-service-all-extras-docs-${{ runner.os }}-py${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('poetry.lock') }}
+          path: packages/service/.venv
+          key: ni-measurement-plugin-sdk-service-all-extras-docs-${{ runner.os }}-py${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('packages/service/poetry.lock') }}
       - name: Install ni-measurement-plugin-sdk-service (all extras, docs)
         run: poetry install -v --all-extras --with docs
       - name: Save cached virtualenv (ni-measurement-plugin-sdk-service, all extras, docs)
         uses: actions/cache/save@v4
         if: steps.restore-nims-all-extras-docs.outputs.cache-hit != 'true'
         with:
-          path: .venv
+          path: packages/service/.venv
           key: ${{ steps.restore-nims-all-extras-docs.outputs.cache-primary-key }}
       - name: Build docs and check for errors/warnings
         run: |
