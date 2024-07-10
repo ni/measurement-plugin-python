@@ -34,8 +34,8 @@ jobs:
         uses: actions/cache@v4
         id: cache
         with:
-          path: ni_measurement_plugin_sdk_generator/.venv
-          key: ni-measurement-plugin-sdk-generator-${{ runner.os }}-py${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('poetry.lock') }}
+          path: packages/generator/.venv
+          key: ni-measurement-plugin-sdk-generator-${{ runner.os }}-py${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('packages/generator/poetry.lock') }}
       - name: Install ni-measurement-plugin-sdk-generator
         run: poetry install -v
       - name: Lint ni-measurement-plugin-sdk-generator

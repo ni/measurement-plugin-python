@@ -36,7 +36,7 @@ jobs:
           path: |
             .venv
             .tox
-          key: run-system-tests-${{ runner.os }}-${{ matrix.configuration }}-${{ hashFiles('poetry.lock') }}
+          key: run-system-tests-${{ runner.os }}-${{ matrix.configuration }}-${{ hashFiles('packages/service/poetry.lock') }}
       - name: Install dependencies
         run: poetry install -v
       - name: Run system tests

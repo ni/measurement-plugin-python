@@ -31,7 +31,7 @@ jobs:
         with:
           path: 'examples/**/poetry.lock'
           # Include the main project's poetry.lock in the hash to detect upstream dependency updates.
-          key: examples-poetry-lock-${{ runner.os }}-py${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('examples/**/pyproject.toml', 'poetry.lock') }}
+          key: examples-poetry-lock-${{ runner.os }}-py${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('examples/**/pyproject.toml', 'packages/service/poetry.lock') }}
       - name: Lock examples
         if: steps.cache-poetry-lock.outputs.cache-hit != 'true'
         run: |
