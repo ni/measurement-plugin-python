@@ -15,7 +15,10 @@ from ni_measurement_plugin_sdk_service._internal.parameter.metadata import (
     ParameterMetadata,
     TypeSpecialization,
 )
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types import xydata_pb2
+from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types import (
+    xydata_pb2,
+)
+from ni_measurement_plugin_sdk_service.measurement.info import ServiceInfo
 from tests.utilities.stubs.serialization import test_pb2
 from tests.utilities.stubs.serialization.bigmessage_pb2 import BigMessage
 
@@ -85,8 +88,11 @@ def test___serializer___deserialize_parameter___successful_deserialization(value
     parameter = _get_test_parameter_by_id(values)
     grpc_serialized_data = _get_grpc_serialized_data(values)
 
-    parameter_value_by_id = decoder.deserialize_parameters(parameter, grpc_serialized_data)
-
+    parameter_value_by_id = decoder.deserialize_parameters(
+        parameter,
+        grpc_serialized_data,
+        ServiceInfo(service_class="deserializer", description_url=""),
+    )
     assert list(parameter_value_by_id.values()) == values
 
 
@@ -118,7 +124,9 @@ def test___empty_buffer___deserialize_parameters___returns_zero_or_empty():
         double_xy_data_array,
     ]
     parameter = _get_test_parameter_by_id(nonzero_defaults)
-    parameter_value_by_id = decoder.deserialize_parameters(parameter, bytes())
+    parameter_value_by_id = decoder.deserialize_parameters(
+        parameter, bytes(), ServiceInfo(service_class="empty_buffer", description_url="")
+    )
 
     for key, value in parameter_value_by_id.items():
         parameter_metadata = parameter[key]
@@ -142,7 +150,9 @@ def test___big_message___deserialize_parameters___returns_parameter_value_by_id(
     expected_parameter_value_by_id = {i + 1: value for (i, value) in enumerate(values)}
 
     parameter_value_by_id = decoder.deserialize_parameters(
-        parameter_metadata_by_id, serialized_data
+        parameter_metadata_by_id,
+        serialized_data,
+        ServiceInfo(service_class="big_message", description_url=""),
     )
 
     assert parameter_value_by_id == pytest.approx(expected_parameter_value_by_id)
