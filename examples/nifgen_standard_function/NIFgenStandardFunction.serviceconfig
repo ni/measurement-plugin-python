@@ -9,6 +9,7 @@
         "ni.measurementlink.measurement.v2.MeasurementService"
       ],
       "path": "start.bat",
+      "installPath": "install.bat",
       "annotations": {
         "ni/service.description": "Measurement plug-in example that generates a standard function waveform using an NI waveform generator.",
         "ni/service.collection": "NI.Examples",

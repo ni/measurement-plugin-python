@@ -9,6 +9,7 @@
         "ni.measurementlink.measurement.v2.MeasurementService"
       ],
       "path": "start.bat",
+      "installPath": "install.bat",
       "annotations": {
         "ni/service.description": "Measurement plug-in example that controls relays using an NI relay driver (e.g. PXI-2567).",
         "ni/service.collection": "NI.Examples",
