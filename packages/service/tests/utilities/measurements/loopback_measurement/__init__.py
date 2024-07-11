@@ -4,9 +4,8 @@ import pathlib
 from enum import Enum
 from typing import Iterable, Tuple
 
-from examples.sample_measurement._stubs import color_pb2
-
 import ni_measurement_plugin_sdk_service as nims
+from tests.utilities.measurements.sample_measurement._stubs import color_pb2
 
 
 class Color(Enum):
