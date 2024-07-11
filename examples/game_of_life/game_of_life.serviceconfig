@@ -8,6 +8,7 @@
         "ni.measurementlink.measurement.v2.MeasurementService"
       ],
       "path": "start.bat",
+      "installPath": "install.bat",
       "annotations": {
         "ni/service.description": "Measurement plug-in example that displays Conway's Game of Life simulation in a graph.",
         "ni/service.collection": "NI.Examples",
