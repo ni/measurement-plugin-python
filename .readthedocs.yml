@@ -10,7 +10,7 @@ build:
       # Tell poetry to not use a virtual environment
       - poetry config virtualenvs.create false
     post_install:
-      - pushd packages/service/ && poetry install --with docs
+      - poetry -C packages/service/ install --with docs
 
 sphinx:
   configuration: packages/service/_docs_source/conf.py
