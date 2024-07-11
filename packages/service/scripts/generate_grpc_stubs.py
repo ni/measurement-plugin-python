@@ -11,7 +11,7 @@ import pkg_resources
 STUBS_NAMESPACE = "ni_measurement_plugin_sdk_service._internal.stubs"
 PROTO_PARENT_NAMESPACES = ["ni.measurementlink", "nidevice_grpc", "ni.protobuf.types"]
 STUBS_PATH = pathlib.Path(__file__).parent.parent / STUBS_NAMESPACE.replace(".", "/")
-PROTO_PATH = pathlib.Path(__file__).parent.parent / "third_party" / "ni-apis"
+PROTO_PATH = pathlib.Path(__file__).parent.parent.parent.parent / "third_party" / "ni-apis"
 STUBS_PROTO_PATH = STUBS_PATH / "proto"
 STUBS_PROTO_FILES = list(STUBS_PROTO_PATH.rglob("*.proto"))
 # We still want to use session.proto from STUBS_PATH / "proto" until

@@ -12,6 +12,10 @@ jobs:
       - windows
       - x64
       - rdss-measlinkbot-win-10-${{ matrix.configuration }}
+    defaults:
+      run:
+        # Set the working-directory for all steps in this job.
+        working-directory: ./packages/service
     strategy:
       matrix:
         configuration: ["py32", "py64"]
@@ -24,14 +28,15 @@ jobs:
         uses: actions/checkout@v4
       - name: Copy and rename .env.simulation to .env
         run: cp examples/.env.simulation .env
+        working-directory: ./
       - name: Cache virtualenvs
         uses: actions/cache@v4
         id: cache
         with:
           path: |
-            .venv
-            .tox
-          key: run-system-tests-${{ runner.os }}-${{ matrix.configuration }}-${{ hashFiles('poetry.lock') }}
+            packages/service/.venv
+            packages/service/.tox
+          key: run-system-tests-${{ runner.os }}-${{ matrix.configuration }}-${{ hashFiles('packages/service/poetry.lock') }}
       - name: Install dependencies
         run: poetry install -v
       - name: Run system tests
@@ -40,5 +45,5 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: test_results
-          path: test_results/*.xml
+          path: ./packages/service/test_results/*.xml
         if: always()
