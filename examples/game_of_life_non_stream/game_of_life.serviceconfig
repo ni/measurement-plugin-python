@@ -1,9 +1,9 @@
 {
   "services": [
     {
-      "displayName": "Conway's Game of Life (Py)",
-      "serviceClass": "game_of_life_Python",
-      "descriptionUrl": "www.google.com",
+      "displayName": "Conway's Game of Life Non Streaming(Py)",
+      "serviceClass": "game_of_life_Python_non_stream",
+      "descriptionUrl": "",
       "providedInterfaces": [
         "ni.measurementlink.measurement.v2.MeasurementService"
       ],

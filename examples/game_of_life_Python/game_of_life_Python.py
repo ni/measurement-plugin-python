@@ -1,12 +1,7 @@
-<%page args="measure_docstring, configuration_metadata, output_metadata, service_class, measure_parameters_with_type, measure_parameters, enum_by_class_name, measure_return_values_with_type, import_modules"/>\
-\
 """Python measurement client."""
 
-% if enum_by_class_name:
-from enum import Enum
-% endif
 from functools import cached_property
-from typing import Any, Dict, List, NamedTuple, Tuple
+from typing import Any, Dict, List, NamedTuple, Tuple, Generator
 
 import grpc
 from google.protobuf import any_pb2
@@ -25,9 +20,7 @@ from ni_measurementlink_service._internal.stubs.ni.measurementlink.pin_map_conte
 )
 from ni_measurementlink_service.discovery import DiscoveryClient
 from ni_measurementlink_service.pin_map import PinMapClient
-% for key, val in import_modules.items():
-${val}
-% endfor
+from ni_measurementlink_service._internal.stubs.ni.protobuf.types import xydata_pb2
 
 _SITES = [0]
 _V2_MEASUREMENT_SERVICE_INTERFACE = "ni.measurementlink.measurement.v2.MeasurementService"
@@ -36,10 +29,11 @@ _pin_map_path = ""
 class _MeasurementClient:
 
     def __init__(self, service_class: str):
+        self._measure_response = None
         self._service_class = service_class
         self._discovery_client = DiscoveryClient()
-        self._configuration_metadata_by_id = ${configuration_metadata}
-        self._output_metadata_by_id = ${output_metadata}
+        self._configuration_metadata_by_id = {1: ParameterMetadata(display_name='width', type=13, repeated=False, default_value=100, annotations={}, message_type=''), 2: ParameterMetadata(display_name='height', type=13, repeated=False, default_value=100, annotations={}, message_type=''), 3: ParameterMetadata(display_name='update_interval_msec', type=13, repeated=False, default_value=100, annotations={}, message_type=''), 4: ParameterMetadata(display_name='max_generations', type=5, repeated=False, default_value=-1, annotations={}, message_type='')}
+        self._output_metadata_by_id = {1: ParameterMetadata(display_name='game_of_life', type=11, repeated=False, default_value=0, annotations={}, message_type='ni.protobuf.types.DoubleXYData'), 2: ParameterMetadata(display_name='generation', type=13, repeated=False, default_value=0, annotations={}, message_type='')}
 
     @cached_property
     def _measurement_service_stub(self) -> v2_measurement_service_pb2_grpc.MeasurementServiceStub:
@@ -70,7 +64,6 @@ class _MeasurementClient:
             ),
         )
 
-    % if output_metadata:
 
     def _parse_enum_values_if_any(
         self, output_values: Dict[int, Any]
@@ -87,63 +80,66 @@ class _MeasurementClient:
                     output_values[key] = enum_type(int(output_values[key]))
         return output_values
 
-    % endif
 
-    def _measure(self, *args: Any) -> Tuple[Any]:
+    def _measure(self, *args: Any) -> Generator[Tuple[Any], None, None]:
         request = self._get_measure_request(args)
-        % if output_metadata:
         result = [None] * max(self._output_metadata_by_id.keys())
-        % else:
-        result = []
-        % endif
-        for response in self._measurement_service_stub.Measure(request):
-            output_values = deserialize_parameters(
-                self._output_metadata_by_id, response.outputs.value
-            )
-            % if output_metadata:
-            output_values = self._parse_enum_values_if_any(output_values)
-            % endif
-            for k, v in output_values.items():
-                result[k - 1] = v
+        self._measure_response = self._measurement_service_stub.Measure(request, )
+        try:
+            for response in self._measure_response:
+                output_values = deserialize_parameters(
+                        self._output_metadata_by_id, response.outputs.value
+                    )
+                output_values = self._parse_enum_values_if_any(output_values)
+                for k, v in output_values.items():
+                    result[k - 1] = v
 
-        return tuple(result)
+                yield tuple(result)
+        except grpc.RpcError as e:
+            if e.code() == grpc.StatusCode.CANCELLED:
+                print("Measure Call has been cancelled by the user.")
+            else:
+                raise Exception(f"Measure Call has been failed with status: {e.code()}. Details: {e.details()}")  
 
-% for enum_name, enum_value in enum_by_class_name.items():
-
-class ${enum_name}(Enum):
-
-    % for key, val in enum_value.items():
-    ${key} = ${val}
-    % endfor
-
-% endfor
-<% output_type = "None" %>\
-% if output_metadata:
 
 class Output(NamedTuple):
     """Measurement result container."""
 
-    ${measure_return_values_with_type}
+    game_of_life: xydata_pb2.DoubleXYData
+    generation: int
 
-<% output_type = "Output" %>\
-% endif
+_client = _MeasurementClient("game_of_life_Python")
 
 def measure(
-    ${measure_parameters_with_type}
-) -> ${output_type}:
-    """${measure_docstring}
+    width: int = 100,
+    height: int = 100,
+    update_interval_msec: int = 100,
+    max_generations: int = -1
+) -> Generator[Output, None, None]:
+    """MeasurementLink example that displays Conway's Game of Life simulation in a graph.
 
     Returns:
         Measurement output.
     """
 
-    client = _MeasurementClient("${service_class}")
-    response = client._measure(
-        ${measure_parameters}
+    # client = _MeasurementClient("game_of_life_Python")
+    measure_response = _client._measure(
+        width,
+        height,
+        update_interval_msec,
+        max_generations
     )
-    % if output_metadata:
-    return Output._make(response)
-    % endif
+    for response in measure_response:
+        yield Output._make(response)
+
+
+def cancel():
+    if _client._measure_response is not None:
+        try:
+            _client._measure_response.cancel()
+        except Exception as e:
+            print("..........................")
+            raise Exception(f"measure call has been failed with status: {e}")
 
 
 def register_pin_map(pin_map_absolute_path: str) -> str:

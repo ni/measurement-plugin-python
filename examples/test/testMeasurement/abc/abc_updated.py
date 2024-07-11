@@ -1,15 +1,11 @@
-<%page args="measure_docstring, configuration_metadata, output_metadata, service_class, measure_parameters_with_type, measure_parameters, enum_by_class_name, measure_return_values_with_type, import_modules"/>\
-\
 """Python measurement client."""
 
-% if enum_by_class_name:
-from enum import Enum
-% endif
 from functools import cached_property
 from typing import Any, Dict, List, NamedTuple, Tuple
 
 import grpc
 from google.protobuf import any_pb2
+import time
 
 from ni_measurementlink_service._internal.parameter.metadata import ParameterMetadata
 from ni_measurementlink_service._internal.parameter.serializer import (
@@ -25,9 +21,6 @@ from ni_measurementlink_service._internal.stubs.ni.measurementlink.pin_map_conte
 )
 from ni_measurementlink_service.discovery import DiscoveryClient
 from ni_measurementlink_service.pin_map import PinMapClient
-% for key, val in import_modules.items():
-${val}
-% endfor
 
 _SITES = [0]
 _V2_MEASUREMENT_SERVICE_INTERFACE = "ni.measurementlink.measurement.v2.MeasurementService"
@@ -36,10 +29,11 @@ _pin_map_path = ""
 class _MeasurementClient:
 
     def __init__(self, service_class: str):
+        self._measure_response = None
         self._service_class = service_class
         self._discovery_client = DiscoveryClient()
-        self._configuration_metadata_by_id = ${configuration_metadata}
-        self._output_metadata_by_id = ${output_metadata}
+        self._configuration_metadata_by_id = {1: ParameterMetadata(display_name='pin_name', type=9, repeated=False, default_value='Pin1', annotations={'ni/ioresource.instrument_type': 'niDAQmx', 'ni/type_specialization': 'ioresource'}, message_type=''), 2: ParameterMetadata(display_name='sample_rate', type=1, repeated=False, default_value=1.0, annotations={}, message_type=''), 3: ParameterMetadata(display_name='number_of_samples', type=4, repeated=False, default_value=10000000, annotations={}, message_type='')}
+        self._output_metadata_by_id = {1: ParameterMetadata(display_name='acquired_samples', type=1, repeated=True, default_value=0, annotations={}, message_type='')}
 
     @cached_property
     def _measurement_service_stub(self) -> v2_measurement_service_pb2_grpc.MeasurementServiceStub:
@@ -70,7 +64,6 @@ class _MeasurementClient:
             ),
         )
 
-    % if output_metadata:
 
     def _parse_enum_values_if_any(
         self, output_values: Dict[int, Any]
@@ -87,63 +80,83 @@ class _MeasurementClient:
                     output_values[key] = enum_type(int(output_values[key]))
         return output_values
 
-    % endif
 
     def _measure(self, *args: Any) -> Tuple[Any]:
         request = self._get_measure_request(args)
-        % if output_metadata:
         result = [None] * max(self._output_metadata_by_id.keys())
-        % else:
-        result = []
-        % endif
-        for response in self._measurement_service_stub.Measure(request):
-            output_values = deserialize_parameters(
-                self._output_metadata_by_id, response.outputs.value
-            )
-            % if output_metadata:
-            output_values = self._parse_enum_values_if_any(output_values)
-            % endif
-            for k, v in output_values.items():
-                result[k - 1] = v
+        self._measure_response = self._measurement_service_stub.Measure(request)
+        print(self._measure_response)
+        # if self._measure_response.is_active:
+        #     print("active")
+        #     time.sleep(10)
+        #     self._measure_response.cancel()
+        try:
+            for response in self._measure_response:
+                output_values = deserialize_parameters(
+                    self._output_metadata_by_id, response.outputs.value
+                )
+                output_values = self._parse_enum_values_if_any(output_values)
+                for k, v in output_values.items():
+                    result[k - 1] = v
 
-        return tuple(result)
+            return tuple(result)
+        except grpc.RpcError as e:
+            if e.code() == grpc.StatusCode.CANCELLED:
+                raise e
+                print("Measure Call has been cancelled by the user.")
+            else:
+                raise Exception(f"Measure Call has been failed with status: {e.code()}. Details: {e.details()}")        
 
-% for enum_name, enum_value in enum_by_class_name.items():
-
-class ${enum_name}(Enum):
-
-    % for key, val in enum_value.items():
-    ${key} = ${val}
-    % endfor
-
-% endfor
-<% output_type = "None" %>\
-% if output_metadata:
 
 class Output(NamedTuple):
     """Measurement result container."""
 
-    ${measure_return_values_with_type}
+    acquired_samples: List[float]
 
-<% output_type = "Output" %>\
-% endif
+_client = _MeasurementClient("ni.examples.NIDAQmxAnalogInput_Python")
 
 def measure(
-    ${measure_parameters_with_type}
-) -> ${output_type}:
-    """${measure_docstring}
+    pin_name: str = "Pin1",
+    sample_rate: float = 1000,
+    number_of_samples: int = 60000
+) -> Output:
+    try:
+        """MeasurementLink example that performs a finite analog input measurement with NI-DAQmx.
 
-    Returns:
-        Measurement output.
-    """
+        Returns:
+            Measurement output.
+        """
 
-    client = _MeasurementClient("${service_class}")
-    response = client._measure(
-        ${measure_parameters}
-    )
-    % if output_metadata:
-    return Output._make(response)
-    % endif
+        # _client = _MeasurementClient("ni.examples.NIDAQmxAnalogInput_Python")
+        response = _client._measure(
+            pin_name,
+            sample_rate,
+            number_of_samples
+        )
+        return Output._make(response)
+    except grpc.RpcError as e:
+        if e.code() == grpc.StatusCode.CANCELLED:
+            print("Measure Call has been cancelled by the user.")
+        else:
+            raise Exception(f"Measure Call has been failed with status: {e.code()}. Details: {e.details()}")
+
+# def cancel():
+#     while(_client._measure_response.is_active):
+#         try:
+#             print("Inside cancel")
+#             time.sleep(1)
+#             _client._measure_response.cancel()
+#         except Exception as e:
+#             print("..........................")
+#             raise Exception(f"measure call has been failed with status: {e}")
+            
+def cancel():
+    if _client._measure_response.is_active:
+        print("active")
+        time.sleep(10)
+        _client._measure_response.cancel()   
+    else:
+        print(_client._measure_response)
 
 
 def register_pin_map(pin_map_absolute_path: str) -> str:

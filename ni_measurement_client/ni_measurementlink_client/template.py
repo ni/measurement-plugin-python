@@ -3,7 +3,7 @@
 import json
 import keyword
 import pathlib
-from typing import Any, Dict, Optional, Sequence, Tuple
+from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 import click
 import grpc
@@ -18,6 +18,7 @@ from ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v
     measurement_service_pb2_grpc as v2_measurement_service_pb2_grpc,
 )
 from ni_measurementlink_service.discovery import DiscoveryClient, ServiceDescriptor
+from ni_measurementlink_service._internal.stubs.ni.protobuf.types import xydata_pb2
 
 _V2_MEASUREMENT_SERVICE_INTERFACE = "ni.measurementlink.measurement.v2.MeasurementService"
 _PROTO_DATATYPE_TO_PYTYPE_LOOKUP = {
@@ -36,16 +37,25 @@ _PROTO_DATATYPE_TO_PYTYPE_LOOKUP = {
     Field.TYPE_BOOL: bool,
     Field.TYPE_STRING: str,
     Field.TYPE_ENUM: int,
+    Field.TYPE_MESSAGE: int,
 }
 _INVALID_CHARS = "`~!@#$%^&*()-+={}[]\|:;',<>.?/ \n"
+_XY_DATA_IMPORT = "from ni_measurementlink_service._internal.stubs.ni.protobuf.types import xydata_pb2"
+_IMPORT_MODULES = {}
+
+
+def add_to_import_modules(key, value):
+    global _IMPORT_MODULES
+    _IMPORT_MODULES[key] = value
 
 
 def _check_if_measurement_service_running(
     ctx: click.Context, param: click.Parameter, service_class: str
-) -> str:
+) -> List[str]:
     try:
-        if service_class:
-            DiscoveryClient().resolve_service(_V2_MEASUREMENT_SERVICE_INTERFACE, service_class)
+        if len(service_class) != 0:
+            for service in service_class:
+                DiscoveryClient().resolve_service(_V2_MEASUREMENT_SERVICE_INTERFACE, service)
         return service_class
     except Exception:
         raise click.BadParameter(
@@ -63,6 +73,64 @@ def _get_measurement_service_stub(
     channel = grpc.insecure_channel(resolved_service.insecure_address)
     return v2_measurement_service_pb2_grpc.MeasurementServiceStub(channel)
 
+def _get_service_descriptors_using_services(
+    available_measurement_services: Sequence[ServiceDescriptor],
+    service_class: List[str]
+) -> Sequence[ServiceDescriptor]:
+    preferred_services = []
+    for service in available_measurement_services:
+        if service.service_class in service_class:
+            preferred_services.append(service)
+
+    if len(preferred_services) == 0:
+        raise Exception(f"Measurement client creation failed because either all of the entered services: {service_class} are invalid or not running")
+    return preferred_services
+
+
+
+def _get_module_name_and_service_class_latest(
+    available_measurement_services: Sequence[ServiceDescriptor],
+) -> Sequence[ServiceDescriptor]:
+    print("List of registered measurements: ")
+    for i, service in enumerate(available_measurement_services):
+        print(f"{i+1}. {service.display_name}")
+
+    user_input = input("Enter 'all' to create client measurements for all active services, or enter a list of serial numbers (separated by spaces) for the desired measurement service client creation: ")
+
+    preferred_services = []
+
+    if user_input.lower() == "all":
+        for service in available_measurement_services:
+            preferred_services.append(service)
+        return preferred_services
+    
+    unique_inputs = set()
+    duplicate_values = []
+    inappropriate_values = []
+    
+    # Split the input string into individual elements by spaces
+    elements = user_input.split()
+    
+    for element in elements:
+        try:
+            value = int(element)
+            if value not in unique_inputs:
+                preferred_services.append(available_measurement_services[value - 1])
+                unique_inputs.add(value)
+            else:
+                duplicate_values.append(value)
+        except ValueError:
+            inappropriate_values.append(element)
+    
+    if duplicate_values or inappropriate_values:
+        log_message = "The following duplicate value(s): {} & the following inappropriate value(s): {} are ignored".format(
+            ", ".join(map(str, duplicate_values)) if duplicate_values else "None",
+            ", ".join(inappropriate_values) if inappropriate_values else "None"
+        )
+        print(log_message)
+
+    return preferred_services
+    
 
 def _get_module_name_and_service_class(
     available_measurement_services: Sequence[ServiceDescriptor],
@@ -84,7 +152,8 @@ def _get_module_name_and_service_class(
         raise Exception("Input out of bounds. Please try again by entering a valid serial number.")
 
     measurement_service_class = available_measurement_services[index - 1].service_class
-    module_name = input("Enter the name for the Python measurement client module: ")
+    module_name = available_measurement_services[index - 1].service_class
+    # module_name = input("Enter the name for the Python measurement client module: ")
     return (module_name, measurement_service_class)
 
 
@@ -149,6 +218,7 @@ def _get_python_identifier(name: str) -> str:
         var_name = var_name + "_"
 
     return var_name
+
 
 def _get_python_class_name(name: str) -> str:
     class_name = name.replace("_", " ").title().replace(" ", "")
@@ -262,6 +332,13 @@ def _get_measure_output_fields_with_type(
             if metadata.repeated:
                 param_type = f"List[{param_type}]"
 
+        if metadata.message_type == "ni.protobuf.types.DoubleXYData":
+            param_type = "xydata_pb2.DoubleXYData"
+            add_to_import_modules("DoubleXYData", _XY_DATA_IMPORT)
+
+            if metadata.repeated:
+                param_type = f"List[{param_type}]"
+
         output_names_with_type.append(f"{param_name}: {param_type}")
 
     return "\n    ".join(output_names_with_type)
@@ -311,6 +388,7 @@ def _create_file(
     "--measurement-service-class",
     callback=_check_if_measurement_service_running,
     help="The service class of your measurement.",
+    multiple = True
 )
 @click.option(
     "-i",
@@ -318,8 +396,14 @@ def _create_file(
     is_flag=True,
     help="Utilize interactive input for Python measurement client creation.",
 )
+@click.option(
+    "-a",
+    "--all",
+    is_flag=True,
+    help="Python measurement client creation for all active services",
+)
 def create_client(
-    module_name: str, measurement_service_class: Optional[str], interactive_mode: bool
+    module_name: str, measurement_service_class: Optional[List[str]], interactive_mode: bool, all: bool,
 ) -> None:
     """Generates a Python measurement client module for a measurement service.
 
@@ -335,51 +419,56 @@ def create_client(
     if not available_measurement_services:
         print("Could find any active measurements. Please start one and try again.")
         return
+    
+    if all:
+        preferred_services = available_measurement_services
+    elif interactive_mode:
+        preferred_services = _get_module_name_and_service_class_latest(available_measurement_services)
+    elif not measurement_service_class:
+        raise Exception("Invalid input. Please try again with a valid measurement service class.")
+    else:
+        preferred_services = _get_service_descriptors_using_services(available_measurement_services,measurement_service_class)
 
-    if interactive_mode:
-        module_name, measurement_service_class = _get_module_name_and_service_class(
-            available_measurement_services
+    for service in preferred_services:
+        module_name = service.service_class
+        measurement_service_class = service.service_class
+
+        
+        selected_service_description = next(
+            meas_service.annotations["ni/service.description"]
+            for meas_service in available_measurement_services
+            if meas_service.service_class == measurement_service_class
         )
 
-    if not module_name or not module_name.isidentifier():
-        raise Exception("Module name must follow Python module conventions and cannot be empty.")
+        stub = _get_measurement_service_stub(discovery_client, measurement_service_class)
+        metadata = stub.GetMetadata(v2_measurement_service_pb2.GetMetadataRequest())
+        configuration_metadata_by_id = _get_configuration_metadata_by_id(metadata)
+        output_metadata_by_id = _get_output_metadata_by_id(metadata)
 
-    if not measurement_service_class:
-        raise Exception("Invalid input. Please try again with a valid measurement service class.")
+        measure_parameters_with_type, measure_param_names, enum_values_by_type_name = (
+            _get_measure_parameters_with_type_and_default_value(configuration_metadata_by_id)
+        )
 
-    selected_service_description = next(
-        meas_service.annotations["ni/service.description"]
-        for meas_service in available_measurement_services
-        if meas_service.service_class == measurement_service_class
-    )
+        measure_return_values_with_type = _get_measure_output_fields_with_type(
+            output_metadata_by_id, enum_values_by_type_name
+        )
 
-    stub = _get_measurement_service_stub(discovery_client, measurement_service_class)
-    metadata = stub.GetMetadata(v2_measurement_service_pb2.GetMetadataRequest())
-    configuration_metadata_by_id = _get_configuration_metadata_by_id(metadata)
-    output_metadata_by_id = _get_output_metadata_by_id(metadata)
+        _add_default_values_for_output_enum_parameters(output_metadata_by_id, enum_values_by_type_name)
 
-    measure_parameters_with_type, measure_param_names, enum_values_by_type_name = (
-        _get_measure_parameters_with_type_and_default_value(configuration_metadata_by_id)
-    )
-    measure_return_values_with_type = _get_measure_output_fields_with_type(
-        output_metadata_by_id, enum_values_by_type_name
-    )
+        directory_out_path = pathlib.Path.cwd() / module_name
+        directory_out_path.mkdir(exist_ok=True, parents=True)
 
-    _add_default_values_for_output_enum_parameters(output_metadata_by_id, enum_values_by_type_name)
-
-    directory_out_path = pathlib.Path.cwd() / module_name
-    directory_out_path.mkdir(exist_ok=True, parents=True)
-
-    _create_file(
-        "measurement_client.py.mako",
-        f"{module_name}.py",
-        directory_out_path,
-        measure_docstring=selected_service_description,
-        configuration_metadata=configuration_metadata_by_id,
-        output_metadata=output_metadata_by_id,
-        service_class=measurement_service_class,
-        measure_parameters_with_type=measure_parameters_with_type,
-        measure_parameters=measure_param_names,
-        enum_by_class_name=enum_values_by_type_name,
-        measure_return_values_with_type=measure_return_values_with_type,
-    )
+        _create_file(
+            "measurement_client.py.mako",
+            f"{module_name}.py",
+            directory_out_path,
+            measure_docstring=selected_service_description,
+            configuration_metadata=configuration_metadata_by_id,
+            output_metadata=output_metadata_by_id,
+            service_class=measurement_service_class,
+            measure_parameters_with_type=measure_parameters_with_type,
+            measure_parameters=measure_param_names,
+            enum_by_class_name=enum_values_by_type_name,
+            measure_return_values_with_type=measure_return_values_with_type,
+            import_modules = _IMPORT_MODULES,
+        )

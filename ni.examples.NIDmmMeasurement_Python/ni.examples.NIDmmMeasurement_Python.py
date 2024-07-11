@@ -1,10 +1,6 @@
-<%page args="measure_docstring, configuration_metadata, output_metadata, service_class, measure_parameters_with_type, measure_parameters, enum_by_class_name, measure_return_values_with_type, import_modules"/>\
-\
 """Python measurement client."""
 
-% if enum_by_class_name:
 from enum import Enum
-% endif
 from functools import cached_property
 from typing import Any, Dict, List, NamedTuple, Tuple
 
@@ -25,9 +21,6 @@ from ni_measurementlink_service._internal.stubs.ni.measurementlink.pin_map_conte
 )
 from ni_measurementlink_service.discovery import DiscoveryClient
 from ni_measurementlink_service.pin_map import PinMapClient
-% for key, val in import_modules.items():
-${val}
-% endfor
 
 _SITES = [0]
 _V2_MEASUREMENT_SERVICE_INTERFACE = "ni.measurementlink.measurement.v2.MeasurementService"
@@ -38,8 +31,8 @@ class _MeasurementClient:
     def __init__(self, service_class: str):
         self._service_class = service_class
         self._discovery_client = DiscoveryClient()
-        self._configuration_metadata_by_id = ${configuration_metadata}
-        self._output_metadata_by_id = ${output_metadata}
+        self._configuration_metadata_by_id = {1: ParameterMetadata(display_name='pin_name', type=9, repeated=False, default_value='Pin1', annotations={'ni/ioresource.instrument_type': 'niDMM', 'ni/type_specialization': 'ioresource'}, message_type=''), 2: ParameterMetadata(display_name='measurement_type', type=14, repeated=False, default_value=1, annotations={'ni/enum.values': '{"NONE": 0, "DC_VOLTS": 1, "AC_VOLTS": 2, "DC_CURRENT": 3, "AC_CURRENT": 4, "TWO_WIRE_RES": 5, "FOUR_WIRE_RES": 101, "FREQ": 104, "PERIOD": 105, "TEMPERATURE": 108, "AC_VOLTS_DC_COUPLED": 1001, "DIODE": 1002, "WAVEFORM_VOLTAGE": 1003, "WAVEFORM_CURRENT": 1004, "CAPACITANCE": 1005, "INDUCTANCE": 1006}', 'ni/type_specialization': 'enum'}, message_type=''), 3: ParameterMetadata(display_name='range', type=1, repeated=False, default_value=10.0, annotations={}, message_type=''), 4: ParameterMetadata(display_name='resolution_digits', type=1, repeated=False, default_value=5.5, annotations={}, message_type='')}
+        self._output_metadata_by_id = {1: ParameterMetadata(display_name='measured_value', type=1, repeated=False, default_value=0, annotations={}, message_type=''), 2: ParameterMetadata(display_name='signal_out_of_range', type=8, repeated=False, default_value=0, annotations={}, message_type=''), 3: ParameterMetadata(display_name='absolute_resolution', type=1, repeated=False, default_value=0, annotations={}, message_type='')}
 
     @cached_property
     def _measurement_service_stub(self) -> v2_measurement_service_pb2_grpc.MeasurementServiceStub:
@@ -70,7 +63,6 @@ class _MeasurementClient:
             ),
         )
 
-    % if output_metadata:
 
     def _parse_enum_values_if_any(
         self, output_values: Dict[int, Any]
@@ -87,63 +79,69 @@ class _MeasurementClient:
                     output_values[key] = enum_type(int(output_values[key]))
         return output_values
 
-    % endif
 
     def _measure(self, *args: Any) -> Tuple[Any]:
         request = self._get_measure_request(args)
-        % if output_metadata:
         result = [None] * max(self._output_metadata_by_id.keys())
-        % else:
-        result = []
-        % endif
         for response in self._measurement_service_stub.Measure(request):
             output_values = deserialize_parameters(
                 self._output_metadata_by_id, response.outputs.value
             )
-            % if output_metadata:
             output_values = self._parse_enum_values_if_any(output_values)
-            % endif
             for k, v in output_values.items():
                 result[k - 1] = v
 
         return tuple(result)
 
-% for enum_name, enum_value in enum_by_class_name.items():
 
-class ${enum_name}(Enum):
+class MeasurementTypeEnum(Enum):
 
-    % for key, val in enum_value.items():
-    ${key} = ${val}
-    % endfor
+    NONE = 0
+    DC_VOLTS = 1
+    AC_VOLTS = 2
+    DC_CURRENT = 3
+    AC_CURRENT = 4
+    TWO_WIRE_RES = 5
+    FOUR_WIRE_RES = 101
+    FREQ = 104
+    PERIOD = 105
+    TEMPERATURE = 108
+    AC_VOLTS_DC_COUPLED = 1001
+    DIODE = 1002
+    WAVEFORM_VOLTAGE = 1003
+    WAVEFORM_CURRENT = 1004
+    CAPACITANCE = 1005
+    INDUCTANCE = 1006
 
-% endfor
-<% output_type = "None" %>\
-% if output_metadata:
 
 class Output(NamedTuple):
     """Measurement result container."""
 
-    ${measure_return_values_with_type}
+    measured_value: float
+    signal_out_of_range: bool
+    absolute_resolution: float
 
-<% output_type = "Output" %>\
-% endif
 
 def measure(
-    ${measure_parameters_with_type}
-) -> ${output_type}:
-    """${measure_docstring}
+    pin_name: str = "Pin1",
+    measurement_type: MeasurementTypeEnum = MeasurementTypeEnum.DC_VOLTS,
+    range: float = 10.0,
+    resolution_digits: float = 5.5
+) -> Output:
+    """MeasurementLink example that performs a measurement using an NI DMM.
 
     Returns:
         Measurement output.
     """
 
-    client = _MeasurementClient("${service_class}")
+    client = _MeasurementClient("ni.examples.NIDmmMeasurement_Python")
     response = client._measure(
-        ${measure_parameters}
+        pin_name,
+        measurement_type,
+        range,
+        resolution_digits
     )
-    % if output_metadata:
     return Output._make(response)
-    % endif
 
 
 def register_pin_map(pin_map_absolute_path: str) -> str:

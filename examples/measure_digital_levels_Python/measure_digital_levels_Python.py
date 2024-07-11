@@ -1,10 +1,5 @@
-<%page args="measure_docstring, configuration_metadata, output_metadata, service_class, measure_parameters_with_type, measure_parameters, enum_by_class_name, measure_return_values_with_type, import_modules"/>\
-\
 """Python measurement client."""
 
-% if enum_by_class_name:
-from enum import Enum
-% endif
 from functools import cached_property
 from typing import Any, Dict, List, NamedTuple, Tuple
 
@@ -25,9 +20,6 @@ from ni_measurementlink_service._internal.stubs.ni.measurementlink.pin_map_conte
 )
 from ni_measurementlink_service.discovery import DiscoveryClient
 from ni_measurementlink_service.pin_map import PinMapClient
-% for key, val in import_modules.items():
-${val}
-% endfor
 
 _SITES = [0]
 _V2_MEASUREMENT_SERVICE_INTERFACE = "ni.measurementlink.measurement.v2.MeasurementService"
@@ -38,8 +30,8 @@ class _MeasurementClient:
     def __init__(self, service_class: str):
         self._service_class = service_class
         self._discovery_client = DiscoveryClient()
-        self._configuration_metadata_by_id = ${configuration_metadata}
-        self._output_metadata_by_id = ${output_metadata}
+        self._configuration_metadata_by_id = {1: ParameterMetadata(display_name='VDD (V)', type=1, repeated=False, default_value=1.8, annotations={}, message_type='')}
+        self._output_metadata_by_id = {1: ParameterMetadata(display_name='VIH (V)', type=1, repeated=False, default_value=0, annotations={}, message_type=''), 2: ParameterMetadata(display_name='VIL (V)', type=1, repeated=False, default_value=0, annotations={}, message_type=''), 3: ParameterMetadata(display_name='VOH (V)', type=1, repeated=False, default_value=0, annotations={}, message_type=''), 4: ParameterMetadata(display_name='VOL (V)', type=1, repeated=False, default_value=0, annotations={}, message_type='')}
 
     @cached_property
     def _measurement_service_stub(self) -> v2_measurement_service_pb2_grpc.MeasurementServiceStub:
@@ -70,7 +62,6 @@ class _MeasurementClient:
             ),
         )
 
-    % if output_metadata:
 
     def _parse_enum_values_if_any(
         self, output_values: Dict[int, Any]
@@ -87,63 +78,44 @@ class _MeasurementClient:
                     output_values[key] = enum_type(int(output_values[key]))
         return output_values
 
-    % endif
 
     def _measure(self, *args: Any) -> Tuple[Any]:
         request = self._get_measure_request(args)
-        % if output_metadata:
         result = [None] * max(self._output_metadata_by_id.keys())
-        % else:
-        result = []
-        % endif
         for response in self._measurement_service_stub.Measure(request):
             output_values = deserialize_parameters(
                 self._output_metadata_by_id, response.outputs.value
             )
-            % if output_metadata:
             output_values = self._parse_enum_values_if_any(output_values)
-            % endif
             for k, v in output_values.items():
                 result[k - 1] = v
 
         return tuple(result)
 
-% for enum_name, enum_value in enum_by_class_name.items():
-
-class ${enum_name}(Enum):
-
-    % for key, val in enum_value.items():
-    ${key} = ${val}
-    % endfor
-
-% endfor
-<% output_type = "None" %>\
-% if output_metadata:
 
 class Output(NamedTuple):
     """Measurement result container."""
 
-    ${measure_return_values_with_type}
+    vih__v_: float
+    vil__v_: float
+    voh__v_: float
+    vol__v_: float
 
-<% output_type = "Output" %>\
-% endif
 
 def measure(
-    ${measure_parameters_with_type}
-) -> ${output_type}:
-    """${measure_docstring}
+    vdd__v_: float = 1.8
+) -> Output:
+    """Simulate Digital Input/Output levels of a Digital pin
 
     Returns:
         Measurement output.
     """
 
-    client = _MeasurementClient("${service_class}")
+    client = _MeasurementClient("measure_digital_levels_Python")
     response = client._measure(
-        ${measure_parameters}
+        vdd__v_
     )
-    % if output_metadata:
     return Output._make(response)
-    % endif
 
 
 def register_pin_map(pin_map_absolute_path: str) -> str:
