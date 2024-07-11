@@ -1,0 +1,4 @@
+# This file specifies that when we publish this plugin to a Plug-in Library,
+# we should not copy the following directories:
+.venv
+__pycache__
