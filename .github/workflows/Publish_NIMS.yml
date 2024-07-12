@@ -103,6 +103,8 @@ jobs:
           EXAMPLE_ARCHIVE: measurement-plugin-python-examples-${{ steps.vars.outputs.tag }} 
         run: |
           # Use --prefix for the tarball but not the zip file. Windows zip tools often create a directory automatically.
+          rm -rf dist
+          mkdir -p dist
           git archive -o dist/${EXAMPLE_ARCHIVE}.zip ${GITHUB_REF}:examples/
           git archive -o dist/${EXAMPLE_ARCHIVE}.tar.gz --prefix ${EXAMPLE_ARCHIVE}/ ${GITHUB_REF}:examples/
 
@@ -121,4 +123,4 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: NIMS Artifacts
-          path: dist/ # path/to/artifact
+          path: ./packages/service/dist/ # path/to/artifact
