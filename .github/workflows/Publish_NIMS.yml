@@ -38,6 +38,7 @@ jobs:
 
       - name: Check for lock changes
         run: poetry lock --check
+        working-directory: ./packages/service
 
       # If the tag is 0.1.0, this will set the version of NIMS package to 0.1.0
       - name: Store version from Tag
@@ -47,7 +48,7 @@ jobs:
       - name: Update NIMS package version based on tag name.
         run: |
           poetry version ${{ steps.vars.outputs.tag }}
-          working-directory: ./packages/service
+        working-directory: ./packages/service
       
       - name: Update NIMG package version based on tag name.
         run: |
@@ -85,6 +86,7 @@ jobs:
         if: ${{ startsWith(github.event.release.target_commitish, 'main') || startsWith(github.event.release.target_commitish, 'releases/') }}
         run: |
           poetry publish --build --username __token__ --password ${{ secrets.PYPI_TOKEN }}
+        working-directory: ./packages/service
         
       - name: Build NIMG Python package and publish to PyPI
         if: ${{ startsWith(github.event.release.target_commitish, 'main') || startsWith(github.event.release.target_commitish, 'releases/') }}
