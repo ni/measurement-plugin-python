@@ -48,7 +48,7 @@ jobs:
       - name: Update NIMS package version based on tag name.
         run: |
           poetry version ${{ steps.vars.outputs.tag }}
-          working-directory: ./packages/service
+        working-directory: ./packages/service
       
       - name: Update NIMG package version based on tag name.
         run: |
