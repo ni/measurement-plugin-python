@@ -187,13 +187,13 @@ files = [
 
 [[package]]
 name = "ni-measurement-plugin-sdk-generator"
-version = "2.0.0.dev2"
+version = "2.0.0.dev4"
 description = "Measurement Plugin Code Generator for Python"
 optional = false
 python-versions = "<4.0,>=3.8"
 files = [
-    {file = "ni_measurement_plugin_sdk_generator-2.0.0.dev2-py3-none-any.whl", hash = "sha256:9a6ca7beefae7fc292b8a9e431775108ebbf0d1bbdd809b760b11df2bd8d2ab4"},
-    {file = "ni_measurement_plugin_sdk_generator-2.0.0.dev2.tar.gz", hash = "sha256:52d9c25339dd756324b110126d152cca38acd7e0ec6379b84b2f8322824efeb8"},
+    {file = "ni_measurement_plugin_sdk_generator-2.0.0.dev4-py3-none-any.whl", hash = "sha256:c3cc782b42bb8957a922c43acd7bf326ecf5cbbc76244cb6d394c9df37a4e713"},
+    {file = "ni_measurement_plugin_sdk_generator-2.0.0.dev4.tar.gz", hash = "sha256:84be9adb1669acc26774de665cafa0b636d6c4f9639fa75583054bbcf428e98c"},
 ]
 
 [package.dependencies]
