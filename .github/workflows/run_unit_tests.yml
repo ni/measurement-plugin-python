@@ -95,5 +95,5 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: test_results
-          path: test_results/*.xml
+          path: ./packages/service/test_results/*.xml
         if: always()
