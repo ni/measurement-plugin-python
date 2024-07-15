@@ -42,6 +42,6 @@ follow the steps below:
   driver's `simulate` and `topology` parameters:
 
   ```
-  MEASUREMENTLINK_NISWITCH_SIMULATE=1
-  MEASUREMENTLINK_NISWITCH_TOPOLOGY=2567/Independent
+  MEASUREMENT_PLUGIN_NISWITCH_SIMULATE=1
+  MEASUREMENT_PLUGIN_NISWITCH_TOPOLOGY=2567/Independent
   ```

@@ -47,11 +47,17 @@ jobs:
       - name: Update NIMS package version based on tag name.
         run: |
           poetry version ${{ steps.vars.outputs.tag }}
+          working-directory: ./packages/service
       
       - name: Update NIMG package version based on tag name.
         run: |
           poetry version ${{ steps.vars.outputs.tag }}
-        working-directory: ./ni_measurement_plugin_sdk_generator
+        working-directory: ./packages/generator
+      
+      - name: Update SDK package version based on tag name.
+        run: |
+          poetry version ${{ steps.vars.outputs.tag }}
+        working-directory: ./packages/sdk
 
       - name: Commit file changes
         id: commit
@@ -84,13 +90,21 @@ jobs:
         if: ${{ startsWith(github.event.release.target_commitish, 'main') || startsWith(github.event.release.target_commitish, 'releases/') }}
         run: |
           poetry publish --build --username __token__ --password ${{ secrets.PYPI_TOKEN }}
-        working-directory: ./ni_measurement_plugin_sdk_generator
+        working-directory: ./packages/generator
+
+      - name: Build SDK Python package and publish to PyPI
+        if: ${{ startsWith(github.event.release.target_commitish, 'main') || startsWith(github.event.release.target_commitish, 'releases/') }}
+        run: |
+          poetry publish --build --username __token__ --password ${{ secrets.PYPI_TOKEN }}
+        working-directory: ./packages/sdk
 
       - name: Create archives of the examples
         env:
           EXAMPLE_ARCHIVE: measurement-plugin-python-examples-${{ steps.vars.outputs.tag }} 
         run: |
           # Use --prefix for the tarball but not the zip file. Windows zip tools often create a directory automatically.
+          rm -rf dist
+          mkdir -p dist
           git archive -o dist/${EXAMPLE_ARCHIVE}.zip ${GITHUB_REF}:examples/
           git archive -o dist/${EXAMPLE_ARCHIVE}.tar.gz --prefix ${EXAMPLE_ARCHIVE}/ ${GITHUB_REF}:examples/
 
@@ -109,4 +123,4 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: NIMS Artifacts
-          path: dist/ # path/to/artifact
+          path: ./packages/service/dist/ # path/to/artifact

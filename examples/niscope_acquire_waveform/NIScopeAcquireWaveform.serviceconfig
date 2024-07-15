@@ -9,6 +9,7 @@
         "ni.measurementlink.measurement.v2.MeasurementService"
       ],
       "path": "start.bat",
+      "installPath": "install.bat",
       "annotations": {
         "ni/service.description": "Measurement plug-in example that acquires a waveform using an NI oscilloscope.",
         "ni/service.collection": "NI.Examples",
