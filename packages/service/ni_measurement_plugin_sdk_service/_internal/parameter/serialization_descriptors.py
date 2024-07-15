@@ -1,4 +1,4 @@
-"""Serialization Strategy."""
+"""Serialization Descriptors."""
 
 from json import loads
 from typing import Any, List
