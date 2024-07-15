@@ -1,15 +1,18 @@
 """Contains tests to validate serializer.py."""
 
 from enum import Enum, IntEnum
+from typing import Any, Dict
 
 import pytest
-from google.protobuf import descriptor_pool
+from google.protobuf import descriptor_pb2, descriptor_pool
 
-from ni_measurement_plugin_sdk_service._internal.parameter import encoder
+from ni_measurement_plugin_sdk_service._internal.parameter import (
+    encoder,
+    serialization_descriptors,
+)
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types import (
     xydata_pb2,
 )
-from ni_measurement_plugin_sdk_service.measurement.info import ServiceInfo
 from tests.unit.test_decoder import (
     _get_big_message,
     _get_big_message_metadata_by_id,
@@ -107,12 +110,13 @@ BIG_MESSAGE_SIZE = 100
 def test___serializer___serialize_parameter___successful_serialization(test_values):
     default_values = test_values
     parameter = _get_test_parameter_by_id(default_values)
+    service_name = _test_create_file_descriptor(list(parameter.values()), "serializeparameter")
 
     # Custom Serialization
     custom_serialized_bytes = encoder.serialize_parameters(
         parameter,
         test_values,
-        service_info=ServiceInfo(service_class="serialize_parameters", description_url=""),
+        service_name=service_name,
     )
 
     _validate_serialized_bytes(custom_serialized_bytes, test_values)
@@ -173,11 +177,10 @@ def test___serializer___serialize_parameter___successful_serialization(test_valu
 )
 def test___serializer___serialize_default_parameter___successful_serialization(default_values):
     parameter = _get_test_parameter_by_id(default_values)
+    service_name = _test_create_file_descriptor(list(parameter.values()), "defaultserialize")
 
     # Custom Serialization
-    custom_serialized_bytes = encoder.serialize_default_values(
-        parameter, service_info=ServiceInfo(service_class="default_serialize", description_url="")
-    )
+    custom_serialized_bytes = encoder.serialize_default_values(parameter, service_name=service_name)
 
     _validate_serialized_bytes(custom_serialized_bytes, default_values)
 
@@ -186,11 +189,14 @@ def test___big_message___serialize_parameters___returns_serialized_data() -> Non
     parameter_metadata_by_id = _get_big_message_metadata_by_id()
     values = [123.456 + i for i in range(BIG_MESSAGE_SIZE)]
     expected_message = _get_big_message(values)
+    service_name = _test_create_file_descriptor(
+        list(parameter_metadata_by_id.values()), "bigmessage"
+    )
 
     serialized_data = encoder.serialize_parameters(
         parameter_metadata_by_id,
         values,
-        service_info=ServiceInfo(service_class="big_message", description_url=""),
+        service_name=service_name,
     )
 
     message = BigMessage.FromString(serialized_data)
@@ -230,7 +236,7 @@ def test___serialize_parameter_multiple_times___returns_one_message_type(test_va
     for i in range(100):
         test___serializer___serialize_parameter___successful_serialization(test_values)
     pool = descriptor_pool.Default()
-    file_descriptor = pool.FindFileByName("serializeparametersSERIALIZE")
+    file_descriptor = pool.FindFileByName("serializeparameter")
     message_dict = file_descriptor.message_types_by_name
     assert len(message_dict) == 1
 
@@ -239,3 +245,16 @@ def _validate_serialized_bytes(custom_serialized_bytes, values):
     # Serialization using gRPC Any
     grpc_serialized_data = _get_grpc_serialized_data(values)
     assert grpc_serialized_data == custom_serialized_bytes
+
+
+def _test_create_file_descriptor(metadata: Dict[int, Any], file_name: str) -> str:
+    pool = descriptor_pool.Default()
+    try:
+        pool.FindMessageTypeByName(f"{file_name}.test")
+    except KeyError:
+        file_descriptor = descriptor_pb2.FileDescriptorProto()
+        file_descriptor.name = file_name
+        file_descriptor.package = file_name
+        serialization_descriptors._create_message_type(metadata, "test", file_descriptor)
+        pool.Add(file_descriptor)
+    return file_name + ".test"

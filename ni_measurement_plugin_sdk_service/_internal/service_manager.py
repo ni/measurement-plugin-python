@@ -3,6 +3,7 @@ from typing import Callable, List, Optional
 
 import grpc
 from deprecation import deprecated
+from google.protobuf import descriptor_pool
 from grpc.framework.foundation import logging_pool
 
 from ni_measurement_plugin_sdk_service._internal.grpc_servicer import (
@@ -11,6 +12,9 @@ from ni_measurement_plugin_sdk_service._internal.grpc_servicer import (
 )
 from ni_measurement_plugin_sdk_service._internal.parameter.metadata import (
     ParameterMetadata,
+)
+from ni_measurement_plugin_sdk_service._internal.parameter.serialization_descriptors import (
+    create_file_descriptor,
 )
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v1 import (
     measurement_service_pb2_grpc as v1_measurement_service_pb2_grpc,
@@ -98,6 +102,12 @@ class GrpcService:
                 ("grpc.max_receive_message_length", -1),
                 ("grpc.max_send_message_length", -1),
             ],
+        )
+        create_file_descriptor(
+            service_name=service_info.service_class,
+            output_metadata=output_parameter_list,
+            input_metadata=configuration_parameter_list,
+            pool=descriptor_pool.Default(),
         )
         for interface in service_info.provided_interfaces:
             if interface == _V1_INTERFACE:

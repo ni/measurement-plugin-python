@@ -10,7 +10,9 @@ from ni_measurement_plugin_sdk_service._annotations import (
     ENUM_VALUES_KEY,
     TYPE_SPECIALIZATION_KEY,
 )
-from ni_measurement_plugin_sdk_service._internal.parameter.default_value import get_type_default
+from ni_measurement_plugin_sdk_service._internal.parameter.default_value import (
+    get_type_default,
+)
 from ni_measurement_plugin_sdk_service.measurement.info import TypeSpecialization
 
 
@@ -39,6 +41,15 @@ class ParameterMetadata(NamedTuple):
     
     Required when 'type' is Kind.TypeMessage. Ignored for any other 'type'.
     """
+
+    def sanitized_display_name(self) -> str:
+        """Parameter display name of alpha/numerical characters.
+
+        Returns:
+            str: Alpha/numerical characters of 'display_name'.
+
+        """
+        return "".join(char for char in self.display_name if char.isalnum())
 
 
 def validate_default_value_type(parameter_metadata: ParameterMetadata) -> None:

@@ -137,11 +137,11 @@ def _get_mapping_by_parameter_name(
 
 
 def _serialize_outputs(
-    output_metadata: Dict[int, ParameterMetadata], outputs: Any, service_info: ServiceInfo
+    output_metadata: Dict[int, ParameterMetadata], outputs: Any, service_name: str
 ) -> any_pb2.Any:
     if isinstance(outputs, collections.abc.Sequence):
         return any_pb2.Any(
-            value=encoder.serialize_parameters(output_metadata, outputs, service_info)
+            value=encoder.serialize_parameters(output_metadata, outputs, service_name)
         )
     elif outputs is None:
         raise ValueError(f"Measurement function returned None")
@@ -205,7 +205,7 @@ class MeasurementServiceServicerV1(v1_measurement_service_pb2_grpc.MeasurementSe
             measurement_signature.configuration_parameters.append(configuration_parameter)
 
         measurement_signature.configuration_defaults.value = encoder.serialize_default_values(
-            self._configuration_metadata, self._service_info
+            self._configuration_metadata, self._get_service_name() + ".Inputs"
         )
 
         for field_number, output_metadata in self._output_metadata.items():
@@ -236,7 +236,9 @@ class MeasurementServiceServicerV1(v1_measurement_service_pb2_grpc.MeasurementSe
     ) -> v1_measurement_service_pb2.MeasureResponse:
         """RPC API that executes the registered measurement method."""
         mapping_by_id = decoder.deserialize_parameters(
-            self._configuration_metadata, request.configuration_parameters.value, self._service_info
+            self._configuration_metadata,
+            request.configuration_parameters.value,
+            self._get_service_name() + ".Inputs",
         )
         mapping_by_variable_name = _get_mapping_by_parameter_name(
             mapping_by_id, self._measure_function
@@ -265,8 +267,14 @@ class MeasurementServiceServicerV1(v1_measurement_service_pb2_grpc.MeasurementSe
 
     def _serialize_response(self, outputs: Any) -> v1_measurement_service_pb2.MeasureResponse:
         return v1_measurement_service_pb2.MeasureResponse(
-            outputs=_serialize_outputs(self._output_metadata, outputs, self._service_info)
+            outputs=_serialize_outputs(
+                self._output_metadata, outputs, self._get_service_name() + ".Outputs"
+            )
         )
+
+    def _get_service_name(self) -> str:
+        service_name = "".join(char for char in self._service_info.service_class if char.isalpha())
+        return service_name
 
 
 class MeasurementServiceServicerV2(v2_measurement_service_pb2_grpc.MeasurementServiceServicer):
@@ -315,7 +323,7 @@ class MeasurementServiceServicerV2(v2_measurement_service_pb2_grpc.MeasurementSe
             measurement_signature.configuration_parameters.append(configuration_parameter)
 
         measurement_signature.configuration_defaults.value = encoder.serialize_default_values(
-            self._configuration_metadata, self._service_info
+            self._configuration_metadata, self._get_service_name() + ".Inputs"
         )
 
         for field_number, output_metadata in self._output_metadata.items():
@@ -348,7 +356,9 @@ class MeasurementServiceServicerV2(v2_measurement_service_pb2_grpc.MeasurementSe
     ) -> Generator[v2_measurement_service_pb2.MeasureResponse, None, None]:
         """RPC API that executes the registered measurement method."""
         mapping_by_id = decoder.deserialize_parameters(
-            self._configuration_metadata, request.configuration_parameters.value, self._service_info
+            self._configuration_metadata,
+            request.configuration_parameters.value,
+            self._get_service_name() + ".Inputs",
         )
         mapping_by_variable_name = _get_mapping_by_parameter_name(
             mapping_by_id, self._measure_function
@@ -376,5 +386,11 @@ class MeasurementServiceServicerV2(v2_measurement_service_pb2_grpc.MeasurementSe
 
     def _serialize_response(self, outputs: Any) -> v2_measurement_service_pb2.MeasureResponse:
         return v2_measurement_service_pb2.MeasureResponse(
-            outputs=_serialize_outputs(self._output_metadata, outputs, self._service_info)
+            outputs=_serialize_outputs(
+                self._output_metadata, outputs, self._get_service_name() + ".Outputs"
+            )
         )
+
+    def _get_service_name(self) -> str:
+        service_name = "".join(char for char in self._service_info.service_class if char.isalpha())
+        return service_name

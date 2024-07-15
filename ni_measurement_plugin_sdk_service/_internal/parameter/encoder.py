@@ -1,5 +1,6 @@
 """Parameter Serializer."""
 
+from enum import Enum
 from typing import Any, Dict, Sequence
 
 from google.protobuf import descriptor_pool, message_factory
@@ -11,17 +12,12 @@ from ni_measurement_plugin_sdk_service._internal.parameter.default_value import 
 from ni_measurement_plugin_sdk_service._internal.parameter.metadata import (
     ParameterMetadata,
 )
-from ni_measurement_plugin_sdk_service._internal.parameter.serialization_strategy import (
-    create_message_type,
-    get_enum_values,
-)
-from ni_measurement_plugin_sdk_service.measurement.info import ServiceInfo
 
 
 def serialize_parameters(
     parameter_metadata_dict: Dict[int, ParameterMetadata],
     parameter_values: Sequence[Any],
-    service_info: ServiceInfo,
+    service_name: str,
 ) -> bytes:
     """Serialize the parameter values in same order based on the metadata_dict.
 
@@ -30,25 +26,19 @@ def serialize_parameters(
 
         parameter_values (Sequence[Any]): Parameter values to serialize.
 
-        Service_info (ServiceInfo): Unique service name.
+        service_name (str): Unique service name.
 
     Returns:
         bytes: Serialized byte string containing parameter values.
     """
     pool = descriptor_pool.Default()
-    service_name = "".join(char for char in service_info.service_class if char.isalpha())
-    message_name = service_name + "SERIALIZE"
-    # Tries to find a message type in pool with message_name else it creates one
-    try:
-        message_proto = pool.FindMessageTypeByName(f"{message_name}.{message_name}")
-    except KeyError:
-        message_proto = create_message_type(parameter_metadata_dict, message_name, pool)
+    message_proto = pool.FindMessageTypeByName(service_name)
     message_instance = message_factory.GetMessageClass(message_proto)()
 
     for i, parameter in enumerate(parameter_values, start=1):
-        field_name = f"field_{i}"
         parameter_metadata = parameter_metadata_dict[i]
-        parameter = get_enum_values(param=parameter)
+        field_name = parameter_metadata.sanitized_display_name()
+        parameter = _get_enum_values(param=parameter)
         type_default_value = get_type_default(parameter_metadata.type, parameter_metadata.repeated)
 
         # Doesn't assign default values or None values to fields
@@ -63,14 +53,14 @@ def serialize_parameters(
 
 
 def serialize_default_values(
-    parameter_metadata_dict: Dict[int, ParameterMetadata], service_info: ServiceInfo
+    parameter_metadata_dict: Dict[int, ParameterMetadata], service_name: str
 ) -> bytes:
     """Serialize the Default values in the Metadata.
 
     Args:
         parameter_metadata_dict (Dict[int, ParameterMetadata]): Configuration metadata.
 
-        Service_info (ServiceInfo): Unique service name.
+        service_name (str): Unique service name.
 
     Returns:
         bytes: Serialized byte string containing default values.
@@ -79,5 +69,23 @@ def serialize_default_values(
         parameter.default_value for parameter in parameter_metadata_dict.values()
     ]
     return serialize_parameters(
-        parameter_metadata_dict, default_value_parameter_array, service_info
+        parameter_metadata_dict, default_value_parameter_array, service_name
     )
+
+
+def _get_enum_values(param: Any) -> Any:
+    """Get's value of an enum.
+
+    Args:
+        param (Any): A value/parameter of parameter_values.
+
+    Returns:
+        Any: An enum value or a list of enums or the 'param'.
+    """
+    if param == []:
+        return param
+    if isinstance(param, list) and isinstance(param[0], Enum):
+        return [x.value for x in param]
+    elif isinstance(param, Enum):
+        return param.value
+    return param
