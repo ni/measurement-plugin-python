@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ni_measurement_plugin_sdk"
-version = "2.0.0-dev5"
+version = "2.0.0"
 description = "Measurement Plugin SDK for Python"
 authors = ["NI <opensource@ni.com>"]
 readme = "README.md"
@@ -20,8 +20,8 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = "^3.8"
-ni-measurement-plugin-sdk-service = "*"
-ni-measurement-plugin-sdk-generator = "*"
+ni-measurement-plugin-sdk-service = ">=2.0"
+ni-measurement-plugin-sdk-generator = ">=2.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
