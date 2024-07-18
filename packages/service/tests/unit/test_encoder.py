@@ -111,7 +111,7 @@ BIG_MESSAGE_SIZE = 100
 def test___serializer___serialize_parameter___successful_serialization(test_values):
     default_values = test_values
     parameter = _get_test_parameter_by_id(default_values)
-    service_name = _test_create_file_descriptor(list(parameter.values()), "serializeparameter")
+    service_name = _test_create_file_descriptor(list(parameter.values()), "serialize_parameter")
 
     # Custom Serialization
     custom_serialized_bytes = encoder.serialize_parameters(
@@ -178,7 +178,7 @@ def test___serializer___serialize_parameter___successful_serialization(test_valu
 )
 def test___serializer___serialize_default_parameter___successful_serialization(default_values):
     parameter = _get_test_parameter_by_id(default_values)
-    service_name = _test_create_file_descriptor(list(parameter.values()), "defaultserialize")
+    service_name = _test_create_file_descriptor(list(parameter.values()), "default_serialize")
 
     # Custom Serialization
     custom_serialized_bytes = encoder.serialize_default_values(parameter, service_name=service_name)
@@ -191,7 +191,7 @@ def test___big_message___serialize_parameters___returns_serialized_data() -> Non
     values = [123.456 + i for i in range(BIG_MESSAGE_SIZE)]
     expected_message = _get_big_message(values)
     service_name = _test_create_file_descriptor(
-        list(parameter_metadata_by_id.values()), "bigmessage"
+        list(parameter_metadata_by_id.values()), "big_message"
     )
 
     serialized_data = encoder.serialize_parameters(
@@ -237,7 +237,7 @@ def test___serialize_parameter_multiple_times___returns_one_message_type(test_va
     for i in range(100):
         test___serializer___serialize_parameter___successful_serialization(test_values)
     pool = descriptor_pool.Default()
-    file_descriptor = pool.FindFileByName("serializeparameter")
+    file_descriptor = pool.FindFileByName("serialize_parameter")
     message_dict = file_descriptor.message_types_by_name
     assert len(message_dict) == 1
 

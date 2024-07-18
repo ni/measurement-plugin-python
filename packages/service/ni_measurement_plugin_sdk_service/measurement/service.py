@@ -415,7 +415,7 @@ class MeasurementService:
         annotations = self._make_annotations_dict(
             data_type_info.type_specialization, instrument_type=instrument_type, enum_type=enum_type
         )
-        parameter = parameter_metadata.ParameterMetadata(
+        parameter = parameter_metadata.initialize(
             display_name,
             data_type_info.grpc_field_type,
             data_type_info.repeated,
@@ -475,7 +475,7 @@ class MeasurementService:
         annotations = self._make_annotations_dict(
             data_type_info.type_specialization, enum_type=enum_type
         )
-        parameter = parameter_metadata.ParameterMetadata(
+        parameter = parameter_metadata.initialize(
             display_name,
             data_type_info.grpc_field_type,
             data_type_info.repeated,

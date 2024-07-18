@@ -37,7 +37,7 @@ def serialize_parameters(
 
     for i, parameter in enumerate(parameter_values, start=1):
         parameter_metadata = parameter_metadata_dict[i]
-        field_name = parameter_metadata.sanitized_display_name()
+        field_name = parameter_metadata.field_name
         parameter = _get_enum_values(param=parameter)
         type_default_value = get_type_default(parameter_metadata.type, parameter_metadata.repeated)
 
@@ -74,14 +74,7 @@ def serialize_default_values(
 
 
 def _get_enum_values(param: Any) -> Any:
-    """Get's value of an enum.
-
-    Args:
-        param (Any): A value/parameter of parameter_values.
-
-    Returns:
-        Any: An enum value or a list of enums or the 'param'.
-    """
+    """Get's value of an enum."""
     if param == []:
         return param
     if isinstance(param, list) and isinstance(param[0], Enum):

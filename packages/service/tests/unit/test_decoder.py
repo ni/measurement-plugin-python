@@ -1,7 +1,7 @@
 """Contains tests to validate serializer.py."""
 
 from enum import Enum, IntEnum
-from typing import List, Dict, Sequence
+from typing import Dict, List, Sequence
 
 import pytest
 from google.protobuf import any_pb2, descriptor_pb2, descriptor_pool, type_pb2
@@ -17,6 +17,7 @@ from ni_measurement_plugin_sdk_service._internal.parameter import (
 from ni_measurement_plugin_sdk_service._internal.parameter.metadata import (
     ParameterMetadata,
     TypeSpecialization,
+    initialize,
 )
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types import (
     xydata_pb2,
@@ -89,7 +90,7 @@ BIG_MESSAGE_SIZE = 100
 def test___serializer___deserialize_parameter___successful_deserialization(values):
     parameter = _get_test_parameter_by_id(values)
     grpc_serialized_data = _get_grpc_serialized_data(values)
-    service_name = _test_create_file_descriptor(list(parameter.values()), "deserializeparameter")
+    service_name = _test_create_file_descriptor(list(parameter.values()), "deserialize_parameter")
 
     parameter_value_by_id = decoder.deserialize_parameters(
         parameter,
@@ -127,7 +128,7 @@ def test___empty_buffer___deserialize_parameters___returns_zero_or_empty():
         double_xy_data_array,
     ]
     parameter = _get_test_parameter_by_id(nonzero_defaults)
-    service_name = _test_create_file_descriptor(list(parameter.values()), "emptybuffer")
+    service_name = _test_create_file_descriptor(list(parameter.values()), "empty_buffer")
     parameter_value_by_id = decoder.deserialize_parameters(
         parameter, bytes(), service_name=service_name
     )
@@ -153,7 +154,7 @@ def test___big_message___deserialize_parameters___returns_parameter_value_by_id(
     serialized_data = message.SerializeToString()
     expected_parameter_value_by_id = {i + 1: value for (i, value) in enumerate(values)}
     service_name = _test_create_file_descriptor(
-        list(parameter_metadata_by_id.values()), "bigmessage"
+        list(parameter_metadata_by_id.values()), "big_message"
     )
 
     parameter_value_by_id = decoder.deserialize_parameters(
@@ -175,119 +176,119 @@ def _get_grpc_serialized_data(values):
 
 def _get_test_parameter_by_id(default_values):
     parameter_by_id = {
-        1: ParameterMetadata(
-            display_name="float_data",
+        1: initialize(
+            display_name="float_data!",
             type=type_pb2.Field.TYPE_FLOAT,
             repeated=False,
             default_value=default_values[0],
             annotations={},
         ),
-        2: ParameterMetadata(
+        2: initialize(
             display_name="double_data",
             type=type_pb2.Field.TYPE_DOUBLE,
             repeated=False,
             default_value=default_values[1],
             annotations={},
         ),
-        3: ParameterMetadata(
+        3: initialize(
             display_name="int32_data",
             type=type_pb2.Field.TYPE_INT32,
             repeated=False,
             default_value=default_values[2],
             annotations={},
         ),
-        4: ParameterMetadata(
+        4: initialize(
             display_name="uint32_data",
             type=type_pb2.Field.TYPE_INT64,
             repeated=False,
             default_value=default_values[3],
             annotations={},
         ),
-        5: ParameterMetadata(
+        5: initialize(
             display_name="int64_data",
             type=type_pb2.Field.TYPE_UINT32,
             repeated=False,
             default_value=default_values[4],
             annotations={},
         ),
-        6: ParameterMetadata(
+        6: initialize(
             display_name="uint64_data",
             type=type_pb2.Field.TYPE_UINT64,
             repeated=False,
             default_value=default_values[5],
             annotations={},
         ),
-        7: ParameterMetadata(
+        7: initialize(
             display_name="bool_data",
             type=type_pb2.Field.TYPE_BOOL,
             repeated=False,
             default_value=default_values[6],
             annotations={},
         ),
-        8: ParameterMetadata(
+        8: initialize(
             display_name="string_data",
             type=type_pb2.Field.TYPE_STRING,
             repeated=False,
             default_value=default_values[7],
             annotations={},
         ),
-        9: ParameterMetadata(
+        9: initialize(
             display_name="double_array_data",
             type=type_pb2.Field.TYPE_DOUBLE,
             repeated=True,
             default_value=default_values[8],
             annotations={},
         ),
-        10: ParameterMetadata(
+        10: initialize(
             display_name="float_array_data",
             type=type_pb2.Field.TYPE_FLOAT,
             repeated=True,
             default_value=default_values[9],
             annotations={},
         ),
-        11: ParameterMetadata(
+        11: initialize(
             display_name="int32_array_data",
             type=type_pb2.Field.TYPE_INT32,
             repeated=True,
             default_value=default_values[10],
             annotations={},
         ),
-        12: ParameterMetadata(
+        12: initialize(
             display_name="uint32_array_data",
             type=type_pb2.Field.TYPE_UINT32,
             repeated=True,
             default_value=default_values[11],
             annotations={},
         ),
-        13: ParameterMetadata(
+        13: initialize(
             display_name="int64_array_data",
             type=type_pb2.Field.TYPE_INT64,
             repeated=True,
             default_value=default_values[12],
             annotations={},
         ),
-        14: ParameterMetadata(
+        14: initialize(
             display_name="uint64_array_data",
             type=type_pb2.Field.TYPE_UINT64,
             repeated=True,
             default_value=default_values[13],
             annotations={},
         ),
-        15: ParameterMetadata(
+        15: initialize(
             display_name="bool_array_data",
             type=type_pb2.Field.TYPE_BOOL,
             repeated=True,
             default_value=default_values[14],
             annotations={},
         ),
-        16: ParameterMetadata(
+        16: initialize(
             display_name="string_array_data",
             type=type_pb2.Field.TYPE_STRING,
             repeated=True,
             default_value=default_values[15],
             annotations={},
         ),
-        17: ParameterMetadata(
+        17: initialize(
             display_name="enum_data",
             type=type_pb2.Field.TYPE_ENUM,
             repeated=False,
@@ -297,7 +298,7 @@ def _get_test_parameter_by_id(default_values):
                 ENUM_VALUES_KEY: '{"PURPLE": 0, "ORANGE": 1, "TEAL": 2, "BROWN": 3}',
             },
         ),
-        18: ParameterMetadata(
+        18: initialize(
             display_name="enum_array_data",
             type=type_pb2.Field.TYPE_ENUM,
             repeated=True,
@@ -307,7 +308,7 @@ def _get_test_parameter_by_id(default_values):
                 ENUM_VALUES_KEY: '{"PURPLE": 0, "ORANGE": 1, "TEAL": 2, "BROWN": 3}',
             },
         ),
-        19: ParameterMetadata(
+        19: initialize(
             display_name="int_enum_data",
             type=type_pb2.Field.TYPE_ENUM,
             repeated=False,
@@ -317,7 +318,7 @@ def _get_test_parameter_by_id(default_values):
                 ENUM_VALUES_KEY: '{"AMERICA": 0, "TAIWAN": 1, "AUSTRALIA": 2, "CANADA": 3}',
             },
         ),
-        20: ParameterMetadata(
+        20: initialize(
             display_name="int_enum_array_data",
             type=type_pb2.Field.TYPE_ENUM,
             repeated=True,
@@ -327,7 +328,7 @@ def _get_test_parameter_by_id(default_values):
                 ENUM_VALUES_KEY: '{"AMERICA": 0, "TAIWAN": 1, "AUSTRALIA": 2, "CANADA": 3}',
             },
         ),
-        21: ParameterMetadata(
+        21: initialize(
             display_name="xy_data",
             type=type_pb2.Field.TYPE_MESSAGE,
             repeated=False,
@@ -335,7 +336,7 @@ def _get_test_parameter_by_id(default_values):
             annotations={},
             message_type=xydata_pb2.DoubleXYData.DESCRIPTOR.full_name,
         ),
-        22: ParameterMetadata(
+        22: initialize(
             display_name="xy_data_array",
             type=type_pb2.Field.TYPE_MESSAGE,
             repeated=True,
@@ -378,7 +379,7 @@ def _get_test_grpc_message(test_values):
 def _get_big_message_metadata_by_id() -> Dict[int, ParameterMetadata]:
     return {
         i
-        + 1: ParameterMetadata(
+        + 1: initialize(
             display_name=f"field{i + 1}",
             type=type_pb2.Field.TYPE_DOUBLE,
             repeated=False,

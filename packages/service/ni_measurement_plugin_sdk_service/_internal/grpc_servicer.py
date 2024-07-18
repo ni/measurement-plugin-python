@@ -205,7 +205,7 @@ class MeasurementServiceServicerV1(v1_measurement_service_pb2_grpc.MeasurementSe
             measurement_signature.configuration_parameters.append(configuration_parameter)
 
         measurement_signature.configuration_defaults.value = encoder.serialize_default_values(
-            self._configuration_metadata, self._get_service_name() + ".Inputs"
+            self._configuration_metadata, self._service_info.service_class + ".Configurations"
         )
 
         for field_number, output_metadata in self._output_metadata.items():
@@ -238,7 +238,7 @@ class MeasurementServiceServicerV1(v1_measurement_service_pb2_grpc.MeasurementSe
         mapping_by_id = decoder.deserialize_parameters(
             self._configuration_metadata,
             request.configuration_parameters.value,
-            self._get_service_name() + ".Inputs",
+            self._service_info.service_class + ".Configurations",
         )
         mapping_by_variable_name = _get_mapping_by_parameter_name(
             mapping_by_id, self._measure_function
@@ -265,16 +265,15 @@ class MeasurementServiceServicerV1(v1_measurement_service_pb2_grpc.MeasurementSe
             measurement_service_context.get().mark_complete()
             measurement_service_context.reset(token)
 
-    def _serialize_response(self, outputs: Any) -> v1_measurement_service_pb2.MeasureResponse:
+    def _serialize_response(
+        self,
+        outputs: Any,
+    ) -> v1_measurement_service_pb2.MeasureResponse:
         return v1_measurement_service_pb2.MeasureResponse(
             outputs=_serialize_outputs(
-                self._output_metadata, outputs, self._get_service_name() + ".Outputs"
+                self._output_metadata, outputs, self._service_info.service_class + ".Outputs"
             )
         )
-
-    def _get_service_name(self) -> str:
-        service_name = "".join(char for char in self._service_info.service_class if char.isalpha())
-        return service_name
 
 
 class MeasurementServiceServicerV2(v2_measurement_service_pb2_grpc.MeasurementServiceServicer):
@@ -323,7 +322,7 @@ class MeasurementServiceServicerV2(v2_measurement_service_pb2_grpc.MeasurementSe
             measurement_signature.configuration_parameters.append(configuration_parameter)
 
         measurement_signature.configuration_defaults.value = encoder.serialize_default_values(
-            self._configuration_metadata, self._get_service_name() + ".Inputs"
+            self._configuration_metadata, self._service_info.service_class + ".Configurations"
         )
 
         for field_number, output_metadata in self._output_metadata.items():
@@ -358,7 +357,7 @@ class MeasurementServiceServicerV2(v2_measurement_service_pb2_grpc.MeasurementSe
         mapping_by_id = decoder.deserialize_parameters(
             self._configuration_metadata,
             request.configuration_parameters.value,
-            self._get_service_name() + ".Inputs",
+            self._service_info.service_class + ".Configurations",
         )
         mapping_by_variable_name = _get_mapping_by_parameter_name(
             mapping_by_id, self._measure_function
@@ -387,10 +386,6 @@ class MeasurementServiceServicerV2(v2_measurement_service_pb2_grpc.MeasurementSe
     def _serialize_response(self, outputs: Any) -> v2_measurement_service_pb2.MeasureResponse:
         return v2_measurement_service_pb2.MeasureResponse(
             outputs=_serialize_outputs(
-                self._output_metadata, outputs, self._get_service_name() + ".Outputs"
+                self._output_metadata, outputs, self._service_info.service_class + ".Outputs"
             )
         )
-
-    def _get_service_name(self) -> str:
-        service_name = "".join(char for char in self._service_info.service_class if char.isalpha())
-        return service_name

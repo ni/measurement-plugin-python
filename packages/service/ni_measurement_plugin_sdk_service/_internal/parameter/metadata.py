@@ -42,14 +42,30 @@ class ParameterMetadata(NamedTuple):
     Required when 'type' is Kind.TypeMessage. Ignored for any other 'type'.
     """
 
-    def sanitized_display_name(self) -> str:
-        """Parameter display name of alpha/numerical characters.
+    field_name: str = ""
+    """display_name in snake_case format."""
 
-        Returns:
-            str: Alpha/numerical characters of 'display_name'.
 
-        """
-        return "".join(char for char in self.display_name if char.isalnum())
+def initialize(
+    display_name: str,
+    type: type_pb2.Field.Kind.ValueType,
+    repeated: bool,
+    default_value: Any,
+    annotations: Dict[str, str],
+    message_type: str = "",
+) -> ParameterMetadata:
+    """Initialize ParameterMetadata with field_name."""
+    underscore_display_name = display_name.replace(" ", "_")
+    if all(char.isalnum() or char == "_" for char in underscore_display_name):
+        field_name = underscore_display_name
+    else:
+        field_name = "".join(
+            char for char in underscore_display_name if char.isalnum() or char == "_" 
+        )
+
+    return ParameterMetadata(
+        display_name, type, repeated, default_value, annotations, message_type, field_name
+    )
 
 
 def validate_default_value_type(parameter_metadata: ParameterMetadata) -> None:
