@@ -10,7 +10,7 @@ from ni_measurement_plugin_sdk_service._annotations import (
     ENUM_VALUES_KEY,
     TYPE_SPECIALIZATION_KEY,
 )
-from ni_measurement_plugin_sdk_service._internal.parameter.default_value import (
+from ni_measurement_plugin_sdk_service._internal.parameter._get_type import (
     get_type_default,
 )
 from ni_measurement_plugin_sdk_service.measurement.info import TypeSpecialization
@@ -60,7 +60,7 @@ def initialize(
         field_name = underscore_display_name
     else:
         field_name = "".join(
-            char for char in underscore_display_name if char.isalnum() or char == "_" 
+            char for char in underscore_display_name if char.isalnum() or char == "_"
         )
 
     return ParameterMetadata(

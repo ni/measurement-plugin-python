@@ -4,7 +4,7 @@ import pytest
 from google.protobuf import type_pb2
 
 from ni_measurement_plugin_sdk_service._internal.parameter import (
-    default_value,
+    _get_type,
 )
 
 
@@ -25,6 +25,6 @@ from ni_measurement_plugin_sdk_service._internal.parameter import (
     ],
 )
 def test___get_default_value___returns_type_defaults(type, is_repeated, expected_default_value):
-    test_default_value = default_value.get_type_default(type, is_repeated)
+    test_default_value = _get_type.get_type_default(type, is_repeated)
 
     assert test_default_value == expected_default_value

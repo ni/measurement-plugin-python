@@ -58,7 +58,7 @@ def deserialize_parameters(
 
 
 def _deserialize_enum_parameter(
-    repeated: bool, field_value: Union[List[int], int], enum_type: Any
+    repeated: bool, field_value: Any, enum_type: Any
 ) -> Union[List[Any], Any]:
     """Convert all enums into the user defined enum type.
 

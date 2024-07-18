@@ -4,9 +4,12 @@ from json import loads
 from typing import List
 
 from google.protobuf import descriptor_pb2, descriptor_pool
-from google.protobuf.descriptor_pb2 import FieldDescriptorProto, DescriptorProto
+from google.protobuf.descriptor_pb2 import DescriptorProto, FieldDescriptorProto
 
 from ni_measurement_plugin_sdk_service._annotations import ENUM_VALUES_KEY
+from ni_measurement_plugin_sdk_service._internal.parameter._get_type import (
+    _TYPE_FIELD_MAPPING,
+)
 from ni_measurement_plugin_sdk_service._internal.parameter.metadata import (
     ParameterMetadata,
 )
@@ -20,7 +23,7 @@ def _create_enum_type_class(
     """Implement a enum class in 'file_descriptor'."""
     enum_dict = loads(parameter_metadata.annotations[ENUM_VALUES_KEY])
     enum_type_name = _get_enum_type(parameter_metadata).__name__
-    
+
     # if enum is a protobuf then enum_type_name is 1st letter of each enum name
     # e.g. {"NONE": 0, "RED": 1, "GREEN": 2} -> NRG
     if enum_type_name == "int" or enum_type_name == "NoneType":
@@ -51,7 +54,7 @@ def _create_field(
     field_descriptor = message_proto.field.add()
     field_descriptor.number = index
     field_descriptor.name = metadata.field_name
-    field_descriptor.type = metadata.type
+    field_descriptor.type = _TYPE_FIELD_MAPPING[metadata.type]
 
     if metadata.repeated:
         field_descriptor.label = FieldDescriptorProto.LABEL_REPEATED
@@ -92,17 +95,7 @@ def create_file_descriptor(
     input_metadata: List[ParameterMetadata],
     pool: descriptor_pool.DescriptorPool,
 ) -> None:
-    """Creates two message types in one file descriptor proto.
-
-    Args:
-        service_class_name (str): Unique service name.
-
-        output_metadata (List[ParameterMetadata]): Metadata of output parameters.
-
-        input_metadata (List[ParameterMetadata]): Metadata of input parameters.
-
-        pool (DescriptorPool): Descriptor pool holding file descriptors and enum classes.
-    """
+    """Creates two message types in one file descriptor proto."""
     try:
         pool.FindFileByName(service_name)
     except KeyError:

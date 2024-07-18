@@ -6,7 +6,7 @@ from typing import Any, Dict, Sequence
 from google.protobuf import descriptor_pool, message_factory
 from google.protobuf.descriptor_pb2 import FieldDescriptorProto
 
-from ni_measurement_plugin_sdk_service._internal.parameter.default_value import (
+from ni_measurement_plugin_sdk_service._internal.parameter._get_type import (
     get_type_default,
 )
 from ni_measurement_plugin_sdk_service._internal.parameter.metadata import (
