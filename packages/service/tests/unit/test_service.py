@@ -10,8 +10,13 @@ from pytest_mock import MockerFixture
 
 from ni_measurement_plugin_sdk_service import _datatypeinfo
 from ni_measurement_plugin_sdk_service._annotations import TYPE_SPECIALIZATION_KEY
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types import xydata_pb2
-from ni_measurement_plugin_sdk_service.measurement.info import DataType, TypeSpecialization
+from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types import (
+    xydata_pb2,
+)
+from ni_measurement_plugin_sdk_service.measurement.info import (
+    DataType,
+    TypeSpecialization,
+)
 from ni_measurement_plugin_sdk_service.measurement.service import MeasurementService
 
 
@@ -419,6 +424,58 @@ def test___service_config___create_measurement_service___service_info_matches_se
         == "https://www.example.com/SampleMeasurement.html"
     )
     assert measurement_service.service_info.annotations == provided_annotations
+
+
+@pytest.mark.parametrize(
+    "service_config,have_special_char",
+    [
+        (
+            "Control.serviceconfig",
+            False,
+        ),
+        (
+            "Control.V1.serviceconfig",
+            False,
+        ),
+        (
+            "Control.V2.serviceconfig",
+            False,
+        ),
+        (
+            "ErrorDisplayName.serviceconfig",
+            True,
+        ),
+        (
+            "ErrorAnnotations.serviceconfig",
+            True,
+        ),
+        (
+            "ErrorTags.serviceconfig",
+            True,
+        ),
+        (
+            "ErrorCollections.serviceconfig",
+            True,
+        ),
+    ],
+)
+def test___service_config___check_service_config___validiate_no_special_characters(
+    test_assets_directory: pathlib.Path,
+    service_config: str,
+    have_special_char: bool,
+):
+    char_service_config = "check_char\\example." + service_config
+    try:
+        MeasurementService(
+            service_config_path=test_assets_directory / char_service_config,
+            version="1.0.0.0",
+            ui_file_paths=[],
+        )
+        error_occurred = False
+    except NameError:
+        error_occurred = True
+
+    assert error_occurred == have_special_char
 
 
 @pytest.mark.parametrize(
