@@ -435,7 +435,7 @@ def test___service_config___create_measurement_service___service_info_matches_se
         "example.ErrorCollections.serviceconfig",
     ],
 )
-def test___service_config___check_service_config___have_error(
+def test___service_config___check_service_config___name_error_exception(
     test_assets_directory: pathlib.Path,
     service_config: str,
 ):
