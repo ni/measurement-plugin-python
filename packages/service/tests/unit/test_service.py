@@ -451,7 +451,6 @@ def test___service_config___check_service_config___have_error(
     assert error_occurred
 
 
-
 @pytest.mark.parametrize(
     "display_name,type,default_value,enum_type",
     [
