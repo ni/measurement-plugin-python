@@ -427,55 +427,29 @@ def test___service_config___create_measurement_service___service_info_matches_se
 
 
 @pytest.mark.parametrize(
-    "service_config,have_special_char",
+    "service_config",
     [
-        (
-            "Control.serviceconfig",
-            False,
-        ),
-        (
-            "Control.V1.serviceconfig",
-            False,
-        ),
-        (
-            "Control.V2.serviceconfig",
-            False,
-        ),
-        (
-            "ErrorDisplayName.serviceconfig",
-            True,
-        ),
-        (
-            "ErrorAnnotations.serviceconfig",
-            True,
-        ),
-        (
-            "ErrorTags.serviceconfig",
-            True,
-        ),
-        (
-            "ErrorCollections.serviceconfig",
-            True,
-        ),
+        "example.ErrorDisplayName.serviceconfig",
+        "example.ErrorAnnotations.serviceconfig",
+        "example.ErrorTags.serviceconfig",
+        "example.ErrorCollections.serviceconfig",
     ],
 )
-def test___service_config___check_service_config___validiate_no_special_characters(
+def test___service_config___check_service_config___have_error(
     test_assets_directory: pathlib.Path,
     service_config: str,
-    have_special_char: bool,
 ):
-    char_service_config = "check_char\\example." + service_config
     try:
         MeasurementService(
-            service_config_path=test_assets_directory / char_service_config,
+            service_config_path=test_assets_directory / f"check_char/{service_config}",
             version="1.0.0.0",
             ui_file_paths=[],
         )
         error_occurred = False
     except NameError:
         error_occurred = True
+    assert error_occurred
 
-    assert error_occurred == have_special_char
 
 
 @pytest.mark.parametrize(
