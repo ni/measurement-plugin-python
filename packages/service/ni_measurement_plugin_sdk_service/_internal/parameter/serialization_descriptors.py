@@ -25,7 +25,7 @@ def _create_enum_type_class(
     enum_dict = loads(parameter_metadata.annotations[ENUM_VALUES_KEY])
 
     # True if enum is protobuf
-    if not isinstance(parameter_metadata.enum_type, Enum):
+    if not type(parameter_metadata.enum_type) is type(Enum):
         try:
             enum_type_name = parameter_metadata.enum_type.DESCRIPTOR.name
         except AttributeError:
