@@ -47,6 +47,6 @@ def get_visa_grpc_insecure_address(config: AutoConfig, discovery_client: Discove
         return urlsplit(grpc_device_server_address).netloc
     else:
         service_location = discovery_client.resolve_service(
-            "visa_grpc.Visa", "ni.measurementlink.v1.grpcdeviceserver"
+            GRPC_SERVICE_INTERFACE_NAME, SERVICE_CLASS
         )
         return service_location.insecure_address
