@@ -1,8 +1,10 @@
 """Contains classes that represents metadata."""
 
+from __future__ import annotations
+
 import json
 from enum import Enum
-from typing import Any, Dict, Iterable, NamedTuple
+from typing import Any, Dict, Iterable, NamedTuple, Union, Type, Optional, TYPE_CHECKING
 
 from google.protobuf import type_pb2
 
@@ -14,6 +16,12 @@ from ni_measurement_plugin_sdk_service._internal.parameter._get_type import (
     get_type_default,
 )
 from ni_measurement_plugin_sdk_service.measurement.info import TypeSpecialization
+
+
+if TYPE_CHECKING:
+    from google.protobuf.internal.enum_type_wrapper import _EnumTypeWrapper
+
+    SupportedEnumType = Union[Type[Enum], _EnumTypeWrapper]
 
 
 class ParameterMetadata(NamedTuple):
@@ -45,7 +53,7 @@ class ParameterMetadata(NamedTuple):
     field_name: str = ""
     """display_name in snake_case format."""
 
-    enum_type: Any = None
+    enum_type: Optional[SupportedEnumType] = None
     """Enum type of parameter"""
 
     @staticmethod
@@ -56,7 +64,7 @@ class ParameterMetadata(NamedTuple):
         default_value: Any,
         annotations: Dict[str, str],
         message_type: str = "",
-        enum_type: Any = None,
+        enum_type: Optional[SupportedEnumType] = None,
     ) -> "ParameterMetadata":
         """Initialize ParameterMetadata with field_name."""
         underscore_display_name = display_name.replace(" ", "_")

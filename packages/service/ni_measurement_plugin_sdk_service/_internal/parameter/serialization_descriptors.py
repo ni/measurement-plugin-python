@@ -1,11 +1,17 @@
 """Serialization Descriptors."""
 
-from enum import Enum
-from json import loads
-from typing import List
+from __future__ import annotations
 
-from google.protobuf import descriptor_pb2, descriptor_pool
-from google.protobuf.descriptor_pb2 import DescriptorProto, FieldDescriptorProto
+from enum import Enum, EnumMeta
+from json import loads
+from typing import TYPE_CHECKING, List, Type, Union, Optional
+
+from google.protobuf.descriptor_pb2 import (
+    DescriptorProto,
+    FieldDescriptorProto,
+    FileDescriptorProto,
+)
+from google.protobuf.descriptor_pool import DescriptorPool
 
 from ni_measurement_plugin_sdk_service._annotations import ENUM_VALUES_KEY
 from ni_measurement_plugin_sdk_service._internal.parameter._get_type import (
@@ -15,25 +21,36 @@ from ni_measurement_plugin_sdk_service._internal.parameter.metadata import (
     ParameterMetadata,
 )
 
+if TYPE_CHECKING:
+    from google.protobuf.internal.enum_type_wrapper import _EnumTypeWrapper
+
+    SupportedEnumType = Union[Type[Enum], _EnumTypeWrapper]
+
+
+def is_protobuf(enum_type: Optional[SupportedEnumType]) -> bool:
+    """Finds if 'enum_type' is a protobuf or a python enum."""
+    return hasattr(enum_type, "ValueType")
+
+
+def _get_enum_type_name(metadata: ParameterMetadata) -> str:
+    """Get's enum type name from a 'parameter_metadata'."""
+    enum_type = metadata.enum_type
+    if enum_type is None:
+        raise ValueError("Enum type cannot be None in ParameterMetadata.")
+
+    if is_protobuf(enum_type) and not isinstance(enum_type, EnumMeta):
+        return enum_type.DESCRIPTOR.name
+    return enum_type.__name__
+
 
 def _create_enum_type_class(
-    file_descriptor: descriptor_pb2.FileDescriptorProto,
-    parameter_metadata: ParameterMetadata,
+    file_descriptor: FileDescriptorProto,
+    metadata: ParameterMetadata,
     field_descriptor: FieldDescriptorProto,
 ) -> None:
     """Implement a enum class in 'file_descriptor'."""
-    enum_dict = loads(parameter_metadata.annotations[ENUM_VALUES_KEY])
-
-    # True if enum is protobuf
-    if not type(parameter_metadata.enum_type) is type(Enum):
-        try:
-            enum_type_name = parameter_metadata.enum_type.DESCRIPTOR.name
-        except AttributeError:
-            # Uses field name if DESCRIPTOR.name isn't defined
-            name_sections = parameter_metadata.field_name.split("_")
-            enum_type_name = "".join(section.capitalize() for section in name_sections)
-    else:
-        enum_type_name = parameter_metadata.enum_type.__name__
+    enum_dict = loads(metadata.annotations[ENUM_VALUES_KEY])
+    enum_type_name = _get_enum_type_name(metadata)
 
     if enum_type_name not in [file_enum.name for file_enum in file_descriptor.enum_type]:
         enum_descriptor = file_descriptor.enum_type.add()
@@ -68,7 +85,7 @@ def _create_field(
 def _create_message_type(
     parameter_metadata: List[ParameterMetadata],
     message_name: str,
-    file_descriptor: descriptor_pb2.FileDescriptorProto,
+    file_descriptor: FileDescriptorProto,
 ) -> None:
     """Creates a message type with fields intialized in 'file_descriptor'."""
     message_proto = file_descriptor.message_type.add()
@@ -82,7 +99,7 @@ def _create_message_type(
         if metadata.type == FieldDescriptorProto.TYPE_ENUM:
             _create_enum_type_class(
                 file_descriptor=file_descriptor,
-                parameter_metadata=metadata,
+                metadata=metadata,
                 field_descriptor=field_descriptor,
             )
 
@@ -91,13 +108,13 @@ def create_file_descriptor(
     service_name: str,
     output_metadata: List[ParameterMetadata],
     input_metadata: List[ParameterMetadata],
-    pool: descriptor_pool.DescriptorPool,
+    pool: DescriptorPool,
 ) -> None:
     """Creates two message types in one file descriptor proto."""
     try:
         pool.FindFileByName(service_name)
     except KeyError:
-        file_descriptor = descriptor_pb2.FileDescriptorProto()
+        file_descriptor = FileDescriptorProto()
         file_descriptor.name = service_name
         file_descriptor.package = service_name
         _create_message_type(input_metadata, "Configurations", file_descriptor)

@@ -8,6 +8,9 @@ from google.protobuf.descriptor_pb2 import FieldDescriptorProto
 from ni_measurement_plugin_sdk_service._internal.parameter.metadata import (
     ParameterMetadata,
 )
+from ni_measurement_plugin_sdk_service._internal.parameter.serialization_descriptors import (
+    is_protobuf,
+)
 
 
 def deserialize_parameters(
@@ -52,17 +55,12 @@ def deserialize_parameters(
 
 
 def _deserialize_enum_parameter(field_value: Any, metadata: ParameterMetadata) -> Any:
-    """Convert all enums into the user defined enum type.
-
-    Returns:
-        Union[List[Any], Any]: Enum type or a list of enum types.
-    """
-    try:
-        # ValueType is defined when field_value is a protobuf enum
-        metadata.enum_type.ValueType
+    """Convert enum into their user defined enum type."""
+    enum_type = metadata.enum_type
+    if is_protobuf(enum_type):
         return field_value
-    except AttributeError:
-        enum_type = metadata.enum_type
-        if metadata.repeated:
-            return [enum_type(value) for value in field_value]
-        return enum_type(field_value)
+
+    assert enum_type is not None
+    if metadata.repeated:
+        return [enum_type(value) for value in field_value]
+    return enum_type(field_value)
