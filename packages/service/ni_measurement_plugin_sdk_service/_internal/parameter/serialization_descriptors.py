@@ -1,5 +1,6 @@
 """Serialization Descriptors."""
 
+from enum import EnumType
 from json import loads
 from typing import List
 
@@ -8,7 +9,7 @@ from google.protobuf.descriptor_pb2 import DescriptorProto, FieldDescriptorProto
 
 from ni_measurement_plugin_sdk_service._annotations import ENUM_VALUES_KEY
 from ni_measurement_plugin_sdk_service._internal.parameter._get_type import (
-    _TYPE_FIELD_MAPPING,
+    TYPE_FIELD_MAPPING,
 )
 from ni_measurement_plugin_sdk_service._internal.parameter.metadata import (
     ParameterMetadata,
@@ -22,15 +23,19 @@ def _create_enum_type_class(
 ) -> None:
     """Implement a enum class in 'file_descriptor'."""
     enum_dict = loads(parameter_metadata.annotations[ENUM_VALUES_KEY])
-    enum_type_name = _get_enum_type(parameter_metadata).__name__
 
-    # if enum is a protobuf then enum_type_name is 1st letter of each enum name
-    # e.g. {"NONE": 0, "RED": 1, "GREEN": 2} -> NRG
-    if enum_type_name == "int" or enum_type_name == "NoneType":
-        enum_field_names = list(enum_dict.keys())[:]
-        enum_type_name = "".join(name[0] for name in enum_field_names)
+    # True if enum is protobuf
+    if not isinstance(parameter_metadata.enum_type, EnumType):
+        try:
+            enum_type_name = parameter_metadata.enum_type.DESCRIPTOR.name
+        except AttributeError:
+            # Uses field name if DESCRIPTOR.name isn't defined
+            name_sections = parameter_metadata.field_name.split("_")
+            enum_type_name = "".join(section.capitalize() for section in name_sections)
+    else:
+        enum_type_name = parameter_metadata.enum_type.__name__
 
-    if enum_type_name not in [enum_type.name for enum_type in file_descriptor.enum_type]:
+    if enum_type_name not in [file_enum.name for file_enum in file_descriptor.enum_type]:
         enum_descriptor = file_descriptor.enum_type.add()
         enum_descriptor.name = enum_type_name
         for name, number in enum_dict.items():
@@ -40,13 +45,6 @@ def _create_enum_type_class(
     field_descriptor.type_name = enum_type_name
 
 
-def _get_enum_type(parameter_metadata: ParameterMetadata) -> type:
-    if parameter_metadata.repeated and len(parameter_metadata.default_value) > 0:
-        return type(parameter_metadata.default_value[0])
-    else:
-        return type(parameter_metadata.default_value)
-
-
 def _create_field(
     message_proto: DescriptorProto, metadata: ParameterMetadata, index: int
 ) -> FieldDescriptorProto:
@@ -54,7 +52,7 @@ def _create_field(
     field_descriptor = message_proto.field.add()
     field_descriptor.number = index
     field_descriptor.name = metadata.field_name
-    field_descriptor.type = _TYPE_FIELD_MAPPING[metadata.type]
+    field_descriptor.type = TYPE_FIELD_MAPPING[metadata.type]
 
     if metadata.repeated:
         field_descriptor.label = FieldDescriptorProto.LABEL_REPEATED

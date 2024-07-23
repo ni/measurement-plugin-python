@@ -1,15 +1,12 @@
 """Parameter Serializer."""
 
-from typing import Any, Dict, List, Union
+from typing import Any, Dict
 
 from google.protobuf import descriptor_pool, message_factory
 from google.protobuf.descriptor_pb2 import FieldDescriptorProto
 
 from ni_measurement_plugin_sdk_service._internal.parameter.metadata import (
     ParameterMetadata,
-)
-from ni_measurement_plugin_sdk_service._internal.parameter.serialization_descriptors import (
-    _get_enum_type,
 )
 
 
@@ -39,13 +36,10 @@ def deserialize_parameters(
     for i in message_proto.fields_by_number.keys():
         parameter_metadata = parameter_metadata_dict[i]
         field_name = parameter_metadata.field_name
-        enum_type = _get_enum_type(parameter_metadata)
         value = getattr(message_instance, field_name)
 
-        if parameter_metadata.type == FieldDescriptorProto.TYPE_ENUM and enum_type is not int:
-            parameter_values[i] = _deserialize_enum_parameter(
-                parameter_metadata.repeated, value, enum_type
-            )
+        if parameter_metadata.type == FieldDescriptorProto.TYPE_ENUM:
+            parameter_values[i] = _deserialize_enum_parameter(value, parameter_metadata)
         elif (
             parameter_metadata.type == FieldDescriptorProto.TYPE_MESSAGE
             and not parameter_metadata.repeated
@@ -57,14 +51,18 @@ def deserialize_parameters(
     return parameter_values
 
 
-def _deserialize_enum_parameter(
-    repeated: bool, field_value: Any, enum_type: Any
-) -> Union[List[Any], Any]:
+def _deserialize_enum_parameter(field_value: Any, metadata: ParameterMetadata) -> Any:
     """Convert all enums into the user defined enum type.
 
     Returns:
         Union[List[Any], Any]: Enum type or a list of enum types.
     """
-    if repeated:
-        return [enum_type(value) for value in field_value]
-    return enum_type(field_value)
+    try:
+        # ValueType is defined when field_value is a protobuf enum
+        metadata.enum_type.ValueType
+        return field_value
+    except AttributeError:
+        enum_type = metadata.enum_type
+        if metadata.repeated:
+            return [enum_type(value) for value in field_value]
+        return enum_type(field_value)

@@ -45,27 +45,37 @@ class ParameterMetadata(NamedTuple):
     field_name: str = ""
     """display_name in snake_case format."""
 
+    enum_type: Any = None
+    """Enum type of parameter"""
 
-def initialize(
-    display_name: str,
-    type: type_pb2.Field.Kind.ValueType,
-    repeated: bool,
-    default_value: Any,
-    annotations: Dict[str, str],
-    message_type: str = "",
-) -> ParameterMetadata:
-    """Initialize ParameterMetadata with field_name."""
-    underscore_display_name = display_name.replace(" ", "_")
-    if all(char.isalnum() or char == "_" for char in underscore_display_name):
-        field_name = underscore_display_name
-    else:
-        field_name = "".join(
-            char for char in underscore_display_name if char.isalnum() or char == "_"
+    @staticmethod
+    def initialize(
+        display_name: str,
+        type: type_pb2.Field.Kind.ValueType,
+        repeated: bool,
+        default_value: Any,
+        annotations: Dict[str, str],
+        message_type: str = "",
+        enum_type: Any = None,
+    ) -> "ParameterMetadata":
+        """Initialize ParameterMetadata with field_name."""
+        underscore_display_name = display_name.replace(" ", "_")
+        if all(char.isalnum() or char == "_" for char in underscore_display_name):
+            field_name = underscore_display_name
+        else:
+            field_name = "".join(
+                char for char in underscore_display_name if char.isalnum() or char == "_"
+            )
+        return ParameterMetadata(
+            display_name,
+            type,
+            repeated,
+            default_value,
+            annotations,
+            message_type,
+            field_name,
+            enum_type,
         )
-
-    return ParameterMetadata(
-        display_name, type, repeated, default_value, annotations, message_type, field_name
-    )
 
 
 def validate_default_value_type(parameter_metadata: ParameterMetadata) -> None:

@@ -3,7 +3,7 @@ from typing import Any
 from google.protobuf.descriptor_pb2 import FieldDescriptorProto
 from google.protobuf.type_pb2 import Field
 
-_TYPE_DEFULAT_MAPPING = {
+_TYPE_DEFAULT_MAPPING = {
     Field.TYPE_FLOAT: float(),
     Field.TYPE_DOUBLE: float(),
     Field.TYPE_INT32: int(),
@@ -15,7 +15,7 @@ _TYPE_DEFULAT_MAPPING = {
     Field.TYPE_ENUM: int(),
 }
 
-_TYPE_FIELD_MAPPING = {
+TYPE_FIELD_MAPPING = {
     Field.TYPE_FLOAT: FieldDescriptorProto.TYPE_FLOAT,
     Field.TYPE_DOUBLE: FieldDescriptorProto.TYPE_DOUBLE,
     Field.TYPE_INT32: FieldDescriptorProto.TYPE_INT32,
@@ -33,4 +33,4 @@ def get_type_default(type: Field.Kind.ValueType, repeated: bool) -> Any:
     """Get the default value for the give type."""
     if repeated:
         return list()
-    return _TYPE_DEFULAT_MAPPING.get(type)
+    return _TYPE_DEFAULT_MAPPING.get(type)
