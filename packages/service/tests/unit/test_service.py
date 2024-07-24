@@ -427,31 +427,6 @@ def test___service_config___create_measurement_service___service_info_matches_se
 
 
 @pytest.mark.parametrize(
-    "service_config",
-    [
-        "example.ErrorDisplayName.serviceconfig",
-        "example.ErrorAnnotations.serviceconfig",
-        "example.ErrorTags.serviceconfig",
-        "example.ErrorCollections.serviceconfig",
-    ],
-)
-def test___service_config___check_service_config___name_error_exception(
-    test_assets_directory: pathlib.Path,
-    service_config: str,
-):
-    try:
-        MeasurementService(
-            service_config_path=test_assets_directory / f"check_char/{service_config}",
-            version="1.0.0.0",
-            ui_file_paths=[],
-        )
-        error_occurred = False
-    except NameError:
-        error_occurred = True
-    assert error_occurred
-
-
-@pytest.mark.parametrize(
     "display_name,type,default_value,enum_type",
     [
         ("EnumConfiguration", DataType.Enum, Color.GREEN, None),

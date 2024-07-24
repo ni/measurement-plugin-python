@@ -210,10 +210,7 @@ class MeasurementService:
             raise RuntimeError(f"File does not exist. {service_config_path}")
 
         with open(service_config_path) as service_config_file:
-            try:
-                service_config = json.loads(service_config_file.read())
-            except json.decoder.JSONDecodeError:
-                raise NameError(f"Invalid character(s) in {service_config_path}")
+            service_config = json.load(service_config_file)
 
         if service_class is None:
             service = next(iter(service_config["services"]), None)
