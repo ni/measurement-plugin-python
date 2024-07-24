@@ -3,13 +3,19 @@ from typing import Callable, List, Optional
 
 import grpc
 from deprecation import deprecated
+from google.protobuf import descriptor_pool
 from grpc.framework.foundation import logging_pool
 
 from ni_measurement_plugin_sdk_service._internal.grpc_servicer import (
     MeasurementServiceServicerV1,
     MeasurementServiceServicerV2,
 )
-from ni_measurement_plugin_sdk_service._internal.parameter.metadata import ParameterMetadata
+from ni_measurement_plugin_sdk_service._internal.parameter.metadata import (
+    ParameterMetadata,
+)
+from ni_measurement_plugin_sdk_service._internal.parameter.serialization_descriptors import (
+    create_file_descriptor,
+)
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v1 import (
     measurement_service_pb2_grpc as v1_measurement_service_pb2_grpc,
 )
@@ -18,7 +24,10 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measur
 )
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient, ServiceLocation
 from ni_measurement_plugin_sdk_service.grpc.loggers import ServerLogger
-from ni_measurement_plugin_sdk_service.measurement.info import MeasurementInfo, ServiceInfo
+from ni_measurement_plugin_sdk_service.measurement.info import (
+    MeasurementInfo,
+    ServiceInfo,
+)
 
 _logger = logging.getLogger(__name__)
 _V1_INTERFACE = "ni.measurementlink.measurement.v1.MeasurementService"
@@ -94,6 +103,12 @@ class GrpcService:
                 ("grpc.max_send_message_length", -1),
             ],
         )
+        create_file_descriptor(
+            service_name=service_info.service_class,
+            output_metadata=output_parameter_list,
+            input_metadata=configuration_parameter_list,
+            pool=descriptor_pool.Default(),
+        )
         for interface in service_info.provided_interfaces:
             if interface == _V1_INTERFACE:
                 servicer_v1 = MeasurementServiceServicerV1(
@@ -102,6 +117,7 @@ class GrpcService:
                     output_parameter_list,
                     measure_function,
                     owner,
+                    service_info,
                 )
                 v1_measurement_service_pb2_grpc.add_MeasurementServiceServicer_to_server(
                     servicer_v1, self._server
@@ -113,6 +129,7 @@ class GrpcService:
                     output_parameter_list,
                     measure_function,
                     owner,
+                    service_info,
                 )
                 v2_measurement_service_pb2_grpc.add_MeasurementServiceServicer_to_server(
                     servicer_v2, self._server

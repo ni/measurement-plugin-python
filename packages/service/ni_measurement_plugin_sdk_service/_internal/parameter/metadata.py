@@ -1,8 +1,10 @@
 """Contains classes that represents metadata."""
 
+from __future__ import annotations
+
 import json
 from enum import Enum
-from typing import Any, Dict, Iterable, NamedTuple
+from typing import Any, Dict, Iterable, NamedTuple, Union, Type, Optional, TYPE_CHECKING
 
 from google.protobuf import type_pb2
 
@@ -10,8 +12,16 @@ from ni_measurement_plugin_sdk_service._annotations import (
     ENUM_VALUES_KEY,
     TYPE_SPECIALIZATION_KEY,
 )
-from ni_measurement_plugin_sdk_service._internal.parameter import serialization_strategy
+from ni_measurement_plugin_sdk_service._internal.parameter._get_type import (
+    get_type_default,
+)
 from ni_measurement_plugin_sdk_service.measurement.info import TypeSpecialization
+
+
+if TYPE_CHECKING:
+    from google.protobuf.internal.enum_type_wrapper import _EnumTypeWrapper
+
+    SupportedEnumType = Union[Type[Enum], _EnumTypeWrapper]
 
 
 class ParameterMetadata(NamedTuple):
@@ -40,6 +50,41 @@ class ParameterMetadata(NamedTuple):
     Required when 'type' is Kind.TypeMessage. Ignored for any other 'type'.
     """
 
+    field_name: str = ""
+    """display_name in snake_case format."""
+
+    enum_type: Optional[SupportedEnumType] = None
+    """Enum type of parameter"""
+
+    @staticmethod
+    def initialize(
+        display_name: str,
+        type: type_pb2.Field.Kind.ValueType,
+        repeated: bool,
+        default_value: Any,
+        annotations: Dict[str, str],
+        message_type: str = "",
+        enum_type: Optional[SupportedEnumType] = None,
+    ) -> "ParameterMetadata":
+        """Initialize ParameterMetadata with field_name."""
+        underscore_display_name = display_name.replace(" ", "_")
+        if all(char.isalnum() or char == "_" for char in underscore_display_name):
+            field_name = underscore_display_name
+        else:
+            field_name = "".join(
+                char for char in underscore_display_name if char.isalnum() or char == "_"
+            )
+        return ParameterMetadata(
+            display_name,
+            type,
+            repeated,
+            default_value,
+            annotations,
+            message_type,
+            field_name,
+            enum_type,
+        )
+
 
 def validate_default_value_type(parameter_metadata: ParameterMetadata) -> None:
     """Validate and raise exception if the default value does not match the type info.
@@ -54,18 +99,12 @@ def validate_default_value_type(parameter_metadata: ParameterMetadata) -> None:
     if default_value is None:
         return None
 
-    expected_type = type(
-        serialization_strategy.get_type_default(
-            parameter_metadata.type, parameter_metadata.repeated
-        )
-    )
+    expected_type = type(get_type_default(parameter_metadata.type, parameter_metadata.repeated))
     display_name = parameter_metadata.display_name
     enum_values_annotation = get_enum_values_annotation(parameter_metadata)
 
     if parameter_metadata.repeated:
-        expected_element_type = type(
-            serialization_strategy.get_type_default(parameter_metadata.type, False)
-        )
+        expected_element_type = type(get_type_default(parameter_metadata.type, False))
         _validate_default_value_type_for_repeated_type(
             default_value,
             expected_type,

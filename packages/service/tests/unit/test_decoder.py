@@ -1,21 +1,26 @@
 """Contains tests to validate serializer.py."""
 
 from enum import Enum, IntEnum
-from typing import Dict, Sequence
+from typing import Dict, List, Sequence
 
 import pytest
-from google.protobuf import any_pb2, type_pb2
+from google.protobuf import any_pb2, descriptor_pb2, descriptor_pool, type_pb2
 
 from ni_measurement_plugin_sdk_service._annotations import (
     ENUM_VALUES_KEY,
     TYPE_SPECIALIZATION_KEY,
 )
-from ni_measurement_plugin_sdk_service._internal.parameter import serializer
+from ni_measurement_plugin_sdk_service._internal.parameter import (
+    decoder,
+    serialization_descriptors,
+)
 from ni_measurement_plugin_sdk_service._internal.parameter.metadata import (
     ParameterMetadata,
     TypeSpecialization,
 )
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types import xydata_pb2
+from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types import (
+    xydata_pb2,
+)
 from tests.utilities.stubs.serialization import test_pb2
 from tests.utilities.stubs.serialization.bigmessage_pb2 import BigMessage
 
@@ -53,131 +58,6 @@ BIG_MESSAGE_SIZE = 100
 
 
 @pytest.mark.parametrize(
-    "test_values",
-    [
-        [
-            2.0,
-            19.2,
-            3,
-            1,
-            2,
-            2,
-            True,
-            "TestString",
-            [5.5, 3.3, 1],
-            [5.5, 3.3, 1],
-            [1, 2, 3, 4],
-            [0, 1, 399],
-            [1, 2, 3, 4],
-            [0, 1, 399],
-            [True, False, True],
-            ["String1, String2"],
-            DifferentColor.ORANGE,
-            [DifferentColor.TEAL, DifferentColor.BROWN],
-            Countries.AUSTRALIA,
-            [Countries.AUSTRALIA, Countries.CANADA],
-            double_xy_data,
-            double_xy_data_array,
-        ],
-        [
-            -0.9999,
-            -0.9999,
-            -13,
-            1,
-            1000,
-            2,
-            True,
-            "////",
-            [5.5, -13.3, 1, 0.0, -99.9999],
-            [5.5, 3.3, 1],
-            [1, 2, 3, 4],
-            [0, 1, 399],
-            [1, 2, 3, 4],
-            [0, 1, 399],
-            [True, False, True],
-            ["String1, String2"],
-            DifferentColor.ORANGE,
-            [DifferentColor.TEAL, DifferentColor.BROWN],
-            Countries.AUSTRALIA,
-            [Countries.AUSTRALIA, Countries.CANADA],
-            double_xy_data,
-            double_xy_data_array,
-        ],
-    ],
-)
-def test___serializer___serialize_parameter___successful_serialization(test_values):
-    default_values = test_values
-    parameter = _get_test_parameter_by_id(default_values)
-
-    # Custom Serialization
-    custom_serialized_bytes = serializer.serialize_parameters(parameter, test_values)
-
-    _validate_serialized_bytes(custom_serialized_bytes, test_values)
-
-
-@pytest.mark.parametrize(
-    "default_values",
-    [
-        [
-            2.0,
-            19.2,
-            3,
-            1,
-            2,
-            2,
-            True,
-            "TestString",
-            [5.5, 3.3, 1],
-            [5.5, 3.3, 1],
-            [1, 2, 3, 4],
-            [0, 1, 399],
-            [1, 2, 3, 4],
-            [0, 1, 399],
-            [True, False, True],
-            ["String1, String2"],
-            DifferentColor.ORANGE,
-            [DifferentColor.TEAL, DifferentColor.BROWN],
-            Countries.AUSTRALIA,
-            [Countries.AUSTRALIA, Countries.CANADA],
-            double_xy_data,
-            double_xy_data_array,
-        ],
-        [
-            -0.9999,
-            -0.9999,
-            -13,
-            1,
-            1000,
-            2,
-            True,
-            "////",
-            [5.5, -13.3, 1, 0.0, -99.9999],
-            [5.5, 3.3, 1],
-            [1, 2, 3, 4],
-            [0, 1, 399],
-            [1, 2, 3, 4],
-            [0, 1, 399],
-            [True, False, True],
-            ["String1, String2"],
-            DifferentColor.ORANGE,
-            [DifferentColor.TEAL, DifferentColor.BROWN],
-            Countries.AUSTRALIA,
-            [Countries.AUSTRALIA, Countries.CANADA],
-            double_xy_data,
-            double_xy_data_array,
-        ],
-    ],
-)
-def test___serializer___serialize_default_parameter___successful_serialization(default_values):
-    parameter = _get_test_parameter_by_id(default_values)
-
-    # Custom Serialization
-    custom_serialized_bytes = serializer.serialize_default_values(parameter)
-
-    _validate_serialized_bytes(custom_serialized_bytes, default_values)
-
-
-@pytest.mark.parametrize(
     "values",
     [
         [
@@ -209,9 +89,13 @@ def test___serializer___serialize_default_parameter___successful_serialization(d
 def test___serializer___deserialize_parameter___successful_deserialization(values):
     parameter = _get_test_parameter_by_id(values)
     grpc_serialized_data = _get_grpc_serialized_data(values)
+    service_name = _test_create_file_descriptor(list(parameter.values()), "deserialize_parameter")
 
-    parameter_value_by_id = serializer.deserialize_parameters(parameter, grpc_serialized_data)
-
+    parameter_value_by_id = decoder.deserialize_parameters(
+        parameter,
+        grpc_serialized_data,
+        service_name=service_name,
+    )
     assert list(parameter_value_by_id.values()) == values
 
 
@@ -243,7 +127,10 @@ def test___empty_buffer___deserialize_parameters___returns_zero_or_empty():
         double_xy_data_array,
     ]
     parameter = _get_test_parameter_by_id(nonzero_defaults)
-    parameter_value_by_id = serializer.deserialize_parameters(parameter, bytes())
+    service_name = _test_create_file_descriptor(list(parameter.values()), "empty_buffer")
+    parameter_value_by_id = decoder.deserialize_parameters(
+        parameter, bytes(), service_name=service_name
+    )
 
     for key, value in parameter_value_by_id.items():
         parameter_metadata = parameter[key]
@@ -265,29 +152,17 @@ def test___big_message___deserialize_parameters___returns_parameter_value_by_id(
     message = _get_big_message(values)
     serialized_data = message.SerializeToString()
     expected_parameter_value_by_id = {i + 1: value for (i, value) in enumerate(values)}
+    service_name = _test_create_file_descriptor(
+        list(parameter_metadata_by_id.values()), "big_message"
+    )
 
-    parameter_value_by_id = serializer.deserialize_parameters(
-        parameter_metadata_by_id, serialized_data
+    parameter_value_by_id = decoder.deserialize_parameters(
+        parameter_metadata_by_id,
+        serialized_data,
+        service_name=service_name,
     )
 
     assert parameter_value_by_id == pytest.approx(expected_parameter_value_by_id)
-
-
-def test___big_message___serialize_parameters___returns_serialized_data() -> None:
-    parameter_metadata_by_id = _get_big_message_metadata_by_id()
-    values = [123.456 + i for i in range(BIG_MESSAGE_SIZE)]
-    expected_message = _get_big_message(values)
-
-    serialized_data = serializer.serialize_parameters(parameter_metadata_by_id, values)
-
-    message = BigMessage.FromString(serialized_data)
-    assert message.ListFields() == pytest.approx(expected_message.ListFields())
-
-
-def _validate_serialized_bytes(custom_serialized_bytes, values):
-    # Serialization using gRPC Any
-    grpc_serialized_data = _get_grpc_serialized_data(values)
-    assert grpc_serialized_data == custom_serialized_bytes
 
 
 def _get_grpc_serialized_data(values):
@@ -300,119 +175,119 @@ def _get_grpc_serialized_data(values):
 
 def _get_test_parameter_by_id(default_values):
     parameter_by_id = {
-        1: ParameterMetadata(
-            display_name="float_data",
+        1: ParameterMetadata.initialize(
+            display_name="float_data!",
             type=type_pb2.Field.TYPE_FLOAT,
             repeated=False,
             default_value=default_values[0],
             annotations={},
         ),
-        2: ParameterMetadata(
+        2: ParameterMetadata.initialize(
             display_name="double_data",
             type=type_pb2.Field.TYPE_DOUBLE,
             repeated=False,
             default_value=default_values[1],
             annotations={},
         ),
-        3: ParameterMetadata(
+        3: ParameterMetadata.initialize(
             display_name="int32_data",
             type=type_pb2.Field.TYPE_INT32,
             repeated=False,
             default_value=default_values[2],
             annotations={},
         ),
-        4: ParameterMetadata(
+        4: ParameterMetadata.initialize(
             display_name="uint32_data",
             type=type_pb2.Field.TYPE_INT64,
             repeated=False,
             default_value=default_values[3],
             annotations={},
         ),
-        5: ParameterMetadata(
+        5: ParameterMetadata.initialize(
             display_name="int64_data",
             type=type_pb2.Field.TYPE_UINT32,
             repeated=False,
             default_value=default_values[4],
             annotations={},
         ),
-        6: ParameterMetadata(
+        6: ParameterMetadata.initialize(
             display_name="uint64_data",
             type=type_pb2.Field.TYPE_UINT64,
             repeated=False,
             default_value=default_values[5],
             annotations={},
         ),
-        7: ParameterMetadata(
+        7: ParameterMetadata.initialize(
             display_name="bool_data",
             type=type_pb2.Field.TYPE_BOOL,
             repeated=False,
             default_value=default_values[6],
             annotations={},
         ),
-        8: ParameterMetadata(
+        8: ParameterMetadata.initialize(
             display_name="string_data",
             type=type_pb2.Field.TYPE_STRING,
             repeated=False,
             default_value=default_values[7],
             annotations={},
         ),
-        9: ParameterMetadata(
+        9: ParameterMetadata.initialize(
             display_name="double_array_data",
             type=type_pb2.Field.TYPE_DOUBLE,
             repeated=True,
             default_value=default_values[8],
             annotations={},
         ),
-        10: ParameterMetadata(
+        10: ParameterMetadata.initialize(
             display_name="float_array_data",
             type=type_pb2.Field.TYPE_FLOAT,
             repeated=True,
             default_value=default_values[9],
             annotations={},
         ),
-        11: ParameterMetadata(
+        11: ParameterMetadata.initialize(
             display_name="int32_array_data",
             type=type_pb2.Field.TYPE_INT32,
             repeated=True,
             default_value=default_values[10],
             annotations={},
         ),
-        12: ParameterMetadata(
+        12: ParameterMetadata.initialize(
             display_name="uint32_array_data",
             type=type_pb2.Field.TYPE_UINT32,
             repeated=True,
             default_value=default_values[11],
             annotations={},
         ),
-        13: ParameterMetadata(
+        13: ParameterMetadata.initialize(
             display_name="int64_array_data",
             type=type_pb2.Field.TYPE_INT64,
             repeated=True,
             default_value=default_values[12],
             annotations={},
         ),
-        14: ParameterMetadata(
+        14: ParameterMetadata.initialize(
             display_name="uint64_array_data",
             type=type_pb2.Field.TYPE_UINT64,
             repeated=True,
             default_value=default_values[13],
             annotations={},
         ),
-        15: ParameterMetadata(
+        15: ParameterMetadata.initialize(
             display_name="bool_array_data",
             type=type_pb2.Field.TYPE_BOOL,
             repeated=True,
             default_value=default_values[14],
             annotations={},
         ),
-        16: ParameterMetadata(
+        16: ParameterMetadata.initialize(
             display_name="string_array_data",
             type=type_pb2.Field.TYPE_STRING,
             repeated=True,
             default_value=default_values[15],
             annotations={},
         ),
-        17: ParameterMetadata(
+        17: ParameterMetadata.initialize(
             display_name="enum_data",
             type=type_pb2.Field.TYPE_ENUM,
             repeated=False,
@@ -421,8 +296,9 @@ def _get_test_parameter_by_id(default_values):
                 TYPE_SPECIALIZATION_KEY: TypeSpecialization.Enum.value,
                 ENUM_VALUES_KEY: '{"PURPLE": 0, "ORANGE": 1, "TEAL": 2, "BROWN": 3}',
             },
+            enum_type=DifferentColor,
         ),
-        18: ParameterMetadata(
+        18: ParameterMetadata.initialize(
             display_name="enum_array_data",
             type=type_pb2.Field.TYPE_ENUM,
             repeated=True,
@@ -431,8 +307,9 @@ def _get_test_parameter_by_id(default_values):
                 TYPE_SPECIALIZATION_KEY: TypeSpecialization.Enum.value,
                 ENUM_VALUES_KEY: '{"PURPLE": 0, "ORANGE": 1, "TEAL": 2, "BROWN": 3}',
             },
+            enum_type=DifferentColor,
         ),
-        19: ParameterMetadata(
+        19: ParameterMetadata.initialize(
             display_name="int_enum_data",
             type=type_pb2.Field.TYPE_ENUM,
             repeated=False,
@@ -441,8 +318,9 @@ def _get_test_parameter_by_id(default_values):
                 TYPE_SPECIALIZATION_KEY: TypeSpecialization.Enum.value,
                 ENUM_VALUES_KEY: '{"AMERICA": 0, "TAIWAN": 1, "AUSTRALIA": 2, "CANADA": 3}',
             },
+            enum_type=Countries,
         ),
-        20: ParameterMetadata(
+        20: ParameterMetadata.initialize(
             display_name="int_enum_array_data",
             type=type_pb2.Field.TYPE_ENUM,
             repeated=True,
@@ -451,8 +329,9 @@ def _get_test_parameter_by_id(default_values):
                 TYPE_SPECIALIZATION_KEY: TypeSpecialization.Enum.value,
                 ENUM_VALUES_KEY: '{"AMERICA": 0, "TAIWAN": 1, "AUSTRALIA": 2, "CANADA": 3}',
             },
+            enum_type=Countries,
         ),
-        21: ParameterMetadata(
+        21: ParameterMetadata.initialize(
             display_name="xy_data",
             type=type_pb2.Field.TYPE_MESSAGE,
             repeated=False,
@@ -460,7 +339,7 @@ def _get_test_parameter_by_id(default_values):
             annotations={},
             message_type=xydata_pb2.DoubleXYData.DESCRIPTOR.full_name,
         ),
-        22: ParameterMetadata(
+        22: ParameterMetadata.initialize(
             display_name="xy_data_array",
             type=type_pb2.Field.TYPE_MESSAGE,
             repeated=True,
@@ -503,7 +382,7 @@ def _get_test_grpc_message(test_values):
 def _get_big_message_metadata_by_id() -> Dict[int, ParameterMetadata]:
     return {
         i
-        + 1: ParameterMetadata(
+        + 1: ParameterMetadata.initialize(
             display_name=f"field{i + 1}",
             type=type_pb2.Field.TYPE_DOUBLE,
             repeated=False,
@@ -517,3 +396,16 @@ def _get_big_message_metadata_by_id() -> Dict[int, ParameterMetadata]:
 def _get_big_message(values: Sequence[float]) -> BigMessage:
     assert len(values) == BIG_MESSAGE_SIZE
     return BigMessage(**{f"field{i + 1}": value for (i, value) in enumerate(values)})
+
+
+def _test_create_file_descriptor(metadata: List[ParameterMetadata], file_name: str) -> str:
+    pool = descriptor_pool.Default()
+    try:
+        pool.FindMessageTypeByName(f"{file_name}.test")
+    except KeyError:
+        file_descriptor = descriptor_pb2.FileDescriptorProto()
+        file_descriptor.name = file_name
+        file_descriptor.package = file_name
+        serialization_descriptors._create_message_type(metadata, "test", file_descriptor)
+        pool.Add(file_descriptor)
+    return file_name + ".test"
