@@ -40,6 +40,8 @@ build-backend = "poetry.core.masonry.api"
 line-length = 100
 
 [tool.mypy]
+files = "ni_measurement_plugin_sdk_generator/,tests/"
+exclude = "^tests/test_assets/"
 disallow_untyped_defs = true
 namespace_packages = true
 warn_redundant_casts = true
