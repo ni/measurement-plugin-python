@@ -41,6 +41,6 @@ jobs:
       - name: Lint ni-measurement-plugin-sdk-generator
         run: poetry run ni-python-styleguide lint
       - name: Mypy static analysis (ni-measurement-plugin-sdk-generator, Linux)
-        run:  poetry run mypy -p ni_measurement_plugin_sdk_generator
+        run:  poetry run mypy
       - name: Mypy static analysis (ni-measurement-plugin-sdk-generator, Windows)
-        run:  poetry run mypy -p ni_measurement_plugin_sdk_generator --platform win32
+        run:  poetry run mypy --platform win32
