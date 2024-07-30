@@ -7,7 +7,7 @@ from ni_measurement_plugin_sdk_generator import template
 
 def test___command_line_args___create_measurement___render_without_exception(
     test_assets_directory: pathlib.Path, tmp_path_factory: pytest.TempPathFactory
-):
+) -> None:
     temp_directory = tmp_path_factory.mktemp("measurement_files")
 
     with pytest.raises(SystemExit):
@@ -39,7 +39,7 @@ def test___command_line_args___create_measurement___render_without_exception(
 
 def test___command_line_args___create_measurement_with_annotations___render_without_exception(
     test_assets_directory: pathlib.Path, tmp_path_factory: pytest.TempPathFactory
-):
+) -> None:
     temp_directory = tmp_path_factory.mktemp("measurement_files")
 
     with pytest.raises(SystemExit):
@@ -79,7 +79,7 @@ def test___command_line_args___create_measurement_with_annotations___render_with
         )
 
 
-def _assert_equal(expected_path: pathlib.Path, result_path: pathlib.Path):
+def _assert_equal(expected_path: pathlib.Path, result_path: pathlib.Path) -> None:
     expected = expected_path.read_text()
     result = result_path.read_text()
 
