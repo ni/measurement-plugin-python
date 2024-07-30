@@ -43,6 +43,7 @@ class ServiceDescriptor(google.protobuf.message.Message):
     PROVIDED_INTERFACES_FIELD_NUMBER: builtins.int
     SERVICE_CLASS_FIELD_NUMBER: builtins.int
     ANNOTATIONS_FIELD_NUMBER: builtins.int
+    VERSIONS_FIELD_NUMBER: builtins.int
     display_name: builtins.str
     """Required. The user visible name of the service."""
     description_url: builtins.str
@@ -75,6 +76,23 @@ class ServiceDescriptor(google.protobuf.message.Message):
           - Example: "[\\"powerup\\", \\"current\\"]"
         """
 
+    @property
+    def versions(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]:
+        """This field is used differently based on the message in which it is used.
+
+        When used in a RegisterServiceRequest, this field must contain a single
+        version, and that version must follow the major.minor.patch format.
+        The version 0.0.1 is reserved for internal use, and cannot be specified.
+        If no version is specified, the version 0.0.1 will be used internally
+        for the registered service.
+
+        When returned from EnumerateServicesResponse, this field will contain the
+        list of versions that are available for the associated service.
+
+        When returned from ResolveServiceWithInformationResponse, this field will
+        contain the version of the resolved service.
+        """
+
     def __init__(
         self,
         *,
@@ -83,8 +101,9 @@ class ServiceDescriptor(google.protobuf.message.Message):
         provided_interfaces: collections.abc.Iterable[builtins.str] | None = ...,
         service_class: builtins.str = ...,
         annotations: collections.abc.Mapping[builtins.str, builtins.str] | None = ...,
+        versions: collections.abc.Iterable[builtins.str] | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["annotations", b"annotations", "description_url", b"description_url", "display_name", b"display_name", "provided_interfaces", b"provided_interfaces", "service_class", b"service_class"]) -> None: ...
+    def ClearField(self, field_name: typing.Literal["annotations", b"annotations", "description_url", b"description_url", "display_name", b"display_name", "provided_interfaces", b"provided_interfaces", "service_class", b"service_class", "versions", b"versions"]) -> None: ...
 
 global___ServiceDescriptor = ServiceDescriptor
 
@@ -192,16 +211,25 @@ class EnumerateServicesRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
     PROVIDED_INTERFACE_FIELD_NUMBER: builtins.int
+    SERVICE_CLASS_FIELD_NUMBER: builtins.int
     provided_interface: builtins.str
     """Optional. The gRPC full name of the service interface that is needed. If empty,
     information for all services registered with the discovery service will be returned.
+    """
+    service_class: builtins.str
+    """Optional. The "class" of the service that should be matched. Using this field can
+    be a useful way to determine the available versions of a specific service.  If used
+    in conjunction with the 'provided_interface' field, the 'service_class' field will
+    be used to filter the results to only those services that match the provided
+    interface and service class.
     """
     def __init__(
         self,
         *,
         provided_interface: builtins.str = ...,
+        service_class: builtins.str = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["provided_interface", b"provided_interface"]) -> None: ...
+    def ClearField(self, field_name: typing.Literal["provided_interface", b"provided_interface", "service_class", b"service_class"]) -> None: ...
 
 global___EnumerateServicesRequest = EnumerateServicesRequest
 
@@ -240,6 +268,7 @@ class ResolveServiceRequest(google.protobuf.message.Message):
     PROVIDED_INTERFACE_FIELD_NUMBER: builtins.int
     SERVICE_CLASS_FIELD_NUMBER: builtins.int
     DEPLOYMENT_TARGET_FIELD_NUMBER: builtins.int
+    VERSION_FIELD_NUMBER: builtins.int
     provided_interface: builtins.str
     """Required. This corresponds to the gRPC Full Name of the service and should match the information
     that was supplied in the RegisterServiceRequest message.
@@ -255,16 +284,81 @@ class ResolveServiceRequest(google.protobuf.message.Message):
     local deployment target.  If the service cannot be resolved from the specified deployment
     target, an error is returned.
     """
+    version: builtins.str
+    """Optional. The version of the service to resolve. If not specified, the latest version will be resolved."""
     def __init__(
         self,
         *,
         provided_interface: builtins.str = ...,
         service_class: builtins.str = ...,
         deployment_target: builtins.str = ...,
+        version: builtins.str = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["deployment_target", b"deployment_target", "provided_interface", b"provided_interface", "service_class", b"service_class"]) -> None: ...
+    def ClearField(self, field_name: typing.Literal["deployment_target", b"deployment_target", "provided_interface", b"provided_interface", "service_class", b"service_class", "version", b"version"]) -> None: ...
 
 global___ResolveServiceRequest = ResolveServiceRequest
+
+@typing.final
+class ResolveServiceWithInformationRequest(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    PROVIDED_INTERFACE_FIELD_NUMBER: builtins.int
+    SERVICE_CLASS_FIELD_NUMBER: builtins.int
+    DEPLOYMENT_TARGET_FIELD_NUMBER: builtins.int
+    VERSION_FIELD_NUMBER: builtins.int
+    provided_interface: builtins.str
+    """Required. This corresponds to the gRPC Full Name of the service and should match the information
+    that was supplied in the RegisterServiceRequest message.
+    """
+    service_class: builtins.str
+    """Optional. The service "class" that should be matched. If the value of this field is not specified and there
+    is more than one matching service registered, an error is returned.
+    """
+    deployment_target: builtins.str
+    """Optional. Indicates the deployment target from which the service should be resolved.
+    The value of this field can be obtained from the results of the EnumerateComputeNodes method.
+    If the value of this field is not specified, the service will be resolved from the
+    local deployment target.  If the service cannot be resolved from the specified deployment
+    target, an error is returned.
+    """
+    version: builtins.str
+    """Optional. The version of the service to resolve. If not specified, the latest version will be resolved."""
+    def __init__(
+        self,
+        *,
+        provided_interface: builtins.str = ...,
+        service_class: builtins.str = ...,
+        deployment_target: builtins.str = ...,
+        version: builtins.str = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["deployment_target", b"deployment_target", "provided_interface", b"provided_interface", "service_class", b"service_class", "version", b"version"]) -> None: ...
+
+global___ResolveServiceWithInformationRequest = ResolveServiceWithInformationRequest
+
+@typing.final
+class ResolveServiceWithInformationResponse(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    SERVICE_LOCATION_FIELD_NUMBER: builtins.int
+    SERVICE_DESCRIPTOR_FIELD_NUMBER: builtins.int
+    @property
+    def service_location(self) -> global___ServiceLocation:
+        """The canonical location information of the service."""
+
+    @property
+    def service_descriptor(self) -> global___ServiceDescriptor:
+        """The description of the service."""
+
+    def __init__(
+        self,
+        *,
+        service_location: global___ServiceLocation | None = ...,
+        service_descriptor: global___ServiceDescriptor | None = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["service_descriptor", b"service_descriptor", "service_location", b"service_location"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["service_descriptor", b"service_descriptor", "service_location", b"service_location"]) -> None: ...
+
+global___ResolveServiceWithInformationResponse = ResolveServiceWithInformationResponse
 
 @typing.final
 class ComputeNodeDescriptor(google.protobuf.message.Message):

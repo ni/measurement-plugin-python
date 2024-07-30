@@ -70,6 +70,15 @@ class DiscoveryServiceStub:
     - FAILED_PRECONDITION: More than one service matching the resolve request was found
     """
 
+    ResolveServiceWithInformation: grpc.UnaryUnaryMultiCallable[
+        ni_measurementlink_discovery_v1_discovery_service_pb2.ResolveServiceWithInformationRequest,
+        ni_measurementlink_discovery_v1_discovery_service_pb2.ResolveServiceWithInformationResponse,
+    ]
+    """Similar to ResolveService, returns information for the service in addition to the location of the service.
+    This is useful if you want to avoid the overhead of having to call EnumerateServices to get this information as part of
+    resolution of the service. See ResolveService for additional documentation related to resolving the service.
+    """
+
     EnumerateComputeNodes: grpc.UnaryUnaryMultiCallable[
         ni_measurementlink_discovery_v1_discovery_service_pb2.EnumerateComputeNodesRequest,
         ni_measurementlink_discovery_v1_discovery_service_pb2.EnumerateComputeNodesResponse,
@@ -128,6 +137,15 @@ class DiscoveryServiceAsyncStub:
     - INVALID_ARGUMENT: provided_interfaces is empty
     - NOT_FOUND: No service matching the resolve request was found
     - FAILED_PRECONDITION: More than one service matching the resolve request was found
+    """
+
+    ResolveServiceWithInformation: grpc.aio.UnaryUnaryMultiCallable[
+        ni_measurementlink_discovery_v1_discovery_service_pb2.ResolveServiceWithInformationRequest,
+        ni_measurementlink_discovery_v1_discovery_service_pb2.ResolveServiceWithInformationResponse,
+    ]
+    """Similar to ResolveService, returns information for the service in addition to the location of the service.
+    This is useful if you want to avoid the overhead of having to call EnumerateServices to get this information as part of
+    resolution of the service. See ResolveService for additional documentation related to resolving the service.
     """
 
     EnumerateComputeNodes: grpc.aio.UnaryUnaryMultiCallable[
@@ -196,6 +214,17 @@ class DiscoveryServiceServicer(metaclass=abc.ABCMeta):
         - INVALID_ARGUMENT: provided_interfaces is empty
         - NOT_FOUND: No service matching the resolve request was found
         - FAILED_PRECONDITION: More than one service matching the resolve request was found
+        """
+
+    @abc.abstractmethod
+    def ResolveServiceWithInformation(
+        self,
+        request: ni_measurementlink_discovery_v1_discovery_service_pb2.ResolveServiceWithInformationRequest,
+        context: _ServicerContext,
+    ) -> typing.Union[ni_measurementlink_discovery_v1_discovery_service_pb2.ResolveServiceWithInformationResponse, collections.abc.Awaitable[ni_measurementlink_discovery_v1_discovery_service_pb2.ResolveServiceWithInformationResponse]]:
+        """Similar to ResolveService, returns information for the service in addition to the location of the service.
+        This is useful if you want to avoid the overhead of having to call EnumerateServices to get this information as part of
+        resolution of the service. See ResolveService for additional documentation related to resolving the service.
         """
 
     @abc.abstractmethod
