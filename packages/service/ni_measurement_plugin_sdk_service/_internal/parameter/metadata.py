@@ -23,6 +23,8 @@ if TYPE_CHECKING:
 
     SupportedEnumType = Union[Type[Enum], _EnumTypeWrapper]
 
+_VALID_CHARS = set(" ().,;:!?-_'+")
+
 
 class ParameterMetadata(NamedTuple):
     """Class that represents the metadata of parameters."""
@@ -84,6 +86,18 @@ class ParameterMetadata(NamedTuple):
             field_name,
             enum_type,
         )
+
+
+def validate_display_name(display_name: str) -> None:
+    """Validate and raise exception if 'display_name' has invalid characters.
+
+    Raises:
+        ValueError: If display_name has invalid characters.
+    """
+    if display_name == "" or not display_name[0].isalpha():
+        raise ValueError("First letter in " + display_name + " must be a letter")
+    elif not all(char in _VALID_CHARS or char.isalnum() for char in display_name):
+        raise ValueError("Invalid characters in " + display_name)
 
 
 def validate_default_value_type(parameter_metadata: ParameterMetadata) -> None:

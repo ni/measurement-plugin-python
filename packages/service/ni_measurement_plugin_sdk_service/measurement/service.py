@@ -411,6 +411,7 @@ class MeasurementService:
                 "DataType.PinArray1D is deprecated. Use DataType.IOResourceArray1D instead.",
                 DeprecationWarning,
             )
+        parameter_metadata.validate_display_name(display_name)
         data_type_info = _datatypeinfo.get_type_info(type)
         annotations = self._make_annotations_dict(
             data_type_info.type_specialization, instrument_type=instrument_type, enum_type=enum_type
@@ -472,6 +473,7 @@ class MeasurementService:
                 "DataType.PinArray1D is deprecated. Use DataType.IOResourceArray1D instead.",
                 DeprecationWarning,
             )
+        parameter_metadata.validate_display_name(display_name)
         data_type_info = _datatypeinfo.get_type_info(type)
         annotations = self._make_annotations_dict(
             data_type_info.type_specialization, enum_type=enum_type

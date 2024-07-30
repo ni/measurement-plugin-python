@@ -176,7 +176,7 @@ def _get_grpc_serialized_data(values):
 def _get_test_parameter_by_id(default_values):
     parameter_by_id = {
         1: ParameterMetadata.initialize(
-            display_name="float_data!",
+            display_name="float_data",
             type=type_pb2.Field.TYPE_FLOAT,
             repeated=False,
             default_value=default_values[0],
@@ -379,7 +379,7 @@ def _get_test_grpc_message(test_values):
     return parameter
 
 
-def _get_big_message_metadata_by_id() -> Dict[int, ParameterMetadata]:
+def _get_big_message_metadata_by_id() -> Dict[int, ParameterMetadata.initialize]:
     return {
         i
         + 1: ParameterMetadata.initialize(
@@ -398,7 +398,9 @@ def _get_big_message(values: Sequence[float]) -> BigMessage:
     return BigMessage(**{f"field{i + 1}": value for (i, value) in enumerate(values)})
 
 
-def _test_create_file_descriptor(metadata: List[ParameterMetadata], file_name: str) -> str:
+def _test_create_file_descriptor(
+    metadata: List[ParameterMetadata.initialize], file_name: str
+) -> str:
     pool = descriptor_pool.Default()
     try:
         pool.FindMessageTypeByName(f"{file_name}.test")

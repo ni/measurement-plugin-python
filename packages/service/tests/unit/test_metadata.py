@@ -10,7 +10,10 @@ from ni_measurement_plugin_sdk_service._annotations import (
     TYPE_SPECIALIZATION_KEY,
 )
 from ni_measurement_plugin_sdk_service._internal.parameter import metadata
-from ni_measurement_plugin_sdk_service.measurement.info import DataType, TypeSpecialization
+from ni_measurement_plugin_sdk_service.measurement.info import (
+    DataType,
+    TypeSpecialization,
+)
 
 
 class Color(Enum):
@@ -148,3 +151,30 @@ def test___default_value_same_as_type___validate___raises_no_exception(
     )
 
     metadata.validate_default_value_type(parameter_metadata)  # implicitly assert does not throw
+
+
+@pytest.mark.parametrize(
+    "display_name",
+    [
+        " test_string",
+        "_____()!",
+        "test@string",
+        "",
+    ],
+)
+def test___display_name_invalid_characters___validate___raises_value_exception(display_name):
+    with pytest.raises(ValueError):
+        metadata.validate_display_name(display_name)
+
+
+@pytest.mark.parametrize(
+    "display_name",
+    [
+        "teststring()",
+        "tEsT StRIng?",
+        "test_string!",
+        "Test String: -10",
+    ],
+)
+def test___display_name_valid_characters___validate___raises_no_exception(display_name):
+    metadata.validate_display_name(display_name)
