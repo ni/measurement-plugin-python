@@ -398,9 +398,7 @@ def _get_big_message(values: Sequence[float]) -> BigMessage:
     return BigMessage(**{f"field{i + 1}": value for (i, value) in enumerate(values)})
 
 
-def _test_create_file_descriptor(
-    metadata: List[ParameterMetadata], file_name: str
-) -> str:
+def _test_create_file_descriptor(metadata: List[ParameterMetadata], file_name: str) -> str:
     pool = descriptor_pool.Default()
     try:
         pool.FindMessageTypeByName(f"{file_name}.test")
