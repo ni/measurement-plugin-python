@@ -379,7 +379,7 @@ def _get_test_grpc_message(test_values):
     return parameter
 
 
-def _get_big_message_metadata_by_id() -> Dict[int, ParameterMetadata.initialize]:
+def _get_big_message_metadata_by_id() -> Dict[int, ParameterMetadata]:
     return {
         i
         + 1: ParameterMetadata.initialize(
@@ -399,7 +399,7 @@ def _get_big_message(values: Sequence[float]) -> BigMessage:
 
 
 def _test_create_file_descriptor(
-    metadata: List[ParameterMetadata.initialize], file_name: str
+    metadata: List[ParameterMetadata], file_name: str
 ) -> str:
     pool = descriptor_pool.Default()
     try:
