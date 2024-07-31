@@ -68,9 +68,10 @@ def skip_aliases(app, what, name, obj, skip, options):
     ]:
         skip = True
 
-    # sphinx-autoapi v3.2.1 says these attributes are duplicate objects and to use :noindex: on one copy,
-    # but it's unclear why these are duplicated, other than the fact that the MeasurementService type
-    # is aliased into a public package. 
+    # sphinx-autoapi v3.2.1 says these attributes are duplicate objects and to
+    # use :noindex: on one copy, but it's unclear why these are duplicated,
+    # other than the fact that the MeasurementService type is aliased into a
+    # public package.
     if name in [
         "ni_measurement_plugin_sdk_service.measurement.service.MeasurementService.measurement_info",
         "ni_measurement_plugin_sdk_service.measurement.service.MeasurementService.service_info",
