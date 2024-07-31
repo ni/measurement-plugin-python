@@ -172,15 +172,7 @@ _F = TypeVar("_F", bound=Callable)
 
 
 class MeasurementService:
-    """Class that supports registering and hosting a python function as a gRPC service.
-
-    Attributes:
-        measurement_info (info.MeasurementInfo): Measurement info
-
-        service_info(info.ServiceInfo) : Service Info
-
-        context (MeasurementContext): Accessor for context-local state.
-    """
+    """Class that supports registering and hosting a python function as a gRPC service."""
 
     def __init__(
         self,
@@ -223,31 +215,33 @@ class MeasurementService:
                 f"Service class '{service_class}' not found in '{service_config_file}'"
             )
 
-        self.measurement_info = MeasurementInfo(
+        # Note: sphinx-autoapi uses the public attributes' type hints and docstrings.
+        self.measurement_info: MeasurementInfo = MeasurementInfo(
             display_name=service["displayName"],
             version=version,
             ui_file_paths=ui_file_paths,
         )
+        """Information about the measurement performed by this service."""
 
         def convert_value_to_str(value: object) -> str:
             if isinstance(value, str):
                 return value
             return json.dumps(value, separators=(",", ":"))
 
-        service_annotations_string = {
-            key: convert_value_to_str(value)
-            for key, value in service.get("annotations", {}).items()
-        }
-
-        self.service_info = ServiceInfo(
+        self.service_info: ServiceInfo = ServiceInfo(
             display_name=service["displayName"],
             service_class=service["serviceClass"],
             description_url=service["descriptionUrl"],
             provided_interfaces=service["providedInterfaces"],
-            annotations=service_annotations_string,
+            annotations={
+                key: convert_value_to_str(value)
+                for key, value in service.get("annotations", {}).items()
+            },
         )
+        """Information about this service."""
 
-        self.context = MeasurementContext()
+        self.context: MeasurementContext = MeasurementContext()
+        """Accessor for context-local state."""
 
         self._configuration_parameter_list: List[parameter_metadata.ParameterMetadata] = []
         self._output_parameter_list: List[parameter_metadata.ParameterMetadata] = []
