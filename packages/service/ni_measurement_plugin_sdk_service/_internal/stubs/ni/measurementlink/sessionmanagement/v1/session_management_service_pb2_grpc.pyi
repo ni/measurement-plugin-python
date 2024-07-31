@@ -18,14 +18,14 @@ class _ServicerContext(grpc.ServicerContext, grpc.aio.ServicerContext):  # type:
     ...
 
 class SessionManagementServiceStub:
-    """Service to keep track of open sessions used by measurement services, and to allow measurement services to access sessions by pin and site."""
+    """Service to keep track of open sessions used by measurement services, and to allow measurement services to access sessions by I/O resource and site."""
 
     def __init__(self, channel: typing.Union[grpc.Channel, grpc.aio.Channel]) -> None: ...
     ReserveSessions: grpc.UnaryUnaryMultiCallable[
         ni_measurementlink_sessionmanagement_v1_session_management_service_pb2.ReserveSessionsRequest,
         ni_measurementlink_sessionmanagement_v1_session_management_service_pb2.ReserveSessionsResponse,
     ]
-    """Reserve session(s) for the given pins or relays, sites, and instrument type ID and returns the information needed to create or access the session.
+    """Reserve session(s) for the given I/O resources (pins, relays, channels), sites, and instrument type ID and returns the information needed to create or access the session.
     Also reserves the session so other processes cannot access it with a ReserveSessions() call.
     Status Codes for errors:
     - INVALID_ARGUMENT:
@@ -113,13 +113,13 @@ class SessionManagementServiceStub:
     """Gets all multiplexer sessions currently registered with this service."""
 
 class SessionManagementServiceAsyncStub:
-    """Service to keep track of open sessions used by measurement services, and to allow measurement services to access sessions by pin and site."""
+    """Service to keep track of open sessions used by measurement services, and to allow measurement services to access sessions by I/O resource and site."""
 
     ReserveSessions: grpc.aio.UnaryUnaryMultiCallable[
         ni_measurementlink_sessionmanagement_v1_session_management_service_pb2.ReserveSessionsRequest,
         ni_measurementlink_sessionmanagement_v1_session_management_service_pb2.ReserveSessionsResponse,
     ]
-    """Reserve session(s) for the given pins or relays, sites, and instrument type ID and returns the information needed to create or access the session.
+    """Reserve session(s) for the given I/O resources (pins, relays, channels), sites, and instrument type ID and returns the information needed to create or access the session.
     Also reserves the session so other processes cannot access it with a ReserveSessions() call.
     Status Codes for errors:
     - INVALID_ARGUMENT:
@@ -207,7 +207,7 @@ class SessionManagementServiceAsyncStub:
     """Gets all multiplexer sessions currently registered with this service."""
 
 class SessionManagementServiceServicer(metaclass=abc.ABCMeta):
-    """Service to keep track of open sessions used by measurement services, and to allow measurement services to access sessions by pin and site."""
+    """Service to keep track of open sessions used by measurement services, and to allow measurement services to access sessions by I/O resource and site."""
 
     @abc.abstractmethod
     def ReserveSessions(
@@ -215,7 +215,7 @@ class SessionManagementServiceServicer(metaclass=abc.ABCMeta):
         request: ni_measurementlink_sessionmanagement_v1_session_management_service_pb2.ReserveSessionsRequest,
         context: _ServicerContext,
     ) -> typing.Union[ni_measurementlink_sessionmanagement_v1_session_management_service_pb2.ReserveSessionsResponse, collections.abc.Awaitable[ni_measurementlink_sessionmanagement_v1_session_management_service_pb2.ReserveSessionsResponse]]:
-        """Reserve session(s) for the given pins or relays, sites, and instrument type ID and returns the information needed to create or access the session.
+        """Reserve session(s) for the given I/O resources (pins, relays, channels), sites, and instrument type ID and returns the information needed to create or access the session.
         Also reserves the session so other processes cannot access it with a ReserveSessions() call.
         Status Codes for errors:
         - INVALID_ARGUMENT:

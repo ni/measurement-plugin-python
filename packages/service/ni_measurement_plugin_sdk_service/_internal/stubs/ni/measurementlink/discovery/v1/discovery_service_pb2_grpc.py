@@ -36,6 +36,11 @@ class DiscoveryServiceStub(object):
                 request_serializer=ni_dot_measurementlink_dot_discovery_dot_v1_dot_discovery__service__pb2.ResolveServiceRequest.SerializeToString,
                 response_deserializer=ni_dot_measurementlink_dot_discovery_dot_v1_dot_discovery__service__pb2.ServiceLocation.FromString,
                 )
+        self.ResolveServiceWithInformation = channel.unary_unary(
+                '/ni.measurementlink.discovery.v1.DiscoveryService/ResolveServiceWithInformation',
+                request_serializer=ni_dot_measurementlink_dot_discovery_dot_v1_dot_discovery__service__pb2.ResolveServiceWithInformationRequest.SerializeToString,
+                response_deserializer=ni_dot_measurementlink_dot_discovery_dot_v1_dot_discovery__service__pb2.ResolveServiceWithInformationResponse.FromString,
+                )
         self.EnumerateComputeNodes = channel.unary_unary(
                 '/ni.measurementlink.discovery.v1.DiscoveryService/EnumerateComputeNodes',
                 request_serializer=ni_dot_measurementlink_dot_discovery_dot_v1_dot_discovery__service__pb2.EnumerateComputeNodesRequest.SerializeToString,
@@ -94,6 +99,15 @@ class DiscoveryServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def ResolveServiceWithInformation(self, request, context):
+        """Similar to ResolveService, returns information for the service in addition to the location of the service.
+        This is useful if you want to avoid the overhead of having to call EnumerateServices to get this information as part of
+        resolution of the service. See ResolveService for additional documentation related to resolving the service.
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
     def EnumerateComputeNodes(self, request, context):
         """Enumerate all compute nodes that have registered themselves in the current session.
         These compute nodes are targets available for execution of services.
@@ -126,6 +140,11 @@ def add_DiscoveryServiceServicer_to_server(servicer, server):
                     servicer.ResolveService,
                     request_deserializer=ni_dot_measurementlink_dot_discovery_dot_v1_dot_discovery__service__pb2.ResolveServiceRequest.FromString,
                     response_serializer=ni_dot_measurementlink_dot_discovery_dot_v1_dot_discovery__service__pb2.ServiceLocation.SerializeToString,
+            ),
+            'ResolveServiceWithInformation': grpc.unary_unary_rpc_method_handler(
+                    servicer.ResolveServiceWithInformation,
+                    request_deserializer=ni_dot_measurementlink_dot_discovery_dot_v1_dot_discovery__service__pb2.ResolveServiceWithInformationRequest.FromString,
+                    response_serializer=ni_dot_measurementlink_dot_discovery_dot_v1_dot_discovery__service__pb2.ResolveServiceWithInformationResponse.SerializeToString,
             ),
             'EnumerateComputeNodes': grpc.unary_unary_rpc_method_handler(
                     servicer.EnumerateComputeNodes,
@@ -209,6 +228,23 @@ class DiscoveryService(object):
         return grpc.experimental.unary_unary(request, target, '/ni.measurementlink.discovery.v1.DiscoveryService/ResolveService',
             ni_dot_measurementlink_dot_discovery_dot_v1_dot_discovery__service__pb2.ResolveServiceRequest.SerializeToString,
             ni_dot_measurementlink_dot_discovery_dot_v1_dot_discovery__service__pb2.ServiceLocation.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def ResolveServiceWithInformation(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ni.measurementlink.discovery.v1.DiscoveryService/ResolveServiceWithInformation',
+            ni_dot_measurementlink_dot_discovery_dot_v1_dot_discovery__service__pb2.ResolveServiceWithInformationRequest.SerializeToString,
+            ni_dot_measurementlink_dot_discovery_dot_v1_dot_discovery__service__pb2.ResolveServiceWithInformationResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 

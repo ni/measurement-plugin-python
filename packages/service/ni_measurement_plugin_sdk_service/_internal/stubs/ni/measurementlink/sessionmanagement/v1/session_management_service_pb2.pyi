@@ -35,7 +35,7 @@ class SessionInformation(google.protobuf.message.Message):
     """
     instrument_type_id: builtins.str
     """Instrument type ID to identify which type of instrument the session represents.
-    Pin maps have built in instrument definitions using the following NI driver based instrument type ids:
+    The session management service has built in instrument definitions using the following NI driver based instrument type ids:
          "niDCPower"
          "niDigitalPattern"
          "niScope"
@@ -43,7 +43,7 @@ class SessionInformation(google.protobuf.message.Message):
          "niDAQmx"
          "niFGen"
          "niRelayDriver"
-    For custom instruments the user defined instrument type id is defined in the pin map file.
+    For custom instruments the user defined instrument type id is defined in the pin map file or custom session management plugin service.
     This field is readonly.
     """
     session_exists: builtins.bool
@@ -58,8 +58,8 @@ class SessionInformation(google.protobuf.message.Message):
 
     @property
     def channel_mappings(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___ChannelMapping]:
-        """List of site and pin/relay mappings with optional multiplexer information for each channel in the channel_list.
-        Each item represents a channel-to-pin connection for this instrument resource. In the case of shared pins, there is a separate item for each connection.
+        """List of site and I/O resource mappings with optional multiplexer information for each channel in the channel_list.
+        Each item represents a channel-to-I/O-resource connection for this instrument resource. In the case of shared pins, there is a separate item for each connection.
         This field is empty for any SessionInformation returned from ReserveAllRegisteredSessions.
         This field is readonly.
         """
@@ -89,13 +89,13 @@ class ChannelMapping(google.protobuf.message.Message):
     MULTIPLEXER_RESOURCE_NAME_FIELD_NUMBER: builtins.int
     MULTIPLEXER_ROUTE_FIELD_NUMBER: builtins.int
     pin_or_relay_name: builtins.str
-    """The pin or relay that is mapped to a channel."""
+    """The I/O resource that is mapped to a channel."""
     site: builtins.int
-    """The site on which the pin or relay is mapped to a channel.
+    """The site on which the I/O resource is mapped to a channel.
     For system pins/relays the site number is -1 since they do not belong to a specific site.
     """
     channel: builtins.str
-    """The channel to which the pin or relay is mapped on this site."""
+    """The channel to which the I/O resource is mapped on this site."""
     multiplexer_resource_name: builtins.str
     """The multiplexer resource name is used to open the multiplexer session in the driver."""
     multiplexer_route: builtins.str
@@ -162,7 +162,7 @@ class ReserveSessionsRequest(google.protobuf.message.Message):
     TIMEOUT_IN_MILLISECONDS_FIELD_NUMBER: builtins.int
     instrument_type_id: builtins.str
     """Optional. Instrument type ID for the measurement. If unspecified, reserve sessions for all instrument types connected in the registered pin map resource.
-    Pin maps have built in instrument definitions using the following NI driver based instrument type ids:
+    The session management service has built in instrument definitions using the following NI driver based instrument type ids:
          "niDCPower"
          "niDigitalPattern"
          "niScope"
@@ -170,7 +170,7 @@ class ReserveSessionsRequest(google.protobuf.message.Message):
          "niDAQmx"
          "niFGen"
          "niRelayDriver"
-    For custom instruments the user defined instrument type id is defined in the pin map file.
+    For custom instruments the user defined instrument type id is defined in the pin map file or custom session management plugin service.
     """
     timeout_in_milliseconds: builtins.int
     """Optional. Timeout for the reservation request.
@@ -178,11 +178,11 @@ class ReserveSessionsRequest(google.protobuf.message.Message):
     """
     @property
     def pin_map_context(self) -> ni_measurementlink_pin_map_context_pb2.PinMapContext:
-        """Required. Includes the pin map ID for the pin map in the Pin Map Service, as well as the list of sites for the measurement."""
+        """Optional. Includes the pin map ID for the pin map in the Pin Map Service, as well as the list of sites for the measurement. If unspecified, specify non-pin I/O resources for pin_or_relay_names."""
 
     @property
     def pin_or_relay_names(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]:
-        """Optional. List of pins, pin groups, relays, or relay groups to use for the measurement. If unspecified, reserve sessions for all pins and relays in the registered pin map resource."""
+        """Optional. List of I/O resources (pins, pin groups, relays, relay groups, or channels) to use for the measurement. If unspecified, reserve sessions for all pins and relays in the registered pin map resource."""
 
     def __init__(
         self,
@@ -224,11 +224,11 @@ class ReserveSessionsResponse(google.protobuf.message.Message):
     GROUP_MAPPINGS_FIELD_NUMBER: builtins.int
     @property
     def sessions(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___SessionInformation]:
-        """List of information needed to create or use each session for the given pin, site, and instrument type ID."""
+        """List of information needed to create or use each session for the given I/O resource, site, and instrument type ID."""
 
     @property
     def multiplexer_sessions(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___MultiplexerSessionInformation]:
-        """List of information needed to create or use each multiplexer session for the given pin, site, and instrument type ID."""
+        """List of information needed to create or use each multiplexer session for the given I/O resource, site, and instrument type ID."""
 
     @property
     def group_mappings(self) -> google.protobuf.internal.containers.MessageMap[builtins.str, global___ResolvedPinsOrRelays]:
@@ -341,7 +341,7 @@ class ReserveAllRegisteredSessionsRequest(google.protobuf.message.Message):
     """
     instrument_type_id: builtins.str
     """Optional. Instrument type ID of the registered sessions to reserve. If unspecified, reserve sessions for all instrument types connected in the registered pin map resource.
-    Pin maps have built in instrument definitions using the following NI driver based instrument type ids:
+    The session management service has built in instrument definitions using the following NI driver based instrument type ids:
          "niDCPower"
          "niDigitalPattern"
          "niScope"
@@ -349,7 +349,7 @@ class ReserveAllRegisteredSessionsRequest(google.protobuf.message.Message):
          "niDAQmx"
          "niFGen"
          "niRelayDriver"
-    For custom instruments the user defined instrument type id is defined in the pin map file.
+    For custom instruments the user defined instrument type id is defined in the pin map file or custom session management plugin service.
     """
     def __init__(
         self,

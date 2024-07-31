@@ -6,7 +6,7 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.sessio
 
 
 class SessionManagementServiceStub(object):
-    """Service to keep track of open sessions used by measurement services, and to allow measurement services to access sessions by pin and site.
+    """Service to keep track of open sessions used by measurement services, and to allow measurement services to access sessions by I/O resource and site.
     """
 
     def __init__(self, channel):
@@ -63,11 +63,11 @@ class SessionManagementServiceStub(object):
 
 
 class SessionManagementServiceServicer(object):
-    """Service to keep track of open sessions used by measurement services, and to allow measurement services to access sessions by pin and site.
+    """Service to keep track of open sessions used by measurement services, and to allow measurement services to access sessions by I/O resource and site.
     """
 
     def ReserveSessions(self, request, context):
-        """Reserve session(s) for the given pins or relays, sites, and instrument type ID and returns the information needed to create or access the session.
+        """Reserve session(s) for the given I/O resources (pins, relays, channels), sites, and instrument type ID and returns the information needed to create or access the session.
         Also reserves the session so other processes cannot access it with a ReserveSessions() call.
         Status Codes for errors:
         - INVALID_ARGUMENT:
@@ -216,7 +216,7 @@ def add_SessionManagementServiceServicer_to_server(servicer, server):
 
  # This class is part of an EXPERIMENTAL API.
 class SessionManagementService(object):
-    """Service to keep track of open sessions used by measurement services, and to allow measurement services to access sessions by pin and site.
+    """Service to keep track of open sessions used by measurement services, and to allow measurement services to access sessions by I/O resource and site.
     """
 
     @staticmethod
