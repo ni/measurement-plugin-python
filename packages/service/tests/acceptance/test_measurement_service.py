@@ -1,6 +1,7 @@
 """Tests to validate measurement service. Uses the Sample Measurement Example."""
 
 import random
+import sys
 import urllib.parse
 import urllib.request
 from enum import Enum
@@ -143,6 +144,8 @@ def test___measurement_service_v2___measure___returns_output(
 def test___measurement_service_v1___measure_with_large_array___returns_output(
     double_array_len: int, stub_v1: v1_measurement_service_pb2_grpc.MeasurementServiceStub
 ):
+    if sys.platform == "win32" and sys.maxsize < 2**32 and double_array_len > 1000000:
+        pytest.skip("TODO: 32-bit Python tests fail with out-of-memory errors #818")
     float_in = 1.23
     double_array_in = [random.random() for i in range(double_array_len)]
     bool_in = False
@@ -174,6 +177,8 @@ def test___measurement_service_v1___measure_with_large_array___returns_output(
 def test___measurement_service_v2___measure_with_large_array___returns_output(
     double_array_len: int, stub_v2: v2_measurement_service_pb2_grpc.MeasurementServiceStub
 ):
+    if sys.platform == "win32" and sys.maxsize < 2**32 and double_array_len > 1000000:
+        pytest.skip("TODO: 32-bit Python tests fail with out-of-memory errors #818")
     float_in = 1.23
     double_array_in = [random.random() for i in range(double_array_len)]
     bool_in = False
