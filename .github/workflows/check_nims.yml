@@ -31,7 +31,7 @@ jobs:
         with:
           poetry-version: ${{ env.POETRY_VERSION }}
       - name: Check for lock changes (ni-measurement-plugin-sdk-service)
-        run: poetry lock --check
+        run: poetry check --lock
 
       # ni-measurement-plugin-sdk-service, all extras
       - name: Restore cached virtualenv (ni-measurement-plugin-sdk-service, all extras)

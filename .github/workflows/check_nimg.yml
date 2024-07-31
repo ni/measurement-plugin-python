@@ -29,7 +29,7 @@ jobs:
         with:
           poetry-version: ${{ env.POETRY_VERSION }}
       - name: Check for lock changes (ni-measurement-plugin-sdk-generator)
-        run: poetry lock --check
+        run: poetry check --lock
       - name: Cache virtualenv (ni-measurement-plugin-sdk-generator)
         uses: actions/cache@v4
         id: cache
