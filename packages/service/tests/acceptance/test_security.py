@@ -16,7 +16,7 @@ def test___loopback_measurement___listening_on_loopback_interface(
 
     listener_ips = [
         ip_address(conn.laddr.ip)
-        for conn in psutil.Process().connections()
+        for conn in psutil.Process().net_connections()
         if conn.laddr.port == insecure_port and conn.status == psutil.CONN_LISTEN
     ]
     assert len(listener_ips) >= 1 and all([ip.is_loopback for ip in listener_ips])
