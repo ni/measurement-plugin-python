@@ -115,6 +115,8 @@ markers = [
 ]
 
 [tool.mypy]
+files = "ni_measurement_plugin_sdk_service/,tests/"
+exclude = "^tests/assets/"
 disallow_untyped_defs = true
 namespace_packages = true
 plugins = "numpy.typing.mypy_plugin"
