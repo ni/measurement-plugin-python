@@ -37,7 +37,7 @@ jobs:
           poetry-version: ${{ env.POETRY_VERSION }}
 
       - name: Check for lock changes
-        run: poetry lock --check
+        run: poetry check --lock
 
       # If the tag is 0.1.0, this will set the version of NIMS package to 0.1.0
       - name: Store version from Tag
