@@ -60,6 +60,7 @@ class ParameterMetadata(NamedTuple):
 
     @staticmethod
     def initialize(
+        validate_type: bool,
         display_name: str,
         type: type_pb2.Field.Kind.ValueType,
         repeated: bool,
@@ -69,14 +70,16 @@ class ParameterMetadata(NamedTuple):
         enum_type: Optional[SupportedEnumType] = None,
     ) -> "ParameterMetadata":
         """Initialize ParameterMetadata with field_name."""
+        _validate_display_name(display_name)
         underscore_display_name = display_name.replace(" ", "_")
+
         if all(char.isalnum() or char == "_" for char in underscore_display_name):
             field_name = underscore_display_name
         else:
             field_name = "".join(
                 char for char in underscore_display_name if char.isalnum() or char == "_"
             )
-        return ParameterMetadata(
+        parameter_metadata = ParameterMetadata(
             display_name,
             type,
             repeated,
@@ -86,21 +89,26 @@ class ParameterMetadata(NamedTuple):
             field_name,
             enum_type,
         )
+        if validate_type:
+            _validate_default_value_type(parameter_metadata)
+        return parameter_metadata
 
 
-def validate_display_name(display_name: str) -> None:
+def _validate_display_name(display_name: str) -> None:
     """Validate and raise exception if 'display_name' has invalid characters.
 
     Raises:
         ValueError: If display_name has invalid characters.
     """
-    if display_name == "" or not display_name[0].isalpha():
-        raise ValueError("First letter in " + display_name + " must be a letter")
+    if not display_name:
+        raise ValueError("The display name cannot be an empty string.")
+    elif not display_name[0].isalpha():
+        raise ValueError(f"The first character in display name: '{display_name}' must be a letter.")
     elif not all(char in _VALID_CHARS or char.isalnum() for char in display_name):
-        raise ValueError("Invalid characters in " + display_name)
+        raise ValueError(f"There are Invalid characters in display name: '{display_name}'.")
 
 
-def validate_default_value_type(parameter_metadata: ParameterMetadata) -> None:
+def _validate_default_value_type(parameter_metadata: ParameterMetadata) -> None:
     """Validate and raise exception if the default value does not match the type info.
 
     Args:

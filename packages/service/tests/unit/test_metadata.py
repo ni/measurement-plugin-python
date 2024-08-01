@@ -93,7 +93,7 @@ def test___default_value_different_from_type___validate___raises_type_exception(
     )
 
     with pytest.raises(TypeError):
-        metadata.validate_default_value_type(parameter_metadata)
+        metadata._validate_default_value_type(parameter_metadata)
 
 
 @pytest.mark.parametrize(
@@ -150,7 +150,7 @@ def test___default_value_same_as_type___validate___raises_no_exception(
         annotations,
     )
 
-    metadata.validate_default_value_type(parameter_metadata)  # implicitly assert does not throw
+    metadata._validate_default_value_type(parameter_metadata)  # implicitly assert does not throw
 
 
 @pytest.mark.parametrize(
@@ -164,7 +164,7 @@ def test___default_value_same_as_type___validate___raises_no_exception(
 )
 def test___display_name_invalid_characters___validate___raises_value_exception(display_name):
     with pytest.raises(ValueError):
-        metadata.validate_display_name(display_name)
+        metadata._validate_display_name(display_name)
 
 
 @pytest.mark.parametrize(
@@ -177,4 +177,4 @@ def test___display_name_invalid_characters___validate___raises_value_exception(d
     ],
 )
 def test___display_name_valid_characters___validate___raises_no_exception(display_name):
-    metadata.validate_display_name(display_name)
+    metadata._validate_display_name(display_name)

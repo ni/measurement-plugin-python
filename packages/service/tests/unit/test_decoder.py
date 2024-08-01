@@ -176,6 +176,7 @@ def _get_grpc_serialized_data(values):
 def _get_test_parameter_by_id(default_values):
     parameter_by_id = {
         1: ParameterMetadata.initialize(
+            validate_type=False,
             display_name="float_data",
             type=type_pb2.Field.TYPE_FLOAT,
             repeated=False,
@@ -183,6 +184,7 @@ def _get_test_parameter_by_id(default_values):
             annotations={},
         ),
         2: ParameterMetadata.initialize(
+            validate_type=False,
             display_name="double_data",
             type=type_pb2.Field.TYPE_DOUBLE,
             repeated=False,
@@ -190,6 +192,7 @@ def _get_test_parameter_by_id(default_values):
             annotations={},
         ),
         3: ParameterMetadata.initialize(
+            validate_type=False,
             display_name="int32_data",
             type=type_pb2.Field.TYPE_INT32,
             repeated=False,
@@ -197,6 +200,7 @@ def _get_test_parameter_by_id(default_values):
             annotations={},
         ),
         4: ParameterMetadata.initialize(
+            validate_type=False,
             display_name="uint32_data",
             type=type_pb2.Field.TYPE_INT64,
             repeated=False,
@@ -204,6 +208,7 @@ def _get_test_parameter_by_id(default_values):
             annotations={},
         ),
         5: ParameterMetadata.initialize(
+            validate_type=False,
             display_name="int64_data",
             type=type_pb2.Field.TYPE_UINT32,
             repeated=False,
@@ -211,6 +216,7 @@ def _get_test_parameter_by_id(default_values):
             annotations={},
         ),
         6: ParameterMetadata.initialize(
+            validate_type=False,
             display_name="uint64_data",
             type=type_pb2.Field.TYPE_UINT64,
             repeated=False,
@@ -218,6 +224,7 @@ def _get_test_parameter_by_id(default_values):
             annotations={},
         ),
         7: ParameterMetadata.initialize(
+            validate_type=False,
             display_name="bool_data",
             type=type_pb2.Field.TYPE_BOOL,
             repeated=False,
@@ -225,6 +232,7 @@ def _get_test_parameter_by_id(default_values):
             annotations={},
         ),
         8: ParameterMetadata.initialize(
+            validate_type=False,
             display_name="string_data",
             type=type_pb2.Field.TYPE_STRING,
             repeated=False,
@@ -232,6 +240,7 @@ def _get_test_parameter_by_id(default_values):
             annotations={},
         ),
         9: ParameterMetadata.initialize(
+            validate_type=False,
             display_name="double_array_data",
             type=type_pb2.Field.TYPE_DOUBLE,
             repeated=True,
@@ -239,6 +248,7 @@ def _get_test_parameter_by_id(default_values):
             annotations={},
         ),
         10: ParameterMetadata.initialize(
+            validate_type=False,
             display_name="float_array_data",
             type=type_pb2.Field.TYPE_FLOAT,
             repeated=True,
@@ -246,6 +256,7 @@ def _get_test_parameter_by_id(default_values):
             annotations={},
         ),
         11: ParameterMetadata.initialize(
+            validate_type=False,
             display_name="int32_array_data",
             type=type_pb2.Field.TYPE_INT32,
             repeated=True,
@@ -253,6 +264,7 @@ def _get_test_parameter_by_id(default_values):
             annotations={},
         ),
         12: ParameterMetadata.initialize(
+            validate_type=False,
             display_name="uint32_array_data",
             type=type_pb2.Field.TYPE_UINT32,
             repeated=True,
@@ -260,6 +272,7 @@ def _get_test_parameter_by_id(default_values):
             annotations={},
         ),
         13: ParameterMetadata.initialize(
+            validate_type=False,
             display_name="int64_array_data",
             type=type_pb2.Field.TYPE_INT64,
             repeated=True,
@@ -267,6 +280,7 @@ def _get_test_parameter_by_id(default_values):
             annotations={},
         ),
         14: ParameterMetadata.initialize(
+            validate_type=False,
             display_name="uint64_array_data",
             type=type_pb2.Field.TYPE_UINT64,
             repeated=True,
@@ -274,6 +288,7 @@ def _get_test_parameter_by_id(default_values):
             annotations={},
         ),
         15: ParameterMetadata.initialize(
+            validate_type=False,
             display_name="bool_array_data",
             type=type_pb2.Field.TYPE_BOOL,
             repeated=True,
@@ -281,6 +296,7 @@ def _get_test_parameter_by_id(default_values):
             annotations={},
         ),
         16: ParameterMetadata.initialize(
+            validate_type=False,
             display_name="string_array_data",
             type=type_pb2.Field.TYPE_STRING,
             repeated=True,
@@ -288,6 +304,7 @@ def _get_test_parameter_by_id(default_values):
             annotations={},
         ),
         17: ParameterMetadata.initialize(
+            validate_type=False,
             display_name="enum_data",
             type=type_pb2.Field.TYPE_ENUM,
             repeated=False,
@@ -299,6 +316,7 @@ def _get_test_parameter_by_id(default_values):
             enum_type=DifferentColor,
         ),
         18: ParameterMetadata.initialize(
+            validate_type=False,
             display_name="enum_array_data",
             type=type_pb2.Field.TYPE_ENUM,
             repeated=True,
@@ -310,6 +328,7 @@ def _get_test_parameter_by_id(default_values):
             enum_type=DifferentColor,
         ),
         19: ParameterMetadata.initialize(
+            validate_type=False,
             display_name="int_enum_data",
             type=type_pb2.Field.TYPE_ENUM,
             repeated=False,
@@ -321,6 +340,7 @@ def _get_test_parameter_by_id(default_values):
             enum_type=Countries,
         ),
         20: ParameterMetadata.initialize(
+            validate_type=False,
             display_name="int_enum_array_data",
             type=type_pb2.Field.TYPE_ENUM,
             repeated=True,
@@ -332,6 +352,7 @@ def _get_test_parameter_by_id(default_values):
             enum_type=Countries,
         ),
         21: ParameterMetadata.initialize(
+            validate_type=False,
             display_name="xy_data",
             type=type_pb2.Field.TYPE_MESSAGE,
             repeated=False,
@@ -340,6 +361,7 @@ def _get_test_parameter_by_id(default_values):
             message_type=xydata_pb2.DoubleXYData.DESCRIPTOR.full_name,
         ),
         22: ParameterMetadata.initialize(
+            validate_type=False,
             display_name="xy_data_array",
             type=type_pb2.Field.TYPE_MESSAGE,
             repeated=True,
@@ -383,6 +405,7 @@ def _get_big_message_metadata_by_id() -> Dict[int, ParameterMetadata]:
     return {
         i
         + 1: ParameterMetadata.initialize(
+            validate_type=False,
             display_name=f"field{i + 1}",
             type=type_pb2.Field.TYPE_DOUBLE,
             repeated=False,
