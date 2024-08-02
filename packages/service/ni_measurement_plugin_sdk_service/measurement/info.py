@@ -62,7 +62,7 @@ class ServiceInfo(NamedTuple):
     """The service display name for clients to display to users."""
 
     version: str = ""
-    """The version of the service.  It should be in the form major.minor.build[.revision] (e.g. 1.0.0)."""
+    """The version of the service in the form major.minor.build[.revision] (e.g. 1.0.0)."""
 
 
 class TypeSpecialization(enum.Enum):
