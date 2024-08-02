@@ -325,15 +325,16 @@ def test___discovery_service_exe_unavailable___register_service___raises_file_no
 def test___registered_measurements___enumerate_services___returns_list_of_measurements(
     discovery_client: DiscoveryClient, discovery_service_stub: Mock
 ):
-    discovery_service_stub.RegisterService.return_value = RegisterServiceResponse(
-        registration_id="abcd"
+    grpc_service_descriptor = GrpcServiceDescriptor(
+        display_name = _TEST_SERVICE_INFO.display_name,
+        description_url = _TEST_SERVICE_INFO.description_url,
+        provided_interfaces = _TEST_SERVICE_INFO.provided_interfaces,
+        annotations = _TEST_SERVICE_INFO.annotations,
+        service_class = _TEST_SERVICE_INFO.service_class
     )
-    discovery_client.register_service(_TEST_SERVICE_INFO, _TEST_SERVICE_LOCATION)
-    register_service_request: RegisterServiceRequest = (
-        discovery_service_stub.RegisterService.call_args.args[0]
-    )
+    grpc_service_descriptor.annotations[SERVICE_PROGRAMMINGLANGUAGE_KEY] = "Python"
     discovery_service_stub.EnumerateServices.return_value = EnumerateServicesResponse(
-        available_services=[register_service_request.service_description]
+        available_services=[grpc_service_descriptor]
     )
 
     available_measurements = discovery_client.enumerate_services(
