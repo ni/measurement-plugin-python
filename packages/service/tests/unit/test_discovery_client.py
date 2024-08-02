@@ -17,6 +17,8 @@ from ni_measurement_plugin_sdk_service._annotations import (
     SERVICE_PROGRAMMINGLANGUAGE_KEY,
 )
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.discovery.v1.discovery_service_pb2 import (
+    EnumerateServicesRequest,
+    EnumerateServicesResponse,
     RegisterServiceRequest,
     RegisterServiceResponse,
     ResolveServiceRequest,
@@ -24,8 +26,6 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.discov
     ServiceLocation as GrpcServiceLocation,
     UnregisterServiceRequest,
     UnregisterServiceResponse,
-    EnumerateServicesRequest,
-    EnumerateServicesResponse,
 )
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.discovery.v1.discovery_service_pb2_grpc import (
     DiscoveryServiceStub,
@@ -322,14 +322,13 @@ def test___discovery_service_exe_unavailable___register_service___raises_file_no
         discovery_client.register_service(_TEST_SERVICE_INFO, _TEST_SERVICE_LOCATION)
 
 
-def test___active_measurements_available___enumerate_services___returns_list_of_measurements(
+def test___registered_measurements___enumerate_services___returns_list_of_measurements(
     discovery_client: DiscoveryClient, discovery_service_stub: Mock
 ):
     discovery_service_stub.RegisterService.return_value = RegisterServiceResponse(
         registration_id="abcd"
     )
     discovery_client.register_service(_TEST_SERVICE_INFO, _TEST_SERVICE_LOCATION)
-    discovery_service_stub.RegisterService.assert_called_once()
     register_service_request: RegisterServiceRequest = (
         discovery_service_stub.RegisterService.call_args.args[0]
     )
@@ -348,7 +347,7 @@ def test___active_measurements_available___enumerate_services___returns_list_of_
         _assert_service_info_equal(_TEST_SERVICE_INFO, measurement)
 
 
-def test___no_active_measurements_available___enumerate_services___returns_list_of_measurements(
+def test___no_registered_measurements___enumerate_services___returns_empty_list(
     discovery_client: DiscoveryClient, discovery_service_stub: Mock
 ):
     discovery_service_stub.EnumerateServices.return_value = EnumerateServicesResponse()

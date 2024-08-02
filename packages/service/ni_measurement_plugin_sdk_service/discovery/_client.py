@@ -238,10 +238,10 @@ class DiscoveryClient:
         """Enumerates all the services for the provided interface.
 
         Args:
-            provided_interface: Interface to filter the services.
+            provided_interface: The gRPC full name of the service.
 
         Returns:
-            The service details matching the provided interface.
+            The list of information describing the service.
         """
         request = discovery_service_pb2.EnumerateServicesRequest(
             provided_interface=provided_interface
