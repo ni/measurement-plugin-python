@@ -8,6 +8,7 @@
         "ni.measurementlink.measurement.v2.MeasurementService"
       ],
       "path": "start.bat",
+      "version": "1.0.6",
       "annotations": {
         "ni/service.description": "Testing extra Client info",
         "client/extra.NumberID" : 500,

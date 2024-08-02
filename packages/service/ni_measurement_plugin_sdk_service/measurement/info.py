@@ -28,9 +28,9 @@ class ServiceInfo(NamedTuple):
     """
 
     service_class: str
-    """"The "class" of a service. The value of this field should be unique for a given interface
-    in ``provided_interfaces``. In effect, the ``.proto`` service declaration defines the
-    interface, and this field defines a class or concrete type of the interface."""
+    """"The "class" of a service. The value of this field should be unique for all services.
+    In effect, the ``.proto`` service declaration defines the interface, and this field
+    defines a class or concrete type of the interface."""
 
     description_url: str
     """The URL of a web page that provides a description of the service."""
@@ -40,7 +40,7 @@ class ServiceInfo(NamedTuple):
 
     annotations: Dict[str, str] = {}
     """Represents a set of annotations on the service.
-    
+
     Well-known annotations:
 
     - Description
@@ -60,6 +60,9 @@ class ServiceInfo(NamedTuple):
 
     display_name: str = ""
     """The service display name for clients to display to users."""
+
+    version: str = ""
+    """The version of the service.  It should be in the form major.minor.build[.revision] (e.g. 1.0.0)."""
 
 
 class TypeSpecialization(enum.Enum):

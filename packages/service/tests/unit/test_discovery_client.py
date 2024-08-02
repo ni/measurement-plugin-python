@@ -65,11 +65,12 @@ _TEST_SERVICE_LOCATION = ServiceLocation("localhost", _TEST_SERVICE_PORT, _TEST_
 _TEST_SERVICE_LOCATION_WITHOUT_SSL = _TEST_SERVICE_LOCATION._replace(ssl_authenticated_port="")
 
 _TEST_SERVICE_INFO = ServiceInfo(
-    "TestServiceClass",
-    "TestUrl",
-    _PROVIDED_MEASUREMENT_SERVICES,
-    _PROVIDED_ANNOTATIONS,
-    "TestMeasurement",
+    service_class="TestServiceClass",
+    description_url="TestUrl",
+    provided_interfaces=_PROVIDED_MEASUREMENT_SERVICES,
+    annotations=_PROVIDED_ANNOTATIONS,
+    display_name="TestMeasurement",
+    version="2.0.2",
 )
 _TEST_SERVICE_INFO_WITHOUT_DISPLAY_NAME = _TEST_SERVICE_INFO._replace(display_name="")
 
@@ -393,3 +394,7 @@ def _assert_service_info_equal(
     assert set(expected.provided_interfaces) == set(actual.provided_interfaces)
     assert expected.service_class == actual.service_class
     assert expected.annotations == actual.annotations
+    if isinstance(actual, GrpcServiceDescriptor):
+        assert expected.version == actual.versions[0]
+    else:
+        assert expected.version == actual.version

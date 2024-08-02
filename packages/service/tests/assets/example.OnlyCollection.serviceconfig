@@ -9,6 +9,7 @@
         "ni.measurementlink.measurement.v2.MeasurementService"
       ],
       "path": "start.bat",
+      "version": "1.0.4",
       "annotations": {
         "ni/service.collection": "CurrentTests.Inrush"
       }

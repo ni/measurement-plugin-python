@@ -9,6 +9,7 @@
         "ni.measurementlink.measurement.v2.MeasurementService"
       ],
       "path": "start.bat",
+      "version": "1.0.1",
       "annotations": {
         "ni/service.description": "Measure inrush current with a shorted load and validate results against configured limits.",
         "ni/service.collection": "CurrentTests.Inrush",
