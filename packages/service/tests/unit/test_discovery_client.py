@@ -326,11 +326,11 @@ def test___registered_measurements___enumerate_services___returns_list_of_measur
     discovery_client: DiscoveryClient, discovery_service_stub: Mock
 ):
     grpc_service_descriptor = GrpcServiceDescriptor(
-        display_name = _TEST_SERVICE_INFO.display_name,
-        description_url = _TEST_SERVICE_INFO.description_url,
-        provided_interfaces = _TEST_SERVICE_INFO.provided_interfaces,
-        annotations = _TEST_SERVICE_INFO.annotations,
-        service_class = _TEST_SERVICE_INFO.service_class
+        display_name=_TEST_SERVICE_INFO.display_name,
+        description_url=_TEST_SERVICE_INFO.description_url,
+        provided_interfaces=_TEST_SERVICE_INFO.provided_interfaces,
+        annotations=_TEST_SERVICE_INFO.annotations,
+        service_class=_TEST_SERVICE_INFO.service_class,
     )
     grpc_service_descriptor.annotations[SERVICE_PROGRAMMINGLANGUAGE_KEY] = "Python"
     discovery_service_stub.EnumerateServices.return_value = EnumerateServicesResponse(
