@@ -177,7 +177,7 @@ class MeasurementService:
     def __init__(
         self,
         service_config_path: Path,
-        version: Optional[str] = None,
+        version: str = "",
         ui_file_paths: List[Path] = [],
         service_class: Optional[str] = None,
     ) -> None:
@@ -217,7 +217,7 @@ class MeasurementService:
 
         config_version = service.get("version")
         if config_version is not None:
-            if version is not None and version != config_version:
+            if version and version != config_version:
                 raise RuntimeError(
                     f"Version mismatch: .serviceconfig version is '{config_version}', but version parameter is '{version}'.",
                 )

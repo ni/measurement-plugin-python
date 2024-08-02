@@ -360,7 +360,7 @@ no_annotations: typing.Dict[str, str] = {}
         ),
         (
             "example.v1.serviceconfig",
-            None,
+            "",
             ["ni.measurementlink.measurement.v1.MeasurementService"],
             no_annotations,
         ),
