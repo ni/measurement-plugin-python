@@ -24,6 +24,8 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.discov
     ServiceLocation as GrpcServiceLocation,
     UnregisterServiceRequest,
     UnregisterServiceResponse,
+    EnumerateServicesRequest,
+    EnumerateServicesResponse,
 )
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.discovery.v1.discovery_service_pb2_grpc import (
     DiscoveryServiceStub,
@@ -318,6 +320,47 @@ def test___discovery_service_exe_unavailable___register_service___raises_file_no
 
     with pytest.raises(FileNotFoundError):
         discovery_client.register_service(_TEST_SERVICE_INFO, _TEST_SERVICE_LOCATION)
+
+
+def test___active_measurements_available___enumerate_services___returns_list_of_measurements(
+    discovery_client: DiscoveryClient, discovery_service_stub: Mock
+):
+    discovery_service_stub.RegisterService.return_value = RegisterServiceResponse(
+        registration_id="abcd"
+    )
+    discovery_client.register_service(_TEST_SERVICE_INFO, _TEST_SERVICE_LOCATION)
+    discovery_service_stub.RegisterService.assert_called_once()
+    register_service_request: RegisterServiceRequest = (
+        discovery_service_stub.RegisterService.call_args.args[0]
+    )
+    discovery_service_stub.EnumerateServices.return_value = EnumerateServicesResponse(
+        available_services=[register_service_request.service_description]
+    )
+
+    available_measurements = discovery_client.enumerate_services(
+        _TEST_SERVICE_INFO.provided_interfaces[1]
+    )
+
+    discovery_service_stub.EnumerateServices.assert_called_once()
+    request: EnumerateServicesRequest = discovery_service_stub.EnumerateServices.call_args.args[0]
+    assert _TEST_SERVICE_INFO.provided_interfaces[1] == request.provided_interface
+    for measurement in available_measurements:
+        _assert_service_info_equal(_TEST_SERVICE_INFO, measurement)
+
+
+def test___no_active_measurements_available___enumerate_services___returns_list_of_measurements(
+    discovery_client: DiscoveryClient, discovery_service_stub: Mock
+):
+    discovery_service_stub.EnumerateServices.return_value = EnumerateServicesResponse()
+
+    available_measurements = discovery_client.enumerate_services(
+        _TEST_SERVICE_INFO.provided_interfaces[1]
+    )
+
+    discovery_service_stub.EnumerateServices.assert_called_once()
+    request: EnumerateServicesRequest = discovery_service_stub.EnumerateServices.call_args.args[0]
+    assert _TEST_SERVICE_INFO.provided_interfaces[1] == request.provided_interface
+    assert not available_measurements
 
 
 @pytest.fixture(scope="module")
