@@ -253,8 +253,8 @@ class DiscoveryClient:
             ServiceInfo(
                 service.service_class,
                 service.description_url,
-                service.provided_interfaces,
-                service.annotations,
+                list(service.provided_interfaces),
+                dict(service.annotations),
                 service.display_name,
             )
             for service in response.available_services
