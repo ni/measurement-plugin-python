@@ -419,7 +419,7 @@ def test___service_config___create_measurement_service___service_info_matches_se
         ui_file_paths=[],
     )
 
-    assert measurement_service.service_info.version == version
+    assert measurement_service.service_info.versions[0] == version
     assert measurement_service.service_info.service_class == "SampleMeasurement_Python"
     assert set(measurement_service.service_info.provided_interfaces) >= set(provided_interfaces)
     assert (
@@ -458,7 +458,7 @@ def test___service_config___create_measurement_service_with_version___version_is
         version=version,
     )
 
-    assert service.service_info.version == version
+    assert service.service_info.versions[0] == version
 
 
 @pytest.mark.parametrize(

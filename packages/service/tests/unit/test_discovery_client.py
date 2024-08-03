@@ -70,7 +70,7 @@ _TEST_SERVICE_INFO = ServiceInfo(
     provided_interfaces=_PROVIDED_MEASUREMENT_SERVICES,
     annotations=_PROVIDED_ANNOTATIONS,
     display_name="TestMeasurement",
-    version="2.0.2",
+    versions=["2.0.2"],
 )
 _TEST_SERVICE_INFO_WITHOUT_DISPLAY_NAME = _TEST_SERVICE_INFO._replace(display_name="")
 
@@ -395,6 +395,6 @@ def _assert_service_info_equal(
     assert expected.service_class == actual.service_class
     assert expected.annotations == actual.annotations
     if isinstance(actual, GrpcServiceDescriptor):
-        assert expected.version == actual.versions[0]
+        assert expected.versions == actual.versions
     else:
-        assert expected.version == actual.version
+        assert expected.versions == actual.versions

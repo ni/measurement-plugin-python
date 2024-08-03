@@ -124,7 +124,7 @@ class DiscoveryClient:
                 provided_interfaces=service_info.provided_interfaces,
                 service_class=service_info.service_class,
                 annotations=annotations,
-                versions=[service_info.version],
+                versions=service_info.versions,
             )
 
             grpc_service_location = discovery_service_pb2.ServiceLocation(

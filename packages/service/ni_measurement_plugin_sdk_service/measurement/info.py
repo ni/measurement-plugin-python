@@ -61,8 +61,9 @@ class ServiceInfo(NamedTuple):
     display_name: str = ""
     """The service display name for clients to display to users."""
 
-    version: str = ""
-    """The version of the service in the form major.minor.build[.revision] (e.g. 1.0.0)."""
+    versions: List[str] = []
+    """The list of versions associated with this service in
+     the form major.minor.build[.revision] (e.g. 1.0.0)."""
 
 
 class TypeSpecialization(enum.Enum):

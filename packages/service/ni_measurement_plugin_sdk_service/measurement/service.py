@@ -241,7 +241,7 @@ class MeasurementService:
             service_class=service["serviceClass"],
             description_url=service["descriptionUrl"],
             provided_interfaces=service["providedInterfaces"],
-            version=version,
+            versions=[version],
             annotations={
                 key: convert_value_to_str(value)
                 for key, value in service.get("annotations", {}).items()
