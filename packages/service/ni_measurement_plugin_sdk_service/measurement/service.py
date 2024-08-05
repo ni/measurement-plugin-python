@@ -189,9 +189,12 @@ class MeasurementService:
         Args:
             service_config_path (Path): Path to the .serviceconfig file.
 
-            version (str): Version of the measurement service.
+            version (str): Version of the measurement service. Do not use this
+                parameter.  Instead, specify the "version" field in the
+                .serviceconfig file. Default value is "".
 
             ui_file_paths (List[Path]): List of paths to supported UIs.
+                Default value is [].
 
             service_class (str): The service class from the .serviceconfig to use.
                 Default value is None, which will use the first service in the
