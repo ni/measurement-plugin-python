@@ -103,9 +103,9 @@ def _validate_display_name(display_name: str) -> None:
     if not display_name:
         raise ValueError("The display name cannot be an empty string.")
     elif not display_name[0].isalpha():
-        raise ValueError(f"The first character in display name: '{display_name}' must be a letter.")
+        raise ValueError(f"The first character in display name '{display_name}' must be a letter.")
     elif not all(char in _VALID_CHARS or char.isalnum() for char in display_name):
-        raise ValueError(f"There are Invalid characters in display name: '{display_name}'.")
+        raise ValueError(f"There are invalid characters in display name '{display_name}'.")
 
 
 def _validate_default_value_type(parameter_metadata: ParameterMetadata) -> None:
