@@ -5,9 +5,10 @@
       "serviceClass": "SampleMeasurement_Python",
       "descriptionUrl": "https://www.example.com/SampleMeasurement.html",
       "providedInterfaces": [
-         "ni.measurementlink.measurement.v1.MeasurementService"
+        "ni.measurementlink.measurement.v1.MeasurementService"
       ],
       "path": "NoFile.exe",
+      "version": "1.0.7",
       "annotations": {
         "description": "An annotated test measurement service.",
         "collection": "Tests.Measurements",

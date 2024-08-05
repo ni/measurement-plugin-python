@@ -177,8 +177,8 @@ class MeasurementService:
     def __init__(
         self,
         service_config_path: Path,
-        version: str,
-        ui_file_paths: List[Path],
+        version: str = "",
+        ui_file_paths: List[Path] = [],
         service_class: Optional[str] = None,
     ) -> None:
         """Initialize the Measurement Service object.
@@ -189,9 +189,12 @@ class MeasurementService:
         Args:
             service_config_path (Path): Path to the .serviceconfig file.
 
-            version (str): Version of the measurement service.
+            version (str): Version of the measurement service. Do not use this
+                parameter.  Instead, specify the "version" field in the
+                .serviceconfig file. Default value is "".
 
             ui_file_paths (List[Path]): List of paths to supported UIs.
+                Default value is [].
 
             service_class (str): The service class from the .serviceconfig to use.
                 Default value is None, which will use the first service in the
@@ -215,6 +218,14 @@ class MeasurementService:
                 f"Service class '{service_class}' not found in '{service_config_file}'"
             )
 
+        config_version = service.get("version")
+        if config_version is not None:
+            if version and version != config_version:
+                raise RuntimeError(
+                    f"Version mismatch: .serviceconfig version is '{config_version}', but version parameter is '{version}'.",
+                )
+            version = config_version
+
         # Note: sphinx-autoapi uses the public attributes' type hints and docstrings.
         self.measurement_info: MeasurementInfo = MeasurementInfo(
             display_name=service["displayName"],
@@ -233,6 +244,7 @@ class MeasurementService:
             service_class=service["serviceClass"],
             description_url=service["descriptionUrl"],
             provided_interfaces=service["providedInterfaces"],
+            versions=[version],
             annotations={
                 key: convert_value_to_str(value)
                 for key, value in service.get("annotations", {}).items()

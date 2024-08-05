@@ -9,6 +9,7 @@
         "ni.measurementlink.measurement.v2.MeasurementService"
       ],
       "path": "start.bat",
+      "version": "1.2.3.4",
       "annotations": {
         "ni/service.description": "Measurement description",
         "ni/service.collection": "Measurement.Collection",

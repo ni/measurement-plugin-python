@@ -348,10 +348,11 @@ no_annotations: typing.Dict[str, str] = {}
 
 
 @pytest.mark.parametrize(
-    "service_config,provided_interfaces,provided_annotations",
+    "service_config,version,provided_interfaces,provided_annotations",
     [
         (
             "example.serviceconfig",
+            "1.0.1",
             [
                 "ni.measurementlink.measurement.v1.MeasurementService",
                 "ni.measurementlink.measurement.v2.MeasurementService",
@@ -364,26 +365,31 @@ no_annotations: typing.Dict[str, str] = {}
         ),
         (
             "example.v1.serviceconfig",
+            "",
             ["ni.measurementlink.measurement.v1.MeasurementService"],
             no_annotations,
         ),
         (
             "example.v2.serviceconfig",
+            "1.0.3",
             ["ni.measurementlink.measurement.v2.MeasurementService"],
             no_annotations,
         ),
         (
             "example.OnlyCollection.serviceconfig",
+            "1.0.4",
             ["ni.measurementlink.measurement.v2.MeasurementService"],
             {"ni/service.collection": "CurrentTests.Inrush"},
         ),
         (
             "example.OnlyTags.serviceconfig",
+            "1.0.5",
             ["ni.measurementlink.measurement.v2.MeasurementService"],
             {"ni/service.tags": '["powerup","current","voltage"]'},
         ),
         (
             "example.AllAnnotations.serviceconfig",
+            "1.0.6",
             ["ni.measurementlink.measurement.v2.MeasurementService"],
             {
                 "ni/service.description": "Testing extra Client info",
@@ -394,6 +400,7 @@ no_annotations: typing.Dict[str, str] = {}
         ),
         (
             "example.CustomAnnotations.serviceconfig",
+            "1.0.7",
             ["ni.measurementlink.measurement.v1.MeasurementService"],
             {
                 "description": "An annotated test measurement service.",
@@ -408,15 +415,16 @@ no_annotations: typing.Dict[str, str] = {}
 def test___service_config___create_measurement_service___service_info_matches_service_config(
     test_assets_directory: pathlib.Path,
     service_config: str,
+    version: str,
     provided_interfaces: List[str],
     provided_annotations: typing.Dict[str, str],
 ):
     measurement_service = MeasurementService(
         service_config_path=test_assets_directory / service_config,
-        version="1.0.0.0",
         ui_file_paths=[],
     )
 
+    assert measurement_service.service_info.versions[0] == version
     assert measurement_service.service_info.service_class == "SampleMeasurement_Python"
     assert set(measurement_service.service_info.provided_interfaces) >= set(provided_interfaces)
     assert (
@@ -424,6 +432,38 @@ def test___service_config___create_measurement_service___service_info_matches_se
         == "https://www.example.com/SampleMeasurement.html"
     )
     assert measurement_service.service_info.annotations == provided_annotations
+
+
+def test___service_config___create_measurement_service_with_version___version_differs_from_service_config(
+    test_assets_directory: pathlib.Path,
+):
+    with pytest.raises(RuntimeError) as version_error:
+        MeasurementService(
+            service_config_path=test_assets_directory / "example.serviceconfig",
+            version="2.0.1",
+        )
+
+    assert "Version mismatch" in str(version_error.value)
+
+
+@pytest.mark.parametrize(
+    "service_config,version",
+    [
+        ("example.serviceconfig", "1.0.1"),
+        ("example.v1.serviceconfig", "2.0.1"),
+    ],
+)
+def test___service_config___create_measurement_service_with_version___version_is_used(
+    test_assets_directory: pathlib.Path,
+    service_config: str,
+    version: str,
+):
+    service = MeasurementService(
+        service_config_path=test_assets_directory / service_config,
+        version=version,
+    )
+
+    assert service.service_info.versions[0] == version
 
 
 @pytest.mark.parametrize(
@@ -463,8 +503,4 @@ def test___measurement_service___host_service_with_grpc_service_not_started___ra
 @pytest.fixture
 def measurement_service(test_assets_directory: pathlib.Path) -> MeasurementService:
     """Create a MeasurementService."""
-    return MeasurementService(
-        service_config_path=test_assets_directory / "example.serviceconfig",
-        version="1.0.0.0",
-        ui_file_paths=[],
-    )
+    return MeasurementService(service_config_path=test_assets_directory / "example.serviceconfig")
