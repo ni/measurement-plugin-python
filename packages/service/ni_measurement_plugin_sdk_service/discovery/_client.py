@@ -238,10 +238,10 @@ class DiscoveryClient:
         """Enumerates all the services for the provided interface.
 
         Args:
-            provided_interface: The gRPC full name of the service.
+            provided_interface: The gRPC full name of the services.
 
         Returns:
-            The list of information describing the service.
+            The list of information describing the services.
         """
         request = discovery_service_pb2.EnumerateServicesRequest(
             provided_interface=provided_interface
@@ -251,11 +251,11 @@ class DiscoveryClient:
 
         return [
             ServiceInfo(
-                service.service_class,
-                service.description_url,
-                list(service.provided_interfaces),
-                dict(service.annotations),
-                service.display_name,
+                service_class=service.service_class,
+                description_url=service.description_url,
+                provided_interfaces=list(service.provided_interfaces),
+                annotations=dict(service.annotations),
+                display_name=service.display_name,
             )
             for service in response.available_services
         ]
