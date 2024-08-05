@@ -1,4 +1,4 @@
-<%page args="display_name, service_class, description_url, description, collection, tags"/>\
+<%page args="display_name, service_class, description_url, description, collection, version, tags"/>\
 <%
     import json
 
@@ -13,6 +13,7 @@
                   "ni.measurementlink.measurement.v2.MeasurementService",
               ],
               "path": "start.bat",
+              "version": version,
               "annotations": {
                   "ni/service.description": description,
                   "ni/service.collection": collection,

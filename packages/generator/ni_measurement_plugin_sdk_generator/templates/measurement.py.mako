@@ -1,4 +1,4 @@
-<%page args="display_name, version, ui_file, ui_file_type, service_class, description_url, serviceconfig_file"/>\
+<%page args="display_name, ui_file, ui_file_type, service_class, description_url, serviceconfig_file"/>\
 \
 """A default measurement with an array in and out."""
 
@@ -13,7 +13,6 @@ script_or_exe = sys.executable if getattr(sys, "frozen", False) else __file__
 service_directory = pathlib.Path(script_or_exe).resolve().parent
 measurement_service = nims.MeasurementService(
     service_config_path=service_directory / "${serviceconfig_file}",
-    version="${version}",
     ui_file_paths=[service_directory / "${ui_file}"],
 )
 

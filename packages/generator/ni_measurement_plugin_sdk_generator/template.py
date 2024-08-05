@@ -179,7 +179,6 @@ def create_measurement(
         "measurement.py",
         directory_out_path,
         display_name=display_name,
-        version=measurement_version,
         ui_file=ui_file,
         ui_file_type=ui_file_type,
         service_class=service_class,
@@ -196,6 +195,7 @@ def create_measurement(
         ui_file_type=ui_file_type,
         description=description,
         collection=collection,
+        version=measurement_version,
         tags=list(tags),
     )
     if ui_file_type == "MeasurementUI":
