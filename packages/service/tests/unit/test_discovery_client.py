@@ -394,7 +394,4 @@ def _assert_service_info_equal(
     assert set(expected.provided_interfaces) == set(actual.provided_interfaces)
     assert expected.service_class == actual.service_class
     assert expected.annotations == actual.annotations
-    if isinstance(actual, GrpcServiceDescriptor):
-        assert expected.versions == actual.versions
-    else:
-        assert expected.versions == actual.versions
+    assert expected.versions == actual.versions
