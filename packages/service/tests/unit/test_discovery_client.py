@@ -90,8 +90,6 @@ _MOCK_REGISTRATION_FILE_CONTENT = {"discovery": {"path": "Discovery/NI.Discovery
 def test___service_not_registered___register_service___sends_request_and_returns_id(
     discovery_client: DiscoveryClient, discovery_service_stub: Mock
 ):
-    expected_service_info = copy.deepcopy(_TEST_SERVICE_INFO)
-    expected_service_info.annotations[SERVICE_PROGRAMMINGLANGUAGE_KEY] = "Python"
     discovery_service_stub.RegisterService.return_value = RegisterServiceResponse(
         registration_id="abcd"
     )
@@ -100,6 +98,8 @@ def test___service_not_registered___register_service___sends_request_and_returns
 
     discovery_service_stub.RegisterService.assert_called_once()
     request: RegisterServiceRequest = discovery_service_stub.RegisterService.call_args.args[0]
+    expected_service_info = copy.deepcopy(_TEST_SERVICE_INFO)
+    expected_service_info.annotations[SERVICE_PROGRAMMINGLANGUAGE_KEY] = "Python"
     _assert_service_info_equal(expected_service_info, request.service_description)
     _assert_service_location_equal(_TEST_SERVICE_LOCATION, request.location)
     assert registration_id == "abcd"
@@ -157,8 +157,6 @@ def test___service_not_registered___resolve_service___raises_not_found_error(
 def test___service_not_registered___register_measurement_service___sends_request_and_warns(
     discovery_client: DiscoveryClient, discovery_service_stub: Mock
 ):
-    expected_service_info = copy.deepcopy(_TEST_SERVICE_INFO)
-    expected_service_info.annotations[SERVICE_PROGRAMMINGLANGUAGE_KEY] = "Python"
     discovery_service_stub.RegisterService.return_value = RegisterServiceResponse(
         registration_id="abcd"
     )
@@ -170,6 +168,8 @@ def test___service_not_registered___register_measurement_service___sends_request
 
     discovery_service_stub.RegisterService.assert_called_once()
     request = discovery_service_stub.RegisterService.call_args.args[0]
+    expected_service_info = copy.deepcopy(_TEST_SERVICE_INFO)
+    expected_service_info.annotations[SERVICE_PROGRAMMINGLANGUAGE_KEY] = "Python"
     _assert_service_info_equal(expected_service_info, request.service_description)
     _assert_service_location_equal(_TEST_SERVICE_LOCATION_WITHOUT_SSL, request.location)
     assert discovery_client._registration_id == "abcd"
@@ -326,9 +326,8 @@ def test___discovery_service_exe_unavailable___register_service___raises_file_no
     with pytest.raises(FileNotFoundError):
         discovery_client.register_service(_TEST_SERVICE_INFO, _TEST_SERVICE_LOCATION)
 
-@pytest.mark.parametrize(
-    "programming_language", ["Python", "LabVIEW"]
-) # 
+
+@pytest.mark.parametrize("programming_language", ["Python", "LabVIEW"])
 def test___registered_measurements___enumerate_services___returns_list_of_measurements(
     discovery_client: DiscoveryClient, discovery_service_stub: Mock, programming_language: str
 ):
@@ -350,9 +349,11 @@ def test___registered_measurements___enumerate_services___returns_list_of_measur
 
     discovery_service_stub.EnumerateServices.assert_called_once()
     request: EnumerateServicesRequest = discovery_service_stub.EnumerateServices.call_args.args[0]
+    expected_service_info = copy.deepcopy(_TEST_SERVICE_INFO)
+    expected_service_info.annotations[SERVICE_PROGRAMMINGLANGUAGE_KEY] = programming_language
     assert _TEST_SERVICE_INFO.provided_interfaces[1] == request.provided_interface
     for measurement in available_measurements:
-        _assert_service_info_equal(grpc_service_descriptor, measurement)
+        _assert_service_info_equal(expected_service_info, measurement)
 
 
 def test___no_registered_measurements___enumerate_services___returns_empty_list(
