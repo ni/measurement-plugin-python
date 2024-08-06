@@ -2,7 +2,7 @@
 
 import logging
 import threading
-from typing import Optional
+from typing import Optional, Sequence
 
 import grpc
 from deprecation import deprecated
@@ -233,3 +233,30 @@ class DiscoveryClient:
             insecure_port=response.insecure_port,
             ssl_authenticated_port=response.ssl_authenticated_port,
         )
+
+    def enumerate_services(self, provided_interface: str) -> Sequence[ServiceInfo]:
+        """Enumerates all the services for the provided interface.
+
+        Args:
+            provided_interface: The gRPC full name of the services.
+
+        Returns:
+            The list of information describing the services.
+        """
+        request = discovery_service_pb2.EnumerateServicesRequest(
+            provided_interface=provided_interface
+        )
+
+        response = self._get_stub().EnumerateServices(request)
+
+        return [
+            ServiceInfo(
+                service_class=service.service_class,
+                description_url=service.description_url,
+                provided_interfaces=list(service.provided_interfaces),
+                annotations=dict(service.annotations),
+                display_name=service.display_name,
+                versions=list(service.versions),
+            )
+            for service in response.available_services
+        ]

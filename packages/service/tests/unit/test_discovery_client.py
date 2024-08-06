@@ -1,6 +1,7 @@
 """Contains tests to validate the discovery_client.py.
 """
 
+import copy
 import json
 import pathlib
 import subprocess
@@ -17,6 +18,8 @@ from ni_measurement_plugin_sdk_service._annotations import (
     SERVICE_PROGRAMMINGLANGUAGE_KEY,
 )
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.discovery.v1.discovery_service_pb2 import (
+    EnumerateServicesRequest,
+    EnumerateServicesResponse,
     RegisterServiceRequest,
     RegisterServiceResponse,
     ResolveServiceRequest,
@@ -95,7 +98,9 @@ def test___service_not_registered___register_service___sends_request_and_returns
 
     discovery_service_stub.RegisterService.assert_called_once()
     request: RegisterServiceRequest = discovery_service_stub.RegisterService.call_args.args[0]
-    _assert_service_info_equal(_TEST_SERVICE_INFO, request.service_description)
+    expected_service_info = copy.deepcopy(_TEST_SERVICE_INFO)
+    expected_service_info.annotations[SERVICE_PROGRAMMINGLANGUAGE_KEY] = "Python"
+    _assert_service_info_equal(expected_service_info, request.service_description)
     _assert_service_location_equal(_TEST_SERVICE_LOCATION, request.location)
     assert registration_id == "abcd"
 
@@ -163,7 +168,9 @@ def test___service_not_registered___register_measurement_service___sends_request
 
     discovery_service_stub.RegisterService.assert_called_once()
     request = discovery_service_stub.RegisterService.call_args.args[0]
-    _assert_service_info_equal(_TEST_SERVICE_INFO, request.service_description)
+    expected_service_info = copy.deepcopy(_TEST_SERVICE_INFO)
+    expected_service_info.annotations[SERVICE_PROGRAMMINGLANGUAGE_KEY] = "Python"
+    _assert_service_info_equal(expected_service_info, request.service_description)
     _assert_service_location_equal(_TEST_SERVICE_LOCATION_WITHOUT_SSL, request.location)
     assert discovery_client._registration_id == "abcd"
     assert registration_success_flag
@@ -320,6 +327,51 @@ def test___discovery_service_exe_unavailable___register_service___raises_file_no
         discovery_client.register_service(_TEST_SERVICE_INFO, _TEST_SERVICE_LOCATION)
 
 
+@pytest.mark.parametrize("programming_language", ["Python", "LabVIEW"])
+def test___registered_measurements___enumerate_services___returns_list_of_measurements(
+    discovery_client: DiscoveryClient, discovery_service_stub: Mock, programming_language: str
+):
+    expected_service_info = copy.deepcopy(_TEST_SERVICE_INFO)
+    expected_service_info.annotations[SERVICE_PROGRAMMINGLANGUAGE_KEY] = programming_language
+    discovery_service_stub.EnumerateServices.return_value = EnumerateServicesResponse(
+        available_services=[
+            GrpcServiceDescriptor(
+                display_name=expected_service_info.display_name,
+                description_url=expected_service_info.description_url,
+                provided_interfaces=expected_service_info.provided_interfaces,
+                annotations=expected_service_info.annotations,
+                service_class=expected_service_info.service_class,
+                versions=expected_service_info.versions,
+            )
+        ]
+    )
+
+    available_measurements = discovery_client.enumerate_services(
+        _TEST_SERVICE_INFO.provided_interfaces[1]
+    )
+
+    discovery_service_stub.EnumerateServices.assert_called_once()
+    request: EnumerateServicesRequest = discovery_service_stub.EnumerateServices.call_args.args[0]
+    assert _TEST_SERVICE_INFO.provided_interfaces[1] == request.provided_interface
+    for measurement in available_measurements:
+        _assert_service_info_equal(expected_service_info, measurement)
+
+
+def test___no_registered_measurements___enumerate_services___returns_empty_list(
+    discovery_client: DiscoveryClient, discovery_service_stub: Mock
+):
+    discovery_service_stub.EnumerateServices.return_value = EnumerateServicesResponse()
+
+    available_measurements = discovery_client.enumerate_services(
+        _TEST_SERVICE_INFO.provided_interfaces[1]
+    )
+
+    discovery_service_stub.EnumerateServices.assert_called_once()
+    request: EnumerateServicesRequest = discovery_service_stub.EnumerateServices.call_args.args[0]
+    assert _TEST_SERVICE_INFO.provided_interfaces[1] == request.provided_interface
+    assert not available_measurements
+
+
 @pytest.fixture(scope="module")
 def subprocess_popen_kwargs() -> Dict[str, Any]:
     kwargs: Dict[str, Any] = {}
@@ -388,7 +440,6 @@ def _assert_service_location_equal(
 def _assert_service_info_equal(
     expected: ServiceInfo, actual: Union[ServiceInfo, GrpcServiceDescriptor]
 ) -> None:
-    expected.annotations[SERVICE_PROGRAMMINGLANGUAGE_KEY] = "Python"
     assert expected.display_name == actual.display_name
     assert expected.description_url == actual.description_url
     assert set(expected.provided_interfaces) == set(actual.provided_interfaces)
