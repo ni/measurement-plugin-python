@@ -331,16 +331,18 @@ def test___discovery_service_exe_unavailable___register_service___raises_file_no
 def test___registered_measurements___enumerate_services___returns_list_of_measurements(
     discovery_client: DiscoveryClient, discovery_service_stub: Mock, programming_language: str
 ):
-    grpc_service_descriptor = GrpcServiceDescriptor(
-        display_name=_TEST_SERVICE_INFO.display_name,
-        description_url=_TEST_SERVICE_INFO.description_url,
-        provided_interfaces=_TEST_SERVICE_INFO.provided_interfaces,
-        annotations=_TEST_SERVICE_INFO.annotations,
-        service_class=_TEST_SERVICE_INFO.service_class,
-    )
-    grpc_service_descriptor.annotations[SERVICE_PROGRAMMINGLANGUAGE_KEY] = programming_language
+    expected_service_info = copy.deepcopy(_TEST_SERVICE_INFO)
+    expected_service_info.annotations[SERVICE_PROGRAMMINGLANGUAGE_KEY] = programming_language
     discovery_service_stub.EnumerateServices.return_value = EnumerateServicesResponse(
-        available_services=[grpc_service_descriptor]
+        available_services=[
+            GrpcServiceDescriptor(
+                display_name=expected_service_info.display_name,
+                description_url=expected_service_info.description_url,
+                provided_interfaces=expected_service_info.provided_interfaces,
+                annotations=expected_service_info.annotations,
+                service_class=expected_service_info.service_class,
+            )
+        ]
     )
 
     available_measurements = discovery_client.enumerate_services(
@@ -349,8 +351,6 @@ def test___registered_measurements___enumerate_services___returns_list_of_measur
 
     discovery_service_stub.EnumerateServices.assert_called_once()
     request: EnumerateServicesRequest = discovery_service_stub.EnumerateServices.call_args.args[0]
-    expected_service_info = copy.deepcopy(_TEST_SERVICE_INFO)
-    expected_service_info.annotations[SERVICE_PROGRAMMINGLANGUAGE_KEY] = programming_language
     assert _TEST_SERVICE_INFO.provided_interfaces[1] == request.provided_interface
     for measurement in available_measurements:
         _assert_service_info_equal(expected_service_info, measurement)
