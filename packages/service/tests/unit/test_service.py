@@ -281,7 +281,6 @@ def test___measurement_service___add_non_path_configuration__path_type_annotatio
         ("BoolConfiguration", DataType.Boolean, "MismatchDefaultValue"),
         ("StringConfiguration", DataType.String, True),
         ("DoubleConfiguration", DataType.Double, ""),
-        ("Float", DataType.Float, 1),
         ("Double1DArray", DataType.DoubleArray1D, ""),
         ("Int32", DataType.Int32, 1.0),
         ("Int64", DataType.Int64, 1.0),

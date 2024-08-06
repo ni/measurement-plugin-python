@@ -39,10 +39,10 @@ def serialize_parameters(
         parameter_metadata = parameter_metadata_dict[i]
         field_name = parameter_metadata.field_name
         parameter = _get_enum_values(param=parameter)
-        type_default_value = get_type_default(parameter_metadata.type, parameter_metadata.repeated)
+        default_value = get_type_default(parameter_metadata.type, parameter_metadata.repeated)
 
         # Doesn't assign default values or None values to fields
-        if parameter != type_default_value and parameter is not None:
+        if parameter != default_value and parameter is not None:
             if parameter_metadata.repeated:
                 getattr(message_instance, field_name).extend(parameter)
             elif parameter_metadata.type == FieldDescriptorProto.TYPE_MESSAGE:

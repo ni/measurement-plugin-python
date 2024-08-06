@@ -15,6 +15,8 @@ _TYPE_DEFAULT_MAPPING = {
     Field.TYPE_ENUM: int(),
 }
 
+_PYTHON_DEFAULT_TYPES = set(type(value) for value in _TYPE_DEFAULT_MAPPING.values())
+
 TYPE_FIELD_MAPPING = {
     Field.TYPE_FLOAT: FieldDescriptorProto.TYPE_FLOAT,
     Field.TYPE_DOUBLE: FieldDescriptorProto.TYPE_DOUBLE,
@@ -29,8 +31,13 @@ TYPE_FIELD_MAPPING = {
 }
 
 
-def get_type_default(type: Field.Kind.ValueType, repeated: bool) -> Any:
+def get_type_default(type: Field.Kind.ValueType, repeated: bool, default_value: Any = None) -> Any:
     """Get the default value for the give type."""
     if repeated:
         return list()
+    if isinstance(default_value, list):
+        default_value = default_value[0]
+
+    if type is Field.TYPE_MESSAGE and default_value.__class__ not in _PYTHON_DEFAULT_TYPES:
+        return default_value
     return _TYPE_DEFAULT_MAPPING.get(type)

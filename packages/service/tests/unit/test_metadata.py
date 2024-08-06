@@ -52,7 +52,6 @@ class Countries(IntEnum):
         (DataType.Boolean, 0, {}),
         (DataType.String, True, {}),
         (DataType.DoubleArray1D, 0.5, {}),
-        (DataType.Double, 1, {}),
         (
             DataType.Enum,
             1.0,

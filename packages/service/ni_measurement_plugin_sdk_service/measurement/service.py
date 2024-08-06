@@ -410,7 +410,6 @@ class MeasurementService:
             data_type_info.type_specialization, instrument_type=instrument_type, enum_type=enum_type
         )
         parameter = parameter_metadata.ParameterMetadata.initialize(
-            True,
             display_name,
             data_type_info.grpc_field_type,
             data_type_info.repeated,
@@ -471,7 +470,6 @@ class MeasurementService:
             data_type_info.type_specialization, enum_type=enum_type
         )
         parameter = parameter_metadata.ParameterMetadata.initialize(
-            False,
             display_name,
             data_type_info.grpc_field_type,
             data_type_info.repeated,
