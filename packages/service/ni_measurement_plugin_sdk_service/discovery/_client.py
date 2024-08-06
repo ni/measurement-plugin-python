@@ -256,7 +256,7 @@ class DiscoveryClient:
                 provided_interfaces=list(service.provided_interfaces),
                 annotations=dict(service.annotations),
                 display_name=service.display_name,
-                versions=service.versions,
+                versions=list(service.versions),
             )
             for service in response.available_services
         ]

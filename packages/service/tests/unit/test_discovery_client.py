@@ -341,7 +341,7 @@ def test___registered_measurements___enumerate_services___returns_list_of_measur
                 provided_interfaces=expected_service_info.provided_interfaces,
                 annotations=expected_service_info.annotations,
                 service_class=expected_service_info.service_class,
-                versions=expected_service_info.versions
+                versions=expected_service_info.versions,
             )
         ]
     )
