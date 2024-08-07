@@ -30,7 +30,7 @@ ni-python-styleguide = ">=0.4.1"
 mypy = ">=1.0"
 
 [tool.poetry.scripts]
-ni-measurement-plugin-generator = "ni_measurement_plugin_sdk_generator.template:create_measurement"
+ni-measurement-plugin-generator = "ni_measurement_plugin_sdk_generator.ni_measurement_plugin_generator.template:create_measurement"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
