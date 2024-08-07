@@ -131,6 +131,8 @@ def _validate_default_value_type(parameter_metadata: ParameterMetadata) -> None:
             expected_element_type = type(
                 get_type_default(parameter_metadata.type, False, type(default_value[0]))
             )
+        else:
+            expected_element_type = expected_type
         _validate_default_value_type_for_repeated_type(
             default_value,
             expected_type,

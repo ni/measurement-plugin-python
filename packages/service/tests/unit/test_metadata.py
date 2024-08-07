@@ -104,6 +104,7 @@ def test___default_value_different_from_type___validate___raises_type_exception(
         (DataType.DoubleArray1D, [0.5, 0.1], {}),
         (DataType.Double, 1.0, {}),
         (DataType.Double, 1, {}),
+        (DataType.DoubleArray1D, [], {}),
         (
             DataType.Enum,
             Color.BLUE,
@@ -134,6 +135,14 @@ def test___default_value_different_from_type___validate___raises_type_exception(
             {
                 TYPE_SPECIALIZATION_KEY: TypeSpecialization.Enum.value,
                 ENUM_VALUES_KEY: '{"AMERICA":0, "TAIWAN": 1, "AUSTRALIA": 2, "CANADA": 3}',
+            },
+        ),
+        (
+            DataType.EnumArray1D,
+            [],
+            {
+                TYPE_SPECIALIZATION_KEY: TypeSpecialization.Enum.value,
+                ENUM_VALUES_KEY: '{"NONE":0, "RED": 1, "GREEN": 2, "BLUE": 3}',
             },
         ),
     ],
