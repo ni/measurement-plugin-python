@@ -1,11 +1,17 @@
 
 ## Example Measurements
 
-These are example measurements for use with InstrumentStudio 2024 Q3 or later.
+These are example measurements for use with InstrumentStudio 2024 Q4 or later.
 
 For best results, use the example measurements corresponding to the version of InstrumentStudio
 that you are using. Newer examples may demonstrate features that are not available in older
 versions of InstrumentStudio.
+
+| InstrumentStudio Version | Release | Download |
+| ------------------------ | -------- | ------- |
+| 2024 Q3                  | [2.0.0](https://github.com/ni/measurement-plugin-python/releases/tag/2.0.0) | [measurement-plugin-python-examples-2.0.0.zip](https://github.com/ni/measurement-plugin-python/releases/download/2.0.0/measurement-plugin-python-examples-2.0.0.zip) |
+| 2024 Q2                  | [1.4.0](https://github.com/ni/measurement-plugin-python/releases/tag/1.4.0) | [measurementlink-python-examples-1.4.0.zip](https://github.com/ni/measurement-plugin-python/releases/download/1.4.0/measurementlink-python-examples-1.4.0.zip) |
+| Older versions | | See [releases](https://github.com/ni/measurement-plugin-python/releases) page |
 
 The TestStand sequence files associated with each example are saved in TestStand 2021 SP1.
 
