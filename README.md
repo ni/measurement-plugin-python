@@ -66,13 +66,19 @@ There are three ways to do this:
 
 ## Examples
 
-The `examples` directory contains example measurements for use with InstrumentStudio 2024 Q3 or later.
+The `examples` directory contains example measurements for use with InstrumentStudio 2024 Q4 or later.
 
 For more information on setting up and running the example measurements, see the included `README.md` file.
 
 For best results, use the example measurements corresponding to the version of InstrumentStudio
 that you are using. Newer examples may demonstrate features that are not available in older
 versions of InstrumentStudio.
+
+| InstrumentStudio Version | Release | Download |
+| ------------------------ | -------- | ------- |
+| 2024 Q3                  | [2.0.0](https://github.com/ni/measurement-plugin-python/releases/tag/2.0.0) | [measurement-plugin-python-examples-2.0.0.zip](https://github.com/ni/measurement-plugin-python/releases/download/2.0.0/measurement-plugin-python-examples-2.0.0.zip) |
+| 2024 Q2                  | [1.4.0](https://github.com/ni/measurement-plugin-python/releases/tag/1.4.0) | [measurementlink-python-examples-1.4.0.zip](https://github.com/ni/measurement-plugin-python/releases/download/1.4.0/measurementlink-python-examples-1.4.0.zip) |
+| Older versions | | See [releases](https://github.com/ni/measurement-plugin-python/releases) page |
 
 ---
 
