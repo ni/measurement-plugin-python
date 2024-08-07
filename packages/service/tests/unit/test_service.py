@@ -58,6 +58,7 @@ def test___measurement_service___register_measurement_method___method_registered
         ("StringConfiguration", DataType.String, "DefaultString"),
         ("DoubleConfiguration", DataType.Double, 0.899),
         ("Float", DataType.Float, 0.100),
+        ("IntFloat", DataType.Float, 1),
         ("Double1DArray", DataType.DoubleArray1D, [1.009, -1.0009]),
         ("Int32", DataType.Int32, -8799),
         ("Int64", DataType.Int64, -999),

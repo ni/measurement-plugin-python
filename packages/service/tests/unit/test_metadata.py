@@ -103,6 +103,7 @@ def test___default_value_different_from_type___validate___raises_type_exception(
         (DataType.String, "string_default_value", {}),
         (DataType.DoubleArray1D, [0.5, 0.1], {}),
         (DataType.Double, 1.0, {}),
+        (DataType.Double, 1, {}),
         (
             DataType.Enum,
             Color.BLUE,

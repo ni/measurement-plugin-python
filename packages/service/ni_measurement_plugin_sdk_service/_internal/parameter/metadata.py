@@ -119,15 +119,18 @@ def _validate_default_value_type(parameter_metadata: ParameterMetadata) -> None:
         return None
 
     expected_type = type(
-        get_type_default(parameter_metadata.type, parameter_metadata.repeated, default_value)
+        get_type_default(parameter_metadata.type, parameter_metadata.repeated, type(default_value))
     )
     display_name = parameter_metadata.display_name
     enum_values_annotation = get_enum_values_annotation(parameter_metadata)
 
     if parameter_metadata.repeated:
-        expected_element_type = type(
-            get_type_default(parameter_metadata.type, False, default_value)
-        )
+        if not isinstance(default_value, list):
+            raise TypeError(f"The default value '{default_value}' is not a list.")
+        if len(default_value) > 0:
+            expected_element_type = type(
+                get_type_default(parameter_metadata.type, False, type(default_value[0]))
+            )
         _validate_default_value_type_for_repeated_type(
             default_value,
             expected_type,

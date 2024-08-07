@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Optional
 
 from google.protobuf.descriptor_pb2 import FieldDescriptorProto
 from google.protobuf.type_pb2 import Field
@@ -31,13 +31,16 @@ TYPE_FIELD_MAPPING = {
 }
 
 
-def get_type_default(type: Field.Kind.ValueType, repeated: bool, default_value: Any = None) -> Any:
+def get_type_default(
+    value_type: Field.Kind.ValueType, repeated: bool, default_value_type: Optional[type] = None
+) -> Any:
     """Get the default value for the give type."""
     if repeated:
         return list()
-    if isinstance(default_value, list):
-        default_value = default_value[0]
-
-    if type is Field.TYPE_MESSAGE and default_value.__class__ not in _PYTHON_DEFAULT_TYPES:
-        return default_value
-    return _TYPE_DEFAULT_MAPPING.get(type)
+    if (
+        value_type == Field.TYPE_MESSAGE
+        and default_value_type not in _PYTHON_DEFAULT_TYPES
+        and default_value_type is not None
+    ):
+        return default_value_type()
+    return _TYPE_DEFAULT_MAPPING.get(value_type)
