@@ -44,7 +44,7 @@ The example measurements are *Poetry-based* projects. Follow the steps below to 
 
     ``` cmd
     cd <path_of_example_measurement>
-    REM Example: cd "..\measurementlink-python\examples\dc_measurement"
+    REM Example: cd "..\measurement-plugin-python\examples\nidcpower_source_dc_voltage"
     ```
 
 3. Run `poetry install`. This command creates/updates the virtual environment (`.venv`) and installs the needed dependencies (including `ni-measurement-plugin-sdk-service` package) into the virtual environment.

@@ -66,19 +66,19 @@ poetry add -D <name_of_dev_dependency>:<version>
 
 # Updating gRPC stubs when a .proto file is modified
 
-The `ni_measurement_plugin_sdk_service\_internal\stubs` directory contains the auto-generated Python files based on Measurement Plug-In protobuf (`.proto`) files. The file needs to be replaced whenever there is a change to these `.proto` files:
+The `packages/service/ni_measurement_plugin_sdk_service/_internal/stubs` directory contains the
+auto-generated Python files based on Measurement Plug-In protobuf (`.proto`) files. The file needs
+to be replaced whenever there is a change to these `.proto` files:
 
-- ni/measurementlink/pin_map_context.proto
-- ni/measurementlink/discovery/v1/discovery_service.proto
-- ni/measurementlink/measurement/v1/measurement_service.proto
-- ni/measurementlink/pinmap/v1/pin_map_service.proto
-- ni/measurementlink/sessionmanagement/v1/session_management_service.proto
-- nidevice_grpc/README.md
-- nidevice_grpc/session.proto
+- `ni/measurementlink/**/*.proto`
+- `ni/grpcdevice/v1/session.proto`
 
-The latest .proto files are available in [Azure Repo](https://dev.azure.com/ni/DevCentral/_git/ASW?path=/Source/Protos). From the Azure Repo manually download and overwrite the `.proto` files under the `ni_measurement_plugin_sdk_service\_internal\stubs\proto` folder.
+The latest `.proto` files are available in the [ni-apis](https://github.com/ni/ni-apis) repo. This
+repo includes the `ni-apis` repo as a Git submodule in `third_party/ni-apis`.
 
-Run `poetry run python scripts/generate_grpc_stubs.py`. This generates the required `.py` files for the listed `.proto` files. The required `grpcio-tools` package is already added as a development dependency in pyproject.toml.
+To regenerate the gRPC stubs, cd to the `packages/service` directory and run `poetry run python scripts/generate_grpc_stubs.py`.
+This generates the required `.py` files for the listed `.proto` files. The required `grpcio-tools`
+package is already added as a development dependency in `pyproject.toml`.
 
 # Lint and Build Code
 

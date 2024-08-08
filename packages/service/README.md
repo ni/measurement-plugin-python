@@ -43,8 +43,8 @@ InstrumentStudio and automated testing in TestStand.
 
 ## Documentation
 
-- [Measurement Plug-In SDK Manual](https://www.ni.com/docs/en-US/bundle/measurementlink)
-- [API Reference](https://ni.github.io/measurementlink-python/)
+- [Measurement Plug-In SDK Manual](https://www.ni.com/docs/en-US/bundle/measurementplugins/)
+- [API Reference](https://ni.github.io/measurement-plugin-python/)
 
 ---
 
