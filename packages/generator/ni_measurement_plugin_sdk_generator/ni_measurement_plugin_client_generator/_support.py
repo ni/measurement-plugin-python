@@ -67,7 +67,7 @@ def _get_configuration_parameter_list(
                 type=configuration.type,
                 repeated=configuration.repeated,
                 default_value=None,
-                annotations=configuration.annotations,
+                annotations=dict(configuration.annotations.items()),
                 message_type=configuration.message_type,
             )
         )
@@ -86,7 +86,7 @@ def _get_output_parameter_list(
                 type=output.type,
                 repeated=output.repeated,
                 default_value=None,
-                annotations=output.annotations,
+                annotations=dict(output.annotations.items()),
                 message_type=output.message_type,
             )
         )
@@ -167,7 +167,9 @@ def _get_python_type_as_str(type: Field.Kind.ValueType, is_array: bool) -> str:
     python_type = _PROTO_DATATYPE_TO_PYTYPE_LOOKUP.get(type)
 
     if python_type is None:
-        Exception("Invalid data type : The configurated data type is not of the expected type")
+        raise Exception(
+            "Invalid data type : The configurated data type is not of the expected type"
+        )
 
     if is_array:
         return f"List[{python_type.__name__}]"

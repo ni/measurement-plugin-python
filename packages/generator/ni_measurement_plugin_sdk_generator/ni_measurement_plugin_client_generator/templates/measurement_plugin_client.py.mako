@@ -11,6 +11,11 @@ ${module}
 from typing import List, NamedTuple
 
 import grpc
+from _helpers import (
+    _create_file_descriptor,
+    _get_measure_request,
+    _get_resolved_service,
+)
 from ni_measurement_plugin_sdk_service._internal.parameter import decoder
 from ni_measurement_plugin_sdk_service._internal.parameter.metadata import ParameterMetadata
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v2 import (
@@ -22,13 +27,9 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measur
 ${module}
 % endif
 % endfor
-from _helpers import (
-    _create_file_descriptor,
-    _get_measure_request,
-    _get_resolved_service,
-)
-<% output_type = "None" %>\
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
+
+<% output_type = "None" %>\
 % if output_metadata:
 
 class Output(NamedTuple):

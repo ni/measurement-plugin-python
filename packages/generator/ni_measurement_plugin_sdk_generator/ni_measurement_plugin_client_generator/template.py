@@ -3,6 +3,7 @@
 import pathlib
 from typing import Any, Optional
 
+import black
 import click
 from mako.template import Template
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v2 import (
@@ -42,10 +43,13 @@ def _create_file(
 ) -> None:
     output_file = directory_out / file_name
 
-    output = _render_template(template_name, **template_args)
+    output = black.format_str(
+        src_contents=_render_template(template_name, **template_args).decode("utf-8"),
+        mode=black.Mode(line_length=100),
+    )
 
-    with output_file.open("wb") as fout:
-        fout.write(output)
+    with output_file.open("w") as file:
+        file.write(output)
 
 
 @click.command()

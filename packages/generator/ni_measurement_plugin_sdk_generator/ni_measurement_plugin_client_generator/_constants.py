@@ -14,7 +14,7 @@ _PATH_IMPORT = "from pathlib import Path"
 
 _DEFAULT_IMPORT_TYPE = "In-Built"
 _CUSTOM_IMPORT_TYPE = "Custom"
-_IMPORT_MODULES = {}
+_IMPORT_MODULES: dict[str, str] = {}
 
 _PROTO_DATATYPE_TO_PYTYPE_LOOKUP = {
     Field.TYPE_INT32: int,

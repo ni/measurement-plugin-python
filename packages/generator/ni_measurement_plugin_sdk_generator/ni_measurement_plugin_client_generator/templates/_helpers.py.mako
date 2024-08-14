@@ -18,10 +18,7 @@ from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient, Service
 _V2_MEASUREMENT_SERVICE_INTERFACE = "ni.measurementlink.measurement.v2.MeasurementService"
 
 
-def _get_resolved_service(
-    discovery_client: DiscoveryClient, 
-    service_class: str
-) -> ServiceLocation:
+def _get_resolved_service(discovery_client: DiscoveryClient, service_class: str) -> ServiceLocation:
     try:
         resolved_service = discovery_client.resolve_service(
             provided_interface=_V2_MEASUREMENT_SERVICE_INTERFACE, 
