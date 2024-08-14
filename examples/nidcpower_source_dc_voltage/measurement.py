@@ -123,9 +123,7 @@ def measure(
                         in_compliance = session_info.session.channels[
                             channel_mapping.channel
                         ].query_in_compliance()
-                        measurement._replace(in_compliance=in_compliance)
-
-                    measurements.extend(session_measurements)
+                        measurements.append(measurement._replace(in_compliance=in_compliance))
 
                 # Reset the channels to a known state
                 for session_info in session_infos:
