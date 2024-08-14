@@ -22,6 +22,7 @@ from ni_measurement_plugin_sdk_generator.ni_measurement_plugin_client_generator.
     _get_output_metadata,
     _get_output_parameters_with_type,
     _get_python_module_name,
+    _handle_exception,
     _is_measurement_service_running,
 )
 
@@ -43,13 +44,16 @@ def _create_file(
 ) -> None:
     output_file = directory_out / file_name
 
-    output = black.format_str(
-        src_contents=_render_template(template_name, **template_args).decode("utf-8"),
+    output = _handle_exception(
+        lambda: _render_template(template_name, **template_args).decode("utf-8"),
+    )
+    formatted_output = black.format_str(
+        src_contents=output,
         mode=black.Mode(line_length=100),
     )
 
     with output_file.open("w") as file:
-        file.write(output)
+        file.write(formatted_output)
 
 
 @click.command()

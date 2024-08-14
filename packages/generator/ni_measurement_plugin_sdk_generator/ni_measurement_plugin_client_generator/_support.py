@@ -1,7 +1,7 @@
 """Support functions for the Measurement Plug-In Client generator."""
 
 import keyword
-from typing import Dict, List, Tuple
+from typing import Any, Callable, Dict, List, Tuple
 
 import click
 import grpc
@@ -187,7 +187,9 @@ def _get_configuration_parameters_with_type_and_values(
         parameter_names.append(parameter_name)
 
         default_value = metadata.default_value
-        parameter_type = _get_python_type_as_str(metadata.type, metadata.repeated)
+        parameter_type = _handle_exception(
+            lambda: _get_python_type_as_str(metadata.type, metadata.repeated)
+        )
         if isinstance(default_value, str):
             default_value = f'"{default_value}"'
 
@@ -212,7 +214,9 @@ def _get_output_parameters_with_type(
     output_parameters_with_type = []
     for metadata in output_metadata.values():
         parameter_name = _get_python_identifier(metadata.display_name)
-        parameter_type = _get_python_type_as_str(metadata.type, metadata.repeated)
+        parameter_type = _handle_exception(
+            lambda: _get_python_type_as_str(metadata.type, metadata.repeated)
+        )
 
         if metadata.annotations and metadata.annotations["ni/type_specialization"] == "path":
             parameter_type = "Path"
@@ -228,3 +232,10 @@ def _get_output_parameters_with_type(
         output_parameters_with_type.append(f"{parameter_name}: {parameter_type}")
 
     return "\n    ".join(output_parameters_with_type)
+
+
+def _handle_exception(method: Callable[[], Any]) -> Any:
+    try:
+        return method()
+    except Exception as ex:
+        print(ex)
