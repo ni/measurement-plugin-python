@@ -62,7 +62,6 @@ def _get_configuration_parameter_list(
     for configuration in metadata.measurement_signature.configuration_parameters:
         configuration_parameter_list.append(
             ParameterMetadata.initialize(
-                validate_type=True,
                 display_name=configuration.name,
                 type=configuration.type,
                 repeated=configuration.repeated,
@@ -81,7 +80,6 @@ def _get_output_parameter_list(
     for output in metadata.measurement_signature.outputs:
         output_parameter_list.append(
             ParameterMetadata.initialize(
-                validate_type=True,
                 display_name=output.name,
                 type=output.type,
                 repeated=output.repeated,
