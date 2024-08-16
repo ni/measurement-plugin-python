@@ -25,18 +25,17 @@ def test_assets_directory() -> pathlib.Path:
 def discovery_service_process() -> Generator[DiscoveryServiceProcess, None, None]:
     """Test fixture that creates discovery service process."""
     if sys.platform != "win32":
-        pytest.skip(
-            f"Platform {sys.platform} is not supported for starting discovery service."
-            "Could not proceed to run the tests."
-        )
-    elif not _get_registration_json_file_path().exists():
-        pytest.skip(
-            "MeasurementLink registration file not found or MeasurementLink not installed."
-            "Could not proceed to run the tests. Install MeasurementLink to create the registration file."
-        )
-    else:
-        with DiscoveryServiceProcess() as proc:
-            yield proc
+        pytest.skip(f"Platform {sys.platform} is not supported for discovery service tests.")
+
+    try:
+        registration_json_file_exists = _get_registration_json_file_path().exists()
+    except FileNotFoundError:  # registry key not found
+        registration_json_file_exists = False
+    if not registration_json_file_exists:
+        pytest.skip("Registration file not found. Ensure the Measurement Plug-In SDK is installed.")
+
+    with DiscoveryServiceProcess() as proc:
+        yield proc
 
 
 @pytest.fixture

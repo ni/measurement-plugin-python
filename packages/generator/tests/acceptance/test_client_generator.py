@@ -7,7 +7,7 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measur
 )
 from ni_measurement_plugin_sdk_service.measurement.service import MeasurementService
 
-from ni_measurement_plugin_sdk_generator.ni_measurement_plugin_client_generator import template
+from ni_measurement_plugin_sdk_generator.client import create_client
 from tests.utilities.discovery_service_process import DiscoveryServiceProcess
 from tests.utilities.measurements import test_measurement
 
@@ -21,7 +21,7 @@ def test___command_line_args___create_client___render_without_exception(
     module_name = "test_measurement_client"
 
     with pytest.raises(SystemExit):
-        template.create_client(
+        create_client(
             [
                 module_name,
                 "--measurement-service-class",

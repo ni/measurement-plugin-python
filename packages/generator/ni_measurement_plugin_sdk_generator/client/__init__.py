@@ -1,7 +1,7 @@
 """Utilizes command line args to create a Measurement Plug-In Client using template files."""
 
 import pathlib
-from typing import Any, Optional
+from typing import Any, Dict, Optional
 
 import black
 import click
@@ -11,11 +11,10 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measur
 )
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 
-from ni_measurement_plugin_sdk_generator.ni_measurement_plugin_client_generator._constants import (
+from ni_measurement_plugin_sdk_generator.client._constants import (
     _V2_MEASUREMENT_SERVICE_INTERFACE,
-    _IMPORT_MODULES,
 )
-from ni_measurement_plugin_sdk_generator.ni_measurement_plugin_client_generator._support import (
+from ni_measurement_plugin_sdk_generator.client._support import (
     _get_configuration_metadata,
     _get_configuration_parameters_with_type_and_values,
     _get_measurement_service_stub,
@@ -25,6 +24,9 @@ from ni_measurement_plugin_sdk_generator.ni_measurement_plugin_client_generator.
     _handle_exception,
     _is_measurement_service_running,
 )
+
+
+_IMPORT_MODULES: Dict[str, str] = {}
 
 
 def _render_template(template_name: str, **template_args: Any) -> bytes:
@@ -107,9 +109,9 @@ def create_client(
     )
     output_metadata = _get_output_metadata(metadata)
     configuration_parameters_with_type_and_values, measure_api_parameters = (
-        _get_configuration_parameters_with_type_and_values(configuration_metadata)
+        _get_configuration_parameters_with_type_and_values(configuration_metadata, _IMPORT_MODULES)
     )
-    output_parameters_with_type = _get_output_parameters_with_type(output_metadata)
+    output_parameters_with_type = _get_output_parameters_with_type(output_metadata, _IMPORT_MODULES)
 
     if directory_out is None:
         directory_out_path = pathlib.Path.cwd() / module_name

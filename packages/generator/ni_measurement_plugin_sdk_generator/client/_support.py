@@ -18,8 +18,7 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measur
 )
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 
-from ni_measurement_plugin_sdk_generator.ni_measurement_plugin_client_generator._constants import (
-    _IMPORT_MODULES,
+from ni_measurement_plugin_sdk_generator.client._constants import (
     _INVALID_CHARS,
     _PATH_IMPORT,
     _PROTO_DATATYPE_TO_PYTYPE_LOOKUP,
@@ -58,7 +57,7 @@ def _get_measurement_service_stub(
 def _get_configuration_parameter_list(
     metadata: v2_measurement_service_pb2.GetMetadataResponse,
 ) -> List[ParameterMetadata]:
-    configuration_parameter_list = []
+    configuration_parameter_list: List[ParameterMetadata] = []
     for configuration in metadata.measurement_signature.configuration_parameters:
         configuration_parameter_list.append(
             ParameterMetadata.initialize(
@@ -76,7 +75,7 @@ def _get_configuration_parameter_list(
 def _get_output_parameter_list(
     metadata: v2_measurement_service_pb2.GetMetadataResponse,
 ) -> List[ParameterMetadata]:
-    output_parameter_list = []
+    output_parameter_list: List[ParameterMetadata] = []
     for output in metadata.measurement_signature.outputs:
         output_parameter_list.append(
             ParameterMetadata.initialize(
@@ -94,7 +93,7 @@ def _get_output_parameter_list(
 def _frame_metadata_dict(
     parameter_list: List[ParameterMetadata],
 ) -> Dict[int, ParameterMetadata]:
-    metadata_dict = {}
+    metadata_dict: Dict[int, ParameterMetadata] = {}
     for i, parameter in enumerate(parameter_list, start=1):
         metadata_dict[i] = parameter
 
@@ -175,7 +174,8 @@ def _get_python_type_as_str(type: Field.Kind.ValueType, is_array: bool) -> str:
 
 
 def _get_configuration_parameters_with_type_and_values(
-    configuration_metadata: Dict[int, ParameterMetadata]
+    configuration_metadata: Dict[int, ParameterMetadata],
+    import_modules: Dict[str, str],
 ) -> Tuple[str, str]:
     configuration_parameters = []
     parameter_names = []
@@ -195,7 +195,7 @@ def _get_configuration_parameters_with_type_and_values(
             if metadata.annotations and metadata.annotations["ni/type_specialization"] == "path":
                 default_value = f"r{default_value}"
                 parameter_type = "Path"
-                _IMPORT_MODULES[parameter_type] = _PATH_IMPORT
+                import_modules[parameter_type] = _PATH_IMPORT
 
         configuration_parameters.append(f"{parameter_name}: {parameter_type} = {default_value}")
 
@@ -208,6 +208,7 @@ def _get_configuration_parameters_with_type_and_values(
 
 def _get_output_parameters_with_type(
     output_metadata: Dict[int, ParameterMetadata],
+    import_modules: Dict[str, str],
 ) -> str:
     output_parameters_with_type = []
     for metadata in output_metadata.values():
@@ -218,11 +219,11 @@ def _get_output_parameters_with_type(
 
         if metadata.annotations and metadata.annotations["ni/type_specialization"] == "path":
             parameter_type = "Path"
-            _IMPORT_MODULES[_PATH_IMPORT] = _DEFAULT_IMPORT_TYPE
+            import_modules[_PATH_IMPORT] = _DEFAULT_IMPORT_TYPE
 
         if metadata.message_type and metadata.message_type == "ni.protobuf.types.DoubleXYData":
             parameter_type = "DoubleXYData"
-            _IMPORT_MODULES[_XY_DATA_IMPORT] = _CUSTOM_IMPORT_TYPE
+            import_modules[_XY_DATA_IMPORT] = _CUSTOM_IMPORT_TYPE
 
             if metadata.repeated:
                 parameter_type = f"List[{parameter_type}]"
