@@ -1,145 +1,92 @@
 """Support functions for the Measurement Plug-In Client generator."""
 
 import keyword
-from typing import Any, Callable, Dict, List, Tuple
+from enum import Enum
+from typing import Dict, Tuple
 
 import click
-import grpc
-from google.protobuf import descriptor_pool
 from google.protobuf.type_pb2 import Field
-from ni_measurement_plugin_sdk_service._internal.parameter import decoder
+from ni_measurement_plugin_sdk_service._internal.grpc_servicer import frame_metadata_dict
 from ni_measurement_plugin_sdk_service._internal.parameter.metadata import ParameterMetadata
-from ni_measurement_plugin_sdk_service._internal.parameter.serialization_descriptors import (
-    create_file_descriptor,
-)
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v2 import (
     measurement_service_pb2 as v2_measurement_service_pb2,
     measurement_service_pb2_grpc as v2_measurement_service_pb2_grpc,
 )
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
+from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
 
 from ni_measurement_plugin_sdk_generator.client._constants import (
-    _INVALID_CHARS,
-    _PATH_IMPORT,
-    _PROTO_DATATYPE_TO_PYTYPE_LOOKUP,
-    _V2_MEASUREMENT_SERVICE_INTERFACE,
-    _XY_DATA_IMPORT,
-    _CUSTOM_IMPORT_TYPE,
-    _DEFAULT_IMPORT_TYPE,
+    INVALID_CHARS,
+    PATH_IMPORT,
+    PROTO_DATATYPE_TO_PYTYPE_LOOKUP,
+    V2_MEASUREMENT_SERVICE_INTERFACE,
+    XY_DATA_IMPORT,
+)
+from ni_measurement_plugin_sdk_generator.parameter import (
+    _get_configuration_parameters,
+    _get_output_parameters,
+    create_file_descriptor,
+    deserialize_parameters,
 )
 
 
-def _is_measurement_service_running(
-    ctx: click.Context, param: click.Parameter, service_class: str
-) -> str:
-    try:
-        if service_class:
-            DiscoveryClient().resolve_service(_V2_MEASUREMENT_SERVICE_INTERFACE, service_class)
-        return service_class
-    except Exception:
-        raise click.BadParameter(
-            f"Could not find any registered measurement with service class: '{service_class}'."
-        )
+class ImportType(Enum):
+    """Type for import  modules."""
+
+    Built_In = 1
+    Custom = 2
 
 
 def _get_measurement_service_stub(
     discovery_client: DiscoveryClient,
+    channel_pool: GrpcChannelPool,
     service_class: str,
 ) -> v2_measurement_service_pb2_grpc.MeasurementServiceStub:
-    resolved_service = discovery_client.resolve_service(
-        _V2_MEASUREMENT_SERVICE_INTERFACE, service_class
-    )
-    channel = grpc.insecure_channel(resolved_service.insecure_address)
-
+    try:
+        service_location = discovery_client.resolve_service(
+            V2_MEASUREMENT_SERVICE_INTERFACE, service_class
+        )
+    except Exception as e:
+        raise click.ClickException(
+            f"Could not find any registered measurement with service class: '{service_class}'."
+        ) from e
+    channel = channel_pool.get_channel(service_location.insecure_address)
     return v2_measurement_service_pb2_grpc.MeasurementServiceStub(channel)
 
 
-def _get_configuration_parameter_list(
-    metadata: v2_measurement_service_pb2.GetMetadataResponse,
-) -> List[ParameterMetadata]:
-    configuration_parameter_list: List[ParameterMetadata] = []
-    for configuration in metadata.measurement_signature.configuration_parameters:
-        configuration_parameter_list.append(
-            ParameterMetadata.initialize(
-                display_name=configuration.name,
-                type=configuration.type,
-                repeated=configuration.repeated,
-                default_value=None,
-                annotations=dict(configuration.annotations.items()),
-                message_type=configuration.message_type,
-            )
-        )
-    return configuration_parameter_list
-
-
-def _get_output_parameter_list(
-    metadata: v2_measurement_service_pb2.GetMetadataResponse,
-) -> List[ParameterMetadata]:
-    output_parameter_list: List[ParameterMetadata] = []
-    for output in metadata.measurement_signature.outputs:
-        output_parameter_list.append(
-            ParameterMetadata.initialize(
-                display_name=output.name,
-                type=output.type,
-                repeated=output.repeated,
-                default_value=None,
-                annotations=dict(output.annotations.items()),
-                message_type=output.message_type,
-            )
-        )
-    return output_parameter_list
-
-
-def _frame_metadata_dict(
-    parameter_list: List[ParameterMetadata],
-) -> Dict[int, ParameterMetadata]:
-    metadata_dict: Dict[int, ParameterMetadata] = {}
-    for i, parameter in enumerate(parameter_list, start=1):
-        metadata_dict[i] = parameter
-
-    return metadata_dict
-
-
-def _get_configuration_metadata(
+def _get_configuration_metadata_by_index(
     metadata: v2_measurement_service_pb2.GetMetadataResponse, service_class: str
 ) -> Dict[int, ParameterMetadata]:
-    configuration_parameter_list = _get_configuration_parameter_list(metadata)
-    output_parameter_list = _get_output_parameter_list(metadata)
-    configuration_metadata = _frame_metadata_dict(configuration_parameter_list)
+    create_file_descriptor(metadata=metadata, service_name=service_class)
 
-    create_file_descriptor(
-        service_name=service_class,
-        output_metadata=output_parameter_list,
-        input_metadata=configuration_parameter_list,
-        pool=descriptor_pool.Default(),
-    )
-
-    deserialized_paramers = decoder.deserialize_parameters(
+    configuration_parameter_list = _get_configuration_parameters(metadata)
+    configuration_metadata = frame_metadata_dict(configuration_parameter_list)
+    deserialized_parameters = deserialize_parameters(
         configuration_metadata,
         metadata.measurement_signature.configuration_defaults.value,
         service_class + ".Configurations",
     )
 
-    default_values = [None] * deserialized_paramers.__len__()
-    for k, v in deserialized_paramers.items():
+    default_values = [None] * len(deserialized_parameters)
+    for k, v in deserialized_parameters.items():
         configuration_metadata[k] = configuration_metadata[k]._replace(default_value=v)
         default_values[k - 1] = v
 
     return configuration_metadata
 
 
-def _get_output_metadata(
+def _get_output_metadata_by_index(
     metadata: v2_measurement_service_pb2.GetMetadataResponse,
 ) -> Dict[int, ParameterMetadata]:
-    output_parameter_list = _get_output_parameter_list(metadata)
-    output_metadata = _frame_metadata_dict(output_parameter_list)
+    output_parameter_list = _get_output_parameters(metadata)
+    output_metadata = frame_metadata_dict(output_parameter_list)
     return output_metadata
 
 
 def _remove_invalid_characters(input_string: str, new_char: str) -> str:
     # Replace any spaces or special characters with an '_'.
     if not input_string.isidentifier():
-        for invalid_char in _INVALID_CHARS:
+        for invalid_char in INVALID_CHARS:
             input_string = input_string.replace(invalid_char, new_char)
 
     if input_string[0].isdigit() or keyword.iskeyword(input_string):
@@ -161,19 +108,17 @@ def _get_python_identifier(input_string: str) -> str:
 
 
 def _get_python_type_as_str(type: Field.Kind.ValueType, is_array: bool) -> str:
-    python_type = _PROTO_DATATYPE_TO_PYTYPE_LOOKUP.get(type)
+    python_type = PROTO_DATATYPE_TO_PYTYPE_LOOKUP.get(type)
 
     if python_type is None:
-        raise Exception(
-            "Invalid data type : The configurated data type is not of the expected type"
-        )
+        raise click.ClickException("Invalid data type: The configured data type is unsupported.")
 
     if is_array:
         return f"List[{python_type.__name__}]"
     return python_type.__name__
 
 
-def _get_configuration_parameters_with_type_and_values(
+def _get_configuration_parameters_with_type_and_default_values(
     configuration_metadata: Dict[int, ParameterMetadata],
     import_modules: Dict[str, str],
 ) -> Tuple[str, str]:
@@ -185,9 +130,7 @@ def _get_configuration_parameters_with_type_and_values(
         parameter_names.append(parameter_name)
 
         default_value = metadata.default_value
-        parameter_type = _handle_exception(
-            lambda: _get_python_type_as_str(metadata.type, metadata.repeated)
-        )
+        parameter_type = _get_python_type_as_str(metadata.type, metadata.repeated)
         if isinstance(default_value, str):
             default_value = f'"{default_value}"'
 
@@ -195,7 +138,7 @@ def _get_configuration_parameters_with_type_and_values(
             if metadata.annotations and metadata.annotations["ni/type_specialization"] == "path":
                 default_value = f"r{default_value}"
                 parameter_type = "Path"
-                import_modules[parameter_type] = _PATH_IMPORT
+                import_modules[PATH_IMPORT] = ImportType.Built_In.name
 
         configuration_parameters.append(f"{parameter_name}: {parameter_type} = {default_value}")
 
@@ -213,17 +156,15 @@ def _get_output_parameters_with_type(
     output_parameters_with_type = []
     for metadata in output_metadata.values():
         parameter_name = _get_python_identifier(metadata.display_name)
-        parameter_type = _handle_exception(
-            lambda: _get_python_type_as_str(metadata.type, metadata.repeated)
-        )
+        parameter_type = _get_python_type_as_str(metadata.type, metadata.repeated)
 
         if metadata.annotations and metadata.annotations["ni/type_specialization"] == "path":
             parameter_type = "Path"
-            import_modules[_PATH_IMPORT] = _DEFAULT_IMPORT_TYPE
+            import_modules[PATH_IMPORT] = ImportType.Built_In.name
 
         if metadata.message_type and metadata.message_type == "ni.protobuf.types.DoubleXYData":
             parameter_type = "DoubleXYData"
-            import_modules[_XY_DATA_IMPORT] = _CUSTOM_IMPORT_TYPE
+            import_modules[XY_DATA_IMPORT] = ImportType.Custom.name
 
             if metadata.repeated:
                 parameter_type = f"List[{parameter_type}]"
@@ -231,10 +172,3 @@ def _get_output_parameters_with_type(
         output_parameters_with_type.append(f"{parameter_name}: {parameter_type}")
 
     return "\n    ".join(output_parameters_with_type)
-
-
-def _handle_exception(method: Callable[[], Any]) -> Any:
-    try:
-        return method()
-    except Exception as ex:
-        print(ex)

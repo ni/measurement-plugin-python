@@ -4,15 +4,12 @@ import pathlib
 import sys
 from typing import Generator
 
-import grpc
 import pytest
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v2 import (
-    measurement_service_pb2_grpc as v2_measurement_service_pb2_grpc,
-)
 from ni_measurement_plugin_sdk_service.discovery._support import _get_registration_json_file_path
 from ni_measurement_plugin_sdk_service.measurement.service import MeasurementService
 
 from tests.utilities.discovery_service_process import DiscoveryServiceProcess
+from tests.utilities.measurements import test_measurement
 
 
 @pytest.fixture
@@ -38,19 +35,10 @@ def discovery_service_process() -> Generator[DiscoveryServiceProcess, None, None
         yield proc
 
 
-@pytest.fixture
-def stub_v2(grpc_channel: grpc.Channel) -> v2_measurement_service_pb2_grpc.MeasurementServiceStub:
-    """Test fixture that creates a MeasurementService v2 stub."""
-    return v2_measurement_service_pb2_grpc.MeasurementServiceStub(grpc_channel)
-
-
-@pytest.fixture
-def grpc_channel(measurement_service: MeasurementService) -> Generator[grpc.Channel, None, None]:
-    """Test fixture that creates a gRPC channel."""
-    target = measurement_service.service_location.insecure_address
-    options = [
-        ("grpc.max_receive_message_length", -1),
-        ("grpc.max_send_message_length", -1),
-    ]
-    with grpc.insecure_channel(target, options) as channel:
-        yield channel
+@pytest.fixture(scope="module")
+def measurement_service(
+    discovery_service_process: Generator[DiscoveryServiceProcess, None, None]
+) -> Generator[MeasurementService, None, None]:
+    """Test fixture that creates and hosts a measurement plug-in service."""
+    with test_measurement.measurement_service.host_service() as service:
+        yield service

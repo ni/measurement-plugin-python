@@ -151,9 +151,10 @@ def _serialize_outputs(
         )
 
 
-def _frame_metadata_dict(
+def frame_metadata_dict(
     parameter_list: List[ParameterMetadata],
 ) -> Dict[int, ParameterMetadata]:
+    """Create a metadata dictionary."""
     metadata_dict = {}
     for i, parameter in enumerate(parameter_list, start=1):
         metadata_dict[i] = parameter
@@ -174,8 +175,8 @@ class MeasurementServiceServicerV1(v1_measurement_service_pb2_grpc.MeasurementSe
     ) -> None:
         """Initialize the measurement v1 servicer."""
         super().__init__()
-        self._configuration_metadata = _frame_metadata_dict(configuration_parameter_list)
-        self._output_metadata = _frame_metadata_dict(output_parameter_list)
+        self._configuration_metadata = frame_metadata_dict(configuration_parameter_list)
+        self._output_metadata = frame_metadata_dict(output_parameter_list)
         self._measurement_info = measurement_info
         self._measure_function = measure_function
         self._owner = weakref.ref(owner) if owner is not None else None  # avoid reference cycle
@@ -290,8 +291,8 @@ class MeasurementServiceServicerV2(v2_measurement_service_pb2_grpc.MeasurementSe
     ) -> None:
         """Initialize the measurement v2 servicer."""
         super().__init__()
-        self._configuration_metadata = _frame_metadata_dict(configuration_parameter_list)
-        self._output_metadata = _frame_metadata_dict(output_parameter_list)
+        self._configuration_metadata = frame_metadata_dict(configuration_parameter_list)
+        self._output_metadata = frame_metadata_dict(output_parameter_list)
         self._measurement_info = measurement_info
         self._measure_function = measure_function
         self._owner = weakref.ref(owner) if owner is not None else None  # avoid reference cycle
