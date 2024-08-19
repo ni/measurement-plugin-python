@@ -1,4 +1,4 @@
-<%page args="measure_docstring, configuration_metadata, output_metadata, service_class, configuration_parameters_with_type_and_default_values, measure_api_parameters, output_parameters_with_type, import_modules"/>\
+<%page args="class_name, measure_docstring, configuration_metadata, output_metadata, service_class, configuration_parameters_with_type_and_default_values, measure_api_parameters, output_parameters_with_type, import_modules"/>\
 \
 """Python Measurement Plug-In Client."""
 
@@ -43,7 +43,7 @@ class Output(NamedTuple):
 % endif
 
 
-class MeasurementPlugInClient:
+class ${class_name}:
     """Client for accessing the Measurement Plug-In measurement services."""
      
     def __init__(self):

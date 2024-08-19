@@ -4,7 +4,6 @@ import keyword
 from enum import Enum
 from typing import Dict, Tuple
 
-import click
 from google.protobuf.type_pb2 import Field
 from ni_measurement_plugin_sdk_service._internal.grpc_servicer import frame_metadata_dict
 from ni_measurement_plugin_sdk_service._internal.parameter.metadata import ParameterMetadata
@@ -46,10 +45,10 @@ def _get_measurement_service_stub(
         service_location = discovery_client.resolve_service(
             V2_MEASUREMENT_SERVICE_INTERFACE, service_class
         )
-    except Exception as e:
-        raise click.ClickException(
+    except Exception:
+        raise RuntimeError(
             f"Could not find any registered measurement with service class: '{service_class}'."
-        ) from e
+        )
     channel = channel_pool.get_channel(service_location.insecure_address)
     return v2_measurement_service_pb2_grpc.MeasurementServiceStub(channel)
 
@@ -111,7 +110,7 @@ def _get_python_type_as_str(type: Field.Kind.ValueType, is_array: bool) -> str:
     python_type = PROTO_DATATYPE_TO_PYTYPE_LOOKUP.get(type)
 
     if python_type is None:
-        raise click.ClickException("Invalid data type: The configured data type is unsupported.")
+        raise TypeError("Invalid data type: The configured data type is unsupported.")
 
     if is_array:
         return f"List[{python_type.__name__}]"

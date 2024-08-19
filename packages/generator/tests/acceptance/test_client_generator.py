@@ -27,12 +27,12 @@ def test___command_line_args___create_client___render_without_error(
         )
 
     golden_path = test_assets_directory / "example_renders" / "measurement_plugin_client"
-    filename = "measurement_plugin_client.py"
+    filename = "test_measurement_client.py"
 
     assert not exc_info.value.code
     _assert_equal(
         golden_path / filename,
-        temp_directory / module_name / filename,
+        temp_directory / filename,
     )
 
 

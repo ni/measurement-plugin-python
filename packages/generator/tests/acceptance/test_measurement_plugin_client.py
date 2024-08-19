@@ -8,15 +8,11 @@ from ni_measurement_plugin_sdk_service.measurement.service import MeasurementSer
 
 from ni_measurement_plugin_sdk_generator.client import create_client
 
-_TEST_MODULE_NAME = "test_measurement_client"
-
 
 def test___measurement_plugin_client___measure___returns_output(
     measurement_plugin_client_module: ModuleType,
 ) -> None:
-    measurement_plugin_client_class = getattr(
-        measurement_plugin_client_module, "MeasurementPlugInClient"
-    )
+    test_measurement_client = getattr(measurement_plugin_client_module, "TestMeasurementClient")
     output = getattr(measurement_plugin_client_module, "Output")
 
     expected_measure_output = output(
@@ -33,7 +29,7 @@ def test___measurement_plugin_client___measure___returns_output(
         xy_data_out=None,
     )
 
-    measurement_plugin_client = measurement_plugin_client_class()
+    measurement_plugin_client = test_measurement_client()
     measure_output = measurement_plugin_client.measure()
 
     assert measure_output == expected_measure_output
@@ -46,11 +42,12 @@ def measurement_client_directory(
 ) -> pathlib.Path:
     """Test fixture that creates a measurement plugin-in client."""
     temp_directory = tmp_path_factory.mktemp("measurement_plugin_client_files")
+    module_name = "test_measurement_client"
 
     with pytest.raises(SystemExit):
         create_client(
             [
-                _TEST_MODULE_NAME,
+                module_name,
                 "--measurement-service-class",
                 "ni.tests.TestMeasurement_Python",
                 "--directory-out",
@@ -66,8 +63,8 @@ def measurement_plugin_client_module(
     measurement_client_directory: pathlib.Path,
 ) -> Union[ModuleType, None]:
     """Test fixture that imports the generated measurement plug-in client module."""
-    module_path = measurement_client_directory / _TEST_MODULE_NAME / "measurement_plugin_client.py"
-    spec = importlib.util.spec_from_file_location("measurement_plugin_client.py", module_path)
+    module_path = measurement_client_directory / "test_measurement_client.py"
+    spec = importlib.util.spec_from_file_location("test_measurement_client.py", module_path)
     if spec is not None:
         imported_module = importlib.util.module_from_spec(spec)
         if spec.loader is not None:
