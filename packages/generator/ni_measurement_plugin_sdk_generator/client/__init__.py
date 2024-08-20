@@ -49,8 +49,8 @@ def _create_file(
         mode=black.Mode(line_length=100),
     )
 
-    with output_file.open("w") as file:
-        file.write(formatted_output)
+    with output_file.open("wb") as file:
+        file.write(formatted_output.encode("utf-8"))
 
 
 @click.command()
