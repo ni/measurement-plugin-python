@@ -22,8 +22,8 @@ from ni_measurement_plugin_sdk_generator.client._constants import (
     XY_DATA_IMPORT,
 )
 from ni_measurement_plugin_sdk_generator.parameter import (
-    _get_configuration_parameters,
-    _get_output_parameters,
+    get_configuration_parameters,
+    get_output_parameters,
     create_file_descriptor,
     deserialize_parameters,
 )
@@ -36,11 +36,12 @@ class ImportType(Enum):
     Custom = 2
 
 
-def _get_measurement_service_stub(
+def get_measurement_service_stub(
     discovery_client: DiscoveryClient,
     channel_pool: GrpcChannelPool,
     service_class: str,
 ) -> v2_measurement_service_pb2_grpc.MeasurementServiceStub:
+    """Returns the measurement service stub of the given service class."""
     try:
         service_location = discovery_client.resolve_service(
             V2_MEASUREMENT_SERVICE_INTERFACE, service_class
@@ -53,12 +54,13 @@ def _get_measurement_service_stub(
     return v2_measurement_service_pb2_grpc.MeasurementServiceStub(channel)
 
 
-def _get_configuration_metadata_by_index(
+def get_configuration_metadata_by_index(
     metadata: v2_measurement_service_pb2.GetMetadataResponse, service_class: str
 ) -> Dict[int, ParameterMetadata]:
+    """Returns the configuration metadata of the measurement."""
     create_file_descriptor(metadata=metadata, service_name=service_class)
 
-    configuration_parameter_list = _get_configuration_parameters(metadata)
+    configuration_parameter_list = get_configuration_parameters(metadata)
     configuration_metadata = frame_metadata_dict(configuration_parameter_list)
     deserialized_parameters = deserialize_parameters(
         configuration_metadata,
@@ -74,10 +76,11 @@ def _get_configuration_metadata_by_index(
     return configuration_metadata
 
 
-def _get_output_metadata_by_index(
+def get_output_metadata_by_index(
     metadata: v2_measurement_service_pb2.GetMetadataResponse,
 ) -> Dict[int, ParameterMetadata]:
-    output_parameter_list = _get_output_parameters(metadata)
+    """Returns the output metadata of the measurement."""
+    output_parameter_list = get_output_parameters(metadata)
     output_metadata = frame_metadata_dict(output_parameter_list)
     return output_metadata
 
@@ -94,7 +97,8 @@ def _remove_invalid_characters(input_string: str, new_char: str) -> str:
     return input_string
 
 
-def _get_python_module_name(input_string: str) -> str:
+def get_python_module_name(input_string: str) -> str:
+    """Returns a valid name python module."""
     module_name = input_string.replace(" ", "_").lower()
     module_name = _remove_invalid_characters(module_name, "")
     return module_name
@@ -110,17 +114,18 @@ def _get_python_type_as_str(type: Field.Kind.ValueType, is_array: bool) -> str:
     python_type = PROTO_DATATYPE_TO_PYTYPE_LOOKUP.get(type)
 
     if python_type is None:
-        raise TypeError("Invalid data type: The configured data type is unsupported.")
+        raise TypeError(f"Invalid data type: '{type}'.")
 
     if is_array:
         return f"List[{python_type.__name__}]"
     return python_type.__name__
 
 
-def _get_configuration_parameters_with_type_and_default_values(
+def get_configuration_parameters_with_type_and_default_values(
     configuration_metadata: Dict[int, ParameterMetadata],
     import_modules: Dict[str, str],
 ) -> Tuple[str, str]:
+    """Returns configuration parameters of the measurement with type and default values."""
     configuration_parameters = []
     parameter_names = []
 
@@ -148,10 +153,11 @@ def _get_configuration_parameters_with_type_and_default_values(
     return (configuration_parameters_with_type_and_value, parameter_names_as_str)
 
 
-def _get_output_parameters_with_type(
+def get_output_parameters_with_type(
     output_metadata: Dict[int, ParameterMetadata],
     import_modules: Dict[str, str],
 ) -> str:
+    """Returns the output parameters of the measurement with type."""
     output_parameters_with_type = []
     for metadata in output_metadata.values():
         parameter_name = _get_python_identifier(metadata.display_name)

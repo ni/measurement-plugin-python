@@ -35,9 +35,9 @@ def discovery_service_process() -> Generator[DiscoveryServiceProcess, None, None
         yield proc
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="session")
 def measurement_service(
-    discovery_service_process: Generator[DiscoveryServiceProcess, None, None]
+    discovery_service_process: DiscoveryServiceProcess,
 ) -> Generator[MeasurementService, None, None]:
     """Test fixture that creates and hosts a measurement plug-in service."""
     with test_measurement.measurement_service.host_service() as service:

@@ -1,7 +1,7 @@
 import importlib.util
 import pathlib
 from types import ModuleType
-from typing import Generator, Union
+from typing import Union
 
 import pytest
 from ni_measurement_plugin_sdk_service.measurement.service import MeasurementService
@@ -12,10 +12,11 @@ from ni_measurement_plugin_sdk_generator.client import create_client
 def test___measurement_plugin_client___measure___returns_output(
     measurement_plugin_client_module: ModuleType,
 ) -> None:
-    test_measurement_client = getattr(measurement_plugin_client_module, "TestMeasurementClient")
-    output = getattr(measurement_plugin_client_module, "Output")
-
-    expected_measure_output = output(
+    test_measurement_client_type = getattr(
+        measurement_plugin_client_module, "TestMeasurementClient"
+    )
+    output_type = getattr(measurement_plugin_client_module, "Output")
+    expected_measure_output = output_type(
         float_out=0.05999999865889549,
         double_array_out=[0.1, 0.2, 0.3],
         bool_out=False,
@@ -28,8 +29,8 @@ def test___measurement_plugin_client___measure___returns_output(
         integer_out=10,
         xy_data_out=None,
     )
+    measurement_plugin_client = test_measurement_client_type()
 
-    measurement_plugin_client = test_measurement_client()
     measure_output = measurement_plugin_client.measure()
 
     assert measure_output == expected_measure_output
@@ -38,7 +39,7 @@ def test___measurement_plugin_client___measure___returns_output(
 @pytest.fixture(scope="module")
 def measurement_client_directory(
     tmp_path_factory: pytest.TempPathFactory,
-    measurement_service: Generator[MeasurementService, None, None],
+    measurement_service: MeasurementService,
 ) -> pathlib.Path:
     """Test fixture that creates a measurement plugin-in client."""
     temp_directory = tmp_path_factory.mktemp("measurement_plugin_client_files")

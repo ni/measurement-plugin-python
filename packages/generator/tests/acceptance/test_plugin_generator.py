@@ -5,12 +5,14 @@ import pytest
 from ni_measurement_plugin_sdk_generator.plugin import create_measurement
 
 
-def test___command_line_args___create_measurement___render_without_exception(
+def test___command_line_args___create_measurement___render_without_error(
     test_assets_directory: pathlib.Path, tmp_path_factory: pytest.TempPathFactory
 ) -> None:
     temp_directory = tmp_path_factory.mktemp("measurement_files")
+    golden_path = test_assets_directory / "example_renders" / "measurement"
+    filenames = ["measurement.py", "SampleMeasurement.serviceconfig", "start.bat", "_helpers.py"]
 
-    with pytest.raises(SystemExit):
+    with pytest.raises(SystemExit) as exc_info:
         create_measurement(
             [
                 "Sample Measurement",
@@ -27,9 +29,7 @@ def test___command_line_args___create_measurement___render_without_exception(
             ]
         )
 
-    golden_path = test_assets_directory / "example_renders" / "measurement"
-
-    filenames = ["measurement.py", "SampleMeasurement.serviceconfig", "start.bat", "_helpers.py"]
+    assert not exc_info.value.code
     for filename in filenames:
         _assert_equal(
             golden_path / filename,

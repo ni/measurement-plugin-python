@@ -11,9 +11,10 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measur
 )
 
 
-def _get_configuration_parameters(
+def get_configuration_parameters(
     metadata: v2_measurement_service_pb2.GetMetadataResponse,
 ) -> List[ParameterMetadata]:
+    """Return the list of configuration parameters of the measurement."""
     configuration_parameters = []
     for configuration in metadata.measurement_signature.configuration_parameters:
         configuration_parameters.append(
@@ -29,9 +30,10 @@ def _get_configuration_parameters(
     return configuration_parameters
 
 
-def _get_output_parameters(
+def get_output_parameters(
     metadata: v2_measurement_service_pb2.GetMetadataResponse,
 ) -> List[ParameterMetadata]:
+    """Return the list of output parameters of the measurement."""
     output_parameters = []
     for output in metadata.measurement_signature.outputs:
         output_parameters.append(
@@ -57,8 +59,8 @@ def create_file_descriptor(
 
         service_name (str): Unique service name.
     """
-    configuration_parameter_list = _get_configuration_parameters(metadata)
-    output_parameter_list = _get_output_parameters(metadata)
+    configuration_parameter_list = get_configuration_parameters(metadata)
+    output_parameter_list = get_output_parameters(metadata)
 
     serialization_descriptors.create_file_descriptor(
         service_name=service_name,

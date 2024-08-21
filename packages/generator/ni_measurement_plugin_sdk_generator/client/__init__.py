@@ -16,16 +16,13 @@ from ni_measurement_plugin_sdk_generator.client._constants import (
     V2_MEASUREMENT_SERVICE_INTERFACE,
 )
 from ni_measurement_plugin_sdk_generator.client._support import (
-    _get_configuration_metadata_by_index,
-    _get_configuration_parameters_with_type_and_default_values,
-    _get_measurement_service_stub,
-    _get_output_metadata_by_index,
-    _get_output_parameters_with_type,
-    _get_python_module_name,
+    get_configuration_metadata_by_index,
+    get_configuration_parameters_with_type_and_default_values,
+    get_measurement_service_stub,
+    get_output_metadata_by_index,
+    get_output_parameters_with_type,
+    get_python_module_name,
 )
-
-
-_IMPORT_MODULES: Dict[str, str] = {}
 
 
 def _render_template(template_name: str, **template_args: Any) -> bytes:
@@ -78,9 +75,10 @@ def create_client(
     """
     channel_pool = GrpcChannelPool()
     discovery_client = DiscoveryClient(grpc_channel_pool=channel_pool)
+    import_modules: Dict[str, str] = {}
 
     try:
-        measurement_service_stub = _get_measurement_service_stub(
+        measurement_service_stub = get_measurement_service_stub(
             discovery_client, channel_pool, measurement_service_class
         )
         registered_measurement_services = discovery_client.enumerate_services(
@@ -107,7 +105,7 @@ def create_client(
             return
 
         if not module_name.isidentifier():
-            module_name = _get_python_module_name(
+            module_name = get_python_module_name(
                 selected_measurement_service.service_class + "_client"
             )
         class_name = module_name.title().replace("_", "")
@@ -115,17 +113,17 @@ def create_client(
         metadata = measurement_service_stub.GetMetadata(
             v2_measurement_service_pb2.GetMetadataRequest()
         )
-        configuration_metadata = _get_configuration_metadata_by_index(
+        configuration_metadata = get_configuration_metadata_by_index(
             metadata, selected_measurement_service.service_class
         )
-        output_metadata = _get_output_metadata_by_index(metadata)
+        output_metadata = get_output_metadata_by_index(metadata)
         configuration_parameters_with_type_and_default_values, measure_api_parameters = (
-            _get_configuration_parameters_with_type_and_default_values(
-                configuration_metadata, _IMPORT_MODULES
+            get_configuration_parameters_with_type_and_default_values(
+                configuration_metadata, import_modules
             )
         )
-        output_parameters_with_type = _get_output_parameters_with_type(
-            output_metadata, _IMPORT_MODULES
+        output_parameters_with_type = get_output_parameters_with_type(
+            output_metadata, import_modules
         )
 
         if directory_out is None:
@@ -145,7 +143,7 @@ def create_client(
             configuration_parameters_with_type_and_default_values=configuration_parameters_with_type_and_default_values,
             measure_api_parameters=measure_api_parameters,
             output_parameters_with_type=output_parameters_with_type,
-            import_modules=_IMPORT_MODULES,
+            import_modules=import_modules,
         )
     except Exception as e:
         print(e)
