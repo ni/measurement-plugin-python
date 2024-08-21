@@ -1,0 +1,214 @@
+<%page args="measure_docstring, configuration_metadata, output_metadata, service_class, measure_parameters_with_type, measure_parameters, enum_by_class_name, measure_return_values_with_type"/>\
+\
+"""Python measurement client."""
+
+% if enum_by_class_name:
+from enum import Enum
+% endif
+from functools import cached_property
+from typing import Any, Dict, List, NamedTuple, Tuple
+
+import grpc
+from google.protobuf import any_pb2
+
+from ni_measurement_plugin_sdk_service._internal.parameter.metadata import ParameterMetadata
+from ni_measurement_plugin_sdk_service._internal.parameter.encoder import serialize_parameters
+from ni_measurement_plugin_sdk_service._internal.parameter.decoder import deserialize_parameters
+
+from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v2 import (
+    measurement_service_pb2 as v2_measurement_service_pb2,
+    measurement_service_pb2_grpc as v2_measurement_service_pb2_grpc,
+)
+from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.pin_map_context_pb2 import (
+    PinMapContext,
+)
+from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
+from ni_measurement_plugin_sdk_service.pin_map import PinMapClient
+from ni_measurement_plugin_sdk_service._internal.parameter import serialization_descriptors
+from google.protobuf import descriptor_pool
+
+_SITES = [0]
+_V2_MEASUREMENT_SERVICE_INTERFACE = "ni.measurementlink.measurement.v2.MeasurementService"
+_pin_map_path = ""
+
+class _MeasurementClient:
+
+    def __init__(self, service_class: str):
+        self._service_class = service_class
+        self._discovery_client = DiscoveryClient()
+        self._configuration_metadata_by_id = ${configuration_metadata}
+        self._output_metadata_by_id = ${output_metadata}
+        self._metadata = self._measurement_service_stub.GetMetadata(v2_measurement_service_pb2.GetMetadataRequest())
+        create_file_descriptor(self._metadata, self._service_class)
+
+
+    @cached_property
+    def _measurement_service_stub(self) -> v2_measurement_service_pb2_grpc.MeasurementServiceStub:
+        try:
+            resolved_service = self._discovery_client.resolve_service(
+                _V2_MEASUREMENT_SERVICE_INTERFACE, self._service_class
+            )
+        except grpc.RpcError as e:
+            if e.code() == grpc.StatusCode.NOT_FOUND:
+                raise RuntimeError(
+                    "Failed to connect to the measurement service. Ensure if the measurement is running."
+                )
+            raise
+
+        channel = grpc.insecure_channel(resolved_service.insecure_address)
+        return v2_measurement_service_pb2_grpc.MeasurementServiceStub(channel)
+
+
+    def _get_measure_request(self, args: Any) -> v2_measurement_service_pb2.MeasureRequest:
+        serialized_configuration = any_pb2.Any(
+            value=serialize_parameters(self._configuration_metadata_by_id, list(args), self._service_class +  ".Configurations")
+        )
+        return v2_measurement_service_pb2.MeasureRequest(
+            configuration_parameters=serialized_configuration,
+            pin_map_context=PinMapContext(
+                pin_map_id=_pin_map_path,
+                sites=_SITES,
+            ),
+        )
+
+    % if output_metadata:
+
+    def _parse_enum_values_if_any(
+        self, output_values: Dict[int, Any]
+    ) -> Dict[int, Any]:
+        for key, metadata in self._output_metadata_by_id.items():
+            if metadata.annotations and metadata.annotations["ni/type_specialization"] == "enum":
+                enum_type = type(eval(metadata.default_value))
+                if metadata.repeated:
+                    enum_values = []
+                    for value in output_values[key]:
+                        enum_values.append(enum_type(int(value)))
+                    output_values[key] = enum_values
+                else:
+                    output_values[key] = enum_type(int(output_values[key]))
+        return output_values
+
+    % endif
+
+    def _measure(self, *args: Any) -> Tuple[Any]:
+        request = self._get_measure_request(args)
+        % if output_metadata:
+        result = [None] * max(self._output_metadata_by_id.keys())
+        % else:
+        result = []
+        % endif
+        for response in self._measurement_service_stub.Measure(request):
+            output_values = deserialize_parameters(
+                self._output_metadata_by_id, response.outputs.value, service_name=self._service_class +  ".Outputs"
+            )
+            % if output_metadata:
+            output_values = self._parse_enum_values_if_any(output_values)
+            % endif
+            for k, v in output_values.items():
+                result[k - 1] = v
+
+        return tuple(result)
+
+def _get_configuration_parameters(metadata: v2_measurement_service_pb2.GetMetadataResponse,) -> List[ParameterMetadata]:
+        configuration_parameters = []
+        for configuration in metadata.measurement_signature.configuration_parameters:
+            configuration_parameters.append(
+                ParameterMetadata.initialize(
+                    display_name=configuration.name,
+                    type=configuration.type,
+                    repeated=configuration.repeated,
+                    default_value=None,
+                    annotations=dict(configuration.annotations.items()),
+                    message_type=configuration.message_type,
+                )
+            )
+        return configuration_parameters
+
+def create_file_descriptor(metadata: v2_measurement_service_pb2.GetMetadataResponse, service_name: str) -> None:
+    """Creates two message types in one file descriptor proto.
+
+    Args:
+        metadata (measurement_service_pb2.GetMetadataResponse): Measurement metadata.
+
+        service_name (str): Unique service name.
+    """
+    configuration_parameter_list = _get_configuration_parameters(metadata)
+    output_parameter_list = _get_output_parameters(metadata)
+
+    serialization_descriptors.create_file_descriptor(
+        service_name=service_name,
+        output_metadata=output_parameter_list,
+        input_metadata=configuration_parameter_list,
+        pool=descriptor_pool.Default(),
+    )
+
+def _get_output_parameters(
+    metadata: v2_measurement_service_pb2.GetMetadataResponse,
+) -> List[ParameterMetadata]:
+    output_parameters = []
+    for output in metadata.measurement_signature.outputs:
+        output_parameters.append(
+            ParameterMetadata.initialize(
+                display_name=output.name,
+                type=output.type,
+                repeated=output.repeated,
+                default_value=None,
+                annotations=dict(output.annotations.items()),
+                message_type=output.message_type,
+            )
+        )
+    return output_parameters
+
+% for enum_name, enum_value in enum_by_class_name.items():
+
+class ${enum_name}(Enum):
+
+    % for key, val in enum_value.items():
+    ${key} = ${val}
+    % endfor
+
+% endfor
+<% output_type = "None" %>\
+% if output_metadata:
+
+class Output(NamedTuple):
+    """Measurement result container."""
+
+    ${measure_return_values_with_type}
+
+<% output_type = "Output" %>\
+% endif
+
+def measure(
+    ${measure_parameters_with_type}
+) -> ${output_type}:
+    """${measure_docstring}
+
+    Returns:
+        Measurement output.
+    """
+
+    client = _MeasurementClient("${service_class}")
+    response = client._measure(
+        ${measure_parameters}
+    )
+    % if output_metadata:
+    return Output._make(response)
+    % endif
+
+
+def register_pin_map(pin_map_absolute_path: str) -> str:
+    """Registers the pin map with the pin map service.
+
+    Args:
+        pin_map_absolute_path: Absolute path of the pin map.
+
+    Returns:
+        Pin map id.
+    """
+
+    pin_map_client = PinMapClient()
+    global _pin_map_path
+    _pin_map_path = pin_map_absolute_path
+
+    return pin_map_client.update_pin_map(_pin_map_path)
