@@ -4,6 +4,7 @@ import keyword
 from enum import Enum
 from typing import Dict, Tuple
 
+from google.protobuf import descriptor_pool
 from google.protobuf.type_pb2 import Field
 from ni_measurement_plugin_sdk_service._internal.grpc_servicer import frame_metadata_dict
 from ni_measurement_plugin_sdk_service._internal.parameter.metadata import ParameterMetadata
@@ -13,6 +14,10 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measur
 )
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
+from ni_measurement_plugin_sdk_service.parameter import (
+    decoder,
+    serialization_descriptors,
+)
 
 from ni_measurement_plugin_sdk_generator.client._constants import (
     INVALID_CHARS,
@@ -21,19 +26,13 @@ from ni_measurement_plugin_sdk_generator.client._constants import (
     V2_MEASUREMENT_SERVICE_INTERFACE,
     XY_DATA_IMPORT,
 )
-from ni_measurement_plugin_sdk_generator.parameter import (
-    get_configuration_parameters,
-    get_output_parameters,
-    create_file_descriptor,
-    deserialize_parameters,
-)
 
 
 class ImportType(Enum):
     """Type for import  modules."""
 
-    Built_In = 1
-    Custom = 2
+    BUILT_IN = 1
+    CUSTOM = 2
 
 
 def get_measurement_service_stub(
@@ -58,11 +57,40 @@ def get_configuration_metadata_by_index(
     metadata: v2_measurement_service_pb2.GetMetadataResponse, service_class: str
 ) -> Dict[int, ParameterMetadata]:
     """Returns the configuration metadata of the measurement."""
-    create_file_descriptor(metadata=metadata, service_name=service_class)
+    configuration_parameter_list =  []
+    for configuration in metadata.measurement_signature.configuration_parameters:
+        configuration_parameter_list.append(
+            ParameterMetadata.initialize(
+                display_name=configuration.name,
+                type=configuration.type,
+                repeated=configuration.repeated,
+                default_value=None,
+                annotations=dict(configuration.annotations.items()),
+                message_type=configuration.message_type,
+            )
+        )
 
-    configuration_parameter_list = get_configuration_parameters(metadata)
+    output_parameter_list = []
+    for output in metadata.measurement_signature.outputs:
+        output_parameter_list.append(
+            ParameterMetadata.initialize(
+                display_name=output.name,
+                type=output.type,
+                repeated=output.repeated,
+                default_value=None,
+                annotations=dict(output.annotations.items()),
+                message_type=output.message_type,
+            )
+        )
+
+    serialization_descriptors.create_file_descriptor(
+        input_metadata=configuration_parameter_list,
+        output_metadata=output_parameter_list,
+        service_name=service_class,
+        pool=descriptor_pool.Default(),
+    )
     configuration_metadata = frame_metadata_dict(configuration_parameter_list)
-    deserialized_parameters = deserialize_parameters(
+    deserialized_parameters = decoder.deserialize_parameters(
         configuration_metadata,
         metadata.measurement_signature.configuration_defaults.value,
         service_class + ".Configurations",
@@ -80,7 +108,18 @@ def get_output_metadata_by_index(
     metadata: v2_measurement_service_pb2.GetMetadataResponse,
 ) -> Dict[int, ParameterMetadata]:
     """Returns the output metadata of the measurement."""
-    output_parameter_list = get_output_parameters(metadata)
+    output_parameter_list = []
+    for output in metadata.measurement_signature.outputs:
+        output_parameter_list.append(
+            ParameterMetadata.initialize(
+                display_name=output.name,
+                type=output.type,
+                repeated=output.repeated,
+                default_value=None,
+                annotations=dict(output.annotations.items()),
+                message_type=output.message_type,
+            )
+        )
     output_metadata = frame_metadata_dict(output_parameter_list)
     return output_metadata
 
@@ -142,7 +181,7 @@ def get_configuration_parameters_with_type_and_default_values(
             if metadata.annotations and metadata.annotations["ni/type_specialization"] == "path":
                 default_value = f"r{default_value}"
                 parameter_type = "Path"
-                import_modules[PATH_IMPORT] = ImportType.Built_In.name
+                import_modules[PATH_IMPORT] = ImportType.BUILT_IN.name
 
         configuration_parameters.append(f"{parameter_name}: {parameter_type} = {default_value}")
 
@@ -165,11 +204,11 @@ def get_output_parameters_with_type(
 
         if metadata.annotations and metadata.annotations["ni/type_specialization"] == "path":
             parameter_type = "Path"
-            import_modules[PATH_IMPORT] = ImportType.Built_In.name
+            import_modules[PATH_IMPORT] = ImportType.BUILT_IN.name
 
         if metadata.message_type and metadata.message_type == "ni.protobuf.types.DoubleXYData":
             parameter_type = "DoubleXYData"
-            import_modules[XY_DATA_IMPORT] = ImportType.Custom.name
+            import_modules[XY_DATA_IMPORT] = ImportType.CUSTOM.name
 
             if metadata.repeated:
                 parameter_type = f"List[{parameter_type}]"

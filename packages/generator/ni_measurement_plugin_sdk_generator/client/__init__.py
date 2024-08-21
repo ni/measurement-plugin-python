@@ -1,5 +1,6 @@
 """Utilizes command line args to create a Measurement Plug-In Client using template files."""
 
+import os
 import pathlib
 from typing import Any, Dict, Optional
 
@@ -45,6 +46,7 @@ def _create_file(
         src_contents=output,
         mode=black.Mode(line_length=100),
     )
+    formatted_output = formatted_output.replace("\n", os.linesep)
 
     with output_file.open("wb") as file:
         file.write(formatted_output.encode("utf-8"))
@@ -86,8 +88,9 @@ def create_client(
         )
 
         if not registered_measurement_services:
-            print("No active measurements were found. Please start one and try again.")
-            return
+            click.ClickException(
+                "No active measurements were found. Please start one and try again."
+            )
 
         selected_measurement_service = next(
             (
@@ -99,7 +102,7 @@ def create_client(
         )
 
         if selected_measurement_service is None:
-            print(
+            click.ClickException(
                 f"Could not find any registered measurement with service class: '{measurement_service_class}'."
             )
             return
@@ -146,4 +149,4 @@ def create_client(
             import_modules=import_modules,
         )
     except Exception as e:
-        print(e)
+        raise click.ClickException(str(e))

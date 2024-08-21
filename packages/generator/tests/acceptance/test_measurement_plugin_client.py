@@ -1,7 +1,6 @@
 import importlib.util
 import pathlib
 from types import ModuleType
-from typing import Union
 
 import pytest
 from ni_measurement_plugin_sdk_service.measurement.service import MeasurementService
@@ -62,7 +61,7 @@ def measurement_client_directory(
 @pytest.fixture(scope="module")
 def measurement_plugin_client_module(
     measurement_client_directory: pathlib.Path,
-) -> Union[ModuleType, None]:
+) -> ModuleType:
     """Test fixture that imports the generated measurement plug-in client module."""
     module_path = measurement_client_directory / "test_measurement_client.py"
     spec = importlib.util.spec_from_file_location("test_measurement_client.py", module_path)
@@ -71,5 +70,4 @@ def measurement_plugin_client_module(
         if spec.loader is not None:
             spec.loader.exec_module(imported_module)
             return imported_module
-        return None
-    return None
+    pytest.fail("The module specification cannot be None.")
