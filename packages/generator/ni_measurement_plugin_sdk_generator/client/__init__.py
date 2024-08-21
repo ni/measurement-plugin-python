@@ -23,6 +23,7 @@ from ni_measurement_plugin_sdk_generator.client._support import (
     get_output_metadata_by_index,
     get_output_parameters_with_type,
     get_python_module_name,
+    ImportType,
 )
 
 
@@ -77,7 +78,7 @@ def create_client(
     """
     channel_pool = GrpcChannelPool()
     discovery_client = DiscoveryClient(grpc_channel_pool=channel_pool)
-    import_modules: Dict[str, str] = {}
+    import_modules: Dict[str, ImportType] = {}
 
     try:
         measurement_service_stub = get_measurement_service_stub(

@@ -4,7 +4,7 @@
 
 import threading
 % for module, import_type in import_modules.items():
-% if import_type == "BUILT_IN":
+% if import_type == type(import_type).BUILT_IN:
 ${module}
 % endif
 % endfor
@@ -18,7 +18,7 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measur
     measurement_service_pb2_grpc as v2_measurement_service_pb2_grpc,
 )
 % for module, import_type in import_modules.items():
-% if import_type == "CUSTOM":
+% if import_type == type(import_type).CUSTOM:
 ${module}
 % endif
 % endfor
