@@ -80,7 +80,7 @@ def _assert_line_ending(file_path: pathlib.Path) -> None:
         for match in matches:
             assert match == b"\r\n"
     else:
-        pattern = re.compile(r"\r?\n")
+        pattern = re.compile(rb"\r?\n")
         matches = pattern.findall(content)
         for match in matches:
             assert match == b"\n"
