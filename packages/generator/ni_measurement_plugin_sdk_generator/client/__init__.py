@@ -1,11 +1,11 @@
 """Utilizes command line args to create a Measurement Plug-In Client using template files."""
 
-import os
 import pathlib
 from typing import Any, Dict, Optional
 
 import black
 import click
+import grpc
 from mako.template import Template
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v2 import (
     measurement_service_pb2 as v2_measurement_service_pb2,
@@ -13,9 +13,6 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measur
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
 
-from ni_measurement_plugin_sdk_generator.client._constants import (
-    V2_MEASUREMENT_SERVICE_INTERFACE,
-)
 from ni_measurement_plugin_sdk_generator.client._support import (
     get_configuration_metadata_by_index,
     get_configuration_parameters_with_type_and_default_values,
@@ -23,6 +20,7 @@ from ni_measurement_plugin_sdk_generator.client._support import (
     get_output_metadata_by_index,
     get_output_parameters_with_type,
     get_python_module_name,
+    get_python_class_name,
     ImportType,
 )
 
@@ -34,7 +32,7 @@ def _render_template(template_name: str, **template_args: Any) -> bytes:
     try:
         return template.render(**template_args)
     except Exception:
-        raise RuntimeError(f'An error occurred while rendering template "{template_name}".')
+        raise click.ClickException(f'An error occurred while rendering template "{template_name}".')
 
 
 def _create_file(
@@ -47,14 +45,22 @@ def _create_file(
         src_contents=output,
         mode=black.Mode(line_length=100),
     )
-    formatted_output = formatted_output.replace("\n", os.linesep)
 
-    with output_file.open("wb") as file:
-        file.write(formatted_output.encode("utf-8"))
+    with output_file.open("w") as file:
+        file.write(formatted_output)
 
 
 @click.command()
-@click.argument("module_name", type=str, default="")
+@click.option(
+    "-m",
+    "--module-name",
+    help="Name for the Python Measurement Plug-In Client module.",
+)
+@click.option(
+    "-c",
+    "--class-name",
+    help="Name for the Python Measurement Plug-In Client Class in the generated module.",
+)
 @click.option(
     "-s",
     "--measurement-service-class",
@@ -67,58 +73,37 @@ def _create_file(
 )
 def create_client(
     module_name: str,
+    class_name: str,
     measurement_service_class: str,
     directory_out: Optional[str],
 ) -> None:
     """Generates a Python Measurement Plug-In Client module for the measurement service.
 
     You can use the generated module to interact with the corresponding measurement service.
-
-    MODULE_NAME: Name for the Python Measurement Plug-In Client module to be generated.
     """
     channel_pool = GrpcChannelPool()
     discovery_client = DiscoveryClient(grpc_channel_pool=channel_pool)
     import_modules: Dict[str, ImportType] = {}
 
+    if measurement_service_class is None:
+        raise click.BadParameter("Measurement service class cannot be empty")
+
+    if module_name is None or not module_name.isidentifier():
+        module_name = get_python_module_name(measurement_service_class)
+
+    if class_name is None or not class_name.isalnum():
+        class_name = get_python_class_name(measurement_service_class)
+
     try:
         measurement_service_stub = get_measurement_service_stub(
             discovery_client, channel_pool, measurement_service_class
         )
-        registered_measurement_services = discovery_client.enumerate_services(
-            V2_MEASUREMENT_SERVICE_INTERFACE
-        )
-
-        if not registered_measurement_services:
-            click.ClickException(
-                "No active measurements were found. Please start one and try again."
-            )
-
-        selected_measurement_service = next(
-            (
-                measurement_service
-                for measurement_service in registered_measurement_services
-                if measurement_service.service_class == measurement_service_class
-            ),
-            None,
-        )
-
-        if selected_measurement_service is None:
-            click.ClickException(
-                f"Could not find any registered measurement with service class: '{measurement_service_class}'."
-            )
-            return
-
-        if not module_name.isidentifier():
-            module_name = get_python_module_name(
-                selected_measurement_service.service_class + "_client"
-            )
-        class_name = module_name.title().replace("_", "")
 
         metadata = measurement_service_stub.GetMetadata(
             v2_measurement_service_pb2.GetMetadataRequest()
         )
         configuration_metadata = get_configuration_metadata_by_index(
-            metadata, selected_measurement_service.service_class
+            metadata, measurement_service_class
         )
         output_metadata = get_output_metadata_by_index(metadata)
         configuration_parameters_with_type_and_default_values, measure_api_parameters = (
@@ -140,7 +125,7 @@ def create_client(
             file_name=f"{module_name}.py",
             directory_out=directory_out_path,
             class_name=class_name,
-            measure_docstring=selected_measurement_service.annotations["ni/service.description"],
+            display_name=metadata.measurement_details.display_name,
             configuration_metadata=configuration_metadata,
             output_metadata=output_metadata,
             service_class=measurement_service_class,
@@ -149,5 +134,9 @@ def create_client(
             output_parameters_with_type=output_parameters_with_type,
             import_modules=import_modules,
         )
+    except TypeError as e:
+        raise click.ClickException(f"{e}")
+    except grpc.RpcError as e:
+        raise click.ClickException(f"{e}")
     except Exception as e:
-        raise click.ClickException(str(e))
+        raise Exception(f"Error in creating measurement plug-in client.\nPossible reasons: {e}")

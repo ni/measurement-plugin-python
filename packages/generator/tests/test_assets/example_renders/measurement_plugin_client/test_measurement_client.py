@@ -14,14 +14,14 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measur
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types.xydata_pb2 import (
     DoubleXYData,
 )
+from ni_measurement_plugin_sdk_service.client_support import (
+    create_file_descriptor,
+    deserialize_parameters,
+    ParameterMetadata,
+    serialize_parameters,
+)
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
-from ni_measurement_plugin_sdk_service.parameter import (
-    decoder,
-    encoder,
-    serialization_descriptors,
-    ParameterMetadata,
-)
 
 _V2_MEASUREMENT_SERVICE_INTERFACE = "ni.measurementlink.measurement.v2.MeasurementService"
 
@@ -42,7 +42,7 @@ class Output(NamedTuple):
     xy_data_out: DoubleXYData
 
 
-class TestMeasurementClient:
+class TestMeasurement:
     """Client for accessing the Measurement Plug-In measurement services."""
 
     def __init__(self):
@@ -274,6 +274,7 @@ class TestMeasurementClient:
                 enum_type=None,
             ),
         }
+        self._create_file_descriptor()
 
     @property
     def _measurement_service_stub(self) -> v2_measurement_service_pb2_grpc.MeasurementServiceStub:
@@ -293,7 +294,7 @@ class TestMeasurementClient:
 
     def _create_file_descriptor(self) -> None:
         input_metadata = []
-        for configuration in self.metadata.measurement_signature.configuration_parameters:
+        for configuration in self._metadata.measurement_signature.configuration_parameters:
             input_metadata.append(
                 ParameterMetadata.initialize(
                     display_name=configuration.name,
@@ -305,7 +306,7 @@ class TestMeasurementClient:
                 )
             )
         output_metadata = []
-        for output in self.metadata.measurement_signature.outputs:
+        for output in self._metadata.measurement_signature.outputs:
             output_metadata.append(
                 ParameterMetadata.initialize(
                     display_name=output.name,
@@ -316,7 +317,7 @@ class TestMeasurementClient:
                     message_type=output.message_type,
                 )
             )
-        serialization_descriptors.create_file_descriptor(
+        create_file_descriptor(
             input_metadata=input_metadata,
             output_metadata=output_metadata,
             service_name=self._service_class,
@@ -336,7 +337,7 @@ class TestMeasurementClient:
         pin_array_in: List[str] = ["pin1", "pin2"],
         integer_in: int = 10,
     ) -> Output:
-        """Measurement plug-in test service that performs a loopback measurement.
+        """Executes Test Measurement (Py).
 
         Returns:
             Measurement output.
@@ -354,7 +355,7 @@ class TestMeasurementClient:
             integer_in,
         ]
         serialized_configuration = any_pb2.Any(
-            value=encoder.serialize_parameters(
+            value=serialize_parameters(
                 parameter_metadata_dict=self._configuration_metadata,
                 parameter_values=parameter_values,
                 service_name=self._service_class + ".Configurations",
@@ -366,7 +367,7 @@ class TestMeasurementClient:
         result = [None] * max(self._output_metadata.keys())
 
         for response in self._measurement_service_stub.Measure(request):
-            output_values = decoder.deserialize_parameters(
+            output_values = deserialize_parameters(
                 self._output_metadata, response.outputs.value, self._service_class + ".Outputs"
             )
 

@@ -11,9 +11,7 @@ from ni_measurement_plugin_sdk_generator.client import create_client
 def test___measurement_plugin_client___measure___returns_output(
     measurement_plugin_client_module: ModuleType,
 ) -> None:
-    test_measurement_client_type = getattr(
-        measurement_plugin_client_module, "TestMeasurementClient"
-    )
+    test_measurement_client_type = getattr(measurement_plugin_client_module, "TestMeasurement")
     output_type = getattr(measurement_plugin_client_module, "Output")
     expected_measure_output = output_type(
         float_out=0.05999999865889549,
@@ -47,7 +45,10 @@ def measurement_client_directory(
     with pytest.raises(SystemExit):
         create_client(
             [
+                "--module-name",
                 module_name,
+                "--class-name",
+                "TestMeasurement",
                 "--measurement-service-class",
                 "ni.tests.TestMeasurement_Python",
                 "--directory-out",

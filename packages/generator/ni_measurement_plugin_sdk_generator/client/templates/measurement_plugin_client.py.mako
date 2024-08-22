@@ -1,4 +1,4 @@
-<%page args="class_name, measure_docstring, configuration_metadata, output_metadata, service_class, configuration_parameters_with_type_and_default_values, measure_api_parameters, output_parameters_with_type, import_modules"/>\
+<%page args="class_name, display_name, configuration_metadata, output_metadata, service_class, configuration_parameters_with_type_and_default_values, measure_api_parameters, output_parameters_with_type, import_modules"/>\
 \
 """Python Measurement Plug-In Client."""
 
@@ -22,14 +22,14 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measur
 ${module}
 % endif
 % endfor
+from ni_measurement_plugin_sdk_service.client_support import (
+    create_file_descriptor,
+    deserialize_parameters,
+    ParameterMetadata,
+    serialize_parameters,
+)
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
-from ni_measurement_plugin_sdk_service.parameter import (
-    decoder,
-    encoder,
-    serialization_descriptors,
-    ParameterMetadata,
-)
 
 _V2_MEASUREMENT_SERVICE_INTERFACE = "ni.measurementlink.measurement.v2.MeasurementService"
 
@@ -56,6 +56,7 @@ class ${class_name}:
         self._metadata = self._measurement_service_stub.GetMetadata(v2_measurement_service_pb2.GetMetadataRequest())
         self._configuration_metadata = ${configuration_metadata}
         self._output_metadata = ${output_metadata}
+        self._create_file_descriptor()
         
     @property
     def _measurement_service_stub(self) -> v2_measurement_service_pb2_grpc.MeasurementServiceStub:
@@ -72,10 +73,10 @@ class ${class_name}:
                 raise
             channel = self._channel_pool.get_channel(service_location.insecure_address)
             return v2_measurement_service_pb2_grpc.MeasurementServiceStub(channel)
-    
+
     def _create_file_descriptor(self) -> None:
         input_metadata =  []        
-        for configuration in self.metadata.measurement_signature.configuration_parameters:
+        for configuration in self._metadata.measurement_signature.configuration_parameters:
             input_metadata.append(
                 ParameterMetadata.initialize(
                     display_name=configuration.name,
@@ -88,7 +89,7 @@ class ${class_name}:
             )
 
         output_metadata = []
-        for output in self.metadata.measurement_signature.outputs:
+        for output in self._metadata.measurement_signature.outputs:
             output_metadata.append(
                 ParameterMetadata.initialize(
                     display_name=output.name,
@@ -100,7 +101,7 @@ class ${class_name}:
                 )
             )
 
-        serialization_descriptors.create_file_descriptor(
+        create_file_descriptor(
             input_metadata=input_metadata,
             output_metadata=output_metadata,
             service_name=self._service_class,
@@ -111,14 +112,14 @@ class ${class_name}:
         self,
         ${configuration_parameters_with_type_and_default_values}
     ) -> ${output_type} :
-        """${measure_docstring}
+        """Executes ${display_name}.
 
         Returns:
             Measurement output.
         """
         parameter_values = [${measure_api_parameters}]
         serialized_configuration = any_pb2.Any(
-            value=encoder.serialize_parameters(
+            value=serialize_parameters(
                 parameter_metadata_dict=self._configuration_metadata, 
                 parameter_values=parameter_values, 
                 service_name=self._service_class +  ".Configurations"
@@ -134,7 +135,7 @@ class ${class_name}:
         % endif
 
         for response in self._measurement_service_stub.Measure(request):
-            output_values = decoder.deserialize_parameters(
+            output_values = deserialize_parameters(
                 self._output_metadata, response.outputs.value, self._service_class + ".Outputs"
             )
 
