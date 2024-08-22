@@ -2128,13 +2128,13 @@ files = [
 
 [[package]]
 name = "types-pywin32"
-version = "306.0.0.20240806"
+version = "306.0.0.20240822"
 description = "Typing stubs for pywin32"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "types-pywin32-306.0.0.20240806.tar.gz", hash = "sha256:aaac3c52f5ca7e9a2f79a838a51bc467babd09c0143cfcae62c1164a1ebb7964"},
-    {file = "types_pywin32-306.0.0.20240806-py3-none-any.whl", hash = "sha256:70bcc3a950aa519881f6928bae6c05a2e3f46adaa5fa5110a4608dc6fb813d1e"},
+    {file = "types-pywin32-306.0.0.20240822.tar.gz", hash = "sha256:34d22b58aaa2cc86fe585b6e2e1eda88a60b010badea0e0e4a410ebe28744645"},
+    {file = "types_pywin32-306.0.0.20240822-py3-none-any.whl", hash = "sha256:31a16f7eaf711166e8aec50ee1ddf0f16b4512e19ecc92a019ae7a0860b64bad"},
 ]
 
 [[package]]
