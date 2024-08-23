@@ -1,7 +1,7 @@
 """Utilizes command line args to create a Measurement Plug-In Client using template files."""
 
 import pathlib
-from typing import Any, Dict, Optional, Set
+from typing import Any, Optional, Set
 
 import black
 import click
