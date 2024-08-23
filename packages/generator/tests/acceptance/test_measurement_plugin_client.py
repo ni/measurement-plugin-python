@@ -45,12 +45,11 @@ def measurement_client_directory(
     with pytest.raises(SystemExit):
         create_client(
             [
+                "ni.tests.TestMeasurement_Python",
                 "--module-name",
                 module_name,
                 "--class-name",
                 "TestMeasurement",
-                "--measurement-service-class",
-                "ni.tests.TestMeasurement_Python",
                 "--directory-out",
                 temp_directory,
             ]

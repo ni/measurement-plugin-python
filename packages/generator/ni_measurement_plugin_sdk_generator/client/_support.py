@@ -13,7 +13,7 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measur
     measurement_service_pb2 as v2_measurement_service_pb2,
     measurement_service_pb2_grpc as v2_measurement_service_pb2_grpc,
 )
-from ni_measurement_plugin_sdk_service.client_support import (
+from ni_measurement_plugin_sdk_service.measurement.client_support import (
     create_file_descriptor,
     deserialize_parameters,
     ParameterMetadata,
@@ -31,7 +31,7 @@ from ni_measurement_plugin_sdk_generator.client._constants import (
 
 
 class ImportType(Enum):
-    """Type for import  modules."""
+    """Type for import modules."""
 
     BUILT_IN = 1
     CUSTOM = 2
@@ -124,18 +124,6 @@ def get_output_metadata_by_index(
     return output_metadata
 
 
-def _remove_invalid_characters(input_string: str, new_char: str) -> str:
-    # Replace any spaces or special characters with an '_'.
-    if not input_string.isidentifier():
-        for invalid_char in INVALID_CHARS:
-            input_string = input_string.replace(invalid_char, new_char)
-
-    if input_string[0].isdigit() or keyword.iskeyword(input_string):
-        input_string = "_" + input_string
-
-    return input_string
-
-
 def get_python_module_name(module_name: str) -> str:
     """Returns a valid name for the python module."""
     module_name = module_name.lower()
@@ -148,23 +136,6 @@ def get_python_class_name(input_string: str) -> str:
     class_name = input_string.title().replace("_", "")
     class_name = _remove_invalid_characters(class_name, "")
     return class_name
-
-
-def _get_python_identifier(input_string: str) -> str:
-    valid_identifier = input_string.lower()
-    valid_identifier = _remove_invalid_characters(valid_identifier, "_")
-    return valid_identifier
-
-
-def _get_python_type_as_str(type: Field.Kind.ValueType, is_array: bool) -> str:
-    python_type = PROTO_DATATYPE_TO_PYTYPE_LOOKUP.get(type)
-
-    if python_type is None:
-        raise TypeError(f"Invalid data type: '{type}'.")
-
-    if is_array:
-        return f"List[{python_type.__name__}]"
-    return python_type.__name__
 
 
 def get_configuration_parameters_with_type_and_default_values(
@@ -225,3 +196,32 @@ def get_output_parameters_with_type(
         output_parameters_with_type.append(f"{parameter_name}: {parameter_type}")
 
     return f"{os.linesep}    ".join(output_parameters_with_type)
+
+
+def _remove_invalid_characters(input_string: str, new_char: str) -> str:
+    # Replace any spaces or special characters with an '_'.
+    if not input_string.isidentifier():
+        for invalid_char in INVALID_CHARS:
+            input_string = input_string.replace(invalid_char, new_char)
+
+    if input_string[0].isdigit() or keyword.iskeyword(input_string):
+        input_string = "_" + input_string
+
+    return input_string
+
+
+def _get_python_identifier(input_string: str) -> str:
+    valid_identifier = input_string.lower()
+    valid_identifier = _remove_invalid_characters(valid_identifier, "_")
+    return valid_identifier
+
+
+def _get_python_type_as_str(type: Field.Kind.ValueType, is_array: bool) -> str:
+    python_type = PROTO_DATATYPE_TO_PYTYPE_LOOKUP.get(type)
+
+    if python_type is None:
+        raise TypeError(f"Invalid data type: '{type}'.")
+
+    if is_array:
+        return f"List[{python_type.__name__}]"
+    return python_type.__name__

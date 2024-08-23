@@ -50,7 +50,26 @@ def _create_file(
         file.write(formatted_output)
 
 
+def _get_metadata(
+    discovery_client: DiscoveryClient,
+    channel_pool: GrpcChannelPool,
+    service_class: str,
+) -> v2_measurement_service_pb2.GetMetadataResponse:
+    try:
+        measurement_service_stub = get_measurement_service_stub(
+            discovery_client, channel_pool, service_class
+        )
+
+        metadata = measurement_service_stub.GetMetadata(
+            v2_measurement_service_pb2.GetMetadataRequest()
+        )
+        return metadata
+    except grpc.RpcError as e:
+        raise click.ClickException(f"{e}")    
+
+
 @click.command()
+@click.argument("measurement_service_class")
 @click.option(
     "-m",
     "--module-name",
@@ -62,31 +81,25 @@ def _create_file(
     help="Name for the Python Measurement Plug-In Client Class in the generated module.",
 )
 @click.option(
-    "-s",
-    "--measurement-service-class",
-    help="The service class of your measurement.",
-)
-@click.option(
     "-o",
     "--directory-out",
     help="Output directory for Measurement Plug-In Client files. Default: '<current_directory>/<module_name>'",
 )
 def create_client(
-    module_name: str,
-    class_name: str,
     measurement_service_class: str,
+    module_name: Optional[str],
+    class_name: Optional[str],
     directory_out: Optional[str],
 ) -> None:
     """Generates a Python Measurement Plug-In Client module for the measurement service.
 
     You can use the generated module to interact with the corresponding measurement service.
+
+    MEASUREMENT_SERVICE_CLASS: The service class of the measurement.
     """
     channel_pool = GrpcChannelPool()
     discovery_client = DiscoveryClient(grpc_channel_pool=channel_pool)
     import_modules: Dict[str, ImportType] = {}
-
-    if measurement_service_class is None:
-        raise click.BadParameter("Measurement service class cannot be empty")
 
     if module_name is None or not module_name.isidentifier():
         module_name = get_python_module_name(measurement_service_class)
@@ -95,12 +108,8 @@ def create_client(
         class_name = get_python_class_name(measurement_service_class)
 
     try:
-        measurement_service_stub = get_measurement_service_stub(
+        metadata = _get_metadata(
             discovery_client, channel_pool, measurement_service_class
-        )
-
-        metadata = measurement_service_stub.GetMetadata(
-            v2_measurement_service_pb2.GetMetadataRequest()
         )
         configuration_metadata = get_configuration_metadata_by_index(
             metadata, measurement_service_class
@@ -136,7 +145,7 @@ def create_client(
         )
     except TypeError as e:
         raise click.ClickException(f"{e}")
-    except grpc.RpcError as e:
+    except click.ClickException as e:
         raise click.ClickException(f"{e}")
     except Exception as e:
         raise Exception(f"Error in creating measurement plug-in client.\nPossible reasons: {e}")

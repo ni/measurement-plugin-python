@@ -22,7 +22,7 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measur
 ${module}
 % endif
 % endfor
-from ni_measurement_plugin_sdk_service.client_support import (
+from ni_measurement_plugin_sdk_service.measurement.client_support import (
     create_file_descriptor,
     deserialize_parameters,
     ParameterMetadata,

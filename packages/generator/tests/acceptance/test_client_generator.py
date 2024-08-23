@@ -21,12 +21,11 @@ def test___command_line_args___create_client___render_without_error(
     with pytest.raises(SystemExit) as exc_info:
         create_client(
             [
+                "ni.tests.TestMeasurement_Python",
                 "--module-name",
                 module_name,
                 "--class-name",
                 "TestMeasurement",
-                "--measurement-service-class",
-                "ni.tests.TestMeasurement_Pytho",
                 "--directory-out",
                 temp_directory,
             ]
@@ -50,12 +49,11 @@ def test___command_line_args___create_client___render_with_proper_line_ending(
     with pytest.raises(SystemExit) as exc_info:
         create_client(
             [
+                "ni.tests.TestMeasurement_Python",
                 "--module-name",
                 module_name,
                 "--class-name",
                 "TestMeasurement",
-                "--measurement-service-class",
-                "ni.tests.TestMeasurement_Python",
                 "--directory-out",
                 temp_directory,
             ]
