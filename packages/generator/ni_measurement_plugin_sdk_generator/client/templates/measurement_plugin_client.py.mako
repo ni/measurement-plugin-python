@@ -22,14 +22,14 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measur
 ${module}
 % endif
 % endfor
+from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
+from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
 from ni_measurement_plugin_sdk_service.measurement.client_support import (
     create_file_descriptor,
     deserialize_parameters,
     ParameterMetadata,
     serialize_parameters,
 )
-from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
-from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
 
 _V2_MEASUREMENT_SERVICE_INTERFACE = "ni.measurementlink.measurement.v2.MeasurementService"
 

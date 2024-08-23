@@ -65,7 +65,7 @@ def _get_metadata(
         )
         return metadata
     except grpc.RpcError as e:
-        raise click.ClickException(f"{e}")    
+        raise click.ClickException(f"{e}")
 
 
 @click.command()
@@ -108,9 +108,7 @@ def create_client(
         class_name = get_python_class_name(measurement_service_class)
 
     try:
-        metadata = _get_metadata(
-            discovery_client, channel_pool, measurement_service_class
-        )
+        metadata = _get_metadata(discovery_client, channel_pool, measurement_service_class)
         configuration_metadata = get_configuration_metadata_by_index(
             metadata, measurement_service_class
         )
