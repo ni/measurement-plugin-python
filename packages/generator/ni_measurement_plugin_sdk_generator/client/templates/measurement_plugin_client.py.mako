@@ -1,12 +1,10 @@
-<%page args="class_name, display_name, configuration_metadata, output_metadata, service_class, configuration_parameters_with_type_and_default_values, measure_api_parameters, output_parameters_with_type, import_modules"/>\
+<%page args="class_name, display_name, configuration_metadata, output_metadata, service_class, configuration_parameters_with_type_and_default_values, measure_api_parameters, output_parameters_with_type, built_in_import_modules, custom_import_modules"/>\
 \
 """Python Measurement Plug-In Client."""
 
 import threading
-% for module, import_type in import_modules.items():
-% if import_type == type(import_type).BUILT_IN:
+% for module in built_in_import_modules:
 ${module}
-% endif
 % endfor
 from typing import List, NamedTuple
 
@@ -17,10 +15,8 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measur
     measurement_service_pb2 as v2_measurement_service_pb2,
     measurement_service_pb2_grpc as v2_measurement_service_pb2_grpc,
 )
-% for module, import_type in import_modules.items():
-% if import_type == type(import_type).CUSTOM:
+% for module in custom_import_modules:
 ${module}
-% endif
 % endfor
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool

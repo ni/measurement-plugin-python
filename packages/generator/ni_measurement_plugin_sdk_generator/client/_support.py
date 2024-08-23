@@ -2,8 +2,7 @@
 
 import keyword
 import os
-from enum import Enum
-from typing import Dict, Tuple
+from typing import Dict, Set, Tuple
 
 import grpc
 from google.protobuf import descriptor_pool
@@ -28,13 +27,6 @@ from ni_measurement_plugin_sdk_generator.client._constants import (
     V2_MEASUREMENT_SERVICE_INTERFACE,
     XY_DATA_IMPORT,
 )
-
-
-class ImportType(Enum):
-    """Type for import modules."""
-
-    BUILT_IN = 1
-    CUSTOM = 2
 
 
 def get_measurement_service_stub(
@@ -140,7 +132,7 @@ def get_python_class_name(input_string: str) -> str:
 
 def get_configuration_parameters_with_type_and_default_values(
     configuration_metadata: Dict[int, ParameterMetadata],
-    import_modules: Dict[str, ImportType],
+    built_in_import_modules: Set[str],
 ) -> Tuple[str, str]:
     """Returns configuration parameters of the measurement with type and default values."""
     configuration_parameters = []
@@ -159,7 +151,7 @@ def get_configuration_parameters_with_type_and_default_values(
             if metadata.annotations and metadata.annotations["ni/type_specialization"] == "path":
                 default_value = f"r{default_value}"
                 parameter_type = "Path"
-                import_modules[PATH_IMPORT] = ImportType.BUILT_IN
+                built_in_import_modules.add(PATH_IMPORT)
 
         configuration_parameters.append(f"{parameter_name}: {parameter_type} = {default_value}")
 
@@ -174,7 +166,8 @@ def get_configuration_parameters_with_type_and_default_values(
 
 def get_output_parameters_with_type(
     output_metadata: Dict[int, ParameterMetadata],
-    import_modules: Dict[str, ImportType],
+    built_in_import_modules: Set[str],
+    custom_import_modules: Set[str],
 ) -> str:
     """Returns the output parameters of the measurement with type."""
     output_parameters_with_type = []
@@ -184,11 +177,11 @@ def get_output_parameters_with_type(
 
         if metadata.annotations and metadata.annotations["ni/type_specialization"] == "path":
             parameter_type = "Path"
-            import_modules[PATH_IMPORT] = ImportType.BUILT_IN
+            built_in_import_modules.add(PATH_IMPORT)
 
         if metadata.message_type and metadata.message_type == "ni.protobuf.types.DoubleXYData":
             parameter_type = "DoubleXYData"
-            import_modules[XY_DATA_IMPORT] = ImportType.CUSTOM
+            custom_import_modules.add(XY_DATA_IMPORT)
 
             if metadata.repeated:
                 parameter_type = f"List[{parameter_type}]"

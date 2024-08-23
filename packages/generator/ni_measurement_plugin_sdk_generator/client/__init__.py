@@ -1,7 +1,7 @@
 """Utilizes command line args to create a Measurement Plug-In Client using template files."""
 
 import pathlib
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Set
 
 import black
 import click
@@ -21,7 +21,6 @@ from ni_measurement_plugin_sdk_generator.client._support import (
     get_output_parameters_with_type,
     get_python_module_name,
     get_python_class_name,
-    ImportType,
 )
 
 
@@ -99,7 +98,8 @@ def create_client(
     """
     channel_pool = GrpcChannelPool()
     discovery_client = DiscoveryClient(grpc_channel_pool=channel_pool)
-    import_modules: Dict[str, ImportType] = {}
+    built_in_import_modules: Set[str] = set()
+    custom_import_modules: Set[str] = set()
 
     if module_name is None or not module_name.isidentifier():
         module_name = get_python_module_name(measurement_service_class)
@@ -115,11 +115,11 @@ def create_client(
         output_metadata = get_output_metadata_by_index(metadata)
         configuration_parameters_with_type_and_default_values, measure_api_parameters = (
             get_configuration_parameters_with_type_and_default_values(
-                configuration_metadata, import_modules
+                configuration_metadata, built_in_import_modules
             )
         )
         output_parameters_with_type = get_output_parameters_with_type(
-            output_metadata, import_modules
+            output_metadata, built_in_import_modules, custom_import_modules
         )
 
         if directory_out is None:
@@ -139,7 +139,8 @@ def create_client(
             configuration_parameters_with_type_and_default_values=configuration_parameters_with_type_and_default_values,
             measure_api_parameters=measure_api_parameters,
             output_parameters_with_type=output_parameters_with_type,
-            import_modules=import_modules,
+            built_in_import_modules=built_in_import_modules,
+            custom_import_modules=custom_import_modules,
         )
     except TypeError as e:
         raise click.ClickException(f"{e}")
