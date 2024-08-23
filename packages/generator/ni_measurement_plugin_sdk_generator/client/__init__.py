@@ -107,12 +107,13 @@ def create_client(
     if class_name is None or not class_name.isalnum():
         class_name = get_python_class_name(measurement_service_class)
 
+    metadata = _get_metadata(discovery_client, channel_pool, measurement_service_class)
+    configuration_metadata = get_configuration_metadata_by_index(
+        metadata, measurement_service_class
+    )
+    output_metadata = get_output_metadata_by_index(metadata)
+
     try:
-        metadata = _get_metadata(discovery_client, channel_pool, measurement_service_class)
-        configuration_metadata = get_configuration_metadata_by_index(
-            metadata, measurement_service_class
-        )
-        output_metadata = get_output_metadata_by_index(metadata)
         configuration_parameters_with_type_and_default_values, measure_api_parameters = (
             get_configuration_parameters_with_type_and_default_values(
                 configuration_metadata, built_in_import_modules
@@ -121,30 +122,26 @@ def create_client(
         output_parameters_with_type = get_output_parameters_with_type(
             output_metadata, built_in_import_modules, custom_import_modules
         )
-
-        if directory_out is None:
-            directory_out_path = pathlib.Path.cwd()
-        else:
-            directory_out_path = pathlib.Path(directory_out)
-
-        _create_file(
-            template_name="measurement_plugin_client.py.mako",
-            file_name=f"{module_name}.py",
-            directory_out=directory_out_path,
-            class_name=class_name,
-            display_name=metadata.measurement_details.display_name,
-            configuration_metadata=configuration_metadata,
-            output_metadata=output_metadata,
-            service_class=measurement_service_class,
-            configuration_parameters_with_type_and_default_values=configuration_parameters_with_type_and_default_values,
-            measure_api_parameters=measure_api_parameters,
-            output_parameters_with_type=output_parameters_with_type,
-            built_in_import_modules=built_in_import_modules,
-            custom_import_modules=custom_import_modules,
-        )
     except TypeError as e:
         raise click.ClickException(f"{e}")
-    except click.ClickException as e:
-        raise click.ClickException(f"{e}")
-    except Exception as e:
-        raise Exception(f"Error in creating measurement plug-in client.\nPossible reasons: {e}")
+
+    if directory_out is None:
+        directory_out_path = pathlib.Path.cwd()
+    else:
+        directory_out_path = pathlib.Path(directory_out)
+
+    _create_file(
+        template_name="measurement_plugin_client.py.mako",
+        file_name=f"{module_name}.py",
+        directory_out=directory_out_path,
+        class_name=class_name,
+        display_name=metadata.measurement_details.display_name,
+        configuration_metadata=configuration_metadata,
+        output_metadata=output_metadata,
+        service_class=measurement_service_class,
+        configuration_parameters_with_type_and_default_values=configuration_parameters_with_type_and_default_values,
+        measure_api_parameters=measure_api_parameters,
+        output_parameters_with_type=output_parameters_with_type,
+        built_in_import_modules=built_in_import_modules,
+        custom_import_modules=custom_import_modules,
+    )
