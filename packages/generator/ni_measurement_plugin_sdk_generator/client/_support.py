@@ -2,7 +2,8 @@
 
 import keyword
 import os
-from typing import Dict, Set, Tuple
+import re
+from typing import AbstractSet, Dict, Iterable, List, Tuple, TypeVar
 
 import grpc
 from google.protobuf import descriptor_pool
@@ -27,6 +28,15 @@ from ni_measurement_plugin_sdk_generator.client._constants import (
     V2_MEASUREMENT_SERVICE_INTERFACE,
     XY_DATA_IMPORT,
 )
+
+
+_T = TypeVar("_T")
+CAMEL_TO_SNAKE_CASE_REGEXES = [
+    re.compile("([^_\n])([A-Z][a-z]+)"),
+    re.compile("([a-z])([A-Z])"),
+    re.compile("([0-9])([^_0-9])"),
+    re.compile("([^_0-9])([0-9])"),
+]
 
 
 def get_measurement_service_stub(
@@ -116,23 +126,9 @@ def get_output_metadata_by_index(
     return output_metadata
 
 
-def get_python_module_name(module_name: str) -> str:
-    """Returns a valid name for the python module."""
-    module_name = module_name.lower()
-    module_name = _remove_invalid_characters(module_name, "_")
-    return module_name
-
-
-def get_python_class_name(input_string: str) -> str:
-    """Returns a valid class name."""
-    class_name = input_string.title().replace("_", "")
-    class_name = _remove_invalid_characters(class_name, "")
-    return class_name
-
-
 def get_configuration_parameters_with_type_and_default_values(
     configuration_metadata: Dict[int, ParameterMetadata],
-    built_in_import_modules: Set[str],
+    built_in_import_modules: list[str],
 ) -> Tuple[str, str]:
     """Returns configuration parameters of the measurement with type and default values."""
     configuration_parameters = []
@@ -151,7 +147,7 @@ def get_configuration_parameters_with_type_and_default_values(
             if metadata.annotations and metadata.annotations["ni/type_specialization"] == "path":
                 default_value = f"r{default_value}"
                 parameter_type = "Path"
-                built_in_import_modules.add(PATH_IMPORT)
+                built_in_import_modules.append(PATH_IMPORT)
 
         configuration_parameters.append(f"{parameter_name}: {parameter_type} = {default_value}")
 
@@ -166,8 +162,8 @@ def get_configuration_parameters_with_type_and_default_values(
 
 def get_output_parameters_with_type(
     output_metadata: Dict[int, ParameterMetadata],
-    built_in_import_modules: Set[str],
-    custom_import_modules: Set[str],
+    built_in_import_modules: List[str],
+    custom_import_modules: List[str],
 ) -> str:
     """Returns the output parameters of the measurement with type."""
     output_parameters_with_type = []
@@ -177,11 +173,11 @@ def get_output_parameters_with_type(
 
         if metadata.annotations and metadata.annotations["ni/type_specialization"] == "path":
             parameter_type = "Path"
-            built_in_import_modules.add(PATH_IMPORT)
+            built_in_import_modules.append(PATH_IMPORT)
 
         if metadata.message_type and metadata.message_type == "ni.protobuf.types.DoubleXYData":
             parameter_type = "DoubleXYData"
-            custom_import_modules.add(XY_DATA_IMPORT)
+            custom_import_modules.append(XY_DATA_IMPORT)
 
             if metadata.repeated:
                 parameter_type = f"List[{parameter_type}]"
@@ -189,6 +185,20 @@ def get_output_parameters_with_type(
         output_parameters_with_type.append(f"{parameter_name}: {parameter_type}")
 
     return f"{os.linesep}    ".join(output_parameters_with_type)
+
+
+def to_ordered_set(values: Iterable[_T]) -> AbstractSet[_T]:
+    """Converts an iterable to an ordered set."""
+    return dict.fromkeys(values).keys()
+
+
+def camel_to_snake_case(camel_case_string: str) -> str:
+    """Converts a camelCase string to a snake_case string."""
+    partial = camel_case_string
+    for regex in CAMEL_TO_SNAKE_CASE_REGEXES:
+        partial = regex.sub(r"\1_\2", partial)
+
+    return partial.lower()
 
 
 def _remove_invalid_characters(input_string: str, new_char: str) -> str:

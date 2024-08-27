@@ -2,7 +2,7 @@
 
 import threading
 from pathlib import Path
-from typing import List, NamedTuple
+from typing import List, NamedTuple, Optional
 
 import grpc
 from google.protobuf import any_pb2
@@ -45,15 +45,27 @@ class Output(NamedTuple):
 class TestMeasurement:
     """Client for accessing the Measurement Plug-In measurement services."""
 
-    def __init__(self):
-        """Initialize the Measurement Plug-In client."""
+    def __init__(
+        self,
+        *,
+        discovery_client: Optional[DiscoveryClient] = None,
+        grpc_channel: Optional[grpc.Channel] = None,
+        grpc_channel_pool: Optional[GrpcChannelPool] = None,
+    ):
+        """Initialize the Measurement Plug-In client.
+
+        Args:
+            discovery_client: An optional discovery client.
+
+            grpc_channel: An optional session management gRPC channel.
+
+            grpc_channel_pool: An optional gRPC channel pool.
+        """
         self._initialization_lock = threading.Lock()
         self._service_class = "ni.tests.TestMeasurement_Python"
-        self._channel_pool = GrpcChannelPool()
-        self._discovery_client = DiscoveryClient(grpc_channel_pool=self._channel_pool)
-        self._metadata = self._measurement_service_stub.GetMetadata(
-            v2_measurement_service_pb2.GetMetadataRequest()
-        )
+        self._grpc_channel_pool = grpc_channel_pool
+        self._discovery_client = discovery_client
+        self._stub: Optional[v2_measurement_service_pb2_grpc.MeasurementServiceStub] = None
         self._configuration_metadata = {
             1: ParameterMetadata(
                 display_name="Float In",
@@ -274,27 +286,32 @@ class TestMeasurement:
                 enum_type=None,
             ),
         }
+        if grpc_channel is not None:
+            self._stub = v2_measurement_service_pb2_grpc.MeasurementServiceStub(grpc_channel)
         self._create_file_descriptor()
 
-    @property
-    def _measurement_service_stub(self) -> v2_measurement_service_pb2_grpc.MeasurementServiceStub:
-        with self._initialization_lock:
-            try:
-                service_location = self._discovery_client.resolve_service(
-                    _V2_MEASUREMENT_SERVICE_INTERFACE, self._service_class
-                )
-            except grpc.RpcError as e:
-                if e.code() == grpc.StatusCode.NOT_FOUND:
-                    raise RuntimeError(
-                        "Failed to connect to the measurement service. Ensure if the measurement is running."
+    def _get_stub(self) -> v2_measurement_service_pb2_grpc.MeasurementServiceStub:
+        if self._stub is None:
+            with self._initialization_lock:
+                if self._grpc_channel_pool is None:
+                    self._grpc_channel_pool = GrpcChannelPool()
+                if self._discovery_client is None:
+                    self._discovery_client = DiscoveryClient(
+                        grpc_channel_pool=self._grpc_channel_pool
                     )
-                raise
-            channel = self._channel_pool.get_channel(service_location.insecure_address)
-            return v2_measurement_service_pb2_grpc.MeasurementServiceStub(channel)
+                if self._stub is None:
+                    service_location = self._discovery_client.resolve_service(
+                        provided_interface=_V2_MEASUREMENT_SERVICE_INTERFACE,
+                        service_class=self._service_class,
+                    )
+                    channel = self._grpc_channel_pool.get_channel(service_location.insecure_address)
+                    self._stub = v2_measurement_service_pb2_grpc.MeasurementServiceStub(channel)
+        return self._stub
 
     def _create_file_descriptor(self) -> None:
+        metadata = self._get_stub().GetMetadata(v2_measurement_service_pb2.GetMetadataRequest())
         input_metadata = []
-        for configuration in self._metadata.measurement_signature.configuration_parameters:
+        for configuration in metadata.measurement_signature.configuration_parameters:
             input_metadata.append(
                 ParameterMetadata.initialize(
                     display_name=configuration.name,
@@ -306,7 +323,7 @@ class TestMeasurement:
                 )
             )
         output_metadata = []
-        for output in self._metadata.measurement_signature.outputs:
+        for output in metadata.measurement_signature.outputs:
             output_metadata.append(
                 ParameterMetadata.initialize(
                     display_name=output.name,
@@ -366,7 +383,7 @@ class TestMeasurement:
         )
         result = [None] * max(self._output_metadata.keys())
 
-        for response in self._measurement_service_stub.Measure(request):
+        for response in self._get_stub().Measure(request):
             output_values = deserialize_parameters(
                 self._output_metadata, response.outputs.value, self._service_class + ".Outputs"
             )

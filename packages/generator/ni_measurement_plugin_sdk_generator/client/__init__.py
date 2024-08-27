@@ -1,11 +1,10 @@
 """Utilizes command line args to create a Measurement Plug-In Client using template files."""
 
 import pathlib
-from typing import Any, Optional, Set
+from typing import Any, List, Optional
 
 import black
 import click
-import grpc
 from mako.template import Template
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v2 import (
     measurement_service_pb2 as v2_measurement_service_pb2,
@@ -14,24 +13,20 @@ from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
 
 from ni_measurement_plugin_sdk_generator.client._support import (
+    camel_to_snake_case,
     get_configuration_metadata_by_index,
     get_configuration_parameters_with_type_and_default_values,
     get_measurement_service_stub,
     get_output_metadata_by_index,
     get_output_parameters_with_type,
-    get_python_module_name,
-    get_python_class_name,
+    to_ordered_set,
 )
 
 
 def _render_template(template_name: str, **template_args: Any) -> bytes:
     file_path = str(pathlib.Path(__file__).parent / "templates" / template_name)
     template = Template(filename=file_path, input_encoding="utf-8", output_encoding="utf-8")
-
-    try:
-        return template.render(**template_args)
-    except Exception:
-        raise click.ClickException(f'An error occurred while rendering template "{template_name}".')
+    return template.render(**template_args)
 
 
 def _create_file(
@@ -49,22 +44,12 @@ def _create_file(
         file.write(formatted_output)
 
 
-def _get_metadata(
-    discovery_client: DiscoveryClient,
-    channel_pool: GrpcChannelPool,
-    service_class: str,
-) -> v2_measurement_service_pb2.GetMetadataResponse:
-    try:
-        measurement_service_stub = get_measurement_service_stub(
-            discovery_client, channel_pool, service_class
-        )
-
-        metadata = measurement_service_stub.GetMetadata(
-            v2_measurement_service_pb2.GetMetadataRequest()
-        )
-        return metadata
-    except grpc.RpcError as e:
-        raise click.ClickException(f"{e}")
+def _remove_suffix(string: str) -> str:
+    suffixes = ["_Python", "_LabVIEW"]
+    for suffix in suffixes:
+        if string.endswith(suffix):
+            return string.removesuffix(suffix)
+    return string
 
 
 @click.command()
@@ -98,32 +83,44 @@ def create_client(
     """
     channel_pool = GrpcChannelPool()
     discovery_client = DiscoveryClient(grpc_channel_pool=channel_pool)
-    built_in_import_modules: Set[str] = set()
-    custom_import_modules: Set[str] = set()
+    built_in_import_modules: List[str] = []
+    custom_import_modules: List[str] = []
 
-    if module_name is None or not module_name.isidentifier():
-        module_name = get_python_module_name(measurement_service_class)
+    if module_name is None or class_name is None:
+        base_service_class = measurement_service_class.split(".")[-1]
+        base_service_class = _remove_suffix(base_service_class)
+        if not base_service_class:
+            raise click.ClickException(
+                "Unable to create client.\nPlease provide valid module name or update the measurement with valid service class."
+            )
 
-    if class_name is None or not class_name.isalnum():
-        class_name = get_python_class_name(measurement_service_class)
+        if module_name is None:
+            module_name = camel_to_snake_case(base_service_class) + "_client"
+        if class_name is None:
+            class_name = base_service_class.title().replace("_", "") + "Client"
 
-    metadata = _get_metadata(discovery_client, channel_pool, measurement_service_class)
+    if not module_name.isidentifier():
+        raise click.ClickException("Invalid module name.")
+    if not class_name.isalnum() or class_name[0].isnumeric():
+        raise click.ClickException("Invalid class name.")
+
+    measurement_service_stub = get_measurement_service_stub(
+        discovery_client, channel_pool, measurement_service_class
+    )
+    metadata = measurement_service_stub.GetMetadata(v2_measurement_service_pb2.GetMetadataRequest())
     configuration_metadata = get_configuration_metadata_by_index(
         metadata, measurement_service_class
     )
     output_metadata = get_output_metadata_by_index(metadata)
 
-    try:
-        configuration_parameters_with_type_and_default_values, measure_api_parameters = (
-            get_configuration_parameters_with_type_and_default_values(
-                configuration_metadata, built_in_import_modules
-            )
+    configuration_parameters_with_type_and_default_values, measure_api_parameters = (
+        get_configuration_parameters_with_type_and_default_values(
+            configuration_metadata, built_in_import_modules
         )
-        output_parameters_with_type = get_output_parameters_with_type(
-            output_metadata, built_in_import_modules, custom_import_modules
-        )
-    except TypeError as e:
-        raise click.ClickException(f"{e}")
+    )
+    output_parameters_with_type = get_output_parameters_with_type(
+        output_metadata, built_in_import_modules, custom_import_modules
+    )
 
     if directory_out is None:
         directory_out_path = pathlib.Path.cwd()
@@ -142,6 +139,6 @@ def create_client(
         configuration_parameters_with_type_and_default_values=configuration_parameters_with_type_and_default_values,
         measure_api_parameters=measure_api_parameters,
         output_parameters_with_type=output_parameters_with_type,
-        built_in_import_modules=built_in_import_modules,
-        custom_import_modules=custom_import_modules,
+        built_in_import_modules=to_ordered_set(built_in_import_modules),
+        custom_import_modules=to_ordered_set(custom_import_modules),
     )
