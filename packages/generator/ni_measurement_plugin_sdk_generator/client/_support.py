@@ -128,7 +128,7 @@ def get_output_metadata_by_index(
 
 def get_configuration_parameters_with_type_and_default_values(
     configuration_metadata: Dict[int, ParameterMetadata],
-    built_in_import_modules: list[str],
+    built_in_import_modules: List[str],
 ) -> Tuple[str, str]:
     """Returns configuration parameters of the measurement with type and default values."""
     configuration_parameters = []
