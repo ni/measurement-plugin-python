@@ -1,6 +1,7 @@
 """Utilizes command line args to create a Measurement Plug-In Client using template files."""
 
 import pathlib
+import re
 import sys
 from typing import Any, List, Optional
 
@@ -56,6 +57,11 @@ def _remove_suffix(string: str) -> str:
     return string
 
 
+def _is_valid_class_name(class_name: str) -> bool:
+    pattern = r"^[a-zA-Z_][a-zA-Z0-9_]*$"
+    return re.fullmatch(pattern, class_name) is not None
+
+
 @click.command()
 @click.argument("measurement_service_class")
 @click.option(
@@ -93,7 +99,7 @@ def create_client(
     if module_name is None or class_name is None:
         base_service_class = measurement_service_class.split(".")[-1]
         base_service_class = _remove_suffix(base_service_class)
-        if not base_service_class:
+        if not base_service_class.isidentifier():
             raise click.ClickException(
                 "Unable to create client.\nPlease provide valid module name or update the measurement with valid service class."
             )
@@ -101,11 +107,15 @@ def create_client(
         if module_name is None:
             module_name = camel_to_snake_case(base_service_class) + "_client"
         if class_name is None:
-            class_name = base_service_class.title().replace("_", "") + "Client"
+            class_name = base_service_class.replace("_", "") + "Client"
+            if not any(ch.isupper() for ch in class_name):
+                print(
+                    f"Warning: Service class is expected to be in PascalCase: '{measurement_service_class}'."
+                )
 
     if not module_name.isidentifier():
         raise click.ClickException(f"Invalid module name: '{module_name}'.")
-    if not class_name.isalnum() or class_name[0].isnumeric():
+    if not _is_valid_class_name(class_name):
         raise click.ClickException(f"Invalid class name: '{class_name}'.")
 
     measurement_service_stub = get_measurement_service_stub(
