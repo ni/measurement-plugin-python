@@ -5,6 +5,7 @@ import os
 import re
 from typing import AbstractSet, Dict, Iterable, List, Tuple, TypeVar
 
+import click
 import grpc
 from google.protobuf import descriptor_pool
 from google.protobuf.type_pb2 import Field
@@ -49,10 +50,13 @@ def get_measurement_service_stub(
         service_location = discovery_client.resolve_service(
             V2_MEASUREMENT_SERVICE_INTERFACE, service_class
         )
-    except grpc.RpcError:
-        raise grpc.RpcError(
-            f"Could not find any registered measurement with service class: '{service_class}'."
-        )
+    except grpc.RpcError as e:
+        if e.code() == grpc.StatusCode.NOT_FOUND:
+            raise click.ClickException(
+                f"Could not find any registered measurement with service class: '{service_class}'."
+            )
+        else:
+            raise
     channel = channel_pool.get_channel(service_location.insecure_address)
     return v2_measurement_service_pb2_grpc.MeasurementServiceStub(channel)
 

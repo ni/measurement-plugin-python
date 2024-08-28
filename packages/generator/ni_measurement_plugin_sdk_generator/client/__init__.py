@@ -1,6 +1,7 @@
 """Utilizes command line args to create a Measurement Plug-In Client using template files."""
 
 import pathlib
+import sys
 from typing import Any, List, Optional
 
 import black
@@ -48,7 +49,10 @@ def _remove_suffix(string: str) -> str:
     suffixes = ["_Python", "_LabVIEW"]
     for suffix in suffixes:
         if string.endswith(suffix):
-            return string.removesuffix(suffix)
+            if sys.version_info >= (3, 9):
+                return string.removesuffix(suffix)
+            else:
+                return string[0:len(string)-len(suffix)]
     return string
 
 
@@ -100,9 +104,9 @@ def create_client(
             class_name = base_service_class.title().replace("_", "") + "Client"
 
     if not module_name.isidentifier():
-        raise click.ClickException("Invalid module name.")
+        raise click.ClickException(f"Invalid module name: '{module_name}'.")
     if not class_name.isalnum() or class_name[0].isnumeric():
-        raise click.ClickException("Invalid class name.")
+        raise click.ClickException(f"Invalid class name: '{class_name}'.")
 
     measurement_service_stub = get_measurement_service_stub(
         discovery_client, channel_pool, measurement_service_class

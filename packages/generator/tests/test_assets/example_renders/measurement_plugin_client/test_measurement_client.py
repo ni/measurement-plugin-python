@@ -1,5 +1,6 @@
 """Python Measurement Plug-In Client."""
 
+import logging
 import threading
 from pathlib import Path
 from typing import List, NamedTuple, Optional
@@ -22,6 +23,8 @@ from ni_measurement_plugin_sdk_service.measurement.client_support import (
     ParameterMetadata,
     serialize_parameters,
 )
+
+_logger = logging.getLogger(__name__)
 
 _V2_MEASUREMENT_SERVICE_INTERFACE = "ni.measurementlink.measurement.v2.MeasurementService"
 
@@ -57,7 +60,7 @@ class TestMeasurement:
         Args:
             discovery_client: An optional discovery client.
 
-            grpc_channel: An optional session management gRPC channel.
+            grpc_channel: An optional gRPC channel targeting a measurement service.
 
             grpc_channel_pool: An optional gRPC channel pool.
         """
@@ -294,8 +297,10 @@ class TestMeasurement:
         if self._stub is None:
             with self._initialization_lock:
                 if self._grpc_channel_pool is None:
+                    _logger.debug("Creating unshared GrpcChannelPool.")
                     self._grpc_channel_pool = GrpcChannelPool()
                 if self._discovery_client is None:
+                    _logger.debug("Creating unshared DiscoveryClient.")
                     self._discovery_client = DiscoveryClient(
                         grpc_channel_pool=self._grpc_channel_pool
                     )
