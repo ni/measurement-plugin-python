@@ -8,7 +8,7 @@ from ni_measurement_plugin_sdk_service.measurement.service import MeasurementSer
 
 from ni_measurement_plugin_sdk_generator.client import create_client
 from tests.utilities.discovery_service_process import DiscoveryServiceProcess
-from tests.utilities.measurements import streaming_measurement
+from tests.utilities.measurements import streaming_data_measurement
 
 
 def test___measurement_plugin_client___measure___returns_output(
@@ -17,8 +17,9 @@ def test___measurement_plugin_client___measure___returns_output(
     test_measurement_client_type = getattr(measurement_plugin_client_module, "TestMeasurement")
     output_type = getattr(measurement_plugin_client_module, "Output")
     expected_measure_output = output_type(
-        count_out=5,
-        integer_out=5,
+        name="<Name>",
+        index=9,
+        data=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
     )
     measurement_plugin_client = test_measurement_client_type()
 
@@ -36,10 +37,11 @@ def test___measurement_plugin_client___stream_measure___returns_output(
 
     measure_output = measurement_plugin_client.stream_measure()
 
-    for i, output in enumerate(measure_output, start=1):
+    for count, output in enumerate(measure_output, start=0):
         expected_measure_output = output_type(
-            count_out=i,
-            integer_out=5,
+            name="<Name>",
+            index=count,
+            data=[i for i in range(count + 1)],
         )
         assert output == expected_measure_output
 
@@ -56,7 +58,7 @@ def measurement_client_directory(
     with pytest.raises(SystemExit):
         create_client(
             [
-                "ni.tests.StreamingMeasurement_Python",
+                "ni.tests.StreamingDataMeasurement_Python",
                 "--module-name",
                 module_name,
                 "--class-name",
@@ -89,5 +91,5 @@ def measurement_service(
     discovery_service_process: DiscoveryServiceProcess,
 ) -> Generator[MeasurementService, None, None]:
     """Test fixture that creates and hosts a measurement plug-in service."""
-    with streaming_measurement.measurement_service.host_service() as service:
+    with streaming_data_measurement.measurement_service.host_service() as service:
         yield service
