@@ -7,7 +7,7 @@ import threading
 % for module in built_in_import_modules:
 ${module}
 % endfor
-from typing import List, NamedTuple, Optional
+from typing import Any, Generator, List, NamedTuple, Optional
 
 import grpc
 from google.protobuf import any_pb2
@@ -128,6 +128,20 @@ class ${class_name}:
             pool=descriptor_pool.Default(),
         )
 
+    def _get_measure_request(
+            self, parameter_values: List[Any]
+    ) -> v2_measurement_service_pb2.MeasureRequest:
+        serialized_configuration = any_pb2.Any(
+            value=serialize_parameters(
+                parameter_metadata_dict=self._configuration_metadata,
+                parameter_values=parameter_values,
+                service_name=self._service_class + ".Configurations",
+            )
+        )
+        return v2_measurement_service_pb2.MeasureRequest(
+            configuration_parameters=serialized_configuration
+        )
+
     def measure(
         self,
         ${configuration_parameters_with_type_and_default_values}
@@ -138,16 +152,7 @@ class ${class_name}:
             Measurement output.
         """
         parameter_values = [${measure_api_parameters}]
-        serialized_configuration = any_pb2.Any(
-            value=serialize_parameters(
-                parameter_metadata_dict=self._configuration_metadata, 
-                parameter_values=parameter_values, 
-                service_name=f"{self._service_class}.Configurations"
-            )
-        )
-        request = v2_measurement_service_pb2.MeasureRequest(
-            configuration_parameters=serialized_configuration
-        )
+        request = self._get_measure_request(parameter_values)
         % if output_metadata:
         result = [None] * max(self._output_metadata.keys())
         % else:
@@ -163,3 +168,29 @@ class ${class_name}:
                 result[k - 1] = v
 
         return Output._make(result)
+
+    def stream_measure(
+        self,
+        ${configuration_parameters_with_type_and_default_values}
+    ) -> Generator[${output_type}, None, None] :
+        """Executes ${display_name}.
+
+        Returns:
+            Measurement output.
+        """
+        parameter_values = [${measure_api_parameters}]
+        request = self._get_measure_request(parameter_values)
+
+        for response in self._get_stub().Measure(request):
+            % if output_metadata:
+            result = [None] * max(self._output_metadata.keys())
+            % else:
+            result = []
+            % endif
+            output_values = deserialize_parameters(
+                self._output_metadata, response.outputs.value, self._service_class + ".Outputs"
+            )
+
+            for k, v in output_values.items():
+                result[k - 1] = v
+            yield Output._make(result)

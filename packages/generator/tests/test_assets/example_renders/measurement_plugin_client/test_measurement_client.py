@@ -3,7 +3,7 @@
 import logging
 import threading
 from pathlib import Path
-from typing import List, NamedTuple, Optional
+from typing import Any, Generator, List, NamedTuple, Optional
 
 import grpc
 from google.protobuf import any_pb2
@@ -65,7 +65,7 @@ class TestMeasurement:
             grpc_channel_pool: An optional gRPC channel pool.
         """
         self._initialization_lock = threading.Lock()
-        self._service_class = "ni.tests.TestMeasurement_Python"
+        self._service_class = "ni.tests.NonStreamingMeasurement_Python"
         self._grpc_channel_pool = grpc_channel_pool
         self._discovery_client = discovery_client
         self._stub: Optional[v2_measurement_service_pb2_grpc.MeasurementServiceStub] = None
@@ -352,6 +352,20 @@ class TestMeasurement:
             pool=descriptor_pool.Default(),
         )
 
+    def _get_measure_request(
+        self, parameter_values: List[Any]
+    ) -> v2_measurement_service_pb2.MeasureRequest:
+        serialized_configuration = any_pb2.Any(
+            value=serialize_parameters(
+                parameter_metadata_dict=self._configuration_metadata,
+                parameter_values=parameter_values,
+                service_name=self._service_class + ".Configurations",
+            )
+        )
+        return v2_measurement_service_pb2.MeasureRequest(
+            configuration_parameters=serialized_configuration
+        )
+
     def measure(
         self,
         float_in: float = 0.05999999865889549,
@@ -365,7 +379,7 @@ class TestMeasurement:
         io_array_in: List[str] = ["resource1", "resource2"],
         integer_in: int = 10,
     ) -> Output:
-        """Executes the Test Measurement (Py).
+        """Executes Non-Streaming Measurement (Py).
 
         Returns:
             Measurement output.
@@ -382,16 +396,7 @@ class TestMeasurement:
             io_array_in,
             integer_in,
         ]
-        serialized_configuration = any_pb2.Any(
-            value=serialize_parameters(
-                parameter_metadata_dict=self._configuration_metadata,
-                parameter_values=parameter_values,
-                service_name=f"{self._service_class}.Configurations",
-            )
-        )
-        request = v2_measurement_service_pb2.MeasureRequest(
-            configuration_parameters=serialized_configuration
-        )
+        request = self._get_measure_request(parameter_values)
         result = [None] * max(self._output_metadata.keys())
 
         for response in self._get_stub().Measure(request):
@@ -402,3 +407,45 @@ class TestMeasurement:
             for k, v in output_values.items():
                 result[k - 1] = v
         return Output._make(result)
+
+    def stream_measure(
+        self,
+        float_in: float = 0.05999999865889549,
+        double_array_in: List[float] = [0.1, 0.2, 0.3],
+        bool_in: bool = False,
+        string_in: str = "sample string",
+        string_array_in: List[str] = ["String1", "String2"],
+        path_in: Path = r"path/test",
+        path_array_in: List[str] = ["path/test1", "path/ntest2"],
+        io_in: str = "resource",
+        pin_array_in: List[str] = ["pin1", "pin2"],
+        integer_in: int = 10,
+    ) -> Generator[Output, None, None]:
+        """Executes Non-Streaming Measurement (Py).
+
+        Returns:
+            Measurement output.
+        """
+        parameter_values = [
+            float_in,
+            double_array_in,
+            bool_in,
+            string_in,
+            string_array_in,
+            path_in,
+            path_array_in,
+            io_in,
+            pin_array_in,
+            integer_in,
+        ]
+        request = self._get_measure_request(parameter_values)
+
+        for response in self._get_stub().Measure(request):
+            result = [None] * max(self._output_metadata.keys())
+            output_values = deserialize_parameters(
+                self._output_metadata, response.outputs.value, self._service_class + ".Outputs"
+            )
+
+            for k, v in output_values.items():
+                result[k - 1] = v
+            yield Output._make(result)

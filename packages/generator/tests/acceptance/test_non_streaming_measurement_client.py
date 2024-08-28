@@ -1,11 +1,14 @@
 import importlib.util
 import pathlib
 from types import ModuleType
+from typing import Generator
 
 import pytest
 from ni_measurement_plugin_sdk_service.measurement.service import MeasurementService
 
 from ni_measurement_plugin_sdk_generator.client import create_client
+from tests.utilities.discovery_service_process import DiscoveryServiceProcess
+from tests.utilities.measurements import non_streaming_measurement
 
 
 def test___measurement_plugin_client___measure___returns_output(
@@ -22,7 +25,7 @@ def test___measurement_plugin_client___measure___returns_output(
         path_out="path/test",
         path_array_out=["path/test1", "path/ntest2"],
         io_out="resource",
-        io_array_out=["resource1", "resource2"],
+        pin_array_out=["pin1", "pin2"],
         integer_out=10,
         xy_data_out=None,
     )
@@ -31,6 +34,32 @@ def test___measurement_plugin_client___measure___returns_output(
     measure_output = measurement_plugin_client.measure()
 
     assert measure_output == expected_measure_output
+
+
+def test___measurement_plugin_client___stream_measure___returns_output(
+    measurement_plugin_client_module: ModuleType,
+) -> None:
+    test_measurement_client_type = getattr(measurement_plugin_client_module, "TestMeasurement")
+    output_type = getattr(measurement_plugin_client_module, "Output")
+    expected_measure_output = output_type(
+        float_out=0.05999999865889549,
+        double_array_out=[0.1, 0.2, 0.3],
+        bool_out=False,
+        string_out="sample string",
+        string_array_out=["String1", "String2"],
+        path_out="path/test",
+        path_array_out=["path/test1", "path/ntest2"],
+        io_out="resource",
+        pin_array_out=["pin1", "pin2"],
+        integer_out=10,
+        xy_data_out=None,
+    )
+    measurement_plugin_client = test_measurement_client_type()
+
+    measure_output = measurement_plugin_client.stream_measure()
+
+    for output in measure_output:
+        assert output == expected_measure_output
 
 
 @pytest.fixture(scope="module")
@@ -45,7 +74,7 @@ def measurement_client_directory(
     with pytest.raises(SystemExit):
         create_client(
             [
-                "ni.tests.TestMeasurement_Python",
+                "ni.tests.NonStreamingMeasurement_Python",
                 "--module-name",
                 module_name,
                 "--class-name",
@@ -71,3 +100,12 @@ def measurement_plugin_client_module(
             spec.loader.exec_module(imported_module)
             return imported_module
     pytest.fail("The module specification cannot be None.")
+
+
+@pytest.fixture(scope="module")
+def measurement_service(
+    discovery_service_process: DiscoveryServiceProcess,
+) -> Generator[MeasurementService, None, None]:
+    """Test fixture that creates and hosts a measurement plug-in service."""
+    with non_streaming_measurement.measurement_service.host_service() as service:
+        yield service

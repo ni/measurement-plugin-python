@@ -1,11 +1,14 @@
 import pathlib
 import re
 import sys
+from typing import Generator
 
 import pytest
 from ni_measurement_plugin_sdk_service.measurement.service import MeasurementService
 
 from ni_measurement_plugin_sdk_generator.client import create_client
+from tests.utilities.discovery_service_process import DiscoveryServiceProcess
+from tests.utilities.measurements import non_streaming_measurement
 
 
 def test___command_line_args___create_client___render_without_error(
@@ -21,7 +24,7 @@ def test___command_line_args___create_client___render_without_error(
     with pytest.raises(SystemExit) as exc_info:
         create_client(
             [
-                "ni.tests.TestMeasurement_Python",
+                "ni.tests.NonStreamingMeasurement_Python",
                 "--module-name",
                 module_name,
                 "--class-name",
@@ -49,7 +52,7 @@ def test___command_line_args___create_client___render_with_proper_line_ending(
     with pytest.raises(SystemExit) as exc_info:
         create_client(
             [
-                "ni.tests.TestMeasurement_Python",
+                "ni.tests.NonStreamingMeasurement_Python",
                 "--module-name",
                 module_name,
                 "--class-name",
@@ -82,3 +85,12 @@ def _assert_line_ending(file_path: pathlib.Path) -> None:
         matches = pattern.findall(content)
         for match in matches:
             assert match == b"\n"
+
+
+@pytest.fixture(scope="module")
+def measurement_service(
+    discovery_service_process: DiscoveryServiceProcess,
+) -> Generator[MeasurementService, None, None]:
+    """Test fixture that creates and hosts a measurement plug-in service."""
+    with non_streaming_measurement.measurement_service.host_service() as service:
+        yield service
