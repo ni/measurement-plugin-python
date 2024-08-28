@@ -206,7 +206,6 @@ def camel_to_snake_case(camel_case_string: str) -> str:
 
 
 def _remove_invalid_characters(input_string: str, new_char: str) -> str:
-    # Replace any spaces or special characters with an '_'.
     if not input_string.isidentifier():
         for invalid_char in INVALID_CHARS:
             input_string = input_string.replace(invalid_char, new_char)

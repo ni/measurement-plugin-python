@@ -110,13 +110,17 @@ def create_client(
             class_name = base_service_class.replace("_", "") + "Client"
             if not any(ch.isupper() for ch in class_name):
                 print(
-                    f"Warning: Service class is expected to be in PascalCase: '{measurement_service_class}'."
+                    f"Warning: Service class does not follow the recommended format: '{measurement_service_class}'."
                 )
 
     if not module_name.isidentifier():
-        raise click.ClickException(f"Invalid module name: '{module_name}'.")
+        raise click.ClickException(
+            f"The provided module name '{module_name}' is not a valid Python identifier."
+        )
     if not _is_valid_class_name(class_name):
-        raise click.ClickException(f"Invalid class name: '{class_name}'.")
+        raise click.ClickException(
+            f"The provided class name '{class_name}' is not a valid Python identifier."
+        )
 
     measurement_service_stub = get_measurement_service_stub(
         discovery_client, channel_pool, measurement_service_class
