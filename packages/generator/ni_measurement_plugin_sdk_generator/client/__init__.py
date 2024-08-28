@@ -52,7 +52,7 @@ def _remove_suffix(string: str) -> str:
             if sys.version_info >= (3, 9):
                 return string.removesuffix(suffix)
             else:
-                return string[0:len(string)-len(suffix)]
+                return string[0 : len(string) - len(suffix)]
     return string
 
 
