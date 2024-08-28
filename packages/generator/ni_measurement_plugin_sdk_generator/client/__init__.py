@@ -108,7 +108,7 @@ def create_client(
             module_name = camel_to_snake_case(base_service_class) + "_client"
         if class_name is None:
             class_name = base_service_class.replace("_", "") + "Client"
-            if not any(ch.isupper() for ch in class_name):
+            if not any(ch.isupper() for ch in base_service_class):
                 print(
                     f"Warning: Service class does not follow the recommended format: '{measurement_service_class}'."
                 )
