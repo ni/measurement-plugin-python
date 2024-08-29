@@ -91,6 +91,6 @@ def _assert_line_ending(file_path: pathlib.Path) -> None:
 def measurement_service(
     discovery_service_process: DiscoveryServiceProcess,
 ) -> Generator[MeasurementService, None, None]:
-    """Test fixture that creates and hosts a measurement plug-in service."""
+    """Test fixture that creates and hosts a Measurement Plug-In Service."""
     with non_streaming_data_measurement.measurement_service.host_service() as service:
         yield service

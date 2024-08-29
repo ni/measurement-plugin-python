@@ -67,7 +67,7 @@ def measurement_client_directory(
     tmp_path_factory: pytest.TempPathFactory,
     measurement_service: MeasurementService,
 ) -> pathlib.Path:
-    """Test fixture that creates a measurement plugin-in client."""
+    """Test fixture that creates a Measurement Plug-In Client."""
     temp_directory = tmp_path_factory.mktemp("measurement_plugin_client_files")
     module_name = "test_measurement_client"
 
@@ -91,7 +91,7 @@ def measurement_client_directory(
 def measurement_plugin_client_module(
     measurement_client_directory: pathlib.Path,
 ) -> ModuleType:
-    """Test fixture that imports the generated measurement plug-in client module."""
+    """Test fixture that imports the generated Measurement Plug-In Client module."""
     module_path = measurement_client_directory / "test_measurement_client.py"
     spec = importlib.util.spec_from_file_location("test_measurement_client.py", module_path)
     if spec is not None:
@@ -106,6 +106,6 @@ def measurement_plugin_client_module(
 def measurement_service(
     discovery_service_process: DiscoveryServiceProcess,
 ) -> Generator[MeasurementService, None, None]:
-    """Test fixture that creates and hosts a measurement plug-in service."""
+    """Test fixture that creates and hosts a Measurement Plug-In Service."""
     with non_streaming_data_measurement.measurement_service.host_service() as service:
         yield service

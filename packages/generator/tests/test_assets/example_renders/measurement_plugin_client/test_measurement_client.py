@@ -443,7 +443,7 @@ class TestMeasurement:
         for response in self._get_stub().Measure(request):
             result = [None] * max(self._output_metadata.keys())
             output_values = deserialize_parameters(
-                self._output_metadata, response.outputs.value, self._service_class + ".Outputs"
+                self._output_metadata, response.outputs.value, f"{self._service_class}.Outputs"
             )
 
             for k, v in output_values.items():

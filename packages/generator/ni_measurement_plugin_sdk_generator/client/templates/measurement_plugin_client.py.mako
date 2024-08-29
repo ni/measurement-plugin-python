@@ -188,7 +188,7 @@ class ${class_name}:
             result = []
             % endif
             output_values = deserialize_parameters(
-                self._output_metadata, response.outputs.value, self._service_class + ".Outputs"
+                self._output_metadata, response.outputs.value, f"{self._service_class}.Outputs"
             )
 
             for k, v in output_values.items():
