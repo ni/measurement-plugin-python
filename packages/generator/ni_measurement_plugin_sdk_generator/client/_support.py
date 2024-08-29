@@ -246,7 +246,7 @@ def remove_suffix(string: str) -> str:
 
 
 def is_python_identifier(input_string: str) -> bool:
-    """Validates if the given string is a valid python identifier."""
+    """Validates whether the given string is a valid Python identifier."""
     pattern = r"^[a-zA-Z_][a-zA-Z0-9_]*$"
     return re.fullmatch(pattern, input_string) is not None
 
