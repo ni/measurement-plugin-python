@@ -1,4 +1,4 @@
-"""Measurement plug-in client generator constants."""
+"""Measurement Plug-In Client generator constants."""
 
 from google.protobuf.type_pb2 import Field
 

@@ -1,13 +1,14 @@
 """Contains utility functions to test loopback measurement service. """
 
-import pathlib
+
+from pathlib import Path
 from typing import Iterable, Tuple
 
 import ni_measurement_plugin_sdk_service as nims
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types import xydata_pb2
 
 
-service_directory = pathlib.Path(__file__).resolve().parent
+service_directory = Path(__file__).resolve().parent
 measurement_service = nims.MeasurementService(
     service_config_path=service_directory / "TestMeasurement.serviceconfig",
     version="0.1.0.0",
@@ -30,7 +31,7 @@ measurement_service = nims.MeasurementService(
     "Path Array In", nims.DataType.PathArray1D, ["path/test1", "path/ntest2"]
 )
 @measurement_service.configuration("IO In", nims.DataType.IOResource, "resource")
-@measurement_service.configuration("Pin Array In", nims.DataType.PinArray1D, ["pin1", "pin2"])
+@measurement_service.configuration("IO Array In", nims.DataType.IOResourceArray1D, ["resource1", "resource2"])
 @measurement_service.configuration("Integer In", nims.DataType.Int32, 10)
 @measurement_service.output("Float out", nims.DataType.Float)
 @measurement_service.output("Double Array out", nims.DataType.DoubleArray1D)
@@ -40,7 +41,7 @@ measurement_service = nims.MeasurementService(
 @measurement_service.output("Path Out", nims.DataType.Path)
 @measurement_service.output("Path Array Out", nims.DataType.PathArray1D)
 @measurement_service.output("IO Out", nims.DataType.IOResource)
-@measurement_service.output("Pin Array Out", nims.DataType.PinArray1D)
+@measurement_service.output("IO Array Out", nims.DataType.IOResourceArray1D)
 @measurement_service.output("Integer Out", nims.DataType.Int32)
 @measurement_service.output("XY Data Out", nims.DataType.DoubleXYData)
 def measure(
@@ -49,10 +50,10 @@ def measure(
     bool_input: bool,
     string_input: str,
     string_array_input: Iterable[str],
-    path_input: str,
-    path_array_input: str,
+    path_input: Path,
+    path_array_input: Iterable[Path],
     io_input: str,
-    pin_array_input: Iterable[str],
+    io_array_input: Iterable[str],
     integer_input: int,
 ) -> Tuple[
     float,
@@ -60,8 +61,8 @@ def measure(
     bool,
     str,
     Iterable[str],
-    str,
-    Iterable[str],
+    Path,
+    Iterable[Path],
     str,
     Iterable[str],
     int,
@@ -76,7 +77,7 @@ def measure(
     path_output = path_input
     path_array_output = path_array_input
     io_output = io_input
-    pin_array_output = pin_array_input
+    io_array_output = io_array_input
     integer_output = integer_input
     xy_data_output = xydata_pb2.DoubleXYData()
 
@@ -89,7 +90,7 @@ def measure(
         path_output,
         path_array_output,
         io_output,
-        pin_array_output,
+        io_array_output,
         integer_output,
         xy_data_output,
     )

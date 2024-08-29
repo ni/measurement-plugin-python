@@ -38,15 +38,15 @@ class Output(NamedTuple):
     string_out: str
     string_array_out: List[str]
     path_out: Path
-    path_array_out: Path
+    path_array_out: List[Path]
     io_out: str
-    pin_array_out: List[str]
+    io_array_out: List[str]
     integer_out: int
     xy_data_out: DoubleXYData
 
 
 class TestMeasurement:
-    """Client for accessing the Measurement Plug-In measurement services."""
+    """Client to interact with the measurement plug-in."""
 
     def __init__(
         self,
@@ -55,7 +55,7 @@ class TestMeasurement:
         grpc_channel: Optional[grpc.Channel] = None,
         grpc_channel_pool: Optional[GrpcChannelPool] = None,
     ):
-        """Initialize the Measurement Plug-In client.
+        """Initialize the Measurement Plug-In Client.
 
         Args:
             discovery_client: An optional discovery client.
@@ -154,13 +154,16 @@ class TestMeasurement:
                 enum_type=None,
             ),
             9: ParameterMetadata(
-                display_name="Pin Array In",
+                display_name="IO Array In",
                 type=9,
                 repeated=True,
-                default_value=["pin1", "pin2"],
-                annotations={"ni/pin.instrument_type": "", "ni/type_specialization": "pin"},
+                default_value=["resource1", "resource2"],
+                annotations={
+                    "ni/ioresource.instrument_type": "",
+                    "ni/type_specialization": "ioresource",
+                },
                 message_type="",
-                field_name="Pin_Array_In",
+                field_name="IO_Array_In",
                 enum_type=None,
             ),
             10: ParameterMetadata(
@@ -259,13 +262,16 @@ class TestMeasurement:
                 enum_type=None,
             ),
             9: ParameterMetadata(
-                display_name="Pin Array Out",
+                display_name="IO Array Out",
                 type=9,
                 repeated=True,
                 default_value=None,
-                annotations={"ni/pin.instrument_type": "", "ni/type_specialization": "pin"},
+                annotations={
+                    "ni/ioresource.instrument_type": "",
+                    "ni/type_specialization": "ioresource",
+                },
                 message_type="",
-                field_name="Pin_Array_Out",
+                field_name="IO_Array_Out",
                 enum_type=None,
             ),
             10: ParameterMetadata(
@@ -315,9 +321,9 @@ class TestMeasurement:
 
     def _create_file_descriptor(self) -> None:
         metadata = self._get_stub().GetMetadata(v2_measurement_service_pb2.GetMetadataRequest())
-        input_metadata = []
+        configuration_metadata = []
         for configuration in metadata.measurement_signature.configuration_parameters:
-            input_metadata.append(
+            configuration_metadata.append(
                 ParameterMetadata.initialize(
                     display_name=configuration.name,
                     type=configuration.type,
@@ -340,7 +346,7 @@ class TestMeasurement:
                 )
             )
         create_file_descriptor(
-            input_metadata=input_metadata,
+            input_metadata=configuration_metadata,
             output_metadata=output_metadata,
             service_name=self._service_class,
             pool=descriptor_pool.Default(),
@@ -354,12 +360,12 @@ class TestMeasurement:
         string_in: str = "sample string",
         string_array_in: List[str] = ["String1", "String2"],
         path_in: Path = r"path/test",
-        path_array_in: List[str] = ["path/test1", "path/ntest2"],
+        path_array_in: List[Path] = ["path/test1", "path/ntest2"],
         io_in: str = "resource",
-        pin_array_in: List[str] = ["pin1", "pin2"],
+        io_array_in: List[str] = ["resource1", "resource2"],
         integer_in: int = 10,
     ) -> Output:
-        """Executes Test Measurement (Py).
+        """Executes the Test Measurement (Py).
 
         Returns:
             Measurement output.
@@ -373,14 +379,14 @@ class TestMeasurement:
             path_in,
             path_array_in,
             io_in,
-            pin_array_in,
+            io_array_in,
             integer_in,
         ]
         serialized_configuration = any_pb2.Any(
             value=serialize_parameters(
                 parameter_metadata_dict=self._configuration_metadata,
                 parameter_values=parameter_values,
-                service_name=self._service_class + ".Configurations",
+                service_name=f"{self._service_class}.Configurations",
             )
         )
         request = v2_measurement_service_pb2.MeasureRequest(
@@ -390,7 +396,7 @@ class TestMeasurement:
 
         for response in self._get_stub().Measure(request):
             output_values = deserialize_parameters(
-                self._output_metadata, response.outputs.value, self._service_class + ".Outputs"
+                self._output_metadata, response.outputs.value, f"{self._service_class}.Outputs"
             )
 
             for k, v in output_values.items():

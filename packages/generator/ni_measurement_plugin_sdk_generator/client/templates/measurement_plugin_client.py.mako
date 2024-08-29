@@ -44,7 +44,7 @@ class Output(NamedTuple):
 
 
 class ${class_name}:
-    """Client for accessing the Measurement Plug-In measurement services."""
+    """Client to interact with the measurement plug-in."""
      
     def __init__(
         self,
@@ -53,7 +53,7 @@ class ${class_name}:
         grpc_channel: Optional[grpc.Channel] = None,
         grpc_channel_pool: Optional[GrpcChannelPool] = None,
     ):
-        """Initialize the Measurement Plug-In client.
+        """Initialize the Measurement Plug-In Client.
 
         Args:
             discovery_client: An optional discovery client.
@@ -95,9 +95,9 @@ class ${class_name}:
 
     def _create_file_descriptor(self) -> None:
         metadata = self._get_stub().GetMetadata(v2_measurement_service_pb2.GetMetadataRequest())
-        input_metadata =  []        
+        configuration_metadata =  []        
         for configuration in metadata.measurement_signature.configuration_parameters:
-            input_metadata.append(
+            configuration_metadata.append(
                 ParameterMetadata.initialize(
                     display_name=configuration.name,
                     type=configuration.type,
@@ -122,7 +122,7 @@ class ${class_name}:
             )
 
         create_file_descriptor(
-            input_metadata=input_metadata,
+            input_metadata=configuration_metadata,
             output_metadata=output_metadata,
             service_name=self._service_class,
             pool=descriptor_pool.Default(),
@@ -132,7 +132,7 @@ class ${class_name}:
         self,
         ${configuration_parameters_with_type_and_default_values}
     ) -> ${output_type} :
-        """Executes ${display_name}.
+        """Executes the ${display_name}.
 
         Returns:
             Measurement output.
@@ -142,7 +142,7 @@ class ${class_name}:
             value=serialize_parameters(
                 parameter_metadata_dict=self._configuration_metadata, 
                 parameter_values=parameter_values, 
-                service_name=self._service_class +  ".Configurations"
+                service_name=f"{self._service_class}.Configurations"
             )
         )
         request = v2_measurement_service_pb2.MeasureRequest(
@@ -156,7 +156,7 @@ class ${class_name}:
 
         for response in self._get_stub().Measure(request):
             output_values = deserialize_parameters(
-                self._output_metadata, response.outputs.value, self._service_class + ".Outputs"
+                self._output_metadata, response.outputs.value, f"{self._service_class}.Outputs"
             )
 
             for k, v in output_values.items():

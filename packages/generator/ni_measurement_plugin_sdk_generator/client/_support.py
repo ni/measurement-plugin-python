@@ -3,6 +3,7 @@
 import keyword
 import os
 import re
+import sys
 from typing import AbstractSet, Dict, Iterable, List, Tuple, TypeVar
 
 import click
@@ -22,17 +23,37 @@ from ni_measurement_plugin_sdk_service.measurement.client_support import (
     ParameterMetadata,
 )
 
-from ni_measurement_plugin_sdk_generator.client._constants import (
-    INVALID_CHARS,
-    PATH_IMPORT,
-    PROTO_DATATYPE_TO_PYTYPE_LOOKUP,
-    V2_MEASUREMENT_SERVICE_INTERFACE,
-    XY_DATA_IMPORT,
-)
 
+_V2_MEASUREMENT_SERVICE_INTERFACE = "ni.measurementlink.measurement.v2.MeasurementService"
+
+_INVALID_CHARS = "`~!@#$%^&*()-+={}[]\|:;',<>.?/ \n"
+
+_XY_DATA_IMPORT = "from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types.xydata_pb2 import DoubleXYData"
+_PATH_IMPORT = "from pathlib import Path"
+
+_PROTO_DATATYPE_TO_PYTYPE_LOOKUP = {
+    Field.TYPE_INT32: int,
+    Field.TYPE_INT64: int,
+    Field.TYPE_UINT32: int,
+    Field.TYPE_UINT64: int,
+    Field.TYPE_SINT32: int,
+    Field.TYPE_SINT64: int,
+    Field.TYPE_FIXED32: int,
+    Field.TYPE_FIXED64: int,
+    Field.TYPE_SFIXED32: int,
+    Field.TYPE_SFIXED64: int,
+    Field.TYPE_FLOAT: float,
+    Field.TYPE_DOUBLE: float,
+    Field.TYPE_BOOL: bool,
+    Field.TYPE_STRING: str,
+    Field.TYPE_ENUM: int,
+    Field.TYPE_MESSAGE: str,
+}
 
 _T = TypeVar("_T")
-CAMEL_TO_SNAKE_CASE_REGEXES = [
+
+# List of regex patterns to convert camel case to snake case
+_CAMEL_TO_SNAKE_CASE_REGEXES = [
     re.compile("([^_\n])([A-Z][a-z]+)"),
     re.compile("([a-z])([A-Z])"),
     re.compile("([0-9])([^_0-9])"),
@@ -48,12 +69,12 @@ def get_measurement_service_stub(
     """Returns the measurement service stub of the given service class."""
     try:
         service_location = discovery_client.resolve_service(
-            V2_MEASUREMENT_SERVICE_INTERFACE, service_class
+            _V2_MEASUREMENT_SERVICE_INTERFACE, service_class
         )
     except grpc.RpcError as e:
         if e.code() == grpc.StatusCode.NOT_FOUND:
             raise click.ClickException(
-                f"Could not find any registered measurement with service class: '{service_class}'."
+                f"Could not find any registered measurement with the service class: '{service_class}'."
             )
         else:
             raise
@@ -147,15 +168,19 @@ def get_configuration_parameters_with_type_and_default_values(
         if isinstance(default_value, str):
             default_value = f'"{default_value}"'
 
-            # If it's path type, make the value as raw string literal to ignore escape characters.
-            if metadata.annotations and metadata.annotations["ni/type_specialization"] == "path":
-                default_value = f"r{default_value}"
-                parameter_type = "Path"
-                built_in_import_modules.append(PATH_IMPORT)
+        # If it's path type, make the value as raw string literal to ignore escape characters.
+        if metadata.annotations and metadata.annotations["ni/type_specialization"] == "path":
+            default_value = f"r{default_value}"
+            parameter_type = "Path"
+            built_in_import_modules.append(_PATH_IMPORT)
+
+            if metadata.repeated:
+                parameter_type = f"List[{parameter_type}]"
+                default_value = metadata.default_value
 
         configuration_parameters.append(f"{parameter_name}: {parameter_type} = {default_value}")
 
-    # Use newline and spaces to align the method parameters appropriately in the generated file.
+    # Use line separator and spaces to align the parameters appropriately in the generated file.
     configuration_parameters_with_type_and_value = f",{os.linesep}        ".join(
         configuration_parameters
     )
@@ -177,11 +202,14 @@ def get_output_parameters_with_type(
 
         if metadata.annotations and metadata.annotations["ni/type_specialization"] == "path":
             parameter_type = "Path"
-            built_in_import_modules.append(PATH_IMPORT)
+            built_in_import_modules.append(_PATH_IMPORT)
+
+            if metadata.repeated:
+                parameter_type = f"List[{parameter_type}]"
 
         if metadata.message_type and metadata.message_type == "ni.protobuf.types.DoubleXYData":
             parameter_type = "DoubleXYData"
-            custom_import_modules.append(XY_DATA_IMPORT)
+            custom_import_modules.append(_XY_DATA_IMPORT)
 
             if metadata.repeated:
                 parameter_type = f"List[{parameter_type}]"
@@ -199,31 +227,43 @@ def to_ordered_set(values: Iterable[_T]) -> AbstractSet[_T]:
 def camel_to_snake_case(camel_case_string: str) -> str:
     """Converts a camelCase string to a snake_case string."""
     partial = camel_case_string
-    for regex in CAMEL_TO_SNAKE_CASE_REGEXES:
+    for regex in _CAMEL_TO_SNAKE_CASE_REGEXES:
         partial = regex.sub(r"\1_\2", partial)
 
     return partial.lower()
 
 
-def _remove_invalid_characters(input_string: str, new_char: str) -> str:
-    if not input_string.isidentifier():
-        for invalid_char in INVALID_CHARS:
-            input_string = input_string.replace(invalid_char, new_char)
+def remove_suffix(string: str) -> str:
+    """Removes the suffix from the given string."""
+    suffixes = ["_Python", "_LabVIEW"]
+    for suffix in suffixes:
+        if string.endswith(suffix):
+            if sys.version_info >= (3, 9):
+                return string.removesuffix(suffix)
+            else:
+                return string[0 : len(string) - len(suffix)]
+    return string
 
-    if input_string[0].isdigit() or keyword.iskeyword(input_string):
-        input_string = "_" + input_string
 
-    return input_string
+def is_python_identifier(input_string: str) -> bool:
+    """Validates if the given string is a valid python identifier."""
+    pattern = r"^[a-zA-Z_][a-zA-Z0-9_]*$"
+    return re.fullmatch(pattern, input_string) is not None
 
 
 def _get_python_identifier(input_string: str) -> str:
     valid_identifier = input_string.lower()
-    valid_identifier = _remove_invalid_characters(valid_identifier, "_")
+    if not valid_identifier.isidentifier():
+        for invalid_char in _INVALID_CHARS:
+            valid_identifier = valid_identifier.replace(invalid_char, "_")
+
+    if valid_identifier[0].isdigit() or keyword.iskeyword(valid_identifier):
+        valid_identifier = f"_{valid_identifier}"
     return valid_identifier
 
 
 def _get_python_type_as_str(type: Field.Kind.ValueType, is_array: bool) -> str:
-    python_type = PROTO_DATATYPE_TO_PYTYPE_LOOKUP.get(type)
+    python_type = _PROTO_DATATYPE_TO_PYTYPE_LOOKUP.get(type)
 
     if python_type is None:
         raise TypeError(f"Invalid data type: '{type}'.")

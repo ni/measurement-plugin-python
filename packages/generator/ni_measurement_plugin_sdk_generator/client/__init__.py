@@ -21,6 +21,8 @@ from ni_measurement_plugin_sdk_generator.client._support import (
     get_measurement_service_stub,
     get_output_metadata_by_index,
     get_output_parameters_with_type,
+    is_python_identifier,
+    remove_suffix,
     to_ordered_set,
 )
 
@@ -44,22 +46,6 @@ def _create_file(
 
     with output_file.open("w") as file:
         file.write(formatted_output)
-
-
-def _remove_suffix(string: str) -> str:
-    suffixes = ["_Python", "_LabVIEW"]
-    for suffix in suffixes:
-        if string.endswith(suffix):
-            if sys.version_info >= (3, 9):
-                return string.removesuffix(suffix)
-            else:
-                return string[0 : len(string) - len(suffix)]
-    return string
-
-
-def _is_valid_class_name(class_name: str) -> bool:
-    pattern = r"^[a-zA-Z_][a-zA-Z0-9_]*$"
-    return re.fullmatch(pattern, class_name) is not None
 
 
 @click.command()
@@ -98,10 +84,10 @@ def create_client(
 
     if module_name is None or class_name is None:
         base_service_class = measurement_service_class.split(".")[-1]
-        base_service_class = _remove_suffix(base_service_class)
+        base_service_class = remove_suffix(base_service_class)
         if not base_service_class.isidentifier():
             raise click.ClickException(
-                "Unable to create client.\nPlease provide valid module name or update the measurement with valid service class."
+                "Unable to create client.\nPlease provide a valid module name or update the measurement with a valid service class."
             )
 
         if module_name is None:
@@ -110,16 +96,16 @@ def create_client(
             class_name = base_service_class.replace("_", "") + "Client"
             if not any(ch.isupper() for ch in base_service_class):
                 print(
-                    f"Warning: Service class does not follow the recommended format: '{measurement_service_class}'."
+                    f"Warning: The service class '{measurement_service_class}' does not follow the recommended format."
                 )
 
     if not module_name.isidentifier():
         raise click.ClickException(
-            f"The provided module name '{module_name}' is not a valid Python identifier."
+            f"The module name '{module_name}' is not a valid Python identifier."
         )
-    if not _is_valid_class_name(class_name):
+    if not is_python_identifier(class_name):
         raise click.ClickException(
-            f"The provided class name '{class_name}' is not a valid Python identifier."
+            f"The class name '{class_name}' is not a valid Python identifier."
         )
 
     measurement_service_stub = get_measurement_service_stub(
