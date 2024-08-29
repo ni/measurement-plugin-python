@@ -424,7 +424,7 @@ class TestMeasurement:
         """Executes Non-Streaming Data Measurement (Py).
 
         Returns:
-            Measurement output.
+            Stream of measurement output.
         """
         parameter_values = [
             float_in,

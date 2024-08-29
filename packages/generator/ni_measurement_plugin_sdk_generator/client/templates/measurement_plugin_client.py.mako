@@ -176,7 +176,7 @@ class ${class_name}:
         """Executes ${display_name}.
 
         Returns:
-            Measurement output.
+            Stream of measurement output.
         """
         parameter_values = [${measure_api_parameters}]
         request = self._get_measure_request(parameter_values)

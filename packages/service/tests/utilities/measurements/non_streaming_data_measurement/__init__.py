@@ -9,7 +9,7 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types import 
 
 service_directory = Path(__file__).resolve().parent
 measurement_service = nims.MeasurementService(
-    service_config_path=service_directory / "non_streaming_data_measurement.serviceconfig",
+    service_config_path=service_directory / "NonStreamingDataMeasurement.serviceconfig",
     version="0.1.0.0",
     ui_file_paths=[
         service_directory,
