@@ -65,7 +65,7 @@ class TestMeasurement:
             grpc_channel_pool: An optional gRPC channel pool.
         """
         self._initialization_lock = threading.Lock()
-        self._service_class = "ni.tests.NonStreamingMeasurement_Python"
+        self._service_class = "ni.tests.NonStreamingDataMeasurement_Python"
         self._grpc_channel_pool = grpc_channel_pool
         self._discovery_client = discovery_client
         self._stub: Optional[v2_measurement_service_pb2_grpc.MeasurementServiceStub] = None
@@ -379,7 +379,7 @@ class TestMeasurement:
         io_array_in: List[str] = ["resource1", "resource2"],
         integer_in: int = 10,
     ) -> Output:
-        """Executes Non-Streaming Measurement (Py).
+        """Executes Non-Streaming Data Measurement (Py).
 
         Returns:
             Measurement output.
@@ -421,7 +421,7 @@ class TestMeasurement:
         pin_array_in: List[str] = ["pin1", "pin2"],
         integer_in: int = 10,
     ) -> Generator[Output, None, None]:
-        """Executes Non-Streaming Measurement (Py).
+        """Executes Non-Streaming Data Measurement (Py).
 
         Returns:
             Measurement output.

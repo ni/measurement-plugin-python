@@ -1,4 +1,4 @@
-"""Contains utility functions to test non-streaming measurement service. """
+"""Contains utility functions to test loopback measurement service. """
 
 from pathlib import Path
 from typing import Iterable, Tuple
@@ -9,7 +9,7 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types import 
 
 service_directory = Path(__file__).resolve().parent
 measurement_service = nims.MeasurementService(
-    service_config_path=service_directory / "non_streaming_measurement.serviceconfig",
+    service_config_path=service_directory / "non_streaming_data_measurement.serviceconfig",
     version="0.1.0.0",
     ui_file_paths=[
         service_directory,
@@ -69,7 +69,7 @@ def measure(
     int,
     xydata_pb2.DoubleXYData,
 ]:
-    """Perform a non-streaming measurement with various data types."""
+    """Perform a loopback measurement with various data types."""
     float_output = float_input
     float_array_output = double_array_input
     bool_output = bool_input

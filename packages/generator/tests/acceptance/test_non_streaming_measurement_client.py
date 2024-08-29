@@ -8,7 +8,7 @@ from ni_measurement_plugin_sdk_service.measurement.service import MeasurementSer
 
 from ni_measurement_plugin_sdk_generator.client import create_client
 from tests.utilities.discovery_service_process import DiscoveryServiceProcess
-from tests.utilities.measurements import non_streaming_measurement
+from tests.utilities.measurements import non_streaming_data_measurement
 
 
 def test___measurement_plugin_client___measure___returns_output(
@@ -74,7 +74,7 @@ def measurement_client_directory(
     with pytest.raises(SystemExit):
         create_client(
             [
-                "ni.tests.NonStreamingMeasurement_Python",
+                "ni.tests.NonStreamingDataMeasurement_Python",
                 "--module-name",
                 module_name,
                 "--class-name",
@@ -107,5 +107,5 @@ def measurement_service(
     discovery_service_process: DiscoveryServiceProcess,
 ) -> Generator[MeasurementService, None, None]:
     """Test fixture that creates and hosts a measurement plug-in service."""
-    with non_streaming_measurement.measurement_service.host_service() as service:
+    with non_streaming_data_measurement.measurement_service.host_service() as service:
         yield service
