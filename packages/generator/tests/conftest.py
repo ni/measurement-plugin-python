@@ -3,8 +3,6 @@
 import pathlib
 import sys
 from typing import Generator
-import sys
-from typing import Generator
 
 import pytest
 from ni_measurement_plugin_sdk_service.discovery._support import _get_registration_json_file_path
