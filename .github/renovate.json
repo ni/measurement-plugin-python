@@ -6,5 +6,15 @@
     ":maintainLockFilesWeekly",
     ":automergePatch",
     "schedule:automergeDaily"
+  ],
+  "git-submodules": {
+    "automerge": true,
+    "enabled": true
+  },
+  "packageRules": [
+    {
+      "matchDepNames": ["third_party/ni-apis"],
+      "extends": ["schedule:weekly"]
+    }
   ]
 }
