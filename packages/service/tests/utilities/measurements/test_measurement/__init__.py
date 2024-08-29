@@ -1,6 +1,5 @@
 """Contains utility functions to test loopback measurement service. """
 
-
 from pathlib import Path
 from typing import Iterable, Tuple
 
@@ -31,7 +30,9 @@ measurement_service = nims.MeasurementService(
     "Path Array In", nims.DataType.PathArray1D, ["path/test1", "path/ntest2"]
 )
 @measurement_service.configuration("IO In", nims.DataType.IOResource, "resource")
-@measurement_service.configuration("IO Array In", nims.DataType.IOResourceArray1D, ["resource1", "resource2"])
+@measurement_service.configuration(
+    "IO Array In", nims.DataType.IOResourceArray1D, ["resource1", "resource2"]
+)
 @measurement_service.configuration("Integer In", nims.DataType.Int32, 10)
 @measurement_service.output("Float out", nims.DataType.Float)
 @measurement_service.output("Double Array out", nims.DataType.DoubleArray1D)
