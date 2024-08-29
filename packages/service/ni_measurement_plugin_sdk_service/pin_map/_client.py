@@ -85,6 +85,5 @@ class PinMapClient(object):
         request = pin_map_service_pb2.UpdatePinMapFromXmlRequest(
             pin_map_id=str(pin_map_path), pin_map_xml=xml_content
         )
-
         response = self._get_stub().UpdatePinMapFromXml(request)
         return response.pin_map_id

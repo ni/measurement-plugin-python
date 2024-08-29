@@ -34,7 +34,7 @@ def test__valid_pin_map_file__register_pin_map___sends_request_and_returns_id(
     pin_map_stub.UpdatePinMapFromXml.assert_called_once()
     request: UpdatePinMapFromXmlRequest = pin_map_stub.UpdatePinMapFromXml.call_args.args[0]
     assert request.pin_map_id == pin_map_path
-    assert request.pin_map_xml == _read_pin_map_file(pin_map_path)
+    assert request.pin_map_xml == _get_pin_map_file_contents(pin_map_path)
     assert registered_pin_map_id == pin_map_path
 
 
@@ -47,7 +47,7 @@ def test__invalid_pin_map_file_path__register_pin_map___raises_file_not_found_er
         _ = pin_map_client.update_pin_map(pin_map_path)
 
 
-def _read_pin_map_file(pin_map_path: str) -> str:
+def _get_pin_map_file_contents(pin_map_path: str) -> str:
     with open(pin_map_path, "r", encoding="utf-8-sig") as file:
         xml_content = file.read()
     return xml_content
