@@ -135,7 +135,7 @@ class ${class_name}:
             value=serialize_parameters(
                 parameter_metadata_dict=self._configuration_metadata,
                 parameter_values=parameter_values,
-                service_name=self._service_class + ".Configurations",
+                service_name=f"{self._service_class}.Configurations",
             )
         )
         return v2_measurement_service_pb2.MeasureRequest(
@@ -173,7 +173,7 @@ class ${class_name}:
         self,
         ${configuration_parameters_with_type_and_default_values}
     ) -> Generator[${output_type}, None, None] :
-        """Executes ${display_name}.
+        """Executes the ${display_name}.
 
         Returns:
             Stream of measurement output.

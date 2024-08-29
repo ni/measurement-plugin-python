@@ -359,7 +359,7 @@ class TestMeasurement:
             value=serialize_parameters(
                 parameter_metadata_dict=self._configuration_metadata,
                 parameter_values=parameter_values,
-                service_name=self._service_class + ".Configurations",
+                service_name=f"{self._service_class}.Configurations",
             )
         )
         return v2_measurement_service_pb2.MeasureRequest(
@@ -379,7 +379,7 @@ class TestMeasurement:
         io_array_in: List[str] = ["resource1", "resource2"],
         integer_in: int = 10,
     ) -> Output:
-        """Executes Non-Streaming Data Measurement (Py).
+        """Executes the Non-Streaming Data Measurement (Py).
 
         Returns:
             Measurement output.
@@ -416,12 +416,12 @@ class TestMeasurement:
         string_in: str = "sample string",
         string_array_in: List[str] = ["String1", "String2"],
         path_in: Path = r"path/test",
-        path_array_in: List[str] = ["path/test1", "path/ntest2"],
+        path_array_in: List[Path] = ["path/test1", "path/ntest2"],
         io_in: str = "resource",
-        pin_array_in: List[str] = ["pin1", "pin2"],
+        io_array_in: List[str] = ["resource1", "resource2"],
         integer_in: int = 10,
     ) -> Generator[Output, None, None]:
-        """Executes Non-Streaming Data Measurement (Py).
+        """Executes the Non-Streaming Data Measurement (Py).
 
         Returns:
             Stream of measurement output.
@@ -435,7 +435,7 @@ class TestMeasurement:
             path_in,
             path_array_in,
             io_in,
-            pin_array_in,
+            io_array_in,
             integer_in,
         ]
         request = self._get_measure_request(parameter_values)
