@@ -31,14 +31,14 @@ class PinMapClient(object):
         grpc_channel_pool: Optional[GrpcChannelPool] = None
     ) -> None:
         """Initialize the pin map client.
-        
+
         Args:
             discovery_client: An optional discovery client (recommended).
 
             grpc_channel: An optional session management gRPC channel.
 
-            grpc_channel_pool: An optional gRPC channel pool (recommended).        
-        """        
+            grpc_channel_pool: An optional gRPC channel pool (recommended).
+        """
         self._initialization_lock = threading.Lock()
         self._discovery_client = discovery_client
         self._grpc_channel_pool = grpc_channel_pool
@@ -85,6 +85,6 @@ class PinMapClient(object):
         request = pin_map_service_pb2.UpdatePinMapFromXmlRequest(
             pin_map_id=str(pin_map_path), pin_map_xml=xml_content
         )
-        
+
         response = self._get_stub().UpdatePinMapFromXml(request)
         return response.pin_map_id

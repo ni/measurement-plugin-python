@@ -40,8 +40,8 @@ def test___discovery_client___call___client_call_logged(
 
 
 def test___pin_map_client___call___client_call_logged(
-    caplog: LogCaptureFixture, 
-    pin_map_client: PinMapClient, 
+    caplog: LogCaptureFixture,
+    pin_map_client: PinMapClient,
     pin_map_directory: pathlib.Path,
 ) -> None:
     with caplog.at_level(logging.DEBUG):

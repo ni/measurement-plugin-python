@@ -13,14 +13,16 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.pinmap
     PinMap,
     UpdatePinMapFromXmlRequest,
 )
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.pinmap.v1.pin_map_service_pb2_grpc import PinMapServiceStub
+from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.pinmap.v1.pin_map_service_pb2_grpc import (
+    PinMapServiceStub,
+)
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
 from ni_measurement_plugin_sdk_service.pin_map._client import PinMapClient
 
 
 def test__valid_pin_map_file__register_pin_map___sends_request_and_returns_id(
-    pin_map_client: PinMapClient, 
+    pin_map_client: PinMapClient,
     pin_map_stub: Mock,
     pin_map_directory: pathlib.Path,
 ) -> None:
@@ -37,7 +39,7 @@ def test__valid_pin_map_file__register_pin_map___sends_request_and_returns_id(
 
 
 def test__invalid_pin_map_file_path__register_pin_map___raises_file_not_found_error(
-    pin_map_client: PinMapClient
+    pin_map_client: PinMapClient,
 ) -> None:
     pin_map_path = "InvalidPinmap.pinmap"
 
@@ -46,9 +48,9 @@ def test__invalid_pin_map_file_path__register_pin_map___raises_file_not_found_er
 
 
 def _read_pin_map_file(pin_map_path: str) -> str:
-        with open(pin_map_path, "r", encoding="utf-8-sig") as file:
-            xml_content = file.read()
-        return xml_content
+    with open(pin_map_path, "r", encoding="utf-8-sig") as file:
+        xml_content = file.read()
+    return xml_content
 
 
 @pytest.fixture
