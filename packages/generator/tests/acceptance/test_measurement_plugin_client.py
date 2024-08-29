@@ -22,7 +22,7 @@ def test___measurement_plugin_client___measure___returns_output(
         path_out="path/test",
         path_array_out=["path/test1", "path/ntest2"],
         io_out="resource",
-        io_array_out=["resource1","resource2"],
+        io_array_out=["resource1", "resource2"],
         integer_out=10,
         xy_data_out=None,
     )
