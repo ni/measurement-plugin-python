@@ -19,13 +19,13 @@ from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 from ni_measurement_plugin_sdk_service.discovery._support import (
     _get_registration_json_file_path,
 )
+from ni_measurement_plugin_sdk_service.pin_map import PinMapClient
 from ni_measurement_plugin_sdk_service.measurement.service import (
     GrpcChannelPool,
     MeasurementService,
 )
 from ni_measurement_plugin_sdk_service.session_management import SessionManagementClient
 from tests.utilities.discovery_service_process import DiscoveryServiceProcess
-from tests.utilities.pin_map_client import PinMapClient
 
 
 @pytest.fixture(scope="module")
