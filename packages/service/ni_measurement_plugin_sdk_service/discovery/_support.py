@@ -4,7 +4,7 @@ import json
 import logging
 import os
 import pathlib
-import subprocess
+import subprocess  # nosec: B404
 import sys
 import time
 import typing
@@ -79,7 +79,9 @@ def _start_service(
     if sys.platform == "win32":
         # Terminating the measurement service should not terminate the discovery service.
         kwargs["creationflags"] = subprocess.CREATE_BREAKAWAY_FROM_JOB | subprocess.DETACHED_PROCESS
-    discovery_service_subprocess = subprocess.Popen(
+    # The EXE file path comes from the registration JSON, which is installed in
+    # a trusted location (e.g. NISHAREDDIR64).
+    discovery_service_subprocess = subprocess.Popen(  # nosec: B603
         [exe_file_path],
         cwd=exe_file_path.parent,
         stdout=subprocess.DEVNULL,
