@@ -16,16 +16,16 @@ def test___measurement_plugin_client___measure___returns_output(
 ) -> None:
     test_measurement_client_type = getattr(measurement_plugin_client_module, "TestMeasurement")
     output_type = getattr(measurement_plugin_client_module, "Output")
-    expected_measure_output = output_type(
+    expected_output = output_type(
         name="<Name>",
         index=9,
         data=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
     )
     measurement_plugin_client = test_measurement_client_type()
 
-    measure_output = measurement_plugin_client.measure()
+    response = measurement_plugin_client.measure()
 
-    assert measure_output == expected_measure_output
+    assert response == expected_output
 
 
 def test___measurement_plugin_client___stream_measure___returns_output(
@@ -35,15 +35,18 @@ def test___measurement_plugin_client___stream_measure___returns_output(
     output_type = getattr(measurement_plugin_client_module, "Output")
     measurement_plugin_client = test_measurement_client_type()
 
-    measure_output = measurement_plugin_client.stream_measure()
+    response_iterator = measurement_plugin_client.stream_measure()
 
-    for count, output in enumerate(measure_output, start=0):
-        expected_measure_output = output_type(
+    responses = [response for response in response_iterator]
+    expected_output = [
+        output_type(
             name="<Name>",
-            index=count,
-            data=[i for i in range(count + 1)],
+            index=index,
+            data=[data for data in range(index + 1)],
         )
-        assert output == expected_measure_output
+        for index in range(10)
+    ]
+    assert responses == expected_output
 
 
 @pytest.fixture(scope="module")

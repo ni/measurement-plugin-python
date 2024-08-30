@@ -1,20 +1,18 @@
 {
   "services": [
     {
-      "displayName": "Test Measurement (Py)",
-      "serviceClass": "ni.tests.TestMeasurement_Python",
+      "displayName": "Streaming Data Measurement (Py)",
+      "serviceClass": "ni.tests.StreamingDataMeasurement_Python",
       "descriptionUrl": "",
       "providedInterfaces": [
-        "ni.measurementlink.measurement.v1.MeasurementService",
         "ni.measurementlink.measurement.v2.MeasurementService"
       ],
       "path": "start.bat",
       "annotations": {
-        "ni/service.description": "Measurement plug-in test service that performs a loopback measurement.",
+        "ni/service.description": "Measurement plug-in test service that generates a predictable stream of data.",
         "ni/service.collection": "NI.Tests",
         "ni/service.tags": []
       }
-
     }
   ]
 }

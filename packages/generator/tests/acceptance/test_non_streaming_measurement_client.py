@@ -16,7 +16,7 @@ def test___measurement_plugin_client___measure___returns_output(
 ) -> None:
     test_measurement_client_type = getattr(measurement_plugin_client_module, "TestMeasurement")
     output_type = getattr(measurement_plugin_client_module, "Output")
-    expected_measure_output = output_type(
+    expected_output = output_type(
         float_out=0.05999999865889549,
         double_array_out=[0.1, 0.2, 0.3],
         bool_out=False,
@@ -31,9 +31,9 @@ def test___measurement_plugin_client___measure___returns_output(
     )
     measurement_plugin_client = test_measurement_client_type()
 
-    measure_output = measurement_plugin_client.measure()
+    response = measurement_plugin_client.measure()
 
-    assert measure_output == expected_measure_output
+    assert response == expected_output
 
 
 def test___measurement_plugin_client___stream_measure___returns_output(
@@ -41,7 +41,7 @@ def test___measurement_plugin_client___stream_measure___returns_output(
 ) -> None:
     test_measurement_client_type = getattr(measurement_plugin_client_module, "TestMeasurement")
     output_type = getattr(measurement_plugin_client_module, "Output")
-    expected_measure_output = output_type(
+    expected_output = output_type(
         float_out=0.05999999865889549,
         double_array_out=[0.1, 0.2, 0.3],
         bool_out=False,
@@ -56,10 +56,11 @@ def test___measurement_plugin_client___stream_measure___returns_output(
     )
     measurement_plugin_client = test_measurement_client_type()
 
-    measure_output = measurement_plugin_client.stream_measure()
+    response_iterator = measurement_plugin_client.stream_measure()
 
-    for output in measure_output:
-        assert output == expected_measure_output
+    responses = [response for response in response_iterator]
+    assert len(responses) == 1
+    assert responses[0] == expected_output
 
 
 @pytest.fixture(scope="module")

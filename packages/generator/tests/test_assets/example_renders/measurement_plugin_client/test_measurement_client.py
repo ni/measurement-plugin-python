@@ -352,7 +352,7 @@ class TestMeasurement:
             pool=descriptor_pool.Default(),
         )
 
-    def _get_measure_request(
+    def _create_measure_request(
         self, parameter_values: List[Any]
     ) -> v2_measurement_service_pb2.MeasureRequest:
         serialized_configuration = any_pb2.Any(
@@ -365,6 +365,16 @@ class TestMeasurement:
         return v2_measurement_service_pb2.MeasureRequest(
             configuration_parameters=serialized_configuration
         )
+
+    def _deserialize_response(self, response: v2_measurement_service_pb2.MeasureResponse) -> Output:
+        result = [None] * max(self._output_metadata.keys())
+        output_values = deserialize_parameters(
+            self._output_metadata, response.outputs.value, f"{self._service_class}.Outputs"
+        )
+
+        for k, v in output_values.items():
+            result[k - 1] = v
+        return Output._make(result)
 
     def measure(
         self,
@@ -396,17 +406,11 @@ class TestMeasurement:
             io_array_in,
             integer_in,
         ]
-        request = self._get_measure_request(parameter_values)
-        result = [None] * max(self._output_metadata.keys())
+        request = self._create_measure_request(parameter_values)
 
         for response in self._get_stub().Measure(request):
-            output_values = deserialize_parameters(
-                self._output_metadata, response.outputs.value, f"{self._service_class}.Outputs"
-            )
-
-            for k, v in output_values.items():
-                result[k - 1] = v
-        return Output._make(result)
+            result = self._deserialize_response(response)
+        return result
 
     def stream_measure(
         self,
@@ -438,14 +442,7 @@ class TestMeasurement:
             io_array_in,
             integer_in,
         ]
-        request = self._get_measure_request(parameter_values)
+        request = self._create_measure_request(parameter_values)
 
         for response in self._get_stub().Measure(request):
-            result = [None] * max(self._output_metadata.keys())
-            output_values = deserialize_parameters(
-                self._output_metadata, response.outputs.value, f"{self._service_class}.Outputs"
-            )
-
-            for k, v in output_values.items():
-                result[k - 1] = v
-            yield Output._make(result)
+            yield self._deserialize_response(response)

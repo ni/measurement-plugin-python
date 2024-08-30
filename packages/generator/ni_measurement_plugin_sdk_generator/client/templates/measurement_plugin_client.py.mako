@@ -128,8 +128,8 @@ class ${class_name}:
             pool=descriptor_pool.Default(),
         )
 
-    def _get_measure_request(
-            self, parameter_values: List[Any]
+    def _create_measure_request(
+        self, parameter_values: List[Any]
     ) -> v2_measurement_service_pb2.MeasureRequest:
         serialized_configuration = any_pb2.Any(
             value=serialize_parameters(
@@ -142,6 +142,22 @@ class ${class_name}:
             configuration_parameters=serialized_configuration
         )
 
+    def _deserialize_response(
+        self, response: v2_measurement_service_pb2.MeasureResponse
+    ) -> Output:
+        % if output_metadata:
+        result = [None] * max(self._output_metadata.keys())
+        % else:
+        result = []
+        % endif
+        output_values = deserialize_parameters(
+            self._output_metadata, response.outputs.value, f"{self._service_class}.Outputs"
+        )
+
+        for k, v in output_values.items():
+            result[k - 1] = v
+        return Output._make(result)
+
     def measure(
         self,
         ${configuration_parameters_with_type_and_default_values}
@@ -152,22 +168,11 @@ class ${class_name}:
             Measurement output.
         """
         parameter_values = [${measure_api_parameters}]
-        request = self._get_measure_request(parameter_values)
-        % if output_metadata:
-        result = [None] * max(self._output_metadata.keys())
-        % else:
-        result = []
-        % endif
+        request = self._create_measure_request(parameter_values)
 
         for response in self._get_stub().Measure(request):
-            output_values = deserialize_parameters(
-                self._output_metadata, response.outputs.value, f"{self._service_class}.Outputs"
-            )
-
-            for k, v in output_values.items():
-                result[k - 1] = v
-
-        return Output._make(result)
+            result = self._deserialize_response(response)
+        return result
 
     def stream_measure(
         self,
@@ -179,18 +184,7 @@ class ${class_name}:
             Stream of measurement output.
         """
         parameter_values = [${measure_api_parameters}]
-        request = self._get_measure_request(parameter_values)
+        request = self._create_measure_request(parameter_values)
 
         for response in self._get_stub().Measure(request):
-            % if output_metadata:
-            result = [None] * max(self._output_metadata.keys())
-            % else:
-            result = []
-            % endif
-            output_values = deserialize_parameters(
-                self._output_metadata, response.outputs.value, f"{self._service_class}.Outputs"
-            )
-
-            for k, v in output_values.items():
-                result[k - 1] = v
-            yield Output._make(result)
+            yield self._deserialize_response(response)
