@@ -21,7 +21,7 @@ from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
 from ni_measurement_plugin_sdk_service.pin_map._client import PinMapClient
 
 
-def test__valid_pin_map_file__register_pin_map___sends_request_and_returns_id(
+def test___valid_pin_map_file___register_pin_map___returns_pin_map_id(
     pin_map_client: PinMapClient,
     pin_map_stub: Mock,
     pin_map_directory: pathlib.Path,
@@ -38,7 +38,7 @@ def test__valid_pin_map_file__register_pin_map___sends_request_and_returns_id(
     assert registered_pin_map_id == pin_map_path
 
 
-def test__invalid_pin_map_file_path__register_pin_map___raises_file_not_found_error(
+def test___invalid_pin_map_file_path___register_pin_map___raises_file_not_found_error(
     pin_map_client: PinMapClient,
 ) -> None:
     pin_map_path = "InvalidPinmap.pinmap"
