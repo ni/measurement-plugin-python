@@ -44,3 +44,5 @@ jobs:
         run:  poetry run mypy
       - name: Mypy static analysis (ni-measurement-plugin-sdk-generator, Windows)
         run:  poetry run mypy --platform win32
+      - name: Bandit security checks (ni-measurement-plugin-sdk-generator)
+        run:  poetry run bandit -c pyproject.toml -r ni_measurement_plugin_sdk_generator tests/test_asserts/example_renders
