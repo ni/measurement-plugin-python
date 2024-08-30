@@ -41,7 +41,7 @@ def test___valid_pin_map_file___register_pin_map___returns_pin_map_id(
 def test___invalid_pin_map_file_path___register_pin_map___raises_file_not_found_error(
     pin_map_client: PinMapClient,
 ) -> None:
-    pin_map_path = "InvalidPinmap.pinmap"
+    pin_map_path = "InvalidPinMap.pinmap"
 
     with pytest.raises(FileNotFoundError):
         _ = pin_map_client.update_pin_map(pin_map_path)

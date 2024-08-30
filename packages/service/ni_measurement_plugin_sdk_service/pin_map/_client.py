@@ -35,7 +35,7 @@ class PinMapClient(object):
         Args:
             discovery_client: An optional discovery client (recommended).
 
-            grpc_channel: An optional session management gRPC channel.
+            grpc_channel: An optional pin map gRPC channel.
 
             grpc_channel_pool: An optional gRPC channel pool (recommended).
         """
