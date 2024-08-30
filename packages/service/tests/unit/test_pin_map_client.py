@@ -26,7 +26,7 @@ def test___valid_pin_map_file___register_pin_map___returns_pin_map_id(
     pin_map_stub: Mock,
     pin_map_directory: pathlib.Path,
 ) -> None:
-    pin_map_path = str(pin_map_directory / "1Smu1ChannelGroup1Pin1Site.pinmap")
+    pin_map_path = "D:\\measurement-plugin-python\\examples\\nidcpower_source_dc_voltage\\NIDCPowerSourceDCVoltage.pinmap"
     pin_map_stub.UpdatePinMapFromXml.return_value = PinMap(pin_map_id=pin_map_path)
 
     registered_pin_map_id = pin_map_client.update_pin_map(pin_map_path)
@@ -48,9 +48,7 @@ def test___invalid_pin_map_file_path___register_pin_map___raises_file_not_found_
 
 
 def _get_pin_map_file_contents(pin_map_path: str) -> str:
-    with open(pin_map_path, "r", encoding="utf-8-sig") as file:
-        xml_content = file.read()
-    return xml_content
+    return pathlib.Path(pin_map_path).read_text(encoding="utf-8-sig")
 
 
 @pytest.fixture
