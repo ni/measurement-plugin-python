@@ -1,5 +1,6 @@
 """Test fixtures for unit tests."""
 
+import pathlib
 from typing import Generator, cast
 from unittest.mock import Mock
 
@@ -94,3 +95,9 @@ def session_management_client(
 def single_session_reservation(mocker: MockerFixture) -> Mock:
     """Test fixture that creates a mock SingleSessionReservation."""
     return mocker.create_autospec(SingleSessionReservation)
+
+
+@pytest.fixture
+def pin_map_directory(test_assets_directory: pathlib.Path) -> pathlib.Path:
+    """Test fixture that returns the pin map directory."""
+    return test_assets_directory / "unit" / "pin_map"

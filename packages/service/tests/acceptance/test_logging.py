@@ -1,4 +1,5 @@
 import logging
+import pathlib
 import re
 from typing import Generator
 
@@ -12,6 +13,7 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measur
 )
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 from ni_measurement_plugin_sdk_service.measurement.service import MeasurementService
+from ni_measurement_plugin_sdk_service.pin_map import PinMapClient
 from ni_measurement_plugin_sdk_service.session_management import SessionManagementClient
 from tests.acceptance.test_streaming_data_measurement import (
     _get_configuration_parameters as get_streaming_data_configuration_parameters,
@@ -32,6 +34,21 @@ def test___discovery_client___call___client_call_logged(
         )
 
     method_name = "/ni.measurementlink.discovery.v1.DiscoveryService/ResolveService"
+    debug_messages = [r.message for r in caplog.records if r.levelno == logging.DEBUG]
+    assert f"gRPC client call starting: {method_name}" in debug_messages
+    assert f"gRPC client call complete: {method_name}" in debug_messages
+
+
+def test___pin_map_client___call___client_call_logged(
+    caplog: LogCaptureFixture,
+    pin_map_client: PinMapClient,
+    pin_map_directory: pathlib.Path,
+) -> None:
+    with caplog.at_level(logging.DEBUG):
+        pin_map_path = pin_map_directory / "1Smu1ChannelGroup2Pin2Site.pinmap"
+        _ = pin_map_client.update_pin_map(pin_map_path)
+
+    method_name = "/ni.measurementlink.pinmap.v1.PinMapService/UpdatePinMapFromXml"
     debug_messages = [r.message for r in caplog.records if r.levelno == logging.DEBUG]
     assert f"gRPC client call starting: {method_name}" in debug_messages
     assert f"gRPC client call complete: {method_name}" in debug_messages

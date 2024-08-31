@@ -1,4 +1,4 @@
-"""Client for accessing the measurement pin map service."""
+"""Client for accessing the NI Pin Map Service."""
 
 import logging
 import pathlib
@@ -21,7 +21,7 @@ GRPC_SERVICE_CLASS = "ni.measurementlink.pinmap.v1.PinMapService"
 
 
 class PinMapClient(object):
-    """Client for accessing the measurement pin map service."""
+    """Client for accessing the NI Pin Map Service."""
 
     def __init__(
         self,
@@ -30,7 +30,15 @@ class PinMapClient(object):
         grpc_channel: Optional[grpc.Channel] = None,
         grpc_channel_pool: Optional[GrpcChannelPool] = None
     ) -> None:
-        """Initialize the pin map client."""
+        """Initialize the pin map client.
+
+        Args:
+            discovery_client: An optional discovery client (recommended).
+
+            grpc_channel: An optional pin map gRPC channel.
+
+            grpc_channel_pool: An optional gRPC channel pool (recommended).
+        """
         self._initialization_lock = threading.Lock()
         self._discovery_client = discovery_client
         self._grpc_channel_pool = grpc_channel_pool
@@ -74,7 +82,7 @@ class PinMapClient(object):
         # By convention, the pin map id is the .pinmap file path.
         request = pin_map_service_pb2.UpdatePinMapFromXmlRequest(
             pin_map_id=str(pin_map_path),
-            pin_map_xml=pathlib.Path(pin_map_path).read_text(encoding="utf-8"),
+            pin_map_xml=pathlib.Path(pin_map_path).read_text(encoding="utf-8-sig"),
         )
         response = self._get_stub().UpdatePinMapFromXml(request)
         return response.pin_map_id

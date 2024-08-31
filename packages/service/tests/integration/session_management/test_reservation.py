@@ -3,6 +3,7 @@ from __future__ import annotations
 import pathlib
 from contextlib import ExitStack
 
+from ni_measurement_plugin_sdk_service.pin_map import PinMapClient
 from ni_measurement_plugin_sdk_service.session_management import (
     INSTRUMENT_TYPE_NI_DCPOWER,
     INSTRUMENT_TYPE_NI_RELAY_DRIVER,
@@ -15,7 +16,6 @@ from tests.utilities.connection_subset import (
     get_connection_subset,
     get_connection_subset_with_multiplexer,
 )
-from tests.utilities.pin_map_client import PinMapClient
 
 _PIN_MAP_A = "PinMapA_3Instruments_3DutPins_2SystemPins_2Sites.pinmap"
 _PIN_MAP_A_PIN_NAMES = ["A", "B", "C", "S1", "S2"]
