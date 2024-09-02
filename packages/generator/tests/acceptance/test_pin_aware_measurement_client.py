@@ -29,9 +29,9 @@ def test___measurement_plugin_client___measure_with_pin_map_registration___retur
     measurement_plugin_client = test_measurement_client_type()
 
     measurement_plugin_client.register_pin_map(pin_map_path)
-    outputs = measurement_plugin_client.measure()
+    output = measurement_plugin_client.measure()
 
-    assert outputs == expected_output
+    assert output == expected_output
 
 
 def test___measurement_plugin_client___measure_without_pin_map_registration___raises_no_sessions_error(
