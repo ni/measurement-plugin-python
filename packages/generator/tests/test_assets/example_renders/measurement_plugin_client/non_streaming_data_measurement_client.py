@@ -415,8 +415,8 @@ class NonStreamingDataMeasurementClient:
 
         try:
             for response in self._measure_response:
-                result = self._deserialize_response(response)
-            return result
+                result = response
+            return self._deserialize_response(result)
         except grpc.RpcError as e:
             if e.code() == grpc.StatusCode.CANCELLED:
                 print("Measure call has been cancelled.")
