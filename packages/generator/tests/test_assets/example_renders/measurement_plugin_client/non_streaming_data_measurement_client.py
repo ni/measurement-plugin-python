@@ -69,6 +69,7 @@ class NonStreamingDataMeasurementClient:
         self._grpc_channel_pool = grpc_channel_pool
         self._discovery_client = discovery_client
         self._stub: Optional[v2_measurement_service_pb2_grpc.MeasurementServiceStub] = None
+        self._measure_response: Optional[v2_measurement_service_pb2.MeasureResponse] = None
         self._configuration_metadata = {
             1: ParameterMetadata(
                 display_name="Float In",
@@ -410,10 +411,17 @@ class NonStreamingDataMeasurementClient:
             integer_in,
         ]
         request = self._create_measure_request(parameter_values)
+        self._measure_response = self._get_stub().Measure(request)
 
-        for response in self._get_stub().Measure(request):
-            result = self._deserialize_response(response)
-        return result
+        try:
+            for response in self._measure_response:
+                result = self._deserialize_response(response)
+            return result
+        except grpc.RpcError as e:
+            if e.code() == grpc.StatusCode.CANCELLED:
+                print("Measure call has been cancelled.")
+            else:
+                raise
 
     def stream_measure(
         self,
@@ -446,6 +454,17 @@ class NonStreamingDataMeasurementClient:
             integer_in,
         ]
         request = self._create_measure_request(parameter_values)
+        self._measure_response = self._get_stub().Measure(request)
 
-        for response in self._get_stub().Measure(request):
-            yield self._deserialize_response(response)
+        try:
+            for response in self._measure_response:
+                yield self._deserialize_response(response)
+        except grpc.RpcError as e:
+            if e.code() == grpc.StatusCode.CANCELLED:
+                print("Measure call has been cancelled.")
+            else:
+                raise
+
+    def cancel(self) -> None:
+        if self._measure_response and self._measure_response.is_active():
+            self._measure_response.cancel()

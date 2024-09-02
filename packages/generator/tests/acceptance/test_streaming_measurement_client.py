@@ -1,5 +1,7 @@
 import importlib.util
 import pathlib
+import threading
+import time
 from types import ModuleType
 from typing import Generator
 
@@ -47,6 +49,23 @@ def test___measurement_plugin_client___stream_measure___returns_output(
         for index in range(10)
     ]
     assert responses == expected_output
+
+
+def test___measurement_plugin_client___cancel___cancels_grpc_call(
+    measurement_plugin_client_module: ModuleType,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    test_measurement_client_type = getattr(measurement_plugin_client_module, "TestMeasurement")
+    measurement_plugin_client = test_measurement_client_type()
+    measure_thread = threading.Thread(target=measurement_plugin_client.measure)
+    measure_thread.start()
+    time.sleep(2)
+
+    measurement_plugin_client.cancel()
+
+    measure_thread.join()
+    captured = capsys.readouterr()
+    assert "Measure call has been cancelled." in captured.out
 
 
 @pytest.fixture(scope="module")
