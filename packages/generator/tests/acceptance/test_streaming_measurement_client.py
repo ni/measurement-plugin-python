@@ -51,7 +51,7 @@ def test___measurement_plugin_client___stream_measure___returns_output(
     assert responses == expected_output
 
 
-def test___measurement_plugin_client___cancel___cancels_grpc_call(
+def test___measurement_plugin_client___cancel___cancels_measure_call(
     measurement_plugin_client_module: ModuleType,
     capsys: pytest.CaptureFixture[str],
 ) -> None:
@@ -59,6 +59,27 @@ def test___measurement_plugin_client___cancel___cancels_grpc_call(
     measurement_plugin_client = test_measurement_client_type()
     measure_thread = threading.Thread(target=measurement_plugin_client.measure)
     measure_thread.start()
+    # Calls Cancel API after 2 seconds.
+    time.sleep(2)
+
+    measurement_plugin_client.cancel()
+
+    measure_thread.join()
+    captured = capsys.readouterr()
+    assert "Measure call has been cancelled." in captured.out
+
+
+def test___measurement_plugin_client___cancel___cancels_stream_measure_call(
+    measurement_plugin_client_module: ModuleType,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    test_measurement_client_type = getattr(measurement_plugin_client_module, "TestMeasurement")
+    measurement_plugin_client = test_measurement_client_type()
+    measure_thread = threading.Thread(
+        target=lambda: list(map(lambda i: print(i), measurement_plugin_client.stream_measure()))
+    )
+    measure_thread.start()
+    # Calls Cancel API after 2 seconds.
     time.sleep(2)
 
     measurement_plugin_client.cancel()
