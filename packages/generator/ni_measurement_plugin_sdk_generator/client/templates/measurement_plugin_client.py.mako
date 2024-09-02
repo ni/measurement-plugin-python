@@ -145,11 +145,10 @@ class ${class_name}:
     def _deserialize_response(
         self, response: v2_measurement_service_pb2.MeasureResponse
     ) -> Output:
-        % if output_metadata:
-        result = [None] * max(self._output_metadata.keys())
-        % else:
-        result = []
-        % endif
+        if self._output_metadata:
+            result = [None] * max(self._output_metadata.keys())
+        else:
+            result = []
         output_values = deserialize_parameters(
             self._output_metadata, response.outputs.value, f"{self._service_class}.Outputs"
         )
