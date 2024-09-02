@@ -16,6 +16,9 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measur
     measurement_service_pb2 as v2_measurement_service_pb2,
     measurement_service_pb2_grpc as v2_measurement_service_pb2_grpc,
 )
+from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.pin_map_context_pb2 import (
+    PinMapContext,
+)
 % for module in custom_import_modules:
 ${module}
 % endfor
@@ -27,9 +30,12 @@ from ni_measurement_plugin_sdk_service.measurement.client_support import (
     ParameterMetadata,
     serialize_parameters,
 )
+from ni_measurement_plugin_sdk_service.pin_map import PinMapClient
 
 _logger = logging.getLogger(__name__)
 
+_pin_map_path = ""
+_SITES = [0]
 _V2_MEASUREMENT_SERVICE_INTERFACE = "ni.measurementlink.measurement.v2.MeasurementService"
 
 <% output_type = "None" %>\
@@ -139,7 +145,8 @@ class ${class_name}:
             )
         )
         return v2_measurement_service_pb2.MeasureRequest(
-            configuration_parameters=serialized_configuration
+            configuration_parameters=serialized_configuration,
+            pin_map_context=PinMapContext(pin_map_id=_pin_map_path, sites=_SITES),
         )
 
     def _deserialize_response(
@@ -187,3 +194,18 @@ class ${class_name}:
 
         for response in self._get_stub().Measure(request):
             yield self._deserialize_response(response)
+
+    def register_pin_map(self, pin_map_path: str) -> str:
+        """Registers the pin map with the pin map service.
+        
+        Args:
+            pin_map_path: Absolute path of the pin map file.
+
+        Returns:
+            Registered pin map id.
+        """
+        pin_map_client = PinMapClient()
+        global _pin_map_path
+        _pin_map_path = pin_map_path
+
+        return pin_map_client.update_pin_map(_pin_map_path)
