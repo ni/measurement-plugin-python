@@ -59,7 +59,7 @@ def test___measurement_plugin_client___cancel___cancels_measure_call(
     measurement_plugin_client = test_measurement_client_type()
     measure_thread = threading.Thread(target=measurement_plugin_client.measure)
     measure_thread.start()
-    # Calls Cancel API after 2 seconds.
+    # Wait for 2 seconds to call Cancel API.
     time.sleep(2)
 
     measurement_plugin_client.cancel()
@@ -79,7 +79,7 @@ def test___measurement_plugin_client___cancel___cancels_stream_measure_call(
         target=lambda: list(map(lambda i: print(i), measurement_plugin_client.stream_measure()))
     )
     measure_thread.start()
-    # Calls Cancel API after 2 seconds.
+    # Wait for 2 seconds to call Cancel API.
     time.sleep(2)
 
     measurement_plugin_client.cancel()
