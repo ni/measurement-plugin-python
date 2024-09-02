@@ -6,10 +6,8 @@ from typing import Generator
 
 import pytest
 from ni_measurement_plugin_sdk_service.discovery._support import _get_registration_json_file_path
-from ni_measurement_plugin_sdk_service.measurement.service import MeasurementService
 
 from tests.utilities.discovery_service_process import DiscoveryServiceProcess
-from tests.utilities.measurements import test_measurement
 
 
 @pytest.fixture
@@ -33,12 +31,3 @@ def discovery_service_process() -> Generator[DiscoveryServiceProcess, None, None
 
     with DiscoveryServiceProcess() as proc:
         yield proc
-
-
-@pytest.fixture(scope="session")
-def measurement_service(
-    discovery_service_process: DiscoveryServiceProcess,
-) -> Generator[MeasurementService, None, None]:
-    """Test fixture that creates and hosts a measurement plug-in service."""
-    with test_measurement.measurement_service.host_service() as service:
-        yield service

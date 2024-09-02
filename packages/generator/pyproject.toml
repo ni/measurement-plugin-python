@@ -35,7 +35,7 @@ mypy-protobuf = ">=3.4"
 types-protobuf = "^4.21"
 grpc-stubs = "^1.53"
 # Uncomment to use prerelease dependencies.
-ni-measurement-plugin-sdk-service = {path = "../../packages/service", develop = true}
+ni-measurement-plugin-sdk-service = {path = "../../packages/service"}
 
 [tool.poetry.scripts]
 ni-measurement-plugin-generator = "ni_measurement_plugin_sdk_generator.plugin:create_measurement"

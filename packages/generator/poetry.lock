@@ -543,7 +543,7 @@ description = "Measurement Plugin Support for Python"
 optional = false
 python-versions = "^3.8"
 files = []
-develop = true
+develop = false
 
 [package.dependencies]
 deprecation = ">=2.1"
@@ -907,4 +907,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "3376bbd73265468141c24d819b9dcb231372b9b0770c9312dfafb85cba82cb24"
+content-hash = "f276841e13db46d813e139a356e2e3d6f1a71f4ec95de0c04e31b21125e2b4fa"
