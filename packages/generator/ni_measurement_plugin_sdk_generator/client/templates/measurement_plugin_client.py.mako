@@ -157,6 +157,33 @@ class ${class_name}:
             result[k - 1] = v
         return Output._make(result)
 
+    def _validate_parameters(self, parameter_values: List[Any]) -> List[Any]:
+        result = []
+
+        for parameter_value in parameter_values:
+            if isinstance(parameter_value, list):
+                # Convert each Path in the list to a string.
+                converted_list = []
+                for value in parameter_value:
+                    % if "from pathlib import Path" in built_in_import_modules:
+                    if isinstance(value, (Path, str)):
+                    % else:
+                    if isinstance(value, str):
+                    % endif
+                        value = str(value).encode('unicode-escape')  
+                    converted_list.append(value)
+                result.append(converted_list)
+            % if "from pathlib import Path" in built_in_import_modules:
+            elif isinstance(parameter_value, (Path, str)):
+            % else:
+            elif isinstance(parameter_value, str):
+            % endif
+                parameter_value = str(parameter_value).encode('unicode-escape')
+                result.append(parameter_value)
+            else:
+                result.append(parameter_value)
+        return result
+
     def measure(
         self,
         ${configuration_parameters_with_type_and_default_values}
@@ -166,7 +193,7 @@ class ${class_name}:
         Returns:
             Measurement output.
         """
-        parameter_values = [${measure_api_parameters}]
+        parameter_values = self._validate_parameters([${measure_api_parameters}])
         request = self._create_measure_request(parameter_values)
 
         for response in self._get_stub().Measure(request):
@@ -182,7 +209,7 @@ class ${class_name}:
         Returns:
             Stream of measurement output.
         """
-        parameter_values = [${measure_api_parameters}]
+        parameter_values = self._validate_parameters([${measure_api_parameters}])
         request = self._create_measure_request(parameter_values)
 
         for response in self._get_stub().Measure(request):

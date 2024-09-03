@@ -379,6 +379,26 @@ class NonStreamingDataMeasurementClient:
             result[k - 1] = v
         return Output._make(result)
 
+    def _validate_parameters(self, parameter_values: List[Any]) -> List[Any]:
+        result = []
+
+        for parameter_value in parameter_values:
+            if isinstance(parameter_value, list):
+                # Convert each Path in the list to a string.
+
+                converted_list = []
+                for value in parameter_value:
+                    if isinstance(value, (Path, str)):
+                        value = str(value).encode("unicode-escape")
+                    converted_list.append(value)
+                result.append(converted_list)
+            elif isinstance(parameter_value, (Path, str)):
+                parameter_value = str(parameter_value).encode("unicode-escape")
+                result.append(parameter_value)
+            else:
+                result.append(parameter_value)
+        return result
+
     def measure(
         self,
         float_in: float = 0.05999999865889549,
@@ -386,7 +406,7 @@ class NonStreamingDataMeasurementClient:
         bool_in: bool = False,
         string_in: str = "sample string",
         string_array_in: List[str] = ["String1", "String2"],
-        path_in: Path = r"path/test",
+        path_in: Path = "path/test",
         path_array_in: List[Path] = ["path/test1", "path/ntest2"],
         io_in: str = "resource",
         io_array_in: List[str] = ["resource1", "resource2"],
@@ -397,18 +417,20 @@ class NonStreamingDataMeasurementClient:
         Returns:
             Measurement output.
         """
-        parameter_values = [
-            float_in,
-            double_array_in,
-            bool_in,
-            string_in,
-            string_array_in,
-            path_in,
-            path_array_in,
-            io_in,
-            io_array_in,
-            integer_in,
-        ]
+        parameter_values = self._validate_parameters(
+            [
+                float_in,
+                double_array_in,
+                bool_in,
+                string_in,
+                string_array_in,
+                path_in,
+                path_array_in,
+                io_in,
+                io_array_in,
+                integer_in,
+            ]
+        )
         request = self._create_measure_request(parameter_values)
 
         for response in self._get_stub().Measure(request):
@@ -422,7 +444,7 @@ class NonStreamingDataMeasurementClient:
         bool_in: bool = False,
         string_in: str = "sample string",
         string_array_in: List[str] = ["String1", "String2"],
-        path_in: Path = r"path/test",
+        path_in: Path = "path/test",
         path_array_in: List[Path] = ["path/test1", "path/ntest2"],
         io_in: str = "resource",
         io_array_in: List[str] = ["resource1", "resource2"],
@@ -433,18 +455,20 @@ class NonStreamingDataMeasurementClient:
         Returns:
             Stream of measurement output.
         """
-        parameter_values = [
-            float_in,
-            double_array_in,
-            bool_in,
-            string_in,
-            string_array_in,
-            path_in,
-            path_array_in,
-            io_in,
-            io_array_in,
-            integer_in,
-        ]
+        parameter_values = self._validate_parameters(
+            [
+                float_in,
+                double_array_in,
+                bool_in,
+                string_in,
+                string_array_in,
+                path_in,
+                path_array_in,
+                io_in,
+                io_array_in,
+                integer_in,
+            ]
+        )
         request = self._create_measure_request(parameter_values)
 
         for response in self._get_stub().Measure(request):
