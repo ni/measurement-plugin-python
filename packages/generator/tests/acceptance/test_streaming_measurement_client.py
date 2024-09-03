@@ -51,7 +51,7 @@ def test___measurement_plugin_client___stream_measure___returns_output(
     assert responses == expected_output
 
 
-def test___measurement_plugin_client___cancel___cancels_measure_call(
+def test___non_streaming_measurement_execution___cancel___cancels_measure_call(
     measurement_plugin_client_module: ModuleType,
     capsys: pytest.CaptureFixture[str],
 ) -> None:
@@ -69,7 +69,7 @@ def test___measurement_plugin_client___cancel___cancels_measure_call(
     assert "Measure call has been cancelled." in captured.out
 
 
-def test___measurement_plugin_client___cancel___cancels_stream_measure_call(
+def test___streaming_measurement_execution___cancel___cancels_stream_measure_call(
     measurement_plugin_client_module: ModuleType,
     capsys: pytest.CaptureFixture[str],
 ) -> None:

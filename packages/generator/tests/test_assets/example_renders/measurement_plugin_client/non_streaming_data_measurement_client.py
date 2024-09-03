@@ -398,7 +398,7 @@ class NonStreamingDataMeasurementClient:
         Returns:
             Measurement output.
         """
-        parameter_values = [
+        stream_measure_response = self.stream_measure(
             float_in,
             double_array_in,
             bool_in,
@@ -409,19 +409,10 @@ class NonStreamingDataMeasurementClient:
             io_in,
             io_array_in,
             integer_in,
-        ]
-        request = self._create_measure_request(parameter_values)
-        self._measure_response = self._get_stub().Measure(request)
-
-        try:
-            for response in self._measure_response:
-                result = response
-            return self._deserialize_response(result)
-        except grpc.RpcError as e:
-            if e.code() == grpc.StatusCode.CANCELLED:
-                print("Measure call has been cancelled.")
-            else:
-                raise
+        )
+        for response in stream_measure_response:
+            result = response
+        return result
 
     def stream_measure(
         self,
