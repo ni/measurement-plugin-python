@@ -205,6 +205,6 @@ class ${class_name}:
             Registered pin map id.
         """
         pin_map_client = PinMapClient()
-        self._pin_map_path = pin_map_path
+        self._pin_map_path = pin_map_client.update_pin_map(pin_map_path)
 
-        return pin_map_client.update_pin_map(self._pin_map_path)
+        return self._pin_map_path
