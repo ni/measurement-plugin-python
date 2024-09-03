@@ -172,7 +172,7 @@ class ${class_name}:
         )
         for response in stream_measure_response:
             result = response
-        return result          
+        return result
 
     def stream_measure(
         self,
