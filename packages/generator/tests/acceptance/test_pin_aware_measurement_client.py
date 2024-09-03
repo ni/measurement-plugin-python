@@ -44,7 +44,7 @@ def test___measurement_plugin_client___measure_without_pin_map_registration___ra
         _ = measurement_plugin_client.measure()
 
     assert exc_info.value.code() == grpc.StatusCode.UNKNOWN
-    assert "No sessions reserved." in (exc_info.value.details() or "")
+    assert "No sessions reserved." in exc_info.value.details()
 
 
 @pytest.fixture(scope="module")
