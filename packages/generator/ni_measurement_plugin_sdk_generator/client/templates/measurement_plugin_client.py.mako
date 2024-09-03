@@ -162,7 +162,7 @@ class ${class_name}:
 
         for parameter_value in parameter_values:
             if isinstance(parameter_value, list):
-                # Convert each Path in the list to a string.
+                # Convert each Path in the list to a string and converting '\' to '\\' in strings.
                 converted_list = []
                 for value in parameter_value:
                     % if "from pathlib import Path" in built_in_import_modules:
