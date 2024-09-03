@@ -30,8 +30,6 @@ from ni_measurement_plugin_sdk_service.pin_map import PinMapClient
 
 _logger = logging.getLogger(__name__)
 
-_pin_map_path = ""
-_SITES = [0]
 _V2_MEASUREMENT_SERVICE_INTERFACE = "ni.measurementlink.measurement.v2.MeasurementService"
 
 
