@@ -383,9 +383,9 @@ class NonStreamingDataMeasurementClient:
         result = []
 
         for parameter_value in parameter_values:
-            if isinstance(parameter_value, list):
-                # Convert each Path in the list to a string and converting '\' to '\\' in strings.
+            # Convert each Path in the list to a string and convert '\' to '\\' in strings.
 
+            if isinstance(parameter_value, list):
                 converted_list = []
                 for value in parameter_value:
                     if isinstance(value, (Path, str)):
@@ -404,11 +404,11 @@ class NonStreamingDataMeasurementClient:
         float_in: float = 0.05999999865889549,
         double_array_in: List[float] = [0.1, 0.2, 0.3],
         bool_in: bool = False,
-        string_in: str = "sample string",
+        string_in: str = b"sample string",
         string_array_in: List[str] = ["String1", "String2"],
-        path_in: Path = "path/test",
+        path_in: Path = b"path/test",
         path_array_in: List[Path] = ["path/test1", "path/ntest2"],
-        io_in: str = "resource",
+        io_in: str = b"resource",
         io_array_in: List[str] = ["resource1", "resource2"],
         integer_in: int = 10,
     ) -> Output:
@@ -442,11 +442,11 @@ class NonStreamingDataMeasurementClient:
         float_in: float = 0.05999999865889549,
         double_array_in: List[float] = [0.1, 0.2, 0.3],
         bool_in: bool = False,
-        string_in: str = "sample string",
+        string_in: str = b"sample string",
         string_array_in: List[str] = ["String1", "String2"],
-        path_in: Path = "path/test",
+        path_in: Path = b"path/test",
         path_array_in: List[Path] = ["path/test1", "path/ntest2"],
-        io_in: str = "resource",
+        io_in: str = b"resource",
         io_array_in: List[str] = ["resource1", "resource2"],
         integer_in: int = 10,
     ) -> Generator[Output, None, None]:
