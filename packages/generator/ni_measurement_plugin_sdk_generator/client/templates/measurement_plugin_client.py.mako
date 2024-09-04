@@ -4,6 +4,7 @@
 
 import logging
 import threading
+from functools import cached_property
 % for module in built_in_import_modules:
 ${module}
 % endfor
@@ -76,9 +77,15 @@ class ${class_name}:
         if grpc_channel is not None:
             self._stub = v2_measurement_service_pb2_grpc.MeasurementServiceStub(grpc_channel)
         self._create_file_descriptor()
-        self._pin_map_path = ""
-        self._sites = [0]
-        
+        self.pin_map_id: str = ""
+        self.sites: list[int] = [0]
+
+    @cached_property
+    def pin_map_client(self) -> PinMapClient:
+        return PinMapClient(
+            discovery_client=self._discovery_client, grpc_channel_pool=self._grpc_channel_pool
+        )
+
     def _get_stub(self) -> v2_measurement_service_pb2_grpc.MeasurementServiceStub:
         if self._stub is None:
             with self._initialization_lock:
@@ -146,7 +153,7 @@ class ${class_name}:
         )
         return v2_measurement_service_pb2.MeasureRequest(
             configuration_parameters=serialized_configuration,
-            pin_map_context=PinMapContext(pin_map_id=self._pin_map_path, sites=self._sites),
+            pin_map_context=PinMapContext(pin_map_id=self.pin_map_id, sites=self.sites),
         )
 
     def _deserialize_response(
@@ -204,7 +211,6 @@ class ${class_name}:
         Returns:
             Registered pin map id.
         """
-        pin_map_client = PinMapClient()
-        self._pin_map_path = pin_map_client.update_pin_map(pin_map_path)
+        self.pin_map_id = self.pin_map_client.update_pin_map(pin_map_path)
 
-        return self._pin_map_path
+        return self.pin_map_id
