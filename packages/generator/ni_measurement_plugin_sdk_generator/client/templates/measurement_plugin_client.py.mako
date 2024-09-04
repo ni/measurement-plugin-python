@@ -143,6 +143,7 @@ class ${class_name}:
             configuration_parameters=serialized_configuration
         )
 
+    % if output_metadata:
     def _deserialize_response(
         self, response: v2_measurement_service_pb2.MeasureResponse
     ) -> Outputs:
@@ -158,6 +159,7 @@ class ${class_name}:
             result[k - 1] = v
         return Outputs._make(result)
 
+    % endif
     def measure(
         self,
         ${configuration_parameters_with_type_and_default_values}
@@ -167,12 +169,20 @@ class ${class_name}:
         Returns:
             Measurement outputs.
         """
-        stream_measure_response = self.stream_measure(
-            ${measure_api_parameters}
-        )
+        with self._initialization_lock:
+            if self._measure_response is not None:
+                print("A measure call is already in progress.")
+                return
+            stream_measure_response = self.stream_measure(
+                ${measure_api_parameters}
+            )
         for response in stream_measure_response:
+        % if output_metadata:
             result = response
         return result
+        % else:
+            pass
+        % endif
 
     def stream_measure(
         self,
@@ -184,18 +194,31 @@ class ${class_name}:
             Stream of measurement outputs.
         """
         parameter_values = [${measure_api_parameters}]
-        request = self._create_measure_request(parameter_values)
-        self._measure_response = self._get_stub().Measure(request)
+        with self._initialization_lock:
+            if self._measure_response is not None:
+                print("A measure call is already in progress.")
+                return
+            request = self._create_measure_request(parameter_values)
+            self._measure_response = self._get_stub().Measure(request)
 
         try:
             for response in self._measure_response:
-                yield self._deserialize_response(response)  
+                % if output_metadata:
+                yield self._deserialize_response(response)
+                % else:
+                yield
+                % endif
         except grpc.RpcError as e:
             if e.code() == grpc.StatusCode.CANCELLED:
-                print("Measure call has been cancelled.")
+                print("The measure call is canceled.")
             else:
-                raise      
+                raise
+        finally:
+            self._measure_response = None
 
     def cancel(self) -> None:
         if self._measure_response and self._measure_response.is_active():
-            self._measure_response.cancel()
+            with self._initialization_lock:
+                self._measure_response.cancel()
+        else:
+            print("The measure call is not initialized at this moment.")

@@ -51,6 +51,22 @@ def test___measurement_plugin_client___stream_measure___returns_output(
     assert responses == expected_output
 
 
+def test___call_measure_in_differnet_threads___measure___print_process_in_progress_message(
+    measurement_plugin_client_module: ModuleType,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    test_measurement_client_type = getattr(measurement_plugin_client_module, "TestMeasurement")
+    measurement_plugin_client = test_measurement_client_type()
+
+    measure_thread = threading.Thread(target=measurement_plugin_client.measure)
+    measure_thread.start()
+    measurement_plugin_client.measure()
+
+    measure_thread.join()
+    captured = capsys.readouterr()
+    assert "A measure call is already in progress." in captured.out
+
+
 def test___non_streaming_measurement_execution___cancel___cancels_measure_call(
     measurement_plugin_client_module: ModuleType,
     capsys: pytest.CaptureFixture[str],
@@ -66,7 +82,7 @@ def test___non_streaming_measurement_execution___cancel___cancels_measure_call(
 
     measure_thread.join()
     captured = capsys.readouterr()
-    assert "Measure call has been cancelled." in captured.out
+    assert "The measure call is canceled." in captured.out
 
 
 def test___streaming_measurement_execution___cancel___cancels_stream_measure_call(
@@ -86,7 +102,20 @@ def test___streaming_measurement_execution___cancel___cancels_stream_measure_cal
 
     measure_thread.join()
     captured = capsys.readouterr()
-    assert "Measure call has been cancelled." in captured.out
+    assert "The measure call is canceled." in captured.out
+
+
+def test___cancel_measure_without_any_measure_calls___cancel___print_cancel_failure_message(
+    measurement_plugin_client_module: ModuleType,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    test_measurement_client_type = getattr(measurement_plugin_client_module, "TestMeasurement")
+    measurement_plugin_client = test_measurement_client_type()
+
+    measurement_plugin_client.cancel()
+
+    captured = capsys.readouterr()
+    assert "The measure call is not initialized at this moment." in captured.out
 
 
 @pytest.fixture(scope="module")
