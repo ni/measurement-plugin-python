@@ -77,7 +77,7 @@ def test___non_streaming_measurement_execution___cancel___cancels_measure_call(
     measurement_plugin_client = test_measurement_client_type()
     measure_thread = threading.Thread(target=measurement_plugin_client.measure)
     measure_thread.start()
-    time.sleep(2) # Wait for 2 seconds to call Cancel API.
+    time.sleep(2)  # Wait for 2 seconds to call Cancel API.
 
     measurement_plugin_client.cancel()
 
@@ -96,7 +96,7 @@ def test___streaming_measurement_execution___cancel___cancels_stream_measure_cal
         target=lambda: tuple(measurement_plugin_client.stream_measure())
     )
     measure_thread.start()
-    time.sleep(2) # Wait for 2 seconds to call Cancel API.
+    time.sleep(2)  # Wait for 2 seconds to call Cancel API.
 
     measurement_plugin_client.cancel()
 
