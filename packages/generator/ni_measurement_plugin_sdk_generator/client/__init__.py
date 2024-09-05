@@ -99,7 +99,7 @@ def create_client(
         preferred_service_classes = measurement_service_classes.split(",")
 
     for service_class in preferred_service_classes:
-        if can_generate_name(module_name, class_name, all, preferred_service_classes):
+        if can_generate_name(module_name, class_name, preferred_service_classes):
             base_service_class = service_class.split(".")[-1]
             base_service_class = remove_suffix(base_service_class)
             if not base_service_class.isidentifier():
@@ -107,16 +107,14 @@ def create_client(
                     "Unable to create client.\nPlease provide a valid module name or update the measurement with a valid service class."
                 )
 
-            if module_name is None:
+            if module_name is None or len(preferred_service_classes) > 1:
                 module_name = camel_to_snake_case(base_service_class) + "_client"
-            if class_name is None:
+            if class_name is None or len(preferred_service_classes) > 1:
                 class_name = base_service_class.replace("_", "") + "Client"
                 if not any(ch.isupper() for ch in base_service_class):
                     print(
                         f"Warning: The service class '{service_class}' does not follow the recommended format."
                     )
-            if all:
-                print("Module name and class name are generated using the service class.")
 
         if not is_python_identifier(module_name):
             raise click.ClickException(
@@ -133,9 +131,7 @@ def create_client(
         metadata = measurement_service_stub.GetMetadata(
             v2_measurement_service_pb2.GetMetadataRequest()
         )
-        configuration_metadata = get_configuration_metadata_by_index(
-            metadata, service_class
-        )
+        configuration_metadata = get_configuration_metadata_by_index(metadata, service_class)
         output_metadata = get_output_metadata_by_index(metadata)
 
         configuration_parameters_with_type_and_default_values, measure_api_parameters = (

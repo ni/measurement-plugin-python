@@ -265,10 +265,10 @@ def is_python_identifier(input_string: Optional[str]) -> bool:
 
 
 def can_generate_name(
-    module_name: Optional[str], class_name: Optional[str], all_services: Optional[bool], service_classes: List[str]
+    module_name: Optional[str], class_name: Optional[str], service_classes: List[str]
 ) -> bool:
     """Checks whether to generate a custom name."""
-    return module_name is None or class_name is None or all_services or len(service_classes) > 1
+    return module_name is None or class_name is None or len(service_classes) > 1
 
 
 def _get_python_identifier(input_string: str) -> str:
