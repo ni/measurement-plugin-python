@@ -22,7 +22,7 @@ from ni_measurement_plugin_sdk_generator.client._support import (
     get_measurement_service_stub,
     get_output_metadata_by_index,
     get_output_parameters_with_type,
-    get_service_classes,
+    get_service_class_list,
     is_python_identifier,
     remove_suffix,
     to_ordered_set,
@@ -93,7 +93,7 @@ def create_client(
     custom_import_modules: List[str] = []
 
     if all:
-        service_class_list = get_service_classes(discovery_client)
+        service_class_list = get_service_class_list(discovery_client)
     else:
         if not measurement_service_class:
             raise click.ClickException("Measurement service class cannot be empty.")

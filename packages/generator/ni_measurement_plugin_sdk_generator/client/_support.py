@@ -82,15 +82,15 @@ def get_measurement_service_stub(
     return v2_measurement_service_pb2_grpc.MeasurementServiceStub(channel)
 
 
-def get_service_classes(discovery_client: DiscoveryClient) -> List[str]:
+def get_service_class_list(discovery_client: DiscoveryClient) -> List[str]:
     """Returns the service classes of all the available measurement services."""
     available_measurement_services = discovery_client.enumerate_services(
         _V2_MEASUREMENT_SERVICE_INTERFACE
     )
-    service_classes = [
+    service_class_list = [
         measurement_service.service_class for measurement_service in available_measurement_services
     ]
-    return service_classes
+    return service_class_list
 
 
 def get_configuration_metadata_by_index(
