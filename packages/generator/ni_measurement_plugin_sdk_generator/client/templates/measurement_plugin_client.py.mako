@@ -169,13 +169,9 @@ class ${class_name}:
         Returns:
             Measurement outputs.
         """
-        with self._initialization_lock:
-            if self._measure_response is not None:
-                print("A measure call is already in progress.")
-                return
-            stream_measure_response = self.stream_measure(
-                ${measure_api_parameters}
-            )
+        stream_measure_response = self.stream_measure(
+            ${measure_api_parameters}
+        )
         for response in stream_measure_response:
         % if output_metadata:
             result = response
@@ -201,20 +197,20 @@ class ${class_name}:
             request = self._create_measure_request(parameter_values)
             self._measure_response = self._get_stub().Measure(request)
 
-        try:
-            for response in self._measure_response:
-                % if output_metadata:
-                yield self._deserialize_response(response)
-                % else:
-                yield
-                % endif
-        except grpc.RpcError as e:
-            if e.code() == grpc.StatusCode.CANCELLED:
-                print("The measure call is canceled.")
-            else:
-                raise
-        finally:
-            self._measure_response = None
+            try:
+                for response in self._measure_response:
+                    % if output_metadata:
+                    yield self._deserialize_response(response)
+                    % else:
+                    yield
+                    % endif
+            except grpc.RpcError as e:
+                if e.code() == grpc.StatusCode.CANCELLED:
+                    print("The measure call is canceled.")
+                else:
+                    raise
+            finally:
+                self._measure_response = None
 
     def cancel(self) -> None:
         if self._measure_response and self._measure_response.is_active():

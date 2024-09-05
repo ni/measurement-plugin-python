@@ -398,22 +398,18 @@ class NonStreamingDataMeasurementClient:
         Returns:
             Measurement output.
         """
-        with self._initialization_lock:
-            if self._measure_response is not None:
-                print("A measure call is already in progress.")
-                return
-            stream_measure_response = self.stream_measure(
-                float_in,
-                double_array_in,
-                bool_in,
-                string_in,
-                string_array_in,
-                path_in,
-                path_array_in,
-                io_in,
-                io_array_in,
-                integer_in,
-            )
+        stream_measure_response = self.stream_measure(
+            float_in,
+            double_array_in,
+            bool_in,
+            string_in,
+            string_array_in,
+            path_in,
+            path_array_in,
+            io_in,
+            io_array_in,
+            integer_in,
+        )
         for response in stream_measure_response:
             result = response
         return result
@@ -454,16 +450,17 @@ class NonStreamingDataMeasurementClient:
                 return
             request = self._create_measure_request(parameter_values)
             self._measure_response = self._get_stub().Measure(request)
-        try:
-            for response in self._measure_response:
-                yield self._deserialize_response(response)
-        except grpc.RpcError as e:
-            if e.code() == grpc.StatusCode.CANCELLED:
-                print("The measure call is canceled.")
-            else:
-                raise
-        finally:
-            self._measure_response = None
+
+            try:
+                for response in self._measure_response:
+                    yield self._deserialize_response(response)
+            except grpc.RpcError as e:
+                if e.code() == grpc.StatusCode.CANCELLED:
+                    print("The measure call is canceled.")
+                else:
+                    raise
+            finally:
+                self._measure_response = None
 
     def cancel(self) -> None:
         if self._measure_response and self._measure_response.is_active():

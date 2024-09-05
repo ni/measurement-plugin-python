@@ -51,18 +51,20 @@ def test___measurement_plugin_client___stream_measure___returns_output(
     assert responses == expected_output
 
 
-def test___call_measure_in_differnet_threads___measure___print_process_in_progress_message(
+def test___measurement_plugin_client___invoke_measure_from_two_threads___initiates_first_measure_and_rejects_second_measure(
     measurement_plugin_client_module: ModuleType,
     capsys: pytest.CaptureFixture[str],
 ) -> None:
     test_measurement_client_type = getattr(measurement_plugin_client_module, "TestMeasurement")
     measurement_plugin_client = test_measurement_client_type()
 
-    measure_thread = threading.Thread(target=measurement_plugin_client.measure)
-    measure_thread.start()
-    measurement_plugin_client.measure()
+    measure_thread_1 = threading.Thread(target=measurement_plugin_client.measure)
+    measure_thread_2 = threading.Thread(target=measurement_plugin_client.measure)
+    measure_thread_1.start()
+    measure_thread_2.start()
 
-    measure_thread.join()
+    measure_thread_1.join()
+    measure_thread_2.join()
     captured = capsys.readouterr()
     assert "A measure call is already in progress." in captured.out
 
@@ -75,8 +77,7 @@ def test___non_streaming_measurement_execution___cancel___cancels_measure_call(
     measurement_plugin_client = test_measurement_client_type()
     measure_thread = threading.Thread(target=measurement_plugin_client.measure)
     measure_thread.start()
-    # Wait for 2 seconds to call Cancel API.
-    time.sleep(2)
+    time.sleep(2) # Wait for 2 seconds to call Cancel API.
 
     measurement_plugin_client.cancel()
 
@@ -92,11 +93,10 @@ def test___streaming_measurement_execution___cancel___cancels_stream_measure_cal
     test_measurement_client_type = getattr(measurement_plugin_client_module, "TestMeasurement")
     measurement_plugin_client = test_measurement_client_type()
     measure_thread = threading.Thread(
-        target=lambda: list(map(lambda i: print(i), measurement_plugin_client.stream_measure()))
+        target=lambda: tuple(measurement_plugin_client.stream_measure())
     )
     measure_thread.start()
-    # Wait for 2 seconds to call Cancel API.
-    time.sleep(2)
+    time.sleep(2) # Wait for 2 seconds to call Cancel API.
 
     measurement_plugin_client.cancel()
 
