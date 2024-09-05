@@ -17,7 +17,7 @@ def test___command_line_args___create_client___render_without_error(
     measurement_service: MeasurementService,
 ) -> None:
     temp_directory = tmp_path_factory.mktemp("measurement_plugin_client_files")
-    module_name = "test_measurement_client"
+    module_name = "non_streaming_data_measurement_client"
     golden_path = test_assets_directory / "example_renders" / "measurement_plugin_client"
     filename = f"{module_name}.py"
 
@@ -28,7 +28,32 @@ def test___command_line_args___create_client___render_without_error(
                 "--module-name",
                 module_name,
                 "--class-name",
-                "TestMeasurement",
+                "NonStreamingDataMeasurementClient",
+                "--directory-out",
+                temp_directory,
+            ]
+        )
+
+    assert not exc_info.value.code
+    _assert_equal(
+        golden_path / filename,
+        temp_directory / filename,
+    )
+
+
+def test___command_line_args___create_client_for_all_active_measurement___render_without_error(
+    test_assets_directory: pathlib.Path,
+    tmp_path_factory: pytest.TempPathFactory,
+    measurement_service: MeasurementService,
+) -> None:
+    temp_directory = tmp_path_factory.mktemp("measurement_plugin_client_files")
+    golden_path = test_assets_directory / "example_renders" / "measurement_plugin_client"
+    filename = "non_streaming_data_measurement_client.py"
+
+    with pytest.raises(SystemExit) as exc_info:
+        create_client(
+            [
+                "--all",
                 "--directory-out",
                 temp_directory,
             ]
@@ -46,7 +71,7 @@ def test___command_line_args___create_client___render_with_proper_line_ending(
     measurement_service: MeasurementService,
 ) -> None:
     temp_directory = tmp_path_factory.mktemp("measurement_plugin_client_files")
-    module_name = "test_measurement_client"
+    module_name = "non_streaming_data_measurement_client"
     filename = f"{module_name}.py"
 
     with pytest.raises(SystemExit) as exc_info:
@@ -56,7 +81,7 @@ def test___command_line_args___create_client___render_with_proper_line_ending(
                 "--module-name",
                 module_name,
                 "--class-name",
-                "TestMeasurement",
+                "NonStreamingDataMeasurementClient",
                 "--directory-out",
                 temp_directory,
             ]

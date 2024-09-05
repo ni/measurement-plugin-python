@@ -4,7 +4,7 @@ import keyword
 import os
 import re
 import sys
-from typing import AbstractSet, Dict, Iterable, List, Tuple, TypeVar
+from typing import AbstractSet, Dict, Iterable, List, Optional, Tuple, TypeVar
 
 import click
 import grpc
@@ -80,6 +80,17 @@ def get_measurement_service_stub(
             raise
     channel = channel_pool.get_channel(service_location.insecure_address)
     return v2_measurement_service_pb2_grpc.MeasurementServiceStub(channel)
+
+
+def get_service_classes(discovery_client: DiscoveryClient) -> List[str]:
+    """Returns the service classes of all the available measurement services."""
+    available_measurement_services = discovery_client.enumerate_services(
+        _V2_MEASUREMENT_SERVICE_INTERFACE
+    )
+    service_classes = [
+        measurement_service.service_class for measurement_service in available_measurement_services
+    ]
+    return service_classes
 
 
 def get_configuration_metadata_by_index(
@@ -245,10 +256,19 @@ def remove_suffix(string: str) -> str:
     return string
 
 
-def is_python_identifier(input_string: str) -> bool:
+def is_python_identifier(input_string: Optional[str]) -> bool:
     """Validates whether the given string is a valid Python identifier."""
+    if input_string is None:
+        return False
     pattern = r"^[a-zA-Z_][a-zA-Z0-9_]*$"
     return re.fullmatch(pattern, input_string) is not None
+
+
+def can_generate_name(
+    module_name: Optional[str], class_name: Optional[str], all_services: Optional[bool], service_classes: List[str]
+) -> bool:
+    """Checks whether to generate a custom name."""
+    return module_name is None or class_name is None or all_services or len(service_classes) > 1
 
 
 def _get_python_identifier(input_string: str) -> str:

@@ -16,11 +16,13 @@ from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
 
 from ni_measurement_plugin_sdk_generator.client._support import (
     camel_to_snake_case,
+    can_generate_name,
     get_configuration_metadata_by_index,
     get_configuration_parameters_with_type_and_default_values,
     get_measurement_service_stub,
     get_output_metadata_by_index,
     get_output_parameters_with_type,
+    get_service_classes,
     is_python_identifier,
     remove_suffix,
     to_ordered_set,
@@ -49,7 +51,7 @@ def _create_file(
 
 
 @click.command()
-@click.argument("measurement_service_class")
+@click.argument("measurement_service_classes", default="")
 @click.option(
     "-m",
     "--module-name",
@@ -61,88 +63,107 @@ def _create_file(
     help="Name for the Python Measurement Plug-In Client Class in the generated module.",
 )
 @click.option(
+    "-a",
+    "--all",
+    is_flag=True,
+    help="Creates Python Measurement Plug-In Client for all the active measurement services.",
+)
+@click.option(
     "-o",
     "--directory-out",
     help="Output directory for Measurement Plug-In Client files. Default: '<current_directory>/<module_name>'",
 )
 def create_client(
-    measurement_service_class: str,
+    measurement_service_classes: str,
     module_name: Optional[str],
     class_name: Optional[str],
+    all: Optional[bool],
     directory_out: Optional[str],
 ) -> None:
     """Generates a Python Measurement Plug-In Client module for the measurement service.
 
     You can use the generated module to interact with the corresponding measurement service.
 
-    MEASUREMENT_SERVICE_CLASS: The service class of the measurement.
+    MEASUREMENT_SERVICE_CLASSES: The service class of the measurements, separated by commas.
     """
     channel_pool = GrpcChannelPool()
     discovery_client = DiscoveryClient(grpc_channel_pool=channel_pool)
     built_in_import_modules: List[str] = []
     custom_import_modules: List[str] = []
 
-    if module_name is None or class_name is None:
-        base_service_class = measurement_service_class.split(".")[-1]
-        base_service_class = remove_suffix(base_service_class)
-        if not base_service_class.isidentifier():
-            raise click.ClickException(
-                "Unable to create client.\nPlease provide a valid module name or update the measurement with a valid service class."
-            )
+    if all:
+        preferred_service_classes = get_service_classes(discovery_client)
+    else:
+        if not measurement_service_classes:
+            raise click.ClickException("Measurement service class cannot be empty.")
+        preferred_service_classes = measurement_service_classes.split(",")
 
-        if module_name is None:
-            module_name = camel_to_snake_case(base_service_class) + "_client"
-        if class_name is None:
-            class_name = base_service_class.replace("_", "") + "Client"
-            if not any(ch.isupper() for ch in base_service_class):
-                print(
-                    f"Warning: The service class '{measurement_service_class}' does not follow the recommended format."
+    for service_class in preferred_service_classes:
+        if can_generate_name(module_name, class_name, all, preferred_service_classes):
+            base_service_class = service_class.split(".")[-1]
+            base_service_class = remove_suffix(base_service_class)
+            if not base_service_class.isidentifier():
+                raise click.ClickException(
+                    "Unable to create client.\nPlease provide a valid module name or update the measurement with a valid service class."
                 )
 
-    if not module_name.isidentifier():
-        raise click.ClickException(
-            f"The module name '{module_name}' is not a valid Python identifier."
+            if module_name is None:
+                module_name = camel_to_snake_case(base_service_class) + "_client"
+            if class_name is None:
+                class_name = base_service_class.replace("_", "") + "Client"
+                if not any(ch.isupper() for ch in base_service_class):
+                    print(
+                        f"Warning: The service class '{service_class}' does not follow the recommended format."
+                    )
+            if all:
+                print("Module name and class name are generated using the service class.")
+
+        if not is_python_identifier(module_name):
+            raise click.ClickException(
+                f"The module name '{module_name}' is not a valid Python identifier."
+            )
+        if not is_python_identifier(class_name):
+            raise click.ClickException(
+                f"The class name '{class_name}' is not a valid Python identifier."
+            )
+
+        measurement_service_stub = get_measurement_service_stub(
+            discovery_client, channel_pool, service_class
         )
-    if not is_python_identifier(class_name):
-        raise click.ClickException(
-            f"The class name '{class_name}' is not a valid Python identifier."
+        metadata = measurement_service_stub.GetMetadata(
+            v2_measurement_service_pb2.GetMetadataRequest()
+        )
+        configuration_metadata = get_configuration_metadata_by_index(
+            metadata, service_class
+        )
+        output_metadata = get_output_metadata_by_index(metadata)
+
+        configuration_parameters_with_type_and_default_values, measure_api_parameters = (
+            get_configuration_parameters_with_type_and_default_values(
+                configuration_metadata, built_in_import_modules
+            )
+        )
+        output_parameters_with_type = get_output_parameters_with_type(
+            output_metadata, built_in_import_modules, custom_import_modules
         )
 
-    measurement_service_stub = get_measurement_service_stub(
-        discovery_client, channel_pool, measurement_service_class
-    )
-    metadata = measurement_service_stub.GetMetadata(v2_measurement_service_pb2.GetMetadataRequest())
-    configuration_metadata = get_configuration_metadata_by_index(
-        metadata, measurement_service_class
-    )
-    output_metadata = get_output_metadata_by_index(metadata)
+        if directory_out is None:
+            directory_out_path = pathlib.Path.cwd()
+        else:
+            directory_out_path = pathlib.Path(directory_out)
 
-    configuration_parameters_with_type_and_default_values, measure_api_parameters = (
-        get_configuration_parameters_with_type_and_default_values(
-            configuration_metadata, built_in_import_modules
+        _create_file(
+            template_name="measurement_plugin_client.py.mako",
+            file_name=f"{module_name}.py",
+            directory_out=directory_out_path,
+            class_name=class_name,
+            display_name=metadata.measurement_details.display_name,
+            configuration_metadata=configuration_metadata,
+            output_metadata=output_metadata,
+            service_class=service_class,
+            configuration_parameters_with_type_and_default_values=configuration_parameters_with_type_and_default_values,
+            measure_api_parameters=measure_api_parameters,
+            output_parameters_with_type=output_parameters_with_type,
+            built_in_import_modules=to_ordered_set(built_in_import_modules),
+            custom_import_modules=to_ordered_set(custom_import_modules),
         )
-    )
-    output_parameters_with_type = get_output_parameters_with_type(
-        output_metadata, built_in_import_modules, custom_import_modules
-    )
-
-    if directory_out is None:
-        directory_out_path = pathlib.Path.cwd()
-    else:
-        directory_out_path = pathlib.Path(directory_out)
-
-    _create_file(
-        template_name="measurement_plugin_client.py.mako",
-        file_name=f"{module_name}.py",
-        directory_out=directory_out_path,
-        class_name=class_name,
-        display_name=metadata.measurement_details.display_name,
-        configuration_metadata=configuration_metadata,
-        output_metadata=output_metadata,
-        service_class=measurement_service_class,
-        configuration_parameters_with_type_and_default_values=configuration_parameters_with_type_and_default_values,
-        measure_api_parameters=measure_api_parameters,
-        output_parameters_with_type=output_parameters_with_type,
-        built_in_import_modules=to_ordered_set(built_in_import_modules),
-        custom_import_modules=to_ordered_set(custom_import_modules),
-    )
