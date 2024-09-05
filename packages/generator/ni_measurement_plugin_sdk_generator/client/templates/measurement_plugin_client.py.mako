@@ -157,11 +157,11 @@ class ${class_name}:
             result[k - 1] = v
         return Output._make(result)
 
-    def _validate_parameters(self, parameter_values: List[Any]) -> List[Any]:
+    def _convert_paths_to_strings(self, parameter_values: List[Any]) -> List[Any]:
         result = []
 
         for parameter_value in parameter_values:
-            # Convert each Path in the list to a string and convert '\' to '\\' in strings.
+            # Convert each Path in the list to string and convert '\' to '\\' in strings.
             if isinstance(parameter_value, list):
                 converted_list = []
                 for value in parameter_value:
@@ -193,7 +193,7 @@ class ${class_name}:
         Returns:
             Measurement output.
         """
-        parameter_values = self._validate_parameters([${measure_api_parameters}])
+        parameter_values = self._convert_paths_to_strings([${measure_api_parameters}])
         request = self._create_measure_request(parameter_values)
 
         for response in self._get_stub().Measure(request):
@@ -209,7 +209,7 @@ class ${class_name}:
         Returns:
             Stream of measurement output.
         """
-        parameter_values = self._validate_parameters([${measure_api_parameters}])
+        parameter_values = self._convert_paths_to_strings([${measure_api_parameters}])
         request = self._create_measure_request(parameter_values)
 
         for response in self._get_stub().Measure(request):
