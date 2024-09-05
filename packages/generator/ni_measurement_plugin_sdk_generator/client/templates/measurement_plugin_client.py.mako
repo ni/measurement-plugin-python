@@ -62,7 +62,7 @@ class ${class_name}:
 
             grpc_channel_pool: An optional gRPC channel pool.
         """
-        self._initialization_lock = threading.Lock()
+        self._initialization_lock = threading.RLock()
         self._service_class = ${service_class | repr}
         self._grpc_channel_pool = grpc_channel_pool
         self._discovery_client = discovery_client
@@ -197,24 +197,24 @@ class ${class_name}:
             request = self._create_measure_request(parameter_values)
             self._measure_response = self._get_stub().Measure(request)
 
-            try:
-                for response in self._measure_response:
-                    % if output_metadata:
-                    yield self._deserialize_response(response)
-                    % else:
-                    yield
-                    % endif
-            except grpc.RpcError as e:
-                if e.code() == grpc.StatusCode.CANCELLED:
-                    print("The measure call is canceled.")
-                else:
-                    raise
-            finally:
-                self._measure_response = None
+        try:
+            for response in self._measure_response:
+                % if output_metadata:
+                yield self._deserialize_response(response)
+                % else:
+                yield
+                % endif
+        except grpc.RpcError as e:
+            if e.code() == grpc.StatusCode.CANCELLED:
+                print("The measure call is canceled.")
+            else:
+                raise
+        finally:
+            self._measure_response = None
 
-    def cancel(self) -> None:
+    def cancel(self) -> bool:
         if self._measure_response and self._measure_response.is_active():
-            with self._initialization_lock:
-                self._measure_response.cancel()
+            self._measure_response.cancel()
+            return True
         else:
-            print("The measure call is not initialized at this moment.")
+            return False
