@@ -149,6 +149,9 @@ def create_client(
         else:
             directory_out_path = pathlib.Path(directory_out)
 
+        if not directory_out_path.exists():
+            raise click.ClickException(f"No such directory '{directory_out}' found.")
+
         _create_file(
             template_name="measurement_plugin_client.py.mako",
             file_name=f"{module_name}.py",
