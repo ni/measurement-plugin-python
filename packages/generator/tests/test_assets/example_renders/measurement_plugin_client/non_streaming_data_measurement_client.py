@@ -446,8 +446,7 @@ class NonStreamingDataMeasurementClient:
         ]
         with self._initialization_lock:
             if self._measure_response is not None:
-                print("A measure call is already in progress.")
-                return
+                raise RuntimeError("A measure call is already in progress.")
             request = self._create_measure_request(parameter_values)
             self._measure_response = self._get_stub().Measure(request)
         try:

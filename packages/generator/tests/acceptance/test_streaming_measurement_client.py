@@ -58,15 +58,13 @@ def test___measurement_plugin_client___invoke_measure_from_two_threads___initiat
     test_measurement_client_type = getattr(measurement_plugin_client_module, "TestMeasurement")
     measurement_plugin_client = test_measurement_client_type()
 
-    measure_thread_1 = threading.Thread(target=measurement_plugin_client.measure)
-    measure_thread_2 = threading.Thread(target=measurement_plugin_client.measure)
-    measure_thread_1.start()
-    measure_thread_2.start()
+    with pytest.raises(RuntimeError) as exc_info:
+        measure_thread = threading.Thread(target=measurement_plugin_client.measure)
+        measure_thread.start()
+        measurement_plugin_client.measure()  # Calling Measure in main thread, to catch error in pytest.
+        measure_thread.join()
 
-    measure_thread_1.join()
-    measure_thread_2.join()
-    captured = capsys.readouterr()
-    assert "A measure call is already in progress." in captured.out
+    assert "A measure call is already in progress." in exc_info.value.args[0]
 
 
 def test___non_streaming_measurement_execution___cancel___returns_true(
