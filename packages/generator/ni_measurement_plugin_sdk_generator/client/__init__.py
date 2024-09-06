@@ -51,7 +51,7 @@ def _create_file(
 
 
 @click.command()
-@click.argument("measurement_service_class", default="")
+@click.argument("measurement_service_class", required=False, nargs=-1)
 @click.option(
     "-m",
     "--module-name",
@@ -74,7 +74,7 @@ def _create_file(
     help="Output directory for Measurement Plug-In Client files. Default: '<current_directory>/<module_name>'",
 )
 def create_client(
-    measurement_service_class: str,
+    measurement_service_class: List[str],
     module_name: Optional[str],
     class_name: Optional[str],
     all: Optional[bool],
@@ -85,7 +85,7 @@ def create_client(
     You can use the generated module to interact with the corresponding measurement service.
 
     MEASUREMENT_SERVICE_CLASS: The service class of the measurement.
-    Provide comma separated service class to generate multiple clients.
+    Provide space separated service class to generate multiple clients.
     """
     channel_pool = GrpcChannelPool()
     discovery_client = DiscoveryClient(grpc_channel_pool=channel_pool)
@@ -93,14 +93,13 @@ def create_client(
     custom_import_modules: List[str] = []
 
     if all:
-        service_class_list = get_service_class_list(discovery_client)
+        measurement_service_class = get_service_class_list(discovery_client)
     else:
         if not measurement_service_class:
             raise click.ClickException("Measurement service class cannot be empty.")
-        service_class_list = measurement_service_class.split(",")
 
-    for service_class in service_class_list:
-        if can_generate_name(module_name, class_name, service_class_list):
+    for service_class in measurement_service_class:
+        if can_generate_name(module_name, class_name, measurement_service_class):
             base_service_class = service_class.split(".")[-1]
             base_service_class = remove_suffix(base_service_class)
             if not base_service_class.isidentifier():
@@ -108,9 +107,9 @@ def create_client(
                     "Unable to create client.\nPlease provide a valid module name or update the measurement with a valid service class."
                 )
 
-            if module_name is None or len(service_class_list) > 1:
+            if module_name is None or len(measurement_service_class) > 1:
                 module_name = camel_to_snake_case(base_service_class) + "_client"
-            if class_name is None or len(service_class_list) > 1:
+            if class_name is None or len(measurement_service_class) > 1:
                 class_name = base_service_class.replace("_", "") + "Client"
                 if not any(ch.isupper() for ch in base_service_class):
                     print(
