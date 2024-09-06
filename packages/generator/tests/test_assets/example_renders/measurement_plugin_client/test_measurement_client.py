@@ -57,6 +57,7 @@ class TestMeasurement:
         self,
         *,
         discovery_client: Optional[DiscoveryClient] = None,
+        pin_map_client: Optional[PinMapClient] = None,
         grpc_channel: Optional[grpc.Channel] = None,
         grpc_channel_pool: Optional[GrpcChannelPool] = None,
     ):
@@ -69,10 +70,11 @@ class TestMeasurement:
 
             grpc_channel_pool: An optional gRPC channel pool.
         """
-        self._initialization_lock = threading.Lock()
+        self._initialization_lock = threading.RLock()
         self._service_class = "ni.tests.NonStreamingDataMeasurement_Python"
         self._grpc_channel_pool = grpc_channel_pool
         self._discovery_client = discovery_client
+        self._pin_map_client = pin_map_client
         self._stub: Optional[v2_measurement_service_pb2_grpc.MeasurementServiceStub] = None
         self._configuration_metadata = {
             1: ParameterMetadata(
@@ -304,33 +306,47 @@ class TestMeasurement:
             self._stub = v2_measurement_service_pb2_grpc.MeasurementServiceStub(grpc_channel)
         self._create_file_descriptor()
         self._pin_map_id: str = ""
-        self._sites: List[int] = [0]
-
-    @cached_property
-    def pin_map_client(self) -> PinMapClient:
-        return PinMapClient(
-            discovery_client=self._discovery_client, grpc_channel_pool=self._grpc_channel_pool
-        )
+        self.sites: List[int] = [0]
 
     def _get_stub(self) -> v2_measurement_service_pb2_grpc.MeasurementServiceStub:
         if self._stub is None:
             with self._initialization_lock:
-                if self._grpc_channel_pool is None:
-                    _logger.debug("Creating unshared GrpcChannelPool.")
-                    self._grpc_channel_pool = GrpcChannelPool()
-                if self._discovery_client is None:
-                    _logger.debug("Creating unshared DiscoveryClient.")
-                    self._discovery_client = DiscoveryClient(
-                        grpc_channel_pool=self._grpc_channel_pool
-                    )
                 if self._stub is None:
-                    service_location = self._discovery_client.resolve_service(
+                    service_location = self._get_discovery_client().resolve_service(
                         provided_interface=_V2_MEASUREMENT_SERVICE_INTERFACE,
                         service_class=self._service_class,
                     )
-                    channel = self._grpc_channel_pool.get_channel(service_location.insecure_address)
+                    channel = self._get_grpc_channel_pool().get_channel(
+                        service_location.insecure_address
+                    )
                     self._stub = v2_measurement_service_pb2_grpc.MeasurementServiceStub(channel)
         return self._stub
+
+    def _get_discovery_client(self) -> DiscoveryClient:
+        if self._discovery_client is None:
+            with self._initialization_lock:
+                if self._discovery_client is None:
+                    self._discovery_client = DiscoveryClient(
+                        grpc_channel_pool=self._get_grpc_channel_pool(),
+                    )
+        return self._discovery_client
+
+    def _get_grpc_channel_pool(self) -> GrpcChannelPool:
+        if self._grpc_channel_pool is None:
+            with self._initialization_lock:
+                if self._grpc_channel_pool is None:
+                    self._grpc_channel_pool = GrpcChannelPool()
+        return self._grpc_channel_pool
+
+    def _get_pin_map_client(self) -> PinMapClient:
+        if self._pin_map_client is None:
+            with self._initialization_lock:
+                if self._pin_map_client is None:
+                    self._pin_map_client = PinMapClient(
+                        discovery_client=self._get_discovery_client(),
+                        grpc_channel_pool=self._get_grpc_channel_pool(),
+                    )
+        self._pin_map_client
 
     def _create_file_descriptor(self) -> None:
         metadata = self._get_stub().GetMetadata(v2_measurement_service_pb2.GetMetadataRequest())
@@ -377,7 +393,7 @@ class TestMeasurement:
         )
         return v2_measurement_service_pb2.MeasureRequest(
             configuration_parameters=serialized_configuration,
-            pin_map_context=PinMapContext(pin_map_id=self._pin_map_id, sites=self._sites),
+            pin_map_context=PinMapContext(pin_map_id=self._pin_map_id, sites=self.sites),
         )
 
     def _deserialize_response(self, response: v2_measurement_service_pb2.MeasureResponse) -> Output:
@@ -473,6 +489,6 @@ class TestMeasurement:
         Returns:
             Registered pin map id.
         """
-        self._pin_map_id = self.pin_map_client.update_pin_map(pin_map_path)
+        self._pin_map_id = self._get_pin_map_client().update_pin_map(pin_map_path)
 
         return self._pin_map_id
