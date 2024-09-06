@@ -127,5 +127,5 @@ def multiple_measurement_service(
     discovery_service_process: DiscoveryServiceProcess,
 ) -> Generator[MeasurementService, None, None]:
     """Test fixture that creates and hosts a Measurement Plug-In Service."""
-    with non_streaming_data_measurement.measurement_service.host_service(), streaming_data_measurement.measurement_service.host_service() as service:
-        yield service
+    with non_streaming_data_measurement.measurement_service.host_service(), streaming_data_measurement.measurement_service.host_service() as services:
+        yield services
