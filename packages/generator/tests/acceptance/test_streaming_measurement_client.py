@@ -53,7 +53,6 @@ def test___measurement_plugin_client___stream_measure___returns_output(
 
 def test___measurement_plugin_client___invoke_measure_from_two_threads___initiates_first_measure_and_rejects_second_measure(
     measurement_plugin_client_module: ModuleType,
-    capsys: pytest.CaptureFixture[str],
 ) -> None:
     test_measurement_client_type = getattr(measurement_plugin_client_module, "TestMeasurement")
     measurement_plugin_client = test_measurement_client_type()
