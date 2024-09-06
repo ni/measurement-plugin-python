@@ -1,3 +1,4 @@
+<%page args="class_name, display_name, configuration_metadata, output_metadata, service_class, configuration_parameters_with_type_and_default_values, measure_api_parameters, output_parameters_with_type, built_in_import_modules, custom_import_modules"/>\
 \
 """Python Measurement Plug-In Client."""
 
