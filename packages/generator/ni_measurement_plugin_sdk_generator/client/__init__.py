@@ -16,13 +16,12 @@ from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
 
 from ni_measurement_plugin_sdk_generator.client._support import (
     camel_to_snake_case,
-    can_generate_name,
     get_configuration_metadata_by_index,
     get_configuration_parameters_with_type_and_default_values,
     get_measurement_service_stub,
     get_output_metadata_by_index,
     get_output_parameters_with_type,
-    get_service_class_list,
+    get_available_measurements_service_class,
     is_python_identifier,
     remove_suffix,
     to_ordered_set,
@@ -93,13 +92,14 @@ def create_client(
     custom_import_modules: List[str] = []
 
     if all:
-        measurement_service_class = get_service_class_list(discovery_client)
+        measurement_service_class = get_available_measurements_service_class(discovery_client)
     else:
         if not measurement_service_class:
             raise click.ClickException("Measurement service class cannot be empty.")
 
+    is_multiple_client_generation = len(measurement_service_class) > 1
     for service_class in measurement_service_class:
-        if can_generate_name(module_name, class_name, measurement_service_class):
+        if is_multiple_client_generation or module_name is None or class_name is None:
             base_service_class = service_class.split(".")[-1]
             base_service_class = remove_suffix(base_service_class)
             if not base_service_class.isidentifier():
@@ -107,9 +107,9 @@ def create_client(
                     "Unable to create client.\nPlease provide a valid module name or update the measurement with a valid service class."
                 )
 
-            if module_name is None or len(measurement_service_class) > 1:
+            if is_multiple_client_generation or module_name is None:
                 module_name = camel_to_snake_case(base_service_class) + "_client"
-            if class_name is None or len(measurement_service_class) > 1:
+            if is_multiple_client_generation or class_name is None:
                 class_name = base_service_class.replace("_", "") + "Client"
                 if not any(ch.isupper() for ch in base_service_class):
                     print(

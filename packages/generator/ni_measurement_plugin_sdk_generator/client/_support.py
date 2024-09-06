@@ -82,7 +82,7 @@ def get_measurement_service_stub(
     return v2_measurement_service_pb2_grpc.MeasurementServiceStub(channel)
 
 
-def get_service_class_list(discovery_client: DiscoveryClient) -> List[str]:
+def get_available_measurements_service_class(discovery_client: DiscoveryClient) -> List[str]:
     """Returns the service classes of all the available measurement services."""
     available_measurement_services = discovery_client.enumerate_services(
         _V2_MEASUREMENT_SERVICE_INTERFACE
@@ -262,13 +262,6 @@ def is_python_identifier(input_string: Optional[str]) -> bool:
         return False
     pattern = r"^[a-zA-Z_][a-zA-Z0-9_]*$"
     return re.fullmatch(pattern, input_string) is not None
-
-
-def can_generate_name(
-    module_name: Optional[str], class_name: Optional[str], service_classes: List[str]
-) -> bool:
-    """Checks whether to generate a custom name."""
-    return module_name is None or class_name is None or len(service_classes) > 1
 
 
 def _get_python_identifier(input_string: str) -> str:
