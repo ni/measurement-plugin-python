@@ -2,9 +2,8 @@
 
 import logging
 import threading
-from functools import cached_property
 from pathlib import Path
-from typing import Any, Generator, List, NamedTuple, Optional
+from typing import Any, Generator, List, NamedTuple, Optional, Tuple
 
 import grpc
 from google.protobuf import any_pb2
@@ -305,8 +304,21 @@ class TestMeasurement:
         if grpc_channel is not None:
             self._stub = v2_measurement_service_pb2_grpc.MeasurementServiceStub(grpc_channel)
         self._create_file_descriptor()
-        self._pin_map_id: str = ""
-        self.sites: List[int] = [0]
+        self._pin_map_id = ""
+        self._sites = [0]
+
+    @property
+    def sites(self) -> Tuple[int]:
+        """Specifies the list of sites being monitored."""
+        return tuple(self._sites)
+
+    @sites.setter
+    def sites(self, val):
+        if not isinstance(val, list):
+            raise ValueError("Sites must be a list")
+        if not all(isinstance(site, int) for site in val):
+            raise ValueError("All sites must be integers")
+        self._sites = val
 
     def _get_stub(self) -> v2_measurement_service_pb2_grpc.MeasurementServiceStub:
         if self._stub is None:
@@ -346,7 +358,7 @@ class TestMeasurement:
                         discovery_client=self._get_discovery_client(),
                         grpc_channel_pool=self._get_grpc_channel_pool(),
                     )
-        self._pin_map_client
+        return self._pin_map_client
 
     def _create_file_descriptor(self) -> None:
         metadata = self._get_stub().GetMetadata(v2_measurement_service_pb2.GetMetadataRequest())
@@ -393,7 +405,7 @@ class TestMeasurement:
         )
         return v2_measurement_service_pb2.MeasureRequest(
             configuration_parameters=serialized_configuration,
-            pin_map_context=PinMapContext(pin_map_id=self._pin_map_id, sites=self.sites),
+            pin_map_context=PinMapContext(pin_map_id=self._pin_map_id, sites=self._sites),
         )
 
     def _deserialize_response(self, response: v2_measurement_service_pb2.MeasureResponse) -> Output:
