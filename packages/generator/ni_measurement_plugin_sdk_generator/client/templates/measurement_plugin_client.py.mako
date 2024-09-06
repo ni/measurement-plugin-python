@@ -216,15 +216,10 @@ class ${class_name}:
         for response in self._get_stub().Measure(request):
             yield self._deserialize_response(response)
 
-    def register_pin_map(self, pin_map_path: str) -> str:
+    def register_pin_map(self, pin_map_path: str) -> None:
         """Registers the pin map with the pin map service.
         
         Args:
             pin_map_path: Absolute path of the pin map file.
-
-        Returns:
-            Registered pin map id.
         """
         self._pin_map_id = self._get_pin_map_client().update_pin_map(pin_map_path)
-
-        return self._pin_map_id
