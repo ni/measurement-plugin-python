@@ -19,7 +19,7 @@ from ni_measurement_plugin_sdk_generator.client._support import (
     get_measurement_service_stub,
     get_output_metadata_by_index,
     get_output_parameters_with_type,
-    get_available_measurements_service_class,
+    get_all_registered_measurement_service_classes,
     is_python_identifier,
     remove_suffix,
     to_ordered_set,
@@ -63,7 +63,7 @@ def _create_file(
     "-a",
     "--all",
     is_flag=True,
-    help="Creates Python Measurement Plug-In Client for all the active measurement services.",
+    help="Creates Python Measurement Plug-In Client for all the registered measurement services.",
 )
 @click.option(
     "-o",
@@ -72,17 +72,17 @@ def _create_file(
 )
 def create_client(
     measurement_service_class: List[str],
+    all: bool,
     module_name: Optional[str],
     class_name: Optional[str],
-    all: Optional[bool],
     directory_out: Optional[str],
 ) -> None:
     """Generates a Python Measurement Plug-In Client module for the measurement service.
 
     You can use the generated module to interact with the corresponding measurement service.
 
-    MEASUREMENT_SERVICE_CLASS: The service class of the measurement.
-    Provide space separated service class to generate multiple clients.
+    MEASUREMENT_SERVICE_CLASS: Accepts one or more measurement service classes.
+    Separate each service class with a space.
     """
     channel_pool = GrpcChannelPool()
     discovery_client = DiscoveryClient(grpc_channel_pool=channel_pool)
@@ -90,12 +90,14 @@ def create_client(
     custom_import_modules: List[str] = []
 
     if all:
-        measurement_service_class = get_available_measurements_service_class(discovery_client)
-        if len(measurement_service_class) < 1:
-            raise click.ClickException("No active measurements are available.")
+        measurement_service_class = get_all_registered_measurement_service_classes(discovery_client)
+        if len(measurement_service_class) == 0:
+            raise click.ClickException("No registered measurements.")
     else:
         if not measurement_service_class:
-            raise click.ClickException("Measurement service class cannot be empty.")
+            raise click.ClickException(
+                "The measurement service class cannot be empty. Either provide a measurement service class or use the 'all' flag to generate clients for all registered measurements."
+            )
 
     if directory_out is None:
         directory_out_path = pathlib.Path.cwd()
@@ -103,7 +105,7 @@ def create_client(
         directory_out_path = pathlib.Path(directory_out)
 
     if not directory_out_path.exists():
-        raise click.ClickException(f"No such directory '{directory_out}' found.")
+        raise click.ClickException(f"The specified directory '{directory_out}' was not found.")
 
     is_multiple_client_generation = len(measurement_service_class) > 1
     for service_class in measurement_service_class:
@@ -112,7 +114,7 @@ def create_client(
             base_service_class = remove_suffix(base_service_class)
             if not base_service_class.isidentifier():
                 raise click.ClickException(
-                    "Unable to create client.\nPlease provide a valid module name or update the measurement with a valid service class."
+                    "Client creation failed.\nEither provide a module name or update the measurement with a valid service class."
                 )
 
             if is_multiple_client_generation or module_name is None:
@@ -121,7 +123,7 @@ def create_client(
                 class_name = base_service_class.replace("_", "") + "Client"
                 if not any(ch.isupper() for ch in base_service_class):
                     print(
-                        f"Warning: The service class '{service_class}' does not follow the recommended format."
+                        f"Warning: The service class '{service_class}' does not adhere to the recommended format."
                     )
 
         if not is_python_identifier(module_name):
@@ -167,4 +169,6 @@ def create_client(
             custom_import_modules=to_ordered_set(custom_import_modules),
         )
 
-        print(f"Client has been created successfully for '{service_class}'.")
+        print(
+            f"The measurement plug-in client for the service class '{service_class}' has been created successfully."
+        )

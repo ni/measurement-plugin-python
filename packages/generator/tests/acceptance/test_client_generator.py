@@ -41,7 +41,7 @@ def test___command_line_args___create_client___render_without_error(
     )
 
 
-def test___command_line_args___create_client_for_all_active_measurement___render_without_error(
+def test___command_line_args___create_client_for_all_registered_measurements___renders_without_error(
     test_assets_directory: pathlib.Path,
     tmp_path_factory: pytest.TempPathFactory,
     measurement_service: MeasurementService,
