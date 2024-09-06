@@ -3,7 +3,7 @@
 import logging
 import threading
 from pathlib import Path
-from typing import Any, Generator, List, NamedTuple, Optional, Tuple
+from typing import Any, Generator, Iterable, List, NamedTuple, Optional, Tuple
 
 import grpc
 from google.protobuf import any_pb2
@@ -310,13 +310,13 @@ class TestMeasurement:
         self._sites = [0]
 
     @property
-    def sites(self) -> Tuple[int]:
-        """Specifies the list of sites being monitored."""
+    def sites(self) -> Tuple[int, ...]:
+        """Sites for which the measurement is being executed."""
         return tuple(self._sites)
 
     def set_sites(self, val):
-        if not isinstance(val, list):
-            raise ValueError("Sites must be a list")
+        if not isinstance(val, Iterable):
+            raise ValueError("Sites must be a iterable")
         if not all(isinstance(site, int) for site in val):
             raise ValueError("All sites must be integers")
         self._sites = val

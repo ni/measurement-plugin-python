@@ -1,4 +1,3 @@
-<%page args="class_name, display_name, configuration_metadata, output_metadata, service_class, configuration_parameters_with_type_and_default_values, measure_api_parameters, output_parameters_with_type, built_in_import_modules, custom_import_modules"/>\
 \
 """Python Measurement Plug-In Client."""
 
@@ -7,7 +6,7 @@ import threading
 % for module in built_in_import_modules:
 ${module}
 % endfor
-from typing import Any, Generator, List, NamedTuple, Optional, Tuple
+from typing import Any, Generator, Iterable, List, NamedTuple, Optional, Tuple
 
 import grpc
 from google.protobuf import any_pb2
@@ -84,13 +83,13 @@ class ${class_name}:
         self._sites = [0]
 
     @property
-    def sites(self) -> Tuple[int]:
-        """Specifies the list of sites being monitored."""
+    def sites(self) -> Tuple[int, ...]:
+        """Sites for which the measurement is being executed."""
         return tuple(self._sites)
     
     def set_sites(self, val):
-        if not isinstance(val, list):
-            raise ValueError("Sites must be a list")
+        if not isinstance(val, Iterable):
+            raise ValueError("Sites must be a iterable")
         if not all(isinstance(site, int) for site in val):
             raise ValueError("All sites must be integers")
         self._sites = val

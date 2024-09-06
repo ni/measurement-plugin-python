@@ -47,6 +47,53 @@ def test___measurement_plugin_client___measure_without_pin_map_registration___ra
     assert "No sessions reserved." in (exc_info.value.details() or "")
 
 
+def test___measurement_plugin_client___measure_with_single_site_selection___returns_selected_site(
+    measurement_plugin_client_module: ModuleType,
+    pin_map_directory: pathlib.Path,
+) -> None:
+    pin_map_path = str(pin_map_directory / "1Smu1ChannelGroup1Pin1Site.pinmap")
+    test_measurement_client_type = getattr(measurement_plugin_client_module, "TestMeasurement")
+    measurement_plugin_client = test_measurement_client_type()
+    measurement_plugin_client.register_pin_map(pin_map_path)
+
+    measurement_plugin_client.set_sites([0])
+    output = measurement_plugin_client.measure()
+
+    assert output.sites == [0]
+
+
+def test___measurement_plugin_client___measure_with_multiple_sites_selection___returns_selected_sites(
+    measurement_plugin_client_module: ModuleType,
+    pin_map_directory: pathlib.Path,
+) -> None:
+    pin_map_path = str(pin_map_directory / "1Smu1ChannelGroup2Pin2Site.pinmap")
+    test_measurement_client_type = getattr(measurement_plugin_client_module, "TestMeasurement")
+    measurement_plugin_client = test_measurement_client_type()
+    measurement_plugin_client.register_pin_map(pin_map_path)
+
+    measurement_plugin_client.set_sites([0,1])
+    output = measurement_plugin_client.measure()
+
+    assert output.sites == [0,1]
+
+
+def test___measurement_plugin_client___measure_with_invalid_sites_selection___raises_invalid_sites_error(
+    measurement_plugin_client_module: ModuleType,
+    pin_map_directory: pathlib.Path,
+) -> None:
+    pin_map_path = str(pin_map_directory / "1Smu1ChannelGroup1Pin1Site.pinmap")
+    test_measurement_client_type = getattr(measurement_plugin_client_module, "TestMeasurement")
+    measurement_plugin_client = test_measurement_client_type()
+    measurement_plugin_client.register_pin_map(pin_map_path)
+
+    with pytest.raises(grpc.RpcError) as exc_info:
+        measurement_plugin_client.set_sites([1])
+        _ = measurement_plugin_client.measure()
+
+    assert exc_info.value.code() == grpc.StatusCode.UNKNOWN
+    assert "Pin map does not contain site numbers: \"1\"" in (exc_info.value.details() or "")
+
+
 @pytest.fixture(scope="module")
 def measurement_client_directory(
     tmp_path_factory: pytest.TempPathFactory,
