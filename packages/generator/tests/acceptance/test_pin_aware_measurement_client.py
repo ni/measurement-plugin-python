@@ -71,10 +71,10 @@ def test___measurement_plugin_client___measure_with_multiple_sites_selection___r
     measurement_plugin_client = test_measurement_client_type()
     measurement_plugin_client.register_pin_map(pin_map_path)
 
-    measurement_plugin_client.set_sites([0,1])
+    measurement_plugin_client.set_sites([0, 1])
     output = measurement_plugin_client.measure()
 
-    assert output.sites == [0,1]
+    assert output.sites == [0, 1]
 
 
 def test___measurement_plugin_client___measure_with_invalid_sites_selection___raises_invalid_sites_error(
@@ -91,7 +91,7 @@ def test___measurement_plugin_client___measure_with_invalid_sites_selection___ra
         _ = measurement_plugin_client.measure()
 
     assert exc_info.value.code() == grpc.StatusCode.UNKNOWN
-    assert "Pin map does not contain site numbers: \"1\"" in (exc_info.value.details() or "")
+    assert 'Pin map does not contain site numbers: "1"' in (exc_info.value.details() or "")
 
 
 @pytest.fixture(scope="module")
