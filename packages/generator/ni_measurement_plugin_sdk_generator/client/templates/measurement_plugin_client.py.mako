@@ -77,8 +77,8 @@ class ${class_name}:
         if grpc_channel is not None:
             self._stub = v2_measurement_service_pb2_grpc.MeasurementServiceStub(grpc_channel)
         self._create_file_descriptor()
-        self.pin_map_id: str = ""
-        self.sites: list[int] = [0]
+        self._pin_map_id: str = ""
+        self._sites: list[int] = [0]
 
     @cached_property
     def pin_map_client(self) -> PinMapClient:
@@ -153,7 +153,7 @@ class ${class_name}:
         )
         return v2_measurement_service_pb2.MeasureRequest(
             configuration_parameters=serialized_configuration,
-            pin_map_context=PinMapContext(pin_map_id=self.pin_map_id, sites=self.sites),
+            pin_map_context=PinMapContext(pin_map_id=self._pin_map_id, sites=self._sites),
         )
 
     def _deserialize_response(
@@ -211,6 +211,6 @@ class ${class_name}:
         Returns:
             Registered pin map id.
         """
-        self.pin_map_id = self.pin_map_client.update_pin_map(pin_map_path)
+        self._pin_map_id = self.pin_map_client.update_pin_map(pin_map_path)
 
-        return self.pin_map_id
+        return self._pin_map_id
