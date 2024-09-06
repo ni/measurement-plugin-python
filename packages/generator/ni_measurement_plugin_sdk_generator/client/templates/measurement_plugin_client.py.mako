@@ -63,6 +63,8 @@ class ${class_name}:
         Args:
             discovery_client: An optional discovery client.
 
+            pin_map_client: An optional pin map client.
+
             grpc_channel: An optional gRPC channel targeting a measurement service.
 
             grpc_channel_pool: An optional gRPC channel pool.
