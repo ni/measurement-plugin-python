@@ -1,8 +1,6 @@
 """Utilizes command line args to create a Measurement Plug-In Client using template files."""
 
 import pathlib
-import re
-import sys
 from typing import Any, List, Optional
 
 import black
@@ -93,9 +91,19 @@ def create_client(
 
     if all:
         measurement_service_class = get_available_measurements_service_class(discovery_client)
+        if len(measurement_service_class) < 1:
+            raise click.ClickException("No active measurements are available.")
     else:
         if not measurement_service_class:
             raise click.ClickException("Measurement service class cannot be empty.")
+
+    if directory_out is None:
+        directory_out_path = pathlib.Path.cwd()
+    else:
+        directory_out_path = pathlib.Path(directory_out)
+
+    if not directory_out_path.exists():
+        raise click.ClickException(f"No such directory '{directory_out}' found.")
 
     is_multiple_client_generation = len(measurement_service_class) > 1
     for service_class in measurement_service_class:
@@ -142,14 +150,6 @@ def create_client(
         output_parameters_with_type = get_output_parameters_with_type(
             output_metadata, built_in_import_modules, custom_import_modules
         )
-
-        if directory_out is None:
-            directory_out_path = pathlib.Path.cwd()
-        else:
-            directory_out_path = pathlib.Path(directory_out)
-
-        if not directory_out_path.exists():
-            raise click.ClickException(f"No such directory '{directory_out}' found.")
 
         _create_file(
             template_name="measurement_plugin_client.py.mako",
