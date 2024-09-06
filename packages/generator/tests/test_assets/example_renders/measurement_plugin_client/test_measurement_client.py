@@ -314,8 +314,7 @@ class TestMeasurement:
         """Specifies the list of sites being monitored."""
         return tuple(self._sites)
 
-    @sites.setter
-    def sites(self, val):
+    def set_sites(self, val):
         if not isinstance(val, list):
             raise ValueError("Sites must be a list")
         if not all(isinstance(site, int) for site in val):
