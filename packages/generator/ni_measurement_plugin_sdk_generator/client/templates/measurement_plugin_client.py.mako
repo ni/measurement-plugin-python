@@ -43,7 +43,7 @@ class Output(NamedTuple):
 % endif
 
 
-class ${class_name}:
+class ${repr(class_name)}:
     """Client to interact with the measurement plug-in."""
      
     def __init__(
@@ -63,7 +63,7 @@ class ${class_name}:
             grpc_channel_pool: An optional gRPC channel pool.
         """
         self._initialization_lock = threading.Lock()
-        self._service_class = "${service_class}"
+        self._service_class = ${repr(service_class)}
         self._grpc_channel_pool = grpc_channel_pool
         self._discovery_client = discovery_client
         self._stub: Optional[v2_measurement_service_pb2_grpc.MeasurementServiceStub] = None
@@ -161,7 +161,7 @@ class ${class_name}:
         self,
         ${configuration_parameters_with_type_and_default_values}
     ) -> ${output_type} :
-        """Executes the ${display_name}.
+        """Executes the ${repr(display_name)}.
 
         Returns:
             Measurement output.
