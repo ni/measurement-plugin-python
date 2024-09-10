@@ -1,8 +1,10 @@
 """Contains utility functions to test loopback measurement service. """
 
+from enum import Enum
 from pathlib import Path
 from typing import Iterable, Tuple
 
+import click
 import ni_measurement_plugin_sdk_service as nims
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types import xydata_pb2
 
@@ -10,11 +12,19 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types import 
 service_directory = Path(__file__).resolve().parent
 measurement_service = nims.MeasurementService(
     service_config_path=service_directory / "NonStreamingDataMeasurement.serviceconfig",
-    version="0.1.0.0",
+    version="0.1.0",
     ui_file_paths=[
         service_directory,
     ],
 )
+
+
+class Color(Enum):
+
+    NONE = 0
+    RED = 1
+    GREEN = 2
+    BLUE = 3
 
 
 @measurement_service.register_measurement
@@ -33,6 +43,8 @@ measurement_service = nims.MeasurementService(
 @measurement_service.configuration(
     "IO Array In", nims.DataType.IOResourceArray1D, ["resource1", "resource2"]
 )
+@measurement_service.configuration("Enum In", nims.DataType.Enum, Color.BLUE, enum_type=Color)
+@measurement_service.configuration("Enum Array In", nims.DataType.EnumArray1D, [1, 2], enum_type=Color)
 @measurement_service.configuration("Integer In", nims.DataType.Int32, 10)
 @measurement_service.output("Float out", nims.DataType.Float)
 @measurement_service.output("Double Array out", nims.DataType.DoubleArray1D)
@@ -45,6 +57,8 @@ measurement_service = nims.MeasurementService(
 @measurement_service.output("IO Array Out", nims.DataType.IOResourceArray1D)
 @measurement_service.output("Integer Out", nims.DataType.Int32)
 @measurement_service.output("XY Data Out", nims.DataType.DoubleXYData)
+@measurement_service.output("Enum Out", nims.DataType.Enum, enum_type=Color)
+@measurement_service.output("Enum Array Out", nims.DataType.EnumArray1D, enum_type=Color)
 def measure(
     float_input: float,
     double_array_input: Iterable[float],
@@ -56,6 +70,8 @@ def measure(
     io_input: str,
     io_array_input: Iterable[str],
     integer_input: int,
+    enum_input: Color,
+    enum_array_input: Iterable[Color],
 ) -> Tuple[
     float,
     Iterable[float],
@@ -68,6 +84,8 @@ def measure(
     Iterable[str],
     int,
     xydata_pb2.DoubleXYData,
+    Color,
+    Iterable[Color],
 ]:
     """Perform a loopback measurement with various data types."""
     float_output = float_input
@@ -81,6 +99,8 @@ def measure(
     io_array_output = io_array_input
     integer_output = integer_input
     xy_data_output = xydata_pb2.DoubleXYData()
+    enum_output = enum_input
+    enum_array_output = enum_array_input
 
     return (
         float_output,
@@ -94,4 +114,19 @@ def measure(
         io_array_output,
         integer_output,
         xy_data_output,
+        enum_output,
+        enum_array_output,
     )
+
+
+@click.command
+def main() -> None:
+    """Perform a loopback measurement with various data types."""
+    # configure_logging(verbosity)
+
+    with measurement_service.host_service():
+        input("Press enter to close the measurement service.\n")
+
+
+if __name__ == "__main__":
+    main()

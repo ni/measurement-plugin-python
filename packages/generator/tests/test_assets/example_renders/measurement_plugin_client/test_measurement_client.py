@@ -1,13 +1,17 @@
 """Python Measurement Plug-In Client."""
 
+import json
 import logging
+import re
 import threading
+from enum import Enum
 from pathlib import Path
-from typing import Any, Generator, List, NamedTuple, Optional
+from typing import Any, Dict, Generator, List, NamedTuple, Optional
 
 import grpc
 from google.protobuf import any_pb2
 from google.protobuf import descriptor_pool
+from google.protobuf.descriptor_pb2 import FieldDescriptorProto
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v2 import (
     measurement_service_pb2 as v2_measurement_service_pb2,
     measurement_service_pb2_grpc as v2_measurement_service_pb2_grpc,
@@ -29,6 +33,14 @@ _logger = logging.getLogger(__name__)
 _V2_MEASUREMENT_SERVICE_INTERFACE = "ni.measurementlink.measurement.v2.MeasurementService"
 
 
+class EnumInEnum(Enum):
+
+    NONE = 0
+    RED = 1
+    GREEN = 2
+    BLUE = 3
+
+
 class Output(NamedTuple):
     """Measurement result container."""
 
@@ -43,9 +55,11 @@ class Output(NamedTuple):
     io_array_out: List[str]
     integer_out: int
     xy_data_out: DoubleXYData
+    enum_out: EnumInEnum
+    enum_array_out: List[EnumInEnum]
 
 
-class TestMeasurement:
+class NonStreamingDataMeasurementClient:
     """Client to interact with the measurement plug-in."""
 
     def __init__(
@@ -167,6 +181,32 @@ class TestMeasurement:
                 enum_type=None,
             ),
             10: ParameterMetadata(
+                display_name="Enum In",
+                type=14,
+                repeated=False,
+                default_value=3,
+                annotations={
+                    "ni/enum.values": '{"NONE": 0, "RED": 1, "GREEN": 2, "BLUE": 3}',
+                    "ni/type_specialization": "enum",
+                },
+                message_type="",
+                field_name="Enum_In",
+                enum_type=EnumInEnum,
+            ),
+            11: ParameterMetadata(
+                display_name="Enum Array In",
+                type=14,
+                repeated=True,
+                default_value=[1, 2],
+                annotations={
+                    "ni/enum.values": '{"NONE": 0, "RED": 1, "GREEN": 2, "BLUE": 3}',
+                    "ni/type_specialization": "enum",
+                },
+                message_type="",
+                field_name="Enum_Array_In",
+                enum_type=EnumInEnum,
+            ),
+            12: ParameterMetadata(
                 display_name="Integer In",
                 type=5,
                 repeated=False,
@@ -294,6 +334,32 @@ class TestMeasurement:
                 field_name="XY_Data_Out",
                 enum_type=None,
             ),
+            12: ParameterMetadata(
+                display_name="Enum Out",
+                type=14,
+                repeated=False,
+                default_value=None,
+                annotations={
+                    "ni/enum.values": '{"NONE": 0, "RED": 1, "GREEN": 2, "BLUE": 3}',
+                    "ni/type_specialization": "enum",
+                },
+                message_type="",
+                field_name="Enum_Out",
+                enum_type=EnumInEnum,
+            ),
+            13: ParameterMetadata(
+                display_name="Enum Array Out",
+                type=14,
+                repeated=True,
+                default_value=None,
+                annotations={
+                    "ni/enum.values": '{"NONE": 0, "RED": 1, "GREEN": 2, "BLUE": 3}',
+                    "ni/type_specialization": "enum",
+                },
+                message_type="",
+                field_name="Enum_Array_Out",
+                enum_type=EnumInEnum,
+            ),
         }
         if grpc_channel is not None:
             self._stub = v2_measurement_service_pb2_grpc.MeasurementServiceStub(grpc_channel)
@@ -322,6 +388,7 @@ class TestMeasurement:
     def _create_file_descriptor(self) -> None:
         metadata = self._get_stub().GetMetadata(v2_measurement_service_pb2.GetMetadataRequest())
         configuration_metadata = []
+        enum_values_by_type_name: Dict[str, Dict[str, Any]] = {}
         for configuration in metadata.measurement_signature.configuration_parameters:
             configuration_metadata.append(
                 ParameterMetadata.initialize(
@@ -331,6 +398,7 @@ class TestMeasurement:
                     default_value=None,
                     annotations=dict(configuration.annotations.items()),
                     message_type=configuration.message_type,
+                    enum_type=self._get_enum_type(configuration, enum_values_by_type_name),
                 )
             )
         output_metadata = []
@@ -343,6 +411,7 @@ class TestMeasurement:
                     default_value=None,
                     annotations=dict(output.annotations.items()),
                     message_type=output.message_type,
+                    enum_type=self._get_enum_type(output, enum_values_by_type_name),
                 )
             )
         create_file_descriptor(
@@ -379,6 +448,28 @@ class TestMeasurement:
             result[k - 1] = v
         return Output._make(result)
 
+    def _get_enum_type(
+        self, parameter: Any, enum_values_by_type_name: Dict[str, Dict[str, Any]]
+    ) -> Any:
+        if parameter.type == FieldDescriptorProto.TYPE_ENUM:
+            loaded_enum_values = json.loads(parameter.annotations["ni/enum.values"])
+            enum_values = dict((key, value) for key, value in loaded_enum_values.items())
+
+            for existing_enum_name, existing_enum_values in enum_values_by_type_name.items():
+                if existing_enum_values == enum_values:
+                    return Enum(existing_enum_name, existing_enum_values)
+            new_enum_type_name = self._get_enum_class_name(parameter.name)
+            enum_values_by_type_name[new_enum_type_name] = enum_values
+            return Enum(new_enum_type_name, enum_values)
+        return None
+
+    def _get_enum_class_name(self, name: str) -> str:
+        class_name = name.title().replace(" ", "")
+        invalid_chars = "`~!@#$%^&*()-+={}[]\|:;',<>.?/ \n_"
+        pattern = f"[{re.escape(invalid_chars)}]"
+        class_name = re.sub(pattern, "", class_name)
+        return class_name + "Enum"
+
     def measure(
         self,
         float_in: float = 0.05999999865889549,
@@ -390,6 +481,8 @@ class TestMeasurement:
         path_array_in: List[Path] = ["path/test1", "path/ntest2"],
         io_in: str = "resource",
         io_array_in: List[str] = ["resource1", "resource2"],
+        enum_in: EnumInEnum = EnumInEnum.BLUE,
+        enum_array_in: List[EnumInEnum] = [EnumInEnum.RED, EnumInEnum.GREEN],
         integer_in: int = 10,
     ) -> Output:
         """Executes the Non-Streaming Data Measurement (Py).
@@ -407,6 +500,8 @@ class TestMeasurement:
             path_array_in,
             io_in,
             io_array_in,
+            enum_in,
+            enum_array_in,
             integer_in,
         ]
         request = self._create_measure_request(parameter_values)
@@ -426,6 +521,8 @@ class TestMeasurement:
         path_array_in: List[Path] = ["path/test1", "path/ntest2"],
         io_in: str = "resource",
         io_array_in: List[str] = ["resource1", "resource2"],
+        enum_in: EnumInEnum = EnumInEnum.BLUE,
+        enum_array_in: List[EnumInEnum] = [EnumInEnum.RED, EnumInEnum.GREEN],
         integer_in: int = 10,
     ) -> Generator[Output, None, None]:
         """Executes the Non-Streaming Data Measurement (Py).
@@ -443,6 +540,8 @@ class TestMeasurement:
             path_array_in,
             io_in,
             io_array_in,
+            enum_in,
+            enum_array_in,
             integer_in,
         ]
         request = self._create_measure_request(parameter_values)
