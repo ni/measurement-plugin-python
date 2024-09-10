@@ -49,7 +49,7 @@ class Output(NamedTuple):
     xy_data_out: DoubleXYData
 
 
-class TestMeasurement:
+class NonStreamingDataMeasurementClient:
     """Client to interact with the measurement plug-in."""
 
     def __init__(

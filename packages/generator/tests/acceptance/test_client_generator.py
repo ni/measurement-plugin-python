@@ -1,3 +1,4 @@
+import os
 import pathlib
 import re
 import sys
@@ -8,7 +9,7 @@ from ni_measurement_plugin_sdk_service.measurement.service import MeasurementSer
 
 from ni_measurement_plugin_sdk_generator.client import create_client
 from tests.utilities.discovery_service_process import DiscoveryServiceProcess
-from tests.utilities.measurements import non_streaming_data_measurement
+from tests.utilities.measurements import non_streaming_data_measurement, streaming_data_measurement
 
 
 def test___command_line_args___create_client___render_without_error(
@@ -17,7 +18,7 @@ def test___command_line_args___create_client___render_without_error(
     measurement_service: MeasurementService,
 ) -> None:
     temp_directory = tmp_path_factory.mktemp("measurement_plugin_client_files")
-    module_name = "test_measurement_client"
+    module_name = "non_streaming_data_measurement_client"
     golden_path = test_assets_directory / "example_renders" / "measurement_plugin_client"
     filename = f"{module_name}.py"
 
@@ -28,7 +29,7 @@ def test___command_line_args___create_client___render_without_error(
                 "--module-name",
                 module_name,
                 "--class-name",
-                "TestMeasurement",
+                "NonStreamingDataMeasurementClient",
                 "--directory-out",
                 temp_directory,
             ]
@@ -41,12 +42,41 @@ def test___command_line_args___create_client___render_without_error(
     )
 
 
+def test___command_line_args___create_client_for_all_registered_measurements___renders_without_error(
+    tmp_path_factory: pytest.TempPathFactory,
+    multiple_measurement_service: MeasurementService,
+) -> None:
+    temp_directory = tmp_path_factory.mktemp("measurement_plugin_client_files")
+
+    with pytest.raises(SystemExit) as exc_info:
+        create_client(
+            [
+                "--all",
+                "--directory-out",
+                temp_directory,
+            ]
+        )
+
+    expected_modules = [
+        "non_streaming_data_measurement_client.py",
+        "streaming_data_measurement_client.py",
+    ]
+    actual_modules = os.listdir(temp_directory)
+    assert all(
+        [
+            not exc_info.value.code,
+            len(actual_modules) == 2,
+            expected_modules == actual_modules,
+        ]
+    )
+
+
 def test___command_line_args___create_client___render_with_proper_line_ending(
     tmp_path_factory: pytest.TempPathFactory,
     measurement_service: MeasurementService,
 ) -> None:
     temp_directory = tmp_path_factory.mktemp("measurement_plugin_client_files")
-    module_name = "test_measurement_client"
+    module_name = "non_streaming_data_measurement_client"
     filename = f"{module_name}.py"
 
     with pytest.raises(SystemExit) as exc_info:
@@ -56,7 +86,7 @@ def test___command_line_args___create_client___render_with_proper_line_ending(
                 "--module-name",
                 module_name,
                 "--class-name",
-                "TestMeasurement",
+                "NonStreamingDataMeasurementClient",
                 "--directory-out",
                 temp_directory,
             ]
@@ -87,10 +117,19 @@ def _assert_line_ending(file_path: pathlib.Path) -> None:
             assert match == b"\n"
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture
 def measurement_service(
     discovery_service_process: DiscoveryServiceProcess,
 ) -> Generator[MeasurementService, None, None]:
     """Test fixture that creates and hosts a Measurement Plug-In Service."""
     with non_streaming_data_measurement.measurement_service.host_service() as service:
         yield service
+
+
+@pytest.fixture
+def multiple_measurement_service(
+    discovery_service_process: DiscoveryServiceProcess,
+) -> Generator[MeasurementService, None, None]:
+    """Test fixture that creates and hosts a Measurement Plug-In Service."""
+    with non_streaming_data_measurement.measurement_service.host_service(), streaming_data_measurement.measurement_service.host_service() as services:
+        yield services

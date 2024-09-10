@@ -4,7 +4,7 @@ import keyword
 import os
 import re
 import sys
-from typing import AbstractSet, Dict, Iterable, List, Tuple, TypeVar
+from typing import AbstractSet, Dict, Iterable, List, Optional, Tuple, TypeVar
 
 import click
 import grpc
@@ -80,6 +80,17 @@ def get_measurement_service_stub(
             raise
     channel = channel_pool.get_channel(service_location.insecure_address)
     return v2_measurement_service_pb2_grpc.MeasurementServiceStub(channel)
+
+
+def get_all_registered_measurement_service_classes(discovery_client: DiscoveryClient) -> List[str]:
+    """Returns the service classes of all the registered measurement services."""
+    registered_measurement_services = discovery_client.enumerate_services(
+        _V2_MEASUREMENT_SERVICE_INTERFACE
+    )
+    measurement_service_classes = [
+        measurement_service.service_class for measurement_service in registered_measurement_services
+    ]
+    return measurement_service_classes
 
 
 def get_configuration_metadata_by_index(
@@ -169,7 +180,7 @@ def get_configuration_parameters_with_type_and_default_values(
             default_value = f'"{default_value}"'
 
         # If it's path type, make the value as raw string literal to ignore escape characters.
-        if metadata.annotations and metadata.annotations["ni/type_specialization"] == "path":
+        if metadata.annotations and metadata.annotations.get("ni/type_specialization") == "path":
             default_value = f"r{default_value}"
             parameter_type = "Path"
             built_in_import_modules.append(_PATH_IMPORT)
@@ -200,7 +211,7 @@ def get_output_parameters_with_type(
         parameter_name = _get_python_identifier(metadata.display_name)
         parameter_type = _get_python_type_as_str(metadata.type, metadata.repeated)
 
-        if metadata.annotations and metadata.annotations["ni/type_specialization"] == "path":
+        if metadata.annotations and metadata.annotations.get("ni/type_specialization") == "path":
             parameter_type = "Path"
             built_in_import_modules.append(_PATH_IMPORT)
 
@@ -245,8 +256,10 @@ def remove_suffix(string: str) -> str:
     return string
 
 
-def is_python_identifier(input_string: str) -> bool:
+def is_python_identifier(input_string: Optional[str]) -> bool:
     """Validates whether the given string is a valid Python identifier."""
+    if input_string is None:
+        return False
     pattern = r"^[a-zA-Z_][a-zA-Z0-9_]*$"
     return re.fullmatch(pattern, input_string) is not None
 
