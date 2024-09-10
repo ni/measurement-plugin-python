@@ -169,7 +169,7 @@ def get_configuration_parameters_with_type_and_default_values(
             default_value = f'"{default_value}"'
 
         # If it's path type, make the value as raw string literal to ignore escape characters.
-        if metadata.annotations and metadata.annotations["ni/type_specialization"] == "path":
+        if metadata.annotations and metadata.annotations.get("ni/type_specialization") == "path":
             default_value = f"r{default_value}"
             parameter_type = "Path"
             built_in_import_modules.append(_PATH_IMPORT)
@@ -200,7 +200,7 @@ def get_output_parameters_with_type(
         parameter_name = _get_python_identifier(metadata.display_name)
         parameter_type = _get_python_type_as_str(metadata.type, metadata.repeated)
 
-        if metadata.annotations and metadata.annotations["ni/type_specialization"] == "path":
+        if metadata.annotations and metadata.annotations.get("ni/type_specialization") == "path":
             parameter_type = "Path"
             built_in_import_modules.append(_PATH_IMPORT)
 
