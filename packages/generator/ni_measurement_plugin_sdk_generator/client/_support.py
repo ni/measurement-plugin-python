@@ -206,7 +206,7 @@ def get_configuration_parameters_with_type_and_default_values(
                 parameter_type = f"List[{parameter_type}]"
                 default_value = metadata.default_value
 
-        if metadata.annotations and metadata.annotations["ni/type_specialization"] == "enum":
+        if metadata.annotations and metadata.annotations.get("ni/type_specialization") == "enum":
             enum_type = _get_enum_type(metadata, enum_values_by_type_name)
             parameter_type = enum_type.__name__
             if metadata.repeated:
