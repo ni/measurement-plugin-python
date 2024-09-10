@@ -62,9 +62,11 @@ def test___command_line_args___create_client_for_all_registered_measurements___r
         "streaming_data_measurement_client.py",
     ]
     actual_modules = os.listdir(temp_directory)
-    assert not exc_info.value.code
-    assert len(actual_modules) == 2
-    assert expected_modules == actual_modules
+    assert all([
+       not exc_info.value.code,
+       len(actual_modules) == 2,
+       expected_modules == actual_modules,
+    ])
 
 
 def test___command_line_args___create_client___render_with_proper_line_ending(
@@ -113,7 +115,7 @@ def _assert_line_ending(file_path: pathlib.Path) -> None:
             assert match == b"\n"
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture
 def measurement_service(
     discovery_service_process: DiscoveryServiceProcess,
 ) -> Generator[MeasurementService, None, None]:
