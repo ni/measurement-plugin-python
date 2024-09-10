@@ -146,8 +146,8 @@ def get_configuration_metadata_by_index(
     for k, v in deserialized_parameters.items():
         if issubclass(type(v), Enum):
             default_value = v.value
-        elif issubclass(type(v), list):
-            default_value = [e.value for e in v if issubclass(type(e), Enum)]
+        elif issubclass(type(v), list) and any(issubclass(type(e), Enum) for e in v):
+            default_value = [e.value for e in v]
         else:
             default_value = v
 
@@ -260,7 +260,7 @@ def get_output_parameters_with_type(
             if metadata.repeated:
                 parameter_type = f"List[{parameter_type}]"
 
-        if metadata.annotations and metadata.annotations["ni/type_specialization"] == "enum":
+        if metadata.annotations and metadata.annotations.get("ni/type_specialization") == "enum":
             enum_type_name = _get_enum_type(metadata, enum_values_by_type_name).__name__
             parameter_type = f"List[{enum_type_name}]" if metadata.repeated else enum_type_name
 
