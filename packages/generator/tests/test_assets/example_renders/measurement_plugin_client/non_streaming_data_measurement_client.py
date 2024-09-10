@@ -34,6 +34,7 @@ _V2_MEASUREMENT_SERVICE_INTERFACE = "ni.measurementlink.measurement.v2.Measureme
 
 
 class EnumInEnum(Enum):
+    """Primary colors used for example enum-typed config and output."""
 
     NONE = 0
     RED = 1

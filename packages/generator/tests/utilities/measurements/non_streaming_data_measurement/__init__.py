@@ -20,6 +20,7 @@ measurement_service = nims.MeasurementService(
 
 
 class Color(Enum):
+    """Primary colors used for example enum-typed config and output."""
 
     NONE = 0
     RED = 1
@@ -44,7 +45,9 @@ class Color(Enum):
     "IO Array In", nims.DataType.IOResourceArray1D, ["resource1", "resource2"]
 )
 @measurement_service.configuration("Enum In", nims.DataType.Enum, Color.BLUE, enum_type=Color)
-@measurement_service.configuration("Enum Array In", nims.DataType.EnumArray1D, [1, 2], enum_type=Color)
+@measurement_service.configuration(
+    "Enum Array In", nims.DataType.EnumArray1D, [1, 2], enum_type=Color
+)
 @measurement_service.configuration("Integer In", nims.DataType.Int32, 10)
 @measurement_service.output("Float out", nims.DataType.Float)
 @measurement_service.output("Double Array out", nims.DataType.DoubleArray1D)

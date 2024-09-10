@@ -147,7 +147,9 @@ def create_client(
         metadata = measurement_service_stub.GetMetadata(
             v2_measurement_service_pb2.GetMetadataRequest()
         )
-        configuration_metadata = get_configuration_metadata_by_index(metadata, service_class, enum_values_by_type_name)
+        configuration_metadata = get_configuration_metadata_by_index(
+            metadata, service_class, enum_values_by_type_name
+        )
         output_metadata = get_output_metadata_by_index(metadata, enum_values_by_type_name)
 
         configuration_parameters_with_type_and_default_values, measure_api_parameters = (
@@ -156,7 +158,10 @@ def create_client(
             )
         )
         output_parameters_with_type = get_output_parameters_with_type(
-            output_metadata, built_in_import_modules, custom_import_modules, enum_values_by_type_name
+            output_metadata,
+            built_in_import_modules,
+            custom_import_modules,
+            enum_values_by_type_name,
         )
 
         _create_file(
@@ -174,7 +179,7 @@ def create_client(
             built_in_import_modules=to_ordered_set(built_in_import_modules),
             custom_import_modules=to_ordered_set(custom_import_modules),
             enum_by_class_name=enum_values_by_type_name,
-    )
+        )
 
         print(
             f"The measurement plug-in client for the service class '{service_class}' has been created successfully."
