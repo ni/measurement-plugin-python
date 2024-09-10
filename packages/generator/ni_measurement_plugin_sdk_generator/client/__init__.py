@@ -1,8 +1,6 @@
 """Utilizes command line args to create a Measurement Plug-In Client using template files."""
 
 import pathlib
-import re
-import sys
 from typing import Any, Dict, List, Optional
 
 import black
@@ -34,18 +32,12 @@ def _render_template(template_name: str, **template_args: Any) -> bytes:
     return template.render(**template_args)
 
 
-def _replace_enum_class_type(output: str) -> str:
-    pattern = "<enum '([^']+)'>"
-    return re.sub(pattern, r"\1", output)
-
-
 def _create_file(
     template_name: str, file_name: str, directory_out: pathlib.Path, **template_args: Any
 ) -> None:
     output_file = directory_out / file_name
 
     output = _render_template(template_name, **template_args).decode("utf-8")
-    output = _replace_enum_class_type(output)
     formatted_output = black.format_str(
         src_contents=output,
         mode=black.Mode(line_length=100),
@@ -149,23 +141,23 @@ def create_client(
                 f"The class name '{class_name}' is not a valid Python identifier."
             )
 
-    measurement_service_stub = get_measurement_service_stub(
-        discovery_client, channel_pool, measurement_service_class
-    )
-    metadata = measurement_service_stub.GetMetadata(v2_measurement_service_pb2.GetMetadataRequest())
-    configuration_metadata = get_configuration_metadata_by_index(
-        metadata, measurement_service_class, enum_values_by_type_name
-    )
-    output_metadata = get_output_metadata_by_index(metadata, enum_values_by_type_name)
-
-    configuration_parameters_with_type_and_default_values, measure_api_parameters = (
-        get_configuration_parameters_with_type_and_default_values(
-            configuration_metadata, built_in_import_modules, enum_values_by_type_name
+        measurement_service_stub = get_measurement_service_stub(
+            discovery_client, channel_pool, service_class
         )
-    )
-    output_parameters_with_type = get_output_parameters_with_type(
-        output_metadata, built_in_import_modules, custom_import_modules, enum_values_by_type_name
-    )
+        metadata = measurement_service_stub.GetMetadata(
+            v2_measurement_service_pb2.GetMetadataRequest()
+        )
+        configuration_metadata = get_configuration_metadata_by_index(metadata, service_class, enum_values_by_type_name)
+        output_metadata = get_output_metadata_by_index(metadata, enum_values_by_type_name)
+
+        configuration_parameters_with_type_and_default_values, measure_api_parameters = (
+            get_configuration_parameters_with_type_and_default_values(
+                configuration_metadata, built_in_import_modules, enum_values_by_type_name
+            )
+        )
+        output_parameters_with_type = get_output_parameters_with_type(
+            output_metadata, built_in_import_modules, custom_import_modules, enum_values_by_type_name
+        )
 
         _create_file(
             template_name="measurement_plugin_client.py.mako",
