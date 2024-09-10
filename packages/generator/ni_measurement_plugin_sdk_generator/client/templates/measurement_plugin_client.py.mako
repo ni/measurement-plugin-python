@@ -8,7 +8,7 @@ import threading
 % for module in built_in_import_modules:
 ${module}
 % endfor
-from typing import Any, Generator, Iterable, List, NamedTuple, Optional, Tuple
+from typing import Any, Generator, Iterable, List, NamedTuple, Optional
 
 import grpc
 from google.protobuf import any_pb2
