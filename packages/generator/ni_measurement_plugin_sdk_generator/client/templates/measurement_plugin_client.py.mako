@@ -81,20 +81,18 @@ class ${class_name}:
         if grpc_channel is not None:
             self._stub = v2_measurement_service_pb2_grpc.MeasurementServiceStub(grpc_channel)
         self._create_file_descriptor()
-        self._pin_map_id = ""
-        self._sites = [0]
+        self._pin_map_context: Optional[PinMapContext] = None
 
     @property
-    def sites(self) -> Tuple[int, ...]:
-        """Sites for which the measurement is being executed."""
-        return tuple(self._sites)
-    
-    def set_sites(self, val):
-        if not isinstance(val, Iterable):
-            raise ValueError("Sites must be a iterable")
-        if not all(isinstance(site, int) for site in val):
-            raise ValueError("All sites must be integers")
-        self._sites = val
+    def pin_map_context(self) -> PinMapContext:
+        """Get the pin map context for the RPC."""
+        return self._pin_map_context
+
+    @pin_map_context.setter
+    def pin_map_context(self, val: PinMapContext) -> None:
+        if not isinstance(val, PinMapContext):
+            raise ValueError("pin_map_context must be an instance of PinMapContext.")
+        self._pin_map_context = val
 
     def _get_stub(self) -> v2_measurement_service_pb2_grpc.MeasurementServiceStub:
         if self._stub is None:
@@ -230,10 +228,14 @@ class ${class_name}:
         for response in self._get_stub().Measure(request):
             yield self._deserialize_response(response)
 
-    def register_pin_map(self, pin_map_path: pathlib.Path) -> None:
+    def register_pin_map(self, pin_map_path: pathlib.Path, sites: Iterable[int] = [0]) -> None:
         """Registers the pin map with the pin map service.
-        
+
         Args:
             pin_map_path: Absolute path of the pin map file.
+
+            sites: Sites for which the measurement is being executed. If not specified,
+                site 0 is used.
         """
-        self._pin_map_id = self._get_pin_map_client().update_pin_map(pin_map_path)
+        pin_map_id = self._get_pin_map_client().update_pin_map(pin_map_path)
+        self._pin_map_context = PinMapContext(pin_map_id=pin_map_id, sites=sites)
