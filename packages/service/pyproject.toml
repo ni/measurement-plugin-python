@@ -81,6 +81,7 @@ numpy = [
   {version = ">=1.22", python = ">=3.8,<3.12"},
   {version = ">=1.26", python = ">=3.12,<3.13"},
 ]
+bandit = { version = ">=1.7", extras = ["toml"] }
 
 [tool.poetry.group.docs]
 optional = true
@@ -157,3 +158,8 @@ warn_unused_ignores = false
 module = ["tests.*"]
 check_untyped_defs = true
 disallow_untyped_defs = false
+
+[tool.bandit]
+skips = [
+  "B101", # assert_used
+]

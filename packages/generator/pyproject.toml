@@ -37,6 +37,7 @@ types-protobuf = "^4.21"
 grpc-stubs = "^1.53"
 # Uncomment to use prerelease dependencies.
 ni-measurement-plugin-sdk-service = {path = "../../packages/service"}
+bandit = { version = ">=1.7", extras = ["toml"] }
 
 [tool.poetry.scripts]
 ni-measurement-plugin-generator = "ni_measurement_plugin_sdk_generator.plugin:create_measurement"
@@ -66,3 +67,9 @@ ignore_missing_imports = true
 addopts = "--doctest-modules --ignore tests/test_assets --strict-markers"
 filterwarnings = ["always::ImportWarning", "always::ResourceWarning"]
 testpaths = ["tests"]
+
+[tool.bandit]
+skips = [
+  "B101", # assert_used
+  "B702", # use_of_mako_templates
+]
