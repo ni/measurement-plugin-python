@@ -3,6 +3,7 @@
 """Python Measurement Plug-In Client."""
 
 import logging
+import pathlib
 import threading
 % for module in built_in_import_modules:
 ${module}
@@ -229,7 +230,7 @@ class ${class_name}:
         for response in self._get_stub().Measure(request):
             yield self._deserialize_response(response)
 
-    def register_pin_map(self, pin_map_path: str) -> None:
+    def register_pin_map(self, pin_map_path: pathlib.Path) -> None:
         """Registers the pin map with the pin map service.
         
         Args:
