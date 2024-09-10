@@ -177,10 +177,15 @@ class ${class_name}:
                 service_name=f"{self._service_class}.Configurations",
             )
         )
-        return v2_measurement_service_pb2.MeasureRequest(
-            configuration_parameters=serialized_configuration,
-            pin_map_context=PinMapContext(pin_map_id=self._pin_map_id, sites=self._sites),
-        )
+        if self._pin_map_context is None:
+            return v2_measurement_service_pb2.MeasureRequest(
+                configuration_parameters=serialized_configuration,
+            )
+        else:
+            return v2_measurement_service_pb2.MeasureRequest(
+                configuration_parameters=serialized_configuration,
+                pin_map_context=self._pin_map_context,
+            )
 
     def _deserialize_response(
         self, response: v2_measurement_service_pb2.MeasureResponse
