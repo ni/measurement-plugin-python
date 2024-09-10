@@ -1,17 +1,21 @@
-<%page args="class_name, display_name, configuration_metadata, output_metadata, service_class, configuration_parameters_with_type_and_default_values, measure_api_parameters, output_parameters_with_type, built_in_import_modules, custom_import_modules"/>\
+<%page args="class_name, display_name, configuration_metadata, output_metadata, service_class, configuration_parameters_with_type_and_default_values, measure_api_parameters, output_parameters_with_type, built_in_import_modules, custom_import_modules, enum_by_class_name"/>\
 \
 """Python Measurement Plug-In Client."""
 
+import json
 import logging
+import re
 import threading
+from enum import Enum
 % for module in built_in_import_modules:
 ${module}
 % endfor
-from typing import Any, Generator, List, NamedTuple, Optional
+from typing import Any, Dict, Generator, List, NamedTuple, Optional, Union
 
 import grpc
 from google.protobuf import any_pb2
 from google.protobuf import descriptor_pool
+from google.protobuf.descriptor_pb2 import FieldDescriptorProto
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v2 import (
     measurement_service_pb2 as v2_measurement_service_pb2,
     measurement_service_pb2_grpc as v2_measurement_service_pb2_grpc,
@@ -31,6 +35,15 @@ from ni_measurement_plugin_sdk_service.measurement.client_support import (
 _logger = logging.getLogger(__name__)
 
 _V2_MEASUREMENT_SERVICE_INTERFACE = "ni.measurementlink.measurement.v2.MeasurementService"
+
+% for enum_name, enum_value in enum_by_class_name.items():
+
+class ${enum_name}(Enum):
+
+    % for key, val in enum_value.items():
+    ${key} = ${val}
+    % endfor
+% endfor
 
 <% output_type = "None" %>\
 % if output_metadata:
@@ -95,7 +108,8 @@ class ${class_name}:
 
     def _create_file_descriptor(self) -> None:
         metadata = self._get_stub().GetMetadata(v2_measurement_service_pb2.GetMetadataRequest())
-        configuration_metadata =  []        
+        configuration_metadata =  []
+        enum_values_by_type_name: Dict[str, Dict[str, Any]] = {}    
         for configuration in metadata.measurement_signature.configuration_parameters:
             configuration_metadata.append(
                 ParameterMetadata.initialize(
@@ -105,6 +119,7 @@ class ${class_name}:
                     default_value=None,
                     annotations=dict(configuration.annotations.items()),
                     message_type=configuration.message_type,
+                    enum_type=self._get_enum_type(configuration, enum_values_by_type_name),
                 )
             )
 
@@ -118,6 +133,7 @@ class ${class_name}:
                     default_value=None,
                     annotations=dict(output.annotations.items()),
                     message_type=output.message_type,
+                    enum_type=self._get_enum_type(output, enum_values_by_type_name),
                 )
             )
 
@@ -156,6 +172,29 @@ class ${class_name}:
         for k, v in output_values.items():
             result[k - 1] = v
         return Output._make(result)
+
+    def _get_enum_type(self, parameter: Any, enum_values_by_type_name: Dict[str, Dict[str, Any]]) -> Union[Enum, None]:
+        enum_type = None
+        if parameter.type == FieldDescriptorProto.TYPE_ENUM:
+            loaded_enum_values = json.loads(parameter.annotations["ni/enum.values"])
+            enum_values_dict = dict((key, value) for key, value in loaded_enum_values.items())
+            
+            for existing_enum_name, existing_enum_values in enum_values_by_type_name.items():
+                if existing_enum_values == enum_values_dict:
+                    return Enum(existing_enum_name, existing_enum_values)
+            
+            new_enum_type_name = self._get_enum_class_name(parameter.name)
+            enum_values_by_type_name[new_enum_type_name] = enum_values_dict
+            enum_type = Enum(new_enum_type_name, enum_values_dict)
+        
+        return enum_type
+
+    def _get_enum_class_name(self, name: str) -> str:
+        class_name = name.title().replace(" ", "")
+        invalid_chars = "`~!@#$%^&*()-+={}[]\|:;',<>.?/ \nr_"
+        pattern = f"[{re.escape(invalid_chars)}]"
+        class_name = re.sub(pattern, '', class_name)
+        return class_name + "Enum"
 
     def measure(
         self,

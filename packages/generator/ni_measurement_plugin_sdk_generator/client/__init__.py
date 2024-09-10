@@ -3,7 +3,7 @@
 import pathlib
 import re
 import sys
-from typing import Any, List, Optional
+from typing import Any, Dict, List, Optional
 
 import black
 import click
@@ -33,12 +33,18 @@ def _render_template(template_name: str, **template_args: Any) -> bytes:
     return template.render(**template_args)
 
 
+def _replace_enum_class_type(output: str):
+    pattern = "<enum '([^']+)'>"
+    return re.sub(pattern, r"\1", output)
+
+
 def _create_file(
     template_name: str, file_name: str, directory_out: pathlib.Path, **template_args: Any
 ) -> None:
     output_file = directory_out / file_name
 
     output = _render_template(template_name, **template_args).decode("utf-8")
+    output = _replace_enum_class_type(output)
     formatted_output = black.format_str(
         src_contents=output,
         mode=black.Mode(line_length=100),
@@ -81,6 +87,7 @@ def create_client(
     discovery_client = DiscoveryClient(grpc_channel_pool=channel_pool)
     built_in_import_modules: List[str] = []
     custom_import_modules: List[str] = []
+    enum_values_by_type_name: Dict[str, Dict[str, Any]] = {}
 
     if module_name is None or class_name is None:
         base_service_class = measurement_service_class.split(".")[-1]
@@ -113,17 +120,17 @@ def create_client(
     )
     metadata = measurement_service_stub.GetMetadata(v2_measurement_service_pb2.GetMetadataRequest())
     configuration_metadata = get_configuration_metadata_by_index(
-        metadata, measurement_service_class
+        metadata, measurement_service_class, enum_values_by_type_name
     )
-    output_metadata = get_output_metadata_by_index(metadata)
+    output_metadata = get_output_metadata_by_index(metadata, enum_values_by_type_name)
 
     configuration_parameters_with_type_and_default_values, measure_api_parameters = (
         get_configuration_parameters_with_type_and_default_values(
-            configuration_metadata, built_in_import_modules
+            configuration_metadata, built_in_import_modules, enum_values_by_type_name
         )
     )
     output_parameters_with_type = get_output_parameters_with_type(
-        output_metadata, built_in_import_modules, custom_import_modules
+        output_metadata, built_in_import_modules, custom_import_modules, enum_values_by_type_name
     )
 
     if directory_out is None:
@@ -145,4 +152,5 @@ def create_client(
         output_parameters_with_type=output_parameters_with_type,
         built_in_import_modules=to_ordered_set(built_in_import_modules),
         custom_import_modules=to_ordered_set(custom_import_modules),
+        enum_by_class_name=enum_values_by_type_name,
     )
