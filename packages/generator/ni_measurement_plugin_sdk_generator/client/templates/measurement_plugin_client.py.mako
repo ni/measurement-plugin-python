@@ -10,7 +10,7 @@ from enum import Enum
 % for module in built_in_import_modules:
 ${module}
 % endfor
-from typing import Any, Dict, Generator, List, NamedTuple, Optional, Union
+from typing import Any, Dict, Generator, List, NamedTuple, Optional
 
 import grpc
 from google.protobuf import any_pb2
@@ -173,21 +173,19 @@ class ${class_name}:
             result[k - 1] = v
         return Output._make(result)
 
-    def _get_enum_type(self, parameter: Any, enum_values_by_type_name: Dict[str, Dict[str, Any]]) -> Union[Enum, None]:
-        enum_type = None
+    def _get_enum_type(self, parameter: Any, enum_values_by_type_name: Dict[str, Dict[str, Any]]) -> Any:
         if parameter.type == FieldDescriptorProto.TYPE_ENUM:
             loaded_enum_values = json.loads(parameter.annotations["ni/enum.values"])
-            enum_values_dict = dict((key, value) for key, value in loaded_enum_values.items())
-            
+            enum_values = dict((key, value) for key, value in loaded_enum_values.items())
+
             for existing_enum_name, existing_enum_values in enum_values_by_type_name.items():
-                if existing_enum_values == enum_values_dict:
+                if existing_enum_values == enum_values:
                     return Enum(existing_enum_name, existing_enum_values)
-            
+
             new_enum_type_name = self._get_enum_class_name(parameter.name)
-            enum_values_by_type_name[new_enum_type_name] = enum_values_dict
-            enum_type = Enum(new_enum_type_name, enum_values_dict)
-        
-        return enum_type
+            enum_values_by_type_name[new_enum_type_name] = enum_values
+            return Enum(new_enum_type_name, enum_values)
+        return None
 
     def _get_enum_class_name(self, name: str) -> str:
         class_name = name.title().replace(" ", "")
