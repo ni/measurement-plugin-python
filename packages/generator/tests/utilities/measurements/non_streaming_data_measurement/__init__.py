@@ -4,7 +4,6 @@ from enum import Enum
 from pathlib import Path
 from typing import Iterable, Tuple
 
-import click
 import ni_measurement_plugin_sdk_service as nims
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types import xydata_pb2
 
