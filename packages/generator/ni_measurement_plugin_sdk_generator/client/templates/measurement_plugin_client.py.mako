@@ -191,7 +191,7 @@ class ${class_name}:
 
     def _get_enum_class_name(self, name: str) -> str:
         class_name = name.title().replace(" ", "")
-        invalid_chars = "`~!@#$%^&*()-+={}[]\|:;',<>.?/ \nr_"
+        invalid_chars = "`~!@#$%^&*()-+={}[]\|:;',<>.?/ \n_"
         pattern = f"[{re.escape(invalid_chars)}]"
         class_name = re.sub(pattern, '', class_name)
         return class_name + "Enum"

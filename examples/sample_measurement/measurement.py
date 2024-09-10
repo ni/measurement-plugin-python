@@ -19,7 +19,7 @@ script_or_exe = sys.executable if getattr(sys, "frozen", False) else __file__
 service_directory = pathlib.Path(script_or_exe).resolve().parent
 measurement_service = nims.MeasurementService(
     service_config_path=service_directory / "SampleMeasurement.serviceconfig",
-    version="0.1.0.0",
+    version="0.1.0",
     ui_file_paths=[
         service_directory / "SampleMeasurement.measui",
         service_directory / "SampleAllParameters.measui",
@@ -41,8 +41,9 @@ class Color(Enum):
 @measurement_service.configuration("Float In", nims.DataType.Float, 0.06)
 @measurement_service.configuration("Double Array In", nims.DataType.DoubleArray1D, [0.1, 0.2, 0.3])
 @measurement_service.configuration("Bool In", nims.DataType.Boolean, False)
-@measurement_service.configuration("String In", nims.DataType.String, "sample string")
-@measurement_service.configuration("Enum In", nims.DataType.Enum, Color.BLUE, enum_type=Color)
+@measurement_service.configuration("String_ In", nims.DataType.String, "sample string")
+@measurement_service.configuration("e+! In", nims.DataType.Enum, Color.BLUE, enum_type=Color)
+@measurement_service.configuration("Enum Array In", nims.DataType.EnumArray1D, [], enum_type=Color)
 @measurement_service.configuration(
     "Protobuf Enum In",
     nims.DataType.Enum,
@@ -67,6 +68,7 @@ def measure(
     bool_input: bool,
     string_input: str,
     enum_input: Color,
+    enum_array_in: Iterable[Color],
     protobuf_enum_input: color_pb2.ProtobufColor.ValueType,
     string_array_in: Iterable[str],
 ) -> Tuple[
@@ -79,6 +81,8 @@ def measure(
         logging.info("Canceling measurement")
 
     measurement_service.context.add_cancel_callback(cancel_callback)
+
+    print(enum_array_in)
 
     float_output = float_input
     float_array_output = double_array_input
