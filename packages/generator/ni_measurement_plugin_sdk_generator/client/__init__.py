@@ -33,7 +33,7 @@ def _render_template(template_name: str, **template_args: Any) -> bytes:
     return template.render(**template_args)
 
 
-def _replace_enum_class_type(output: str):
+def _replace_enum_class_type(output: str) -> str:
     pattern = "<enum '([^']+)'>"
     return re.sub(pattern, r"\1", output)
 
