@@ -112,7 +112,7 @@ def create_client(
         if is_multiple_client_generation or module_name is None or class_name is None:
             base_service_class = service_class.split(".")[-1]
             base_service_class = remove_suffix(base_service_class)
-            
+
             if not base_service_class.isidentifier():
                 raise click.ClickException(
                     "Client creation failed.\nEither provide a module name or update the measurement with a valid service class."
