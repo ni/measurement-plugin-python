@@ -13,9 +13,6 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measur
     measurement_service_pb2 as v2_measurement_service_pb2,
     measurement_service_pb2_grpc as v2_measurement_service_pb2_grpc,
 )
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.pin_map_context_pb2 import (
-    PinMapContext,
-)
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types.xydata_pb2 import (
     DoubleXYData,
 )
@@ -28,6 +25,7 @@ from ni_measurement_plugin_sdk_service.measurement.client_support import (
     serialize_parameters,
 )
 from ni_measurement_plugin_sdk_service.pin_map import PinMapClient
+from ni_measurement_plugin_sdk_service.session_management import PinMapContext
 
 _logger = logging.getLogger(__name__)
 
@@ -320,6 +318,15 @@ class NonStreamingDataMeasurementClient:
             raise ValueError("pin_map_context must be an instance of PinMapContext.")
         self._pin_map_context = val
 
+    @property
+    def sites(self) -> List[int]:
+        """Sites for which the measurement is being executed."""
+        return self._pin_map_context.sites
+
+    @sites.setter
+    def sites(self, val: List[int]):
+        self._pin_map_context = self._pin_map_context._replace(sites=val)
+
     def _get_stub(self) -> v2_measurement_service_pb2_grpc.MeasurementServiceStub:
         if self._stub is None:
             with self._initialization_lock:
@@ -410,7 +417,7 @@ class NonStreamingDataMeasurementClient:
         else:
             return v2_measurement_service_pb2.MeasureRequest(
                 configuration_parameters=serialized_configuration,
-                pin_map_context=self._pin_map_context,
+                pin_map_context=self._pin_map_context._to_grpc(),
             )
 
     def _deserialize_response(self, response: v2_measurement_service_pb2.MeasureResponse) -> Output:

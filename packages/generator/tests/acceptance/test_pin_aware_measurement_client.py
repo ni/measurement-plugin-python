@@ -5,10 +5,8 @@ from typing import Generator
 
 import grpc
 import pytest
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.pin_map_context_pb2 import (
-    PinMapContext,
-)
 from ni_measurement_plugin_sdk_service.measurement.service import MeasurementService
+from ni_measurement_plugin_sdk_service.session_management import PinMapContext
 
 from ni_measurement_plugin_sdk_generator.client import create_client
 from tests.utilities.discovery_service_process import DiscoveryServiceProcess
@@ -73,7 +71,7 @@ def test___measurement_plugin_client___measure_with_multiple_sites_selection___r
     measurement_plugin_client = test_measurement_client_type()
     measurement_plugin_client.register_pin_map(pin_map_path)
 
-    measurement_plugin_client.pin_map_context = PinMapContext(pin_map_id=pin_map_path, sites=[0, 1])
+    measurement_plugin_client.sites = [0, 1]
     output = measurement_plugin_client.measure()
 
     assert output.sites == [0, 1]
@@ -89,13 +87,36 @@ def test___measurement_plugin_client___measure_with_invalid_sites_selection___ra
     measurement_plugin_client.register_pin_map(pin_map_path)
 
     with pytest.raises(grpc.RpcError) as exc_info:
-        measurement_plugin_client.pin_map_context = PinMapContext(
-            pin_map_id=pin_map_path, sites=[0, 1]
-        )
+        measurement_plugin_client.sites = [0, 1]
         _ = measurement_plugin_client.measure()
 
     assert exc_info.value.code() == grpc.StatusCode.UNKNOWN
     assert 'Pin map does not contain site numbers: "1"' in (exc_info.value.details() or "")
+
+
+def test___measurement_plugin_client___measure_with_pin_map_context___returns_output(
+    measurement_plugin_client_module: ModuleType,
+    pin_map_directory: pathlib.Path,
+) -> None:
+    pin_map_path = str(pin_map_directory / "1Smu1ChannelGroup2Pin2Site.pinmap")
+    output_type = getattr(measurement_plugin_client_module, "Output")
+    expected_output = output_type(
+        pin_map_id=pin_map_path,
+        sites=[0, 1],
+        session_names=["DCPower1/0, DCPower1/1, DCPower1/2, DCPower1/3"],
+        resource_names=["DCPower1/0, DCPower1/1, DCPower1/2, DCPower1/3"],
+        channel_lists=["DCPower1/0, DCPower1/2"],
+    )
+    test_measurement_client_type = getattr(measurement_plugin_client_module, "TestMeasurement")
+    measurement_plugin_client = test_measurement_client_type()
+    measurement_plugin_client.register_pin_map(pin_map_path)
+
+    measurement_plugin_client.pin_map_context = PinMapContext(
+        pin_map_id=str(pin_map_path), sites=[0, 1]
+    )
+    output = measurement_plugin_client.measure()
+
+    assert output == expected_output
 
 
 @pytest.fixture(scope="module")
