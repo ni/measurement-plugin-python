@@ -412,15 +412,10 @@ class NonStreamingDataMeasurementClient:
                 service_name=f"{self._service_class}.Configurations",
             )
         )
-        if self._pin_map_context is None:
-            return v2_measurement_service_pb2.MeasureRequest(
-                configuration_parameters=serialized_configuration,
-            )
-        else:
-            return v2_measurement_service_pb2.MeasureRequest(
-                configuration_parameters=serialized_configuration,
-                pin_map_context=self._pin_map_context._to_grpc(),
-            )
+        return v2_measurement_service_pb2.MeasureRequest(
+            configuration_parameters=serialized_configuration,
+            pin_map_context=self._pin_map_context._to_grpc() if self._pin_map_context else None,
+        )
 
     def _deserialize_response(self, response: v2_measurement_service_pb2.MeasureResponse) -> Output:
         if self._output_metadata:
