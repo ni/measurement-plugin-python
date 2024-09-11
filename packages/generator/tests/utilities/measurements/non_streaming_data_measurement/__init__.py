@@ -21,13 +21,13 @@ measurement_service = nims.MeasurementService(
 @measurement_service.configuration("Float In", nims.DataType.Float, 0.06)
 @measurement_service.configuration("Double Array In", nims.DataType.DoubleArray1D, [0.1, 0.2, 0.3])
 @measurement_service.configuration("Bool In", nims.DataType.Boolean, False)
-@measurement_service.configuration("String In", nims.DataType.String, "sample string")
+@measurement_service.configuration("String In", nims.DataType.String, 'sample "string"')
 @measurement_service.configuration(
     "String Array In", nims.DataType.StringArray1D, ["String1", "String2"]
 )
-@measurement_service.configuration("Path In", nims.DataType.Path, "path/test")
+@measurement_service.configuration("Path In", nims.DataType.Path, "path\test")
 @measurement_service.configuration(
-    "Path Array In", nims.DataType.PathArray1D, ["path/test1", "path/ntest2"]
+    "Path Array In", nims.DataType.PathArray1D, ["path\test1", "path\ntest2"]
 )
 @measurement_service.configuration("IO In", nims.DataType.IOResource, "resource")
 @measurement_service.configuration(

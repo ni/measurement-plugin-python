@@ -177,7 +177,7 @@ def get_configuration_parameters_with_type_and_default_values(
         default_value = metadata.default_value
         parameter_type = _get_python_type_as_str(metadata.type, metadata.repeated)
         if isinstance(default_value, str):
-            default_value = default_value.encode("unicode-escape")
+            default_value = repr(default_value)
 
         if metadata.annotations and metadata.annotations.get("ni/type_specialization") == "path":
             parameter_type = "Path"
