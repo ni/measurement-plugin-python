@@ -98,7 +98,7 @@ class ${class_name}:
             return self._pin_map_context.sites
 
     @sites.setter
-    def sites(self, val: List[int]):
+    def sites(self, val: List[int]) -> None:
         if self._pin_map_context is None:
             raise AttributeError("Cannot set sites because pin map context is None.")
         self._pin_map_context = self._pin_map_context._replace(sites=val)
