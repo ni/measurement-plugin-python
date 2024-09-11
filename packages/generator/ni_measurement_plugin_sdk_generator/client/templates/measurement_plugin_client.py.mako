@@ -8,7 +8,7 @@ import threading
 % for module in built_in_import_modules:
 ${module}
 % endfor
-from typing import Any, Generator, Iterable, List, NamedTuple, Optional
+from typing import Any, Generator, List, NamedTuple, Optional
 
 import grpc
 from google.protobuf import any_pb2
@@ -94,11 +94,13 @@ class ${class_name}:
 
     @property
     def sites(self) -> List[int]:
-        """Sites for which the measurement is being executed."""
-        return self._pin_map_context.sites
+        if self._pin_map_context is not None:
+            return self._pin_map_context.sites
 
     @sites.setter
     def sites(self, val: List[int]):
+        if self._pin_map_context is None:
+            raise AttributeError("Cannot set sites because pin map context is None.")
         self._pin_map_context = self._pin_map_context._replace(sites=val)
 
     def _get_stub(self) -> v2_measurement_service_pb2_grpc.MeasurementServiceStub:
@@ -240,14 +242,14 @@ class ${class_name}:
         for response in self._get_stub().Measure(request):
             yield self._deserialize_response(response)
 
-    def register_pin_map(self, pin_map_path: pathlib.Path, sites: Iterable[int] = [0]) -> None:
+    def register_pin_map(self, pin_map_path: pathlib.Path) -> None:
         """Registers the pin map with the pin map service.
 
         Args:
             pin_map_path: Absolute path of the pin map file.
-
-            sites: Sites for which the measurement is being executed. If not specified,
-                site 0 is used.
         """
         pin_map_id = self._get_pin_map_client().update_pin_map(pin_map_path)
-        self._pin_map_context = PinMapContext(pin_map_id=pin_map_id, sites=sites)
+        if self._pin_map_context is None:
+            self._pin_map_context = PinMapContext(pin_map_id=pin_map_id, sites=[0])
+        else:
+            self._pin_map_context._replace(pin_map_id=pin_map_id)
