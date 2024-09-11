@@ -69,7 +69,9 @@ class NonStreamingDataMeasurementClient:
         self._grpc_channel_pool = grpc_channel_pool
         self._discovery_client = discovery_client
         self._stub: Optional[v2_measurement_service_pb2_grpc.MeasurementServiceStub] = None
-        self._measure_response: Optional[v2_measurement_service_pb2.MeasureResponse] = None
+        self._measure_response: Optional[
+            Generator[v2_measurement_service_pb2.MeasureResponse, None, None]
+        ] = None
         self._configuration_metadata = {
             1: ParameterMetadata(
                 display_name="Float In",
@@ -392,7 +394,7 @@ class NonStreamingDataMeasurementClient:
         io_in: str = "resource",
         io_array_in: List[str] = ["resource1", "resource2"],
         integer_in: int = 10,
-    ) -> Output:
+    ) -> Optional[Output]:
         """Executes the Non-Streaming Data Measurement (Py).
 
         Returns:
@@ -410,6 +412,7 @@ class NonStreamingDataMeasurementClient:
             io_array_in,
             integer_in,
         )
+        result = None
         for response in stream_measure_response:
             result = response
         return result
@@ -426,7 +429,7 @@ class NonStreamingDataMeasurementClient:
         io_in: str = "resource",
         io_array_in: List[str] = ["resource1", "resource2"],
         integer_in: int = 10,
-    ) -> Generator[Output, None, None]:
+    ) -> Generator[Optional[Output], None, None]:
         """Executes the Non-Streaming Data Measurement (Py).
 
         Returns:
@@ -454,15 +457,17 @@ class NonStreamingDataMeasurementClient:
                 yield self._deserialize_response(response)
         except grpc.RpcError as e:
             if e.code() == grpc.StatusCode.CANCELLED:
-                print("The measure call is canceled.")
+                _logger.debug("The measure call is canceled.")
             else:
                 raise
         finally:
-            self._measure_response = None
+            with self._initialization_lock:
+                self._measure_response = None
 
     def cancel(self) -> bool:
-        if self._measure_response and self._measure_response.is_active():
-            self._measure_response.cancel()
-            return True
-        else:
-            return False
+        """Cancels the active measure call."""
+        with self._initialization_lock:
+            if self._measure_response:
+                return self._measure_response.cancel()
+            else:
+                return False

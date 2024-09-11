@@ -67,7 +67,9 @@ class ${class_name}:
         self._grpc_channel_pool = grpc_channel_pool
         self._discovery_client = discovery_client
         self._stub: Optional[v2_measurement_service_pb2_grpc.MeasurementServiceStub] = None
-        self._measure_response: Optional[v2_measurement_service_pb2.MeasureResponse] = None
+        self._measure_response: Optional[
+            Generator[v2_measurement_service_pb2.MeasureResponse, None, None]
+        ] = None
         self._configuration_metadata = ${configuration_metadata}
         self._output_metadata = ${output_metadata}
         if grpc_channel is not None:
@@ -172,6 +174,9 @@ class ${class_name}:
         stream_measure_response = self.stream_measure(
             ${measure_api_parameters}
         )
+        % if output_metadata:
+        result = None
+        % endif
         for response in stream_measure_response:
         % if output_metadata:
             result = response
@@ -205,15 +210,17 @@ class ${class_name}:
                 % endif
         except grpc.RpcError as e:
             if e.code() == grpc.StatusCode.CANCELLED:
-                print("The measure call is canceled.")
+                _logger.debug("The measure call is canceled.")
             else:
                 raise
         finally:
-            self._measure_response = None
+            with self._initialization_lock:
+                self._measure_response = None
 
     def cancel(self) -> bool:
-        if self._measure_response and self._measure_response.is_active():
-            self._measure_response.cancel()
-            return True
-        else:
-            return False
+        """Cancels the active measure call."""
+        with self._initialization_lock:
+            if self._measure_response:
+                return self._measure_response.cancel()
+            else:
+                return False

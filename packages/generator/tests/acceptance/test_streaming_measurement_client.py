@@ -1,7 +1,6 @@
+import concurrent.futures
 import importlib.util
 import pathlib
-import threading
-import time
 from types import ModuleType
 from typing import Generator
 
@@ -58,10 +57,11 @@ def test___measurement_plugin_client___invoke_measure_from_two_threads___initiat
     measurement_plugin_client = test_measurement_client_type()
 
     with pytest.raises(RuntimeError) as exc_info:
-        measure_thread = threading.Thread(target=measurement_plugin_client.measure)
-        measure_thread.start()
-        measurement_plugin_client.measure()  # Calling Measure in main thread, to catch error in pytest.
-        measure_thread.join()
+        with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
+            future_measure_1 = executor.submit(measurement_plugin_client.measure)
+            future_measure_2 = executor.submit(measurement_plugin_client.measure)
+            future_measure_1.result()
+            future_measure_2.result()
 
     assert "A measure call is already in progress." in exc_info.value.args[0]
 
@@ -71,13 +71,12 @@ def test___non_streaming_measurement_execution___cancel___returns_true(
 ) -> None:
     test_measurement_client_type = getattr(measurement_plugin_client_module, "TestMeasurement")
     measurement_plugin_client = test_measurement_client_type()
-    measure_thread = threading.Thread(target=measurement_plugin_client.measure)
-    measure_thread.start()
-    time.sleep(2)  # Wait for 2 seconds to call Cancel API.
 
-    is_canceled = measurement_plugin_client.cancel()
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        measure = executor.submit(measurement_plugin_client.measure)
+        is_canceled = measurement_plugin_client.cancel()
+        measure.result()
 
-    measure_thread.join()
     assert is_canceled
 
 
@@ -86,15 +85,12 @@ def test___streaming_measurement_execution___cancel___returns_true(
 ) -> None:
     test_measurement_client_type = getattr(measurement_plugin_client_module, "TestMeasurement")
     measurement_plugin_client = test_measurement_client_type()
-    measure_thread = threading.Thread(
-        target=lambda: tuple(measurement_plugin_client.stream_measure())
-    )
-    measure_thread.start()
-    time.sleep(2)  # Wait for 2 seconds to call Cancel API.
 
-    is_canceled = measurement_plugin_client.cancel()
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        measure = executor.submit(lambda: list(measurement_plugin_client.stream_measure()))
+        is_canceled = measurement_plugin_client.cancel()
+        measure.result()
 
-    measure_thread.join()
     assert is_canceled
 
 
