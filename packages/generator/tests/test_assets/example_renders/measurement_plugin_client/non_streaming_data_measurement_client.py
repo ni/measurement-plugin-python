@@ -320,6 +320,7 @@ class NonStreamingDataMeasurementClient:
 
     @property
     def sites(self) -> List[int]:
+        """Sites for which the measurement is being executed."""
         if self._pin_map_context is not None:
             return self._pin_map_context.sites
 
