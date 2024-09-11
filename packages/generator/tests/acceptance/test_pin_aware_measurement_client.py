@@ -17,10 +17,10 @@ def test___measurement_plugin_client___measure_with_pin_map_registration___retur
     measurement_plugin_client_module: ModuleType,
     pin_map_directory: pathlib.Path,
 ) -> None:
-    pin_map_path = str(pin_map_directory / "1Smu1ChannelGroup1Pin1Site.pinmap")
+    pin_map_path = pin_map_directory / "1Smu1ChannelGroup1Pin1Site.pinmap"
     output_type = getattr(measurement_plugin_client_module, "Output")
     expected_output = output_type(
-        pin_map_id=pin_map_path,
+        pin_map_id=str(pin_map_path),
         sites=[0],
         session_names=["DCPower1/0"],
         resource_names=["DCPower1/0"],
@@ -48,11 +48,40 @@ def test___measurement_plugin_client___measure_without_pin_map_registration___ra
     assert "No sessions reserved." in (exc_info.value.details() or "")
 
 
+def test___measurement_plugin_client___register_pin_map_without_pin_map_context___updates_pin_map_id_and_sites(
+    measurement_plugin_client_module: ModuleType,
+    pin_map_directory: pathlib.Path,
+) -> None:
+    pin_map_path = pin_map_directory / "1Smu1ChannelGroup2Pin2Site.pinmap"
+    test_measurement_client_type = getattr(measurement_plugin_client_module, "TestMeasurement")
+    measurement_plugin_client = test_measurement_client_type()
+
+    measurement_plugin_client.register_pin_map(pin_map_path)
+
+    expected_pin_map_context = PinMapContext(pin_map_id=str(pin_map_path), sites=[0])
+    assert measurement_plugin_client.pin_map_context == expected_pin_map_context
+
+
+def test___measurement_plugin_client___register_pin_map_with_pin_map_context___updates_pin_map_id(
+    measurement_plugin_client_module: ModuleType,
+    pin_map_directory: pathlib.Path,
+) -> None:
+    pin_map_path = pin_map_directory / "1Smu1ChannelGroup2Pin2Site.pinmap"
+    test_measurement_client_type = getattr(measurement_plugin_client_module, "TestMeasurement")
+    measurement_plugin_client = test_measurement_client_type()
+    measurement_plugin_client.pin_map_context = PinMapContext(pin_map_id="", sites=[0, 1])
+
+    measurement_plugin_client.register_pin_map(pin_map_path)
+
+    expected_pin_map_context = PinMapContext(pin_map_id=str(pin_map_path), sites=[0, 1])
+    assert measurement_plugin_client.pin_map_context == expected_pin_map_context
+
+
 def test___measurement_plugin_client___measure_with_default_site_selection___returns_selected_site(
     measurement_plugin_client_module: ModuleType,
     pin_map_directory: pathlib.Path,
 ) -> None:
-    pin_map_path = str(pin_map_directory / "1Smu1ChannelGroup1Pin1Site.pinmap")
+    pin_map_path = pin_map_directory / "1Smu1ChannelGroup1Pin1Site.pinmap"
     test_measurement_client_type = getattr(measurement_plugin_client_module, "TestMeasurement")
     measurement_plugin_client = test_measurement_client_type()
     measurement_plugin_client.register_pin_map(pin_map_path)
@@ -66,7 +95,7 @@ def test___measurement_plugin_client___measure_with_multiple_sites_selection___r
     measurement_plugin_client_module: ModuleType,
     pin_map_directory: pathlib.Path,
 ) -> None:
-    pin_map_path = str(pin_map_directory / "1Smu1ChannelGroup2Pin2Site.pinmap")
+    pin_map_path = pin_map_directory / "1Smu1ChannelGroup2Pin2Site.pinmap"
     test_measurement_client_type = getattr(measurement_plugin_client_module, "TestMeasurement")
     measurement_plugin_client = test_measurement_client_type()
     measurement_plugin_client.register_pin_map(pin_map_path)
@@ -81,7 +110,7 @@ def test___measurement_plugin_client___measure_with_invalid_sites_selection___ra
     measurement_plugin_client_module: ModuleType,
     pin_map_directory: pathlib.Path,
 ) -> None:
-    pin_map_path = str(pin_map_directory / "1Smu1ChannelGroup1Pin1Site.pinmap")
+    pin_map_path = pin_map_directory / "1Smu1ChannelGroup1Pin1Site.pinmap"
     test_measurement_client_type = getattr(measurement_plugin_client_module, "TestMeasurement")
     measurement_plugin_client = test_measurement_client_type()
     measurement_plugin_client.register_pin_map(pin_map_path)
@@ -98,10 +127,10 @@ def test___measurement_plugin_client___measure_with_pin_map_context___returns_ou
     measurement_plugin_client_module: ModuleType,
     pin_map_directory: pathlib.Path,
 ) -> None:
-    pin_map_path = str(pin_map_directory / "1Smu1ChannelGroup2Pin2Site.pinmap")
+    pin_map_path = pin_map_directory / "1Smu1ChannelGroup2Pin2Site.pinmap"
     output_type = getattr(measurement_plugin_client_module, "Output")
     expected_output = output_type(
-        pin_map_id=pin_map_path,
+        pin_map_id=str(pin_map_path),
         sites=[0, 1],
         session_names=["DCPower1/0, DCPower1/1, DCPower1/2, DCPower1/3"],
         resource_names=["DCPower1/0, DCPower1/1, DCPower1/2, DCPower1/3"],

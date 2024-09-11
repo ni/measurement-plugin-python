@@ -511,4 +511,4 @@ class NonStreamingDataMeasurementClient:
         if self._pin_map_context is None:
             self._pin_map_context = PinMapContext(pin_map_id=pin_map_id, sites=[0])
         else:
-            self._pin_map_context._replace(pin_map_id=pin_map_id)
+            self._pin_map_context = self._pin_map_context._replace(pin_map_id=pin_map_id)
