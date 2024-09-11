@@ -94,12 +94,12 @@ class ${class_name}:
 
     @property
     def sites(self) -> List[int]:
+        """Sites for which the measurement is being executed."""
         if self._pin_map_context is not None:
             return self._pin_map_context.sites
 
     @sites.setter
     def sites(self, val: List[int]) -> None:
-        """Sites for which the measurement is being executed."""
         if self._pin_map_context is None:
             raise AttributeError("Cannot set sites because pin map context is None.")
         self._pin_map_context = self._pin_map_context._replace(sites=val)
