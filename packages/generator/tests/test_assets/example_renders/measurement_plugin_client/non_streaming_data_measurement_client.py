@@ -315,7 +315,7 @@ class NonStreamingDataMeasurementClient:
     @pin_map_context.setter
     def pin_map_context(self, val: PinMapContext) -> None:
         if not isinstance(val, PinMapContext):
-            raise ValueError("pin_map_context must be an instance of PinMapContext.")
+            raise TypeError("Invalid type: The given value must be an instance of PinMapContext.")
         self._pin_map_context = val
 
     @property
