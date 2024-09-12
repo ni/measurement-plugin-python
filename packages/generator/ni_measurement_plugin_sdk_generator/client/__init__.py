@@ -163,7 +163,7 @@ def create_client(
             file_name=f"{module_name}.py",
             directory_out=directory_out_path,
             class_name=class_name,
-            display_name=repr(metadata.measurement_details.display_name).strip("'").strip('"'),
+            display_name=metadata.measurement_details.display_name,
             configuration_metadata=configuration_metadata,
             output_metadata=output_metadata,
             service_class=service_class,
