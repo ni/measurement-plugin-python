@@ -156,33 +156,26 @@ class ${class_name}:
         for k, v in output_values.items():
             result[k - 1] = v
         return Output._make(result)
-
+    
+    % if "from pathlib import Path" in built_in_import_modules:
     def _convert_paths_to_strings(self, parameter_values: List[Any]) -> List[Any]:
         result = []
 
         for parameter_value in parameter_values:
-            # Convert each Path in the list to string and convert '\' to '\\' in strings.
+            # Converts Path type to string.
             if isinstance(parameter_value, list):
                 converted_list = []
                 for value in parameter_value:
-                    % if "from pathlib import Path" in built_in_import_modules:
-                    if isinstance(value, (Path, str)):
-                    % else:
-                    if isinstance(value, str):
-                    % endif
-                        value = str(value).encode('unicode-escape')  
+                    if isinstance(value, Path):
+                        value = str(value)
                     converted_list.append(value)
                 result.append(converted_list)
-            % if "from pathlib import Path" in built_in_import_modules:
-            elif isinstance(parameter_value, (Path, str)):
-            % else:
-            elif isinstance(parameter_value, str):
-            % endif
-                parameter_value = str(parameter_value).encode('unicode-escape')
-                result.append(parameter_value)
+            elif isinstance(parameter_value, Path):
+                result.append(str(parameter_value))
             else:
                 result.append(parameter_value)
         return result
+    % endif
 
     def measure(
         self,
@@ -193,7 +186,11 @@ class ${class_name}:
         Returns:
             Measurement output.
         """
+        % if "from pathlib import Path" in built_in_import_modules:
         parameter_values = self._convert_paths_to_strings([${measure_api_parameters}])
+        % else:
+        parameter_values = [${measure_api_parameters}]
+        % endif
         request = self._create_measure_request(parameter_values)
 
         for response in self._get_stub().Measure(request):
@@ -209,7 +206,11 @@ class ${class_name}:
         Returns:
             Stream of measurement output.
         """
+        % if "from pathlib import Path" in built_in_import_modules:
         parameter_values = self._convert_paths_to_strings([${measure_api_parameters}])
+        % else:
+        parameter_values = [${measure_api_parameters}]
+        % endif
         request = self._create_measure_request(parameter_values)
 
         for response in self._get_stub().Measure(request):

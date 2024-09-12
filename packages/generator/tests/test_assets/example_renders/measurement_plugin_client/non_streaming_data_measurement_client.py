@@ -383,18 +383,17 @@ class NonStreamingDataMeasurementClient:
         result = []
 
         for parameter_value in parameter_values:
-            # Convert each Path in the list to string and convert '\' to '\\' in strings.
+            # Converts Path type to string.
 
             if isinstance(parameter_value, list):
                 converted_list = []
                 for value in parameter_value:
-                    if isinstance(value, (Path, str)):
-                        value = str(value).encode("unicode-escape")
+                    if isinstance(value, Path):
+                        value = str(value)
                     converted_list.append(value)
                 result.append(converted_list)
-            elif isinstance(parameter_value, (Path, str)):
-                parameter_value = str(parameter_value).encode("unicode-escape")
-                result.append(parameter_value)
+            elif isinstance(parameter_value, Path):
+                result.append(str(parameter_value))
             else:
                 result.append(parameter_value)
         return result
