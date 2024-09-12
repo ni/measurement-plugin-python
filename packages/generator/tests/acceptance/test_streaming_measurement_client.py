@@ -4,6 +4,7 @@ import pathlib
 from types import ModuleType
 from typing import Generator
 
+import grpc
 import pytest
 from ni_measurement_plugin_sdk_service.measurement.service import MeasurementService
 
@@ -63,38 +64,41 @@ def test___measurement_plugin_client___invoke_measure_from_two_threads___initiat
             future_measure_1.result()
             future_measure_2.result()
 
-    assert "A measure call is already in progress." in exc_info.value.args[0]
+    expected_error_message = "A measurement is currently in progress. To make concurrent measurement requests, please create a new client instance."
+    assert expected_error_message in exc_info.value.args[0]
 
 
-def test___non_streaming_measurement_execution___cancel___returns_true(
+def test___non_streaming_measurement_execution___cancel___cancels_measurement(
     measurement_plugin_client_module: ModuleType,
 ) -> None:
     test_measurement_client_type = getattr(measurement_plugin_client_module, "TestMeasurement")
     measurement_plugin_client = test_measurement_client_type()
 
-    with concurrent.futures.ThreadPoolExecutor() as executor:
-        measure = executor.submit(measurement_plugin_client.measure)
-        is_canceled = measurement_plugin_client.cancel()
-        measure.result()
+    with pytest.raises(grpc.RpcError) as exc_info:
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            measure = executor.submit(measurement_plugin_client.measure)
+            measurement_plugin_client.cancel()
+            measure.result()
 
-    assert is_canceled
+    assert exc_info.value.code() == grpc.StatusCode.CANCELLED
 
 
-def test___streaming_measurement_execution___cancel___returns_true(
+def test___streaming_measurement_execution___cancel___cancels_measurement(
     measurement_plugin_client_module: ModuleType,
 ) -> None:
     test_measurement_client_type = getattr(measurement_plugin_client_module, "TestMeasurement")
     measurement_plugin_client = test_measurement_client_type()
 
-    with concurrent.futures.ThreadPoolExecutor() as executor:
-        measure = executor.submit(lambda: list(measurement_plugin_client.stream_measure()))
-        is_canceled = measurement_plugin_client.cancel()
-        measure.result()
+    with pytest.raises(grpc.RpcError) as exc_info:
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            measure = executor.submit(lambda: list(measurement_plugin_client.stream_measure()))
+            measurement_plugin_client.cancel()
+            measure.result()
 
-    assert is_canceled
+    assert exc_info.value.code() == grpc.StatusCode.CANCELLED
 
 
-def test___measurement_client___cancel_without__measure___returns_false(
+def test___measurement_client___cancel_without_measure___returns_false(
     measurement_plugin_client_module: ModuleType,
 ) -> None:
     test_measurement_client_type = getattr(measurement_plugin_client_module, "TestMeasurement")

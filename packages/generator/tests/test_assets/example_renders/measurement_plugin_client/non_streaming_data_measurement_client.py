@@ -394,7 +394,7 @@ class NonStreamingDataMeasurementClient:
         io_in: str = "resource",
         io_array_in: List[str] = ["resource1", "resource2"],
         integer_in: int = 10,
-    ) -> Optional[Output]:
+    ) -> Output:
         """Executes the Non-Streaming Data Measurement (Py).
 
         Returns:
@@ -412,7 +412,6 @@ class NonStreamingDataMeasurementClient:
             io_array_in,
             integer_in,
         )
-        result = None
         for response in stream_measure_response:
             result = response
         return result
@@ -429,7 +428,7 @@ class NonStreamingDataMeasurementClient:
         io_in: str = "resource",
         io_array_in: List[str] = ["resource1", "resource2"],
         integer_in: int = 10,
-    ) -> Generator[Optional[Output], None, None]:
+    ) -> Generator[Output, None, None]:
         """Executes the Non-Streaming Data Measurement (Py).
 
         Returns:
@@ -449,7 +448,9 @@ class NonStreamingDataMeasurementClient:
         ]
         with self._initialization_lock:
             if self._measure_response is not None:
-                raise RuntimeError("A measure call is already in progress.")
+                raise RuntimeError(
+                    "A measurement is currently in progress. To make concurrent measurement requests, please create a new client instance."
+                )
             request = self._create_measure_request(parameter_values)
             self._measure_response = self._get_stub().Measure(request)
         try:
@@ -457,9 +458,8 @@ class NonStreamingDataMeasurementClient:
                 yield self._deserialize_response(response)
         except grpc.RpcError as e:
             if e.code() == grpc.StatusCode.CANCELLED:
-                _logger.debug("The measure call is canceled.")
-            else:
-                raise
+                _logger.debug("The measurement is canceled.")
+            raise
         finally:
             with self._initialization_lock:
                 self._measure_response = None

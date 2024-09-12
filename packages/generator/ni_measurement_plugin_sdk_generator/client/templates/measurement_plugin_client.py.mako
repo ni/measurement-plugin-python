@@ -174,9 +174,6 @@ class ${class_name}:
         stream_measure_response = self.stream_measure(
             ${measure_api_parameters}
         )
-        % if output_metadata:
-        result = None
-        % endif
         for response in stream_measure_response:
         % if output_metadata:
             result = response
@@ -197,7 +194,9 @@ class ${class_name}:
         parameter_values = [${measure_api_parameters}]
         with self._initialization_lock:
             if self._measure_response is not None:
-                raise RuntimeError("A measure call is already in progress.")
+                raise RuntimeError(
+                    "A measurement is currently in progress. To make concurrent measurement requests, please create a new client instance."
+                )
             request = self._create_measure_request(parameter_values)
             self._measure_response = self._get_stub().Measure(request)
 
@@ -210,9 +209,8 @@ class ${class_name}:
                 % endif
         except grpc.RpcError as e:
             if e.code() == grpc.StatusCode.CANCELLED:
-                _logger.debug("The measure call is canceled.")
-            else:
-                raise
+                _logger.debug("The measurement is canceled.")
+            raise
         finally:
             with self._initialization_lock:
                 self._measure_response = None
