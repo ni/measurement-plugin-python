@@ -90,10 +90,12 @@ def _extract_base_service_class(service_class: str) -> str:
     return base_service_class
 
 
-def _create_module_and_class_names(base_service_class: str) -> Tuple[str, str]:
-    module_name = camel_to_snake_case(base_service_class) + "_client"
-    class_name = base_service_class.replace("_", "") + "Client"
-    return module_name, class_name
+def _create_module_name(base_service_class: str) -> str:
+    return camel_to_snake_case(base_service_class) + "_client"
+
+
+def _create_class_name(base_service_class: str) -> str:
+    return base_service_class.replace("_", "") + "Client"
 
 
 def _get_class_and_module_names(
@@ -108,12 +110,13 @@ def _get_class_and_module_names(
     elif is_multiple_client_generation or module_name is None or class_name is None:
         base_service_class = _extract_base_service_class(service_class)
         if is_multiple_client_generation:
-            module_name, class_name = _create_module_and_class_names(base_service_class)
+            module_name = _create_module_name(base_service_class)
+            class_name = _create_class_name(base_service_class)
         else:
             if module_name is None:
-                module_name = camel_to_snake_case(base_service_class) + "_client"
+                module_name = _create_module_name(base_service_class)
             if class_name is None:
-                class_name = base_service_class.replace("_", "") + "Client"
+                class_name = _create_class_name(base_service_class)
 
         _validate_identifier(module_name, "module")
         _validate_identifier(class_name, "class")
