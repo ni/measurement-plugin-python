@@ -341,7 +341,7 @@ def create_client_in_interactive_mode() -> None:
 
 
 @click.group()
-def cli() -> None:
+def create_client() -> None:
     """Generates a Python Measurement Plug-In Client module for the measurement service.
 
     You can use the generated module to interact with the corresponding measurement service.
@@ -351,10 +351,5 @@ def cli() -> None:
     pass
 
 
-def create_client() -> None:
-    """Generates a Python Measurement Plug-In Client module for the measurement service."""
-    cli()
-
-
-cli.add_command(create_client_in_batch_mode)
-cli.add_command(create_client_in_interactive_mode)
+create_client.add_command(create_client_in_batch_mode)
+create_client.add_command(create_client_in_interactive_mode)
