@@ -114,7 +114,7 @@ def _get_class_and_module_names(
                 module_name = camel_to_snake_case(base_service_class) + "_client"
             if class_name is None:
                 class_name = base_service_class.replace("_", "") + "Client"
-        
+
         _validate_identifier(module_name, "module")
         _validate_identifier(class_name, "class")
     return module_name, class_name

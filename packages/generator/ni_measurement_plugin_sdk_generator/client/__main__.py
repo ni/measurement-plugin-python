@@ -18,5 +18,4 @@ def _create_client(context: click.Context, mode: str) -> None:
         context.invoke(create_client_in_batch_mode())
 
 
-if __name__ == "__main__":
-    _create_client()
+_create_client()
