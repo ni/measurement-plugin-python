@@ -6,7 +6,7 @@ from typing import Generator
 import pytest
 from ni_measurement_plugin_sdk_service.measurement.service import MeasurementService
 
-from ni_measurement_plugin_sdk_generator.client import create_client
+from ni_measurement_plugin_sdk_generator.client import create_client_in_batch_mode
 from tests.utilities.discovery_service_process import DiscoveryServiceProcess
 from tests.utilities.measurements import non_streaming_data_measurement
 
@@ -73,7 +73,7 @@ def measurement_client_directory(
     module_name = "test_measurement_client"
 
     with pytest.raises(SystemExit):
-        create_client(
+        create_client_in_batch_mode(
             [
                 "ni.tests.NonStreamingDataMeasurement_Python",
                 "--module-name",
