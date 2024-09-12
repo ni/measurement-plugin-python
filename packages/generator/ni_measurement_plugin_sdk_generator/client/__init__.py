@@ -2,6 +2,7 @@
 
 import pathlib
 import re
+from enum import Enum
 from typing import Any, Dict, List, Optional
 
 import black
@@ -95,7 +96,7 @@ def create_client(
     discovery_client = DiscoveryClient(grpc_channel_pool=channel_pool)
     built_in_import_modules: List[str] = []
     custom_import_modules: List[str] = []
-    enum_values_by_type_name: Dict[str, Dict[str, Any]] = {}
+    enum_values_by_type: Dict[Enum, Dict[str, Any]] = {}
 
     if all:
         measurement_service_class = get_all_registered_measurement_service_classes(discovery_client)
@@ -155,20 +156,20 @@ def create_client(
             v2_measurement_service_pb2.GetMetadataRequest()
         )
         configuration_metadata = get_configuration_metadata_by_index(
-            metadata, service_class, enum_values_by_type_name
+            metadata, service_class, enum_values_by_type
         )
-        output_metadata = get_output_metadata_by_index(metadata, enum_values_by_type_name)
+        output_metadata = get_output_metadata_by_index(metadata, enum_values_by_type)
 
         configuration_parameters_with_type_and_default_values, measure_api_parameters = (
             get_configuration_parameters_with_type_and_default_values(
-                configuration_metadata, built_in_import_modules, enum_values_by_type_name
+                configuration_metadata, built_in_import_modules, enum_values_by_type
             )
         )
         output_parameters_with_type = get_output_parameters_with_type(
             output_metadata,
             built_in_import_modules,
             custom_import_modules,
-            enum_values_by_type_name,
+            enum_values_by_type,
         )
 
         _create_file(
@@ -185,7 +186,7 @@ def create_client(
             output_parameters_with_type=output_parameters_with_type,
             built_in_import_modules=to_ordered_set(built_in_import_modules),
             custom_import_modules=to_ordered_set(custom_import_modules),
-            enum_by_class_name=enum_values_by_type_name,
+            enum_by_class_name=enum_values_by_type,
         )
 
         print(

@@ -99,7 +99,7 @@ def get_all_registered_measurement_service_classes(discovery_client: DiscoveryCl
 def get_configuration_metadata_by_index(
     metadata: v2_measurement_service_pb2.GetMetadataResponse,
     service_class: str,
-    enum_values_by_type_name: Dict[str, Dict[str, Any]] = {},
+    enum_values_by_type: Dict[Enum, Dict[str, Any]] = {},
 ) -> Dict[int, ParameterMetadata]:
     """Returns the configuration metadata of the measurement."""
     configuration_parameter_list = []
@@ -112,7 +112,7 @@ def get_configuration_metadata_by_index(
                 default_value=None,
                 annotations=dict(configuration.annotations.items()),
                 message_type=configuration.message_type,
-                enum_type=_get_enum_type(configuration, enum_values_by_type_name),
+                enum_type=_get_enum_type(configuration, enum_values_by_type),
             )
         )
 
@@ -126,7 +126,7 @@ def get_configuration_metadata_by_index(
                 default_value=None,
                 annotations=dict(output.annotations.items()),
                 message_type=output.message_type,
-                enum_type=_get_enum_type(output, enum_values_by_type_name),
+                enum_type=_get_enum_type(output, enum_values_by_type),
             )
         )
 
@@ -158,7 +158,7 @@ def get_configuration_metadata_by_index(
 
 def get_output_metadata_by_index(
     metadata: v2_measurement_service_pb2.GetMetadataResponse,
-    enum_values_by_type_name: Dict[str, Dict[str, Any]] = {},
+    enum_values_by_type: Dict[Enum, Dict[str, Any]] = {},
 ) -> Dict[int, ParameterMetadata]:
     """Returns the output metadata of the measurement."""
     output_parameter_list = []
@@ -171,7 +171,7 @@ def get_output_metadata_by_index(
                 default_value=None,
                 annotations=dict(output.annotations.items()),
                 message_type=output.message_type,
-                enum_type=_get_enum_type(output, enum_values_by_type_name),
+                enum_type=_get_enum_type(output, enum_values_by_type),
             )
         )
     output_metadata = frame_metadata_dict(output_parameter_list)
@@ -181,7 +181,7 @@ def get_output_metadata_by_index(
 def get_configuration_parameters_with_type_and_default_values(
     configuration_metadata: Dict[int, ParameterMetadata],
     built_in_import_modules: List[str],
-    enum_values_by_type_name: Dict[str, Dict[str, Any]] = {},
+    enum_values_by_type: Dict[Enum, Dict[str, Any]] = {},
 ) -> Tuple[str, str]:
     """Returns configuration parameters of the measurement with type and default values."""
     configuration_parameters = []
@@ -207,7 +207,7 @@ def get_configuration_parameters_with_type_and_default_values(
                 default_value = metadata.default_value
 
         if metadata.annotations and metadata.annotations.get("ni/type_specialization") == "enum":
-            enum_type = _get_enum_type(metadata, enum_values_by_type_name)
+            enum_type = _get_enum_type(metadata, enum_values_by_type)
             parameter_type = enum_type.__name__
             if metadata.repeated:
                 values = []
@@ -238,7 +238,7 @@ def get_output_parameters_with_type(
     output_metadata: Dict[int, ParameterMetadata],
     built_in_import_modules: List[str],
     custom_import_modules: List[str],
-    enum_values_by_type_name: Dict[str, Dict[str, Any]] = {},
+    enum_values_by_type: Dict[Enum, Dict[str, Any]] = {},
 ) -> str:
     """Returns the output parameters of the measurement with type."""
     output_parameters_with_type = []
@@ -261,7 +261,7 @@ def get_output_parameters_with_type(
                 parameter_type = f"List[{parameter_type}]"
 
         if metadata.annotations and metadata.annotations.get("ni/type_specialization") == "enum":
-            enum_type_name = _get_enum_type(metadata, enum_values_by_type_name).__name__
+            enum_type_name = _get_enum_type(metadata, enum_values_by_type).__name__
             parameter_type = f"List[{enum_type_name}]" if metadata.repeated else enum_type_name
 
         output_parameters_with_type.append(f"{parameter_name}: {parameter_type}")
@@ -325,18 +325,20 @@ def _get_python_type_as_str(type: Field.Kind.ValueType, is_array: bool) -> str:
     return python_type.__name__
 
 
-def _get_enum_type(parameter: Any, enum_values_by_type_name: Dict[str, Dict[str, Any]]) -> Any:
+def _get_enum_type(parameter: Any, enum_values_by_type: Dict[Enum, Dict[str, Any]]) -> Any:
     if parameter.type == FieldDescriptorProto.TYPE_ENUM:
         loaded_enum_values = json.loads(parameter.annotations["ni/enum.values"])
-        enum_values = dict((key, value) for key, value in loaded_enum_values.items())
+        enum_values = {key: value for key, value in loaded_enum_values.items()}
 
-        for existing_enum_name, existing_enum_values in enum_values_by_type_name.items():
+        for existing_enum_type, existing_enum_values in enum_values_by_type.items():
             if existing_enum_values == enum_values:
-                return Enum(existing_enum_name, existing_enum_values)
+                return existing_enum_type
 
         new_enum_type_name = _get_enum_class_name(parameter.name)
-        enum_values_by_type_name[new_enum_type_name] = enum_values
-        return Enum(new_enum_type_name, enum_values)
+        new_enum_type = Enum(new_enum_type_name, enum_values)
+        enum_values_by_type[new_enum_type] = enum_values
+        return new_enum_type
+
     return None
 
 

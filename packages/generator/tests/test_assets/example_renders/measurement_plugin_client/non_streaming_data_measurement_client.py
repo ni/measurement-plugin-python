@@ -34,7 +34,7 @@ _V2_MEASUREMENT_SERVICE_INTERFACE = "ni.measurementlink.measurement.v2.Measureme
 
 
 class EnumInEnum(Enum):
-    """Primary colors used for example enum-typed config and output."""
+    """EnumInEnum used for enum-typed measurement configs and outputs."""
 
     NONE = 0
     RED = 1
@@ -389,7 +389,7 @@ class NonStreamingDataMeasurementClient:
     def _create_file_descriptor(self) -> None:
         metadata = self._get_stub().GetMetadata(v2_measurement_service_pb2.GetMetadataRequest())
         configuration_metadata = []
-        enum_values_by_type_name: Dict[str, Dict[str, Any]] = {}
+        enum_values_by_type: Dict[Enum, Dict[str, Any]] = {}
         for configuration in metadata.measurement_signature.configuration_parameters:
             configuration_metadata.append(
                 ParameterMetadata.initialize(
@@ -399,7 +399,7 @@ class NonStreamingDataMeasurementClient:
                     default_value=None,
                     annotations=dict(configuration.annotations.items()),
                     message_type=configuration.message_type,
-                    enum_type=self._get_enum_type(configuration, enum_values_by_type_name),
+                    enum_type=self._get_enum_type(configuration, enum_values_by_type),
                 )
             )
         output_metadata = []
@@ -412,7 +412,7 @@ class NonStreamingDataMeasurementClient:
                     default_value=None,
                     annotations=dict(output.annotations.items()),
                     message_type=output.message_type,
-                    enum_type=self._get_enum_type(output, enum_values_by_type_name),
+                    enum_type=self._get_enum_type(output, enum_values_by_type),
                 )
             )
         create_file_descriptor(
@@ -450,18 +450,21 @@ class NonStreamingDataMeasurementClient:
         return Output._make(result)
 
     def _get_enum_type(
-        self, parameter: Any, enum_values_by_type_name: Dict[str, Dict[str, Any]]
+        self, parameter: Any, enum_values_by_type: Dict[Enum, Dict[str, Any]]
     ) -> Any:
         if parameter.type == FieldDescriptorProto.TYPE_ENUM:
             loaded_enum_values = json.loads(parameter.annotations["ni/enum.values"])
-            enum_values = dict((key, value) for key, value in loaded_enum_values.items())
+            enum_values = {key: value for key, value in loaded_enum_values.items()}
 
-            for existing_enum_name, existing_enum_values in enum_values_by_type_name.items():
+            for existing_enum_type, existing_enum_values in enum_values_by_type.items():
                 if existing_enum_values == enum_values:
-                    return Enum(existing_enum_name, existing_enum_values)
+                    return existing_enum_type
+
             new_enum_type_name = self._get_enum_class_name(parameter.name)
-            enum_values_by_type_name[new_enum_type_name] = enum_values
-            return Enum(new_enum_type_name, enum_values)
+            new_enum_type = Enum(new_enum_type_name, enum_values)
+            enum_values_by_type[new_enum_type] = enum_values
+            return new_enum_type
+
         return None
 
     def _get_enum_class_name(self, name: str) -> str:
