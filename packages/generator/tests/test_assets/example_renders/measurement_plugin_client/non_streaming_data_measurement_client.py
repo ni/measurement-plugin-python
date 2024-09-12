@@ -389,7 +389,7 @@ class NonStreamingDataMeasurementClient:
     def _create_file_descriptor(self) -> None:
         metadata = self._get_stub().GetMetadata(v2_measurement_service_pb2.GetMetadataRequest())
         configuration_metadata = []
-        enum_values_by_type: Dict[Enum, Dict[str, Any]] = {}
+        enum_values_by_type: Dict[Enum, Dict[str, int]] = {}
         for configuration in metadata.measurement_signature.configuration_parameters:
             configuration_metadata.append(
                 ParameterMetadata.initialize(
@@ -450,8 +450,8 @@ class NonStreamingDataMeasurementClient:
         return Output._make(result)
 
     def _get_enum_type(
-        self, parameter: Any, enum_values_by_type: Dict[Enum, Dict[str, Any]]
-    ) -> Any:
+        self, parameter: Any, enum_values_by_type: Dict[Enum, Dict[str, int]]
+    ) -> Enum:
         if parameter.type == FieldDescriptorProto.TYPE_ENUM:
             loaded_enum_values = json.loads(parameter.annotations["ni/enum.values"])
             enum_values = {key: value for key, value in loaded_enum_values.items()}
