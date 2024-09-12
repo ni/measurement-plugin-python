@@ -67,9 +67,9 @@ def _validate_identifier(name: str, name_type: str) -> None:
 
 
 def _get_interactive_module_and_class_names() -> Tuple[str, str]:
-    module_name = click.prompt("Enter a module name for the client", type=str)
+    module_name = click.prompt("Enter a name for the python client module", type=str)
     _validate_identifier(module_name, "module")
-    class_name = click.prompt("Enter a class name for the client", type=str)
+    class_name = click.prompt("Enter a name for the python client class", type=str)
     _validate_identifier(class_name, "class")
 
     return module_name, class_name
@@ -142,7 +142,7 @@ def _get_measurement_service_class(
         if len(measurement_service_class) == 0:
             raise click.ClickException("No registered measurements.")
         if interactive:
-            print("\nList of available measurement services:\n")
+            print("\nList of registered measurements:")
             for index, service_class in enumerate(measurement_service_class, start=1):
                 print(f"{index}. {service_class}")
 
