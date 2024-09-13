@@ -4,6 +4,7 @@ import keyword
 import os
 import re
 import sys
+from pathlib import Path
 from typing import AbstractSet, Dict, Iterable, List, Optional, Tuple, TypeVar
 
 import click
@@ -29,7 +30,7 @@ _V2_MEASUREMENT_SERVICE_INTERFACE = "ni.measurementlink.measurement.v2.Measureme
 _INVALID_CHARS = "`~!@#$%^&*()-+={}[]\|:;',<>.?/ \n"
 
 _XY_DATA_IMPORT = "from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types.xydata_pb2 import DoubleXYData"
-_PATH_IMPORT = "from pathlib import Path"
+_PATH_IMPORT = "from pathlib import Path, WindowsPath"
 
 _PROTO_DATATYPE_TO_PYTYPE_LOOKUP = {
     Field.TYPE_INT32: int,
@@ -183,7 +184,10 @@ def get_configuration_parameters_with_type_and_default_values(
             parameter_type = "Path"
             built_in_import_modules.append(_PATH_IMPORT)
             if metadata.repeated:
+                default_value = [Path(f"{value}") for value in default_value]
                 parameter_type = f"List[{parameter_type}]"
+            else:
+                default_value = f"WindowsPath({default_value})"
 
         configuration_parameters.append(f"{parameter_name}: {parameter_type} = {default_value}")
 

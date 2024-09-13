@@ -2,7 +2,7 @@
 
 import logging
 import threading
-from pathlib import Path
+from pathlib import Path, WindowsPath
 from typing import Any, Generator, List, NamedTuple, Optional
 
 import grpc
@@ -380,7 +380,7 @@ class NonStreamingDataMeasurementClient:
         return Output._make(result)
 
     def _convert_paths_to_strings(self, parameter_values: List[Any]) -> List[Any]:
-        result = []
+        result: List[Any] = []
 
         for parameter_value in parameter_values:
             if isinstance(parameter_value, list):
@@ -404,8 +404,8 @@ class NonStreamingDataMeasurementClient:
         bool_in: bool = False,
         string_in: str = 'sample "string"',
         string_array_in: List[str] = ["String1", "String2"],
-        path_in: Path = "path\test",
-        path_array_in: List[Path] = ["path\test1", "path\ntest2"],
+        path_in: Path = WindowsPath("path\test"),
+        path_array_in: List[Path] = [WindowsPath("path\test1"), WindowsPath("path\ntest2")],
         io_in: str = "resource",
         io_array_in: List[str] = ["resource1", "resource2"],
         integer_in: int = 10,
@@ -442,8 +442,8 @@ class NonStreamingDataMeasurementClient:
         bool_in: bool = False,
         string_in: str = 'sample "string"',
         string_array_in: List[str] = ["String1", "String2"],
-        path_in: Path = "path\test",
-        path_array_in: List[Path] = ["path\test1", "path\ntest2"],
+        path_in: Path = WindowsPath("path\test"),
+        path_array_in: List[Path] = [WindowsPath("path\test1"), WindowsPath("path\ntest2")],
         io_in: str = "resource",
         io_array_in: List[str] = ["resource1", "resource2"],
         integer_in: int = 10,
