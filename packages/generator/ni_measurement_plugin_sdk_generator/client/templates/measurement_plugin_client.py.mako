@@ -62,11 +62,14 @@ class ${class_name}:
 
             grpc_channel_pool: An optional gRPC channel pool.
         """
-        self._initialization_lock = threading.Lock()
+        self._initialization_lock = threading.RLock()
         self._service_class = ${service_class | repr}
         self._grpc_channel_pool = grpc_channel_pool
         self._discovery_client = discovery_client
         self._stub: Optional[v2_measurement_service_pb2_grpc.MeasurementServiceStub] = None
+        self._measure_response: Optional[
+            Generator[v2_measurement_service_pb2.MeasureResponse, None, None]
+        ] = None
         self._configuration_metadata = ${configuration_metadata}
         self._output_metadata = ${output_metadata}
         if grpc_channel is not None:
@@ -142,6 +145,7 @@ class ${class_name}:
             configuration_parameters=serialized_configuration
         )
 
+    % if output_metadata:
     def _deserialize_response(
         self, response: v2_measurement_service_pb2.MeasureResponse
     ) -> Outputs:
@@ -157,6 +161,7 @@ class ${class_name}:
             result[k - 1] = v
         return Outputs._make(result)
 
+    % endif
     def measure(
         self,
         ${configuration_parameters_with_type_and_default_values}
@@ -166,12 +171,16 @@ class ${class_name}:
         Returns:
             Measurement outputs.
         """
-        parameter_values = [${measure_api_parameters}]
-        request = self._create_measure_request(parameter_values)
-
-        for response in self._get_stub().Measure(request):
-            result = self._deserialize_response(response)
+        stream_measure_response = self.stream_measure(
+            ${measure_api_parameters}
+        )
+        for response in stream_measure_response:
+        % if output_metadata:
+            result = response
         return result
+        % else:
+            pass
+        % endif
 
     def stream_measure(
         self,
@@ -183,7 +192,33 @@ class ${class_name}:
             Stream of measurement outputs.
         """
         parameter_values = [${measure_api_parameters}]
-        request = self._create_measure_request(parameter_values)
+        with self._initialization_lock:
+            if self._measure_response is not None:
+                raise RuntimeError(
+                    "A measurement is currently in progress. To make concurrent measurement requests, please create a new client instance."
+                )
+            request = self._create_measure_request(parameter_values)
+            self._measure_response = self._get_stub().Measure(request)
 
-        for response in self._get_stub().Measure(request):
-            yield self._deserialize_response(response)
+        try:
+            for response in self._measure_response:
+                % if output_metadata:
+                yield self._deserialize_response(response)
+                % else:
+                yield
+                % endif
+        except grpc.RpcError as e:
+            if e.code() == grpc.StatusCode.CANCELLED:
+                _logger.debug("The measurement is canceled.")
+            raise
+        finally:
+            with self._initialization_lock:
+                self._measure_response = None
+
+    def cancel(self) -> bool:
+        """Cancels the active measurement call."""
+        with self._initialization_lock:
+            if self._measure_response:
+                return self._measure_response.cancel()
+            else:
+                return False
