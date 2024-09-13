@@ -467,7 +467,7 @@ class NonStreamingDataMeasurementClient:
                 self._measure_response = None
 
     def cancel(self) -> bool:
-        """Cancels the active measure call."""
+        """Cancels the active measurement call."""
         with self._initialization_lock:
             if self._measure_response:
                 return self._measure_response.cancel()
