@@ -54,6 +54,8 @@ jobs:
         run:  poetry run mypy
       - name: Mypy static analysis (ni-measurement-plugin-sdk-service, Windows)
         run:  poetry run mypy --platform win32
+      - name: Bandit security checks (ni-measurement-plugin-sdk-service)
+        run:  poetry run bandit -c pyproject.toml -r ni_measurement_plugin_sdk_service
 
       # ni-measurement-plugin-sdk-service, all extras, docs
       - name: Restore cached virtualenv (ni-measurement-plugin-sdk-service, all extras, docs)

@@ -1,4 +1,4 @@
-"""Python Measurement Plug-In Client."""
+"""Generated client API for the 'Non-Streaming Data Measurement (Py)' measurement plug-in."""
 
 import json
 import logging
@@ -42,8 +42,8 @@ class EnumInEnum(Enum):
     BLUE = 3
 
 
-class Output(NamedTuple):
-    """Measurement result container."""
+class Outputs(NamedTuple):
+    """Outputs for the 'Non-Streaming Data Measurement (Py)' measurement plug-in."""
 
     float_out: float
     double_array_out: List[float]
@@ -61,7 +61,7 @@ class Output(NamedTuple):
 
 
 class NonStreamingDataMeasurementClient:
-    """Client to interact with the measurement plug-in."""
+    """Client for the 'Non-Streaming Data Measurement (Py)' measurement plug-in."""
 
     def __init__(
         self,
@@ -79,11 +79,14 @@ class NonStreamingDataMeasurementClient:
 
             grpc_channel_pool: An optional gRPC channel pool.
         """
-        self._initialization_lock = threading.Lock()
+        self._initialization_lock = threading.RLock()
         self._service_class = "ni.tests.NonStreamingDataMeasurement_Python"
         self._grpc_channel_pool = grpc_channel_pool
         self._discovery_client = discovery_client
         self._stub: Optional[v2_measurement_service_pb2_grpc.MeasurementServiceStub] = None
+        self._measure_response: Optional[
+            Generator[v2_measurement_service_pb2.MeasureResponse, None, None]
+        ] = None
         self._configuration_metadata = {
             1: ParameterMetadata(
                 display_name="Float In",
@@ -436,7 +439,9 @@ class NonStreamingDataMeasurementClient:
             configuration_parameters=serialized_configuration
         )
 
-    def _deserialize_response(self, response: v2_measurement_service_pb2.MeasureResponse) -> Output:
+    def _deserialize_response(
+        self, response: v2_measurement_service_pb2.MeasureResponse
+    ) -> Outputs:
         if self._output_metadata:
             result = [None] * max(self._output_metadata.keys())
         else:
@@ -447,7 +452,33 @@ class NonStreamingDataMeasurementClient:
 
         for k, v in output_values.items():
             result[k - 1] = v
-        return Output._make(result)
+        
+        return Outputs._make(result)
+
+    def _get_enum_type(
+        self, parameter: Any, enum_values_by_type: Dict[Enum, Dict[str, int]]
+    ) -> Enum:
+        if parameter.type == FieldDescriptorProto.TYPE_ENUM:
+            loaded_enum_values = json.loads(parameter.annotations["ni/enum.values"])
+            enum_values = {key: value for key, value in loaded_enum_values.items()}
+
+            for existing_enum_type, existing_enum_values in enum_values_by_type.items():
+                if existing_enum_values == enum_values:
+                    return existing_enum_type
+
+            new_enum_type_name = self._get_enum_class_name(parameter.name)
+            new_enum_type = Enum(new_enum_type_name, enum_values)
+            enum_values_by_type[new_enum_type] = enum_values
+            return new_enum_type
+
+        return None
+
+    def _get_enum_class_name(self, name: str) -> str:
+        class_name = name.title().replace(" ", "")
+        invalid_chars = "`~!@#$%^&*()-+={}[]\|:;',<>.?/ \n_"
+        pattern = f"[{re.escape(invalid_chars)}]"
+        class_name = re.sub(pattern, "", class_name)
+        return class_name + "Enum"
 
     def _get_enum_type(
         self, parameter: Any, enum_values_by_type: Dict[Enum, Dict[str, int]]
@@ -488,13 +519,13 @@ class NonStreamingDataMeasurementClient:
         enum_in: EnumInEnum = EnumInEnum.BLUE,
         enum_array_in: List[EnumInEnum] = [EnumInEnum.RED, EnumInEnum.GREEN],
         integer_in: int = 10,
-    ) -> Output:
-        """Executes the Non-Streaming Data Measurement (Py).
+    ) -> Outputs:
+        """Perform a single measurement.
 
         Returns:
-            Measurement output.
+            Measurement outputs.
         """
-        parameter_values = [
+        stream_measure_response = self.stream_measure(
             float_in,
             double_array_in,
             bool_in,
@@ -507,11 +538,9 @@ class NonStreamingDataMeasurementClient:
             enum_in,
             enum_array_in,
             integer_in,
-        ]
-        request = self._create_measure_request(parameter_values)
-
-        for response in self._get_stub().Measure(request):
-            result = self._deserialize_response(response)
+        )
+        for response in stream_measure_response:
+            result = response
         return result
 
     def stream_measure(
@@ -528,11 +557,11 @@ class NonStreamingDataMeasurementClient:
         enum_in: EnumInEnum = EnumInEnum.BLUE,
         enum_array_in: List[EnumInEnum] = [EnumInEnum.RED, EnumInEnum.GREEN],
         integer_in: int = 10,
-    ) -> Generator[Output, None, None]:
-        """Executes the Non-Streaming Data Measurement (Py).
+    ) -> Generator[Outputs, None, None]:
+        """Perform a streaming measurement.
 
         Returns:
-            Stream of measurement output.
+            Stream of measurement outputs.
         """
         parameter_values = [
             float_in,
@@ -548,7 +577,28 @@ class NonStreamingDataMeasurementClient:
             enum_array_in,
             integer_in,
         ]
-        request = self._create_measure_request(parameter_values)
+        with self._initialization_lock:
+            if self._measure_response is not None:
+                raise RuntimeError(
+                    "A measurement is currently in progress. To make concurrent measurement requests, please create a new client instance."
+                )
+            request = self._create_measure_request(parameter_values)
+            self._measure_response = self._get_stub().Measure(request)
+        try:
+            for response in self._measure_response:
+                yield self._deserialize_response(response)
+        except grpc.RpcError as e:
+            if e.code() == grpc.StatusCode.CANCELLED:
+                _logger.debug("The measurement is canceled.")
+            raise
+        finally:
+            with self._initialization_lock:
+                self._measure_response = None
 
-        for response in self._get_stub().Measure(request):
-            yield self._deserialize_response(response)
+    def cancel(self) -> bool:
+        """Cancels the active measurement call."""
+        with self._initialization_lock:
+            if self._measure_response:
+                return self._measure_response.cancel()
+            else:
+                return False
