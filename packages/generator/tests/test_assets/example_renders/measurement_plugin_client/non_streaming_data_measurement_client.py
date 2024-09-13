@@ -1,6 +1,7 @@
 """Generated client API for the 'Non-Streaming Data Measurement (Py)' measurement plug-in."""
 
 import logging
+import pathlib
 import threading
 from pathlib import Path
 from typing import Any, Generator, List, NamedTuple, Optional
@@ -23,6 +24,8 @@ from ni_measurement_plugin_sdk_service.measurement.client_support import (
     ParameterMetadata,
     serialize_parameters,
 )
+from ni_measurement_plugin_sdk_service.pin_map import PinMapClient
+from ni_measurement_plugin_sdk_service.session_management import PinMapContext
 
 _logger = logging.getLogger(__name__)
 
@@ -52,6 +55,7 @@ class NonStreamingDataMeasurementClient:
         self,
         *,
         discovery_client: Optional[DiscoveryClient] = None,
+        pin_map_client: Optional[PinMapClient] = None,
         grpc_channel: Optional[grpc.Channel] = None,
         grpc_channel_pool: Optional[GrpcChannelPool] = None,
     ):
@@ -59,6 +63,8 @@ class NonStreamingDataMeasurementClient:
 
         Args:
             discovery_client: An optional discovery client.
+
+            pin_map_client: An optional pin map client.
 
             grpc_channel: An optional gRPC channel targeting a measurement service.
 
@@ -68,6 +74,7 @@ class NonStreamingDataMeasurementClient:
         self._service_class = "ni.tests.NonStreamingDataMeasurement_Python"
         self._grpc_channel_pool = grpc_channel_pool
         self._discovery_client = discovery_client
+        self._pin_map_client = pin_map_client
         self._stub: Optional[v2_measurement_service_pb2_grpc.MeasurementServiceStub] = None
         self._measure_response: Optional[
             Generator[v2_measurement_service_pb2.MeasureResponse, None, None]
@@ -301,26 +308,74 @@ class NonStreamingDataMeasurementClient:
         if grpc_channel is not None:
             self._stub = v2_measurement_service_pb2_grpc.MeasurementServiceStub(grpc_channel)
         self._create_file_descriptor()
+        self._pin_map_context: Optional[PinMapContext] = None
+
+    @property
+    def pin_map_context(self) -> PinMapContext:
+        """Get the pin map context for the measurement."""
+        return self._pin_map_context
+
+    @pin_map_context.setter
+    def pin_map_context(self, val: PinMapContext) -> None:
+        if not isinstance(val, PinMapContext):
+            raise TypeError(
+                f"Invalid type {type(val)}: The given value must be an instance of PinMapContext."
+            )
+        self._pin_map_context = val
+
+    @property
+    def sites(self) -> List[int]:
+        """The sites where the measurement must be executed."""
+        if self._pin_map_context is not None:
+            return self._pin_map_context.sites
+
+    @sites.setter
+    def sites(self, val: List[int]) -> None:
+        if self._pin_map_context is None:
+            raise AttributeError(
+                "Cannot set sites because the pin map context is None. Please provide a pin map context or register a pin map before setting sites."
+            )
+        self._pin_map_context = self._pin_map_context._replace(sites=val)
 
     def _get_stub(self) -> v2_measurement_service_pb2_grpc.MeasurementServiceStub:
         if self._stub is None:
             with self._initialization_lock:
-                if self._grpc_channel_pool is None:
-                    _logger.debug("Creating unshared GrpcChannelPool.")
-                    self._grpc_channel_pool = GrpcChannelPool()
-                if self._discovery_client is None:
-                    _logger.debug("Creating unshared DiscoveryClient.")
-                    self._discovery_client = DiscoveryClient(
-                        grpc_channel_pool=self._grpc_channel_pool
-                    )
                 if self._stub is None:
-                    service_location = self._discovery_client.resolve_service(
+                    service_location = self._get_discovery_client().resolve_service(
                         provided_interface=_V2_MEASUREMENT_SERVICE_INTERFACE,
                         service_class=self._service_class,
                     )
-                    channel = self._grpc_channel_pool.get_channel(service_location.insecure_address)
+                    channel = self._get_grpc_channel_pool().get_channel(
+                        service_location.insecure_address
+                    )
                     self._stub = v2_measurement_service_pb2_grpc.MeasurementServiceStub(channel)
         return self._stub
+
+    def _get_discovery_client(self) -> DiscoveryClient:
+        if self._discovery_client is None:
+            with self._initialization_lock:
+                if self._discovery_client is None:
+                    self._discovery_client = DiscoveryClient(
+                        grpc_channel_pool=self._get_grpc_channel_pool(),
+                    )
+        return self._discovery_client
+
+    def _get_grpc_channel_pool(self) -> GrpcChannelPool:
+        if self._grpc_channel_pool is None:
+            with self._initialization_lock:
+                if self._grpc_channel_pool is None:
+                    self._grpc_channel_pool = GrpcChannelPool()
+        return self._grpc_channel_pool
+
+    def _get_pin_map_client(self) -> PinMapClient:
+        if self._pin_map_client is None:
+            with self._initialization_lock:
+                if self._pin_map_client is None:
+                    self._pin_map_client = PinMapClient(
+                        discovery_client=self._get_discovery_client(),
+                        grpc_channel_pool=self._get_grpc_channel_pool(),
+                    )
+        return self._pin_map_client
 
     def _create_file_descriptor(self) -> None:
         metadata = self._get_stub().GetMetadata(v2_measurement_service_pb2.GetMetadataRequest())
@@ -366,7 +421,8 @@ class NonStreamingDataMeasurementClient:
             )
         )
         return v2_measurement_service_pb2.MeasureRequest(
-            configuration_parameters=serialized_configuration
+            configuration_parameters=serialized_configuration,
+            pin_map_context=self._pin_map_context._to_grpc() if self._pin_map_context else None,
         )
 
     def _deserialize_response(
@@ -473,3 +529,15 @@ class NonStreamingDataMeasurementClient:
                 return self._measure_response.cancel()
             else:
                 return False
+
+    def register_pin_map(self, pin_map_path: pathlib.Path) -> None:
+        """Registers the pin map with the pin map service.
+
+        Args:
+            pin_map_path: Absolute path of the pin map file.
+        """
+        pin_map_id = self._get_pin_map_client().update_pin_map(pin_map_path)
+        if self._pin_map_context is None:
+            self._pin_map_context = PinMapContext(pin_map_id=pin_map_id, sites=[0])
+        else:
+            self._pin_map_context = self._pin_map_context._replace(pin_map_id=pin_map_id)

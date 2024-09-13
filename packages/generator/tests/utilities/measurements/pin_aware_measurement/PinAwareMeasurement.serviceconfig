@@ -1,0 +1,20 @@
+{
+  "services": [
+    {
+      "displayName": "Pin Aware Measurement (Py)",
+      "serviceClass": "ni.tests.PinAwareMeasurement_Python",
+      "descriptionUrl": "",
+      "providedInterfaces": [
+        "ni.measurementlink.measurement.v1.MeasurementService",
+        "ni.measurementlink.measurement.v2.MeasurementService"
+      ],
+      "path": "start.bat",
+      "annotations": {
+        "ni/service.description": "Pin-aware measurement plug-in test service.",
+        "ni/service.collection": "NI.Tests",
+        "ni/service.tags": []
+      }
+
+    }
+  ]
+}
