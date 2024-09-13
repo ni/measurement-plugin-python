@@ -17,7 +17,7 @@ def test___measurement_plugin_client___measure___returns_output(
     measurement_plugin_client_module: ModuleType,
 ) -> None:
     test_measurement_client_type = getattr(measurement_plugin_client_module, "TestMeasurement")
-    output_type = getattr(measurement_plugin_client_module, "Output")
+    output_type = getattr(measurement_plugin_client_module, "Outputs")
     expected_output = output_type(
         name="<Name>",
         index=9,
@@ -34,7 +34,7 @@ def test___measurement_plugin_client___stream_measure___returns_output(
     measurement_plugin_client_module: ModuleType,
 ) -> None:
     test_measurement_client_type = getattr(measurement_plugin_client_module, "TestMeasurement")
-    output_type = getattr(measurement_plugin_client_module, "Output")
+    output_type = getattr(measurement_plugin_client_module, "Outputs")
     measurement_plugin_client = test_measurement_client_type()
 
     response_iterator = measurement_plugin_client.stream_measure()

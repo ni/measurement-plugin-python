@@ -1,4 +1,4 @@
-"""Python Measurement Plug-In Client."""
+"""Generated client API for the 'Non-Streaming Data Measurement (Py)' measurement plug-in."""
 
 import logging
 import threading
@@ -29,8 +29,8 @@ _logger = logging.getLogger(__name__)
 _V2_MEASUREMENT_SERVICE_INTERFACE = "ni.measurementlink.measurement.v2.MeasurementService"
 
 
-class Output(NamedTuple):
-    """Measurement result container."""
+class Outputs(NamedTuple):
+    """Outputs for the 'Non-Streaming Data Measurement (Py)' measurement plug-in."""
 
     float_out: float
     double_array_out: List[float]
@@ -46,7 +46,7 @@ class Output(NamedTuple):
 
 
 class NonStreamingDataMeasurementClient:
-    """Client to interact with the measurement plug-in."""
+    """Client for the 'Non-Streaming Data Measurement (Py)' measurement plug-in."""
 
     def __init__(
         self,
@@ -369,7 +369,9 @@ class NonStreamingDataMeasurementClient:
             configuration_parameters=serialized_configuration
         )
 
-    def _deserialize_response(self, response: v2_measurement_service_pb2.MeasureResponse) -> Output:
+    def _deserialize_response(
+        self, response: v2_measurement_service_pb2.MeasureResponse
+    ) -> Outputs:
         if self._output_metadata:
             result = [None] * max(self._output_metadata.keys())
         else:
@@ -380,7 +382,7 @@ class NonStreamingDataMeasurementClient:
 
         for k, v in output_values.items():
             result[k - 1] = v
-        return Output._make(result)
+        return Outputs._make(result)
 
     def measure(
         self,
@@ -394,11 +396,11 @@ class NonStreamingDataMeasurementClient:
         io_in: str = "resource",
         io_array_in: List[str] = ["resource1", "resource2"],
         integer_in: int = 10,
-    ) -> Output:
-        """Executes the Non-Streaming Data Measurement (Py).
+    ) -> Outputs:
+        """Perform a single measurement.
 
         Returns:
-            Measurement output.
+            Measurement outputs.
         """
         stream_measure_response = self.stream_measure(
             float_in,
@@ -428,11 +430,11 @@ class NonStreamingDataMeasurementClient:
         io_in: str = "resource",
         io_array_in: List[str] = ["resource1", "resource2"],
         integer_in: int = 10,
-    ) -> Generator[Output, None, None]:
-        """Executes the Non-Streaming Data Measurement (Py).
+    ) -> Generator[Outputs, None, None]:
+        """Perform a streaming measurement.
 
         Returns:
-            Stream of measurement output.
+            Stream of measurement outputs.
         """
         parameter_values = [
             float_in,
