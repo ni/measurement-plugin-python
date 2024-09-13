@@ -49,7 +49,7 @@ class ServiceDescriptor(google.protobuf.message.Message):
     description_url: builtins.str
     """Optional. Url which provides descriptive information about the service"""
     service_class: builtins.str
-    """Required. The "class" of a service. The value of this field should be unique for a given interface in provided_interfaces.
+    """Required. The "class" of a service. The value of this field should be unique for all services.
     In effect, the .proto service declaration defines the interface, and this field defines a class or concrete type of the interface.
     """
     @property

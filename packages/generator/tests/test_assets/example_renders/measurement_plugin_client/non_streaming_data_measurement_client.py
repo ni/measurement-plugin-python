@@ -1,4 +1,4 @@
-"""Python Measurement Plug-In Client."""
+"""Generated client API for the 'Non-Streaming Data Measurement (Py)' measurement plug-in."""
 
 import logging
 import threading
@@ -29,8 +29,8 @@ _logger = logging.getLogger(__name__)
 _V2_MEASUREMENT_SERVICE_INTERFACE = "ni.measurementlink.measurement.v2.MeasurementService"
 
 
-class Output(NamedTuple):
-    """Measurement result container."""
+class Outputs(NamedTuple):
+    """Outputs for the 'Non-Streaming Data Measurement (Py)' measurement plug-in."""
 
     float_out: float
     double_array_out: List[float]
@@ -46,7 +46,7 @@ class Output(NamedTuple):
 
 
 class NonStreamingDataMeasurementClient:
-    """Client to interact with the measurement plug-in."""
+    """Client for the 'Non-Streaming Data Measurement (Py)' measurement plug-in."""
 
     def __init__(
         self,
@@ -64,11 +64,14 @@ class NonStreamingDataMeasurementClient:
 
             grpc_channel_pool: An optional gRPC channel pool.
         """
-        self._initialization_lock = threading.Lock()
+        self._initialization_lock = threading.RLock()
         self._service_class = "ni.tests.NonStreamingDataMeasurement_Python"
         self._grpc_channel_pool = grpc_channel_pool
         self._discovery_client = discovery_client
         self._stub: Optional[v2_measurement_service_pb2_grpc.MeasurementServiceStub] = None
+        self._measure_response: Optional[
+            Generator[v2_measurement_service_pb2.MeasureResponse, None, None]
+        ] = None
         self._configuration_metadata = {
             1: ParameterMetadata(
                 display_name="Float In",
@@ -366,7 +369,9 @@ class NonStreamingDataMeasurementClient:
             configuration_parameters=serialized_configuration
         )
 
-    def _deserialize_response(self, response: v2_measurement_service_pb2.MeasureResponse) -> Output:
+    def _deserialize_response(
+        self, response: v2_measurement_service_pb2.MeasureResponse
+    ) -> Outputs:
         if self._output_metadata:
             result = [None] * max(self._output_metadata.keys())
         else:
@@ -377,7 +382,25 @@ class NonStreamingDataMeasurementClient:
 
         for k, v in output_values.items():
             result[k - 1] = v
-        return Output._make(result)
+        return Outputs._make(result)
+
+    def _convert_paths_to_strings(self, parameter_values: List[Any]) -> List[Any]:
+        result: List[Any] = []
+
+        for parameter_value in parameter_values:
+            if isinstance(parameter_value, list):
+                converted_list = []
+                for value in parameter_value:
+                    if isinstance(value, Path):
+                        converted_list.append(str(value))
+                    else:
+                        converted_list.append(value)
+                result.append(converted_list)
+            elif isinstance(parameter_value, Path):
+                result.append(str(parameter_value))
+            else:
+                result.append(parameter_value)
+        return result
 
     def _convert_paths_to_strings(self, parameter_values: List[Any]) -> List[Any]:
         result: List[Any] = []
@@ -409,11 +432,11 @@ class NonStreamingDataMeasurementClient:
         io_in: str = "resource",
         io_array_in: List[str] = ["resource1", "resource2"],
         integer_in: int = 10,
-    ) -> Output:
-        """Executes the Non-Streaming Data Measurement (Py).
+    ) -> Outputs:
+        """Perform a single measurement.
 
         Returns:
-            Measurement output.
+            Measurement outputs.
         """
         parameter_values = self._convert_paths_to_strings(
             [
@@ -429,10 +452,9 @@ class NonStreamingDataMeasurementClient:
                 integer_in,
             ]
         )
-        request = self._create_measure_request(parameter_values)
-
-        for response in self._get_stub().Measure(request):
-            result = self._deserialize_response(response)
+        stream_measure_response = self.stream_measure(parameter_values)
+        for response in stream_measure_response:
+            result = response
         return result
 
     def stream_measure(
@@ -447,11 +469,11 @@ class NonStreamingDataMeasurementClient:
         io_in: str = "resource",
         io_array_in: List[str] = ["resource1", "resource2"],
         integer_in: int = 10,
-    ) -> Generator[Output, None, None]:
-        """Executes the Non-Streaming Data Measurement (Py).
+    ) -> Generator[Outputs, None, None]:
+        """Perform a streaming measurement.
 
         Returns:
-            Stream of measurement output.
+            Stream of measurement outputs.
         """
         parameter_values = self._convert_paths_to_strings(
             [
@@ -467,7 +489,28 @@ class NonStreamingDataMeasurementClient:
                 integer_in,
             ]
         )
-        request = self._create_measure_request(parameter_values)
+        with self._initialization_lock:
+            if self._measure_response is not None:
+                raise RuntimeError(
+                    "A measurement is currently in progress. To make concurrent measurement requests, please create a new client instance."
+                )
+            request = self._create_measure_request(parameter_values)
+            self._measure_response = self._get_stub().Measure(request)
+        try:
+            for response in self._measure_response:
+                yield self._deserialize_response(response)
+        except grpc.RpcError as e:
+            if e.code() == grpc.StatusCode.CANCELLED:
+                _logger.debug("The measurement is canceled.")
+            raise
+        finally:
+            with self._initialization_lock:
+                self._measure_response = None
 
-        for response in self._get_stub().Measure(request):
-            yield self._deserialize_response(response)
+    def cancel(self) -> bool:
+        """Cancels the active measurement call."""
+        with self._initialization_lock:
+            if self._measure_response:
+                return self._measure_response.cancel()
+            else:
+                return False
