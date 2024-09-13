@@ -185,6 +185,16 @@ class NonStreamingDataMeasurementClient:
                 enum_type=None,
             ),
             10: ParameterMetadata(
+                display_name="Integer In",
+                type=5,
+                repeated=False,
+                default_value=10,
+                annotations={},
+                message_type="",
+                field_name="Integer_In",
+                enum_type=None,
+            ),
+            11: ParameterMetadata(
                 display_name="Enum In",
                 type=14,
                 repeated=False,
@@ -197,7 +207,7 @@ class NonStreamingDataMeasurementClient:
                 field_name="Enum_In",
                 enum_type=EnumInEnum,
             ),
-            11: ParameterMetadata(
+            12: ParameterMetadata(
                 display_name="Enum Array In",
                 type=14,
                 repeated=True,
@@ -209,16 +219,6 @@ class NonStreamingDataMeasurementClient:
                 message_type="",
                 field_name="Enum_Array_In",
                 enum_type=EnumInEnum,
-            ),
-            12: ParameterMetadata(
-                display_name="Integer In",
-                type=5,
-                repeated=False,
-                default_value=10,
-                annotations={},
-                message_type="",
-                field_name="Integer_In",
-                enum_type=None,
             ),
         }
         self._output_metadata = {
@@ -496,9 +496,9 @@ class NonStreamingDataMeasurementClient:
         path_array_in: List[Path] = ["path/test1", "path/ntest2"],
         io_in: str = "resource",
         io_array_in: List[str] = ["resource1", "resource2"],
+        integer_in: int = 10,
         enum_in: EnumInEnum = EnumInEnum.BLUE,
         enum_array_in: List[EnumInEnum] = [EnumInEnum.RED, EnumInEnum.GREEN],
-        integer_in: int = 10,
     ) -> Outputs:
         """Perform a single measurement.
 
@@ -515,9 +515,9 @@ class NonStreamingDataMeasurementClient:
             path_array_in,
             io_in,
             io_array_in,
+            integer_in,
             enum_in,
             enum_array_in,
-            integer_in,
         )
         for response in stream_measure_response:
             result = response
@@ -534,9 +534,9 @@ class NonStreamingDataMeasurementClient:
         path_array_in: List[Path] = ["path/test1", "path/ntest2"],
         io_in: str = "resource",
         io_array_in: List[str] = ["resource1", "resource2"],
+        integer_in: int = 10,
         enum_in: EnumInEnum = EnumInEnum.BLUE,
         enum_array_in: List[EnumInEnum] = [EnumInEnum.RED, EnumInEnum.GREEN],
-        integer_in: int = 10,
     ) -> Generator[Outputs, None, None]:
         """Perform a streaming measurement.
 
@@ -553,9 +553,9 @@ class NonStreamingDataMeasurementClient:
             path_array_in,
             io_in,
             io_array_in,
+            integer_in,
             enum_in,
             enum_array_in,
-            integer_in,
         ]
         with self._initialization_lock:
             if self._measure_response is not None:
