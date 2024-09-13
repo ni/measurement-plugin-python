@@ -383,14 +383,13 @@ class NonStreamingDataMeasurementClient:
         result = []
 
         for parameter_value in parameter_values:
-            # Converts Path type to string.
-
             if isinstance(parameter_value, list):
                 converted_list = []
                 for value in parameter_value:
                     if isinstance(value, Path):
-                        value = str(value)
-                    converted_list.append(value)
+                        converted_list.append(str(value))
+                    else:
+                        converted_list.append(value)
                 result.append(converted_list)
             elif isinstance(parameter_value, Path):
                 result.append(str(parameter_value))
