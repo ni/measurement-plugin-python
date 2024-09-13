@@ -309,7 +309,7 @@ class NonStreamingDataMeasurementClient:
 
     @property
     def pin_map_context(self) -> PinMapContext:
-        """Get the pin map context for the RPC."""
+        """Get the pin map context for the measurement."""
         return self._pin_map_context
 
     @pin_map_context.setter
@@ -322,14 +322,16 @@ class NonStreamingDataMeasurementClient:
 
     @property
     def sites(self) -> List[int]:
-        """Sites for which the measurement is being executed."""
+        """The sites where the measurement must be executed."""
         if self._pin_map_context is not None:
             return self._pin_map_context.sites
 
     @sites.setter
     def sites(self, val: List[int]) -> None:
         if self._pin_map_context is None:
-            raise AttributeError("Cannot set sites because pin map context is None.")
+            raise AttributeError(
+                "Cannot set sites because the pin map context is None. Please provide a pin map context or register a pin map before setting sites."
+            )
         self._pin_map_context = self._pin_map_context._replace(sites=val)
 
     def _get_stub(self) -> v2_measurement_service_pb2_grpc.MeasurementServiceStub:
