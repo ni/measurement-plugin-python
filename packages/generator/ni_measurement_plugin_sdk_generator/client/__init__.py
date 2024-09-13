@@ -248,7 +248,7 @@ def _create_client(
         )
 
 
-@click.command(name="b")
+@click.command()
 @click.argument("measurement_service_class", nargs=-1)
 @click.option(
     "-a",
