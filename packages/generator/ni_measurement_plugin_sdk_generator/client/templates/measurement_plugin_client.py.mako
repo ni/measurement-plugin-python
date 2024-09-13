@@ -162,7 +162,7 @@ class ${class_name}:
         return Outputs._make(result)
     
     % endif
-    % if "from pathlib import Path, WindowsPath" in built_in_import_modules:
+    % if "from pathlib import Path" in built_in_import_modules:
     def _convert_paths_to_strings(self, parameter_values: List[Any]) -> List[Any]:
         result: List[Any] = []
 
@@ -211,7 +211,7 @@ class ${class_name}:
         Returns:
             Stream of measurement outputs.
         """
-        % if "from pathlib import Path, WindowsPath" in built_in_import_modules:
+        % if "from pathlib import Path" in built_in_import_modules:
         parameter_values = self._convert_paths_to_strings([${measure_api_parameters}])
         % else:
         parameter_values = [${measure_api_parameters}]

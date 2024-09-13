@@ -2,7 +2,7 @@
 
 import logging
 import threading
-from pathlib import Path, WindowsPath
+from pathlib import Path
 from typing import Any, Generator, List, NamedTuple, Optional
 
 import grpc
@@ -409,8 +409,8 @@ class NonStreamingDataMeasurementClient:
         bool_in: bool = False,
         string_in: str = 'sample "string"',
         string_array_in: List[str] = ["String1", "String2"],
-        path_in: Path = WindowsPath("path\test"),
-        path_array_in: List[Path] = [WindowsPath("path\test1"), WindowsPath("path\ntest2")],
+        path_in: Path = Path("path\test"),
+        path_array_in: List[Path] = [Path("path\test1"), Path("path\ntest2")],
         io_in: str = "resource",
         io_array_in: List[str] = ["resource1", "resource2"],
         integer_in: int = 10,
@@ -443,8 +443,8 @@ class NonStreamingDataMeasurementClient:
         bool_in: bool = False,
         string_in: str = 'sample "string"',
         string_array_in: List[str] = ["String1", "String2"],
-        path_in: Path = WindowsPath("path\test"),
-        path_array_in: List[Path] = [WindowsPath("path\test1"), WindowsPath("path\ntest2")],
+        path_in: Path = Path("path\test"),
+        path_array_in: List[Path] = [Path("path\test1"), Path("path\ntest2")],
         io_in: str = "resource",
         io_array_in: List[str] = ["resource1", "resource2"],
         integer_in: int = 10,
