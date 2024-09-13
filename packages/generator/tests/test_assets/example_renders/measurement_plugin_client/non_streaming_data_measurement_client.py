@@ -6,7 +6,7 @@ import re
 import threading
 from enum import Enum
 from pathlib import Path
-from typing import Any, Dict, Generator, List, NamedTuple, Optional
+from typing import Any, Dict, Generator, List, NamedTuple, Optional, Type
 
 import grpc
 from google.protobuf import any_pb2
@@ -392,7 +392,7 @@ class NonStreamingDataMeasurementClient:
     def _create_file_descriptor(self) -> None:
         metadata = self._get_stub().GetMetadata(v2_measurement_service_pb2.GetMetadataRequest())
         configuration_metadata = []
-        enum_values_by_type: Dict[Enum, Dict[str, int]] = {}
+        enum_values_by_type: Dict[Type[Enum], Dict[str, int]] = {}
         for configuration in metadata.measurement_signature.configuration_parameters:
             configuration_metadata.append(
                 ParameterMetadata.initialize(
@@ -402,7 +402,11 @@ class NonStreamingDataMeasurementClient:
                     default_value=None,
                     annotations=dict(configuration.annotations.items()),
                     message_type=configuration.message_type,
-                    enum_type=self._get_enum_type(configuration, enum_values_by_type),
+                    enum_type=(
+                        self._get_enum_type(configuration, enum_values_by_type)
+                        if configuration.type == FieldDescriptorProto.TYPE_ENUM
+                        else None
+                    ),
                 )
             )
         output_metadata = []
@@ -415,7 +419,11 @@ class NonStreamingDataMeasurementClient:
                     default_value=None,
                     annotations=dict(output.annotations.items()),
                     message_type=output.message_type,
-                    enum_type=self._get_enum_type(output, enum_values_by_type),
+                    enum_type=(
+                        self._get_enum_type(output, enum_values_by_type)
+                        if output.type == FieldDescriptorProto.TYPE_ENUM
+                        else None
+                    ),
                 )
             )
         create_file_descriptor(
@@ -452,58 +460,30 @@ class NonStreamingDataMeasurementClient:
 
         for k, v in output_values.items():
             result[k - 1] = v
-        
         return Outputs._make(result)
 
     def _get_enum_type(
-        self, parameter: Any, enum_values_by_type: Dict[Enum, Dict[str, int]]
-    ) -> Enum:
-        if parameter.type == FieldDescriptorProto.TYPE_ENUM:
-            loaded_enum_values = json.loads(parameter.annotations["ni/enum.values"])
-            enum_values = {key: value for key, value in loaded_enum_values.items()}
+        self, parameter: Any, enum_values_by_type: Dict[Type[Enum], Dict[str, int]]
+    ) -> Type[Enum]:
+        loaded_enum_values = json.loads(parameter.annotations["ni/enum.values"])
+        enum_values = {key: value for key, value in loaded_enum_values.items()}
 
-            for existing_enum_type, existing_enum_values in enum_values_by_type.items():
-                if existing_enum_values == enum_values:
-                    return existing_enum_type
-
-            new_enum_type_name = self._get_enum_class_name(parameter.name)
-            new_enum_type = Enum(new_enum_type_name, enum_values)
-            enum_values_by_type[new_enum_type] = enum_values
-            return new_enum_type
-
-        return None
+        for existing_enum_type, existing_enum_values in enum_values_by_type.items():
+            if existing_enum_values == enum_values:
+                return existing_enum_type
+        new_enum_type_name = self._get_enum_class_name(parameter.name)
+        new_enum_type = Enum(new_enum_type_name, enum_values)
+        enum_values_by_type[new_enum_type] = enum_values
+        return new_enum_type
 
     def _get_enum_class_name(self, name: str) -> str:
-        class_name = name.title().replace(" ", "")
-        invalid_chars = "`~!@#$%^&*()-+={}[]\|:;',<>.?/ \n_"
-        pattern = f"[{re.escape(invalid_chars)}]"
-        class_name = re.sub(pattern, "", class_name)
-        return class_name + "Enum"
-
-    def _get_enum_type(
-        self, parameter: Any, enum_values_by_type: Dict[Enum, Dict[str, int]]
-    ) -> Enum:
-        if parameter.type == FieldDescriptorProto.TYPE_ENUM:
-            loaded_enum_values = json.loads(parameter.annotations["ni/enum.values"])
-            enum_values = {key: value for key, value in loaded_enum_values.items()}
-
-            for existing_enum_type, existing_enum_values in enum_values_by_type.items():
-                if existing_enum_values == enum_values:
-                    return existing_enum_type
-
-            new_enum_type_name = self._get_enum_class_name(parameter.name)
-            new_enum_type = Enum(new_enum_type_name, enum_values)
-            enum_values_by_type[new_enum_type] = enum_values
-            return new_enum_type
-
-        return None
-
-    def _get_enum_class_name(self, name: str) -> str:
-        class_name = name.title().replace(" ", "")
-        invalid_chars = "`~!@#$%^&*()-+={}[]\|:;',<>.?/ \n_"
-        pattern = f"[{re.escape(invalid_chars)}]"
-        class_name = re.sub(pattern, "", class_name)
-        return class_name + "Enum"
+        name = re.sub(r"[^\w\s]", "", name).replace("_", " ")
+        split_string = name.split()
+        if len(split_string) > 1:
+            name = "".join(s.capitalize() for s in split_string)
+        else:
+            name = name[0].upper() + name[1:]
+        return name + "Enum"
 
     def measure(
         self,

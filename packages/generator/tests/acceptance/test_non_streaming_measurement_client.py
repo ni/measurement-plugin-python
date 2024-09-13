@@ -1,5 +1,6 @@
 import importlib.util
 import pathlib
+from enum import Enum
 from types import ModuleType
 from typing import Generator
 
@@ -9,6 +10,15 @@ from ni_measurement_plugin_sdk_service.measurement.service import MeasurementSer
 from ni_measurement_plugin_sdk_generator.client import create_client
 from tests.utilities.discovery_service_process import DiscoveryServiceProcess
 from tests.utilities.measurements import non_streaming_data_measurement
+
+
+class EnumInEnum(Enum):
+    """EnumInEnum used for enum-typed measurement configs and outputs."""
+
+    NONE = 0
+    RED = 1
+    GREEN = 2
+    BLUE = 3
 
 
 def test___measurement_plugin_client___measure___returns_output(
@@ -28,12 +38,16 @@ def test___measurement_plugin_client___measure___returns_output(
         io_array_out=["resource1", "resource2"],
         integer_out=10,
         xy_data_out=None,
+        enum_out=EnumInEnum.BLUE,
+        enum_array_out=[EnumInEnum.RED, EnumInEnum.GREEN],
     )
     measurement_plugin_client = test_measurement_client_type()
 
     response = measurement_plugin_client.measure()
 
-    assert response == expected_output
+    # Enum values are not comparable due to differing imports.
+    # So comparing values by converting them to string.
+    assert str(response) == str(expected_output)
 
 
 def test___measurement_plugin_client___stream_measure___returns_output(
@@ -53,6 +67,8 @@ def test___measurement_plugin_client___stream_measure___returns_output(
         io_array_out=["resource1", "resource2"],
         integer_out=10,
         xy_data_out=None,
+        enum_out=EnumInEnum.BLUE,
+        enum_array_out=[EnumInEnum.RED, EnumInEnum.GREEN],
     )
     measurement_plugin_client = test_measurement_client_type()
 
@@ -60,7 +76,9 @@ def test___measurement_plugin_client___stream_measure___returns_output(
 
     responses = [response for response in response_iterator]
     assert len(responses) == 1
-    assert responses[0] == expected_output
+    # Enum values are not comparable due to differing imports.
+    # So comparing values by converting them to string.
+    assert str(responses[0]) == str(expected_output)
 
 
 @pytest.fixture(scope="module")
