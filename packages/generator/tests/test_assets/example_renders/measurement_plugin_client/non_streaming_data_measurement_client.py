@@ -70,7 +70,7 @@ class NonStreamingDataMeasurementClient:
         self._discovery_client = discovery_client
         self._stub: Optional[v2_measurement_service_pb2_grpc.MeasurementServiceStub] = None
         self._measure_response: Optional[
-            Generator[v2_measurement_service_pb2.MeasureResponse, None, None]
+            grpc.CallIterator[v2_measurement_service_pb2.MeasureResponse]
         ] = None
         self._configuration_metadata = {
             1: ParameterMetadata(
@@ -402,24 +402,6 @@ class NonStreamingDataMeasurementClient:
                 result.append(parameter_value)
         return result
 
-    def _convert_paths_to_strings(self, parameter_values: List[Any]) -> List[Any]:
-        result: List[Any] = []
-
-        for parameter_value in parameter_values:
-            if isinstance(parameter_value, list):
-                converted_list = []
-                for value in parameter_value:
-                    if isinstance(value, Path):
-                        converted_list.append(str(value))
-                    else:
-                        converted_list.append(value)
-                result.append(converted_list)
-            elif isinstance(parameter_value, Path):
-                result.append(str(parameter_value))
-            else:
-                result.append(parameter_value)
-        return result
-
     def measure(
         self,
         float_in: float = 0.05999999865889549,
@@ -438,21 +420,18 @@ class NonStreamingDataMeasurementClient:
         Returns:
             Measurement outputs.
         """
-        parameter_values = self._convert_paths_to_strings(
-            [
-                float_in,
-                double_array_in,
-                bool_in,
-                string_in,
-                string_array_in,
-                path_in,
-                path_array_in,
-                io_in,
-                io_array_in,
-                integer_in,
-            ]
+        stream_measure_response = self.stream_measure(
+            float_in,
+            double_array_in,
+            bool_in,
+            string_in,
+            string_array_in,
+            path_in,
+            path_array_in,
+            io_in,
+            io_array_in,
+            integer_in,
         )
-        stream_measure_response = self.stream_measure(parameter_values)
         for response in stream_measure_response:
             result = response
         return result

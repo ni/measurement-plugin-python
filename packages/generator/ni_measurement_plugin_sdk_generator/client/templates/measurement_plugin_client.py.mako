@@ -68,7 +68,7 @@ class ${class_name}:
         self._discovery_client = discovery_client
         self._stub: Optional[v2_measurement_service_pb2_grpc.MeasurementServiceStub] = None
         self._measure_response: Optional[
-            Generator[v2_measurement_service_pb2.MeasureResponse, None, None]
+            grpc.CallIterator[v2_measurement_service_pb2.MeasureResponse]
         ] = None
         self._configuration_metadata = ${configuration_metadata}
         self._output_metadata = ${output_metadata}
@@ -191,12 +191,9 @@ class ${class_name}:
         Returns:
             Measurement outputs.
         """
-        % if "from pathlib import Path, WindowsPath" in built_in_import_modules:
-        parameter_values = self._convert_paths_to_strings([${measure_api_parameters}])
-        % else:
-        parameter_values = [${measure_api_parameters}]
-        % endif
-        stream_measure_response = self.stream_measure(parameter_values)
+        stream_measure_response = self.stream_measure(
+            ${measure_api_parameters}
+        )
         for response in stream_measure_response:
         % if output_metadata:
             result = response
