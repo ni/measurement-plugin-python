@@ -271,12 +271,23 @@ def _create_client(
     "--directory-out",
     help="Output directory for Measurement Plug-In Client files. Default: '<current_directory>/<module_name>'",
 )
-def create_client_in_batch_mode(
+@click.option(
+    "-i",
+    "--interactive",
+    is_flag=True,
+    help=(
+        "Enables interactive mode for creating Measurement Plug-In Client files. "
+        "If no parameters are provided, this mode will be activated by default."
+        "When using this mode, no other parameters should be specified. "
+    ),
+)
+def create_client(
     measurement_service_class: List[str],
     all: bool,
     module_name: Optional[str],
     class_name: Optional[str],
     directory_out: Optional[str],
+    interactive: bool,
 ) -> None:
     """Generates a Python Measurement Plug-In Client module for the measurement service.
 
@@ -290,66 +301,48 @@ def create_client_in_batch_mode(
     built_in_import_modules: List[str] = []
     custom_import_modules: List[str] = []
 
-    _create_client(
-        channel_pool=channel_pool,
-        discovery_client=discovery_client,
-        built_in_import_modules=built_in_import_modules,
-        custom_import_modules=custom_import_modules,
-        measurement_service_class=measurement_service_class,
-        all=all,
-        module_name=module_name,
-        class_name=class_name,
-        directory_out=directory_out,
-        interactive_mode=False,
+    has_batch_parameters = (
+        measurement_service_class or all or module_name or class_name or directory_out
     )
-
-
-@click.command(name="i")
-def create_client_in_interactive_mode() -> None:
-    """Generates a Python Measurement Plug-In Client module for measurement service interactively.
-
-    You can use the generated module to interact with the corresponding measurement service.
-    """
-    channel_pool = GrpcChannelPool()
-    discovery_client = DiscoveryClient(grpc_channel_pool=channel_pool)
-    built_in_import_modules: List[str] = []
-    custom_import_modules: List[str] = []
-
-    while True:
+    if has_batch_parameters and not interactive:
         _create_client(
-            interactive_mode=True,
             channel_pool=channel_pool,
             discovery_client=discovery_client,
             built_in_import_modules=built_in_import_modules,
             custom_import_modules=custom_import_modules,
+            measurement_service_class=measurement_service_class,
+            all=all,
+            module_name=module_name,
+            class_name=class_name,
+            directory_out=directory_out,
+            interactive_mode=False,
         )
-
-        selection = (
-            click.prompt(
-                "\nEnter 'Y' to continue, or enter any other keys to exit",
-                type=str,
-                default="",
-                show_default=False,
+    else:
+        if has_batch_parameters and interactive:
+            raise click.ClickException(
+                "Interactive mode does not support additional parameters. Please remove any extra parameters and try again."
             )
-            .strip()
-            .lower()
-        )
-        if selection == "y":
-            continue
-        else:
-            break
+        print("Creating the Python Measurement Plug-In Client in interactive mode...")
+        while True:
+            _create_client(
+                channel_pool=channel_pool,
+                discovery_client=discovery_client,
+                built_in_import_modules=built_in_import_modules,
+                custom_import_modules=custom_import_modules,
+                interactive_mode=True,
+            )
 
-
-@click.group()
-def create_client() -> None:
-    """Generates a Python Measurement Plug-In Client module for the measurement service.
-
-    You can use the generated module to interact with the corresponding measurement service.
-
-    Use command 'b' to generate the client module in batch mode, or 'i' for interactive mode.
-    """
-    pass
-
-
-create_client.add_command(create_client_in_batch_mode)
-create_client.add_command(create_client_in_interactive_mode)
+            selection = (
+                click.prompt(
+                    "\nEnter 'yes' or 'y' to continue, or enter any other keys to exit",
+                    type=str,
+                    default="",
+                    show_default=False,
+                )
+                .strip()
+                .lower()
+            )
+            if selection in ["yes", "y"]:
+                continue
+            else:
+                break
