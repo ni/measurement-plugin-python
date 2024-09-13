@@ -119,13 +119,3 @@ def measure(
         enum_output,
         enum_array_output,
     )
-
-
-def main() -> None:
-    """Perform a loopback measurement with various data types."""
-    with measurement_service.host_service():
-        input("Press enter to close the measurement service.\n")
-
-
-if __name__ == "__main__":
-    main()
