@@ -193,12 +193,12 @@ class ${class_name}:
     ) -> Type[Enum]:
         loaded_enum_values = json.loads(parameter.annotations["ni/enum.values"])
         enum_values = {key: value for key, value in loaded_enum_values.items()}
-
         for existing_enum_type, existing_enum_values in enum_values_by_type.items():
             if existing_enum_values == enum_values:
                 return existing_enum_type
+
         new_enum_type_name = self._get_enum_class_name(parameter.name)
-        new_enum_type = Enum(new_enum_type_name, enum_values)
+        new_enum_type = Enum.__call__(new_enum_type_name, enum_values)
         enum_values_by_type[new_enum_type] = enum_values
         return new_enum_type
 
