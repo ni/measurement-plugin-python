@@ -1,6 +1,6 @@
 <%page args="class_name, display_name, configuration_metadata, output_metadata, service_class, configuration_parameters_with_type_and_default_values, measure_api_parameters, output_parameters_with_type, built_in_import_modules, custom_import_modules"/>\
 \
-"""Python Measurement Plug-In Client."""
+"""Generated client API for the ${display_name | repr} measurement plug-in."""
 
 import logging
 import threading
@@ -35,16 +35,16 @@ _V2_MEASUREMENT_SERVICE_INTERFACE = "ni.measurementlink.measurement.v2.Measureme
 <% output_type = "None" %>\
 % if output_metadata:
 
-class Output(NamedTuple):
-    """Measurement result container."""
+class Outputs(NamedTuple):
+    """Outputs for the ${display_name | repr} measurement plug-in."""
 
     ${output_parameters_with_type}
-<% output_type = "Output" %>\
+<% output_type = "Outputs" %>\
 % endif
 
 
 class ${class_name}:
-    """Client to interact with the measurement plug-in."""
+    """Client for the ${display_name | repr} measurement plug-in."""
      
     def __init__(
         self,
@@ -63,7 +63,7 @@ class ${class_name}:
             grpc_channel_pool: An optional gRPC channel pool.
         """
         self._initialization_lock = threading.Lock()
-        self._service_class = "${service_class}"
+        self._service_class = ${service_class | repr}
         self._grpc_channel_pool = grpc_channel_pool
         self._discovery_client = discovery_client
         self._stub: Optional[v2_measurement_service_pb2_grpc.MeasurementServiceStub] = None
@@ -144,7 +144,7 @@ class ${class_name}:
 
     def _deserialize_response(
         self, response: v2_measurement_service_pb2.MeasureResponse
-    ) -> Output:
+    ) -> Outputs:
         if self._output_metadata:
             result = [None] * max(self._output_metadata.keys())
         else:
@@ -155,16 +155,16 @@ class ${class_name}:
 
         for k, v in output_values.items():
             result[k - 1] = v
-        return Output._make(result)
+        return Outputs._make(result)
 
     def measure(
         self,
         ${configuration_parameters_with_type_and_default_values}
     ) -> ${output_type} :
-        """Executes the ${display_name}.
+        """Perform a single measurement.
 
         Returns:
-            Measurement output.
+            Measurement outputs.
         """
         parameter_values = [${measure_api_parameters}]
         request = self._create_measure_request(parameter_values)
@@ -177,10 +177,10 @@ class ${class_name}:
         self,
         ${configuration_parameters_with_type_and_default_values}
     ) -> Generator[${output_type}, None, None] :
-        """Executes the ${display_name}.
+        """Perform a streaming measurement.
 
         Returns:
-            Stream of measurement output.
+            Stream of measurement outputs.
         """
         parameter_values = [${measure_api_parameters}]
         request = self._create_measure_request(parameter_values)
