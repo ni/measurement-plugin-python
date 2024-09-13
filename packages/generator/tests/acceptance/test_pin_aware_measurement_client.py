@@ -48,7 +48,7 @@ def test___measurement_plugin_client___measure_without_pin_map_registration___ra
     assert "No sessions reserved." in (exc_info.value.details() or "")
 
 
-def test___measurement_plugin_client___register_pin_map_without_pin_map_context___updates_pin_map_id_and_sites(
+def test___measurement_plugin_client___register_pin_map_without_pin_map_context___creates_pin_map_context_with_pin_map_id_and_sites(
     measurement_plugin_client_module: ModuleType,
     pin_map_directory: pathlib.Path,
 ) -> None:
@@ -62,7 +62,7 @@ def test___measurement_plugin_client___register_pin_map_without_pin_map_context_
     assert measurement_plugin_client.pin_map_context == expected_pin_map_context
 
 
-def test___measurement_plugin_client___register_pin_map_with_pin_map_context___updates_pin_map_id(
+def test___measurement_plugin_client___register_pin_map_with_pin_map_context___updates_pin_map_context_with_pin_map_id(
     measurement_plugin_client_module: ModuleType,
     pin_map_directory: pathlib.Path,
 ) -> None:
@@ -138,7 +138,6 @@ def test___measurement_plugin_client___measure_with_pin_map_context___returns_ou
     )
     test_measurement_client_type = getattr(measurement_plugin_client_module, "TestMeasurement")
     measurement_plugin_client = test_measurement_client_type()
-    measurement_plugin_client.register_pin_map(pin_map_path)
 
     measurement_plugin_client.pin_map_context = PinMapContext(
         pin_map_id=str(pin_map_path), sites=[0, 1]
