@@ -70,7 +70,7 @@ class NonStreamingDataMeasurementClient:
         self._discovery_client = discovery_client
         self._stub: Optional[v2_measurement_service_pb2_grpc.MeasurementServiceStub] = None
         self._measure_response: Optional[
-            grpc.CallIterator[v2_measurement_service_pb2.MeasureResponse]
+            Generator[v2_measurement_service_pb2.MeasureResponse, None, None]
         ] = None
         self._configuration_metadata = {
             1: ParameterMetadata(
