@@ -3,7 +3,7 @@
 import pathlib
 import re
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Type
 
 import black
 import click
@@ -96,7 +96,7 @@ def create_client(
     discovery_client = DiscoveryClient(grpc_channel_pool=channel_pool)
     built_in_import_modules: List[str] = []
     custom_import_modules: List[str] = []
-    enum_values_by_type: Dict[Enum, Dict[str, Any]] = {}
+    enum_values_by_type: Dict[Type[Enum], Dict[str, int]] = {}
 
     if all:
         measurement_service_class = get_all_registered_measurement_service_classes(discovery_client)
