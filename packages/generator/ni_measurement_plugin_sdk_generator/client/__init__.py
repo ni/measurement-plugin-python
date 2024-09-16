@@ -194,11 +194,13 @@ def _create_clients_interactively() -> None:
             print(f"{index}. {display_name}")
 
         selection = click.prompt(
-            "\nSelect a measurement to generate a client",
-            type=int,
+            "\nSelect a measurement to generate a client (x to exit)",
+            type=str,
         )
+        if selection.lower() == "x":
+            break
         service_class = _get_selected_measurement_service_class(
-            selection, measurement_service_class
+            int(selection), measurement_service_class
         )
 
         base_service_class = _extract_base_service_class(service_class)
@@ -225,19 +227,6 @@ def _create_clients_interactively() -> None:
             class_name=class_name,
             directory_out=directory_out_path,
         )
-
-        selection = (
-            click.prompt(
-                "\nEnter 'x' to exit or enter any other keys to continue client creation for another measurement",
-                type=str,
-                default="",
-                show_default=False,
-            )
-            .strip()
-            .lower()
-        )
-        if selection == "x":
-            break
 
 
 def _create_clients(
