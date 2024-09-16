@@ -280,7 +280,7 @@ def _create_client(
     is_flag=True,
     help=(
         "Enables interactive mode for creating Measurement Plug-In Client files. "
-        "If no parameters are provided, this mode will be activated by default."
+        "If no parameters are provided, this mode will be activated by default. "
         "When using this mode, no other parameters should be specified. "
     ),
 )
