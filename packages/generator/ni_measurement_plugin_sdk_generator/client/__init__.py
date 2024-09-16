@@ -19,7 +19,7 @@ from ni_measurement_plugin_sdk_generator.client._support import (
     get_measurement_service_stub,
     get_output_metadata_by_index,
     get_output_parameters_with_type,
-    get_all_registered_measurement_service_classes,
+    get_all_registered_measurement_info,
     is_python_identifier,
     remove_suffix,
     to_ordered_set,
@@ -141,12 +141,12 @@ def _get_measurement_service_class(
 ) -> List[str]:
 
     if all or interactive:
-        measurement_service_class = get_all_registered_measurement_service_classes(discovery_client)
+        measurement_service_class, measurement_display_name = get_all_registered_measurement_info(discovery_client)
         if len(measurement_service_class) == 0:
             raise click.ClickException("No registered measurements.")
         if interactive:
             print("\nList of registered measurements:")
-            for index, service_class in enumerate(measurement_service_class, start=1):
+            for index, service_class in enumerate(measurement_display_name, start=1):
                 print(f"{index}. {service_class}")
 
             selection = click.prompt(
