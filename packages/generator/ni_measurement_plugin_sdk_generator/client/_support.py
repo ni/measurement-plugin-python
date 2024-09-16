@@ -82,7 +82,9 @@ def get_measurement_service_stub(
     return v2_measurement_service_pb2_grpc.MeasurementServiceStub(channel)
 
 
-def get_all_registered_measurement_info(discovery_client: DiscoveryClient) -> Tuple[List[str], List[str]]:
+def get_all_registered_measurement_info(
+    discovery_client: DiscoveryClient,
+) -> Tuple[List[str], List[str]]:
     """Returns the service classes of all the registered measurement services."""
     registered_measurement_services = discovery_client.enumerate_services(
         _V2_MEASUREMENT_SERVICE_INTERFACE
