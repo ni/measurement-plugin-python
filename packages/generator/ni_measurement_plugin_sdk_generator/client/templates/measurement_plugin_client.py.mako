@@ -5,7 +5,9 @@
 import logging
 import pathlib
 import threading
+% if len(enum_by_class_name):
 from enum import Enum
+% endif
 % for module in built_in_import_modules:
 ${module}
 % endfor

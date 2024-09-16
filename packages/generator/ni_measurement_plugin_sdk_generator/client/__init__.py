@@ -96,7 +96,6 @@ def create_client(
     discovery_client = DiscoveryClient(grpc_channel_pool=channel_pool)
     built_in_import_modules: List[str] = []
     custom_import_modules: List[str] = []
-    enum_values_by_type: Dict[Type[Enum], Dict[str, int]] = {}
 
     if all:
         measurement_service_class = get_all_registered_measurement_service_classes(discovery_client)
@@ -118,6 +117,7 @@ def create_client(
 
     is_multiple_client_generation = len(measurement_service_class) > 1
     for service_class in measurement_service_class:
+        enum_values_by_type: Dict[Type[Enum], Dict[str, int]] = {}
         if is_multiple_client_generation or module_name is None or class_name is None:
             base_service_class = service_class.split(".")[-1]
             base_service_class = remove_suffix(base_service_class)
