@@ -54,15 +54,7 @@ class GrpcChannelPool(object):
         with self._lock:
             if target not in self._channel_cache:
                 self._lock.release()
-                options = [
-                    ("grpc.max_receive_message_length", -1),
-                    ("grpc.max_send_message_length", -1),
-                ]
-                if self._is_local(target):
-                    options.append(("grpc.enable_http_proxy", 0))
-                new_channel = grpc.insecure_channel(target, options)
-                if ClientLogger.is_enabled():
-                    new_channel = grpc.intercept_channel(new_channel, ClientLogger())
+                new_channel = self._create_channel(target)
                 self._lock.acquire()
                 if target not in self._channel_cache:
                     self._channel_cache[target] = new_channel
@@ -82,6 +74,18 @@ class GrpcChannelPool(object):
                 channel.close()
             self._channel_cache.clear()
 
+    def _create_channel(self, target: str) -> grpc.Channel:
+        options = [
+            ("grpc.max_receive_message_length", -1),
+            ("grpc.max_send_message_length", -1),
+        ]
+        if self._is_local(target):
+            options.append(("grpc.enable_http_proxy", 0))
+        channel = grpc.insecure_channel(target, options)
+        if ClientLogger.is_enabled():
+            channel = grpc.intercept_channel(channel, ClientLogger())
+        return channel
+
     def _is_local(self, target: str) -> bool:
         hostname = ""
         # First, check if the target string is in URL format
@@ -98,7 +102,7 @@ class GrpcChannelPool(object):
             return False
         if hostname == "localhost" or hostname == "LOCALHOST":
             return True
-        
+
         # IPv6 addresses don't support parsing with leading/trailing brackets so we need to remove them.
         match = re.match(r"^\[(.*)\]$", hostname)
         if match:
@@ -107,6 +111,5 @@ class GrpcChannelPool(object):
         try:
             address = ipaddress.ip_address(hostname)
             return address.is_loopback
-        except:
-            pass
-        return False
+        except ValueError:
+            return False

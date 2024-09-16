@@ -6,15 +6,15 @@ from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
 @pytest.mark.parametrize(
     "target,expected_result",
     [
-        ("127.0.0.1", False),
-        ("[::1]", False),
-        ("localhost", False),
+        ("127.0.0.1", False), # Port must be specified explicitly
+        ("[::1]", False),     # Port must be specified explicitly
+        ("localhost", False), # Port must be specified explicitly
         ("127.0.0.1:100", True),
         ("[::1]:100", True),
         ("localhost:100", True),
-        ("http://127.0.0.1", False),
-        ("http://[::1]", False),
-        ("http://localhost", False),
+        ("http://127.0.0.1", False), # Port must be specified explicitly
+        ("http://[::1]", False),     # Port must be specified explicitly
+        ("http://localhost", False), # Port must be specified explicitly
         ("http://127.0.0.1:100", True),
         ("http://[::1]:100", True),
         ("http://localhost:100", True),
