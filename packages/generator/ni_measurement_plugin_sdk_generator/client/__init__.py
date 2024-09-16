@@ -337,7 +337,7 @@ def create_client(
 
             selection = (
                 click.prompt(
-                    "\nEnter 'yes' or 'y' to continue, or enter any other keys to exit",
+                    "\nEnter 'x' to exit or enter any other keys to select another measurement",
                     type=str,
                     default="",
                     show_default=False,
@@ -345,7 +345,7 @@ def create_client(
                 .strip()
                 .lower()
             )
-            if selection in ["yes", "y"]:
+            if selection == 'x':
                 continue
             else:
                 break
