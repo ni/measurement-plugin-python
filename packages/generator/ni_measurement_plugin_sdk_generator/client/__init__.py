@@ -166,14 +166,14 @@ def _create_client(
     "-a",
     "--all",
     is_flag=True,
-    help="Creates Python Measurement Plug-In Client for all the registered measurement services.",
+    help="Creates Python Measurement Plug-In Clients for all registered measurement services.",
 )
 @optgroup.option(
     "-i",
     "--interactive",
     is_flag=True,
     help=(
-        "Creates Python Measurement Plug-In Client for any registered measurement services interactively."
+        "Creates Python Measurement Plug-In Clients interactively."
     ),
 )
 @optgroup.group(
