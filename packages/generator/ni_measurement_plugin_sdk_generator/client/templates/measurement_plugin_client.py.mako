@@ -200,7 +200,6 @@ class ${class_name}:
         return Outputs._make(result)
 
     % endif
-
     def measure(
         self,
         ${configuration_parameters_with_type_and_default_values}
