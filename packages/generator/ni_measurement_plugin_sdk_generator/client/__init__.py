@@ -159,8 +159,8 @@ def _get_measurement_service_class(
             raise click.ClickException("No registered measurements.")
         if interactive:
             print("\nList of registered measurements:")
-            for index, service_class in enumerate(measurement_display_name, start=1):
-                print(f"{index}. {service_class}")
+            for index, display_name in enumerate(measurement_display_name, start=1):
+                print(f"{index}. {display_name}")
 
             selection = click.prompt(
                 "\nSelect a measurement to generate a client",
