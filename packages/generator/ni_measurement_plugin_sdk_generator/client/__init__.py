@@ -5,6 +5,7 @@ from typing import Any, List, Optional, Tuple
 
 import black
 import click
+from click_option_group import optgroup, RequiredMutuallyExclusiveOptionGroup
 from mako.template import Template
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v2 import (
     measurement_service_pb2 as v2_measurement_service_pb2,
@@ -259,37 +260,50 @@ def _create_client(
 
 
 @click.command()
-@click.argument("measurement_service_class", nargs=-1)
-@click.option(
+@optgroup.group(
+    "all-modes",
+    cls=RequiredMutuallyExclusiveOptionGroup,
+    help="The different modes to create Python measurement client.",
+)
+@optgroup.option(
+    "-s",
+    "--measurement_service_class",
+    help="Creates Python Measurement Plug-In Client for the given measurement services.",
+    multiple=True,
+)
+@optgroup.option(
     "-a",
     "--all",
     is_flag=True,
     help="Creates Python Measurement Plug-In Client for all the registered measurement services.",
 )
-@click.option(
-    "-m",
-    "--module-name",
-    help="Name for the Python Measurement Plug-In Client module.",
-)
-@click.option(
-    "-c",
-    "--class-name",
-    help="Name for the Python Measurement Plug-In Client Class in the generated module.",
-)
-@click.option(
-    "-o",
-    "--directory-out",
-    help="Output directory for Measurement Plug-In Client files. Default: '<current_directory>/<module_name>'",
-)
-@click.option(
+@optgroup.option(
     "-i",
     "--interactive",
     is_flag=True,
     help=(
-        "Enables interactive mode for creating Measurement Plug-In Client files. "
-        "If no parameters are provided, this mode will be activated by default. "
-        "When using this mode, no other parameters should be specified. "
+        "Creates Python Measurement Plug-In Client for any registered measurement services interactively. "
+        "If no modes are provided, this mode will be activated by default. "
     ),
+)
+@optgroup.group(
+    "optional parameters",
+    help="Recommended parameters when using measurement service class mode.",
+)
+@optgroup.option(
+    "-m",
+    "--module-name",
+    help="Name for the Python Measurement Plug-In Client module.",
+)
+@optgroup.option(
+    "-c",
+    "--class-name",
+    help="Name for the Python Measurement Plug-In Client Class in the generated module.",
+)
+@optgroup.option(
+    "-o",
+    "--directory-out",
+    help="Output directory for Measurement Plug-In Client files. Default: '<current_directory>/<module_name>'",
 )
 def create_client(
     measurement_service_class: List[str],
@@ -309,24 +323,7 @@ def create_client(
     channel_pool = GrpcChannelPool()
     discovery_client = DiscoveryClient(grpc_channel_pool=channel_pool)
 
-    has_batch_parameters = (
-        measurement_service_class or all or module_name or class_name or directory_out
-    )
-    if has_batch_parameters and not interactive:
-        _create_client(
-            channel_pool=channel_pool,
-            discovery_client=discovery_client,
-            measurement_service_class=measurement_service_class,
-            all=all,
-            module_name=module_name,
-            class_name=class_name,
-            directory_out=directory_out,
-        )
-    else:
-        if has_batch_parameters and interactive:
-            raise click.ClickException(
-                "Interactive mode does not support additional parameters. Please remove any extra parameters and try again."
-            )
+    if interactive:
         print("Creating the Python Measurement Plug-In Client in interactive mode...")
         while True:
             _create_client(
@@ -345,7 +342,17 @@ def create_client(
                 .strip()
                 .lower()
             )
-            if selection == 'x':
+            if selection == "x":
                 continue
             else:
                 break
+    else:
+        _create_client(
+            channel_pool=channel_pool,
+            discovery_client=discovery_client,
+            measurement_service_class=measurement_service_class,
+            all=all,
+            module_name=module_name,
+            class_name=class_name,
+            directory_out=directory_out,
+        )
