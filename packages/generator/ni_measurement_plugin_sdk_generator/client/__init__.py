@@ -233,7 +233,7 @@ def _create_client(
     all: bool = False,
     module_name: Optional[str] = None,
     class_name: Optional[str] = None,
-    directory_out: Optional[str] = "",
+    directory_out: Optional[str] = None,
     interactive_mode: bool = False,
 ) -> None:
 
