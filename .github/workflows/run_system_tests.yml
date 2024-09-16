@@ -47,7 +47,7 @@ jobs:
       - name: Run system tests for generator
         run: poetry run tox
         working-directory: ./packages/generator
-      - name: Upload test results from service
+      - name: Upload test results
         uses: actions/upload-artifact@v4
         with:
           name: test_results_system_${{ matrix.configuration }}
