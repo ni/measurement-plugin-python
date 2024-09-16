@@ -1,7 +1,7 @@
 """Utilizes command line args to create a Measurement Plug-In Client using template files."""
 
 import pathlib
-from typing import Any, List, Optional, Tuple
+from typing import Any, List, Optional
 
 import black
 import click
@@ -48,7 +48,7 @@ def _create_file(
         file.write(formatted_output)
 
 
-def _resolve_output_directory(directory_out: Optional[str]) -> pathlib.Path:
+def _resolve_output_directory(directory_out: Optional[str] = None) -> pathlib.Path:
     if directory_out is None:
         directory_out_path = pathlib.Path.cwd()
     else:
@@ -65,26 +65,6 @@ def _validate_identifier(name: str, name_type: str) -> None:
         raise click.ClickException(
             f"The {name_type} name '{name}' is not a valid Python identifier."
         )
-
-
-def _get_interactive_module_and_class_names(base_service_class: str) -> Tuple[str, str]:
-    default_module_name = _create_module_name(base_service_class)
-    module_name = click.prompt(
-        "Enter a name for the Python client module (or) press enter to choose the default name",
-        type=str,
-        default=default_module_name,
-    )
-    _validate_identifier(module_name, "module")
-
-    default_class_name = _create_class_name(base_service_class)
-    class_name = click.prompt(
-        "Enter a name for the Python client class (or) press enter to choose the default name",
-        type=str,
-        default=default_class_name,
-    )
-    _validate_identifier(class_name, "class")
-
-    return module_name, class_name
 
 
 def _extract_base_service_class(service_class: str) -> str:
@@ -110,31 +90,6 @@ def _create_class_name(base_service_class: str) -> str:
     return base_service_class.replace("_", "") + "Client"
 
 
-def _get_class_and_module_names(
-    service_class: str,
-    is_multiple_client_generation: bool,
-    module_name: Optional[str],
-    class_name: Optional[str],
-    interactive_mode: bool,
-) -> Tuple[str, str]:
-    base_service_class = _extract_base_service_class(service_class)
-    if interactive_mode:
-        return _get_interactive_module_and_class_names(base_service_class)
-    elif is_multiple_client_generation or module_name is None or class_name is None:
-        if is_multiple_client_generation:
-            module_name = _create_module_name(base_service_class)
-            class_name = _create_class_name(base_service_class)
-        else:
-            if module_name is None:
-                module_name = _create_module_name(base_service_class)
-            if class_name is None:
-                class_name = _create_class_name(base_service_class)
-
-        _validate_identifier(module_name, "module")
-        _validate_identifier(class_name, "class")
-    return module_name, class_name
-
-
 def _get_selected_measurement_service_class(
     selection: int, measurement_service_classes: List[str]
 ) -> List[str]:
@@ -142,59 +97,27 @@ def _get_selected_measurement_service_class(
         raise click.ClickException(
             f"Input {selection} is not invalid. Please try again by selecting a valid measurement from the list."
         )
-    return [measurement_service_classes[selection - 1]]
+    return measurement_service_classes[selection - 1]
 
 
-def _get_measurement_service_class(
-    all: bool,
-    interactive: bool,
-    measurement_service_class: List[str],
-    discovery_client: DiscoveryClient,
-) -> List[str]:
-
-    if all or interactive:
-        measurement_service_class, measurement_display_name = get_all_registered_measurement_info(
-            discovery_client
-        )
-        if len(measurement_service_class) == 0:
-            raise click.ClickException("No registered measurements.")
-        if interactive:
-            print("\nList of registered measurements:")
-            for index, display_name in enumerate(measurement_display_name, start=1):
-                print(f"{index}. {display_name}")
-
-            selection = click.prompt(
-                "\nSelect a measurement to generate a client",
-                type=int,
-            )
-            measurement_service_class = _get_selected_measurement_service_class(
-                selection, measurement_service_class
-            )
-
-    else:
-        if not measurement_service_class:
-            raise click.ClickException(
-                "The measurement service class cannot be empty. Either provide a measurement service class or use the 'all' flag to generate clients for all registered measurements."
-            )
-    return measurement_service_class
-
-
-def _generate_measurement_client(
+def _create_client(
     discovery_client: DiscoveryClient,
     channel_pool: GrpcChannelPool,
-    service_class: str,
+    measurement_service_class: str,
     module_name: str,
     class_name: str,
-    directory_out_path: pathlib.Path,
+    directory_out: pathlib.Path,
 ) -> None:
     built_in_import_modules: List[str] = []
     custom_import_modules: List[str] = []
 
     measurement_service_stub = get_measurement_service_stub(
-        discovery_client, channel_pool, service_class
+        discovery_client, channel_pool, measurement_service_class
     )
     metadata = measurement_service_stub.GetMetadata(v2_measurement_service_pb2.GetMetadataRequest())
-    configuration_metadata = get_configuration_metadata_by_index(metadata, service_class)
+    configuration_metadata = get_configuration_metadata_by_index(
+        metadata, measurement_service_class
+    )
     output_metadata = get_output_metadata_by_index(metadata)
 
     configuration_parameters_with_type_and_default_values, measure_api_parameters = (
@@ -209,12 +132,12 @@ def _generate_measurement_client(
     _create_file(
         template_name="measurement_plugin_client.py.mako",
         file_name=f"{module_name}.py",
-        directory_out=directory_out_path,
+        directory_out=directory_out,
         class_name=class_name,
         display_name=metadata.measurement_details.display_name,
         configuration_metadata=configuration_metadata,
         output_metadata=output_metadata,
-        service_class=service_class,
+        service_class=measurement_service_class,
         configuration_parameters_with_type_and_default_values=configuration_parameters_with_type_and_default_values,
         measure_api_parameters=measure_api_parameters,
         output_parameters_with_type=output_parameters_with_type,
@@ -223,40 +146,8 @@ def _generate_measurement_client(
     )
 
     print(
-        f"The measurement plug-in client for the service class '{service_class}' has been created successfully."
+        f"The measurement plug-in client for the service class '{measurement_service_class}' has been created successfully."
     )
-
-
-def _create_client(
-    channel_pool: GrpcChannelPool,
-    discovery_client: DiscoveryClient,
-    measurement_service_class: List[str] = [],
-    all: bool = False,
-    module_name: Optional[str] = None,
-    class_name: Optional[str] = None,
-    directory_out: Optional[str] = None,
-    interactive_mode: bool = False,
-) -> None:
-
-    measurement_service_class = _get_measurement_service_class(
-        all, interactive_mode, measurement_service_class, discovery_client
-    )
-
-    directory_out_path = _resolve_output_directory(directory_out)
-
-    is_multiple_client_generation = len(measurement_service_class) > 1
-    for service_class in measurement_service_class:
-        module_name, class_name = _get_class_and_module_names(
-            service_class, is_multiple_client_generation, module_name, class_name, interactive_mode
-        )
-        _generate_measurement_client(
-            discovery_client,
-            channel_pool,
-            service_class,
-            module_name,
-            class_name,
-            directory_out_path,
-        )
 
 
 @click.command()
@@ -282,8 +173,7 @@ def _create_client(
     "--interactive",
     is_flag=True,
     help=(
-        "Creates Python Measurement Plug-In Client for any registered measurement services interactively. "
-        "If no modes are provided, this mode will be activated by default. "
+        "Creates Python Measurement Plug-In Client for any registered measurement services interactively."
     ),
 )
 @optgroup.group(
@@ -323,20 +213,81 @@ def create_client(
     channel_pool = GrpcChannelPool()
     discovery_client = DiscoveryClient(grpc_channel_pool=channel_pool)
 
-    if interactive:
-        print("Creating the Python Measurement Plug-In Client in interactive mode...")
-        while True:
+    directory_out = _resolve_output_directory()
+
+    if all:
+        measurement_service_class, _ = get_all_registered_measurement_info(discovery_client)
+        if len(measurement_service_class) == 0:
+            raise click.ClickException("No registered measurements.")
+
+        for service_class in measurement_service_class:
+            base_service_class = _extract_base_service_class(service_class)
+            module_name = _create_module_name(base_service_class)
+            class_name = _create_class_name(base_service_class)
+            _validate_identifier(module_name, "module")
+            _validate_identifier(class_name, "class")
+
             _create_client(
                 channel_pool=channel_pool,
                 discovery_client=discovery_client,
-                interactive_mode=True,
+                measurement_service_class=service_class,
+                module_name=module_name,
+                class_name=class_name,
+                directory_out=directory_out,
+            )
+
+    elif interactive:
+        print("Creating the Python Measurement Plug-In Client in interactive mode...")
+
+        while True:
+            measurement_service_class, measurement_display_names = (
+                get_all_registered_measurement_info(discovery_client)
+            )
+            if len(measurement_service_class) == 0:
+                raise click.ClickException("No registered measurements.")
+
+            print("\nList of registered measurements:")
+            for index, display_name in enumerate(measurement_display_names, start=1):
+                print(f"{index}. {display_name}")
+
+            selection = click.prompt(
+                "\nSelect a measurement to generate a client",
+                type=int,
+            )
+            service_class = _get_selected_measurement_service_class(
+                selection, measurement_service_class
+            )
+
+            base_service_class = _extract_base_service_class(service_class)
+            default_module_name = _create_module_name(base_service_class)
+            module_name = click.prompt(
+                "Enter a name for the Python client module (or) press enter to choose the default name",
+                type=str,
+                default=default_module_name,
+            )
+            _validate_identifier(module_name, "module")
+            default_class_name = _create_class_name(base_service_class)
+            class_name = click.prompt(
+                "Enter a name for the Python client class (or) press enter to choose the default name",
+                type=str,
+                default=default_class_name,
+            )
+            _validate_identifier(class_name, "class")
+
+            _create_client(
+                channel_pool=channel_pool,
+                discovery_client=discovery_client,
+                measurement_service_class=service_class,
+                module_name=module_name,
+                class_name=class_name,
+                directory_out=directory_out,
             )
 
             selection = (
                 click.prompt(
                     "\nEnter 'x' to exit or enter any other keys to select another measurement",
                     type=str,
-                    default="",
+                    default="x",
                     show_default=False,
                 )
                 .strip()
@@ -347,12 +298,25 @@ def create_client(
             else:
                 break
     else:
-        _create_client(
-            channel_pool=channel_pool,
-            discovery_client=discovery_client,
-            measurement_service_class=measurement_service_class,
-            all=all,
-            module_name=module_name,
-            class_name=class_name,
-            directory_out=directory_out,
-        )
+        if not measurement_service_class:
+            raise click.ClickException(
+                "The measurement service class cannot be empty. Please provide a measurement service class or use the 'all' flag to generate clients for all registered measurements or 'interactive' flag to generate client for any registered measurements."
+            )
+
+        for service_class in measurement_service_class:
+            base_service_class = _extract_base_service_class(service_class)
+            if module_name is None:
+                module_name = _create_module_name(base_service_class)
+            if class_name is None:
+                class_name = _create_class_name(base_service_class)
+            _validate_identifier(module_name, "module")
+            _validate_identifier(class_name, "class")
+
+            _create_client(
+                channel_pool=channel_pool,
+                discovery_client=discovery_client,
+                measurement_service_class=service_class,
+                module_name=module_name,
+                class_name=class_name,
+                directory_out=directory_out,
+            )
