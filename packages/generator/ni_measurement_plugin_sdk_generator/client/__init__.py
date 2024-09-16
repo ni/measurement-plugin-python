@@ -214,7 +214,7 @@ def create_client(
     discovery_client = DiscoveryClient(grpc_channel_pool=channel_pool)
 
     if all:
-        directory_out = _resolve_output_directory()
+        directory_out = _resolve_output_directory(directory_out)
         measurement_service_class, _ = get_all_registered_measurement_info(discovery_client)
         if len(measurement_service_class) == 0:
             raise click.ClickException("No registered measurements.")
