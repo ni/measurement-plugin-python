@@ -296,14 +296,10 @@ def create_client(
             if selection == "x":
                 break
     else:
-        if not measurement_service_class:
-            raise click.ClickException(
-                "The measurement service class cannot be empty. Please provide a measurement service class or use the 'all' flag to generate clients for all registered measurements or 'interactive' flag to generate client for any registered measurements."
-            )
         directory_out = _resolve_output_directory(directory_out)
 
         is_multiple_measurement_client_creation = len(measurement_service_class) > 0
-        for service_class in measurement_service_class:
+        for service_class in measurement_service_class: 
             base_service_class = _extract_base_service_class(service_class)
             if is_multiple_measurement_client_creation or module_name is None:
                 module_name = _create_module_name(base_service_class)
