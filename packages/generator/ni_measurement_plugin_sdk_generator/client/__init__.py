@@ -172,12 +172,13 @@ def _generate_measurement_client(
     discovery_client: DiscoveryClient,
     channel_pool: GrpcChannelPool,
     service_class: str,
-    built_in_import_modules: List[str],
-    custom_import_modules: List[str],
     module_name: str,
     class_name: str,
     directory_out_path: pathlib.Path,
 ) -> None:
+    built_in_import_modules: List[str] = []
+    custom_import_modules: List[str] = []
+
     measurement_service_stub = get_measurement_service_stub(
         discovery_client, channel_pool, service_class
     )
@@ -218,12 +219,10 @@ def _generate_measurement_client(
 def _create_client(
     channel_pool: GrpcChannelPool,
     discovery_client: DiscoveryClient,
-    built_in_import_modules: List[str],
-    custom_import_modules: List[str],
     measurement_service_class: List[str] = [],
     all: bool = False,
-    module_name: Optional[str] = "",
-    class_name: Optional[str] = "",
+    module_name: Optional[str] = None,
+    class_name: Optional[str] = None,
     directory_out: Optional[str] = "",
     interactive_mode: bool = False,
 ) -> None:
@@ -243,8 +242,6 @@ def _create_client(
             discovery_client,
             channel_pool,
             service_class,
-            built_in_import_modules,
-            custom_import_modules,
             module_name,
             class_name,
             directory_out_path,
@@ -301,8 +298,6 @@ def create_client(
     """
     channel_pool = GrpcChannelPool()
     discovery_client = DiscoveryClient(grpc_channel_pool=channel_pool)
-    built_in_import_modules: List[str] = []
-    custom_import_modules: List[str] = []
 
     has_batch_parameters = (
         measurement_service_class or all or module_name or class_name or directory_out
@@ -311,14 +306,11 @@ def create_client(
         _create_client(
             channel_pool=channel_pool,
             discovery_client=discovery_client,
-            built_in_import_modules=built_in_import_modules,
-            custom_import_modules=custom_import_modules,
             measurement_service_class=measurement_service_class,
             all=all,
             module_name=module_name,
             class_name=class_name,
             directory_out=directory_out,
-            interactive_mode=False,
         )
     else:
         if has_batch_parameters and interactive:
@@ -330,8 +322,6 @@ def create_client(
             _create_client(
                 channel_pool=channel_pool,
                 discovery_client=discovery_client,
-                built_in_import_modules=built_in_import_modules,
-                custom_import_modules=custom_import_modules,
                 interactive_mode=True,
             )
 
