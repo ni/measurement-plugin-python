@@ -131,7 +131,7 @@ def _get_selected_measurement_service_class(
 ) -> List[str]:
     if not (1 <= selection <= len(measurement_service_classes)):
         raise click.ClickException(
-            f"Input {selection} is out of bounds. Please try again by entering a valid serial number."
+            f"Input {selection} is not invalid. Please try again by selecting a valid measurement from the list."
         )
     return [measurement_service_classes[selection - 1]]
 
@@ -153,7 +153,7 @@ def _get_measurement_service_class(
                 print(f"{index}. {service_class}")
 
             selection = click.prompt(
-                "\nEnter the serial number for the desired measurement service client creation",
+                "\nSelect a measurement to generate a client",
                 type=int,
             )
             measurement_service_class = _get_selected_measurement_service_class(
