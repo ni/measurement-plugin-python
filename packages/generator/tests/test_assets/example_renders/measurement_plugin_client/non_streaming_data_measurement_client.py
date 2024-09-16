@@ -1,18 +1,15 @@
 """Generated client API for the 'Non-Streaming Data Measurement (Py)' measurement plug-in."""
 
-import json
 import logging
 import pathlib
-import re
 import threading
 from enum import Enum
 from pathlib import Path
-from typing import Any, Dict, Generator, List, NamedTuple, Optional, Type
+from typing import Any, Generator, List, NamedTuple, Optional
 
 import grpc
 from google.protobuf import any_pb2
 from google.protobuf import descriptor_pool
-from google.protobuf.descriptor_pb2 import FieldDescriptorProto
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v2 import (
     measurement_service_pb2 as v2_measurement_service_pb2,
     measurement_service_pb2_grpc as v2_measurement_service_pb2_grpc,
@@ -445,45 +442,9 @@ class NonStreamingDataMeasurementClient:
         return self._pin_map_client
 
     def _create_file_descriptor(self) -> None:
-        metadata = self._get_stub().GetMetadata(v2_measurement_service_pb2.GetMetadataRequest())
-        configuration_metadata = []
-        enum_values_by_type: Dict[Type[Enum], Dict[str, int]] = {}
-        for configuration in metadata.measurement_signature.configuration_parameters:
-            configuration_metadata.append(
-                ParameterMetadata.initialize(
-                    display_name=configuration.name,
-                    type=configuration.type,
-                    repeated=configuration.repeated,
-                    default_value=None,
-                    annotations=dict(configuration.annotations.items()),
-                    message_type=configuration.message_type,
-                    enum_type=(
-                        self._get_enum_type(configuration, enum_values_by_type)
-                        if configuration.type == FieldDescriptorProto.TYPE_ENUM
-                        else None
-                    ),
-                )
-            )
-        output_metadata = []
-        for output in metadata.measurement_signature.outputs:
-            output_metadata.append(
-                ParameterMetadata.initialize(
-                    display_name=output.name,
-                    type=output.type,
-                    repeated=output.repeated,
-                    default_value=None,
-                    annotations=dict(output.annotations.items()),
-                    message_type=output.message_type,
-                    enum_type=(
-                        self._get_enum_type(output, enum_values_by_type)
-                        if output.type == FieldDescriptorProto.TYPE_ENUM
-                        else None
-                    ),
-                )
-            )
         create_file_descriptor(
-            input_metadata=configuration_metadata,
-            output_metadata=output_metadata,
+            input_metadata=list(self._configuration_metadata.values()),
+            output_metadata=list(self._output_metadata.values()),
             service_name=self._service_class,
             pool=descriptor_pool.Default(),
         )
@@ -517,29 +478,6 @@ class NonStreamingDataMeasurementClient:
         for k, v in output_values.items():
             result[k - 1] = v
         return Outputs._make(result)
-
-    def _get_enum_type(
-        self, parameter: Any, enum_values_by_type: Dict[Type[Enum], Dict[str, int]]
-    ) -> Type[Enum]:
-        loaded_enum_values = json.loads(parameter.annotations["ni/enum.values"])
-        enum_values = {key: value for key, value in loaded_enum_values.items()}
-        for existing_enum_type, existing_enum_values in enum_values_by_type.items():
-            if existing_enum_values == enum_values:
-                return existing_enum_type
-
-        new_enum_type_name = self._get_enum_class_name(parameter.name)
-        new_enum_type = Enum.__call__(new_enum_type_name, enum_values)
-        enum_values_by_type[new_enum_type] = enum_values
-        return new_enum_type
-
-    def _get_enum_class_name(self, name: str) -> str:
-        name = re.sub(r"[^\w\s]", "", name).replace("_", " ")
-        split_string = name.split()
-        if len(split_string) > 1:
-            name = "".join(s.capitalize() for s in split_string)
-        else:
-            name = name[0].upper() + name[1:]
-        return name + "Enum"
 
     def measure(
         self,
