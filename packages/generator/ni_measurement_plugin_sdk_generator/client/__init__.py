@@ -88,6 +88,7 @@ def create_client(
     discovery_client = DiscoveryClient(grpc_channel_pool=channel_pool)
     built_in_import_modules: List[str] = []
     custom_import_modules: List[str] = []
+    type_url_prefix = "type.googleapis.com/"
 
     if all:
         measurement_service_class = get_all_registered_measurement_service_classes(discovery_client)
@@ -172,7 +173,7 @@ def create_client(
             output_parameters_with_type=output_parameters_with_type,
             built_in_import_modules=to_ordered_set(built_in_import_modules),
             custom_import_modules=to_ordered_set(custom_import_modules),
-            type_url=f"type.googleapis.com/{metadata.measurement_signature.configuration_parameters_message_type}",
+            type_url=type_url_prefix + metadata.measurement_signature.configuration_parameters_message_type,
         )
 
         print(
