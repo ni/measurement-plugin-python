@@ -352,7 +352,9 @@ def _get_enum_type(
             return existing_enum_type
 
     new_enum_type_name = _get_enum_class_name(parameter.name)
-    new_enum_type = Enum.__call__(new_enum_type_name, enum_values)
+    # MyPy error: Enum() expects a string literal as the first argument.
+    # Ignoring this error because MyPy cannot validate dynamic Enum creation statically.
+    new_enum_type = Enum(new_enum_type_name, enum_values)  # type: ignore[misc]
     enum_values_by_type[new_enum_type] = enum_values
     return new_enum_type
 
