@@ -213,13 +213,12 @@ def create_client(
     channel_pool = GrpcChannelPool()
     discovery_client = DiscoveryClient(grpc_channel_pool=channel_pool)
 
-    directory_out = _resolve_output_directory()
-
     if all:
+        directory_out = _resolve_output_directory()
         measurement_service_class, _ = get_all_registered_measurement_info(discovery_client)
         if len(measurement_service_class) == 0:
             raise click.ClickException("No registered measurements.")
-
+        
         for service_class in measurement_service_class:
             base_service_class = _extract_base_service_class(service_class)
             module_name = _create_module_name(base_service_class)
@@ -238,6 +237,7 @@ def create_client(
 
     elif interactive:
         print("Creating the Python Measurement Plug-In Client in interactive mode...")
+        directory_out = _resolve_output_directory()
 
         while True:
             measurement_service_class, measurement_display_names = (
@@ -302,6 +302,7 @@ def create_client(
             raise click.ClickException(
                 "The measurement service class cannot be empty. Please provide a measurement service class or use the 'all' flag to generate clients for all registered measurements or 'interactive' flag to generate client for any registered measurements."
             )
+        directory_out = _resolve_output_directory(directory_out)
 
         for service_class in measurement_service_class:
             base_service_class = _extract_base_service_class(service_class)
