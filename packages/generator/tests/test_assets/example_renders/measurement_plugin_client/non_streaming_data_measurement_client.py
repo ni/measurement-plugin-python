@@ -4,7 +4,7 @@ import logging
 import pathlib
 import threading
 from pathlib import Path
-from typing import Any, Generator, List, NamedTuple, Optional
+from typing import Any, Generator, Iterable, List, NamedTuple, Optional
 
 import grpc
 from google.protobuf import any_pb2
@@ -454,24 +454,6 @@ class NonStreamingDataMeasurementClient:
             result[k - 1] = v
         return Outputs._make(result)
 
-    def _convert_paths_to_strings(self, parameter_values: List[Any]) -> List[Any]:
-        result: List[Any] = []
-
-        for parameter_value in parameter_values:
-            if isinstance(parameter_value, list):
-                converted_list = []
-                for value in parameter_value:
-                    if isinstance(value, Path):
-                        converted_list.append(str(value))
-                    else:
-                        converted_list.append(value)
-                result.append(converted_list)
-            elif isinstance(parameter_value, Path):
-                result.append(str(parameter_value))
-            else:
-                result.append(parameter_value)
-        return result
-
     def measure(
         self,
         float_in: float = 0.05999999865889549,
@@ -552,7 +534,7 @@ class NonStreamingDataMeasurementClient:
         Returns:
             Stream of measurement outputs.
         """
-        parameter_values = self._convert_paths_to_strings(
+        parameter_values = _convert_paths_to_strings(
             [
                 float_in,
                 double_array_in,
@@ -603,3 +585,22 @@ class NonStreamingDataMeasurementClient:
             self._pin_map_context = PinMapContext(pin_map_id=pin_map_id, sites=[0])
         else:
             self._pin_map_context = self._pin_map_context._replace(pin_map_id=pin_map_id)
+
+
+def _convert_paths_to_strings(parameter_values: Iterable[Any]) -> List[Any]:
+    result: List[Any] = []
+
+    for parameter_value in parameter_values:
+        if isinstance(parameter_value, list):
+            converted_list = []
+            for value in parameter_value:
+                if isinstance(value, Path):
+                    converted_list.append(str(value))
+                else:
+                    converted_list.append(value)
+            result.append(converted_list)
+        elif isinstance(parameter_value, Path):
+            result.append(str(parameter_value))
+        else:
+            result.append(parameter_value)
+    return result

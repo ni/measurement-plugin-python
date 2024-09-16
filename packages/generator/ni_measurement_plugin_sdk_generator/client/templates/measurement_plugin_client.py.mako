@@ -8,7 +8,7 @@ import threading
 % for module in built_in_import_modules:
 ${module}
 % endfor
-from typing import Any, Generator, List, NamedTuple, Optional
+from typing import Any, Generator, Iterable, List, NamedTuple, Optional
 
 import grpc
 from google.protobuf import any_pb2
@@ -214,26 +214,6 @@ class ${class_name}:
         for k, v in output_values.items():
             result[k - 1] = v
         return Outputs._make(result)
-    
-    % endif
-    % if "from pathlib import Path" in built_in_import_modules:
-    def _convert_paths_to_strings(self, parameter_values: List[Any]) -> List[Any]:
-        result: List[Any] = []
-
-        for parameter_value in parameter_values:
-            if isinstance(parameter_value, list):
-                converted_list = []
-                for value in parameter_value:
-                    if isinstance(value, Path):
-                        converted_list.append(str(value))
-                    else:
-                        converted_list.append(value)
-                result.append(converted_list)
-            elif isinstance(parameter_value, Path):
-                result.append(str(parameter_value))
-            else:
-                result.append(parameter_value)
-        return result
     % endif
 
     def measure(
@@ -266,7 +246,7 @@ class ${class_name}:
             Stream of measurement outputs.
         """
         % if "from pathlib import Path" in built_in_import_modules:
-        parameter_values = self._convert_paths_to_strings([${measure_api_parameters}])
+        parameter_values = _convert_paths_to_strings([${measure_api_parameters}])
         % else:
         parameter_values = [${measure_api_parameters}]
         % endif
@@ -312,3 +292,25 @@ class ${class_name}:
             self._pin_map_context = PinMapContext(pin_map_id=pin_map_id, sites=[0])
         else:
             self._pin_map_context = self._pin_map_context._replace(pin_map_id=pin_map_id)
+
+% if "from pathlib import Path" in built_in_import_modules:
+
+def _convert_paths_to_strings(parameter_values: Iterable[Any]) -> List[Any]:
+    result: List[Any] = []
+
+    for parameter_value in parameter_values:
+        if isinstance(parameter_value, list):
+            converted_list = []
+            for value in parameter_value:
+                if isinstance(value, Path):
+                    converted_list.append(str(value))
+                else:
+                    converted_list.append(value)
+            result.append(converted_list)
+        elif isinstance(parameter_value, Path):
+            result.append(str(parameter_value))
+        else:
+            result.append(parameter_value)
+    return result
+
+% endif
