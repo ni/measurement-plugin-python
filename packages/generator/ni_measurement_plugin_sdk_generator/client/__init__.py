@@ -285,7 +285,7 @@ def create_client(
 
             selection = (
                 click.prompt(
-                    "\nEnter 'x' to exit or enter any other keys to select another measurement",
+                    "\nEnter 'x' to exit or enter any other keys to continue client creation for another measurement",
                     type=str,
                     default="x",
                     show_default=False,
@@ -294,8 +294,6 @@ def create_client(
                 .lower()
             )
             if selection == "x":
-                continue
-            else:
                 break
     else:
         if not measurement_service_class:
