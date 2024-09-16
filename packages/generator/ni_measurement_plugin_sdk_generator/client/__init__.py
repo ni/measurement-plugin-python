@@ -68,11 +68,11 @@ def _validate_identifier(name: str, name_type: str) -> None:
 
 def _get_interactive_module_and_class_names(base_service_class: str) -> Tuple[str, str]:
     default_module_name = _create_module_name(base_service_class)
-    module_name = click.prompt("Enter a name for the python client module (or) press enter to choose the default name", type=str, default=default_module_name)
+    module_name = click.prompt("Enter a name for the Python client module (or) press enter to choose the default name", type=str, default=default_module_name)
     _validate_identifier(module_name, "module")
 
     default_class_name = _create_class_name(base_service_class)
-    class_name = click.prompt("Enter a name for the python client class (or) press enter to choose the default name", type=str, default=default_class_name)
+    class_name = click.prompt("Enter a name for the Python client class (or) press enter to choose the default name", type=str, default=default_class_name)
     _validate_identifier(class_name, "class")
 
     return module_name, class_name
