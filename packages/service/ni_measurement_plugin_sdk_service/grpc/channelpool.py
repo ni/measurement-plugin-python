@@ -103,7 +103,8 @@ class GrpcChannelPool(object):
         if hostname == "localhost" or hostname == "LOCALHOST":
             return True
 
-        # IPv6 addresses don't support parsing with leading/trailing brackets so we need to remove them.
+        # IPv6 addresses don't support parsing with leading/trailing brackets
+        # so we need to remove them.
         match = re.match(r"^\[(.*)\]$", hostname)
         if match:
             hostname = match.group(1)
