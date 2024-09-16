@@ -302,11 +302,12 @@ def create_client(
             )
         directory_out = _resolve_output_directory(directory_out)
 
+        is_multiple_measurement_client_creation = len(measurement_service_class) > 0
         for service_class in measurement_service_class:
             base_service_class = _extract_base_service_class(service_class)
-            if module_name is None:
+            if is_multiple_measurement_client_creation or module_name is None:
                 module_name = _create_module_name(base_service_class)
-            if class_name is None:
+            if is_multiple_measurement_client_creation or class_name is None:
                 class_name = _create_class_name(base_service_class)
             _validate_identifier(module_name, "module")
             _validate_identifier(class_name, "class")
