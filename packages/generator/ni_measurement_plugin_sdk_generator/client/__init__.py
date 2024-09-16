@@ -92,7 +92,7 @@ def _create_class_name(base_service_class: str) -> str:
 
 def _get_selected_measurement_service_class(
     selection: int, measurement_service_classes: List[str]
-) -> List[str]:
+) -> str:
     if not (1 <= selection <= len(measurement_service_classes)):
         raise click.ClickException(
             f"Input {selection} is not invalid. Please try again by selecting a valid measurement from the list."
@@ -150,38 +150,37 @@ def _create_client(
     )
 
 
-def _create_all_clients(directory_out: str) -> None:
+def _create_all_clients(directory_out: Optional[str]) -> None:
     channel_pool = GrpcChannelPool()
     discovery_client = DiscoveryClient(grpc_channel_pool=channel_pool)
 
-    if all:
-        directory_out = _resolve_output_directory(directory_out)
-        measurement_service_class, _ = get_all_registered_measurement_info(discovery_client)
-        if len(measurement_service_class) == 0:
-            raise click.ClickException("No registered measurements.")
+    directory_out_path = _resolve_output_directory(directory_out)
+    measurement_service_class, _ = get_all_registered_measurement_info(discovery_client)
+    if len(measurement_service_class) == 0:
+        raise click.ClickException("No registered measurements.")
 
-        for service_class in measurement_service_class:
-            base_service_class = _extract_base_service_class(service_class)
-            module_name = _create_module_name(base_service_class)
-            class_name = _create_class_name(base_service_class)
-            _validate_identifier(module_name, "module")
-            _validate_identifier(class_name, "class")
+    for service_class in measurement_service_class:
+        base_service_class = _extract_base_service_class(service_class)
+        module_name = _create_module_name(base_service_class)
+        class_name = _create_class_name(base_service_class)
+        _validate_identifier(module_name, "module")
+        _validate_identifier(class_name, "class")
 
-            _create_client(
-                channel_pool=channel_pool,
-                discovery_client=discovery_client,
-                measurement_service_class=service_class,
-                module_name=module_name,
-                class_name=class_name,
-                directory_out=directory_out,
-            )
+        _create_client(
+            channel_pool=channel_pool,
+            discovery_client=discovery_client,
+            measurement_service_class=service_class,
+            module_name=module_name,
+            class_name=class_name,
+            directory_out=directory_out_path,
+        )
 
 
 def _create_clients_interactively() -> None:
     print("Creating the Python Measurement Plug-In Client in interactive mode...")
     channel_pool = GrpcChannelPool()
     discovery_client = DiscoveryClient(grpc_channel_pool=channel_pool)
-    directory_out = _resolve_output_directory()
+    directory_out_path = _resolve_output_directory()
 
     while True:
         measurement_service_class, measurement_display_names = get_all_registered_measurement_info(
@@ -224,7 +223,7 @@ def _create_clients_interactively() -> None:
             measurement_service_class=service_class,
             module_name=module_name,
             class_name=class_name,
-            directory_out=directory_out,
+            directory_out=directory_out_path,
         )
 
         selection = (
@@ -242,11 +241,14 @@ def _create_clients_interactively() -> None:
 
 
 def _create_clients(
-    measurement_service_class: List[str], module_name: str, class_name: str, directory_out: str
+    measurement_service_class: List[str],
+    module_name: Optional[str],
+    class_name: Optional[str],
+    directory_out: Optional[str],
 ) -> None:
     channel_pool = GrpcChannelPool()
     discovery_client = DiscoveryClient(grpc_channel_pool=channel_pool)
-    directory_out = _resolve_output_directory(directory_out)
+    directory_out_path = _resolve_output_directory(directory_out)
 
     is_multiple_measurement_client_creation = len(measurement_service_class) > 1
     for service_class in measurement_service_class:
@@ -264,7 +266,7 @@ def _create_clients(
             measurement_service_class=service_class,
             module_name=module_name,
             class_name=class_name,
-            directory_out=directory_out,
+            directory_out=directory_out_path,
         )
 
 
