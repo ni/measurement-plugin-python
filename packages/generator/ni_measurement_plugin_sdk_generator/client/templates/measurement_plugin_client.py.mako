@@ -2,21 +2,18 @@
 \
 """Generated client API for the ${display_name | repr} measurement plug-in."""
 
-import json
 import logging
 import pathlib
-import re
 import threading
 from enum import Enum
 % for module in built_in_import_modules:
 ${module}
 % endfor
-from typing import Any, Dict, Generator, List, NamedTuple, Optional, Type
+from typing import Any, Generator, List, NamedTuple, Optional
 
 import grpc
 from google.protobuf import any_pb2
 from google.protobuf import descriptor_pool
-from google.protobuf.descriptor_pb2 import FieldDescriptorProto
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v2 import (
     measurement_service_pb2 as v2_measurement_service_pb2,
     measurement_service_pb2_grpc as v2_measurement_service_pb2_grpc,
