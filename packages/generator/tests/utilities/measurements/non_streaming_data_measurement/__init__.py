@@ -23,11 +23,29 @@ measurement_service = nims.MeasurementService(
 @measurement_service.configuration("Bool In", nims.DataType.Boolean, False)
 @measurement_service.configuration("String In", nims.DataType.String, "sample string")
 @measurement_service.configuration(
-    "String Array In", nims.DataType.StringArray1D, ["String1", "String2"]
+    "String Array In",
+    nims.DataType.StringArray1D,
+    [
+        "string with /forwardslash",
+        "string with \\backslash",
+        "string with 'single quotes'",
+        'string with "double quotes"',
+        "string with \ttabspace",
+        "string with \nnewline",
+    ],
 )
-@measurement_service.configuration("Path In", nims.DataType.Path, "path/test")
+@measurement_service.configuration("Path In", nims.DataType.Path, "sample\\path\\for\\test")
 @measurement_service.configuration(
-    "Path Array In", nims.DataType.PathArray1D, ["path/test1", "path/ntest2"]
+    "Path Array In",
+    nims.DataType.PathArray1D,
+    [
+        "path/with/forward/slash",
+        "path\\with\\backslash",
+        "path with 'single quotes'",
+        'path with "double quotes"',
+        "path\twith\ttabs",
+        "path\nwith\nnewlines",
+    ],
 )
 @measurement_service.configuration("IO In", nims.DataType.IOResource, "resource")
 @measurement_service.configuration(

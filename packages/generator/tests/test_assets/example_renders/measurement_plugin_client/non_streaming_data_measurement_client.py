@@ -4,7 +4,7 @@ import logging
 import pathlib
 import threading
 from pathlib import Path
-from typing import Any, Generator, List, NamedTuple, Optional
+from typing import Any, Generator, Iterable, List, NamedTuple, Optional
 
 import grpc
 from google.protobuf import any_pb2
@@ -124,7 +124,14 @@ class NonStreamingDataMeasurementClient:
                 display_name="String Array In",
                 type=9,
                 repeated=True,
-                default_value=["String1", "String2"],
+                default_value=[
+                    "string with /forwardslash",
+                    "string with \\backslash",
+                    "string with 'single quotes'",
+                    'string with "double quotes"',
+                    "string with \ttabspace",
+                    "string with \nnewline",
+                ],
                 annotations={},
                 message_type="",
                 field_name="String_Array_In",
@@ -134,7 +141,7 @@ class NonStreamingDataMeasurementClient:
                 display_name="Path In",
                 type=9,
                 repeated=False,
-                default_value="path/test",
+                default_value="sample\\path\\for\\test",
                 annotations={"ni/type_specialization": "path"},
                 message_type="",
                 field_name="Path_In",
@@ -144,7 +151,14 @@ class NonStreamingDataMeasurementClient:
                 display_name="Path Array In",
                 type=9,
                 repeated=True,
-                default_value=["path/test1", "path/ntest2"],
+                default_value=[
+                    "path/with/forward/slash",
+                    "path\\with\\backslash",
+                    "path with 'single quotes'",
+                    'path with "double quotes"',
+                    "path\twith\ttabs",
+                    "path\nwith\nnewlines",
+                ],
                 annotations={"ni/type_specialization": "path"},
                 message_type="",
                 field_name="Path_Array_In",
@@ -446,9 +460,23 @@ class NonStreamingDataMeasurementClient:
         double_array_in: List[float] = [0.1, 0.2, 0.3],
         bool_in: bool = False,
         string_in: str = "sample string",
-        string_array_in: List[str] = ["String1", "String2"],
-        path_in: Path = r"path/test",
-        path_array_in: List[Path] = ["path/test1", "path/ntest2"],
+        string_array_in: List[str] = [
+            "string with /forwardslash",
+            "string with \\backslash",
+            "string with 'single quotes'",
+            'string with "double quotes"',
+            "string with \ttabspace",
+            "string with \nnewline",
+        ],
+        path_in: Path = Path("sample\\path\\for\\test"),
+        path_array_in: List[Path] = [
+            Path("path/with/forward/slash"),
+            Path("path\\with\\backslash"),
+            Path("path with 'single quotes'"),
+            Path('path with "double quotes"'),
+            Path("path\twith\ttabs"),
+            Path("path\nwith\nnewlines"),
+        ],
         io_in: str = "resource",
         io_array_in: List[str] = ["resource1", "resource2"],
         integer_in: int = 10,
@@ -480,9 +508,23 @@ class NonStreamingDataMeasurementClient:
         double_array_in: List[float] = [0.1, 0.2, 0.3],
         bool_in: bool = False,
         string_in: str = "sample string",
-        string_array_in: List[str] = ["String1", "String2"],
-        path_in: Path = r"path/test",
-        path_array_in: List[Path] = ["path/test1", "path/ntest2"],
+        string_array_in: List[str] = [
+            "string with /forwardslash",
+            "string with \\backslash",
+            "string with 'single quotes'",
+            'string with "double quotes"',
+            "string with \ttabspace",
+            "string with \nnewline",
+        ],
+        path_in: Path = Path("sample\\path\\for\\test"),
+        path_array_in: List[Path] = [
+            Path("path/with/forward/slash"),
+            Path("path\\with\\backslash"),
+            Path("path with 'single quotes'"),
+            Path('path with "double quotes"'),
+            Path("path\twith\ttabs"),
+            Path("path\nwith\nnewlines"),
+        ],
         io_in: str = "resource",
         io_array_in: List[str] = ["resource1", "resource2"],
         integer_in: int = 10,
@@ -492,18 +534,20 @@ class NonStreamingDataMeasurementClient:
         Returns:
             Stream of measurement outputs.
         """
-        parameter_values = [
-            float_in,
-            double_array_in,
-            bool_in,
-            string_in,
-            string_array_in,
-            path_in,
-            path_array_in,
-            io_in,
-            io_array_in,
-            integer_in,
-        ]
+        parameter_values = _convert_paths_to_strings(
+            [
+                float_in,
+                double_array_in,
+                bool_in,
+                string_in,
+                string_array_in,
+                path_in,
+                path_array_in,
+                io_in,
+                io_array_in,
+                integer_in,
+            ]
+        )
         with self._initialization_lock:
             if self._measure_response is not None:
                 raise RuntimeError(
@@ -541,3 +585,22 @@ class NonStreamingDataMeasurementClient:
             self._pin_map_context = PinMapContext(pin_map_id=pin_map_id, sites=[0])
         else:
             self._pin_map_context = self._pin_map_context._replace(pin_map_id=pin_map_id)
+
+
+def _convert_paths_to_strings(parameter_values: Iterable[Any]) -> List[Any]:
+    result: List[Any] = []
+
+    for parameter_value in parameter_values:
+        if isinstance(parameter_value, list):
+            converted_list = []
+            for value in parameter_value:
+                if isinstance(value, Path):
+                    converted_list.append(str(value))
+                else:
+                    converted_list.append(value)
+            result.append(converted_list)
+        elif isinstance(parameter_value, Path):
+            result.append(str(parameter_value))
+        else:
+            result.append(parameter_value)
+    return result

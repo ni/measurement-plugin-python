@@ -18,7 +18,7 @@ def test___measurement_plugin_client___measure_with_pin_map_registration___retur
     pin_map_directory: pathlib.Path,
 ) -> None:
     pin_map_path = pin_map_directory / "1Smu1ChannelGroup1Pin1Site.pinmap"
-    output_type = getattr(measurement_plugin_client_module, "Output")
+    output_type = getattr(measurement_plugin_client_module, "Outputs")
     expected_output = output_type(
         pin_map_id=str(pin_map_path),
         sites=[0],
@@ -128,7 +128,7 @@ def test___measurement_plugin_client___measure_with_pin_map_context___returns_ou
     pin_map_directory: pathlib.Path,
 ) -> None:
     pin_map_path = pin_map_directory / "1Smu1ChannelGroup2Pin2Site.pinmap"
-    output_type = getattr(measurement_plugin_client_module, "Output")
+    output_type = getattr(measurement_plugin_client_module, "Outputs")
     expected_output = output_type(
         pin_map_id=str(pin_map_path),
         sites=[0, 1],
