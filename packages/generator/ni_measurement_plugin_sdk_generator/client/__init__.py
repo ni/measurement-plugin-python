@@ -267,7 +267,7 @@ def _create_clients(
 )
 @optgroup.option(
     "-s",
-    "--measurement_service_class",
+    "--measurement-service-class",
     help="Creates Python Measurement Plug-In Client for the given measurement services.",
     multiple=True,
 )
