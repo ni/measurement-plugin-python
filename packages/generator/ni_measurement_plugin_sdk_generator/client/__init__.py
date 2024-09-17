@@ -14,16 +14,20 @@ from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
 
 from ni_measurement_plugin_sdk_generator.client._support import (
-    camel_to_snake_case,
+    create_class_name,
+    create_module_name,
+    extract_base_service_class,
     get_configuration_metadata_by_index,
     get_configuration_parameters_with_type_and_default_values,
     get_measurement_service_stub,
     get_output_metadata_by_index,
     get_output_parameters_with_type,
     get_all_registered_measurement_info,
-    is_python_identifier,
-    remove_suffix,
+    get_selected_measurement_service_class,
     to_ordered_set,
+    resolve_output_directory,
+    validate_identifier,
+    validate_measurement_service_classes,
 )
 
 
@@ -46,63 +50,6 @@ def _create_file(
 
     with output_file.open("w") as file:
         file.write(formatted_output)
-
-
-def _resolve_output_directory(directory_out: Optional[str] = None) -> pathlib.Path:
-    if directory_out is None:
-        directory_out_path = pathlib.Path.cwd()
-    else:
-        directory_out_path = pathlib.Path(directory_out)
-
-    if not directory_out_path.exists():
-        raise click.ClickException(f"The specified directory '{directory_out}' was not found.")
-
-    return directory_out_path
-
-
-def _validate_identifier(name: str, name_type: str) -> None:
-    if not is_python_identifier(name):
-        raise click.ClickException(
-            f"The {name_type} name '{name}' is not a valid Python identifier."
-        )
-
-
-def _extract_base_service_class(service_class: str) -> str:
-    base_service_class = service_class.split(".")[-1]
-    base_service_class = remove_suffix(base_service_class)
-
-    if not base_service_class.isidentifier():
-        raise click.ClickException(
-            "Client creation failed.\nEither provide a module name or update the measurement with a valid service class."
-        )
-    if not any(ch.isupper() for ch in base_service_class):
-        print(
-            f"Warning: The service class '{service_class}' does not adhere to the recommended format."
-        )
-    return base_service_class
-
-
-def _create_module_name(base_service_class: str) -> str:
-    return camel_to_snake_case(base_service_class) + "_client"
-
-
-def _create_class_name(base_service_class: str) -> str:
-    return base_service_class.replace("_", "") + "Client"
-
-
-def _get_selected_measurement_service_class(
-    selection: int, measurement_service_classes: List[str]
-) -> str:
-    if not (1 <= selection <= len(measurement_service_classes)):
-        raise click.ClickException(
-            f"Input {selection} is not invalid. Please try again by selecting a valid measurement from the list."
-        )
-    return measurement_service_classes[selection - 1]
-
-
-def _validate_measurement_service_classes(measurement_service_classes: List[str]) -> None:
-    if len(measurement_service_classes) == 0:
-        raise click.ClickException("No registered measurements.")
 
 
 def _create_client(
@@ -159,16 +106,16 @@ def _create_all_clients(directory_out: Optional[str]) -> None:
     channel_pool = GrpcChannelPool()
     discovery_client = DiscoveryClient(grpc_channel_pool=channel_pool)
 
-    directory_out_path = _resolve_output_directory(directory_out)
+    directory_out_path = resolve_output_directory(directory_out)
     measurement_service_classes, _ = get_all_registered_measurement_info(discovery_client)
-    _validate_measurement_service_classes(measurement_service_classes)
+    validate_measurement_service_classes(measurement_service_classes)
 
     for service_class in measurement_service_classes:
-        base_service_class = _extract_base_service_class(service_class)
-        module_name = _create_module_name(base_service_class)
-        class_name = _create_class_name(base_service_class)
-        _validate_identifier(module_name, "module")
-        _validate_identifier(class_name, "class")
+        base_service_class = extract_base_service_class(service_class)
+        module_name = create_module_name(base_service_class)
+        class_name = create_class_name(base_service_class)
+        validate_identifier(module_name, "module")
+        validate_identifier(class_name, "class")
 
         _create_client(
             channel_pool=channel_pool,
@@ -184,13 +131,13 @@ def _create_clients_interactively() -> None:
     print("Creating the Python Measurement Plug-In Client in interactive mode...")
     channel_pool = GrpcChannelPool()
     discovery_client = DiscoveryClient(grpc_channel_pool=channel_pool)
-    directory_out_path = _resolve_output_directory()
+    directory_out_path = resolve_output_directory()
 
     while True:
-        measurement_service_classes, measurement_display_names = get_all_registered_measurement_info(
-            discovery_client
+        measurement_service_classes, measurement_display_names = (
+            get_all_registered_measurement_info(discovery_client)
         )
-        _validate_measurement_service_classes(measurement_service_classes)
+        validate_measurement_service_classes(measurement_service_classes)
 
         print("\nList of registered measurements:")
         for index, display_name in enumerate(measurement_display_names, start=1):
@@ -202,25 +149,25 @@ def _create_clients_interactively() -> None:
         )
         if selection.lower() == "x":
             break
-        service_class = _get_selected_measurement_service_class(
+        service_class = get_selected_measurement_service_class(
             int(selection), measurement_service_classes
         )
 
-        base_service_class = _extract_base_service_class(service_class)
-        default_module_name = _create_module_name(base_service_class)
+        base_service_class = extract_base_service_class(service_class)
+        default_module_name = create_module_name(base_service_class)
         module_name = click.prompt(
             "Enter a name for the Python client module, or press Enter to use the default name.",
             type=str,
             default=default_module_name,
         )
-        _validate_identifier(module_name, "module")
-        default_class_name = _create_class_name(base_service_class)
+        validate_identifier(module_name, "module")
+        default_class_name = create_class_name(base_service_class)
         class_name = click.prompt(
             "Enter a name for the Python client class, or press Enter to use the default name.",
             type=str,
             default=default_class_name,
         )
-        _validate_identifier(class_name, "class")
+        validate_identifier(class_name, "class")
 
         _create_client(
             channel_pool=channel_pool,
@@ -240,17 +187,17 @@ def _create_clients(
 ) -> None:
     channel_pool = GrpcChannelPool()
     discovery_client = DiscoveryClient(grpc_channel_pool=channel_pool)
-    directory_out_path = _resolve_output_directory(directory_out)
+    directory_out_path = resolve_output_directory(directory_out)
 
     has_multiple_service_classes = len(measurement_service_classes) > 1
     for service_class in measurement_service_classes:
-        base_service_class = _extract_base_service_class(service_class)
+        base_service_class = extract_base_service_class(service_class)
         if has_multiple_service_classes or module_name is None:
-            module_name = _create_module_name(base_service_class)
+            module_name = create_module_name(base_service_class)
         if has_multiple_service_classes or class_name is None:
-            class_name = _create_class_name(base_service_class)
-        _validate_identifier(module_name, "module")
-        _validate_identifier(class_name, "class")
+            class_name = create_class_name(base_service_class)
+        validate_identifier(module_name, "module")
+        validate_identifier(class_name, "class")
 
         _create_client(
             channel_pool=channel_pool,
@@ -326,7 +273,7 @@ def create_client(
         _create_clients_interactively()
     else:
         _create_clients(
-            measurement_service_class=measurement_service_class,
+            measurement_service_classes=measurement_service_class,
             module_name=module_name,
             class_name=class_name,
             directory_out=directory_out,
