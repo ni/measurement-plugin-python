@@ -1,7 +1,9 @@
 """Utilizes command line args to create a Measurement Plug-In Client using template files."""
 
 import pathlib
-from typing import Any, List, Optional
+import re
+from enum import Enum
+from typing import Any, Dict, List, Optional, Type
 
 import black
 import click
@@ -37,12 +39,18 @@ def _render_template(template_name: str, **template_args: Any) -> bytes:
     return template.render(**template_args)
 
 
+def _replace_enum_class_type(output: str) -> str:
+    pattern = "<enum '([^']+)'>"
+    return re.sub(pattern, r"\1", output)
+
+
 def _create_file(
     template_name: str, file_name: str, directory_out: pathlib.Path, **template_args: Any
 ) -> None:
     output_file = directory_out / file_name
 
     output = _render_template(template_name, **template_args).decode("utf-8")
+    output = _replace_enum_class_type(output)
     formatted_output = black.format_str(
         src_contents=output,
         mode=black.Mode(line_length=100),
@@ -62,23 +70,24 @@ def _create_client(
 ) -> None:
     built_in_import_modules: List[str] = []
     custom_import_modules: List[str] = []
+    enum_values_by_type: Dict[Type[Enum], Dict[str, int]] = {}
 
     measurement_service_stub = get_measurement_service_stub(
         discovery_client, channel_pool, measurement_service_class
     )
     metadata = measurement_service_stub.GetMetadata(v2_measurement_service_pb2.GetMetadataRequest())
     configuration_metadata = get_configuration_metadata_by_index(
-        metadata, measurement_service_class
+        metadata, measurement_service_class, enum_values_by_type
     )
-    output_metadata = get_output_metadata_by_index(metadata)
+    output_metadata = get_output_metadata_by_index(metadata, enum_values_by_type)
 
     configuration_parameters_with_type_and_default_values, measure_api_parameters = (
         get_configuration_parameters_with_type_and_default_values(
-            configuration_metadata, built_in_import_modules
+            configuration_metadata, built_in_import_modules, enum_values_by_type
         )
     )
     output_parameters_with_type = get_output_parameters_with_type(
-        output_metadata, built_in_import_modules, custom_import_modules
+        output_metadata, built_in_import_modules, custom_import_modules, enum_values_by_type
     )
 
     _create_file(

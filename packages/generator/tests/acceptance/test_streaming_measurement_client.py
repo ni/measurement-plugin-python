@@ -1,8 +1,10 @@
+import concurrent.futures
 import importlib.util
 import pathlib
 from types import ModuleType
 from typing import Generator
 
+import grpc
 import pytest
 from ni_measurement_plugin_sdk_service.measurement.service import MeasurementService
 
@@ -15,7 +17,7 @@ def test___measurement_plugin_client___measure___returns_output(
     measurement_plugin_client_module: ModuleType,
 ) -> None:
     test_measurement_client_type = getattr(measurement_plugin_client_module, "TestMeasurement")
-    output_type = getattr(measurement_plugin_client_module, "Output")
+    output_type = getattr(measurement_plugin_client_module, "Outputs")
     expected_output = output_type(
         name="<Name>",
         index=9,
@@ -32,7 +34,7 @@ def test___measurement_plugin_client___stream_measure___returns_output(
     measurement_plugin_client_module: ModuleType,
 ) -> None:
     test_measurement_client_type = getattr(measurement_plugin_client_module, "TestMeasurement")
-    output_type = getattr(measurement_plugin_client_module, "Output")
+    output_type = getattr(measurement_plugin_client_module, "Outputs")
     measurement_plugin_client = test_measurement_client_type()
 
     response_iterator = measurement_plugin_client.stream_measure()
@@ -47,6 +49,64 @@ def test___measurement_plugin_client___stream_measure___returns_output(
         for index in range(10)
     ]
     assert responses == expected_output
+
+
+def test___measurement_plugin_client___invoke_measure_from_two_threads___initiates_first_measure_and_rejects_second_measure(
+    measurement_plugin_client_module: ModuleType,
+) -> None:
+    test_measurement_client_type = getattr(measurement_plugin_client_module, "TestMeasurement")
+    measurement_plugin_client = test_measurement_client_type()
+
+    with pytest.raises(RuntimeError) as exc_info:
+        with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
+            future_measure_1 = executor.submit(measurement_plugin_client.measure)
+            future_measure_2 = executor.submit(measurement_plugin_client.measure)
+            future_measure_1.result()
+            future_measure_2.result()
+
+    expected_error_message = "A measurement is currently in progress. To make concurrent measurement requests, please create a new client instance."
+    assert expected_error_message in exc_info.value.args[0]
+
+
+def test___non_streaming_measurement_execution___cancel___cancels_measurement(
+    measurement_plugin_client_module: ModuleType,
+) -> None:
+    test_measurement_client_type = getattr(measurement_plugin_client_module, "TestMeasurement")
+    measurement_plugin_client = test_measurement_client_type()
+
+    with pytest.raises(grpc.RpcError) as exc_info:
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            measure = executor.submit(measurement_plugin_client.measure)
+            measurement_plugin_client.cancel()
+            measure.result()
+
+    assert exc_info.value.code() == grpc.StatusCode.CANCELLED
+
+
+def test___streaming_measurement_execution___cancel___cancels_measurement(
+    measurement_plugin_client_module: ModuleType,
+) -> None:
+    test_measurement_client_type = getattr(measurement_plugin_client_module, "TestMeasurement")
+    measurement_plugin_client = test_measurement_client_type()
+
+    with pytest.raises(grpc.RpcError) as exc_info:
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            measure = executor.submit(lambda: list(measurement_plugin_client.stream_measure()))
+            measurement_plugin_client.cancel()
+            measure.result()
+
+    assert exc_info.value.code() == grpc.StatusCode.CANCELLED
+
+
+def test___measurement_client___cancel_without_measure___returns_false(
+    measurement_plugin_client_module: ModuleType,
+) -> None:
+    test_measurement_client_type = getattr(measurement_plugin_client_module, "TestMeasurement")
+    measurement_plugin_client = test_measurement_client_type()
+
+    is_canceled = measurement_plugin_client.cancel()
+
+    assert not is_canceled
 
 
 @pytest.fixture(scope="module")
