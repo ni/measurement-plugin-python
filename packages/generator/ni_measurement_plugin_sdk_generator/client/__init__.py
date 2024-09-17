@@ -315,7 +315,7 @@ def create_client(
     You can use the generated module to interact with the corresponding measurement service.
 
     MEASUREMENT_SERVICE_CLASS: Accepts one or more measurement service classes.
-    Separate each service class with a space.
+    Provide each service class separately.
     """
     if all:
         _create_all_clients(directory_out)
