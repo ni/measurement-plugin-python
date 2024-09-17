@@ -1,6 +1,6 @@
-# Measurement Plug-In Generator for Python
+# Measurement Plug-In SDK Generator for Python
 
-- [Measurement Plug-In Generator for Python](#measurement-plug-in-generator-for-python)
+- [Measurement Plug-In SDK Generator for Python](#measurement-plug-in-sdk-generator-for-python)
   - [Introduction](#introduction)
   - [Dependencies](#dependencies)
   - [Developing Measurements: Quick Start](#developing-measurements-quick-start)
@@ -13,7 +13,7 @@
 
 ## Introduction
 
-`ni-measurement-plugin-sdk-generator` is a Python package containing tools for generating reusable measurement plug-ins and clients.
+Measurement Plug-In SDK Generator for Python (`ni-measurement-plugin-sdk-generator`) is a Python package containing tools for generating reusable measurement plug-ins and clients.
 
 - `ni-measurement-plugin-generator` is a command for generating measurement plug-ins using gRPC services.
 - `ni-measurement-plugin-client-generator` is a command for generating plug-in clients to interact with the measurement plug-ins.
