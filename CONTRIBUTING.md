@@ -25,46 +25,75 @@ See [GitHub's official documentation](https://help.github.com/articles/using-pul
 
 - (Optional) Install [Visual Studio Code](https://code.visualstudio.com/download).
 - Install Git.
+- Install Python and add it to the `PATH`. For the recommended Python version,
+  see [Dependencies](README.md#dependencies).
 - Install [Poetry](https://python-poetry.org/docs/#installation). Version >= 1.8.2
-- Install Python and add it to the `PATH`. For the recommended Python version, see [Dependencies](README.md#dependencies).
 
-## Clone Repo
+## Clone or Update the Git Repository
 
-Clone the repo, this will pull the Measurement Plug-In SDK for Python components and related components.
+To download the Measurement Plug-In SDK for Python source, clone its Git
+repository to your local PC.
 
 ```cmd
-git clone https://github.com/ni/measurement-plugin-python.git
+git clone --recurse-submodules https://github.com/ni/measurement-plugin-python.git
 ```
 
-## Initializing the repo with .venv
+Specifying `--recurse-submodules` includes the
+[ni-apis](https://github.com/ni/ni-apis) repository. This is required for the
+[update gRPC stubs](#update-grpc-stubs-if-needed)
+workflow.
 
-From the root directory of the repo, initialize the project using the [`poetry install`](https://python-poetry.org/docs/cli/#install) command. This will set up a virtual environment (`.venv`) with the required dependencies based on the `poetry.lock` file and `pyproject.toml`.
+If you already have the Git repository on your local PC, you can update it and
+its submodules.
+
+```cmd
+git checkout main
+git pull
+git submodule update --init --recursive
+```
+
+## Select a Package to Develop
+
+The Measurement Plug-In SDK for Python includes multiple Python packages:
+- [ni_measurement_plugin_sdk_generator](/packages/generator/): Code generator
+  for creating new Measurement Plug-In services and clients
+- [ni_measurement_plugin_sdk_service](/packages/service/): Shared code used by
+  Measurement Plug-In services and clients
+- [ni_measurement_plugin_sdk](/packages/sdk/): Meta-package for installing both
+  `ni_measurement_plugin_sdk_generator` and `ni_measurement_plugin_sdk_service`
+
+Open a terminal window and `cd` to the package that you want to develop.
+
+```cmd
+cd packages\service
+```
+
+## Install the Package and Its Dependencies
+
+From the package's subdirectory, run the [`poetry install`](https://python-poetry.org/docs/cli/#install) 
+command. This creates an in-project virtual environment (`.venv`) and installs
+the package's dependencies and dev-dependencies, as specified in its
+`pyproject.toml` and `poetry.lock` files.
 
 ```cmd
 poetry install
 ```
 
-## Ensure that the `./.venv` virtual environment is activated
+For `ni_measurement_plugin_sdk_service`, you may also want to install the
+package's extra dependencies. This will install the NI driver API packages that
+are supported for session management.
 
+```cmd
+poetry install --all-extras
+```
+
+## Activate the Virtual Environment (If Needed)
+
+- (Preferred) Prefix commands with `poetry run`, e.g. `poetry run python measurement.py`
 - In the command prompt: `poetry shell`
 - In VS Code ([link](https://code.visualstudio.com/docs/python/environments#_select-and-activate-an-environment))
-- Alternative: run commands with `poetry run`. i.e., `poetry run python measurement.py`
 
-# Adding dependencies
-
-Add dependency package for `ni_measurement_plugin_sdk_service`  using the [`poetry add`](https://python-poetry.org/docs/cli/#add) command.
-
-```cmd
-poetry add <name_of_dependency>:<version>
-```
-
-Add **development dependencies** with the `-D` switch as shown below.
-
-```cmd
-poetry add -D <name_of_dev_dependency>:<version>
-```
-
-# Updating gRPC stubs when a .proto file is modified
+# Update gRPC Stubs (If Needed)
 
 The `packages/service/ni_measurement_plugin_sdk_service/_internal/stubs` directory contains the
 auto-generated Python files based on Measurement Plug-In protobuf (`.proto`) files. The file needs
@@ -76,31 +105,81 @@ to be replaced whenever there is a change to these `.proto` files:
 The latest `.proto` files are available in the [ni-apis](https://github.com/ni/ni-apis) repo. This
 repo includes the `ni-apis` repo as a Git submodule in `third_party/ni-apis`.
 
-To regenerate the gRPC stubs, cd to the `packages/service` directory and run `poetry run python scripts/generate_grpc_stubs.py`.
-This generates the required `.py` files for the listed `.proto` files. The required `grpcio-tools`
-package is already added as a development dependency in `pyproject.toml`.
+To regenerate the gRPC stubs, `cd` to the `packages/service` directory, install
+it with `poetry install`, and run `poetry run python scripts/generate_grpc_stubs.py`. 
+This generates the required `.py` files for the listed `.proto` files. The
+required `grpcio-tools` package is already added as a development dependency in
+`pyproject.toml`.
 
 # Lint and Build Code
 
-## Linting (correctly formatting) code
+## Lint Code for Style and Formatting
 
-To check the code and update it for formatting errors
+Use [ni-python-styleguide](https://github.com/ni/python-styleguide) to lint the
+code for style and formatting. This runs other tools such as `flake8`,
+`pycodestyle`, and `black`.
+
+```cmd
+poetry run ni-python-styleguide lint
+```
+
+If there are any failures, try using `ni-python-styleguide` to fix them, then
+lint the code again. If `ni-python-styleguide` doesn't fix the failures, you
+will have to manually fix them.
 
 ```cmd
 poetry run ni-python-styleguide fix
+poetry run ni-python-styleguide lint
 ```
 
-## Building
+## Mypy Type Checking
+
+Use [Mypy](https://pypi.org/project/mypy/) to type check the code.
+
+```cmd
+poetry run mypy
+```
+
+## Bandit Security Checks
+
+Use [Bandit](https://pypi.org/project/bandit/) to check for common security issues.
+
+```cmd
+poetry run bandit -c pyproject.toml -r ni_measurement_plugin_sdk_service
+```
+
+For the exact command line for each package, see the corresponding Github workflows: [check_nimg.yml](/.github/workflows/check_nimg.yml) [check_nims.yml](/.github/workflows/check_nims.yml)
+
+## Build Distribution Packages
+
+To build distribution packages, run `poetry build`. This generates installable
+distribution packages (source distributions and wheels) in the `dist`
+subdirectory.
 
 ```cmd
 poetry build
 ```
 
-Running this command from the repo's root directory will generate the tar.gz file and .whl file of ni_measurement_plugin_sdk_service package to the `dist` directory.
+## Build Documentation
+
+The `ni_measurement_plugin_sdk_service` package uses Sphinx to build API
+reference documentation.
+
+```cmd
+poetry run sphinx-build _docs_source docs -b html -W --keep-going
+```
+
+The generated documentation is at `docs/index.html`.
 
 # Testing
 
-`ni-measurement-plugin-sdk-service` includes regression tests under the `tests/` directory. The GitHub CI runs these tests for PRs targeting the main branch. It is recommended that during development you run the tests locally before creating a PR.
+`ni-measurement-plugin-sdk-service` includes regression tests under the `tests/`
+directory. The GitHub CI runs these tests for PRs targeting the main branch. It
+is recommended that during development you run the tests locally before creating
+a PR.
+
+Some of the regression tests require InstrumentStudio and NI drivers to be
+installed. 
 
 In order to run the `ni-measurement-plugin-sdk-service` tests locally:
 
@@ -139,12 +218,21 @@ extension to execute/debug the tests using UI. For more details related to the
 extension, refer
 [here](https://marketplace.visualstudio.com/items?itemName=LittleFoxTeam.vscode-python-test-adapter).
 
-## Steps to generate code coverage report
+## Generate a Code Coverage Report
 
 - Install the required dependency by running `poetry install`
-- Activate the virtual environment if not already activated : `.venv\Scripts\activate`
-- Run the command `pytest --cov=ni_measurement_plugin_sdk_service`, from the repo's root directory **to get the summary of test coverage** in the console.
-- Run the command `pytest --cov-report html:cov_html --cov=ni_measurement_plugin_sdk_service`, from the repo's root directory **to generate detailed HTML based coverage report**. Upon running, the coverage reports will be created under `<repo_root>\cov_html` directory.
+- Run the command `poetry run pytest --cov=ni_measurement_plugin_sdk_service` to
+  print a test coverage summary in the console window.
+- Run the command `poetry run pytest --cov-report html:cov_html --cov=ni_measurement_plugin_sdk_service` 
+  to generate detailed HTML based coverage report. Upon running, the coverage
+  reports will be created under `<repo_root>\cov_html` directory.
+
+# Adding Dependencies
+
+You can add new dependencies using `poetry add` or by editing the `pyproject.toml` file.
+
+When adding new dependencies, use a `>=` version constraint (instead of `^`)
+unless the dependency uses semantic versioning.
 
 # Developer Certificate of Origin (DCO)
 
