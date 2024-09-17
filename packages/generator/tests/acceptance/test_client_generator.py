@@ -74,7 +74,7 @@ def test___command_line_args___create_client_for_all_registered_measurements___r
 
 
 @patch("pathlib.Path.cwd")
-def test__command_line_args__create_client_using_interactive_mode_with_registered_measurements__renders_without_error(
+def test___command_line_args_with_registered_measurements___create_client_using_interactive_mode___renders_without_error(
     mock_directory_out: Mock,
     test_assets_directory: pathlib.Path,
     tmp_path_factory: pytest.TempPathFactory,
@@ -104,7 +104,7 @@ def test__command_line_args__create_client_using_interactive_mode_with_registere
     )
 
 
-def test__command_line_args__create_client_using_interactive_mode_without_registered_measurements__renders_without_error() -> (
+def test___command_line_args_without_registering_any_measurement___create_client_using_interactive_mode___raises_exception() -> (
     None
 ):
     with pytest.raises(SystemExit):
