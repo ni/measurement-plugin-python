@@ -3,6 +3,7 @@
 import json
 import keyword
 import os
+import pathlib
 import re
 import sys
 from enum import Enum
@@ -85,15 +86,20 @@ def get_measurement_service_stub(
     return v2_measurement_service_pb2_grpc.MeasurementServiceStub(channel)
 
 
-def get_all_registered_measurement_service_classes(discovery_client: DiscoveryClient) -> List[str]:
-    """Returns the service classes of all the registered measurement services."""
+def get_all_registered_measurement_info(
+    discovery_client: DiscoveryClient,
+) -> Tuple[List[str], List[str]]:
+    """Returns the service classes and display names of all the registered measurement services."""
     registered_measurement_services = discovery_client.enumerate_services(
         _V2_MEASUREMENT_SERVICE_INTERFACE
     )
     measurement_service_classes = [
         measurement_service.service_class for measurement_service in registered_measurement_services
     ]
-    return measurement_service_classes
+    measurement_display_names = [
+        measurement_service.display_name for measurement_service in registered_measurement_services
+    ]
+    return measurement_service_classes, measurement_display_names
 
 
 def get_configuration_metadata_by_index(
@@ -286,33 +292,68 @@ def to_ordered_set(values: Iterable[_T]) -> AbstractSet[_T]:
     return dict.fromkeys(values).keys()
 
 
-def camel_to_snake_case(camel_case_string: str) -> str:
-    """Converts a camelCase string to a snake_case string."""
-    partial = camel_case_string
-    for regex in _CAMEL_TO_SNAKE_CASE_REGEXES:
-        partial = regex.sub(r"\1_\2", partial)
+def resolve_output_directory(directory_out: Optional[str] = None) -> pathlib.Path:
+    """Returns the validated directory output path."""
+    if directory_out is None:
+        directory_out_path = pathlib.Path.cwd()
+    else:
+        directory_out_path = pathlib.Path(directory_out)
 
-    return partial.lower()
+    if not directory_out_path.exists():
+        raise click.ClickException(f"The specified directory '{directory_out}' was not found.")
 
-
-def remove_suffix(string: str) -> str:
-    """Removes the suffix from the given string."""
-    suffixes = ["_Python", "_LabVIEW"]
-    for suffix in suffixes:
-        if string.endswith(suffix):
-            if sys.version_info >= (3, 9):
-                return string.removesuffix(suffix)
-            else:
-                return string[0 : len(string) - len(suffix)]
-    return string
+    return directory_out_path
 
 
-def is_python_identifier(input_string: Optional[str]) -> bool:
+def validate_identifier(name: str, name_type: str) -> None:
     """Validates whether the given string is a valid Python identifier."""
-    if input_string is None:
-        return False
-    pattern = r"^[a-zA-Z_][a-zA-Z0-9_]*$"
-    return re.fullmatch(pattern, input_string) is not None
+    if not _is_python_identifier(name):
+        raise click.ClickException(
+            f"The {name_type} name '{name}' is not a valid Python identifier."
+        )
+
+
+def extract_base_service_class(service_class: str) -> str:
+    """Creates a base service class from the measurement service class."""
+    base_service_class = service_class.split(".")[-1]
+    base_service_class = _remove_suffix(base_service_class)
+
+    if not base_service_class.isidentifier():
+        raise click.ClickException(
+            "Client creation failed.\nEither provide a module name or update the measurement with a valid service class."
+        )
+    if not any(ch.isupper() for ch in base_service_class):
+        print(
+            f"Warning: The service class '{service_class}' does not adhere to the recommended format."
+        )
+    return base_service_class
+
+
+def create_module_name(base_service_class: str) -> str:
+    """Creates a module name using base service class."""
+    return _camel_to_snake_case(base_service_class) + "_client"
+
+
+def create_class_name(base_service_class: str) -> str:
+    """Creates a class name using base service class."""
+    return base_service_class.replace("_", "") + "Client"
+
+
+def get_selected_measurement_service_class(
+    selection: int, measurement_service_classes: List[str]
+) -> str:
+    """Returns the selected measurement service class."""
+    if not (1 <= selection <= len(measurement_service_classes)):
+        raise click.ClickException(
+            f"Input {selection} is not invalid. Please try again by selecting a valid measurement from the list."
+        )
+    return measurement_service_classes[selection - 1]
+
+
+def validate_measurement_service_classes(measurement_service_classes: List[str]) -> None:
+    """Validates whether the given measurement service classes list is empty."""
+    if len(measurement_service_classes) == 0:
+        raise click.ClickException("No registered measurements.")
 
 
 def _get_python_identifier(input_string: str) -> str:
@@ -335,6 +376,32 @@ def _get_python_type_as_str(type: Field.Kind.ValueType, is_array: bool) -> str:
     if is_array:
         return f"List[{python_type.__name__}]"
     return python_type.__name__
+
+
+def _camel_to_snake_case(camel_case_string: str) -> str:
+    partial = camel_case_string
+    for regex in _CAMEL_TO_SNAKE_CASE_REGEXES:
+        partial = regex.sub(r"\1_\2", partial)
+
+    return partial.lower()
+
+
+def _remove_suffix(string: str) -> str:
+    suffixes = ["_Python", "_LabVIEW"]
+    for suffix in suffixes:
+        if string.endswith(suffix):
+            if sys.version_info >= (3, 9):
+                return string.removesuffix(suffix)
+            else:
+                return string[0 : len(string) - len(suffix)]
+    return string
+
+
+def _is_python_identifier(input_string: Optional[str]) -> bool:
+    if input_string is None:
+        return False
+    pattern = r"^[a-zA-Z_][a-zA-Z0-9_]*$"
+    return re.fullmatch(pattern, input_string) is not None
 
 
 def _is_enum_param(parameter_type: int) -> bool:

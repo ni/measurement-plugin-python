@@ -121,6 +121,7 @@ def measurement_client_directory(
     with pytest.raises(SystemExit):
         create_client(
             [
+                "--measurement-service-class",
                 "ni.tests.NonStreamingDataMeasurement_Python",
                 "--module-name",
                 module_name,
