@@ -155,11 +155,11 @@ def _create_all_clients(directory_out: Optional[str]) -> None:
     discovery_client = DiscoveryClient(grpc_channel_pool=channel_pool)
 
     directory_out_path = _resolve_output_directory(directory_out)
-    measurement_service_class, _ = get_all_registered_measurement_info(discovery_client)
-    if len(measurement_service_class) == 0:
+    measurement_service_classes, _ = get_all_registered_measurement_info(discovery_client)
+    if len(measurement_service_classes) == 0:
         raise click.ClickException("No registered measurements.")
 
-    for service_class in measurement_service_class:
+    for service_class in measurement_service_classes:
         base_service_class = _extract_base_service_class(service_class)
         module_name = _create_module_name(base_service_class)
         class_name = _create_class_name(base_service_class)
@@ -183,10 +183,10 @@ def _create_clients_interactively() -> None:
     directory_out_path = _resolve_output_directory()
 
     while True:
-        measurement_service_class, measurement_display_names = get_all_registered_measurement_info(
+        measurement_service_classes, measurement_display_names = get_all_registered_measurement_info(
             discovery_client
         )
-        if len(measurement_service_class) == 0:
+        if len(measurement_service_classes) == 0:
             raise click.ClickException("No registered measurements.")
 
         print("\nList of registered measurements:")
@@ -200,7 +200,7 @@ def _create_clients_interactively() -> None:
         if selection.lower() == "x":
             break
         service_class = _get_selected_measurement_service_class(
-            int(selection), measurement_service_class
+            int(selection), measurement_service_classes
         )
 
         base_service_class = _extract_base_service_class(service_class)
