@@ -88,7 +88,7 @@ jobs:
           path: packages/generator/.venv
           key: ${{ steps.restore-nimg.outputs.cache-primary-key }}
       - name: Run unit tests and code coverage (ni-measurement-plugin-sdk-generator)
-        run: poetry run pytest ./tests/unit -v --cov=ni_measurement_plugin_sdk_generator --junitxml=test_results/nimg-${{ matrix.os }}-py${{ matrix.python-version}}.xml
+        run: poetry run pytest ./tests/unit -v --junitxml=test_results/nimg-${{ matrix.os }}-py${{ matrix.python-version}}.xml
         working-directory: ./packages/generator
 
       - name: Upload test results
