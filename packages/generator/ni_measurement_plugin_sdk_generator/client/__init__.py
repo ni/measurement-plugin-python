@@ -230,7 +230,7 @@ def _create_clients_interactively() -> None:
 
 
 def _create_clients(
-    measurement_service_class: List[str],
+    measurement_service_classes: List[str],
     module_name: Optional[str],
     class_name: Optional[str],
     directory_out: Optional[str],
@@ -239,12 +239,12 @@ def _create_clients(
     discovery_client = DiscoveryClient(grpc_channel_pool=channel_pool)
     directory_out_path = _resolve_output_directory(directory_out)
 
-    is_multiple_measurement_client_creation = len(measurement_service_class) > 1
-    for service_class in measurement_service_class:
+    has_multiple_service_classes = len(measurement_service_classes) > 1
+    for service_class in measurement_service_classes:
         base_service_class = _extract_base_service_class(service_class)
-        if is_multiple_measurement_client_creation or module_name is None:
+        if has_multiple_service_classes or module_name is None:
             module_name = _create_module_name(base_service_class)
-        if is_multiple_measurement_client_creation or class_name is None:
+        if has_multiple_service_classes or class_name is None:
             class_name = _create_class_name(base_service_class)
         _validate_identifier(module_name, "module")
         _validate_identifier(class_name, "class")
