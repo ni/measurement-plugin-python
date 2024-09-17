@@ -10,11 +10,11 @@
   - [Developing Measurements: Quick Start](#developing-measurements-quick-start)
     - [Installation](#installation)
     - [Developing a minimal Python measurement](#developing-a-minimal-python-measurement)
-  - [Steps to run/debug the measurement service](#steps-to-rundebug-the-measurement-service)
+  - [Steps to Run/Debug the Measurement Service](#steps-to-rundebug-the-measurement-service)
   - [Generating Measurement Clients: Quick Start](#generating-measurement-clients-quick-start)
     - [Installation](#installation-1)
-    - [Generating a minimal Python measurement client](#generating-a-minimal-python-measurement-client)
-  - [Steps to run/debug the measurement client](#steps-to-rundebug-the-measurement-client)
+    - [Generating a Minimal Python Measurement Client](#generating-a-minimal-python-measurement-client)
+  - [Steps to Run/Debug the Measurement Client](#steps-to-rundebug-the-measurement-client)
   - [Static Registration of Python Measurements](#static-registration-of-python-measurements)
     - [Create a batch file that runs a Python measurement](#create-a-batch-file-that-runs-a-python-measurement)
     - [Create Executable for Python Scripts](#create-executable-for-python-scripts)
@@ -161,11 +161,11 @@ pip install ni-measurement-plugin-sdk-generator
             return ["foo", "bar"]
         ```
 
-4. Run/Debug the created measurement by following the steps discussed in the section ["Steps to run/debug the measurement service".](#steps-to-rundebug-the-measurement-service)
+4. Run/Debug the created measurement by following the steps discussed in the section ["Steps to Run/Debug the Measurement Service".](#steps-to-rundebug-the-measurement-service)
 
 ---
 
-## Steps to run/debug the measurement service
+## Steps to Run/Debug the Measurement Service
 
 1. Start the discovery service if not already started.
 
@@ -201,7 +201,7 @@ This section provides instructions to generate custom measurement clients in Pyt
 ### Installation
 Install Measurement Plug-In SDK by following the instructions in section ["Measurement Plug-In SDK Installation"](#installation).
 
-### Generating a minimal Python measurement client
+### Generating a Minimal Python Measurement Client
 
 1. Install the `ni-measurement-plugin-sdk-generator` package.
 
@@ -210,44 +210,44 @@ Install Measurement Plug-In SDK by following the instructions in section ["Measu
     pip install ni-measurement-plugin-sdk-generator
     ```
 
-2. Run the command `ni-measurement-plugin-client-generator` tool. Use either of the below modes to create Python measurement clients.
+2. Run the `ni-measurement-plugin-client-generator` tool. Use any of the command line arguments below to create Python measurement clients.
 
     1. Run this command with optional arguments to create measurement clients for specific measurements.
 
-        `ni-measurement-plugin-client-generator --measurement-service-class "ni.examples.SampleMeasurement_Python" --module-name "sample_measurement"  --class-name "SampleMeasurement" 
-        --directory-out <new_path_for_created_files>`
+        ```ni-measurement-plugin-client-generator --measurement-service-class "ni.examples.SampleMeasurement_Python" --module-name "sample_measurement_client"  --class-name "SampleMeasurementClient" --directory-out <new_path_for_created_files>```
 
         - `--measurement-service-class` specifies the measurement service class for which the client is being generated.
 
+        #### Optional:
         - `--module-name` and `--class-name` define the module and class names of the generated client. If not specified, they are derived from the measurement service class name.
 
-        - `--directory-out` specifies the output directory for the generated files. If not provided, files are placed in the current directory.
+        - `--directory-out` specifies the output directory for the generated files. If not specified, files are placed in the current directory.
         
-        > **Note**: For multiple measurement client creation, `--module-name` and `--class-name` are ignored, and they are derived from service class for each measurement. So, ensure measurement service class name adheres to proper naming conventions.
+        > **Note**: For multiple measurement client generation, `--module-name` and `--class-name` are ignored and derived from the service class of each measurement. So, ensure that the measurement service class name adheres to proper naming conventions.
 
     2. Run this command to create measurement clients for all registered measurements.
 
-        `ni-measurement-plugin-sdk-generator --all`
+        `ni-measurement-plugin-client-generator --all`
 
-        > **Note**: `--directory-out` can be provided for this mode.
+        > **Note**: `--directory-out` can be provided for this command.
 
-    3. Run this command to interactively create measurement clients for any registered measurements.
+    3. Run this command to create measurement clients for any registered measurements interactively.
 
-        `ni-measurement-plugin-sdk-generator --interactive`
+        `ni-measurement-plugin-client-generator --interactive`
 
-3. The genarted client comprises four APIs: `measure`, `stream_measure`, `register_pin_map`, and `cancel`. The usage of these APIs is discussed in the section ["Steps to run/debug the measurement client".](#steps-to-rundebug-the-measurement-client)
+3. The generated client includes four APIs: `measure`, `stream_measure`, `register_pin_map`, and `cancel`. The usage of these APIs is discussed in the section ["Steps to Run/Debug the Measurement Client".](#steps-to-rundebug-the-measurement-client)
 
 > **Note**:
 > - The Measurement Plug-In Client is compatible with all datatypes supported by the Measurement Plug-In.
-> - Measurement configuration of Double XY datatype is not supported. 
-> - For Enum datatypes, the generated enum class names will be the measurement parameter names suffixed with 'Enum'. For instance, if configuration is 'Enum In', the generated enum in client will be `EnumInEnum'.
-> - Ring controls in LabVIEW measurement will be represented as numeric datatypes in the generated client.
+> - The Double XY datatype is not supported for measurement configurations (inputs).
+> - For Enum datatypes, the generated enum class names will be the measurement parameter name suffixed with 'Enum'. For instance, if the measurement parameter name is 'Enum In', the generated enum in the client will be `EnumInEnum'.
+> - Ring control in LabVIEW measurements will be represented as numeric datatypes in the generated client.
 
 ### 
 
 ---
 
-## Steps to run/debug the measurement client
+## Steps to Run/Debug the Measurement Client
 
 1. Make sure the required measurement service is running before interacting with it via the client.
 
@@ -256,44 +256,51 @@ Install Measurement Plug-In SDK by following the instructions in section ["Measu
     1. For non-streaming measurements, use `measure` method.
 
         ``` python
-        from sample_measurement.SampleMeasurement import measure
+        from sample_measurement_client import SampleMeasurementClient
         
-        output = measure()
+        client = SampleMeasurementClient()
+        outputs = client.measure()
         ```
 
     2. For streaming measurements, use `stream_measure` method.
 
         ``` python
-        from sample_measurement.SampleMeasurement import stream_measure
+        from sample_measurement_client import SampleMeasurementClient
         
-        outputs = stream_measure()
+        client = SampleMeasurementClient()
+        outputs_itr = client.stream_measure()
+        for index, outputs in enumerate(outputs_itr):
+            print(f"outputs[{index}] = {outputs}")
         ```
 
-    3. If measurements require pin map, pin map can be registered using `register_pin_map` method. By default, `sites` is set to 0.
+    3. If a measurement requires a pin map, it can be registered using the `register_pin_map` method. By default, `sites` is set to 0.
 
         ``` python
-        from sample_measurement.SampleMeasurement import measure, register_pin_map
+        from sample_measurement_client import SampleMeasurementClient
         
-        register_pin_map(pin_map_path)
-        output = measure()
+        client = SampleMeasurementClient()
+        client.register_pin_map(pin_map_path)
+        output = client.measure()
         ```
-        - Alternatively, you can provide pin map context through `pin_map_context` property. Similarly, sites can also be provided through `sites` property.
+        - Alternatively, you can provide a pin map context through the `pin_map_context` property. Similarly, sites can be provided through the `sites` property.
 
         ``` python
-        from sample_measurement.SampleMeasurement import measure, pin_map_context
+        from sample_measurement_client import SampleMeasurementClient
         
-        pin_map_context = active_pin_map_context
-        output = measure()
+        client = SampleMeasurementClient()
+        client.pin_map_context = active_pin_map_context
+        outputs = client.measure()
         ```
 
-    4. Cancel any ongoing `measure` or `stream_measure` calls using `cancel` method.
+    4. Cancel any ongoing `measure` or `stream_measure` calls using the `cancel` method.
 
         ``` python
-        from sample_measurement.SampleMeasurement import measure, cancel
+        from sample_measurement_client import SampleMeasurementClient
         
-        thread = threading.Thread(target=measure)
+        client = SampleMeasurementClient()
+        thread = threading.Thread(target=client.measure)
         thread.start()
-        cancel()
+        client.cancel()
         ```
 
 ---
