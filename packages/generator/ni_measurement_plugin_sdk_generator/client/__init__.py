@@ -146,7 +146,7 @@ def _create_client(
     )
 
     print(
-        f"The measurement plug-in client for the service class '{measurement_service_class}' has been created successfully."
+        f"The measurement plug-in client for the service class '{measurement_service_class}' is created successfully."
     )
 
 
@@ -206,14 +206,14 @@ def _create_clients_interactively() -> None:
         base_service_class = _extract_base_service_class(service_class)
         default_module_name = _create_module_name(base_service_class)
         module_name = click.prompt(
-            "Enter a name for the Python client module (or) press enter to choose the default name",
+            "Enter a name for the Python client module, or press Enter to use the default name.",
             type=str,
             default=default_module_name,
         )
         _validate_identifier(module_name, "module")
         default_class_name = _create_class_name(base_service_class)
         class_name = click.prompt(
-            "Enter a name for the Python client class (or) press enter to choose the default name",
+            "Enter a name for the Python client class, or press Enter to use the default name.",
             type=str,
             default=default_class_name,
         )
@@ -281,7 +281,7 @@ def _create_clients(
     "-i",
     "--interactive",
     is_flag=True,
-    help=("Creates Python Measurement Plug-In Clients interactively."),
+    help="Creates Python Measurement Plug-In Clients interactively.",
 )
 @optgroup.group(
     "optional parameters",

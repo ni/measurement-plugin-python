@@ -85,7 +85,7 @@ def get_measurement_service_stub(
 def get_all_registered_measurement_info(
     discovery_client: DiscoveryClient,
 ) -> Tuple[List[str], List[str]]:
-    """Returns the service classes of all the registered measurement services."""
+    """Returns the service classes and display names of all the registered measurement services."""
     registered_measurement_services = discovery_client.enumerate_services(
         _V2_MEASUREMENT_SERVICE_INTERFACE
     )
