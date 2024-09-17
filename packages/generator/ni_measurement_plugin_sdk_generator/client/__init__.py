@@ -305,10 +305,10 @@ def _create_clients(
 def create_client(
     measurement_service_class: List[str],
     all: bool,
+    interactive: bool,
     module_name: Optional[str],
     class_name: Optional[str],
     directory_out: Optional[str],
-    interactive: bool,
 ) -> None:
     """Generates a Python Measurement Plug-In Client module for the measurement service.
 
