@@ -2,16 +2,13 @@
 
 from __future__ import annotations
 
+import ipaddress
+import re
 import sys
 from threading import Lock
 from types import TracebackType
-from typing import (
-    Dict,
-    Literal,
-    Optional,
-    Type,
-    TYPE_CHECKING,
-)
+from typing import TYPE_CHECKING, Dict, Literal, Optional, Type
+from urllib.parse import urlparse
 
 import grpc
 
@@ -57,9 +54,7 @@ class GrpcChannelPool(object):
         with self._lock:
             if target not in self._channel_cache:
                 self._lock.release()
-                new_channel = grpc.insecure_channel(target)
-                if ClientLogger.is_enabled():
-                    new_channel = grpc.intercept_channel(new_channel, ClientLogger())
+                new_channel = self._create_channel(target)
                 self._lock.acquire()
                 if target not in self._channel_cache:
                     self._channel_cache[target] = new_channel
@@ -78,3 +73,44 @@ class GrpcChannelPool(object):
             for channel in self._channel_cache.values():
                 channel.close()
             self._channel_cache.clear()
+
+    def _create_channel(self, target: str) -> grpc.Channel:
+        options = [
+            ("grpc.max_receive_message_length", -1),
+            ("grpc.max_send_message_length", -1),
+        ]
+        if self._is_local(target):
+            options.append(("grpc.enable_http_proxy", 0))
+        channel = grpc.insecure_channel(target, options)
+        if ClientLogger.is_enabled():
+            channel = grpc.intercept_channel(channel, ClientLogger())
+        return channel
+
+    def _is_local(self, target: str) -> bool:
+        hostname = ""
+        # First, check if the target string is in URL format
+        parse_result = urlparse(target)
+        if parse_result.scheme and parse_result.hostname and parse_result.port:
+            hostname = parse_result.hostname
+        else:
+            # Next, check for target string in <host_name>:<port> format
+            match = re.match(r"^(.*):(\d+)$", target)
+            if match:
+                hostname = match.group(1)
+
+        if not hostname:
+            return False
+        if hostname == "localhost" or hostname == "LOCALHOST":
+            return True
+
+        # IPv6 addresses don't support parsing with leading/trailing brackets
+        # so we need to remove them.
+        match = re.match(r"^\[(.*)\]$", hostname)
+        if match:
+            hostname = match.group(1)
+
+        try:
+            address = ipaddress.ip_address(hostname)
+            return address.is_loopback
+        except ValueError:
+            return False
