@@ -104,6 +104,7 @@ def _create_client(
         output_parameters_with_type=output_parameters_with_type,
         built_in_import_modules=to_ordered_set(built_in_import_modules),
         custom_import_modules=to_ordered_set(custom_import_modules),
+        enum_by_class_name=enum_values_by_type,
     )
 
     print(
