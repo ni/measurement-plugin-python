@@ -95,8 +95,6 @@ pip show ni-measurement-plugin-sdk-service
 > - For Enum datatypes, the generated enum class names will be the measurement parameter name suffixed with 'Enum'. For instance, if the measurement parameter name is 'Enum In', the generated enum in the client will be `EnumInEnum'.
 > - Ring control in LabVIEW measurements will be represented as numeric datatypes in the generated client.
 
-### 
-
 ---
 
 ## Steps to Run/Debug the Measurement Client
