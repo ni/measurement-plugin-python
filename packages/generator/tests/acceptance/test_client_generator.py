@@ -4,7 +4,9 @@ import re
 import sys
 from typing import Generator
 
+import click
 import pytest
+from unittest.mock import Mock, patch
 from ni_measurement_plugin_sdk_service.measurement.service import MeasurementService
 
 from ni_measurement_plugin_sdk_generator.client import create_client
@@ -69,6 +71,35 @@ def test___command_line_args___create_client_for_all_registered_measurements___r
             expected_modules == actual_modules,
         ]
     )
+
+
+@patch('pathlib.Path.cwd')
+def test__command_line_args__create_client_using_interactive_mode_with_registered_measurements__renders_without_error(
+    mock_directory_out: Mock,
+    test_assets_directory: pathlib.Path,
+    tmp_path_factory: pytest.TempPathFactory,
+    measurement_service: MeasurementService,
+) -> None:
+    temp_directory = tmp_path_factory.mktemp("measurement_plugin_client_files")
+    mock_directory_out.return_value = temp_directory
+    golden_path = test_assets_directory / "example_renders" / "measurement_plugin_client"
+    filename = "non_streaming_data_measurement_client.py"
+
+    with patch('click.prompt', side_effect=["1", "non_streaming_data_measurement_client", "NonStreamingDataMeasurementClient", "x"]):
+        with pytest.raises(SystemExit) as exc_info:
+            create_client(["--interactive"])
+
+    assert not exc_info.value.code
+    _assert_equal(
+        golden_path / filename,
+        temp_directory / filename,
+    )
+
+
+def test__command_line_args__create_client_using_interactive_mode_without_registered_measurements__renders_without_error() -> None:    
+    with pytest.raises(SystemExit):
+        with pytest.raises(click.ClickException):
+            create_client(["--interactive"])
 
 
 def test___command_line_args___create_client___render_with_proper_line_ending(
