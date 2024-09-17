@@ -173,7 +173,7 @@ def create_client(
             output_parameters_with_type=output_parameters_with_type,
             built_in_import_modules=to_ordered_set(built_in_import_modules),
             custom_import_modules=to_ordered_set(custom_import_modules),
-            type_url=type_url_prefix
+            configuration_parameters_type_url=type_url_prefix
             + metadata.measurement_signature.configuration_parameters_message_type,
         )
 
