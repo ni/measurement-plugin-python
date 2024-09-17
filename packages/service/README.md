@@ -208,7 +208,7 @@ Install Measurement Plug-In SDK by following the instructions in section ["Measu
 
     1. Run this command with optional arguments to create measurement clients for specific measurements.
 
-        `ni-measurement-plugin-client-generator --measurement-service-class "SampleMeasurement(Py)" --module-name "sample_measurement"  --class-name "SampleMeasurement" 
+        `ni-measurement-plugin-client-generator --measurement-service-class "ni.examples.SampleMeasurement_Python" --module-name "sample_measurement"  --class-name "SampleMeasurement" 
         --directory-out <new_path_for_created_files>`
 
         - `--measurement-service-class` specifies the measurement service class for which the client is being generated.
