@@ -18,8 +18,6 @@
 - `ni-measurement-plugin-generator` is a command for generating measurement plug-ins using gRPC services.
 - `ni-measurement-plugin-client-generator` is a command for generating plug-in clients to interact with the measurement plug-ins.
 
-For installation and usage, see [Measurement Plug-In SDK Service for Python (`ni-measurement-plugin-sdk-service`)](https://pypi.org/project/ni-measurement-plugin-sdk-service/).
-
 ---
 
 ## Dependencies
@@ -32,7 +30,7 @@ For installation and usage, see [Measurement Plug-In SDK Service for Python (`ni
 
 ## Developing Measurements: Quick Start
 
-See the instructions [Measurement Plug-In SDK Service for Python (`ni-measurement-plugin-sdk-service`)](https://pypi.org/project/ni_measurement_plugin_sdk_service/#developing-measurements-quick-start) to develop a minimal measurement plug-in.
+For installation and usage, see [Measurement Plug-In SDK Service for Python - Developing Measurements: Quick Start](https://pypi.org/project/ni_measurement_plugin_sdk_service/#developing-measurements-quick-start) section.
 
 ---
 
