@@ -71,6 +71,26 @@ jobs:
         run: poetry run pytest ./tests/unit -v --cov=ni_measurement_plugin_sdk_service --junitxml=test_results/nims-${{ matrix.os }}-py${{ matrix.python-version}}-all-extras.xml
         working-directory: ./packages/service
 
+      # ni-measurement-plugin-sdk-generator
+      - name: Restore cached virtualenv (ni-measurement-plugin-sdk-generator)
+        uses: actions/cache/restore@v4
+        id: restore-nimg
+        with:
+          path: packages/generator/.venv
+          key: ni-measurement-plugin-sdk-generator-${{ runner.os }}-py${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('packages/generator/poetry.lock') }}
+      - name: Install ni-measurement-plugin-sdk-generator
+        run: poetry install -v
+        working-directory: ./packages/generator
+      - name: Save cached virtualenv (ni-measurement-plugin-sdk-generator)
+        uses: actions/cache/save@v4
+        if: steps.restore-nimg.outputs.cache-hit != 'true'
+        with:
+          path: packages/generator/.venv
+          key: ${{ steps.restore-nimg.outputs.cache-primary-key }}
+      - name: Run unit tests and code coverage (ni-measurement-plugin-sdk-generator)
+        run: poetry run pytest ./tests/unit -v --cov=ni_measurement_plugin_sdk_generator --junitxml=test_results/nimg-${{ matrix.os }}-py${{ matrix.python-version}}.xml
+        working-directory: ./packages/generator
+
       - name: Upload test results
         uses: actions/upload-artifact@v4
         with:
