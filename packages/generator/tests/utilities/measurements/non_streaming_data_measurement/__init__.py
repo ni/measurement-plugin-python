@@ -1,5 +1,6 @@
 """Contains utility functions to test loopback measurement service. """
 
+from enum import Enum
 from pathlib import Path
 from typing import Iterable, Tuple
 
@@ -17,23 +18,54 @@ measurement_service = nims.MeasurementService(
 )
 
 
+class Color(Enum):
+    """Primary colors used for example enum-typed config and output."""
+
+    NONE = 0
+    RED = 1
+    GREEN = 2
+    BLUE = 3
+
+
 @measurement_service.register_measurement
 @measurement_service.configuration("Float In", nims.DataType.Float, 0.06)
 @measurement_service.configuration("Double Array In", nims.DataType.DoubleArray1D, [0.1, 0.2, 0.3])
 @measurement_service.configuration("Bool In", nims.DataType.Boolean, False)
 @measurement_service.configuration("String In", nims.DataType.String, "sample string")
 @measurement_service.configuration(
-    "String Array In", nims.DataType.StringArray1D, ["String1", "String2"]
+    "String Array In",
+    nims.DataType.StringArray1D,
+    [
+        "string with /forwardslash",
+        "string with \\backslash",
+        "string with 'single quotes'",
+        'string with "double quotes"',
+        "string with \ttabspace",
+        "string with \nnewline",
+    ],
 )
-@measurement_service.configuration("Path In", nims.DataType.Path, "path/test")
+@measurement_service.configuration("Path In", nims.DataType.Path, "sample\\path\\for\\test")
 @measurement_service.configuration(
-    "Path Array In", nims.DataType.PathArray1D, ["path/test1", "path/ntest2"]
+    "Path Array In",
+    nims.DataType.PathArray1D,
+    [
+        "path/with/forward/slash",
+        "path\\with\\backslash",
+        "path with 'single quotes'",
+        'path with "double quotes"',
+        "path\twith\ttabs",
+        "path\nwith\nnewlines",
+    ],
 )
 @measurement_service.configuration("IO In", nims.DataType.IOResource, "resource")
 @measurement_service.configuration(
     "IO Array In", nims.DataType.IOResourceArray1D, ["resource1", "resource2"]
 )
 @measurement_service.configuration("Integer In", nims.DataType.Int32, 10)
+@measurement_service.configuration("Enum In", nims.DataType.Enum, Color.BLUE, enum_type=Color)
+@measurement_service.configuration(
+    "Enum Array In", nims.DataType.EnumArray1D, [1, 2], enum_type=Color
+)
 @measurement_service.output("Float out", nims.DataType.Float)
 @measurement_service.output("Double Array out", nims.DataType.DoubleArray1D)
 @measurement_service.output("Bool out", nims.DataType.Boolean)
@@ -45,6 +77,8 @@ measurement_service = nims.MeasurementService(
 @measurement_service.output("IO Array Out", nims.DataType.IOResourceArray1D)
 @measurement_service.output("Integer Out", nims.DataType.Int32)
 @measurement_service.output("XY Data Out", nims.DataType.DoubleXYData)
+@measurement_service.output("Enum Out", nims.DataType.Enum, enum_type=Color)
+@measurement_service.output("Enum Array Out", nims.DataType.EnumArray1D, enum_type=Color)
 def measure(
     float_input: float,
     double_array_input: Iterable[float],
@@ -56,6 +90,8 @@ def measure(
     io_input: str,
     io_array_input: Iterable[str],
     integer_input: int,
+    enum_input: Color,
+    enum_array_input: Iterable[Color],
 ) -> Tuple[
     float,
     Iterable[float],
@@ -68,6 +104,8 @@ def measure(
     Iterable[str],
     int,
     xydata_pb2.DoubleXYData,
+    Color,
+    Iterable[Color],
 ]:
     """Perform a loopback measurement with various data types."""
     float_output = float_input
@@ -81,6 +119,8 @@ def measure(
     io_array_output = io_array_input
     integer_output = integer_input
     xy_data_output = xydata_pb2.DoubleXYData()
+    enum_output = enum_input
+    enum_array_output = enum_array_input
 
     return (
         float_output,
@@ -94,4 +134,6 @@ def measure(
         io_array_output,
         integer_output,
         xy_data_output,
+        enum_output,
+        enum_array_output,
     )

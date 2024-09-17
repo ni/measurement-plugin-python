@@ -1,14 +1,17 @@
-<%page args="class_name, display_name, configuration_metadata, output_metadata, service_class, configuration_parameters_with_type_and_default_values, measure_api_parameters, output_parameters_with_type, built_in_import_modules, custom_import_modules"/>\
+<%page args="class_name, display_name, configuration_metadata, output_metadata, service_class, configuration_parameters_with_type_and_default_values, measure_api_parameters, output_parameters_with_type, built_in_import_modules, custom_import_modules, enum_by_class_name"/>\
 \
 """Generated client API for the ${display_name | repr} measurement plug-in."""
 
 import logging
 import pathlib
 import threading
+% if len(enum_by_class_name):
+from enum import Enum
+% endif
 % for module in built_in_import_modules:
 ${module}
 % endfor
-from typing import Any, Generator, List, NamedTuple, Optional
+from typing import Any, Generator, Iterable, List, NamedTuple, Optional
 
 import grpc
 from google.protobuf import any_pb2
@@ -34,6 +37,16 @@ from ni_measurement_plugin_sdk_service.session_management import PinMapContext
 _logger = logging.getLogger(__name__)
 
 _V2_MEASUREMENT_SERVICE_INTERFACE = "ni.measurementlink.measurement.v2.MeasurementService"
+
+% for enum_name, enum_value in enum_by_class_name.items():
+
+class ${enum_name.__name__}(Enum):
+    """${enum_name.__name__} used for enum-typed measurement configs and outputs."""
+
+    % for key, val in enum_value.items():
+    ${key} = ${val}
+    % endfor
+% endfor
 
 <% output_type = "None" %>\
 % if output_metadata:
@@ -150,36 +163,9 @@ class ${class_name}:
         return self._pin_map_client
 
     def _create_file_descriptor(self) -> None:
-        metadata = self._get_stub().GetMetadata(v2_measurement_service_pb2.GetMetadataRequest())
-        configuration_metadata =  []        
-        for configuration in metadata.measurement_signature.configuration_parameters:
-            configuration_metadata.append(
-                ParameterMetadata.initialize(
-                    display_name=configuration.name,
-                    type=configuration.type,
-                    repeated=configuration.repeated,
-                    default_value=None,
-                    annotations=dict(configuration.annotations.items()),
-                    message_type=configuration.message_type,
-                )
-            )
-
-        output_metadata = []
-        for output in metadata.measurement_signature.outputs:
-            output_metadata.append(
-                ParameterMetadata.initialize(
-                    display_name=output.name,
-                    type=output.type,
-                    repeated=output.repeated,
-                    default_value=None,
-                    annotations=dict(output.annotations.items()),
-                    message_type=output.message_type,
-                )
-            )
-
         create_file_descriptor(
-            input_metadata=configuration_metadata,
-            output_metadata=output_metadata,
+            input_metadata=list(self._configuration_metadata.values()),
+            output_metadata=list(self._output_metadata.values()),
             service_name=self._service_class,
             pool=descriptor_pool.Default(),
         )
@@ -214,8 +200,8 @@ class ${class_name}:
         for k, v in output_values.items():
             result[k - 1] = v
         return Outputs._make(result)
-
     % endif
+
     def measure(
         self,
         ${configuration_parameters_with_type_and_default_values}
@@ -245,7 +231,11 @@ class ${class_name}:
         Returns:
             Stream of measurement outputs.
         """
+        % if "from pathlib import Path" in built_in_import_modules:
+        parameter_values = _convert_paths_to_strings([${measure_api_parameters}])
+        % else:
         parameter_values = [${measure_api_parameters}]
+        % endif
         with self._initialization_lock:
             if self._measure_response is not None:
                 raise RuntimeError(
@@ -288,3 +278,25 @@ class ${class_name}:
             self._pin_map_context = PinMapContext(pin_map_id=pin_map_id, sites=[0])
         else:
             self._pin_map_context = self._pin_map_context._replace(pin_map_id=pin_map_id)
+
+% if "from pathlib import Path" in built_in_import_modules:
+
+def _convert_paths_to_strings(parameter_values: Iterable[Any]) -> List[Any]:
+    result: List[Any] = []
+
+    for parameter_value in parameter_values:
+        if isinstance(parameter_value, list):
+            converted_list = []
+            for value in parameter_value:
+                if isinstance(value, Path):
+                    converted_list.append(str(value))
+                else:
+                    converted_list.append(value)
+            result.append(converted_list)
+        elif isinstance(parameter_value, Path):
+            result.append(str(parameter_value))
+        else:
+            result.append(parameter_value)
+    return result
+
+% endif

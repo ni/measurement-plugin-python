@@ -3,8 +3,9 @@
 import logging
 import pathlib
 import threading
+from enum import Enum
 from pathlib import Path
-from typing import Any, Generator, List, NamedTuple, Optional
+from typing import Any, Generator, Iterable, List, NamedTuple, Optional
 
 import grpc
 from google.protobuf import any_pb2
@@ -32,6 +33,15 @@ _logger = logging.getLogger(__name__)
 _V2_MEASUREMENT_SERVICE_INTERFACE = "ni.measurementlink.measurement.v2.MeasurementService"
 
 
+class EnumInEnum(Enum):
+    """EnumInEnum used for enum-typed measurement configs and outputs."""
+
+    NONE = 0
+    RED = 1
+    GREEN = 2
+    BLUE = 3
+
+
 class Outputs(NamedTuple):
     """Outputs for the 'Non-Streaming Data Measurement (Py)' measurement plug-in."""
 
@@ -46,6 +56,8 @@ class Outputs(NamedTuple):
     io_array_out: List[str]
     integer_out: int
     xy_data_out: DoubleXYData
+    enum_out: EnumInEnum
+    enum_array_out: List[EnumInEnum]
 
 
 class NonStreamingDataMeasurementClient:
@@ -124,7 +136,14 @@ class NonStreamingDataMeasurementClient:
                 display_name="String Array In",
                 type=9,
                 repeated=True,
-                default_value=["String1", "String2"],
+                default_value=[
+                    "string with /forwardslash",
+                    "string with \\backslash",
+                    "string with 'single quotes'",
+                    'string with "double quotes"',
+                    "string with \ttabspace",
+                    "string with \nnewline",
+                ],
                 annotations={},
                 message_type="",
                 field_name="String_Array_In",
@@ -134,7 +153,7 @@ class NonStreamingDataMeasurementClient:
                 display_name="Path In",
                 type=9,
                 repeated=False,
-                default_value="path/test",
+                default_value="sample\\path\\for\\test",
                 annotations={"ni/type_specialization": "path"},
                 message_type="",
                 field_name="Path_In",
@@ -144,7 +163,14 @@ class NonStreamingDataMeasurementClient:
                 display_name="Path Array In",
                 type=9,
                 repeated=True,
-                default_value=["path/test1", "path/ntest2"],
+                default_value=[
+                    "path/with/forward/slash",
+                    "path\\with\\backslash",
+                    "path with 'single quotes'",
+                    'path with "double quotes"',
+                    "path\twith\ttabs",
+                    "path\nwith\nnewlines",
+                ],
                 annotations={"ni/type_specialization": "path"},
                 message_type="",
                 field_name="Path_Array_In",
@@ -185,6 +211,32 @@ class NonStreamingDataMeasurementClient:
                 message_type="",
                 field_name="Integer_In",
                 enum_type=None,
+            ),
+            11: ParameterMetadata(
+                display_name="Enum In",
+                type=14,
+                repeated=False,
+                default_value=3,
+                annotations={
+                    "ni/enum.values": '{"NONE": 0, "RED": 1, "GREEN": 2, "BLUE": 3}',
+                    "ni/type_specialization": "enum",
+                },
+                message_type="",
+                field_name="Enum_In",
+                enum_type=EnumInEnum,
+            ),
+            12: ParameterMetadata(
+                display_name="Enum Array In",
+                type=14,
+                repeated=True,
+                default_value=[1, 2],
+                annotations={
+                    "ni/enum.values": '{"NONE": 0, "RED": 1, "GREEN": 2, "BLUE": 3}',
+                    "ni/type_specialization": "enum",
+                },
+                message_type="",
+                field_name="Enum_Array_In",
+                enum_type=EnumInEnum,
             ),
         }
         self._output_metadata = {
@@ -304,6 +356,32 @@ class NonStreamingDataMeasurementClient:
                 field_name="XY_Data_Out",
                 enum_type=None,
             ),
+            12: ParameterMetadata(
+                display_name="Enum Out",
+                type=14,
+                repeated=False,
+                default_value=None,
+                annotations={
+                    "ni/enum.values": '{"NONE": 0, "RED": 1, "GREEN": 2, "BLUE": 3}',
+                    "ni/type_specialization": "enum",
+                },
+                message_type="",
+                field_name="Enum_Out",
+                enum_type=EnumInEnum,
+            ),
+            13: ParameterMetadata(
+                display_name="Enum Array Out",
+                type=14,
+                repeated=True,
+                default_value=None,
+                annotations={
+                    "ni/enum.values": '{"NONE": 0, "RED": 1, "GREEN": 2, "BLUE": 3}',
+                    "ni/type_specialization": "enum",
+                },
+                message_type="",
+                field_name="Enum_Array_Out",
+                enum_type=EnumInEnum,
+            ),
         }
         if grpc_channel is not None:
             self._stub = v2_measurement_service_pb2_grpc.MeasurementServiceStub(grpc_channel)
@@ -378,34 +456,9 @@ class NonStreamingDataMeasurementClient:
         return self._pin_map_client
 
     def _create_file_descriptor(self) -> None:
-        metadata = self._get_stub().GetMetadata(v2_measurement_service_pb2.GetMetadataRequest())
-        configuration_metadata = []
-        for configuration in metadata.measurement_signature.configuration_parameters:
-            configuration_metadata.append(
-                ParameterMetadata.initialize(
-                    display_name=configuration.name,
-                    type=configuration.type,
-                    repeated=configuration.repeated,
-                    default_value=None,
-                    annotations=dict(configuration.annotations.items()),
-                    message_type=configuration.message_type,
-                )
-            )
-        output_metadata = []
-        for output in metadata.measurement_signature.outputs:
-            output_metadata.append(
-                ParameterMetadata.initialize(
-                    display_name=output.name,
-                    type=output.type,
-                    repeated=output.repeated,
-                    default_value=None,
-                    annotations=dict(output.annotations.items()),
-                    message_type=output.message_type,
-                )
-            )
         create_file_descriptor(
-            input_metadata=configuration_metadata,
-            output_metadata=output_metadata,
+            input_metadata=list(self._configuration_metadata.values()),
+            output_metadata=list(self._output_metadata.values()),
             service_name=self._service_class,
             pool=descriptor_pool.Default(),
         )
@@ -446,12 +499,28 @@ class NonStreamingDataMeasurementClient:
         double_array_in: List[float] = [0.1, 0.2, 0.3],
         bool_in: bool = False,
         string_in: str = "sample string",
-        string_array_in: List[str] = ["String1", "String2"],
-        path_in: Path = r"path/test",
-        path_array_in: List[Path] = ["path/test1", "path/ntest2"],
+        string_array_in: List[str] = [
+            "string with /forwardslash",
+            "string with \\backslash",
+            "string with 'single quotes'",
+            'string with "double quotes"',
+            "string with \ttabspace",
+            "string with \nnewline",
+        ],
+        path_in: Path = Path("sample\\path\\for\\test"),
+        path_array_in: List[Path] = [
+            Path("path/with/forward/slash"),
+            Path("path\\with\\backslash"),
+            Path("path with 'single quotes'"),
+            Path('path with "double quotes"'),
+            Path("path\twith\ttabs"),
+            Path("path\nwith\nnewlines"),
+        ],
         io_in: str = "resource",
         io_array_in: List[str] = ["resource1", "resource2"],
         integer_in: int = 10,
+        enum_in: EnumInEnum = EnumInEnum.BLUE,
+        enum_array_in: List[EnumInEnum] = [EnumInEnum.RED, EnumInEnum.GREEN],
     ) -> Outputs:
         """Perform a single measurement.
 
@@ -469,6 +538,8 @@ class NonStreamingDataMeasurementClient:
             io_in,
             io_array_in,
             integer_in,
+            enum_in,
+            enum_array_in,
         )
         for response in stream_measure_response:
             result = response
@@ -480,30 +551,50 @@ class NonStreamingDataMeasurementClient:
         double_array_in: List[float] = [0.1, 0.2, 0.3],
         bool_in: bool = False,
         string_in: str = "sample string",
-        string_array_in: List[str] = ["String1", "String2"],
-        path_in: Path = r"path/test",
-        path_array_in: List[Path] = ["path/test1", "path/ntest2"],
+        string_array_in: List[str] = [
+            "string with /forwardslash",
+            "string with \\backslash",
+            "string with 'single quotes'",
+            'string with "double quotes"',
+            "string with \ttabspace",
+            "string with \nnewline",
+        ],
+        path_in: Path = Path("sample\\path\\for\\test"),
+        path_array_in: List[Path] = [
+            Path("path/with/forward/slash"),
+            Path("path\\with\\backslash"),
+            Path("path with 'single quotes'"),
+            Path('path with "double quotes"'),
+            Path("path\twith\ttabs"),
+            Path("path\nwith\nnewlines"),
+        ],
         io_in: str = "resource",
         io_array_in: List[str] = ["resource1", "resource2"],
         integer_in: int = 10,
+        enum_in: EnumInEnum = EnumInEnum.BLUE,
+        enum_array_in: List[EnumInEnum] = [EnumInEnum.RED, EnumInEnum.GREEN],
     ) -> Generator[Outputs, None, None]:
         """Perform a streaming measurement.
 
         Returns:
             Stream of measurement outputs.
         """
-        parameter_values = [
-            float_in,
-            double_array_in,
-            bool_in,
-            string_in,
-            string_array_in,
-            path_in,
-            path_array_in,
-            io_in,
-            io_array_in,
-            integer_in,
-        ]
+        parameter_values = _convert_paths_to_strings(
+            [
+                float_in,
+                double_array_in,
+                bool_in,
+                string_in,
+                string_array_in,
+                path_in,
+                path_array_in,
+                io_in,
+                io_array_in,
+                integer_in,
+                enum_in,
+                enum_array_in,
+            ]
+        )
         with self._initialization_lock:
             if self._measure_response is not None:
                 raise RuntimeError(
@@ -541,3 +632,22 @@ class NonStreamingDataMeasurementClient:
             self._pin_map_context = PinMapContext(pin_map_id=pin_map_id, sites=[0])
         else:
             self._pin_map_context = self._pin_map_context._replace(pin_map_id=pin_map_id)
+
+
+def _convert_paths_to_strings(parameter_values: Iterable[Any]) -> List[Any]:
+    result: List[Any] = []
+
+    for parameter_value in parameter_values:
+        if isinstance(parameter_value, list):
+            converted_list = []
+            for value in parameter_value:
+                if isinstance(value, Path):
+                    converted_list.append(str(value))
+                else:
+                    converted_list.append(value)
+            result.append(converted_list)
+        elif isinstance(parameter_value, Path):
+            result.append(str(parameter_value))
+        else:
+            result.append(parameter_value)
+    return result
