@@ -1,14 +1,17 @@
 """Support functions for the Measurement Plug-In Client generator."""
 
+import json
 import keyword
 import os
 import re
 import sys
-from typing import AbstractSet, Dict, Iterable, List, Optional, Tuple, TypeVar
+from enum import Enum
+from typing import AbstractSet, Any, Dict, Iterable, List, Optional, Tuple, Type, TypeVar
 
 import click
 import grpc
 from google.protobuf import descriptor_pool
+from google.protobuf.descriptor_pb2 import FieldDescriptorProto
 from google.protobuf.type_pb2 import Field
 from ni_measurement_plugin_sdk_service._internal.grpc_servicer import frame_metadata_dict
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v2 import (
@@ -94,7 +97,9 @@ def get_all_registered_measurement_service_classes(discovery_client: DiscoveryCl
 
 
 def get_configuration_metadata_by_index(
-    metadata: v2_measurement_service_pb2.GetMetadataResponse, service_class: str
+    metadata: v2_measurement_service_pb2.GetMetadataResponse,
+    service_class: str,
+    enum_values_by_type: Dict[Type[Enum], Dict[str, int]] = {},
 ) -> Dict[int, ParameterMetadata]:
     """Returns the configuration metadata of the measurement."""
     configuration_parameter_list = []
@@ -107,6 +112,11 @@ def get_configuration_metadata_by_index(
                 default_value=None,
                 annotations=dict(configuration.annotations.items()),
                 message_type=configuration.message_type,
+                enum_type=(
+                    _get_enum_type(configuration, enum_values_by_type)
+                    if _is_enum_param(configuration.type)
+                    else None
+                ),
             )
         )
 
@@ -120,6 +130,11 @@ def get_configuration_metadata_by_index(
                 default_value=None,
                 annotations=dict(output.annotations.items()),
                 message_type=output.message_type,
+                enum_type=(
+                    _get_enum_type(output, enum_values_by_type)
+                    if _is_enum_param(output.type)
+                    else None
+                ),
             )
         )
 
@@ -137,13 +152,21 @@ def get_configuration_metadata_by_index(
     )
 
     for k, v in deserialized_parameters.items():
-        configuration_metadata[k] = configuration_metadata[k]._replace(default_value=v)
+        if issubclass(type(v), Enum):
+            default_value = v.value
+        elif issubclass(type(v), list) and any(issubclass(type(e), Enum) for e in v):
+            default_value = [e.value for e in v]
+        else:
+            default_value = v
+
+        configuration_metadata[k] = configuration_metadata[k]._replace(default_value=default_value)
 
     return configuration_metadata
 
 
 def get_output_metadata_by_index(
     metadata: v2_measurement_service_pb2.GetMetadataResponse,
+    enum_values_by_type: Dict[Type[Enum], Dict[str, int]] = {},
 ) -> Dict[int, ParameterMetadata]:
     """Returns the output metadata of the measurement."""
     output_parameter_list = []
@@ -156,6 +179,11 @@ def get_output_metadata_by_index(
                 default_value=None,
                 annotations=dict(output.annotations.items()),
                 message_type=output.message_type,
+                enum_type=(
+                    _get_enum_type(output, enum_values_by_type)
+                    if _is_enum_param(output.type)
+                    else None
+                ),
             )
         )
     output_metadata = frame_metadata_dict(output_parameter_list)
@@ -165,6 +193,7 @@ def get_output_metadata_by_index(
 def get_configuration_parameters_with_type_and_default_values(
     configuration_metadata: Dict[int, ParameterMetadata],
     built_in_import_modules: List[str],
+    enum_values_by_type: Dict[Type[Enum], Dict[str, int]] = {},
 ) -> Tuple[str, str]:
     """Returns configuration parameters of the measurement with type and default values."""
     configuration_parameters = []
@@ -189,6 +218,23 @@ def get_configuration_parameters_with_type_and_default_values(
             else:
                 default_value = f"Path({default_value})"
 
+        if metadata.annotations and metadata.annotations.get("ni/type_specialization") == "enum":
+            enum_type = _get_enum_type(metadata, enum_values_by_type)
+            parameter_type = enum_type.__name__
+            if metadata.repeated:
+                values = []
+                for val in default_value:
+                    enum_value = next((e.name for e in enum_type if e.value == val), None)
+                    values.append(f"{parameter_type}.{enum_value}")
+                concatenated_default_value = ", ".join(values)
+                concatenated_default_value = f"[{concatenated_default_value}]"
+
+                parameter_type = f"List[{parameter_type}]"
+                default_value = concatenated_default_value
+            else:
+                enum_value = next((e.name for e in enum_type if e.value == default_value), None)
+                default_value = f"{parameter_type}.{enum_value}"
+
         configuration_parameters.append(f"{parameter_name}: {parameter_type} = {default_value}")
 
     # Use line separator and spaces to align the parameters appropriately in the generated file.
@@ -204,6 +250,7 @@ def get_output_parameters_with_type(
     output_metadata: Dict[int, ParameterMetadata],
     built_in_import_modules: List[str],
     custom_import_modules: List[str],
+    enum_values_by_type: Dict[Type[Enum], Dict[str, int]] = {},
 ) -> str:
     """Returns the output parameters of the measurement with type."""
     output_parameters_with_type = []
@@ -224,6 +271,10 @@ def get_output_parameters_with_type(
 
             if metadata.repeated:
                 parameter_type = f"List[{parameter_type}]"
+
+        if metadata.annotations and metadata.annotations.get("ni/type_specialization") == "enum":
+            enum_type_name = _get_enum_type(metadata, enum_values_by_type).__name__
+            parameter_type = f"List[{enum_type_name}]" if metadata.repeated else enum_type_name
 
         output_parameters_with_type.append(f"{parameter_name}: {parameter_type}")
 
@@ -284,3 +335,35 @@ def _get_python_type_as_str(type: Field.Kind.ValueType, is_array: bool) -> str:
     if is_array:
         return f"List[{python_type.__name__}]"
     return python_type.__name__
+
+
+def _is_enum_param(parameter_type: int) -> bool:
+    return parameter_type == FieldDescriptorProto.TYPE_ENUM
+
+
+def _get_enum_type(
+    parameter: Any, enum_values_by_type: Dict[Type[Enum], Dict[str, int]]
+) -> Type[Enum]:
+    loaded_enum_values = json.loads(parameter.annotations["ni/enum.values"])
+    enum_values = {key: value for key, value in loaded_enum_values.items()}
+
+    for existing_enum_type, existing_enum_values in enum_values_by_type.items():
+        if existing_enum_values == enum_values:
+            return existing_enum_type
+
+    new_enum_type_name = _get_enum_class_name(parameter.name)
+    # MyPy error: Enum() expects a string literal as the first argument.
+    # Ignoring this error because MyPy cannot validate dynamic Enum creation statically.
+    new_enum_type = Enum(new_enum_type_name, enum_values)  # type: ignore[misc]
+    enum_values_by_type[new_enum_type] = enum_values
+    return new_enum_type
+
+
+def _get_enum_class_name(name: str) -> str:
+    name = re.sub(r"[^\w\s]", "", name).replace("_", " ")
+    split_string = name.split()
+    if len(split_string) > 1:
+        name = "".join(s.capitalize() for s in split_string)
+    else:
+        name = name[0].upper() + name[1:]
+    return name + "Enum"

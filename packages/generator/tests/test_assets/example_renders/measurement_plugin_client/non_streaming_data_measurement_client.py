@@ -3,6 +3,7 @@
 import logging
 import pathlib
 import threading
+from enum import Enum
 from pathlib import Path
 from typing import Any, Generator, Iterable, List, NamedTuple, Optional
 
@@ -32,6 +33,15 @@ _logger = logging.getLogger(__name__)
 _V2_MEASUREMENT_SERVICE_INTERFACE = "ni.measurementlink.measurement.v2.MeasurementService"
 
 
+class EnumInEnum(Enum):
+    """EnumInEnum used for enum-typed measurement configs and outputs."""
+
+    NONE = 0
+    RED = 1
+    GREEN = 2
+    BLUE = 3
+
+
 class Outputs(NamedTuple):
     """Outputs for the 'Non-Streaming Data Measurement (Py)' measurement plug-in."""
 
@@ -46,6 +56,8 @@ class Outputs(NamedTuple):
     io_array_out: List[str]
     integer_out: int
     xy_data_out: DoubleXYData
+    enum_out: EnumInEnum
+    enum_array_out: List[EnumInEnum]
 
 
 class NonStreamingDataMeasurementClient:
@@ -200,6 +212,32 @@ class NonStreamingDataMeasurementClient:
                 field_name="Integer_In",
                 enum_type=None,
             ),
+            11: ParameterMetadata(
+                display_name="Enum In",
+                type=14,
+                repeated=False,
+                default_value=3,
+                annotations={
+                    "ni/enum.values": '{"NONE": 0, "RED": 1, "GREEN": 2, "BLUE": 3}',
+                    "ni/type_specialization": "enum",
+                },
+                message_type="",
+                field_name="Enum_In",
+                enum_type=EnumInEnum,
+            ),
+            12: ParameterMetadata(
+                display_name="Enum Array In",
+                type=14,
+                repeated=True,
+                default_value=[1, 2],
+                annotations={
+                    "ni/enum.values": '{"NONE": 0, "RED": 1, "GREEN": 2, "BLUE": 3}',
+                    "ni/type_specialization": "enum",
+                },
+                message_type="",
+                field_name="Enum_Array_In",
+                enum_type=EnumInEnum,
+            ),
         }
         self._output_metadata = {
             1: ParameterMetadata(
@@ -318,6 +356,32 @@ class NonStreamingDataMeasurementClient:
                 field_name="XY_Data_Out",
                 enum_type=None,
             ),
+            12: ParameterMetadata(
+                display_name="Enum Out",
+                type=14,
+                repeated=False,
+                default_value=None,
+                annotations={
+                    "ni/enum.values": '{"NONE": 0, "RED": 1, "GREEN": 2, "BLUE": 3}',
+                    "ni/type_specialization": "enum",
+                },
+                message_type="",
+                field_name="Enum_Out",
+                enum_type=EnumInEnum,
+            ),
+            13: ParameterMetadata(
+                display_name="Enum Array Out",
+                type=14,
+                repeated=True,
+                default_value=None,
+                annotations={
+                    "ni/enum.values": '{"NONE": 0, "RED": 1, "GREEN": 2, "BLUE": 3}',
+                    "ni/type_specialization": "enum",
+                },
+                message_type="",
+                field_name="Enum_Array_Out",
+                enum_type=EnumInEnum,
+            ),
         }
         if grpc_channel is not None:
             self._stub = v2_measurement_service_pb2_grpc.MeasurementServiceStub(grpc_channel)
@@ -392,34 +456,9 @@ class NonStreamingDataMeasurementClient:
         return self._pin_map_client
 
     def _create_file_descriptor(self) -> None:
-        metadata = self._get_stub().GetMetadata(v2_measurement_service_pb2.GetMetadataRequest())
-        configuration_metadata = []
-        for configuration in metadata.measurement_signature.configuration_parameters:
-            configuration_metadata.append(
-                ParameterMetadata.initialize(
-                    display_name=configuration.name,
-                    type=configuration.type,
-                    repeated=configuration.repeated,
-                    default_value=None,
-                    annotations=dict(configuration.annotations.items()),
-                    message_type=configuration.message_type,
-                )
-            )
-        output_metadata = []
-        for output in metadata.measurement_signature.outputs:
-            output_metadata.append(
-                ParameterMetadata.initialize(
-                    display_name=output.name,
-                    type=output.type,
-                    repeated=output.repeated,
-                    default_value=None,
-                    annotations=dict(output.annotations.items()),
-                    message_type=output.message_type,
-                )
-            )
         create_file_descriptor(
-            input_metadata=configuration_metadata,
-            output_metadata=output_metadata,
+            input_metadata=list(self._configuration_metadata.values()),
+            output_metadata=list(self._output_metadata.values()),
             service_name=self._service_class,
             pool=descriptor_pool.Default(),
         )
@@ -480,6 +519,8 @@ class NonStreamingDataMeasurementClient:
         io_in: str = "resource",
         io_array_in: List[str] = ["resource1", "resource2"],
         integer_in: int = 10,
+        enum_in: EnumInEnum = EnumInEnum.BLUE,
+        enum_array_in: List[EnumInEnum] = [EnumInEnum.RED, EnumInEnum.GREEN],
     ) -> Outputs:
         """Perform a single measurement.
 
@@ -497,6 +538,8 @@ class NonStreamingDataMeasurementClient:
             io_in,
             io_array_in,
             integer_in,
+            enum_in,
+            enum_array_in,
         )
         for response in stream_measure_response:
             result = response
@@ -528,6 +571,8 @@ class NonStreamingDataMeasurementClient:
         io_in: str = "resource",
         io_array_in: List[str] = ["resource1", "resource2"],
         integer_in: int = 10,
+        enum_in: EnumInEnum = EnumInEnum.BLUE,
+        enum_array_in: List[EnumInEnum] = [EnumInEnum.RED, EnumInEnum.GREEN],
     ) -> Generator[Outputs, None, None]:
         """Perform a streaming measurement.
 
@@ -546,6 +591,8 @@ class NonStreamingDataMeasurementClient:
                 io_in,
                 io_array_in,
                 integer_in,
+                enum_in,
+                enum_array_in,
             ]
         )
         with self._initialization_lock:
