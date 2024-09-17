@@ -206,17 +206,17 @@ def get_configuration_parameters_with_type_and_default_values(
         default_value = metadata.default_value
         parameter_type = _get_python_type_as_str(metadata.type, metadata.repeated)
         if isinstance(default_value, str):
-            default_value = f'"{default_value}"'
+            default_value = repr(default_value)
 
-        # If it's path type, make the value as raw string literal to ignore escape characters.
         if metadata.annotations and metadata.annotations.get("ni/type_specialization") == "path":
-            default_value = f"r{default_value}"
             parameter_type = "Path"
             built_in_import_modules.append(_PATH_IMPORT)
-
             if metadata.repeated:
+                formatted_value = ", ".join(f"Path({repr(value)})" for value in default_value)
+                default_value = f"[{formatted_value}]"
                 parameter_type = f"List[{parameter_type}]"
-                default_value = metadata.default_value
+            else:
+                default_value = f"Path({default_value})"
 
         if metadata.annotations and metadata.annotations.get("ni/type_specialization") == "enum":
             enum_type = _get_enum_type(metadata, enum_values_by_type)
