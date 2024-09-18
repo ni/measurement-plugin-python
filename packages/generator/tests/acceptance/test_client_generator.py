@@ -1,8 +1,8 @@
-from functools import partial
 import os
 import pathlib
 import re
 import sys
+from functools import partial
 from typing import Generator
 from unittest.mock import patch
 

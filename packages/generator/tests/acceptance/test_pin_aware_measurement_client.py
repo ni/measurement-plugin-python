@@ -1,6 +1,6 @@
-from functools import partial
 import importlib.util
 import pathlib
+from functools import partial
 from types import ModuleType
 from typing import Generator
 

@@ -1,5 +1,5 @@
-from functools import partial
 import pathlib
+from functools import partial
 
 import pytest
 from click.testing import Result
