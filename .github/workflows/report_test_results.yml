@@ -26,5 +26,5 @@ jobs:
       - name: Publish test results
         uses: EnricoMi/publish-unit-test-result-action@v2
         with:
-          files: "test_results/*.xml"
+          files: "test_results/**/*.xml"
         if: always()
