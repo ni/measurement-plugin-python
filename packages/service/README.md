@@ -1,6 +1,6 @@
-# Measurement Plug-In SDK for Python
+# Measurement Plug-In SDK Service for Python
 
-- [Measurement Plug-In SDK for Python](#measurement-plug-in-sdk-for-python)
+- [Measurement Plug-In Service for Python](#measurement-plug-in-sdk-service-for-python)
   - [Introduction](#introduction)
   - [Dependencies](#dependencies)
   - [Documentation](#documentation)
@@ -25,7 +25,7 @@
 
 ## Introduction
 
-Measurement Plug-In SDK for Python (`ni-measurement-plugin-sdk-service`) is a Python
+Measurement Plug-In SDK Service for Python (`ni-measurement-plugin-sdk-service`) is a Python
 framework that helps you create reusable measurement plug-ins using gRPC
 services. Deploy your measurement plug-ins to perform interactive validation in
 InstrumentStudio and automated testing in TestStand.
@@ -82,29 +82,22 @@ This section provides instructions to develop custom measurement services in Pyt
 
 ### Installation
 
-Make sure the system has the recommended Python version is installed. Install Measurement Plug-In SDK for Python using [pip](https://pip.pypa.io/).
+Make sure the system has the recommended Python version installed. Install Measurement Plug-In SDK for Python using [pip](https://pip.pypa.io/).
 
 ``` cmd
 REM Activate the required virtual environment if any.
-pip install ni-measurement-plugin-sdk-service
+pip install ni-measurement-plugin-sdk
 ```
 
 Check if you have installed the expected version of Measurement Plug-In SDK for Python installed by running the below command:
 
 ```cmd
-pip show ni-measurement-plugin-sdk-service
+pip show ni-measurement-plugin-sdk
 ```
 
 ### Developing a minimal Python measurement
 
-1. Install the `ni-measurement-plugin-sdk-generator` package.
-
-``` cmd
-REM Activate the required virtual environment if any.
-pip install ni-measurement-plugin-sdk-generator
-```
-
-2. Run the `ni-measurement-plugin-sdk-generator` tool. Use command line arguments to specify the `display-name` and optionally the `version`, `measurement-type`, and `product-type`.
+1. Run the `ni-measurement-plugin-sdk-generator` tool. Use command line arguments to specify the `display-name` and optionally the `version`, `measurement-type`, and `product-type`.
 
     1. Running `ni-measurement-plugin-sdk-generator` without optional arguments:
 
@@ -126,7 +119,7 @@ pip install ni-measurement-plugin-sdk-generator
     be placed in a new folder under the current directory
     named after the display name without spaces.
 
-3. To customize the created measurement, provide metadata of the measurement's configuration (input parameters) and outputs (output parameters) in `measurement.py`.
+2. To customize the created measurement, provide metadata of the measurement's configuration (input parameters) and outputs (output parameters) in `measurement.py`.
     1. Use the `configuration()` decorator to provide metadata about the configurations.**The order of the configuration decorator must match with the order of the parameters defined in the function signature.**
 
         ``` python
@@ -151,7 +144,7 @@ pip install ni-measurement-plugin-sdk-generator
             return ["foo", "bar"]
         ```
 
-4. Run/Debug the created measurement by following the steps discussed in the section ["Steps to run/debug the measurement service".](#steps-to-rundebug-the-measurement-service)
+3. Run/Debug the created measurement by following the steps discussed in the section ["Steps to run/debug the measurement service".](#steps-to-rundebug-the-measurement-service)
 
 ---
 
