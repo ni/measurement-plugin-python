@@ -12,10 +12,6 @@ jobs:
       - windows
       - x64
       - rdss-measlinkbot-win-10-${{ matrix.configuration }}
-    defaults:
-      run:
-        # Set the working-directory for all steps in this job.
-        working-directory: ./packages/service
     strategy:
       matrix:
         configuration: ["py32", "py64"]
@@ -28,22 +24,44 @@ jobs:
         uses: actions/checkout@v4
       - name: Copy and rename .env.simulation to .env
         run: cp examples/.env.simulation .env
-        working-directory: ./
-      - name: Cache virtualenvs
+
+      # ni-measurement-plugin-sdk-service  
+      - name: Cache virtualenv (ni-measurement-plugin-sdk-service)
         uses: actions/cache@v4
-        id: cache
+        id: cache-nims
         with:
           path: |
             packages/service/.venv
             packages/service/.tox
-          key: run-system-tests-${{ runner.os }}-${{ matrix.configuration }}-${{ hashFiles('packages/service/poetry.lock') }}
-      - name: Install dependencies
+          key: run-system-tests-nims-${{ runner.os }}-${{ matrix.configuration }}-${{ hashFiles('packages/service/poetry.lock') }}
+      - name: Install dependencies (ni-measurement-plugin-sdk-service)
         run: poetry install -v
-      - name: Run system tests
+        working-directory: ./packages/service
+      - name: Run system tests (ni-measurement-plugin-sdk-service)
         run: poetry run tox
+        working-directory: ./packages/service
+
+      # ni-measurement-plugin-sdk-generator
+      - name: Cache virtualenv (ni-measurement-plugin-sdk-generator)
+        uses: actions/cache@v4
+        id: cache-nimg
+        with:
+          path: |
+            packages/generator/.venv
+            packages/generator/.tox
+          key: run-system-tests-nimg-${{ runner.os }}-${{ matrix.configuration }}-${{ hashFiles('packages/generator/poetry.lock') }}
+      - name: Install dependencies (ni-measurement-plugin-sdk-generator)
+        run: poetry install -v
+        working-directory: ./packages/generator
+      - name: Run system tests (ni-measurement-plugin-sdk-generator)
+        run: poetry run tox
+        working-directory: ./packages/generator
+
       - name: Upload test results
         uses: actions/upload-artifact@v4
         with:
           name: test_results_system_${{ matrix.configuration }}
-          path: ./packages/service/test_results/*.xml
+          path: |
+            ./packages/generator/test_results/*.xml
+            ./packages/service/test_results/*.xml
         if: always()
