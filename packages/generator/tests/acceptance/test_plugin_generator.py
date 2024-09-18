@@ -1,12 +1,12 @@
 import pathlib
-from functools import partial
+from typing import Callable, Sequence
 
 import pytest
 from click.testing import Result
 
 
 def test___command_line_args___create_measurement___render_without_error(
-    create_measurement: partial[Result],
+    create_measurement: Callable[[Sequence[str]], Result],
     test_assets_directory: pathlib.Path,
     tmp_path_factory: pytest.TempPathFactory,
 ) -> None:
@@ -14,7 +14,7 @@ def test___command_line_args___create_measurement___render_without_error(
     golden_path = test_assets_directory / "example_renders" / "measurement"
     filenames = ["measurement.py", "SampleMeasurement.serviceconfig", "start.bat", "_helpers.py"]
 
-    result: Result = create_measurement(
+    result = create_measurement(
         [
             "Sample Measurement",
             "--measurement-version",
@@ -26,7 +26,7 @@ def test___command_line_args___create_measurement___render_without_error(
             "--description-url",
             "https://www.example.com/SampleMeasurement.html",
             "--directory-out",
-            temp_directory,
+            str(temp_directory),
         ]
     )
 
@@ -38,14 +38,14 @@ def test___command_line_args___create_measurement___render_without_error(
         )
 
 
-def test___command_line_args___create_measurement_with_annotations___render_without_exception(
-    create_measurement: partial[Result],
+def test___command_line_args___create_measurement_with_annotations___render_without_error(
+    create_measurement: Callable[[Sequence[str]], Result],
     test_assets_directory: pathlib.Path,
     tmp_path_factory: pytest.TempPathFactory,
 ) -> None:
     temp_directory = tmp_path_factory.mktemp("measurement_files")
 
-    create_measurement(
+    result = create_measurement(
         [
             "Sample Measurement",
             "--measurement-version",
@@ -59,7 +59,7 @@ def test___command_line_args___create_measurement_with_annotations___render_with
             "--description-url",
             "https://www.example.com/SampleMeasurement.html",
             "--directory-out",
-            temp_directory,
+            str(temp_directory),
             "--collection",
             "Measurement.Collection",
             "--tags",
@@ -74,6 +74,7 @@ def test___command_line_args___create_measurement_with_annotations___render_with
     golden_path = test_assets_directory / "example_renders" / "measurement_with_annotations"
 
     filenames = ["measurement.py", "SampleMeasurement.serviceconfig", "start.bat", "_helpers.py"]
+    assert result.exit_code == 0
     for filename in filenames:
         _assert_equal(
             golden_path / filename,

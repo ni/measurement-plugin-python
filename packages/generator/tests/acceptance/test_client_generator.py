@@ -2,8 +2,7 @@ import os
 import pathlib
 import re
 import sys
-from functools import partial
-from typing import Generator
+from typing import Callable, Generator, Sequence
 from unittest.mock import patch
 
 import pytest
@@ -15,7 +14,7 @@ from tests.utilities.measurements import non_streaming_data_measurement, streami
 
 
 def test___command_line_args___create_client___render_without_error(
-    create_client: partial[Result],
+    create_client: Callable[[Sequence[str]], Result],
     test_assets_directory: pathlib.Path,
     tmp_path_factory: pytest.TempPathFactory,
     measurement_service: MeasurementService,
@@ -25,7 +24,7 @@ def test___command_line_args___create_client___render_without_error(
     golden_path = test_assets_directory / "example_renders" / "measurement_plugin_client"
     filename = f"{module_name}.py"
 
-    result: Result = create_client(
+    result = create_client(
         [
             "--measurement-service-class",
             "ni.tests.NonStreamingDataMeasurement_Python",
@@ -34,7 +33,7 @@ def test___command_line_args___create_client___render_without_error(
             "--class-name",
             "NonStreamingDataMeasurementClient",
             "--directory-out",
-            temp_directory,
+            str(temp_directory),
         ]
     )
 
@@ -46,17 +45,17 @@ def test___command_line_args___create_client___render_without_error(
 
 
 def test___command_line_args___create_client_for_all_registered_measurements___renders_without_error(
-    create_client: partial[Result],
+    create_client: Callable[[Sequence[str]], Result],
     tmp_path_factory: pytest.TempPathFactory,
     multiple_measurement_service: MeasurementService,
 ) -> None:
     temp_directory = tmp_path_factory.mktemp("measurement_plugin_client_files")
 
-    result: Result = create_client(
+    result = create_client(
         [
             "--all",
             "--directory-out",
-            temp_directory,
+            str(temp_directory),
         ]
     )
 
@@ -75,7 +74,7 @@ def test___command_line_args___create_client_for_all_registered_measurements___r
 
 
 def test___command_line_args_with_registered_measurements___create_client_using_interactive_mode___renders_without_error(
-    create_client: partial[Result],
+    create_client: Callable[[Sequence[str]], Result],
     test_assets_directory: pathlib.Path,
     tmp_path_factory: pytest.TempPathFactory,
     measurement_service: MeasurementService,
@@ -94,7 +93,7 @@ def test___command_line_args_with_registered_measurements___create_client_using_
             "x",
         ],
     ):
-        result: Result = create_client(["--interactive"])
+        result = create_client(["--interactive"])
 
     assert result.exit_code == 0
     _assert_equal(
@@ -104,15 +103,15 @@ def test___command_line_args_with_registered_measurements___create_client_using_
 
 
 def test___command_line_args_without_registering_any_measurement___create_client_using_interactive_mode___raises_exception(
-    create_client: partial[Result],
+    create_client: Callable[[Sequence[str]], Result],
 ) -> None:
-    result: Result = create_client(["--interactive"])
+    result = create_client(["--interactive"])
     assert result.exit_code == 1
     assert "No registered measurements." in str(result.exception)
 
 
 def test___command_line_args___create_client___render_with_proper_line_ending(
-    create_client: partial[Result],
+    create_client: Callable[[Sequence[str]], Result],
     tmp_path_factory: pytest.TempPathFactory,
     measurement_service: MeasurementService,
 ) -> None:
@@ -120,7 +119,7 @@ def test___command_line_args___create_client___render_with_proper_line_ending(
     module_name = "non_streaming_data_measurement_client"
     filename = f"{module_name}.py"
 
-    result: Result = create_client(
+    result = create_client(
         [
             "--measurement-service-class",
             "ni.tests.NonStreamingDataMeasurement_Python",

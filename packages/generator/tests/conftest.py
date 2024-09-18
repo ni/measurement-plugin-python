@@ -3,7 +3,7 @@
 import functools
 import pathlib
 import sys
-from typing import Any, Generator
+from typing import Callable, Generator, Sequence
 
 import pytest
 from click.testing import CliRunner, Result
@@ -44,14 +44,14 @@ def pin_map_directory(test_assets_directory: pathlib.Path) -> pathlib.Path:
 
 
 @pytest.fixture(scope="session")
-def create_client() -> Generator[functools.partial[Result], Any, None]:
+def create_client() -> Generator[Callable[[Sequence[str]], Result], None, None]:
     """Test fixture for calling client generator cli."""
     runner = CliRunner(mix_stderr=False)
     yield functools.partial(runner.invoke, client_generator.create_client, standalone_mode=False)
 
 
 @pytest.fixture(scope="session")
-def create_measurement() -> Generator[functools.partial[Result], Any, None]:
+def create_measurement() -> Generator[Callable[[Sequence[str]], Result], None, None]:
     """Test fixture for calling plugin generator cli."""
     runner = CliRunner(mix_stderr=False)
     yield functools.partial(

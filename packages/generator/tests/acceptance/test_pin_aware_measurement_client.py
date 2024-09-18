@@ -1,8 +1,7 @@
 import importlib.util
 import pathlib
-from functools import partial
 from types import ModuleType
-from typing import Generator
+from typing import Callable, Generator, Sequence
 
 import grpc
 import pytest
@@ -150,7 +149,7 @@ def test___measurement_plugin_client___measure_with_pin_map_context___returns_ou
 
 @pytest.fixture(scope="module")
 def measurement_client_directory(
-    create_client: partial[Result],
+    create_client: Callable[[Sequence[str]], Result],
     tmp_path_factory: pytest.TempPathFactory,
     measurement_service: MeasurementService,
 ) -> pathlib.Path:
@@ -167,7 +166,7 @@ def measurement_client_directory(
             "--class-name",
             "TestMeasurement",
             "--directory-out",
-            temp_directory,
+            str(temp_directory),
         ]
     )
 
