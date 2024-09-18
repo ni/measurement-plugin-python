@@ -17,6 +17,7 @@ from tests.utilities.discovery_service_process import DiscoveryServiceProcess
 class CliRunnerFunction(Protocol):
     """Protocol for a callable that executes a CLI command using Click's CliRunner."""
     def __call__(self, args: Sequence[str], input: Optional[str] = None) -> Result: ...
+    """Execute the CLI command with the provided arguments."""
 
 
 @pytest.fixture
