@@ -1,3 +1,4 @@
+from functools import partial
 import importlib.util
 import pathlib
 from enum import Enum
@@ -5,9 +6,9 @@ from types import ModuleType
 from typing import Generator
 
 import pytest
+from click.testing import Result
 from ni_measurement_plugin_sdk_service.measurement.service import MeasurementService
 
-from ni_measurement_plugin_sdk_generator.client import create_client
 from tests.utilities.discovery_service_process import DiscoveryServiceProcess
 from tests.utilities.measurements import non_streaming_data_measurement
 
@@ -111,6 +112,7 @@ def test___measurement_plugin_client___stream_measure___returns_output(
 
 @pytest.fixture(scope="module")
 def measurement_client_directory(
+    create_client: partial[Result],
     tmp_path_factory: pytest.TempPathFactory,
     measurement_service: MeasurementService,
 ) -> pathlib.Path:
@@ -118,19 +120,18 @@ def measurement_client_directory(
     temp_directory = tmp_path_factory.mktemp("measurement_plugin_client_files")
     module_name = "test_measurement_client"
 
-    with pytest.raises(SystemExit):
-        create_client(
-            [
-                "--measurement-service-class",
-                "ni.tests.NonStreamingDataMeasurement_Python",
-                "--module-name",
-                module_name,
-                "--class-name",
-                "TestMeasurement",
-                "--directory-out",
-                temp_directory,
-            ]
-        )
+    create_client(
+        [
+            "--measurement-service-class",
+            "ni.tests.NonStreamingDataMeasurement_Python",
+            "--module-name",
+            module_name,
+            "--class-name",
+            "TestMeasurement",
+            "--directory-out",
+            temp_directory,
+        ]
+    )
 
     return temp_directory
 
