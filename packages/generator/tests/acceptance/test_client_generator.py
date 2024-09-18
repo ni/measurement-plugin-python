@@ -3,7 +3,6 @@ import pathlib
 import re
 import sys
 from typing import Callable, Generator, Sequence
-from unittest.mock import patch
 
 import pytest
 from click.testing import Result
@@ -82,18 +81,15 @@ def test___command_line_args_with_registered_measurements___create_client_using_
     temp_directory = tmp_path_factory.mktemp("measurement_plugin_client_files")
     golden_path = test_assets_directory / "example_renders" / "measurement_plugin_client"
     filename = "non_streaming_data_measurement_client.py"
+    inputs = [
+        "1",
+        "non_streaming_data_measurement_client",
+        "NonStreamingDataMeasurementClient",
+        "x",
+    ]
     os.chdir(temp_directory)
 
-    with patch(
-        "click.prompt",
-        side_effect=[
-            "1",
-            "non_streaming_data_measurement_client",
-            "NonStreamingDataMeasurementClient",
-            "x",
-        ],
-    ):
-        result = create_client(["--interactive"])
+    result = create_client(["--interactive"], input="\n".join(inputs))
 
     assert result.exit_code == 0
     _assert_equal(
