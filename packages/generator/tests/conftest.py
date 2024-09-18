@@ -3,7 +3,7 @@
 import functools
 import pathlib
 import sys
-from typing import Callable, Generator, Sequence
+from typing import Generator, Optional, Protocol, Sequence
 
 import pytest
 from click.testing import CliRunner, Result
@@ -12,6 +12,10 @@ from ni_measurement_plugin_sdk_service.discovery._support import _get_registrati
 import ni_measurement_plugin_sdk_generator.client as client_generator
 import ni_measurement_plugin_sdk_generator.plugin as plugin_generator
 from tests.utilities.discovery_service_process import DiscoveryServiceProcess
+
+
+class CliRunnerFunction(Protocol):
+    def __call__(self, args: Sequence[str], input: Optional[str] = None) -> Result: ...
 
 
 @pytest.fixture
@@ -44,14 +48,14 @@ def pin_map_directory(test_assets_directory: pathlib.Path) -> pathlib.Path:
 
 
 @pytest.fixture(scope="session")
-def create_client() -> Generator[Callable[[Sequence[str]], Result], None, None]:
+def create_client() -> Generator[CliRunnerFunction, None, None]:
     """Test fixture for calling client generator cli."""
     runner = CliRunner(mix_stderr=False)
     yield functools.partial(runner.invoke, client_generator.create_client, standalone_mode=False)
 
 
 @pytest.fixture(scope="session")
-def create_measurement() -> Generator[Callable[[Sequence[str]], Result], None, None]:
+def create_measurement() -> Generator[CliRunnerFunction, None, None]:
     """Test fixture for calling plugin generator cli."""
     runner = CliRunner(mix_stderr=False)
     yield functools.partial(

@@ -2,18 +2,18 @@ import os
 import pathlib
 import re
 import sys
-from typing import Callable, Generator, Sequence
+from typing import Generator
 
 import pytest
-from click.testing import Result
 from ni_measurement_plugin_sdk_service.measurement.service import MeasurementService
 
+from tests.conftest import CliRunnerFunction
 from tests.utilities.discovery_service_process import DiscoveryServiceProcess
 from tests.utilities.measurements import non_streaming_data_measurement, streaming_data_measurement
 
 
 def test___command_line_args___create_client___render_without_error(
-    create_client: Callable[[Sequence[str]], Result],
+    create_client: CliRunnerFunction,
     test_assets_directory: pathlib.Path,
     tmp_path_factory: pytest.TempPathFactory,
     measurement_service: MeasurementService,
@@ -44,7 +44,7 @@ def test___command_line_args___create_client___render_without_error(
 
 
 def test___command_line_args___create_client_for_all_registered_measurements___renders_without_error(
-    create_client: Callable[[Sequence[str]], Result],
+    create_client: CliRunnerFunction,
     tmp_path_factory: pytest.TempPathFactory,
     multiple_measurement_service: MeasurementService,
 ) -> None:
@@ -73,7 +73,7 @@ def test___command_line_args___create_client_for_all_registered_measurements___r
 
 
 def test___command_line_args_with_registered_measurements___create_client_using_interactive_mode___renders_without_error(
-    create_client: Callable[[Sequence[str]], Result],
+    create_client: CliRunnerFunction,
     test_assets_directory: pathlib.Path,
     tmp_path_factory: pytest.TempPathFactory,
     measurement_service: MeasurementService,
@@ -99,7 +99,7 @@ def test___command_line_args_with_registered_measurements___create_client_using_
 
 
 def test___command_line_args_without_registering_any_measurement___create_client_using_interactive_mode___raises_exception(
-    create_client: Callable[[Sequence[str]], Result],
+    create_client: CliRunnerFunction,
 ) -> None:
     result = create_client(["--interactive"])
     assert result.exit_code == 1
@@ -107,7 +107,7 @@ def test___command_line_args_without_registering_any_measurement___create_client
 
 
 def test___command_line_args___create_client___render_with_proper_line_ending(
-    create_client: Callable[[Sequence[str]], Result],
+    create_client: CliRunnerFunction,
     tmp_path_factory: pytest.TempPathFactory,
     measurement_service: MeasurementService,
 ) -> None:

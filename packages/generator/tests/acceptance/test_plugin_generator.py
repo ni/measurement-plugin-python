@@ -1,12 +1,12 @@
 import pathlib
-from typing import Callable, Sequence
 
 import pytest
-from click.testing import Result
+
+from tests.conftest import CliRunnerFunction
 
 
 def test___command_line_args___create_measurement___render_without_error(
-    create_measurement: Callable[[Sequence[str]], Result],
+    create_measurement: CliRunnerFunction,
     test_assets_directory: pathlib.Path,
     tmp_path_factory: pytest.TempPathFactory,
 ) -> None:
@@ -39,7 +39,7 @@ def test___command_line_args___create_measurement___render_without_error(
 
 
 def test___command_line_args___create_measurement_with_annotations___render_without_error(
-    create_measurement: Callable[[Sequence[str]], Result],
+    create_measurement: CliRunnerFunction,
     test_assets_directory: pathlib.Path,
     tmp_path_factory: pytest.TempPathFactory,
 ) -> None:

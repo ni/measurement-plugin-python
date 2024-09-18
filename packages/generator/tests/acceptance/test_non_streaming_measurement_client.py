@@ -2,12 +2,12 @@ import importlib.util
 import pathlib
 from enum import Enum
 from types import ModuleType
-from typing import Callable, Generator, Sequence
+from typing import Generator
 
 import pytest
-from click.testing import Result
 from ni_measurement_plugin_sdk_service.measurement.service import MeasurementService
 
+from tests.conftest import CliRunnerFunction
 from tests.utilities.discovery_service_process import DiscoveryServiceProcess
 from tests.utilities.measurements import non_streaming_data_measurement
 
@@ -111,7 +111,7 @@ def test___measurement_plugin_client___stream_measure___returns_output(
 
 @pytest.fixture(scope="module")
 def measurement_client_directory(
-    create_client: Callable[[Sequence[str]], Result],
+    create_client: CliRunnerFunction,
     tmp_path_factory: pytest.TempPathFactory,
     measurement_service: MeasurementService,
 ) -> pathlib.Path:
