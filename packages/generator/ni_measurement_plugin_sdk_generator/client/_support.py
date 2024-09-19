@@ -2,7 +2,6 @@
 
 import json
 import keyword
-import os
 import pathlib
 import re
 import sys
@@ -244,10 +243,8 @@ def get_configuration_parameters_with_type_and_default_values(
         configuration_parameters.append(f"{parameter_name}: {parameter_type} = {default_value}")
 
     # Use line separator and spaces to align the parameters appropriately in the generated file.
-    configuration_parameters_with_type_and_value = f",{os.linesep}        ".join(
-        configuration_parameters
-    )
-    parameter_names_as_str = ", ".join(parameter_names)
+    configuration_parameters_with_type_and_value = f",".join(configuration_parameters)
+    parameter_names_as_str = ",".join(parameter_names)
 
     return (configuration_parameters_with_type_and_value, parameter_names_as_str)
 
@@ -284,7 +281,7 @@ def get_output_parameters_with_type(
 
         output_parameters_with_type.append(f"{parameter_name}: {parameter_type}")
 
-    return f"{os.linesep}    ".join(output_parameters_with_type)
+    return f";".join(output_parameters_with_type)
 
 
 def to_ordered_set(values: Iterable[_T]) -> AbstractSet[_T]:
@@ -354,6 +351,12 @@ def validate_measurement_service_classes(measurement_service_classes: List[str])
     """Validates whether the given measurement service classes list is empty."""
     if len(measurement_service_classes) == 0:
         raise click.ClickException("No registered measurements.")
+
+
+def replace_enum_class_type(output: str) -> str:
+    """Formats the data with enum type."""
+    pattern = "<enum '([^']+)'>"
+    return re.sub(pattern, r"\1", output)
 
 
 def _get_python_identifier(input_string: str) -> str:
@@ -433,4 +436,4 @@ def _get_enum_class_name(name: str) -> str:
         name = "".join(s.capitalize() for s in split_string)
     else:
         name = name[0].upper() + name[1:]
-    return name + "Enum"
+    return f"{name}Enum"

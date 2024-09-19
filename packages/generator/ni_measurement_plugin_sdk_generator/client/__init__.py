@@ -1,7 +1,6 @@
 """Utilizes command line args to create a Measurement Plug-In Client using template files."""
 
 import pathlib
-import re
 from enum import Enum
 from typing import Any, Dict, List, Optional, Type
 
@@ -27,6 +26,7 @@ from ni_measurement_plugin_sdk_generator.client._support import (
     get_all_registered_measurement_info,
     get_selected_measurement_service_class,
     to_ordered_set,
+    replace_enum_class_type,
     resolve_output_directory,
     validate_identifier,
     validate_measurement_service_classes,
@@ -39,18 +39,13 @@ def _render_template(template_name: str, **template_args: Any) -> bytes:
     return template.render(**template_args)
 
 
-def _replace_enum_class_type(output: str) -> str:
-    pattern = "<enum '([^']+)'>"
-    return re.sub(pattern, r"\1", output)
-
-
 def _create_file(
     template_name: str, file_name: str, directory_out: pathlib.Path, **template_args: Any
 ) -> None:
     output_file = directory_out / file_name
 
     output = _render_template(template_name, **template_args).decode("utf-8")
-    output = _replace_enum_class_type(output)
+    output = replace_enum_class_type(output)
     formatted_output = black.format_str(
         src_contents=output,
         mode=black.Mode(line_length=100),

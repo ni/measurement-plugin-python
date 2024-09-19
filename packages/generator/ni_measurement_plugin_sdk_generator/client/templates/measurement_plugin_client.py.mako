@@ -99,7 +99,7 @@ class ${class_name}:
 
     @property
     def pin_map_context(self) -> PinMapContext:
-        """Get the pin map context for the measurement."""
+        """The pin map context for the measurement."""
         return self._pin_map_context
 
     @pin_map_context.setter

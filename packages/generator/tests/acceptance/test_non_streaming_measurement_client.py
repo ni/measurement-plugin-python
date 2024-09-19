@@ -21,6 +21,15 @@ class EnumInEnum(Enum):
     BLUE = 3
 
 
+class ProtobufEnumInEnum(Enum):
+    """ProtobufEnumInEnum used for enum-typed measurement configs and outputs."""
+
+    NONE = 0
+    PINK = 1
+    WHITE = 2
+    BLACK = 3
+
+
 def test___measurement_plugin_client___measure___returns_output(
     measurement_plugin_client_module: ModuleType,
 ) -> None:
@@ -54,6 +63,7 @@ def test___measurement_plugin_client___measure___returns_output(
         xy_data_out=None,
         enum_out=EnumInEnum.BLUE,
         enum_array_out=[EnumInEnum.RED, EnumInEnum.GREEN],
+        protobuf_enum_out=ProtobufEnumInEnum.BLACK,
     )
     measurement_plugin_client = test_measurement_client_type()
 
@@ -97,6 +107,7 @@ def test___measurement_plugin_client___stream_measure___returns_output(
         xy_data_out=None,
         enum_out=EnumInEnum.BLUE,
         enum_array_out=[EnumInEnum.RED, EnumInEnum.GREEN],
+        protobuf_enum_out=ProtobufEnumInEnum.BLACK,
     )
     measurement_plugin_client = test_measurement_client_type()
 
