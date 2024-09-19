@@ -467,11 +467,12 @@ class NonStreamingDataMeasurementClient:
         self, parameter_values: List[Any]
     ) -> v2_measurement_service_pb2.MeasureRequest:
         serialized_configuration = any_pb2.Any(
+            type_url="type.googleapis.com/ni.measurementlink.measurement.v2.MeasurementConfigurations",
             value=serialize_parameters(
                 parameter_metadata_dict=self._configuration_metadata,
                 parameter_values=parameter_values,
                 service_name=f"{self._service_class}.Configurations",
-            )
+            ),
         )
         return v2_measurement_service_pb2.MeasureRequest(
             configuration_parameters=serialized_configuration,
