@@ -8,7 +8,7 @@ import grpc
 import pytest
 from ni_measurement_plugin_sdk_service.measurement.service import MeasurementService
 
-from ni_measurement_plugin_sdk_generator.client import create_client
+from tests.conftest import CliRunnerFunction
 from tests.utilities.discovery_service_process import DiscoveryServiceProcess
 from tests.utilities.measurements import streaming_data_measurement
 
@@ -111,6 +111,7 @@ def test___measurement_client___cancel_without_measure___returns_false(
 
 @pytest.fixture(scope="module")
 def measurement_client_directory(
+    create_client: CliRunnerFunction,
     tmp_path_factory: pytest.TempPathFactory,
     measurement_service: MeasurementService,
 ) -> pathlib.Path:
@@ -118,19 +119,18 @@ def measurement_client_directory(
     temp_directory = tmp_path_factory.mktemp("measurement_plugin_client_files")
     module_name = "test_measurement_client"
 
-    with pytest.raises(SystemExit):
-        create_client(
-            [
-                "--measurement-service-class",
-                "ni.tests.StreamingDataMeasurement_Python",
-                "--module-name",
-                module_name,
-                "--class-name",
-                "TestMeasurement",
-                "--directory-out",
-                temp_directory,
-            ]
-        )
+    create_client(
+        [
+            "--measurement-service-class",
+            "ni.tests.StreamingDataMeasurement_Python",
+            "--module-name",
+            module_name,
+            "--class-name",
+            "TestMeasurement",
+            "--directory-out",
+            str(temp_directory),
+        ]
+    )
 
     return temp_directory
 

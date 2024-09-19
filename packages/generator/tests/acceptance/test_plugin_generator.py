@@ -2,34 +2,35 @@ import pathlib
 
 import pytest
 
-from ni_measurement_plugin_sdk_generator.plugin import create_measurement
+from tests.conftest import CliRunnerFunction
 
 
 def test___command_line_args___create_measurement___render_without_error(
-    test_assets_directory: pathlib.Path, tmp_path_factory: pytest.TempPathFactory
+    create_measurement: CliRunnerFunction,
+    test_assets_directory: pathlib.Path,
+    tmp_path_factory: pytest.TempPathFactory,
 ) -> None:
     temp_directory = tmp_path_factory.mktemp("measurement_files")
     golden_path = test_assets_directory / "example_renders" / "measurement"
     filenames = ["measurement.py", "SampleMeasurement.serviceconfig", "start.bat", "_helpers.py"]
 
-    with pytest.raises(SystemExit) as exc_info:
-        create_measurement(
-            [
-                "Sample Measurement",
-                "--measurement-version",
-                "1.2.3.4",
-                "--ui-file",
-                "MeasurementUI.measui",
-                "--service-class",
-                "SampleMeasurement_Python",
-                "--description-url",
-                "https://www.example.com/SampleMeasurement.html",
-                "--directory-out",
-                temp_directory,
-            ]
-        )
+    result = create_measurement(
+        [
+            "Sample Measurement",
+            "--measurement-version",
+            "1.2.3.4",
+            "--ui-file",
+            "MeasurementUI.measui",
+            "--service-class",
+            "SampleMeasurement_Python",
+            "--description-url",
+            "https://www.example.com/SampleMeasurement.html",
+            "--directory-out",
+            str(temp_directory),
+        ]
+    )
 
-    assert not exc_info.value.code
+    assert result.exit_code == 0
     for filename in filenames:
         _assert_equal(
             golden_path / filename,
@@ -37,41 +38,43 @@ def test___command_line_args___create_measurement___render_without_error(
         )
 
 
-def test___command_line_args___create_measurement_with_annotations___render_without_exception(
-    test_assets_directory: pathlib.Path, tmp_path_factory: pytest.TempPathFactory
+def test___command_line_args___create_measurement_with_annotations___render_without_error(
+    create_measurement: CliRunnerFunction,
+    test_assets_directory: pathlib.Path,
+    tmp_path_factory: pytest.TempPathFactory,
 ) -> None:
     temp_directory = tmp_path_factory.mktemp("measurement_files")
 
-    with pytest.raises(SystemExit):
-        create_measurement(
-            [
-                "Sample Measurement",
-                "--measurement-version",
-                "1.2.3.4",
-                "--ui-file",
-                "MeasurementUI.measui",
-                "--service-class",
-                "SampleMeasurement_Python",
-                "-D",
-                "Measurement description",
-                "--description-url",
-                "https://www.example.com/SampleMeasurement.html",
-                "--directory-out",
-                temp_directory,
-                "--collection",
-                "Measurement.Collection",
-                "--tags",
-                "M1",
-                "--tags",
-                "M2",
-                "--tags",
-                "M3",
-            ]
-        )
+    result = create_measurement(
+        [
+            "Sample Measurement",
+            "--measurement-version",
+            "1.2.3.4",
+            "--ui-file",
+            "MeasurementUI.measui",
+            "--service-class",
+            "SampleMeasurement_Python",
+            "-D",
+            "Measurement description",
+            "--description-url",
+            "https://www.example.com/SampleMeasurement.html",
+            "--directory-out",
+            str(temp_directory),
+            "--collection",
+            "Measurement.Collection",
+            "--tags",
+            "M1",
+            "--tags",
+            "M2",
+            "--tags",
+            "M3",
+        ]
+    )
 
     golden_path = test_assets_directory / "example_renders" / "measurement_with_annotations"
 
     filenames = ["measurement.py", "SampleMeasurement.serviceconfig", "start.bat", "_helpers.py"]
+    assert result.exit_code == 0
     for filename in filenames:
         _assert_equal(
             golden_path / filename,

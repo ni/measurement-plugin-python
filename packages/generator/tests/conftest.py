@@ -1,13 +1,24 @@
 """Shared fixtures for ni-measurement-plugin-sdk-generator tests."""
 
+import functools
 import pathlib
 import sys
-from typing import Generator
+from typing import Generator, Optional, Protocol, Sequence
 
 import pytest
+from click.testing import CliRunner, Result
 from ni_measurement_plugin_sdk_service.discovery._support import _get_registration_json_file_path
 
+import ni_measurement_plugin_sdk_generator.client as client_generator
+import ni_measurement_plugin_sdk_generator.plugin as plugin_generator
 from tests.utilities.discovery_service_process import DiscoveryServiceProcess
+
+
+class CliRunnerFunction(Protocol):
+    """Protocol for a callable that executes a CLI command using Click's CliRunner."""
+
+    def __call__(self, args: Sequence[str], input: Optional[str] = None) -> Result:
+        """Execute the CLI command with the provided arguments."""
 
 
 @pytest.fixture
@@ -37,3 +48,19 @@ def discovery_service_process() -> Generator[DiscoveryServiceProcess, None, None
 def pin_map_directory(test_assets_directory: pathlib.Path) -> pathlib.Path:
     """Test fixture that returns the pin map directory."""
     return test_assets_directory / "pin_map"
+
+
+@pytest.fixture(scope="session")
+def create_client() -> Generator[CliRunnerFunction, None, None]:
+    """Test fixture for calling client generator cli."""
+    runner = CliRunner(mix_stderr=False)
+    yield functools.partial(runner.invoke, client_generator.create_client, standalone_mode=False)
+
+
+@pytest.fixture(scope="session")
+def create_measurement() -> Generator[CliRunnerFunction, None, None]:
+    """Test fixture for calling plugin generator cli."""
+    runner = CliRunner(mix_stderr=False)
+    yield functools.partial(
+        runner.invoke, plugin_generator.create_measurement, standalone_mode=False
+    )

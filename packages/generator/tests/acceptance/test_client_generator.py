@@ -7,12 +7,13 @@ from typing import Generator
 import pytest
 from ni_measurement_plugin_sdk_service.measurement.service import MeasurementService
 
-from ni_measurement_plugin_sdk_generator.client import create_client
+from tests.conftest import CliRunnerFunction
 from tests.utilities.discovery_service_process import DiscoveryServiceProcess
 from tests.utilities.measurements import non_streaming_data_measurement, streaming_data_measurement
 
 
 def test___command_line_args___create_client___render_without_error(
+    create_client: CliRunnerFunction,
     test_assets_directory: pathlib.Path,
     tmp_path_factory: pytest.TempPathFactory,
     measurement_service: MeasurementService,
@@ -22,21 +23,20 @@ def test___command_line_args___create_client___render_without_error(
     golden_path = test_assets_directory / "example_renders" / "measurement_plugin_client"
     filename = f"{module_name}.py"
 
-    with pytest.raises(SystemExit) as exc_info:
-        create_client(
-            [
-                "--measurement-service-class",
-                "ni.tests.NonStreamingDataMeasurement_Python",
-                "--module-name",
-                module_name,
-                "--class-name",
-                "NonStreamingDataMeasurementClient",
-                "--directory-out",
-                temp_directory,
-            ]
-        )
+    result = create_client(
+        [
+            "--measurement-service-class",
+            "ni.tests.NonStreamingDataMeasurement_Python",
+            "--module-name",
+            module_name,
+            "--class-name",
+            "NonStreamingDataMeasurementClient",
+            "--directory-out",
+            str(temp_directory),
+        ]
+    )
 
-    assert not exc_info.value.code
+    assert result.exit_code == 0
     _assert_equal(
         golden_path / filename,
         temp_directory / filename,
@@ -44,19 +44,19 @@ def test___command_line_args___create_client___render_without_error(
 
 
 def test___command_line_args___create_client_for_all_registered_measurements___renders_without_error(
+    create_client: CliRunnerFunction,
     tmp_path_factory: pytest.TempPathFactory,
     multiple_measurement_service: MeasurementService,
 ) -> None:
     temp_directory = tmp_path_factory.mktemp("measurement_plugin_client_files")
 
-    with pytest.raises(SystemExit) as exc_info:
-        create_client(
-            [
-                "--all",
-                "--directory-out",
-                temp_directory,
-            ]
-        )
+    result = create_client(
+        [
+            "--all",
+            "--directory-out",
+            str(temp_directory),
+        ]
+    )
 
     expected_modules = [
         "non_streaming_data_measurement_client.py",
@@ -65,14 +65,49 @@ def test___command_line_args___create_client_for_all_registered_measurements___r
     actual_modules = os.listdir(temp_directory)
     assert all(
         [
-            not exc_info.value.code,
+            result.exit_code == 0,
             len(actual_modules) == 2,
             expected_modules == actual_modules,
         ]
     )
 
 
+def test___command_line_args_with_registered_measurements___create_client_using_interactive_mode___renders_without_error(
+    create_client: CliRunnerFunction,
+    test_assets_directory: pathlib.Path,
+    tmp_path_factory: pytest.TempPathFactory,
+    measurement_service: MeasurementService,
+) -> None:
+    temp_directory = tmp_path_factory.mktemp("measurement_plugin_client_files")
+    golden_path = test_assets_directory / "example_renders" / "measurement_plugin_client"
+    filename = "non_streaming_data_measurement_client.py"
+    inputs = [
+        "1",
+        "non_streaming_data_measurement_client",
+        "NonStreamingDataMeasurementClient",
+        "x",
+    ]
+    os.chdir(temp_directory)
+
+    result = create_client(["--interactive"], input="\n".join(inputs))
+
+    assert result.exit_code == 0
+    _assert_equal(
+        golden_path / filename,
+        temp_directory / filename,
+    )
+
+
+def test___command_line_args_without_registering_any_measurement___create_client_using_interactive_mode___raises_exception(
+    create_client: CliRunnerFunction,
+) -> None:
+    result = create_client(["--interactive"])
+    assert result.exit_code == 1
+    assert "No registered measurements." in str(result.exception)
+
+
 def test___command_line_args___create_client___render_with_proper_line_ending(
+    create_client: CliRunnerFunction,
     tmp_path_factory: pytest.TempPathFactory,
     measurement_service: MeasurementService,
 ) -> None:
@@ -80,21 +115,20 @@ def test___command_line_args___create_client___render_with_proper_line_ending(
     module_name = "non_streaming_data_measurement_client"
     filename = f"{module_name}.py"
 
-    with pytest.raises(SystemExit) as exc_info:
-        create_client(
-            [
-                "--measurement-service-class",
-                "ni.tests.NonStreamingDataMeasurement_Python",
-                "--module-name",
-                module_name,
-                "--class-name",
-                "NonStreamingDataMeasurementClient",
-                "--directory-out",
-                temp_directory,
-            ]
-        )
+    result = create_client(
+        [
+            "--measurement-service-class",
+            "ni.tests.NonStreamingDataMeasurement_Python",
+            "--module-name",
+            module_name,
+            "--class-name",
+            "NonStreamingDataMeasurementClient",
+            "--directory-out",
+            str(temp_directory),
+        ]
+    )
 
-    assert not exc_info.value.code
+    assert result.exit_code == 0
     _assert_line_ending(temp_directory / filename)
 
 
