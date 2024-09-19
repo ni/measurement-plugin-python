@@ -224,7 +224,7 @@ def get_configuration_parameters_with_type_and_default_values(
             else:
                 default_value = f"Path({default_value})"
 
-        if metadata.message_type and metadata.message_type == "ni.protobuf.types.DoubleXYData":
+        if metadata.message_type:
             raise click.ClickException(
                 "Measurement configuration with Double XY datatype is not supported."
             )
