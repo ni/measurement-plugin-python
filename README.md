@@ -10,7 +10,11 @@
   - [Developing Measurements: Quick Start](#developing-measurements-quick-start)
     - [Installation](#installation)
     - [Developing a minimal Python measurement](#developing-a-minimal-python-measurement)
-  - [Steps to run/debug the measurement service](#steps-to-rundebug-the-measurement-service)
+  - [Steps to Run/Debug the Measurement Service](#steps-to-rundebug-the-measurement-service)
+  - [Generating Measurement Clients: Quick Start](#generating-measurement-clients-quick-start)
+    - [Installation](#installation-1)
+    - [Generating a Minimal Python Measurement Client](#generating-a-minimal-python-measurement-client)
+  - [Steps to Run/Debug the Measurement Client](#steps-to-rundebug-the-measurement-client)
   - [Static Registration of Python Measurements](#static-registration-of-python-measurements)
     - [Create a batch file that runs a Python measurement](#create-a-batch-file-that-runs-a-python-measurement)
     - [Create Executable for Python Scripts](#create-executable-for-python-scripts)
@@ -19,13 +23,13 @@
   - [Appendix: Managing Measurement with Python](#appendix-managing-measurement-with-python)
     - [Create and Manage Python Measurement using Poetry](#create-and-manage-python-measurement-using-poetry)
     - [Create and Manage Python Measurement using `venv`](#create-and-manage-python-measurement-using-venv)
-    - [Create and Manage Python Measurement by directly installing `ni-measurement-plugin-sdk-service` as a system-level package](#create-and-manage-python-measurement-by-directly-installing-ni-measurement-plugin-sdk-service-as-a-system-level-package)
+    - [Create and Manage Python Measurement by directly installing `ni-measurement-plugin-sdk` as a system-level package](#create-and-manage-python-measurement-by-directly-installing-ni-measurement-plugin-sdk-as-a-system-level-package)
 
 ---
 
 ## Introduction
 
-Measurement Plug-In SDK for Python (`ni-measurement-plugin-sdk-service`) is a Python
+Measurement Plug-In SDK for Python (`ni-measurement-plugin-sdk`) is a Python
 framework that helps you create reusable measurement plug-ins using gRPC
 services. Deploy your measurement plug-ins to perform interactive validation in
 InstrumentStudio and automated testing in TestStand.
@@ -88,51 +92,44 @@ This section provides instructions to develop custom measurement services in Pyt
 
 ### Installation
 
-Make sure the system has the recommended Python version is installed. Install Measurement Plug-In SDK for Python using [pip](https://pip.pypa.io/).
+Make sure the system has the recommended Python version installed. Install Measurement Plug-In SDK for Python using [pip](https://pip.pypa.io/).
 
 ``` cmd
 REM Activate the required virtual environment if any.
-pip install ni-measurement-plugin-sdk-service
+pip install ni-measurement-plugin-sdk
 ```
 
 Check if you have installed the expected version of Measurement Plug-In SDK for Python installed by running the below command:
 
 ```cmd
-pip show ni-measurement-plugin-sdk-service
+pip show ni-measurement-plugin-sdk
 ```
 
 ### Developing a minimal Python measurement
 
-1. Install the `ni-measurement-plugin-sdk-generator` package.
+1. Run the `ni-measurement-plugin-generator` tool. Use command line arguments to specify the `display-name` and optionally the `version`, `measurement-type`, and `product-type`.
 
-``` cmd
-REM Activate the required virtual environment if any.
-pip install ni-measurement-plugin-sdk-generator
-```
+    1. Running `ni-measurement-plugin-generator` without optional arguments:
 
-2. Run the `ni-measurement-plugin-sdk-generator` tool. Use command line arguments to specify the `display-name` and optionally the `version`, `measurement-type`, and `product-type`.
-
-    1. Running `ni-measurement-plugin-sdk-generator` without optional arguments:
-
-    `ni-measurement-plugin-sdk-generator SampleMeasurement`
+    `ni-measurement-plugin-generator SampleMeasurement`
 
     'SampleMeasurement' is the display name of your measurement service. Without the optional arguments,
     the other arguments are generated for you based on the display name.
 
-    2. Running `ni-measurement-plugin-sdk-generator` with optional arguments for `measurement-version`, `ui-file`,
+    2. Running `ni-measurement-plugin-generator` with optional arguments for `measurement-version`, `ui-file`,
     `service-class`, and `description-url`:
 
-    `ni-measurement-plugin-sdk-generator SampleMeasurement --measurement-version 0.1.0.0 --ui-file MeasurementUI.measui --service-class SampleMeasurement_Python --description-url https://www.example.com/SampleMeasurement.html`
+    `ni-measurement-plugin-generator SampleMeasurement --measurement-version 0.1.0.0 --ui-file MeasurementUI.measui --service-class SampleMeasurement_Python --description-url https://www.example.com/SampleMeasurement.html`
 
-    3. Running `ni-measurement-plugin-sdk-generator` with optional argument for `directory-out`
+    3. Running `ni-measurement-plugin-generator` with optional argument for `directory-out`
 
-    `ni-measurement-plugin-sdk-generator SampleMeasurement --directory-out <new_path_for_created_files>`
+    `ni-measurement-plugin-generator SampleMeasurement --directory-out <new_path_for_created_files>`
 
     If no output directory is specified, the files will
     be placed in a new folder under the current directory
     named after the display name without spaces.
 
-3. To customize the created measurement, provide metadata of the measurement's configuration (input parameters) and outputs (output parameters) in `measurement.py`.
+2. To customize the created measurement, provide metadata of the measurement's configuration (input parameters) and outputs (output parameters) in `measurement.py`.
     1. Use the `configuration()` decorator to provide metadata about the configurations.**The order of the configuration decorator must match with the order of the parameters defined in the function signature.**
 
         ``` python
@@ -157,11 +154,11 @@ pip install ni-measurement-plugin-sdk-generator
             return ["foo", "bar"]
         ```
 
-4. Run/Debug the created measurement by following the steps discussed in the section ["Steps to run/debug the measurement service".](#steps-to-rundebug-the-measurement-service)
+3. Run/Debug the created measurement by following the steps discussed in the section ["Steps to Run/Debug the Measurement Service".](#steps-to-rundebug-the-measurement-service)
 
 ---
 
-## Steps to run/debug the measurement service
+## Steps to Run/Debug the Measurement Service
 
 1. Start the discovery service if not already started.
 
@@ -187,6 +184,113 @@ pip install ni-measurement-plugin-sdk-generator
     ```cmd
     deactivate
     ```
+
+---
+
+## Generating Measurement Clients: Quick Start
+
+This section provides instructions to generate custom measurement clients in Python using Measurement Plug-In SDK for Python.
+
+### Installation
+
+Install Measurement Plug-In SDK by following the instructions in section ["Measurement Plug-In SDK Installation"](#installation).
+
+### Generating a Minimal Python Measurement Client
+
+Run the `ni-measurement-plugin-client-generator` tool.
+
+1. To create measurement clients for specific measurements, use this command with optional arguments:
+
+    ```ni-measurement-plugin-client-generator --measurement-service-class "ni.examples.SampleMeasurement_Python" [--module-name "sample_measurement_client"]  [--class-name "SampleMeasurementClient"] [--directory-out <new_path_for_created_files>]```
+
+    - `--measurement-service-class` specifies the measurement service class for which the client is being generated.
+
+    - Optional arguments:
+        - `--module-name` and `--class-name` define the module and class names of the generated client. If not specified, they are derived from the measurement service class name.
+
+        - `--directory-out` specifies the output directory for the generated files. If not specified, files are placed in the current directory.
+        
+    > **Note**: When generating multiple measurement clients, `--module-name` and `--class-name` are ignored and derived from the service class of each measurement. So, ensure that the measurement service class name adheres to proper naming conventions.
+
+2. To create measurement clients for all registered measurements, use this command:
+
+    `ni-measurement-plugin-client-generator --all [--directory-out <new_path_for_created_files>]`
+
+3. To interactively create measurement clients for any registered measurements, use this command:
+
+    `ni-measurement-plugin-client-generator --interactive`
+
+The generated client includes four APIs: `measure`, `stream_measure`, `register_pin_map`, and `cancel`. The usage of these APIs is discussed in the ["Steps to Run/Debug the Measurement Client"](#steps-to-rundebug-the-measurement-client) section.
+
+> **Note**:
+> - The Measurement Plug-In Client is compatible with all datatypes supported by the Measurement Plug-In.
+> - The Double XY datatype is not supported for measurement configurations (inputs).
+> - For Enum datatypes, the generated enum class names will be the measurement parameter name suffixed with 'Enum'. For instance, if the measurement parameter name is 'Enum In', the generated enum in the client will be `EnumInEnum'.
+> - Ring control in LabVIEW measurements will be represented as numeric datatypes in the generated client.
+
+---
+
+## Steps to Run/Debug the Measurement Client
+
+1. Make sure the required measurement service is running before interacting with it via the client.
+
+2. Use the client APIs from the ["Generating a Minimal Python Measurement Client"](#generating-a-minimal-python-measurement-client) section.
+
+    1. For non-streaming measurements, use the `measure` method.
+
+        ``` python
+        from sample_measurement_client import SampleMeasurementClient
+        
+        client = SampleMeasurementClient()
+        outputs = client.measure()
+        print(outputs)
+        ```
+
+    2. For streaming measurements, use the `stream_measure` method.
+
+        ``` python
+        from sample_measurement_client import SampleMeasurementClient
+        
+        client = SampleMeasurementClient()
+        outputs_itr = client.stream_measure()
+        for index, outputs in enumerate(outputs_itr):
+            print(f"outputs[{index}] = {outputs}")
+        ```
+
+    3. If a measurement requires a pin map, it can be registered using the `register_pin_map` method. By default, `sites` is set to [0].
+
+        ``` python
+        from sample_measurement_client import SampleMeasurementClient
+        
+        client = SampleMeasurementClient()
+        client.register_pin_map(pin_map_path)
+        outputs = client.measure()
+        print(outputs)
+        ```
+        - Alternatively, when calling a measurement service from another measurement, you can pass the first measurement's pin map context to the second measurement's pin map context through the `pin_map_context` property. Sites can also be provided through the `sites` property.
+
+        ``` python
+        from sample_measurement_client import SampleMeasurementClient
+        
+        client = SampleMeasurementClient()
+        client.pin_map_context = available_pin_map_context
+        client.sites = [0, 1]
+        outputs = client.measure()
+        print(outputs)
+        ```
+
+    4. Cancel an ongoing `measure` or `stream_measure` call using the `cancel` method.
+
+        ``` python
+        from concurrent.futures import ThreadPoolExecutor
+        from sample_measurement_client import SampleMeasurementClient
+        
+        client = SampleMeasurementClient()
+        with ThreadPoolExecutor() as executor:
+            future = executor.submit(client.measure)
+            client.cancel()
+            outputs = future.result()  # Raises grpc.RpcException with status code "CANCELLED" 
+        ```
 
 ---
 
@@ -274,7 +378,7 @@ Python communities have different ways of managing Python projects and their dep
 
     2. Install `poetry` using the installation steps given in <https://python-poetry.org/docs/#installation>.
 
-2. Create a new Python project and add `ni-measurement-plugin-sdk-service` as a dependency to the project.
+2. Create a new Python project and add `ni-measurement-plugin-sdk` as a dependency to the project.
 
     1. Open a command prompt, and change the working directory to the directory of your choice where you want to create the project.
 
@@ -288,11 +392,11 @@ Python communities have different ways of managing Python projects and their dep
         poetry new <name_of_the_project>
         ```
 
-    3. Add the `ni-measurement-plugin-sdk-service` package as a dependency using the [`poetry add`](https://python-poetry.org/docs/cli/#add) command.
+    3. Add the `ni-measurement-plugin-sdk` package as a dependency using the [`poetry add`](https://python-poetry.org/docs/cli/#add) command.
 
         ``` cmd
         cd <name_of_the_project>
-        poetry add ni-measurement-plugin-sdk-service
+        poetry add ni-measurement-plugin-sdk
         ```
 
     4. The virtual environment will be auto-created by poetry.
@@ -331,10 +435,10 @@ For detailed info on managing projects using poetry [refer to the official docum
     python -m pip install -U pip
     ```
 
-5. Install the `ni-measurement-plugin-sdk-service` package into the virtual environment.
+5. Install the `ni-measurement-plugin-sdk` package into the virtual environment.
 
     ``` cmd
-    pip install ni-measurement-plugin-sdk-service
+    pip install ni-measurement-plugin-sdk
     ```
 
 6. Create measurement modules as described in ["Developing a minimal Python measurement"](#developing-a-minimal-python-measurement)
@@ -346,14 +450,14 @@ For detailed info on managing projects using poetry [refer to the official docum
 
 For detailed info on managing projects with a virtual environment, refer to the [official documentation](https://docs.python.org/3/tutorial/venv.html).
 
-### Create and Manage Python Measurement by directly installing `ni-measurement-plugin-sdk-service` as a system-level package
+### Create and Manage Python Measurement by directly installing `ni-measurement-plugin-sdk` as a system-level package
 
-Measurement developers can also install `ni-measurement-plugin-sdk-service` as a system package if necessary.
+Measurement developers can also install `ni-measurement-plugin-sdk` as a system package if necessary.
 
-1. Install the `ni-measurement-plugin-sdk-service` package from the command prompt
+1. Install the `ni-measurement-plugin-sdk` package from the command prompt
 
     ``` cmd
-    pip install ni-measurement-plugin-sdk-service
+    pip install ni-measurement-plugin-sdk
     ```
 
 2. Create measurement modules as described in ["Developing a minimal Python measurement"](#developing-a-minimal-python-measurement)
