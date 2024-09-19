@@ -10,7 +10,7 @@ The purpose of this package is as a meta-package that depends on `ni-measurement
 and `ni-measurement-plugin-sdk-service` so as to easily install all the things needed for the
 Measurement Plug-In SDK.
 
-For installation and usage, see [Measurement Plug-In SDK for Python (`ni-measurement-plugin-sdk-service`)](https://pypi.org/project/ni-measurement-plugin-sdk-service/).
+For installation and usage, see [Measurement Plug-In SDK Service for Python (`ni-measurement-plugin-sdk-service`)](https://pypi.org/project/ni-measurement-plugin-sdk-service/).
 
 ---
 
