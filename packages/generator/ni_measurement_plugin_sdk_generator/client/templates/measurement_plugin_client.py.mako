@@ -54,7 +54,9 @@ class ${enum_name.__name__}(Enum):
 class Outputs(NamedTuple):
     """Outputs for the ${display_name | repr} measurement plug-in."""
 
-    ${output_parameters_with_type}
+    % for output_parameter in output_parameters_with_type:
+    ${output_parameter}
+    % endfor
 <% output_type = "Outputs" %>\
 % endif
 

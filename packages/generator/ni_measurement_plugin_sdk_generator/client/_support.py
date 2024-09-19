@@ -242,9 +242,9 @@ def get_configuration_parameters_with_type_and_default_values(
 
         configuration_parameters.append(f"{parameter_name}: {parameter_type} = {default_value}")
 
-    # Use line separator and spaces to align the parameters appropriately in the generated file.
-    configuration_parameters_with_type_and_value = f",".join(configuration_parameters)
-    parameter_names_as_str = ",".join(parameter_names)
+    # Convert the list of parameters into ", " separated string.
+    configuration_parameters_with_type_and_value = f", ".join(configuration_parameters)
+    parameter_names_as_str = ", ".join(parameter_names)
 
     return (configuration_parameters_with_type_and_value, parameter_names_as_str)
 
@@ -254,7 +254,7 @@ def get_output_parameters_with_type(
     built_in_import_modules: List[str],
     custom_import_modules: List[str],
     enum_values_by_type: Dict[Type[Enum], Dict[str, int]] = {},
-) -> str:
+) -> List[str]:
     """Returns the output parameters of the measurement with type."""
     output_parameters_with_type = []
     for metadata in output_metadata.values():
@@ -281,7 +281,7 @@ def get_output_parameters_with_type(
 
         output_parameters_with_type.append(f"{parameter_name}: {parameter_type}")
 
-    return f";".join(output_parameters_with_type)
+    return output_parameters_with_type
 
 
 def to_ordered_set(values: Iterable[_T]) -> AbstractSet[_T]:
@@ -353,10 +353,10 @@ def validate_measurement_service_classes(measurement_service_classes: List[str])
         raise click.ClickException("No registered measurements.")
 
 
-def replace_enum_class_type(output: str) -> str:
-    """Formats the data with enum type."""
+def replace_enum_class_type(input_string: str) -> str:
+    """Replace enum class type representation with just the enum name."""
     pattern = "<enum '([^']+)'>"
-    return re.sub(pattern, r"\1", output)
+    return re.sub(pattern, r"\1", input_string)
 
 
 def _get_python_identifier(input_string: str) -> str:
