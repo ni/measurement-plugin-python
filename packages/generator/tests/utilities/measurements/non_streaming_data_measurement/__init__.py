@@ -6,6 +6,7 @@ from typing import Iterable, Tuple
 
 import ni_measurement_plugin_sdk_service as nims
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types import xydata_pb2
+
 from tests.utilities.measurements.non_streaming_data_measurement._stubs import color_pb2
 
 
