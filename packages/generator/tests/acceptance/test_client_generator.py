@@ -67,7 +67,7 @@ def test___command_line_args_for_void_measurement___create_client___render_witho
             "--class-name",
             "VoidMeasurementClient",
             "--directory-out",
-            temp_directory,
+            str(temp_directory),
         ]
     )
 

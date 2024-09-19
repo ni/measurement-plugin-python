@@ -8,7 +8,6 @@ from typing import List, Tuple
 import grpc
 import ni_measurement_plugin_sdk_service as nims
 
-
 service_directory = Path(__file__).resolve().parent
 measurement_service = nims.MeasurementService(
     service_config_path=service_directory / "VoidMeasurement.serviceconfig",
@@ -33,7 +32,7 @@ def measure(
 
     for index in range(0, integer_input):
         update_time = time.monotonic()
-        data.extend(index)
+        data.append(index)
 
         # Delay for the remaining portion of the requested interval and check for cancellation.
         delay = max(0.0, response_interval_in_seconds - (time.monotonic() - update_time))
@@ -41,3 +40,5 @@ def measure(
             measurement_service.context.abort(
                 grpc.StatusCode.CANCELLED, "Client requested cancellation."
             )
+
+    return ()
