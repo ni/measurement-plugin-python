@@ -1,15 +1,13 @@
 """Generated client API for the 'Non-Streaming Data Measurement (Py)' measurement plug-in."""
 
 import logging
-import pathlib
 import threading
 from enum import Enum
 from pathlib import Path
 from typing import Any, Generator, Iterable, List, NamedTuple, Optional
 
 import grpc
-from google.protobuf import any_pb2
-from google.protobuf import descriptor_pool
+from google.protobuf import any_pb2, descriptor_pool
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v2 import (
     measurement_service_pb2 as v2_measurement_service_pb2,
     measurement_service_pb2_grpc as v2_measurement_service_pb2_grpc,
@@ -621,7 +619,7 @@ class NonStreamingDataMeasurementClient:
             else:
                 return False
 
-    def register_pin_map(self, pin_map_path: pathlib.Path) -> None:
+    def register_pin_map(self, pin_map_path: Path) -> None:
         """Registers the pin map with the pin map service.
 
         Args:
