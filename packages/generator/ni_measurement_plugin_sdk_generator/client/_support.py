@@ -226,7 +226,7 @@ def get_configuration_parameters_with_type_and_default_values(
 
         if metadata.message_type and metadata.message_type == "ni.protobuf.types.DoubleXYData":
             raise click.ClickException(
-                "Measurement configuration(s) with Double XY datatype is not supported."
+                "Measurement configuration with Double XY datatype is not supported."
             )
 
         if metadata.annotations and metadata.annotations.get("ni/type_specialization") == "enum":
