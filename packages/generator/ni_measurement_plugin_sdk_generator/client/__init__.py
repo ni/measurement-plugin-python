@@ -66,6 +66,7 @@ def _create_client(
     built_in_import_modules: List[str] = []
     custom_import_modules: List[str] = []
     enum_values_by_type: Dict[Type[Enum], Dict[str, int]] = {}
+    type_url_prefix = "type.googleapis.com/"
 
     measurement_service_stub = get_measurement_service_stub(
         discovery_client, channel_pool, measurement_service_class
@@ -100,6 +101,8 @@ def _create_client(
         built_in_import_modules=to_ordered_set(built_in_import_modules),
         custom_import_modules=to_ordered_set(custom_import_modules),
         enum_by_class_name=enum_values_by_type,
+        configuration_parameters_type_url=type_url_prefix
+        + metadata.measurement_signature.configuration_parameters_message_type,
     )
 
     print(
