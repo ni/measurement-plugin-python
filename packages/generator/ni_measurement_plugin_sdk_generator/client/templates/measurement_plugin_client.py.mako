@@ -8,7 +8,12 @@ import threading
 from enum import Enum
 % endif
 from pathlib import Path
-from typing import Any, Generator${", Iterable" if output_metadata else ""}, List${", NamedTuple" if output_metadata else ""}, Optional
+<%
+    typing_imports = ["Any", "Generator", "List", "Optional"]
+    if output_metadata:
+        typing_imports += ["Iterable", "NamedTuple"]
+%>\
+from typing import ${", ".join(sorted(typing_imports))}
 
 import grpc
 from google.protobuf import any_pb2, descriptor_pool

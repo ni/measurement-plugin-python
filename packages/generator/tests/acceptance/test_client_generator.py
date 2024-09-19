@@ -16,7 +16,7 @@ from tests.utilities.measurements import (
 )
 
 
-def test___command_line_args_for_non_streaming_measurement___create_client___render_without_error(
+def test___non_streaming_measurement___create_client___render_without_error(
     create_client: CliRunnerFunction,
     test_assets_directory: pathlib.Path,
     tmp_path_factory: pytest.TempPathFactory,
@@ -47,7 +47,7 @@ def test___command_line_args_for_non_streaming_measurement___create_client___ren
     )
 
 
-def test___command_line_args_for_void_measurement___create_client___render_without_error(
+def test___void_measurement___create_client___render_without_error(
     create_client: CliRunnerFunction,
     test_assets_directory: pathlib.Path,
     tmp_path_factory: pytest.TempPathFactory,
@@ -78,7 +78,7 @@ def test___command_line_args_for_void_measurement___create_client___render_witho
     )
 
 
-def test___command_line_args_for_all_registered_measurements___create_client___renders_without_error(
+def test___all_registered_measurements___create_client___renders_without_error(
     create_client: CliRunnerFunction,
     tmp_path_factory: pytest.TempPathFactory,
     multiple_measurement_service: MeasurementService,
@@ -107,7 +107,7 @@ def test___command_line_args_for_all_registered_measurements___create_client___r
     )
 
 
-def test___command_line_args_with_registered_measurements___create_client_using_interactive_mode___renders_without_error(
+def test___interactive_mode_with_registered_measurements___create_client___renders_without_error(
     create_client: CliRunnerFunction,
     test_assets_directory: pathlib.Path,
     tmp_path_factory: pytest.TempPathFactory,
@@ -133,7 +133,7 @@ def test___command_line_args_with_registered_measurements___create_client_using_
     )
 
 
-def test___command_line_args_without_registering_any_measurement___create_client_using_interactive_mode___raises_exception(
+def test___interactive_mode_without_registered_measurements___create_client___raises_exception(
     create_client: CliRunnerFunction,
 ) -> None:
     result = create_client(["--interactive"])
@@ -141,7 +141,7 @@ def test___command_line_args_without_registering_any_measurement___create_client
     assert "No registered measurements." in str(result.exception)
 
 
-def test___command_line_args___create_client___render_with_proper_line_ending(
+def test___non_streaming_measurement___create_client___render_with_proper_line_ending(
     create_client: CliRunnerFunction,
     tmp_path_factory: pytest.TempPathFactory,
     non_streaming_measurement_service: MeasurementService,
