@@ -193,18 +193,7 @@ This section provides instructions to generate custom measurement clients in Pyt
 
 ### Installation
 
-Make sure the system has the recommended Python version installed. Install Measurement Plug-In SDK for Python using [pip](https://pip.pypa.io/).
-
-``` cmd
-REM Activate the required virtual environment if any.
-pip install ni-measurement-plugin-sdk
-```
-
-Check if you have installed the expected version of Measurement Plug-In SDK for Python installed by running the below command:
-
-```cmd
-pip show ni-measurement-plugin-sdk
-```
+Install Measurement Plug-In SDK by following the instructions in section ["Measurement Plug-In SDK Installation"](#installation).
 
 ### Generating a Minimal Python Measurement Client
 
