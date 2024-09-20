@@ -153,7 +153,7 @@ def get_configuration_metadata_by_index(
     deserialized_parameters = deserialize_parameters(
         configuration_metadata,
         metadata.measurement_signature.configuration_defaults.value,
-        service_class + ".Configurations",
+        f"{service_class}.Configurations",
     )
 
     for k, v in deserialized_parameters.items():
