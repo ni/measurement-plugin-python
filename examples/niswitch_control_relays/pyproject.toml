@@ -8,7 +8,7 @@ authors = ["National Instruments"]
 [tool.poetry.dependencies]
 python = "^3.8"
 niswitch = { version = ">=1.4.4", extras = ["grpc"] }
-ni-measurement-plugin-sdk-service = {version = "^2.1.0-dev0", allow-prereleases = truereleases=true}
+ni-measurement-plugin-sdk-service = {version = "^2.1.0-dev0", allow-prereleases = true}
 click = ">=7.1.2, !=8.1.4" # mypy fails with click 8.1.4: https://github.com/pallets/click/issues/2558
 grpcio = "*"
 
