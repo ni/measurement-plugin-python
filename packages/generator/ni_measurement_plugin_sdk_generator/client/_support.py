@@ -224,6 +224,11 @@ def get_configuration_parameters_with_type_and_default_values(
             else:
                 default_value = f"Path({default_value})"
 
+        if metadata.message_type:
+            raise click.ClickException(
+                "Measurement configuration with message datatype is not supported."
+            )
+
         if metadata.annotations and metadata.annotations.get("ni/type_specialization") == "enum":
             enum_type = _get_enum_type(metadata, enum_values_by_type)
             parameter_type = enum_type.__name__
