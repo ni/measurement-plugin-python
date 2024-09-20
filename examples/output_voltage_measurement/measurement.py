@@ -27,7 +27,6 @@ _NIDCPOWER_TIMEOUT_ERROR_CODES = [
 service_directory = pathlib.Path(__file__).resolve().parent
 measurement_service = nims.MeasurementService(
     service_config_path=service_directory / "OutputVoltageMeasurement.serviceconfig",
-    version="1.0.0.0",
     ui_file_paths=[service_directory / "OutputVoltageMeasurement.measui"],
 )
 
