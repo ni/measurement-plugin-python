@@ -242,7 +242,7 @@ def get_configuration_parameters_with_type_and_default_values(
 
         configuration_parameters.append(f"{parameter_name}: {parameter_type} = {default_value}")
 
-    # Convert the list of parameters into ", " separated string.
+    # Join the list of configuration parameters into a comma-separated string.
     configuration_parameters_with_type_and_value = f", ".join(configuration_parameters)
     parameter_names_as_str = ", ".join(parameter_names)
 
