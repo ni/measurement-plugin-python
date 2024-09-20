@@ -226,7 +226,7 @@ def get_configuration_parameters_with_type_and_default_values(
 
         if metadata.message_type:
             raise click.ClickException(
-                "Measurement configuration with Double XY datatype is not supported."
+                "Measurement configuration with message datatype is not supported."
             )
 
         if metadata.annotations and metadata.annotations.get("ni/type_specialization") == "enum":
