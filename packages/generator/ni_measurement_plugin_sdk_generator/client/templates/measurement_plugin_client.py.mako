@@ -1,19 +1,20 @@
 <%!
 import re
-%>
-
-<%page args="class_name, display_name, configuration_metadata, output_metadata, service_class, configuration_parameters_with_type_and_default_values, measure_api_parameters, output_parameters_with_type, built_in_import_modules, custom_import_modules, enum_by_class_name, configuration_parameters_type_url"/>
-
+%>\
+\
+<%page args="class_name, display_name, configuration_metadata, output_metadata, service_class, configuration_parameters_with_type_and_default_values, measure_api_parameters, output_parameters_with_type, built_in_import_modules, custom_import_modules, enum_by_class_name, configuration_parameters_type_url"/>\
+\
 <%
     def _replace_enum_class_type(input_string: str) -> str:
         """Replace enum class type representation with the enum name."""
         pattern = r"<enum '([^']+)'>"
         return re.sub(pattern, r"\1", input_string)
-
+        
     configuration_metadata = _replace_enum_class_type(str(configuration_metadata))
     if output_metadata:
         output_metadata = _replace_enum_class_type(str(output_metadata))
-%>
+%>\
+\
 
 """Generated client API for the ${display_name | repr} measurement plug-in."""
 
