@@ -27,7 +27,9 @@ from pathlib import Path
 <%
     typing_imports = ["Any", "Generator", "List", "Optional"]
     if output_metadata:
-        typing_imports += ["Iterable", "NamedTuple"]
+        typing_imports += ["NamedTuple"]
+    if "from pathlib import Path" in built_in_import_modules:
+        typing_imports += ["Iterable"]
 %>\
 from typing import ${", ".join(sorted(typing_imports))}
 
