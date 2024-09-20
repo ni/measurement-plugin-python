@@ -40,6 +40,10 @@ grpc-stubs = "^1.53"
 ni-measurement-plugin-sdk-service = {path = "../../packages/service"}
 bandit = { version = ">=1.7", extras = ["toml"] }
 tox = ">=4.0"
+grpcio-tools = [
+  {version = "1.49.1", python = ">=3.8,<3.12"},
+  {version = "1.59.0", python = "^3.12"},
+]
 
 [tool.poetry.scripts]
 ni-measurement-plugin-generator = "ni_measurement_plugin_sdk_generator.plugin:create_measurement"
