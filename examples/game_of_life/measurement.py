@@ -15,7 +15,7 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types import 
 service_directory = pathlib.Path(__file__).resolve().parent
 measurement_service = nims.MeasurementService(
     service_config_path=service_directory / "game_of_life.serviceconfig",
-    version="1.0.0.0",
+    version="1.0.0",
     ui_file_paths=[service_directory / "game_of_life.measui"],
 )
 

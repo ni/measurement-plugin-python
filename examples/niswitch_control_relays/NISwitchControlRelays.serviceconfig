@@ -2,7 +2,7 @@
   "services": [
     {
       "displayName": "NI-SWITCH Control Relays (Py)",
-      "version": "1.0.0.0",
+      "version": "1.0.0",
       "serviceClass": "ni.examples.NISwitchControlRelays_Python",
       "descriptionUrl": "",
       "providedInterfaces": [

@@ -2,7 +2,7 @@
   "services": [
     {
       "displayName": "NI-DMM Measurement (Py)",
-      "version": "1.0.0.0",
+      "version": "1.0.0",
       "serviceClass": "ni.examples.NIDmmMeasurement_Python",
       "descriptionUrl": "",
       "providedInterfaces": [

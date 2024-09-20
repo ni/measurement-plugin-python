@@ -2,7 +2,7 @@
   "services": [
     {
       "displayName": "Output Voltage Measurement (Py)",
-      "version": "1.0.0.0",
+      "version": "1.0.0",
       "serviceClass": "ni.examples.OutputVoltageMeasurement_Python",
       "descriptionUrl": "",
       "providedInterfaces": [

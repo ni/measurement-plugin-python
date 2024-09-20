@@ -2,7 +2,7 @@
   "services": [
     {
       "displayName": "NI-DCPower Source DC Voltage (Py)",
-      "version": "1.0.0.0",
+      "version": "1.0.0",
       "serviceClass": "ni.examples.NIDCPowerSourceDCVoltage_Python",
       "descriptionUrl": "",
       "providedInterfaces": [
