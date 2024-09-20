@@ -73,6 +73,11 @@ warn_unused_ignores = true
 module = "mako.*"
 ignore_missing_imports = true
 
+[[tool.mypy.overrides]]
+# mypy-protobuf codegen has some unused ignores.
+module = "tests.utilities.measurements.non_streaming_data_measurement._stubs.*"
+warn_unused_ignores = false
+
 [tool.pytest.ini_options]
 addopts = "--doctest-modules --ignore tests/test_assets --strict-markers"
 filterwarnings = ["always::ImportWarning", "always::ResourceWarning"]
