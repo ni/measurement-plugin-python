@@ -8,10 +8,6 @@ package ni.measurementlink.measurement.sample_measurement.v1;
 
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-option csharp_namespace = "NationalInstruments.non_streaming_data_measurement.Measurements";
-
-//---------------------------------------------------------------------
-//---------------------------------------------------------------------
 
 enum ProtobufColor{
     NONE = 0;
