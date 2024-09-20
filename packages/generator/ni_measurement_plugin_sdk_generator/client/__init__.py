@@ -226,7 +226,7 @@ def _create_clients(
 @optgroup.option(
     "-s",
     "--measurement-service-class",
-    help="Creates Python Measurement Plug-In Client for the given measurement services.",
+    help="Creates Python Measurement Plug-In Client for the given measurement service classes.",
     multiple=True,
 )
 @optgroup.option(
@@ -271,9 +271,6 @@ def create_client(
     """Generates a Python Measurement Plug-In Client module for the measurement service.
 
     You can use the generated module to interact with the corresponding measurement service.
-
-    MEASUREMENT_SERVICE_CLASS: Accepts one or more measurement service classes.
-    Provide each service class separately.
     """
     if all:
         _create_all_clients(directory_out)

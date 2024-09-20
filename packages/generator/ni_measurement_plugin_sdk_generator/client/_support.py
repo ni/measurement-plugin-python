@@ -247,7 +247,6 @@ def get_configuration_parameters_with_type_and_default_values(
 
         configuration_parameters.append(f"{parameter_name}: {parameter_type} = {default_value}")
 
-    # Join the list of configuration parameters into a comma-separated string.
     configuration_parameters_with_type_and_value = f", ".join(configuration_parameters)
     parameter_names_as_str = ", ".join(parameter_names)
 
@@ -261,7 +260,7 @@ def get_output_parameters_with_type(
     enum_values_by_type: Dict[Type[Enum], Dict[str, int]] = {},
 ) -> List[str]:
     """Returns the output parameters of the measurement with type."""
-    output_parameters_with_type = []
+    output_parameters_with_type: List[str] = []
     for metadata in output_metadata.values():
         parameter_name = _get_python_identifier(metadata.display_name)
         parameter_type = _get_python_type_as_str(metadata.type, metadata.repeated)
