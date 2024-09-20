@@ -321,7 +321,7 @@ def extract_base_service_class(service_class: str) -> str:
 
     if not base_service_class.isidentifier():
         raise click.ClickException(
-            "Client creation failed.\nEither provide a module name or update the measurement with a valid service class."
+            f"Client creation failed for '{service_class}'.\nEither provide a module name or update the measurement with a valid service class."
         )
     if not any(ch.isupper() for ch in base_service_class):
         print(
