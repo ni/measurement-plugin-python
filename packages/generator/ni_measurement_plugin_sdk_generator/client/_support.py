@@ -357,12 +357,6 @@ def validate_measurement_service_classes(measurement_service_classes: List[str])
         raise click.ClickException("No registered measurements.")
 
 
-def replace_enum_class_type(input_string: str) -> str:
-    """Replace enum class type representation with just the enum name."""
-    pattern = "<enum '([^']+)'>"
-    return re.sub(pattern, r"\1", input_string)
-
-
 def _get_python_identifier(input_string: str) -> str:
     valid_identifier = input_string.lower()
     if not valid_identifier.isidentifier():

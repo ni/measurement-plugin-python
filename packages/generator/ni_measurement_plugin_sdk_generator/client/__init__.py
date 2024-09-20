@@ -26,7 +26,6 @@ from ni_measurement_plugin_sdk_generator.client._support import (
     get_all_registered_measurement_info,
     get_selected_measurement_service_class,
     to_ordered_set,
-    replace_enum_class_type,
     resolve_output_directory,
     validate_identifier,
     validate_measurement_service_classes,
@@ -45,7 +44,6 @@ def _create_file(
     output_file = directory_out / file_name
 
     output = _render_template(template_name, **template_args).decode("utf-8")
-    output = replace_enum_class_type(output)
     formatted_output = black.format_str(
         src_contents=output,
         mode=black.Mode(line_length=100),
