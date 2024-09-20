@@ -1,19 +1,9 @@
-<%page args="class_name, display_name, configuration_metadata, output_metadata, service_class, configuration_parameters_with_type_and_default_values, measure_api_parameters, output_parameters_with_type, built_in_import_modules, custom_import_modules, enum_by_class_name, configuration_parameters_type_url"/>\
-\
-"""Generated client API for the ${display_name | repr} measurement plug-in."""
+"""Generated client API for the 'Void Measurement (Py)' measurement plug-in."""
 
 import logging
 import threading
-% if len(enum_by_class_name):
-from enum import Enum
-% endif
 from pathlib import Path
-<%
-    typing_imports = ["Any", "Generator", "List", "Optional"]
-    if output_metadata:
-        typing_imports += ["Iterable", "NamedTuple"]
-%>\
-from typing import ${", ".join(sorted(typing_imports))}
+from typing import Any, Generator, List, Optional
 
 import grpc
 from google.protobuf import any_pb2, descriptor_pool
@@ -21,16 +11,10 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measur
     measurement_service_pb2 as v2_measurement_service_pb2,
     measurement_service_pb2_grpc as v2_measurement_service_pb2_grpc,
 )
-% for module in custom_import_modules:
-${module}
-% endfor
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
 from ni_measurement_plugin_sdk_service.measurement.client_support import (
     create_file_descriptor,
-% if output_metadata:
-    deserialize_parameters,
-% endif
     ParameterMetadata,
     serialize_parameters,
 )
@@ -41,30 +25,10 @@ _logger = logging.getLogger(__name__)
 
 _V2_MEASUREMENT_SERVICE_INTERFACE = "ni.measurementlink.measurement.v2.MeasurementService"
 
-% for enum_name, enum_value in enum_by_class_name.items():
 
-class ${enum_name.__name__}(Enum):
-    """${enum_name.__name__} used for enum-typed measurement configs and outputs."""
+class VoidMeasurementClient:
+    """Client for the 'Void Measurement (Py)' measurement plug-in."""
 
-    % for key, val in enum_value.items():
-    ${key} = ${val}
-    % endfor
-% endfor
-
-<% output_type = "None" %>\
-% if output_metadata:
-
-class Outputs(NamedTuple):
-    """Outputs for the ${display_name | repr} measurement plug-in."""
-
-    ${output_parameters_with_type}
-<% output_type = "Outputs" %>\
-% endif
-
-
-class ${class_name}:
-    """Client for the ${display_name | repr} measurement plug-in."""
-     
     def __init__(
         self,
         *,
@@ -85,7 +49,7 @@ class ${class_name}:
             grpc_channel_pool: An optional gRPC channel pool.
         """
         self._initialization_lock = threading.RLock()
-        self._service_class = ${service_class | repr}
+        self._service_class = "ni.tests.VoidMeasurement_Python"
         self._grpc_channel_pool = grpc_channel_pool
         self._discovery_client = discovery_client
         self._pin_map_client = pin_map_client
@@ -93,8 +57,19 @@ class ${class_name}:
         self._measure_response: Optional[
             Generator[v2_measurement_service_pb2.MeasureResponse, None, None]
         ] = None
-        self._configuration_metadata = ${configuration_metadata}
-        self._output_metadata = ${output_metadata}
+        self._configuration_metadata = {
+            1: ParameterMetadata(
+                display_name="Integer In",
+                type=5,
+                repeated=False,
+                default_value=10,
+                annotations={},
+                message_type="",
+                field_name="Integer_In",
+                enum_type=None,
+            )
+        }
+        self._output_metadata = {}
         if grpc_channel is not None:
             self._stub = v2_measurement_service_pb2_grpc.MeasurementServiceStub(grpc_channel)
         self._create_file_descriptor()
@@ -135,7 +110,9 @@ class ${class_name}:
                         provided_interface=_V2_MEASUREMENT_SERVICE_INTERFACE,
                         service_class=self._service_class,
                     )
-                    channel = self._get_grpc_channel_pool().get_channel(service_location.insecure_address)
+                    channel = self._get_grpc_channel_pool().get_channel(
+                        service_location.insecure_address
+                    )
                     self._stub = v2_measurement_service_pb2_grpc.MeasurementServiceStub(channel)
         return self._stub
 
@@ -160,7 +137,7 @@ class ${class_name}:
             with self._initialization_lock:
                 if self._pin_map_client is None:
                     self._pin_map_client = PinMapClient(
-                        discovery_client=self._get_discovery_client(), 
+                        discovery_client=self._get_discovery_client(),
                         grpc_channel_pool=self._get_grpc_channel_pool(),
                     )
         return self._pin_map_client
@@ -177,69 +154,35 @@ class ${class_name}:
         self, parameter_values: List[Any]
     ) -> v2_measurement_service_pb2.MeasureRequest:
         serialized_configuration = any_pb2.Any(
-            type_url=${configuration_parameters_type_url | repr},
+            type_url="type.googleapis.com/ni.measurementlink.measurement.v2.MeasurementConfigurations",
             value=serialize_parameters(
                 parameter_metadata_dict=self._configuration_metadata,
                 parameter_values=parameter_values,
                 service_name=f"{self._service_class}.Configurations",
-            )
+            ),
         )
         return v2_measurement_service_pb2.MeasureRequest(
             configuration_parameters=serialized_configuration,
             pin_map_context=self._pin_map_context._to_grpc() if self._pin_map_context else None,
         )
 
-    % if output_metadata:
-    def _deserialize_response(
-        self, response: v2_measurement_service_pb2.MeasureResponse
-    ) -> Outputs:
-        if self._output_metadata:
-            result = [None] * max(self._output_metadata.keys())
-        else:
-            result = []
-        output_values = deserialize_parameters(
-            self._output_metadata, response.outputs.value, f"{self._service_class}.Outputs"
-        )
-
-        for k, v in output_values.items():
-            result[k - 1] = v
-        return Outputs._make(result)
-    % endif
-
-    def measure(
-        self,
-        ${configuration_parameters_with_type_and_default_values}
-    ) -> ${output_type} :
+    def measure(self, integer_in: int = 10) -> None:
         """Perform a single measurement.
 
         Returns:
             Measurement outputs.
         """
-        stream_measure_response = self.stream_measure(
-            ${measure_api_parameters}
-        )
+        stream_measure_response = self.stream_measure(integer_in)
         for response in stream_measure_response:
-        % if output_metadata:
-            result = response
-        return result
-        % else:
             pass
-        % endif
 
-    def stream_measure(
-        self,
-        ${configuration_parameters_with_type_and_default_values}
-    ) -> Generator[${output_type}, None, None] :
+    def stream_measure(self, integer_in: int = 10) -> Generator[None, None, None]:
         """Perform a streaming measurement.
 
         Returns:
             Stream of measurement outputs.
         """
-        % if "from pathlib import Path" in built_in_import_modules:
-        parameter_values = _convert_paths_to_strings([${measure_api_parameters}])
-        % else:
-        parameter_values = [${measure_api_parameters}]
-        % endif
+        parameter_values = [integer_in]
         with self._initialization_lock:
             if self._measure_response is not None:
                 raise RuntimeError(
@@ -247,14 +190,9 @@ class ${class_name}:
                 )
             request = self._create_measure_request(parameter_values)
             self._measure_response = self._get_stub().Measure(request)
-
         try:
             for response in self._measure_response:
-                % if output_metadata:
-                yield self._deserialize_response(response)
-                % else:
                 yield
-                % endif
         except grpc.RpcError as e:
             if e.code() == grpc.StatusCode.CANCELLED:
                 _logger.debug("The measurement is canceled.")
@@ -282,25 +220,3 @@ class ${class_name}:
             self._pin_map_context = PinMapContext(pin_map_id=pin_map_id, sites=[0])
         else:
             self._pin_map_context = self._pin_map_context._replace(pin_map_id=pin_map_id)
-
-% if "from pathlib import Path" in built_in_import_modules:
-
-def _convert_paths_to_strings(parameter_values: Iterable[Any]) -> List[Any]:
-    result: List[Any] = []
-
-    for parameter_value in parameter_values:
-        if isinstance(parameter_value, list):
-            converted_list = []
-            for value in parameter_value:
-                if isinstance(value, Path):
-                    converted_list.append(str(value))
-                else:
-                    converted_list.append(value)
-            result.append(converted_list)
-        elif isinstance(parameter_value, Path):
-            result.append(str(parameter_value))
-        else:
-            result.append(parameter_value)
-    return result
-
-% endif
