@@ -2,6 +2,7 @@
   "services": [
     {
       "displayName": "NI-DCPower Source DC Voltage With Multiplexer (Py)",
+      "version": "1.0.0.0",
       "serviceClass": "ni.examples.NIDCPowerSourceDCVoltageWithMultiplexer_Python",
       "descriptionUrl": "",
       "providedInterfaces": [

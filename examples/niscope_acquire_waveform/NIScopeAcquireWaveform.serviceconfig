@@ -2,6 +2,7 @@
   "services": [
     {
       "displayName": "NI-SCOPE Acquire Waveform (Py)",
+      "version": "1.0.0.0",
       "serviceClass": "ni.examples.NIScopeAcquireWaveform_Python",
       "descriptionUrl": "",
       "providedInterfaces": [

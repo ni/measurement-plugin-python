@@ -2,6 +2,7 @@
   "services": [
     {
       "displayName": "Conway's Game of Life (Py)",
+      "version": "1.0.0.0",
       "serviceClass": "ni.examples.GameOfLife_Python",
       "descriptionUrl": "",
       "providedInterfaces": [

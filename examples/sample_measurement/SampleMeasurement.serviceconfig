@@ -2,6 +2,7 @@
   "services": [
     {
       "displayName": "Sample Measurement (Py)",
+      "version": "1.0.0.0",
       "serviceClass": "ni.examples.SampleMeasurement_Python",
       "descriptionUrl": "",
       "providedInterfaces": [
