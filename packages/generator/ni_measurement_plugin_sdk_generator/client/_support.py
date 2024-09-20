@@ -2,7 +2,6 @@
 
 import json
 import keyword
-import os
 import pathlib
 import re
 import sys
@@ -154,7 +153,7 @@ def get_configuration_metadata_by_index(
     deserialized_parameters = deserialize_parameters(
         configuration_metadata,
         metadata.measurement_signature.configuration_defaults.value,
-        service_class + ".Configurations",
+        f"{service_class}.Configurations",
     )
 
     for k, v in deserialized_parameters.items():
@@ -248,10 +247,7 @@ def get_configuration_parameters_with_type_and_default_values(
 
         configuration_parameters.append(f"{parameter_name}: {parameter_type} = {default_value}")
 
-    # Use line separator and spaces to align the parameters appropriately in the generated file.
-    configuration_parameters_with_type_and_value = f",{os.linesep}        ".join(
-        configuration_parameters
-    )
+    configuration_parameters_with_type_and_value = f", ".join(configuration_parameters)
     parameter_names_as_str = ", ".join(parameter_names)
 
     return (configuration_parameters_with_type_and_value, parameter_names_as_str)
@@ -262,9 +258,9 @@ def get_output_parameters_with_type(
     built_in_import_modules: List[str],
     custom_import_modules: List[str],
     enum_values_by_type: Dict[Type[Enum], Dict[str, int]] = {},
-) -> str:
+) -> List[str]:
     """Returns the output parameters of the measurement with type."""
-    output_parameters_with_type = []
+    output_parameters_with_type: List[str] = []
     for metadata in output_metadata.values():
         parameter_name = _get_python_identifier(metadata.display_name)
         parameter_type = _get_python_type_as_str(metadata.type, metadata.repeated)
@@ -289,7 +285,7 @@ def get_output_parameters_with_type(
 
         output_parameters_with_type.append(f"{parameter_name}: {parameter_type}")
 
-    return f"{os.linesep}    ".join(output_parameters_with_type)
+    return output_parameters_with_type
 
 
 def to_ordered_set(values: Iterable[_T]) -> AbstractSet[_T]:
@@ -325,7 +321,7 @@ def extract_base_service_class(service_class: str) -> str:
 
     if not base_service_class.isidentifier():
         raise click.ClickException(
-            "Client creation failed.\nEither provide a module name or update the measurement with a valid service class."
+            f"Client creation failed for '{service_class}'.\nEither provide a module name or update the measurement with a valid service class."
         )
     if not any(ch.isupper() for ch in base_service_class):
         print(
@@ -438,4 +434,4 @@ def _get_enum_class_name(name: str) -> str:
         name = "".join(s.capitalize() for s in split_string)
     else:
         name = name[0].upper() + name[1:]
-    return name + "Enum"
+    return f"{name}Enum"

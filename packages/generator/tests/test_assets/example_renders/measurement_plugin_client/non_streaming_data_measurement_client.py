@@ -40,6 +40,15 @@ class EnumInEnum(Enum):
     BLUE = 3
 
 
+class ProtobufEnumInEnum(Enum):
+    """ProtobufEnumInEnum used for enum-typed measurement configs and outputs."""
+
+    NONE = 0
+    PINK = 1
+    WHITE = 2
+    BLACK = 3
+
+
 class Outputs(NamedTuple):
     """Outputs for the 'Non-Streaming Data Measurement (Py)' measurement plug-in."""
 
@@ -56,6 +65,7 @@ class Outputs(NamedTuple):
     xy_data_out: DoubleXYData
     enum_out: EnumInEnum
     enum_array_out: List[EnumInEnum]
+    protobuf_enum_out: ProtobufEnumInEnum
 
 
 class NonStreamingDataMeasurementClient:
@@ -236,6 +246,19 @@ class NonStreamingDataMeasurementClient:
                 field_name="Enum_Array_In",
                 enum_type=EnumInEnum,
             ),
+            13: ParameterMetadata(
+                display_name="Protobuf Enum In",
+                type=14,
+                repeated=False,
+                default_value=3,
+                annotations={
+                    "ni/enum.values": '{"NONE": 0, "PINK": 1, "WHITE": 2, "BLACK": 3}',
+                    "ni/type_specialization": "enum",
+                },
+                message_type="",
+                field_name="Protobuf_Enum_In",
+                enum_type=ProtobufEnumInEnum,
+            ),
         }
         self._output_metadata = {
             1: ParameterMetadata(
@@ -380,6 +403,19 @@ class NonStreamingDataMeasurementClient:
                 field_name="Enum_Array_Out",
                 enum_type=EnumInEnum,
             ),
+            14: ParameterMetadata(
+                display_name="Protobuf Enum out",
+                type=14,
+                repeated=False,
+                default_value=None,
+                annotations={
+                    "ni/enum.values": '{"NONE": 0, "PINK": 1, "WHITE": 2, "BLACK": 3}',
+                    "ni/type_specialization": "enum",
+                },
+                message_type="",
+                field_name="Protobuf_Enum_out",
+                enum_type=ProtobufEnumInEnum,
+            ),
         }
         if grpc_channel is not None:
             self._stub = v2_measurement_service_pb2_grpc.MeasurementServiceStub(grpc_channel)
@@ -388,7 +424,7 @@ class NonStreamingDataMeasurementClient:
 
     @property
     def pin_map_context(self) -> PinMapContext:
-        """Get the pin map context for the measurement."""
+        """The pin map context for the measurement."""
         return self._pin_map_context
 
     @pin_map_context.setter
@@ -520,6 +556,7 @@ class NonStreamingDataMeasurementClient:
         integer_in: int = 10,
         enum_in: EnumInEnum = EnumInEnum.BLUE,
         enum_array_in: List[EnumInEnum] = [EnumInEnum.RED, EnumInEnum.GREEN],
+        protobuf_enum_in: ProtobufEnumInEnum = ProtobufEnumInEnum.BLACK,
     ) -> Outputs:
         """Perform a single measurement.
 
@@ -539,6 +576,7 @@ class NonStreamingDataMeasurementClient:
             integer_in,
             enum_in,
             enum_array_in,
+            protobuf_enum_in,
         )
         for response in stream_measure_response:
             result = response
@@ -572,6 +610,7 @@ class NonStreamingDataMeasurementClient:
         integer_in: int = 10,
         enum_in: EnumInEnum = EnumInEnum.BLUE,
         enum_array_in: List[EnumInEnum] = [EnumInEnum.RED, EnumInEnum.GREEN],
+        protobuf_enum_in: ProtobufEnumInEnum = ProtobufEnumInEnum.BLACK,
     ) -> Generator[Outputs, None, None]:
         """Perform a streaming measurement.
 
@@ -592,6 +631,7 @@ class NonStreamingDataMeasurementClient:
                 integer_in,
                 enum_in,
                 enum_array_in,
+                protobuf_enum_in,
             ]
         )
         with self._initialization_lock:

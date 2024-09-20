@@ -40,6 +40,10 @@ grpc-stubs = "^1.53"
 ni-measurement-plugin-sdk-service = {path = "../../packages/service"}
 bandit = { version = ">=1.7", extras = ["toml"] }
 tox = ">=4.0"
+grpcio-tools = [
+  {version = "1.49.1", python = ">=3.8,<3.12"},
+  {version = "1.59.0", python = "^3.12"},
+]
 
 [tool.poetry.scripts]
 ni-measurement-plugin-generator = "ni_measurement_plugin_sdk_generator.plugin:create_measurement"
@@ -50,7 +54,11 @@ requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.black]
+extend_exclude = '\.tox/|_pb2(_grpc)?\.(py|pyi)$'
 line-length = 100
+
+[tool.ni-python-styleguide]
+extend_exclude = '.tox/,*_pb2_grpc.py,*_pb2_grpc.pyi,*_pb2.py,*_pb2.pyi'
 
 [tool.mypy]
 files = "ni_measurement_plugin_sdk_generator/,tests/"
@@ -64,6 +72,11 @@ warn_unused_ignores = true
 [[tool.mypy.overrides]]
 module = "mako.*"
 ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+# mypy-protobuf codegen has some unused ignores.
+module = "tests.utilities.measurements.non_streaming_data_measurement._stubs.*"
+warn_unused_ignores = false
 
 [tool.pytest.ini_options]
 addopts = "--doctest-modules --ignore tests/test_assets --strict-markers"

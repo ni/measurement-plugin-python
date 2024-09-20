@@ -234,7 +234,7 @@ The generated client includes four APIs: `measure`, `stream_measure`, `register_
 
 1. Make sure the required measurement service is running before interacting with it via the client.
 
-2. Use the client APIs from the ["Developing a Minimal Python MeasurementClient"](#developing-a-minimal-python-measurement-client) section.
+2. Use the client APIs from the ["Generating a Minimal Python Measurement Client"](#generating-a-minimal-python-measurement-client) section.
 
     1. For non-streaming measurements, use the `measure` method.
 

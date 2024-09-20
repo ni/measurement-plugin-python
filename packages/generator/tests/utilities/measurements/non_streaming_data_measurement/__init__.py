@@ -7,6 +7,8 @@ from typing import Iterable, Tuple
 import ni_measurement_plugin_sdk_service as nims
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types import xydata_pb2
 
+from tests.utilities.measurements.non_streaming_data_measurement._stubs import color_pb2
+
 
 service_directory = Path(__file__).resolve().parent
 measurement_service = nims.MeasurementService(
@@ -66,6 +68,12 @@ class Color(Enum):
 @measurement_service.configuration(
     "Enum Array In", nims.DataType.EnumArray1D, [1, 2], enum_type=Color
 )
+@measurement_service.configuration(
+    "Protobuf Enum In",
+    nims.DataType.Enum,
+    color_pb2.ProtobufColor.BLACK,
+    enum_type=color_pb2.ProtobufColor,
+)
 @measurement_service.output("Float out", nims.DataType.Float)
 @measurement_service.output("Double Array out", nims.DataType.DoubleArray1D)
 @measurement_service.output("Bool out", nims.DataType.Boolean)
@@ -79,6 +87,9 @@ class Color(Enum):
 @measurement_service.output("XY Data Out", nims.DataType.DoubleXYData)
 @measurement_service.output("Enum Out", nims.DataType.Enum, enum_type=Color)
 @measurement_service.output("Enum Array Out", nims.DataType.EnumArray1D, enum_type=Color)
+@measurement_service.output(
+    "Protobuf Enum out", nims.DataType.Enum, enum_type=color_pb2.ProtobufColor
+)
 def measure(
     float_input: float,
     double_array_input: Iterable[float],
@@ -92,6 +103,7 @@ def measure(
     integer_input: int,
     enum_input: Color,
     enum_array_input: Iterable[Color],
+    protobuf_enum_input: color_pb2.ProtobufColor.ValueType,
 ) -> Tuple[
     float,
     Iterable[float],
@@ -106,6 +118,7 @@ def measure(
     xydata_pb2.DoubleXYData,
     Color,
     Iterable[Color],
+    color_pb2.ProtobufColor.ValueType,
 ]:
     """Perform a loopback measurement with various data types."""
     float_output = float_input
@@ -121,6 +134,7 @@ def measure(
     xy_data_output = xydata_pb2.DoubleXYData()
     enum_output = enum_input
     enum_array_output = enum_array_input
+    protobuf_enum_output = protobuf_enum_input
 
     return (
         float_output,
@@ -136,4 +150,5 @@ def measure(
         xy_data_output,
         enum_output,
         enum_array_output,
+        protobuf_enum_output,
     )
