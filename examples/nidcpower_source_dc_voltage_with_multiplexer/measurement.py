@@ -29,7 +29,6 @@ script_or_exe = sys.executable if getattr(sys, "frozen", False) else __file__
 service_directory = pathlib.Path(script_or_exe).resolve().parent
 measurement_service = nims.MeasurementService(
     service_config_path=service_directory / "NIDCPowerSourceDCVoltageWithMultiplexer.serviceconfig",
-    version="0.1.0.0",
     ui_file_paths=[service_directory / "NIDCPowerSourceDCVoltageWithMultiplexer.measui"],
 )
 

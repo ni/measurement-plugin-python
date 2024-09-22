@@ -2,6 +2,7 @@
   "services": [
     {
       "displayName": "NI-DAQmx Analog Input (Py)",
+      "version": "1.0.0",
       "serviceClass": "ni.examples.NIDAQmxAnalogInput_Python",
       "descriptionUrl": "",
       "providedInterfaces": [
