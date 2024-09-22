@@ -219,7 +219,10 @@ class MeasurementService:
             )
 
         if version:
-            warnings.warn("The 'version' parameter is deprecated. Specify the version in the .serviceconfig file instead.", DeprecationWarning)
+            warnings.warn(
+                "The 'version' parameter is deprecated. Specify the version in the .serviceconfig file instead.",
+                DeprecationWarning,
+            )
         config_version = service.get("version")
         if version and config_version is None:
             raise RuntimeError(
