@@ -218,7 +218,13 @@ class MeasurementService:
                 f"Service class '{service_class}' not found in '{service_config_file}'"
             )
 
+        if version:
+            warnings.warn("The 'version' parameter is deprecated. Specify the version in the .serviceconfig file instead.", DeprecationWarning)
         config_version = service.get("version")
+        if version and config_version is None:
+            raise RuntimeError(
+                f"Version error: version parameter is '{version}'. Specify the version in the .serviceconfig file instead.",
+            )
         if config_version is not None:
             if version and version != config_version:
                 raise RuntimeError(

@@ -11,7 +11,6 @@ from ni_measurement_plugin_sdk_service.session_management import TypedSessionInf
 service_directory = pathlib.Path(__file__).resolve().parent
 measurement_service = nims.MeasurementService(
     service_config_path=service_directory / "NISwitchMeasurement.serviceconfig",
-    version="0.1.0.0",
     ui_file_paths=[
         service_directory,
     ],
