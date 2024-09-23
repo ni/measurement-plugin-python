@@ -101,12 +101,12 @@ def get_all_registered_measurement_info(
     return measurement_service_classes, measurement_display_names
 
 
-def get_configuration_metadata_by_index(
+def get_configuration_and_output_metadata_by_index(
     metadata: v2_measurement_service_pb2.GetMetadataResponse,
     service_class: str,
     enum_values_by_type: Dict[Type[Enum], Dict[str, int]] = {},
-) -> Dict[int, ParameterMetadata]:
-    """Returns the configuration metadata of the measurement."""
+) -> Tuple[Dict[int, ParameterMetadata], Dict[int, ParameterMetadata]]:
+    """Returns the configuration and output metadata of the measurement."""
     configuration_parameter_list = []
     for configuration in metadata.measurement_signature.configuration_parameters:
         configuration_parameter_list.append(
@@ -150,6 +150,7 @@ def get_configuration_metadata_by_index(
         pool=descriptor_pool.Default(),
     )
     configuration_metadata = frame_metadata_dict(configuration_parameter_list)
+    output_metadata = frame_metadata_dict(output_parameter_list)
     deserialized_parameters = deserialize_parameters(
         configuration_metadata,
         metadata.measurement_signature.configuration_defaults.value,
@@ -166,33 +167,7 @@ def get_configuration_metadata_by_index(
 
         configuration_metadata[k] = configuration_metadata[k]._replace(default_value=default_value)
 
-    return configuration_metadata
-
-
-def get_output_metadata_by_index(
-    metadata: v2_measurement_service_pb2.GetMetadataResponse,
-    enum_values_by_type: Dict[Type[Enum], Dict[str, int]] = {},
-) -> Dict[int, ParameterMetadata]:
-    """Returns the output metadata of the measurement."""
-    output_parameter_list = []
-    for output in metadata.measurement_signature.outputs:
-        output_parameter_list.append(
-            ParameterMetadata.initialize(
-                display_name=output.name,
-                type=output.type,
-                repeated=output.repeated,
-                default_value=None,
-                annotations=dict(output.annotations.items()),
-                message_type=output.message_type,
-                enum_type=(
-                    _get_enum_type(output, enum_values_by_type)
-                    if _is_enum_param(output.type)
-                    else None
-                ),
-            )
-        )
-    output_metadata = frame_metadata_dict(output_parameter_list)
-    return output_metadata
+    return configuration_metadata, output_metadata
 
 
 def get_configuration_parameters_with_type_and_default_values(
@@ -412,8 +387,13 @@ def _is_enum_param(parameter_type: int) -> bool:
 def _get_enum_type(
     parameter: Any, enum_values_by_type: Dict[Type[Enum], Dict[str, int]]
 ) -> Type[Enum]:
+    if "ni/enum.values" not in parameter.annotations:
+        raise click.ClickException(
+            f"Enum parameter '{parameter.name}' does not have a valid enum annotation."
+        )
     loaded_enum_values = json.loads(parameter.annotations["ni/enum.values"])
     enum_values = {key: value for key, value in loaded_enum_values.items()}
+    _validate_enum_annotations(enum_values)
 
     for existing_enum_type, existing_enum_values in enum_values_by_type.items():
         if existing_enum_values == enum_values:
@@ -435,3 +415,11 @@ def _get_enum_class_name(name: str) -> str:
     else:
         name = name[0].upper() + name[1:]
     return f"{name}Enum"
+
+
+def _validate_enum_annotations(enum_values: Dict[str, int]) -> None:
+    for enum_value in enum_values:
+        if not re.match(r"^[A-Za-z_][A-Za-z0-9_]*$", enum_value):
+            raise click.ClickException(
+                f"Invalid enum value: '{enum_value}'. Enum values must start with a letter or underscore and should only contain alphanumeric characters and underscores."
+            )
