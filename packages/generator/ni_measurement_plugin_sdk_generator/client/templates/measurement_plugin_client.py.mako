@@ -1,5 +1,6 @@
 <%!
 import re
+from typing import Any
 %>\
 \
 <%page args="class_name, display_name, configuration_metadata, output_metadata, service_class, configuration_parameters_with_type_and_default_values, measure_api_parameters, output_parameters_with_type, built_in_import_modules, custom_import_modules, enum_by_class_name, configuration_parameters_type_url"/>\
@@ -9,10 +10,12 @@ import re
         """Replace enum class type representation with the enum name."""
         pattern = r"<enum '([^']+)'>"
         return re.sub(pattern, r"\1", input_string)
-        
-    configuration_metadata = _replace_enum_class_type(str(configuration_metadata))
-    if output_metadata:
-        output_metadata = _replace_enum_class_type(str(output_metadata))
+
+    def _format_default_value(value: Any) -> Any:
+        if isinstance(value, str):
+            return repr(value)
+        else:
+            return value
 %>\
 \
 
@@ -35,6 +38,7 @@ from typing import ${", ".join(sorted(typing_imports))}
 
 import grpc
 from google.protobuf import any_pb2, descriptor_pool
+from google.protobuf.type_pb2 import Field
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v2 import (
     measurement_service_pb2 as v2_measurement_service_pb2,
     measurement_service_pb2_grpc as v2_measurement_service_pb2_grpc,
@@ -111,17 +115,43 @@ class ${class_name}:
         self._pin_map_client = pin_map_client
         self._stub: Optional[v2_measurement_service_pb2_grpc.MeasurementServiceStub] = None
         self._measure_response: Optional[
-            Generator[v2_measurement_service_pb2.MeasureResponse, None, None]
+            grpc.CallIterator[v2_measurement_service_pb2.MeasureResponse]
         ] = None
-        self._configuration_metadata = ${configuration_metadata}
-        self._output_metadata = ${output_metadata}
+        self._configuration_metadata = {
+            % for key, value in configuration_metadata.items():
+            ${key}: ParameterMetadata(
+                display_name="${value.display_name}",
+                type=Field.Kind.ValueType(${value.type}),
+                repeated=${value.repeated},
+                default_value=${_format_default_value(value.default_value)},
+                annotations=${value.annotations},
+                message_type="${value.message_type}",
+                field_name="${value.field_name}",
+                enum_type=${_replace_enum_class_type(str(value.enum_type))}
+            ),  
+            % endfor
+        }
+        self._output_metadata = {
+            % for key, value in output_metadata.items():
+            ${key}: ParameterMetadata(
+                display_name="${value.display_name}",
+                type=Field.Kind.ValueType(${value.type}),
+                repeated=${value.repeated},
+                default_value=${value.default_value},
+                annotations=${value.annotations},
+                message_type="${value.message_type}",
+                field_name="${value.field_name}",
+                enum_type=${_replace_enum_class_type(str(value.enum_type))}
+            ),  
+            % endfor
+        }
         if grpc_channel is not None:
             self._stub = v2_measurement_service_pb2_grpc.MeasurementServiceStub(grpc_channel)
         self._create_file_descriptor()
         self._pin_map_context: Optional[PinMapContext] = None
 
     @property
-    def pin_map_context(self) -> PinMapContext:
+    def pin_map_context(self) -> Optional[PinMapContext]:
         """The pin map context for the measurement."""
         return self._pin_map_context
 
@@ -134,10 +164,11 @@ class ${class_name}:
         self._pin_map_context = val
 
     @property
-    def sites(self) -> List[int]:
+    def sites(self) -> Optional[List[int]]:
         """The sites where the measurement must be executed."""
         if self._pin_map_context is not None:
             return self._pin_map_context.sites
+        return None
 
     @sites.setter
     def sites(self, val: List[int]) -> None:

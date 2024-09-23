@@ -8,6 +8,7 @@ from typing import Any, Generator, Iterable, List, NamedTuple, Optional
 
 import grpc
 from google.protobuf import any_pb2, descriptor_pool
+from google.protobuf.type_pb2 import Field
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v2 import (
     measurement_service_pb2 as v2_measurement_service_pb2,
     measurement_service_pb2_grpc as v2_measurement_service_pb2_grpc,
@@ -97,12 +98,12 @@ class NonStreamingDataMeasurementClient:
         self._pin_map_client = pin_map_client
         self._stub: Optional[v2_measurement_service_pb2_grpc.MeasurementServiceStub] = None
         self._measure_response: Optional[
-            Generator[v2_measurement_service_pb2.MeasureResponse, None, None]
+            grpc.CallIterator[v2_measurement_service_pb2.MeasureResponse]
         ] = None
         self._configuration_metadata = {
             1: ParameterMetadata(
                 display_name="Float In",
-                type=2,
+                type=Field.Kind.ValueType(2),
                 repeated=False,
                 default_value=0.05999999865889549,
                 annotations={},
@@ -112,7 +113,7 @@ class NonStreamingDataMeasurementClient:
             ),
             2: ParameterMetadata(
                 display_name="Double Array In",
-                type=1,
+                type=Field.Kind.ValueType(1),
                 repeated=True,
                 default_value=[0.1, 0.2, 0.3],
                 annotations={},
@@ -122,7 +123,7 @@ class NonStreamingDataMeasurementClient:
             ),
             3: ParameterMetadata(
                 display_name="Bool In",
-                type=8,
+                type=Field.Kind.ValueType(8),
                 repeated=False,
                 default_value=False,
                 annotations={},
@@ -132,7 +133,7 @@ class NonStreamingDataMeasurementClient:
             ),
             4: ParameterMetadata(
                 display_name="String In",
-                type=9,
+                type=Field.Kind.ValueType(9),
                 repeated=False,
                 default_value="sample string",
                 annotations={},
@@ -142,7 +143,7 @@ class NonStreamingDataMeasurementClient:
             ),
             5: ParameterMetadata(
                 display_name="String Array In",
-                type=9,
+                type=Field.Kind.ValueType(9),
                 repeated=True,
                 default_value=[
                     "string with /forwardslash",
@@ -159,7 +160,7 @@ class NonStreamingDataMeasurementClient:
             ),
             6: ParameterMetadata(
                 display_name="Path In",
-                type=9,
+                type=Field.Kind.ValueType(9),
                 repeated=False,
                 default_value="sample\\path\\for\\test",
                 annotations={"ni/type_specialization": "path"},
@@ -169,7 +170,7 @@ class NonStreamingDataMeasurementClient:
             ),
             7: ParameterMetadata(
                 display_name="Path Array In",
-                type=9,
+                type=Field.Kind.ValueType(9),
                 repeated=True,
                 default_value=[
                     "path/with/forward/slash",
@@ -186,7 +187,7 @@ class NonStreamingDataMeasurementClient:
             ),
             8: ParameterMetadata(
                 display_name="IO In",
-                type=9,
+                type=Field.Kind.ValueType(9),
                 repeated=False,
                 default_value="resource",
                 annotations={
@@ -199,7 +200,7 @@ class NonStreamingDataMeasurementClient:
             ),
             9: ParameterMetadata(
                 display_name="IO Array In",
-                type=9,
+                type=Field.Kind.ValueType(9),
                 repeated=True,
                 default_value=["resource1", "resource2"],
                 annotations={
@@ -212,7 +213,7 @@ class NonStreamingDataMeasurementClient:
             ),
             10: ParameterMetadata(
                 display_name="Integer In",
-                type=5,
+                type=Field.Kind.ValueType(5),
                 repeated=False,
                 default_value=10,
                 annotations={},
@@ -222,7 +223,7 @@ class NonStreamingDataMeasurementClient:
             ),
             11: ParameterMetadata(
                 display_name="Enum In",
-                type=14,
+                type=Field.Kind.ValueType(14),
                 repeated=False,
                 default_value=3,
                 annotations={
@@ -235,7 +236,7 @@ class NonStreamingDataMeasurementClient:
             ),
             12: ParameterMetadata(
                 display_name="Enum Array In",
-                type=14,
+                type=Field.Kind.ValueType(14),
                 repeated=True,
                 default_value=[1, 2],
                 annotations={
@@ -248,7 +249,7 @@ class NonStreamingDataMeasurementClient:
             ),
             13: ParameterMetadata(
                 display_name="Protobuf Enum In",
-                type=14,
+                type=Field.Kind.ValueType(14),
                 repeated=False,
                 default_value=3,
                 annotations={
@@ -263,7 +264,7 @@ class NonStreamingDataMeasurementClient:
         self._output_metadata = {
             1: ParameterMetadata(
                 display_name="Float out",
-                type=2,
+                type=Field.Kind.ValueType(2),
                 repeated=False,
                 default_value=None,
                 annotations={},
@@ -273,7 +274,7 @@ class NonStreamingDataMeasurementClient:
             ),
             2: ParameterMetadata(
                 display_name="Double Array out",
-                type=1,
+                type=Field.Kind.ValueType(1),
                 repeated=True,
                 default_value=None,
                 annotations={},
@@ -283,7 +284,7 @@ class NonStreamingDataMeasurementClient:
             ),
             3: ParameterMetadata(
                 display_name="Bool out",
-                type=8,
+                type=Field.Kind.ValueType(8),
                 repeated=False,
                 default_value=None,
                 annotations={},
@@ -293,7 +294,7 @@ class NonStreamingDataMeasurementClient:
             ),
             4: ParameterMetadata(
                 display_name="String out",
-                type=9,
+                type=Field.Kind.ValueType(9),
                 repeated=False,
                 default_value=None,
                 annotations={},
@@ -303,7 +304,7 @@ class NonStreamingDataMeasurementClient:
             ),
             5: ParameterMetadata(
                 display_name="String Array out",
-                type=9,
+                type=Field.Kind.ValueType(9),
                 repeated=True,
                 default_value=None,
                 annotations={},
@@ -313,7 +314,7 @@ class NonStreamingDataMeasurementClient:
             ),
             6: ParameterMetadata(
                 display_name="Path Out",
-                type=9,
+                type=Field.Kind.ValueType(9),
                 repeated=False,
                 default_value=None,
                 annotations={"ni/type_specialization": "path"},
@@ -323,7 +324,7 @@ class NonStreamingDataMeasurementClient:
             ),
             7: ParameterMetadata(
                 display_name="Path Array Out",
-                type=9,
+                type=Field.Kind.ValueType(9),
                 repeated=True,
                 default_value=None,
                 annotations={"ni/type_specialization": "path"},
@@ -333,7 +334,7 @@ class NonStreamingDataMeasurementClient:
             ),
             8: ParameterMetadata(
                 display_name="IO Out",
-                type=9,
+                type=Field.Kind.ValueType(9),
                 repeated=False,
                 default_value=None,
                 annotations={
@@ -346,7 +347,7 @@ class NonStreamingDataMeasurementClient:
             ),
             9: ParameterMetadata(
                 display_name="IO Array Out",
-                type=9,
+                type=Field.Kind.ValueType(9),
                 repeated=True,
                 default_value=None,
                 annotations={
@@ -359,7 +360,7 @@ class NonStreamingDataMeasurementClient:
             ),
             10: ParameterMetadata(
                 display_name="Integer Out",
-                type=5,
+                type=Field.Kind.ValueType(5),
                 repeated=False,
                 default_value=None,
                 annotations={},
@@ -369,7 +370,7 @@ class NonStreamingDataMeasurementClient:
             ),
             11: ParameterMetadata(
                 display_name="XY Data Out",
-                type=11,
+                type=Field.Kind.ValueType(11),
                 repeated=False,
                 default_value=None,
                 annotations={},
@@ -379,7 +380,7 @@ class NonStreamingDataMeasurementClient:
             ),
             12: ParameterMetadata(
                 display_name="Enum Out",
-                type=14,
+                type=Field.Kind.ValueType(14),
                 repeated=False,
                 default_value=None,
                 annotations={
@@ -392,7 +393,7 @@ class NonStreamingDataMeasurementClient:
             ),
             13: ParameterMetadata(
                 display_name="Enum Array Out",
-                type=14,
+                type=Field.Kind.ValueType(14),
                 repeated=True,
                 default_value=None,
                 annotations={
@@ -405,7 +406,7 @@ class NonStreamingDataMeasurementClient:
             ),
             14: ParameterMetadata(
                 display_name="Protobuf Enum out",
-                type=14,
+                type=Field.Kind.ValueType(14),
                 repeated=False,
                 default_value=None,
                 annotations={
@@ -423,7 +424,7 @@ class NonStreamingDataMeasurementClient:
         self._pin_map_context: Optional[PinMapContext] = None
 
     @property
-    def pin_map_context(self) -> PinMapContext:
+    def pin_map_context(self) -> Optional[PinMapContext]:
         """The pin map context for the measurement."""
         return self._pin_map_context
 
@@ -436,10 +437,11 @@ class NonStreamingDataMeasurementClient:
         self._pin_map_context = val
 
     @property
-    def sites(self) -> List[int]:
+    def sites(self) -> Optional[List[int]]:
         """The sites where the measurement must be executed."""
         if self._pin_map_context is not None:
             return self._pin_map_context.sites
+        return None
 
     @sites.setter
     def sites(self, val: List[int]) -> None:
