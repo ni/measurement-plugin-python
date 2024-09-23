@@ -21,7 +21,7 @@ def test___enum_annotations___validate_and_transform_enum_annotations___returns_
 ) -> None:
     actual_enum_annotations = _validate_and_transform_enum_annotations(enum_annotations)
 
-    assert expected_enum_annotations == actual_enum_annotations
+    assert actual_enum_annotations == expected_enum_annotations
 
 
 def test___invalid_enum_annotations___validate_and_transform_enum_annotations___raises_invalid_enum_value_error() -> (
@@ -33,4 +33,4 @@ def test___invalid_enum_annotations___validate_and_transform_enum_annotations___
     with pytest.raises(ClickException) as exc_info:
         _ = _validate_and_transform_enum_annotations(enum_annotations)
 
-    assert expected_error_message == exc_info.value.message
+    assert exc_info.value.message == expected_error_message
