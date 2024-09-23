@@ -455,7 +455,7 @@ def test___service_config___create_measurement_service_with_version___service_co
             version="2.0.1",
         )
 
-    assert "Specify the version in the .serviceconfig file" in str(version_error.value)
+    assert "Specify the version using the 'version' field in the .serviceconfig file instead." in str(version_error.value)
 
 
 @pytest.mark.parametrize(
