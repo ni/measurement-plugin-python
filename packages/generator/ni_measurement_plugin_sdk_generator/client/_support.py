@@ -6,7 +6,7 @@ import pathlib
 import re
 import sys
 from enum import Enum
-from typing import AbstractSet, Any, Dict, Iterable, List, Optional, Tuple, Type, TypeVar
+from typing import AbstractSet, Dict, Iterable, List, Optional, Tuple, Type, TypeVar
 
 import click
 import grpc
@@ -109,16 +109,23 @@ def get_configuration_and_output_metadata_by_index(
     """Returns the configuration and output metadata of the measurement."""
     configuration_parameter_list = []
     for configuration in metadata.measurement_signature.configuration_parameters:
+        annotations_dict = dict(configuration.annotations.items())
+        if _is_enum_param(configuration.type):
+            annotations_dict["ni/enum.values"] = _validate_and_transform_enum_annotations(
+                configuration.annotations["ni/enum.values"]
+            )
         configuration_parameter_list.append(
             ParameterMetadata.initialize(
                 display_name=configuration.name,
                 type=configuration.type,
                 repeated=configuration.repeated,
                 default_value=None,
-                annotations=dict(configuration.annotations.items()),
+                annotations=annotations_dict,
                 message_type=configuration.message_type,
                 enum_type=(
-                    _get_enum_type(configuration, enum_values_by_type)
+                    _get_enum_type(
+                        configuration.name, annotations_dict["ni/enum.values"], enum_values_by_type
+                    )
                     if _is_enum_param(configuration.type)
                     else None
                 ),
@@ -127,16 +134,23 @@ def get_configuration_and_output_metadata_by_index(
 
     output_parameter_list = []
     for output in metadata.measurement_signature.outputs:
+        annotations_dict = dict(output.annotations.items())
+        if _is_enum_param(output.type):
+            annotations_dict["ni/enum.values"] = _validate_and_transform_enum_annotations(
+                output.annotations["ni/enum.values"]
+            )
         output_parameter_list.append(
             ParameterMetadata.initialize(
                 display_name=output.name,
                 type=output.type,
                 repeated=output.repeated,
                 default_value=None,
-                annotations=dict(output.annotations.items()),
+                annotations=annotations_dict,
                 message_type=output.message_type,
                 enum_type=(
-                    _get_enum_type(output, enum_values_by_type)
+                    _get_enum_type(
+                        output.name, annotations_dict["ni/enum.values"], enum_values_by_type
+                    )
                     if _is_enum_param(output.type)
                     else None
                 ),
@@ -204,7 +218,9 @@ def get_configuration_parameters_with_type_and_default_values(
             )
 
         if metadata.annotations and metadata.annotations.get("ni/type_specialization") == "enum":
-            enum_type = _get_enum_type(metadata, enum_values_by_type)
+            enum_type = _get_enum_type(
+                metadata.display_name, metadata.annotations["ni/enum.values"], enum_values_by_type
+            )
             parameter_type = enum_type.__name__
             if metadata.repeated:
                 values = []
@@ -255,7 +271,9 @@ def get_output_parameters_with_type(
                 parameter_type = f"List[{parameter_type}]"
 
         if metadata.annotations and metadata.annotations.get("ni/type_specialization") == "enum":
-            enum_type_name = _get_enum_type(metadata, enum_values_by_type).__name__
+            enum_type_name = _get_enum_type(
+                metadata.display_name, metadata.annotations["ni/enum.values"], enum_values_by_type
+            ).__name__
             parameter_type = f"List[{enum_type_name}]" if metadata.repeated else enum_type_name
 
         output_parameters_with_type.append(f"{parameter_name}: {parameter_type}")
@@ -385,21 +403,16 @@ def _is_enum_param(parameter_type: int) -> bool:
 
 
 def _get_enum_type(
-    parameter: Any, enum_values_by_type: Dict[Type[Enum], Dict[str, int]]
+    parameter_name: str,
+    enum_annotations: str,
+    enum_values_by_type: Dict[Type[Enum], Dict[str, int]],
 ) -> Type[Enum]:
-    if "ni/enum.values" not in parameter.annotations:
-        raise click.ClickException(
-            f"Enum parameter '{parameter.name}' does not have a valid enum annotation."
-        )
-    loaded_enum_values = json.loads(parameter.annotations["ni/enum.values"])
-    enum_values = {key: value for key, value in loaded_enum_values.items()}
-    _validate_enum_values(enum_values)
-
+    enum_values = dict(json.loads(enum_annotations))
     for existing_enum_type, existing_enum_values in enum_values_by_type.items():
         if existing_enum_values == enum_values:
             return existing_enum_type
 
-    new_enum_type_name = _get_enum_class_name(parameter.name)
+    new_enum_type_name = _get_enum_class_name(parameter_name)
     # MyPy error: Enum() expects a string literal as the first argument.
     # Ignoring this error because MyPy cannot validate dynamic Enum creation statically.
     new_enum_type = Enum(new_enum_type_name, enum_values)  # type: ignore[misc]
@@ -417,9 +430,20 @@ def _get_enum_class_name(name: str) -> str:
     return f"{name}Enum"
 
 
-def _validate_enum_values(enum_values: Dict[str, int]) -> None:
-    for enum_value in enum_values:
-        if not re.match(r"^[A-Za-z_][A-Za-z0-9_]*$", enum_value):
-            raise click.ClickException(
-                f"Invalid enum value: '{enum_value}'. Enum values must start with a letter or underscore and should only contain alphanumeric characters and underscores."
-            )
+def _validate_and_transform_enum_annotations(enum_annotations: str) -> str:
+    enum_values = dict(json.loads(enum_annotations))
+    transformed_enum_annotations = {}
+    for enum_value, value in enum_values.items():
+        original_enum_value = enum_value
+
+        enum_value = re.sub(r"\W+", "_", enum_value).replace(" ", "_")
+        if enum_value[0].isdigit():
+            enum_value = f"k_{enum_value}"
+
+        # Check for enum values that are only special characters.
+        if not enum_value.strip("_"):
+            raise click.ClickException(f"The enum value '{original_enum_value} is invalid.")
+
+        transformed_enum_annotations[enum_value] = value
+
+    return json.dumps(transformed_enum_annotations)
