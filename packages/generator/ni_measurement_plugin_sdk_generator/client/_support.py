@@ -436,13 +436,13 @@ def _validate_and_transform_enum_annotations(enum_annotations: str) -> str:
     for enum_value, value in enum_values.items():
         original_enum_value = enum_value
 
-        enum_value = re.sub(r"\W+", "_", enum_value).replace(" ", "_")
+        enum_value = re.sub(r"\W+", "_", enum_value)
         if enum_value[0].isdigit():
             enum_value = f"k_{enum_value}"
 
         # Check for enum values that are only special characters.
         if not enum_value.strip("_"):
-            raise click.ClickException(f"The enum value '{original_enum_value} is invalid.")
+            raise click.ClickException(f"The enum value '{original_enum_value}' is invalid.")
 
         transformed_enum_annotations[enum_value] = value
 
