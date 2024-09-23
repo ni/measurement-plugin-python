@@ -2,4 +2,4 @@
 
 from ni_measurement_plugin_sdk_generator.client import create_client
 
-create_client()
+create_client(["-s", "ni.examples.NIDmmMeasurement_LabVIEW", "-o", "D:\\Testing\\C#"])
