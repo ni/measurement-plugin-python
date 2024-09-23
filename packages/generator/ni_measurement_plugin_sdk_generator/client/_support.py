@@ -393,7 +393,7 @@ def _get_enum_type(
         )
     loaded_enum_values = json.loads(parameter.annotations["ni/enum.values"])
     enum_values = {key: value for key, value in loaded_enum_values.items()}
-    _validate_enum_annotations(enum_values)
+    _validate_enum_values(enum_values)
 
     for existing_enum_type, existing_enum_values in enum_values_by_type.items():
         if existing_enum_values == enum_values:
@@ -417,7 +417,7 @@ def _get_enum_class_name(name: str) -> str:
     return f"{name}Enum"
 
 
-def _validate_enum_annotations(enum_values: Dict[str, int]) -> None:
+def _validate_enum_values(enum_values: Dict[str, int]) -> None:
     for enum_value in enum_values:
         if not re.match(r"^[A-Za-z_][A-Za-z0-9_]*$", enum_value):
             raise click.ClickException(
