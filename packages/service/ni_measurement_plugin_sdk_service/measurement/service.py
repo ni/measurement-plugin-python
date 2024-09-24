@@ -225,9 +225,7 @@ class MeasurementService:
             )
         config_version = service.get("version")
         if version and config_version is None:
-            raise RuntimeError(
-                f"Version error: version parameter is '{version}'. Specify the version using the 'version' field in the .serviceconfig file instead.",
-            )
+            version = None
         if config_version is not None:
             if version and version != config_version:
                 raise RuntimeError(
