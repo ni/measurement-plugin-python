@@ -121,7 +121,7 @@ class ${class_name}:
                 type=Field.Kind.ValueType(${value.type}),
                 repeated=${value.repeated},
                 default_value=${_format_default_value(value.default_value)},
-                annotations=${value.annotations | n,repr},
+                annotations=${value.annotations | n},
                 message_type=${value.message_type | repr},
                 field_name=${value.field_name | repr},
                 % if value.enum_type:
@@ -139,7 +139,7 @@ class ${class_name}:
                 type=Field.Kind.ValueType(${value.type}),
                 repeated=${value.repeated},
                 default_value=${value.default_value},
-                annotations=${value.annotations | n,repr},
+                annotations=${value.annotations | n},
                 message_type=${value.message_type | repr},
                 field_name=${value.field_name | repr},
                 % if value.enum_type:
