@@ -2,9 +2,16 @@
 
 from pathlib import Path
 from typing import Any, Dict, Iterable, List
-from ni_measurement_plugin_sdk_service._internal.parameter.decoder import deserialize_parameters
-from ni_measurement_plugin_sdk_service._internal.parameter.encoder import serialize_parameters
-from ni_measurement_plugin_sdk_service._internal.parameter.metadata import ParameterMetadata
+
+from ni_measurement_plugin_sdk_service._internal.parameter.decoder import (
+    deserialize_parameters,
+)
+from ni_measurement_plugin_sdk_service._internal.parameter.encoder import (
+    serialize_parameters,
+)
+from ni_measurement_plugin_sdk_service._internal.parameter.metadata import (
+    ParameterMetadata,
+)
 from ni_measurement_plugin_sdk_service._internal.parameter.serialization_descriptors import (
     create_file_descriptor,
 )
@@ -19,9 +26,11 @@ __all__ = [
 ]
 
 
-def convert_paths_to_strings(parameter_metadata_dict: Dict[int, ParameterMetadata], parameter_values: Iterable[Any]) -> List[Any]:
+def convert_paths_to_strings(
+    parameter_metadata_dict: Dict[int, ParameterMetadata], parameter_values: Iterable[Any]
+) -> List[Any]:
     """Convert path parameters from Path objects to strings.
-    
+
     Args:
         parameter_metadata_dict: Parameter metadata by ID.
 
@@ -45,9 +54,11 @@ def convert_paths_to_strings(parameter_metadata_dict: Dict[int, ParameterMetadat
     return result
 
 
-def convert_strings_to_paths(parameter_metadata_dict: Dict[int, ParameterMetadata], parameter_values: Iterable[Any]) -> List[Any]:
+def convert_strings_to_paths(
+    parameter_metadata_dict: Dict[int, ParameterMetadata], parameter_values: Iterable[Any]
+) -> List[Any]:
     """Convert path parameters from strings to Path objects.
-    
+
     Args:
         parameter_metadata_dict: Parameter metadata by ID.
 
@@ -76,7 +87,7 @@ def _path_to_string(value: Any) -> Any:
         return str(value)
     else:
         return value
-    
+
 
 def _string_to_path(value: Any) -> Any:
     if isinstance(value, str):
