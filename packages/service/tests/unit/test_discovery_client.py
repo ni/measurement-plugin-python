@@ -118,7 +118,28 @@ def test___service_registered___unregister_service___sends_request(
     assert unregistration_success_flag
 
 
-def test___service_registered___resolve_service___sends_request(
+def test___service_registered___resolve_service_without_version___sends_request(
+    discovery_client: DiscoveryClient, discovery_service_stub: Mock
+):
+    discovery_service_stub.ResolveService.return_value = GrpcServiceLocation(
+        location=_TEST_SERVICE_LOCATION.location,
+        insecure_port=_TEST_SERVICE_LOCATION.insecure_port,
+        ssl_authenticated_port=_TEST_SERVICE_LOCATION.ssl_authenticated_port,
+    )
+
+    service_location = discovery_client.resolve_service(
+        provided_interface=_TEST_SERVICE_INFO.provided_interfaces[0],
+        service_class=_TEST_SERVICE_INFO.service_class,
+    )
+
+    discovery_service_stub.ResolveService.assert_called_once()
+    request: ResolveServiceRequest = discovery_service_stub.ResolveService.call_args.args[0]
+    assert _TEST_SERVICE_INFO.provided_interfaces[0] == request.provided_interface
+    assert _TEST_SERVICE_INFO.service_class == request.service_class
+    _assert_service_location_equal(_TEST_SERVICE_LOCATION, service_location)
+
+
+def test___service_registered___resolve_service_with_version___sends_request(
     discovery_client: DiscoveryClient, discovery_service_stub: Mock
 ):
     discovery_service_stub.ResolveService.return_value = GrpcServiceLocation(
