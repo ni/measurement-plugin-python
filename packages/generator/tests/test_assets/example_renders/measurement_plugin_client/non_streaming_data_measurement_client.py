@@ -426,7 +426,7 @@ class NonStreamingDataMeasurementClient:
         self._pin_map_context: PinMapContext = PinMapContext(pin_map_id="", sites=[0])
 
     @property
-    def pin_map_context(self) -> Optional[PinMapContext]:
+    def pin_map_context(self) -> PinMapContext:
         """The pin map context for the measurement."""
         return self._pin_map_context
 
