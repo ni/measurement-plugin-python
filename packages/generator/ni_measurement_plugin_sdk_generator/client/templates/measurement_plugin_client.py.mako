@@ -21,6 +21,8 @@ from typing import Any
 
 """Generated client API for the ${display_name | repr} measurement plug-in."""
 
+from __future__ import annotations
+
 import logging
 import threading
 % if len(enum_by_class_name):
@@ -120,13 +122,13 @@ class ${class_name}:
         self._configuration_metadata = {
             % for key, value in configuration_metadata.items():
             ${key}: ParameterMetadata(
-                display_name="${value.display_name}",
+                display_name=${value.display_name | repr},
                 type=Field.Kind.ValueType(${value.type}),
                 repeated=${value.repeated},
                 default_value=${_format_default_value(value.default_value)},
-                annotations=${value.annotations},
-                message_type="${value.message_type}",
-                field_name="${value.field_name}",
+                annotations=${value.annotations | n,repr},
+                message_type=${value.message_type | repr},
+                field_name=${value.field_name | repr},
                 enum_type=${_replace_enum_class_type(str(value.enum_type))}
             ),  
             % endfor
@@ -134,13 +136,13 @@ class ${class_name}:
         self._output_metadata = {
             % for key, value in output_metadata.items():
             ${key}: ParameterMetadata(
-                display_name="${value.display_name}",
+                display_name=${value.display_name | repr},
                 type=Field.Kind.ValueType(${value.type}),
                 repeated=${value.repeated},
                 default_value=${value.default_value},
-                annotations=${value.annotations},
-                message_type="${value.message_type}",
-                field_name="${value.field_name}",
+                annotations=${value.annotations | n,repr},
+                message_type=${value.message_type | repr},
+                field_name=${value.field_name | repr},
                 enum_type=${_replace_enum_class_type(str(value.enum_type))}
             ),  
             % endfor

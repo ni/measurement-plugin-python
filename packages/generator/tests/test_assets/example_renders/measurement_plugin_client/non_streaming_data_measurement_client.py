@@ -1,5 +1,7 @@
 """Generated client API for the 'Non-Streaming Data Measurement (Py)' measurement plug-in."""
 
+from __future__ import annotations
+
 import logging
 import threading
 from enum import Enum
