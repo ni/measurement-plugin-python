@@ -4,7 +4,7 @@ import logging
 import pathlib
 import sys
 from enum import Enum
-from typing import Sequence, Tuple
+from typing import Iterable, Tuple
 
 import click
 import ni_measurement_plugin_sdk_service as nims
@@ -62,14 +62,14 @@ class Color(Enum):
 @measurement_service.output("String Array out", nims.DataType.StringArray1D)
 def measure(
     float_input: float,
-    double_array_input: Sequence[float],
+    double_array_input: Iterable[float],
     bool_input: bool,
     string_input: str,
     enum_input: Color,
     protobuf_enum_input: color_pb2.ProtobufColor.ValueType,
-    string_array_in: Sequence[str],
+    string_array_in: Iterable[str],
 ) -> Tuple[
-    float, Sequence[float], bool, str, Color, color_pb2.ProtobufColor.ValueType, Sequence[str]
+    float, Iterable[float], bool, str, Color, color_pb2.ProtobufColor.ValueType, Iterable[str]
 ]:
     """Perform a loopback measurement with various data types."""
     logging.info("Executing measurement")
