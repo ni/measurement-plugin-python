@@ -1,7 +1,7 @@
 """NI-DAQmx measurement plug-in test service."""
 
 import pathlib
-from typing import List, Sequence, Tuple
+from typing import Iterable, List, Sequence, Tuple
 
 import nidaqmx
 
@@ -27,7 +27,7 @@ measurement_service = nims.MeasurementService(
 @measurement_service.output("connected_channels", nims.DataType.StringArray1D)
 @measurement_service.output("voltage_values", nims.DataType.DoubleArray1D)
 def measure(
-    pin_names: List[str],
+    pin_names: Iterable[str],
     multi_session: bool,
 ) -> Tuple[List[str], List[str], List[str], List[str], List[float]]:
     """NI-DAQmx measurement plug-in test service."""

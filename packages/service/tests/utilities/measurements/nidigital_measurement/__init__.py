@@ -2,7 +2,7 @@
 
 import pathlib
 from itertools import groupby
-from typing import Iterable, Sequence, Tuple, Union
+from typing import Iterable, Sequence, Tuple, Union, List
 
 import nidigital
 
@@ -35,7 +35,7 @@ def measure(
     pin_names: Iterable[str],
     multi_session: bool,
 ) -> Tuple[
-    Iterable[str], Iterable[str], Iterable[str], Iterable[str], Iterable[str], Iterable[str]
+    Iterable[str], Iterable[str], Iterable[str], Iterable[str], Iterable[int], Iterable[int]
 ]:
     """NI-Digital measurement plug-in test service."""
     if multi_session:
@@ -56,8 +56,8 @@ def measure(
                         ", ".join(conn.channel_name for conn in conns)
                         for conns in connections_by_session
                     ],
-                    list(passing_sites),
-                    list(failing_sites),
+                    passing_sites,
+                    failing_sites,
                 )
     else:
         with measurement_service.context.reserve_session(pin_names) as reservation:
@@ -78,7 +78,7 @@ def measure(
 
 def _burst_spi_pattern(
     session_infos: Sequence[TypedSessionInformation[nidigital.Session]],
-) -> Tuple:
+) -> Tuple[List[int], List[int]]:
     specifications_file_path = "Specifications.specs"
     levels_file_path = "PinLevels.digilevels"
     timing_file_path = "Timing.digitiming"
