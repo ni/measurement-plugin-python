@@ -1,8 +1,9 @@
 import importlib.util
 import pathlib
+from collections.abc import Sequence
 from enum import Enum
 from types import ModuleType
-from typing import Generator
+from typing import Any, Generator, Tuple, Type, Union
 
 import pytest
 from ni_measurement_plugin_sdk_service.measurement.service import MeasurementService
@@ -48,14 +49,14 @@ def test___measurement_plugin_client___measure___returns_output(
             "string with \ttabspace",
             "string with \nnewline",
         ],
-        path_out="sample\\path\\for\\test",
+        path_out=pathlib.Path("sample\\path\\for\\test"),
         path_array_out=[
-            "path\\with\\forward\\slash",
-            "path\\with\\backslash",
-            "path with 'single quotes'",
-            'path with "double quotes"',
-            "path\twith\ttabs",
-            "path\nwith\nnewlines",
+            pathlib.Path("path\\with\\forward\\slash"),
+            pathlib.Path("path\\with\\backslash"),
+            pathlib.Path("path with 'single quotes'"),
+            pathlib.Path('path with "double quotes"'),
+            pathlib.Path("path\twith\ttabs"),
+            pathlib.Path("path\nwith\nnewlines"),
         ],
         io_out="resource",
         io_array_out=["resource1", "resource2"],
@@ -72,6 +73,17 @@ def test___measurement_plugin_client___measure___returns_output(
     # Enum values are not comparable due to differing imports.
     # So comparing values by converting them to string.
     assert str(response) == str(expected_output)
+    
+
+def test___measurement_plugin_client___measure___converts_output_types(
+    measurement_plugin_client_module: ModuleType,
+) -> None:
+    test_measurement_client_type = getattr(measurement_plugin_client_module, "TestMeasurement")
+    measurement_plugin_client = test_measurement_client_type()
+
+    response = measurement_plugin_client.measure()
+
+    _verify_output_types(response, measurement_plugin_client_module)
 
 
 def test___measurement_plugin_client___stream_measure___returns_output(
@@ -92,14 +104,14 @@ def test___measurement_plugin_client___stream_measure___returns_output(
             "string with \ttabspace",
             "string with \nnewline",
         ],
-        path_out="sample\\path\\for\\test",
+        path_out=pathlib.Path("sample\\path\\for\\test"),
         path_array_out=[
-            "path\\with\\forward\\slash",
-            "path\\with\\backslash",
-            "path with 'single quotes'",
-            'path with "double quotes"',
-            "path\twith\ttabs",
-            "path\nwith\nnewlines",
+            pathlib.Path("path\\with\\forward\\slash"),
+            pathlib.Path("path\\with\\backslash"),
+            pathlib.Path("path with 'single quotes'"),
+            pathlib.Path('path with "double quotes"'),
+            pathlib.Path("path\twith\ttabs"),
+            pathlib.Path("path\nwith\nnewlines"),
         ],
         io_out="resource",
         io_array_out=["resource1", "resource2"],
@@ -118,6 +130,19 @@ def test___measurement_plugin_client___stream_measure___returns_output(
     # Enum values are not comparable due to differing imports.
     # So comparing values by converting them to string.
     assert str(responses[0]) == str(expected_output)
+
+
+def test___measurement_plugin_client___stream_measure___converts_output_types(
+    measurement_plugin_client_module: ModuleType,
+) -> None:
+    test_measurement_client_type = getattr(measurement_plugin_client_module, "TestMeasurement")
+    measurement_plugin_client = test_measurement_client_type()
+
+    response_iterator = measurement_plugin_client.stream_measure()
+
+    responses = [response for response in response_iterator]
+    assert len(responses) == 1
+    _verify_output_types(responses[0], measurement_plugin_client_module)
 
 
 @pytest.fixture(scope="module")
@@ -168,3 +193,36 @@ def measurement_service(
     """Test fixture that creates and hosts a Measurement Plug-In Service."""
     with non_streaming_data_measurement.measurement_service.host_service() as service:
         yield service
+
+def _verify_output_types(outputs: Any, measurement_plugin_client_module: ModuleType) -> None:
+    output_type = getattr(measurement_plugin_client_module, "Outputs")
+    enum_type = getattr(measurement_plugin_client_module, "EnumInEnum")
+    protobuf_enum_type = getattr(measurement_plugin_client_module, "ProtobufEnumInEnum")
+
+    _assert_type(outputs, output_type)
+    _assert_type(outputs.float_out, float)
+    _assert_collection_type(outputs.double_array_out, Sequence, float)
+    _assert_type(outputs.bool_out, bool)
+    _assert_type(outputs.string_out, str)
+    _assert_collection_type(outputs.string_array_out, Sequence, str)
+    _assert_type(outputs.path_out, pathlib.Path)
+    _assert_collection_type(outputs.path_array_out, Sequence, pathlib.Path)
+    _assert_type(outputs.io_out, str)
+    _assert_collection_type(outputs.io_array_out, Sequence, str)
+    _assert_type(outputs.integer_out, int)
+    _assert_type(outputs.xy_data_out, type(None))
+    _assert_type(outputs.io_out, str)
+    _assert_collection_type(outputs.io_array_out, Sequence, str)
+    _assert_type(outputs.enum_out, enum_type)
+    _assert_collection_type(outputs.enum_array_out, Sequence, enum_type)
+    _assert_type(outputs.protobuf_enum_out, protobuf_enum_type)
+
+
+
+def _assert_type(value: Any, expected_type: Union[Type[Any], Tuple[Type[Any], ...]]) -> None:
+    assert isinstance(value, expected_type), f"{value!r} has type {type(value)}, expected {expected_type}"
+
+def _assert_collection_type(value: Any, expected_type: Union[Type[Any], Tuple[Type[Any], ...]], expected_element_type: Union[Type[Any], Tuple[Type[Any], ...]]) -> None:
+    _assert_type(value, expected_type)
+    for element in value:
+        _assert_type(element, expected_element_type)

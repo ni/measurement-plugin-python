@@ -22,6 +22,8 @@ from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
 from ni_measurement_plugin_sdk_service.measurement.client_support import (
     create_file_descriptor,
+    convert_paths_to_strings,
+    convert_strings_to_paths,
     deserialize_parameters,
     ParameterMetadata,
     serialize_parameters,
@@ -527,9 +529,9 @@ class NonStreamingDataMeasurementClient:
         output_values = deserialize_parameters(
             self._output_metadata, response.outputs.value, f"{self._service_class}.Outputs"
         )
-
         for k, v in output_values.items():
             result[k - 1] = v
+        result = convert_strings_to_paths(self._output_metadata, result)
         return Outputs._make(result)
 
     def measure(
@@ -621,7 +623,8 @@ class NonStreamingDataMeasurementClient:
         Returns:
             Stream of measurement outputs.
         """
-        parameter_values = _convert_paths_to_strings(
+        parameter_values = convert_paths_to_strings(
+            self._configuration_metadata,
             [
                 float_in,
                 double_array_in,
@@ -636,7 +639,7 @@ class NonStreamingDataMeasurementClient:
                 enum_in,
                 enum_array_in,
                 protobuf_enum_in,
-            ]
+            ],
         )
         with self._initialization_lock:
             if self._measure_response is not None:
@@ -672,22 +675,3 @@ class NonStreamingDataMeasurementClient:
         """
         pin_map_id = self._get_pin_map_client().update_pin_map(pin_map_path)
         self._pin_map_context = self._pin_map_context._replace(pin_map_id=pin_map_id)
-
-
-def _convert_paths_to_strings(parameter_values: Iterable[Any]) -> List[Any]:
-    result: List[Any] = []
-
-    for parameter_value in parameter_values:
-        if isinstance(parameter_value, list):
-            converted_list = []
-            for value in parameter_value:
-                if isinstance(value, Path):
-                    converted_list.append(str(value))
-                else:
-                    converted_list.append(value)
-            result.append(converted_list)
-        elif isinstance(parameter_value, Path):
-            result.append(str(parameter_value))
-        else:
-            result.append(parameter_value)
-    return result

@@ -47,6 +47,12 @@ from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
 from ni_measurement_plugin_sdk_service.measurement.client_support import (
     create_file_descriptor,
+% if "from pathlib import Path" in built_in_import_modules:
+    convert_paths_to_strings,
+% endif
+% if output_metadata and "from pathlib import Path" in built_in_import_modules:
+    convert_strings_to_paths,
+% endif
 % if output_metadata:
     deserialize_parameters,
 % endif
@@ -256,9 +262,11 @@ class ${class_name}:
         output_values = deserialize_parameters(
             self._output_metadata, response.outputs.value, f"{self._service_class}.Outputs"
         )
-
         for k, v in output_values.items():
             result[k - 1] = v
+        % if "from pathlib import Path" in built_in_import_modules:
+        result = convert_strings_to_paths(self._output_metadata, result)
+        % endif
         return Outputs._make(result)
     % endif
 
@@ -292,7 +300,7 @@ class ${class_name}:
             Stream of measurement outputs.
         """
         % if "from pathlib import Path" in built_in_import_modules:
-        parameter_values = _convert_paths_to_strings([${measure_api_parameters}])
+        parameter_values = convert_paths_to_strings(self._configuration_metadata, [${measure_api_parameters}])
         % else:
         parameter_values = [${measure_api_parameters}]
         % endif
@@ -335,25 +343,3 @@ class ${class_name}:
         """
         pin_map_id = self._get_pin_map_client().update_pin_map(pin_map_path)
         self._pin_map_context = self._pin_map_context._replace(pin_map_id=pin_map_id)
-
-% if "from pathlib import Path" in built_in_import_modules:
-
-def _convert_paths_to_strings(parameter_values: Iterable[Any]) -> List[Any]:
-    result: List[Any] = []
-
-    for parameter_value in parameter_values:
-        if isinstance(parameter_value, list):
-            converted_list = []
-            for value in parameter_value:
-                if isinstance(value, Path):
-                    converted_list.append(str(value))
-                else:
-                    converted_list.append(value)
-            result.append(converted_list)
-        elif isinstance(parameter_value, Path):
-            result.append(str(parameter_value))
-        else:
-            result.append(parameter_value)
-    return result
-
-% endif
