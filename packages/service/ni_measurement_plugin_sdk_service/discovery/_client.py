@@ -207,11 +207,7 @@ class DiscoveryClient:
             raise
 
     def resolve_service(
-        self,
-        provided_interface: str,
-        service_class: str = "",
-        deployment_target: str = "",
-        version: str = "",
+        self, provided_interface: str, service_class: str = "", version: str = ""
     ) -> ServiceLocation:
         """Resolve the location of a service.
 
@@ -224,7 +220,6 @@ class DiscoveryClient:
             service_class: The service "class" that should be matched. If the value is not
                 specified and there is more than one matching service registered, an error
                 is returned.
-            deployment_target: The deployment target from which the service should be resolved.
             version: The version of the service to resolve. If not specified, the latest version
                 will be resolved.
 
@@ -234,7 +229,6 @@ class DiscoveryClient:
         request = discovery_service_pb2.ResolveServiceRequest(
             provided_interface=provided_interface,
             service_class=service_class,
-            deployment_target=deployment_target,
             version=version,
         )
 
