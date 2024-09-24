@@ -5,7 +5,7 @@ import pathlib
 import sys
 import threading
 import time
-from typing import List, Tuple
+from typing import List, Sequence, Tuple
 
 import click
 import grpc
@@ -64,7 +64,7 @@ measurement_service = nims.MeasurementService(
 @measurement_service.output("waveform2", nims.DataType.DoubleArray1D)
 @measurement_service.output("waveform3", nims.DataType.DoubleArray1D)
 def measure(
-    measurement_pins: List[str],
+    measurement_pins: Sequence[str],
     vertical_range: float,
     vertical_coupling: str,
     input_impedance: float,
@@ -90,7 +90,7 @@ def measure(
     measurement_service.context.add_cancel_callback(cancellation_event.set)
 
     with measurement_service.context.reserve_session(
-        measurement_pins + [trigger_pin]
+        list(measurement_pins) + [trigger_pin]
     ) as reservation:
         with reservation.initialize_niscope_session() as session_info:
             # Use connections to map pin names to channel names. This sets the

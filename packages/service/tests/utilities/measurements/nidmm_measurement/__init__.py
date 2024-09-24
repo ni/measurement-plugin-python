@@ -2,7 +2,7 @@
 
 import math
 import pathlib
-from typing import List, Sequence, Tuple
+from typing import Iterable, List, Sequence, Tuple
 
 import nidmm
 
@@ -28,7 +28,7 @@ measurement_service = nims.MeasurementService(
 @measurement_service.output("signals_out_of_range", nims.DataType.BooleanArray1D)
 @measurement_service.output("absolute_resolutions", nims.DataType.DoubleArray1D)
 def measure(
-    pin_names: List[str],
+    pin_names: Iterable[str],
     multi_session: bool,
 ) -> Tuple[List[str], List[str], List[str], List[str], List[bool], List[float]]:
     """NI-DMM measurement plug-in test service."""
