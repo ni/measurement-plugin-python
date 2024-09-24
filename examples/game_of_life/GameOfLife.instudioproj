@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<SourceFile Checksum="0A94192A9E54574F9BB9144907D89978C8E0665C0703DCF08CC7362C9820B81D1C9C7A996F639540FEDBE6AB4E83B5B75591554027720D4673446F47B00F296C" xmlns="http://www.ni.com/PlatformFramework">
+<SourceFile Checksum="6B4C9DB5386095A6B18DBAA320B85A65E020F855F07CBCF658C9084BDA2B1E9D8888795A38791F923DF21D64C847AEE10CA4F34284452183B3DB73A2E8378A30" xmlns="http://www.ni.com/PlatformFramework">
 	<SourceModelFeatureSet>
-		<ParsableNamespace AssemblyFileVersion="9.10.0.2535" FeatureSetName="Editor" Name="http://www.ni.com/PlatformFramework" OldestCompatibleVersion="8.1.0.49152" Version="8.1.0.49152" />
-		<ApplicationVersionInfo Build="23.8.0.2535" Name="InstrumentStudio" PersistenceVersion="22.1.0.0" Version="23.8.0.2535" />
+		<ParsableNamespace AssemblyFileVersion="9.14.0.2657" FeatureSetName="Editor" Name="http://www.ni.com/PlatformFramework" OldestCompatibleVersion="8.1.0.49152" Version="8.1.0.49152" />
+		<ApplicationVersionInfo Build="24.8.0.2657" Name="InstrumentStudio" PersistenceVersion="22.1.0.0" Version="24.8.0.2657" />
 	</SourceModelFeatureSet>
 	<Project xmlns="http://www.ni.com/PlatformFramework">
 		<EnvoyManagerRootEnvoy Id="ec69f4193c6b47178af959e7fb3313d8" ModelDefinitionType="EnvoyManagerRootEnvoy" Name="RootEnvoy" />
@@ -14,5 +14,11 @@
 			<SourceFileReference Bindings="EnvoyManager" Id="3ddcebe30d614851942b0b92040acd2b" ModelDefinitionType="NationalInstruments.InstrumentFramework.Document.SourceModel.UnifiedTask" Name="GameOfLife.sfp" StoragePath="GameOfLife.sfp" />
 		</NameScopingEnvoy>
 	</Project>
-	<ProjectInformation xmlns="http://www.ni.com/PlatformFramework" />
+	<ProjectInformation xmlns="http://www.ni.com/PlatformFramework">
+		<p.ProjectProperties>
+			<Kind Name="plugin.reference">
+				<Item Name="ni.examples.GameOfLife_Python" Value="1.0.0" />
+			</Kind>
+		</p.ProjectProperties>
+	</ProjectInformation>
 </SourceFile>
