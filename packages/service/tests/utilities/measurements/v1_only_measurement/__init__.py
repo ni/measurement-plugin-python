@@ -7,7 +7,6 @@ import ni_measurement_plugin_sdk_service as nims
 service_directory = pathlib.Path(__file__).resolve().parent
 measurement_service = nims.MeasurementService(
     service_config_path=service_directory / "v1_only.serviceconfig",
-    version="0.1.0.0",
     ui_file_paths=[
         service_directory,
     ],

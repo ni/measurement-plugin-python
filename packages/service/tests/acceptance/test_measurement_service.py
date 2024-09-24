@@ -253,7 +253,7 @@ def _validate_get_metadata_response(
     ]
 ):
     assert get_metadata_response.measurement_details.display_name == "Loopback Measurement (Py)"
-    assert get_metadata_response.measurement_details.version == "0.1.0.0"
+    assert get_metadata_response.measurement_details.version == "1.2.3.4"
 
     expected_version = "v1"
     if isinstance(get_metadata_response, v2_measurement_service_pb2.GetMetadataResponse):
