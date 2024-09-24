@@ -73,7 +73,7 @@ def test___measurement_plugin_client___measure___returns_output(
     # Enum values are not comparable due to differing imports.
     # So comparing values by converting them to string.
     assert str(response) == str(expected_output)
-    
+
 
 def test___measurement_plugin_client___measure___converts_output_types(
     measurement_plugin_client_module: ModuleType,
@@ -194,6 +194,7 @@ def measurement_service(
     with non_streaming_data_measurement.measurement_service.host_service() as service:
         yield service
 
+
 def _verify_output_types(outputs: Any, measurement_plugin_client_module: ModuleType) -> None:
     output_type = getattr(measurement_plugin_client_module, "Outputs")
     enum_type = getattr(measurement_plugin_client_module, "EnumInEnum")
@@ -218,11 +219,17 @@ def _verify_output_types(outputs: Any, measurement_plugin_client_module: ModuleT
     _assert_type(outputs.protobuf_enum_out, protobuf_enum_type)
 
 
-
 def _assert_type(value: Any, expected_type: Union[Type[Any], Tuple[Type[Any], ...]]) -> None:
-    assert isinstance(value, expected_type), f"{value!r} has type {type(value)}, expected {expected_type}"
+    assert isinstance(
+        value, expected_type
+    ), f"{value!r} has type {type(value)}, expected {expected_type}"
 
-def _assert_collection_type(value: Any, expected_type: Union[Type[Any], Tuple[Type[Any], ...]], expected_element_type: Union[Type[Any], Tuple[Type[Any], ...]]) -> None:
+
+def _assert_collection_type(
+    value: Any,
+    expected_type: Union[Type[Any], Tuple[Type[Any], ...]],
+    expected_element_type: Union[Type[Any], Tuple[Type[Any], ...]],
+) -> None:
     _assert_type(value, expected_type)
     for element in value:
         _assert_type(element, expected_element_type)
