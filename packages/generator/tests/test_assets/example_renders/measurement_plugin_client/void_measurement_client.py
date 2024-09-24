@@ -1,5 +1,7 @@
 """Generated client API for the 'Void Measurement (Py)' measurement plug-in."""
 
+from __future__ import annotations
+
 import logging
 import threading
 from pathlib import Path
@@ -7,6 +9,7 @@ from typing import Any, Generator, List, Optional
 
 import grpc
 from google.protobuf import any_pb2, descriptor_pool
+from google.protobuf.type_pb2 import Field
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v2 import (
     measurement_service_pb2 as v2_measurement_service_pb2,
     measurement_service_pb2_grpc as v2_measurement_service_pb2_grpc,
@@ -55,19 +58,19 @@ class VoidMeasurementClient:
         self._pin_map_client = pin_map_client
         self._stub: Optional[v2_measurement_service_pb2_grpc.MeasurementServiceStub] = None
         self._measure_response: Optional[
-            Generator[v2_measurement_service_pb2.MeasureResponse, None, None]
+            grpc.CallIterator[v2_measurement_service_pb2.MeasureResponse]
         ] = None
         self._configuration_metadata = {
             1: ParameterMetadata(
                 display_name="Integer In",
-                type=5,
+                type=Field.Kind.ValueType(5),
                 repeated=False,
                 default_value=10,
                 annotations={},
                 message_type="",
                 field_name="Integer_In",
                 enum_type=None,
-            )
+            ),
         }
         self._output_metadata = {}
         if grpc_channel is not None:
@@ -89,7 +92,7 @@ class VoidMeasurementClient:
         self._pin_map_context = val
 
     @property
-    def sites(self) -> List[int]:
+    def sites(self) -> Optional[List[int]]:
         """The sites where the measurement must be executed."""
         if self._pin_map_context is not None:
             return self._pin_map_context.sites
