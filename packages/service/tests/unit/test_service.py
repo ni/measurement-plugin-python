@@ -449,16 +449,12 @@ def test___service_config___create_measurement_service_with_version___version_di
 def test___service_config___create_measurement_service_with_version___service_config_has_no_version(
     test_assets_directory: pathlib.Path,
 ):
-    with pytest.raises(RuntimeError) as version_error:
-        MeasurementService(
+    measurement_service = MeasurementService(
             service_config_path=test_assets_directory / "example.NoVersion.serviceconfig",
             version="2.0.1",
         )
 
-    assert (
-        "Specify the version using the 'version' field in the .serviceconfig file instead."
-        in str(version_error.value)
-    )
+    assert not measurement_service.service_info.versions[0]
 
 
 @pytest.mark.parametrize(
