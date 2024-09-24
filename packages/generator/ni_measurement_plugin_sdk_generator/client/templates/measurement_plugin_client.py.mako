@@ -2,7 +2,7 @@
 import re
 %>\
 \
-<%page args="class_name, display_name, configuration_metadata, output_metadata, service_class, configuration_parameters_with_type_and_default_values, measure_api_parameters, output_parameters_with_type, built_in_import_modules, custom_import_modules, enum_by_class_name, configuration_parameters_type_url"/>\
+<%page args="class_name, display_name, version, configuration_metadata, output_metadata, service_class, configuration_parameters_with_type_and_default_values, measure_api_parameters, output_parameters_with_type, built_in_import_modules, custom_import_modules, enum_by_class_name, configuration_parameters_type_url"/>\
 \
 <%
     def _replace_enum_class_type(input_string: str) -> str:
@@ -106,6 +106,7 @@ class ${class_name}:
         """
         self._initialization_lock = threading.RLock()
         self._service_class = ${service_class | repr}
+        self._version = ${version | repr}
         self._grpc_channel_pool = grpc_channel_pool
         self._discovery_client = discovery_client
         self._pin_map_client = pin_map_client
@@ -153,6 +154,7 @@ class ${class_name}:
                     service_location = self._get_discovery_client().resolve_service(
                         provided_interface=_V2_MEASUREMENT_SERVICE_INTERFACE,
                         service_class=self._service_class,
+                        version=self._version,
                     )
                     channel = self._get_grpc_channel_pool().get_channel(service_location.insecure_address)
                     self._stub = v2_measurement_service_pb2_grpc.MeasurementServiceStub(channel)

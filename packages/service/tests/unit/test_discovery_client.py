@@ -128,13 +128,16 @@ def test___service_registered___resolve_service___sends_request(
     )
 
     service_location = discovery_client.resolve_service(
-        _TEST_SERVICE_INFO.provided_interfaces[0], _TEST_SERVICE_INFO.service_class
+        provided_interface=_TEST_SERVICE_INFO.provided_interfaces[0], 
+        service_class=_TEST_SERVICE_INFO.service_class,
+        version=_TEST_SERVICE_INFO.versions[0],
     )
 
     discovery_service_stub.ResolveService.assert_called_once()
     request: ResolveServiceRequest = discovery_service_stub.ResolveService.call_args.args[0]
     assert _TEST_SERVICE_INFO.provided_interfaces[0] == request.provided_interface
     assert _TEST_SERVICE_INFO.service_class == request.service_class
+    assert _TEST_SERVICE_INFO.versions[0] == request.version
     _assert_service_location_equal(_TEST_SERVICE_LOCATION, service_location)
 
 
@@ -147,7 +150,9 @@ def test___service_not_registered___resolve_service___raises_not_found_error(
 
     with pytest.raises(grpc.RpcError) as exc_info:
         _ = discovery_client.resolve_service(
-            _TEST_SERVICE_INFO.provided_interfaces[0], _TEST_SERVICE_INFO.service_class
+            provided_interface=_TEST_SERVICE_INFO.provided_interfaces[0],
+            service_class=_TEST_SERVICE_INFO.service_class,
+            version=_TEST_SERVICE_INFO.versions[0],
         )
 
     discovery_service_stub.ResolveService.assert_called_once()
