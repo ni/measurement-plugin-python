@@ -6,7 +6,7 @@ import logging
 import threading
 from enum import Enum
 from pathlib import Path
-from typing import Any, Generator, Iterable, List, NamedTuple, Optional
+from typing import Any, Generator, Iterable, List, NamedTuple, Optional, Sequence
 
 import grpc
 from google.protobuf import any_pb2, descriptor_pool
@@ -58,18 +58,18 @@ class Outputs(NamedTuple):
     """Outputs for the 'Non-Streaming Data Measurement (Py)' measurement plug-in."""
 
     float_out: float
-    double_array_out: List[float]
+    double_array_out: Sequence[float]
     bool_out: bool
     string_out: str
-    string_array_out: List[str]
+    string_array_out: Sequence[str]
     path_out: Path
-    path_array_out: List[Path]
+    path_array_out: Sequence[Path]
     io_out: str
-    io_array_out: List[str]
+    io_array_out: Sequence[str]
     integer_out: int
     xy_data_out: DoubleXYData
     enum_out: EnumInEnum
-    enum_array_out: List[EnumInEnum]
+    enum_array_out: Sequence[EnumInEnum]
     protobuf_enum_out: ProtobufEnumInEnum
 
 
@@ -537,10 +537,10 @@ class NonStreamingDataMeasurementClient:
     def measure(
         self,
         float_in: float = 0.05999999865889549,
-        double_array_in: List[float] = [0.1, 0.2, 0.3],
+        double_array_in: Iterable[float] = [0.1, 0.2, 0.3],
         bool_in: bool = False,
         string_in: str = "sample string",
-        string_array_in: List[str] = [
+        string_array_in: Iterable[str] = [
             "string with /forwardslash",
             "string with \\backslash",
             "string with 'single quotes'",
@@ -549,7 +549,7 @@ class NonStreamingDataMeasurementClient:
             "string with \nnewline",
         ],
         path_in: Path = Path("sample\\path\\for\\test"),
-        path_array_in: List[Path] = [
+        path_array_in: Iterable[Path] = [
             Path("path/with/forward/slash"),
             Path("path\\with\\backslash"),
             Path("path with 'single quotes'"),
@@ -558,10 +558,10 @@ class NonStreamingDataMeasurementClient:
             Path("path\nwith\nnewlines"),
         ],
         io_in: str = "resource",
-        io_array_in: List[str] = ["resource1", "resource2"],
+        io_array_in: Iterable[str] = ["resource1", "resource2"],
         integer_in: int = 10,
         enum_in: EnumInEnum = EnumInEnum.BLUE,
-        enum_array_in: List[EnumInEnum] = [EnumInEnum.RED, EnumInEnum.GREEN],
+        enum_array_in: Iterable[EnumInEnum] = [EnumInEnum.RED, EnumInEnum.GREEN],
         protobuf_enum_in: ProtobufEnumInEnum = ProtobufEnumInEnum.BLACK,
     ) -> Outputs:
         """Perform a single measurement.
@@ -591,10 +591,10 @@ class NonStreamingDataMeasurementClient:
     def stream_measure(
         self,
         float_in: float = 0.05999999865889549,
-        double_array_in: List[float] = [0.1, 0.2, 0.3],
+        double_array_in: Iterable[float] = [0.1, 0.2, 0.3],
         bool_in: bool = False,
         string_in: str = "sample string",
-        string_array_in: List[str] = [
+        string_array_in: Iterable[str] = [
             "string with /forwardslash",
             "string with \\backslash",
             "string with 'single quotes'",
@@ -603,7 +603,7 @@ class NonStreamingDataMeasurementClient:
             "string with \nnewline",
         ],
         path_in: Path = Path("sample\\path\\for\\test"),
-        path_array_in: List[Path] = [
+        path_array_in: Iterable[Path] = [
             Path("path/with/forward/slash"),
             Path("path\\with\\backslash"),
             Path("path with 'single quotes'"),
@@ -612,10 +612,10 @@ class NonStreamingDataMeasurementClient:
             Path("path\nwith\nnewlines"),
         ],
         io_in: str = "resource",
-        io_array_in: List[str] = ["resource1", "resource2"],
+        io_array_in: Iterable[str] = ["resource1", "resource2"],
         integer_in: int = 10,
         enum_in: EnumInEnum = EnumInEnum.BLUE,
-        enum_array_in: List[EnumInEnum] = [EnumInEnum.RED, EnumInEnum.GREEN],
+        enum_array_in: Iterable[EnumInEnum] = [EnumInEnum.RED, EnumInEnum.GREEN],
         protobuf_enum_in: ProtobufEnumInEnum = ProtobufEnumInEnum.BLACK,
     ) -> Generator[Outputs, None, None]:
         """Perform a streaming measurement.

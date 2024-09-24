@@ -27,7 +27,7 @@ from pathlib import Path
 <%
     typing_imports = ["Any", "Generator", "List", "Optional"]
     if output_metadata:
-        typing_imports += ["NamedTuple"]
+        typing_imports += ["NamedTuple", "Sequence"]
     if "from pathlib import Path" in built_in_import_modules:
         typing_imports += ["Iterable"]
 %>\

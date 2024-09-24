@@ -198,7 +198,7 @@ def get_configuration_parameters_with_type_and_default_values(
         parameter_names.append(parameter_name)
 
         default_value = metadata.default_value
-        parameter_type = _get_python_type_as_str(metadata.type, metadata.repeated)
+        parameter_type = _get_configuration_python_type_as_str(metadata.type, metadata.repeated)
         if isinstance(default_value, str):
             default_value = repr(default_value)
 
@@ -208,7 +208,7 @@ def get_configuration_parameters_with_type_and_default_values(
             if metadata.repeated:
                 formatted_value = ", ".join(f"Path({repr(value)})" for value in default_value)
                 default_value = f"[{formatted_value}]"
-                parameter_type = f"List[{parameter_type}]"
+                parameter_type = f"Iterable[{parameter_type}]"
             else:
                 default_value = f"Path({default_value})"
 
@@ -230,7 +230,7 @@ def get_configuration_parameters_with_type_and_default_values(
                 concatenated_default_value = ", ".join(values)
                 concatenated_default_value = f"[{concatenated_default_value}]"
 
-                parameter_type = f"List[{parameter_type}]"
+                parameter_type = f"Iterable[{parameter_type}]"
                 default_value = concatenated_default_value
             else:
                 enum_value = next((e.name for e in enum_type if e.value == default_value), None)
@@ -254,27 +254,27 @@ def get_output_parameters_with_type(
     output_parameters_with_type: List[str] = []
     for metadata in output_metadata.values():
         parameter_name = _get_python_identifier(metadata.display_name)
-        parameter_type = _get_python_type_as_str(metadata.type, metadata.repeated)
+        parameter_type = _get_output_python_type_as_str(metadata.type, metadata.repeated)
 
         if metadata.annotations and metadata.annotations.get("ni/type_specialization") == "path":
             parameter_type = "Path"
             built_in_import_modules.append(_PATH_IMPORT)
 
             if metadata.repeated:
-                parameter_type = f"List[{parameter_type}]"
+                parameter_type = f"Sequence[{parameter_type}]"
 
         if metadata.message_type and metadata.message_type == "ni.protobuf.types.DoubleXYData":
             parameter_type = "DoubleXYData"
             custom_import_modules.append(_XY_DATA_IMPORT)
 
             if metadata.repeated:
-                parameter_type = f"List[{parameter_type}]"
+                parameter_type = f"Sequence[{parameter_type}]"
 
         if metadata.annotations and metadata.annotations.get("ni/type_specialization") == "enum":
             enum_type_name = _get_enum_type(
                 metadata.display_name, metadata.annotations["ni/enum.values"], enum_values_by_type
             ).__name__
-            parameter_type = f"List[{enum_type_name}]" if metadata.repeated else enum_type_name
+            parameter_type = f"Sequence[{enum_type_name}]" if metadata.repeated else enum_type_name
 
         output_parameters_with_type.append(f"{parameter_name}: {parameter_type}")
 
@@ -361,14 +361,25 @@ def _get_python_identifier(input_string: str) -> str:
     return valid_identifier
 
 
-def _get_python_type_as_str(type: Field.Kind.ValueType, is_array: bool) -> str:
+def _get_configuration_python_type_as_str(type: Field.Kind.ValueType, is_array: bool) -> str:
     python_type = _PROTO_DATATYPE_TO_PYTYPE_LOOKUP.get(type)
 
     if python_type is None:
         raise TypeError(f"Invalid data type: '{type}'.")
 
     if is_array:
-        return f"List[{python_type.__name__}]"
+        return f"Iterable[{python_type.__name__}]"
+    return python_type.__name__
+
+
+def _get_output_python_type_as_str(type: Field.Kind.ValueType, is_array: bool) -> str:
+    python_type = _PROTO_DATATYPE_TO_PYTYPE_LOOKUP.get(type)
+
+    if python_type is None:
+        raise TypeError(f"Invalid data type: '{type}'.")
+
+    if is_array:
+        return f"Sequence[{python_type.__name__}]"
     return python_type.__name__
 
 
