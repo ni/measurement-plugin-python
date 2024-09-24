@@ -225,7 +225,7 @@ class MeasurementService:
             )
         config_version = service.get("version")
         if version and config_version is None:
-            version = None
+            version = ""
         if config_version is not None:
             if version and version != config_version:
                 raise RuntimeError(
