@@ -4,6 +4,7 @@ import re
 import sys
 from typing import Generator
 
+import mypy.api
 import pytest
 from ni_measurement_plugin_sdk_service.measurement.service import MeasurementService
 
@@ -165,6 +166,34 @@ def test___non_streaming_measurement___create_client___render_with_proper_line_e
 
     assert result.exit_code == 0
     _assert_line_ending(temp_directory / filename)
+
+
+def test___non_streaming_measurement___create_client___render_without_mypy_error(
+    create_client: CliRunnerFunction,
+    tmp_path_factory: pytest.TempPathFactory,
+    non_streaming_measurement_service: MeasurementService,
+) -> None:
+    temp_directory = tmp_path_factory.mktemp("measurement_plugin_client_files")
+    module_name = "non_streaming_data_measurement_client"
+    filename = f"{module_name}.py"
+
+    result = create_client(
+        [
+            "--measurement-service-class",
+            "ni.tests.NonStreamingDataMeasurement_Python",
+            "--module-name",
+            module_name,
+            "--class-name",
+            "NonStreamingDataMeasurementClient",
+            "--directory-out",
+            str(temp_directory),
+        ]
+    )
+
+    mypy_result = mypy.api.run([str(temp_directory / filename)])
+    mypy_exit_status = mypy_result[2]
+    assert result.exit_code == 0
+    assert mypy_exit_status == 0
 
 
 def _assert_equal(expected_path: pathlib.Path, result_path: pathlib.Path) -> None:
