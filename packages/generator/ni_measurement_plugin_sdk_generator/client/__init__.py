@@ -18,10 +18,9 @@ from ni_measurement_plugin_sdk_generator.client._support import (
     create_class_name,
     create_module_name,
     extract_base_service_class,
-    get_configuration_metadata_by_index,
+    get_configuration_and_output_metadata_by_index,
     get_configuration_parameters_with_type_and_default_values,
     get_measurement_service_stub,
-    get_output_metadata_by_index,
     get_output_parameters_with_type,
     get_all_registered_measurement_info,
     get_selected_measurement_service_class,
@@ -70,10 +69,9 @@ def _create_client(
         discovery_client, channel_pool, measurement_service_class
     )
     metadata = measurement_service_stub.GetMetadata(v2_measurement_service_pb2.GetMetadataRequest())
-    configuration_metadata = get_configuration_metadata_by_index(
+    configuration_metadata, output_metadata = get_configuration_and_output_metadata_by_index(
         metadata, measurement_service_class, enum_values_by_type
     )
-    output_metadata = get_output_metadata_by_index(metadata, enum_values_by_type)
 
     configuration_parameters_with_type_and_default_values, measure_api_parameters = (
         get_configuration_parameters_with_type_and_default_values(

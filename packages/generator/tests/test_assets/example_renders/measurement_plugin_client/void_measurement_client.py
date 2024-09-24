@@ -76,7 +76,7 @@ class VoidMeasurementClient:
         if grpc_channel is not None:
             self._stub = v2_measurement_service_pb2_grpc.MeasurementServiceStub(grpc_channel)
         self._create_file_descriptor()
-        self._pin_map_context: Optional[PinMapContext] = None
+        self._pin_map_context: PinMapContext = PinMapContext(pin_map_id="", sites=[0])
 
     @property
     def pin_map_context(self) -> Optional[PinMapContext]:
@@ -94,9 +94,7 @@ class VoidMeasurementClient:
     @property
     def sites(self) -> Optional[List[int]]:
         """The sites where the measurement must be executed."""
-        if self._pin_map_context is not None:
-            return self._pin_map_context.sites
-        return None
+        return self._pin_map_context.sites
 
     @sites.setter
     def sites(self, val: List[int]) -> None:
@@ -167,7 +165,7 @@ class VoidMeasurementClient:
         )
         return v2_measurement_service_pb2.MeasureRequest(
             configuration_parameters=serialized_configuration,
-            pin_map_context=self._pin_map_context._to_grpc() if self._pin_map_context else None,
+            pin_map_context=self._pin_map_context._to_grpc(),
         )
 
     def measure(self, integer_in: int = 10) -> None:
@@ -220,7 +218,4 @@ class VoidMeasurementClient:
             pin_map_path: Absolute path of the pin map file.
         """
         pin_map_id = self._get_pin_map_client().update_pin_map(pin_map_path)
-        if self._pin_map_context is None:
-            self._pin_map_context = PinMapContext(pin_map_id=pin_map_id, sites=[0])
-        else:
-            self._pin_map_context = self._pin_map_context._replace(pin_map_id=pin_map_id)
+        self._pin_map_context = self._pin_map_context._replace(pin_map_id=pin_map_id)
