@@ -128,7 +128,7 @@ def test___service_registered___resolve_service___sends_request(
     )
 
     service_location = discovery_client.resolve_service(
-        provided_interface=_TEST_SERVICE_INFO.provided_interfaces[0], 
+        provided_interface=_TEST_SERVICE_INFO.provided_interfaces[0],
         service_class=_TEST_SERVICE_INFO.service_class,
         version=_TEST_SERVICE_INFO.versions[0],
     )

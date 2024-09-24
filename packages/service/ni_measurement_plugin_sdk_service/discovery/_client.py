@@ -225,8 +225,9 @@ class DiscoveryClient:
                 specified and there is more than one matching service registered, an error
                 is returned.
             deployment_target: The deployment target from which the service should be resolved.
-            version: The version of the service to resolve, If not specified, the latest version
+            version: The version of the service to resolve. If not specified, the latest version
                 will be resolved.
+
         Returns:
             The service location.
         """
