@@ -2,7 +2,7 @@
 
 import pathlib
 from contextlib import ExitStack
-from typing import Iterable, Sequence, Tuple
+from typing import Iterable, List, Sequence, Tuple
 
 import hightime
 import nidcpower
@@ -64,14 +64,14 @@ def measure(
                     [session_info.resource_name],
                     [session_info.channel_list],
                     [connection.channel_name],
-                    [list(voltage_measurements)[0]],
-                    [list(current_measurements)[0]],
+                    [voltage_measurements[0]],
+                    [current_measurements[0]],
                 )
 
 
 def _source_measure_dc_voltage(
     connections: Sequence[nims.session_management.TypedConnection[nidcpower.Session]],
-) -> Tuple[Iterable[float], Iterable[float]]:
+) -> Tuple[List[float], List[float]]:
     for connection in connections:
         channel = connection.session.channels[connection.channel_name]
         channel.source_mode = nidcpower.SourceMode.SINGLE_POINT
