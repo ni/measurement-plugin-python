@@ -171,8 +171,7 @@ def test___service_not_registered___resolve_service___raises_not_found_error(
 
     with pytest.raises(grpc.RpcError) as exc_info:
         _ = discovery_client.resolve_service(
-            provided_interface=_TEST_SERVICE_INFO.provided_interfaces[0],
-            service_class=_TEST_SERVICE_INFO.service_class,
+            _TEST_SERVICE_INFO.provided_interfaces[0], _TEST_SERVICE_INFO.service_class
         )
 
     discovery_service_stub.ResolveService.assert_called_once()
