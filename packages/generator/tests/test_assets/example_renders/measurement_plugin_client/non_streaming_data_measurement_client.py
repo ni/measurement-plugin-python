@@ -95,6 +95,7 @@ class NonStreamingDataMeasurementClient:
         """
         self._initialization_lock = threading.RLock()
         self._service_class = "ni.tests.NonStreamingDataMeasurement_Python"
+        self._version = "0.1.0.0"
         self._grpc_channel_pool = grpc_channel_pool
         self._discovery_client = discovery_client
         self._pin_map_client = pin_map_client
@@ -458,6 +459,7 @@ class NonStreamingDataMeasurementClient:
                     service_location = self._get_discovery_client().resolve_service(
                         provided_interface=_V2_MEASUREMENT_SERVICE_INTERFACE,
                         service_class=self._service_class,
+                        version=self._version,
                     )
                     channel = self._get_grpc_channel_pool().get_channel(
                         service_location.insecure_address
