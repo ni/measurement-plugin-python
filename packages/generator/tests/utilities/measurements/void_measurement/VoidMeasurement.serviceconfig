@@ -2,6 +2,7 @@
   "services": [
     {
       "displayName": "Void Measurement (Py)",
+      "version": "0.1.0.0",
       "serviceClass": "ni.tests.VoidMeasurement_Python",
       "descriptionUrl": "",
       "providedInterfaces": [
