@@ -41,13 +41,13 @@ def convert_paths_to_strings(
     """
     result: List[Any] = []
 
-    for index, parameter_value in enumerate(parameter_values):
-        metadata = parameter_metadata_dict[index + 1]
+    for id, parameter_value in enumerate(parameter_values, start=1):
+        metadata = parameter_metadata_dict[id]
         if metadata.annotations and metadata.annotations.get("ni/type_specialization") == "path":
             if metadata.repeated:
-                result.append([_path_to_string(value) for value in parameter_value])
+                result.append([str(value) for value in parameter_value])
             else:
-                result.append(_path_to_string(parameter_value))
+                result.append(str(parameter_value))
         else:
             result.append(parameter_value)
 
@@ -69,28 +69,14 @@ def convert_strings_to_paths(
     """
     result: List[Any] = []
 
-    for index, parameter_value in enumerate(parameter_values):
-        metadata = parameter_metadata_dict[index + 1]
+    for id, parameter_value in enumerate(parameter_values, start=1):
+        metadata = parameter_metadata_dict[id]
         if metadata.annotations and metadata.annotations.get("ni/type_specialization") == "path":
             if metadata.repeated:
-                result.append([_string_to_path(value) for value in parameter_value])
+                result.append([Path(value) for value in parameter_value])
             else:
-                result.append(_string_to_path(parameter_value))
+                result.append(Path(parameter_value))
         else:
             result.append(parameter_value)
 
     return result
-
-
-def _path_to_string(value: Any) -> Any:
-    if isinstance(value, Path):
-        return str(value)
-    else:
-        return value
-
-
-def _string_to_path(value: Any) -> Any:
-    if isinstance(value, str):
-        return Path(value)
-    else:
-        return value
