@@ -19,19 +19,12 @@ from typing import Any
 from __future__ import annotations
 
 import logging
+import pathlib
 import threading
+import typing
 % if len(enum_by_class_name):
 from enum import Enum
 % endif
-from pathlib import Path
-<%
-    typing_imports = ["Any", "Generator", "List", "Optional"]
-    if output_metadata:
-        typing_imports += ["NamedTuple", "Sequence"]
-    if "from pathlib import Path" in built_in_import_modules:
-        typing_imports += ["Iterable"]
-%>\
-from typing import ${", ".join(sorted(typing_imports))}
 
 import grpc
 from google.protobuf import any_pb2, descriptor_pool
@@ -47,10 +40,10 @@ from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
 from ni_measurement_plugin_sdk_service.measurement.client_support import (
     create_file_descriptor,
-% if "from pathlib import Path" in built_in_import_modules:
+% if "import pathlib" in built_in_import_modules:
     convert_paths_to_strings,
 % endif
-% if output_metadata and "from pathlib import Path" in built_in_import_modules:
+% if output_metadata and "import pathlib" in built_in_import_modules:
     convert_strings_to_paths,
 % endif
 % if output_metadata:
@@ -79,7 +72,7 @@ class ${enum_name.__name__}(Enum):
 <% output_type = "None" %>\
 % if output_metadata:
 
-class Outputs(NamedTuple):
+class Outputs(typing.NamedTuple):
     """Outputs for the ${display_name | repr} measurement plug-in."""
 
     % for output_parameter in output_parameters_with_type:
@@ -95,10 +88,10 @@ class ${class_name}:
     def __init__(
         self,
         *,
-        discovery_client: Optional[DiscoveryClient] = None,
-        pin_map_client: Optional[PinMapClient] = None,
-        grpc_channel: Optional[grpc.Channel] = None,
-        grpc_channel_pool: Optional[GrpcChannelPool] = None,
+        discovery_client: typing.Optional[DiscoveryClient] = None,
+        pin_map_client: typing.Optional[PinMapClient] = None,
+        grpc_channel: typing.Optional[grpc.Channel] = None,
+        grpc_channel_pool: typing.Optional[GrpcChannelPool] = None,
     ):
         """Initialize the Measurement Plug-In Client.
 
@@ -117,8 +110,8 @@ class ${class_name}:
         self._grpc_channel_pool = grpc_channel_pool
         self._discovery_client = discovery_client
         self._pin_map_client = pin_map_client
-        self._stub: Optional[v2_measurement_service_pb2_grpc.MeasurementServiceStub] = None
-        self._measure_response: Optional[
+        self._stub: typing.Optional[v2_measurement_service_pb2_grpc.MeasurementServiceStub] = None
+        self._measure_response: typing.Optional[
             grpc.CallIterator[v2_measurement_service_pb2.MeasureResponse]
         ] = None
         self._configuration_metadata = {
@@ -176,12 +169,12 @@ class ${class_name}:
         self._pin_map_context = val
 
     @property
-    def sites(self) -> Optional[List[int]]:
+    def sites(self) -> typing.Optional[typing.List[int]]:
         """The sites where the measurement must be executed."""
         return self._pin_map_context.sites
 
     @sites.setter
-    def sites(self, val: List[int]) -> None:
+    def sites(self, val: typing.List[int]) -> None:
         if self._pin_map_context is None:
             raise AttributeError(
                 "Cannot set sites because the pin map context is None. Please provide a pin map context or register a pin map before setting sites."
@@ -236,7 +229,7 @@ class ${class_name}:
         )
 
     def _create_measure_request(
-        self, parameter_values: List[Any]
+        self, parameter_values: typing.List[typing.Any]
     ) -> v2_measurement_service_pb2.MeasureRequest:
         serialized_configuration = any_pb2.Any(
             type_url=${configuration_parameters_type_url | repr},
@@ -264,7 +257,7 @@ class ${class_name}:
         )
         for k, v in output_values.items():
             result[k - 1] = v
-        % if "from pathlib import Path" in built_in_import_modules:
+        % if "import pathlib" in built_in_import_modules:
         result = convert_strings_to_paths(self._output_metadata, result)
         % endif
         return Outputs._make(result)
@@ -293,13 +286,13 @@ class ${class_name}:
     def stream_measure(
         self,
         ${configuration_parameters_with_type_and_default_values}
-    ) -> Generator[${output_type}, None, None] :
+    ) -> typing.Generator[${output_type}, None, None] :
         """Perform a streaming measurement.
 
         Returns:
             Stream of measurement outputs.
         """
-        % if "from pathlib import Path" in built_in_import_modules:
+        % if "import pathlib" in built_in_import_modules:
         parameter_values = convert_paths_to_strings(self._configuration_metadata, [${measure_api_parameters}])
         % else:
         parameter_values = [${measure_api_parameters}]
@@ -335,7 +328,7 @@ class ${class_name}:
             else:
                 return False
 
-    def register_pin_map(self, pin_map_path: Path) -> None:
+    def register_pin_map(self, pin_map_path: pathlib.Path) -> None:
         """Registers the pin map with the pin map service.
 
         Args:
