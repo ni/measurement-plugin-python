@@ -203,14 +203,14 @@ def get_configuration_parameters_with_type_and_default_values(
             default_value = repr(default_value)
 
         if metadata.annotations and metadata.annotations.get("ni/type_specialization") == "path":
-            parameter_type = "pathlib.Path"
+            parameter_type = "pathlib.PurePath"
             built_in_import_modules.append(_PATH_IMPORT)
             if metadata.repeated:
-                formatted_value = ", ".join(f"pathlib.Path({repr(value)})" for value in default_value)
+                formatted_value = ", ".join(f"pathlib.PurePath({repr(value)})" for value in default_value)
                 default_value = f"[{formatted_value}]"
                 parameter_type = f"typing.Iterable[{parameter_type}]"
             else:
-                default_value = f"pathlib.Path({default_value})"
+                default_value = f"pathlib.PurePath({default_value})"
 
         if metadata.message_type:
             raise click.ClickException(
