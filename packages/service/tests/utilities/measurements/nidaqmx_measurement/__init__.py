@@ -1,7 +1,7 @@
 """NI-DAQmx measurement plug-in test service."""
 
 import pathlib
-from typing import List, Sequence, Tuple
+from typing import Iterable, List, Sequence, Tuple
 
 import nidaqmx
 
@@ -11,7 +11,6 @@ from ni_measurement_plugin_sdk_service.session_management import TypedSessionInf
 service_directory = pathlib.Path(__file__).resolve().parent
 measurement_service = nims.MeasurementService(
     service_config_path=service_directory / "NIDAQmxMeasurement.serviceconfig",
-    version="0.1.0.0",
     ui_file_paths=[
         service_directory,
     ],
@@ -27,7 +26,7 @@ measurement_service = nims.MeasurementService(
 @measurement_service.output("connected_channels", nims.DataType.StringArray1D)
 @measurement_service.output("voltage_values", nims.DataType.DoubleArray1D)
 def measure(
-    pin_names: List[str],
+    pin_names: Iterable[str],
     multi_session: bool,
 ) -> Tuple[List[str], List[str], List[str], List[str], List[float]]:
     """NI-DAQmx measurement plug-in test service."""

@@ -2,7 +2,7 @@
 
 import pathlib
 from contextlib import ExitStack
-from typing import Iterable, Sequence, Tuple
+from typing import Iterable, List, Sequence, Tuple
 
 import hightime
 import nidcpower
@@ -12,7 +12,6 @@ import ni_measurement_plugin_sdk_service as nims
 service_directory = pathlib.Path(__file__).resolve().parent
 measurement_service = nims.MeasurementService(
     service_config_path=service_directory / "NIDCPowerMeasurement.serviceconfig",
-    version="0.1.0.0",
     ui_file_paths=[
         service_directory,
     ],
@@ -64,14 +63,14 @@ def measure(
                     [session_info.resource_name],
                     [session_info.channel_list],
                     [connection.channel_name],
-                    [list(voltage_measurements)[0]],
-                    [list(current_measurements)[0]],
+                    [voltage_measurements[0]],
+                    [current_measurements[0]],
                 )
 
 
 def _source_measure_dc_voltage(
     connections: Sequence[nims.session_management.TypedConnection[nidcpower.Session]],
-) -> Tuple[Iterable[float], Iterable[float]]:
+) -> Tuple[List[float], List[float]]:
     for connection in connections:
         channel = connection.session.channels[connection.channel_name]
         channel.source_mode = nidcpower.SourceMode.SINGLE_POINT
