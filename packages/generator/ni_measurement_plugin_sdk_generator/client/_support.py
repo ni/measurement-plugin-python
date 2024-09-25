@@ -13,7 +13,9 @@ import grpc
 from google.protobuf import descriptor_pool
 from google.protobuf.descriptor_pb2 import FieldDescriptorProto
 from google.protobuf.type_pb2 import Field
-from ni_measurement_plugin_sdk_service._internal.grpc_servicer import frame_metadata_dict
+from ni_measurement_plugin_sdk_service._internal.grpc_servicer import (
+    frame_metadata_dict,
+)
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v2 import (
     measurement_service_pb2 as v2_measurement_service_pb2,
     measurement_service_pb2_grpc as v2_measurement_service_pb2_grpc,
@@ -21,11 +23,10 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measur
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
 from ni_measurement_plugin_sdk_service.measurement.client_support import (
+    ParameterMetadata,
     create_file_descriptor,
     deserialize_parameters,
-    ParameterMetadata,
 )
-
 
 _V2_MEASUREMENT_SERVICE_INTERFACE = "ni.measurementlink.measurement.v2.MeasurementService"
 
@@ -206,7 +207,9 @@ def get_configuration_parameters_with_type_and_default_values(
             parameter_type = "pathlib.PurePath"
             built_in_import_modules.append(_PATH_IMPORT)
             if metadata.repeated:
-                formatted_value = ", ".join(f"pathlib.PurePath({repr(value)})" for value in default_value)
+                formatted_value = ", ".join(
+                    f"pathlib.PurePath({repr(value)})" for value in default_value
+                )
                 default_value = f"[{formatted_value}]"
                 parameter_type = f"typing.Iterable[{parameter_type}]"
             else:
@@ -274,7 +277,9 @@ def get_output_parameters_with_type(
             enum_type_name = _get_enum_type(
                 metadata.display_name, metadata.annotations["ni/enum.values"], enum_values_by_type
             ).__name__
-            parameter_type = f"typing.Sequence[{enum_type_name}]" if metadata.repeated else enum_type_name
+            parameter_type = (
+                f"typing.Sequence[{enum_type_name}]" if metadata.repeated else enum_type_name
+            )
 
         output_parameters_with_type.append(f"{parameter_name}: {parameter_type}")
 
