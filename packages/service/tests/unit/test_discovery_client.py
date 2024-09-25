@@ -173,7 +173,6 @@ def test___service_not_registered___resolve_service___raises_not_found_error(
         _ = discovery_client.resolve_service(
             provided_interface=_TEST_SERVICE_INFO.provided_interfaces[0],
             service_class=_TEST_SERVICE_INFO.service_class,
-            version=_TEST_SERVICE_INFO.versions[0],
         )
 
     discovery_service_stub.ResolveService.assert_called_once()
