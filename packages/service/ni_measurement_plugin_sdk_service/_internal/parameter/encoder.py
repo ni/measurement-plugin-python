@@ -48,7 +48,6 @@ def serialize_parameters(
             elif parameter_metadata.type == FieldDescriptorProto.TYPE_MESSAGE:
                 getattr(message_instance, field_name).CopyFrom(parameter)
             else:
-                print(field_name, repr(parameter))
                 setattr(message_instance, field_name, parameter)
     return message_instance.SerializeToString()
 
