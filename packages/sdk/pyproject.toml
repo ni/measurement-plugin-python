@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ni_measurement_plugin_sdk"
-version = "2.1.0-dev0"
+version = "2.1.0-dev2"
 description = "Measurement Plugin SDK for Python"
 authors = ["NI <opensource@ni.com>"]
 readme = "README.md"

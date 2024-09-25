@@ -88,6 +88,7 @@ def _create_client(
         directory_out=directory_out,
         class_name=class_name,
         display_name=metadata.measurement_details.display_name,
+        version=metadata.measurement_details.version,
         configuration_metadata=configuration_metadata,
         output_metadata=output_metadata,
         service_class=measurement_service_class,
