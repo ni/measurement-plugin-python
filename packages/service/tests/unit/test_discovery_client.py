@@ -128,8 +128,7 @@ def test___service_registered___resolve_service_without_version___sends_request(
     )
 
     service_location = discovery_client.resolve_service(
-        provided_interface=_TEST_SERVICE_INFO.provided_interfaces[0],
-        service_class=_TEST_SERVICE_INFO.service_class,
+         _TEST_SERVICE_INFO.provided_interfaces[0], _TEST_SERVICE_INFO.service_class
     )
 
     discovery_service_stub.ResolveService.assert_called_once()

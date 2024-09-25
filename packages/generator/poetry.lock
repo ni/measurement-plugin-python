@@ -793,7 +793,7 @@ types-protobuf = ">=4.24"
 
 [[package]]
 name = "ni-measurement-plugin-sdk-service"
-version = "2.1.0-dev0"
+version = "2.1.0-dev2"
 description = "Measurement Plugin Support for Python"
 optional = false
 python-versions = "^3.8"
