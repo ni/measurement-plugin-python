@@ -6,8 +6,8 @@ import enum
 from pathlib import Path
 from typing import Dict, List, NamedTuple
 
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.discovery.v1.discovery_service_pb2 import (
-    ServiceDescriptor,
+from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.discovery.v1 import (
+    discovery_service_pb2,
 )
 
 
@@ -70,7 +70,7 @@ class ServiceInfo(NamedTuple):
      the form major.minor.build[.revision] (e.g. 1.0.0)."""
 
     @classmethod
-    def _from_grpc(cls, other: ServiceDescriptor) -> ServiceInfo:
+    def _from_grpc(cls, other: discovery_service_pb2.ServiceDescriptor) -> ServiceInfo:
         return ServiceInfo(
             service_class=other.service_class,
             description_url=other.description_url,
