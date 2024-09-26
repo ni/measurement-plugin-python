@@ -37,7 +37,7 @@ mypy-protobuf = ">=3.4"
 types-protobuf = "^4.21"
 grpc-stubs = "^1.53"
 # Uncomment to use prerelease dependencies.
-ni-measurement-plugin-sdk-service = {path = "../../packages/service"}
+ni-measurement-plugin-sdk-service = {path = "../../packages/service", develop = true}
 bandit = { version = ">=1.7", extras = ["toml"] }
 tox = ">=4.0"
 grpcio-tools = [

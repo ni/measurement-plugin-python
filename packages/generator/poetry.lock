@@ -798,7 +798,7 @@ description = "Measurement Plugin Support for Python"
 optional = false
 python-versions = "^3.8"
 files = []
-develop = false
+develop = true
 
 [package.dependencies]
 deprecation = ">=2.1"
@@ -1348,4 +1348,4 @@ test = ["covdefaults (>=2.3)", "coverage (>=7.2.7)", "coverage-enable-subprocess
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "9e89f1d48e3a088113b71de98a7e7b19edda83be4bd21673d78ff516944a4812"
+content-hash = "af67807bad5aae7bc14c438be5c084ebd2a151e2ca336c7b4de388f17e6235d9"
