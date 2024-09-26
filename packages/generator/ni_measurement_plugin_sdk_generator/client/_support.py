@@ -82,9 +82,15 @@ def get_measurement_service_stub_and_version(
         else:
             raise
     channel = channel_pool.get_channel(resolve_service_response.service_location.insecure_address)
+    version = (
+        resolve_service_response.service_info.versions[0]
+        if resolve_service_response.service_info.versions
+        else ""
+    )
+
     return (
         v2_measurement_service_pb2_grpc.MeasurementServiceStub(channel),
-        resolve_service_response.service_info.versions[0],
+        version,
     )
 
 
