@@ -2,7 +2,7 @@
 
 import logging
 import threading
-from typing import Optional, Sequence
+from typing import Optional, Sequence, Tuple
 
 import grpc
 from deprecation import deprecated
@@ -15,10 +15,7 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.discov
     discovery_service_pb2_grpc,
 )
 from ni_measurement_plugin_sdk_service.discovery._support import _get_discovery_service_address
-from ni_measurement_plugin_sdk_service.discovery._types import (
-    ServiceLocation,
-    ServiceDetails,
-)
+from ni_measurement_plugin_sdk_service.discovery._types import ServiceLocation
 from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
 from ni_measurement_plugin_sdk_service.measurement.info import MeasurementInfo, ServiceInfo
 
@@ -251,7 +248,7 @@ class DiscoveryClient:
         service_class: str = "",
         deployment_target: str = "",
         version: str = "",
-    ) -> ServiceDetails:
+    ) -> Tuple[ServiceLocation, ServiceInfo]:
         """Resolve the location of a service along with its information.
 
         Given a description of a service, returns information for the service in addition to
@@ -268,7 +265,7 @@ class DiscoveryClient:
                 will be resolved.
 
         Returns:
-            The location of a service along with its information.
+            A tuple containing the service location and service information.
         """
         request = discovery_service_pb2.ResolveServiceWithInformationRequest(
             provided_interface=provided_interface,
@@ -279,12 +276,9 @@ class DiscoveryClient:
 
         response = self._get_stub().ResolveServiceWithInformation(request)
 
-        service_info = ServiceInfo._from_grpc(response.service_descriptor)
-        service_location = ServiceLocation._from_grpc(response.service_location)
-
-        return ServiceDetails(
-            service_location=service_location,
-            service_info=service_info,
+        return (
+            ServiceLocation._from_grpc(response.service_location),
+            ServiceInfo._from_grpc(response.service_descriptor),
         )
 
     def enumerate_services(self, provided_interface: str) -> Sequence[ServiceInfo]:

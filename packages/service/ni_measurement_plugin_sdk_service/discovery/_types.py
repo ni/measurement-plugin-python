@@ -7,7 +7,6 @@ import typing
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.discovery.v1 import (
     discovery_service_pb2,
 )
-from ni_measurement_plugin_sdk_service.measurement.info import ServiceInfo
 
 
 class ServiceLocation(typing.NamedTuple):
@@ -34,10 +33,3 @@ class ServiceLocation(typing.NamedTuple):
             insecure_port=other.insecure_port,
             ssl_authenticated_port=other.ssl_authenticated_port,
         )
-
-
-class ServiceDetails(typing.NamedTuple):
-    """Represents the service information along with its location."""
-
-    service_location: ServiceLocation
-    service_info: ServiceInfo
