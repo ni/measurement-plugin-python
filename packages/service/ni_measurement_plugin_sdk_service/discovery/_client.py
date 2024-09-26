@@ -2,7 +2,7 @@
 
 import logging
 import threading
-from typing import Optional, Sequence
+from typing import Optional, Sequence, Tuple
 
 import grpc
 from deprecation import deprecated
@@ -15,10 +15,7 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.discov
     discovery_service_pb2_grpc,
 )
 from ni_measurement_plugin_sdk_service.discovery._support import _get_discovery_service_address
-from ni_measurement_plugin_sdk_service.discovery._types import (
-    ServiceLocation,
-    ResolveServiceWithInformationResponse,
-)
+from ni_measurement_plugin_sdk_service.discovery._types import ServiceLocation
 from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
 from ni_measurement_plugin_sdk_service.measurement.info import MeasurementInfo, ServiceInfo
 
@@ -243,11 +240,7 @@ class DiscoveryClient:
 
         response = self._get_stub().ResolveService(request)
 
-        return ServiceLocation(
-            location=response.location,
-            insecure_port=response.insecure_port,
-            ssl_authenticated_port=response.ssl_authenticated_port,
-        )
+        return ServiceLocation._from_grpc(response)
 
     def resolve_service_with_information(
         self,
@@ -255,7 +248,7 @@ class DiscoveryClient:
         service_class: str = "",
         deployment_target: str = "",
         version: str = "",
-    ) -> ResolveServiceWithInformationResponse:
+    ) -> Tuple[ServiceLocation, ServiceInfo]:
         """Resolve the location of a service along with its information.
 
         Given a description of a service, returns information for the service in addition to
@@ -272,7 +265,7 @@ class DiscoveryClient:
                 will be resolved.
 
         Returns:
-            The location of a service along with its information.
+            A tuple containing the service location and service information.
         """
         request = discovery_service_pb2.ResolveServiceWithInformationRequest(
             provided_interface=provided_interface,
@@ -283,23 +276,9 @@ class DiscoveryClient:
 
         response = self._get_stub().ResolveServiceWithInformation(request)
 
-        service_info = ServiceInfo(
-            service_class=response.service_descriptor.service_class,
-            description_url=response.service_descriptor.description_url,
-            provided_interfaces=list(response.service_descriptor.provided_interfaces),
-            annotations=dict(response.service_descriptor.annotations),
-            display_name=response.service_descriptor.display_name,
-            versions=list(response.service_descriptor.versions),
-        )
-        service_location = ServiceLocation(
-            location=response.service_location.location,
-            insecure_port=response.service_location.insecure_port,
-            ssl_authenticated_port=response.service_location.ssl_authenticated_port,
-        )
-
-        return ResolveServiceWithInformationResponse(
-            service_location=service_location,
-            service_info=service_info,
+        return (
+            ServiceLocation._from_grpc(response.service_location),
+            ServiceInfo._from_grpc(response.service_descriptor),
         )
 
     def enumerate_services(self, provided_interface: str) -> Sequence[ServiceInfo]:
@@ -317,14 +296,4 @@ class DiscoveryClient:
 
         response = self._get_stub().EnumerateServices(request)
 
-        return [
-            ServiceInfo(
-                service_class=service.service_class,
-                description_url=service.description_url,
-                provided_interfaces=list(service.provided_interfaces),
-                annotations=dict(service.annotations),
-                display_name=service.display_name,
-                versions=list(service.versions),
-            )
-            for service in response.available_services
-        ]
+        return [ServiceInfo._from_grpc(service) for service in response.available_services]

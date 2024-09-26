@@ -398,7 +398,7 @@ def test___no_registered_measurements___enumerate_services___returns_empty_list(
 
 
 @pytest.mark.parametrize("programming_language", ["Python", "LabVIEW"])
-def test___service_registered___resolve_service_with_information___sends_request(
+def test___registered_measurements___resolve_service_with_information___sends_request(
     discovery_client: DiscoveryClient, discovery_service_stub: Mock, programming_language: str
 ):
     expected_service_info = copy.deepcopy(_TEST_SERVICE_INFO)
@@ -421,7 +421,7 @@ def test___service_registered___resolve_service_with_information___sends_request
         )
     )
 
-    resolve_service_response = discovery_client.resolve_service_with_information(
+    service_location, service_info = discovery_client.resolve_service_with_information(
         provided_interface=_TEST_SERVICE_INFO.provided_interfaces[0],
         service_class=_TEST_SERVICE_INFO.service_class,
         version=_TEST_SERVICE_INFO.versions[0],
@@ -434,13 +434,11 @@ def test___service_registered___resolve_service_with_information___sends_request
     assert _TEST_SERVICE_INFO.provided_interfaces[0] == request.provided_interface
     assert _TEST_SERVICE_INFO.service_class == request.service_class
     assert _TEST_SERVICE_INFO.versions[0] == request.version
-    _assert_service_location_equal(
-        _TEST_SERVICE_LOCATION, resolve_service_response.service_location
-    )
-    _assert_service_info_equal(expected_service_info, resolve_service_response.service_info)
+    _assert_service_location_equal(_TEST_SERVICE_LOCATION, service_location)
+    _assert_service_info_equal(expected_service_info, service_info)
 
 
-def test___service_not_registered___resolve_service_with_information___raises_not_found_error(
+def test___no_registered_measurements___resolve_service_with_information___raises_not_found_error(
     discovery_client: DiscoveryClient, discovery_service_stub: Mock
 ):
     discovery_service_stub.ResolveServiceWithInformation.side_effect = FakeRpcError(
