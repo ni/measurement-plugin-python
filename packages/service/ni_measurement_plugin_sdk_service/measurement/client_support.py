@@ -29,7 +29,7 @@ __all__ = [
 def deserialize_parameters(
     parameter_metadata_dict: Dict[int, ParameterMetadata],
     parameter_bytes: bytes,
-    service_name: str,
+    message_name: str,
     *,
     convert_paths: bool = True
 ) -> Sequence[Any]:
@@ -48,7 +48,7 @@ def deserialize_parameters(
         Deserialized parameter values, ordered by ID.
     """
     parameter_values = _internal_deserialize_parameters(
-        parameter_metadata_dict, parameter_bytes, service_name
+        parameter_metadata_dict, parameter_bytes, message_name
     )
 
     for id in parameter_values.keys():
