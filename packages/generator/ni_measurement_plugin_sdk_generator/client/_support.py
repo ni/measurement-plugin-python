@@ -69,7 +69,7 @@ def get_measurement_service_stub_and_version(
     channel_pool: GrpcChannelPool,
     service_class: str,
 ) -> Tuple[v2_measurement_service_pb2_grpc.MeasurementServiceStub, str]:
-    """Returns the measurement service stub of the given service class."""
+    """Returns the measurement service stub and version of the given service class."""
     try:
         resolve_service_response = discovery_client.resolve_service_with_information(
             _V2_MEASUREMENT_SERVICE_INTERFACE, service_class
