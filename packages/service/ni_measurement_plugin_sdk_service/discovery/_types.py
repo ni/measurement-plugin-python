@@ -1,5 +1,7 @@
 """Data types for the NI Discovery Service."""
 
+from __future__ import annotations
+
 import typing
 
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.discovery.v1 import (
@@ -26,7 +28,7 @@ class ServiceLocation(typing.NamedTuple):
         return f"{self.location}:{self.ssl_authenticated_port}"
 
     @classmethod
-    def _from_grpc(cls, other: discovery_service_pb2.ServiceLocation) -> "ServiceLocation":
+    def _from_grpc(cls, other: discovery_service_pb2.ServiceLocation) -> ServiceLocation:
         return ServiceLocation(
             location=other.location,
             insecure_port=other.insecure_port,
