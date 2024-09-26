@@ -71,7 +71,7 @@ def get_measurement_service_stub_and_version(
 ) -> Tuple[v2_measurement_service_pb2_grpc.MeasurementServiceStub, str]:
     """Returns the measurement service stub and version of the given service class."""
     try:
-        resolve_service_response = discovery_client.resolve_service_with_information(
+        service_location, service_info = discovery_client.resolve_service_with_information(
             _V2_MEASUREMENT_SERVICE_INTERFACE, service_class
         )
     except grpc.RpcError as e:
@@ -81,12 +81,8 @@ def get_measurement_service_stub_and_version(
             )
         else:
             raise
-    channel = channel_pool.get_channel(resolve_service_response.service_location.insecure_address)
-    version = (
-        resolve_service_response.service_info.versions[0]
-        if resolve_service_response.service_info.versions
-        else ""
-    )
+    channel = channel_pool.get_channel(service_location.insecure_address)
+    version = service_info.versions[0] if service_info.versions else ""
 
     return (
         v2_measurement_service_pb2_grpc.MeasurementServiceStub(channel),
