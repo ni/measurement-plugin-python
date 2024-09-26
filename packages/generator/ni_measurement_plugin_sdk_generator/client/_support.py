@@ -29,7 +29,7 @@ from ni_measurement_plugin_sdk_service.measurement.client_support import (
 
 _V2_MEASUREMENT_SERVICE_INTERFACE = "ni.measurementlink.measurement.v2.MeasurementService"
 
-_INVALID_CHARS = "`~!@#$%^&*()-+={}[]\|:;',<>.?/ \n"
+_INVALID_CHARS = "`~!@#$%^&*()-+={}[]\\|:;',<>.?/ \n"
 
 _XY_DATA_IMPORT = "from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types.xydata_pb2 import DoubleXYData"
 _PATH_IMPORT = "from pathlib import Path"
