@@ -79,10 +79,14 @@ def get_measurement_service_stub_and_version(
             raise click.ClickException(
                 f"Could not find any registered measurement with the service class: '{service_class}'."
             )
+        elif e.code() == grpc.StatusCode.UNIMPLEMENTED:
+            raise click.ClickException(
+                "The Measurement Plug-In Client generator requires InstrumentStudio Professional version 2024 Q4 or higher."
+            )
         else:
             raise
     channel = channel_pool.get_channel(service_location.insecure_address)
-
+    
     if not service_info.versions:
         raise click.ClickException(
             "The Measurement Plug-In Client generator requires InstrumentStudio Professional version 2024 Q4 or higher."
