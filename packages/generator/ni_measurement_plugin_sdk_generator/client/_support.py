@@ -82,11 +82,15 @@ def get_measurement_service_stub_and_version(
         else:
             raise
     channel = channel_pool.get_channel(service_location.insecure_address)
-    version = service_info.versions[0] if service_info.versions else ""
+
+    if not service_info.versions:
+        raise click.ClickException(
+            "The Measurement Plug-In Client generator requires InstrumentStudio Professional version 2024 Q4 or higher."
+        )
 
     return (
         v2_measurement_service_pb2_grpc.MeasurementServiceStub(channel),
-        version,
+        service_info.versions[0],
     )
 
 
