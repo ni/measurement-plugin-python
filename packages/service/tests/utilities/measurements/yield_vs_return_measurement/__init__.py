@@ -17,7 +17,6 @@ UI_UPDATE_INTERVAL_IN_SECONDS = 100e-3
 service_directory = pathlib.Path(__file__).resolve().parent
 measurement_service = nims.MeasurementService(
     service_config_path=service_directory / "UIProgressUpdates.serviceconfig",
-    version="0.5.0.0",
     ui_file_paths=[
         service_directory,
     ],

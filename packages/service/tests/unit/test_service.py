@@ -365,7 +365,7 @@ no_annotations: typing.Dict[str, str] = {}
         ),
         (
             "example.v1.serviceconfig",
-            "",
+            "1.0.1",
             ["ni.measurementlink.measurement.v1.MeasurementService"],
             no_annotations,
         ),
@@ -446,11 +446,22 @@ def test___service_config___create_measurement_service_with_version___version_di
     assert "Version mismatch" in str(version_error.value)
 
 
+def test___service_config___create_measurement_service_with_version___service_config_has_no_version(
+    test_assets_directory: pathlib.Path,
+):
+    measurement_service = MeasurementService(
+        service_config_path=test_assets_directory / "example.NoVersion.serviceconfig",
+        version="2.0.1",
+    )
+
+    assert not measurement_service.service_info.versions[0]
+
+
 @pytest.mark.parametrize(
     "service_config,version",
     [
         ("example.serviceconfig", "1.0.1"),
-        ("example.v1.serviceconfig", "2.0.1"),
+        ("example.v1.serviceconfig", "1.0.1"),
     ],
 )
 def test___service_config___create_measurement_service_with_version___version_is_used(
