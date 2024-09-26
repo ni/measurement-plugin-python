@@ -17,7 +17,7 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.discov
 from ni_measurement_plugin_sdk_service.discovery._support import _get_discovery_service_address
 from ni_measurement_plugin_sdk_service.discovery._types import (
     ServiceLocation,
-    ResolveServiceWithInformationResponse,
+    ServiceDetails,
 )
 from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
 from ni_measurement_plugin_sdk_service.measurement.info import MeasurementInfo, ServiceInfo
@@ -255,7 +255,7 @@ class DiscoveryClient:
         service_class: str = "",
         deployment_target: str = "",
         version: str = "",
-    ) -> ResolveServiceWithInformationResponse:
+    ) -> ServiceDetails:
         """Resolve the location of a service along with its information.
 
         Given a description of a service, returns information for the service in addition to
@@ -297,7 +297,7 @@ class DiscoveryClient:
             ssl_authenticated_port=response.service_location.ssl_authenticated_port,
         )
 
-        return ResolveServiceWithInformationResponse(
+        return ServiceDetails(
             service_location=service_location,
             service_info=service_info,
         )

@@ -398,7 +398,7 @@ def test___no_registered_measurements___enumerate_services___returns_empty_list(
 
 
 @pytest.mark.parametrize("programming_language", ["Python", "LabVIEW"])
-def test___service_registered___resolve_service_with_information___sends_request(
+def test___registered_measurements___resolve_service_with_information___sends_request(
     discovery_client: DiscoveryClient, discovery_service_stub: Mock, programming_language: str
 ):
     expected_service_info = copy.deepcopy(_TEST_SERVICE_INFO)
@@ -440,7 +440,7 @@ def test___service_registered___resolve_service_with_information___sends_request
     _assert_service_info_equal(expected_service_info, resolve_service_response.service_info)
 
 
-def test___service_not_registered___resolve_service_with_information___raises_not_found_error(
+def test___no_registered_measurements___resolve_service_with_information___raises_not_found_error(
     discovery_client: DiscoveryClient, discovery_service_stub: Mock
 ):
     discovery_service_stub.ResolveServiceWithInformation.side_effect = FakeRpcError(

@@ -23,8 +23,8 @@ class ServiceLocation(typing.NamedTuple):
         return f"{self.location}:{self.ssl_authenticated_port}"
 
 
-class ResolveServiceWithInformationResponse(typing.NamedTuple):
-    """Represents the location of a service along with its information."""
+class ServiceDetails(typing.NamedTuple):
+    """Represents the service information along with its location."""
 
     service_location: ServiceLocation
     service_info: ServiceInfo
