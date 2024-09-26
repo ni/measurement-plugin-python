@@ -5,9 +5,12 @@ import warnings
 from deprecation import DeprecatedWarning
 
 from ni_measurement_plugin_sdk_service.discovery._client import DiscoveryClient
-from ni_measurement_plugin_sdk_service.discovery._types import ServiceLocation
+from ni_measurement_plugin_sdk_service.discovery._types import (
+    ServiceLocation,
+    ResolveServiceWithInformationResponse,
+)
 
-__all__ = ["DiscoveryClient", "ServiceLocation"]
+__all__ = ["DiscoveryClient", "ServiceLocation", "ResolveServiceWithInformationResponse"]
 
 warnings.warn(
     DeprecatedWarning(

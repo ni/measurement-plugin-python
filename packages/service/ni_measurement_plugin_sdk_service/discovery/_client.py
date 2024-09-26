@@ -15,7 +15,10 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.discov
     discovery_service_pb2_grpc,
 )
 from ni_measurement_plugin_sdk_service.discovery._support import _get_discovery_service_address
-from ni_measurement_plugin_sdk_service.discovery._types import ServiceLocation
+from ni_measurement_plugin_sdk_service.discovery._types import (
+    ServiceLocation,
+    ResolveServiceWithInformationResponse,
+)
 from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
 from ni_measurement_plugin_sdk_service.measurement.info import MeasurementInfo, ServiceInfo
 
@@ -244,6 +247,59 @@ class DiscoveryClient:
             location=response.location,
             insecure_port=response.insecure_port,
             ssl_authenticated_port=response.ssl_authenticated_port,
+        )
+
+    def resolve_service_with_information(
+        self,
+        provided_interface: str,
+        service_class: str = "",
+        deployment_target: str = "",
+        version: str = "",
+    ) -> ResolveServiceWithInformationResponse:
+        """Resolve the location of a service along with its information.
+
+        Given a description of a service, returns information for the service in addition to
+        the location of the service. If necessary, the service will be started by the discovery
+        service if it has not already been started.
+
+        Args:
+            provided_interface: The gRPC full name of the service.
+            service_class: The service "class" that should be matched. If the value is not
+                specified and there is more than one matching service registered, an error
+                is returned.
+            deployment_target: The deployment target from which the service should be resolved.
+            version: The version of the service to resolve. If not specified, the latest version
+                will be resolved.
+
+        Returns:
+            The location of a service along with its information.
+        """
+        request = discovery_service_pb2.ResolveServiceWithInformationRequest(
+            provided_interface=provided_interface,
+            service_class=service_class,
+            deployment_target=deployment_target,
+            version=version,
+        )
+
+        response = self._get_stub().ResolveServiceWithInformation(request)
+
+        service_info = ServiceInfo(
+            service_class=response.service_descriptor.service_class,
+            description_url=response.service_descriptor.description_url,
+            provided_interfaces=list(response.service_descriptor.provided_interfaces),
+            annotations=dict(response.service_descriptor.annotations),
+            display_name=response.service_descriptor.display_name,
+            versions=list(response.service_descriptor.versions),
+        )
+        service_location = ServiceLocation(
+            location=response.service_location.location,
+            insecure_port=response.service_location.insecure_port,
+            ssl_authenticated_port=response.service_location.ssl_authenticated_port,
+        )
+
+        return ResolveServiceWithInformationResponse(
+            service_location=service_location,
+            service_info=service_info,
         )
 
     def enumerate_services(self, provided_interface: str) -> Sequence[ServiceInfo]:
