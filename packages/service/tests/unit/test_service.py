@@ -438,10 +438,11 @@ def test___service_config___create_measurement_service_with_version___version_di
     test_assets_directory: pathlib.Path,
 ):
     with pytest.raises(RuntimeError) as version_error:
-        MeasurementService(
-            service_config_path=test_assets_directory / "example.serviceconfig",
-            version="2.0.1",
-        )
+        with pytest.deprecated_call():
+            MeasurementService(
+                service_config_path=test_assets_directory / "example.serviceconfig",
+                version="2.0.1",
+            )
 
     assert "Version mismatch" in str(version_error.value)
 
@@ -449,10 +450,11 @@ def test___service_config___create_measurement_service_with_version___version_di
 def test___service_config___create_measurement_service_with_version___service_config_has_no_version(
     test_assets_directory: pathlib.Path,
 ):
-    measurement_service = MeasurementService(
-        service_config_path=test_assets_directory / "example.NoVersion.serviceconfig",
-        version="2.0.1",
-    )
+    with pytest.deprecated_call():
+        measurement_service = MeasurementService(
+            service_config_path=test_assets_directory / "example.NoVersion.serviceconfig",
+            version="2.0.1",
+        )
 
     assert not measurement_service.service_info.versions[0]
 
@@ -469,10 +471,11 @@ def test___service_config___create_measurement_service_with_version___version_is
     service_config: str,
     version: str,
 ):
-    service = MeasurementService(
-        service_config_path=test_assets_directory / service_config,
-        version=version,
-    )
+    with pytest.deprecated_call():
+        service = MeasurementService(
+            service_config_path=test_assets_directory / service_config,
+            version=version,
+        )
 
     assert service.service_info.versions[0] == version
 
