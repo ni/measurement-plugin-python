@@ -243,11 +243,7 @@ class DiscoveryClient:
 
         response = self._get_stub().ResolveService(request)
 
-        return ServiceLocation(
-            location=response.location,
-            insecure_port=response.insecure_port,
-            ssl_authenticated_port=response.ssl_authenticated_port,
-        )
+        return ServiceLocation._from_grpc(response)
 
     def resolve_service_with_information(
         self,
@@ -283,19 +279,8 @@ class DiscoveryClient:
 
         response = self._get_stub().ResolveServiceWithInformation(request)
 
-        service_info = ServiceInfo(
-            service_class=response.service_descriptor.service_class,
-            description_url=response.service_descriptor.description_url,
-            provided_interfaces=list(response.service_descriptor.provided_interfaces),
-            annotations=dict(response.service_descriptor.annotations),
-            display_name=response.service_descriptor.display_name,
-            versions=list(response.service_descriptor.versions),
-        )
-        service_location = ServiceLocation(
-            location=response.service_location.location,
-            insecure_port=response.service_location.insecure_port,
-            ssl_authenticated_port=response.service_location.ssl_authenticated_port,
-        )
+        service_info = ServiceInfo._from_grpc(response.service_descriptor)
+        service_location = ServiceLocation._from_grpc(response.service_location)
 
         return ServiceDetails(
             service_location=service_location,
@@ -317,14 +302,4 @@ class DiscoveryClient:
 
         response = self._get_stub().EnumerateServices(request)
 
-        return [
-            ServiceInfo(
-                service_class=service.service_class,
-                description_url=service.description_url,
-                provided_interfaces=list(service.provided_interfaces),
-                annotations=dict(service.annotations),
-                display_name=service.display_name,
-                versions=list(service.versions),
-            )
-            for service in response.available_services
-        ]
+        return [ServiceInfo._from_grpc(service) for service in response.available_services]

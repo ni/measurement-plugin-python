@@ -2,6 +2,9 @@
 
 import typing
 
+from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.discovery.v1 import (
+    discovery_service_pb2,
+)
 from ni_measurement_plugin_sdk_service.measurement.info import ServiceInfo
 
 
@@ -21,6 +24,14 @@ class ServiceLocation(typing.NamedTuple):
     def ssl_authenticated_address(self) -> str:
         """Get the service's SSL-authenticated address in the format host:port."""
         return f"{self.location}:{self.ssl_authenticated_port}"
+
+    @classmethod
+    def _from_grpc(cls, other: discovery_service_pb2.ServiceLocation) -> "ServiceLocation":
+        return ServiceLocation(
+            location=other.location,
+            insecure_port=other.insecure_port,
+            ssl_authenticated_port=other.ssl_authenticated_port,
+        )
 
 
 class ServiceDetails(typing.NamedTuple):
