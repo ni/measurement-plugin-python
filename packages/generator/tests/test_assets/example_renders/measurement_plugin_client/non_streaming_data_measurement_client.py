@@ -21,11 +21,9 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types.xydata_
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
 from ni_measurement_plugin_sdk_service.measurement.client_support import (
-    create_file_descriptor,
-    convert_paths_to_strings,
-    convert_strings_to_paths,
-    deserialize_parameters,
     ParameterMetadata,
+    create_file_descriptor,
+    deserialize_parameters,
     serialize_parameters,
 )
 from ni_measurement_plugin_sdk_service.pin_map import PinMapClient
@@ -509,9 +507,9 @@ class NonStreamingDataMeasurementClient:
         serialized_configuration = any_pb2.Any(
             type_url="type.googleapis.com/ni.measurementlink.measurement.v2.MeasurementConfigurations",
             value=serialize_parameters(
-                parameter_metadata_dict=self._configuration_metadata,
-                parameter_values=parameter_values,
-                service_name=f"{self._service_class}.Configurations",
+                self._configuration_metadata,
+                parameter_values,
+                f"{self._service_class}.Configurations",
             ),
         )
         return v2_measurement_service_pb2.MeasureRequest(
@@ -522,17 +520,13 @@ class NonStreamingDataMeasurementClient:
     def _deserialize_response(
         self, response: v2_measurement_service_pb2.MeasureResponse
     ) -> Outputs:
-        if self._output_metadata:
-            result = [None] * max(self._output_metadata.keys())
-        else:
-            result = []
-        output_values = deserialize_parameters(
-            self._output_metadata, response.outputs.value, f"{self._service_class}.Outputs"
+        return Outputs._make(
+            deserialize_parameters(
+                self._output_metadata,
+                response.outputs.value,
+                f"{self._service_class}.Outputs",
+            )
         )
-        for k, v in output_values.items():
-            result[k - 1] = v
-        result = convert_strings_to_paths(self._output_metadata, result)
-        return Outputs._make(result)
 
     def measure(
         self,
@@ -623,24 +617,21 @@ class NonStreamingDataMeasurementClient:
         Returns:
             Stream of measurement outputs.
         """
-        parameter_values = convert_paths_to_strings(
-            self._configuration_metadata,
-            [
-                float_in,
-                double_array_in,
-                bool_in,
-                string_in,
-                string_array_in,
-                path_in,
-                path_array_in,
-                io_in,
-                io_array_in,
-                integer_in,
-                enum_in,
-                enum_array_in,
-                protobuf_enum_in,
-            ],
-        )
+        parameter_values = [
+            float_in,
+            double_array_in,
+            bool_in,
+            string_in,
+            string_array_in,
+            path_in,
+            path_array_in,
+            io_in,
+            io_array_in,
+            integer_in,
+            enum_in,
+            enum_array_in,
+            protobuf_enum_in,
+        ]
         with self._initialization_lock:
             if self._measure_response is not None:
                 raise RuntimeError(

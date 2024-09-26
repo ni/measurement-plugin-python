@@ -1,13 +1,15 @@
 """Support functions for the Measurement Plug-In Client."""
 
 from pathlib import Path
-from typing import Any, Dict, Iterable, List
+from typing import Any, Dict, Sequence
+
+from google.protobuf.descriptor_pb2 import FieldDescriptorProto
 
 from ni_measurement_plugin_sdk_service._internal.parameter.decoder import (
-    deserialize_parameters,
+    deserialize_parameters as _internal_deserialize_parameters,
 )
 from ni_measurement_plugin_sdk_service._internal.parameter.encoder import (
-    serialize_parameters,
+    serialize_parameters as _internal_serialize_parameters,
 )
 from ni_measurement_plugin_sdk_service._internal.parameter.metadata import (
     ParameterMetadata,
@@ -18,65 +20,93 @@ from ni_measurement_plugin_sdk_service._internal.parameter.serialization_descrip
 
 __all__ = [
     "create_file_descriptor",
-    "convert_paths_to_strings",
-    "convert_strings_to_paths",
     "deserialize_parameters",
     "ParameterMetadata",
     "serialize_parameters",
 ]
 
 
-def convert_paths_to_strings(
-    parameter_metadata_dict: Dict[int, ParameterMetadata], parameter_values: Iterable[Any]
-) -> List[Any]:
-    """Convert path parameters from Path objects to strings.
+def deserialize_parameters(
+    parameter_metadata_dict: Dict[int, ParameterMetadata],
+    parameter_bytes: bytes,
+    service_name: str,
+    *,
+    convert_paths: bool = True
+) -> Sequence[Any]:
+    """Deserialize parameter bytes into separate parameter values.
 
     Args:
         parameter_metadata_dict: Parameter metadata by ID.
 
-        parameter_values: The parameter values.
+        parameter_byte: Byte string to deserialize.
+
+        message_name: gRPC message name (e.g. f"{service_class}.Outputs").
+
+        convert_paths: Specifies whether to convert path parameters to pathlib.Path.
 
     Returns:
-        The parameter values with Path objects converted to strings, where appropriate.
+        Deserialized parameter values, ordered by ID.
     """
-    result: List[Any] = []
+    parameter_values = _internal_deserialize_parameters(
+        parameter_metadata_dict, parameter_bytes, service_name
+    )
 
-    for id, parameter_value in enumerate(parameter_values, start=1):
+    for id in parameter_values.keys():
         metadata = parameter_metadata_dict[id]
-        if metadata.annotations and metadata.annotations.get("ni/type_specialization") == "path":
+        if (
+            convert_paths
+            and metadata.type == FieldDescriptorProto.TYPE_STRING
+            and metadata.annotations
+            and metadata.annotations.get("ni/type_specialization") == "path"
+        ):
             if metadata.repeated:
-                result.append([str(value) for value in parameter_value])
+                parameter_values[id] = [Path(value) for value in parameter_values[id]]
             else:
-                result.append(str(parameter_value))
-        else:
-            result.append(parameter_value)
+                parameter_values[id] = Path(parameter_values[id])
+
+    if parameter_metadata_dict:
+        result = [None] * max(parameter_metadata_dict.keys())
+    else:
+        result = []
+
+    for k, v in parameter_values.items():
+        result[k - 1] = v
 
     return result
 
 
-def convert_strings_to_paths(
-    parameter_metadata_dict: Dict[int, ParameterMetadata], parameter_values: Iterable[Any]
-) -> List[Any]:
-    """Convert path parameters from strings to Path objects.
+def serialize_parameters(
+    parameter_metadata_dict: Dict[int, ParameterMetadata],
+    parameter_values: Sequence[Any],
+    message_name: str,
+) -> bytes:
+    """Serialize parameter values into a parameter byte string.
 
     Args:
         parameter_metadata_dict: Parameter metadata by ID.
 
-        parameter_values: The parameter values.
+        parameter_values: Parameter values to serialize, ordered by ID.
+
+        message_name: gRPC message name (e.g. f"{service_class}.Configurations").
 
     Returns:
-        The parameter values with strings converted to Path objects, where approriate.
+        Serialized byte string containing parameter values.
     """
-    result: List[Any] = []
+    new_parameter_values = list(parameter_values)
 
-    for id, parameter_value in enumerate(parameter_values, start=1):
+    for id in parameter_metadata_dict.keys():
+        index = id - 1
         metadata = parameter_metadata_dict[id]
-        if metadata.annotations and metadata.annotations.get("ni/type_specialization") == "path":
+        if (
+            metadata.type == FieldDescriptorProto.TYPE_STRING
+            and metadata.annotations
+            and metadata.annotations.get("ni/type_specialization") == "path"
+        ):
             if metadata.repeated:
-                result.append([Path(value) for value in parameter_value])
+                new_parameter_values[index] = [str(value) for value in parameter_values[index]]
             else:
-                result.append(Path(parameter_value))
-        else:
-            result.append(parameter_value)
+                new_parameter_values[index] = str(parameter_values[index])
 
-    return result
+    return _internal_serialize_parameters(
+        parameter_metadata_dict, new_parameter_values, message_name
+    )

@@ -17,8 +17,8 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measur
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
 from ni_measurement_plugin_sdk_service.measurement.client_support import (
-    create_file_descriptor,
     ParameterMetadata,
+    create_file_descriptor,
     serialize_parameters,
 )
 from ni_measurement_plugin_sdk_service.pin_map import PinMapClient
@@ -160,9 +160,9 @@ class VoidMeasurementClient:
         serialized_configuration = any_pb2.Any(
             type_url="type.googleapis.com/ni.measurementlink.measurement.v2.MeasurementConfigurations",
             value=serialize_parameters(
-                parameter_metadata_dict=self._configuration_metadata,
-                parameter_values=parameter_values,
-                service_name=f"{self._service_class}.Configurations",
+                self._configuration_metadata,
+                parameter_values,
+                f"{self._service_class}.Configurations",
             ),
         )
         return v2_measurement_service_pb2.MeasureRequest(

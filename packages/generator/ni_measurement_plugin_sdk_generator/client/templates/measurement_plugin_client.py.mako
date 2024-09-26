@@ -39,17 +39,11 @@ ${module}
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
 from ni_measurement_plugin_sdk_service.measurement.client_support import (
+    ParameterMetadata,
     create_file_descriptor,
-% if "import pathlib" in built_in_import_modules:
-    convert_paths_to_strings,
-% endif
-% if output_metadata and "import pathlib" in built_in_import_modules:
-    convert_strings_to_paths,
-% endif
 % if output_metadata:
     deserialize_parameters,
 % endif
-    ParameterMetadata,
     serialize_parameters,
 )
 from ni_measurement_plugin_sdk_service.pin_map import PinMapClient
@@ -234,9 +228,9 @@ class ${class_name}:
         serialized_configuration = any_pb2.Any(
             type_url=${configuration_parameters_type_url | repr},
             value=serialize_parameters(
-                parameter_metadata_dict=self._configuration_metadata,
-                parameter_values=parameter_values,
-                service_name=f"{self._service_class}.Configurations",
+                self._configuration_metadata,
+                parameter_values,
+                f"{self._service_class}.Configurations",
             )
         )
         return v2_measurement_service_pb2.MeasureRequest(
@@ -248,19 +242,13 @@ class ${class_name}:
     def _deserialize_response(
         self, response: v2_measurement_service_pb2.MeasureResponse
     ) -> Outputs:
-        if self._output_metadata:
-            result = [None] * max(self._output_metadata.keys())
-        else:
-            result = []
-        output_values = deserialize_parameters(
-            self._output_metadata, response.outputs.value, f"{self._service_class}.Outputs"
+        return Outputs._make(
+            deserialize_parameters(
+                self._output_metadata,
+                response.outputs.value,
+                f"{self._service_class}.Outputs",
+            )
         )
-        for k, v in output_values.items():
-            result[k - 1] = v
-        % if "import pathlib" in built_in_import_modules:
-        result = convert_strings_to_paths(self._output_metadata, result)
-        % endif
-        return Outputs._make(result)
     % endif
 
     def measure(
@@ -292,11 +280,7 @@ class ${class_name}:
         Returns:
             Stream of measurement outputs.
         """
-        % if "import pathlib" in built_in_import_modules:
-        parameter_values = convert_paths_to_strings(self._configuration_metadata, [${measure_api_parameters}])
-        % else:
         parameter_values = [${measure_api_parameters}]
-        % endif
         with self._initialization_lock:
             if self._measure_response is not None:
                 raise RuntimeError(

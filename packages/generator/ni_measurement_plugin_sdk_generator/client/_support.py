@@ -166,21 +166,24 @@ def get_configuration_and_output_metadata_by_index(
     )
     configuration_metadata = frame_metadata_dict(configuration_parameter_list)
     output_metadata = frame_metadata_dict(output_parameter_list)
-    deserialized_parameters = deserialize_parameters(
+
+    # Disable path conversion to avoid normalizing path separators and eliminate the need to
+    # convert Path objects to strings.
+    default_values = deserialize_parameters(
         configuration_metadata,
         metadata.measurement_signature.configuration_defaults.value,
         f"{service_class}.Configurations",
+        convert_paths=False,
     )
 
-    for k, v in deserialized_parameters.items():
-        if issubclass(type(v), Enum):
-            default_value = v.value
-        elif issubclass(type(v), list) and any(issubclass(type(e), Enum) for e in v):
-            default_value = [e.value for e in v]
-        else:
-            default_value = v
-
-        configuration_metadata[k] = configuration_metadata[k]._replace(default_value=default_value)
+    for id, default_value in enumerate(default_values, start=1):
+        if isinstance(default_value, Enum):
+            default_value = default_value.value
+        elif isinstance(default_value, list) and any(isinstance(e, Enum) for e in default_value):
+            default_value = [e.value for e in default_value]
+        configuration_metadata[id] = configuration_metadata[id]._replace(
+            default_value=default_value
+        )
 
     return configuration_metadata, output_metadata
 
