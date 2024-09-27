@@ -20,7 +20,7 @@ from ni_measurement_plugin_sdk_generator.client._support import (
     extract_base_service_class,
     get_configuration_and_output_metadata_by_index,
     get_configuration_parameters_with_type_and_default_values,
-    get_measurement_service_stub,
+    get_measurement_service_stub_and_version,
     get_output_parameters_with_type,
     get_all_registered_measurement_info,
     get_selected_measurement_service_class,
@@ -65,7 +65,7 @@ def _create_client(
     enum_values_by_type: Dict[Type[Enum], Dict[str, int]] = {}
     type_url_prefix = "type.googleapis.com/"
 
-    measurement_service_stub = get_measurement_service_stub(
+    measurement_service_stub, measurement_version = get_measurement_service_stub_and_version(
         discovery_client, channel_pool, measurement_service_class
     )
     metadata = measurement_service_stub.GetMetadata(v2_measurement_service_pb2.GetMetadataRequest())
@@ -88,7 +88,7 @@ def _create_client(
         directory_out=directory_out,
         class_name=class_name,
         display_name=metadata.measurement_details.display_name,
-        version=metadata.measurement_details.version,
+        version=measurement_version,
         configuration_metadata=configuration_metadata,
         output_metadata=output_metadata,
         service_class=measurement_service_class,

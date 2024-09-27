@@ -64,14 +64,14 @@ _CAMEL_TO_SNAKE_CASE_REGEXES = [
 ]
 
 
-def get_measurement_service_stub(
+def get_measurement_service_stub_and_version(
     discovery_client: DiscoveryClient,
     channel_pool: GrpcChannelPool,
     service_class: str,
-) -> v2_measurement_service_pb2_grpc.MeasurementServiceStub:
-    """Returns the measurement service stub of the given service class."""
+) -> Tuple[v2_measurement_service_pb2_grpc.MeasurementServiceStub, str]:
+    """Returns the measurement service stub and version of the given service class."""
     try:
-        service_location = discovery_client.resolve_service(
+        service_location, service_info = discovery_client.resolve_service_with_information(
             _V2_MEASUREMENT_SERVICE_INTERFACE, service_class
         )
     except grpc.RpcError as e:
@@ -79,10 +79,23 @@ def get_measurement_service_stub(
             raise click.ClickException(
                 f"Could not find any registered measurement with the service class: '{service_class}'."
             )
+        elif e.code() == grpc.StatusCode.UNIMPLEMENTED:
+            raise click.ClickException(
+                "The Measurement Plug-In Client generator requires InstrumentStudio Professional version 2024 Q4 or higher."
+            )
         else:
             raise
     channel = channel_pool.get_channel(service_location.insecure_address)
-    return v2_measurement_service_pb2_grpc.MeasurementServiceStub(channel)
+
+    if not service_info.versions:
+        raise click.ClickException(
+            "The Measurement Plug-In Client generator requires InstrumentStudio Professional version 2024 Q4 or higher."
+        )
+
+    return (
+        v2_measurement_service_pb2_grpc.MeasurementServiceStub(channel),
+        service_info.versions[0],
+    )
 
 
 def get_all_registered_measurement_info(
