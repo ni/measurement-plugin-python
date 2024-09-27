@@ -13,7 +13,9 @@ import grpc
 from google.protobuf import descriptor_pool
 from google.protobuf.descriptor_pb2 import FieldDescriptorProto
 from google.protobuf.type_pb2 import Field
-from ni_measurement_plugin_sdk_service._internal.grpc_servicer import frame_metadata_dict
+from ni_measurement_plugin_sdk_service._internal.grpc_servicer import (
+    frame_metadata_dict,
+)
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v2 import (
     measurement_service_pb2 as v2_measurement_service_pb2,
     measurement_service_pb2_grpc as v2_measurement_service_pb2_grpc,
@@ -21,18 +23,17 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measur
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
 from ni_measurement_plugin_sdk_service.measurement.client_support import (
+    ParameterMetadata,
     create_file_descriptor,
     deserialize_parameters,
-    ParameterMetadata,
 )
-
 
 _V2_MEASUREMENT_SERVICE_INTERFACE = "ni.measurementlink.measurement.v2.MeasurementService"
 
 _INVALID_CHARS = "`~!@#$%^&*()-+={}[]\\|:;',<>.?/ \n"
 
 _XY_DATA_IMPORT = "from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types.xydata_pb2 import DoubleXYData"
-_PATH_IMPORT = "from pathlib import Path"
+_PATH_IMPORT = "import pathlib"
 
 _PROTO_DATATYPE_TO_PYTYPE_LOOKUP = {
     Field.TYPE_INT32: int,
@@ -178,21 +179,24 @@ def get_configuration_and_output_metadata_by_index(
     )
     configuration_metadata = frame_metadata_dict(configuration_parameter_list)
     output_metadata = frame_metadata_dict(output_parameter_list)
-    deserialized_parameters = deserialize_parameters(
+
+    # Disable path conversion to avoid normalizing path separators and eliminate the need to
+    # convert Path objects to strings.
+    default_values = deserialize_parameters(
         configuration_metadata,
         metadata.measurement_signature.configuration_defaults.value,
         f"{service_class}.Configurations",
+        convert_paths=False,
     )
 
-    for k, v in deserialized_parameters.items():
-        if issubclass(type(v), Enum):
-            default_value = v.value
-        elif issubclass(type(v), list) and any(issubclass(type(e), Enum) for e in v):
-            default_value = [e.value for e in v]
-        else:
-            default_value = v
-
-        configuration_metadata[k] = configuration_metadata[k]._replace(default_value=default_value)
+    for id, default_value in enumerate(default_values, start=1):
+        if isinstance(default_value, Enum):
+            default_value = default_value.value
+        elif isinstance(default_value, list) and any(isinstance(e, Enum) for e in default_value):
+            default_value = [e.value for e in default_value]
+        configuration_metadata[id] = configuration_metadata[id]._replace(
+            default_value=default_value
+        )
 
     return configuration_metadata, output_metadata
 
@@ -211,19 +215,21 @@ def get_configuration_parameters_with_type_and_default_values(
         parameter_names.append(parameter_name)
 
         default_value = metadata.default_value
-        parameter_type = _get_python_type_as_str(metadata.type, metadata.repeated)
+        parameter_type = _get_configuration_python_type_as_str(metadata.type, metadata.repeated)
         if isinstance(default_value, str):
             default_value = repr(default_value)
 
         if metadata.annotations and metadata.annotations.get("ni/type_specialization") == "path":
-            parameter_type = "Path"
+            parameter_type = "pathlib.PurePath"
             built_in_import_modules.append(_PATH_IMPORT)
             if metadata.repeated:
-                formatted_value = ", ".join(f"Path({repr(value)})" for value in default_value)
+                formatted_value = ", ".join(
+                    f"pathlib.PurePath({repr(value)})" for value in default_value
+                )
                 default_value = f"[{formatted_value}]"
-                parameter_type = f"List[{parameter_type}]"
+                parameter_type = f"typing.Iterable[{parameter_type}]"
             else:
-                default_value = f"Path({default_value})"
+                default_value = f"pathlib.PurePath({default_value})"
 
         if metadata.message_type:
             raise click.ClickException(
@@ -243,7 +249,7 @@ def get_configuration_parameters_with_type_and_default_values(
                 concatenated_default_value = ", ".join(values)
                 concatenated_default_value = f"[{concatenated_default_value}]"
 
-                parameter_type = f"List[{parameter_type}]"
+                parameter_type = f"typing.Iterable[{parameter_type}]"
                 default_value = concatenated_default_value
             else:
                 enum_value = next((e.name for e in enum_type if e.value == default_value), None)
@@ -267,27 +273,29 @@ def get_output_parameters_with_type(
     output_parameters_with_type: List[str] = []
     for metadata in output_metadata.values():
         parameter_name = _get_python_identifier(metadata.display_name)
-        parameter_type = _get_python_type_as_str(metadata.type, metadata.repeated)
+        parameter_type = _get_output_python_type_as_str(metadata.type, metadata.repeated)
 
         if metadata.annotations and metadata.annotations.get("ni/type_specialization") == "path":
-            parameter_type = "Path"
+            parameter_type = "pathlib.Path"
             built_in_import_modules.append(_PATH_IMPORT)
 
             if metadata.repeated:
-                parameter_type = f"List[{parameter_type}]"
+                parameter_type = f"typing.Sequence[{parameter_type}]"
 
         if metadata.message_type and metadata.message_type == "ni.protobuf.types.DoubleXYData":
             parameter_type = "DoubleXYData"
             custom_import_modules.append(_XY_DATA_IMPORT)
 
             if metadata.repeated:
-                parameter_type = f"List[{parameter_type}]"
+                parameter_type = f"typing.Sequence[{parameter_type}]"
 
         if metadata.annotations and metadata.annotations.get("ni/type_specialization") == "enum":
             enum_type_name = _get_enum_type(
                 metadata.display_name, metadata.annotations["ni/enum.values"], enum_values_by_type
             ).__name__
-            parameter_type = f"List[{enum_type_name}]" if metadata.repeated else enum_type_name
+            parameter_type = (
+                f"typing.Sequence[{enum_type_name}]" if metadata.repeated else enum_type_name
+            )
 
         output_parameters_with_type.append(f"{parameter_name}: {parameter_type}")
 
@@ -374,14 +382,25 @@ def _get_python_identifier(input_string: str) -> str:
     return valid_identifier
 
 
-def _get_python_type_as_str(type: Field.Kind.ValueType, is_array: bool) -> str:
+def _get_configuration_python_type_as_str(type: Field.Kind.ValueType, is_array: bool) -> str:
     python_type = _PROTO_DATATYPE_TO_PYTYPE_LOOKUP.get(type)
 
     if python_type is None:
         raise TypeError(f"Invalid data type: '{type}'.")
 
     if is_array:
-        return f"List[{python_type.__name__}]"
+        return f"typing.Iterable[{python_type.__name__}]"
+    return python_type.__name__
+
+
+def _get_output_python_type_as_str(type: Field.Kind.ValueType, is_array: bool) -> str:
+    python_type = _PROTO_DATATYPE_TO_PYTYPE_LOOKUP.get(type)
+
+    if python_type is None:
+        raise TypeError(f"Invalid data type: '{type}'.")
+
+    if is_array:
+        return f"typing.Sequence[{python_type.__name__}]"
     return python_type.__name__
 
 
