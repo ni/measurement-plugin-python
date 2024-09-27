@@ -23,6 +23,8 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.discov
     RegisterServiceRequest,
     RegisterServiceResponse,
     ResolveServiceRequest,
+    ResolveServiceWithInformationRequest,
+    ResolveServiceWithInformationResponse,
     ServiceDescriptor as GrpcServiceDescriptor,
     ServiceLocation as GrpcServiceLocation,
     UnregisterServiceRequest,
@@ -395,6 +397,65 @@ def test___no_registered_measurements___enumerate_services___returns_empty_list(
     assert not available_measurements
 
 
+@pytest.mark.parametrize("programming_language", ["Python", "LabVIEW"])
+def test___registered_measurements___resolve_service_with_information___sends_request(
+    discovery_client: DiscoveryClient, discovery_service_stub: Mock, programming_language: str
+):
+    expected_service_info = copy.deepcopy(_TEST_SERVICE_INFO)
+    expected_service_info.annotations[SERVICE_PROGRAMMINGLANGUAGE_KEY] = programming_language
+    discovery_service_stub.ResolveServiceWithInformation.return_value = (
+        ResolveServiceWithInformationResponse(
+            service_location=GrpcServiceLocation(
+                location=_TEST_SERVICE_LOCATION.location,
+                insecure_port=_TEST_SERVICE_LOCATION.insecure_port,
+                ssl_authenticated_port=_TEST_SERVICE_LOCATION.ssl_authenticated_port,
+            ),
+            service_descriptor=GrpcServiceDescriptor(
+                display_name=expected_service_info.display_name,
+                description_url=expected_service_info.description_url,
+                provided_interfaces=expected_service_info.provided_interfaces,
+                annotations=expected_service_info.annotations,
+                service_class=expected_service_info.service_class,
+                versions=expected_service_info.versions,
+            ),
+        )
+    )
+
+    service_location, service_info = discovery_client.resolve_service_with_information(
+        provided_interface=_TEST_SERVICE_INFO.provided_interfaces[0],
+        service_class=_TEST_SERVICE_INFO.service_class,
+        version=_TEST_SERVICE_INFO.versions[0],
+    )
+
+    discovery_service_stub.ResolveServiceWithInformation.assert_called_once()
+    request: ResolveServiceWithInformationRequest = (
+        discovery_service_stub.ResolveServiceWithInformation.call_args.args[0]
+    )
+    assert _TEST_SERVICE_INFO.provided_interfaces[0] == request.provided_interface
+    assert _TEST_SERVICE_INFO.service_class == request.service_class
+    assert _TEST_SERVICE_INFO.versions[0] == request.version
+    _assert_service_location_equal(_TEST_SERVICE_LOCATION, service_location)
+    _assert_service_info_equal(expected_service_info, service_info)
+
+
+def test___no_registered_measurements___resolve_service_with_information___raises_not_found_error(
+    discovery_client: DiscoveryClient, discovery_service_stub: Mock
+):
+    discovery_service_stub.ResolveServiceWithInformation.side_effect = FakeRpcError(
+        grpc.StatusCode.NOT_FOUND, details="Service not found"
+    )
+
+    with pytest.raises(grpc.RpcError) as exc_info:
+        _ = discovery_client.resolve_service_with_information(
+            provided_interface=_TEST_SERVICE_INFO.provided_interfaces[0],
+            service_class=_TEST_SERVICE_INFO.service_class,
+            version=_TEST_SERVICE_INFO.versions[0],
+        )
+
+    discovery_service_stub.ResolveServiceWithInformation.assert_called_once()
+    assert exc_info.value.code() == grpc.StatusCode.NOT_FOUND
+
+
 @pytest.fixture(scope="module")
 def subprocess_popen_kwargs() -> Dict[str, Any]:
     kwargs: Dict[str, Any] = {}
@@ -423,6 +484,7 @@ def discovery_service_stub(mocker: MockerFixture) -> Mock:
     stub.UnregisterService = mocker.create_autospec(grpc.UnaryUnaryMultiCallable)
     stub.EnumerateServices = mocker.create_autospec(grpc.UnaryUnaryMultiCallable)
     stub.ResolveService = mocker.create_autospec(grpc.UnaryUnaryMultiCallable)
+    stub.ResolveServiceWithInformation = mocker.create_autospec(grpc.UnaryUnaryMultiCallable)
     return stub
 
 

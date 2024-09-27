@@ -2,7 +2,7 @@
 
 import logging
 import threading
-from typing import Optional, Sequence
+from typing import Optional, Sequence, Tuple
 
 import grpc
 from deprecation import deprecated
@@ -240,10 +240,45 @@ class DiscoveryClient:
 
         response = self._get_stub().ResolveService(request)
 
-        return ServiceLocation(
-            location=response.location,
-            insecure_port=response.insecure_port,
-            ssl_authenticated_port=response.ssl_authenticated_port,
+        return ServiceLocation._from_grpc(response)
+
+    def resolve_service_with_information(
+        self,
+        provided_interface: str,
+        service_class: str = "",
+        deployment_target: str = "",
+        version: str = "",
+    ) -> Tuple[ServiceLocation, ServiceInfo]:
+        """Resolve the location of a service along with its information.
+
+        Given a description of a service, returns information for the service in addition to
+        the location of the service. If necessary, the service will be started by the discovery
+        service if it has not already been started.
+
+        Args:
+            provided_interface: The gRPC full name of the service.
+            service_class: The service "class" that should be matched. If the value is not
+                specified and there is more than one matching service registered, an error
+                is returned.
+            deployment_target: The deployment target from which the service should be resolved.
+            version: The version of the service to resolve. If not specified, the latest version
+                will be resolved.
+
+        Returns:
+            A tuple containing the service location and service information.
+        """
+        request = discovery_service_pb2.ResolveServiceWithInformationRequest(
+            provided_interface=provided_interface,
+            service_class=service_class,
+            deployment_target=deployment_target,
+            version=version,
+        )
+
+        response = self._get_stub().ResolveServiceWithInformation(request)
+
+        return (
+            ServiceLocation._from_grpc(response.service_location),
+            ServiceInfo._from_grpc(response.service_descriptor),
         )
 
     def enumerate_services(self, provided_interface: str) -> Sequence[ServiceInfo]:
@@ -261,14 +296,4 @@ class DiscoveryClient:
 
         response = self._get_stub().EnumerateServices(request)
 
-        return [
-            ServiceInfo(
-                service_class=service.service_class,
-                description_url=service.description_url,
-                provided_interfaces=list(service.provided_interfaces),
-                annotations=dict(service.annotations),
-                display_name=service.display_name,
-                versions=list(service.versions),
-            )
-            for service in response.available_services
-        ]
+        return [ServiceInfo._from_grpc(service) for service in response.available_services]
