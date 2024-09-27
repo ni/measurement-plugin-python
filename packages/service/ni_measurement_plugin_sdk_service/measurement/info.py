@@ -6,6 +6,10 @@ import enum
 from pathlib import Path
 from typing import Dict, List, NamedTuple
 
+from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.discovery.v1 import (
+    discovery_service_pb2,
+)
+
 
 class MeasurementInfo(NamedTuple):
     """A named tuple providing information about a measurement."""
@@ -64,6 +68,17 @@ class ServiceInfo(NamedTuple):
     versions: List[str] = []
     """The list of versions associated with this service in
      the form major.minor.build[.revision] (e.g. 1.0.0)."""
+
+    @classmethod
+    def _from_grpc(cls, other: discovery_service_pb2.ServiceDescriptor) -> ServiceInfo:
+        return ServiceInfo(
+            service_class=other.service_class,
+            description_url=other.description_url,
+            provided_interfaces=list(other.provided_interfaces),
+            annotations=dict(other.annotations),
+            display_name=other.display_name,
+            versions=list(other.versions),
+        )
 
 
 class TypeSpecialization(enum.Enum):
