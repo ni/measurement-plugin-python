@@ -3,9 +3,9 @@
 from __future__ import annotations
 
 import logging
+import pathlib
 import threading
-from pathlib import Path
-from typing import Any, Generator, List, Optional
+import typing
 
 import grpc
 from google.protobuf import any_pb2, descriptor_pool
@@ -17,8 +17,8 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measur
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
 from ni_measurement_plugin_sdk_service.measurement.client_support import (
-    create_file_descriptor,
     ParameterMetadata,
+    create_file_descriptor,
     serialize_parameters,
 )
 from ni_measurement_plugin_sdk_service.pin_map import PinMapClient
@@ -35,10 +35,10 @@ class VoidMeasurementClient:
     def __init__(
         self,
         *,
-        discovery_client: Optional[DiscoveryClient] = None,
-        pin_map_client: Optional[PinMapClient] = None,
-        grpc_channel: Optional[grpc.Channel] = None,
-        grpc_channel_pool: Optional[GrpcChannelPool] = None,
+        discovery_client: typing.Optional[DiscoveryClient] = None,
+        pin_map_client: typing.Optional[PinMapClient] = None,
+        grpc_channel: typing.Optional[grpc.Channel] = None,
+        grpc_channel_pool: typing.Optional[GrpcChannelPool] = None,
     ):
         """Initialize the Measurement Plug-In Client.
 
@@ -57,8 +57,8 @@ class VoidMeasurementClient:
         self._grpc_channel_pool = grpc_channel_pool
         self._discovery_client = discovery_client
         self._pin_map_client = pin_map_client
-        self._stub: Optional[v2_measurement_service_pb2_grpc.MeasurementServiceStub] = None
-        self._measure_response: Optional[
+        self._stub: typing.Optional[v2_measurement_service_pb2_grpc.MeasurementServiceStub] = None
+        self._measure_response: typing.Optional[
             grpc.CallIterator[v2_measurement_service_pb2.MeasureResponse]
         ] = None
         self._configuration_metadata = {
@@ -93,12 +93,12 @@ class VoidMeasurementClient:
         self._pin_map_context = val
 
     @property
-    def sites(self) -> Optional[List[int]]:
+    def sites(self) -> typing.Optional[typing.List[int]]:
         """The sites where the measurement must be executed."""
         return self._pin_map_context.sites
 
     @sites.setter
-    def sites(self, val: List[int]) -> None:
+    def sites(self, val: typing.List[int]) -> None:
         if self._pin_map_context is None:
             raise AttributeError(
                 "Cannot set sites because the pin map context is None. Please provide a pin map context or register a pin map before setting sites."
@@ -155,14 +155,14 @@ class VoidMeasurementClient:
         )
 
     def _create_measure_request(
-        self, parameter_values: List[Any]
+        self, parameter_values: typing.List[typing.Any]
     ) -> v2_measurement_service_pb2.MeasureRequest:
         serialized_configuration = any_pb2.Any(
             type_url="type.googleapis.com/ni.measurementlink.measurement.v2.MeasurementConfigurations",
             value=serialize_parameters(
-                parameter_metadata_dict=self._configuration_metadata,
-                parameter_values=parameter_values,
-                service_name=f"{self._service_class}.Configurations",
+                self._configuration_metadata,
+                parameter_values,
+                f"{self._service_class}.Configurations",
             ),
         )
         return v2_measurement_service_pb2.MeasureRequest(
@@ -180,7 +180,7 @@ class VoidMeasurementClient:
         for response in stream_measure_response:
             pass
 
-    def stream_measure(self, integer_in: int = 10) -> Generator[None, None, None]:
+    def stream_measure(self, integer_in: int = 10) -> typing.Generator[None, None, None]:
         """Perform a streaming measurement.
 
         Returns:
@@ -213,7 +213,7 @@ class VoidMeasurementClient:
             else:
                 return False
 
-    def register_pin_map(self, pin_map_path: Path) -> None:
+    def register_pin_map(self, pin_map_path: pathlib.Path) -> None:
         """Registers the pin map with the pin map service.
 
         Args:

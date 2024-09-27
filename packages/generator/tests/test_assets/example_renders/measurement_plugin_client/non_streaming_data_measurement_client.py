@@ -3,10 +3,10 @@
 from __future__ import annotations
 
 import logging
+import pathlib
 import threading
+import typing
 from enum import Enum
-from pathlib import Path
-from typing import Any, Generator, Iterable, List, NamedTuple, Optional
 
 import grpc
 from google.protobuf import any_pb2, descriptor_pool
@@ -21,9 +21,9 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types.xydata_
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
 from ni_measurement_plugin_sdk_service.measurement.client_support import (
+    ParameterMetadata,
     create_file_descriptor,
     deserialize_parameters,
-    ParameterMetadata,
     serialize_parameters,
 )
 from ni_measurement_plugin_sdk_service.pin_map import PinMapClient
@@ -52,22 +52,22 @@ class ProtobufEnumInEnum(Enum):
     BLACK = 3
 
 
-class Outputs(NamedTuple):
+class Outputs(typing.NamedTuple):
     """Outputs for the 'Non-Streaming Data Measurement (Py)' measurement plug-in."""
 
     float_out: float
-    double_array_out: List[float]
+    double_array_out: typing.Sequence[float]
     bool_out: bool
     string_out: str
-    string_array_out: List[str]
-    path_out: Path
-    path_array_out: List[Path]
+    string_array_out: typing.Sequence[str]
+    path_out: pathlib.Path
+    path_array_out: typing.Sequence[pathlib.Path]
     io_out: str
-    io_array_out: List[str]
+    io_array_out: typing.Sequence[str]
     integer_out: int
     xy_data_out: DoubleXYData
     enum_out: EnumInEnum
-    enum_array_out: List[EnumInEnum]
+    enum_array_out: typing.Sequence[EnumInEnum]
     protobuf_enum_out: ProtobufEnumInEnum
 
 
@@ -77,10 +77,10 @@ class NonStreamingDataMeasurementClient:
     def __init__(
         self,
         *,
-        discovery_client: Optional[DiscoveryClient] = None,
-        pin_map_client: Optional[PinMapClient] = None,
-        grpc_channel: Optional[grpc.Channel] = None,
-        grpc_channel_pool: Optional[GrpcChannelPool] = None,
+        discovery_client: typing.Optional[DiscoveryClient] = None,
+        pin_map_client: typing.Optional[PinMapClient] = None,
+        grpc_channel: typing.Optional[grpc.Channel] = None,
+        grpc_channel_pool: typing.Optional[GrpcChannelPool] = None,
     ):
         """Initialize the Measurement Plug-In Client.
 
@@ -99,8 +99,8 @@ class NonStreamingDataMeasurementClient:
         self._grpc_channel_pool = grpc_channel_pool
         self._discovery_client = discovery_client
         self._pin_map_client = pin_map_client
-        self._stub: Optional[v2_measurement_service_pb2_grpc.MeasurementServiceStub] = None
-        self._measure_response: Optional[
+        self._stub: typing.Optional[v2_measurement_service_pb2_grpc.MeasurementServiceStub] = None
+        self._measure_response: typing.Optional[
             grpc.CallIterator[v2_measurement_service_pb2.MeasureResponse]
         ] = None
         self._configuration_metadata = {
@@ -440,12 +440,12 @@ class NonStreamingDataMeasurementClient:
         self._pin_map_context = val
 
     @property
-    def sites(self) -> Optional[List[int]]:
+    def sites(self) -> typing.Optional[typing.List[int]]:
         """The sites where the measurement must be executed."""
         return self._pin_map_context.sites
 
     @sites.setter
-    def sites(self, val: List[int]) -> None:
+    def sites(self, val: typing.List[int]) -> None:
         if self._pin_map_context is None:
             raise AttributeError(
                 "Cannot set sites because the pin map context is None. Please provide a pin map context or register a pin map before setting sites."
@@ -502,14 +502,14 @@ class NonStreamingDataMeasurementClient:
         )
 
     def _create_measure_request(
-        self, parameter_values: List[Any]
+        self, parameter_values: typing.List[typing.Any]
     ) -> v2_measurement_service_pb2.MeasureRequest:
         serialized_configuration = any_pb2.Any(
             type_url="type.googleapis.com/ni.measurementlink.measurement.v2.MeasurementConfigurations",
             value=serialize_parameters(
-                parameter_metadata_dict=self._configuration_metadata,
-                parameter_values=parameter_values,
-                service_name=f"{self._service_class}.Configurations",
+                self._configuration_metadata,
+                parameter_values,
+                f"{self._service_class}.Configurations",
             ),
         )
         return v2_measurement_service_pb2.MeasureRequest(
@@ -520,25 +520,21 @@ class NonStreamingDataMeasurementClient:
     def _deserialize_response(
         self, response: v2_measurement_service_pb2.MeasureResponse
     ) -> Outputs:
-        if self._output_metadata:
-            result = [None] * max(self._output_metadata.keys())
-        else:
-            result = []
-        output_values = deserialize_parameters(
-            self._output_metadata, response.outputs.value, f"{self._service_class}.Outputs"
+        return Outputs._make(
+            deserialize_parameters(
+                self._output_metadata,
+                response.outputs.value,
+                f"{self._service_class}.Outputs",
+            )
         )
-
-        for k, v in output_values.items():
-            result[k - 1] = v
-        return Outputs._make(result)
 
     def measure(
         self,
         float_in: float = 0.05999999865889549,
-        double_array_in: List[float] = [0.1, 0.2, 0.3],
+        double_array_in: typing.Iterable[float] = [0.1, 0.2, 0.3],
         bool_in: bool = False,
         string_in: str = "sample string",
-        string_array_in: List[str] = [
+        string_array_in: typing.Iterable[str] = [
             "string with /forwardslash",
             "string with \\backslash",
             "string with 'single quotes'",
@@ -546,20 +542,20 @@ class NonStreamingDataMeasurementClient:
             "string with \ttabspace",
             "string with \nnewline",
         ],
-        path_in: Path = Path("sample\\path\\for\\test"),
-        path_array_in: List[Path] = [
-            Path("path/with/forward/slash"),
-            Path("path\\with\\backslash"),
-            Path("path with 'single quotes'"),
-            Path('path with "double quotes"'),
-            Path("path\twith\ttabs"),
-            Path("path\nwith\nnewlines"),
+        path_in: pathlib.PurePath = pathlib.PurePath("sample\\path\\for\\test"),
+        path_array_in: typing.Iterable[pathlib.PurePath] = [
+            pathlib.PurePath("path/with/forward/slash"),
+            pathlib.PurePath("path\\with\\backslash"),
+            pathlib.PurePath("path with 'single quotes'"),
+            pathlib.PurePath('path with "double quotes"'),
+            pathlib.PurePath("path\twith\ttabs"),
+            pathlib.PurePath("path\nwith\nnewlines"),
         ],
         io_in: str = "resource",
-        io_array_in: List[str] = ["resource1", "resource2"],
+        io_array_in: typing.Iterable[str] = ["resource1", "resource2"],
         integer_in: int = 10,
         enum_in: EnumInEnum = EnumInEnum.BLUE,
-        enum_array_in: List[EnumInEnum] = [EnumInEnum.RED, EnumInEnum.GREEN],
+        enum_array_in: typing.Iterable[EnumInEnum] = [EnumInEnum.RED, EnumInEnum.GREEN],
         protobuf_enum_in: ProtobufEnumInEnum = ProtobufEnumInEnum.BLACK,
     ) -> Outputs:
         """Perform a single measurement.
@@ -589,10 +585,10 @@ class NonStreamingDataMeasurementClient:
     def stream_measure(
         self,
         float_in: float = 0.05999999865889549,
-        double_array_in: List[float] = [0.1, 0.2, 0.3],
+        double_array_in: typing.Iterable[float] = [0.1, 0.2, 0.3],
         bool_in: bool = False,
         string_in: str = "sample string",
-        string_array_in: List[str] = [
+        string_array_in: typing.Iterable[str] = [
             "string with /forwardslash",
             "string with \\backslash",
             "string with 'single quotes'",
@@ -600,44 +596,42 @@ class NonStreamingDataMeasurementClient:
             "string with \ttabspace",
             "string with \nnewline",
         ],
-        path_in: Path = Path("sample\\path\\for\\test"),
-        path_array_in: List[Path] = [
-            Path("path/with/forward/slash"),
-            Path("path\\with\\backslash"),
-            Path("path with 'single quotes'"),
-            Path('path with "double quotes"'),
-            Path("path\twith\ttabs"),
-            Path("path\nwith\nnewlines"),
+        path_in: pathlib.PurePath = pathlib.PurePath("sample\\path\\for\\test"),
+        path_array_in: typing.Iterable[pathlib.PurePath] = [
+            pathlib.PurePath("path/with/forward/slash"),
+            pathlib.PurePath("path\\with\\backslash"),
+            pathlib.PurePath("path with 'single quotes'"),
+            pathlib.PurePath('path with "double quotes"'),
+            pathlib.PurePath("path\twith\ttabs"),
+            pathlib.PurePath("path\nwith\nnewlines"),
         ],
         io_in: str = "resource",
-        io_array_in: List[str] = ["resource1", "resource2"],
+        io_array_in: typing.Iterable[str] = ["resource1", "resource2"],
         integer_in: int = 10,
         enum_in: EnumInEnum = EnumInEnum.BLUE,
-        enum_array_in: List[EnumInEnum] = [EnumInEnum.RED, EnumInEnum.GREEN],
+        enum_array_in: typing.Iterable[EnumInEnum] = [EnumInEnum.RED, EnumInEnum.GREEN],
         protobuf_enum_in: ProtobufEnumInEnum = ProtobufEnumInEnum.BLACK,
-    ) -> Generator[Outputs, None, None]:
+    ) -> typing.Generator[Outputs, None, None]:
         """Perform a streaming measurement.
 
         Returns:
             Stream of measurement outputs.
         """
-        parameter_values = _convert_paths_to_strings(
-            [
-                float_in,
-                double_array_in,
-                bool_in,
-                string_in,
-                string_array_in,
-                path_in,
-                path_array_in,
-                io_in,
-                io_array_in,
-                integer_in,
-                enum_in,
-                enum_array_in,
-                protobuf_enum_in,
-            ]
-        )
+        parameter_values = [
+            float_in,
+            double_array_in,
+            bool_in,
+            string_in,
+            string_array_in,
+            path_in,
+            path_array_in,
+            io_in,
+            io_array_in,
+            integer_in,
+            enum_in,
+            enum_array_in,
+            protobuf_enum_in,
+        ]
         with self._initialization_lock:
             if self._measure_response is not None:
                 raise RuntimeError(
@@ -664,7 +658,7 @@ class NonStreamingDataMeasurementClient:
             else:
                 return False
 
-    def register_pin_map(self, pin_map_path: Path) -> None:
+    def register_pin_map(self, pin_map_path: pathlib.Path) -> None:
         """Registers the pin map with the pin map service.
 
         Args:
@@ -672,22 +666,3 @@ class NonStreamingDataMeasurementClient:
         """
         pin_map_id = self._get_pin_map_client().update_pin_map(pin_map_path)
         self._pin_map_context = self._pin_map_context._replace(pin_map_id=pin_map_id)
-
-
-def _convert_paths_to_strings(parameter_values: Iterable[Any]) -> List[Any]:
-    result: List[Any] = []
-
-    for parameter_value in parameter_values:
-        if isinstance(parameter_value, list):
-            converted_list = []
-            for value in parameter_value:
-                if isinstance(value, Path):
-                    converted_list.append(str(value))
-                else:
-                    converted_list.append(value)
-            result.append(converted_list)
-        elif isinstance(parameter_value, Path):
-            result.append(str(parameter_value))
-        else:
-            result.append(parameter_value)
-    return result
