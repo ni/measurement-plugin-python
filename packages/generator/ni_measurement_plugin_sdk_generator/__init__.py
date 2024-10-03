@@ -1,1 +1,1 @@
-"""Measurement Plugin SDK Code Generator."""
+"""Measurement Plug-In SDK Code Generator."""
