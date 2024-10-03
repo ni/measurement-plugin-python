@@ -1,4 +1,4 @@
-"""Measurement Plugin Support for Python."""
+"""Measurement Plug-In Support for Python."""
 
 import logging
 

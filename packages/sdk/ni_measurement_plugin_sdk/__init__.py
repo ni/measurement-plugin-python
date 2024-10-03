@@ -1,1 +1,1 @@
-"""Measurement Plugin SDK for Python."""
+"""Measurement Plug-In SDK for Python."""
