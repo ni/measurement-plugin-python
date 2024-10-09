@@ -103,7 +103,7 @@ def _create_client(
     )
 
     print(
-        f"The measurement plug-in client for the service class '{measurement_service_class}' is created successfully as '{module_name}.py'."
+        f"The measurement plug-in client for the service class '{measurement_service_class}' has been successfully created as '{module_name}.py'."
     )
 
 
