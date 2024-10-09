@@ -111,13 +111,14 @@ def _create_all_clients(directory_out: Optional[str]) -> None:
     channel_pool = GrpcChannelPool()
     discovery_client = DiscoveryClient(grpc_channel_pool=channel_pool)
 
+    generated_modules: List[str] = []
     directory_out_path = resolve_output_directory(directory_out)
     measurement_service_classes, _ = get_all_registered_measurement_info(discovery_client)
     validate_measurement_service_classes(measurement_service_classes)
 
     for service_class in measurement_service_classes:
         base_service_class = extract_base_service_class(service_class)
-        module_name = create_module_name(base_service_class, directory_out_path)
+        module_name = create_module_name(base_service_class, generated_modules)
         class_name = create_class_name(base_service_class)
         validate_identifier(module_name, "module")
         validate_identifier(class_name, "class")
@@ -130,10 +131,12 @@ def _create_all_clients(directory_out: Optional[str]) -> None:
             class_name=class_name,
             directory_out=directory_out_path,
         )
+        generated_modules.append(module_name)
 
 
 def _create_clients_interactively() -> None:
     print("Creating the Python Measurement Plug-In Client in interactive mode...")
+    generated_modules: List[str] = []
     channel_pool = GrpcChannelPool()
     discovery_client = DiscoveryClient(grpc_channel_pool=channel_pool)
     directory_out_path = resolve_output_directory()
@@ -159,7 +162,7 @@ def _create_clients_interactively() -> None:
         )
 
         base_service_class = extract_base_service_class(service_class)
-        default_module_name = create_module_name(base_service_class, directory_out_path)
+        default_module_name = create_module_name(base_service_class, generated_modules)
         module_name = click.prompt(
             "Enter a name for the Python client module, or press Enter to use the default name.",
             type=str,
@@ -182,6 +185,7 @@ def _create_clients_interactively() -> None:
             class_name=class_name,
             directory_out=directory_out_path,
         )
+        generated_modules.append(module_name)
 
 
 def _create_clients(
@@ -190,6 +194,7 @@ def _create_clients(
     class_name: Optional[str],
     directory_out: Optional[str],
 ) -> None:
+    generated_modules: List[str] = []
     channel_pool = GrpcChannelPool()
     discovery_client = DiscoveryClient(grpc_channel_pool=channel_pool)
     directory_out_path = resolve_output_directory(directory_out)
@@ -198,7 +203,7 @@ def _create_clients(
     for service_class in measurement_service_classes:
         base_service_class = extract_base_service_class(service_class)
         if has_multiple_service_classes or module_name is None:
-            module_name = create_module_name(base_service_class, directory_out_path)
+            module_name = create_module_name(base_service_class, generated_modules)
         if has_multiple_service_classes or class_name is None:
             class_name = create_class_name(base_service_class)
         validate_identifier(module_name, "module")
@@ -212,6 +217,7 @@ def _create_clients(
             class_name=class_name,
             directory_out=directory_out_path,
         )
+        generated_modules.append(module_name)
 
 
 @click.command()

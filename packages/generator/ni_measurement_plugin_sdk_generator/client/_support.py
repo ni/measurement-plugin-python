@@ -2,7 +2,6 @@
 
 import json
 import keyword
-import os
 import pathlib
 import re
 import sys
@@ -345,19 +344,17 @@ def extract_base_service_class(service_class: str) -> str:
     return base_service_class
 
 
-def create_module_name(base_service_class: str, directory: pathlib.Path) -> str:
-    """Creates a module name using base service class."""
+def create_module_name(base_service_class: str, generated_modules: List[str]) -> str:
+    """Creates a unique module name using the base service class."""
     base_module_name = _camel_to_snake_case(base_service_class) + "_client"
-    module_name_with_extension = f"{base_module_name}.py"
-    filepath = os.path.join(directory, module_name_with_extension)
-    counter = 1
+    module_name = base_module_name
+    counter = 2
 
-    while os.path.exists(filepath):
-        module_name_with_extension = f"{base_module_name}_{counter}.py"
-        filepath = os.path.join(directory, module_name_with_extension)
+    while module_name in generated_modules:
+        module_name = f"{base_module_name}{counter}"
         counter += 1
 
-    return os.path.splitext(module_name_with_extension)[0]
+    return module_name
 
 
 def create_class_name(base_service_class: str) -> str:
