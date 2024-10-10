@@ -16,9 +16,8 @@ jobs:
   check_nims:
     name: Check NIMS
     uses: ./.github/workflows/check_nims.yml
-  check_nimg:
-    name: Check NIMG
-    uses: ./.github/workflows/check_nimg.yml
+  # Don't run check_nimg.yml because the generator now depends
+  # on the service and may reference a package version that doesn't exist yet.
   # Don't run check_examples.yml because the examples may reference a
   # package version that doesn't exist yet.
   build:
