@@ -421,7 +421,7 @@ def _camel_to_snake_case(camel_case_string: str) -> str:
 
 
 def _remove_suffix(string: str) -> str:
-    suffixes = ["_Python", "_LabVIEW"]
+    suffixes = ["_Python", "_LabVIEW", "_NET"]
     for suffix in suffixes:
         if string.endswith(suffix):
             if sys.version_info >= (3, 9):
