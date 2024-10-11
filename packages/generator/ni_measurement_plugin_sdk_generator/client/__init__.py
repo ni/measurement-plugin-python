@@ -135,10 +135,10 @@ def _create_all_clients(directory_out: Optional[str]) -> None:
                 class_name=class_name,
                 directory_out=directory_out_path,
             )
+            generated_modules.append(module_name)
         except Exception as e:
             click.echo(CLIENT_CREATION_ERROR_MESSAGE.format(service_class, e))
             continue
-        generated_modules.append(module_name)
 
 
 def _create_clients_interactively() -> None:
@@ -193,10 +193,10 @@ def _create_clients_interactively() -> None:
                 class_name=class_name,
                 directory_out=directory_out_path,
             )
+            generated_modules.append(module_name)
         except Exception as e:
             click.echo(CLIENT_CREATION_ERROR_MESSAGE.format(service_class, e))
             break
-        generated_modules.append(module_name)
 
 
 def _create_clients(
@@ -229,10 +229,10 @@ def _create_clients(
                 class_name=class_name,
                 directory_out=directory_out_path,
             )
+            generated_modules.append(module_name)
         except Exception as e:
             click.echo(CLIENT_CREATION_ERROR_MESSAGE.format(service_class, e))
             continue
-        generated_modules.append(module_name)
 
 
 @click.command()
