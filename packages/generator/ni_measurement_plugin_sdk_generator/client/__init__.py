@@ -31,6 +31,9 @@ from ni_measurement_plugin_sdk_generator.client._support import (
 )
 
 
+CLIENT_CREATION_ERROR_MESSAGE = "The measurement plug-in client creation for the service class '{}' has been failed. Possible reason(s): {}"
+
+
 def _render_template(template_name: str, **template_args: Any) -> bytes:
     file_path = str(pathlib.Path(__file__).parent / "templates" / template_name)
     template = Template(filename=file_path, input_encoding="utf-8", output_encoding="utf-8")
@@ -117,20 +120,24 @@ def _create_all_clients(directory_out: Optional[str]) -> None:
     validate_measurement_service_classes(measurement_service_classes)
 
     for service_class in measurement_service_classes:
-        base_service_class = extract_base_service_class(service_class)
-        module_name = create_module_name(base_service_class, generated_modules)
-        class_name = create_class_name(base_service_class)
-        validate_identifier(module_name, "module")
-        validate_identifier(class_name, "class")
+        try:
+            base_service_class = extract_base_service_class(service_class)
+            module_name = create_module_name(base_service_class, generated_modules)
+            class_name = create_class_name(base_service_class)
+            validate_identifier(module_name, "module")
+            validate_identifier(class_name, "class")
 
-        _create_client(
-            channel_pool=channel_pool,
-            discovery_client=discovery_client,
-            measurement_service_class=service_class,
-            module_name=module_name,
-            class_name=class_name,
-            directory_out=directory_out_path,
-        )
+            _create_client(
+                channel_pool=channel_pool,
+                discovery_client=discovery_client,
+                measurement_service_class=service_class,
+                module_name=module_name,
+                class_name=class_name,
+                directory_out=directory_out_path,
+            )
+        except Exception as e:
+            click.echo(CLIENT_CREATION_ERROR_MESSAGE.format(service_class,e))
+            continue
         generated_modules.append(module_name)
 
 
@@ -161,30 +168,34 @@ def _create_clients_interactively() -> None:
             int(selection), measurement_service_classes
         )
 
-        base_service_class = extract_base_service_class(service_class)
-        default_module_name = create_module_name(base_service_class, generated_modules)
-        module_name = click.prompt(
-            "Enter a name for the Python client module, or press Enter to use the default name.",
-            type=str,
-            default=default_module_name,
-        )
-        validate_identifier(module_name, "module")
-        default_class_name = create_class_name(base_service_class)
-        class_name = click.prompt(
-            "Enter a name for the Python client class, or press Enter to use the default name.",
-            type=str,
-            default=default_class_name,
-        )
-        validate_identifier(class_name, "class")
+        try:
+            base_service_class = extract_base_service_class(service_class)
+            default_module_name = create_module_name(base_service_class, generated_modules)
+            module_name = click.prompt(
+                "Enter a name for the Python client module, or press Enter to use the default name.",
+                type=str,
+                default=default_module_name,
+            )
+            validate_identifier(module_name, "module")
+            default_class_name = create_class_name(base_service_class)
+            class_name = click.prompt(
+                "Enter a name for the Python client class, or press Enter to use the default name.",
+                type=str,
+                default=default_class_name,
+            )
+            validate_identifier(class_name, "class")
 
-        _create_client(
-            channel_pool=channel_pool,
-            discovery_client=discovery_client,
-            measurement_service_class=service_class,
-            module_name=module_name,
-            class_name=class_name,
-            directory_out=directory_out_path,
-        )
+            _create_client(
+                channel_pool=channel_pool,
+                discovery_client=discovery_client,
+                measurement_service_class=service_class,
+                module_name=module_name,
+                class_name=class_name,
+                directory_out=directory_out_path,
+            )
+        except Exception as e:
+            click.echo(CLIENT_CREATION_ERROR_MESSAGE.format(service_class,e))
+            break
         generated_modules.append(module_name)
 
 
@@ -201,22 +212,26 @@ def _create_clients(
 
     has_multiple_service_classes = len(measurement_service_classes) > 1
     for service_class in measurement_service_classes:
-        base_service_class = extract_base_service_class(service_class)
-        if has_multiple_service_classes or module_name is None:
-            module_name = create_module_name(base_service_class, generated_modules)
-        if has_multiple_service_classes or class_name is None:
-            class_name = create_class_name(base_service_class)
-        validate_identifier(module_name, "module")
-        validate_identifier(class_name, "class")
+        try:
+            base_service_class = extract_base_service_class(service_class)
+            if has_multiple_service_classes or module_name is None:
+                module_name = create_module_name(base_service_class, generated_modules)
+            if has_multiple_service_classes or class_name is None:
+                class_name = create_class_name(base_service_class)  
+            validate_identifier(module_name, "module")
+            validate_identifier(class_name, "class")
 
-        _create_client(
-            channel_pool=channel_pool,
-            discovery_client=discovery_client,
-            measurement_service_class=service_class,
-            module_name=module_name,
-            class_name=class_name,
-            directory_out=directory_out_path,
-        )
+            _create_client(
+                channel_pool=channel_pool,
+                discovery_client=discovery_client,
+                measurement_service_class=service_class,
+                module_name=module_name,
+                class_name=class_name,
+                directory_out=directory_out_path,
+            )
+        except Exception as e:
+            click.echo(CLIENT_CREATION_ERROR_MESSAGE.format(service_class,e))
+            continue
         generated_modules.append(module_name)
 
 
