@@ -31,7 +31,7 @@ from ni_measurement_plugin_sdk_generator.client._support import (
 )
 
 
-CLIENT_CREATION_ERROR_MESSAGE = "The measurement plug-in client creation for the service class '{}' has been failed. Possible reason(s): {}"
+CLIENT_CREATION_ERROR_MESSAGE = "The measurement plug-in client creation for the service class '{}' has failed. Possible reason(s): {}"
 
 
 def _render_template(template_name: str, **template_args: Any) -> bytes:
@@ -138,7 +138,6 @@ def _create_all_clients(directory_out: Optional[str]) -> None:
             generated_modules.append(module_name)
         except Exception as e:
             click.echo(CLIENT_CREATION_ERROR_MESSAGE.format(service_class, e))
-            continue
 
 
 def _create_clients_interactively() -> None:
@@ -232,7 +231,6 @@ def _create_clients(
             generated_modules.append(module_name)
         except Exception as e:
             click.echo(CLIENT_CREATION_ERROR_MESSAGE.format(service_class, e))
-            continue
 
 
 @click.command()

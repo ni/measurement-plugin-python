@@ -125,7 +125,7 @@ def get_configuration_and_output_metadata_by_index(
     for configuration in metadata.measurement_signature.configuration_parameters:
         if configuration.message_type:
             raise click.ClickException(
-                "Measurement configurations with message datatype are not supported."
+                f"Measurement configurations do not support message data types ({configuration.message_type} is unsupported)."
             )
 
         annotations_dict = dict(configuration.annotations.items())
@@ -155,7 +155,7 @@ def get_configuration_and_output_metadata_by_index(
     for output in metadata.measurement_signature.outputs:
         if output.message_type and output.message_type != "ni.protobuf.types.DoubleXYData":
             raise click.ClickException(
-                "Measurement outputs with message datatype other than DoubleXYData are not supported."
+                f"Measurement outputs do not support {output.message_type}. Only DoubleXYData is supported."
             )
 
         annotations_dict = dict(output.annotations.items())
