@@ -211,13 +211,13 @@ Mako = ">=1.2.1,<2.0.0"
 
 [[package]]
 name = "ni-measurement-plugin-sdk-service"
-version = "2.0.0"
-description = "Measurement Plugin Support for Python"
+version = "2.1.0"
+description = "Measurement Plug-In Support for Python"
 optional = false
 python-versions = "<4.0,>=3.8"
 files = [
-    {file = "ni_measurement_plugin_sdk_service-2.0.0-py3-none-any.whl", hash = "sha256:6bc1db707c0dc3c9628b85a485c6bcaa0dcf6767b5379b00f46ea5d3063411e6"},
-    {file = "ni_measurement_plugin_sdk_service-2.0.0.tar.gz", hash = "sha256:a9e7bcbe3cf81c10f84e59e81c9d498fe3be526cd64aa076ff8af32d11605391"},
+    {file = "ni_measurement_plugin_sdk_service-2.1.0-py3-none-any.whl", hash = "sha256:0cba7e1be8718aeefa24d1ccc33e521e9c03f2021e3c58a12aad87c078e57754"},
+    {file = "ni_measurement_plugin_sdk_service-2.1.0.tar.gz", hash = "sha256:0fc9edac12d19b90f295f3c60b620eaf467625ce7cbb5779de218e543e9d970a"},
 ]
 
 [package.dependencies]
