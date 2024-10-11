@@ -127,7 +127,7 @@ def get_configuration_and_output_metadata_by_index(
             raise click.ClickException(
                 "Measurement configurations with message datatype are not supported."
             )
-        
+
         annotations_dict = dict(configuration.annotations.items())
         if _is_enum_param(configuration.type):
             annotations_dict["ni/enum.values"] = _validate_and_transform_enum_annotations(
@@ -153,11 +153,11 @@ def get_configuration_and_output_metadata_by_index(
 
     output_parameter_list = []
     for output in metadata.measurement_signature.outputs:
-        if output.message_type and output.message_type is not "ni.protobuf.types.DoubleXYData":
+        if output.message_type and output.message_type != "ni.protobuf.types.DoubleXYData":
             raise click.ClickException(
                 "Measurement outputs with message datatype other than DoubleXYData are not supported."
             )
-        
+
         annotations_dict = dict(output.annotations.items())
         if _is_enum_param(output.type):
             annotations_dict["ni/enum.values"] = _validate_and_transform_enum_annotations(
