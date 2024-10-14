@@ -1,5 +1,6 @@
 """Utilizes command line args to create a Measurement Plug-In Client using template files."""
 
+import logging
 import pathlib
 from enum import Enum
 from typing import Any, Dict, List, Optional, Type
@@ -263,6 +264,12 @@ def _create_clients(
     "--directory-out",
     help="Output directory for Measurement Plug-In Client files. Default: '<current_directory>/<module_name>'",
 )
+@click.option(
+    "-v",
+    "--verbose",
+    count=True,
+    help="Enable verbose logging. Repeat to increase verbosity.",
+)
 def create_client(
     measurement_service_class: List[str],
     all: bool,
@@ -270,11 +277,20 @@ def create_client(
     module_name: Optional[str],
     class_name: Optional[str],
     directory_out: Optional[str],
+    verbose: int,
 ) -> None:
     """Generates a Python Measurement Plug-In Client module for the measurement service.
 
     You can use the generated module to interact with the corresponding measurement service.
     """
+    if verbose > 1:
+        level = logging.DEBUG
+    elif verbose == 1:
+        level = logging.INFO
+    else:
+        level = logging.WARNING
+    logging.basicConfig(format="%(asctime)s %(levelname)s: %(message)s", level=level)
+
     if all:
         _create_all_clients(directory_out)
     elif interactive:
