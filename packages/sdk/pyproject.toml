@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ni_measurement_plugin_sdk"
-version = "2.1.0-dev2"
+version = "2.2.0-dev0"
 description = "Measurement Plug-In SDK for Python"
 authors = ["NI <opensource@ni.com>"]
 readme = "README.md"
@@ -22,6 +22,12 @@ classifiers = [
 python = "^3.8"
 ni-measurement-plugin-sdk-service = "*"
 ni-measurement-plugin-sdk-generator = "*"
+
+[tool.poetry.group.dev.dependencies]
+# During development, use file paths to reference the latest source for packages
+# in the same Git repository.
+ni-measurement-plugin-sdk-service = {path = "../../packages/service", develop = true}
+ni-measurement-plugin-sdk-generator = {path = "../../packages/generator", develop = true}
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

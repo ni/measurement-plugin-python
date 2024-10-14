@@ -272,39 +272,39 @@ files = [
 
 [[package]]
 name = "ni-measurement-plugin-sdk-generator"
-version = "2.1.0"
+version = "2.2.0-dev0"
 description = "Measurement Plug-In Code Generator for Python"
 optional = false
-python-versions = "<4.0,>=3.8"
-files = [
-    {file = "ni_measurement_plugin_sdk_generator-2.1.0-py3-none-any.whl", hash = "sha256:67bc4cc5a4c0dac41d49d9082673fcf4204f5c4bc07745508ac906418286f744"},
-    {file = "ni_measurement_plugin_sdk_generator-2.1.0.tar.gz", hash = "sha256:7686d3b1b9cfc5105321632db56e86a2979055fbb7e315e13830ef0e18eb0962"},
-]
+python-versions = "^3.8"
+files = []
+develop = true
 
 [package.dependencies]
 black = ">=24.8.0"
 click = ">=8.1.3"
 click-option-group = ">=0.5.6"
-grpcio = ">=1.49.1,<2.0.0"
-Mako = ">=1.2.1,<2.0.0"
-ni-measurement-plugin-sdk-service = ">=2.1.0,<3.0.0"
-protobuf = ">=4.21,<5.0"
+grpcio = "^1.49.1"
+Mako = "^1.2.1"
+ni-measurement-plugin-sdk-service = "^2.1.0"
+protobuf = "^4.21"
+
+[package.source]
+type = "directory"
+url = "../generator"
 
 [[package]]
 name = "ni-measurement-plugin-sdk-service"
-version = "2.1.0"
+version = "2.2.0-dev0"
 description = "Measurement Plug-In Support for Python"
 optional = false
-python-versions = "<4.0,>=3.8"
-files = [
-    {file = "ni_measurement_plugin_sdk_service-2.1.0-py3-none-any.whl", hash = "sha256:0cba7e1be8718aeefa24d1ccc33e521e9c03f2021e3c58a12aad87c078e57754"},
-    {file = "ni_measurement_plugin_sdk_service-2.1.0.tar.gz", hash = "sha256:0fc9edac12d19b90f295f3c60b620eaf467625ce7cbb5779de218e543e9d970a"},
-]
+python-versions = "^3.8"
+files = []
+develop = true
 
 [package.dependencies]
 deprecation = ">=2.1"
-grpcio = ">=1.49.1,<2.0.0"
-protobuf = ">=4.21,<5.0"
+grpcio = "^1.49.1"
+protobuf = "^4.21"
 python-decouple = ">=3.8"
 pywin32 = {version = ">=303", markers = "sys_platform == \"win32\""}
 traceloggingdynamic = {version = ">=1.0", markers = "python_version >= \"3.9\" and python_version < \"4.0\" and sys_platform == \"win32\""}
@@ -318,6 +318,10 @@ nidmm = ["nidmm[grpc] (>=1.4.4)"]
 nifgen = ["nifgen[grpc] (>=1.4.4)"]
 niscope = ["niscope[grpc] (>=1.4.4)"]
 niswitch = ["niswitch[grpc] (>=1.4.4)"]
+
+[package.source]
+type = "directory"
+url = "../service"
 
 [[package]]
 name = "packaging"
@@ -450,4 +454,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "655153d0bf52074b6481de5c5aca23a22ce0f88220643ed4448ce7c086a18eb9"
+content-hash = "9f4bd46b62519d49d8b94ed65a50b259c5a89567266c6ea1a01a9bf11bdff33c"

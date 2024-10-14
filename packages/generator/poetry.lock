@@ -807,7 +807,7 @@ types-protobuf = ">=4.24"
 
 [[package]]
 name = "ni-measurement-plugin-sdk-service"
-version = "2.1.0-dev2"
+version = "2.2.0-dev0"
 description = "Measurement Plug-In Support for Python"
 optional = false
 python-versions = "^3.8"
@@ -1367,4 +1367,4 @@ test = ["covdefaults (>=2.3)", "coverage (>=7.2.7)", "coverage-enable-subprocess
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "af67807bad5aae7bc14c438be5c084ebd2a151e2ca336c7b4de388f17e6235d9"
+content-hash = "7f6cf4fdb19dafb63e32ad873fc767ef77d64600b9cd831a1d7a4df8f4722da5"
