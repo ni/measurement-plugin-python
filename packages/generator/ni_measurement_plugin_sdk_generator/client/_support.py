@@ -325,43 +325,46 @@ def resolve_output_directory(directory_out: Optional[str] = None) -> pathlib.Pat
     return directory_out_path
 
 
-def get_module_name(
-    service_class: str,
-    generated_modules: List[str],
-    is_interactive_mode: bool = False,
-) -> str:
-    """Creates a unique module name using the service class."""
-    base_service_class = _extract_base_service_class(service_class)
-    module_name = _create_module_name(base_service_class, generated_modules)
-
-    if is_interactive_mode:
-        module_name = click.prompt(
-            "Enter a name for the Python client module, or press Enter to use the default name.",
-            type=str,
-            default=module_name,
+def validate_identifier(name: str, name_type: str) -> None:
+    """Validates whether the given string is a valid Python identifier."""
+    if not _is_python_identifier(name):
+        raise click.ClickException(
+            f"The {name_type} name '{name}' is not a valid Python identifier."
         )
-    _validate_identifier(module_name, "module")
+
+
+def extract_base_service_class(service_class: str) -> str:
+    """Creates a base service class from the measurement service class."""
+    base_service_class = service_class.split(".")[-1]
+    base_service_class = _remove_suffix(base_service_class)
+
+    if not base_service_class.isidentifier():
+        raise click.ClickException(
+            f"Client creation failed for '{service_class}'.\nEither provide a module name or update the measurement with a valid service class."
+        )
+    if not any(ch.isupper() for ch in base_service_class):
+        print(
+            f"Warning: The service class '{service_class}' does not adhere to the recommended format."
+        )
+    return base_service_class
+
+
+def create_module_name(base_service_class: str, generated_modules: List[str]) -> str:
+    """Creates a unique module name using the base service class."""
+    base_module_name = _camel_to_snake_case(base_service_class) + "_client"
+    module_name = base_module_name
+    counter = 2
+
+    while module_name in generated_modules:
+        module_name = f"{base_module_name}{counter}"
+        counter += 1
 
     return module_name
 
 
-def get_class_name(
-    service_class: str,
-    is_interactive_mode: bool = False,
-) -> str:
-    """Creates a class name using service class."""
-    base_service_class = _extract_base_service_class(service_class)
-    class_name = _create_class_name(base_service_class)
-
-    if is_interactive_mode:
-        class_name = click.prompt(
-            "Enter a name for the Python client class, or press Enter to use the default name.",
-            type=str,
-            default=class_name,
-        )
-    _validate_identifier(class_name, "class")
-
-    return class_name
+def create_class_name(base_service_class: str) -> str:
+    """Creates a class name using base service class."""
+    return base_service_class.replace("_", "") + "Client"
 
 
 def get_selected_measurement_service_class(
@@ -489,41 +492,3 @@ def _validate_and_transform_enum_annotations(enum_annotations: str) -> str:
         transformed_enum_annotations[enum_value] = value
 
     return json.dumps(transformed_enum_annotations)
-
-
-def _create_module_name(base_service_class: str, generated_modules: List[str]) -> str:
-    base_module_name = _camel_to_snake_case(base_service_class) + "_client"
-    module_name = base_module_name
-    counter = 2
-
-    while module_name in generated_modules:
-        module_name = f"{base_module_name}{counter}"
-        counter += 1
-
-    return module_name
-
-
-def _create_class_name(base_service_class: str) -> str:
-    return base_service_class.replace("_", "") + "Client"
-
-
-def _validate_identifier(name: str, name_type: str) -> None:
-    if not _is_python_identifier(name):
-        raise click.ClickException(
-            f"The {name_type} name '{name}' is not a valid Python identifier."
-        )
-
-
-def _extract_base_service_class(service_class: str) -> str:
-    base_service_class = service_class.split(".")[-1]
-    base_service_class = _remove_suffix(base_service_class)
-
-    if not base_service_class.isidentifier():
-        raise click.ClickException(
-            f"Client creation failed for '{service_class}'.\nEither provide a module name or update the measurement with a valid service class."
-        )
-    if not any(ch.isupper() for ch in base_service_class):
-        print(
-            f"Warning: The service class '{service_class}' does not adhere to the recommended format."
-        )
-    return base_service_class
