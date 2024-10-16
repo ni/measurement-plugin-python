@@ -32,6 +32,9 @@ from ni_measurement_plugin_sdk_generator.client._support import (
 )
 
 
+_CLIENT_CREATION_ERROR_MESSAGE = "Client creation failed for '{}'. Possible reason(s): {}"
+
+
 def _render_template(template_name: str, **template_args: Any) -> bytes:
     file_path = str(pathlib.Path(__file__).parent / "templates" / template_name)
     template = Template(filename=file_path, input_encoding="utf-8", output_encoding="utf-8")
@@ -60,6 +63,7 @@ def _create_client(
     module_name: str,
     class_name: str,
     directory_out: pathlib.Path,
+    generated_modules: List[str],
 ) -> None:
     built_in_import_modules: List[str] = []
     custom_import_modules: List[str] = []
@@ -103,6 +107,7 @@ def _create_client(
         + metadata.measurement_signature.configuration_parameters_message_type,
     )
 
+    generated_modules.append(module_name)
     print(
         f"The measurement plug-in client for the service class '{measurement_service_class}' has been successfully created as '{module_name}.py'."
     )
@@ -113,26 +118,39 @@ def _create_all_clients(directory_out: Optional[str]) -> None:
     discovery_client = DiscoveryClient(grpc_channel_pool=channel_pool)
 
     generated_modules: List[str] = []
+    errors: List[str] = []
     directory_out_path = resolve_output_directory(directory_out)
     measurement_service_classes, _ = get_all_registered_measurement_info(discovery_client)
     validate_measurement_service_classes(measurement_service_classes)
 
     for service_class in measurement_service_classes:
-        base_service_class = extract_base_service_class(service_class)
-        module_name = create_module_name(base_service_class, generated_modules)
-        class_name = create_class_name(base_service_class)
-        validate_identifier(module_name, "module")
-        validate_identifier(class_name, "class")
+        try:
+            base_service_class = extract_base_service_class(service_class)
+            module_name = create_module_name(base_service_class, generated_modules)
+            class_name = create_class_name(base_service_class)
+            validate_identifier(module_name, "module")
+            validate_identifier(class_name, "class")
 
-        _create_client(
-            channel_pool=channel_pool,
-            discovery_client=discovery_client,
-            measurement_service_class=service_class,
-            module_name=module_name,
-            class_name=class_name,
-            directory_out=directory_out_path,
+            _create_client(
+                channel_pool=channel_pool,
+                discovery_client=discovery_client,
+                measurement_service_class=service_class,
+                module_name=module_name,
+                class_name=class_name,
+                directory_out=directory_out_path,
+                generated_modules=generated_modules,
+            )
+        except Exception as e:
+            errors.append(_CLIENT_CREATION_ERROR_MESSAGE.format(service_class, e))
+
+    if len(errors) == 1:
+        raise click.ClickException(errors[0])
+    elif len(errors) > 1:
+        raise click.ClickException(
+            "Client creation failed for multiple measurement plug-ins:\n\n{}".format(
+                "\n\n".join(errors)
+            )
         )
-        generated_modules.append(module_name)
 
 
 def _create_clients_interactively() -> None:
@@ -162,31 +180,34 @@ def _create_clients_interactively() -> None:
             int(selection), measurement_service_classes
         )
 
-        base_service_class = extract_base_service_class(service_class)
-        default_module_name = create_module_name(base_service_class, generated_modules)
-        module_name = click.prompt(
-            "Enter a name for the Python client module, or press Enter to use the default name.",
-            type=str,
-            default=default_module_name,
-        )
-        validate_identifier(module_name, "module")
-        default_class_name = create_class_name(base_service_class)
-        class_name = click.prompt(
-            "Enter a name for the Python client class, or press Enter to use the default name.",
-            type=str,
-            default=default_class_name,
-        )
-        validate_identifier(class_name, "class")
+        try:
+            base_service_class = extract_base_service_class(service_class)
+            default_module_name = create_module_name(base_service_class, generated_modules)
+            module_name = click.prompt(
+                "Enter a name for the Python client module, or press Enter to use the default name.",
+                type=str,
+                default=default_module_name,
+            )
+            validate_identifier(module_name, "module")
+            default_class_name = create_class_name(base_service_class)
+            class_name = click.prompt(
+                "Enter a name for the Python client class, or press Enter to use the default name.",
+                type=str,
+                default=default_class_name,
+            )
+            validate_identifier(class_name, "class")
 
-        _create_client(
-            channel_pool=channel_pool,
-            discovery_client=discovery_client,
-            measurement_service_class=service_class,
-            module_name=module_name,
-            class_name=class_name,
-            directory_out=directory_out_path,
-        )
-        generated_modules.append(module_name)
+            _create_client(
+                channel_pool=channel_pool,
+                discovery_client=discovery_client,
+                measurement_service_class=service_class,
+                module_name=module_name,
+                class_name=class_name,
+                directory_out=directory_out_path,
+                generated_modules=generated_modules,
+            )
+        except Exception as e:
+            click.echo(_CLIENT_CREATION_ERROR_MESSAGE.format(service_class, e))
 
 
 def _create_clients(
@@ -217,8 +238,8 @@ def _create_clients(
             module_name=module_name,
             class_name=class_name,
             directory_out=directory_out_path,
+            generated_modules=generated_modules,
         )
-        generated_modules.append(module_name)
 
 
 @click.command()
