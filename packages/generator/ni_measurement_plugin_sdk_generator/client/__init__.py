@@ -142,8 +142,14 @@ def _create_all_clients(directory_out: Optional[str]) -> None:
         except Exception as e:
             errors.append(_CLIENT_CREATION_ERROR_MESSAGE.format(service_class, e))
 
-    if errors:
+    if len(errors) == 1:
         raise click.ClickException(errors[0])
+    elif len(errors) > 1:
+        raise click.ClickException(
+            "Client creation failed for multiple measurement plug-ins:\n\n{}".format(
+                "\n\n".join(errors)
+            )
+        )
 
 
 def _create_clients_interactively() -> None:
