@@ -140,7 +140,7 @@ def _create_all_clients(directory_out: Optional[str]) -> None:
                 generated_modules=generated_modules,
             )
         except Exception as e:
-            errors.append(_CLIENT_CREATION_ERROR_MESSAGE.format(service_class,e))
+            errors.append(_CLIENT_CREATION_ERROR_MESSAGE.format(service_class, e))
 
     if errors:
         raise click.ClickException(errors[0])
