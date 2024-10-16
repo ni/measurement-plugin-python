@@ -70,7 +70,7 @@ There are three ways to do this:
 
 ## Examples
 
-The `examples` directory contains example measurements for use with InstrumentStudio 2024 Q4 or later.
+The `examples` directory contains example measurements for use with InstrumentStudio 2025 Q1 or later.
 
 For more information on setting up and running the example measurements, see the included `README.md` file.
 

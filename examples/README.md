@@ -1,7 +1,7 @@
 
 ## Example Measurements
 
-These are example measurements for use with InstrumentStudio 2024 Q4 or later.
+These are example measurements for use with InstrumentStudio 2025 Q1 or later.
 
 For best results, use the example measurements corresponding to the version of InstrumentStudio
 that you are using. Newer examples may demonstrate features that are not available in older

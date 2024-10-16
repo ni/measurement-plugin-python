@@ -23,7 +23,7 @@ This is a measurement plug-in example that controls relays using an NI relay dri
 
 ### Required Software
 
-- InstrumentStudio 2024 Q4 or later
+- InstrumentStudio 2025 Q1 or later
 - NI-SWITCH
 - Recommended: TestStand 2021 SP1 or later
 

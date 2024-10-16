@@ -13,7 +13,7 @@ in a graph.
 
 ### Required Software
 
-- InstrumentStudio 2024 Q4 or later
+- InstrumentStudio 2025 Q1 or later
 
 ### Required Hardware
 

@@ -28,7 +28,7 @@ NI SMU.
 
 ### Required Software
 
-- InstrumentStudio 2024 Q4 or later
+- InstrumentStudio 2025 Q1 or later
 - NI-DCPower
 - Recommended: TestStand 2021 SP1 or later
 

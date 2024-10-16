@@ -19,7 +19,7 @@ This is a measurement plug-in example that performs a measurement using an NI DM
 
 ### Required Software
 
-- InstrumentStudio 2024 Q4 or later
+- InstrumentStudio 2025 Q1 or later
 - NI-DMM
 - Recommended: TestStand 2021 SP1 or later
 
