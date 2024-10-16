@@ -31,7 +31,7 @@ from ni_measurement_plugin_sdk_generator.client._support import (
 )
 
 
-CLIENT_CREATION_ERROR_MESSAGE = "The measurement plug-in client creation for the service class '{}' has failed. Possible reason(s): {}"
+_CLIENT_CREATION_ERROR_MESSAGE = "Client creation failed for '{}'. Possible reason(s): {}"
 
 
 def _render_template(template_name: str, **template_args: Any) -> bytes:
@@ -117,6 +117,7 @@ def _create_all_clients(directory_out: Optional[str]) -> None:
     discovery_client = DiscoveryClient(grpc_channel_pool=channel_pool)
 
     generated_modules: List[str] = []
+    errors: List[str] = []
     directory_out_path = resolve_output_directory(directory_out)
     measurement_service_classes, _ = get_all_registered_measurement_info(discovery_client)
     validate_measurement_service_classes(measurement_service_classes)
@@ -139,7 +140,10 @@ def _create_all_clients(directory_out: Optional[str]) -> None:
                 generated_modules=generated_modules,
             )
         except Exception as e:
-            click.echo(CLIENT_CREATION_ERROR_MESSAGE.format(service_class, e))
+            errors.append(_CLIENT_CREATION_ERROR_MESSAGE.format(service_class,e))
+
+    if errors:
+        raise click.ClickException(errors[0])
 
 
 def _create_clients_interactively() -> None:
@@ -196,7 +200,7 @@ def _create_clients_interactively() -> None:
                 generated_modules=generated_modules,
             )
         except Exception as e:
-            click.echo(CLIENT_CREATION_ERROR_MESSAGE.format(service_class, e))
+            click.echo(_CLIENT_CREATION_ERROR_MESSAGE.format(service_class, e))
 
 
 def _create_clients(
