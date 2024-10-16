@@ -26,8 +26,8 @@ using an NI waveform generator.
 
 ### Required Software
 
-- InstrumentStudio 2024 Q3 or later
- NI-FGEN
+- InstrumentStudio 2024 Q4 or later
+- NI-FGEN
 - Recommended: TestStand 2021 SP1 or later
 
 ### Required Hardware
