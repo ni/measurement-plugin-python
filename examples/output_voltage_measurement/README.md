@@ -26,7 +26,7 @@ commands using NI-VISA.
 
 ### Required Software
 
-- InstrumentStudio 2024 Q3 or later
+- InstrumentStudio 2025 Q1 or later
 - NI-DCPower
 - NI-488.2 and/or NI-Serial
 - NI-VISA

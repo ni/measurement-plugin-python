@@ -21,7 +21,7 @@ measurement with NI-DAQmx.
 
 ### Required Software
 
-- InstrumentStudio 2024 Q3 or later
+- InstrumentStudio 2025 Q1 or later
 - NI-DAQmx
 - Recommended: TestStand 2021 SP1 or later
 

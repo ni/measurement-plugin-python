@@ -22,7 +22,7 @@ and a DMM that supports SCPI commands.
 
 ### Required Software
 
-- InstrumentStudio 2024 Q3 or later
+- InstrumentStudio 2025 Q1 or later
 - NI-488.2 and/or NI-Serial
 - NI-VISA
 - Recommended: TestStand 2021 SP1 or later

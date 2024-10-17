@@ -23,7 +23,7 @@ NI SMU via an NI-SWITCH multiplexer.
 
 ### Required Software
 
-- InstrumentStudio 2024 Q3 or later
+- InstrumentStudio 2025 Q1 or later
 - NI-DCPower
 - NI-SWITCH
 - Recommended: TestStand 2021 SP1 or later
