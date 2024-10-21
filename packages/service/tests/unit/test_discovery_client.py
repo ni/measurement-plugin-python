@@ -258,6 +258,7 @@ def test___discovery_service_not_running___get_discovery_service_address___start
     mock_popen.assert_called_once_with(
         [exe_file_path],
         cwd=exe_file_path.parent,
+        stdin=subprocess.DEVNULL,
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,
         **subprocess_popen_kwargs,
@@ -326,6 +327,7 @@ def test___key_file_exist_after_poll___start_discovery_service___discovery_servi
     mock_popen.assert_called_once_with(
         [exe_file_path],
         cwd=exe_file_path.parent,
+        stdin=subprocess.DEVNULL,
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,
         **subprocess_popen_kwargs,
