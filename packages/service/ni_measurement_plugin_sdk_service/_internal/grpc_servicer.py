@@ -11,7 +11,7 @@ from contextvars import ContextVar
 from typing import Any, Callable, Dict, Generator, List, Optional
 
 import grpc
-from google.protobuf import any_pb2
+from google.protobuf import any_pb2, descriptor_pool, message_factory
 
 from ni_measurement_plugin_sdk_service._internal.parameter import decoder, encoder
 from ni_measurement_plugin_sdk_service._internal.parameter.metadata import (
@@ -191,7 +191,8 @@ class MeasurementServiceServicerV1(v1_measurement_service_pb2_grpc.MeasurementSe
         )
 
         measurement_signature = v1_measurement_service_pb2.MeasurementSignature(
-            configuration_parameters_message_type="ni.measurementlink.measurement.v1.MeasurementConfigurations",
+            configuration_parameters_message_type=self._service_info.service_class
+            + ".Configurations",
             outputs_message_type="ni.measurementlink.measurement.v1.MeasurementOutputs",
         )
 
@@ -236,6 +237,7 @@ class MeasurementServiceServicerV1(v1_measurement_service_pb2_grpc.MeasurementSe
         self, request: v1_measurement_service_pb2.MeasureRequest, context: grpc.ServicerContext
     ) -> v1_measurement_service_pb2.MeasureResponse:
         """RPC API that executes the registered measurement method."""
+        self._validate_parameters(request)
         mapping_by_id = decoder.deserialize_parameters(
             self._configuration_metadata,
             request.configuration_parameters.value,
@@ -276,6 +278,17 @@ class MeasurementServiceServicerV1(v1_measurement_service_pb2_grpc.MeasurementSe
             )
         )
 
+    def _validate_parameters(self, request: v1_measurement_service_pb2.MeasureRequest) -> None:
+        pool = descriptor_pool.Default()
+        configuration_proto = pool.FindMessageTypeByName(
+            self._service_info.service_class + ".Configurations"
+        )
+        configuration_message = message_factory.GetMessageClass(configuration_proto)()
+        if not request.configuration_parameters.Is(configuration_message.DESCRIPTOR):
+            raise TypeError("Wrong message type")
+        if not request.configuration_parameters.Unpack(configuration_message):
+            raise RuntimeError("Unpack failed")
+
 
 class MeasurementServiceServicerV2(v2_measurement_service_pb2_grpc.MeasurementServiceServicer):
     """Measurement v2 servicer."""
@@ -307,7 +320,8 @@ class MeasurementServiceServicerV2(v2_measurement_service_pb2_grpc.MeasurementSe
         )
 
         measurement_signature = v2_measurement_service_pb2.MeasurementSignature(
-            configuration_parameters_message_type="ni.measurementlink.measurement.v2.MeasurementConfigurations",
+            configuration_parameters_message_type=self._service_info.service_class
+            + ".Configurations",
             outputs_message_type="ni.measurementlink.measurement.v2.MeasurementOutputs",
         )
 
@@ -355,6 +369,7 @@ class MeasurementServiceServicerV2(v2_measurement_service_pb2_grpc.MeasurementSe
         self, request: v2_measurement_service_pb2.MeasureRequest, context: grpc.ServicerContext
     ) -> Generator[v2_measurement_service_pb2.MeasureResponse, None, None]:
         """RPC API that executes the registered measurement method."""
+        self._validate_parameters(request)
         mapping_by_id = decoder.deserialize_parameters(
             self._configuration_metadata,
             request.configuration_parameters.value,
@@ -390,3 +405,14 @@ class MeasurementServiceServicerV2(v2_measurement_service_pb2_grpc.MeasurementSe
                 self._output_metadata, outputs, self._service_info.service_class + ".Outputs"
             )
         )
+
+    def _validate_parameters(self, request: v2_measurement_service_pb2.MeasureRequest) -> None:
+        pool = descriptor_pool.Default()
+        configuration_proto = pool.FindMessageTypeByName(
+            self._service_info.service_class + ".Configurations"
+        )
+        configuration_message = message_factory.GetMessageClass(configuration_proto)()
+        if not request.configuration_parameters.Is(configuration_message.DESCRIPTOR):
+            raise TypeError("Wrong message type")
+        if not request.configuration_parameters.Unpack(configuration_message):
+            raise RuntimeError("Unpack failed")
