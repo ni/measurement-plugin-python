@@ -84,6 +84,7 @@ def _start_service(
     discovery_service_subprocess = subprocess.Popen(  # nosec: B603
         [exe_file_path],
         cwd=exe_file_path.parent,
+        stdin=subprocess.DEVNULL,
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,
         **kwargs,
