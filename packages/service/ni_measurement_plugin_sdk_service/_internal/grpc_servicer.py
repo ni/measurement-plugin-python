@@ -243,7 +243,7 @@ class MeasurementServiceServicerV1(v1_measurement_service_pb2_grpc.MeasurementSe
         mapping_by_id = decoder.deserialize_parameters(
             self._configuration_metadata,
             request.configuration_parameters.value,
-            self._configuration_parameters_message_type
+            self._configuration_parameters_message_type,
         )
         mapping_by_variable_name = _get_mapping_by_parameter_name(
             mapping_by_id, self._measure_function
@@ -275,9 +275,7 @@ class MeasurementServiceServicerV1(v1_measurement_service_pb2_grpc.MeasurementSe
         outputs: Any,
     ) -> v1_measurement_service_pb2.MeasureResponse:
         return v1_measurement_service_pb2.MeasureResponse(
-            outputs=_serialize_outputs(
-                self._output_metadata, outputs, self._outputs_message_type
-            )
+            outputs=_serialize_outputs(self._output_metadata, outputs, self._outputs_message_type)
         )
 
     def _validate_parameters(self, request: v1_measurement_service_pb2.MeasureRequest) -> None:
@@ -376,7 +374,7 @@ class MeasurementServiceServicerV2(v2_measurement_service_pb2_grpc.MeasurementSe
         mapping_by_id = decoder.deserialize_parameters(
             self._configuration_metadata,
             request.configuration_parameters.value,
-            self._configuration_parameters_message_type
+            self._configuration_parameters_message_type,
         )
         mapping_by_variable_name = _get_mapping_by_parameter_name(
             mapping_by_id, self._measure_function
@@ -404,9 +402,7 @@ class MeasurementServiceServicerV2(v2_measurement_service_pb2_grpc.MeasurementSe
 
     def _serialize_response(self, outputs: Any) -> v2_measurement_service_pb2.MeasureResponse:
         return v2_measurement_service_pb2.MeasureResponse(
-            outputs=_serialize_outputs(
-                self._output_metadata, outputs, self._outputs_message_type
-            )
+            outputs=_serialize_outputs(self._output_metadata, outputs, self._outputs_message_type)
         )
 
     def _validate_parameters(self, request: v2_measurement_service_pb2.MeasureRequest) -> None:
