@@ -6,6 +6,7 @@ import collections.abc
 import contextlib
 import inspect
 import pathlib
+import sys
 import weakref
 from contextvars import ContextVar
 from typing import Any, Callable, Dict, Generator, List, Optional
@@ -181,6 +182,8 @@ class MeasurementServiceServicerV1(v1_measurement_service_pb2_grpc.MeasurementSe
         self._measure_function = measure_function
         self._owner = weakref.ref(owner) if owner is not None else None  # avoid reference cycle
         self._service_info = service_info
+        self._configuration_parameters_message_type = service_info.service_class + ".Configurations"
+        self._outputs_message_type = service_info.service_class + ".Outputs"
 
     def GetMetadata(  # noqa: N802 - function name should be lowercase
         self, request: v1_measurement_service_pb2.GetMetadataRequest, context: grpc.ServicerContext
@@ -191,9 +194,8 @@ class MeasurementServiceServicerV1(v1_measurement_service_pb2_grpc.MeasurementSe
         )
 
         measurement_signature = v1_measurement_service_pb2.MeasurementSignature(
-            configuration_parameters_message_type=self._service_info.service_class
-            + ".Configurations",
-            outputs_message_type="ni.measurementlink.measurement.v1.MeasurementOutputs",
+            configuration_parameters_message_type=self._configuration_parameters_message_type,
+            outputs_message_type=self._outputs_message_type,
         )
 
         for field_number, configuration_metadata in self._configuration_metadata.items():
@@ -207,7 +209,7 @@ class MeasurementServiceServicerV1(v1_measurement_service_pb2_grpc.MeasurementSe
             measurement_signature.configuration_parameters.append(configuration_parameter)
 
         measurement_signature.configuration_defaults.value = encoder.serialize_default_values(
-            self._configuration_metadata, self._service_info.service_class + ".Configurations"
+            self._configuration_metadata, self._configuration_parameters_message_type
         )
 
         for field_number, output_metadata in self._output_metadata.items():
@@ -241,7 +243,7 @@ class MeasurementServiceServicerV1(v1_measurement_service_pb2_grpc.MeasurementSe
         mapping_by_id = decoder.deserialize_parameters(
             self._configuration_metadata,
             request.configuration_parameters.value,
-            self._service_info.service_class + ".Configurations",
+            self._configuration_parameters_message_type
         )
         mapping_by_variable_name = _get_mapping_by_parameter_name(
             mapping_by_id, self._measure_function
@@ -274,20 +276,22 @@ class MeasurementServiceServicerV1(v1_measurement_service_pb2_grpc.MeasurementSe
     ) -> v1_measurement_service_pb2.MeasureResponse:
         return v1_measurement_service_pb2.MeasureResponse(
             outputs=_serialize_outputs(
-                self._output_metadata, outputs, self._service_info.service_class + ".Outputs"
+                self._output_metadata, outputs, self._outputs_message_type
             )
         )
 
     def _validate_parameters(self, request: v1_measurement_service_pb2.MeasureRequest) -> None:
         pool = descriptor_pool.Default()
         configuration_proto = pool.FindMessageTypeByName(
-            self._service_info.service_class + ".Configurations"
+            self._configuration_parameters_message_type
         )
         configuration_message = message_factory.GetMessageClass(configuration_proto)()
         if not request.configuration_parameters.Is(configuration_message.DESCRIPTOR):
-            raise TypeError("Wrong message type")
-        if not request.configuration_parameters.Unpack(configuration_message):
-            raise RuntimeError("Unpack failed")
+            expected = "type.googleapis.com/" + configuration_message.DESCRIPTOR.full_name
+            actual = request.configuration_parameters.type_url
+            sys.stderr.write(f"Note: Wrong message type. Expected {expected!r} but got {actual!r}")
+        elif not request.configuration_parameters.Unpack(configuration_message):
+            sys.stderr.write("Warning: Unpack failed")
 
 
 class MeasurementServiceServicerV2(v2_measurement_service_pb2_grpc.MeasurementServiceServicer):
@@ -320,9 +324,8 @@ class MeasurementServiceServicerV2(v2_measurement_service_pb2_grpc.MeasurementSe
         )
 
         measurement_signature = v2_measurement_service_pb2.MeasurementSignature(
-            configuration_parameters_message_type=self._service_info.service_class
-            + ".Configurations",
-            outputs_message_type="ni.measurementlink.measurement.v2.MeasurementOutputs",
+            configuration_parameters_message_type=self._configuration_parameters_message_type,
+            outputs_message_type=self._outputs_message_type,
         )
 
         for field_number, configuration_metadata in self._configuration_metadata.items():
@@ -337,7 +340,7 @@ class MeasurementServiceServicerV2(v2_measurement_service_pb2_grpc.MeasurementSe
             measurement_signature.configuration_parameters.append(configuration_parameter)
 
         measurement_signature.configuration_defaults.value = encoder.serialize_default_values(
-            self._configuration_metadata, self._service_info.service_class + ".Configurations"
+            self._configuration_metadata, self._configuration_parameters_message_type
         )
 
         for field_number, output_metadata in self._output_metadata.items():
@@ -373,7 +376,7 @@ class MeasurementServiceServicerV2(v2_measurement_service_pb2_grpc.MeasurementSe
         mapping_by_id = decoder.deserialize_parameters(
             self._configuration_metadata,
             request.configuration_parameters.value,
-            self._service_info.service_class + ".Configurations",
+            self._configuration_parameters_message_type
         )
         mapping_by_variable_name = _get_mapping_by_parameter_name(
             mapping_by_id, self._measure_function
@@ -402,17 +405,19 @@ class MeasurementServiceServicerV2(v2_measurement_service_pb2_grpc.MeasurementSe
     def _serialize_response(self, outputs: Any) -> v2_measurement_service_pb2.MeasureResponse:
         return v2_measurement_service_pb2.MeasureResponse(
             outputs=_serialize_outputs(
-                self._output_metadata, outputs, self._service_info.service_class + ".Outputs"
+                self._output_metadata, outputs, self._outputs_message_type
             )
         )
 
     def _validate_parameters(self, request: v2_measurement_service_pb2.MeasureRequest) -> None:
         pool = descriptor_pool.Default()
         configuration_proto = pool.FindMessageTypeByName(
-            self._service_info.service_class + ".Configurations"
+            self._configuration_parameters_message_type
         )
         configuration_message = message_factory.GetMessageClass(configuration_proto)()
         if not request.configuration_parameters.Is(configuration_message.DESCRIPTOR):
-            raise TypeError("Wrong message type")
-        if not request.configuration_parameters.Unpack(configuration_message):
-            raise RuntimeError("Unpack failed")
+            expected = "type.googleapis.com/" + configuration_message.DESCRIPTOR.full_name
+            actual = request.configuration_parameters.type_url
+            sys.stderr.write(f"Note: Wrong message type. Expected {expected!r} but got {actual!r}")
+        elif not request.configuration_parameters.Unpack(configuration_message):
+            sys.stderr.write("Warning: Unpack failed")
