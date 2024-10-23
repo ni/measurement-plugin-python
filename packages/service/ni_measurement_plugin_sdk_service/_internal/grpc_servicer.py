@@ -312,6 +312,8 @@ class MeasurementServiceServicerV2(v2_measurement_service_pb2_grpc.MeasurementSe
         self._measure_function = measure_function
         self._owner = weakref.ref(owner) if owner is not None else None  # avoid reference cycle
         self._service_info = service_info
+        self._configuration_parameters_message_type = service_info.service_class + ".Configurations"
+        self._outputs_message_type = service_info.service_class + ".Outputs"
 
     def GetMetadata(  # noqa: N802 - function name should be lowercase
         self, request: v2_measurement_service_pb2.GetMetadataRequest, context: grpc.ServicerContext
