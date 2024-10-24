@@ -105,9 +105,12 @@ def test___streaming_data_measurement___measure___server_call_logged(
         )
         num_responses = 10
 
+        metadata = stub_v2.GetMetadata(v2_measurement_service_pb2.GetMetadataRequest())
+
         measure_request = v2_measurement_service_pb2.MeasureRequest(
             configuration_parameters=get_streaming_data_configuration_parameters(
-                num_responses=num_responses
+                message_type=metadata.measurement_signature.configuration_parameters_message_type,
+                num_responses=num_responses,
             )
         )
         response_iterator = stub_v2.Measure(measure_request)

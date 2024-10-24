@@ -17,8 +17,12 @@ from tests.utilities.stubs.yieldvsreturn.types_pb2 import Configurations, Output
 def test___measurement_utilizing_yield_and_return___call_measurement___receives_responses_from_yield_and_return(
     stub_v2: v2_measurement_service_pb2_grpc.MeasurementServiceStub,
 ):
+    metadata = stub_v2.GetMetadata(v2_measurement_service_pb2.GetMetadataRequest())
+
     request = v2_measurement_service_pb2.MeasureRequest(
-        configuration_parameters=_get_configuration_parameters()
+        configuration_parameters=_get_configuration_parameters(
+            message_type=metadata.measurement_signature.configuration_parameters_message_type
+        )
     )
 
     response_iterator = stub_v2.Measure(request)
@@ -33,9 +37,10 @@ def test___measurement_utilizing_yield_and_return___call_measurement___receives_
             assert output.status == f"Update: {index + 1}"
 
 
-def _get_configuration_parameters(*args, **kwargs) -> any_pb2.Any:
+def _get_configuration_parameters(*args, message_type: str = "", **kwargs) -> any_pb2.Any:
     serialized_parameter = _get_serialized_measurement_configuration_parameters(*args, **kwargs)
     config_params_any = any_pb2.Any()
+    config_params_any.type_url = "type.googleapis.com/" + message_type
     config_params_any.value = serialized_parameter
     return config_params_any
 

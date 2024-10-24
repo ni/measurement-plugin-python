@@ -76,6 +76,8 @@ def test___measurement_service_v1___measure___returns_output(
     string_array_in: List[str],
     stub_v1: v1_measurement_service_pb2_grpc.MeasurementServiceStub,
 ):
+    metadata = stub_v1.GetMetadata(v1_measurement_service_pb2.GetMetadataRequest())
+
     request = v1_measurement_service_pb2.MeasureRequest(
         configuration_parameters=_get_configuration_parameters(
             float_in,
@@ -85,6 +87,7 @@ def test___measurement_service_v1___measure___returns_output(
             enum_in,
             protobuf_enum_in,
             string_array_in,
+            message_type=metadata.measurement_signature.configuration_parameters_message_type,
         )
     )
     response = stub_v1.Measure(request)
@@ -119,6 +122,8 @@ def test___measurement_service_v2___measure___returns_output(
     string_array_in: List[str],
     stub_v2: v2_measurement_service_pb2_grpc.MeasurementServiceStub,
 ):
+    metadata = stub_v2.GetMetadata(v2_measurement_service_pb2.GetMetadataRequest())
+
     request = v2_measurement_service_pb2.MeasureRequest(
         configuration_parameters=_get_configuration_parameters(
             float_in,
@@ -128,6 +133,7 @@ def test___measurement_service_v2___measure___returns_output(
             enum_in,
             protobuf_enum_in,
             string_array_in,
+            message_type=metadata.measurement_signature.configuration_parameters_message_type,
         )
     )
     response_iterator = stub_v2.Measure(request)
@@ -154,6 +160,8 @@ def test___measurement_service_v1___measure_with_large_array___returns_output(
     protobuf_enum_in = ProtobufColor.WHITE
     string_array_in = ["", "TestString1", "#$%!@<*(&^~`"]
 
+    metadata = stub_v1.GetMetadata(v1_measurement_service_pb2.GetMetadataRequest())
+
     request = v1_measurement_service_pb2.MeasureRequest(
         configuration_parameters=_get_configuration_parameters(
             float_in,
@@ -163,6 +171,7 @@ def test___measurement_service_v1___measure_with_large_array___returns_output(
             enum_in,
             protobuf_enum_in,
             string_array_in,
+            message_type=metadata.measurement_signature.configuration_parameters_message_type,
         )
     )
     response = stub_v1.Measure(request)
@@ -187,6 +196,8 @@ def test___measurement_service_v2___measure_with_large_array___returns_output(
     string_in = "InputString"
     string_array_in = ["", "TestString1", "#$%!@<*(&^~`"]
 
+    metadata = stub_v2.GetMetadata(v2_measurement_service_pb2.GetMetadataRequest())
+
     request = v2_measurement_service_pb2.MeasureRequest(
         configuration_parameters=_get_configuration_parameters(
             float_in,
@@ -196,6 +207,7 @@ def test___measurement_service_v2___measure_with_large_array___returns_output(
             enum_in,
             protobuf_enum_in,
             string_array_in,
+            message_type=metadata.measurement_signature.configuration_parameters_message_type,
         )
     )
     response_iterator = stub_v2.Measure(request)
@@ -215,13 +227,11 @@ def measurement_service(discovery_service_process) -> Generator[MeasurementServi
         yield service
 
 
-def _get_configuration_parameters(*args, **kwargs) -> any_pb2.Any:
+def _get_configuration_parameters(*args, message_type: str = "", **kwargs) -> any_pb2.Any:
     serialized_parameter = _get_serialized_measurement_signature(*args, **kwargs)
     config_params_any = any_pb2.Any()
+    config_params_any.type_url = "type.googleapis.com/" + message_type
     config_params_any.value = serialized_parameter
-    config_params_any.type_url = (
-        "type.googleapis.com/ni.tests.LoopbackMeasurement_Python.Configurations"
-    )
     return config_params_any
 
 

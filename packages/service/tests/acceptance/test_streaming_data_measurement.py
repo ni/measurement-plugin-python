@@ -19,8 +19,13 @@ from tests.utilities.stubs.streamingdata.types_pb2 import Configurations, Output
 def test___streaming_measurement_service___request_number_of_responses___receives_responses(
     num_responses: int, stub_v2: v2_measurement_service_pb2_grpc.MeasurementServiceStub
 ):
+    metadata = stub_v2.GetMetadata(v2_measurement_service_pb2.GetMetadataRequest())
+
     request = v2_measurement_service_pb2.MeasureRequest(
-        configuration_parameters=_get_configuration_parameters(num_responses=num_responses)
+        configuration_parameters=_get_configuration_parameters(
+            message_type=metadata.measurement_signature.configuration_parameters_message_type,
+            num_responses=num_responses,
+        )
     )
 
     response_iterator = stub_v2.Measure(request)
@@ -33,9 +38,12 @@ def test___streaming_measurement_service___request_number_of_responses___receive
 def test___streaming_measurement_service___request_data_cumulatively___receives_expected_amount_of_data(
     data_size: int, stub_v2: v2_measurement_service_pb2_grpc.MeasurementServiceStub
 ):
+    metadata = stub_v2.GetMetadata(v2_measurement_service_pb2.GetMetadataRequest())
+
     name = "testing-cumulative"
     request = v2_measurement_service_pb2.MeasureRequest(
         configuration_parameters=_get_configuration_parameters(
+            message_type=metadata.measurement_signature.configuration_parameters_message_type,
             name=name,
             data_size=data_size,
             cumulative_data=True,
@@ -57,9 +65,12 @@ def test___streaming_measurement_service___request_data_cumulatively___receives_
 def test___streaming_measurement_service___specify_data_size___receives_expected_amount_of_data(
     data_size: int, stub_v2: v2_measurement_service_pb2_grpc.MeasurementServiceStub
 ):
+    metadata = stub_v2.GetMetadata(v2_measurement_service_pb2.GetMetadataRequest())
+
     name = "testing-not-cumulative"
     request = v2_measurement_service_pb2.MeasureRequest(
         configuration_parameters=_get_configuration_parameters(
+            message_type=metadata.measurement_signature.configuration_parameters_message_type,
             name=name,
             data_size=data_size,
             cumulative_data=False,
@@ -80,8 +91,13 @@ def test___streaming_measurement_service___specify_data_size___receives_expected
 def test___streaming_measurement_service___specify_error_index___errors_at_expected_response(
     error_on_index: int, stub_v2: v2_measurement_service_pb2_grpc.MeasurementServiceStub
 ):
+    metadata = stub_v2.GetMetadata(v2_measurement_service_pb2.GetMetadataRequest())
+
     request = v2_measurement_service_pb2.MeasureRequest(
-        configuration_parameters=_get_configuration_parameters(error_on_index=error_on_index)
+        configuration_parameters=_get_configuration_parameters(
+            message_type=metadata.measurement_signature.configuration_parameters_message_type,
+            error_on_index=error_on_index,
+        )
     )
 
     response_iterator = stub_v2.Measure(request)
@@ -92,12 +108,10 @@ def test___streaming_measurement_service___specify_error_index___errors_at_expec
     assert (index + 1) == error_on_index
 
 
-def _get_configuration_parameters(*args, **kwargs) -> any_pb2.Any:
+def _get_configuration_parameters(*args, message_type: str = "", **kwargs) -> any_pb2.Any:
     serialized_parameter = _get_serialized_measurement_configuration_parameters(*args, **kwargs)
     config_params_any = any_pb2.Any()
-    config_params_any.type_url = (
-        "type.googleapis.com/ni.tests.StreamingDataMeasurement_Python.Configurations"
-    )
+    config_params_any.type_url = "type.googleapis.com/" + message_type
     config_params_any.value = serialized_parameter
     return config_params_any
 

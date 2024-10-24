@@ -42,6 +42,7 @@ def test___single_session___measure___creates_single_session(
     assert _get_output(outputs) == [_MeasurementOutput("SCOPE1", "SCOPE1", "0", "0")]
 
 
+@pytest.mark.usefixtures("filter_wrong_configurations_message_type_warnings")
 def test___multiple_sessions___measure___creates_multiple_sessions(
     pin_map_context: PinMapContext,
     stub_v2: MeasurementServiceStub,
