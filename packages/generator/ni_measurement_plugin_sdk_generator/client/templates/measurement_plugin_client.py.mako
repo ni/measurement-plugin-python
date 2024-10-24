@@ -3,7 +3,7 @@ import re
 from typing import Any
 %>\
 \
-<%page args="class_name, display_name, version, configuration_metadata, output_metadata, service_class, configuration_parameters_with_type_and_default_values, measure_api_parameters, output_parameters_with_type, built_in_import_modules, custom_import_modules, enum_by_class_name, configuration_parameters_type_url"/>\
+<%page args="class_name, display_name, version, configuration_metadata, output_metadata, service_class, configuration_parameters_with_type_and_default_values, measure_api_parameters, output_parameters_with_type, built_in_import_modules, custom_import_modules, enum_by_class_name, configuration_parameters_type_url, outputs_message_type"/>\
 \
 <%
     def _format_default_value(value: Any) -> Any:
@@ -258,7 +258,7 @@ class ${class_name}:
         )
 
     def _validate_response(self, response: v2_measurement_service_pb2.MeasureResponse) -> None:
-        expected_type = f"type.googleapis.com/{self._service_class}.Outputs"
+        expected_type = "type.googleapis.com/" + ${outputs_message_type | repr}
         actual_type = response.outputs.type_url
         if actual_type != expected_type:
             warnings.warn(

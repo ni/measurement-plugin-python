@@ -532,7 +532,9 @@ class NonStreamingDataMeasurementClient:
         )
 
     def _validate_response(self, response: v2_measurement_service_pb2.MeasureResponse) -> None:
-        expected_type = f"type.googleapis.com/{self._service_class}.Outputs"
+        expected_type = (
+            "type.googleapis.com/" + "ni.tests.NonStreamingDataMeasurement_Python.Outputs"
+        )
         actual_type = response.outputs.type_url
         if actual_type != expected_type:
             warnings.warn(
