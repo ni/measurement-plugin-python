@@ -20,6 +20,7 @@ from tests.utilities.stubs.niscope.types_pb2 import Configurations, Outputs
 _SITE = 0
 
 
+@pytest.mark.usefixtures("filter_wrong_configurations_message_type_warnings")
 def test___single_session___measure___returns_measured_values(
     pin_map_context: PinMapContext,
     stub_v2: MeasurementServiceStub,
@@ -31,6 +32,7 @@ def test___single_session___measure___returns_measured_values(
     assert all([-2.5 < sample < 2.5 for sample in outputs.waveform])
 
 
+@pytest.mark.usefixtures("filter_wrong_configurations_message_type_warnings")
 def test___single_session___measure___creates_single_session(
     pin_map_context: PinMapContext,
     stub_v2: MeasurementServiceStub,
