@@ -22,7 +22,9 @@ import logging
 import pathlib
 import threading
 import typing
+% if output_metadata:
 import warnings
+% endif
 % if len(enum_by_class_name):
 from enum import Enum
 % endif
@@ -39,7 +41,9 @@ ${module}
 % endfor
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
+% if output_metadata:
 from ni_measurement_plugin_sdk_service.measurement import WrongMessageTypeWarning
+% endif
 from ni_measurement_plugin_sdk_service.measurement.client_support import (
     ParameterMetadata,
     create_file_descriptor,
@@ -253,9 +257,7 @@ class ${class_name}:
             )
         )
 
-    def _validate_response(
-        self, response: v2_measurement_service_pb2.MeasureResponse
-    ) -> None:
+    def _validate_response(self, response: v2_measurement_service_pb2.MeasureResponse) -> None:
         expected_type = f"type.googleapis.com/{self._service_class}.Outputs"
         actual_type = response.outputs.type_url
         if actual_type != expected_type:

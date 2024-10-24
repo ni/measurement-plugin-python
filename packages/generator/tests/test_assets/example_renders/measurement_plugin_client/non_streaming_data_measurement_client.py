@@ -6,6 +6,7 @@ import logging
 import pathlib
 import threading
 import typing
+import warnings
 from enum import Enum
 
 import grpc
@@ -20,6 +21,7 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types.xydata_
 )
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
+from ni_measurement_plugin_sdk_service.measurement import WrongMessageTypeWarning
 from ni_measurement_plugin_sdk_service.measurement.client_support import (
     ParameterMetadata,
     create_file_descriptor,
@@ -505,7 +507,7 @@ class NonStreamingDataMeasurementClient:
         self, parameter_values: typing.List[typing.Any]
     ) -> v2_measurement_service_pb2.MeasureRequest:
         serialized_configuration = any_pb2.Any(
-            type_url="type.googleapis.com/ni.measurementlink.measurement.v2.MeasurementConfigurations",
+            type_url="type.googleapis.com/ni.tests.NonStreamingDataMeasurement_Python.Configurations",
             value=serialize_parameters(
                 self._configuration_metadata,
                 parameter_values,
@@ -520,6 +522,7 @@ class NonStreamingDataMeasurementClient:
     def _deserialize_response(
         self, response: v2_measurement_service_pb2.MeasureResponse
     ) -> Outputs:
+        self._validate_response(response)
         return Outputs._make(
             deserialize_parameters(
                 self._output_metadata,
@@ -527,6 +530,15 @@ class NonStreamingDataMeasurementClient:
                 f"{self._service_class}.Outputs",
             )
         )
+
+    def _validate_response(self, response: v2_measurement_service_pb2.MeasureResponse) -> None:
+        expected_type = f"type.googleapis.com/{self._service_class}.Outputs"
+        actual_type = response.outputs.type_url
+        if actual_type != expected_type:
+            warnings.warn(
+                f"Wrong message type. Expected {expected_type!r} but got {actual_type!r}",
+                WrongMessageTypeWarning,
+            )
 
     def measure(
         self,
