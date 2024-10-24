@@ -104,7 +104,6 @@ def test___streaming_data_measurement___measure___server_call_logged(
             "stub_v2"
         )
         num_responses = 10
-
         metadata = stub_v2.GetMetadata(v2_measurement_service_pb2.GetMetadataRequest())
 
         measure_request = v2_measurement_service_pb2.MeasureRequest(

@@ -159,7 +159,6 @@ def test___measurement_service_v1___measure_with_large_array___returns_output(
     enum_in = Color.BLUE
     protobuf_enum_in = ProtobufColor.WHITE
     string_array_in = ["", "TestString1", "#$%!@<*(&^~`"]
-
     metadata = stub_v1.GetMetadata(v1_measurement_service_pb2.GetMetadataRequest())
 
     request = v1_measurement_service_pb2.MeasureRequest(
@@ -195,7 +194,6 @@ def test___measurement_service_v2___measure_with_large_array___returns_output(
     protobuf_enum_in = ProtobufColor.WHITE
     string_in = "InputString"
     string_array_in = ["", "TestString1", "#$%!@<*(&^~`"]
-
     metadata = stub_v2.GetMetadata(v2_measurement_service_pb2.GetMetadataRequest())
 
     request = v2_measurement_service_pb2.MeasureRequest(

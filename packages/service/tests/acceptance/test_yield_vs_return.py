@@ -18,7 +18,6 @@ def test___measurement_utilizing_yield_and_return___call_measurement___receives_
     stub_v2: v2_measurement_service_pb2_grpc.MeasurementServiceStub,
 ):
     metadata = stub_v2.GetMetadata(v2_measurement_service_pb2.GetMetadataRequest())
-
     request = v2_measurement_service_pb2.MeasureRequest(
         configuration_parameters=_get_configuration_parameters(
             message_type=metadata.measurement_signature.configuration_parameters_message_type
