@@ -22,6 +22,7 @@ import logging
 import pathlib
 import threading
 import typing
+import warnings
 % if len(enum_by_class_name):
 from enum import Enum
 % endif
@@ -38,6 +39,7 @@ ${module}
 % endfor
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
+from ni_measurement_plugin_sdk_service.measurement import WrongMessageTypeWarning
 from ni_measurement_plugin_sdk_service.measurement.client_support import (
     ParameterMetadata,
     create_file_descriptor,
@@ -242,6 +244,7 @@ class ${class_name}:
     def _deserialize_response(
         self, response: v2_measurement_service_pb2.MeasureResponse
     ) -> Outputs:
+        self._validate_response(response)
         return Outputs._make(
             deserialize_parameters(
                 self._output_metadata,
@@ -249,6 +252,17 @@ class ${class_name}:
                 f"{self._service_class}.Outputs",
             )
         )
+
+    def _validate_response(
+        self, response: v2_measurement_service_pb2.MeasureResponse
+    ) -> None:
+        expected_type = f"type.googleapis.com/{self._service_class}.Outputs"
+        actual_type = response.outputs.type_url
+        if actual_type != expected_type:
+            warnings.warn(
+                f"Wrong message type. Expected {expected_type!r} but got {actual_type!r}",
+                WrongMessageTypeWarning,
+            )
     % endif
 
     def measure(

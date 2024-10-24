@@ -6,13 +6,13 @@ import collections.abc
 import contextlib
 import inspect
 import pathlib
-import sys
+import warnings
 import weakref
 from contextvars import ContextVar
 from typing import Any, Callable, Dict, Generator, List, Optional
 
 import grpc
-from google.protobuf import any_pb2, descriptor_pool, message_factory
+from google.protobuf import any_pb2
 
 from ni_measurement_plugin_sdk_service._internal.parameter import decoder, encoder
 from ni_measurement_plugin_sdk_service._internal.parameter.metadata import (
@@ -26,6 +26,7 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measur
     measurement_service_pb2 as v2_measurement_service_pb2,
     measurement_service_pb2_grpc as v2_measurement_service_pb2_grpc,
 )
+from ni_measurement_plugin_sdk_service.measurement import WrongMessageTypeWarning
 from ni_measurement_plugin_sdk_service.measurement.info import (
     MeasurementInfo,
     ServiceInfo,
@@ -142,7 +143,8 @@ def _serialize_outputs(
 ) -> any_pb2.Any:
     if isinstance(outputs, collections.abc.Sequence):
         return any_pb2.Any(
-            value=encoder.serialize_parameters(output_metadata, outputs, service_name)
+            value=encoder.serialize_parameters(output_metadata, outputs, service_name),
+            type_url="type.googleapis.com/" + service_name,
         )
     elif outputs is None:
         raise ValueError(f"Measurement function returned None")
@@ -279,17 +281,13 @@ class MeasurementServiceServicerV1(v1_measurement_service_pb2_grpc.MeasurementSe
         )
 
     def _validate_parameters(self, request: v1_measurement_service_pb2.MeasureRequest) -> None:
-        pool = descriptor_pool.Default()
-        configuration_proto = pool.FindMessageTypeByName(
-            self._configuration_parameters_message_type
-        )
-        configuration_message = message_factory.GetMessageClass(configuration_proto)()
-        if not request.configuration_parameters.Is(configuration_message.DESCRIPTOR):
-            expected = "type.googleapis.com/" + configuration_message.DESCRIPTOR.full_name
-            actual = request.configuration_parameters.type_url
-            sys.stderr.write(f"Note: Wrong message type. Expected {expected!r} but got {actual!r}")
-        elif not request.configuration_parameters.Unpack(configuration_message):
-            sys.stderr.write("Warning: Unpack failed")
+        expected_type = "type.googleapis.com/" + self._configuration_parameters_message_type
+        actual_type = request.configuration_parameters.type_url
+        if actual_type != expected_type:
+            warnings.warn(
+                f"Wrong message type. Expected {expected_type!r} but got {actual_type!r}",
+                WrongMessageTypeWarning,
+            )
 
 
 class MeasurementServiceServicerV2(v2_measurement_service_pb2_grpc.MeasurementServiceServicer):
@@ -408,14 +406,10 @@ class MeasurementServiceServicerV2(v2_measurement_service_pb2_grpc.MeasurementSe
         )
 
     def _validate_parameters(self, request: v2_measurement_service_pb2.MeasureRequest) -> None:
-        pool = descriptor_pool.Default()
-        configuration_proto = pool.FindMessageTypeByName(
-            self._configuration_parameters_message_type
-        )
-        configuration_message = message_factory.GetMessageClass(configuration_proto)()
-        if not request.configuration_parameters.Is(configuration_message.DESCRIPTOR):
-            expected = "type.googleapis.com/" + configuration_message.DESCRIPTOR.full_name
-            actual = request.configuration_parameters.type_url
-            sys.stderr.write(f"Note: Wrong message type. Expected {expected!r} but got {actual!r}")
-        elif not request.configuration_parameters.Unpack(configuration_message):
-            sys.stderr.write("Warning: Unpack failed")
+        expected_type = "type.googleapis.com/" + self._configuration_parameters_message_type
+        actual_type = request.configuration_parameters.type_url
+        if actual_type != expected_type:
+            warnings.warn(
+                f"Wrong message type. Expected {expected_type!r} but got {actual_type!r}",
+                WrongMessageTypeWarning,
+            )
