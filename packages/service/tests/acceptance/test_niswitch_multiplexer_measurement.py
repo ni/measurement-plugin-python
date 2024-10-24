@@ -20,7 +20,9 @@ from tests.utilities.stubs.niswitchmultiplexer.types_pb2 import Configurations, 
 _SITE = 0
 
 
-@pytest.mark.usefixtures("filter_wrong_configurations_message_type_warnings")
+pytestmark = pytest.mark.usefixtures("filter_wrong_configurations_message_type_warnings")
+
+
 def test___single_session___measure___creates_single_session(
     pin_map_context: PinMapContext,
     stub_v2: MeasurementServiceStub,
@@ -34,7 +36,6 @@ def test___single_session___measure___creates_single_session(
     ]
 
 
-@pytest.mark.usefixtures("filter_wrong_configurations_message_type_warnings")
 def test___multiple_sessions___measure___creates_multiple_sessions(
     pin_map_context: PinMapContext,
     stub_v2: MeasurementServiceStub,

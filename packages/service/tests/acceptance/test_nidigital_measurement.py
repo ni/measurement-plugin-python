@@ -18,7 +18,9 @@ from tests.utilities.measurements import nidigital_measurement
 from tests.utilities.stubs.nidigital.types_pb2 import Configurations, Outputs
 
 
-@pytest.mark.usefixtures("filter_wrong_configurations_message_type_warnings")
+pytestmark = pytest.mark.usefixtures("filter_wrong_configurations_message_type_warnings")
+
+
 def test___single_session___measure___returns_measured_values(
     pin_map_id: str,
     stub_v2: MeasurementServiceStub,
@@ -32,7 +34,6 @@ def test___single_session___measure___returns_measured_values(
     assert outputs.failing_sites == []
 
 
-@pytest.mark.usefixtures("filter_wrong_configurations_message_type_warnings")
 def test___single_session___measure___creates_single_session(
     pin_map_id: str,
     stub_v2: MeasurementServiceStub,
@@ -52,7 +53,6 @@ def test___single_session___measure___creates_single_session(
     ]
 
 
-@pytest.mark.usefixtures("filter_wrong_configurations_message_type_warnings")
 def test___multiple_sessions___measure___creates_multiple_sessions(
     pin_map_id: str,
     stub_v2: MeasurementServiceStub,

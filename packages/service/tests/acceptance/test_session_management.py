@@ -20,7 +20,9 @@ from tests.utilities.measurements import pin_aware_measurement
 from tests.utilities.stubs.pinaware.types_pb2 import Configurations, Outputs
 
 
-@pytest.mark.usefixtures("filter_wrong_configurations_message_type_warnings")
+pytestmark = pytest.mark.usefixtures("filter_wrong_configurations_message_type_warnings")
+
+
 def test___pin_map_context___measure___sends_pin_map_id_and_sites(
     pin_map_client: PinMapClient,
     pin_map_directory: pathlib.Path,
@@ -208,7 +210,6 @@ _SMU_MULTI_SESSION_CONFIGURATIONS = [
 @pytest.mark.parametrize(
     "configuration", _FGEN_SINGLE_SESSION_CONFIGURATIONS + _SMU_SINGLE_SESSION_CONFIGURATIONS
 )
-@pytest.mark.usefixtures("filter_wrong_configurations_message_type_warnings")
 def test___single_session___measure___reserves_single_session(
     configuration: Configuration,
     pin_map_client: PinMapClient,
@@ -233,7 +234,6 @@ def test___single_session___measure___reserves_single_session(
     + _SMU_SINGLE_SESSION_CONFIGURATIONS
     + _SMU_MULTI_SESSION_CONFIGURATIONS,
 )
-@pytest.mark.usefixtures("filter_wrong_configurations_message_type_warnings")
 def test___multi_session___measure___reserves_multiple_sessions(
     configuration: Configuration,
     pin_map_client: PinMapClient,
@@ -254,7 +254,6 @@ def test___multi_session___measure___reserves_multiple_sessions(
 @pytest.mark.parametrize(
     "configuration", _FGEN_MULTI_SESSION_CONFIGURATIONS + _SMU_MULTI_SESSION_CONFIGURATIONS
 )
-@pytest.mark.usefixtures("filter_wrong_configurations_message_type_warnings")
 def test___multi_session_but_expecting_single_session___measure___raises_too_many_sessions_error(
     configuration: Configuration,
     pin_map_client: PinMapClient,
