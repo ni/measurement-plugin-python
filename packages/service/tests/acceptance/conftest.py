@@ -4,9 +4,9 @@ import pathlib
 import warnings
 from typing import Generator
 
-from ni_measurement_plugin_sdk_service.measurement import WrongMessageTypeWarning
-
 import pytest
+
+from ni_measurement_plugin_sdk_service.measurement import WrongMessageTypeWarning
 
 
 @pytest.fixture(scope="module")
