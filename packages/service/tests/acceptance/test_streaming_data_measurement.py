@@ -95,6 +95,9 @@ def test___streaming_measurement_service___specify_error_index___errors_at_expec
 def _get_configuration_parameters(*args, **kwargs) -> any_pb2.Any:
     serialized_parameter = _get_serialized_measurement_configuration_parameters(*args, **kwargs)
     config_params_any = any_pb2.Any()
+    config_params_any.type_url = (
+        "type.googleapis.com/ni.tests.StreamingDataMeasurement_Python.Configurations"
+    )
     config_params_any.value = serialized_parameter
     return config_params_any
 

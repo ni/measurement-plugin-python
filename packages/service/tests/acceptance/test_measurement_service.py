@@ -219,6 +219,9 @@ def _get_configuration_parameters(*args, **kwargs) -> any_pb2.Any:
     serialized_parameter = _get_serialized_measurement_signature(*args, **kwargs)
     config_params_any = any_pb2.Any()
     config_params_any.value = serialized_parameter
+    config_params_any.type_url = (
+        "type.googleapis.com/ni.tests.LoopbackMeasurement_Python.Configurations"
+    )
     return config_params_any
 
 
@@ -255,17 +258,13 @@ def _validate_get_metadata_response(
     assert get_metadata_response.measurement_details.display_name == "Loopback Measurement (Py)"
     assert get_metadata_response.measurement_details.version == "1.2.3.4"
 
-    expected_version = "v1"
-    if isinstance(get_metadata_response, v2_measurement_service_pb2.GetMetadataResponse):
-        expected_version = "v2"
-
     assert (
         get_metadata_response.measurement_signature.configuration_parameters_message_type
-        == f"ni.measurementlink.measurement.{expected_version}.MeasurementConfigurations"
+        == "ni.tests.LoopbackMeasurement_Python.Configurations"
     )
     assert (
         get_metadata_response.measurement_signature.outputs_message_type
-        == f"ni.measurementlink.measurement.{expected_version}.MeasurementOutputs"
+        == "ni.tests.LoopbackMeasurement_Python.Outputs"
     )
     assert (
         len(get_metadata_response.measurement_signature.configuration_parameters)
