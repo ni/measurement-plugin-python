@@ -6,6 +6,7 @@ import collections.abc
 import contextlib
 import inspect
 import pathlib
+import warnings
 import weakref
 from contextvars import ContextVar
 from typing import Any, Callable, Dict, Generator, List, Optional
@@ -25,6 +26,7 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measur
     measurement_service_pb2 as v2_measurement_service_pb2,
     measurement_service_pb2_grpc as v2_measurement_service_pb2_grpc,
 )
+from ni_measurement_plugin_sdk_service.measurement import WrongMessageTypeWarning
 from ni_measurement_plugin_sdk_service.measurement.info import (
     MeasurementInfo,
     ServiceInfo,
@@ -141,7 +143,8 @@ def _serialize_outputs(
 ) -> any_pb2.Any:
     if isinstance(outputs, collections.abc.Sequence):
         return any_pb2.Any(
-            value=encoder.serialize_parameters(output_metadata, outputs, service_name)
+            value=encoder.serialize_parameters(output_metadata, outputs, service_name),
+            type_url="type.googleapis.com/" + service_name,
         )
     elif outputs is None:
         raise ValueError(f"Measurement function returned None")
@@ -181,6 +184,8 @@ class MeasurementServiceServicerV1(v1_measurement_service_pb2_grpc.MeasurementSe
         self._measure_function = measure_function
         self._owner = weakref.ref(owner) if owner is not None else None  # avoid reference cycle
         self._service_info = service_info
+        self._configuration_parameters_message_type = service_info.service_class + ".Configurations"
+        self._outputs_message_type = service_info.service_class + ".Outputs"
 
     def GetMetadata(  # noqa: N802 - function name should be lowercase
         self, request: v1_measurement_service_pb2.GetMetadataRequest, context: grpc.ServicerContext
@@ -191,8 +196,8 @@ class MeasurementServiceServicerV1(v1_measurement_service_pb2_grpc.MeasurementSe
         )
 
         measurement_signature = v1_measurement_service_pb2.MeasurementSignature(
-            configuration_parameters_message_type="ni.measurementlink.measurement.v1.MeasurementConfigurations",
-            outputs_message_type="ni.measurementlink.measurement.v1.MeasurementOutputs",
+            configuration_parameters_message_type=self._configuration_parameters_message_type,
+            outputs_message_type=self._outputs_message_type,
         )
 
         for field_number, configuration_metadata in self._configuration_metadata.items():
@@ -206,7 +211,7 @@ class MeasurementServiceServicerV1(v1_measurement_service_pb2_grpc.MeasurementSe
             measurement_signature.configuration_parameters.append(configuration_parameter)
 
         measurement_signature.configuration_defaults.value = encoder.serialize_default_values(
-            self._configuration_metadata, self._service_info.service_class + ".Configurations"
+            self._configuration_metadata, self._configuration_parameters_message_type
         )
 
         for field_number, output_metadata in self._output_metadata.items():
@@ -236,10 +241,11 @@ class MeasurementServiceServicerV1(v1_measurement_service_pb2_grpc.MeasurementSe
         self, request: v1_measurement_service_pb2.MeasureRequest, context: grpc.ServicerContext
     ) -> v1_measurement_service_pb2.MeasureResponse:
         """RPC API that executes the registered measurement method."""
+        self._validate_parameters(request)
         mapping_by_id = decoder.deserialize_parameters(
             self._configuration_metadata,
             request.configuration_parameters.value,
-            self._service_info.service_class + ".Configurations",
+            self._configuration_parameters_message_type,
         )
         mapping_by_variable_name = _get_mapping_by_parameter_name(
             mapping_by_id, self._measure_function
@@ -271,10 +277,17 @@ class MeasurementServiceServicerV1(v1_measurement_service_pb2_grpc.MeasurementSe
         outputs: Any,
     ) -> v1_measurement_service_pb2.MeasureResponse:
         return v1_measurement_service_pb2.MeasureResponse(
-            outputs=_serialize_outputs(
-                self._output_metadata, outputs, self._service_info.service_class + ".Outputs"
-            )
+            outputs=_serialize_outputs(self._output_metadata, outputs, self._outputs_message_type)
         )
+
+    def _validate_parameters(self, request: v1_measurement_service_pb2.MeasureRequest) -> None:
+        expected_type = "type.googleapis.com/" + self._configuration_parameters_message_type
+        actual_type = request.configuration_parameters.type_url
+        if actual_type != expected_type:
+            warnings.warn(
+                f"Wrong message type. Expected {expected_type!r} but got {actual_type!r}",
+                WrongMessageTypeWarning,
+            )
 
 
 class MeasurementServiceServicerV2(v2_measurement_service_pb2_grpc.MeasurementServiceServicer):
@@ -297,6 +310,8 @@ class MeasurementServiceServicerV2(v2_measurement_service_pb2_grpc.MeasurementSe
         self._measure_function = measure_function
         self._owner = weakref.ref(owner) if owner is not None else None  # avoid reference cycle
         self._service_info = service_info
+        self._configuration_parameters_message_type = service_info.service_class + ".Configurations"
+        self._outputs_message_type = service_info.service_class + ".Outputs"
 
     def GetMetadata(  # noqa: N802 - function name should be lowercase
         self, request: v2_measurement_service_pb2.GetMetadataRequest, context: grpc.ServicerContext
@@ -307,8 +322,8 @@ class MeasurementServiceServicerV2(v2_measurement_service_pb2_grpc.MeasurementSe
         )
 
         measurement_signature = v2_measurement_service_pb2.MeasurementSignature(
-            configuration_parameters_message_type="ni.measurementlink.measurement.v2.MeasurementConfigurations",
-            outputs_message_type="ni.measurementlink.measurement.v2.MeasurementOutputs",
+            configuration_parameters_message_type=self._configuration_parameters_message_type,
+            outputs_message_type=self._outputs_message_type,
         )
 
         for field_number, configuration_metadata in self._configuration_metadata.items():
@@ -323,7 +338,7 @@ class MeasurementServiceServicerV2(v2_measurement_service_pb2_grpc.MeasurementSe
             measurement_signature.configuration_parameters.append(configuration_parameter)
 
         measurement_signature.configuration_defaults.value = encoder.serialize_default_values(
-            self._configuration_metadata, self._service_info.service_class + ".Configurations"
+            self._configuration_metadata, self._configuration_parameters_message_type
         )
 
         for field_number, output_metadata in self._output_metadata.items():
@@ -355,10 +370,11 @@ class MeasurementServiceServicerV2(v2_measurement_service_pb2_grpc.MeasurementSe
         self, request: v2_measurement_service_pb2.MeasureRequest, context: grpc.ServicerContext
     ) -> Generator[v2_measurement_service_pb2.MeasureResponse, None, None]:
         """RPC API that executes the registered measurement method."""
+        self._validate_parameters(request)
         mapping_by_id = decoder.deserialize_parameters(
             self._configuration_metadata,
             request.configuration_parameters.value,
-            self._service_info.service_class + ".Configurations",
+            self._configuration_parameters_message_type,
         )
         mapping_by_variable_name = _get_mapping_by_parameter_name(
             mapping_by_id, self._measure_function
@@ -386,7 +402,14 @@ class MeasurementServiceServicerV2(v2_measurement_service_pb2_grpc.MeasurementSe
 
     def _serialize_response(self, outputs: Any) -> v2_measurement_service_pb2.MeasureResponse:
         return v2_measurement_service_pb2.MeasureResponse(
-            outputs=_serialize_outputs(
-                self._output_metadata, outputs, self._service_info.service_class + ".Outputs"
-            )
+            outputs=_serialize_outputs(self._output_metadata, outputs, self._outputs_message_type)
         )
+
+    def _validate_parameters(self, request: v2_measurement_service_pb2.MeasureRequest) -> None:
+        expected_type = "type.googleapis.com/" + self._configuration_parameters_message_type
+        actual_type = request.configuration_parameters.type_url
+        if actual_type != expected_type:
+            warnings.warn(
+                f"Wrong message type. Expected {expected_type!r} but got {actual_type!r}",
+                WrongMessageTypeWarning,
+            )

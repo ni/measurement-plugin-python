@@ -158,7 +158,7 @@ class VoidMeasurementClient:
         self, parameter_values: typing.List[typing.Any]
     ) -> v2_measurement_service_pb2.MeasureRequest:
         serialized_configuration = any_pb2.Any(
-            type_url="type.googleapis.com/ni.measurementlink.measurement.v2.MeasurementConfigurations",
+            type_url="type.googleapis.com/ni.tests.VoidMeasurement_Python.Configurations",
             value=serialize_parameters(
                 self._configuration_metadata,
                 parameter_values,
