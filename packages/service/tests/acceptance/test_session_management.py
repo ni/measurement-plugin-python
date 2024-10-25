@@ -20,6 +20,9 @@ from tests.utilities.measurements import pin_aware_measurement
 from tests.utilities.stubs.pinaware.types_pb2 import Configurations, Outputs
 
 
+pytestmark = pytest.mark.usefixtures("filter_wrong_configurations_message_type_warnings")
+
+
 def test___pin_map_context___measure___sends_pin_map_id_and_sites(
     pin_map_client: PinMapClient,
     pin_map_directory: pathlib.Path,

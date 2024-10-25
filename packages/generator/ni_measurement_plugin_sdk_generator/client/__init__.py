@@ -105,6 +105,7 @@ def _create_client(
         enum_by_class_name=enum_values_by_type,
         configuration_parameters_type_url=type_url_prefix
         + metadata.measurement_signature.configuration_parameters_message_type,
+        outputs_message_type=metadata.measurement_signature.outputs_message_type,
     )
 
     generated_modules.append(module_name)
