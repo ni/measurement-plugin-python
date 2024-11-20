@@ -210,7 +210,7 @@ Run the `ni-measurement-plugin-client-generator` tool.
         - `--module-name` and `--class-name` define the module and class names of the generated client. If not specified, they are derived from the measurement service class name.
 
         - `--directory-out` specifies the output directory for the generated files. If not specified, files are placed in the current directory.
-        
+
     > **Note**: When generating multiple measurement clients, `--module-name` and `--class-name` are ignored and derived from the service class of each measurement. So, ensure that the measurement service class name adheres to proper naming conventions.
 
 2. To create measurement clients for all registered measurements, use this command:
