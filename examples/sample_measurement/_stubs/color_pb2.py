@@ -13,7 +13,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0b\x63olor.proto\x12\x36ni.measurementplugin.measurement.sample_measurement.v1*9\n\rProtobufColor\x12\x08\n\x04NONE\x10\x00\x12\x08\n\x04PINK\x10\x01\x12\t\n\x05WHITE\x10\x02\x12\t\n\x05\x42LACK\x10\x03\x42\x37\xaa\x02\x34NationalInstruments.MeasurementServices.Measurementsb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0b\x63olor.proto\x12\x0bni.examples*9\n\rProtobufColor\x12\x08\n\x04NONE\x10\x00\x12\x08\n\x04PINK\x10\x01\x12\t\n\x05WHITE\x10\x02\x12\t\n\x05\x42LACK\x10\x03\x42\x37\xaa\x02\x34NationalInstruments.MeasurementServices.Measurementsb\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'color_pb2', globals())
@@ -21,6 +21,6 @@ if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
   DESCRIPTOR._serialized_options = b'\252\0024NationalInstruments.MeasurementServices.Measurements'
-  _PROTOBUFCOLOR._serialized_start=71
-  _PROTOBUFCOLOR._serialized_end=128
+  _PROTOBUFCOLOR._serialized_start=28
+  _PROTOBUFCOLOR._serialized_end=85
 # @@protoc_insertion_point(module_scope)
