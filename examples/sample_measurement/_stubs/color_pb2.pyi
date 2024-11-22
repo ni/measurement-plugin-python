@@ -4,6 +4,7 @@ isort:skip_file
 ---------------------------------------------------------------------
 ---------------------------------------------------------------------
 """
+
 import builtins
 import google.protobuf.descriptor
 import google.protobuf.internal.enum_type_wrapper

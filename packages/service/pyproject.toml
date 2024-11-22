@@ -11,7 +11,7 @@ version = "2.2.0-dev0"
 description = "Measurement Plug-In Support for Python"
 authors = ["NI <opensource@ni.com>"]
 readme = "README.md" # apply the repo readme to the package as well
-repository = "https://github.com/ni/measurementlink-python/"
+repository = "https://github.com/ni/measurement-plugin-python/"
 license = "MIT"
 classifiers = [
     "Development Status :: 5 - Production/Stable",
