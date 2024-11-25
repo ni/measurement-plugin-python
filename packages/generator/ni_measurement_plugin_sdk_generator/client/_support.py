@@ -33,6 +33,7 @@ _V2_MEASUREMENT_SERVICE_INTERFACE = "ni.measurementlink.measurement.v2.Measureme
 _INVALID_CHARS = "`~!@#$%^&*()-+={}[]\\|:;',<>.?/ \n"
 
 _XY_DATA_IMPORT = "from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types.xydata_pb2 import DoubleXYData"
+_2DARRAY_DATA_IMPORT = "from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types.array_pb2 import Double2DArray"
 _PATH_IMPORT = "import pathlib"
 
 _PROTO_DATATYPE_TO_PYTYPE_LOOKUP = {
@@ -153,9 +154,13 @@ def get_configuration_and_output_metadata_by_index(
 
     output_parameter_list = []
     for output in metadata.measurement_signature.outputs:
-        if output.message_type and output.message_type != "ni.protobuf.types.DoubleXYData":
+        if (
+            output.message_type
+            and output.message_type != "ni.protobuf.types.DoubleXYData"
+            and output.message_type != "ni.protobuf.types.Double2DArray"
+        ):
             raise click.ClickException(
-                f"Measurement outputs do not support {output.message_type}. Only DoubleXYData is supported."
+                f"Measurement outputs do not support {output.message_type}. Only DoubleXYData and Double2DArray is supported."
             )
 
         annotations_dict = dict(output.annotations.items())
@@ -290,6 +295,13 @@ def get_output_parameters_with_type(
         if metadata.message_type and metadata.message_type == "ni.protobuf.types.DoubleXYData":
             parameter_type = "DoubleXYData"
             custom_import_modules.append(_XY_DATA_IMPORT)
+
+            if metadata.repeated:
+                parameter_type = f"typing.Sequence[{parameter_type}]"
+
+        if metadata.message_type and metadata.message_type == "ni.protobuf.types.Double2DArray":
+            parameter_type = "Double2DArray"
+            custom_import_modules.append(_2DARRAY_DATA_IMPORT)
 
             if metadata.repeated:
                 parameter_type = f"typing.Sequence[{parameter_type}]"
