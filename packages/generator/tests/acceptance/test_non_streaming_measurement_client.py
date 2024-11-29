@@ -6,14 +6,15 @@ from types import ModuleType
 from typing import Any, Generator, Tuple, Type, Union
 
 import pytest
+from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types import (
+    array_pb2,
+)
 from ni_measurement_plugin_sdk_service.measurement.service import MeasurementService
 
 from tests.conftest import CliRunnerFunction
 from tests.utilities.discovery_service_process import DiscoveryServiceProcess
 from tests.utilities.measurements import non_streaming_data_measurement
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types import (
-    array_pb2,
-)
+
 
 class EnumInEnum(Enum):
     """EnumInEnum used for enum-typed measurement configs and outputs."""

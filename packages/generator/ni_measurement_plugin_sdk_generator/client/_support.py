@@ -124,7 +124,10 @@ def get_configuration_and_output_metadata_by_index(
     """Returns the configuration and output metadata of the measurement."""
     configuration_parameter_list = []
     for configuration in metadata.measurement_signature.configuration_parameters:
-        if configuration.message_type and configuration.message_type != "ni.protobuf.types.Double2DArray":
+        if (
+            configuration.message_type
+            and configuration.message_type != "ni.protobuf.types.Double2DArray"
+        ):
             raise click.ClickException(
                 f"Measurement configurations do not support message data types ({configuration.message_type} is unsupported)."
             )
@@ -273,7 +276,7 @@ def get_configuration_parameters_with_type_and_default_values(
             else:
                 enum_value = next((e.name for e in enum_type if e.value == default_value), None)
                 default_value = f"{parameter_type}.{enum_value}"
-        
+
         if metadata.message_type and metadata.message_type == "ni.protobuf.types.Double2DArray":
             parameter_type = "Double2DArray"
 
