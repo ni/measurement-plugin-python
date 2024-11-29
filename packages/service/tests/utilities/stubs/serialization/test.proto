@@ -1,6 +1,7 @@
 syntax = "proto3";
 package ni.measurementlink.measurement.tests.serialization;
 
+import "ni/protobuf/types/array.proto";
 import "ni/protobuf/types/xydata.proto";
 
 enum DifferentColor
@@ -42,4 +43,5 @@ message MeasurementParameter {
     repeated Countries int_enum_array_data = 20;
     ni.protobuf.types.DoubleXYData xy_data = 21;
     repeated ni.protobuf.types.DoubleXYData xy_data_array = 22;
+    ni.protobuf.types.Double2DArray double_2d_array = 23;
 }

@@ -75,6 +75,11 @@ class Color(Enum):
     color_pb2.ProtobufColor.BLACK,
     enum_type=color_pb2.ProtobufColor,
 )
+@measurement_service.configuration(
+    "Double 2D Array In",
+    nims.DataType.Double2DArray,
+    array_pb2.Double2DArray(rows=2, columns=3, data=[1, 2, 3, 4, 5, 6]),
+)
 @measurement_service.output("Float out", nims.DataType.Float)
 @measurement_service.output("Double Array out", nims.DataType.DoubleArray1D)
 @measurement_service.output("Bool out", nims.DataType.Boolean)
@@ -106,6 +111,7 @@ def measure(
     enum_input: Color,
     enum_array_input: Iterable[Color],
     protobuf_enum_input: color_pb2.ProtobufColor.ValueType,
+    double_2d_array_input: array_pb2.Double2DArray,
 ) -> Tuple[
     float,
     Iterable[float],
@@ -138,7 +144,7 @@ def measure(
     enum_output = enum_input
     enum_array_output = enum_array_input
     protobuf_enum_output = protobuf_enum_input
-    double_2d_array_output = array_pb2.Double2DArray()
+    double_2d_array_output = double_2d_array_input
 
     return (
         float_output,

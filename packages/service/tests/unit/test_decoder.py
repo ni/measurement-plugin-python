@@ -19,6 +19,7 @@ from ni_measurement_plugin_sdk_service._internal.parameter.metadata import (
     TypeSpecialization,
 )
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types import (
+    array_pb2,
     xydata_pb2,
 )
 from tests.utilities.stubs.serialization import test_pb2
@@ -53,6 +54,8 @@ double_xy_data2.y_data.append(10)
 
 double_xy_data_array = [double_xy_data, double_xy_data2]
 
+double_2d_array = array_pb2.Double2DArray(rows=2, columns=3, data=[1, 2, 3, 4, 5, 6])
+
 # This should match the number of fields in bigmessage.proto.
 BIG_MESSAGE_SIZE = 100
 
@@ -83,6 +86,7 @@ BIG_MESSAGE_SIZE = 100
             [Countries.AUSTRALIA, Countries.CANADA],
             double_xy_data,
             double_xy_data_array,
+            double_2d_array,
         ]
     ],
 )
@@ -125,6 +129,7 @@ def test___empty_buffer___deserialize_parameters___returns_zero_or_empty():
         [Countries.AUSTRALIA, Countries.CANADA],
         double_xy_data,
         double_xy_data_array,
+        double_2d_array,
     ]
     parameter = _get_test_parameter_by_id(nonzero_defaults)
     service_name = _test_create_file_descriptor(list(parameter.values()), "empty_buffer")
@@ -347,6 +352,14 @@ def _get_test_parameter_by_id(default_values):
             annotations={},
             message_type=xydata_pb2.DoubleXYData.DESCRIPTOR.full_name,
         ),
+        23: ParameterMetadata.initialize(
+            display_name="double_2d_array",
+            type=type_pb2.Field.TYPE_MESSAGE,
+            repeated=False,
+            default_value=default_values[22],
+            annotations={},
+            message_type=array_pb2.Double2DArray.DESCRIPTOR.full_name,
+        ),
     }
     return parameter_by_id
 
@@ -376,6 +389,9 @@ def _get_test_grpc_message(test_values):
     parameter.xy_data.x_data.append(test_values[20].x_data[0])
     parameter.xy_data.y_data.append(test_values[20].y_data[0])
     parameter.xy_data_array.extend(test_values[21])
+    parameter.double_2d_array.rows = test_values[22].rows
+    parameter.double_2d_array.columns = test_values[22].columns
+    parameter.double_2d_array.data.extend(test_values[22].data)
     return parameter
 
 

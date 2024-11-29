@@ -120,7 +120,7 @@ class ${class_name}:
                 display_name=${value.display_name | repr},
                 type=Field.Kind.ValueType(${value.type}),
                 repeated=${value.repeated},
-                default_value=${_format_default_value(value.default_value)},
+                default_value=${value.default_value},
                 annotations=${value.annotations | n, repr},
                 message_type=${value.message_type | repr},
                 field_name=${value.field_name | repr},

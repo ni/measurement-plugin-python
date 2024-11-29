@@ -269,6 +269,16 @@ class NonStreamingDataMeasurementClient:
                 field_name="Protobuf_Enum_In",
                 enum_type=ProtobufEnumInEnum,
             ),
+            14: ParameterMetadata(
+                display_name="Double 2D Array In",
+                type=Field.Kind.ValueType(11),
+                repeated=False,
+                default_value=Double2DArray(rows=2, columns=3, data=[1, 2, 3, 4, 5, 6]),
+                annotations={},
+                message_type="ni.protobuf.types.Double2DArray",
+                field_name="Double_2D_Array_In",
+                enum_type=None,
+            ),
         }
         self._output_metadata = {
             1: ParameterMetadata(
@@ -585,6 +595,7 @@ class NonStreamingDataMeasurementClient:
         enum_in: EnumInEnum = EnumInEnum.BLUE,
         enum_array_in: typing.Iterable[EnumInEnum] = [EnumInEnum.RED, EnumInEnum.GREEN],
         protobuf_enum_in: ProtobufEnumInEnum = ProtobufEnumInEnum.BLACK,
+        double_2d_array_in: Double2DArray = Double2DArray(rows=2, columns=3, data=[1, 2, 3, 4, 5, 6]),
     ) -> Outputs:
         """Perform a single measurement.
 
@@ -605,6 +616,7 @@ class NonStreamingDataMeasurementClient:
             enum_in,
             enum_array_in,
             protobuf_enum_in,
+            double_2d_array_in,
         )
         for response in stream_measure_response:
             result = response
@@ -639,6 +651,7 @@ class NonStreamingDataMeasurementClient:
         enum_in: EnumInEnum = EnumInEnum.BLUE,
         enum_array_in: typing.Iterable[EnumInEnum] = [EnumInEnum.RED, EnumInEnum.GREEN],
         protobuf_enum_in: ProtobufEnumInEnum = ProtobufEnumInEnum.BLACK,
+        double_2d_array_in: Double2DArray = Double2DArray(rows=2, columns=3, data=[1, 2, 3, 4, 5, 6]),
     ) -> typing.Generator[Outputs, None, None]:
         """Perform a streaming measurement.
 
@@ -659,6 +672,7 @@ class NonStreamingDataMeasurementClient:
             enum_in,
             enum_array_in,
             protobuf_enum_in,
+            double_2d_array_in,
         ]
         with self._initialization_lock:
             if self._measure_response is not None:
