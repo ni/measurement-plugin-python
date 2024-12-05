@@ -156,11 +156,10 @@ def get_configuration_and_output_metadata_by_index(
     for output in metadata.measurement_signature.outputs:
         if (
             output.message_type
-            and output.message_type != "ni.protobuf.types.DoubleXYData"
-            and output.message_type != "ni.protobuf.types.Double2DArray"
+            and output.message_type not in ["ni.protobuf.types.DoubleXYData", "ni.protobuf.types.Double2DArray"]
         ):
             raise click.ClickException(
-                f"Measurement outputs do not support {output.message_type}. Only DoubleXYData and Double2DArray is supported."
+                f"Measurement outputs do not support {output.message_type}. Only DoubleXYData and Double2DArray are supported."
             )
 
         annotations_dict = dict(output.annotations.items())
@@ -304,7 +303,10 @@ def get_output_parameters_with_type(
             custom_import_modules.append(_2DARRAY_DATA_IMPORT)
 
             if metadata.repeated:
-                parameter_type = f"typing.Sequence[{parameter_type}]"
+                raise click.ClickException(
+                    f"Repeated Double 2D Array are not supported for output parameter "
+                    f"'{parameter_name}'. Please contact the measurement developer."
+                )
 
         if metadata.annotations and metadata.annotations.get("ni/type_specialization") == "enum":
             enum_type_name = _get_enum_type(

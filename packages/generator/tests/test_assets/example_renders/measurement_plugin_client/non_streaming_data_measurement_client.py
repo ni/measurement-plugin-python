@@ -74,7 +74,7 @@ class Outputs(typing.NamedTuple):
     enum_out: EnumInEnum
     enum_array_out: typing.Sequence[EnumInEnum]
     protobuf_enum_out: ProtobufEnumInEnum
-    double2darray_out: Double2DArray
+    double_2d_array_out: Double2DArray
 
 
 class NonStreamingDataMeasurementClient:
@@ -427,13 +427,13 @@ class NonStreamingDataMeasurementClient:
                 enum_type=ProtobufEnumInEnum,
             ),
             15: ParameterMetadata(
-                display_name="Double2DArray out",
+                display_name="Double 2D Array out",
                 type=Field.Kind.ValueType(11),
                 repeated=False,
                 default_value=None,
                 annotations={},
                 message_type="ni.protobuf.types.Double2DArray",
-                field_name="Double2DArray_out",
+                field_name="Double_2D_Array_out",
                 enum_type=None,
             ),
         }

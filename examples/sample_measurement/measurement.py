@@ -61,7 +61,7 @@ class Color(Enum):
     "Protobuf Enum out", nims.DataType.Enum, enum_type=color_pb2.ProtobufColor
 )
 @measurement_service.output("String Array out", nims.DataType.StringArray1D)
-@measurement_service.output("Double2DArray Out", nims.DataType.Double2DArray)
+@measurement_service.output("Double 2D Array Out", nims.DataType.Double2DArray)
 def measure(
     float_input: float,
     double_array_input: Iterable[float],
@@ -95,7 +95,7 @@ def measure(
     enum_output = enum_input
     protobuf_enum_output = protobuf_enum_input
     string_array_output = string_array_in
-    double2d_array_output = array_pb2.Double2DArray()
+    double_2d_array_output = array_pb2.Double2DArray()
     logging.info("Completed measurement")
 
     return (
@@ -106,7 +106,7 @@ def measure(
         enum_output,
         protobuf_enum_output,
         string_array_output,
-        double2d_array_output,
+        double_2d_array_output,
     )
 
 
