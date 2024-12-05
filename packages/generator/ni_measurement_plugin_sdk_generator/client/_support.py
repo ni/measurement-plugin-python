@@ -154,10 +154,10 @@ def get_configuration_and_output_metadata_by_index(
 
     output_parameter_list = []
     for output in metadata.measurement_signature.outputs:
-        if (
-            output.message_type
-            and output.message_type not in ["ni.protobuf.types.DoubleXYData", "ni.protobuf.types.Double2DArray"]
-        ):
+        if output.message_type and output.message_type not in [
+            "ni.protobuf.types.DoubleXYData",
+            "ni.protobuf.types.Double2DArray",
+        ]:
             raise click.ClickException(
                 f"Measurement outputs do not support {output.message_type}. Only DoubleXYData and Double2DArray are supported."
             )
