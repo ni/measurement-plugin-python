@@ -595,7 +595,9 @@ class NonStreamingDataMeasurementClient:
         enum_in: EnumInEnum = EnumInEnum.BLUE,
         enum_array_in: typing.Iterable[EnumInEnum] = [EnumInEnum.RED, EnumInEnum.GREEN],
         protobuf_enum_in: ProtobufEnumInEnum = ProtobufEnumInEnum.BLACK,
-        double_2d_array_in: Double2DArray = Double2DArray(rows=2, columns=3, data=[1, 2, 3, 4, 5, 6]),
+        double_2d_array_in: Double2DArray = Double2DArray(
+            rows=2, columns=3, data=[1, 2, 3, 4, 5, 6]
+        ),
     ) -> Outputs:
         """Perform a single measurement.
 
@@ -651,7 +653,9 @@ class NonStreamingDataMeasurementClient:
         enum_in: EnumInEnum = EnumInEnum.BLUE,
         enum_array_in: typing.Iterable[EnumInEnum] = [EnumInEnum.RED, EnumInEnum.GREEN],
         protobuf_enum_in: ProtobufEnumInEnum = ProtobufEnumInEnum.BLACK,
-        double_2d_array_in: Double2DArray = Double2DArray(rows=2, columns=3, data=[1, 2, 3, 4, 5, 6]),
+        double_2d_array_in: Double2DArray = Double2DArray(
+            rows=2, columns=3, data=[1, 2, 3, 4, 5, 6]
+        ),
     ) -> typing.Generator[Outputs, None, None]:
         """Perform a streaming measurement.
 
