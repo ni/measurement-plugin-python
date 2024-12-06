@@ -1,17 +1,11 @@
 <%!
 import re
 from typing import Any
+from ni_measurement_plugin_sdk_generator.client._support import _format_default_value
 %>\
 \
 <%page args="class_name, display_name, version, configuration_metadata, output_metadata, service_class, configuration_parameters_with_type_and_default_values, measure_api_parameters, output_parameters_with_type, built_in_import_modules, custom_import_modules, enum_by_class_name, configuration_parameters_type_url, outputs_message_type"/>\
 \
-<%
-    def _format_default_value(value: Any) -> Any:
-        if isinstance(value, str):
-            return repr(value)
-        else:
-            return value
-%>\
 \
 
 """Generated client API for the ${display_name | repr} measurement plug-in."""
@@ -120,7 +114,7 @@ class ${class_name}:
                 display_name=${value.display_name | repr},
                 type=Field.Kind.ValueType(${value.type}),
                 repeated=${value.repeated},
-                default_value=${value.default_value},
+                default_value=${_format_default_value(value.default_value)},
                 annotations=${value.annotations | n, repr},
                 message_type=${value.message_type | repr},
                 field_name=${value.field_name | repr},
@@ -138,7 +132,7 @@ class ${class_name}:
                 display_name=${value.display_name | repr},
                 type=Field.Kind.ValueType(${value.type}),
                 repeated=${value.repeated},
-                default_value=${value.default_value},
+                default_value=${_format_default_value(value.default_value)},
                 annotations=${value.annotations | n, repr},
                 message_type=${value.message_type | repr},
                 field_name=${value.field_name | repr},

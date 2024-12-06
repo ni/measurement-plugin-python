@@ -6,7 +6,17 @@ import pathlib
 import re
 import sys
 from enum import Enum
-from typing import AbstractSet, Dict, Iterable, List, Optional, Tuple, Type, TypeVar
+from typing import (
+    AbstractSet,
+    Any,
+    Dict,
+    Iterable,
+    List,
+    Optional,
+    Tuple,
+    Type,
+    TypeVar,
+)
 
 import click
 import grpc
@@ -19,6 +29,9 @@ from ni_measurement_plugin_sdk_service._internal.grpc_servicer import (
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v2 import (
     measurement_service_pb2 as v2_measurement_service_pb2,
     measurement_service_pb2_grpc as v2_measurement_service_pb2_grpc,
+)
+from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types.array_pb2 import (
+    Double2DArray,
 )
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
@@ -64,6 +77,24 @@ _CAMEL_TO_SNAKE_CASE_REGEXES = [
     re.compile("([0-9])([^_0-9])"),
     re.compile("([^_0-9])([0-9])"),
 ]
+
+
+def _format_default_value(value: Any) -> Any:
+    """Formats the default value for the given value. Used for generating the service's metadata structs."""
+    if isinstance(value, str):
+        return repr(value)
+    elif isinstance(value, Double2DArray):
+        value = str(value).split("\n")[:-1]
+        value_2d_array_rows = int(value[0].split(" ")[1])
+        value_2d_array_columns = int(value[1].split(" ")[1])
+        value_2d_array_data = []
+        for data in value[2:]:
+            new_data = data.split(" ")[1]
+            value_2d_array_data.append(int(new_data))
+        value = f"Double2DArray(rows={value_2d_array_rows}, columns={value_2d_array_columns}, data={value_2d_array_data})"
+        return value
+    else:
+        return value
 
 
 def get_measurement_service_stub_and_version(
@@ -211,18 +242,7 @@ def get_configuration_and_output_metadata_by_index(
             default_value = default_value.value
         elif isinstance(default_value, list) and any(isinstance(e, Enum) for e in default_value):
             default_value = [e.value for e in default_value]
-        elif isinstance(default_value, str):
-            default_value = repr(default_value)
-        elif configuration_metadata[id].message_type == "ni.protobuf.types.Double2DArray":
-            default_value = str(default_value).split("\n")[:-1]
-            value_2d_array_rows = int(default_value[0].split(" ")[1])
-            value_2d_array_columns = int(default_value[1].split(" ")[1])
-            value_2d_array_data = []
-            for data in default_value[2:]:
-                new_data = data.split(" ")[1]
-                value_2d_array_data.append(int(new_data))
 
-            default_value = f"Double2DArray(rows={value_2d_array_rows}, columns={value_2d_array_columns}, data={value_2d_array_data})"
         configuration_metadata[id] = configuration_metadata[id]._replace(
             default_value=default_value
         )
@@ -235,7 +255,7 @@ def get_configuration_parameters_with_type_and_default_values(
     built_in_import_modules: List[str],
     enum_values_by_type: Dict[Type[Enum], Dict[str, int]] = {},
 ) -> Tuple[str, str]:
-    """Returns configuration parameters of the measurement with type and default values."""
+    """Returns configuration parameters of the measurement with type and default values. Used to generate Client API class's measure() parameter list."""
     configuration_parameters = []
     parameter_names = []
 
@@ -245,6 +265,8 @@ def get_configuration_parameters_with_type_and_default_values(
 
         default_value = metadata.default_value
         parameter_type = _get_configuration_python_type_as_str(metadata.type, metadata.repeated)
+        if isinstance(default_value, str):
+            default_value = _format_default_value(default_value)
 
         if metadata.annotations and metadata.annotations.get("ni/type_specialization") == "path":
             parameter_type = "pathlib.PurePath"
@@ -278,6 +300,7 @@ def get_configuration_parameters_with_type_and_default_values(
                 default_value = f"{parameter_type}.{enum_value}"
 
         if metadata.message_type and metadata.message_type == "ni.protobuf.types.Double2DArray":
+            default_value = _format_default_value(default_value)
             parameter_type = "Double2DArray"
 
         configuration_parameters.append(f"{parameter_name}: {parameter_type} = {default_value}")
