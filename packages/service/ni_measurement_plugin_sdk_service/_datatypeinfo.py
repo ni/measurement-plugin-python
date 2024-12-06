@@ -2,6 +2,7 @@ from typing import NamedTuple
 
 from google.protobuf import type_pb2
 
+from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types import array_pb2
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types import xydata_pb2
 from ni_measurement_plugin_sdk_service.measurement.info import DataType, TypeSpecialization
 
@@ -50,6 +51,11 @@ _DATATYPE_TO_DATATYPEINFO_LOOKUP = {
         type_pb2.Field.TYPE_MESSAGE,
         False,
         message_type=xydata_pb2.DoubleXYData.DESCRIPTOR.full_name,
+    ),
+    DataType.Double2DArray: DataTypeInfo(
+        type_pb2.Field.TYPE_MESSAGE,
+        False,
+        message_type=array_pb2.Double2DArray.DESCRIPTOR.full_name,
     ),
     DataType.IOResource: DataTypeInfo(
         type_pb2.Field.TYPE_STRING, False, TypeSpecialization.IOResource

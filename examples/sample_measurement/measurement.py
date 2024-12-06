@@ -9,6 +9,7 @@ from typing import Iterable, Tuple
 import click
 import ni_measurement_plugin_sdk_service as nims
 from _helpers import configure_logging, verbosity_option
+from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types import array_pb2
 
 try:
     from _stubs import color_pb2
@@ -60,6 +61,7 @@ class Color(Enum):
     "Protobuf Enum out", nims.DataType.Enum, enum_type=color_pb2.ProtobufColor
 )
 @measurement_service.output("String Array out", nims.DataType.StringArray1D)
+@measurement_service.output("Double 2D Array Out", nims.DataType.Double2DArray)
 def measure(
     float_input: float,
     double_array_input: Iterable[float],
@@ -69,7 +71,14 @@ def measure(
     protobuf_enum_input: color_pb2.ProtobufColor.ValueType,
     string_array_in: Iterable[str],
 ) -> Tuple[
-    float, Iterable[float], bool, str, Color, color_pb2.ProtobufColor.ValueType, Iterable[str]
+    float,
+    Iterable[float],
+    bool,
+    str,
+    Color,
+    color_pb2.ProtobufColor.ValueType,
+    Iterable[str],
+    array_pb2.Double2DArray,
 ]:
     """Perform a loopback measurement with various data types."""
     logging.info("Executing measurement")
@@ -85,7 +94,8 @@ def measure(
     string_output = string_input
     enum_output = enum_input
     protobuf_enum_output = protobuf_enum_input
-    string_array_out = string_array_in
+    string_array_output = string_array_in
+    double_2d_array_output = array_pb2.Double2DArray()
     logging.info("Completed measurement")
 
     return (
@@ -95,7 +105,8 @@ def measure(
         string_output,
         enum_output,
         protobuf_enum_output,
-        string_array_out,
+        string_array_output,
+        double_2d_array_output,
     )
 
 

@@ -86,6 +86,7 @@ def _create_client(
     output_parameters_with_type = get_output_parameters_with_type(
         output_metadata, built_in_import_modules, custom_import_modules, enum_values_by_type
     )
+    custom_import_modules.sort()
 
     _create_file(
         template_name="measurement_plugin_client.py.mako",

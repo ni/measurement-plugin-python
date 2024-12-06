@@ -5,10 +5,12 @@ from pathlib import Path
 from typing import Iterable, Tuple
 
 import ni_measurement_plugin_sdk_service as nims
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types import xydata_pb2
+from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types import (
+    array_pb2,
+    xydata_pb2,
+)
 
 from tests.utilities.measurements.non_streaming_data_measurement._stubs import color_pb2
-
 
 service_directory = Path(__file__).resolve().parent
 measurement_service = nims.MeasurementService(
@@ -89,6 +91,7 @@ class Color(Enum):
 @measurement_service.output(
     "Protobuf Enum out", nims.DataType.Enum, enum_type=color_pb2.ProtobufColor
 )
+@measurement_service.output("Double 2D Array out", nims.DataType.Double2DArray)
 def measure(
     float_input: float,
     double_array_input: Iterable[float],
@@ -118,6 +121,7 @@ def measure(
     Color,
     Iterable[Color],
     color_pb2.ProtobufColor.ValueType,
+    array_pb2.Double2DArray,
 ]:
     """Perform a loopback measurement with various data types."""
     float_output = float_input
@@ -134,6 +138,7 @@ def measure(
     enum_output = enum_input
     enum_array_output = enum_array_input
     protobuf_enum_output = protobuf_enum_input
+    double_2d_array_output = array_pb2.Double2DArray()
 
     return (
         float_output,
@@ -150,4 +155,5 @@ def measure(
         enum_output,
         enum_array_output,
         protobuf_enum_output,
+        double_2d_array_output,
     )

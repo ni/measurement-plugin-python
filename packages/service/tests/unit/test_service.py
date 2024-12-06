@@ -67,6 +67,7 @@ def test___measurement_service___register_measurement_method___method_registered
         ("UInt64", DataType.UInt64, False),
         ("DoubleXYData", DataType.DoubleXYData, None),
         ("DoubleXYDataArray", DataType.DoubleXYDataArray1D, None),
+        ("Double2DArray", DataType.Double2DArray, None),
     ],
 )
 def test___measurement_service___add_configuration__configuration_added(
@@ -294,6 +295,7 @@ def test___measurement_service___add_non_path_configuration__path_type_annotatio
         ("Path", DataType.Path, 1.0),
         ("Path1DArray", DataType.PathArray1D, [1.009, -1.0009]),
         ("DoubleXYDataArray", DataType.DoubleXYDataArray1D, [1.009, -1.0009]),
+        ("Double2DArray", DataType.Double2DArray, 12),
     ],
 )
 @pytest.mark.filterwarnings("ignore:.*Pin.*:DeprecationWarning")
@@ -323,6 +325,7 @@ def test___measurement_service___add_configuration_with_mismatch_default_value__
         ("UInt64", DataType.UInt64),
         ("DoubleXYData", DataType.DoubleXYData),
         ("DoubleXYDataArray", DataType.DoubleXYDataArray1D),
+        ("Double2DArray", DataType.Double2DArray),
     ],
 )
 def test___measurement_service___add_output__output_added(

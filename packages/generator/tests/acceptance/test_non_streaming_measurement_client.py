@@ -65,6 +65,7 @@ def test___measurement_plugin_client___measure___returns_output(
         enum_out=EnumInEnum.BLUE,
         enum_array_out=[EnumInEnum.RED, EnumInEnum.GREEN],
         protobuf_enum_out=ProtobufEnumInEnum.BLACK,
+        double_2d_array_out=None,
     )
     measurement_plugin_client = test_measurement_client_type()
 
@@ -120,6 +121,7 @@ def test___measurement_plugin_client___stream_measure___returns_output(
         enum_out=EnumInEnum.BLUE,
         enum_array_out=[EnumInEnum.RED, EnumInEnum.GREEN],
         protobuf_enum_out=ProtobufEnumInEnum.BLACK,
+        double_2d_array_out=None,
     )
     measurement_plugin_client = test_measurement_client_type()
 
@@ -217,6 +219,7 @@ def _verify_output_types(outputs: Any, measurement_plugin_client_module: ModuleT
     _assert_type(outputs.enum_out, enum_type)
     _assert_collection_type(outputs.enum_array_out, Sequence, enum_type)
     _assert_type(outputs.protobuf_enum_out, protobuf_enum_type)
+    _assert_type(outputs.double_2d_array_out, type(None))
 
 
 def _assert_type(value: Any, expected_type: Union[Type[Any], Tuple[Type[Any], ...]]) -> None:

@@ -16,6 +16,9 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measur
     measurement_service_pb2 as v2_measurement_service_pb2,
     measurement_service_pb2_grpc as v2_measurement_service_pb2_grpc,
 )
+from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types.array_pb2 import (
+    Double2DArray,
+)
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types.xydata_pb2 import (
     DoubleXYData,
 )
@@ -71,6 +74,7 @@ class Outputs(typing.NamedTuple):
     enum_out: EnumInEnum
     enum_array_out: typing.Sequence[EnumInEnum]
     protobuf_enum_out: ProtobufEnumInEnum
+    double_2d_array_out: Double2DArray
 
 
 class NonStreamingDataMeasurementClient:
@@ -421,6 +425,16 @@ class NonStreamingDataMeasurementClient:
                 message_type="",
                 field_name="Protobuf_Enum_out",
                 enum_type=ProtobufEnumInEnum,
+            ),
+            15: ParameterMetadata(
+                display_name="Double 2D Array out",
+                type=Field.Kind.ValueType(11),
+                repeated=False,
+                default_value=None,
+                annotations={},
+                message_type="ni.protobuf.types.Double2DArray",
+                field_name="Double_2D_Array_out",
+                enum_type=None,
             ),
         }
         if grpc_channel is not None:
