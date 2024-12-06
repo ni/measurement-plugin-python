@@ -80,7 +80,8 @@ _CAMEL_TO_SNAKE_CASE_REGEXES = [
 
 
 def _format_default_value(value: Any) -> Any:
-    """Formats the default value for the given value. Used for generating the service's metadata structs."""
+    """Formats the default value for the given value.
+    Used for generating the service's metadata structs."""
     if isinstance(value, str):
         return repr(value)
     elif isinstance(value, Double2DArray):
@@ -255,7 +256,8 @@ def get_configuration_parameters_with_type_and_default_values(
     built_in_import_modules: List[str],
     enum_values_by_type: Dict[Type[Enum], Dict[str, int]] = {},
 ) -> Tuple[str, str]:
-    """Returns configuration parameters of the measurement with type and default values. Used to generate Client API class's measure() parameter list."""
+    """Returns configuration parameters of the measurement with type and default values.
+    Used to generate Client API class's measure() parameter list."""
     configuration_parameters = []
     parameter_names = []
 
