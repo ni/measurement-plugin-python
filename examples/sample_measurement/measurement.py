@@ -98,7 +98,7 @@ def measure(
     protobuf_enum_output = protobuf_enum_input
     string_array_output = string_array_in
     double_2d_array_output = array_pb2.Double2DArray(
-        rows=2, columns=3, data=[1.5, 2.0, 3.0, 4.0, 5.0, 6.0]
+        rows=2, columns=3, data=[1.5, 2.5, 3.5, 4.5, 5.5, 6.5]
     )
     logging.info("Completed measurement")
 
