@@ -9,7 +9,9 @@ from typing import Iterable, Tuple
 import click
 import ni_measurement_plugin_sdk_service as nims
 from _helpers import configure_logging, verbosity_option
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types import array_pb2
+from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types import (
+    array_pb2,
+)
 
 try:
     from _stubs import color_pb2
@@ -95,7 +97,9 @@ def measure(
     enum_output = enum_input
     protobuf_enum_output = protobuf_enum_input
     string_array_output = string_array_in
-    double_2d_array_output = array_pb2.Double2DArray()
+    double_2d_array_output = array_pb2.Double2DArray(
+        rows=2, columns=3, data=[1.5, 2.0, 3.0, 4.0, 5.0, 6.0]
+    )
     logging.info("Completed measurement")
 
     return (

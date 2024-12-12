@@ -6,6 +6,9 @@ from types import ModuleType
 from typing import Any, Generator, Tuple, Type, Union
 
 import pytest
+from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types import (
+    array_pb2,
+)
 from ni_measurement_plugin_sdk_service.measurement.service import MeasurementService
 
 from tests.conftest import CliRunnerFunction
@@ -65,7 +68,9 @@ def test___measurement_plugin_client___measure___returns_output(
         enum_out=EnumInEnum.BLUE,
         enum_array_out=[EnumInEnum.RED, EnumInEnum.GREEN],
         protobuf_enum_out=ProtobufEnumInEnum.BLACK,
-        double_2d_array_out=None,
+        double_2d_array_out=array_pb2.Double2DArray(
+            rows=2, columns=3, data=[1.0, 2.0, 3.0, 4.0, 5.0, 6.0]
+        ),
     )
     measurement_plugin_client = test_measurement_client_type()
 
@@ -121,7 +126,9 @@ def test___measurement_plugin_client___stream_measure___returns_output(
         enum_out=EnumInEnum.BLUE,
         enum_array_out=[EnumInEnum.RED, EnumInEnum.GREEN],
         protobuf_enum_out=ProtobufEnumInEnum.BLACK,
-        double_2d_array_out=None,
+        double_2d_array_out=array_pb2.Double2DArray(
+            rows=2, columns=3, data=[1.0, 2.0, 3.0, 4.0, 5.0, 6.0]
+        ),
     )
     measurement_plugin_client = test_measurement_client_type()
 
@@ -219,7 +226,7 @@ def _verify_output_types(outputs: Any, measurement_plugin_client_module: ModuleT
     _assert_type(outputs.enum_out, enum_type)
     _assert_collection_type(outputs.enum_array_out, Sequence, enum_type)
     _assert_type(outputs.protobuf_enum_out, protobuf_enum_type)
-    _assert_type(outputs.double_2d_array_out, type(None))
+    _assert_type(outputs.double_2d_array_out, array_pb2.Double2DArray)
 
 
 def _assert_type(value: Any, expected_type: Union[Type[Any], Tuple[Type[Any], ...]]) -> None:
