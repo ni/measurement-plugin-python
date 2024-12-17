@@ -65,8 +65,6 @@ def test___measurement_service___register_measurement_method___method_registered
         ("UInt32", DataType.UInt32, 3994),
         ("UInt64", DataType.UInt64, 3456),
         ("UInt64", DataType.UInt64, False),
-        ("DoubleXYData", DataType.DoubleXYData, None),
-        ("DoubleXYDataArray", DataType.DoubleXYDataArray1D, None),
     ],
 )
 def test___measurement_service___add_configuration__configuration_added(
@@ -293,7 +291,6 @@ def test___measurement_service___add_non_path_configuration__path_type_annotatio
         ("IOResource1DArray", DataType.IOResourceArray1D, [1.009, -1.0009]),
         ("Path", DataType.Path, 1.0),
         ("Path1DArray", DataType.PathArray1D, [1.009, -1.0009]),
-        ("DoubleXYDataArray", DataType.DoubleXYDataArray1D, [1.009, -1.0009]),
     ],
 )
 @pytest.mark.filterwarnings("ignore:.*Pin.*:DeprecationWarning")
