@@ -12,6 +12,7 @@ from ni_measurement_plugin_sdk_service._internal.parameter import (
     serialization_descriptors,
 )
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types import (
+    array_pb2,
     xydata_pb2,
 )
 from tests.unit.test_decoder import (
@@ -51,6 +52,8 @@ double_xy_data2.y_data.append(10)
 
 double_xy_data_array = [double_xy_data, double_xy_data2]
 
+double_2d_array = array_pb2.Double2DArray(rows=2, columns=3, data=[1, 2, 3, 4, 5, 6])
+
 # This should match the number of fields in bigmessage.proto.
 BIG_MESSAGE_SIZE = 100
 
@@ -81,6 +84,7 @@ BIG_MESSAGE_SIZE = 100
             [Countries.AUSTRALIA, Countries.CANADA],
             double_xy_data,
             double_xy_data_array,
+            double_2d_array,
         ],
         [
             -0.9999,
@@ -105,6 +109,7 @@ BIG_MESSAGE_SIZE = 100
             [Countries.AUSTRALIA, Countries.CANADA],
             double_xy_data,
             double_xy_data_array,
+            double_2d_array,
         ],
     ],
 )
@@ -149,6 +154,7 @@ def test___serializer___serialize_parameter___successful_serialization(test_valu
             [Countries.AUSTRALIA, Countries.CANADA],
             double_xy_data,
             double_xy_data_array,
+            double_2d_array,
         ],
         [
             -0.9999,
@@ -173,6 +179,7 @@ def test___serializer___serialize_parameter___successful_serialization(test_valu
             [Countries.AUSTRALIA, Countries.CANADA],
             double_xy_data,
             double_xy_data_array,
+            double_2d_array,
         ],
     ],
 )
@@ -230,6 +237,7 @@ def test___big_message___serialize_parameters___returns_serialized_data() -> Non
             [Countries.AUSTRALIA, Countries.CANADA],
             double_xy_data,
             double_xy_data_array,
+            double_2d_array,
         ],
     ],
 )
