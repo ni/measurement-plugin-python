@@ -138,7 +138,9 @@ def measure(
     enum_output = enum_input
     enum_array_output = enum_array_input
     protobuf_enum_output = protobuf_enum_input
-    double_2d_array_output = array_pb2.Double2DArray()
+    double_2d_array_output = array_pb2.Double2DArray(
+        rows=2, columns=3, data=[1.0, 2.0, 3.0, 4.0, 5.0, 6.0]
+    )
 
     return (
         float_output,

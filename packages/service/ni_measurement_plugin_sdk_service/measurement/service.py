@@ -424,6 +424,8 @@ class MeasurementService:
                 "DataType.PinArray1D is deprecated. Use DataType.IOResourceArray1D instead.",
                 DeprecationWarning,
             )
+        if type in [DataType.Double2DArray, DataType.DoubleXYData, DataType.DoubleXYDataArray1D]:
+            raise ValueError(f"{type} is not supported for configuration parameters.")
         data_type_info = _datatypeinfo.get_type_info(type)
         annotations = self._make_annotations_dict(
             data_type_info.type_specialization, instrument_type=instrument_type, enum_type=enum_type
