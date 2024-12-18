@@ -1,6 +1,7 @@
 """Double2DArray Conversion Utilities."""
 
-from typing import Any, List
+from typing import Any
+
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types import (
     array_pb2,
 )
