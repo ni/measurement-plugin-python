@@ -1,5 +1,6 @@
 """Double2DArray Conversion Utilities."""
 
+from typing import Any, List
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types import (
     array_pb2,
 )
@@ -23,11 +24,11 @@ try:
 except ImportError:
     np = None
 
-    def double2darray_to_ndarray(double2darray):
+    def double2darray_to_ndarray(double2darray: array_pb2.Double2DArray) -> Any:
         """Raise ImportError if numpy is not available."""
         raise ImportError("NumPy is not available. Install NumPy to use this function.")
 
-    def ndarray_to_double2darray(ndarray):
+    def ndarray_to_double2darray(ndarray: Any) -> array_pb2.Double2DArray:
         """Raise ImportError if numpy is not available."""
         raise ImportError("NumPy is not available. Install NumPy to use this function.")
 
