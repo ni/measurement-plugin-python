@@ -8,14 +8,15 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types import 
 
 try:
     import numpy as np
+    from numpy.typing import NDArray
 
-    def double2darray_to_ndarray(double2darray: array_pb2.Double2DArray) -> Any:
+    def double2darray_to_ndarray(double2darray: array_pb2.Double2DArray) -> NDArray[np.float64]:
         """Convert Double2DArray to numpy NDArray."""
         return np.array(double2darray.data, dtype=np.float64).reshape(
             double2darray.rows, double2darray.columns
         )
 
-    def ndarray_to_double2darray(ndarray: Any) -> array_pb2.Double2DArray:
+    def ndarray_to_double2darray(ndarray: NDArray[np.float64]) -> array_pb2.Double2DArray:
         """Convert numpy NDArray to Double2DArray."""
         return array_pb2.Double2DArray(
             data=ndarray.flatten().tolist(), rows=ndarray.shape[0], columns=ndarray.shape[1]
@@ -23,11 +24,11 @@ try:
 
 except ImportError:
 
-    def double2darray_to_ndarray(double2darray: array_pb2.Double2DArray) -> Any:
+    def double2darray_to_ndarray(double2darray: array_pb2.Double2DArray) -> NDArray[np.float64]:
         """Raise ImportError if numpy is not available."""
         raise ImportError("NumPy is not available. Install NumPy to use this function.")
 
-    def ndarray_to_double2darray(ndarray: Any) -> array_pb2.Double2DArray:
+    def ndarray_to_double2darray(ndarray: NDArray[np.float64]) -> array_pb2.Double2DArray:
         """Raise ImportError if numpy is not available."""
         raise ImportError("NumPy is not available. Install NumPy to use this function.")
 
