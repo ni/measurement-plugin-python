@@ -27,5 +27,12 @@ build-backend = "poetry.core.masonry.api"
 [tool.mypy]
 disallow_untyped_defs = true
 
+[[tool.mypy.overrides]]
+module = [
+    # numpy has type hints but this example does not depend on numpy.
+    "numpy.*",
+]
+ignore_missing_imports = true
+
 [tool.ni-python-styleguide]
 extend_exclude = '*_pb2_grpc.py,*_pb2_grpc.pyi,*_pb2.py,*_pb2.pyi'

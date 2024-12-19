@@ -6,6 +6,7 @@ import sys
 from enum import Enum
 from typing import Iterable, Tuple
 
+import _array_utils
 import click
 import ni_measurement_plugin_sdk_service as nims
 from _helpers import configure_logging, verbosity_option
@@ -39,6 +40,13 @@ class Color(Enum):
     BLUE = 3
 
 
+# Define a list of lists of floats
+_list_of_lists = [[1.0, 2.0, 3.0], [4.0, 5.0, 6.0], [7.0, 8.0, 9.0]]
+
+# Convert the list of lists to a Double2DArray
+_converted_double_2d_array = _array_utils.list_to_double2darray(_list_of_lists)
+
+
 @measurement_service.register_measurement
 @measurement_service.configuration("Float In", nims.DataType.Float, 0.06)
 @measurement_service.configuration("Double Array In", nims.DataType.DoubleArray1D, [0.1, 0.2, 0.3])
@@ -64,6 +72,7 @@ class Color(Enum):
 )
 @measurement_service.output("String Array out", nims.DataType.StringArray1D)
 @measurement_service.output("Double 2D Array Out", nims.DataType.Double2DArray)
+@measurement_service.output("Converted Double 2D Array", nims.DataType.Double2DArray)
 def measure(
     float_input: float,
     double_array_input: Iterable[float],
@@ -80,6 +89,7 @@ def measure(
     Color,
     color_pb2.ProtobufColor.ValueType,
     Iterable[str],
+    array_pb2.Double2DArray,
     array_pb2.Double2DArray,
 ]:
     """Perform a loopback measurement with various data types."""
@@ -100,6 +110,7 @@ def measure(
     double_2d_array_output = array_pb2.Double2DArray(
         rows=2, columns=3, data=[1.5, 2.5, 3.5, 4.5, 5.5, 6.5]
     )
+    converted_double_2d_array_output = _converted_double_2d_array
     logging.info("Completed measurement")
 
     return (
@@ -111,6 +122,7 @@ def measure(
         protobuf_enum_output,
         string_array_output,
         double_2d_array_output,
+        converted_double_2d_array_output,
     )
 
 
