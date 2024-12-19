@@ -29,8 +29,8 @@ disallow_untyped_defs = true
 
 [[tool.mypy.overrides]]
 module = [
-    "numpy",
-    "numpy.typing",
+    # numpy has type hints but this example does not depend on numpy.
+    "numpy.*",
 ]
 ignore_missing_imports = true
 
