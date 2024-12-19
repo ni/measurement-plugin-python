@@ -1,36 +1,32 @@
 """Double2DArray Conversion Utilities."""
 
-from typing import Any, List
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, List
 
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types import (
     array_pb2,
 )
 
-try:
+if TYPE_CHECKING:
     import numpy as np
-    from numpy.typing import NDArray
+    import numpy.typing as npt
 
-    def double2darray_to_ndarray(double2darray: array_pb2.Double2DArray) -> NDArray[np.float64]:
-        """Convert Double2DArray to numpy NDArray."""
-        return np.array(double2darray.data, dtype=np.float64).reshape(
-            double2darray.rows, double2darray.columns
-        )
 
-    def ndarray_to_double2darray(ndarray: NDArray[np.float64]) -> array_pb2.Double2DArray:
-        """Convert numpy NDArray to Double2DArray."""
-        return array_pb2.Double2DArray(
-            data=ndarray.flatten().tolist(), rows=ndarray.shape[0], columns=ndarray.shape[1]
-        )
+def double2darray_to_ndarray(double2darray: array_pb2.Double2DArray) -> npt.NDArray[np.float64]:
+    """Convert Double2DArray to numpy NDArray."""
+    import numpy as np
 
-except ImportError:
+    return np.array(double2darray.data, dtype=np.float64).reshape(
+        double2darray.rows, double2darray.columns
+    )
 
-    def double2darray_to_ndarray(double2darray: array_pb2.Double2DArray) -> NDArray[np.float64]:
-        """Raise ImportError if numpy is not available."""
-        raise ImportError("NumPy is not available. Install NumPy to use this function.")
 
-    def ndarray_to_double2darray(ndarray: NDArray[np.float64]) -> array_pb2.Double2DArray:
-        """Raise ImportError if numpy is not available."""
-        raise ImportError("NumPy is not available. Install NumPy to use this function.")
+def ndarray_to_double2darray(ndarray: npt.NDArray[np.float64]) -> array_pb2.Double2DArray:
+    """Convert numpy NDArray to Double2DArray."""
+    return array_pb2.Double2DArray(
+        data=ndarray.flatten().tolist(), rows=ndarray.shape[0], columns=ndarray.shape[1]
+    )
 
 
 def list_to_double2darray(data: List[List[float]]) -> array_pb2.Double2DArray:
