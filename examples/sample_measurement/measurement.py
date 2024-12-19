@@ -41,10 +41,10 @@ class Color(Enum):
 
 
 # Define a list of lists of floats
-list_of_lists = [[1.0, 2.0, 3.0], [4.0, 5.0, 6.0], [7.0, 8.0, 9.0]]
+_list_of_lists = [[1.0, 2.0, 3.0], [4.0, 5.0, 6.0], [7.0, 8.0, 9.0]]
 
 # Convert the list of lists to a Double2DArray
-converted_double_2d_array = _array_utils.list_to_double2darray(list_of_lists)
+_converted_double_2d_array = _array_utils.list_to_double2darray(_list_of_lists)
 
 
 @measurement_service.register_measurement
@@ -110,7 +110,7 @@ def measure(
     double_2d_array_output = array_pb2.Double2DArray(
         rows=2, columns=3, data=[1.5, 2.5, 3.5, 4.5, 5.5, 6.5]
     )
-    converted_double_2d_array_output = converted_double_2d_array
+    converted_double_2d_array_output = _converted_double_2d_array
     logging.info("Completed measurement")
 
     return (

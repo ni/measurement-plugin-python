@@ -23,7 +23,6 @@ try:
         )
 
 except ImportError:
-    np = None
 
     def double2darray_to_ndarray(double2darray: array_pb2.Double2DArray) -> Any:
         """Raise ImportError if numpy is not available."""

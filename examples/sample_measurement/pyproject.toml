@@ -26,6 +26,12 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.mypy]
 disallow_untyped_defs = true
+
+[[tool.mypy.overrides]]
+module = [
+    "numpy",
+    "numpy.typing",
+]
 ignore_missing_imports = true
 
 [tool.ni-python-styleguide]
