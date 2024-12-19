@@ -1,6 +1,6 @@
 """Double2DArray Conversion Utilities."""
 
-from typing import Any
+from typing import Any, List
 
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types import (
     array_pb2,
@@ -32,7 +32,7 @@ except ImportError:
         raise ImportError("NumPy is not available. Install NumPy to use this function.")
 
 
-def list_to_double2darray(data: list[list[float]]) -> array_pb2.Double2DArray:
+def list_to_double2darray(data: List[List[float]]) -> array_pb2.Double2DArray:
     """Convert list of lists to Double2DArray."""
     rows = len(data)
     columns = len(data[0]) if rows > 0 else 0
@@ -40,7 +40,7 @@ def list_to_double2darray(data: list[list[float]]) -> array_pb2.Double2DArray:
     return array_pb2.Double2DArray(data=flattened_data, rows=rows, columns=columns)
 
 
-def double2darray_to_list(double2darray: array_pb2.Double2DArray) -> list[list[float]]:
+def double2darray_to_list(double2darray: array_pb2.Double2DArray) -> List[List[float]]:
     """Convert Double2DArray to list of lists."""
     data = double2darray.data
     rows = double2darray.rows
