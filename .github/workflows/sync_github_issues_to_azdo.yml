@@ -23,7 +23,7 @@ jobs:
           else
             echo "work_item_type=Bug" >> $GITHUB_OUTPUT
           fi
-      - uses: danhellem/github-actions-issue-to-work-item@v2.3
+      - uses: danhellem/github-actions-issue-to-work-item@v2.4
         env:
           ado_token: "${{ secrets.AZDO_WORK_ITEM_TOKEN }}"
           github_token: "${{ secrets.GH_REPO_TOKEN }}"
