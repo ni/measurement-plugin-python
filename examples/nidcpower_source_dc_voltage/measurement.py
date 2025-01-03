@@ -52,9 +52,9 @@ if TYPE_CHECKING:
     ["Pin1"],
     instrument_type=nims.session_management.INSTRUMENT_TYPE_NI_DCPOWER,
 )
-@measurement_service.configuration("voltage_level", nims.DataType.Double, 6.0)
-@measurement_service.configuration("voltage_level_range", nims.DataType.Double, 6.0)
-@measurement_service.configuration("current_limit", nims.DataType.Double, 0.01)
+@measurement_service.configuration("voltage_level", nims.DataType.Double, 1.7)
+@measurement_service.configuration("voltage_level_range", nims.DataType.Double, 2.0)
+@measurement_service.configuration("current_limit", nims.DataType.Double, 0.002)
 @measurement_service.configuration("current_limit_range", nims.DataType.Double, 0.01)
 @measurement_service.configuration("source_delay", nims.DataType.Double, 0.0)
 @measurement_service.output("measurement_sites", nims.DataType.Int32Array1D)
