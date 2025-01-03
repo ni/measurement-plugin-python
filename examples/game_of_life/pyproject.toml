@@ -7,7 +7,7 @@ authors = ["National Instruments"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
-ni-measurement-plugin-sdk-service = {version = "^2.1.0"}
+ni-measurement-plugin-sdk-service = {version = "^2.2.0"}
 click = ">=7.1.2, !=8.1.4" # mypy fails with click 8.1.4: https://github.com/pallets/click/issues/2558
 
 [tool.poetry.group.dev.dependencies]
