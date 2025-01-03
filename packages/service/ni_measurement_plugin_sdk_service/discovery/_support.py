@@ -35,7 +35,7 @@ def _get_discovery_service_address() -> str:
     _logger.debug("Discovery service key file path: %s", key_file_path)
     with _open_key_file(str(key_file_path)) as key_file:
         key_json = json.load(key_file)
-        return "localhost:" + key_json["InsecurePort"]
+        return "10.1.133.10:" + key_json["InsecurePort"]
 
 
 def _ensure_discovery_service_started(key_file_path: pathlib.Path) -> None:
