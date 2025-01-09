@@ -80,6 +80,7 @@ versions of InstrumentStudio.
 
 | InstrumentStudio Version | Release | Download |
 | ------------------------ | -------- | ------- |
+| 2025 Q1                  | [2.2.0](https://github.com/ni/measurement-plugin-python/releases/tag/2.2.0) | [measurement-plugin-python-examples-2.2.0.zip](https://github.com/ni/measurement-plugin-python/releases/download/2.2.0/measurement-plugin-python-examples-2.2.0.zip) |
 | 2024 Q4                  | [2.1.0](https://github.com/ni/measurement-plugin-python/releases/tag/2.1.0) | [measurement-plugin-python-examples-2.1.0.zip](https://github.com/ni/measurement-plugin-python/releases/download/2.1.0/measurement-plugin-python-examples-2.1.0.zip) |
 | 2024 Q3                  | [2.0.0](https://github.com/ni/measurement-plugin-python/releases/tag/2.0.0) | [measurement-plugin-python-examples-2.0.0.zip](https://github.com/ni/measurement-plugin-python/releases/download/2.0.0/measurement-plugin-python-examples-2.0.0.zip) |
 | 2024 Q2                  | [1.4.0](https://github.com/ni/measurement-plugin-python/releases/tag/1.4.0) | [measurementlink-python-examples-1.4.0.zip](https://github.com/ni/measurement-plugin-python/releases/download/1.4.0/measurementlink-python-examples-1.4.0.zip) |
