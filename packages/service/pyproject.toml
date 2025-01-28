@@ -31,7 +31,7 @@ python = "^3.8"
 # below. Please keep the minimum grpcio version in sync with the grpcio-tools version. Otherwise,
 # the generated gRPC stubs may not work with the minimum grpcio version.
 grpcio = "^1.49.1"
-protobuf = "^4.21"
+protobuf = ">=4.21"
 pywin32 = {version = ">=303", platform = "win32"}
 deprecation = ">=2.1"
 # https://github.com/microsoft/tracelogging/issues/58 - traceloggingdynamic raises TypeError with Python 3.8
@@ -62,14 +62,15 @@ ni-python-styleguide = ">=0.4.1"
 # and regenerate gRPC stubs.
 grpcio-tools = [
   {version = "1.49.1", python = ">=3.8,<3.12"},
-  {version = "1.59.0", python = "^3.12"},
+  {version = "1.59.0", python = ">=3.12,<3.13"},
+  {version = "1.67.0", python = "^3.13"},
 ]
 pytest-cov = ">=3.0.0"
 pytest-mock = ">=3.0"
 tox = ">=4.0"
 mypy = ">=1.0"
 mypy-protobuf = ">=3.4"
-types-protobuf = "^4.21"
+types-protobuf = ">=4.21"
 types-setuptools = "*"
 types-pywin32 = ">=304"
 grpc-stubs = "^1.53"
@@ -79,7 +80,7 @@ types-psutil = ">=6.0"
 # we need to include multiple NumPy versions in poetry.lock.
 numpy = [
   {version = ">=1.22", python = ">=3.8,<3.12"},
-  {version = ">=1.26", python = ">=3.12,<3.13"},
+  {version = ">=1.26", python = "^3.12"},
 ]
 bandit = { version = ">=1.7", extras = ["toml"] }
 
@@ -89,7 +90,7 @@ optional = true
 [tool.poetry.group.docs.dependencies]
 Sphinx = [
   {version = ">=7.1.2", python = ">=3.8,<3.9"},
-  {version = ">=7.2.0", python = ">=3.9,<3.13"},
+  {version = ">=7.2.0", python = "^3.9"},
 ]
 sphinx-rtd-theme = ">=1.0.0"
 sphinx-autoapi = ">=1.8.4"
