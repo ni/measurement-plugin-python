@@ -35,7 +35,7 @@ def _get_discovery_service_address() -> str:
     _logger.debug("Discovery service key file path: %s", key_file_path)
     with _open_key_file(str(key_file_path)) as key_file:
         key_json = json.load(key_file)
-        return "10.1.133.10:" + key_json["InsecurePort"]
+        return _get_discovery_location() + ":" + key_json["InsecurePort"]
 
 
 def _ensure_discovery_service_started(key_file_path: pathlib.Path) -> None:
@@ -130,6 +130,19 @@ def _get_key_file_directory() -> pathlib.Path:
         return _get_nipath("NIPUBAPPDATADIR") / "MeasurementLink" / "Discovery" / version
     else:
         raise NotImplementedError("Platform not supported")
+
+
+def _get_discovery_location() -> str:
+    file_path = None
+    location = "localhost"
+    if sys.platform == "win32":
+        file_path = _get_nipath("NIPUBAPPDATADIR") / "Shared" / "discovery_location.txt"
+    
+    if file_path:
+        with open(file_path, "r", encoding="utf-8") as file:
+            location = file.readline().strip()
+
+    return location
 
 
 def _open_key_file(path: str) -> typing.TextIO:
