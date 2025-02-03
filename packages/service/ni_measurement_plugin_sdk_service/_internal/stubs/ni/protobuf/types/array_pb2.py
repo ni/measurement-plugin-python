@@ -13,7 +13,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x1dni/protobuf/types/array.proto\x12\x11ni.protobuf.types\"<\n\rDouble2DArray\x12\x0c\n\x04rows\x18\x01 \x01(\x05\x12\x0f\n\x07\x63olumns\x18\x02 \x01(\x05\x12\x0c\n\x04\x64\x61ta\x18\x03 \x03(\x01\x42\x82\x01\n\x15\x63om.ni.protobuf.typesB\nArrayProtoP\x01Z\x05types\xa2\x02\x04NIPT\xaa\x02\"NationalInstruments.Protobuf.Types\xca\x02\x11NI\\PROTOBUF\\TYPES\xea\x02\x13NI::Protobuf::Typesb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x1dni/protobuf/types/array.proto\x12\x11ni.protobuf.types\"<\n\rDouble2DArray\x12\x0c\n\x04rows\x18\x01 \x01(\x05\x12\x0f\n\x07\x63olumns\x18\x02 \x01(\x05\x12\x0c\n\x04\x64\x61ta\x18\x03 \x03(\x01\"<\n\rString2DArray\x12\x0c\n\x04rows\x18\x01 \x01(\x05\x12\x0f\n\x07\x63olumns\x18\x02 \x01(\x05\x12\x0c\n\x04\x64\x61ta\x18\x03 \x03(\tB\x82\x01\n\x15\x63om.ni.protobuf.typesB\nArrayProtoP\x01Z\x05types\xa2\x02\x04NIPT\xaa\x02\"NationalInstruments.Protobuf.Types\xca\x02\x11NI\\PROTOBUF\\TYPES\xea\x02\x13NI::Protobuf::Typesb\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'ni.protobuf.types.array_pb2', globals())
@@ -23,4 +23,6 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   DESCRIPTOR._serialized_options = b'\n\025com.ni.protobuf.typesB\nArrayProtoP\001Z\005types\242\002\004NIPT\252\002\"NationalInstruments.Protobuf.Types\312\002\021NI\\PROTOBUF\\TYPES\352\002\023NI::Protobuf::Types'
   _DOUBLE2DARRAY._serialized_start=52
   _DOUBLE2DARRAY._serialized_end=112
+  _STRING2DARRAY._serialized_start=114
+  _STRING2DARRAY._serialized_end=174
 # @@protoc_insertion_point(module_scope)
