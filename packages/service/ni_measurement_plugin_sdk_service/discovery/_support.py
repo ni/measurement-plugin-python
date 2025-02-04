@@ -51,7 +51,10 @@ def _ensure_discovery_service_started(key_file_path: pathlib.Path) -> None:
 def _get_discovery_service_location() -> pathlib.PurePath:
     """Gets the location of the discovery service process executable."""
     registration_json_path = _get_registration_json_file_path()
-    registration_json_obj = json.loads(registration_json_path.read_text())
+    if sys.platform == "win32":
+        registration_json_obj = json.loads(registration_json_path.read_text())
+    else:
+        registration_json_obj = json.loads(registration_json_path.read_text(encoding='utf-8-sig'))
     return registration_json_path.parent / registration_json_obj["discovery"]["path"]
 
 
@@ -64,11 +67,14 @@ def _get_registration_json_file_path() -> pathlib.Path:
             )
         return json_path
     else:
-        raise NotImplementedError("Platform not supported")
+        return pathlib.Path.home() / ".config" / "ni" / "Services" / "NIServices.json"
 
 
 def _key_file_exists(key_file_path: pathlib.Path) -> bool:
-    return key_file_path.is_file() and key_file_path.stat().st_size > 0
+    if key_file_path.is_file():
+        if key_file_path.stat().st_size > 0:
+            return True
+    return False
 
 
 def _start_service(
@@ -79,6 +85,8 @@ def _start_service(
     if sys.platform == "win32":
         # Terminating the measurement service should not terminate the discovery service.
         kwargs["creationflags"] = subprocess.CREATE_BREAKAWAY_FROM_JOB | subprocess.DETACHED_PROCESS
+    else:
+        kwargs["start_new_session"] = True
     # The EXE file path comes from the registration JSON, which is installed in
     # a trusted location (e.g. NISHAREDDIR64).
     discovery_service_subprocess = subprocess.Popen(  # nosec: B603
@@ -113,9 +121,12 @@ def _service_already_running(key_file_path: pathlib.Path) -> bool:
 
 def _delete_existing_key_file(key_file_path: pathlib.Path) -> None:
     if _key_file_exists(key_file_path):
-        with key_file_path.open("w") as _:
-            pass
-        key_file_path.unlink()
+        if sys.platform == "win32":
+            with key_file_path.open("w") as _:
+                pass
+            key_file_path.unlink()
+        else:
+            raise OSError(f"Failed to delete key file: {key_file_path}")
 
 
 def _get_key_file_path(cluster_id: Optional[str] = None) -> pathlib.Path:
@@ -129,7 +140,8 @@ def _get_key_file_directory() -> pathlib.Path:
     if sys.platform == "win32":
         return _get_nipath("NIPUBAPPDATADIR") / "MeasurementLink" / "Discovery" / version
     else:
-        raise NotImplementedError("Platform not supported")
+        discoveryPath = pathlib.Path.home() / ".config" / "ni" / "MeasurementLink" / "Discovery" / version
+        return discoveryPath
 
 
 def _open_key_file(path: str) -> typing.TextIO:
@@ -162,7 +174,7 @@ def _open_key_file(path: str) -> typing.TextIO:
         # file object closes the underlying Win32 file handle.
         return os.fdopen(crt_file_descriptor, "r", encoding="utf-8-sig")
     else:
-        return open(path, "r")
+        return open(path, "r", encoding="utf-8-sig")
 
 
 def _get_nipath(name: str) -> pathlib.Path:
