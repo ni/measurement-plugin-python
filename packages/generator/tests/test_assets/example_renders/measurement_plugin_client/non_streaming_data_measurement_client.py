@@ -18,6 +18,7 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measur
 )
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types.array_pb2 import (
     Double2DArray,
+    String2DArray,
 )
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types.xydata_pb2 import (
     DoubleXYData,
@@ -75,6 +76,7 @@ class Outputs(typing.NamedTuple):
     enum_array_out: typing.Sequence[EnumInEnum]
     protobuf_enum_out: ProtobufEnumInEnum
     double_2d_array_out: Double2DArray
+    string_2d_array_out: String2DArray
 
 
 class NonStreamingDataMeasurementClient:
@@ -434,6 +436,16 @@ class NonStreamingDataMeasurementClient:
                 annotations={},
                 message_type="ni.protobuf.types.Double2DArray",
                 field_name="Double_2D_Array_out",
+                enum_type=None,
+            ),
+            16: ParameterMetadata(
+                display_name="String 2D Array out",
+                type=Field.Kind.ValueType(11),
+                repeated=False,
+                default_value=None,
+                annotations={},
+                message_type="ni.protobuf.types.String2DArray",
+                field_name="String_2D_Array_out",
                 enum_type=None,
             ),
         }

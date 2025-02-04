@@ -73,6 +73,7 @@ _converted_double_2d_array = _array_utils.list_to_double2darray(_list_of_lists)
 @measurement_service.output("String Array out", nims.DataType.StringArray1D)
 @measurement_service.output("Double 2D Array Out", nims.DataType.Double2DArray)
 @measurement_service.output("Converted Double 2D Array", nims.DataType.Double2DArray)
+@measurement_service.output("String 2D Array Out", nims.DataType.String2DArray)
 def measure(
     float_input: float,
     double_array_input: Iterable[float],
@@ -91,6 +92,7 @@ def measure(
     Iterable[str],
     array_pb2.Double2DArray,
     array_pb2.Double2DArray,
+    array_pb2.String2DArray,
 ]:
     """Perform a loopback measurement with various data types."""
     logging.info("Executing measurement")
@@ -111,6 +113,9 @@ def measure(
         rows=2, columns=3, data=[1.5, 2.5, 3.5, 4.5, 5.5, 6.5]
     )
     converted_double_2d_array_output = _converted_double_2d_array
+    string_2d_array_output = array_pb2.String2DArray(
+        rows=2, columns=3, data=["ABC", "DEF", "GHI", "JKL", "MNO", "PQR"]
+    )
     logging.info("Completed measurement")
 
     return (
@@ -123,6 +128,7 @@ def measure(
         string_array_output,
         double_2d_array_output,
         converted_double_2d_array_output,
+        string_2d_array_output,
     )
 
 

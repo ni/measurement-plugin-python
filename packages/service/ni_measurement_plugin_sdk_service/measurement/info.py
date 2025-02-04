@@ -108,6 +108,7 @@ class DataType(enum.Enum):
     DoubleXYData = 11
     IOResource = 12
     Double2DArray = 13
+    String2DArray = 14
 
     Int32Array1D = 100
     Int64Array1D = 101

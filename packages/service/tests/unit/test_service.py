@@ -321,6 +321,7 @@ def test___measurement_service___add_configuration_with_mismatch_default_value__
         ("DoubleXYData", DataType.DoubleXYData),
         ("DoubleXYDataArray", DataType.DoubleXYDataArray1D),
         ("Double2DArray", DataType.Double2DArray),
+        ("String2DArray", DataType.String2DArray),
     ],
 )
 def test___measurement_service___add_output__output_added(
