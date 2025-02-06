@@ -41,10 +41,16 @@ class Color(Enum):
 
 
 # Define a list of lists of floats
-_list_of_lists = [[1.0, 2.0, 3.0], [4.0, 5.0, 6.0], [7.0, 8.0, 9.0]]
+_list_of_lists_of_floats = [[1.0, 2.0, 3.0], [4.0, 5.0, 6.0], [7.0, 8.0, 9.0]]
 
 # Convert the list of lists to a Double2DArray
-_converted_double_2d_array = _array_utils.list_to_double2darray(_list_of_lists)
+_converted_double_2d_array = _array_utils.list_to_double2darray(_list_of_lists_of_floats)
+
+# Define a list of lists of strings
+_list_of_lists_of_string = [["String1", "String2", "String3"], ["String4", "String5", "String6"]]
+
+# Convert the list of lists to a String2DArray
+_converted_string_2d_array = _array_utils.list_to_string2darray(_list_of_lists_of_string)
 
 
 @measurement_service.register_measurement
@@ -74,6 +80,7 @@ _converted_double_2d_array = _array_utils.list_to_double2darray(_list_of_lists)
 @measurement_service.output("Double 2D Array Out", nims.DataType.Double2DArray)
 @measurement_service.output("Converted Double 2D Array", nims.DataType.Double2DArray)
 @measurement_service.output("String 2D Array Out", nims.DataType.String2DArray)
+@measurement_service.output("Converted String 2D Array", nims.DataType.String2DArray)
 def measure(
     float_input: float,
     double_array_input: Iterable[float],
@@ -92,6 +99,7 @@ def measure(
     Iterable[str],
     array_pb2.Double2DArray,
     array_pb2.Double2DArray,
+    array_pb2.String2DArray,
     array_pb2.String2DArray,
 ]:
     """Perform a loopback measurement with various data types."""
@@ -116,6 +124,7 @@ def measure(
     string_2d_array_output = array_pb2.String2DArray(
         rows=2, columns=3, data=["ABC", "DEF", "GHI", "JKL", "MNO", "PQR"]
     )
+    converted_string_2d_array_output = _converted_string_2d_array
     logging.info("Completed measurement")
 
     return (
@@ -129,6 +138,7 @@ def measure(
         double_2d_array_output,
         converted_double_2d_array_output,
         string_2d_array_output,
+        converted_string_2d_array_output,
     )
 
 
