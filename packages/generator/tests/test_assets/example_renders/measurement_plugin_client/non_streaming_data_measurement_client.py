@@ -18,6 +18,8 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measur
 )
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types.array_pb2 import (
     Double2DArray,
+)
+from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types.array_pb2 import (
     String2DArray,
 )
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types.xydata_pb2 import (
