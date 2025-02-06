@@ -33,7 +33,8 @@ _V2_MEASUREMENT_SERVICE_INTERFACE = "ni.measurementlink.measurement.v2.Measureme
 _INVALID_CHARS = "`~!@#$%^&*()-+={}[]\\|:;',<>.?/ \n"
 
 _XY_DATA_IMPORT = "from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types.xydata_pb2 import DoubleXYData"
-_2DARRAY_DATA_IMPORT = "from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types.array_pb2 import Double2DArray, String2DArray"
+_DOUBLE2DARRAY_DATA_IMPORT = "from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types.array_pb2 import Double2DArray"
+_STRING2DARRAY_DATA_IMPORT = "from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types.array_pb2 import String2DArray"
 _PATH_IMPORT = "import pathlib"
 
 _PROTO_DATATYPE_TO_PYTYPE_LOOKUP = {
@@ -301,7 +302,7 @@ def get_output_parameters_with_type(
 
         if metadata.message_type and metadata.message_type == "ni.protobuf.types.Double2DArray":
             parameter_type = "Double2DArray"
-            custom_import_modules.append(_2DARRAY_DATA_IMPORT)
+            custom_import_modules.append(_DOUBLE2DARRAY_DATA_IMPORT)
 
             if metadata.repeated:
                 raise click.ClickException(
@@ -311,8 +312,7 @@ def get_output_parameters_with_type(
 
         if metadata.message_type and metadata.message_type == "ni.protobuf.types.String2DArray":
             parameter_type = "String2DArray"
-            if _2DARRAY_DATA_IMPORT not in custom_import_modules:
-                custom_import_modules.append(_2DARRAY_DATA_IMPORT)
+            custom_import_modules.append(_STRING2DARRAY_DATA_IMPORT)
 
             if metadata.repeated:
                 raise click.ClickException(
