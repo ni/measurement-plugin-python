@@ -57,6 +57,11 @@ _DATATYPE_TO_DATATYPEINFO_LOOKUP = {
         False,
         message_type=array_pb2.Double2DArray.DESCRIPTOR.full_name,
     ),
+    DataType.String2DArray: DataTypeInfo(
+        type_pb2.Field.TYPE_MESSAGE,
+        False,
+        message_type=array_pb2.String2DArray.DESCRIPTOR.full_name,
+    ),
     DataType.IOResource: DataTypeInfo(
         type_pb2.Field.TYPE_STRING, False, TypeSpecialization.IOResource
     ),

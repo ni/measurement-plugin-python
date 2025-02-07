@@ -92,6 +92,7 @@ class Color(Enum):
     "Protobuf Enum out", nims.DataType.Enum, enum_type=color_pb2.ProtobufColor
 )
 @measurement_service.output("Double 2D Array out", nims.DataType.Double2DArray)
+@measurement_service.output("String 2D Array out", nims.DataType.String2DArray)
 def measure(
     float_input: float,
     double_array_input: Iterable[float],
@@ -122,6 +123,7 @@ def measure(
     Iterable[Color],
     color_pb2.ProtobufColor.ValueType,
     array_pb2.Double2DArray,
+    array_pb2.String2DArray,
 ]:
     """Perform a loopback measurement with various data types."""
     float_output = float_input
@@ -141,6 +143,9 @@ def measure(
     double_2d_array_output = array_pb2.Double2DArray(
         rows=2, columns=3, data=[1.0, 2.0, 3.0, 4.0, 5.0, 6.0]
     )
+    string_2d_array_output = array_pb2.String2DArray(
+        rows=2, columns=3, data=["ABC", "DEF", "GHI", "JKL", "MNO", "PQR"]
+    )
 
     return (
         float_output,
@@ -158,4 +163,5 @@ def measure(
         enum_array_output,
         protobuf_enum_output,
         double_2d_array_output,
+        string_2d_array_output,
     )

@@ -33,7 +33,8 @@ _V2_MEASUREMENT_SERVICE_INTERFACE = "ni.measurementlink.measurement.v2.Measureme
 _INVALID_CHARS = "`~!@#$%^&*()-+={}[]\\|:;',<>.?/ \n"
 
 _XY_DATA_IMPORT = "from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types.xydata_pb2 import DoubleXYData"
-_2DARRAY_DATA_IMPORT = "from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types.array_pb2 import Double2DArray"
+_DOUBLE2DARRAY_DATA_IMPORT = "from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types.array_pb2 import Double2DArray"
+_STRING2DARRAY_DATA_IMPORT = "from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types.array_pb2 import String2DArray"
 _PATH_IMPORT = "import pathlib"
 
 _PROTO_DATATYPE_TO_PYTYPE_LOOKUP = {
@@ -157,9 +158,10 @@ def get_configuration_and_output_metadata_by_index(
         if output.message_type and output.message_type not in [
             "ni.protobuf.types.DoubleXYData",
             "ni.protobuf.types.Double2DArray",
+            "ni.protobuf.types.String2DArray",
         ]:
             raise click.ClickException(
-                f"Measurement outputs do not support {output.message_type}. Only DoubleXYData and Double2DArray are supported."
+                f"Measurement outputs do not support {output.message_type}. DoubleXYData, Double2DArray and String2DArray message types are supported."
             )
 
         annotations_dict = dict(output.annotations.items())
@@ -300,11 +302,21 @@ def get_output_parameters_with_type(
 
         if metadata.message_type and metadata.message_type == "ni.protobuf.types.Double2DArray":
             parameter_type = "Double2DArray"
-            custom_import_modules.append(_2DARRAY_DATA_IMPORT)
+            custom_import_modules.append(_DOUBLE2DARRAY_DATA_IMPORT)
 
             if metadata.repeated:
                 raise click.ClickException(
                     f"Repeated Double 2D Array are not supported for output parameter "
+                    f"'{parameter_name}'. Please contact the measurement developer."
+                )
+
+        if metadata.message_type and metadata.message_type == "ni.protobuf.types.String2DArray":
+            parameter_type = "String2DArray"
+            custom_import_modules.append(_STRING2DARRAY_DATA_IMPORT)
+
+            if metadata.repeated:
+                raise click.ClickException(
+                    f"Repeated String 2D Array are not supported for output parameter "
                     f"'{parameter_name}'. Please contact the measurement developer."
                 )
 

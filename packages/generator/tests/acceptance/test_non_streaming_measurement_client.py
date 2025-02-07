@@ -71,6 +71,9 @@ def test___measurement_plugin_client___measure___returns_output(
         double_2d_array_out=array_pb2.Double2DArray(
             rows=2, columns=3, data=[1.0, 2.0, 3.0, 4.0, 5.0, 6.0]
         ),
+        string_2d_array_out=array_pb2.String2DArray(
+            rows=2, columns=3, data=["ABC", "DEF", "GHI", "JKL", "MNO", "PQR"]
+        ),
     )
     measurement_plugin_client = test_measurement_client_type()
 
@@ -128,6 +131,9 @@ def test___measurement_plugin_client___stream_measure___returns_output(
         protobuf_enum_out=ProtobufEnumInEnum.BLACK,
         double_2d_array_out=array_pb2.Double2DArray(
             rows=2, columns=3, data=[1.0, 2.0, 3.0, 4.0, 5.0, 6.0]
+        ),
+        string_2d_array_out=array_pb2.String2DArray(
+            rows=2, columns=3, data=["ABC", "DEF", "GHI", "JKL", "MNO", "PQR"]
         ),
     )
     measurement_plugin_client = test_measurement_client_type()
@@ -227,6 +233,7 @@ def _verify_output_types(outputs: Any, measurement_plugin_client_module: ModuleT
     _assert_collection_type(outputs.enum_array_out, Sequence, enum_type)
     _assert_type(outputs.protobuf_enum_out, protobuf_enum_type)
     _assert_type(outputs.double_2d_array_out, array_pb2.Double2DArray)
+    _assert_type(outputs.string_2d_array_out, array_pb2.String2DArray)
 
 
 def _assert_type(value: Any, expected_type: Union[Type[Any], Tuple[Type[Any], ...]]) -> None:

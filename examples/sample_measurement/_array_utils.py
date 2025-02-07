@@ -1,4 +1,4 @@
-"""Double2DArray Conversion Utilities."""
+"""2DArray Conversion Utilities."""
 
 from __future__ import annotations
 
@@ -43,3 +43,35 @@ def double2darray_to_list(double2darray: array_pb2.Double2DArray) -> List[List[f
     rows = double2darray.rows
     columns = double2darray.columns
     return [data[i * columns : (i + 1) * columns] for i in range(rows)]
+
+
+def string2darray_to_ndarray(string2darray: array_pb2.String2DArray) -> npt.NDArray[np.str_]:
+    """Convert String2DArray to numpy NDArray."""
+    import numpy as np
+
+    return np.array(string2darray.data, dtype=np.str_).reshape(
+        string2darray.rows, string2darray.columns
+    )
+
+
+def ndarray_to_string2darray(ndarray: npt.NDArray[np.str_]) -> array_pb2.String2DArray:
+    """Convert numpy NDArray to String2DArray."""
+    return array_pb2.String2DArray(
+        data=ndarray.flatten().tolist(), rows=ndarray.shape[0], columns=ndarray.shape[1]
+    )
+
+
+def string2darray_to_list(string2darray: array_pb2.String2DArray) -> List[List[str]]:
+    """Convert String2DArray to list of lists."""
+    data = string2darray.data
+    rows = string2darray.rows
+    columns = string2darray.columns
+    return [data[i * columns : (i + 1) * columns] for i in range(rows)]
+
+
+def list_to_string2darray(data: List[List[str]]) -> array_pb2.String2DArray:
+    """Convert list of lists to String2DArray."""
+    rows = len(data)
+    columns = len(data[0]) if rows > 0 else 0
+    flattened_data = [item for sublist in data for item in sublist]
+    return array_pb2.String2DArray(data=flattened_data, rows=rows, columns=columns)
