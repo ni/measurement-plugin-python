@@ -134,7 +134,8 @@ def _get_mapping_by_parameter_name(
     signature = inspect.signature(measure_function)
     mapping_by_variable_name = {}
     for i, parameter in enumerate(signature.parameters.values(), start=1):
-        mapping_by_variable_name[parameter.name] = mapping_by_id[i]
+        if i in mapping_by_id:
+            mapping_by_variable_name[parameter.name] = mapping_by_id[i]
     return mapping_by_variable_name
 
 
