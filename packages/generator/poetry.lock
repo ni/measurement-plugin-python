@@ -817,7 +817,7 @@ name = "ni-measurement-plugin-sdk-service"
 version = "2.3.0-dev0"
 description = "Measurement Plug-In Support for Python"
 optional = false
-python-versions = "^3.8"
+python-versions = "^3.9"
 files = []
 develop = true
 
@@ -827,7 +827,7 @@ grpcio = "^1.49.1"
 protobuf = "^4.21"
 python-decouple = ">=3.8"
 pywin32 = {version = ">=303", markers = "sys_platform == \"win32\""}
-traceloggingdynamic = {version = ">=1.0", markers = "python_version >= \"3.9\" and python_version < \"4.0\" and sys_platform == \"win32\""}
+traceloggingdynamic = {version = ">=1.0", markers = "sys_platform == \"win32\""}
 
 [package.extras]
 drivers = ["nidaqmx[grpc] (>=0.8.0)", "nidcpower[grpc] (>=1.4.4)", "nidigital[grpc] (>=1.4.4)", "nidmm[grpc] (>=1.4.4)", "nifgen[grpc] (>=1.4.4)", "niscope[grpc] (>=1.4.4)", "niswitch[grpc] (>=1.4.4)"]
@@ -1405,5 +1405,5 @@ test = ["covdefaults (>=2.3)", "coverage (>=7.2.7)", "coverage-enable-subprocess
 
 [metadata]
 lock-version = "2.0"
-python-versions = "^3.8"
-content-hash = "61a4cc20f91788a0fb43d1210684c723dbe45d1f3ef638675ec2be875981dcd7"
+python-versions = "^3.9"
+content-hash = "12968f137c7ba8fea4a180a71eedd0c9dfc9c0f508fa5f6b45b842b3711d748a"
