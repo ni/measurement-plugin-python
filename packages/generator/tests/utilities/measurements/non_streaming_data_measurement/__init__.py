@@ -1,4 +1,4 @@
-"""Contains utility functions to test loopback measurement service. """
+"""Contains utility functions to test loopback measurement service."""
 
 from enum import Enum
 from pathlib import Path

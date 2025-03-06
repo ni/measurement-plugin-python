@@ -1,4 +1,4 @@
-"""Contains utility functions to test void measurement service. """
+"""Contains utility functions to test void measurement service."""
 
 import threading
 import time

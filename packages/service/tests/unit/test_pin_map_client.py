@@ -1,5 +1,4 @@
-"""Contains tests to validate the pin_map_client.py.
-"""
+"""Contains tests to validate the pin_map_client.py."""
 
 import pathlib
 from typing import cast

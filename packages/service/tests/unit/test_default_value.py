@@ -1,4 +1,4 @@
-"""Contains tests to validate the serializationstrategy.py. """
+"""Contains tests to validate the serializationstrategy.py."""
 
 import pytest
 from google.protobuf import type_pb2
