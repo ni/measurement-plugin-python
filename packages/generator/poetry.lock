@@ -811,7 +811,7 @@ develop = true
 [package.dependencies]
 deprecation = ">=2.1"
 grpcio = "^1.49.1"
-protobuf = "^4.21"
+protobuf = ">=4.21"
 python-decouple = ">=3.8"
 pywin32 = {version = ">=303", markers = "sys_platform == \"win32\""}
 traceloggingdynamic = {version = ">=1.0", markers = "sys_platform == \"win32\""}
@@ -1350,13 +1350,13 @@ files = [
 
 [[package]]
 name = "types-protobuf"
-version = "4.25.0.20240417"
+version = "5.29.1.20250208"
 description = "Typing stubs for protobuf"
 optional = false
-python-versions = ">=3.8"
+python-versions = ">=3.9"
 files = [
-    {file = "types-protobuf-4.25.0.20240417.tar.gz", hash = "sha256:c34eff17b9b3a0adb6830622f0f302484e4c089f533a46e3f147568313544352"},
-    {file = "types_protobuf-4.25.0.20240417-py3-none-any.whl", hash = "sha256:e9b613227c2127e3d4881d75d93c93b4d6fd97b5f6a099a0b654a05351c8685d"},
+    {file = "types_protobuf-5.29.1.20250208-py3-none-any.whl", hash = "sha256:c5f8bfb4afdc1b5cbca1848f2c8b361a2090add7401f410b22b599ef647bf483"},
+    {file = "types_protobuf-5.29.1.20250208.tar.gz", hash = "sha256:c1acd6a59ab554dbe09b5d1fa7dd701e2fcfb2212937a3af1c03b736060b792a"},
 ]
 
 [[package]]
@@ -1393,4 +1393,4 @@ test = ["covdefaults (>=2.3)", "coverage (>=7.2.7)", "coverage-enable-subprocess
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "12968f137c7ba8fea4a180a71eedd0c9dfc9c0f508fa5f6b45b842b3711d748a"
+content-hash = "d8d8df939446d2aa8770251bfa7ab2c325ea0ff7a57cdb22490e18ef9f28847e"

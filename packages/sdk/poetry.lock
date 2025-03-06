@@ -287,7 +287,7 @@ click-option-group = ">=0.5.6"
 grpcio = "^1.49.1"
 Mako = "^1.2.1"
 ni-measurement-plugin-sdk-service = "^2.2.0"
-protobuf = "^4.21"
+protobuf = ">=4.21"
 
 [package.source]
 type = "directory"
@@ -305,7 +305,7 @@ develop = true
 [package.dependencies]
 deprecation = ">=2.1"
 grpcio = "^1.49.1"
-protobuf = "^4.21"
+protobuf = ">=4.21"
 python-decouple = ">=3.8"
 pywin32 = {version = ">=303", markers = "sys_platform == \"win32\""}
 traceloggingdynamic = {version = ">=1.0", markers = "sys_platform == \"win32\""}
