@@ -391,7 +391,7 @@ def _timeout_to_milliseconds(timeout: Optional[float]) -> int:
 def _to_group_mappings_dict(
     mappings: google.protobuf.internal.containers.MessageMap[
         str, session_management_service_pb2.ResolvedPinsOrRelays
-    ]
+    ],
 ) -> Mapping[str, Iterable[str]]:
     group_mappings: Dict[str, Iterable[str]] = {}
     if mappings is not None:

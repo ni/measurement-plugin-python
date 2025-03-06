@@ -1,4 +1,4 @@
-"""Contains Test Doubles related to Discovery service. """
+"""Contains Test Doubles related to Discovery service."""
 
 import uuid
 

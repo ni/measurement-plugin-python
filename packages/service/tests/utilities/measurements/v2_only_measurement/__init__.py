@@ -1,4 +1,4 @@
-"""Contains utility functions to test loopback measurement service. """
+"""Contains utility functions to test loopback measurement service."""
 
 import pathlib
 from typing import Tuple

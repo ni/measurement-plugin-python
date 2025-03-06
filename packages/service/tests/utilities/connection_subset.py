@@ -35,7 +35,7 @@ def get_connection_subset(connection: Union[Connection, TypedConnection[_T]]) ->
 
 
 def get_connection_subset_with_multiplexer(
-    connection: Union[Connection, TypedConnectionWithMultiplexer[_T, _TMultiplexer]]
+    connection: Union[Connection, TypedConnectionWithMultiplexer[_T, _TMultiplexer]],
 ) -> ConnectionSubset:
     """Constructs and returns a ConnectionSubset object with multiplexer data."""
     return ConnectionSubset(
