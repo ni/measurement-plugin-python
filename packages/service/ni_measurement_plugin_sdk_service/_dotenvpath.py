@@ -1,7 +1,7 @@
 import inspect
 import sys
 import traceback
-from pathlib import Path, PurePath
+from pathlib import Path
 from typing import Optional
 
 
