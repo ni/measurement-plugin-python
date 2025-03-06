@@ -4,7 +4,6 @@ import json
 import keyword
 import pathlib
 import re
-import sys
 from enum import Enum
 from typing import AbstractSet, Dict, Iterable, List, Optional, Tuple, Type, TypeVar
 
@@ -455,10 +454,7 @@ def _remove_suffix(string: str) -> str:
     suffixes = ["_Python", "_LabVIEW", "_NET"]
     for suffix in suffixes:
         if string.endswith(suffix):
-            if sys.version_info >= (3, 9):
-                return string.removesuffix(suffix)
-            else:
-                return string[0 : len(string) - len(suffix)]
+            return string.removesuffix(suffix)
     return string
 
 
