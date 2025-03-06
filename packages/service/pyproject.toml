@@ -61,7 +61,8 @@ ni-python-styleguide = ">=0.4.1"
 # and regenerate gRPC stubs.
 grpcio-tools = [
   {version = "1.49.1", python = ">=3.9,<3.12"},
-  {version = "1.59.0", python = "^3.12"},
+  {version = "1.59.0", python = ">=3.12,<3.13"},
+  {version = "1.67.0", python = "^3.13"},
 ]
 pytest-cov = ">=3.0.0"
 pytest-mock = ">=3.0"
@@ -78,7 +79,7 @@ types-psutil = ">=6.0"
 # we need to include multiple NumPy versions in poetry.lock.
 numpy = [
   {version = ">=1.22", python = ">=3.9,<3.12"},
-  {version = ">=1.26", python = ">=3.12,<3.13"},
+  {version = ">=1.26", python = "^3.12"},
 ]
 bandit = { version = ">=1.7", extras = ["toml"] }
 
@@ -88,7 +89,7 @@ optional = true
 [tool.poetry.group.docs.dependencies]
 Sphinx = [
   {version = ">=7.1.2", python = ">=3.8,<3.9"},
-  {version = ">=7.2.0", python = ">=3.9,<3.13"},
+  {version = ">=7.2.0", python = "^3.9"},
 ]
 sphinx-rtd-theme = ">=1.0.0"
 sphinx-autoapi = ">=1.8.4"

@@ -10,7 +10,7 @@ concurrency: publish_to_pypi
 env:
   # Versions are also listed in PR.yml
   POETRY_VERSION: 1.8.2
-  PYTHON_VERSION: 3.9
+  PYTHON_VERSION: 3.11.9
 
 jobs:
   check_nims:
@@ -22,7 +22,7 @@ jobs:
   # package version that doesn't exist yet.
   build:
     name: Build
-    runs-on : ubuntu-latest 
+    runs-on : ubuntu-latest
     steps:
       - name: Check out repo
         uses: actions/checkout@v4
@@ -48,12 +48,12 @@ jobs:
         run: |
           poetry version ${{ steps.vars.outputs.tag }}
         working-directory: ./packages/service
-      
+
       - name: Update NIMG package version based on tag name.
         run: |
           poetry version ${{ steps.vars.outputs.tag }}
         working-directory: ./packages/generator
-      
+
       - name: Update SDK package version based on tag name.
         run: |
           poetry version ${{ steps.vars.outputs.tag }}
@@ -71,13 +71,13 @@ jobs:
             git commit -m "Promote NIMS and NIMG package version" -a
             echo "version_changed=true" >> $GITHUB_OUTPUT
           fi
-      
+
       - name: Push changes to the appropriate branch
         if: ${{ steps.commit.outputs.version_changed && (startsWith(github.event.release.target_commitish, 'main') || startsWith(github.event.release.target_commitish, 'releases/')) }}
         uses: CasperWA/push-protected@v2
         with:
           token: ${{ secrets.ADMIN_PAT }}
-          branch: ${{ github.event.release.target_commitish }}  
+          branch: ${{ github.event.release.target_commitish }}
           unprotect_reviews: true
 
       # To Test the Publish use : poetry publish --build --username __token__ --password ${{ secrets.TEST_PYPI_TOKEN }} -r test-pypi
@@ -86,7 +86,7 @@ jobs:
         run: |
           poetry publish --build --username __token__ --password ${{ secrets.PYPI_TOKEN }}
         working-directory: ./packages/service
-        
+
       - name: Build NIMG Python package and publish to PyPI
         if: ${{ startsWith(github.event.release.target_commitish, 'main') || startsWith(github.event.release.target_commitish, 'releases/') }}
         run: |
@@ -101,7 +101,7 @@ jobs:
 
       - name: Create archives of the examples
         env:
-          EXAMPLE_ARCHIVE: measurement-plugin-python-examples-${{ steps.vars.outputs.tag }} 
+          EXAMPLE_ARCHIVE: measurement-plugin-python-examples-${{ steps.vars.outputs.tag }}
         run: |
           # Use --prefix for the tarball but not the zip file. Windows zip tools often create a directory automatically.
           rm -rf dist
