@@ -1,4 +1,4 @@
-""" Source DC voltage as input with an NI SMU and measure output using NI-VISA DMM."""
+"""Source DC voltage as input with an NI SMU and measure output using NI-VISA DMM."""
 
 import logging
 import pathlib

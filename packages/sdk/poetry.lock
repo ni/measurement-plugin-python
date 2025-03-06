@@ -275,7 +275,7 @@ name = "ni-measurement-plugin-sdk-generator"
 version = "2.3.0-dev0"
 description = "Measurement Plug-In Code Generator for Python"
 optional = false
-python-versions = "^3.8"
+python-versions = "^3.9"
 files = []
 develop = true
 
@@ -297,7 +297,7 @@ name = "ni-measurement-plugin-sdk-service"
 version = "2.3.0-dev0"
 description = "Measurement Plug-In Support for Python"
 optional = false
-python-versions = "^3.8"
+python-versions = "^3.9"
 files = []
 develop = true
 
@@ -307,7 +307,7 @@ grpcio = "^1.49.1"
 protobuf = "^4.21"
 python-decouple = ">=3.8"
 pywin32 = {version = ">=303", markers = "sys_platform == \"win32\""}
-traceloggingdynamic = {version = ">=1.0", markers = "python_version >= \"3.9\" and python_version < \"4.0\" and sys_platform == \"win32\""}
+traceloggingdynamic = {version = ">=1.0", markers = "sys_platform == \"win32\""}
 
 [package.extras]
 drivers = ["nidaqmx[grpc] (>=0.8.0)", "nidcpower[grpc] (>=1.4.4)", "nidigital[grpc] (>=1.4.4)", "nidmm[grpc] (>=1.4.4)", "nifgen[grpc] (>=1.4.4)", "niscope[grpc] (>=1.4.4)", "niswitch[grpc] (>=1.4.4)"]
@@ -483,5 +483,5 @@ files = [
 
 [metadata]
 lock-version = "2.0"
-python-versions = "^3.8"
-content-hash = "9f4bd46b62519d49d8b94ed65a50b259c5a89567266c6ea1a01a9bf11bdff33c"
+python-versions = "^3.9"
+content-hash = "f5db3a791370916e1f5ad48db61b5418385b0c2cd8c429350e71cae8f434c6f1"
