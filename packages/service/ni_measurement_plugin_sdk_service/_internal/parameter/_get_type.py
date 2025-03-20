@@ -33,7 +33,7 @@ TYPE_FIELD_MAPPING = {
 
 
 def get_type_default(
-    value_type: Field.Kind.ValueType, repeated: bool, default_value_type: Optional[type] = None
+    value_type: Field.Kind.ValueType, repeated: bool, default_value_type: type | None = None
 ) -> Any:
     """Get the default value for the give type."""
     if repeated:

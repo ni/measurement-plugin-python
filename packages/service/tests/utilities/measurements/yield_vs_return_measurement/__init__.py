@@ -79,7 +79,7 @@ def measure(time_in_seconds: float) -> Generator[Outputs, None, Outputs]:
     return (elapsed_time_in_seconds, random_numbers, status)
 
 
-def _generate_random_numbers(count: int) -> Generator[float, None, None]:
+def _generate_random_numbers(count: int) -> Generator[float]:
     """Generate random numbers between -RANDOM_NUMBER_RANGE and +RANDOM_NUMBER_RANGE."""
     for _ in range(count):
         yield RANDOM_NUMBER_RANGE * (2.0 * random.random() - 1.0)

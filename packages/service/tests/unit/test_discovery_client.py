@@ -517,7 +517,7 @@ def temp_registration_json_file_path(
 
 
 def _assert_service_location_equal(
-    expected: ServiceLocation, actual: Union[ServiceLocation, GrpcServiceLocation]
+    expected: ServiceLocation, actual: ServiceLocation | GrpcServiceLocation
 ) -> None:
     assert expected.location == actual.location
     assert expected.insecure_port == actual.insecure_port
@@ -525,7 +525,7 @@ def _assert_service_location_equal(
 
 
 def _assert_service_info_equal(
-    expected: ServiceInfo, actual: Union[ServiceInfo, GrpcServiceDescriptor]
+    expected: ServiceInfo, actual: ServiceInfo | GrpcServiceDescriptor
 ) -> None:
     assert expected.display_name == actual.display_name
     assert expected.description_url == actual.description_url

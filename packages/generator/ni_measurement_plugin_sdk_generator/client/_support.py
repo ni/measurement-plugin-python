@@ -340,7 +340,7 @@ def to_ordered_set(values: Iterable[_T]) -> AbstractSet[_T]:
     return dict.fromkeys(values).keys()
 
 
-def resolve_output_directory(directory_out: Optional[str] = None) -> pathlib.Path:
+def resolve_output_directory(directory_out: str | None = None) -> pathlib.Path:
     """Returns the validated directory output path."""
     if directory_out is None:
         directory_out_path = pathlib.Path.cwd()
@@ -461,7 +461,7 @@ def _remove_suffix(string: str) -> str:
     return string
 
 
-def _is_python_identifier(input_string: Optional[str]) -> bool:
+def _is_python_identifier(input_string: str | None) -> bool:
     if input_string is None:
         return False
     pattern = r"^[a-zA-Z_][a-zA-Z0-9_]*$"

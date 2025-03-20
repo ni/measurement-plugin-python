@@ -24,7 +24,7 @@ if sys.platform == "win32":
 
 _logger = logging.getLogger(__name__)
 # Save Popen object to avoid "ResourceWarning: subprocess N is still running"
-_discovery_service_subprocess: Optional[subprocess.Popen] = None
+_discovery_service_subprocess: subprocess.Popen | None = None
 
 _START_SERVICE_TIMEOUT = 30.0
 _START_SERVICE_POLLING_INTERVAL = 100e-3
@@ -119,7 +119,7 @@ def _delete_existing_key_file(key_file_path: pathlib.Path) -> None:
         key_file_path.unlink()
 
 
-def _get_key_file_path(cluster_id: Optional[str] = None) -> pathlib.Path:
+def _get_key_file_path(cluster_id: str | None = None) -> pathlib.Path:
     if cluster_id is not None:
         return _get_key_file_directory() / f"DiscoveryService_{cluster_id}.json"
     return _get_key_file_directory() / "DiscoveryService.json"

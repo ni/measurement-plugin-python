@@ -30,9 +30,9 @@ class DiscoveryClient:
 
     def __init__(
         self,
-        stub: Optional[discovery_service_pb2_grpc.DiscoveryServiceStub] = None,
+        stub: discovery_service_pb2_grpc.DiscoveryServiceStub | None = None,
         *,
-        grpc_channel_pool: Optional[GrpcChannelPool] = None,
+        grpc_channel_pool: GrpcChannelPool | None = None,
     ) -> None:
         """Initialize the discovery client.
 
