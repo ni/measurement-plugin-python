@@ -1,5 +1,6 @@
 """Tests to validate measurement service. Uses the Sample Measurement Example."""
 
+from __future__ import annotations
 import random
 import sys
 import urllib.parse

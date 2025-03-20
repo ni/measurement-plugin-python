@@ -1,3 +1,4 @@
+from __future__ import annotations
 import functools
 from contextlib import ExitStack
 from typing import Any, Dict, List, Tuple

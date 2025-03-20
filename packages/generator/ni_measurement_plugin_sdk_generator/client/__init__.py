@@ -1,5 +1,6 @@
 """Utilizes command line args to create a Measurement Plug-In Client using template files."""
 
+from __future__ import annotations
 import logging
 import pathlib
 from enum import Enum

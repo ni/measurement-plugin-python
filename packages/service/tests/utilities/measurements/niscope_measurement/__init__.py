@@ -1,5 +1,6 @@
 """NI-SCOPE measurement plug-in test service."""
 
+from __future__ import annotations
 import pathlib
 from contextlib import ExitStack
 from typing import List, Tuple

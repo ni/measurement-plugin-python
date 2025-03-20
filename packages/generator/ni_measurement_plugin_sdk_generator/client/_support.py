@@ -1,5 +1,6 @@
 """Support functions for the Measurement Plug-In Client generator."""
 
+from __future__ import annotations
 import json
 import keyword
 import pathlib

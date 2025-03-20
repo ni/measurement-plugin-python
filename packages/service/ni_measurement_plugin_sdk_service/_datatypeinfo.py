@@ -1,3 +1,4 @@
+from __future__ import annotations
 from typing import NamedTuple
 
 from google.protobuf import type_pb2

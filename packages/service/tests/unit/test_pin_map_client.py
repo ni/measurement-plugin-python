@@ -1,5 +1,6 @@
 """Contains tests to validate the pin_map_client.py."""
 
+from __future__ import annotations
 import pathlib
 from typing import cast
 from unittest.mock import Mock

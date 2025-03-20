@@ -1,5 +1,6 @@
 """Class to create and terminate Discovery Service instance."""
 
+from __future__ import annotations
 from types import TracebackType
 from typing import Optional, Type
 
