@@ -1,6 +1,7 @@
 """Utilizes command line args to create a measurement using template files."""
 
 from __future__ import annotations
+
 import logging
 import pathlib
 import re
@@ -44,9 +45,7 @@ def _check_version(ctx: click.Context, param: click.Parameter, version: str) -> 
     raise click.BadParameter(f"Invalid version '{version}'.")
 
 
-def _check_ui_file(
-    ctx: click.Context, param: click.Parameter, ui_file: str | None
-) -> str | None:
+def _check_ui_file(ctx: click.Context, param: click.Parameter, ui_file: str | None) -> str | None:
     if ui_file is not None:
         _ = _get_ui_type(ui_file)
     return ui_file

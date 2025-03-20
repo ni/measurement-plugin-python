@@ -3,7 +3,6 @@ from __future__ import annotations
 import ctypes
 import sys
 import uuid
-from typing import Optional
 
 try:
     import traceloggingdynamic

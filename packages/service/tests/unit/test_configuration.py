@@ -1,11 +1,15 @@
 from __future__ import annotations
-from typing import Any, Dict
+
+from typing import Any
 from unittest.mock import Mock
 
 import pytest
 from pytest_mock import MockerFixture
 
-from ni_measurement_plugin_sdk_service._configuration import MIDriverOptions, NISwitchOptions
+from ni_measurement_plugin_sdk_service._configuration import (
+    MIDriverOptions,
+    NISwitchOptions,
+)
 
 
 def test___mi_driver_options___update_from_config___reads_config(config: Mock) -> None:

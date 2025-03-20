@@ -1,7 +1,8 @@
 from __future__ import annotations
+
 """Parameter Serializer."""
 
-from typing import Any, Dict
+from typing import Any
 
 from google.protobuf import descriptor_pool, message_factory
 from google.protobuf.descriptor_pb2 import FieldDescriptorProto

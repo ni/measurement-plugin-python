@@ -1,15 +1,17 @@
 """NI-SWITCH multiplexer measurement plug-in test service."""
 
 from __future__ import annotations
-import pathlib
-from typing import Tuple
 
+import pathlib
 from collections.abc import Iterable, Sequence
+from typing import Tuple
 
 import niswitch
 
 import ni_measurement_plugin_sdk_service as nims
-from ni_measurement_plugin_sdk_service.session_management import TypedConnectionWithMultiplexer
+from ni_measurement_plugin_sdk_service.session_management import (
+    TypedConnectionWithMultiplexer,
+)
 
 service_directory = pathlib.Path(__file__).resolve().parent
 measurement_service = nims.MeasurementService(

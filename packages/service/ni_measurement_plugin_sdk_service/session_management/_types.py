@@ -2,10 +2,9 @@
 
 from __future__ import annotations
 
-from enum import IntEnum
-from typing import Generic, List, NamedTuple, Optional, Protocol, TypeVar
-
 from collections.abc import Iterable
+from enum import IntEnum
+from typing import Generic, NamedTuple, Protocol, TypeVar
 
 from ni_measurement_plugin_sdk_service._internal.stubs import session_pb2
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink import (

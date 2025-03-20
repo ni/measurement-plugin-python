@@ -1,10 +1,10 @@
 """Pin-aware measurement plug-in test service."""
 
 from __future__ import annotations
-import pathlib
-from typing import Tuple
 
+import pathlib
 from collections.abc import Iterable
+from typing import Tuple
 
 import ni_measurement_plugin_sdk_service as nims
 

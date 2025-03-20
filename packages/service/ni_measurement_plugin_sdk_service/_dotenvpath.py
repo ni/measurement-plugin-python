@@ -1,9 +1,9 @@
 from __future__ import annotations
+
 import inspect
 import sys
 import traceback
 from pathlib import Path
-from typing import Optional
 
 
 def get_dotenv_search_path() -> Path:

@@ -1,6 +1,7 @@
 """Contains utility functions to test loopback measurement service."""
 
 from __future__ import annotations
+
 import pathlib
 from typing import Tuple
 

@@ -1,11 +1,10 @@
 """Contains utility functions to test a v2 measurement service that streams data."""
 
 from __future__ import annotations
+
 import pathlib
 import threading
 import time
-from typing import List, Tuple
-
 from collections.abc import Generator
 
 import grpc

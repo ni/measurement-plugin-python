@@ -1,10 +1,10 @@
 """NI-SWITCH measurement plug-in test service."""
 
 from __future__ import annotations
-import pathlib
-from typing import Tuple
 
+import pathlib
 from collections.abc import Iterable, Sequence
+from typing import Tuple
 
 import niswitch
 

@@ -1,10 +1,10 @@
 """Contains utility functions to test void measurement service."""
 
 from __future__ import annotations
+
 import threading
 import time
 from pathlib import Path
-from typing import List, Tuple
 
 import grpc
 import ni_measurement_plugin_sdk_service as nims

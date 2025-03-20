@@ -1,5 +1,6 @@
 from __future__ import annotations
-from typing import Any, Optional
+
+from typing import Any
 
 from google.protobuf.descriptor_pb2 import FieldDescriptorProto
 from google.protobuf.type_pb2 import Field
@@ -12,7 +13,7 @@ _TYPE_DEFAULT_MAPPING = {
     Field.TYPE_UINT32: int(),
     Field.TYPE_UINT64: int(),
     Field.TYPE_BOOL: bool(),
-    Field.TYPE_STRING: '',
+    Field.TYPE_STRING: "",
     Field.TYPE_ENUM: int(),
 }
 

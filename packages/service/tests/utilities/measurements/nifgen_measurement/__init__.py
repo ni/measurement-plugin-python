@@ -1,11 +1,11 @@
 """NI-FGEN measurement plug-in test service."""
 
 from __future__ import annotations
+
 import pathlib
+from collections.abc import Iterable, Sequence
 from contextlib import ExitStack
 from typing import Tuple
-
-from collections.abc import Iterable, Sequence
 
 import nifgen
 

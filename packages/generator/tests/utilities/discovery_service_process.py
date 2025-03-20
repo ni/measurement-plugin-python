@@ -1,8 +1,8 @@
 """Class to create and terminate Discovery Service instance."""
 
 from __future__ import annotations
+
 from types import TracebackType
-from typing import Optional, Type
 
 from ni_measurement_plugin_sdk_service.discovery._support import (
     _get_discovery_service_location,

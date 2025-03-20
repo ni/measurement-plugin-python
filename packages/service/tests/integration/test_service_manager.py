@@ -1,6 +1,7 @@
 """Contains test to validate service_manager.py."""
 
 from __future__ import annotations
+
 from typing import cast
 
 import grpc

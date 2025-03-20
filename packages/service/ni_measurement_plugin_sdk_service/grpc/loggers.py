@@ -8,18 +8,15 @@ import logging
 import sys
 import threading
 import time
+from collections.abc import Iterator
 from types import TracebackType
 from typing import (
     TYPE_CHECKING,
     Any,
     Callable,
     Generic,
-    Optional,
-    Type,
     TypeVar,
 )
-
-from collections.abc import Iterator
 
 import grpc
 

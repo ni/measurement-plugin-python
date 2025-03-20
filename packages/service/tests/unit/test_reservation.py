@@ -1,7 +1,8 @@
 from __future__ import annotations
+
 import functools
 from contextlib import ExitStack
-from typing import Any, Dict, List
+from typing import Any
 from unittest.mock import Mock
 
 import pytest

@@ -1,16 +1,18 @@
 """Shared fixtures for ni-measurement-plugin-sdk-generator tests."""
 
 from __future__ import annotations
+
 import functools
 import pathlib
 import sys
-from typing import Optional, Protocol
-
 from collections.abc import Generator, Sequence
+from typing import Protocol
 
 import pytest
 from click.testing import CliRunner, Result
-from ni_measurement_plugin_sdk_service.discovery._support import _get_registration_json_file_path
+from ni_measurement_plugin_sdk_service.discovery._support import (
+    _get_registration_json_file_path,
+)
 
 import ni_measurement_plugin_sdk_generator.client as client_generator
 import ni_measurement_plugin_sdk_generator.plugin as plugin_generator

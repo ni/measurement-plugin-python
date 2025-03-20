@@ -1,14 +1,14 @@
 """Support functions for the Measurement Plug-In Client generator."""
 
 from __future__ import annotations
+
 import json
 import keyword
 import pathlib
 import re
-from enum import Enum
-from typing import AbstractSet, Dict, List, Optional, Tuple, Type, TypeVar
-
 from collections.abc import Iterable
+from enum import Enum
+from typing import AbstractSet, TypeVar
 
 import click
 import grpc

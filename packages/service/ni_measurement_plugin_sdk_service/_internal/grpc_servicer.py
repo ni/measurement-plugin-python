@@ -8,10 +8,9 @@ import inspect
 import pathlib
 import warnings
 import weakref
-from contextvars import ContextVar
-from typing import Any, Callable, Dict, List, Optional
-
 from collections.abc import Generator
+from contextvars import ContextVar
+from typing import Any, Callable
 
 import grpc
 from google.protobuf import any_pb2

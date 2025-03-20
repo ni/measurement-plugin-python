@@ -5,8 +5,6 @@ from __future__ import annotations
 import logging
 import threading
 import warnings
-from typing import Dict, Optional, Union
-
 from collections.abc import Iterable, Mapping
 
 import google.protobuf.internal.containers
@@ -58,9 +56,7 @@ class SessionManagementClient:
         self._initialization_lock = threading.Lock()
         self._discovery_client = discovery_client
         self._grpc_channel_pool = grpc_channel_pool
-        self._stub: session_management_service_pb2_grpc.SessionManagementServiceStub | None = (
-            None
-        )
+        self._stub: session_management_service_pb2_grpc.SessionManagementServiceStub | None = None
 
         if grpc_channel is not None:
             self._stub = session_management_service_pb2_grpc.SessionManagementServiceStub(

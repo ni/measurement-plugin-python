@@ -1,10 +1,10 @@
 """Parameter Serializer."""
 
 from __future__ import annotations
-from enum import Enum
-from typing import Any, Dict
 
 from collections.abc import Sequence
+from enum import Enum
+from typing import Any
 
 from google.protobuf import descriptor_pool, message_factory
 from google.protobuf.descriptor_pb2 import FieldDescriptorProto

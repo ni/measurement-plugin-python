@@ -1,13 +1,13 @@
 """Contains utility functions to test that yield and return are supported in measurements."""
 
 from __future__ import annotations
+
 import pathlib
 import random
 import threading
 import time
-from typing import List, Tuple
-
 from collections.abc import Generator
+from typing import List
 
 import grpc
 

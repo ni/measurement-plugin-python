@@ -1,14 +1,15 @@
 """Utilizes command line args to create a Measurement Plug-In Client using template files."""
 
 from __future__ import annotations
+
 import logging
 import pathlib
 from enum import Enum
-from typing import Any, Dict, List, Optional, Type
+from typing import Any
 
 import black
 import click
-from click_option_group import optgroup, RequiredMutuallyExclusiveOptionGroup
+from click_option_group import RequiredMutuallyExclusiveOptionGroup, optgroup
 from mako.template import Template
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v2 import (
     measurement_service_pb2 as v2_measurement_service_pb2,
@@ -20,18 +21,17 @@ from ni_measurement_plugin_sdk_generator.client._support import (
     create_class_name,
     create_module_name,
     extract_base_service_class,
+    get_all_registered_measurement_info,
     get_configuration_and_output_metadata_by_index,
     get_configuration_parameters_with_type_and_default_values,
     get_measurement_service_stub_and_version,
     get_output_parameters_with_type,
-    get_all_registered_measurement_info,
     get_selected_measurement_service_class,
-    to_ordered_set,
     resolve_output_directory,
+    to_ordered_set,
     validate_identifier,
     validate_measurement_service_classes,
 )
-
 
 _CLIENT_CREATION_ERROR_MESSAGE = "Client creation failed for '{}'. Possible reason(s): {}"
 

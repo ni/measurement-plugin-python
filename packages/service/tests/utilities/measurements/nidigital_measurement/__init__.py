@@ -1,11 +1,11 @@
 """NI-Digital measurement plug-in test service."""
 
 from __future__ import annotations
-import pathlib
-from itertools import groupby
-from typing import Tuple, Union, List
 
+import pathlib
 from collections.abc import Iterable, Sequence
+from itertools import groupby
+from typing import Tuple
 
 import nidigital
 

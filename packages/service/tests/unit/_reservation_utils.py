@@ -1,7 +1,6 @@
 """Reservation-related unit test utilities."""
 
 from __future__ import annotations
-from typing import List
 
 from ni_measurement_plugin_sdk_service._internal.stubs import session_pb2
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.sessionmanagement.v1 import (

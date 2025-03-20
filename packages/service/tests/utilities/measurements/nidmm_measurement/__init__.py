@@ -1,11 +1,11 @@
 """NI-DMM measurement plug-in test service."""
 
 from __future__ import annotations
+
 import math
 import pathlib
-from typing import List, Tuple
-
 from collections.abc import Iterable, Sequence
+from typing import List
 
 import nidmm
 

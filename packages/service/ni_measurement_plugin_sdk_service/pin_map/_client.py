@@ -1,10 +1,10 @@
 """Client for accessing the NI Pin Map Service."""
 
 from __future__ import annotations
+
 import logging
 import pathlib
 import threading
-from typing import Optional, Union
 
 import grpc
 
@@ -29,7 +29,7 @@ class PinMapClient:
         *,
         discovery_client: DiscoveryClient | None = None,
         grpc_channel: grpc.Channel | None = None,
-        grpc_channel_pool: GrpcChannelPool | None = None
+        grpc_channel_pool: GrpcChannelPool | None = None,
     ) -> None:
         """Initialize the pin map client.
 

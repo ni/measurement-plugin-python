@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from enum import Enum, EnumMeta
 from json import loads
-from typing import TYPE_CHECKING, List, Type, Union, Optional
+from typing import TYPE_CHECKING, Union
 
 from google.protobuf.descriptor_pb2 import (
     DescriptorProto,
