@@ -101,7 +101,7 @@ def test___optional_args___create_nidaqmx_task___optional_args_passed(
     ],
 )
 def test___task_created___get_nidaqmx_connection___connection_returned(
-    kwargs: Dict[str, Any],
+    kwargs: dict[str, Any],
     expected_channel_name: str,
     expected_session_index: int,
     task_new: Mock,
@@ -148,9 +148,9 @@ def test___task_created___get_nidaqmx_connection___connection_returned(
     ],
 )
 def test___task_created___get_nidaqmx_connections___connections_returned(
-    kwargs: Dict[str, Any],
-    expected_channel_names: List[str],
-    expected_session_indices: List[int],
+    kwargs: dict[str, Any],
+    expected_channel_names: list[str],
+    expected_session_indices: list[int],
     task_new: Mock,
     session_management_client: Mock,
 ) -> None:

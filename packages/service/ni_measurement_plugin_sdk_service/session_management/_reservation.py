@@ -16,20 +16,18 @@ from typing import (
     Callable,
     ContextManager,
     Dict,
-    Generator,
-    Iterable,
     List,
     Literal,
-    Mapping,
     NamedTuple,
     Optional,
-    Sequence,
     Set,
     Type,
     TypeVar,
     Union,
     cast,
 )
+
+from collections.abc import Generator, Iterable, Mapping, Sequence
 
 from ni_measurement_plugin_sdk_service._drivers import (
     closing_session,
@@ -87,7 +85,7 @@ _T = TypeVar("_T")
 
 
 def _to_iterable(
-    value: Union[_T, Iterable[_T], None], default: Optional[Iterable[_T]] = None
+    value: _T | Iterable[_T] | None, default: Iterable[_T] | None = None
 ) -> Iterable[_T]:
     if value is None:
         return default or []
@@ -116,13 +114,13 @@ def _quote_if_str(value: object) -> str:
     return _quote(value) if isinstance(value, str) else str(value)
 
 
-def _check_optional_str_param(name: str, value: Optional[str]) -> None:
+def _check_optional_str_param(name: str, value: str | None) -> None:
     if value is not None and not isinstance(value, str):
         raise TypeError(f"The {name} parameter must be a str or None, not {value!r}.")
 
 
 # Why not generic: the error messages differ by "a" vs. "an"
-def _check_optional_int_param(name: str, value: Optional[int]) -> None:
+def _check_optional_int_param(name: str, value: int | None) -> None:
     if value is not None and not isinstance(value, int):
         raise TypeError(f"The {name} parameter must be an int or None, not {value!r}.")
 
@@ -149,9 +147,9 @@ def _check_matching_multiplexer_criterion(
 
 
 def _describe_matching_criteria(
-    pin_or_relay_names: Union[str, Iterable[str], None] = None,
-    sites: Union[int, Iterable[int], None] = None,
-    instrument_type_id: Optional[str] = None,
+    pin_or_relay_names: str | Iterable[str] | None = None,
+    sites: int | Iterable[int] | None = None,
+    instrument_type_id: str | None = None,
 ) -> str:
     criteria = []
     if pin_or_relay_names is not None:
@@ -202,13 +200,13 @@ class MultiplexerSessionContainer(_BaseSessionContainer):
     def __init__(
         self,
         session_management_client: SessionManagementClient,
-        multiplexer_session_info: Optional[
+        multiplexer_session_info: None | (
             Sequence[session_management_service_pb2.MultiplexerSessionInformation]
-        ],
+        ),
     ) -> None:
         """Initialize multiplexer object."""
         super().__init__(session_management_client)
-        self._multiplexer_session_cache: Dict[str, object] = {}
+        self._multiplexer_session_cache: dict[str, object] = {}
 
         if multiplexer_session_info is not None:
             self._multiplexer_session_info = [
@@ -241,16 +239,16 @@ class MultiplexerSessionContainer(_BaseSessionContainer):
 
     def __exit__(
         self,
-        exc_type: Optional[Type[BaseException]],
-        exc_val: Optional[BaseException],
-        traceback: Optional[TracebackType],
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
+        traceback: TracebackType | None,
     ) -> None:
         """Context management protocol."""
         pass
 
     def _get_multiplexer_session_info_for_resource_name(
         self, multiplexer_resource_name: str
-    ) -> Optional[MultiplexerSessionInformation]:
+    ) -> MultiplexerSessionInformation | None:
         return next(
             (
                 info
@@ -262,7 +260,7 @@ class MultiplexerSessionContainer(_BaseSessionContainer):
 
     def _get_multiplexer_session_infos_for_type_id(
         self, multiplexer_type_id: str
-    ) -> List[MultiplexerSessionInformation]:
+    ) -> list[MultiplexerSessionInformation]:
         return [
             info
             for info in self._multiplexer_session_info
@@ -272,14 +270,14 @@ class MultiplexerSessionContainer(_BaseSessionContainer):
     def _validate_and_get_matching_multiplexer_session_infos(
         self,
         multiplexer_type_ids: Iterable[str],
-    ) -> List[MultiplexerSessionInformation]:
+    ) -> list[MultiplexerSessionInformation]:
         if len(self.multiplexer_session_info) == 0:
             raise ValueError(f"No multiplexer sessions available to initialize.")
         _check_matching_multiplexer_criterion(
             "multiplexer type id", multiplexer_type_ids, self._multiplexer_type_ids
         )
 
-        multiplexer_session_infos: List[MultiplexerSessionInformation] = []
+        multiplexer_session_infos: list[MultiplexerSessionInformation] = []
         for type_id in multiplexer_type_ids:
             matching_session_info = self._get_multiplexer_session_infos_for_type_id(type_id)
             if matching_session_info:
@@ -289,7 +287,7 @@ class MultiplexerSessionContainer(_BaseSessionContainer):
     @contextlib.contextmanager
     def _cache_multiplexer_session(
         self, session_name: str, session: TMultiplexerSession
-    ) -> Generator[None, None, None]:
+    ) -> Generator[None]:
         if session_name in self._multiplexer_session_cache:
             raise RuntimeError(f"Multiplexer session '{session_name}' already exists.")
         self._multiplexer_session_cache[session_name] = session
@@ -302,11 +300,11 @@ class MultiplexerSessionContainer(_BaseSessionContainer):
     def _initialize_multiplexer_session_core(
         self,
         session_constructor: Callable[[MultiplexerSessionInformation], TMultiplexerSession],
-        multiplexer_type_id: Optional[str],
-        closing_function: Optional[
+        multiplexer_type_id: str | None,
+        closing_function: None | (
             Callable[[TMultiplexerSession], ContextManager[TMultiplexerSession]]
-        ] = None,
-    ) -> Generator[TypedMultiplexerSessionInformation[TMultiplexerSession], None, None]:
+        ) = None,
+    ) -> Generator[TypedMultiplexerSessionInformation[TMultiplexerSession]]:
         _check_optional_str_param("multiplexer_type_id", multiplexer_type_id)
         multiplexer_session_infos = self._validate_and_get_matching_multiplexer_session_infos(
             _to_iterable(multiplexer_type_id, self._multiplexer_type_ids),
@@ -332,11 +330,11 @@ class MultiplexerSessionContainer(_BaseSessionContainer):
     def _initialize_multiplexer_sessions_core(
         self,
         session_constructor: Callable[[MultiplexerSessionInformation], TMultiplexerSession],
-        multiplexer_type_id: Optional[str],
-        closing_function: Optional[
+        multiplexer_type_id: str | None,
+        closing_function: None | (
             Callable[[TMultiplexerSession], ContextManager[TMultiplexerSession]]
-        ] = None,
-    ) -> Generator[Sequence[TypedMultiplexerSessionInformation[TMultiplexerSession]], None, None]:
+        ) = None,
+    ) -> Generator[Sequence[TypedMultiplexerSessionInformation[TMultiplexerSession]]]:
         _check_optional_str_param("multiplexer_type_id", multiplexer_type_id)
         multiplexer_session_infos = self._validate_and_get_matching_multiplexer_session_infos(
             _to_iterable(multiplexer_type_id, self._multiplexer_type_ids),
@@ -349,7 +347,7 @@ class MultiplexerSessionContainer(_BaseSessionContainer):
             multiplexer_session_infos, key=lambda x: (x.resource_name)
         )
         with ExitStack() as stack:
-            typed_multiplexer_session_infos: List[
+            typed_multiplexer_session_infos: list[
                 TypedMultiplexerSessionInformation[TMultiplexerSession]
             ] = []
             for multiplexer_session_info in multiplexer_session_infos:
@@ -368,7 +366,7 @@ class MultiplexerSessionContainer(_BaseSessionContainer):
     def initialize_multiplexer_session(
         self,
         session_constructor: Callable[[MultiplexerSessionInformation], TMultiplexerSession],
-        multiplexer_type_id: Optional[str] = None,
+        multiplexer_type_id: str | None = None,
     ) -> ContextManager[TypedMultiplexerSessionInformation[TMultiplexerSession]]:
         """Initialize a single multiplexer session.
 
@@ -397,7 +395,7 @@ class MultiplexerSessionContainer(_BaseSessionContainer):
     def initialize_multiplexer_sessions(
         self,
         session_constructor: Callable[[MultiplexerSessionInformation], TMultiplexerSession],
-        multiplexer_type_id: Optional[str] = None,
+        multiplexer_type_id: str | None = None,
     ) -> ContextManager[Sequence[TypedMultiplexerSessionInformation[TMultiplexerSession]]]:
         """Initialize multiple multiplexer sessions.
 
@@ -424,11 +422,11 @@ class MultiplexerSessionContainer(_BaseSessionContainer):
 
     def initialize_niswitch_multiplexer_session(
         self,
-        topology: Optional[str] = None,
-        simulate: Optional[bool] = None,
+        topology: str | None = None,
+        simulate: bool | None = None,
         reset_device: bool = False,
         initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
-        multiplexer_type_id: Optional[str] = None,
+        multiplexer_type_id: str | None = None,
     ) -> ContextManager[TypedMultiplexerSessionInformation[niswitch.Session]]:
         """Initialize a single NI-SWITCH multiplexer session.
 
@@ -487,11 +485,11 @@ class MultiplexerSessionContainer(_BaseSessionContainer):
 
     def initialize_niswitch_multiplexer_sessions(
         self,
-        topology: Optional[str] = None,
-        simulate: Optional[bool] = None,
+        topology: str | None = None,
+        simulate: bool | None = None,
         reset_device: bool = False,
         initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
-        multiplexer_type_id: Optional[str] = None,
+        multiplexer_type_id: str | None = None,
     ) -> ContextManager[Sequence[TypedMultiplexerSessionInformation[niswitch.Session]]]:
         """Initialize multiple NI-SWITCH multiplexer sessions.
 
@@ -556,12 +554,12 @@ class BaseReservation(_BaseSessionContainer):
         self,
         session_management_client: SessionManagementClient,
         session_info: Sequence[session_management_service_pb2.SessionInformation],
-        multiplexer_session_info: Optional[
+        multiplexer_session_info: None | (
             Sequence[session_management_service_pb2.MultiplexerSessionInformation]
-        ] = None,
-        pin_or_relay_group_mappings: Optional[Mapping[str, Iterable[str]]] = None,
-        reserved_pin_or_relay_names: Union[str, Iterable[str], None] = None,
-        reserved_sites: Optional[Iterable[int]] = None,
+        ) = None,
+        pin_or_relay_group_mappings: Mapping[str, Iterable[str]] | None = None,
+        reserved_pin_or_relay_names: str | Iterable[str] | None = None,
+        reserved_sites: Iterable[int] | None = None,
     ) -> None:
         """Initialize reservation object."""
         super().__init__(session_management_client)
@@ -570,7 +568,7 @@ class BaseReservation(_BaseSessionContainer):
         self._session_info = [
             SessionInformation._from_grpc_v1(info) for info in self._grpc_session_info
         ]
-        self._session_cache: Dict[str, object] = {}
+        self._session_cache: dict[str, object] = {}
         self._multiplexer_session_container = MultiplexerSessionContainer(
             session_management_client, multiplexer_session_info
         )
@@ -619,7 +617,7 @@ class BaseReservation(_BaseSessionContainer):
         )
 
     @cached_property
-    def _connection_cache(self) -> Dict[_ConnectionKey, Connection]:
+    def _connection_cache(self) -> dict[_ConnectionKey, Connection]:
         cache = {}
         for session_info in self._session_info:
             for channel_mapping in session_info.channel_mappings:
@@ -646,7 +644,7 @@ class BaseReservation(_BaseSessionContainer):
         return cache
 
     @property
-    def _multiplexer_session_cache(self) -> Dict[str, object]:
+    def _multiplexer_session_cache(self) -> dict[str, object]:
         return self._multiplexer_session_container._multiplexer_session_cache
 
     @property
@@ -660,9 +658,9 @@ class BaseReservation(_BaseSessionContainer):
 
     def __exit__(
         self,
-        exc_type: Optional[Type[BaseException]],
-        exc_val: Optional[BaseException],
-        traceback: Optional[TracebackType],
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
+        traceback: TracebackType | None,
     ) -> Literal[False]:
         """Context management protocol. Calls unreserve()."""
         self.unreserve()
@@ -673,7 +671,7 @@ class BaseReservation(_BaseSessionContainer):
         self._session_management_client._unreserve_sessions(self._grpc_session_info)
 
     @contextlib.contextmanager
-    def _cache_session(self, session_name: str, session: TSession) -> Generator[None, None, None]:
+    def _cache_session(self, session_name: str, session: TSession) -> Generator[None]:
         if session_name in self._session_cache:
             raise RuntimeError(f"Session '{session_name}' already exists.")
         self._session_cache[session_name] = session
@@ -682,7 +680,7 @@ class BaseReservation(_BaseSessionContainer):
         finally:
             del self._session_cache[session_name]
 
-    def _get_matching_session_infos(self, instrument_type_id: str) -> List[SessionInformation]:
+    def _get_matching_session_infos(self, instrument_type_id: str) -> list[SessionInformation]:
         return [
             info for info in self._session_info if instrument_type_id == info.instrument_type_id
         ]
@@ -690,7 +688,7 @@ class BaseReservation(_BaseSessionContainer):
     def _get_resolved_pin_or_relay_names(
         self, reserved_pin_or_relay_names: Iterable[str]
     ) -> Iterable[str]:
-        resolved_pin_or_relay_names: List[str] = []
+        resolved_pin_or_relay_names: list[str] = []
         for pin_or_relay_name in reserved_pin_or_relay_names:
             if pin_or_relay_name in self._pin_or_relay_group_mappings:
                 resolved_pin_or_relay_names.extend(
@@ -706,8 +704,8 @@ class BaseReservation(_BaseSessionContainer):
         self,
         session_constructor: Callable[[SessionInformation], TSession],
         instrument_type_id: str,
-        closing_function: Optional[Callable[[TSession], ContextManager[TSession]]] = None,
-    ) -> Generator[TypedSessionInformation[TSession], None, None]:
+        closing_function: Callable[[TSession], ContextManager[TSession]] | None = None,
+    ) -> Generator[TypedSessionInformation[TSession]]:
         if not instrument_type_id:
             raise ValueError("This method requires an instrument type ID.")
         session_infos = self._get_matching_session_infos(instrument_type_id)
@@ -736,8 +734,8 @@ class BaseReservation(_BaseSessionContainer):
         self,
         session_constructor: Callable[[SessionInformation], TSession],
         instrument_type_id: str,
-        closing_function: Optional[Callable[[TSession], ContextManager[TSession]]] = None,
-    ) -> Generator[Sequence[TypedSessionInformation[TSession]], None, None]:
+        closing_function: Callable[[TSession], ContextManager[TSession]] | None = None,
+    ) -> Generator[Sequence[TypedSessionInformation[TSession]]]:
         if not instrument_type_id:
             raise ValueError("This method requires an instrument type ID.")
         session_infos = self._get_matching_session_infos(instrument_type_id)
@@ -751,7 +749,7 @@ class BaseReservation(_BaseSessionContainer):
             closing_function = closing_session
 
         with ExitStack() as stack:
-            typed_session_infos: List[TypedSessionInformation[TSession]] = []
+            typed_session_infos: list[TypedSessionInformation[TSession]] = []
             for session_info in session_infos:
                 session = stack.enter_context(closing_function(session_constructor(session_info)))
                 stack.enter_context(self._cache_session(session_info.session_name, session))
@@ -763,11 +761,11 @@ class BaseReservation(_BaseSessionContainer):
 
     def _get_connection_core(
         self,
-        session_type: Type[TSession],
-        pin_or_relay_name: Optional[str] = None,
-        site: Optional[int] = None,
-        instrument_type_id: Optional[str] = None,
-        multiplexer_session_type: Optional[Type[TMultiplexerSession]] = None,
+        session_type: type[TSession],
+        pin_or_relay_name: str | None = None,
+        site: int | None = None,
+        instrument_type_id: str | None = None,
+        multiplexer_session_type: type[TMultiplexerSession] | None = None,
     ) -> TypedConnection[TSession]:
         _check_optional_str_param("pin_or_relay_name", pin_or_relay_name)
         _check_optional_int_param("site", site)
@@ -792,11 +790,11 @@ class BaseReservation(_BaseSessionContainer):
 
     def _get_connections_core(
         self,
-        session_type: Type[TSession],
-        pin_or_relay_names: Union[str, Iterable[str], None] = None,
-        sites: Union[int, Iterable[int], None] = None,
-        instrument_type_id: Optional[str] = None,
-        multiplexer_session_type: Optional[Type[TMultiplexerSession]] = None,
+        session_type: type[TSession],
+        pin_or_relay_names: str | Iterable[str] | None = None,
+        sites: int | Iterable[int] | None = None,
+        instrument_type_id: str | None = None,
+        multiplexer_session_type: type[TMultiplexerSession] | None = None,
     ) -> Sequence[TypedConnection[TSession]]:
         _check_optional_str_param("instrument_type_id", instrument_type_id)
 
@@ -837,8 +835,8 @@ class BaseReservation(_BaseSessionContainer):
             requested_sites_with_system.append(SITE_SYSTEM_PINS)
 
         # Sort the results by site, then by pin, then by instrument type (as a tiebreaker).
-        results: List[TypedConnection[TSession]] = []
-        matching_pins: Set[str] = set()
+        results: list[TypedConnection[TSession]] = []
+        matching_pins: set[str] = set()
         for site in requested_sites_with_system:
             for pin in resolved_pin_or_relay_names:
                 for instrument_type in requested_instrument_type_ids:
@@ -912,7 +910,7 @@ class BaseReservation(_BaseSessionContainer):
     def initialize_multiplexer_session(
         self,
         session_constructor: Callable[[MultiplexerSessionInformation], TMultiplexerSession],
-        multiplexer_type_id: Optional[str] = None,
+        multiplexer_type_id: str | None = None,
     ) -> ContextManager[TypedMultiplexerSessionInformation[TMultiplexerSession]]:
         """Initialize a single multiplexer session.
 
@@ -972,7 +970,7 @@ class BaseReservation(_BaseSessionContainer):
     def initialize_multiplexer_sessions(
         self,
         session_constructor: Callable[[MultiplexerSessionInformation], TMultiplexerSession],
-        multiplexer_type_id: Optional[str] = None,
+        multiplexer_type_id: str | None = None,
     ) -> ContextManager[Sequence[TypedMultiplexerSessionInformation[TMultiplexerSession]]]:
         """Initialize multiple multiplexer sessions.
 
@@ -1001,10 +999,10 @@ class BaseReservation(_BaseSessionContainer):
 
     def get_connection(
         self,
-        session_type: Type[TSession],
-        pin_or_relay_name: Optional[str] = None,
-        site: Optional[int] = None,
-        instrument_type_id: Optional[str] = None,
+        session_type: type[TSession],
+        pin_or_relay_name: str | None = None,
+        site: int | None = None,
+        instrument_type_id: str | None = None,
     ) -> TypedConnection[TSession]:
         """Get the connection matching the specified criteria.
 
@@ -1037,11 +1035,11 @@ class BaseReservation(_BaseSessionContainer):
 
     def get_connection_with_multiplexer(
         self,
-        session_type: Type[TSession],
-        multiplexer_session_type: Type[TMultiplexerSession],
-        pin_or_relay_name: Optional[str] = None,
-        site: Optional[int] = None,
-        instrument_type_id: Optional[str] = None,
+        session_type: type[TSession],
+        multiplexer_session_type: type[TMultiplexerSession],
+        pin_or_relay_name: str | None = None,
+        site: int | None = None,
+        instrument_type_id: str | None = None,
     ) -> TypedConnectionWithMultiplexer[TSession, TMultiplexerSession]:
         """Get the connection matching the specified criteria.
 
@@ -1079,10 +1077,10 @@ class BaseReservation(_BaseSessionContainer):
 
     def get_connections(
         self,
-        session_type: Type[TSession],
-        pin_or_relay_names: Union[str, Iterable[str], None] = None,
-        sites: Union[int, Iterable[int], None] = None,
-        instrument_type_id: Optional[str] = None,
+        session_type: type[TSession],
+        pin_or_relay_names: str | Iterable[str] | None = None,
+        sites: int | Iterable[int] | None = None,
+        instrument_type_id: str | None = None,
     ) -> Sequence[TypedConnection[TSession]]:
         """Get all connections matching the specified criteria.
 
@@ -1116,11 +1114,11 @@ class BaseReservation(_BaseSessionContainer):
 
     def get_connections_with_multiplexer(
         self,
-        session_type: Type[TSession],
-        multiplexer_session_type: Type[TMultiplexerSession],
-        pin_or_relay_names: Union[str, Iterable[str], None] = None,
-        sites: Union[int, Iterable[int], None] = None,
-        instrument_type_id: Optional[str] = None,
+        session_type: type[TSession],
+        multiplexer_session_type: type[TMultiplexerSession],
+        pin_or_relay_names: str | Iterable[str] | None = None,
+        sites: int | Iterable[int] | None = None,
+        instrument_type_id: str | None = None,
     ) -> Sequence[TypedConnectionWithMultiplexer[TSession, TMultiplexerSession]]:
         """Get all connections matching the specified criteria.
 
@@ -1233,8 +1231,8 @@ class BaseReservation(_BaseSessionContainer):
 
     def get_nidaqmx_connection(
         self,
-        pin_name: Optional[str] = None,
-        site: Optional[int] = None,
+        pin_name: str | None = None,
+        site: int | None = None,
     ) -> TypedConnection[nidaqmx.Task]:
         """Get the NI-DAQmx connection matching the specified criteria.
 
@@ -1260,9 +1258,9 @@ class BaseReservation(_BaseSessionContainer):
 
     def get_nidaqmx_connection_with_multiplexer(
         self,
-        multiplexer_session_type: Type[TMultiplexerSession],
-        pin_name: Optional[str] = None,
-        site: Optional[int] = None,
+        multiplexer_session_type: type[TMultiplexerSession],
+        pin_name: str | None = None,
+        site: int | None = None,
     ) -> TypedConnectionWithMultiplexer[nidaqmx.Task, TMultiplexerSession]:
         """Get the NI-DAQmx connection matching the specified criteria.
 
@@ -1293,8 +1291,8 @@ class BaseReservation(_BaseSessionContainer):
 
     def get_nidaqmx_connections(
         self,
-        pin_names: Union[str, Iterable[str], None] = None,
-        sites: Union[int, Iterable[int], None] = None,
+        pin_names: str | Iterable[str] | None = None,
+        sites: int | Iterable[int] | None = None,
     ) -> Sequence[TypedConnection[nidaqmx.Task]]:
         """Get all NI-DAQmx connections matching the specified criteria.
 
@@ -1319,9 +1317,9 @@ class BaseReservation(_BaseSessionContainer):
 
     def get_nidaqmx_connections_with_multiplexer(
         self,
-        multiplexer_session_type: Type[TMultiplexerSession],
-        pin_names: Union[str, Iterable[str], None] = None,
-        sites: Union[int, Iterable[int], None] = None,
+        multiplexer_session_type: type[TMultiplexerSession],
+        pin_names: str | Iterable[str] | None = None,
+        sites: int | Iterable[int] | None = None,
     ) -> Sequence[TypedConnectionWithMultiplexer[nidaqmx.Task, TMultiplexerSession]]:
         """Get all NI-DAQmx connections matching the specified criteria.
 
@@ -1355,7 +1353,7 @@ class BaseReservation(_BaseSessionContainer):
     def initialize_nidcpower_session(
         self,
         reset: bool = False,
-        options: Optional[Dict[str, Any]] = None,
+        options: dict[str, Any] | None = None,
         initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
     ) -> ContextManager[TypedSessionInformation[nidcpower.Session]]:
         """Initialize a single NI-DCPower instrument session.
@@ -1399,7 +1397,7 @@ class BaseReservation(_BaseSessionContainer):
     def initialize_nidcpower_sessions(
         self,
         reset: bool = False,
-        options: Optional[Dict[str, Any]] = None,
+        options: dict[str, Any] | None = None,
         initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
     ) -> ContextManager[Sequence[TypedSessionInformation[nidcpower.Session]]]:
         """Initialize multiple NI-DCPower instrument sessions.
@@ -1442,8 +1440,8 @@ class BaseReservation(_BaseSessionContainer):
 
     def get_nidcpower_connection(
         self,
-        pin_name: Optional[str] = None,
-        site: Optional[int] = None,
+        pin_name: str | None = None,
+        site: int | None = None,
     ) -> TypedConnection[nidcpower.Session]:
         """Get the NI-DCPower connection matching the specified criteria.
 
@@ -1471,9 +1469,9 @@ class BaseReservation(_BaseSessionContainer):
 
     def get_nidcpower_connection_with_multiplexer(
         self,
-        multiplexer_session_type: Type[TMultiplexerSession],
-        pin_name: Optional[str] = None,
-        site: Optional[int] = None,
+        multiplexer_session_type: type[TMultiplexerSession],
+        pin_name: str | None = None,
+        site: int | None = None,
     ) -> TypedConnectionWithMultiplexer[nidcpower.Session, TMultiplexerSession]:
         """Get the NI-DCPower connection matching the specified criteria.
 
@@ -1506,8 +1504,8 @@ class BaseReservation(_BaseSessionContainer):
 
     def get_nidcpower_connections(
         self,
-        pin_names: Union[str, Iterable[str], None] = None,
-        sites: Union[int, Iterable[int], None] = None,
+        pin_names: str | Iterable[str] | None = None,
+        sites: int | Iterable[int] | None = None,
     ) -> Sequence[TypedConnection[nidcpower.Session]]:
         """Get all NI-DCPower connections matching the specified criteria.
 
@@ -1534,9 +1532,9 @@ class BaseReservation(_BaseSessionContainer):
 
     def get_nidcpower_connections_with_multiplexer(
         self,
-        multiplexer_session_type: Type[TMultiplexerSession],
-        pin_names: Union[str, Iterable[str], None] = None,
-        sites: Union[int, Iterable[int], None] = None,
+        multiplexer_session_type: type[TMultiplexerSession],
+        pin_names: str | Iterable[str] | None = None,
+        sites: int | Iterable[int] | None = None,
     ) -> Sequence[TypedConnectionWithMultiplexer[nidcpower.Session, TMultiplexerSession]]:
         """Get all NI-DCPower connections matching the specified criteria.
 
@@ -1574,7 +1572,7 @@ class BaseReservation(_BaseSessionContainer):
     def initialize_nidigital_session(
         self,
         reset_device: bool = False,
-        options: Optional[Dict[str, Any]] = None,
+        options: dict[str, Any] | None = None,
         initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
     ) -> ContextManager[TypedSessionInformation[nidigital.Session]]:
         """Initialize a single NI-Digital Pattern instrument session.
@@ -1622,7 +1620,7 @@ class BaseReservation(_BaseSessionContainer):
     def initialize_nidigital_sessions(
         self,
         reset_device: bool = False,
-        options: Optional[Dict[str, Any]] = None,
+        options: dict[str, Any] | None = None,
         initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
     ) -> ContextManager[Sequence[TypedSessionInformation[nidigital.Session]]]:
         """Initialize multiple NI-Digital Pattern instrument sessions.
@@ -1669,8 +1667,8 @@ class BaseReservation(_BaseSessionContainer):
 
     def get_nidigital_connection(
         self,
-        pin_name: Optional[str] = None,
-        site: Optional[int] = None,
+        pin_name: str | None = None,
+        site: int | None = None,
     ) -> TypedConnection[nidigital.Session]:
         """Get the NI-Digital Pattern connection matching the specified criteria.
 
@@ -1698,9 +1696,9 @@ class BaseReservation(_BaseSessionContainer):
 
     def get_nidigital_connection_with_multiplexer(
         self,
-        multiplexer_session_type: Type[TMultiplexerSession],
-        pin_name: Optional[str] = None,
-        site: Optional[int] = None,
+        multiplexer_session_type: type[TMultiplexerSession],
+        pin_name: str | None = None,
+        site: int | None = None,
     ) -> TypedConnectionWithMultiplexer[nidigital.Session, TMultiplexerSession]:
         """Get the NI-Digital Pattern connection matching the specified criteria.
 
@@ -1737,8 +1735,8 @@ class BaseReservation(_BaseSessionContainer):
 
     def get_nidigital_connections(
         self,
-        pin_names: Union[str, Iterable[str], None] = None,
-        sites: Union[int, Iterable[int], None] = None,
+        pin_names: str | Iterable[str] | None = None,
+        sites: int | Iterable[int] | None = None,
     ) -> Sequence[TypedConnection[nidigital.Session]]:
         """Get all NI-Digital Pattern connections matching the specified criteria.
 
@@ -1765,9 +1763,9 @@ class BaseReservation(_BaseSessionContainer):
 
     def get_nidigital_connections_with_multiplexer(
         self,
-        multiplexer_session_type: Type[TMultiplexerSession],
-        pin_names: Union[str, Iterable[str], None] = None,
-        sites: Union[int, Iterable[int], None] = None,
+        multiplexer_session_type: type[TMultiplexerSession],
+        pin_names: str | Iterable[str] | None = None,
+        sites: int | Iterable[int] | None = None,
     ) -> Sequence[TypedConnectionWithMultiplexer[nidigital.Session, TMultiplexerSession]]:
         """Get all NI-Digital Pattern connections matching the specified criteria.
 
@@ -1805,7 +1803,7 @@ class BaseReservation(_BaseSessionContainer):
     def initialize_nidmm_session(
         self,
         reset_device: bool = False,
-        options: Optional[Dict[str, Any]] = None,
+        options: dict[str, Any] | None = None,
         initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
     ) -> ContextManager[TypedSessionInformation[nidmm.Session]]:
         """Initialize a single NI-DMM instrument session.
@@ -1853,7 +1851,7 @@ class BaseReservation(_BaseSessionContainer):
     def initialize_nidmm_sessions(
         self,
         reset_device: bool = False,
-        options: Optional[Dict[str, Any]] = None,
+        options: dict[str, Any] | None = None,
         initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
     ) -> ContextManager[Sequence[TypedSessionInformation[nidmm.Session]]]:
         """Initialize multiple NI-DMM instrument sessions.
@@ -1900,8 +1898,8 @@ class BaseReservation(_BaseSessionContainer):
 
     def get_nidmm_connection(
         self,
-        pin_name: Optional[str] = None,
-        site: Optional[int] = None,
+        pin_name: str | None = None,
+        site: int | None = None,
     ) -> TypedConnection[nidmm.Session]:
         """Get the NI-DMM connection matching the specified criteria.
 
@@ -1927,9 +1925,9 @@ class BaseReservation(_BaseSessionContainer):
 
     def get_nidmm_connection_with_multiplexer(
         self,
-        multiplexer_session_type: Type[TMultiplexerSession],
-        pin_name: Optional[str] = None,
-        site: Optional[int] = None,
+        multiplexer_session_type: type[TMultiplexerSession],
+        pin_name: str | None = None,
+        site: int | None = None,
     ) -> TypedConnectionWithMultiplexer[nidmm.Session, TMultiplexerSession]:
         """Get the NI-DMM connection matching the specified criteria.
 
@@ -1960,8 +1958,8 @@ class BaseReservation(_BaseSessionContainer):
 
     def get_nidmm_connections(
         self,
-        pin_names: Union[str, Iterable[str], None] = None,
-        sites: Union[int, Iterable[int], None] = None,
+        pin_names: str | Iterable[str] | None = None,
+        sites: int | Iterable[int] | None = None,
     ) -> Sequence[TypedConnection[nidmm.Session]]:
         """Get all NI-DMM connections matching the specified criteria.
 
@@ -1986,9 +1984,9 @@ class BaseReservation(_BaseSessionContainer):
 
     def get_nidmm_connections_with_multiplexer(
         self,
-        multiplexer_session_type: Type[TMultiplexerSession],
-        pin_names: Union[str, Iterable[str], None] = None,
-        sites: Union[int, Iterable[int], None] = None,
+        multiplexer_session_type: type[TMultiplexerSession],
+        pin_names: str | Iterable[str] | None = None,
+        sites: int | Iterable[int] | None = None,
     ) -> Sequence[TypedConnectionWithMultiplexer[nidmm.Session, TMultiplexerSession]]:
         """Get all NI-DMM connections matching the specified criteria.
 
@@ -2022,7 +2020,7 @@ class BaseReservation(_BaseSessionContainer):
     def initialize_nifgen_session(
         self,
         reset_device: bool = False,
-        options: Optional[Dict[str, Any]] = None,
+        options: dict[str, Any] | None = None,
         initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
     ) -> ContextManager[TypedSessionInformation[nifgen.Session]]:
         """Initialize a single NI-FGEN instrument session.
@@ -2070,7 +2068,7 @@ class BaseReservation(_BaseSessionContainer):
     def initialize_nifgen_sessions(
         self,
         reset_device: bool = False,
-        options: Optional[Dict[str, Any]] = None,
+        options: dict[str, Any] | None = None,
         initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
     ) -> ContextManager[Sequence[TypedSessionInformation[nifgen.Session]]]:
         """Initialize multiple NI-FGEN instrument sessions.
@@ -2117,8 +2115,8 @@ class BaseReservation(_BaseSessionContainer):
 
     def get_nifgen_connection(
         self,
-        pin_name: Optional[str] = None,
-        site: Optional[int] = None,
+        pin_name: str | None = None,
+        site: int | None = None,
     ) -> TypedConnection[nifgen.Session]:
         """Get the NI-FGEN connection matching the specified criteria.
 
@@ -2144,9 +2142,9 @@ class BaseReservation(_BaseSessionContainer):
 
     def get_nifgen_connection_with_multiplexer(
         self,
-        multiplexer_session_type: Type[TMultiplexerSession],
-        pin_name: Optional[str] = None,
-        site: Optional[int] = None,
+        multiplexer_session_type: type[TMultiplexerSession],
+        pin_name: str | None = None,
+        site: int | None = None,
     ) -> TypedConnectionWithMultiplexer[nifgen.Session, TMultiplexerSession]:
         """Get the NI-FGEN connection matching the specified criteria.
 
@@ -2177,8 +2175,8 @@ class BaseReservation(_BaseSessionContainer):
 
     def get_nifgen_connections(
         self,
-        pin_names: Union[str, Iterable[str], None] = None,
-        sites: Union[int, Iterable[int], None] = None,
+        pin_names: str | Iterable[str] | None = None,
+        sites: int | Iterable[int] | None = None,
     ) -> Sequence[TypedConnection[nifgen.Session]]:
         """Get all NI-FGEN connections matching the specified criteria.
 
@@ -2203,9 +2201,9 @@ class BaseReservation(_BaseSessionContainer):
 
     def get_nifgen_connections_with_multiplexer(
         self,
-        multiplexer_session_type: Type[TMultiplexerSession],
-        pin_names: Union[str, Iterable[str], None] = None,
-        sites: Union[int, Iterable[int], None] = None,
+        multiplexer_session_type: type[TMultiplexerSession],
+        pin_names: str | Iterable[str] | None = None,
+        sites: int | Iterable[int] | None = None,
     ) -> Sequence[TypedConnectionWithMultiplexer[nifgen.Session, TMultiplexerSession]]:
         """Get all NI-FGEN connections matching the specified criteria.
 
@@ -2239,7 +2237,7 @@ class BaseReservation(_BaseSessionContainer):
     def initialize_niscope_session(
         self,
         reset_device: bool = False,
-        options: Optional[Dict[str, Any]] = None,
+        options: dict[str, Any] | None = None,
         initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
     ) -> ContextManager[TypedSessionInformation[niscope.Session]]:
         """Initialize a single NI-SCOPE instrument session.
@@ -2287,7 +2285,7 @@ class BaseReservation(_BaseSessionContainer):
     def initialize_niscope_sessions(
         self,
         reset_device: bool = False,
-        options: Optional[Dict[str, Any]] = None,
+        options: dict[str, Any] | None = None,
         initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
     ) -> ContextManager[Sequence[TypedSessionInformation[niscope.Session]]]:
         """Initialize multiple NI-SCOPE instrument sessions.
@@ -2334,8 +2332,8 @@ class BaseReservation(_BaseSessionContainer):
 
     def get_niscope_connection(
         self,
-        pin_name: Optional[str] = None,
-        site: Optional[int] = None,
+        pin_name: str | None = None,
+        site: int | None = None,
     ) -> TypedConnection[niscope.Session]:
         """Get the NI-SCOPE connection matching the specified criteria.
 
@@ -2361,9 +2359,9 @@ class BaseReservation(_BaseSessionContainer):
 
     def get_niscope_connection_with_multiplexer(
         self,
-        multiplexer_session_type: Type[TMultiplexerSession],
-        pin_name: Optional[str] = None,
-        site: Optional[int] = None,
+        multiplexer_session_type: type[TMultiplexerSession],
+        pin_name: str | None = None,
+        site: int | None = None,
     ) -> TypedConnectionWithMultiplexer[niscope.Session, TMultiplexerSession]:
         """Get the NI-SCOPE connection matching the specified criteria.
 
@@ -2396,8 +2394,8 @@ class BaseReservation(_BaseSessionContainer):
 
     def get_niscope_connections(
         self,
-        pin_names: Union[str, Iterable[str], None] = None,
-        sites: Union[int, Iterable[int], None] = None,
+        pin_names: str | Iterable[str] | None = None,
+        sites: int | Iterable[int] | None = None,
     ) -> Sequence[TypedConnection[niscope.Session]]:
         """Get all NI-SCOPE connections matching the specified criteria.
 
@@ -2424,9 +2422,9 @@ class BaseReservation(_BaseSessionContainer):
 
     def get_niscope_connections_with_multiplexer(
         self,
-        multiplexer_session_type: Type[TMultiplexerSession],
-        pin_names: Union[str, Iterable[str], None] = None,
-        sites: Union[int, Iterable[int], None] = None,
+        multiplexer_session_type: type[TMultiplexerSession],
+        pin_names: str | Iterable[str] | None = None,
+        sites: int | Iterable[int] | None = None,
     ) -> Sequence[TypedConnectionWithMultiplexer[niscope.Session, TMultiplexerSession]]:
         """Get all NI-SCOPE connections matching the specified criteria.
 
@@ -2459,8 +2457,8 @@ class BaseReservation(_BaseSessionContainer):
 
     def initialize_niswitch_session(
         self,
-        topology: Optional[str] = None,
-        simulate: Optional[bool] = None,
+        topology: str | None = None,
+        simulate: bool | None = None,
         reset_device: bool = False,
         initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
     ) -> ContextManager[TypedSessionInformation[niswitch.Session]]:
@@ -2514,8 +2512,8 @@ class BaseReservation(_BaseSessionContainer):
 
     def initialize_niswitch_sessions(
         self,
-        topology: Optional[str] = None,
-        simulate: Optional[bool] = None,
+        topology: str | None = None,
+        simulate: bool | None = None,
         reset_device: bool = False,
         initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
     ) -> ContextManager[Sequence[TypedSessionInformation[niswitch.Session]]]:
@@ -2569,8 +2567,8 @@ class BaseReservation(_BaseSessionContainer):
 
     def get_niswitch_connection(
         self,
-        relay_name: Optional[str] = None,
-        site: Optional[int] = None,
+        relay_name: str | None = None,
+        site: int | None = None,
     ) -> TypedConnection[niswitch.Session]:
         """Get the NI-SWITCH relay driver connection matching the specified criteria.
 
@@ -2598,8 +2596,8 @@ class BaseReservation(_BaseSessionContainer):
 
     def get_niswitch_connections(
         self,
-        relay_names: Union[str, Iterable[str], None] = None,
-        sites: Union[int, Iterable[int], None] = None,
+        relay_names: str | Iterable[str] | None = None,
+        sites: int | Iterable[int] | None = None,
     ) -> Sequence[TypedConnection[niswitch.Session]]:
         """Get all NI-SWITCH relay driver connections matching the specified criteria.
 
@@ -2626,11 +2624,11 @@ class BaseReservation(_BaseSessionContainer):
 
     def initialize_niswitch_multiplexer_session(
         self,
-        topology: Optional[str] = None,
-        simulate: Optional[bool] = None,
+        topology: str | None = None,
+        simulate: bool | None = None,
         reset_device: bool = False,
         initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
-        multiplexer_type_id: Optional[str] = None,
+        multiplexer_type_id: str | None = None,
     ) -> ContextManager[TypedMultiplexerSessionInformation[niswitch.Session]]:
         """Initialize a single NI-SWITCH multiplexer session.
 
@@ -2675,11 +2673,11 @@ class BaseReservation(_BaseSessionContainer):
 
     def initialize_niswitch_multiplexer_sessions(
         self,
-        topology: Optional[str] = None,
-        simulate: Optional[bool] = None,
+        topology: str | None = None,
+        simulate: bool | None = None,
         reset_device: bool = False,
         initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
-        multiplexer_type_id: Optional[str] = None,
+        multiplexer_type_id: str | None = None,
     ) -> ContextManager[Sequence[TypedMultiplexerSessionInformation[niswitch.Session]]]:
         """Initialize multiple NI-SWITCH multiplexer sessions.
 
@@ -2738,7 +2736,7 @@ class MultiSessionReservation(BaseReservation):
     """Manages reservation for multiple sessions."""
 
     @property
-    def session_info(self) -> List[SessionInformation]:
+    def session_info(self) -> list[SessionInformation]:
         """Multiple session information objects."""
         # If the session cache is empty, return the existing list without copying.
         if not self._session_cache:

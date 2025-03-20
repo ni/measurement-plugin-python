@@ -2,7 +2,9 @@
 
 import pathlib
 from contextlib import ExitStack
-from typing import Iterable, List, Sequence, Tuple
+from typing import List, Tuple
+
+from collections.abc import Iterable, Sequence
 
 import hightime
 import nidcpower
@@ -30,7 +32,7 @@ measurement_service = nims.MeasurementService(
 def measure(
     pin_names: Iterable[str],
     multi_session: bool,
-) -> Tuple[
+) -> tuple[
     Iterable[str], Iterable[str], Iterable[str], Iterable[str], Iterable[float], Iterable[float]
 ]:
     """NI-DCPower measurement plug-in test service."""
@@ -70,7 +72,7 @@ def measure(
 
 def _source_measure_dc_voltage(
     connections: Sequence[nims.session_management.TypedConnection[nidcpower.Session]],
-) -> Tuple[List[float], List[float]]:
+) -> tuple[list[float], list[float]]:
     for connection in connections:
         channel = connection.session.channels[connection.channel_name]
         channel.source_mode = nidcpower.SourceMode.SINGLE_POINT

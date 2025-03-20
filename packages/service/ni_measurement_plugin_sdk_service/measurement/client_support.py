@@ -1,7 +1,9 @@
 """Support functions for the Measurement Plug-In Client."""
 
 from pathlib import Path
-from typing import Any, Dict, Sequence
+from typing import Any, Dict
+
+from collections.abc import Sequence
 
 from google.protobuf.descriptor_pb2 import FieldDescriptorProto
 
@@ -29,7 +31,7 @@ __all__ = [
 
 
 def deserialize_parameters(
-    parameter_metadata_dict: Dict[int, ParameterMetadata],
+    parameter_metadata_dict: dict[int, ParameterMetadata],
     parameter_bytes: bytes,
     message_name: str,
     *,
@@ -78,7 +80,7 @@ def deserialize_parameters(
 
 
 def serialize_parameters(
-    parameter_metadata_dict: Dict[int, ParameterMetadata],
+    parameter_metadata_dict: dict[int, ParameterMetadata],
     parameter_values: Sequence[Any],
     message_name: str,
 ) -> bytes:

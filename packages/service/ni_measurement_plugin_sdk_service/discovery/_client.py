@@ -2,7 +2,9 @@
 
 import logging
 import threading
-from typing import Optional, Sequence, Tuple
+from typing import Optional, Tuple
+
+from collections.abc import Sequence
 
 import grpc
 from deprecation import deprecated
@@ -248,7 +250,7 @@ class DiscoveryClient:
         service_class: str = "",
         deployment_target: str = "",
         version: str = "",
-    ) -> Tuple[ServiceLocation, ServiceInfo]:
+    ) -> tuple[ServiceLocation, ServiceInfo]:
         """Resolve the location of a service along with its information.
 
         Given a description of a service, returns information for the service in addition to

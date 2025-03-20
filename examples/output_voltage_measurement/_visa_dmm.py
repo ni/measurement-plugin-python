@@ -91,9 +91,9 @@ class Session:
 
     def __exit__(
         self,
-        exc_type: Optional[Type[BaseException]],
-        exc_val: Optional[BaseException],
-        traceback: Optional[TracebackType],
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
+        traceback: TracebackType | None,
     ) -> None:
         """Context management protocol. Calls close()."""
         self.close()
@@ -108,7 +108,7 @@ class Session:
         function_enum = _FUNCTION_TO_VALUE[function]
         resolution_value = _RESOLUTION_DIGITS_TO_VALUE[str(resolution_digits)]
 
-        self._session.write("CONF:%s %.g,%.g" % (function_enum, range, resolution_value))
+        self._session.write("CONF:{} {:.g},{:.g}".format(function_enum, range, resolution_value))
         self._check_error()
 
     def read(self) -> float:
@@ -123,7 +123,7 @@ class Session:
         fields = response.split(",", maxsplit=1)
         assert len(fields) >= 1
         if int(fields[0]) != 0:
-            raise RuntimeError("Instrument returned error %s: %s" % (fields[0], fields[1]))
+            raise RuntimeError("Instrument returned error {}: {}".format(fields[0], fields[1]))
 
     def _validate_id(self) -> None:
         """Check the selected instrument is proper and responding.."""

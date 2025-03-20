@@ -4,7 +4,9 @@ import pathlib
 import random
 import threading
 import time
-from typing import Any, Generator, List, Tuple
+from typing import Any, List, Tuple
+
+from collections.abc import Generator
 
 import click
 import grpc
@@ -18,7 +20,7 @@ measurement_service = nims.MeasurementService(
     ui_file_paths=[service_directory / "game_of_life.measui"],
 )
 
-Grid = List[List[bool]]
+Grid = list[list[bool]]
 
 INFINITE_GENERATIONS = -1
 
@@ -32,7 +34,7 @@ INFINITE_GENERATIONS = -1
 @measurement_service.output("generation", nims.DataType.UInt32)
 def measure(
     width: int, height: int, update_interval_msec: int, max_generations: int
-) -> Generator[Tuple[xydata_pb2.DoubleXYData, int], None, None]:
+) -> Generator[tuple[xydata_pb2.DoubleXYData, int], None, None]:
     """Streaming measurement that returns Conway's Game of Life grid as DoubleXYData."""
     cancellation_event = threading.Event()
     measurement_service.context.add_cancel_callback(cancellation_event.set)

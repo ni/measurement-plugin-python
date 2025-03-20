@@ -37,7 +37,7 @@ def test___mi_driver_options___update_from_config___reads_config(config: Mock) -
     ],
 )
 def test___mi_driver_options___to_dict___returns_options_dict(
-    options: MIDriverOptions, expected_dict: Dict[str, Any]
+    options: MIDriverOptions, expected_dict: dict[str, Any]
 ) -> None:
     assert options.to_dict() == expected_dict
 

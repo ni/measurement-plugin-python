@@ -41,7 +41,7 @@ create_nimultiplexer_session_infos = functools.partial(
     ],
 )
 def test___invalid_argument_type___intialize_multiplexer_session___raises_type_error(
-    kwargs: Dict[str, Any],
+    kwargs: dict[str, Any],
     expected_message: str,
     session_management_client: Mock,
 ) -> None:
@@ -860,9 +860,9 @@ def test___created_multiple_multiplexer_sessions___get_multiplexer_session_info_
         )
 
 
-def _create_grpc_session_and_multiplexer_session_infos_for_ordering() -> Tuple[
-    List[session_management_service_pb2.SessionInformation],
-    List[session_management_service_pb2.MultiplexerSessionInformation],
+def _create_grpc_session_and_multiplexer_session_infos_for_ordering() -> tuple[
+    list[session_management_service_pb2.SessionInformation],
+    list[session_management_service_pb2.MultiplexerSessionInformation],
 ]:
     grpc_session_infos = create_nifake_session_infos(4)
     grpc_session_infos[0].channel_mappings.add(

@@ -144,7 +144,7 @@ def create_measurement(
     directory_out: Optional[str],
     description: str,
     collection: str,
-    tags: Tuple[str, ...],
+    tags: tuple[str, ...],
     verbose: int,
 ) -> None:
     """Generate a Python measurement service from a template.

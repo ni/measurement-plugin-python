@@ -21,13 +21,13 @@ if TYPE_CHECKING:
         from typing_extensions import Self
 
 
-class GrpcChannelPool(object):
+class GrpcChannelPool:
     """Class that manages gRPC channel lifetimes."""
 
     def __init__(self) -> None:
         """Initialize the GrpcChannelPool object."""
         self._lock: Lock = Lock()
-        self._channel_cache: Dict[str, grpc.Channel] = {}
+        self._channel_cache: dict[str, grpc.Channel] = {}
 
     def __enter__(self: Self) -> Self:
         """Enter the runtime context of the GrpcChannelPool."""
@@ -35,9 +35,9 @@ class GrpcChannelPool(object):
 
     def __exit__(
         self,
-        exc_type: Optional[Type[BaseException]],
-        exc_val: Optional[BaseException],
-        traceback: Optional[TracebackType],
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
+        traceback: TracebackType | None,
     ) -> Literal[False]:
         """Exit the runtime context of the GrpcChannelPool."""
         self.close()

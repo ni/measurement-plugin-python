@@ -10,7 +10,7 @@ from ni_measurement_plugin_sdk_service._configuration import MIDriverOptions
 TSession = TypeVar("TSession")
 
 
-def create_mock_session(session_type: Type[TSession]) -> Mock:
+def create_mock_session(session_type: type[TSession]) -> Mock:
     """Create a single mock session object."""
     mock = create_autospec(session_type)
     mock.__enter__.return_value = mock
@@ -18,7 +18,7 @@ def create_mock_session(session_type: Type[TSession]) -> Mock:
     return mock
 
 
-def create_mock_sessions(session_type: Type[TSession], count: int) -> List[Mock]:
+def create_mock_sessions(session_type: type[TSession], count: int) -> list[Mock]:
     """Create multiple mock session objects."""
     return [create_mock_session(session_type) for _ in range(count)]
 

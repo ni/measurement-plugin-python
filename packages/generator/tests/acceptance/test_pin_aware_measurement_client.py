@@ -1,7 +1,7 @@
 import importlib.util
 import pathlib
 from types import ModuleType
-from typing import Generator
+from collections.abc import Generator
 
 import grpc
 import pytest

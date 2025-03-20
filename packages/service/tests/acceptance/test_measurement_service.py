@@ -6,7 +6,9 @@ import urllib.parse
 import urllib.request
 from enum import Enum
 from os import path
-from typing import Generator, List, Union
+from typing import List, Union
+
+from collections.abc import Generator
 
 import pytest
 from google.protobuf import any_pb2
@@ -68,12 +70,12 @@ def test___measurement_service_v2___get_metadata___returns_metadata(
 )
 def test___measurement_service_v1___measure___returns_output(
     float_in: float,
-    double_array_in: List[float],
+    double_array_in: list[float],
     bool_in: bool,
     string_in: str,
     enum_in: Enum,
     protobuf_enum_in: ProtobufColor.ValueType,
-    string_array_in: List[str],
+    string_array_in: list[str],
     stub_v1: v1_measurement_service_pb2_grpc.MeasurementServiceStub,
 ):
     metadata = stub_v1.GetMetadata(v1_measurement_service_pb2.GetMetadataRequest())
@@ -114,12 +116,12 @@ def test___measurement_service_v1___measure___returns_output(
 )
 def test___measurement_service_v2___measure___returns_output(
     float_in: float,
-    double_array_in: List[float],
+    double_array_in: list[float],
     bool_in: bool,
     string_in: str,
     enum_in: Enum,
     protobuf_enum_in: ProtobufColor.ValueType,
-    string_array_in: List[str],
+    string_array_in: list[str],
     stub_v2: v2_measurement_service_pb2_grpc.MeasurementServiceStub,
 ):
     metadata = stub_v2.GetMetadata(v2_measurement_service_pb2.GetMetadataRequest())
@@ -235,12 +237,12 @@ def _get_configuration_parameters(*args, message_type: str = "", **kwargs) -> an
 
 def _get_serialized_measurement_signature(
     float_in: float,
-    double_array_in: List[float],
+    double_array_in: list[float],
     bool_in: bool,
     string_in: str,
     enum_in: Enum,
     protobuf_enum_in: ProtobufColor.ValueType,
-    string_array_in: List[str],
+    string_array_in: list[str],
 ) -> bytes:
     config_params = Parameters()
     config_params.float_in = float_in

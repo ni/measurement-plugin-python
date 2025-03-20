@@ -74,7 +74,7 @@ def measure(
     range: float,
     resolution_digits: float,
     output_pin: str,
-) -> Tuple[float]:
+) -> tuple[float]:
     """Source DC voltage as input with an NI SMU and measure output using NI-VISA DMM."""
     logging.info(
         "Executing measurement: pin_names=%s voltage_level=%g measurement_type=%s range=%g resolution_digits=%g",

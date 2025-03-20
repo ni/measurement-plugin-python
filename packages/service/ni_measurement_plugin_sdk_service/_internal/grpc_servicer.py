@@ -9,7 +9,9 @@ import pathlib
 import warnings
 import weakref
 from contextvars import ContextVar
-from typing import Any, Callable, Dict, Generator, List, Optional
+from typing import Any, Callable, Dict, List, Optional
+
+from collections.abc import Generator
 
 import grpc
 from google.protobuf import any_pb2
@@ -41,7 +43,7 @@ class MeasurementServiceContext:
         self,
         grpc_context: grpc.ServicerContext,
         pin_map_context: PinMapContext,
-        owner: Optional[weakref.ReferenceType[object]],
+        owner: weakref.ReferenceType[object] | None,
     ) -> None:
         """Initialize the measurement service context."""
         self._grpc_context = grpc_context
@@ -128,8 +130,8 @@ measurement_service_context: ContextVar[MeasurementServiceContext] = ContextVar(
 
 
 def _get_mapping_by_parameter_name(
-    mapping_by_id: Dict[int, Any], measure_function: Callable[[], None]
-) -> Dict[str, Any]:
+    mapping_by_id: dict[int, Any], measure_function: Callable[[], None]
+) -> dict[str, Any]:
     """Transform a mapping by id into a mapping by parameter name (i.e. kwargs)."""
     signature = inspect.signature(measure_function)
     mapping_by_variable_name = {}
@@ -139,7 +141,7 @@ def _get_mapping_by_parameter_name(
 
 
 def _serialize_outputs(
-    output_metadata: Dict[int, ParameterMetadata], outputs: Any, service_name: str
+    output_metadata: dict[int, ParameterMetadata], outputs: Any, service_name: str
 ) -> any_pb2.Any:
     if isinstance(outputs, collections.abc.Sequence):
         return any_pb2.Any(
@@ -155,8 +157,8 @@ def _serialize_outputs(
 
 
 def frame_metadata_dict(
-    parameter_list: List[ParameterMetadata],
-) -> Dict[int, ParameterMetadata]:
+    parameter_list: list[ParameterMetadata],
+) -> dict[int, ParameterMetadata]:
     """Create a metadata dictionary."""
     metadata_dict = {}
     for i, parameter in enumerate(parameter_list, start=1):
@@ -170,8 +172,8 @@ class MeasurementServiceServicerV1(v1_measurement_service_pb2_grpc.MeasurementSe
     def __init__(
         self,
         measurement_info: MeasurementInfo,
-        configuration_parameter_list: List[ParameterMetadata],
-        output_parameter_list: List[ParameterMetadata],
+        configuration_parameter_list: list[ParameterMetadata],
+        output_parameter_list: list[ParameterMetadata],
         measure_function: Callable,
         owner: object,
         service_info: ServiceInfo,
@@ -296,8 +298,8 @@ class MeasurementServiceServicerV2(v2_measurement_service_pb2_grpc.MeasurementSe
     def __init__(
         self,
         measurement_info: MeasurementInfo,
-        configuration_parameter_list: List[ParameterMetadata],
-        output_parameter_list: List[ParameterMetadata],
+        configuration_parameter_list: list[ParameterMetadata],
+        output_parameter_list: list[ParameterMetadata],
         measure_function: Callable,
         owner: object,
         service_info: ServiceInfo,
@@ -368,7 +370,7 @@ class MeasurementServiceServicerV2(v2_measurement_service_pb2_grpc.MeasurementSe
 
     def Measure(  # noqa: N802 - function name should be lowercase
         self, request: v2_measurement_service_pb2.MeasureRequest, context: grpc.ServicerContext
-    ) -> Generator[v2_measurement_service_pb2.MeasureResponse, None, None]:
+    ) -> Generator[v2_measurement_service_pb2.MeasureResponse]:
         """RPC API that executes the registered measurement method."""
         self._validate_parameters(request)
         mapping_by_id = decoder.deserialize_parameters(

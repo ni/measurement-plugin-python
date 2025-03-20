@@ -16,7 +16,7 @@ from tests.utilities import fake_driver, fake_multiplexer_driver
 def create_grpc_session_infos(
     instrument_type_id: str,
     session_count: int,
-) -> List[session_management_service_pb2.SessionInformation]:
+) -> list[session_management_service_pb2.SessionInformation]:
     """Create a list of gRPC SessionInformation messages."""
     return [
         session_management_service_pb2.SessionInformation(
@@ -31,7 +31,7 @@ def create_grpc_session_infos(
 def create_grpc_multiplexer_session_infos(
     multiplexer_type_id: str,
     session_count: int,
-) -> List[session_management_service_pb2.MultiplexerSessionInformation]:
+) -> list[session_management_service_pb2.MultiplexerSessionInformation]:
     """Create a list of gRPC MultiplexerSessionInformation messages."""
     return [
         session_management_service_pb2.MultiplexerSessionInformation(

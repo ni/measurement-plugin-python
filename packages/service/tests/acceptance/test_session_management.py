@@ -1,5 +1,7 @@
 import pathlib
-from typing import Generator, Iterable, NamedTuple
+from typing import NamedTuple
+
+from collections.abc import Generator, Iterable
 
 import grpc
 import pytest

@@ -20,7 +20,7 @@ class MeasurementInfo(NamedTuple):
     version: str
     """The current version of the measurement."""
 
-    ui_file_paths: List[Path]
+    ui_file_paths: list[Path]
     """Absolute paths to user interface files for the measurement (e.g. ``.measui`` or ``.vi``
     files)."""
 
@@ -39,10 +39,10 @@ class ServiceInfo(NamedTuple):
     description_url: str
     """The URL of a web page that provides a description of the service."""
 
-    provided_interfaces: List[str] = ["ni.measurementlink.measurement.v1.MeasurementService"]
+    provided_interfaces: list[str] = ["ni.measurementlink.measurement.v1.MeasurementService"]
     """The service interfaces provided by the service. These are gRPC full names for the service."""
 
-    annotations: Dict[str, str] = {}
+    annotations: dict[str, str] = {}
     """Represents a set of annotations on the service.
 
     Well-known annotations:
@@ -65,7 +65,7 @@ class ServiceInfo(NamedTuple):
     display_name: str = ""
     """The service display name for clients to display to users."""
 
-    versions: List[str] = []
+    versions: list[str] = []
     """The list of versions associated with this service in
      the form major.minor.build[.revision] (e.g. 1.0.0)."""
 

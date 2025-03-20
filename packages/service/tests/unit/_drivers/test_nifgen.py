@@ -159,7 +159,7 @@ def test___optional_args_and_simulation_configured___initialize_nifgen_session__
     ],
 )
 def test___session_created___get_nifgen_connection___connection_returned(
-    kwargs: Dict[str, Any],
+    kwargs: dict[str, Any],
     expected_channel_name: str,
     expected_session_index: int,
     session_new: Mock,
@@ -194,9 +194,9 @@ def test___session_created___get_nifgen_connection___connection_returned(
     ],
 )
 def test___session_created___get_nifgen_connections___connections_returned(
-    kwargs: Dict[str, Any],
-    expected_channel_names: List[str],
-    expected_session_indices: List[int],
+    kwargs: dict[str, Any],
+    expected_channel_names: list[str],
+    expected_session_indices: list[int],
     session_new: Mock,
     session_management_client: Mock,
 ) -> None:

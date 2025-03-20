@@ -17,7 +17,7 @@ measurement_service = nims.MeasurementService(
 @measurement_service.register_measurement
 @measurement_service.configuration("Float In", nims.DataType.Float, 0.06)
 @measurement_service.output("Float out", nims.DataType.Float)
-def measure(float_input: float) -> Tuple[float]:
+def measure(float_input: float) -> tuple[float]:
     """Loopback measurement on the float input."""
     float_output = float_input
 

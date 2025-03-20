@@ -3,7 +3,9 @@
 import logging
 import pathlib
 import sys
-from typing import Iterable, Tuple, Union
+from typing import Tuple, Union
+
+from collections.abc import Iterable
 
 import click
 import ni_measurement_plugin_sdk_service as nims
@@ -42,7 +44,7 @@ def measure(
     timing_file_path: str,
     pattern_file_path: str,
     load_files: bool,
-) -> Tuple:
+) -> tuple:
     """Test a SPI device using an NI Digital Pattern instrument."""
     logging.info("Starting test: pin_names=%s", pin_names)
 

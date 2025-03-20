@@ -35,8 +35,8 @@ class SessionConstructor:
         self,
         discovery_client: DiscoveryClient,
         grpc_channel_pool: GrpcChannelPool,
-        topology: Optional[str],
-        simulate: Optional[bool],
+        topology: str | None,
+        simulate: bool | None,
         reset_device: bool,
         initialization_behavior: SessionInitializationBehavior,
         *,
@@ -58,10 +58,10 @@ class SessionConstructor:
         self._initialization_behavior = _INITIALIZATION_BEHAVIOR[initialization_behavior]
 
     def __call__(
-        self, session_info: Union[SessionInformation, MultiplexerSessionInformation]
+        self, session_info: SessionInformation | MultiplexerSessionInformation
     ) -> niswitch.Session:
         """Construct a session object."""
-        kwargs: Dict[str, Any] = {}
+        kwargs: dict[str, Any] = {}
         if self._grpc_channel:
             kwargs["grpc_options"] = niswitch.GrpcSessionOptions(
                 grpc_channel=self._grpc_channel,

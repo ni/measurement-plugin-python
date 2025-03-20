@@ -3,7 +3,9 @@
 import pathlib
 import threading
 import time
-from typing import Generator, List, Tuple
+from typing import List, Tuple
+
+from collections.abc import Generator
 
 import grpc
 
@@ -18,7 +20,7 @@ measurement_service = nims.MeasurementService(
 )
 
 
-Outputs = Tuple[str, int, List[int]]
+Outputs = tuple[str, int, list[int]]
 
 
 @measurement_service.register_measurement
@@ -43,7 +45,7 @@ def measure(
     cancellation_event = threading.Event()
     measurement_service.context.add_cancel_callback(cancellation_event.set)
 
-    data: List[int] = []
+    data: list[int] = []
 
     response_interval_in_seconds = response_interval_in_ms / 1000.0
 

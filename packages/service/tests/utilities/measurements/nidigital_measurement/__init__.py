@@ -2,7 +2,9 @@
 
 import pathlib
 from itertools import groupby
-from typing import Iterable, Sequence, Tuple, Union, List
+from typing import Tuple, Union, List
+
+from collections.abc import Iterable, Sequence
 
 import nidigital
 
@@ -33,7 +35,7 @@ measurement_service = nims.MeasurementService(
 def measure(
     pin_names: Iterable[str],
     multi_session: bool,
-) -> Tuple[
+) -> tuple[
     Iterable[str], Iterable[str], Iterable[str], Iterable[str], Iterable[int], Iterable[int]
 ]:
     """NI-Digital measurement plug-in test service."""
@@ -77,7 +79,7 @@ def measure(
 
 def _burst_spi_pattern(
     session_infos: Sequence[TypedSessionInformation[nidigital.Session]],
-) -> Tuple[List[int], List[int]]:
+) -> tuple[list[int], list[int]]:
     specifications_file_path = "Specifications.specs"
     levels_file_path = "PinLevels.digilevels"
     timing_file_path = "Timing.digitiming"

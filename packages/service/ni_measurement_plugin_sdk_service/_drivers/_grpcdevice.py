@@ -24,7 +24,7 @@ SERVICE_CLASS = "ni.measurementlink.v1.grpcdeviceserver"
 def get_grpc_device_server_location(
     discovery_client: DiscoveryClient,
     provided_interface: str,
-) -> Optional[ServiceLocation]:
+) -> ServiceLocation | None:
     """Get an address targeting NI gRPC Device Server for unencrypted communication."""
     if not USE_GRPC_DEVICE_SERVER:
         _logger.debug("Not using NI gRPC Device Server")
@@ -81,7 +81,7 @@ def get_insecure_grpc_device_server_channel(
     discovery_client: DiscoveryClient,
     grpc_channel_pool: GrpcChannelPool,
     provided_interface: str,
-) -> Optional[grpc.Channel]:
+) -> grpc.Channel | None:
     """Get an unencrypted gRPC channel targeting NI gRPC Device Server."""
     service_location = get_grpc_device_server_location(discovery_client, provided_interface)
     if not service_location:

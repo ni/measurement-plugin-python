@@ -3,7 +3,9 @@
 import functools
 import pathlib
 import sys
-from typing import Generator, Optional, Protocol, Sequence
+from typing import Optional, Protocol
+
+from collections.abc import Generator, Sequence
 
 import pytest
 from click.testing import CliRunner, Result

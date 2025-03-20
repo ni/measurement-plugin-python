@@ -40,7 +40,7 @@ class SessionConstructor:
 
     def __call__(self, session_info: SessionInformation) -> nidaqmx.Task:
         """Construct a session object."""
-        kwargs: Dict[str, Any] = {}
+        kwargs: dict[str, Any] = {}
         if self._grpc_channel:
             kwargs["grpc_options"] = nidaqmx.GrpcSessionOptions(
                 grpc_channel=self._grpc_channel,

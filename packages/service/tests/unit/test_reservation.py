@@ -343,7 +343,7 @@ def test___multiple_connections___get_connection___value_error_raised(
     ],
 )
 def test___invalid_argument_type___get_connection___type_error_raised(
-    kwargs: Dict[str, Any],
+    kwargs: dict[str, Any],
     expected_message: str,
     session_management_client: Mock,
 ) -> None:
@@ -537,7 +537,7 @@ def test___heterogenous_session_infos___get_connections___connections_returned(
     ],
 )
 def test___heterogenous_session_infos___get_connections_with_partially_matching_criteria___value_error_raised(
-    kwargs: Dict[str, Any],
+    kwargs: dict[str, Any],
     expected_message: str,
     session_management_client: Mock,
 ) -> None:
@@ -847,7 +847,7 @@ def test___multiple_sessions_created___get_session_info___session_info_returned_
 
 
 def _create_grpc_session_infos_for_ordering() -> (
-    List[session_management_service_pb2.SessionInformation]
+    list[session_management_service_pb2.SessionInformation]
 ):
     grpc_session_infos = create_nifoo_session_infos(4)
     grpc_session_infos[0].channel_mappings.add(pin_or_relay_name="Pin1", site=0, channel="0")
@@ -863,7 +863,7 @@ def _create_grpc_session_infos_for_ordering() -> (
 
 
 def _create_grpc_session_infos_with_system_pins() -> (
-    List[session_management_service_pb2.SessionInformation]
+    list[session_management_service_pb2.SessionInformation]
 ):
     grpc_session_infos = create_nifoo_session_infos(2)
     grpc_session_infos[0].channel_mappings.add(pin_or_relay_name="SystemPin1", site=-1, channel="4")

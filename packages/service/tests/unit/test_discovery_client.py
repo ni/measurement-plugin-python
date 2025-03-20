@@ -234,7 +234,7 @@ def test___discovery_service_not_running___get_discovery_service_address___start
     temp_discovery_key_file_path: pathlib.Path,
     temp_registration_json_file_path: pathlib.Path,
     temp_directory: pathlib.Path,
-    subprocess_popen_kwargs: Dict[str, Any],
+    subprocess_popen_kwargs: dict[str, Any],
 ):
     mocker.patch(
         "ni_measurement_plugin_sdk_service.discovery._support._get_key_file_path",
@@ -311,7 +311,7 @@ def test___key_file_exist_after_poll___start_discovery_service___discovery_servi
     mocker: MockerFixture,
     temp_directory: pathlib.Path,
     temp_discovery_key_file_path: pathlib.Path,
-    subprocess_popen_kwargs: Dict[str, Any],
+    subprocess_popen_kwargs: dict[str, Any],
 ):
     exe_file_path = temp_directory / _MOCK_REGISTRATION_FILE_CONTENT["discovery"]["path"]
 
@@ -458,8 +458,8 @@ def test___no_registered_measurements___resolve_service_with_information___raise
 
 
 @pytest.fixture(scope="module")
-def subprocess_popen_kwargs() -> Dict[str, Any]:
-    kwargs: Dict[str, Any] = {}
+def subprocess_popen_kwargs() -> dict[str, Any]:
+    kwargs: dict[str, Any] = {}
     if sys.platform == "win32":
         kwargs["creationflags"] = subprocess.CREATE_BREAKAWAY_FROM_JOB | subprocess.DETACHED_PROCESS
     return kwargs
