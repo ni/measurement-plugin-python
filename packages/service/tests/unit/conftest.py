@@ -1,10 +1,10 @@
 """Test fixtures for unit tests."""
 
 from __future__ import annotations
-import pathlib
-from typing import cast
 
+import pathlib
 from collections.abc import Generator
+from typing import cast
 from unittest.mock import Mock
 
 import grpc
@@ -12,7 +12,9 @@ import pytest
 from pytest_mock import MockerFixture
 
 from ni_measurement_plugin_sdk_service._internal import grpc_servicer
-from ni_measurement_plugin_sdk_service._internal.grpc_servicer import MeasurementServiceContext
+from ni_measurement_plugin_sdk_service._internal.grpc_servicer import (
+    MeasurementServiceContext,
+)
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
 from ni_measurement_plugin_sdk_service.measurement.service import MeasurementService

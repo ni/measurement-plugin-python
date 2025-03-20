@@ -1,8 +1,8 @@
 from __future__ import annotations
-import pathlib
-from typing import NamedTuple
 
+import pathlib
 from collections.abc import Generator, Iterable
+from typing import NamedTuple
 
 import grpc
 import pytest
@@ -21,7 +21,6 @@ from ni_measurement_plugin_sdk_service.pin_map import PinMapClient
 from tests.utilities.discovery_service_process import DiscoveryServiceProcess
 from tests.utilities.measurements import pin_aware_measurement
 from tests.utilities.stubs.pinaware.types_pb2 import Configurations, Outputs
-
 
 pytestmark = pytest.mark.usefixtures("filter_wrong_configurations_message_type_warnings")
 

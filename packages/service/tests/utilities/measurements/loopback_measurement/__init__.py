@@ -1,11 +1,11 @@
 """Contains utility functions to test loopback measurement service."""
 
 from __future__ import annotations
+
 import pathlib
+from collections.abc import Iterable
 from enum import Enum
 from typing import Tuple
-
-from collections.abc import Iterable
 
 import ni_measurement_plugin_sdk_service as nims
 from tests.utilities.measurements.sample_measurement._stubs import color_pb2

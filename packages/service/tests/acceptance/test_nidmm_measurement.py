@@ -1,8 +1,8 @@
 from __future__ import annotations
-import pathlib
-from typing import NamedTuple
 
+import pathlib
 from collections.abc import Generator, Iterable
+from typing import NamedTuple
 
 import pytest
 

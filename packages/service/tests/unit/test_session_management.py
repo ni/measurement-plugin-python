@@ -1,5 +1,6 @@
 from __future__ import annotations
-from typing import List, cast
+
+from typing import cast
 from unittest.mock import Mock
 
 import grpc

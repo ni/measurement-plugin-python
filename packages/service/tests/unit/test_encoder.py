@@ -1,8 +1,8 @@
 """Contains tests to validate serializer.py."""
 
 from __future__ import annotations
+
 from enum import Enum, IntEnum
-from typing import List
 
 import pytest
 from google.protobuf import descriptor_pb2, descriptor_pool

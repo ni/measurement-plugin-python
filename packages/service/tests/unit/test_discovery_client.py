@@ -1,13 +1,14 @@
 """Contains tests to validate the discovery_client.py."""
 
 from __future__ import annotations
+
 import copy
 import json
 import pathlib
 import subprocess
 import sys
 from io import StringIO
-from typing import Any, Dict, Union, cast
+from typing import Any, cast
 from unittest.mock import Mock
 
 import grpc

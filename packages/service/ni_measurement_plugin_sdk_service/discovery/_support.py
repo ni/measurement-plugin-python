@@ -1,6 +1,7 @@
 """Support functions for the NI Discovery Service."""
 
 from __future__ import annotations
+
 import json
 import logging
 import os
@@ -9,7 +10,7 @@ import subprocess  # nosec: B404
 import sys
 import time
 import typing
-from typing import Any, Dict, Optional
+from typing import Any
 
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.discovery.v1 import (
     discovery_service_pb2,

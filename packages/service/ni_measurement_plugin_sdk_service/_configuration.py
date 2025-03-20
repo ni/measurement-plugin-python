@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import sys
-from typing import TYPE_CHECKING, Any, Callable, Dict, NamedTuple, TypeVar, Union
+from typing import TYPE_CHECKING, Any, Callable, NamedTuple, TypeVar
 
 from decouple import AutoConfig, Undefined, undefined
 

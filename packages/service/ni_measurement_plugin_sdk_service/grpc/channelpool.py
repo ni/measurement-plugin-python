@@ -7,7 +7,7 @@ import re
 import sys
 from threading import Lock
 from types import TracebackType
-from typing import TYPE_CHECKING, Dict, Literal, Optional, Type
+from typing import TYPE_CHECKING, Literal
 from urllib.parse import urlparse
 
 import grpc

@@ -1,12 +1,11 @@
 from __future__ import annotations
+
 import importlib.util
 import pathlib
-from collections.abc import Sequence
+from collections.abc import Generator, Sequence
 from enum import Enum
 from types import ModuleType
-from typing import Any, Tuple, Type, Union
-
-from collections.abc import Generator
+from typing import Any
 
 import pytest
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types import (

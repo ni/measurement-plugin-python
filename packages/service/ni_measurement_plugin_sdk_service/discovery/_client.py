@@ -1,10 +1,9 @@
 """Client for accessing the NI Discovery Service."""
 
 from __future__ import annotations
+
 import logging
 import threading
-from typing import Optional, Tuple
-
 from collections.abc import Sequence
 
 import grpc
@@ -17,10 +16,15 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.discov
     discovery_service_pb2,
     discovery_service_pb2_grpc,
 )
-from ni_measurement_plugin_sdk_service.discovery._support import _get_discovery_service_address
+from ni_measurement_plugin_sdk_service.discovery._support import (
+    _get_discovery_service_address,
+)
 from ni_measurement_plugin_sdk_service.discovery._types import ServiceLocation
 from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
-from ni_measurement_plugin_sdk_service.measurement.info import MeasurementInfo, ServiceInfo
+from ni_measurement_plugin_sdk_service.measurement.info import (
+    MeasurementInfo,
+    ServiceInfo,
+)
 
 _logger = logging.getLogger(__name__)
 

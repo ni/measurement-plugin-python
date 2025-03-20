@@ -5,7 +5,7 @@ from __future__ import annotations
 import sys
 from enum import Enum, IntEnum
 from types import TracebackType
-from typing import TYPE_CHECKING, Any, ContextManager, Dict, Optional, Type
+from typing import TYPE_CHECKING, Any, ContextManager
 
 if TYPE_CHECKING:
     import grpc

@@ -1,6 +1,7 @@
 from __future__ import annotations
+
 import logging
-from typing import Callable, List, Optional
+from typing import Callable
 
 import grpc
 from deprecation import deprecated

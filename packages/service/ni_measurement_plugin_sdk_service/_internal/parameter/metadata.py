@@ -3,10 +3,9 @@
 from __future__ import annotations
 
 import json
-from enum import Enum
-from typing import TYPE_CHECKING, Any, Dict, NamedTuple, Optional, Type, Union
-
 from collections.abc import Iterable
+from enum import Enum
+from typing import TYPE_CHECKING, Any, NamedTuple, Union
 
 from google.protobuf import type_pb2
 

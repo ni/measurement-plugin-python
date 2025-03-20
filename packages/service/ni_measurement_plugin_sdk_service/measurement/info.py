@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import enum
 from pathlib import Path
-from typing import Dict, List, NamedTuple
+from typing import NamedTuple
 
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.discovery.v1 import (
     discovery_service_pb2,

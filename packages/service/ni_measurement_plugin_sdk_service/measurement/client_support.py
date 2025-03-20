@@ -1,10 +1,10 @@
 """Support functions for the Measurement Plug-In Client."""
 
 from __future__ import annotations
-from pathlib import Path
-from typing import Any, Dict
 
 from collections.abc import Sequence
+from pathlib import Path
+from typing import Any
 
 from google.protobuf.descriptor_pb2 import FieldDescriptorProto
 
@@ -36,7 +36,7 @@ def deserialize_parameters(
     parameter_bytes: bytes,
     message_name: str,
     *,
-    convert_paths: bool = True
+    convert_paths: bool = True,
 ) -> Sequence[Any]:
     """Deserialize parameter bytes into separate parameter values.
 

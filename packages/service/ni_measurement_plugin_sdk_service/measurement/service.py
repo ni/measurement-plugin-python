@@ -6,6 +6,7 @@ import json
 import sys
 import threading
 import warnings
+from collections.abc import Iterable
 from enum import Enum, EnumMeta
 from os import path
 from pathlib import Path
@@ -14,16 +15,10 @@ from typing import (
     TYPE_CHECKING,
     Any,
     Callable,
-    Dict,
-    List,
     Literal,
-    Optional,
-    Type,
     TypeVar,
     Union,
 )
-
-from collections.abc import Iterable
 
 import grpc
 from deprecation import deprecated

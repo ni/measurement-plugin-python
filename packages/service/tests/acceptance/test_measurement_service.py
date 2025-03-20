@@ -1,15 +1,14 @@
 """Tests to validate measurement service. Uses the Sample Measurement Example."""
 
 from __future__ import annotations
+
 import random
 import sys
 import urllib.parse
 import urllib.request
+from collections.abc import Generator
 from enum import Enum
 from os import path
-from typing import List, Union
-
-from collections.abc import Generator
 
 import pytest
 from google.protobuf import any_pb2
@@ -262,8 +261,8 @@ def _get_serialized_measurement_signature(
 
 def _validate_get_metadata_response(
     get_metadata_response: (
-        v1_measurement_service_pb2.GetMetadataResponse |
-        v2_measurement_service_pb2.GetMetadataResponse
+        v1_measurement_service_pb2.GetMetadataResponse
+        | v2_measurement_service_pb2.GetMetadataResponse
     ),
 ):
     assert get_metadata_response.measurement_details.display_name == "Loopback Measurement (Py)"

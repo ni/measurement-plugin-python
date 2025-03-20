@@ -1,10 +1,9 @@
 """Tests to validated user facing decorators in service.py."""
 
 from __future__ import annotations
+
 import pathlib
-import typing
 from enum import Enum
-from typing import List, Type
 
 import pytest
 from pytest_mock import MockerFixture

@@ -1,17 +1,19 @@
 """Pytest configuration file."""
 
 from __future__ import annotations
+
 import pathlib
 import sys
-from typing import List
-
 from collections.abc import Generator
 
 import grpc
 import pytest
 
 from ni_measurement_plugin_sdk_service import _featuretoggles
-from ni_measurement_plugin_sdk_service._featuretoggles import CodeReadiness, FeatureToggle
+from ni_measurement_plugin_sdk_service._featuretoggles import (
+    CodeReadiness,
+    FeatureToggle,
+)
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v1 import (
     measurement_service_pb2_grpc as v1_measurement_service_pb2_grpc,
 )

@@ -1,10 +1,9 @@
 """Contains tests to validate serializer.py."""
 
 from __future__ import annotations
-from enum import Enum, IntEnum
-from typing import Dict, List
 
 from collections.abc import Sequence
+from enum import Enum, IntEnum
 
 import pytest
 from google.protobuf import any_pb2, descriptor_pb2, descriptor_pool, type_pb2
@@ -132,7 +131,7 @@ def test___empty_buffer___deserialize_parameters___returns_zero_or_empty():
     parameter = _get_test_parameter_by_id(nonzero_defaults)
     service_name = _test_create_file_descriptor(list(parameter.values()), "empty_buffer")
     parameter_value_by_id = decoder.deserialize_parameters(
-        parameter, b'', service_name=service_name
+        parameter, b"", service_name=service_name
     )
 
     for key, value in parameter_value_by_id.items():
