@@ -43,7 +43,7 @@ def test___multiple_pins___reserve_session___session_reserved(
 
 @pytest.mark.parametrize("no_pins", ["", [], None])
 def test___no_pins___reserve_session___value_error_raised(
-    no_pins: Union[str, list[str], None],
+    no_pins: str | list[str] | None,
 ) -> None:
     measurement_context = MeasurementContext()
 
@@ -98,7 +98,7 @@ def test___multiple_pins___reserve_sessions___session_reserved(
 
 @pytest.mark.parametrize("no_pins", ["", [], None])
 def test___no_pins___reserve_sessions___value_error_raised(
-    no_pins: Union[str, list[str], None],
+    no_pins: str | list[str] | None,
 ) -> None:
     measurement_context = MeasurementContext()
 

@@ -25,7 +25,7 @@ def _has_dotenv_file(dir: Path) -> bool:
     return (dir / ".env").exists() or any((p / ".env").exists() for p in dir.parents)
 
 
-def _get_script_or_exe_path() -> Optional[Path]:
+def _get_script_or_exe_path() -> Path | None:
     """Get the path of the top-level script or PyInstaller EXE, if possible."""
     if getattr(sys, "frozen", False):
         return Path(sys.executable)
@@ -39,7 +39,7 @@ def _get_script_or_exe_path() -> Optional[Path]:
     return None
 
 
-def _get_caller_path() -> Optional[Path]:
+def _get_caller_path() -> Path | None:
     """Get the path of the module calling into ni_measurement_plugin_sdk_service, if possible."""
     nims_path = _get_nims_path()
     for frame, _ in traceback.walk_stack(inspect.currentframe()):

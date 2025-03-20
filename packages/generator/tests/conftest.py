@@ -20,7 +20,7 @@ from tests.utilities.discovery_service_process import DiscoveryServiceProcess
 class CliRunnerFunction(Protocol):
     """Protocol for a callable that executes a CLI command using Click's CliRunner."""
 
-    def __call__(self, args: Sequence[str], input: Optional[str] = None) -> Result:
+    def __call__(self, args: Sequence[str], input: str | None = None) -> Result:
         """Execute the CLI command with the provided arguments."""
 
 
@@ -31,7 +31,7 @@ def test_assets_directory() -> pathlib.Path:
 
 
 @pytest.fixture(scope="session")
-def discovery_service_process() -> Generator[DiscoveryServiceProcess, None, None]:
+def discovery_service_process() -> Generator[DiscoveryServiceProcess]:
     """Test fixture that creates discovery service process."""
     if sys.platform != "win32":
         pytest.skip(f"Platform {sys.platform} is not supported for discovery service tests.")
@@ -54,14 +54,14 @@ def pin_map_directory(test_assets_directory: pathlib.Path) -> pathlib.Path:
 
 
 @pytest.fixture(scope="session")
-def create_client() -> Generator[CliRunnerFunction, None, None]:
+def create_client() -> Generator[CliRunnerFunction]:
     """Test fixture for calling client generator cli."""
     runner = CliRunner(mix_stderr=False)
     yield functools.partial(runner.invoke, client_generator.create_client, standalone_mode=False)
 
 
 @pytest.fixture(scope="session")
-def create_measurement() -> Generator[CliRunnerFunction, None, None]:
+def create_measurement() -> Generator[CliRunnerFunction]:
     """Test fixture for calling plugin generator cli."""
     runner = CliRunner(mix_stderr=False)
     yield functools.partial(

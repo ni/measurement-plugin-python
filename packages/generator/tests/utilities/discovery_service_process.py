@@ -34,9 +34,9 @@ class DiscoveryServiceProcess:
 
     def __exit__(
         self,
-        exc_type: Optional[type[BaseException]],
-        exc_val: Optional[BaseException],
-        exc_tb: Optional[TracebackType],
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
+        exc_tb: TracebackType | None,
     ) -> None:
         """Closes the DiscoveryServiceProcess instance."""
         self._close_discovery_service()

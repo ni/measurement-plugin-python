@@ -116,7 +116,7 @@ def _create_client(
     )
 
 
-def _create_all_clients(directory_out: Optional[str]) -> None:
+def _create_all_clients(directory_out: str | None) -> None:
     channel_pool = GrpcChannelPool()
     discovery_client = DiscoveryClient(grpc_channel_pool=channel_pool)
 
@@ -215,9 +215,9 @@ def _create_clients_interactively() -> None:
 
 def _create_clients(
     measurement_service_classes: list[str],
-    module_name: Optional[str],
-    class_name: Optional[str],
-    directory_out: Optional[str],
+    module_name: str | None,
+    class_name: str | None,
+    directory_out: str | None,
 ) -> None:
     generated_modules: list[str] = []
     channel_pool = GrpcChannelPool()
@@ -298,9 +298,9 @@ def create_client(
     measurement_service_class: list[str],
     all: bool,
     interactive: bool,
-    module_name: Optional[str],
-    class_name: Optional[str],
-    directory_out: Optional[str],
+    module_name: str | None,
+    class_name: str | None,
+    directory_out: str | None,
     verbose: int,
 ) -> None:
     """Generates a Python Measurement Plug-In Client module for the measurement service.

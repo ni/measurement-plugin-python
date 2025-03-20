@@ -222,7 +222,7 @@ def test___measurement_service_v2___measure_with_large_array___returns_output(
 
 
 @pytest.fixture(scope="module")
-def measurement_service(discovery_service_process) -> Generator[MeasurementService, None, None]:
+def measurement_service(discovery_service_process) -> Generator[MeasurementService]:
     """Test fixture that creates and hosts a measurement service."""
     with loopback_measurement.measurement_service.host_service() as service:
         yield service
@@ -261,10 +261,10 @@ def _get_serialized_measurement_signature(
 
 
 def _validate_get_metadata_response(
-    get_metadata_response: Union[
-        v1_measurement_service_pb2.GetMetadataResponse,
-        v2_measurement_service_pb2.GetMetadataResponse,
-    ],
+    get_metadata_response: (
+        v1_measurement_service_pb2.GetMetadataResponse |
+        v2_measurement_service_pb2.GetMetadataResponse
+    ),
 ):
     assert get_metadata_response.measurement_details.display_name == "Loopback Measurement (Py)"
     assert get_metadata_response.measurement_details.version == "1.2.3.4"

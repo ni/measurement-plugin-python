@@ -38,7 +38,7 @@ def test_assets_directory() -> pathlib.Path:
 
 
 @pytest.fixture
-def grpc_channel(measurement_service: MeasurementService) -> Generator[grpc.Channel, None, None]:
+def grpc_channel(measurement_service: MeasurementService) -> Generator[grpc.Channel]:
     """Test fixture that creates a gRPC channel."""
     target = measurement_service.service_location.insecure_address
     options = [
@@ -62,7 +62,7 @@ def stub_v2(grpc_channel: grpc.Channel) -> v2_measurement_service_pb2_grpc.Measu
 
 
 @pytest.fixture(scope="session")
-def discovery_service_process() -> Generator[DiscoveryServiceProcess, None, None]:
+def discovery_service_process() -> Generator[DiscoveryServiceProcess]:
     """Test fixture that creates discovery service process."""
     if sys.platform != "win32":
         pytest.skip(f"Platform {sys.platform} is not supported for discovery service tests.")
@@ -79,7 +79,7 @@ def discovery_service_process() -> Generator[DiscoveryServiceProcess, None, None
 
 
 @pytest.fixture(scope="session")
-def grpc_channel_pool() -> Generator[GrpcChannelPool, None, None]:
+def grpc_channel_pool() -> Generator[GrpcChannelPool]:
     """Test fixture that creates a gRPC channel pool."""
     with GrpcChannelPool() as grpc_channel_pool:
         yield grpc_channel_pool

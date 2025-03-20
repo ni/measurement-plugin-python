@@ -27,9 +27,9 @@ class PinMapClient:
     def __init__(
         self,
         *,
-        discovery_client: Optional[DiscoveryClient] = None,
-        grpc_channel: Optional[grpc.Channel] = None,
-        grpc_channel_pool: Optional[GrpcChannelPool] = None
+        discovery_client: DiscoveryClient | None = None,
+        grpc_channel: grpc.Channel | None = None,
+        grpc_channel_pool: GrpcChannelPool | None = None
     ) -> None:
         """Initialize the pin map client.
 
@@ -43,7 +43,7 @@ class PinMapClient:
         self._initialization_lock = threading.Lock()
         self._discovery_client = discovery_client
         self._grpc_channel_pool = grpc_channel_pool
-        self._stub: Optional[pin_map_service_pb2_grpc.PinMapServiceStub] = None
+        self._stub: pin_map_service_pb2_grpc.PinMapServiceStub | None = None
 
         if grpc_channel is not None:
             self._stub = pin_map_service_pb2_grpc.PinMapServiceStub(grpc_channel)
@@ -68,7 +68,7 @@ class PinMapClient:
                     self._stub = pin_map_service_pb2_grpc.PinMapServiceStub(channel)
         return self._stub
 
-    def update_pin_map(self, pin_map_path: Union[str, pathlib.Path]) -> str:
+    def update_pin_map(self, pin_map_path: str | pathlib.Path) -> str:
         """Update registered pin map contents.
 
         Create and register a pin map if a pin map resource for the specified pin map id is not

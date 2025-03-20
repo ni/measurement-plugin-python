@@ -45,8 +45,8 @@ def _check_version(ctx: click.Context, param: click.Parameter, version: str) -> 
 
 
 def _check_ui_file(
-    ctx: click.Context, param: click.Parameter, ui_file: Optional[str]
-) -> Optional[str]:
+    ctx: click.Context, param: click.Parameter, ui_file: str | None
+) -> str | None:
     if ui_file is not None:
         _ = _get_ui_type(ui_file)
     return ui_file
@@ -64,7 +64,7 @@ def _get_ui_type(ui_file: str) -> str:
         )
 
 
-def _resolve_ui_file(ui_file: Optional[str], display_name_for_filenames: str) -> str:
+def _resolve_ui_file(ui_file: str | None, display_name_for_filenames: str) -> str:
     if ui_file is None:
         return f"{display_name_for_filenames}.measui"
     else:
@@ -139,10 +139,10 @@ def _resolve_service_class(service_class: str, display_name: str) -> str:
 def create_measurement(
     display_name: str,
     measurement_version: str,
-    ui_file: Optional[str],
+    ui_file: str | None,
     service_class: str,
     description_url: str,
-    directory_out: Optional[str],
+    directory_out: str | None,
     description: str,
     collection: str,
     tags: tuple[str, ...],

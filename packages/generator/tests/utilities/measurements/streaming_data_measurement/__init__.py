@@ -40,7 +40,7 @@ def measure(
     cumulative_data: bool,
     response_interval_in_ms: int,
     error_on_index: int,
-) -> Generator[Outputs, None, None]:
+) -> Generator[Outputs]:
     """Returns the number of responses requested at the requested interval."""
     cancellation_event = threading.Event()
     measurement_service.context.add_cancel_callback(cancellation_event.set)

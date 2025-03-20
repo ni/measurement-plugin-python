@@ -44,7 +44,7 @@ def grpc_channel_pool(mocker: MockerFixture) -> Mock:
 @pytest.fixture
 def measurement_service_context(
     mocker: MockerFixture, measurement_service: Mock
-) -> Generator[Mock, None, None]:
+) -> Generator[Mock]:
     """Test fixture that creates and registers a mock MeasurementServiceContext."""
     mock = mocker.create_autospec(MeasurementServiceContext)
     mock.owner = measurement_service

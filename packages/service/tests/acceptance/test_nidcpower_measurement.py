@@ -80,7 +80,7 @@ def _measure(
 
 
 @pytest.fixture(scope="module")
-def measurement_service() -> Generator[MeasurementService, None, None]:
+def measurement_service() -> Generator[MeasurementService]:
     """Test fixture that creates and hosts a measurement service."""
     with nidcpower_measurement.measurement_service.host_service() as service:
         yield service

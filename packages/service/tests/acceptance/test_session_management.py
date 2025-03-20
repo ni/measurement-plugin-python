@@ -291,7 +291,7 @@ def _measure(
 @pytest.fixture(scope="module")
 def measurement_service(
     discovery_service_process: DiscoveryServiceProcess,
-) -> Generator[MeasurementService, None, None]:
+) -> Generator[MeasurementService]:
     """Test fixture that creates and hosts a measurement service."""
     with pin_aware_measurement.measurement_service.host_service() as service:
         yield service
