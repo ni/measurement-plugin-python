@@ -1,3 +1,4 @@
+from __future__ import annotations
 import importlib.util
 import pathlib
 from collections.abc import Sequence

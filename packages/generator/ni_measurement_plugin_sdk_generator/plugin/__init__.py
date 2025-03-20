@@ -1,5 +1,6 @@
 """Utilizes command line args to create a measurement using template files."""
 
+from __future__ import annotations
 import logging
 import pathlib
 import re

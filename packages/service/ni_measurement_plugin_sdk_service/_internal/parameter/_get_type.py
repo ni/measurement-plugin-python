@@ -1,3 +1,4 @@
+from __future__ import annotations
 from typing import Any, Optional
 
 from google.protobuf.descriptor_pb2 import FieldDescriptorProto

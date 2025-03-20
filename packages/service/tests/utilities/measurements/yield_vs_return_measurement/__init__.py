@@ -1,5 +1,6 @@
 """Contains utility functions to test that yield and return are supported in measurements."""
 
+from __future__ import annotations
 import pathlib
 import random
 import threading

@@ -1,5 +1,6 @@
 """Shared fixtures for ni-measurement-plugin-sdk-generator tests."""
 
+from __future__ import annotations
 import functools
 import pathlib
 import sys

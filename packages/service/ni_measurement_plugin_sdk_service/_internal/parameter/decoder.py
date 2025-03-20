@@ -1,3 +1,4 @@
+from __future__ import annotations
 """Parameter Serializer."""
 
 from typing import Any, Dict

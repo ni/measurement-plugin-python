@@ -1,5 +1,6 @@
 """Driver-related unit test utilities."""
 
+from __future__ import annotations
 from typing import List, Type, TypeVar
 from unittest.mock import Mock, create_autospec
 

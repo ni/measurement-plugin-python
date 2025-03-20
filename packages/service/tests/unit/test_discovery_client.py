@@ -1,5 +1,6 @@
 """Contains tests to validate the discovery_client.py."""
 
+from __future__ import annotations
 import copy
 import json
 import pathlib

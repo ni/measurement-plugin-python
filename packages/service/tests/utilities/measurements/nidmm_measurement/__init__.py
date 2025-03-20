@@ -1,5 +1,6 @@
 """NI-DMM measurement plug-in test service."""
 
+from __future__ import annotations
 import math
 import pathlib
 from typing import List, Tuple

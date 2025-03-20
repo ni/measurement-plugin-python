@@ -1,5 +1,6 @@
 """Utility to create and construct connection subset."""
 
+from __future__ import annotations
 from typing import NamedTuple, TypeVar, Union
 
 from ni_measurement_plugin_sdk_service.session_management import (
