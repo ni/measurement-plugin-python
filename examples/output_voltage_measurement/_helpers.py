@@ -7,7 +7,7 @@ from typing import Any, Callable, TypeVar
 import click
 
 
-class TestStandSupport(object):
+class TestStandSupport:
     """Class that communicates with TestStand."""
 
     _PIN_MAP_ID_VAR = "NI.MeasurementPlugIns.PinMapId"

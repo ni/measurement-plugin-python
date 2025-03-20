@@ -2,7 +2,9 @@
 
 import pathlib
 from contextlib import ExitStack
-from typing import Iterable, List, Sequence, Tuple
+from typing import List, Tuple
+
+from collections.abc import Iterable, Sequence
 
 import niscope
 
@@ -28,7 +30,7 @@ measurement_service = nims.MeasurementService(
 @measurement_service.output("waveform", nims.DataType.DoubleArray1D)
 def measure(
     pin_names: Iterable[str], multi_session: bool
-) -> Tuple[Iterable[str], Iterable[str], Iterable[str], Iterable[str], Iterable[float]]:
+) -> tuple[Iterable[str], Iterable[str], Iterable[str], Iterable[str], Iterable[float]]:
     """NI-SCOPE measurement plug-in test service."""
     if multi_session:
         with measurement_service.context.reserve_sessions(pin_names) as reservation:
@@ -62,7 +64,7 @@ def measure(
 
 def _acquire_waveforms(
     session_infos: Sequence[TypedSessionInformation[niscope.Session]],
-) -> List[List[float]]:
+) -> list[list[float]]:
     for session_info in session_infos:
         channel_order = session_info.channel_list
         trigger_channel = session_info.channel_list.split(",")[0]

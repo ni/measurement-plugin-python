@@ -1,7 +1,9 @@
 """Contains tests to validate serializer.py."""
 
 from enum import Enum, IntEnum
-from typing import Dict, List, Sequence
+from typing import Dict, List
+
+from collections.abc import Sequence
 
 import pytest
 from google.protobuf import any_pb2, descriptor_pb2, descriptor_pool, type_pb2
@@ -129,7 +131,7 @@ def test___empty_buffer___deserialize_parameters___returns_zero_or_empty():
     parameter = _get_test_parameter_by_id(nonzero_defaults)
     service_name = _test_create_file_descriptor(list(parameter.values()), "empty_buffer")
     parameter_value_by_id = decoder.deserialize_parameters(
-        parameter, bytes(), service_name=service_name
+        parameter, b'', service_name=service_name
     )
 
     for key, value in parameter_value_by_id.items():
@@ -379,7 +381,7 @@ def _get_test_grpc_message(test_values):
     return parameter
 
 
-def _get_big_message_metadata_by_id() -> Dict[int, ParameterMetadata]:
+def _get_big_message_metadata_by_id() -> dict[int, ParameterMetadata]:
     return {
         i
         + 1: ParameterMetadata.initialize(
@@ -398,7 +400,7 @@ def _get_big_message(values: Sequence[float]) -> BigMessage:
     return BigMessage(**{f"field{i + 1}": value for (i, value) in enumerate(values)})
 
 
-def _test_create_file_descriptor(metadata: List[ParameterMetadata], file_name: str) -> str:
+def _test_create_file_descriptor(metadata: list[ParameterMetadata], file_name: str) -> str:
     pool = descriptor_pool.Default()
     try:
         pool.FindMessageTypeByName(f"{file_name}.test")

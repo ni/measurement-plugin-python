@@ -343,7 +343,7 @@ def _fake_measurement_function():
     pass
 
 
-no_annotations: typing.Dict[str, str] = {}
+no_annotations: dict[str, str] = {}
 
 
 @pytest.mark.parametrize(
@@ -430,8 +430,8 @@ def test___service_config___create_measurement_service___service_info_matches_se
     service_config: str,
     display_name: str,
     version: str,
-    provided_interfaces: List[str],
-    provided_annotations: typing.Dict[str, str],
+    provided_interfaces: list[str],
+    provided_annotations: dict[str, str],
 ):
     measurement_service = MeasurementService(
         service_config_path=test_assets_directory / service_config,
@@ -507,7 +507,7 @@ def test___measurement_service___add_configuration_with_invalid_enum_type___rais
     display_name: str,
     type: DataType,
     default_value: object,
-    enum_type: Type[Enum],
+    enum_type: type[Enum],
 ):
     with pytest.raises(ValueError):
         measurement_service.configuration(display_name, type, default_value)(

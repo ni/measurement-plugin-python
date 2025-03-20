@@ -2,7 +2,9 @@
 
 import pathlib
 from contextlib import ExitStack
-from typing import Iterable, Sequence, Tuple
+from typing import Tuple
+
+from collections.abc import Iterable, Sequence
 
 import nifgen
 
@@ -27,7 +29,7 @@ measurement_service = nims.MeasurementService(
 @measurement_service.output("connected_channels", nims.DataType.StringArray1D)
 def measure(
     pin_names: Iterable[str], multi_session: bool
-) -> Tuple[Iterable[str], Iterable[str], Iterable[str], Iterable[str]]:
+) -> tuple[Iterable[str], Iterable[str], Iterable[str], Iterable[str]]:
     """NI-FGEN measurement plug-in test service."""
     if multi_session:
         with measurement_service.context.reserve_sessions(pin_names) as reservation:

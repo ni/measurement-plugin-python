@@ -7,7 +7,9 @@ import threading
 import time
 from contextlib import ExitStack
 from enum import Enum
-from typing import Iterable, Sequence, Tuple
+from typing import Tuple
+
+from collections.abc import Iterable, Sequence
 
 import click
 import grpc
@@ -64,7 +66,7 @@ def measure(
     frequency: float,
     amplitude: float,
     duration: float,
-) -> Tuple[()]:
+) -> tuple[()]:
     """Generate a standard function waveform using an NI waveform generator."""
     logging.info(
         "Starting generation: pin_names=%s waveform_type=%s frequency=%g amplitude=%g",

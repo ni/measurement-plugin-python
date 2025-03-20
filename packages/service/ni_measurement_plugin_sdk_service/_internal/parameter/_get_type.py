@@ -11,11 +11,11 @@ _TYPE_DEFAULT_MAPPING = {
     Field.TYPE_UINT32: int(),
     Field.TYPE_UINT64: int(),
     Field.TYPE_BOOL: bool(),
-    Field.TYPE_STRING: str(),
+    Field.TYPE_STRING: '',
     Field.TYPE_ENUM: int(),
 }
 
-_PYTHON_DEFAULT_TYPES = set(type(value) for value in _TYPE_DEFAULT_MAPPING.values())
+_PYTHON_DEFAULT_TYPES = {type(value) for value in _TYPE_DEFAULT_MAPPING.values()}
 
 TYPE_FIELD_MAPPING = {
     Field.TYPE_FLOAT: FieldDescriptorProto.TYPE_FLOAT,

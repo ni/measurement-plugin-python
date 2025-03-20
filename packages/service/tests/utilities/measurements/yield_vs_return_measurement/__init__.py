@@ -4,7 +4,9 @@ import pathlib
 import random
 import threading
 import time
-from typing import Generator, List, Tuple
+from typing import List, Tuple
+
+from collections.abc import Generator
 
 import grpc
 
@@ -23,7 +25,7 @@ measurement_service = nims.MeasurementService(
 )
 
 
-Outputs = Tuple[float, List[float], str]
+Outputs = tuple[float, list[float], str]
 
 
 @measurement_service.register_measurement
@@ -42,7 +44,7 @@ def measure(time_in_seconds: float) -> Generator[Outputs, None, Outputs]:
         )
 
     elapsed_time_in_seconds = 0.0
-    random_numbers: List[float] = []
+    random_numbers: list[float] = []
     status = ""
 
     start_time = time.monotonic()

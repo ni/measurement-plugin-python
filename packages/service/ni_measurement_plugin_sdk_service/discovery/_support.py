@@ -75,7 +75,7 @@ def _start_service(
     exe_file_path: pathlib.PurePath, key_file_path: pathlib.Path
 ) -> subprocess.Popen:
     """Starts the service at the specified path and wait for the service to get up and running."""
-    kwargs: Dict[str, Any] = {}
+    kwargs: dict[str, Any] = {}
     if sys.platform == "win32":
         # Terminating the measurement service should not terminate the discovery service.
         kwargs["creationflags"] = subprocess.CREATE_BREAKAWAY_FROM_JOB | subprocess.DETACHED_PROCESS
@@ -162,7 +162,7 @@ def _open_key_file(path: str) -> typing.TextIO:
         # file object closes the underlying Win32 file handle.
         return os.fdopen(crt_file_descriptor, "r", encoding="utf-8-sig")
     else:
-        return open(path, "r")
+        return open(path)
 
 
 def _get_nipath(name: str) -> pathlib.Path:

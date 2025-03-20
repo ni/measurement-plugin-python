@@ -5,7 +5,9 @@ import pathlib
 import sys
 import threading
 import time
-from typing import List, Sequence, Tuple
+from typing import List, Tuple
+
+from collections.abc import Sequence
 
 import click
 import grpc
@@ -76,7 +78,7 @@ def measure(
     auto_trigger: bool,
     trigger_coupling: str,
     timeout: float,
-) -> Tuple[List[float], ...]:
+) -> tuple[list[float], ...]:
     """Acquire a waveform using an NI oscilloscope."""
     logging.info(
         "Starting acquisition: measurement_pins=%s vertical_range=%g trigger_pin=%s trigger_level=%g",

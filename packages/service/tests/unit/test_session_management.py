@@ -936,7 +936,7 @@ def test___varying_registered_multiplexers___get_all_registered_multiplexer_sess
     ]
 
 
-def _create_session_infos(session_count: int) -> List[SessionInformation]:
+def _create_session_infos(session_count: int) -> list[SessionInformation]:
     return [
         SessionInformation(f"MySession{i}", "", "", "", False, []) for i in range(session_count)
     ]
@@ -944,7 +944,7 @@ def _create_session_infos(session_count: int) -> List[SessionInformation]:
 
 def _create_multiplexer_session_infos(
     multiplexer_session_count: int,
-) -> List[MultiplexerSessionInformation]:
+) -> list[MultiplexerSessionInformation]:
     return [
         MultiplexerSessionInformation(f"MyMultiplexer{i}", "", "", False)
         for i in range(multiplexer_session_count)
@@ -953,7 +953,7 @@ def _create_multiplexer_session_infos(
 
 def _create_grpc_session_infos(
     session_count: int,
-) -> List[session_management_service_pb2.SessionInformation]:
+) -> list[session_management_service_pb2.SessionInformation]:
     return [
         session_management_service_pb2.SessionInformation(
             session=session_pb2.Session(name=f"MySession{i}")
@@ -964,7 +964,7 @@ def _create_grpc_session_infos(
 
 def _create_grpc_multiplexer_session_infos(
     session_count: int,
-) -> List[session_management_service_pb2.MultiplexerSessionInformation]:
+) -> list[session_management_service_pb2.MultiplexerSessionInformation]:
     return [
         session_management_service_pb2.MultiplexerSessionInformation(
             session=session_pb2.Session(name=f"MyMultiplexer{i}"),

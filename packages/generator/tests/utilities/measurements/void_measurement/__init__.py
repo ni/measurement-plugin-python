@@ -21,13 +21,13 @@ measurement_service = nims.MeasurementService(
 @measurement_service.configuration("Integer In", nims.DataType.Int32, 10)
 def measure(
     integer_input: int,
-) -> Tuple[()]:
+) -> tuple[()]:
     """Perform a measurement with no output."""
     cancellation_event = threading.Event()
     measurement_service.context.add_cancel_callback(cancellation_event.set)
 
     response_interval_in_seconds = 1
-    data: List[int] = []
+    data: list[int] = []
 
     for index in range(0, integer_input):
         update_time = time.monotonic()

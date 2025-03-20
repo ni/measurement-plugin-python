@@ -1,7 +1,9 @@
 """NI-SWITCH multiplexer measurement plug-in test service."""
 
 import pathlib
-from typing import Iterable, Sequence, Tuple
+from typing import Tuple
+
+from collections.abc import Iterable, Sequence
 
 import niswitch
 
@@ -27,7 +29,7 @@ measurement_service = nims.MeasurementService(
 def measure(
     pin_names: Iterable[str],
     multi_session: bool,
-) -> Tuple[Iterable[str], Iterable[str], Iterable[str], Iterable[str]]:
+) -> tuple[Iterable[str], Iterable[str], Iterable[str], Iterable[str]]:
     """NI-SWITCH multiplexer measurement plug-in test service."""
     if multi_session:
         with measurement_service.context.reserve_session(pin_names) as reservation:

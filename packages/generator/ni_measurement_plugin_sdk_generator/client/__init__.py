@@ -63,11 +63,11 @@ def _create_client(
     module_name: str,
     class_name: str,
     directory_out: pathlib.Path,
-    generated_modules: List[str],
+    generated_modules: list[str],
 ) -> None:
-    built_in_import_modules: List[str] = []
-    custom_import_modules: List[str] = []
-    enum_values_by_type: Dict[Type[Enum], Dict[str, int]] = {}
+    built_in_import_modules: list[str] = []
+    custom_import_modules: list[str] = []
+    enum_values_by_type: dict[type[Enum], dict[str, int]] = {}
     type_url_prefix = "type.googleapis.com/"
 
     measurement_service_stub, measurement_version = get_measurement_service_stub_and_version(
@@ -119,8 +119,8 @@ def _create_all_clients(directory_out: Optional[str]) -> None:
     channel_pool = GrpcChannelPool()
     discovery_client = DiscoveryClient(grpc_channel_pool=channel_pool)
 
-    generated_modules: List[str] = []
-    errors: List[str] = []
+    generated_modules: list[str] = []
+    errors: list[str] = []
     directory_out_path = resolve_output_directory(directory_out)
     measurement_service_classes, _ = get_all_registered_measurement_info(discovery_client)
     validate_measurement_service_classes(measurement_service_classes)
@@ -157,7 +157,7 @@ def _create_all_clients(directory_out: Optional[str]) -> None:
 
 def _create_clients_interactively() -> None:
     print("Creating the Python Measurement Plug-In Client in interactive mode...")
-    generated_modules: List[str] = []
+    generated_modules: list[str] = []
     channel_pool = GrpcChannelPool()
     discovery_client = DiscoveryClient(grpc_channel_pool=channel_pool)
     directory_out_path = resolve_output_directory()
@@ -213,12 +213,12 @@ def _create_clients_interactively() -> None:
 
 
 def _create_clients(
-    measurement_service_classes: List[str],
+    measurement_service_classes: list[str],
     module_name: Optional[str],
     class_name: Optional[str],
     directory_out: Optional[str],
 ) -> None:
-    generated_modules: List[str] = []
+    generated_modules: list[str] = []
     channel_pool = GrpcChannelPool()
     discovery_client = DiscoveryClient(grpc_channel_pool=channel_pool)
     directory_out_path = resolve_output_directory(directory_out)
@@ -294,7 +294,7 @@ def _create_clients(
     help="Enable verbose logging. Repeat to increase verbosity.",
 )
 def create_client(
-    measurement_service_class: List[str],
+    measurement_service_class: list[str],
     all: bool,
     interactive: bool,
     module_name: Optional[str],

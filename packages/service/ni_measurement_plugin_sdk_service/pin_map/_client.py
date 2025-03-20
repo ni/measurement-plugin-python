@@ -20,7 +20,7 @@ GRPC_SERVICE_INTERFACE_NAME = "ni.measurementlink.pinmap.v1.PinMapService"
 GRPC_SERVICE_CLASS = "ni.measurementlink.pinmap.v1.PinMapService"
 
 
-class PinMapClient(object):
+class PinMapClient:
     """Client for accessing the NI Pin Map Service."""
 
     def __init__(

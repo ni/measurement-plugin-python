@@ -82,8 +82,8 @@ class GrpcService:
         self,
         measurement_info: MeasurementInfo,
         service_info: ServiceInfo,
-        configuration_parameter_list: List[ParameterMetadata],
-        output_parameter_list: List[ParameterMetadata],
+        configuration_parameter_list: list[ParameterMetadata],
+        output_parameter_list: list[ParameterMetadata],
         measure_function: Callable,
         owner: object = None,
     ) -> str:
@@ -92,7 +92,7 @@ class GrpcService:
         Returns:
             The insecure port.
         """
-        interceptors: List[grpc.ServerInterceptor] = []
+        interceptors: list[grpc.ServerInterceptor] = []
         if ServerLogger.is_enabled():
             interceptors.append(ServerLogger())
         self._server = grpc.server(

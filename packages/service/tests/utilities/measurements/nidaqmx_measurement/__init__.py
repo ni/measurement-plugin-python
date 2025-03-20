@@ -1,7 +1,9 @@
 """NI-DAQmx measurement plug-in test service."""
 
 import pathlib
-from typing import Iterable, List, Sequence, Tuple
+from typing import List, Tuple
+
+from collections.abc import Iterable, Sequence
 
 import nidaqmx
 
@@ -28,7 +30,7 @@ measurement_service = nims.MeasurementService(
 def measure(
     pin_names: Iterable[str],
     multi_session: bool,
-) -> Tuple[List[str], List[str], List[str], List[str], List[float]]:
+) -> tuple[list[str], list[str], list[str], list[str], list[float]]:
     """NI-DAQmx measurement plug-in test service."""
     if multi_session:
         with measurement_service.context.reserve_sessions(pin_names) as reservation:
@@ -63,7 +65,7 @@ def measure(
 
 def _read_voltage_values(
     session_infos: Sequence[TypedSessionInformation[nidaqmx.Task]],
-) -> List[float]:
+) -> list[float]:
     sample_rate = 1000.0
     number_of_samples = 2
     number_of_samples_to_read = 1

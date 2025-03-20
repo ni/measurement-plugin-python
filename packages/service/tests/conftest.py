@@ -2,7 +2,9 @@
 
 import pathlib
 import sys
-from typing import Generator, List
+from typing import List
+
+from collections.abc import Generator
 
 import grpc
 import pytest
@@ -124,7 +126,7 @@ def feature_toggles(monkeypatch: pytest.MonkeyPatch, request: pytest.FixtureRequ
             monkeypatch.setattr(_featuretoggles, "_CODE_READINESS_LEVEL", code_readiness)
 
 
-def pytest_collection_modifyitems(items: List[pytest.Item]) -> None:
+def pytest_collection_modifyitems(items: list[pytest.Item]) -> None:
     """Hook to inject fixtures based on marks."""
     # By default, all features are enabled when running tests.
     _featuretoggles._CODE_READINESS_LEVEL = CodeReadiness.PROTOTYPE

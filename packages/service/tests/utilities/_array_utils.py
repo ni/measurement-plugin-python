@@ -29,7 +29,7 @@ def ndarray_to_double2darray(ndarray: npt.NDArray[np.float64]) -> array_pb2.Doub
     )
 
 
-def list_to_double2darray(data: List[List[float]]) -> array_pb2.Double2DArray:
+def list_to_double2darray(data: list[list[float]]) -> array_pb2.Double2DArray:
     """Convert list of lists to Double2DArray."""
     rows = len(data)
     columns = len(data[0]) if rows > 0 else 0
@@ -37,7 +37,7 @@ def list_to_double2darray(data: List[List[float]]) -> array_pb2.Double2DArray:
     return array_pb2.Double2DArray(data=flattened_data, rows=rows, columns=columns)
 
 
-def double2darray_to_list(double2darray: array_pb2.Double2DArray) -> List[List[float]]:
+def double2darray_to_list(double2darray: array_pb2.Double2DArray) -> list[list[float]]:
     """Convert Double2DArray to list of lists."""
     data = double2darray.data
     rows = double2darray.rows
@@ -61,7 +61,7 @@ def ndarray_to_string2darray(ndarray: npt.NDArray[np.str_]) -> array_pb2.String2
     )
 
 
-def string2darray_to_list(string2darray: array_pb2.String2DArray) -> List[List[str]]:
+def string2darray_to_list(string2darray: array_pb2.String2DArray) -> list[list[str]]:
     """Convert String2DArray to list of lists."""
     data = string2darray.data
     rows = string2darray.rows
@@ -69,7 +69,7 @@ def string2darray_to_list(string2darray: array_pb2.String2DArray) -> List[List[s
     return [data[i * columns : (i + 1) * columns] for i in range(rows)]
 
 
-def list_to_string2darray(data: List[List[str]]) -> array_pb2.String2DArray:
+def list_to_string2darray(data: list[list[str]]) -> array_pb2.String2DArray:
     """Convert list of lists to String2DArray."""
     rows = len(data)
     columns = len(data[0]) if rows > 0 else 0

@@ -5,7 +5,9 @@ import keyword
 import pathlib
 import re
 from enum import Enum
-from typing import AbstractSet, Dict, Iterable, List, Optional, Tuple, Type, TypeVar
+from typing import AbstractSet, Dict, List, Optional, Tuple, Type, TypeVar
+
+from collections.abc import Iterable
 
 import click
 import grpc
@@ -70,7 +72,7 @@ def get_measurement_service_stub_and_version(
     discovery_client: DiscoveryClient,
     channel_pool: GrpcChannelPool,
     service_class: str,
-) -> Tuple[v2_measurement_service_pb2_grpc.MeasurementServiceStub, str]:
+) -> tuple[v2_measurement_service_pb2_grpc.MeasurementServiceStub, str]:
     """Returns the measurement service stub and version of the given service class."""
     try:
         service_location, service_info = discovery_client.resolve_service_with_information(
@@ -102,7 +104,7 @@ def get_measurement_service_stub_and_version(
 
 def get_all_registered_measurement_info(
     discovery_client: DiscoveryClient,
-) -> Tuple[List[str], List[str]]:
+) -> tuple[list[str], list[str]]:
     """Returns the service classes and display names of all the registered measurement services."""
     registered_measurement_services = discovery_client.enumerate_services(
         _V2_MEASUREMENT_SERVICE_INTERFACE
@@ -119,8 +121,8 @@ def get_all_registered_measurement_info(
 def get_configuration_and_output_metadata_by_index(
     metadata: v2_measurement_service_pb2.GetMetadataResponse,
     service_class: str,
-    enum_values_by_type: Dict[Type[Enum], Dict[str, int]] = {},
-) -> Tuple[Dict[int, ParameterMetadata], Dict[int, ParameterMetadata]]:
+    enum_values_by_type: dict[type[Enum], dict[str, int]] = {},
+) -> tuple[dict[int, ParameterMetadata], dict[int, ParameterMetadata]]:
     """Returns the configuration and output metadata of the measurement."""
     configuration_parameter_list = []
     for configuration in metadata.measurement_signature.configuration_parameters:
@@ -217,10 +219,10 @@ def get_configuration_and_output_metadata_by_index(
 
 
 def get_configuration_parameters_with_type_and_default_values(
-    configuration_metadata: Dict[int, ParameterMetadata],
-    built_in_import_modules: List[str],
-    enum_values_by_type: Dict[Type[Enum], Dict[str, int]] = {},
-) -> Tuple[str, str]:
+    configuration_metadata: dict[int, ParameterMetadata],
+    built_in_import_modules: list[str],
+    enum_values_by_type: dict[type[Enum], dict[str, int]] = {},
+) -> tuple[str, str]:
     """Returns configuration parameters of the measurement with type and default values."""
     configuration_parameters = []
     parameter_names = []
@@ -274,13 +276,13 @@ def get_configuration_parameters_with_type_and_default_values(
 
 
 def get_output_parameters_with_type(
-    output_metadata: Dict[int, ParameterMetadata],
-    built_in_import_modules: List[str],
-    custom_import_modules: List[str],
-    enum_values_by_type: Dict[Type[Enum], Dict[str, int]] = {},
-) -> List[str]:
+    output_metadata: dict[int, ParameterMetadata],
+    built_in_import_modules: list[str],
+    custom_import_modules: list[str],
+    enum_values_by_type: dict[type[Enum], dict[str, int]] = {},
+) -> list[str]:
     """Returns the output parameters of the measurement with type."""
-    output_parameters_with_type: List[str] = []
+    output_parameters_with_type: list[str] = []
     for metadata in output_metadata.values():
         parameter_name = _get_python_identifier(metadata.display_name)
         parameter_type = _get_output_python_type_as_str(metadata.type, metadata.repeated)
@@ -374,7 +376,7 @@ def extract_base_service_class(service_class: str) -> str:
     return base_service_class
 
 
-def create_module_name(base_service_class: str, generated_modules: List[str]) -> str:
+def create_module_name(base_service_class: str, generated_modules: list[str]) -> str:
     """Creates a unique module name using the base service class."""
     base_module_name = _camel_to_snake_case(base_service_class) + "_client"
     module_name = base_module_name
@@ -393,7 +395,7 @@ def create_class_name(base_service_class: str) -> str:
 
 
 def get_selected_measurement_service_class(
-    selection: int, measurement_service_classes: List[str]
+    selection: int, measurement_service_classes: list[str]
 ) -> str:
     """Returns the selected measurement service class."""
     if not (1 <= selection <= len(measurement_service_classes)):
@@ -403,7 +405,7 @@ def get_selected_measurement_service_class(
     return measurement_service_classes[selection - 1]
 
 
-def validate_measurement_service_classes(measurement_service_classes: List[str]) -> None:
+def validate_measurement_service_classes(measurement_service_classes: list[str]) -> None:
     """Validates whether the given measurement service classes list is empty."""
     if len(measurement_service_classes) == 0:
         raise click.ClickException("No registered measurements.")
@@ -472,8 +474,8 @@ def _is_enum_param(parameter_type: int) -> bool:
 def _get_enum_type(
     parameter_name: str,
     enum_annotations: str,
-    enum_values_by_type: Dict[Type[Enum], Dict[str, int]],
-) -> Type[Enum]:
+    enum_values_by_type: dict[type[Enum], dict[str, int]],
+) -> type[Enum]:
     enum_values = dict(json.loads(enum_annotations))
     for existing_enum_type, existing_enum_values in enum_values_by_type.items():
         if existing_enum_values == enum_values:

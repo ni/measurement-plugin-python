@@ -1,6 +1,8 @@
 """Functions to set up and tear down sessions of NI Digital Pattern instruments in NI TestStand."""
 
-from typing import Any, Iterable
+from typing import Any
+
+from collections.abc import Iterable
 
 from _helpers import TestStandSupport
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient

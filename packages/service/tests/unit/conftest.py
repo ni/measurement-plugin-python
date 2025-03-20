@@ -1,7 +1,9 @@
 """Test fixtures for unit tests."""
 
 import pathlib
-from typing import Generator, cast
+from typing import cast
+
+from collections.abc import Generator
 from unittest.mock import Mock
 
 import grpc

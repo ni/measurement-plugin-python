@@ -1,7 +1,9 @@
 """Parameter Serializer."""
 
 from enum import Enum
-from typing import Any, Dict, Sequence
+from typing import Any, Dict
+
+from collections.abc import Sequence
 
 from google.protobuf import descriptor_pool, message_factory
 from google.protobuf.descriptor_pb2 import FieldDescriptorProto
@@ -15,7 +17,7 @@ from ni_measurement_plugin_sdk_service._internal.parameter.metadata import (
 
 
 def serialize_parameters(
-    parameter_metadata_dict: Dict[int, ParameterMetadata],
+    parameter_metadata_dict: dict[int, ParameterMetadata],
     parameter_values: Sequence[Any],
     service_name: str,
 ) -> bytes:
@@ -53,7 +55,7 @@ def serialize_parameters(
 
 
 def serialize_default_values(
-    parameter_metadata_dict: Dict[int, ParameterMetadata], service_name: str
+    parameter_metadata_dict: dict[int, ParameterMetadata], service_name: str
 ) -> bytes:
     """Serialize the Default values in the Metadata.
 

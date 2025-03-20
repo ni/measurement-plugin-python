@@ -4,7 +4,9 @@ from __future__ import annotations
 
 import json
 from enum import Enum
-from typing import TYPE_CHECKING, Any, Dict, Iterable, NamedTuple, Optional, Type, Union
+from typing import TYPE_CHECKING, Any, Dict, NamedTuple, Optional, Type, Union
+
+from collections.abc import Iterable
 
 from google.protobuf import type_pb2
 
@@ -20,7 +22,7 @@ from ni_measurement_plugin_sdk_service.measurement.info import TypeSpecializatio
 if TYPE_CHECKING:
     from google.protobuf.internal.enum_type_wrapper import _EnumTypeWrapper
 
-    SupportedEnumType = Union[Type[Enum], _EnumTypeWrapper]
+    SupportedEnumType = Union[type[Enum], _EnumTypeWrapper]
 
 _VALID_CHARS = set(" ().,;:!?-_'+")
 
@@ -42,7 +44,7 @@ class ParameterMetadata(NamedTuple):
     default_value: Any
     """The default value of the parameter."""
 
-    annotations: Dict[str, str]
+    annotations: dict[str, str]
     """Represents a set of annotations on the type."""
 
     message_type: str = ""
@@ -54,7 +56,7 @@ class ParameterMetadata(NamedTuple):
     field_name: str = ""
     """display_name in snake_case format."""
 
-    enum_type: Optional[SupportedEnumType] = None
+    enum_type: SupportedEnumType | None = None
     """Enum type of parameter"""
 
     @staticmethod
@@ -63,10 +65,10 @@ class ParameterMetadata(NamedTuple):
         type: type_pb2.Field.Kind.ValueType,
         repeated: bool,
         default_value: Any,
-        annotations: Dict[str, str],
+        annotations: dict[str, str],
         message_type: str = "",
-        enum_type: Optional[SupportedEnumType] = None,
-    ) -> "ParameterMetadata":
+        enum_type: SupportedEnumType | None = None,
+    ) -> ParameterMetadata:
         """Initialize ParameterMetadata with field_name."""
         _validate_display_name(display_name)
         underscore_display_name = display_name.replace(" ", "_")
@@ -199,7 +201,7 @@ def _validate_default_value_type_for_basic_type(
 
 def _validate_default_value_type_for_enum_type(
     default_value: object,
-    user_enum: Dict[str, int],
+    user_enum: dict[str, int],
     enum_values_annotation: str,
     display_name: str,
 ) -> None:
@@ -224,7 +226,7 @@ def get_enum_values_annotation(parameter_metadata: ParameterMetadata) -> str:
         return ""
 
 
-def _is_valid_enum_value(enum_value: object, user_enum: Dict[str, int]) -> bool:
+def _is_valid_enum_value(enum_value: object, user_enum: dict[str, int]) -> bool:
     if isinstance(enum_value, Enum):
         return enum_value.name in user_enum and user_enum[enum_value.name] == enum_value.value
     elif isinstance(enum_value, int):

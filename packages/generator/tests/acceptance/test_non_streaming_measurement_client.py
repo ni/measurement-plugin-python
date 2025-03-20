@@ -3,7 +3,9 @@ import pathlib
 from collections.abc import Sequence
 from enum import Enum
 from types import ModuleType
-from typing import Any, Generator, Tuple, Type, Union
+from typing import Any, Tuple, Type, Union
+
+from collections.abc import Generator
 
 import pytest
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types import (
@@ -236,7 +238,7 @@ def _verify_output_types(outputs: Any, measurement_plugin_client_module: ModuleT
     _assert_type(outputs.string_2d_array_out, array_pb2.String2DArray)
 
 
-def _assert_type(value: Any, expected_type: Union[Type[Any], Tuple[Type[Any], ...]]) -> None:
+def _assert_type(value: Any, expected_type: Union[type[Any], tuple[type[Any], ...]]) -> None:
     assert isinstance(
         value, expected_type
     ), f"{value!r} has type {type(value)}, expected {expected_type}"
@@ -244,8 +246,8 @@ def _assert_type(value: Any, expected_type: Union[Type[Any], Tuple[Type[Any], ..
 
 def _assert_collection_type(
     value: Any,
-    expected_type: Union[Type[Any], Tuple[Type[Any], ...]],
-    expected_element_type: Union[Type[Any], Tuple[Type[Any], ...]],
+    expected_type: Union[type[Any], tuple[type[Any], ...]],
+    expected_element_type: Union[type[Any], tuple[type[Any], ...]],
 ) -> None:
     _assert_type(value, expected_type)
     for element in value:
