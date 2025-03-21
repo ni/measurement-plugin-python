@@ -385,13 +385,13 @@ class MeasurementService:
         See also: :func:`.register_measurement`
 
         Args:
-            display_name (str): Display name of the configuration.
+            display_name: Display name of the configuration.
 
-            type (DataType): Data type of the configuration.
+            type: Data type of the configuration.
 
-            default_value (Any): Default value of the configuration.
+            default_value: Default value of the configuration.
 
-            instrument_type (Optional[str]):
+            instrument_type:
                 Filter pins by instrument type. This is only supported when configuration type
                 is DataType.IOResource or DataType.Pin (deprecated).
 
@@ -403,12 +403,12 @@ class MeasurementService:
 
                 For custom instruments, use the instrument type id defined in the pin map file.
 
-            enum_type (Optional[SupportedEnumType]):
+            enum_type:
                 Defines the enum type associated with this configuration parameter. This is only
                 supported when configuration type is DataType.Enum or DataType.EnumArray1D.
 
         Returns:
-            Callable: Callable that takes in Any Python Function
+            Callable that takes in Any Python Function
             and returns the same python function.
         """
         if type == DataType.Pin:
@@ -466,16 +466,16 @@ class MeasurementService:
         See also: :func:`.register_measurement`
 
         Args:
-            display_name (str): Display name of the output.
+            display_name: Display name of the output.
 
-            type (DataType): Data type of the output.
+            type: Data type of the output.
 
-            enum_type (Optional[SupportedEnumType]:
+            enum_type:
                 Defines the enum type associated with this configuration parameter. This is only
                 supported when configuration type is DataType.Enum or DataType.EnumArray1D.
 
         Returns:
-            Callable: Callable that takes in Any Python Function and
+            Callable that takes in Any Python Function and
             returns the same python function.
         """
         if type == DataType.Pin:
