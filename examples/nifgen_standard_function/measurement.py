@@ -7,7 +7,6 @@ import threading
 import time
 from contextlib import ExitStack
 from enum import Enum
-from typing import Tuple
 
 from collections.abc import Iterable, Sequence
 

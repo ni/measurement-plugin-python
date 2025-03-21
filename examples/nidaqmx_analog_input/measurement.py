@@ -3,7 +3,6 @@
 import logging
 import pathlib
 import sys
-from typing import List, Tuple
 
 import click
 import ni_measurement_plugin_sdk_service as nims

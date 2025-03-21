@@ -1,9 +1,10 @@
 """Test a SPI device using an NI Digital Pattern instrument."""
 
+from __future__ import annotations
+
 import logging
 import pathlib
 import sys
-from typing import Tuple, Union
 
 from collections.abc import Iterable
 
@@ -82,7 +83,7 @@ def measure(
 
 
 def _resolve_relative_path(
-    directory_path: pathlib.Path, file_path: Union[str, pathlib.Path]
+    directory_path: pathlib.Path, file_path: str | pathlib.Path
 ) -> pathlib.Path:
     file_path = pathlib.Path(file_path)
     if file_path.is_absolute():

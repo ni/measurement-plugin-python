@@ -7,7 +7,7 @@ import pathlib
 import sys
 import threading
 import time
-from typing import TYPE_CHECKING, NamedTuple, Tuple
+from typing import TYPE_CHECKING, NamedTuple
 
 import click
 import grpc

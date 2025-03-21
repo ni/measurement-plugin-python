@@ -1,5 +1,7 @@
 """Helper classes and functions for measurement plug-in examples."""
 
+from __future__ import annotations
+
 import logging
 import pathlib
 from typing import Any, Callable, TypeVar

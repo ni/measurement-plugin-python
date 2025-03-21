@@ -5,7 +5,6 @@ import math
 import pathlib
 import sys
 from enum import Enum
-from typing import Tuple
 
 import click
 import ni_measurement_plugin_sdk_service as nims
