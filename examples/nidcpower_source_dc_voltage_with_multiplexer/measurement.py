@@ -7,7 +7,7 @@ import pathlib
 import sys
 import threading
 import time
-from typing import TYPE_CHECKING, NamedTuple, Tuple
+from typing import TYPE_CHECKING, NamedTuple
 
 import click
 import grpc
@@ -63,7 +63,7 @@ def measure(
     current_limit: float,
     current_limit_range: float,
     source_delay: float,
-) -> Tuple[float, float]:
+) -> tuple[float, float]:
     """Source and measure a DC voltage with an NI SMU connected via an NI-SWITCH multiplexer."""
     logging.info("Executing measurement: pin_name=%s voltage_level=%g", pin_name, voltage_level)
 

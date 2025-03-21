@@ -3,7 +3,6 @@
 import logging
 import pathlib
 import sys
-from typing import Tuple
 
 import click
 import ni_measurement_plugin_sdk_service as nims
@@ -38,7 +37,7 @@ def measure(
     measurement_type: Function,
     range: float,
     resolution_digits: float,
-) -> Tuple[float]:
+) -> tuple[float]:
     """Perform a DMM measurement using NI-VISA and an NI Instrument Simulator v2.0."""
     logging.info(
         "Starting measurement: pin_name=%s measurement_type=%s range=%g resolution_digits=%g",

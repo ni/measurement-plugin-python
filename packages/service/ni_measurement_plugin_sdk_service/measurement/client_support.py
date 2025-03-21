@@ -1,7 +1,10 @@
 """Support functions for the Measurement Plug-In Client."""
 
+from __future__ import annotations
+
+from collections.abc import Sequence
 from pathlib import Path
-from typing import Any, Dict, Sequence
+from typing import Any
 
 from google.protobuf.descriptor_pb2 import FieldDescriptorProto
 
@@ -29,11 +32,11 @@ __all__ = [
 
 
 def deserialize_parameters(
-    parameter_metadata_dict: Dict[int, ParameterMetadata],
+    parameter_metadata_dict: dict[int, ParameterMetadata],
     parameter_bytes: bytes,
     message_name: str,
     *,
-    convert_paths: bool = True
+    convert_paths: bool = True,
 ) -> Sequence[Any]:
     """Deserialize parameter bytes into separate parameter values.
 
@@ -78,7 +81,7 @@ def deserialize_parameters(
 
 
 def serialize_parameters(
-    parameter_metadata_dict: Dict[int, ParameterMetadata],
+    parameter_metadata_dict: dict[int, ParameterMetadata],
     parameter_values: Sequence[Any],
     message_name: str,
 ) -> bytes:

@@ -5,7 +5,7 @@ from __future__ import annotations
 import sys
 from enum import Enum, IntEnum
 from types import TracebackType
-from typing import TYPE_CHECKING, Any, ContextManager, Dict, Optional, Type
+from typing import TYPE_CHECKING, Any, ContextManager
 
 if TYPE_CHECKING:
     import grpc
@@ -73,9 +73,9 @@ class _Acquisition:
 
     def __exit__(
         self,
-        exc_type: Optional[Type[BaseException]],
-        exc_val: Optional[BaseException],
-        traceback: Optional[TracebackType],
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
+        traceback: TracebackType | None,
     ) -> None:
         self._session.abort()
 
@@ -87,7 +87,7 @@ class _SessionBase:
         self,
         resource_name: str,
         initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
-        options: Dict[str, Any] = {},
+        options: dict[str, Any] = {},
     ) -> None:
         """Initialize the session."""
         self.resource_name = resource_name
@@ -129,9 +129,9 @@ class ContextManagerSession(_SessionBase):
 
     def __exit__(
         self,
-        exc_type: Optional[Type[BaseException]],
-        exc_val: Optional[BaseException],
-        traceback: Optional[TracebackType],
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
+        traceback: TracebackType | None,
     ) -> None:
         """Exit the session's runtime context."""
         self.is_closed = True
@@ -144,7 +144,7 @@ class Session(_SessionBase):
         self,
         resource_name: str,
         initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
-        options: Dict[str, Any] = {},
+        options: dict[str, Any] = {},
     ) -> None:
         """Initialize the session."""
         self.resource_name = resource_name
@@ -162,9 +162,9 @@ class Session(_SessionBase):
 
     def __exit__(
         self,
-        exc_type: Optional[Type[BaseException]],
-        exc_val: Optional[BaseException],
-        traceback: Optional[TracebackType],
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
+        traceback: TracebackType | None,
     ) -> None:
         """Exit the session's runtime context."""
         if self.initialization_behavior in _CLOSE_BEHAVIORS:

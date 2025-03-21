@@ -1,6 +1,6 @@
 """Tests to validate that yield and return are both supported in v2 measurements."""
 
-from typing import Generator
+from collections.abc import Generator
 
 import pytest
 from google.protobuf import any_pb2

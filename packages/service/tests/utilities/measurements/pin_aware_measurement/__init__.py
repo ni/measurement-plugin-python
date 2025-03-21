@@ -1,7 +1,10 @@
 """Pin-aware measurement plug-in test service."""
 
+from __future__ import annotations
+
 import pathlib
-from typing import Iterable, Tuple
+from collections.abc import Iterable
+from typing import Tuple
 
 import ni_measurement_plugin_sdk_service as nims
 
@@ -25,7 +28,7 @@ measurement_service = nims.MeasurementService(
 def measure(
     pin_names: Iterable[str],
     multi_session: bool,
-) -> Tuple[str, Iterable[int], Iterable[str], Iterable[str], Iterable[str]]:
+) -> tuple[str, Iterable[int], Iterable[str], Iterable[str], Iterable[str]]:
     """Pin-aware measurement plug-in test service."""
     pin_map_context = measurement_service.context.pin_map_context
     if multi_session:

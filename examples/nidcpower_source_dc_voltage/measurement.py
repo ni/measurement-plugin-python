@@ -7,8 +7,9 @@ import pathlib
 import sys
 import threading
 import time
+from collections.abc import Iterable
 from contextlib import ExitStack
-from typing import TYPE_CHECKING, Iterable, List, NamedTuple, Tuple
+from typing import TYPE_CHECKING, NamedTuple
 
 import click
 import grpc
@@ -69,7 +70,7 @@ def measure(
     current_limit: float,
     current_limit_range: float,
     source_delay: float,
-) -> Tuple[List[int], List[str], List[float], List[float], List[bool]]:
+) -> tuple[list[int], list[str], list[float], list[float], list[bool]]:
     """Source and measure a DC voltage with an NI SMU."""
     logging.info("Executing measurement: pin_names=%s voltage_level=%g", pin_names, voltage_level)
 
@@ -106,12 +107,12 @@ def measure(
                         channels, cancellation_event, nidcpower.enums.Event.SOURCE_COMPLETE, timeout
                     )
 
-                measurements: List[_Measurement] = []
+                measurements: list[_Measurement] = []
                 measured_sites, measured_pins = [], []
                 for session_info in session_infos:
                     channels = session_info.session.channels[session_info.channel_list]
                     # Measure the voltage and current for each output of the session.
-                    session_measurements: List[_Measurement] = channels.measure_multiple()
+                    session_measurements: list[_Measurement] = channels.measure_multiple()
 
                     for measurement, channel_mapping in zip(
                         session_measurements, session_info.channel_mappings

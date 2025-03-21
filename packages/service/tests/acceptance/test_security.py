@@ -1,5 +1,5 @@
+from collections.abc import Generator
 from ipaddress import ip_address
-from typing import Generator
 
 import psutil
 import pytest

@@ -8,15 +8,13 @@ import logging
 import sys
 import threading
 import time
+from collections.abc import Iterator
 from types import TracebackType
 from typing import (
     TYPE_CHECKING,
     Any,
     Callable,
     Generic,
-    Iterator,
-    Optional,
-    Type,
     TypeVar,
 )
 
@@ -149,7 +147,7 @@ class ServerLogger(grpc.ServerInterceptor):
             [grpc.HandlerCallDetails], grpc.RpcMethodHandler[grpc.TRequest, grpc.TResponse] | None
         ],
         handler_call_details: grpc.HandlerCallDetails,
-    ) -> Optional[grpc.RpcMethodHandler[grpc.TRequest, grpc.TResponse]]:
+    ) -> grpc.RpcMethodHandler[grpc.TRequest, grpc.TResponse] | None:
         """Intercept and log a server call."""
         if _ServerCallLogger.is_enabled():
             call_logger = _ServerCallLogger(handler_call_details.method)
@@ -267,9 +265,9 @@ class _CallLogger(abc.ABC):
 
     def __exit__(
         self,
-        exc_type: Optional[Type[BaseException]],
-        exc_val: Optional[BaseException],
-        traceback: Optional[TracebackType],
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
+        traceback: TracebackType | None,
     ) -> None:
         self.close(exc_val)
 

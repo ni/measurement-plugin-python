@@ -1,5 +1,7 @@
 """Helper classes and functions for measurement plug-in examples."""
 
+from __future__ import annotations
+
 import logging
 import pathlib
 from typing import Any, Callable, TypeVar
@@ -7,7 +9,7 @@ from typing import Any, Callable, TypeVar
 import click
 
 
-class TestStandSupport(object):
+class TestStandSupport:
     """Class that communicates with TestStand."""
 
     _PIN_MAP_ID_VAR = "NI.MeasurementPlugIns.PinMapId"

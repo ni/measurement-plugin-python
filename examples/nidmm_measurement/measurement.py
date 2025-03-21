@@ -5,7 +5,6 @@ import math
 import pathlib
 import sys
 from enum import Enum
-from typing import Tuple
 
 import click
 import ni_measurement_plugin_sdk_service as nims
@@ -61,7 +60,7 @@ def measure(
     measurement_type: Function,
     range: float,
     resolution_digits: float,
-) -> Tuple[float, bool, float]:
+) -> tuple[float, bool, float]:
     """Perform a measurement using an NI DMM."""
     logging.info(
         "Starting measurement: pin_name=%s measurement_type=%s range=%g resolution_digits=%g",

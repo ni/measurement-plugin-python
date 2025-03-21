@@ -3,7 +3,6 @@ from __future__ import annotations
 import ctypes
 import sys
 import uuid
-from typing import Optional
 
 try:
     import traceloggingdynamic
@@ -76,7 +75,7 @@ def is_enabled() -> bool:
     return _event_provider and _event_provider.is_enabled()
 
 
-def log_grpc_client_call_start(method_name: str) -> Optional[uuid.UUID]:
+def log_grpc_client_call_start(method_name: str) -> uuid.UUID | None:
     """Log when starting a gRPC client call."""
     if _event_provider and _event_provider.is_enabled(level=_LEVEL_INFO, keyword=_KEYWORD_GRPC):
         eb = traceloggingdynamic.EventBuilder()
@@ -96,7 +95,7 @@ def log_grpc_client_call_start(method_name: str) -> Optional[uuid.UUID]:
         return None
 
 
-def log_grpc_client_call_stop(method_name: str, activity_id: Optional[uuid.UUID] = None) -> None:
+def log_grpc_client_call_stop(method_name: str, activity_id: uuid.UUID | None = None) -> None:
     """Log when a gRPC client call has completed."""
     if _event_provider and _event_provider.is_enabled(level=_LEVEL_INFO, keyword=_KEYWORD_GRPC):
         eb = traceloggingdynamic.EventBuilder()
@@ -139,7 +138,7 @@ def log_grpc_client_call_streaming_response(method_name: str) -> None:
         _event_provider.write(eb)
 
 
-def log_grpc_server_call_start(method_name: str) -> Optional[uuid.UUID]:
+def log_grpc_server_call_start(method_name: str) -> uuid.UUID | None:
     """Log when starting a gRPC server call."""
     if _event_provider and _event_provider.is_enabled(level=_LEVEL_INFO, keyword=_KEYWORD_GRPC):
         eb = traceloggingdynamic.EventBuilder()
@@ -159,7 +158,7 @@ def log_grpc_server_call_start(method_name: str) -> Optional[uuid.UUID]:
         return None
 
 
-def log_grpc_server_call_stop(method_name: str, activity_id: Optional[uuid.UUID] = None) -> None:
+def log_grpc_server_call_stop(method_name: str, activity_id: uuid.UUID | None = None) -> None:
     """Log when a gRPC server call has completed."""
     if _event_provider and _event_provider.is_enabled(level=_LEVEL_INFO, keyword=_KEYWORD_GRPC):
         eb = traceloggingdynamic.EventBuilder()

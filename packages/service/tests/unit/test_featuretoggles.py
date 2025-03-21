@@ -1,4 +1,4 @@
-from typing import List
+from __future__ import annotations
 
 import pytest
 from pytest_mock import MockerFixture
@@ -18,11 +18,11 @@ PROTOTYPE_FEATURE = FeatureToggle("PROTOTYPE_FEATURE", CodeReadiness.PROTOTYPE)
 
 
 @requires_feature(PROTOTYPE_FEATURE)
-def _prototype_function(x: int, y: str, z: List[int]) -> str:
+def _prototype_function(x: int, y: str, z: list[int]) -> str:
     return _prototype_function_impl(x, y, z)
 
 
-def _prototype_function_impl(x: int, y: str, z: List[int]) -> str:
+def _prototype_function_impl(x: int, y: str, z: list[int]) -> str:
     return ""
 
 
