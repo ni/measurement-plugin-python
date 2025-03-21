@@ -5,10 +5,9 @@ import pathlib
 import sys
 import threading
 import time
+from collections.abc import Iterable, Sequence
 from contextlib import ExitStack
 from enum import Enum
-
-from collections.abc import Iterable, Sequence
 
 import click
 import grpc

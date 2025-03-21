@@ -5,7 +5,6 @@ import pathlib
 import sys
 import threading
 import time
-
 from collections.abc import Sequence
 
 import click
