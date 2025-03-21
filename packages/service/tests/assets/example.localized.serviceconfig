@@ -1,0 +1,14 @@
+﻿{
+  "services": [
+    {
+      "displayName": "示例测量",
+      "serviceClass": "SampleMeasurement_Python",
+      "descriptionUrl": "https://www.example.com/SampleMeasurement.html",
+      "providedInterfaces": [
+        "ni.measurementlink.measurement.v2.MeasurementService"
+      ],
+      "path": "start.bat",
+      "version": "1.0.8"
+    }
+  ]
+}
