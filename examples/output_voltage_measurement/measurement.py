@@ -4,7 +4,6 @@ import logging
 import pathlib
 import threading
 import time
-from typing import Tuple
 
 import _visa_dmm
 import click

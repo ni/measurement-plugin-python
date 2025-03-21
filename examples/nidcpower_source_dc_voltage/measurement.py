@@ -7,10 +7,9 @@ import pathlib
 import sys
 import threading
 import time
-from contextlib import ExitStack
-from typing import TYPE_CHECKING, List, NamedTuple, Tuple
-
 from collections.abc import Iterable
+from contextlib import ExitStack
+from typing import TYPE_CHECKING, NamedTuple
 
 import click
 import grpc

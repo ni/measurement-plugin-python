@@ -3,10 +3,8 @@
 import logging
 import pathlib
 import sys
-from enum import Enum
-from typing import Tuple
-
 from collections.abc import Iterable
+from enum import Enum
 
 import _array_utils
 import click
