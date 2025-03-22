@@ -1,4 +1,4 @@
-"""Contains utility functions to test loopback measurement service using non-ASCII characters (i.e. Simplified Chinese)."""
+"""Contains utility functions to test loopback measurement service with non-ASCII characters."""
 
 from enum import Enum
 from pathlib import Path
@@ -22,7 +22,7 @@ measurement_service = nims.MeasurementService(
 
 
 class Color(Enum):
-    """用于示例枚举类型配置和输出的主要颜色。"""
+    """用于示例枚举类型配置和输出的主要颜色."""
 
     NONE = 0
     RED = 1
@@ -69,12 +69,6 @@ class Color(Enum):
 @measurement_service.configuration(
     "Enum Array In", nims.DataType.EnumArray1D, [1, 2], enum_type=Color
 )
-@measurement_service.configuration(
-    "Protobuf Enum In",
-    nims.DataType.Enum,
-    color_pb2.ProtobufColor.BLACK,
-    enum_type=color_pb2.ProtobufColor,
-)
 @measurement_service.output("Float out", nims.DataType.Float)
 @measurement_service.output("Double Array out", nims.DataType.DoubleArray1D)
 @measurement_service.output("Bool out", nims.DataType.Boolean)
@@ -88,9 +82,6 @@ class Color(Enum):
 @measurement_service.output("XY Data Out", nims.DataType.DoubleXYData)
 @measurement_service.output("Enum Out", nims.DataType.Enum, enum_type=Color)
 @measurement_service.output("Enum Array Out", nims.DataType.EnumArray1D, enum_type=Color)
-@measurement_service.output(
-    "Protobuf Enum out", nims.DataType.Enum, enum_type=color_pb2.ProtobufColor
-)
 @measurement_service.output("Double 2D Array out", nims.DataType.Double2DArray)
 @measurement_service.output("String 2D Array out", nims.DataType.String2DArray)
 def measure(
@@ -106,7 +97,6 @@ def measure(
     integer_input: int,
     enum_input: Color,
     enum_array_input: Iterable[Color],
-    protobuf_enum_input: color_pb2.ProtobufColor.ValueType,
 ) -> Tuple[
     float,
     Iterable[float],
@@ -121,11 +111,10 @@ def measure(
     xydata_pb2.DoubleXYData,
     Color,
     Iterable[Color],
-    color_pb2.ProtobufColor.ValueType,
     array_pb2.Double2DArray,
     array_pb2.String2DArray,
 ]:
-    """使用各种数据类型执行环回测量。"""
+    """使用各种数据类型执行环回测量."""
     float_output = float_input
     float_array_output = double_array_input
     bool_output = bool_input
@@ -139,7 +128,6 @@ def measure(
     xy_data_output = xydata_pb2.DoubleXYData()
     enum_output = enum_input
     enum_array_output = enum_array_input
-    protobuf_enum_output = protobuf_enum_input
     double_2d_array_output = array_pb2.Double2DArray(
         rows=2, columns=3, data=[1.0, 2.0, 3.0, 4.0, 5.0, 6.0]
     )
@@ -161,7 +149,6 @@ def measure(
         xy_data_output,
         enum_output,
         enum_array_output,
-        protobuf_enum_output,
         double_2d_array_output,
         string_2d_array_output,
     )

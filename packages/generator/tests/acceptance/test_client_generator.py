@@ -14,7 +14,7 @@ from tests.utilities.measurements import (
     non_streaming_data_measurement,
     streaming_data_measurement,
     void_measurement,
-    localized_measurement
+    localized_measurement,
 )
 
 

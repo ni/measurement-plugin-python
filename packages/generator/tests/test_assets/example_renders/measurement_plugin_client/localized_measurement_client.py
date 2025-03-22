@@ -51,15 +51,6 @@ class EnumInEnum(Enum):
     BLUE = 3
 
 
-class ProtobufEnumInEnum(Enum):
-    """ProtobufEnumInEnum used for enum-typed measurement configs and outputs."""
-
-    NONE = 0
-    PINK = 1
-    WHITE = 2
-    BLACK = 3
-
-
 class Outputs(typing.NamedTuple):
     """Outputs for the '本地化测量（Py）' measurement plug-in."""
 
@@ -76,7 +67,6 @@ class Outputs(typing.NamedTuple):
     xy_data_out: DoubleXYData
     enum_out: EnumInEnum
     enum_array_out: typing.Sequence[EnumInEnum]
-    protobuf_enum_out: ProtobufEnumInEnum
     double_2d_array_out: Double2DArray
     string_2d_array_out: String2DArray
 
@@ -260,19 +250,6 @@ class LocalizedMeasurementClient:
                 field_name="Enum_Array_In",
                 enum_type=EnumInEnum,
             ),
-            13: ParameterMetadata(
-                display_name="Protobuf Enum In",
-                type=Field.Kind.ValueType(14),
-                repeated=False,
-                default_value=3,
-                annotations={
-                    "ni/enum.values": '{"NONE": 0, "PINK": 1, "WHITE": 2, "BLACK": 3}',
-                    "ni/type_specialization": "enum",
-                },
-                message_type="",
-                field_name="Protobuf_Enum_In",
-                enum_type=ProtobufEnumInEnum,
-            ),
         }
         self._output_metadata = {
             1: ParameterMetadata(
@@ -418,19 +395,6 @@ class LocalizedMeasurementClient:
                 enum_type=EnumInEnum,
             ),
             14: ParameterMetadata(
-                display_name="Protobuf Enum out",
-                type=Field.Kind.ValueType(14),
-                repeated=False,
-                default_value=None,
-                annotations={
-                    "ni/enum.values": '{"NONE": 0, "PINK": 1, "WHITE": 2, "BLACK": 3}',
-                    "ni/type_specialization": "enum",
-                },
-                message_type="",
-                field_name="Protobuf_Enum_out",
-                enum_type=ProtobufEnumInEnum,
-            ),
-            15: ParameterMetadata(
                 display_name="Double 2D Array out",
                 type=Field.Kind.ValueType(11),
                 repeated=False,
@@ -440,7 +404,7 @@ class LocalizedMeasurementClient:
                 field_name="Double_2D_Array_out",
                 enum_type=None,
             ),
-            16: ParameterMetadata(
+            15: ParameterMetadata(
                 display_name="String 2D Array out",
                 type=Field.Kind.ValueType(11),
                 repeated=False,
@@ -596,7 +560,6 @@ class LocalizedMeasurementClient:
         integer_in: int = 10,
         enum_in: EnumInEnum = EnumInEnum.BLUE,
         enum_array_in: typing.Iterable[EnumInEnum] = [EnumInEnum.RED, EnumInEnum.GREEN],
-        protobuf_enum_in: ProtobufEnumInEnum = ProtobufEnumInEnum.BLACK,
     ) -> Outputs:
         """Perform a single measurement.
 
@@ -616,7 +579,6 @@ class LocalizedMeasurementClient:
             integer_in,
             enum_in,
             enum_array_in,
-            protobuf_enum_in,
         )
         for response in stream_measure_response:
             result = response
@@ -650,7 +612,6 @@ class LocalizedMeasurementClient:
         integer_in: int = 10,
         enum_in: EnumInEnum = EnumInEnum.BLUE,
         enum_array_in: typing.Iterable[EnumInEnum] = [EnumInEnum.RED, EnumInEnum.GREEN],
-        protobuf_enum_in: ProtobufEnumInEnum = ProtobufEnumInEnum.BLACK,
     ) -> typing.Generator[Outputs, None, None]:
         """Perform a streaming measurement.
 
@@ -670,7 +631,6 @@ class LocalizedMeasurementClient:
             integer_in,
             enum_in,
             enum_array_in,
-            protobuf_enum_in,
         ]
         with self._initialization_lock:
             if self._measure_response is not None:
