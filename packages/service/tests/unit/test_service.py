@@ -347,10 +347,11 @@ no_annotations: typing.Dict[str, str] = {}
 
 
 @pytest.mark.parametrize(
-    "service_config,version,provided_interfaces,provided_annotations",
+    "service_config,display_name,version,provided_interfaces,provided_annotations",
     [
         (
             "example.serviceconfig",
+            "SampleMeasurement",
             "1.0.1",
             [
                 "ni.measurementlink.measurement.v1.MeasurementService",
@@ -364,30 +365,35 @@ no_annotations: typing.Dict[str, str] = {}
         ),
         (
             "example.v1.serviceconfig",
+            "SampleMeasurement",
             "1.0.1",
             ["ni.measurementlink.measurement.v1.MeasurementService"],
             no_annotations,
         ),
         (
             "example.v2.serviceconfig",
+            "SampleMeasurement",
             "1.0.3",
             ["ni.measurementlink.measurement.v2.MeasurementService"],
             no_annotations,
         ),
         (
             "example.OnlyCollection.serviceconfig",
+            "SampleMeasurement",
             "1.0.4",
             ["ni.measurementlink.measurement.v2.MeasurementService"],
             {"ni/service.collection": "CurrentTests.Inrush"},
         ),
         (
             "example.OnlyTags.serviceconfig",
+            "SampleMeasurement",
             "1.0.5",
             ["ni.measurementlink.measurement.v2.MeasurementService"],
             {"ni/service.tags": '["powerup","current","voltage"]'},
         ),
         (
             "example.AllAnnotations.serviceconfig",
+            "SampleMeasurement",
             "1.0.6",
             ["ni.measurementlink.measurement.v2.MeasurementService"],
             {
@@ -399,6 +405,7 @@ no_annotations: typing.Dict[str, str] = {}
         ),
         (
             "example.CustomAnnotations.serviceconfig",
+            "SampleMeasurement",
             "1.0.7",
             ["ni.measurementlink.measurement.v1.MeasurementService"],
             {
@@ -409,11 +416,19 @@ no_annotations: typing.Dict[str, str] = {}
                 + '["foogle","boogle"],"ork":["zork","gork","bork"]}}',
             },
         ),
+        (
+            "example.localized.serviceconfig",
+            "示例测量",
+            "1.0.8",
+            ["ni.measurementlink.measurement.v2.MeasurementService"],
+            no_annotations,
+        ),
     ],
 )
 def test___service_config___create_measurement_service___service_info_matches_service_config(
     test_assets_directory: pathlib.Path,
     service_config: str,
+    display_name: str,
     version: str,
     provided_interfaces: List[str],
     provided_annotations: typing.Dict[str, str],
@@ -423,6 +438,7 @@ def test___service_config___create_measurement_service___service_info_matches_se
         ui_file_paths=[],
     )
 
+    assert measurement_service.service_info.display_name == display_name
     assert measurement_service.service_info.versions[0] == version
     assert measurement_service.service_info.service_class == "SampleMeasurement_Python"
     assert set(measurement_service.service_info.provided_interfaces) >= set(provided_interfaces)

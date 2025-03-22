@@ -1,0 +1,20 @@
+{
+  "services": [
+    {
+      "displayName": "本地化测量（Py）",
+      "version": "0.1.0.0",
+      "serviceClass": "ni.tests.LocalizedMeasurement_Python",
+      "descriptionUrl": "",
+      "providedInterfaces": [
+        "ni.measurementlink.measurement.v1.MeasurementService",
+        "ni.measurementlink.measurement.v2.MeasurementService"
+      ],
+      "path": "start.bat",
+      "annotations": {
+        "ni/service.description": "本地化测量插件测试服务，执行回环测量。",
+        "ni/service.collection": "NI.Tests",
+        "ni/service.tags": []
+      }
+    }
+  ]
+}

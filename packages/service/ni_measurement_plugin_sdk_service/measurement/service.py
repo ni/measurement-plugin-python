@@ -204,7 +204,7 @@ class MeasurementService:
         if not path.exists(service_config_path):
             raise RuntimeError(f"File does not exist. {service_config_path}")
 
-        with open(service_config_path) as service_config_file:
+        with open(service_config_path, "r", encoding="utf-8-sig") as service_config_file:
             service_config = json.load(service_config_file)
 
         if service_class is None:
