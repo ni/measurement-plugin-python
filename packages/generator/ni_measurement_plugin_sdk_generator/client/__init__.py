@@ -52,7 +52,7 @@ def _create_file(
         mode=black.Mode(line_length=100),
     )
 
-    with output_file.open("w") as file:
+    with output_file.open("w", encoding="utf-8") as file:
         file.write(formatted_output)
 
 
