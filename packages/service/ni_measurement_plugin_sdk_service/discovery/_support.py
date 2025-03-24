@@ -1,5 +1,7 @@
 """Support functions for the NI Discovery Service."""
 
+from __future__ import annotations
+
 import json
 import logging
 import os
@@ -8,7 +10,7 @@ import subprocess  # nosec: B404
 import sys
 import time
 import typing
-from typing import Any, Dict, Optional
+from typing import Any
 
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.discovery.v1 import (
     discovery_service_pb2,
@@ -23,7 +25,7 @@ if sys.platform == "win32":
 
 _logger = logging.getLogger(__name__)
 # Save Popen object to avoid "ResourceWarning: subprocess N is still running"
-_discovery_service_subprocess: Optional[subprocess.Popen] = None
+_discovery_service_subprocess: subprocess.Popen | None = None
 
 _START_SERVICE_TIMEOUT = 30.0
 _START_SERVICE_POLLING_INTERVAL = 100e-3
@@ -75,7 +77,7 @@ def _start_service(
     exe_file_path: pathlib.PurePath, key_file_path: pathlib.Path
 ) -> subprocess.Popen:
     """Starts the service at the specified path and wait for the service to get up and running."""
-    kwargs: Dict[str, Any] = {}
+    kwargs: dict[str, Any] = {}
     if sys.platform == "win32":
         # Terminating the measurement service should not terminate the discovery service.
         kwargs["creationflags"] = subprocess.CREATE_BREAKAWAY_FROM_JOB | subprocess.DETACHED_PROCESS
@@ -118,7 +120,7 @@ def _delete_existing_key_file(key_file_path: pathlib.Path) -> None:
         key_file_path.unlink()
 
 
-def _get_key_file_path(cluster_id: Optional[str] = None) -> pathlib.Path:
+def _get_key_file_path(cluster_id: str | None = None) -> pathlib.Path:
     if cluster_id is not None:
         return _get_key_file_directory() / f"DiscoveryService_{cluster_id}.json"
     return _get_key_file_directory() / "DiscoveryService.json"
@@ -162,7 +164,7 @@ def _open_key_file(path: str) -> typing.TextIO:
         # file object closes the underlying Win32 file handle.
         return os.fdopen(crt_file_descriptor, "r", encoding="utf-8-sig")
     else:
-        return open(path, "r")
+        return open(path)
 
 
 def _get_nipath(name: str) -> pathlib.Path:

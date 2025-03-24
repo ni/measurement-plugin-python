@@ -5,7 +5,7 @@ from __future__ import annotations
 import logging
 import threading
 import warnings
-from typing import Dict, Iterable, Mapping, Optional, Union
+from collections.abc import Iterable, Mapping
 
 import google.protobuf.internal.containers
 import grpc
@@ -34,15 +34,15 @@ from ni_measurement_plugin_sdk_service.session_management._types import (
 _logger = logging.getLogger(__name__)
 
 
-class SessionManagementClient(object):
+class SessionManagementClient:
     """Client for accessing the measurement plug-in session management service."""
 
     def __init__(
         self,
         *,
-        discovery_client: Optional[DiscoveryClient] = None,
-        grpc_channel: Optional[grpc.Channel] = None,
-        grpc_channel_pool: Optional[GrpcChannelPool] = None,
+        discovery_client: DiscoveryClient | None = None,
+        grpc_channel: grpc.Channel | None = None,
+        grpc_channel_pool: GrpcChannelPool | None = None,
     ) -> None:
         """Initialize session management client.
 
@@ -56,9 +56,7 @@ class SessionManagementClient(object):
         self._initialization_lock = threading.Lock()
         self._discovery_client = discovery_client
         self._grpc_channel_pool = grpc_channel_pool
-        self._stub: Optional[session_management_service_pb2_grpc.SessionManagementServiceStub] = (
-            None
-        )
+        self._stub: session_management_service_pb2_grpc.SessionManagementServiceStub | None = None
 
         if grpc_channel is not None:
             self._stub = session_management_service_pb2_grpc.SessionManagementServiceStub(
@@ -90,9 +88,9 @@ class SessionManagementClient(object):
     def reserve_session(
         self,
         context: PinMapContext,
-        pin_or_relay_names: Union[str, Iterable[str], None] = None,
-        instrument_type_id: Optional[str] = None,
-        timeout: Optional[float] = 0.0,
+        pin_or_relay_names: str | Iterable[str] | None = None,
+        instrument_type_id: str | None = None,
+        timeout: float | None = 0.0,
     ) -> SingleSessionReservation:
         """Reserve a single session.
 
@@ -151,9 +149,9 @@ class SessionManagementClient(object):
     def reserve_sessions(
         self,
         context: PinMapContext,
-        pin_or_relay_names: Union[str, Iterable[str], None] = None,
-        instrument_type_id: Optional[str] = None,
-        timeout: Optional[float] = 0.0,
+        pin_or_relay_names: str | Iterable[str] | None = None,
+        instrument_type_id: str | None = None,
+        timeout: float | None = 0.0,
     ) -> MultiSessionReservation:
         """Reserve multiple sessions.
 
@@ -203,9 +201,9 @@ class SessionManagementClient(object):
     def _reserve_sessions(
         self,
         context: PinMapContext,
-        pin_or_relay_names: Union[str, Iterable[str], None] = None,
-        instrument_type_id: Optional[str] = None,
-        timeout: Optional[float] = 0.0,
+        pin_or_relay_names: str | Iterable[str] | None = None,
+        instrument_type_id: str | None = None,
+        timeout: float | None = 0.0,
     ) -> session_management_service_pb2.ReserveSessionsResponse:
         request = session_management_service_pb2.ReserveSessionsRequest(
             pin_map_context=context._to_grpc(),
@@ -255,7 +253,7 @@ class SessionManagementClient(object):
         self._get_stub().UnregisterSessions(request)
 
     def reserve_all_registered_sessions(
-        self, instrument_type_id: Optional[str] = None, timeout: Optional[float] = 10.0
+        self, instrument_type_id: str | None = None, timeout: float | None = 10.0
     ) -> MultiSessionReservation:
         """Reserve all sessions currently registered with the session management service.
 
@@ -325,7 +323,7 @@ class SessionManagementClient(object):
         self._get_stub().UnregisterMultiplexerSessions(request)
 
     def get_multiplexer_sessions(
-        self, pin_map_context: PinMapContext, multiplexer_type_id: Optional[str] = None
+        self, pin_map_context: PinMapContext, multiplexer_type_id: str | None = None
     ) -> MultiplexerSessionContainer:
         """Get all multiplexer session infos matching the specified criteria.
 
@@ -354,7 +352,7 @@ class SessionManagementClient(object):
         return MultiplexerSessionContainer(self, session_infos)
 
     def get_all_registered_multiplexer_sessions(
-        self, multiplexer_type_id: Optional[str] = None
+        self, multiplexer_type_id: str | None = None
     ) -> MultiplexerSessionContainer:
         """Get all multiplexer session infos registered with the session management service.
 
@@ -376,7 +374,7 @@ class SessionManagementClient(object):
         return MultiplexerSessionContainer(self, session_infos)
 
 
-def _timeout_to_milliseconds(timeout: Optional[float]) -> int:
+def _timeout_to_milliseconds(timeout: float | None) -> int:
     if timeout is None:
         return 0
     elif timeout == -1:
@@ -393,7 +391,7 @@ def _to_group_mappings_dict(
         str, session_management_service_pb2.ResolvedPinsOrRelays
     ],
 ) -> Mapping[str, Iterable[str]]:
-    group_mappings: Dict[str, Iterable[str]] = {}
+    group_mappings: dict[str, Iterable[str]] = {}
     if mappings is not None:
         for key, value in mappings.items():
             group_mappings[key] = value.pin_or_relay_names

@@ -1,8 +1,11 @@
 """Contains utility functions to test loopback measurement service."""
 
+from __future__ import annotations
+
 import pathlib
+from collections.abc import Iterable
 from enum import Enum
-from typing import Iterable, Tuple
+from typing import Tuple
 
 import ni_measurement_plugin_sdk_service as nims
 from tests.utilities.measurements.sample_measurement._stubs import color_pb2
@@ -58,7 +61,7 @@ def measure(
     enum_input: Color,
     protobuf_enum_input: color_pb2.ProtobufColor.ValueType,
     string_array_in: Iterable[str],
-) -> Tuple[
+) -> tuple[
     float, Iterable[float], bool, str, Color, color_pb2.ProtobufColor.ValueType, Iterable[str]
 ]:
     """Perform a loopback measurement with various data types."""

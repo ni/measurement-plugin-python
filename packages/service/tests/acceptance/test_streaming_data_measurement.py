@@ -1,6 +1,8 @@
 """Tests to validate a v2 measurement service that streams data."""
 
-from typing import Generator, List
+from __future__ import annotations
+
+from collections.abc import Generator
 
 import grpc
 import pytest
@@ -52,7 +54,7 @@ def test___streaming_measurement_service___request_data_cumulatively___receives_
 
     response_iterator = stub_v2.Measure(request)
 
-    expected_data: List[int] = []
+    expected_data: list[int] = []
     index = 0
     for response in response_iterator:
         expected_data.extend(index for i in range(data_size))
@@ -141,7 +143,7 @@ def _get_serialized_measurement_configuration_parameters(
 def _get_serialized_measurement_outputs(
     name: str,
     index: int,
-    data: List[int],
+    data: list[int],
 ) -> bytes:
     config_params = Outputs()
     config_params.name = name
@@ -155,7 +157,7 @@ def _get_serialized_measurement_outputs(
 
 
 @pytest.fixture(scope="module")
-def measurement_service(discovery_service_process) -> Generator[MeasurementService, None, None]:
+def measurement_service(discovery_service_process) -> Generator[MeasurementService]:
     """Test fixture that creates and hosts a measurement service."""
     with streaming_data_measurement.measurement_service.host_service() as service:
         yield service

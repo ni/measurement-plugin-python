@@ -1,13 +1,15 @@
 """Utilizes command line args to create a Measurement Plug-In Client using template files."""
 
+from __future__ import annotations
+
 import logging
 import pathlib
 from enum import Enum
-from typing import Any, Dict, List, Optional, Type
+from typing import Any
 
 import black
 import click
-from click_option_group import optgroup, RequiredMutuallyExclusiveOptionGroup
+from click_option_group import RequiredMutuallyExclusiveOptionGroup, optgroup
 from mako.template import Template
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v2 import (
     measurement_service_pb2 as v2_measurement_service_pb2,
@@ -19,18 +21,17 @@ from ni_measurement_plugin_sdk_generator.client._support import (
     create_class_name,
     create_module_name,
     extract_base_service_class,
+    get_all_registered_measurement_info,
     get_configuration_and_output_metadata_by_index,
     get_configuration_parameters_with_type_and_default_values,
     get_measurement_service_stub_and_version,
     get_output_parameters_with_type,
-    get_all_registered_measurement_info,
     get_selected_measurement_service_class,
-    to_ordered_set,
     resolve_output_directory,
+    to_ordered_set,
     validate_identifier,
     validate_measurement_service_classes,
 )
-
 
 _CLIENT_CREATION_ERROR_MESSAGE = "Client creation failed for '{}'. Possible reason(s): {}"
 
@@ -63,11 +64,11 @@ def _create_client(
     module_name: str,
     class_name: str,
     directory_out: pathlib.Path,
-    generated_modules: List[str],
+    generated_modules: list[str],
 ) -> None:
-    built_in_import_modules: List[str] = []
-    custom_import_modules: List[str] = []
-    enum_values_by_type: Dict[Type[Enum], Dict[str, int]] = {}
+    built_in_import_modules: list[str] = []
+    custom_import_modules: list[str] = []
+    enum_values_by_type: dict[type[Enum], dict[str, int]] = {}
     type_url_prefix = "type.googleapis.com/"
 
     measurement_service_stub, measurement_version = get_measurement_service_stub_and_version(
@@ -115,12 +116,12 @@ def _create_client(
     )
 
 
-def _create_all_clients(directory_out: Optional[str]) -> None:
+def _create_all_clients(directory_out: str | None) -> None:
     channel_pool = GrpcChannelPool()
     discovery_client = DiscoveryClient(grpc_channel_pool=channel_pool)
 
-    generated_modules: List[str] = []
-    errors: List[str] = []
+    generated_modules: list[str] = []
+    errors: list[str] = []
     directory_out_path = resolve_output_directory(directory_out)
     measurement_service_classes, _ = get_all_registered_measurement_info(discovery_client)
     validate_measurement_service_classes(measurement_service_classes)
@@ -157,7 +158,7 @@ def _create_all_clients(directory_out: Optional[str]) -> None:
 
 def _create_clients_interactively() -> None:
     print("Creating the Python Measurement Plug-In Client in interactive mode...")
-    generated_modules: List[str] = []
+    generated_modules: list[str] = []
     channel_pool = GrpcChannelPool()
     discovery_client = DiscoveryClient(grpc_channel_pool=channel_pool)
     directory_out_path = resolve_output_directory()
@@ -213,12 +214,12 @@ def _create_clients_interactively() -> None:
 
 
 def _create_clients(
-    measurement_service_classes: List[str],
-    module_name: Optional[str],
-    class_name: Optional[str],
-    directory_out: Optional[str],
+    measurement_service_classes: list[str],
+    module_name: str | None,
+    class_name: str | None,
+    directory_out: str | None,
 ) -> None:
-    generated_modules: List[str] = []
+    generated_modules: list[str] = []
     channel_pool = GrpcChannelPool()
     discovery_client = DiscoveryClient(grpc_channel_pool=channel_pool)
     directory_out_path = resolve_output_directory(directory_out)
@@ -294,12 +295,12 @@ def _create_clients(
     help="Enable verbose logging. Repeat to increase verbosity.",
 )
 def create_client(
-    measurement_service_class: List[str],
+    measurement_service_class: list[str],
     all: bool,
     interactive: bool,
-    module_name: Optional[str],
-    class_name: Optional[str],
-    directory_out: Optional[str],
+    module_name: str | None,
+    class_name: str | None,
+    directory_out: str | None,
     verbose: int,
 ) -> None:
     """Generates a Python Measurement Plug-In Client module for the measurement service.

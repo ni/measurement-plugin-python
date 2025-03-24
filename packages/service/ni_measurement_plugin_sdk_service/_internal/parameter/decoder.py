@@ -1,6 +1,8 @@
+from __future__ import annotations
+
 """Parameter Serializer."""
 
-from typing import Any, Dict
+from typing import Any
 
 from google.protobuf import descriptor_pool, message_factory
 from google.protobuf.descriptor_pb2 import FieldDescriptorProto
@@ -14,10 +16,10 @@ from ni_measurement_plugin_sdk_service._internal.parameter.serialization_descrip
 
 
 def deserialize_parameters(
-    parameter_metadata_dict: Dict[int, ParameterMetadata],
+    parameter_metadata_dict: dict[int, ParameterMetadata],
     parameter_bytes: bytes,
     service_name: str,
-) -> Dict[int, Any]:
+) -> dict[int, Any]:
     """Deserialize the bytes of the parameter based on the metadata.
 
     Args:

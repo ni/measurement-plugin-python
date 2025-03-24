@@ -5,7 +5,7 @@ from __future__ import annotations
 import sys
 from enum import Enum, IntEnum
 from types import TracebackType
-from typing import TYPE_CHECKING, Optional, Type
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     import grpc
@@ -70,7 +70,7 @@ class _MultiplexerSessionBase:
     def __init__(
         self,
         resource_name: str,
-        topology: Optional[str] = None,
+        topology: str | None = None,
         reset_device: bool = True,
         initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
     ) -> None:
@@ -119,9 +119,9 @@ class ContextManagerSession(_MultiplexerSessionBase):
 
     def __exit__(
         self,
-        exc_type: Optional[Type[BaseException]],
-        exc_val: Optional[BaseException],
-        traceback: Optional[TracebackType],
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
+        traceback: TracebackType | None,
     ) -> None:
         """Exit the session's runtime context."""
         self.is_closed = True
@@ -133,7 +133,7 @@ class Session(_MultiplexerSessionBase):
     def __init__(
         self,
         resource_name: str,
-        topology: Optional[str] = None,
+        topology: str | None = None,
         reset_device: bool = True,
         initialization_behavior: SessionInitializationBehavior = SessionInitializationBehavior.AUTO,
     ) -> None:
@@ -154,9 +154,9 @@ class Session(_MultiplexerSessionBase):
 
     def __exit__(
         self,
-        exc_type: Optional[Type[BaseException]],
-        exc_val: Optional[BaseException],
-        traceback: Optional[TracebackType],
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
+        traceback: TracebackType | None,
     ) -> None:
         """Exit the session's runtime context."""
         if self.initialization_behavior in _CLOSE_BEHAVIORS:

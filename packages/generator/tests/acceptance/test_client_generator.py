@@ -2,7 +2,7 @@ import os
 import pathlib
 import re
 import sys
-from typing import Generator
+from collections.abc import Generator
 
 import mypy.api
 import pytest

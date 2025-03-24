@@ -3,7 +3,6 @@
 import logging
 import pathlib
 import sys
-from typing import Tuple
 
 import click
 import ni_measurement_plugin_sdk_service as nims
@@ -24,7 +23,7 @@ measurement_service = nims.MeasurementService(
 def measure(
     relay_names: str,
     close_relays: bool,
-) -> Tuple[()]:
+) -> tuple[()]:
     """Control relays using an NI relay driver (e.g. PXI-2567)."""
     logging.info(
         "Controlling relays: relay_names=%s close_relay=%s",

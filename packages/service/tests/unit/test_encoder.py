@@ -1,7 +1,8 @@
 """Contains tests to validate serializer.py."""
 
+from __future__ import annotations
+
 from enum import Enum, IntEnum
-from typing import List
 
 import pytest
 from google.protobuf import descriptor_pb2, descriptor_pool
@@ -248,7 +249,7 @@ def _validate_serialized_bytes(custom_serialized_bytes, values):
     assert grpc_serialized_data == custom_serialized_bytes
 
 
-def _test_create_file_descriptor(metadata: List[metadata.ParameterMetadata], file_name: str) -> str:
+def _test_create_file_descriptor(metadata: list[metadata.ParameterMetadata], file_name: str) -> str:
     pool = descriptor_pool.Default()
     try:
         pool.FindMessageTypeByName(f"{file_name}.test")

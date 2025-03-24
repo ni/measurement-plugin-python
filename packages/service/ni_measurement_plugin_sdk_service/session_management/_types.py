@@ -2,8 +2,9 @@
 
 from __future__ import annotations
 
+from collections.abc import Iterable
 from enum import IntEnum
-from typing import Generic, Iterable, List, NamedTuple, Optional, Protocol, TypeVar
+from typing import Generic, NamedTuple, Protocol, TypeVar
 
 from ni_measurement_plugin_sdk_service._internal.stubs import session_pb2
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink import (
@@ -25,7 +26,7 @@ class PinMapContext(NamedTuple):
     pin_map_id: str
     """The resource id of the pin map in the Pin Map service that should be used for the call."""
 
-    sites: Optional[List[int]]
+    sites: list[int] | None
     """List of site numbers being used for the call.
     
     If None or empty, use all sites in the pin map.
@@ -347,7 +348,7 @@ class Connection(NamedTuple):
     multiplexer_route: str
     """The multiplexer route through which the pin is connected to an instrument's channel."""
 
-    multiplexer_session_info: Optional[MultiplexerSessionInformation]
+    multiplexer_session_info: MultiplexerSessionInformation | None
     """The multiplexer session information."""
 
     @property

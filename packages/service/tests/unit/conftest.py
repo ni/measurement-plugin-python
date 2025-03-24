@@ -1,7 +1,10 @@
 """Test fixtures for unit tests."""
 
+from __future__ import annotations
+
 import pathlib
-from typing import Generator, cast
+from collections.abc import Generator
+from typing import cast
 from unittest.mock import Mock
 
 import grpc
@@ -9,7 +12,9 @@ import pytest
 from pytest_mock import MockerFixture
 
 from ni_measurement_plugin_sdk_service._internal import grpc_servicer
-from ni_measurement_plugin_sdk_service._internal.grpc_servicer import MeasurementServiceContext
+from ni_measurement_plugin_sdk_service._internal.grpc_servicer import (
+    MeasurementServiceContext,
+)
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
 from ni_measurement_plugin_sdk_service.measurement.service import MeasurementService
@@ -41,7 +46,7 @@ def grpc_channel_pool(mocker: MockerFixture) -> Mock:
 @pytest.fixture
 def measurement_service_context(
     mocker: MockerFixture, measurement_service: Mock
-) -> Generator[Mock, None, None]:
+) -> Generator[Mock]:
     """Test fixture that creates and registers a mock MeasurementServiceContext."""
     mock = mocker.create_autospec(MeasurementServiceContext)
     mock.owner = measurement_service

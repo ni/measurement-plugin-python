@@ -1,9 +1,11 @@
 """Contains utility functions to test a v2 measurement service that streams data."""
 
+from __future__ import annotations
+
 import pathlib
 import threading
 import time
-from typing import Generator, List, Tuple
+from collections.abc import Generator
 
 import grpc
 import ni_measurement_plugin_sdk_service as nims
@@ -17,7 +19,7 @@ measurement_service = nims.MeasurementService(
 )
 
 
-Outputs = Tuple[str, int, List[int]]
+Outputs = tuple[str, int, list[int]]
 
 
 @measurement_service.register_measurement
@@ -37,12 +39,12 @@ def measure(
     cumulative_data: bool,
     response_interval_in_ms: int,
     error_on_index: int,
-) -> Generator[Outputs, None, None]:
+) -> Generator[Outputs]:
     """Returns the number of responses requested at the requested interval."""
     cancellation_event = threading.Event()
     measurement_service.context.add_cancel_callback(cancellation_event.set)
 
-    data: List[int] = []
+    data: list[int] = []
 
     response_interval_in_seconds = response_interval_in_ms / 1000.0
 

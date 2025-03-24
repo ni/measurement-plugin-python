@@ -1,14 +1,19 @@
 """Pytest configuration file."""
 
+from __future__ import annotations
+
 import pathlib
 import sys
-from typing import Generator, List
+from collections.abc import Generator
 
 import grpc
 import pytest
 
 from ni_measurement_plugin_sdk_service import _featuretoggles
-from ni_measurement_plugin_sdk_service._featuretoggles import CodeReadiness, FeatureToggle
+from ni_measurement_plugin_sdk_service._featuretoggles import (
+    CodeReadiness,
+    FeatureToggle,
+)
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v1 import (
     measurement_service_pb2_grpc as v1_measurement_service_pb2_grpc,
 )
@@ -35,7 +40,7 @@ def test_assets_directory() -> pathlib.Path:
 
 
 @pytest.fixture
-def grpc_channel(measurement_service: MeasurementService) -> Generator[grpc.Channel, None, None]:
+def grpc_channel(measurement_service: MeasurementService) -> Generator[grpc.Channel]:
     """Test fixture that creates a gRPC channel."""
     target = measurement_service.service_location.insecure_address
     options = [
@@ -59,7 +64,7 @@ def stub_v2(grpc_channel: grpc.Channel) -> v2_measurement_service_pb2_grpc.Measu
 
 
 @pytest.fixture(scope="session")
-def discovery_service_process() -> Generator[DiscoveryServiceProcess, None, None]:
+def discovery_service_process() -> Generator[DiscoveryServiceProcess]:
     """Test fixture that creates discovery service process."""
     if sys.platform != "win32":
         pytest.skip(f"Platform {sys.platform} is not supported for discovery service tests.")
@@ -76,7 +81,7 @@ def discovery_service_process() -> Generator[DiscoveryServiceProcess, None, None
 
 
 @pytest.fixture(scope="session")
-def grpc_channel_pool() -> Generator[GrpcChannelPool, None, None]:
+def grpc_channel_pool() -> Generator[GrpcChannelPool]:
     """Test fixture that creates a gRPC channel pool."""
     with GrpcChannelPool() as grpc_channel_pool:
         yield grpc_channel_pool
@@ -124,7 +129,7 @@ def feature_toggles(monkeypatch: pytest.MonkeyPatch, request: pytest.FixtureRequ
             monkeypatch.setattr(_featuretoggles, "_CODE_READINESS_LEVEL", code_readiness)
 
 
-def pytest_collection_modifyitems(items: List[pytest.Item]) -> None:
+def pytest_collection_modifyitems(items: list[pytest.Item]) -> None:
     """Hook to inject fixtures based on marks."""
     # By default, all features are enabled when running tests.
     _featuretoggles._CODE_READINESS_LEVEL = CodeReadiness.PROTOTYPE
