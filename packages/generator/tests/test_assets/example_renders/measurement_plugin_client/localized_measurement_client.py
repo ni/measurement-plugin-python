@@ -77,10 +77,10 @@ class LocalizedMeasurementClient:
     def __init__(
         self,
         *,
-        discovery_client: typing.Optional[DiscoveryClient] = None,
-        pin_map_client: typing.Optional[PinMapClient] = None,
-        grpc_channel: typing.Optional[grpc.Channel] = None,
-        grpc_channel_pool: typing.Optional[GrpcChannelPool] = None,
+        discovery_client: DiscoveryClient | None = None,
+        pin_map_client: PinMapClient | None = None,
+        grpc_channel: grpc.Channel | None = None,
+        grpc_channel_pool: GrpcChannelPool | None = None,
     ):
         """Initialize the Measurement Plug-In Client.
 
@@ -99,10 +99,10 @@ class LocalizedMeasurementClient:
         self._grpc_channel_pool = grpc_channel_pool
         self._discovery_client = discovery_client
         self._pin_map_client = pin_map_client
-        self._stub: typing.Optional[v2_measurement_service_pb2_grpc.MeasurementServiceStub] = None
-        self._measure_response: typing.Optional[
+        self._stub: v2_measurement_service_pb2_grpc.MeasurementServiceStub | None = None
+        self._measure_response: None | (
             grpc.CallIterator[v2_measurement_service_pb2.MeasureResponse]
-        ] = None
+        ) = None
         self._configuration_metadata = {
             1: ParameterMetadata(
                 display_name="Float In",
@@ -434,12 +434,12 @@ class LocalizedMeasurementClient:
         self._pin_map_context = val
 
     @property
-    def sites(self) -> typing.Optional[typing.List[int]]:
+    def sites(self) -> list[int] | None:
         """The sites where the measurement must be executed."""
         return self._pin_map_context.sites
 
     @sites.setter
-    def sites(self, val: typing.List[int]) -> None:
+    def sites(self, val: list[int]) -> None:
         if self._pin_map_context is None:
             raise AttributeError(
                 "Cannot set sites because the pin map context is None. Please provide a pin map context or register a pin map before setting sites."
@@ -496,7 +496,7 @@ class LocalizedMeasurementClient:
         )
 
     def _create_measure_request(
-        self, parameter_values: typing.List[typing.Any]
+        self, parameter_values: list[typing.Any]
     ) -> v2_measurement_service_pb2.MeasureRequest:
         serialized_configuration = any_pb2.Any(
             type_url="type.googleapis.com/ni.tests.LocalizedMeasurement_Python.Configurations",
@@ -612,7 +612,7 @@ class LocalizedMeasurementClient:
         integer_in: int = 10,
         enum_in: EnumInEnum = EnumInEnum.BLUE,
         enum_array_in: typing.Iterable[EnumInEnum] = [EnumInEnum.RED, EnumInEnum.GREEN],
-    ) -> typing.Generator[Outputs, None, None]:
+    ) -> typing.Generator[Outputs]:
         """Perform a streaming measurement.
 
         Returns:

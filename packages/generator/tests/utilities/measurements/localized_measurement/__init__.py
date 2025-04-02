@@ -1,8 +1,8 @@
 """Contains utility functions to test loopback measurement service with non-ASCII characters."""
 
+from collections.abc import Iterable
 from enum import Enum
 from pathlib import Path
-from typing import Iterable, Tuple
 
 import ni_measurement_plugin_sdk_service as nims
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types import (
@@ -97,7 +97,7 @@ def measure(
     integer_input: int,
     enum_input: Color,
     enum_array_input: Iterable[Color],
-) -> Tuple[
+) -> tuple[
     float,
     Iterable[float],
     bool,
