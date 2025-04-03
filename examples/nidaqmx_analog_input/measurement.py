@@ -3,7 +3,6 @@
 import logging
 import pathlib
 import sys
-from typing import List, Tuple
 
 import click
 import ni_measurement_plugin_sdk_service as nims
@@ -31,7 +30,7 @@ measurement_service = nims.MeasurementService(
 @measurement_service.configuration("sample_rate", nims.DataType.Double, 1000.0)
 @measurement_service.configuration("number_of_samples", nims.DataType.UInt64, 100)
 @measurement_service.output("acquired_samples", nims.DataType.DoubleArray1D)
-def measure(pin_name: str, sample_rate: float, number_of_samples: int) -> Tuple[List[float]]:
+def measure(pin_name: str, sample_rate: float, number_of_samples: int) -> tuple[list[float]]:
     """Perform a finite analog input measurement with NI-DAQmx."""
     logging.info(
         "Executing measurement: pin_name=%s sample_rate=%g number_of_samples=%d",
@@ -68,7 +67,7 @@ def measure(pin_name: str, sample_rate: float, number_of_samples: int) -> Tuple[
     return (voltage_values,)
 
 
-def _log_measured_values(samples: List[float], max_samples_to_display: int = 5) -> None:
+def _log_measured_values(samples: list[float], max_samples_to_display: int = 5) -> None:
     """Log the measured values."""
     if len(samples) > max_samples_to_display:
         for index, value in enumerate(samples[0 : max_samples_to_display - 1]):

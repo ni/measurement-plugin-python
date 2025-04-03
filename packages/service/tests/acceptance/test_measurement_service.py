@@ -1,12 +1,14 @@
 """Tests to validate measurement service. Uses the Sample Measurement Example."""
 
+from __future__ import annotations
+
 import random
 import sys
 import urllib.parse
 import urllib.request
+from collections.abc import Generator
 from enum import Enum
 from os import path
-from typing import Generator, List, Union
 
 import pytest
 from google.protobuf import any_pb2
@@ -68,12 +70,12 @@ def test___measurement_service_v2___get_metadata___returns_metadata(
 )
 def test___measurement_service_v1___measure___returns_output(
     float_in: float,
-    double_array_in: List[float],
+    double_array_in: list[float],
     bool_in: bool,
     string_in: str,
     enum_in: Enum,
     protobuf_enum_in: ProtobufColor.ValueType,
-    string_array_in: List[str],
+    string_array_in: list[str],
     stub_v1: v1_measurement_service_pb2_grpc.MeasurementServiceStub,
 ):
     metadata = stub_v1.GetMetadata(v1_measurement_service_pb2.GetMetadataRequest())
@@ -114,12 +116,12 @@ def test___measurement_service_v1___measure___returns_output(
 )
 def test___measurement_service_v2___measure___returns_output(
     float_in: float,
-    double_array_in: List[float],
+    double_array_in: list[float],
     bool_in: bool,
     string_in: str,
     enum_in: Enum,
     protobuf_enum_in: ProtobufColor.ValueType,
-    string_array_in: List[str],
+    string_array_in: list[str],
     stub_v2: v2_measurement_service_pb2_grpc.MeasurementServiceStub,
 ):
     metadata = stub_v2.GetMetadata(v2_measurement_service_pb2.GetMetadataRequest())
@@ -219,7 +221,7 @@ def test___measurement_service_v2___measure_with_large_array___returns_output(
 
 
 @pytest.fixture(scope="module")
-def measurement_service(discovery_service_process) -> Generator[MeasurementService, None, None]:
+def measurement_service(discovery_service_process) -> Generator[MeasurementService]:
     """Test fixture that creates and hosts a measurement service."""
     with loopback_measurement.measurement_service.host_service() as service:
         yield service
@@ -235,12 +237,12 @@ def _get_configuration_parameters(*args, message_type: str = "", **kwargs) -> an
 
 def _get_serialized_measurement_signature(
     float_in: float,
-    double_array_in: List[float],
+    double_array_in: list[float],
     bool_in: bool,
     string_in: str,
     enum_in: Enum,
     protobuf_enum_in: ProtobufColor.ValueType,
-    string_array_in: List[str],
+    string_array_in: list[str],
 ) -> bytes:
     config_params = Parameters()
     config_params.float_in = float_in
@@ -258,10 +260,10 @@ def _get_serialized_measurement_signature(
 
 
 def _validate_get_metadata_response(
-    get_metadata_response: Union[
-        v1_measurement_service_pb2.GetMetadataResponse,
-        v2_measurement_service_pb2.GetMetadataResponse,
-    ],
+    get_metadata_response: (
+        v1_measurement_service_pb2.GetMetadataResponse
+        | v2_measurement_service_pb2.GetMetadataResponse
+    ),
 ):
     assert get_metadata_response.measurement_details.display_name == "Loopback Measurement (Py)"
     assert get_metadata_response.measurement_details.version == "1.2.3.4"

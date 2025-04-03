@@ -1,10 +1,13 @@
 """Contains utility functions to test that yield and return are supported in measurements."""
 
+from __future__ import annotations
+
 import pathlib
 import random
 import threading
 import time
-from typing import Generator, List, Tuple
+from collections.abc import Generator
+from typing import List
 
 import grpc
 
@@ -23,7 +26,7 @@ measurement_service = nims.MeasurementService(
 )
 
 
-Outputs = Tuple[float, List[float], str]
+Outputs = tuple[float, list[float], str]
 
 
 @measurement_service.register_measurement
@@ -42,7 +45,7 @@ def measure(time_in_seconds: float) -> Generator[Outputs, None, Outputs]:
         )
 
     elapsed_time_in_seconds = 0.0
-    random_numbers: List[float] = []
+    random_numbers: list[float] = []
     status = ""
 
     start_time = time.monotonic()
@@ -76,7 +79,7 @@ def measure(time_in_seconds: float) -> Generator[Outputs, None, Outputs]:
     return (elapsed_time_in_seconds, random_numbers, status)
 
 
-def _generate_random_numbers(count: int) -> Generator[float, None, None]:
+def _generate_random_numbers(count: int) -> Generator[float]:
     """Generate random numbers between -RANDOM_NUMBER_RANGE and +RANDOM_NUMBER_RANGE."""
     for _ in range(count):
         yield RANDOM_NUMBER_RANGE * (2.0 * random.random() - 1.0)

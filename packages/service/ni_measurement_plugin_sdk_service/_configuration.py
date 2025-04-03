@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import sys
-from typing import TYPE_CHECKING, Any, Callable, Dict, NamedTuple, TypeVar, Union
+from typing import TYPE_CHECKING, Any, Callable, NamedTuple, TypeVar
 
 from decouple import AutoConfig, Undefined, undefined
 
@@ -26,8 +26,8 @@ if TYPE_CHECKING:
 
     def _config(
         option: str,
-        default: Union[_T, Undefined] = undefined,
-        cast: Union[Callable[[str], _T], Undefined] = undefined,
+        default: _T | Undefined = undefined,
+        cast: Callable[[str], _T] | Undefined = undefined,
     ) -> _T: ...
 
 
@@ -58,9 +58,9 @@ class MIDriverOptions(NamedTuple):
             model=_config(f"{prefix}_MODEL", default=self.model),
         )
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert options to a dict to pass to nimi-python."""
-        options: Dict[str, Any] = {}
+        options: dict[str, Any] = {}
         if self.simulate:
             options["simulate"] = True
         if self.board_type or self.model:

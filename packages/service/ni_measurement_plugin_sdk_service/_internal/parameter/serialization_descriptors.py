@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from enum import Enum, EnumMeta
 from json import loads
-from typing import TYPE_CHECKING, List, Type, Union, Optional
+from typing import TYPE_CHECKING, Union
 
 from google.protobuf.descriptor_pb2 import (
     DescriptorProto,
@@ -24,10 +24,10 @@ from ni_measurement_plugin_sdk_service._internal.parameter.metadata import (
 if TYPE_CHECKING:
     from google.protobuf.internal.enum_type_wrapper import _EnumTypeWrapper
 
-    SupportedEnumType = Union[Type[Enum], _EnumTypeWrapper]
+    SupportedEnumType = Union[type[Enum], _EnumTypeWrapper]
 
 
-def is_protobuf(enum_type: Optional[SupportedEnumType]) -> bool:
+def is_protobuf(enum_type: SupportedEnumType | None) -> bool:
     """Finds if 'enum_type' is a protobuf or a python enum."""
     return hasattr(enum_type, "ValueType")
 
@@ -83,7 +83,7 @@ def _create_field(
 
 
 def _create_message_type(
-    parameter_metadata: List[ParameterMetadata],
+    parameter_metadata: list[ParameterMetadata],
     message_name: str,
     file_descriptor: FileDescriptorProto,
 ) -> None:
@@ -106,8 +106,8 @@ def _create_message_type(
 
 def create_file_descriptor(
     service_name: str,
-    output_metadata: List[ParameterMetadata],
-    input_metadata: List[ParameterMetadata],
+    output_metadata: list[ParameterMetadata],
+    input_metadata: list[ParameterMetadata],
     pool: DescriptorPool,
 ) -> None:
     """Creates two message types in one file descriptor proto."""

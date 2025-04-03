@@ -1,6 +1,8 @@
 """Utility to create and construct connection subset."""
 
-from typing import NamedTuple, TypeVar, Union
+from __future__ import annotations
+
+from typing import NamedTuple, TypeVar
 
 from ni_measurement_plugin_sdk_service.session_management import (
     Connection,
@@ -24,7 +26,7 @@ class ConnectionSubset(NamedTuple):
     multiplexer_route: str = ""
 
 
-def get_connection_subset(connection: Union[Connection, TypedConnection[_T]]) -> ConnectionSubset:
+def get_connection_subset(connection: Connection | TypedConnection[_T]) -> ConnectionSubset:
     """Constructs and returns a ConnectionSubset object."""
     return ConnectionSubset(
         connection.pin_or_relay_name,
@@ -35,7 +37,7 @@ def get_connection_subset(connection: Union[Connection, TypedConnection[_T]]) ->
 
 
 def get_connection_subset_with_multiplexer(
-    connection: Union[Connection, TypedConnectionWithMultiplexer[_T, _TMultiplexer]],
+    connection: Connection | TypedConnectionWithMultiplexer[_T, _TMultiplexer],
 ) -> ConnectionSubset:
     """Constructs and returns a ConnectionSubset object with multiplexer data."""
     return ConnectionSubset(

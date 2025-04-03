@@ -1,8 +1,8 @@
 import concurrent.futures
 import importlib.util
 import pathlib
+from collections.abc import Generator
 from types import ModuleType
-from typing import Generator
 
 import grpc
 import pytest

@@ -1,7 +1,10 @@
 """NI-SWITCH measurement plug-in test service."""
 
+from __future__ import annotations
+
 import pathlib
-from typing import Iterable, Sequence, Tuple
+from collections.abc import Iterable, Sequence
+from typing import Tuple
 
 import niswitch
 
@@ -27,7 +30,7 @@ measurement_service = nims.MeasurementService(
 def measure(
     relay_names: Iterable[str],
     multi_session: bool,
-) -> Tuple[Iterable[str], Iterable[str], Iterable[str], Iterable[str]]:
+) -> tuple[Iterable[str], Iterable[str], Iterable[str], Iterable[str]]:
     """NI-SWITCH measurement plug-in test service."""
     if multi_session:
         with measurement_service.context.reserve_sessions(relay_names) as reservation:

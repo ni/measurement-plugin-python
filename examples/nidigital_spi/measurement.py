@@ -1,9 +1,11 @@
 """Test a SPI device using an NI Digital Pattern instrument."""
 
+from __future__ import annotations
+
 import logging
 import pathlib
 import sys
-from typing import Iterable, Tuple, Union
+from collections.abc import Iterable
 
 import click
 import ni_measurement_plugin_sdk_service as nims
@@ -42,7 +44,7 @@ def measure(
     timing_file_path: str,
     pattern_file_path: str,
     load_files: bool,
-) -> Tuple:
+) -> tuple:
     """Test a SPI device using an NI Digital Pattern instrument."""
     logging.info("Starting test: pin_names=%s", pin_names)
 
@@ -80,7 +82,7 @@ def measure(
 
 
 def _resolve_relative_path(
-    directory_path: pathlib.Path, file_path: Union[str, pathlib.Path]
+    directory_path: pathlib.Path, file_path: str | pathlib.Path
 ) -> pathlib.Path:
     file_path = pathlib.Path(file_path)
     if file_path.is_absolute():
