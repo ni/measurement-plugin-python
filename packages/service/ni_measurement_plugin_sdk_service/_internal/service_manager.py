@@ -1,5 +1,7 @@
+from __future__ import annotations
+
 import logging
-from typing import Callable, List, Optional
+from typing import Callable
 
 import grpc
 from deprecation import deprecated
@@ -37,11 +39,11 @@ _V2_INTERFACE = "ni.measurementlink.measurement.v2.MeasurementService"
 class GrpcService:
     """Manages the gRPC server lifetime and registration."""
 
-    def __init__(self, discovery_client: Optional[DiscoveryClient] = None) -> None:
+    def __init__(self, discovery_client: DiscoveryClient | None = None) -> None:
         """Initialize the service."""
         self._discovery_client = discovery_client or DiscoveryClient()
-        self._server: Optional[grpc.Server] = None
-        self._service_location: Optional[ServiceLocation] = None
+        self._server: grpc.Server | None = None
+        self._service_location: ServiceLocation | None = None
         self._registration_id = ""
 
     @property
@@ -67,7 +69,7 @@ class GrpcService:
         deprecated_in="1.3.0-dev0",
         details="This property should not be public and will be removed in a later release.",
     )
-    def server(self) -> Optional[grpc.Server]:
+    def server(self) -> grpc.Server | None:
         """The gRPC server."""
         return self._server
 
@@ -82,8 +84,8 @@ class GrpcService:
         self,
         measurement_info: MeasurementInfo,
         service_info: ServiceInfo,
-        configuration_parameter_list: List[ParameterMetadata],
-        output_parameter_list: List[ParameterMetadata],
+        configuration_parameter_list: list[ParameterMetadata],
+        output_parameter_list: list[ParameterMetadata],
         measure_function: Callable,
         owner: object = None,
     ) -> str:
@@ -92,7 +94,7 @@ class GrpcService:
         Returns:
             The insecure port.
         """
-        interceptors: List[grpc.ServerInterceptor] = []
+        interceptors: list[grpc.ServerInterceptor] = []
         if ServerLogger.is_enabled():
             interceptors.append(ServerLogger())
         self._server = grpc.server(

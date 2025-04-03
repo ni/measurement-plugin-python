@@ -1,8 +1,10 @@
 """Client for accessing the NI Discovery Service."""
 
+from __future__ import annotations
+
 import logging
 import threading
-from typing import Optional, Sequence, Tuple
+from collections.abc import Sequence
 
 import grpc
 from deprecation import deprecated
@@ -14,10 +16,15 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.discov
     discovery_service_pb2,
     discovery_service_pb2_grpc,
 )
-from ni_measurement_plugin_sdk_service.discovery._support import _get_discovery_service_address
+from ni_measurement_plugin_sdk_service.discovery._support import (
+    _get_discovery_service_address,
+)
 from ni_measurement_plugin_sdk_service.discovery._types import ServiceLocation
 from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
-from ni_measurement_plugin_sdk_service.measurement.info import MeasurementInfo, ServiceInfo
+from ni_measurement_plugin_sdk_service.measurement.info import (
+    MeasurementInfo,
+    ServiceInfo,
+)
 
 _logger = logging.getLogger(__name__)
 
@@ -27,9 +34,9 @@ class DiscoveryClient:
 
     def __init__(
         self,
-        stub: Optional[discovery_service_pb2_grpc.DiscoveryServiceStub] = None,
+        stub: discovery_service_pb2_grpc.DiscoveryServiceStub | None = None,
         *,
-        grpc_channel_pool: Optional[GrpcChannelPool] = None,
+        grpc_channel_pool: GrpcChannelPool | None = None,
     ) -> None:
         """Initialize the discovery client.
 
@@ -248,7 +255,7 @@ class DiscoveryClient:
         service_class: str = "",
         deployment_target: str = "",
         version: str = "",
-    ) -> Tuple[ServiceLocation, ServiceInfo]:
+    ) -> tuple[ServiceLocation, ServiceInfo]:
         """Resolve the location of a service along with its information.
 
         Given a description of a service, returns information for the service in addition to

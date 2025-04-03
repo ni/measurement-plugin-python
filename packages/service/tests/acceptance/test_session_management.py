@@ -1,5 +1,8 @@
+from __future__ import annotations
+
 import pathlib
-from typing import Generator, Iterable, NamedTuple
+from collections.abc import Generator, Iterable
+from typing import NamedTuple
 
 import grpc
 import pytest
@@ -18,7 +21,6 @@ from ni_measurement_plugin_sdk_service.pin_map import PinMapClient
 from tests.utilities.discovery_service_process import DiscoveryServiceProcess
 from tests.utilities.measurements import pin_aware_measurement
 from tests.utilities.stubs.pinaware.types_pb2 import Configurations, Outputs
-
 
 pytestmark = pytest.mark.usefixtures("filter_wrong_configurations_message_type_warnings")
 
@@ -288,7 +290,7 @@ def _measure(
 @pytest.fixture(scope="module")
 def measurement_service(
     discovery_service_process: DiscoveryServiceProcess,
-) -> Generator[MeasurementService, None, None]:
+) -> Generator[MeasurementService]:
     """Test fixture that creates and hosts a measurement service."""
     with pin_aware_measurement.measurement_service.host_service() as service:
         yield service

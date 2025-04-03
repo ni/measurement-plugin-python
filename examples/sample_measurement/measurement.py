@@ -3,8 +3,8 @@
 import logging
 import pathlib
 import sys
+from collections.abc import Iterable
 from enum import Enum
-from typing import Iterable, Tuple
 
 import _array_utils
 import click
@@ -89,7 +89,7 @@ def measure(
     enum_input: Color,
     protobuf_enum_input: color_pb2.ProtobufColor.ValueType,
     string_array_in: Iterable[str],
-) -> Tuple[
+) -> tuple[
     float,
     Iterable[float],
     bool,

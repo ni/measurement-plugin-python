@@ -1,7 +1,8 @@
 """Class to create and terminate Discovery Service instance."""
 
+from __future__ import annotations
+
 from types import TracebackType
-from typing import Optional, Type
 
 from typing_extensions import Self
 
@@ -34,9 +35,9 @@ class DiscoveryServiceProcess:
 
     def __exit__(
         self,
-        exc_type: Optional[Type[BaseException]],
-        exc_val: Optional[BaseException],
-        exc_tb: Optional[TracebackType],
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
+        exc_tb: TracebackType | None,
     ) -> None:
         """Closes the DiscoveryServiceProcess instance."""
         self._close_discovery_service()

@@ -6,6 +6,7 @@ import json
 import sys
 import threading
 import warnings
+from collections.abc import Iterable
 from enum import Enum, EnumMeta
 from os import path
 from pathlib import Path
@@ -14,12 +15,7 @@ from typing import (
     TYPE_CHECKING,
     Any,
     Callable,
-    Dict,
-    Iterable,
-    List,
     Literal,
-    Optional,
-    Type,
     TypeVar,
     Union,
 )
@@ -68,7 +64,7 @@ if TYPE_CHECKING:
     else:
         from typing_extensions import Self
 
-    SupportedEnumType = Union[Type[Enum], _EnumTypeWrapper]
+    SupportedEnumType = Union[type[Enum], _EnumTypeWrapper]
 
 
 class MeasurementContext:
@@ -109,8 +105,8 @@ class MeasurementContext:
 
     def reserve_session(
         self,
-        pin_or_relay_names: Union[str, Iterable[str]],
-        timeout: Optional[float] = 0.0,
+        pin_or_relay_names: str | Iterable[str],
+        timeout: float | None = 0.0,
     ) -> SingleSessionReservation:
         """Reserve a single session.
 
@@ -139,8 +135,8 @@ class MeasurementContext:
 
     def reserve_sessions(
         self,
-        pin_or_relay_names: Union[str, Iterable[str]],
-        timeout: Optional[float] = 0.0,
+        pin_or_relay_names: str | Iterable[str],
+        timeout: float | None = 0.0,
     ) -> MultiSessionReservation:
         """Reserve multiple sessions.
 
@@ -178,8 +174,8 @@ class MeasurementService:
         self,
         service_config_path: Path,
         version: str = "",
-        ui_file_paths: List[Path] = [],
-        service_class: Optional[str] = None,
+        ui_file_paths: list[Path] = [],
+        service_class: str | None = None,
     ) -> None:
         """Initialize the Measurement Service object.
 
@@ -204,7 +200,7 @@ class MeasurementService:
         if not path.exists(service_config_path):
             raise RuntimeError(f"File does not exist. {service_config_path}")
 
-        with open(service_config_path, "r", encoding="utf-8-sig") as service_config_file:
+        with open(service_config_path, encoding="utf-8-sig") as service_config_file:
             service_config = json.load(service_config_file)
 
         if service_class is None:
@@ -262,15 +258,15 @@ class MeasurementService:
         self.context: MeasurementContext = MeasurementContext()
         """Accessor for context-local state."""
 
-        self._configuration_parameter_list: List[parameter_metadata.ParameterMetadata] = []
-        self._output_parameter_list: List[parameter_metadata.ParameterMetadata] = []
+        self._configuration_parameter_list: list[parameter_metadata.ParameterMetadata] = []
+        self._output_parameter_list: list[parameter_metadata.ParameterMetadata] = []
         self._measure_function: Callable = self._raise_measurement_method_not_registered
 
         self._initialization_lock = threading.RLock()
-        self._channel_pool: Optional[GrpcChannelPool] = None
-        self._discovery_client: Optional[DiscoveryClient] = None
-        self._grpc_service: Optional[GrpcService] = None
-        self._session_management_client: Optional[SessionManagementClient] = None
+        self._channel_pool: GrpcChannelPool | None = None
+        self._discovery_client: DiscoveryClient | None = None
+        self._grpc_service: GrpcService | None = None
+        self._session_management_client: SessionManagementClient | None = None
 
     def _raise_measurement_method_not_registered(self) -> Any:
         raise RuntimeError(
@@ -300,7 +296,7 @@ class MeasurementService:
         deprecated_in="1.3.0-dev0",
         details="This property should not be public and will be removed in a later release.",
     )
-    def configuration_parameter_list(self) -> List[Any]:
+    def configuration_parameter_list(self) -> list[Any]:
         """List of configuration parameters."""
         return self._configuration_parameter_list
 
@@ -309,7 +305,7 @@ class MeasurementService:
         deprecated_in="1.3.0-dev0",
         details="This property should not be public and will be removed in a later release.",
     )
-    def grpc_service(self) -> Optional[GrpcService]:
+    def grpc_service(self) -> GrpcService | None:
         """The gRPC service object. This is a private implementation detail."""
         return self._grpc_service
 
@@ -327,7 +323,7 @@ class MeasurementService:
         deprecated_in="1.3.0-dev0",
         details="This property should not be public and will be removed in a later release.",
     )
-    def output_parameter_list(self) -> List[Any]:
+    def output_parameter_list(self) -> list[Any]:
         """List of output parameters."""
         return self._output_parameter_list
 
@@ -377,7 +373,7 @@ class MeasurementService:
         default_value: Any,
         *,
         instrument_type: str = "",
-        enum_type: Optional[SupportedEnumType] = None,
+        enum_type: SupportedEnumType | None = None,
     ) -> Callable[[_F], _F]:
         """Add a configuration parameter to a measurement function.
 
@@ -389,13 +385,13 @@ class MeasurementService:
         See also: :func:`.register_measurement`
 
         Args:
-            display_name (str): Display name of the configuration.
+            display_name: Display name of the configuration.
 
-            type (DataType): Data type of the configuration.
+            type: Data type of the configuration.
 
-            default_value (Any): Default value of the configuration.
+            default_value: Default value of the configuration.
 
-            instrument_type (Optional[str]):
+            instrument_type:
                 Filter pins by instrument type. This is only supported when configuration type
                 is DataType.IOResource or DataType.Pin (deprecated).
 
@@ -407,12 +403,12 @@ class MeasurementService:
 
                 For custom instruments, use the instrument type id defined in the pin map file.
 
-            enum_type (Optional[SupportedEnumType]):
+            enum_type:
                 Defines the enum type associated with this configuration parameter. This is only
                 supported when configuration type is DataType.Enum or DataType.EnumArray1D.
 
         Returns:
-            Callable: Callable that takes in Any Python Function
+            Callable that takes in Any Python Function
             and returns the same python function.
         """
         if type == DataType.Pin:
@@ -456,7 +452,7 @@ class MeasurementService:
         display_name: str,
         type: DataType,
         *,
-        enum_type: Optional[SupportedEnumType] = None,
+        enum_type: SupportedEnumType | None = None,
     ) -> Callable[[_F], _F]:
         """Add an output parameter to a measurement function.
 
@@ -470,16 +466,16 @@ class MeasurementService:
         See also: :func:`.register_measurement`
 
         Args:
-            display_name (str): Display name of the output.
+            display_name: Display name of the output.
 
-            type (DataType): Data type of the output.
+            type: Data type of the output.
 
-            enum_type (Optional[SupportedEnumType]:
+            enum_type:
                 Defines the enum type associated with this configuration parameter. This is only
                 supported when configuration type is DataType.Enum or DataType.EnumArray1D.
 
         Returns:
-            Callable: Callable that takes in Any Python Function and
+            Callable that takes in Any Python Function and
             returns the same python function.
         """
         if type == DataType.Pin:
@@ -543,9 +539,9 @@ class MeasurementService:
         type_specialization: TypeSpecialization,
         *,
         instrument_type: str = "",
-        enum_type: Optional[SupportedEnumType] = None,
-    ) -> Dict[str, str]:
-        annotations: Dict[str, str] = {}
+        enum_type: SupportedEnumType | None = None,
+    ) -> dict[str, str]:
+        annotations: dict[str, str] = {}
         if type_specialization == TypeSpecialization.NoType:
             return annotations
 
@@ -611,9 +607,9 @@ class MeasurementService:
 
     def __exit__(
         self,
-        exc_type: Optional[Type[BaseException]],
-        exc_val: Optional[BaseException],
-        traceback: Optional[TracebackType],
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
+        traceback: TracebackType | None,
     ) -> Literal[False]:
         """Exit the runtime context related to the measurement service."""
         self.close_service()

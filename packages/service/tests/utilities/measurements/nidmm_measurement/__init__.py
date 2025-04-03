@@ -1,8 +1,11 @@
 """NI-DMM measurement plug-in test service."""
 
+from __future__ import annotations
+
 import math
 import pathlib
-from typing import Iterable, List, Sequence, Tuple
+from collections.abc import Iterable, Sequence
+from typing import List
 
 import nidmm
 
@@ -30,7 +33,7 @@ measurement_service = nims.MeasurementService(
 def measure(
     pin_names: Iterable[str],
     multi_session: bool,
-) -> Tuple[List[str], List[str], List[str], List[str], List[bool], List[float]]:
+) -> tuple[list[str], list[str], list[str], list[str], list[bool], list[float]]:
     """NI-DMM measurement plug-in test service."""
     if multi_session:
         with measurement_service.context.reserve_sessions(pin_names) as reservation:
@@ -67,7 +70,7 @@ def measure(
 
 def _get_dmm_readings(
     session_infos: Sequence[TypedSessionInformation[nidmm.Session]],
-) -> Tuple[List[bool], List[float]]:
+) -> tuple[list[bool], list[float]]:
     nidmm_function = nidmm.Function(nidmm.Function.DC_VOLTS.value)
     range = 10.0
     resolution_digits = 5.5

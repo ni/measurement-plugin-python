@@ -1,5 +1,8 @@
+from __future__ import annotations
+
 import pathlib
-from typing import Generator, Iterable, NamedTuple
+from collections.abc import Generator, Iterable
+from typing import NamedTuple
 
 import pytest
 
@@ -63,7 +66,7 @@ def _measure(
 
 
 @pytest.fixture(scope="module")
-def measurement_service() -> Generator[MeasurementService, None, None]:
+def measurement_service() -> Generator[MeasurementService]:
     """Test fixture that creates and hosts a measurement service."""
     with niswitch_measurement.measurement_service.host_service() as service:
         yield service
