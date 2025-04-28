@@ -47,17 +47,16 @@ class ClientLogger(
     def intercept_unary_unary(
         self,
         continuation: Callable[
-            [grpc.ClientCallDetails, grpc.TRequest], grpc.CallFuture[grpc.TResponse]
+            [grpc.ClientCallDetails, grpc._TRequest], grpc._CallFuture[grpc._TResponse]
         ],
         client_call_details: grpc.ClientCallDetails,
-        request: grpc.TRequest,
-    ) -> grpc.CallFuture[grpc.TResponse]:
+        request: grpc._TRequest,
+    ) -> grpc._CallFuture[grpc._TResponse]:
         """Intercept and log a unary call."""
         if _ClientCallLogger.is_enabled():
             call_logger = _ClientCallLogger(client_call_details.method)
             try:
                 call = continuation(client_call_details, request)
-                # call.add_callback(call_logger.close)
                 return _LoggingResponseCallFuture(call_logger, call)
             except Exception as e:
                 call_logger.close(e)
@@ -68,17 +67,16 @@ class ClientLogger(
     def intercept_unary_stream(
         self,
         continuation: Callable[
-            [grpc.ClientCallDetails, grpc.TRequest], grpc.CallIterator[grpc.TResponse]
+            [grpc.ClientCallDetails, grpc._TRequest], grpc._CallIterator[grpc._TResponse]
         ],
         client_call_details: grpc.ClientCallDetails,
-        request: grpc.TRequest,
-    ) -> grpc.CallIterator[grpc.TResponse]:
+        request: grpc._TRequest,
+    ) -> grpc._CallIterator[grpc._TResponse]:
         """Intercept and log a server-streaming call."""
         if _ClientCallLogger.is_enabled():
             call_logger = _ClientCallLogger(client_call_details.method)
             try:
                 call_iterator = continuation(client_call_details, request)
-                # call_iterator.add_callback(call_logger.close)
                 return _LoggingResponseCallIterator(call_logger, call_iterator)
             except Exception as e:
                 call_logger.close(e)
@@ -89,11 +87,11 @@ class ClientLogger(
     def intercept_stream_unary(
         self,
         continuation: Callable[
-            [grpc.ClientCallDetails, Iterator[grpc.TRequest]], grpc.CallFuture[grpc.TResponse]
+            [grpc.ClientCallDetails, Iterator[grpc._TRequest]], grpc._CallFuture[grpc._TResponse]
         ],
         client_call_details: grpc.ClientCallDetails,
-        request_iterator: Iterator[grpc.TRequest],
-    ) -> grpc.CallFuture[grpc.TResponse]:
+        request_iterator: Iterator[grpc._TRequest],
+    ) -> grpc._CallFuture[grpc._TResponse]:
         """Intercept and log a client-streaming call."""
         if _ClientCallLogger.is_enabled():
             call_logger = _ClientCallLogger(client_call_details.method)
@@ -101,7 +99,6 @@ class ClientLogger(
                 call = continuation(
                     client_call_details, _LoggingRequestIterator(call_logger, request_iterator)
                 )
-                # call.add_callback(call_logger.close)
                 return _LoggingResponseCallFuture(call_logger, call)
             except Exception as e:
                 call_logger.close(e)
@@ -112,11 +109,11 @@ class ClientLogger(
     def intercept_stream_stream(
         self,
         continuation: Callable[
-            [grpc.ClientCallDetails, Iterator[grpc.TRequest]], grpc.CallIterator[grpc.TResponse]
+            [grpc.ClientCallDetails, Iterator[grpc._TRequest]], grpc._CallIterator[grpc._TResponse]
         ],
         client_call_details: grpc.ClientCallDetails,
-        request_iterator: Iterator[grpc.TRequest],
-    ) -> grpc.CallIterator[grpc.TResponse]:
+        request_iterator: Iterator[grpc._TRequest],
+    ) -> grpc._CallIterator[grpc._TResponse]:
         """Intercept and log a bidirectional streaming call."""
         if _ClientCallLogger.is_enabled():
             call_logger = _ClientCallLogger(client_call_details.method)
@@ -124,7 +121,6 @@ class ClientLogger(
                 call_iterator = continuation(
                     client_call_details, _LoggingRequestIterator(call_logger, request_iterator)
                 )
-                # call_iterator.add_callback(call_logger.close)
                 return _LoggingResponseCallIterator(call_logger, call_iterator)
             except Exception as e:
                 call_logger.close(e)
@@ -144,10 +140,10 @@ class ServerLogger(grpc.ServerInterceptor):
     def intercept_service(
         self,
         continuation: Callable[
-            [grpc.HandlerCallDetails], grpc.RpcMethodHandler[grpc.TRequest, grpc.TResponse] | None
+            [grpc.HandlerCallDetails], grpc.RpcMethodHandler[grpc._TRequest, grpc._TResponse] | None
         ],
         handler_call_details: grpc.HandlerCallDetails,
-    ) -> grpc.RpcMethodHandler[grpc.TRequest, grpc.TResponse] | None:
+    ) -> grpc.RpcMethodHandler[grpc._TRequest, grpc._TResponse] | None:
         """Intercept and log a server call."""
         if _ServerCallLogger.is_enabled():
             call_logger = _ServerCallLogger(handler_call_details.method)
@@ -186,20 +182,22 @@ class ServerLogger(grpc.ServerInterceptor):
     def _log_unary_unary(
         self,
         call_logger: _CallLogger,
-        handler_function: Callable[[grpc.TRequest, grpc.ServicerContext], grpc.TResponse],
-        request: grpc.TRequest,
+        handler_function: Callable[[grpc._TRequest, grpc.ServicerContext], grpc._TResponse],
+        request: grpc._TRequest,
         context: grpc.ServicerContext,
-    ) -> grpc.TResponse:
+    ) -> grpc._TResponse:
         with call_logger:
             return handler_function(request, context)
 
     def _log_unary_stream(
         self,
         call_logger: _CallLogger,
-        handler_function: Callable[[grpc.TRequest, grpc.ServicerContext], Iterator[grpc.TResponse]],
-        request: grpc.TRequest,
+        handler_function: Callable[
+            [grpc._TRequest, grpc.ServicerContext], Iterator[grpc._TResponse]
+        ],
+        request: grpc._TRequest,
         context: grpc.ServicerContext,
-    ) -> Iterator[grpc.TResponse]:
+    ) -> Iterator[grpc._TResponse]:
         try:
             return _LoggingResponseIterator(call_logger, handler_function(request, context))
         except Exception as e:
@@ -209,10 +207,12 @@ class ServerLogger(grpc.ServerInterceptor):
     def _log_stream_unary(
         self,
         call_logger: _CallLogger,
-        handler_function: Callable[[Iterator[grpc.TRequest], grpc.ServicerContext], grpc.TResponse],
-        request_iterator: Iterator[grpc.TRequest],
+        handler_function: Callable[
+            [Iterator[grpc._TRequest], grpc.ServicerContext], grpc._TResponse
+        ],
+        request_iterator: Iterator[grpc._TRequest],
         context: grpc.ServicerContext,
-    ) -> grpc.TResponse:
+    ) -> grpc._TResponse:
         with call_logger:
             return handler_function(_LoggingRequestIterator(call_logger, request_iterator), context)
 
@@ -220,11 +220,11 @@ class ServerLogger(grpc.ServerInterceptor):
         self,
         call_logger: _CallLogger,
         handler_function: Callable[
-            [Iterator[grpc.TRequest], grpc.ServicerContext], Iterator[grpc.TResponse]
+            [Iterator[grpc._TRequest], grpc.ServicerContext], Iterator[grpc._TResponse]
         ],
-        request_iterator: Iterator[grpc.TRequest],
+        request_iterator: Iterator[grpc._TRequest],
         context: grpc.ServicerContext,
-    ) -> Iterator[grpc.TResponse]:
+    ) -> Iterator[grpc._TResponse]:
         try:
             return _LoggingResponseIterator(
                 call_logger,
@@ -399,8 +399,8 @@ class _LoggingResponseIterator(Generic[_T]):
 
 if TYPE_CHECKING:
     # These types only exist in grpc-stubs.
-    _CallFuture = grpc.CallFuture
-    _CallIterator = grpc.CallIterator
+    _CallFuture = grpc._CallFuture
+    _CallIterator = grpc._CallIterator
 else:
 
     class _CallFuture(Generic[_T]):
@@ -410,14 +410,12 @@ else:
         pass
 
 
-# Type hints for abstract base classes are missing abc.ABC
-# https://github.com/shabbyrobe/grpc-stubs/issues/49
-@grpc.Call.register  # type: ignore[attr-defined]
-@grpc.Future.register  # type: ignore[attr-defined]
+@grpc.Call.register
+@grpc.Future.register
 class _LoggingResponseCallFuture(_CallFuture[_T]):
     __slots__ = ["_call_logger", "_inner_call_future"]
 
-    def __init__(self, call_logger: _CallLogger, inner_call_future: grpc.CallFuture[_T]) -> None:
+    def __init__(self, call_logger: _CallLogger, inner_call_future: grpc._CallFuture[_T]) -> None:
         self._call_logger = call_logger
         self._inner_call_future = inner_call_future
 
@@ -430,22 +428,40 @@ class _LoggingResponseCallFuture(_CallFuture[_T]):
         with self._call_logger:
             return self._inner_call_future.result(timeout)
 
-    def exception(self) -> Exception | None:
+    def exception(self, timeout: float | None = None) -> Exception | None:
         with self._call_logger:
-            return self._inner_call_future.exception()
+            return self._inner_call_future.exception(timeout)
 
     def traceback(self, timeout: float | None = None) -> Any:
         with self._call_logger:
             return self._inner_call_future.traceback(timeout)
 
+    # At run time, __getattr__ forwards these to the inner CallFuture.
+    if TYPE_CHECKING:
 
-@grpc.Call.register  # type: ignore[attr-defined]
-@grpc.Future.register  # type: ignore[attr-defined]
+        def add_callback(self, callback: Callable[[], None]) -> bool: ...
+        def add_done_callback(
+            self, fn: Callable[[grpc.Future[grpc._TFutureValue]], None]
+        ) -> None: ...
+        def cancel(self) -> bool: ...
+        def cancelled(self) -> bool: ...
+        def code(self) -> grpc.StatusCode: ...
+        def details(self) -> str: ...
+        def done(self) -> bool: ...
+        def initial_metadata(self) -> grpc._Metadata: ...
+        def is_active(self) -> bool: ...
+        def running(self) -> bool: ...
+        def time_remaining(self) -> float: ...
+        def trailing_metadata(self) -> grpc._Metadata: ...
+
+
+@grpc.Call.register
+@grpc.Future.register
 class _LoggingResponseCallIterator(_CallIterator[_T]):
     __slots__ = ["_call_logger", "_inner_call_iterator"]
 
     def __init__(
-        self, call_logger: _CallLogger, inner_call_iterator: grpc.CallIterator[_T]
+        self, call_logger: _CallLogger, inner_call_iterator: grpc._CallIterator[_T]
     ) -> None:
         self._call_logger = call_logger
         self._inner_call_iterator = inner_call_iterator
@@ -471,3 +487,21 @@ class _LoggingResponseCallIterator(_CallIterator[_T]):
         except Exception as e:
             self._call_logger.close(e)
             raise
+
+    # At run time, __getattr__ forwards these to the inner CallIterator.
+    if TYPE_CHECKING:
+
+        def add_callback(self, callback: Callable[[], None]) -> bool: ...
+        def add_done_callback(
+            self, fn: Callable[[grpc.Future[grpc._TFutureValue]], None]
+        ) -> None: ...
+        def cancel(self) -> bool: ...
+        def cancelled(self) -> bool: ...
+        def code(self) -> grpc.StatusCode: ...
+        def details(self) -> str: ...
+        def done(self) -> bool: ...
+        def initial_metadata(self) -> grpc._Metadata: ...
+        def is_active(self) -> bool: ...
+        def running(self) -> bool: ...
+        def time_remaining(self) -> float: ...
+        def trailing_metadata(self) -> grpc._Metadata: ...

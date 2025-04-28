@@ -59,7 +59,7 @@ class VoidMeasurementClient:
         self._pin_map_client = pin_map_client
         self._stub: v2_measurement_service_pb2_grpc.MeasurementServiceStub | None = None
         self._measure_response: None | (
-            grpc.CallIterator[v2_measurement_service_pb2.MeasureResponse]
+            grpc._CallIterator[v2_measurement_service_pb2.MeasureResponse]
         ) = None
         self._configuration_metadata = {
             1: ParameterMetadata(
