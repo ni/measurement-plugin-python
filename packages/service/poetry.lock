@@ -2202,9 +2202,15 @@ version = "1.0.0"
 description = "Generates Event Tracing for Windows events using TraceLogging"
 optional = false
 python-versions = ">=3.6"
-files = [
-    {file = "traceloggingdynamic-1.0.0.tar.gz", hash = "sha256:09b6129438b99432733de18519017a7eed8285aeaa08c0cff6de45ac60e04b75"},
-]
+files = []
+develop = false
+
+[package.source]
+type = "git"
+url = "https://github.com/bkeryan/tracelogging"
+reference = "HEAD"
+resolved_reference = "4d3c8b02da568d34daf977db7052a819ab4b18ec"
+subdirectory = "etw/python/traceloggingdynamic"
 
 [[package]]
 name = "types-protobuf"
@@ -2361,4 +2367,4 @@ niswitch = ["niswitch"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "51196bf52d5ba934fb77553b6373174c1e85d5d618eb4fa87367ae0ef707cb1d"
+content-hash = "1a5d55de25d8ffe5fab10eada6879037f6336aa6d69b4b911ea6f5e5818e67b2"
