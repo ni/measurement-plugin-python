@@ -1,6 +1,5 @@
 """Sphinx Configuration File."""
 
-import datetime
 import pathlib
 
 import autoapi.extension
@@ -27,8 +26,7 @@ proj_config = toml.loads(pyproj_file.read_text())
 
 project = proj_config["tool"]["poetry"]["name"]
 company = "National Instruments"
-year = str(datetime.datetime.now().year)
-copyright = f"{year}, {company}"
+copyright = f"2022-%Y, {company}"
 
 
 # The version info for the project you're documenting, acts as replacement for
