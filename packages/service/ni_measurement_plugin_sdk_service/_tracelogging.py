@@ -7,9 +7,12 @@ import uuid
 try:
     import traceloggingdynamic
 
-    _event_provider: traceloggingdynamic.Provider | None = traceloggingdynamic.Provider(
-        b"NI-Measurement-Plug-In-Python"
-    )
+    if sys.platform == "win32":
+        _event_provider: traceloggingdynamic.Provider | None = traceloggingdynamic.Provider(
+            b"NI-Measurement-Plug-In-Python"
+        )
+    else:
+        _event_provider = None
 except ImportError:
     _event_provider = None
 
