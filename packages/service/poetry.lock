@@ -506,20 +506,6 @@ pycodestyle = "*"
 setuptools = "*"
 
 [[package]]
-name = "grpc-stubs"
-version = "1.53.0.5"
-description = "Mypy stubs for gRPC"
-optional = false
-python-versions = ">=3.6"
-files = [
-    {file = "grpc-stubs-1.53.0.5.tar.gz", hash = "sha256:3e1b642775cbc3e0c6332cfcedfccb022176db87e518757bef3a1241397be406"},
-    {file = "grpc_stubs-1.53.0.5-py3-none-any.whl", hash = "sha256:04183fb65a1b166a1febb9627e3d9647d3926ccc2dfe049fe7b6af243428dbe1"},
-]
-
-[package.dependencies]
-grpcio = "*"
-
-[[package]]
 name = "grpcio"
 version = "1.71.0"
 description = "HTTP/2-based RPC framework"
@@ -2207,6 +2193,20 @@ files = [
 ]
 
 [[package]]
+name = "types-grpcio"
+version = "1.0.0.20250426"
+description = "Typing stubs for grpcio"
+optional = false
+python-versions = ">=3.9"
+files = [
+    {file = "types_grpcio-1.0.0.20250426-py3-none-any.whl", hash = "sha256:7931b4ec0bedb8af7c53910ed54edeb8be964251ecf0c4f0234f95e472a90ce3"},
+    {file = "types_grpcio-1.0.0.20250426.tar.gz", hash = "sha256:a079034b1c32520b1218bd50187539352b8ff495cf9b91a7c98772a3baf5f1d1"},
+]
+
+[package.dependencies]
+types-protobuf = "*"
+
+[[package]]
 name = "types-protobuf"
 version = "5.29.1.20250315"
 description = "Typing stubs for protobuf"
@@ -2361,4 +2361,4 @@ niswitch = ["niswitch"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "51196bf52d5ba934fb77553b6373174c1e85d5d618eb4fa87367ae0ef707cb1d"
+content-hash = "1d06f08d41235fbcfe4790c57fde4b1a2b1cbe7dd5ee4faf40c046a373eaea4d"

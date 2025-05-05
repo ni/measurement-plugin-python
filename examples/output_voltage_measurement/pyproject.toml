@@ -18,7 +18,7 @@ python-decouple = ">=3.8"
 [tool.poetry.group.dev.dependencies]
 ni-python-styleguide = ">=0.4.1"
 mypy = ">=1.0"
-grpc-stubs = "^1.53"
+types-grpcio = ">=1.0"
 # Uncomment to use prerelease dependencies.
 # nidcpower = { git = "https://github.com/ni/nimi-python.git", subdirectory = "generated/nidcpower", extras=["grpc"] }
 # ni-measurement-plugin-sdk-service = {path = "../../packages/service", develop = true}

@@ -35,7 +35,7 @@ ni-python-styleguide = ">=0.4.1"
 mypy = ">=1.0"
 mypy-protobuf = ">=3.4"
 types-protobuf = ">=4.21"
-grpc-stubs = "^1.53"
+types-grpcio = ">=1.0"
 # During development, use file paths to reference the latest source for packages
 # in the same Git repository.
 ni-measurement-plugin-sdk-service = {path = "../../packages/service", develop = true}
