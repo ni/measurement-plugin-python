@@ -7,7 +7,9 @@ import uuid
 try:
     import traceloggingdynamic
 
-    _event_provider = traceloggingdynamic.Provider(b"NI-Measurement-Plug-In-Python")
+    _event_provider: traceloggingdynamic.Provider | None = traceloggingdynamic.Provider(
+        b"NI-Measurement-Plug-In-Python"
+    )
 except ImportError:
     _event_provider = None
 
@@ -72,7 +74,7 @@ else:
 
 def is_enabled() -> bool:
     """Queries whether the event provider is enabled."""
-    return _event_provider and _event_provider.is_enabled()
+    return _event_provider is not None and _event_provider.is_enabled()
 
 
 def log_grpc_client_call_start(method_name: str) -> uuid.UUID | None:
