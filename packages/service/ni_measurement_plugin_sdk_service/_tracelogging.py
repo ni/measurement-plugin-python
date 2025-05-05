@@ -4,13 +4,16 @@ import ctypes
 import sys
 import uuid
 
-try:
-    import traceloggingdynamic
+if sys.platform == "win32":
+    try:
+        import traceloggingdynamic
 
-    _event_provider: traceloggingdynamic.Provider | None = traceloggingdynamic.Provider(
-        b"NI-Measurement-Plug-In-Python"
-    )
-except ImportError:
+        _event_provider: traceloggingdynamic.Provider | None = traceloggingdynamic.Provider(
+            b"NI-Measurement-Plug-In-Python"
+        )
+    except ImportError:
+        _event_provider = None
+else:
     _event_provider = None
 
 _LEVEL_LOG_ALWAYS = 0
