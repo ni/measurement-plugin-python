@@ -82,6 +82,8 @@ numpy = [
   {version = ">=1.26", python = "^3.12"},
 ]
 bandit = { version = ">=1.7", extras = ["toml"] }
+# Install traceloggingdynamic on Linux for type checking.
+traceloggingdynamic = { version = ">=1.0", platform = "linux" }
 
 [tool.poetry.group.docs]
 optional = true
@@ -134,8 +136,6 @@ module = [
   "grpc.framework.foundation.*",
   # https://github.com/ni/hightime/issues/4 - Add type annotations
   "hightime.*",
-  # https://github.com/microsoft/tracelogging/issues/57 - Python traceloggingdynamic package is missing py.typed marker file
-  "traceloggingdynamic",
   # https://github.com/ni/nidaqmx-python/issues/209 - Support type annotations
   "nidaqmx",
   # https://github.com/ni/nimi-python/issues/1887 - Support type annotations

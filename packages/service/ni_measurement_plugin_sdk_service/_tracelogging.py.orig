@@ -3,7 +3,10 @@ from __future__ import annotations
 import ctypes
 import sys
 import uuid
+<<<<<<< HEAD
+=======
 from typing import TYPE_CHECKING
+>>>>>>> 714eda9 (service: Enable type checking for tracelogging (#1123))
 
 if sys.platform == "win32":
     try:

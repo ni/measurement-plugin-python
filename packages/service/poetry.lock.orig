@@ -2361,4 +2361,8 @@ niswitch = ["niswitch"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "cb4e521c7dedf9870d66a04f1e99d9ee1862671eb0cd03a6f0a6d46c4026a2a3"
+<<<<<<< HEAD
+content-hash = "1d06f08d41235fbcfe4790c57fde4b1a2b1cbe7dd5ee4faf40c046a373eaea4d"
+=======
+content-hash = "264f01238c12bf603c1fe9200129a4164ecd9104a0c6a817d10a232b01cec113"
+>>>>>>> 714eda9 (service: Enable type checking for tracelogging (#1123))
