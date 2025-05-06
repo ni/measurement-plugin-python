@@ -3,12 +3,21 @@ from __future__ import annotations
 import ctypes
 import sys
 import uuid
+from typing import TYPE_CHECKING
 
-try:
-    import traceloggingdynamic
+if sys.platform == "win32":
+    try:
+        import traceloggingdynamic
 
-    _event_provider = traceloggingdynamic.Provider(b"NI-Measurement-Plug-In-Python")
-except ImportError:
+        _event_provider: traceloggingdynamic.Provider | None = traceloggingdynamic.Provider(
+            b"NI-Measurement-Plug-In-Python"
+        )
+    except ImportError:
+        _event_provider = None
+else:
+    if TYPE_CHECKING:
+        import traceloggingdynamic
+
     _event_provider = None
 
 _LEVEL_LOG_ALWAYS = 0
@@ -72,7 +81,7 @@ else:
 
 def is_enabled() -> bool:
     """Queries whether the event provider is enabled."""
-    return _event_provider and _event_provider.is_enabled()
+    return _event_provider is not None and _event_provider.is_enabled()
 
 
 def log_grpc_client_call_start(method_name: str) -> uuid.UUID | None:
