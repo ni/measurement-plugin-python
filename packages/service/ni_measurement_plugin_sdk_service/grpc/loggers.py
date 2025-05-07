@@ -10,13 +10,7 @@ import threading
 import time
 from collections.abc import Iterator
 from types import TracebackType
-from typing import (
-    TYPE_CHECKING,
-    Any,
-    Callable,
-    Generic,
-    TypeVar,
-)
+from typing import TYPE_CHECKING, Any, Callable, Generic, TypeVar
 
 import grpc
 
@@ -476,9 +470,7 @@ class _LoggingResponseCallIterator(_CallIterator[_T]):
         # For server-streaming and bidirectional RPCs, the call is complete when the response
         # stream is closed or throws an exception.
         try:
-            # CallIterator is missing __next__ method
-            # https://github.com/shabbyrobe/grpc-stubs/issues/50
-            response = next(self._inner_call_iterator)  # type: ignore[call-overload]
+            response = next(self._inner_call_iterator)
             self._call_logger.log_streaming_response()
             return response
         except StopIteration:
