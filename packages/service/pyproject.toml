@@ -14,15 +14,15 @@ readme = "README.md" # apply the repo readme to the package as well
 repository = "https://github.com/ni/measurement-plugin-python/"
 license = "MIT"
 classifiers = [
-    "Development Status :: 5 - Production/Stable",
-    "Intended Audience :: Developers",
-    "Intended Audience :: Manufacturing",
-    "Intended Audience :: Science/Research",
-    "Operating System :: Microsoft :: Windows",
-    # Poetry automatically adds classifiers for the license and the supported Python versions.
-    "Programming Language :: Python :: Implementation :: CPython",
-    "Topic :: Scientific/Engineering",
-    "Topic :: System :: Hardware",
+  "Development Status :: 5 - Production/Stable",
+  "Intended Audience :: Developers",
+  "Intended Audience :: Manufacturing",
+  "Intended Audience :: Science/Research",
+  "Operating System :: Microsoft :: Windows",
+  # Poetry automatically adds classifiers for the license and the supported Python versions.
+  "Programming Language :: Python :: Implementation :: CPython",
+  "Topic :: Scientific/Engineering",
+  "Topic :: System :: Hardware",
 ]
 
 [tool.poetry.dependencies]
@@ -32,20 +32,28 @@ python = "^3.9"
 # the generated gRPC stubs may not work with the minimum grpcio version.
 grpcio = "^1.49.1"
 protobuf = ">=4.21"
-pywin32 = {version = ">=303", platform = "win32"}
+pywin32 = { version = ">=303", platform = "win32" }
 deprecation = ">=2.1"
-traceloggingdynamic = {version = ">=1.0", platform = "win32"}
+traceloggingdynamic = { version = ">=1.0", platform = "win32" }
 python-decouple = ">=3.8"
-nidaqmx = {version = ">=0.8.0", extras = ["grpc"], optional = true}
-nidcpower = {version = ">=1.4.4", extras = ["grpc"], optional = true}
-nidigital = {version = ">=1.4.4", extras = ["grpc"], optional = true}
-nidmm = {version = ">=1.4.4", extras = ["grpc"], optional = true}
-nifgen = {version = ">=1.4.4", extras = ["grpc"], optional = true}
-niscope = {version = ">=1.4.4", extras = ["grpc"], optional = true}
-niswitch = {version = ">=1.4.4", extras = ["grpc"], optional = true}
+nidaqmx = { version = ">=0.8.0", extras = ["grpc"], optional = true }
+nidcpower = { version = ">=1.4.4", extras = ["grpc"], optional = true }
+nidigital = { version = ">=1.4.4", extras = ["grpc"], optional = true }
+nidmm = { version = ">=1.4.4", extras = ["grpc"], optional = true }
+nifgen = { version = ">=1.4.4", extras = ["grpc"], optional = true }
+niscope = { version = ">=1.4.4", extras = ["grpc"], optional = true }
+niswitch = { version = ">=1.4.4", extras = ["grpc"], optional = true }
 
 [tool.poetry.extras]
-drivers = ["nidaqmx", "nidcpower", "nidigital", "nidmm", "nifgen", "niscope", "niswitch"]
+drivers = [
+  "nidaqmx",
+  "nidcpower",
+  "nidigital",
+  "nidmm",
+  "nifgen",
+  "niscope",
+  "niswitch",
+]
 nidaqmx = ["nidaqmx"]
 nidcpower = ["nidcpower"]
 nidigital = ["nidigital"]
@@ -60,9 +68,9 @@ ni-python-styleguide = ">=0.4.1"
 # When you update the grpcio-tools version, you should update the minimum grpcio version
 # and regenerate gRPC stubs.
 grpcio-tools = [
-  {version = "1.49.1", python = ">=3.9,<3.12"},
-  {version = "1.59.0", python = ">=3.12,<3.13"},
-  {version = "1.67.0", python = "^3.13"},
+  { version = "1.49.1", python = ">=3.9,<3.12" },
+  { version = "1.59.0", python = ">=3.12,<3.13" },
+  { version = "1.67.0", python = "^3.13" },
 ]
 pytest-cov = ">=3.0.0"
 pytest-mock = ">=3.0"
@@ -78,8 +86,8 @@ types-psutil = ">=6.0"
 # NumPy dropped support for Python 3.8 before adding support for Python 3.12, so
 # we need to include multiple NumPy versions in poetry.lock.
 numpy = [
-  {version = ">=1.22", python = ">=3.9,<3.12"},
-  {version = ">=1.26", python = "^3.12"},
+  { version = ">=1.22", python = ">=3.9,<3.12" },
+  { version = ">=1.26", python = "^3.12" },
 ]
 bandit = { version = ">=1.7", extras = ["toml"] }
 # Install traceloggingdynamic on Linux for type checking.
@@ -89,10 +97,8 @@ traceloggingdynamic = { version = ">=1.0", platform = "linux" }
 optional = true
 
 [tool.poetry.group.docs.dependencies]
-Sphinx = [
-  {version = ">=7.1.2", python = ">=3.8,<3.9"},
-  {version = ">=7.2.0", python = "^3.9"},
-]
+# The latest Sphinx requires a recent Python version.
+Sphinx = { version = ">=8.2", python = "^3.11" }
 sphinx-rtd-theme = ">=1.0.0"
 sphinx-autoapi = ">=1.8.4"
 m2r2 = ">=0.3.2"
@@ -150,7 +156,10 @@ ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
 # mypy-protobuf codegen has some unused ignores.
-module = ["ni_measurement_plugin_sdk_service._internal.stubs.*","tests.utilities.stubs.*"]
+module = [
+  "ni_measurement_plugin_sdk_service._internal.stubs.*",
+  "tests.utilities.stubs.*",
+]
 warn_unused_ignores = false
 
 [[tool.mypy.overrides]]
