@@ -166,7 +166,7 @@ The `ni_measurement_plugin_sdk_service` package uses Sphinx to build API
 reference documentation.
 
 ```cmd
-poetry run sphinx-build _docs_source docs -b html -W --keep-going
+poetry run sphinx-build _docs_source docs -b html -W
 ```
 
 The generated documentation is at `docs/index.html`.

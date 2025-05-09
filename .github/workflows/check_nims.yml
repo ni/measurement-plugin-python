@@ -76,7 +76,7 @@ jobs:
         run: |
           rm -rf docs
           mkdir -p docs   
-          poetry run sphinx-build _docs_source docs -b html -W --keep-going
+          poetry run sphinx-build _docs_source docs -b html -W
       - name: Revert docs
         run:  rm -rf docs
       - name: Generate gRPC stubs
