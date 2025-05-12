@@ -4,9 +4,6 @@ on:
   workflow_call:
   workflow_dispatch:
 
-env:
-  POETRY_VERSION: 1.8.2
-
 jobs:
   run_unit_tests:
     name: Run unit tests
@@ -22,14 +19,12 @@ jobs:
       - name: Check out repo
         uses: actions/checkout@v4
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: ni/python-actions/setup-python@v0.1.0
         id: setup-python
         with:
           python-version: ${{ matrix.python-version }}
       - name: Set up Poetry
-        uses: Gr1N/setup-poetry@v9
-        with:
-          poetry-version: ${{ env.POETRY_VERSION }}
+        uses: ni/python-actions/setup-poetry@v0.1.0
 
       # ni-measurement-plugin-sdk-service, no extras
       - name: Restore cached virtualenv (ni-measurement-plugin-sdk-service, no extras)
