@@ -4,10 +4,6 @@ on:
   workflow_call:
   workflow_dispatch:
 
-env:
-  POETRY_VERSION: 1.8.2
-  PYTHON_VERSION: 3.11.9
-
 jobs:
   check_examples:
     name: Check examples
@@ -16,14 +12,10 @@ jobs:
       - name: Check out repo
         uses: actions/checkout@v4
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: ni/python-actions/setup-python@v0.1.0
         id: setup-python
-        with:
-          python-version: ${{ env.PYTHON_VERSION }}
       - name: Set up Poetry
-        uses: Gr1N/setup-poetry@v9
-        with:
-          poetry-version: ${{ env.POETRY_VERSION }}
+        uses: ni/python-actions/setup-poetry@v0.1.0
       # Updating poetry.lock for all of the examples takes over 6 minutes, so it's worth caching.
       - name: Cache poetry.lock
         uses: actions/cache@v4
