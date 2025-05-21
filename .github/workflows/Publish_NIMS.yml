@@ -35,42 +35,6 @@ jobs:
         id: vars
         run: echo "tag=${GITHUB_REF#refs/*/}" >> $GITHUB_OUTPUT
 
-      - name: Update NIMS package version based on tag name.
-        run: |
-          poetry version ${{ steps.vars.outputs.tag }}
-        working-directory: ./packages/service
-
-      - name: Update NIMG package version based on tag name.
-        run: |
-          poetry version ${{ steps.vars.outputs.tag }}
-        working-directory: ./packages/generator
-
-      - name: Update SDK package version based on tag name.
-        run: |
-          poetry version ${{ steps.vars.outputs.tag }}
-        working-directory: ./packages/sdk
-
-      - name: Commit file changes
-        id: commit
-        if: ${{ startsWith(github.event.release.target_commitish, 'main') || startsWith(github.event.release.target_commitish, 'releases/') }}
-        run: |
-          echo "version_changed=false" >> $GITHUB_OUTPUT
-          if [ -n "$(git status --porcelain)" ]; then
-            git config --local user.email "action@github.com"
-            git config --local user.name "GitHub Action"
-            git add .
-            git commit -m "Promote NIMS and NIMG package version" -a
-            echo "version_changed=true" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Push changes to the appropriate branch
-        if: ${{ steps.commit.outputs.version_changed && (startsWith(github.event.release.target_commitish, 'main') || startsWith(github.event.release.target_commitish, 'releases/')) }}
-        uses: CasperWA/push-protected@v2
-        with:
-          token: ${{ secrets.ADMIN_PAT }}
-          branch: ${{ github.event.release.target_commitish }}
-          unprotect_reviews: true
-
       # To Test the Publish use : poetry publish --build --username __token__ --password ${{ secrets.TEST_PYPI_TOKEN }} -r test-pypi
       - name: Build NIMS Python package and publish to PyPI
         if: ${{ startsWith(github.event.release.target_commitish, 'main') || startsWith(github.event.release.target_commitish, 'releases/') }}
@@ -116,3 +80,32 @@ jobs:
         with:
           name: NIMS Artifacts
           path: ./packages/service/dist/ # path/to/artifact
+
+  update_project_versions:
+    runs-on: ubuntu-latest
+    needs: [check_nims]
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Set up Python
+        uses: ni/python-actions/setup-python@e8f25e9a64426bd431ac124b83df11b76cdf60d5 # v0.1.0
+      - name: Set up Poetry
+        uses: ni/python-actions/setup-poetry@e8f25e9a64426bd431ac124b83df11b76cdf60d5 # v0.1.0
+      - name: Update NIMS project version
+        uses: ni/python-actions/update-project-version@users/bkeryan/update-project-version
+        with:
+          project-directory: ./packages/service
+          create-pull-request: false
+      - name: Update NIMG project version
+        uses: ni/python-actions/update-project-version@users/bkeryan/update-project-version
+        with:
+          project-directory: ./packages/generator
+          create-pull-request: false
+      - name: Update SDK project version
+        uses: ni/python-actions/update-project-version@users/bkeryan/update-project-version
+        with:
+          project-directory: ./packages/sdk
+          create-pull-request: true
