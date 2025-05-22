@@ -5,7 +5,8 @@
     "config:recommended", 
     ":maintainLockFilesWeekly",
     ":automergePatch",
-    "schedule:automergeDaily"
+    "schedule:automergeDaily",
+    "helpers:pinGitHubActionDigestsToSemver"
   ],
   "git-submodules": {
     "automerge": true,
