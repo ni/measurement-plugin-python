@@ -1098,13 +1098,13 @@ toml = ">=0.10.1"
 
 [[package]]
 name = "nidaqmx"
-version = "1.0.2"
+version = "1.1.0"
 description = "NI-DAQmx Python API"
 optional = true
-python-versions = "<4.0,>=3.8"
+python-versions = "<4.0,>=3.9"
 files = [
-    {file = "nidaqmx-1.0.2-py3-none-any.whl", hash = "sha256:8e7386765cdd185e0126cfc2e17734a3a10b5bebebe47763092c7f9f35f0d847"},
-    {file = "nidaqmx-1.0.2.tar.gz", hash = "sha256:d71639cd30125c091489de15ad87cc08d5ff267f27791d6f91ce95453cdc1ea6"},
+    {file = "nidaqmx-1.1.0-py3-none-any.whl", hash = "sha256:5c015e36ba34f40d7a1246a126a71ddc683a3fc6ff90f39e81a7b4523236dfa3"},
+    {file = "nidaqmx-1.1.0.tar.gz", hash = "sha256:324c1cccbd2ac8fce11708250ed8abbf5f694dcc2f64124e9fbe6be5141fff5f"},
 ]
 
 [package.dependencies]
@@ -1114,7 +1114,7 @@ distro = {version = ">=1.9.0", markers = "sys_platform == \"linux\""}
 grpcio = {version = ">=1.49.0,<2.0", optional = true, markers = "extra == \"grpc\""}
 hightime = ">=0.2.2,<0.3.0"
 numpy = [
-    {version = ">=1.22", markers = "python_version >= \"3.8\" and python_version < \"3.12\""},
+    {version = ">=1.22", markers = "python_version >= \"3.9\" and python_version < \"3.12\""},
     {version = ">=1.26", markers = "python_version >= \"3.12\" and python_version < \"3.13\""},
     {version = ">=2.1", markers = "python_version >= \"3.13\" and python_version < \"4.0\""},
 ]
