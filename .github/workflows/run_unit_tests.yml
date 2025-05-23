@@ -17,18 +17,18 @@ jobs:
       fail-fast: false
     steps:
       - name: Check out repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - name: Set up Python
-        uses: ni/python-actions/setup-python@v0.1.0
+        uses: ni/python-actions/setup-python@e8f25e9a64426bd431ac124b83df11b76cdf60d5 # v0.1.0
         id: setup-python
         with:
           python-version: ${{ matrix.python-version }}
       - name: Set up Poetry
-        uses: ni/python-actions/setup-poetry@v0.1.0
+        uses: ni/python-actions/setup-poetry@e8f25e9a64426bd431ac124b83df11b76cdf60d5 # v0.1.0
 
       # ni-measurement-plugin-sdk-service, no extras
       - name: Restore cached virtualenv (ni-measurement-plugin-sdk-service, no extras)
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@5a3ec84eff668545956fd18022155c47e93e2684 # v4
         id: restore-nims-no-extras
         with:
           path: packages/service/.venv
@@ -37,7 +37,7 @@ jobs:
         run: poetry install -v
         working-directory: ./packages/service
       - name: Save cached virtualenv (ni-measurement-plugin-sdk-service, no extras)
-        uses: actions/cache/save@v4
+        uses: actions/cache/save@5a3ec84eff668545956fd18022155c47e93e2684 # v4
         if: steps.restore-nims-no-extras.outputs.cache-hit != 'true'
         with:
           path: packages/service/.venv
@@ -48,7 +48,7 @@ jobs:
 
       # ni-measurement-plugin-sdk-service, all extras
       - name: Restore cached virtualenv (ni-measurement-plugin-sdk-service, all extras)
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@5a3ec84eff668545956fd18022155c47e93e2684 # v4
         id: restore-nims-all-extras
         with:
           path: packages/service/.venv
@@ -57,7 +57,7 @@ jobs:
         run: poetry install -v --all-extras
         working-directory: ./packages/service
       - name: Save cached ni-measurement-plugin-sdk-service virtualenv (all extras)
-        uses: actions/cache/save@v4
+        uses: actions/cache/save@5a3ec84eff668545956fd18022155c47e93e2684 # v4
         if: steps.restore-nims-all-extras.outputs.cache-hit != 'true'
         with:
           path: packages/service/.venv
@@ -67,7 +67,7 @@ jobs:
         working-directory: ./packages/service
 
       - name: Upload test results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: test_results_unit_${{ matrix.os }}_py${{ matrix.python-version }}
           path: ./packages/service/test_results/*.xml

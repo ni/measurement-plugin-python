@@ -10,15 +10,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - name: Set up Python
-        uses: ni/python-actions/setup-python@v0.1.0
+        uses: ni/python-actions/setup-python@e8f25e9a64426bd431ac124b83df11b76cdf60d5 # v0.1.0
         id: setup-python
       - name: Set up Poetry
-        uses: ni/python-actions/setup-poetry@v0.1.0
+        uses: ni/python-actions/setup-poetry@e8f25e9a64426bd431ac124b83df11b76cdf60d5 # v0.1.0
       # Updating poetry.lock for all of the examples takes over 6 minutes, so it's worth caching.
       - name: Cache poetry.lock
-        uses: actions/cache@v4
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4
         id: cache-poetry-lock
         with:
           path: 'examples/**/poetry.lock'
@@ -35,7 +35,7 @@ jobs:
             echo "::endgroup::"
           done
       - name: Cache virtualenvs
-        uses: actions/cache@v4
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4
         id: cache-venv
         with:
           path: 'examples/**/.venv'
