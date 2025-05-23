@@ -112,6 +112,12 @@ class SessionManagementServiceStub:
     ]
     """Gets all multiplexer sessions currently registered with this service."""
 
+    GetSessions: grpc.UnaryUnaryMultiCallable[
+        ni_measurementlink_sessionmanagement_v1_session_management_service_pb2.GetSessionsRequest,
+        ni_measurementlink_sessionmanagement_v1_session_management_service_pb2.GetSessionsResponse,
+    ]
+    """Gets all reserved or registered sessions for the specified instrument and multiplexer types."""
+
 class SessionManagementServiceAsyncStub:
     """Service to keep track of open sessions used by measurement services, and to allow measurement services to access sessions by I/O resource and site."""
 
@@ -205,6 +211,12 @@ class SessionManagementServiceAsyncStub:
         ni_measurementlink_sessionmanagement_v1_session_management_service_pb2.GetAllRegisteredMultiplexerSessionsResponse,
     ]
     """Gets all multiplexer sessions currently registered with this service."""
+
+    GetSessions: grpc.aio.UnaryUnaryMultiCallable[
+        ni_measurementlink_sessionmanagement_v1_session_management_service_pb2.GetSessionsRequest,
+        ni_measurementlink_sessionmanagement_v1_session_management_service_pb2.GetSessionsResponse,
+    ]
+    """Gets all reserved or registered sessions for the specified instrument and multiplexer types."""
 
 class SessionManagementServiceServicer(metaclass=abc.ABCMeta):
     """Service to keep track of open sessions used by measurement services, and to allow measurement services to access sessions by I/O resource and site."""
@@ -317,5 +329,13 @@ class SessionManagementServiceServicer(metaclass=abc.ABCMeta):
         context: _ServicerContext,
     ) -> typing.Union[ni_measurementlink_sessionmanagement_v1_session_management_service_pb2.GetAllRegisteredMultiplexerSessionsResponse, collections.abc.Awaitable[ni_measurementlink_sessionmanagement_v1_session_management_service_pb2.GetAllRegisteredMultiplexerSessionsResponse]]:
         """Gets all multiplexer sessions currently registered with this service."""
+
+    @abc.abstractmethod
+    def GetSessions(
+        self,
+        request: ni_measurementlink_sessionmanagement_v1_session_management_service_pb2.GetSessionsRequest,
+        context: _ServicerContext,
+    ) -> typing.Union[ni_measurementlink_sessionmanagement_v1_session_management_service_pb2.GetSessionsResponse, collections.abc.Awaitable[ni_measurementlink_sessionmanagement_v1_session_management_service_pb2.GetSessionsResponse]]:
+        """Gets all reserved or registered sessions for the specified instrument and multiplexer types."""
 
 def add_SessionManagementServiceServicer_to_server(servicer: SessionManagementServiceServicer, server: typing.Union[grpc.Server, grpc.aio.Server]) -> None: ...
