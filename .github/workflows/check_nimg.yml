@@ -14,16 +14,16 @@ jobs:
         working-directory: ./packages/generator
     steps:
       - name: Check out repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - name: Set up Python
-        uses: ni/python-actions/setup-python@v0.1.0
+        uses: ni/python-actions/setup-python@e8f25e9a64426bd431ac124b83df11b76cdf60d5 # v0.1.0
         id: setup-python
       - name: Set up Poetry
-        uses: ni/python-actions/setup-poetry@v0.1.0
+        uses: ni/python-actions/setup-poetry@e8f25e9a64426bd431ac124b83df11b76cdf60d5 # v0.1.0
       - name: Check for lock changes (ni-measurement-plugin-sdk-generator)
         run: poetry check --lock
       - name: Cache virtualenv (ni-measurement-plugin-sdk-generator)
-        uses: actions/cache@v4
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4
         id: cache
         with:
           path: packages/generator/.venv

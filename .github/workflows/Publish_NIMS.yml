@@ -22,11 +22,11 @@ jobs:
       contents: write
     steps:
       - name: Check out repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - name: Set up Python
-        uses: ni/python-actions/setup-python@v0.1.0
+        uses: ni/python-actions/setup-python@e8f25e9a64426bd431ac124b83df11b76cdf60d5 # v0.1.0
       - name: Set up Poetry
-        uses: ni/python-actions/setup-poetry@v0.1.0
+        uses: ni/python-actions/setup-poetry@e8f25e9a64426bd431ac124b83df11b76cdf60d5 # v0.1.0
 
       - name: Check for lock changes
         run: poetry check --lock
@@ -67,7 +67,7 @@ jobs:
 
       - name: Push changes to the appropriate branch
         if: ${{ steps.commit.outputs.version_changed && (startsWith(github.event.release.target_commitish, 'main') || startsWith(github.event.release.target_commitish, 'releases/')) }}
-        uses: CasperWA/push-protected@v2
+        uses: CasperWA/push-protected@74d25b8aa10e0c29024138735d32f3c0b75f9279 # v2
         with:
           token: ${{ secrets.ADMIN_PAT }}
           branch: ${{ github.event.release.target_commitish }}
@@ -104,7 +104,7 @@ jobs:
 
       - name: Upload release assets
         if: ${{ startsWith(github.event.release.target_commitish, 'main') || startsWith(github.event.release.target_commitish, 'releases/') }}
-        uses: ncipollo/release-action@v1
+        uses: ncipollo/release-action@440c8c1cb0ed28b9f43e4d1d670870f059653174 # v1
         with:
           artifacts: "dist/measurement-plugin-python-examples-*"
           allowUpdates: true
@@ -114,7 +114,7 @@ jobs:
           omitPrereleaseDuringUpdate: true
           updateOnlyUnreleased: false
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: NIMS Artifacts
           path: ./packages/service/dist/ # path/to/artifact
