@@ -67,7 +67,7 @@ jobs:
 
       - name: Push changes to the appropriate branch
         if: ${{ steps.commit.outputs.version_changed && (startsWith(github.event.release.target_commitish, 'main') || startsWith(github.event.release.target_commitish, 'releases/')) }}
-        uses: CasperWA/push-protected@74d25b8aa10e0c29024138735d32f3c0b75f9279 # v2
+        uses: CasperWA/push-protected@74d25b8aa10e0c29024138735d32f3c0b75f9279 # v2.16.0
         with:
           token: ${{ secrets.ADMIN_PAT }}
           branch: ${{ github.event.release.target_commitish }}
