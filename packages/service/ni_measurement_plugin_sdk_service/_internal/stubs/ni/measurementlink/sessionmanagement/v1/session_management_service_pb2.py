@@ -15,7 +15,7 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink import
 from ni_measurement_plugin_sdk_service._internal.stubs import session_pb2 as session__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\nHni/measurementlink/sessionmanagement/v1/session_management_service.proto\x12\'ni.measurementlink.sessionmanagement.v1\x1a(ni/measurementlink/pin_map_context.proto\x1a\rsession.proto\"\xf1\x01\n\x12SessionInformation\x12\'\n\x07session\x18\x01 \x01(\x0b\x32\x16.nidevice_grpc.Session\x12\x15\n\rresource_name\x18\x02 \x01(\t\x12\x14\n\x0c\x63hannel_list\x18\x03 \x01(\t\x12\x1a\n\x12instrument_type_id\x18\x04 \x01(\t\x12\x16\n\x0esession_exists\x18\x05 \x01(\x08\x12Q\n\x10\x63hannel_mappings\x18\x06 \x03(\x0b\x32\x37.ni.measurementlink.sessionmanagement.v1.ChannelMapping\"\x88\x01\n\x0e\x43hannelMapping\x12\x19\n\x11pin_or_relay_name\x18\x01 \x01(\t\x12\x0c\n\x04site\x18\x02 \x01(\x05\x12\x0f\n\x07\x63hannel\x18\x03 \x01(\t\x12!\n\x19multiplexer_resource_name\x18\x04 \x01(\t\x12\x19\n\x11multiplexer_route\x18\x05 \x01(\t\"\x94\x01\n\x1dMultiplexerSessionInformation\x12\'\n\x07session\x18\x01 \x01(\x0b\x32\x16.nidevice_grpc.Session\x12\x15\n\rresource_name\x18\x02 \x01(\t\x12\x1b\n\x13multiplexer_type_id\x18\x03 \x01(\t\x12\x16\n\x0esession_exists\x18\x04 \x01(\x08\"\xad\x01\n\x16ReserveSessionsRequest\x12:\n\x0fpin_map_context\x18\x01 \x01(\x0b\x32!.ni.measurementlink.PinMapContext\x12\x1a\n\x12pin_or_relay_names\x18\x02 \x03(\t\x12\x1a\n\x12instrument_type_id\x18\x03 \x01(\t\x12\x1f\n\x17timeout_in_milliseconds\x18\x04 \x01(\x05\"\xb0\x03\n\x17ReserveSessionsResponse\x12M\n\x08sessions\x18\x01 \x03(\x0b\x32;.ni.measurementlink.sessionmanagement.v1.SessionInformation\x12\x64\n\x14multiplexer_sessions\x18\x02 \x03(\x0b\x32\x46.ni.measurementlink.sessionmanagement.v1.MultiplexerSessionInformation\x12k\n\x0egroup_mappings\x18\x03 \x03(\x0b\x32S.ni.measurementlink.sessionmanagement.v1.ReserveSessionsResponse.GroupMappingsEntry\x1as\n\x12GroupMappingsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12L\n\x05value\x18\x02 \x01(\x0b\x32=.ni.measurementlink.sessionmanagement.v1.ResolvedPinsOrRelays:\x02\x38\x01\"i\n\x18UnreserveSessionsRequest\x12M\n\x08sessions\x18\x01 \x03(\x0b\x32;.ni.measurementlink.sessionmanagement.v1.SessionInformation\"\x1b\n\x19UnreserveSessionsResponse\"h\n\x17RegisterSessionsRequest\x12M\n\x08sessions\x18\x01 \x03(\x0b\x32;.ni.measurementlink.sessionmanagement.v1.SessionInformation\"\x1a\n\x18RegisterSessionsResponse\"j\n\x19UnregisterSessionsRequest\x12M\n\x08sessions\x18\x01 \x03(\x0b\x32;.ni.measurementlink.sessionmanagement.v1.SessionInformation\"\x1c\n\x1aUnregisterSessionsResponse\"b\n#ReserveAllRegisteredSessionsRequest\x12\x1f\n\x17timeout_in_milliseconds\x18\x01 \x01(\x05\x12\x1a\n\x12instrument_type_id\x18\x02 \x01(\t\"u\n$ReserveAllRegisteredSessionsResponse\x12M\n\x08sessions\x18\x01 \x03(\x0b\x32;.ni.measurementlink.sessionmanagement.v1.SessionInformation\"\x8a\x01\n\"RegisterMultiplexerSessionsRequest\x12\x64\n\x14multiplexer_sessions\x18\x01 \x03(\x0b\x32\x46.ni.measurementlink.sessionmanagement.v1.MultiplexerSessionInformation\"%\n#RegisterMultiplexerSessionsResponse\"\x8c\x01\n$UnregisterMultiplexerSessionsRequest\x12\x64\n\x14multiplexer_sessions\x18\x01 \x03(\x0b\x32\x46.ni.measurementlink.sessionmanagement.v1.MultiplexerSessionInformation\"\'\n%UnregisterMultiplexerSessionsResponse\"x\n\x1dGetMultiplexerSessionsRequest\x12:\n\x0fpin_map_context\x18\x01 \x01(\x0b\x32!.ni.measurementlink.PinMapContext\x12\x1b\n\x13multiplexer_type_id\x18\x02 \x01(\t\"\x86\x01\n\x1eGetMultiplexerSessionsResponse\x12\x64\n\x14multiplexer_sessions\x18\x01 \x03(\x0b\x32\x46.ni.measurementlink.sessionmanagement.v1.MultiplexerSessionInformation\"I\n*GetAllRegisteredMultiplexerSessionsRequest\x12\x1b\n\x13multiplexer_type_id\x18\x01 \x01(\t\"\x93\x01\n+GetAllRegisteredMultiplexerSessionsResponse\x12\x64\n\x14multiplexer_sessions\x18\x01 \x03(\x0b\x32\x46.ni.measurementlink.sessionmanagement.v1.MultiplexerSessionInformation\"2\n\x14ResolvedPinsOrRelays\x12\x1a\n\x12pin_or_relay_names\x18\x01 \x03(\t2\xc1\x0c\n\x18SessionManagementService\x12\x94\x01\n\x0fReserveSessions\x12?.ni.measurementlink.sessionmanagement.v1.ReserveSessionsRequest\x1a@.ni.measurementlink.sessionmanagement.v1.ReserveSessionsResponse\x12\x9a\x01\n\x11UnreserveSessions\x12\x41.ni.measurementlink.sessionmanagement.v1.UnreserveSessionsRequest\x1a\x42.ni.measurementlink.sessionmanagement.v1.UnreserveSessionsResponse\x12\x97\x01\n\x10RegisterSessions\x12@.ni.measurementlink.sessionmanagement.v1.RegisterSessionsRequest\x1a\x41.ni.measurementlink.sessionmanagement.v1.RegisterSessionsResponse\x12\x9d\x01\n\x12UnregisterSessions\x12\x42.ni.measurementlink.sessionmanagement.v1.UnregisterSessionsRequest\x1a\x43.ni.measurementlink.sessionmanagement.v1.UnregisterSessionsResponse\x12\xbb\x01\n\x1cReserveAllRegisteredSessions\x12L.ni.measurementlink.sessionmanagement.v1.ReserveAllRegisteredSessionsRequest\x1aM.ni.measurementlink.sessionmanagement.v1.ReserveAllRegisteredSessionsResponse\x12\xb8\x01\n\x1bRegisterMultiplexerSessions\x12K.ni.measurementlink.sessionmanagement.v1.RegisterMultiplexerSessionsRequest\x1aL.ni.measurementlink.sessionmanagement.v1.RegisterMultiplexerSessionsResponse\x12\xbe\x01\n\x1dUnregisterMultiplexerSessions\x12M.ni.measurementlink.sessionmanagement.v1.UnregisterMultiplexerSessionsRequest\x1aN.ni.measurementlink.sessionmanagement.v1.UnregisterMultiplexerSessionsResponse\x12\xa9\x01\n\x16GetMultiplexerSessions\x12\x46.ni.measurementlink.sessionmanagement.v1.GetMultiplexerSessionsRequest\x1aG.ni.measurementlink.sessionmanagement.v1.GetMultiplexerSessionsResponse\x12\xd0\x01\n#GetAllRegisteredMultiplexerSessions\x12S.ni.measurementlink.sessionmanagement.v1.GetAllRegisteredMultiplexerSessionsRequest\x1aT.ni.measurementlink.sessionmanagement.v1.GetAllRegisteredMultiplexerSessionsResponseB\xf5\x01\n+com.ni.measurementlink.sessionmanagement.v1B\x16SessionManagementProtoP\x01Z\x13sessionmanagementv1\xa2\x02\x04NIMS\xaa\x02\x38NationalInstruments.MeasurementLink.SessionManagement.V1\xca\x02\'NI\\MeasurementLink\\SessionManagement\\V1\xea\x02*NI::MeasurementLink::SessionManagement::V1b\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\nHni/measurementlink/sessionmanagement/v1/session_management_service.proto\x12\'ni.measurementlink.sessionmanagement.v1\x1a(ni/measurementlink/pin_map_context.proto\x1a\rsession.proto\"\x8b\x02\n\x12SessionInformation\x12\'\n\x07session\x18\x01 \x01(\x0b\x32\x16.nidevice_grpc.Session\x12\x15\n\rresource_name\x18\x02 \x01(\t\x12\x14\n\x0c\x63hannel_list\x18\x03 \x01(\t\x12\x1a\n\x12instrument_type_id\x18\x04 \x01(\t\x12\x16\n\x0esession_exists\x18\x05 \x01(\x08\x12\x18\n\x10session_reserved\x18\x07 \x01(\x08\x12Q\n\x10\x63hannel_mappings\x18\x06 \x03(\x0b\x32\x37.ni.measurementlink.sessionmanagement.v1.ChannelMapping\"\x88\x01\n\x0e\x43hannelMapping\x12\x19\n\x11pin_or_relay_name\x18\x01 \x01(\t\x12\x0c\n\x04site\x18\x02 \x01(\x05\x12\x0f\n\x07\x63hannel\x18\x03 \x01(\t\x12!\n\x19multiplexer_resource_name\x18\x04 \x01(\t\x12\x19\n\x11multiplexer_route\x18\x05 \x01(\t\"\x94\x01\n\x1dMultiplexerSessionInformation\x12\'\n\x07session\x18\x01 \x01(\x0b\x32\x16.nidevice_grpc.Session\x12\x15\n\rresource_name\x18\x02 \x01(\t\x12\x1b\n\x13multiplexer_type_id\x18\x03 \x01(\t\x12\x16\n\x0esession_exists\x18\x04 \x01(\x08\"\xad\x01\n\x16ReserveSessionsRequest\x12:\n\x0fpin_map_context\x18\x01 \x01(\x0b\x32!.ni.measurementlink.PinMapContext\x12\x1a\n\x12pin_or_relay_names\x18\x02 \x03(\t\x12\x1a\n\x12instrument_type_id\x18\x03 \x01(\t\x12\x1f\n\x17timeout_in_milliseconds\x18\x04 \x01(\x05\"\xb0\x03\n\x17ReserveSessionsResponse\x12M\n\x08sessions\x18\x01 \x03(\x0b\x32;.ni.measurementlink.sessionmanagement.v1.SessionInformation\x12\x64\n\x14multiplexer_sessions\x18\x02 \x03(\x0b\x32\x46.ni.measurementlink.sessionmanagement.v1.MultiplexerSessionInformation\x12k\n\x0egroup_mappings\x18\x03 \x03(\x0b\x32S.ni.measurementlink.sessionmanagement.v1.ReserveSessionsResponse.GroupMappingsEntry\x1as\n\x12GroupMappingsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12L\n\x05value\x18\x02 \x01(\x0b\x32=.ni.measurementlink.sessionmanagement.v1.ResolvedPinsOrRelays:\x02\x38\x01\"i\n\x18UnreserveSessionsRequest\x12M\n\x08sessions\x18\x01 \x03(\x0b\x32;.ni.measurementlink.sessionmanagement.v1.SessionInformation\"\x1b\n\x19UnreserveSessionsResponse\"h\n\x17RegisterSessionsRequest\x12M\n\x08sessions\x18\x01 \x03(\x0b\x32;.ni.measurementlink.sessionmanagement.v1.SessionInformation\"\x1a\n\x18RegisterSessionsResponse\"j\n\x19UnregisterSessionsRequest\x12M\n\x08sessions\x18\x01 \x03(\x0b\x32;.ni.measurementlink.sessionmanagement.v1.SessionInformation\"\x1c\n\x1aUnregisterSessionsResponse\"b\n#ReserveAllRegisteredSessionsRequest\x12\x1f\n\x17timeout_in_milliseconds\x18\x01 \x01(\x05\x12\x1a\n\x12instrument_type_id\x18\x02 \x01(\t\"u\n$ReserveAllRegisteredSessionsResponse\x12M\n\x08sessions\x18\x01 \x03(\x0b\x32;.ni.measurementlink.sessionmanagement.v1.SessionInformation\"\x8a\x01\n\"RegisterMultiplexerSessionsRequest\x12\x64\n\x14multiplexer_sessions\x18\x01 \x03(\x0b\x32\x46.ni.measurementlink.sessionmanagement.v1.MultiplexerSessionInformation\"%\n#RegisterMultiplexerSessionsResponse\"\x8c\x01\n$UnregisterMultiplexerSessionsRequest\x12\x64\n\x14multiplexer_sessions\x18\x01 \x03(\x0b\x32\x46.ni.measurementlink.sessionmanagement.v1.MultiplexerSessionInformation\"\'\n%UnregisterMultiplexerSessionsResponse\"x\n\x1dGetMultiplexerSessionsRequest\x12:\n\x0fpin_map_context\x18\x01 \x01(\x0b\x32!.ni.measurementlink.PinMapContext\x12\x1b\n\x13multiplexer_type_id\x18\x02 \x01(\t\"\x86\x01\n\x1eGetMultiplexerSessionsResponse\x12\x64\n\x14multiplexer_sessions\x18\x01 \x03(\x0b\x32\x46.ni.measurementlink.sessionmanagement.v1.MultiplexerSessionInformation\"I\n*GetAllRegisteredMultiplexerSessionsRequest\x12\x1b\n\x13multiplexer_type_id\x18\x01 \x01(\t\"\x93\x01\n+GetAllRegisteredMultiplexerSessionsResponse\x12\x64\n\x14multiplexer_sessions\x18\x01 \x03(\x0b\x32\x46.ni.measurementlink.sessionmanagement.v1.MultiplexerSessionInformation\"2\n\x14ResolvedPinsOrRelays\x12\x1a\n\x12pin_or_relay_names\x18\x01 \x03(\t\"M\n\x12GetSessionsRequest\x12\x1a\n\x12instrument_type_id\x18\x01 \x01(\t\x12\x1b\n\x13multiplexer_type_id\x18\x02 \x01(\t\"\xca\x01\n\x13GetSessionsResponse\x12M\n\x08sessions\x18\x01 \x03(\x0b\x32;.ni.measurementlink.sessionmanagement.v1.SessionInformation\x12\x64\n\x14multiplexer_sessions\x18\x02 \x03(\x0b\x32\x46.ni.measurementlink.sessionmanagement.v1.MultiplexerSessionInformation2\xcc\r\n\x18SessionManagementService\x12\x94\x01\n\x0fReserveSessions\x12?.ni.measurementlink.sessionmanagement.v1.ReserveSessionsRequest\x1a@.ni.measurementlink.sessionmanagement.v1.ReserveSessionsResponse\x12\x9a\x01\n\x11UnreserveSessions\x12\x41.ni.measurementlink.sessionmanagement.v1.UnreserveSessionsRequest\x1a\x42.ni.measurementlink.sessionmanagement.v1.UnreserveSessionsResponse\x12\x97\x01\n\x10RegisterSessions\x12@.ni.measurementlink.sessionmanagement.v1.RegisterSessionsRequest\x1a\x41.ni.measurementlink.sessionmanagement.v1.RegisterSessionsResponse\x12\x9d\x01\n\x12UnregisterSessions\x12\x42.ni.measurementlink.sessionmanagement.v1.UnregisterSessionsRequest\x1a\x43.ni.measurementlink.sessionmanagement.v1.UnregisterSessionsResponse\x12\xbb\x01\n\x1cReserveAllRegisteredSessions\x12L.ni.measurementlink.sessionmanagement.v1.ReserveAllRegisteredSessionsRequest\x1aM.ni.measurementlink.sessionmanagement.v1.ReserveAllRegisteredSessionsResponse\x12\xb8\x01\n\x1bRegisterMultiplexerSessions\x12K.ni.measurementlink.sessionmanagement.v1.RegisterMultiplexerSessionsRequest\x1aL.ni.measurementlink.sessionmanagement.v1.RegisterMultiplexerSessionsResponse\x12\xbe\x01\n\x1dUnregisterMultiplexerSessions\x12M.ni.measurementlink.sessionmanagement.v1.UnregisterMultiplexerSessionsRequest\x1aN.ni.measurementlink.sessionmanagement.v1.UnregisterMultiplexerSessionsResponse\x12\xa9\x01\n\x16GetMultiplexerSessions\x12\x46.ni.measurementlink.sessionmanagement.v1.GetMultiplexerSessionsRequest\x1aG.ni.measurementlink.sessionmanagement.v1.GetMultiplexerSessionsResponse\x12\xd0\x01\n#GetAllRegisteredMultiplexerSessions\x12S.ni.measurementlink.sessionmanagement.v1.GetAllRegisteredMultiplexerSessionsRequest\x1aT.ni.measurementlink.sessionmanagement.v1.GetAllRegisteredMultiplexerSessionsResponse\x12\x88\x01\n\x0bGetSessions\x12;.ni.measurementlink.sessionmanagement.v1.GetSessionsRequest\x1a<.ni.measurementlink.sessionmanagement.v1.GetSessionsResponseB\xf5\x01\n+com.ni.measurementlink.sessionmanagement.v1B\x16SessionManagementProtoP\x01Z\x13sessionmanagementv1\xa2\x02\x04NIMS\xaa\x02\x38NationalInstruments.MeasurementLink.SessionManagement.V1\xca\x02\'NI\\MeasurementLink\\SessionManagement\\V1\xea\x02*NI::MeasurementLink::SessionManagement::V1b\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'ni.measurementlink.sessionmanagement.v1.session_management_service_pb2', globals())
@@ -26,51 +26,55 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _RESERVESESSIONSRESPONSE_GROUPMAPPINGSENTRY._options = None
   _RESERVESESSIONSRESPONSE_GROUPMAPPINGSENTRY._serialized_options = b'8\001'
   _SESSIONINFORMATION._serialized_start=175
-  _SESSIONINFORMATION._serialized_end=416
-  _CHANNELMAPPING._serialized_start=419
-  _CHANNELMAPPING._serialized_end=555
-  _MULTIPLEXERSESSIONINFORMATION._serialized_start=558
-  _MULTIPLEXERSESSIONINFORMATION._serialized_end=706
-  _RESERVESESSIONSREQUEST._serialized_start=709
-  _RESERVESESSIONSREQUEST._serialized_end=882
-  _RESERVESESSIONSRESPONSE._serialized_start=885
-  _RESERVESESSIONSRESPONSE._serialized_end=1317
-  _RESERVESESSIONSRESPONSE_GROUPMAPPINGSENTRY._serialized_start=1202
-  _RESERVESESSIONSRESPONSE_GROUPMAPPINGSENTRY._serialized_end=1317
-  _UNRESERVESESSIONSREQUEST._serialized_start=1319
-  _UNRESERVESESSIONSREQUEST._serialized_end=1424
-  _UNRESERVESESSIONSRESPONSE._serialized_start=1426
-  _UNRESERVESESSIONSRESPONSE._serialized_end=1453
-  _REGISTERSESSIONSREQUEST._serialized_start=1455
-  _REGISTERSESSIONSREQUEST._serialized_end=1559
-  _REGISTERSESSIONSRESPONSE._serialized_start=1561
-  _REGISTERSESSIONSRESPONSE._serialized_end=1587
-  _UNREGISTERSESSIONSREQUEST._serialized_start=1589
-  _UNREGISTERSESSIONSREQUEST._serialized_end=1695
-  _UNREGISTERSESSIONSRESPONSE._serialized_start=1697
-  _UNREGISTERSESSIONSRESPONSE._serialized_end=1725
-  _RESERVEALLREGISTEREDSESSIONSREQUEST._serialized_start=1727
-  _RESERVEALLREGISTEREDSESSIONSREQUEST._serialized_end=1825
-  _RESERVEALLREGISTEREDSESSIONSRESPONSE._serialized_start=1827
-  _RESERVEALLREGISTEREDSESSIONSRESPONSE._serialized_end=1944
-  _REGISTERMULTIPLEXERSESSIONSREQUEST._serialized_start=1947
-  _REGISTERMULTIPLEXERSESSIONSREQUEST._serialized_end=2085
-  _REGISTERMULTIPLEXERSESSIONSRESPONSE._serialized_start=2087
-  _REGISTERMULTIPLEXERSESSIONSRESPONSE._serialized_end=2124
-  _UNREGISTERMULTIPLEXERSESSIONSREQUEST._serialized_start=2127
-  _UNREGISTERMULTIPLEXERSESSIONSREQUEST._serialized_end=2267
-  _UNREGISTERMULTIPLEXERSESSIONSRESPONSE._serialized_start=2269
-  _UNREGISTERMULTIPLEXERSESSIONSRESPONSE._serialized_end=2308
-  _GETMULTIPLEXERSESSIONSREQUEST._serialized_start=2310
-  _GETMULTIPLEXERSESSIONSREQUEST._serialized_end=2430
-  _GETMULTIPLEXERSESSIONSRESPONSE._serialized_start=2433
-  _GETMULTIPLEXERSESSIONSRESPONSE._serialized_end=2567
-  _GETALLREGISTEREDMULTIPLEXERSESSIONSREQUEST._serialized_start=2569
-  _GETALLREGISTEREDMULTIPLEXERSESSIONSREQUEST._serialized_end=2642
-  _GETALLREGISTEREDMULTIPLEXERSESSIONSRESPONSE._serialized_start=2645
-  _GETALLREGISTEREDMULTIPLEXERSESSIONSRESPONSE._serialized_end=2792
-  _RESOLVEDPINSORRELAYS._serialized_start=2794
-  _RESOLVEDPINSORRELAYS._serialized_end=2844
-  _SESSIONMANAGEMENTSERVICE._serialized_start=2847
-  _SESSIONMANAGEMENTSERVICE._serialized_end=4448
+  _SESSIONINFORMATION._serialized_end=442
+  _CHANNELMAPPING._serialized_start=445
+  _CHANNELMAPPING._serialized_end=581
+  _MULTIPLEXERSESSIONINFORMATION._serialized_start=584
+  _MULTIPLEXERSESSIONINFORMATION._serialized_end=732
+  _RESERVESESSIONSREQUEST._serialized_start=735
+  _RESERVESESSIONSREQUEST._serialized_end=908
+  _RESERVESESSIONSRESPONSE._serialized_start=911
+  _RESERVESESSIONSRESPONSE._serialized_end=1343
+  _RESERVESESSIONSRESPONSE_GROUPMAPPINGSENTRY._serialized_start=1228
+  _RESERVESESSIONSRESPONSE_GROUPMAPPINGSENTRY._serialized_end=1343
+  _UNRESERVESESSIONSREQUEST._serialized_start=1345
+  _UNRESERVESESSIONSREQUEST._serialized_end=1450
+  _UNRESERVESESSIONSRESPONSE._serialized_start=1452
+  _UNRESERVESESSIONSRESPONSE._serialized_end=1479
+  _REGISTERSESSIONSREQUEST._serialized_start=1481
+  _REGISTERSESSIONSREQUEST._serialized_end=1585
+  _REGISTERSESSIONSRESPONSE._serialized_start=1587
+  _REGISTERSESSIONSRESPONSE._serialized_end=1613
+  _UNREGISTERSESSIONSREQUEST._serialized_start=1615
+  _UNREGISTERSESSIONSREQUEST._serialized_end=1721
+  _UNREGISTERSESSIONSRESPONSE._serialized_start=1723
+  _UNREGISTERSESSIONSRESPONSE._serialized_end=1751
+  _RESERVEALLREGISTEREDSESSIONSREQUEST._serialized_start=1753
+  _RESERVEALLREGISTEREDSESSIONSREQUEST._serialized_end=1851
+  _RESERVEALLREGISTEREDSESSIONSRESPONSE._serialized_start=1853
+  _RESERVEALLREGISTEREDSESSIONSRESPONSE._serialized_end=1970
+  _REGISTERMULTIPLEXERSESSIONSREQUEST._serialized_start=1973
+  _REGISTERMULTIPLEXERSESSIONSREQUEST._serialized_end=2111
+  _REGISTERMULTIPLEXERSESSIONSRESPONSE._serialized_start=2113
+  _REGISTERMULTIPLEXERSESSIONSRESPONSE._serialized_end=2150
+  _UNREGISTERMULTIPLEXERSESSIONSREQUEST._serialized_start=2153
+  _UNREGISTERMULTIPLEXERSESSIONSREQUEST._serialized_end=2293
+  _UNREGISTERMULTIPLEXERSESSIONSRESPONSE._serialized_start=2295
+  _UNREGISTERMULTIPLEXERSESSIONSRESPONSE._serialized_end=2334
+  _GETMULTIPLEXERSESSIONSREQUEST._serialized_start=2336
+  _GETMULTIPLEXERSESSIONSREQUEST._serialized_end=2456
+  _GETMULTIPLEXERSESSIONSRESPONSE._serialized_start=2459
+  _GETMULTIPLEXERSESSIONSRESPONSE._serialized_end=2593
+  _GETALLREGISTEREDMULTIPLEXERSESSIONSREQUEST._serialized_start=2595
+  _GETALLREGISTEREDMULTIPLEXERSESSIONSREQUEST._serialized_end=2668
+  _GETALLREGISTEREDMULTIPLEXERSESSIONSRESPONSE._serialized_start=2671
+  _GETALLREGISTEREDMULTIPLEXERSESSIONSRESPONSE._serialized_end=2818
+  _RESOLVEDPINSORRELAYS._serialized_start=2820
+  _RESOLVEDPINSORRELAYS._serialized_end=2870
+  _GETSESSIONSREQUEST._serialized_start=2872
+  _GETSESSIONSREQUEST._serialized_end=2949
+  _GETSESSIONSRESPONSE._serialized_start=2952
+  _GETSESSIONSRESPONSE._serialized_end=3154
+  _SESSIONMANAGEMENTSERVICE._serialized_start=3157
+  _SESSIONMANAGEMENTSERVICE._serialized_end=4897
 # @@protoc_insertion_point(module_scope)

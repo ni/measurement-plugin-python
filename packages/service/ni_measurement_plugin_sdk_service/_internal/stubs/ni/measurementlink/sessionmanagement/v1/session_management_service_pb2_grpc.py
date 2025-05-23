@@ -60,6 +60,11 @@ class SessionManagementServiceStub(object):
                 request_serializer=ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.GetAllRegisteredMultiplexerSessionsRequest.SerializeToString,
                 response_deserializer=ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.GetAllRegisteredMultiplexerSessionsResponse.FromString,
                 )
+        self.GetSessions = channel.unary_unary(
+                '/ni.measurementlink.sessionmanagement.v1.SessionManagementService/GetSessions',
+                request_serializer=ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.GetSessionsRequest.SerializeToString,
+                response_deserializer=ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.GetSessionsResponse.FromString,
+                )
 
 
 class SessionManagementServiceServicer(object):
@@ -160,6 +165,13 @@ class SessionManagementServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def GetSessions(self, request, context):
+        """Gets all reserved or registered sessions for the specified instrument and multiplexer types.
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_SessionManagementServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -207,6 +219,11 @@ def add_SessionManagementServiceServicer_to_server(servicer, server):
                     servicer.GetAllRegisteredMultiplexerSessions,
                     request_deserializer=ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.GetAllRegisteredMultiplexerSessionsRequest.FromString,
                     response_serializer=ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.GetAllRegisteredMultiplexerSessionsResponse.SerializeToString,
+            ),
+            'GetSessions': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetSessions,
+                    request_deserializer=ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.GetSessionsRequest.FromString,
+                    response_serializer=ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.GetSessionsResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -369,5 +386,22 @@ class SessionManagementService(object):
         return grpc.experimental.unary_unary(request, target, '/ni.measurementlink.sessionmanagement.v1.SessionManagementService/GetAllRegisteredMultiplexerSessions',
             ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.GetAllRegisteredMultiplexerSessionsRequest.SerializeToString,
             ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.GetAllRegisteredMultiplexerSessionsResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetSessions(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ni.measurementlink.sessionmanagement.v1.SessionManagementService/GetSessions',
+            ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.GetSessionsRequest.SerializeToString,
+            ni_dot_measurementlink_dot_sessionmanagement_dot_v1_dot_session__management__service__pb2.GetSessionsResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

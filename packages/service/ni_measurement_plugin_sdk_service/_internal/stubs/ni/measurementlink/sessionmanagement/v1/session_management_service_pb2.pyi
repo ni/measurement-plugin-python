@@ -23,6 +23,7 @@ class SessionInformation(google.protobuf.message.Message):
     CHANNEL_LIST_FIELD_NUMBER: builtins.int
     INSTRUMENT_TYPE_ID_FIELD_NUMBER: builtins.int
     SESSION_EXISTS_FIELD_NUMBER: builtins.int
+    SESSION_RESERVED_FIELD_NUMBER: builtins.int
     CHANNEL_MAPPINGS_FIELD_NUMBER: builtins.int
     resource_name: builtins.str
     """Resource name used to open this session in the driver.
@@ -47,7 +48,11 @@ class SessionInformation(google.protobuf.message.Message):
     This field is readonly.
     """
     session_exists: builtins.bool
-    """Indicates whether the session exists in the Session Manager. This indicates whether the session has been created.
+    """Indicates whether the session has been created and registered with the Session Manager.
+    This field is readonly.
+    """
+    session_reserved: builtins.bool
+    """Indicates whether the session has been reserved with the Session Manager.
     This field is readonly.
     """
     @property
@@ -72,10 +77,11 @@ class SessionInformation(google.protobuf.message.Message):
         channel_list: builtins.str = ...,
         instrument_type_id: builtins.str = ...,
         session_exists: builtins.bool = ...,
+        session_reserved: builtins.bool = ...,
         channel_mappings: collections.abc.Iterable[global___ChannelMapping] | None = ...,
     ) -> None: ...
     def HasField(self, field_name: typing.Literal["session", b"session"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["channel_list", b"channel_list", "channel_mappings", b"channel_mappings", "instrument_type_id", b"instrument_type_id", "resource_name", b"resource_name", "session", b"session", "session_exists", b"session_exists"]) -> None: ...
+    def ClearField(self, field_name: typing.Literal["channel_list", b"channel_list", "channel_mappings", b"channel_mappings", "instrument_type_id", b"instrument_type_id", "resource_name", b"resource_name", "session", b"session", "session_exists", b"session_exists", "session_reserved", b"session_reserved"]) -> None: ...
 
 global___SessionInformation = SessionInformation
 
@@ -531,3 +537,51 @@ class ResolvedPinsOrRelays(google.protobuf.message.Message):
     def ClearField(self, field_name: typing.Literal["pin_or_relay_names", b"pin_or_relay_names"]) -> None: ...
 
 global___ResolvedPinsOrRelays = ResolvedPinsOrRelays
+
+@typing.final
+class GetSessionsRequest(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    INSTRUMENT_TYPE_ID_FIELD_NUMBER: builtins.int
+    MULTIPLEXER_TYPE_ID_FIELD_NUMBER: builtins.int
+    instrument_type_id: builtins.str
+    """Optional. Instrument type ID of the instruments.
+    If unspecified, information for all instrument types is returned.
+    """
+    multiplexer_type_id: builtins.str
+    """Optional. User-defined identifier for the multiplexers.
+    If unspecified, information for all registered multiplexer types is returned.
+    """
+    def __init__(
+        self,
+        *,
+        instrument_type_id: builtins.str = ...,
+        multiplexer_type_id: builtins.str = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["instrument_type_id", b"instrument_type_id", "multiplexer_type_id", b"multiplexer_type_id"]) -> None: ...
+
+global___GetSessionsRequest = GetSessionsRequest
+
+@typing.final
+class GetSessionsResponse(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    SESSIONS_FIELD_NUMBER: builtins.int
+    MULTIPLEXER_SESSIONS_FIELD_NUMBER: builtins.int
+    @property
+    def sessions(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___SessionInformation]:
+        """List of reserved or registered instrument sessions."""
+
+    @property
+    def multiplexer_sessions(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___MultiplexerSessionInformation]:
+        """List of registered multiplexer sessions."""
+
+    def __init__(
+        self,
+        *,
+        sessions: collections.abc.Iterable[global___SessionInformation] | None = ...,
+        multiplexer_sessions: collections.abc.Iterable[global___MultiplexerSessionInformation] | None = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["multiplexer_sessions", b"multiplexer_sessions", "sessions", b"sessions"]) -> None: ...
+
+global___GetSessionsResponse = GetSessionsResponse
