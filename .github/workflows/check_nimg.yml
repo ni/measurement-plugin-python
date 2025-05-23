@@ -23,7 +23,7 @@ jobs:
       - name: Check for lock changes (ni-measurement-plugin-sdk-generator)
         run: poetry check --lock
       - name: Cache virtualenv (ni-measurement-plugin-sdk-generator)
-        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
         id: cache
         with:
           path: packages/generator/.venv
