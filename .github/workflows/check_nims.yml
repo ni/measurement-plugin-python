@@ -18,10 +18,10 @@ jobs:
         with:
           submodules: true
       - name: Set up Python
-        uses: ni/python-actions/setup-python@2c946e7237558ed6d59565787f1edb2150df50ba # v0.2.0
+        uses: ni/python-actions/setup-python@97860b52be87c788fb6df812bd8d1ca68c7aa885 # v0.3.0
         id: setup-python
       - name: Set up Poetry
-        uses: ni/python-actions/setup-poetry@2c946e7237558ed6d59565787f1edb2150df50ba # v0.2.0
+        uses: ni/python-actions/setup-poetry@97860b52be87c788fb6df812bd8d1ca68c7aa885 # v0.3.0
       - name: Check for lock changes (ni-measurement-plugin-sdk-service)
         run: poetry check --lock
 
