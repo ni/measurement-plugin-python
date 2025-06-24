@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any, Dict, Optional
+from typing import Any
 
 import nidigital
 
@@ -32,7 +32,7 @@ class SessionConstructor:
         discovery_client: DiscoveryClient,
         grpc_channel_pool: GrpcChannelPool,
         reset_device: bool,
-        options: Optional[Dict[str, Any]],
+        options: dict[str, Any] | None,
         initialization_behavior: SessionInitializationBehavior,
     ) -> None:
         """Initialize the session constructor."""
@@ -45,7 +45,7 @@ class SessionConstructor:
 
     def __call__(self, session_info: SessionInformation) -> nidigital.Session:
         """Construct a session object."""
-        kwargs: Dict[str, Any] = {}
+        kwargs: dict[str, Any] = {}
         if self._grpc_channel:
             kwargs["grpc_options"] = nidigital.GrpcSessionOptions(
                 grpc_channel=self._grpc_channel,

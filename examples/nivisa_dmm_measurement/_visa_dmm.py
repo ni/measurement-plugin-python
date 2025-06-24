@@ -6,7 +6,7 @@ import pathlib
 import sys
 from enum import Enum
 from types import TracebackType
-from typing import TYPE_CHECKING, Optional, Type
+from typing import TYPE_CHECKING
 
 import pyvisa
 import pyvisa.resources
@@ -91,9 +91,9 @@ class Session:
 
     def __exit__(
         self,
-        exc_type: Optional[Type[BaseException]],
-        exc_val: Optional[BaseException],
-        traceback: Optional[TracebackType],
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
+        traceback: TracebackType | None,
     ) -> None:
         """Context management protocol. Calls close()."""
         self.close()

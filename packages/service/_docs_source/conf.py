@@ -28,7 +28,7 @@ proj_config = toml.loads(pyproj_file.read_text())
 project = proj_config["tool"]["poetry"]["name"]
 company = "National Instruments"
 year = str(datetime.datetime.now().year)
-copyright = "{}, {}".format(year, company)
+copyright = f"{year}, {company}"
 
 
 # The version info for the project you're documenting, acts as replacement for
@@ -40,7 +40,7 @@ release = ".".join(version.split(".")[:2])
 description = proj_config["tool"]["poetry"]["description"]
 
 
-htmlhelp_basename = "{}doc".format(project)
+htmlhelp_basename = f"{project}doc"
 
 
 # tell autoapi to doc the public options
