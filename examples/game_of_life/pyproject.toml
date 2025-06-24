@@ -13,7 +13,7 @@ click = ">=7.1.2, !=8.1.4" # mypy fails with click 8.1.4: https://github.com/pal
 [tool.poetry.group.dev.dependencies]
 ni-python-styleguide = ">=0.4.1"
 mypy = ">=1.0"
-grpc-stubs = "^1.53"
+types-grpcio = ">=1.0"
 types-protobuf = ">=4.21"
 # Uncomment to use prerelease dependencies.
 # ni-measurement-plugin-sdk-service = {path = "../../packages/service", develop = true}
