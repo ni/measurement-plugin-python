@@ -2184,12 +2184,13 @@ test = ["devpi-process (>=1.0.2)", "pytest (>=8.3.4)", "pytest-mock (>=3.14)"]
 
 [[package]]
 name = "traceloggingdynamic"
-version = "1.0.0"
+version = "1.0.1"
 description = "Generates Event Tracing for Windows events using TraceLogging"
 optional = false
 python-versions = ">=3.6"
 files = [
-    {file = "traceloggingdynamic-1.0.0.tar.gz", hash = "sha256:09b6129438b99432733de18519017a7eed8285aeaa08c0cff6de45ac60e04b75"},
+    {file = "traceloggingdynamic-1.0.1-py3-none-any.whl", hash = "sha256:0e19da491a8960725b3622366487ae35f49d8f595bb2e4e5ce1795eb5928db7c"},
+    {file = "traceloggingdynamic-1.0.1.tar.gz", hash = "sha256:d9dd4b291dd04c15e34181eed06f73fdf4ffa7b1f895b78217163def48ab1a52"},
 ]
 
 [[package]]
