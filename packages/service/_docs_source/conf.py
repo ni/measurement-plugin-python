@@ -1,6 +1,5 @@
 """Sphinx Configuration File."""
 
-import datetime
 import pathlib
 
 import autoapi.extension
@@ -27,8 +26,7 @@ proj_config = toml.loads(pyproj_file.read_text())
 
 project = proj_config["tool"]["poetry"]["name"]
 company = "National Instruments"
-year = str(datetime.datetime.now().year)
-copyright = f"{year}, {company}"
+copyright = f"2022-%Y, {company}"
 
 
 # The version info for the project you're documenting, acts as replacement for
@@ -88,6 +86,7 @@ exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
 
 intersphinx_mapping = {
+    "grpc": ("https://grpc.github.io/grpc/python/", None),
     "nidaqmx": ("https://nidaqmx-python.readthedocs.io/en/stable/", None),
     "nidcpower": ("https://nidcpower.readthedocs.io/en/stable/", None),
     "nidigital": ("https://nidigital.readthedocs.io/en/stable/", None),
@@ -95,6 +94,7 @@ intersphinx_mapping = {
     "nifgen": ("https://nifgen.readthedocs.io/en/stable/", None),
     "niscope": ("https://niscope.readthedocs.io/en/stable/", None),
     "niswitch": ("https://niswitch.readthedocs.io/en/stable/", None),
+    "protobuf": ("https://googleapis.dev/python/protobuf/latest/", None),
     "python": ("https://docs.python.org/3", None),
 }
 
