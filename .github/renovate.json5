@@ -19,7 +19,7 @@
     },
     {
       // Update GitHub Actions on weekends.
-      "matchCategories": ["github-actions"],
+      "matchManagers": ["github-actions"],
       "groupName": "GitHub Actions",
       "groupSlug": "github",
       "schedule": [
