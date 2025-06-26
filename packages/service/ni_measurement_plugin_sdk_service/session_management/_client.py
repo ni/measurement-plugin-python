@@ -216,14 +216,16 @@ class SessionManagementClient:
         elif pin_or_relay_names is not None:
             request.pin_or_relay_names.extend(pin_or_relay_names)
 
-        return self._get_stub().ReserveSessions(request)
+        stub = self._get_stub()
+        return stub.ReserveSessions(request)
 
     def _unreserve_sessions(
         self, session_info: Iterable[session_management_service_pb2.SessionInformation]
     ) -> None:
         """Unreserves sessions so they can be accessed by other clients."""
         request = session_management_service_pb2.UnreserveSessionsRequest(sessions=session_info)
-        self._get_stub().UnreserveSessions(request)
+        stub = self._get_stub()
+        stub.UnreserveSessions(request)
 
     def register_sessions(self, session_info: Iterable[SessionInformation]) -> None:
         """Register sessions with the session management service.
@@ -236,7 +238,8 @@ class SessionManagementClient:
         request = session_management_service_pb2.RegisterSessionsRequest(
             sessions=(info._to_grpc_v1() for info in session_info),
         )
-        self._get_stub().RegisterSessions(request)
+        stub = self._get_stub()
+        stub.RegisterSessions(request)
 
     def unregister_sessions(self, session_info: Iterable[SessionInformation]) -> None:
         """Unregisters sessions from the session management service.
@@ -250,7 +253,8 @@ class SessionManagementClient:
         request = session_management_service_pb2.UnregisterSessionsRequest(
             sessions=(info._to_grpc_v1() for info in session_info),
         )
-        self._get_stub().UnregisterSessions(request)
+        stub = self._get_stub()
+        stub.UnregisterSessions(request)
 
     def reserve_all_registered_sessions(
         self, instrument_type_id: str | None = None, timeout: float | None = 10.0
@@ -286,7 +290,8 @@ class SessionManagementClient:
         if instrument_type_id is not None:
             request.instrument_type_id = instrument_type_id
 
-        response = self._get_stub().ReserveAllRegisteredSessions(request)
+        stub = self._get_stub()
+        response = stub.ReserveAllRegisteredSessions(request)
         return MultiSessionReservation(
             session_management_client=self, session_info=response.sessions
         )
@@ -304,7 +309,8 @@ class SessionManagementClient:
         request = session_management_service_pb2.RegisterMultiplexerSessionsRequest(
             multiplexer_sessions=(info._to_grpc_v1() for info in multiplexer_session_info),
         )
-        self._get_stub().RegisterMultiplexerSessions(request)
+        stub = self._get_stub()
+        stub.RegisterMultiplexerSessions(request)
 
     def unregister_multiplexer_sessions(
         self, multiplexer_session_info: Iterable[MultiplexerSessionInformation]
@@ -320,7 +326,8 @@ class SessionManagementClient:
         request = session_management_service_pb2.UnregisterMultiplexerSessionsRequest(
             multiplexer_sessions=(info._to_grpc_v1() for info in multiplexer_session_info),
         )
-        self._get_stub().UnregisterMultiplexerSessions(request)
+        stub = self._get_stub()
+        stub.UnregisterMultiplexerSessions(request)
 
     def get_multiplexer_sessions(
         self, pin_map_context: PinMapContext, multiplexer_type_id: str | None = None
@@ -347,7 +354,8 @@ class SessionManagementClient:
         if multiplexer_type_id is not None:
             request.multiplexer_type_id = multiplexer_type_id
 
-        response = self._get_stub().GetMultiplexerSessions(request)
+        stub = self._get_stub()
+        response = stub.GetMultiplexerSessions(request)
         session_infos = [session for session in response.multiplexer_sessions]
         return MultiplexerSessionContainer(self, session_infos)
 
@@ -369,7 +377,8 @@ class SessionManagementClient:
         if multiplexer_type_id is not None:
             request.multiplexer_type_id = multiplexer_type_id
 
-        response = self._get_stub().GetAllRegisteredMultiplexerSessions(request)
+        stub = self._get_stub()
+        response = stub.GetAllRegisteredMultiplexerSessions(request)
         session_infos = [session for session in response.multiplexer_sessions]
         return MultiplexerSessionContainer(self, session_infos)
 

@@ -4,13 +4,11 @@ import logging
 from typing import Callable
 
 import grpc
-from deprecation import deprecated
 from google.protobuf import descriptor_pool
 from grpc.framework.foundation import logging_pool
 
 from ni_measurement_plugin_sdk_service._internal.grpc_servicer import (
-    MeasurementServiceServicerV1,
-    MeasurementServiceServicerV2,
+    MeasurementServiceServicerV3,
 )
 from ni_measurement_plugin_sdk_service._internal.parameter.metadata import (
     ParameterMetadata,
@@ -18,11 +16,8 @@ from ni_measurement_plugin_sdk_service._internal.parameter.metadata import (
 from ni_measurement_plugin_sdk_service._internal.parameter.serialization_descriptors import (
     create_file_descriptor,
 )
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v1 import (
-    measurement_service_pb2_grpc as v1_measurement_service_pb2_grpc,
-)
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v2 import (
-    measurement_service_pb2_grpc as v2_measurement_service_pb2_grpc,
+from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v3 import (
+    measurement_service_pb2_grpc as v3_measurement_service_pb2_grpc,
 )
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient, ServiceLocation
 from ni_measurement_plugin_sdk_service.grpc.loggers import ServerLogger
@@ -32,46 +27,21 @@ from ni_measurement_plugin_sdk_service.measurement.info import (
 )
 
 _logger = logging.getLogger(__name__)
-_V1_INTERFACE = "ni.measurementlink.measurement.v1.MeasurementService"
-_V2_INTERFACE = "ni.measurementlink.measurement.v2.MeasurementService"
+_V3_INTERFACE = "ni.measurementlink.measurement.v3.MeasurementService"
 
 
 class GrpcService:
     """Manages the gRPC server lifetime and registration."""
 
-    def __init__(self, discovery_client: DiscoveryClient | None = None) -> None:
+    def __init__(
+        self, discovery_client: DiscoveryClient | None = None, port: int | None = None
+    ) -> None:
         """Initialize the service."""
         self._discovery_client = discovery_client or DiscoveryClient()
+        self._port = port
         self._server: grpc.Server | None = None
         self._service_location: ServiceLocation | None = None
         self._registration_id = ""
-
-    @property
-    @deprecated(
-        deprecated_in="1.3.0-dev0",
-        details="This property should not be public and will be removed in a later release.",
-    )
-    def discovery_client(self) -> DiscoveryClient:
-        """Client for accessing the NI Discovery Service."""
-        return self._discovery_client
-
-    @property
-    @deprecated(
-        deprecated_in="1.3.0-dev0",
-        details="Use service_location instead.",
-    )
-    def port(self) -> str:
-        """The insecure port."""
-        return self.service_location.insecure_port
-
-    @property
-    @deprecated(
-        deprecated_in="1.3.0-dev0",
-        details="This property should not be public and will be removed in a later release.",
-    )
-    def server(self) -> grpc.Server | None:
-        """The gRPC server."""
-        return self._server
 
     @property
     def service_location(self) -> ServiceLocation:
@@ -85,15 +55,12 @@ class GrpcService:
         measurement_info: MeasurementInfo,
         service_info: ServiceInfo,
         configuration_parameter_list: list[ParameterMetadata],
-        output_parameter_list: list[ParameterMetadata],
+        input_parameters: dict[str, str],
+        output_parameters: dict[str, str],
         measure_function: Callable,
         owner: object = None,
     ) -> str:
-        """Start the gRPC server and register it with the discovery service.
-
-        Returns:
-            The insecure port.
-        """
+        """Start the gRPC server and register it with the discovery service."""
         interceptors: list[grpc.ServerInterceptor] = []
         if ServerLogger.is_enabled():
             interceptors.append(ServerLogger())
@@ -107,41 +74,29 @@ class GrpcService:
         )
         create_file_descriptor(
             service_name=service_info.service_class,
-            output_metadata=output_parameter_list,
-            input_metadata=configuration_parameter_list,
+            config_metadata=configuration_parameter_list,
             pool=descriptor_pool.Default(),
         )
         for interface in service_info.provided_interfaces:
-            if interface == _V1_INTERFACE:
-                servicer_v1 = MeasurementServiceServicerV1(
+            if interface == _V3_INTERFACE:
+                servicer_v3 = MeasurementServiceServicerV3(
                     measurement_info,
                     configuration_parameter_list,
-                    output_parameter_list,
+                    input_parameters,
+                    output_parameters,
                     measure_function,
                     owner,
                     service_info,
                 )
-                v1_measurement_service_pb2_grpc.add_MeasurementServiceServicer_to_server(
-                    servicer_v1, self._server
-                )
-            elif interface == _V2_INTERFACE:
-                servicer_v2 = MeasurementServiceServicerV2(
-                    measurement_info,
-                    configuration_parameter_list,
-                    output_parameter_list,
-                    measure_function,
-                    owner,
-                    service_info,
-                )
-                v2_measurement_service_pb2_grpc.add_MeasurementServiceServicer_to_server(
-                    servicer_v2, self._server
+                v3_measurement_service_pb2_grpc.add_MeasurementServiceServicer_to_server(
+                    servicer_v3, self._server
                 )
             else:
                 raise ValueError(
                     f"Unknown interface was provided in the .serviceconfig file: {interface}"
                 )
         host = "[::1]"
-        port = str(self._server.add_insecure_port(f"{host}:0"))
+        port = self._port or str(self._server.add_insecure_port(f"{host}:0"))
         address = f"http://{host}:{port}"
         self._server.start()
         _logger.info("Measurement service listening on: %s", address)

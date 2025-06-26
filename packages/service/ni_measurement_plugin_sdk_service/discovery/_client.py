@@ -21,10 +21,7 @@ from ni_measurement_plugin_sdk_service.discovery._support import (
 )
 from ni_measurement_plugin_sdk_service.discovery._types import ServiceLocation
 from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
-from ni_measurement_plugin_sdk_service.measurement.info import (
-    MeasurementInfo,
-    ServiceInfo,
-)
+from ni_measurement_plugin_sdk_service.measurement.info import ServiceInfo
 
 _logger = logging.getLogger(__name__)
 
@@ -59,15 +56,6 @@ class DiscoveryClient:
         """ "The ID from discovery service upon successful registration."""
         return self._registration_id
 
-    @property
-    @deprecated(
-        deprecated_in="1.2.0-dev2",
-        details="This property should not be public and will be removed in a later release.",
-    )
-    def stub(self) -> discovery_service_pb2_grpc.DiscoveryServiceStub:
-        """Get the gRPC stub used to interact with the discovery service."""
-        return self._get_stub()
-
     def _get_stub(self) -> discovery_service_pb2_grpc.DiscoveryServiceStub:
         if self._stub is None:
             with self._initialization_lock:
@@ -79,37 +67,6 @@ class DiscoveryClient:
                     channel = self._grpc_channel_pool.get_channel(address)
                     self._stub = discovery_service_pb2_grpc.DiscoveryServiceStub(channel)
         return self._stub
-
-    @deprecated(deprecated_in="1.2.0-dev2", details="Use register_service instead.")
-    def register_measurement_service(
-        self, service_port: str, service_info: ServiceInfo, measurement_info: MeasurementInfo
-    ) -> bool:
-        """Register the measurement service with the discovery service.
-
-        Args:
-            service_port: The port number of the service.
-
-            service_info: Information describing the service.
-
-            measurement_info: Information describing the measurement.
-
-        Returns:
-            Boolean indicating whether the service was successfully registered.
-        """
-        if self._registration_id:
-            raise RuntimeError("Service already registered")
-
-        service_location = ServiceLocation(
-            location="localhost",
-            insecure_port=service_port,
-            ssl_authenticated_port="",
-        )
-
-        self._registration_id = self.register_service(
-            service_info._replace(display_name=measurement_info.display_name),
-            service_location,
-        )
-        return True
 
     def register_service(self, service_info: ServiceInfo, service_location: ServiceLocation) -> str:
         """Register the specified service with the discovery service.
@@ -145,7 +102,8 @@ class DiscoveryClient:
                 location=grpc_service_location,
             )
 
-            response = self._get_stub().RegisterService(request)
+            stub = self._get_stub()
+            response = stub.RegisterService(request)
             _logger.info("Successfully registered with discovery service.")
             return response.registration_id
         except grpc.RpcError as e:
@@ -189,7 +147,8 @@ class DiscoveryClient:
                 registration_id=registration_id
             )
 
-            _ = self._get_stub().UnregisterService(request)
+            stub = self._get_stub()
+            _ = stub.UnregisterService(request)
             _logger.info("Successfully unregistered with discovery service.")
 
             if registration_id == self._registration_id:
@@ -245,7 +204,8 @@ class DiscoveryClient:
             version=version,
         )
 
-        response = self._get_stub().ResolveService(request)
+        stub = self._get_stub()
+        response = stub.ResolveService(request)
 
         return ServiceLocation._from_grpc(response)
 
@@ -281,7 +241,8 @@ class DiscoveryClient:
             version=version,
         )
 
-        response = self._get_stub().ResolveServiceWithInformation(request)
+        stub = self._get_stub()
+        response = stub.ResolveServiceWithInformation(request)
 
         return (
             ServiceLocation._from_grpc(response.service_location),
@@ -301,6 +262,7 @@ class DiscoveryClient:
             provided_interface=provided_interface
         )
 
-        response = self._get_stub().EnumerateServices(request)
+        stub = self._get_stub()
+        response = stub.EnumerateServices(request)
 
         return [ServiceInfo._from_grpc(service) for service in response.available_services]

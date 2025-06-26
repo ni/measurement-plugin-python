@@ -85,5 +85,6 @@ class PinMapClient:
             pin_map_id=str(pin_map_path),
             pin_map_xml=pathlib.Path(pin_map_path).read_text(encoding="utf-8-sig"),
         )
-        response = self._get_stub().UpdatePinMapFromXml(request)
+        stub = self._get_stub()
+        response = stub.UpdatePinMapFromXml(request)
         return response.pin_map_id

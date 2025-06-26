@@ -133,9 +133,13 @@ class ServerLogger(grpc.ServerInterceptor):
 
     def intercept_service(
         self,
-        continuation: Callable[
-            [grpc.HandlerCallDetails], grpc.RpcMethodHandler[grpc._TRequest, grpc._TResponse] | None
-        ],
+        continuation: (
+            Callable[
+                [grpc.HandlerCallDetails],
+                grpc.RpcMethodHandler[grpc._TRequest, grpc._TResponse],
+            ]
+            | None
+        ),
         handler_call_details: grpc.HandlerCallDetails,
     ) -> grpc.RpcMethodHandler[grpc._TRequest, grpc._TResponse] | None:
         """Intercept and log a server call."""

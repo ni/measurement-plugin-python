@@ -7,7 +7,7 @@ extend_exclude = '.tox/,*_pb2_grpc.py,*_pb2_grpc.pyi,*_pb2.py,*_pb2.pyi,ni_measu
 
 [tool.poetry]
 name = "ni_measurement_plugin_sdk_service"
-version = "2.4.0-dev0"
+version = "2.4.0-dev1"
 description = "Measurement Plug-In Support for Python"
 authors = ["NI <opensource@ni.com>"]
 readme = "README.md" # apply the repo readme to the package as well
@@ -26,7 +26,7 @@ classifiers = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = ">=3.11, <3.14"
 # This package includes gRPC stubs that were generated with the version of grpcio-tools specified
 # below. Please keep the minimum grpcio version in sync with the grpcio-tools version. Otherwise,
 # the generated gRPC stubs may not work with the minimum grpcio version.
@@ -92,6 +92,7 @@ numpy = [
 bandit = { version = ">=1.7", extras = ["toml"] }
 # Install traceloggingdynamic on Linux for type checking.
 traceloggingdynamic = { version = ">=1.0", platform = "linux" }
+ipython = "^9.3.0"
 
 [tool.poetry.group.docs]
 optional = true

@@ -106,8 +106,7 @@ def _create_message_type(
 
 def create_file_descriptor(
     service_name: str,
-    output_metadata: list[ParameterMetadata],
-    input_metadata: list[ParameterMetadata],
+    config_metadata: list[ParameterMetadata],
     pool: DescriptorPool,
 ) -> None:
     """Creates two message types in one file descriptor proto."""
@@ -117,6 +116,5 @@ def create_file_descriptor(
         file_descriptor = FileDescriptorProto()
         file_descriptor.name = service_name
         file_descriptor.package = service_name
-        _create_message_type(input_metadata, "Configurations", file_descriptor)
-        _create_message_type(output_metadata, "Outputs", file_descriptor)
+        _create_message_type(config_metadata, "Configurations", file_descriptor)
         pool.Add(file_descriptor)
