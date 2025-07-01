@@ -26,7 +26,7 @@ classifiers = [
 ]
 
 [tool.poetry.dependencies]
-python = ">=3.9,<3.13"
+python = "^3.9"
 # This package includes gRPC stubs that were generated with the version of grpcio-tools specified
 # below. Please keep the minimum grpcio version in sync with the grpcio-tools version. Otherwise,
 # the generated gRPC stubs may not work with the minimum grpcio version.
@@ -101,7 +101,7 @@ optional = true
 # The latest Sphinx requires a recent Python version.
 Sphinx = [
   { version = "<8.0", python = ">=3.9,<3.11" },
-  { version = ">=8.2", python = ">=3.11,<3.12" },
+  { version = ">=8.2", python = ">=3.11,<3.13" },
 ]
 sphinx-rtd-theme = ">=1.0.0"
 sphinx-autoapi = ">=1.8.4"
