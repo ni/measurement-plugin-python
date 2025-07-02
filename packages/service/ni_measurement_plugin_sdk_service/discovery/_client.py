@@ -24,6 +24,7 @@ from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
 from ni_measurement_plugin_sdk_service.measurement.info import (
     MeasurementInfo,
     ServiceInfo,
+    ComputeNodeDescriptor,
 )
 
 _logger = logging.getLogger(__name__)
@@ -304,3 +305,15 @@ class DiscoveryClient:
         response = self._get_stub().EnumerateServices(request)
 
         return [ServiceInfo._from_grpc(service) for service in response.available_services]
+
+    def enumerate_compute_nodes(self) -> Sequence[ComputeNodeDescriptor]:
+        """Enumerates all compute nodes registered with the discovery service.
+
+        Returns:
+            The list of information describing the compute nodes.
+        """
+        request = discovery_service_pb2.EnumerateComputeNodesRequest()
+
+        response = self._get_stub().EnumerateComputeNodes(request)
+
+        return [ComputeNodeDescriptor._from_grpc(node) for node in response.compute_nodes]

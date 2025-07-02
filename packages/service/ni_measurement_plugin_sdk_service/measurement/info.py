@@ -80,6 +80,23 @@ class ServiceInfo(NamedTuple):
             versions=list(other.versions),
         )
 
+class ComputeNodeDescriptor(NamedTuple):
+    """A named tuple providing information about a compute node.
+
+    This class is used with the NI Discovery Service when enumerating compute nodes.
+    """
+    url: str
+    """The resolvable name (URL) of the compute node."""
+
+    is_local: bool
+    """Indicates whether the compute node is local node."""
+
+    @classmethod
+    def _from_grpc(cls, grpc_obj: discovery_service_pb2.ComputeNodeDescriptor) -> ComputeNodeDescriptor:
+        return ComputeNodeDescriptor(
+            url=grpc_obj.url,
+            is_local=grpc_obj.is_local,
+        )
 
 class TypeSpecialization(enum.Enum):
     """Enum that represents the type specializations for measurement parameters."""
