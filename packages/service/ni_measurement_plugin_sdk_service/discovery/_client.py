@@ -307,7 +307,7 @@ class DiscoveryClient:
         return [ServiceInfo._from_grpc(service) for service in response.available_services]
 
     def enumerate_compute_nodes(self) -> Sequence[ComputeNodeDescriptor]:
-        """Enumerates all compute nodes registered with the discovery service.
+        """Enumerates all the compute nodes registered with the discovery service.
 
         Returns:
             The list of information describing the compute nodes.

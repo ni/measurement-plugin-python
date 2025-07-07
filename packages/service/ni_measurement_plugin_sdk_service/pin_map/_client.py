@@ -61,8 +61,12 @@ class PinMapClient:
                     )
                 if self._stub is None:
                     compute_nodes = self._discovery_client.enumerate_compute_nodes()
-                    remote_nodes = [node for node in compute_nodes if not node.is_local]
-                    first_remote_node_url = remote_nodes[0].url if len(remote_nodes) == 1 else ""
+                    remote_compute_nodes = [node for node in compute_nodes if not node.is_local]
+                    first_remote_node_url = (
+                        remote_compute_nodes[0].url if len(remote_compute_nodes) == 1 else ""
+                    )
+                    # Assigning the first available remote compute node to deployment_target
+                    # to enable remote service resolution if connected.
                     service_location = self._discovery_client.resolve_service(
                         provided_interface=GRPC_SERVICE_INTERFACE_NAME,
                         deployment_target=first_remote_node_url,
