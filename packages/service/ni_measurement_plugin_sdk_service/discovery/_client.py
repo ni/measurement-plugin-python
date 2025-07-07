@@ -19,12 +19,14 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.discov
 from ni_measurement_plugin_sdk_service.discovery._support import (
     _get_discovery_service_address,
 )
-from ni_measurement_plugin_sdk_service.discovery._types import ServiceLocation
+from ni_measurement_plugin_sdk_service.discovery._types import (
+    ComputeNodeDescriptor,
+    ServiceLocation,
+)
 from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
 from ni_measurement_plugin_sdk_service.measurement.info import (
     MeasurementInfo,
     ServiceInfo,
-    ComputeNodeDescriptor,
 )
 
 _logger = logging.getLogger(__name__)

@@ -19,6 +19,8 @@ from ni_measurement_plugin_sdk_service._annotations import (
     SERVICE_PROGRAMMINGLANGUAGE_KEY,
 )
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.discovery.v1.discovery_service_pb2 import (
+    ComputeNodeDescriptor as GrpcComputeNodeDescriptor,
+    EnumerateComputeNodesResponse,
     EnumerateServicesRequest,
     EnumerateServicesResponse,
     RegisterServiceRequest,
@@ -40,6 +42,7 @@ from ni_measurement_plugin_sdk_service.discovery._support import (
     _open_key_file,
     _start_service,
 )
+from ni_measurement_plugin_sdk_service.discovery._types import ComputeNodeDescriptor
 from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
 from ni_measurement_plugin_sdk_service.measurement.info import (
     MeasurementInfo,
@@ -459,6 +462,71 @@ def test___no_registered_measurements___resolve_service_with_information___raise
     assert exc_info.value.code() == grpc.StatusCode.NOT_FOUND
 
 
+def test___registered_compute_node___enumerate_compute_nodes___returns_node(
+    discovery_client: DiscoveryClient, discovery_service_stub: Mock
+):
+    expected_node = ComputeNodeDescriptor(url="http://remotehost:42000", is_local=False)
+    discovery_service_stub.EnumerateComputeNodes.return_value = EnumerateComputeNodesResponse(
+        compute_nodes=[
+            GrpcComputeNodeDescriptor(url=expected_node.url, is_local=expected_node.is_local),
+        ]
+    )
+
+    compute_nodes = discovery_client.enumerate_compute_nodes()
+
+    discovery_service_stub.EnumerateComputeNodes.assert_called_once()
+    assert compute_nodes[0] == expected_node
+
+
+def test___multiple_registered_compute_nodes___enumerate_compute_nodes___returns_all_nodes(
+    discovery_client: DiscoveryClient, discovery_service_stub: Mock
+):
+    expected_nodes = [
+        ComputeNodeDescriptor(url="http://localhost:42000", is_local=True),
+        ComputeNodeDescriptor(url="http://remotehost:42001", is_local=False),
+    ]
+    discovery_service_stub.EnumerateComputeNodes.return_value = EnumerateComputeNodesResponse(
+        compute_nodes=[
+            GrpcComputeNodeDescriptor(
+                url=expected_nodes[0].url, is_local=expected_nodes[0].is_local
+            ),
+            GrpcComputeNodeDescriptor(
+                url=expected_nodes[1].url, is_local=expected_nodes[1].is_local
+            ),
+        ]
+    )
+
+    compute_nodes = discovery_client.enumerate_compute_nodes()
+
+    discovery_service_stub.EnumerateComputeNodes.assert_called_once()
+    assert compute_nodes == expected_nodes
+
+
+def test___no_registered_compute_nodes___enumerate_compute_nodes___returns_empty_list(
+    discovery_client: DiscoveryClient, discovery_service_stub: Mock
+):
+    discovery_service_stub.EnumerateComputeNodes.return_value = EnumerateComputeNodesResponse()
+
+    compute_nodes = discovery_client.enumerate_compute_nodes()
+
+    discovery_service_stub.EnumerateComputeNodes.assert_called_once()
+    assert compute_nodes == []
+
+
+def test___enumerate_compute_nodes___grpc_error___raises_rpc_error(
+    discovery_client: DiscoveryClient, discovery_service_stub: Mock
+):
+    discovery_service_stub.EnumerateComputeNodes.side_effect = FakeRpcError(
+        grpc.StatusCode.UNAVAILABLE, details="Test service unavailable"
+    )
+
+    with pytest.raises(grpc.RpcError) as exc_info:
+        discovery_client.enumerate_compute_nodes()
+
+    discovery_service_stub.EnumerateComputeNodes.assert_called_once()
+    assert exc_info.value.code() == grpc.StatusCode.UNAVAILABLE
+
+
 @pytest.fixture(scope="module")
 def subprocess_popen_kwargs() -> dict[str, Any]:
     kwargs: dict[str, Any] = {}
@@ -488,6 +556,7 @@ def discovery_service_stub(mocker: MockerFixture) -> Mock:
     stub.EnumerateServices = mocker.create_autospec(grpc.UnaryUnaryMultiCallable)
     stub.ResolveService = mocker.create_autospec(grpc.UnaryUnaryMultiCallable)
     stub.ResolveServiceWithInformation = mocker.create_autospec(grpc.UnaryUnaryMultiCallable)
+    stub.EnumerateComputeNodes = mocker.create_autospec(grpc.UnaryUnaryMultiCallable)
     return stub
 
 
