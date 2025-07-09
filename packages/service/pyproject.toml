@@ -36,7 +36,6 @@ pywin32 = { version = ">=303", platform = "win32" }
 deprecation = ">=2.1"
 traceloggingdynamic = { version = ">=1.0", platform = "win32" }
 python-decouple = ">=3.8"
-flake8-import-order = ">=0.18.1,<0.19.0" # we're not compatible with 0.19.0 yet due to #226
 nidaqmx = { version = ">=0.8.0", extras = ["grpc"], optional = true }
 nidcpower = { version = ">=1.4.4", extras = ["grpc"], optional = true }
 nidigital = { version = ">=1.4.4", extras = ["grpc"], optional = true }
@@ -66,6 +65,7 @@ niswitch = ["niswitch"]
 [tool.poetry.group.dev.dependencies]
 pytest = ">=7.2.0"
 ni-python-styleguide = ">=0.4.1"
+flake8-import-order = ">=0.18.1,<0.19.0" # we're not compatible with 0.19.0 yet due to #226
 # When you update the grpcio-tools version, you should update the minimum grpcio version
 # and regenerate gRPC stubs.
 grpcio-tools = [
