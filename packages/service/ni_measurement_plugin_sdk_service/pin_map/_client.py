@@ -65,8 +65,8 @@ class PinMapClient:
                     first_remote_node_url = (
                         remote_compute_nodes[0].url if len(remote_compute_nodes) == 1 else ""
                     )
-                    # Assigning the first available remote compute node to deployment_target
-                    # to enable remote service resolution if connected.
+                    # Assign the remote compute node URL if exactly one node is available; 
+                    # ignore multiple nodes (unsupported) and assign an empty string otherwise. 
                     service_location = self._discovery_client.resolve_service(
                         provided_interface=GRPC_SERVICE_INTERFACE_NAME,
                         deployment_target=first_remote_node_url,
