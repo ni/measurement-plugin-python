@@ -36,13 +36,16 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.discov
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.discovery.v1.discovery_service_pb2_grpc import (
     DiscoveryServiceStub,
 )
-from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient, ServiceLocation
+from ni_measurement_plugin_sdk_service.discovery import (
+    ComputeNodeDescriptor,
+    DiscoveryClient,
+    ServiceLocation,
+)
 from ni_measurement_plugin_sdk_service.discovery._support import (
     _get_discovery_service_address,
     _open_key_file,
     _start_service,
 )
-from ni_measurement_plugin_sdk_service.discovery._types import ComputeNodeDescriptor
 from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
 from ni_measurement_plugin_sdk_service.measurement.info import (
     MeasurementInfo,
