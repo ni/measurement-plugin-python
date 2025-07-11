@@ -19,7 +19,10 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.discov
 from ni_measurement_plugin_sdk_service.discovery._support import (
     _get_discovery_service_address,
 )
-from ni_measurement_plugin_sdk_service.discovery._types import ServiceLocation
+from ni_measurement_plugin_sdk_service.discovery._types import (
+    ComputeNodeDescriptor,
+    ServiceLocation,
+)
 from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
 from ni_measurement_plugin_sdk_service.measurement.info import (
     MeasurementInfo,
@@ -304,3 +307,20 @@ class DiscoveryClient:
         response = self._get_stub().EnumerateServices(request)
 
         return [ServiceInfo._from_grpc(service) for service in response.available_services]
+
+    def enumerate_compute_nodes(self) -> Sequence[ComputeNodeDescriptor]:
+        """Enumerates all the compute nodes registered with the discovery service.
+
+        Returns:
+            The list of information describing the compute nodes.
+        """
+        request = discovery_service_pb2.EnumerateComputeNodesRequest()
+
+        try:
+            response = self._get_stub().EnumerateComputeNodes(request)
+        except grpc.RpcError as e:
+            if e.code() == grpc.StatusCode.UNIMPLEMENTED:
+                return []
+            raise
+
+        return [ComputeNodeDescriptor._from_grpc(node) for node in response.compute_nodes]

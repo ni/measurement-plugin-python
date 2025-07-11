@@ -23,6 +23,7 @@ def test___default_configuration___get_grpc_device_server_location___resolves_se
 
     discovery_client.resolve_service.assert_called_with(
         provided_interface=fake_driver.GRPC_SERVICE_INTERFACE_NAME,
+        deployment_target="",
         service_class=SERVICE_CLASS,
     )
     assert service_location == ServiceLocation("localhost", "1234", "")
@@ -136,6 +137,7 @@ def test___default_configuration___get_insecure_grpc_device_server_channel___res
 
     discovery_client.resolve_service.assert_called_with(
         provided_interface=fake_driver.GRPC_SERVICE_INTERFACE_NAME,
+        deployment_target="",
         service_class=SERVICE_CLASS,
     )
     grpc_channel_pool.get_channel.assert_called_with("localhost:1234")
