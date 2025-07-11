@@ -316,6 +316,11 @@ class DiscoveryClient:
         """
         request = discovery_service_pb2.EnumerateComputeNodesRequest()
 
-        response = self._get_stub().EnumerateComputeNodes(request)
+        try:
+            response = self._get_stub().EnumerateComputeNodes(request)
+        except grpc.RpcError as e:
+            if e.code() == grpc.StatusCode.UNIMPLEMENTED:
+                return []
+            raise
 
         return [ComputeNodeDescriptor._from_grpc(node) for node in response.compute_nodes]
