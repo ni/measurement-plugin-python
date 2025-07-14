@@ -38,9 +38,9 @@ def get_grpc_device_server_location(
 
     compute_nodes = discovery_client.enumerate_compute_nodes()
     remote_compute_nodes = [node for node in compute_nodes if not node.is_local]
+    # Use remote node URL as deployment target if only one remote node is found.
+    # If more than one remote node exists, use empty string for deployment target.
     first_remote_node_url = remote_compute_nodes[0].url if len(remote_compute_nodes) == 1 else ""
-    # Assign the remote compute node URL if exactly one node is available;
-    # ignore multiple nodes (unsupported) and assign an empty string otherwise.
     service_location = discovery_client.resolve_service(
         provided_interface=provided_interface,
         deployment_target=first_remote_node_url,
