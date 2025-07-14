@@ -33,3 +33,22 @@ class ServiceLocation(typing.NamedTuple):
             insecure_port=other.insecure_port,
             ssl_authenticated_port=other.ssl_authenticated_port,
         )
+
+
+class ComputeNodeDescriptor(typing.NamedTuple):
+    """Represents a compute node."""
+
+    url: str
+    """The resolvable name (URL) of the compute node."""
+
+    is_local: bool
+    """Indicates whether the compute node is local node."""
+
+    @classmethod
+    def _from_grpc(
+        cls, other: discovery_service_pb2.ComputeNodeDescriptor
+    ) -> ComputeNodeDescriptor:
+        return ComputeNodeDescriptor(
+            url=other.url,
+            is_local=other.is_local,
+        )

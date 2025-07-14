@@ -75,8 +75,16 @@ class SessionManagementClient:
                         grpc_channel_pool=self._grpc_channel_pool
                     )
                 if self._stub is None:
+                    compute_nodes = self._discovery_client.enumerate_compute_nodes()
+                    remote_compute_nodes = [node for node in compute_nodes if not node.is_local]
+                    # Use remote node URL as deployment target if only one remote node is found.
+                    # If more than one remote node exists, use empty string for deployment target.
+                    first_remote_node_url = (
+                        remote_compute_nodes[0].url if len(remote_compute_nodes) == 1 else ""
+                    )
                     service_location = self._discovery_client.resolve_service(
                         provided_interface=GRPC_SERVICE_INTERFACE_NAME,
+                        deployment_target=first_remote_node_url,
                         service_class=GRPC_SERVICE_CLASS,
                     )
                     channel = self._grpc_channel_pool.get_channel(service_location.insecure_address)
