@@ -1107,13 +1107,13 @@ types-protobuf = ">=4.24"
 
 [[package]]
 name = "ni-python-styleguide"
-version = "0.4.6"
+version = "0.4.7"
 description = "NI's internal and external Python linter rules and plugins"
 optional = false
 python-versions = "<4.0,>=3.7"
 files = [
-    {file = "ni_python_styleguide-0.4.6-py3-none-any.whl", hash = "sha256:0ffa8bd5de38d96779ad0e83e49a3db3620a31742247be10f6471961ab6fa246"},
-    {file = "ni_python_styleguide-0.4.6.tar.gz", hash = "sha256:26d7ebd5acce0b29a6209ef9950f369327cbfd7ffd8404ade3e9a7c0f0aa6bcb"},
+    {file = "ni_python_styleguide-0.4.7-py3-none-any.whl", hash = "sha256:4b1ae36315a53d1ef0f996cf868cfca997e3a80b431808e46c632467eacd2d09"},
+    {file = "ni_python_styleguide-0.4.7.tar.gz", hash = "sha256:b510bb6974bdb907d0d10f14e985e90304d5f02590f5bafab333ebbaa663ef81"},
 ]
 
 [package.dependencies]
@@ -1125,7 +1125,7 @@ flake8 = [
 ]
 flake8-black = ">=0.2.1"
 flake8-docstrings = ">=1.5.0"
-flake8-import-order = ">=0.18.1"
+flake8-import-order = ">=0.18.1,<0.19.0"
 isort = ">=5.10"
 pathspec = ">=0.11.1"
 pep8-naming = ">=0.11.1"
@@ -2412,4 +2412,4 @@ niswitch = ["niswitch"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "a5a9c85b5606da2c72a9ec4150fd4a42a75156b5ab16d7e98871e420e6a5e73e"
+content-hash = "71453e43d6487a73552240702c8986d10a7c7214be575599481b6f6d91c77e9b"

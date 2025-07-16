@@ -65,7 +65,6 @@ niswitch = ["niswitch"]
 [tool.poetry.group.dev.dependencies]
 pytest = ">=7.2.0"
 ni-python-styleguide = ">=0.4.1"
-flake8-import-order = ">=0.18.1,<0.19.0" # we're not compatible with 0.19.0 yet due to #226
 # When you update the grpcio-tools version, you should update the minimum grpcio version
 # and regenerate gRPC stubs.
 grpcio-tools = [
