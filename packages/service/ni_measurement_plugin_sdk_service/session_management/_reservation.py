@@ -82,10 +82,7 @@ def _to_iterable(
 ) -> Iterable[_T]:
     if value is None:
         return default or []
-    elif isinstance(value, Iterable):
-        # str implements Iterable[str] for iterating over characters.
-        if isinstance(value, str):
-            return [cast(_T, value)]
+    elif isinstance(value, Iterable) and not isinstance(value, str):
         return value
     else:
         return [value]
