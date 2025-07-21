@@ -3,16 +3,18 @@
 from __future__ import annotations
 
 import functools
+import importlib.metadata
 import pathlib
 import sys
 from collections.abc import Generator, Sequence
-from typing import Protocol
+from typing import Any, Protocol
 
 import pytest
 from click.testing import CliRunner, Result
 from ni_measurement_plugin_sdk_service.discovery._support import (
     _get_registration_json_file_path,
 )
+from packaging.version import Version
 
 import ni_measurement_plugin_sdk_generator.client as client_generator
 import ni_measurement_plugin_sdk_generator.plugin as plugin_generator
@@ -58,14 +60,22 @@ def pin_map_directory(test_assets_directory: pathlib.Path) -> pathlib.Path:
 @pytest.fixture(scope="session")
 def create_client() -> Generator[CliRunnerFunction]:
     """Test fixture for calling client generator cli."""
-    runner = CliRunner(mix_stderr=False)
+    runner = _create_clirunner()
     yield functools.partial(runner.invoke, client_generator.create_client, standalone_mode=False)
 
 
 @pytest.fixture(scope="session")
 def create_measurement() -> Generator[CliRunnerFunction]:
     """Test fixture for calling plugin generator cli."""
-    runner = CliRunner(mix_stderr=False)
+    runner = _create_clirunner()
     yield functools.partial(
         runner.invoke, plugin_generator.create_measurement, standalone_mode=False
     )
+
+
+def _create_clirunner() -> CliRunner:
+    kwargs: dict[str, Any] = {}
+    if Version(importlib.metadata.version("click")) < Version("8.2.0"):
+        # mix_stderr was removed in click 8.2.
+        kwargs["mix_stderr"] = False
+    return CliRunner(**kwargs)
