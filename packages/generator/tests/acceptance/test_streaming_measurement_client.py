@@ -73,13 +73,17 @@ def test___non_streaming_measurement_execution___cancel___cancels_measurement(
 ) -> None:
     test_measurement_client_type = getattr(measurement_plugin_client_module, "TestMeasurement")
     measurement_plugin_client = test_measurement_client_type()
+    streaming_data_measurement.measurement_started_event.clear()
+    is_canceled = False
 
     with pytest.raises(grpc.RpcError) as exc_info:
         with concurrent.futures.ThreadPoolExecutor() as executor:
             measure = executor.submit(measurement_plugin_client.measure)
-            measurement_plugin_client.cancel()
+            streaming_data_measurement.measurement_started_event.wait()
+            is_canceled = measurement_plugin_client.cancel()
             measure.result()
 
+    assert is_canceled
     assert exc_info.value.code() == grpc.StatusCode.CANCELLED
 
 
@@ -88,13 +92,17 @@ def test___streaming_measurement_execution___cancel___cancels_measurement(
 ) -> None:
     test_measurement_client_type = getattr(measurement_plugin_client_module, "TestMeasurement")
     measurement_plugin_client = test_measurement_client_type()
+    streaming_data_measurement.measurement_started_event.clear()
+    is_canceled = False
 
     with pytest.raises(grpc.RpcError) as exc_info:
         with concurrent.futures.ThreadPoolExecutor() as executor:
             measure = executor.submit(lambda: list(measurement_plugin_client.stream_measure()))
-            measurement_plugin_client.cancel()
+            streaming_data_measurement.measurement_started_event.wait()
+            is_canceled = measurement_plugin_client.cancel()
             measure.result()
 
+    assert is_canceled
     assert exc_info.value.code() == grpc.StatusCode.CANCELLED
 
 
