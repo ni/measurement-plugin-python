@@ -243,31 +243,47 @@ class MeasurementServiceServicerV3(v3_measurement_service_pb2_grpc.MeasurementSe
             [parameter.field_name for parameter in self._configuration_metadata.values()],
         )
         pin_map_context = PinMapContext._from_grpc(first_request.pin_map_context)
+        measure_async = self._measure_async(
+            mapping_by_variable_name,
+            pin_map_context,
+            itertools.chain([first_request], requests),
+            context,
+        )
+
+        # Convert async generator to sync generator
+        while True:
+            try:
+                response = self._loop.run_until_complete(measure_async.__anext__())
+                yield response
+            except StopAsyncIteration:
+                break
+
+    async def _measure_async(
+        self,
+        mapping_by_variable_name: dict[str, Any],
+        pin_map_context: PinMapContext,
+        requests: Iterable[v3_measurement_service_pb2.MeasureRequest],
+        context: grpc.ServicerContext,
+    ) -> AsyncGenerator[v3_measurement_service_pb2.MeasureResponse, None]:
+        """Async helper for the Measure method."""
         token = measurement_service_context.set(
             MeasurementServiceContext(context, pin_map_context, self._owner)
         )
 
-        with MonikerClient() as moniker_client, DataStoreClient() as ds_client:
+        async with MonikerClient() as moniker_client, DataStoreClient() as ds_client:
             try:
-                all_requests = itertools.chain([first_request], requests)
                 measure_requests = (
                     MeasureRequest(moniker_client, self._input_parameters, request)
-                    for request in all_requests
+                    for request in requests
                 )
                 measure_responses = self._measure_function(
                     requests=measure_requests, **mapping_by_variable_name
                 )
-                while True:
-                    try:
-                        measure_response = self._loop.run_until_complete(
-                            measure_responses.__anext__()
-                        )
-                        grpc_response = self._loop.run_until_complete(
-                            measure_response.to_grpc_response(ds_client, self._output_parameters)
-                        )
-                        yield grpc_response
-                    except StopAsyncIteration:
-                        break
+                async for measure_response in measure_responses:
+                    grpc_response = await measure_response.to_grpc_response(
+                        ds_client, self._output_parameters
+                    )
+                    yield grpc_response
             finally:
                 measurement_service_context.get().mark_complete()
                 measurement_service_context.reset(token)
