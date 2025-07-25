@@ -268,7 +268,10 @@ class MeasurementServiceServicerV3(v3_measurement_service_pb2_grpc.MeasurementSe
                     for request in requests
                 )
                 measure_responses = self._measure_function(
-                    requests=measure_requests, **mapping_by_variable_name
+                    **mapping_by_variable_name,
+                    requests=measure_requests,
+                    moniker_client=moniker_client,
+                    ds_client=ds_client,
                 )
                 async for measure_response in measure_responses:
                     grpc_response = await measure_response.to_grpc_response(
