@@ -250,6 +250,8 @@ class MeasurementService:
         self._configuration_parameter_list: list[parameter_metadata.ParameterMetadata] = []
         self._input_parameter_list: dict[str, ParameterType] = {}
         self._output_parameter_list: dict[str, ParameterType] = {}
+        self._use_datastore_client: str | None = None
+        self._use_moniker_client: str | None = None
         self._measure_function: Callable = self._raise_measurement_method_not_registered
 
         self._initialization_lock = threading.RLock()
@@ -458,6 +460,44 @@ class MeasurementService:
 
         return _output
 
+    def use_datastore_client(self, name: str) -> Callable[[_F], _F]:
+        """Decorator to indicate that the measurement function uses the datastore client.
+
+        This decorator is used to indicate that the measurement function uses the datastore client
+        to access data stored in the NI Measurement Plugin SDK datastore.
+
+        Args:
+            name (str): The name of the datastore client.
+
+        Returns:
+            Callable that takes in Any Python Function and returns the same python function.
+        """
+        self._use_datastore_client = name
+
+        def _use_datastore_client(func: _F) -> _F:
+            return func
+
+        return _use_datastore_client
+
+    def use_moniker_client(self, name: str) -> Callable[[_F], _F]:
+        """Decorator to indicate that the measurement function uses the moniker client.
+
+        This decorator is used to indicate that the measurement function uses the moniker client
+        to access monikers in the NI Measurement Plugin SDK datastore.
+
+        Args:
+            name (str): The name of the moniker client.
+
+        Returns:
+            Callable that takes in Any Python Function and returns the same python function.
+        """
+        self._use_moniker_client = name
+
+        def _use_moniker_client(func: _F) -> _F:
+            return func
+
+        return _use_moniker_client
+
     def listen(self, port: int | None = None):
         """Host the registered measurement method as a gRPC measurement service.
 
@@ -477,6 +517,8 @@ class MeasurementService:
                 self._configuration_parameter_list,
                 self._input_parameter_list,
                 self._output_parameter_list,
+                self._use_datastore_client,
+                self._use_moniker_client,
                 self._measure_function,
                 owner=self,
             )

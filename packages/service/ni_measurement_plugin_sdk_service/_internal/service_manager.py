@@ -59,6 +59,8 @@ class GrpcService:
         configuration_parameter_list: list[ParameterMetadata],
         input_parameters: dict[str, ParameterType],
         output_parameters: dict[str, ParameterType],
+        use_datastore_client: str | None,
+        use_moniker_client: str | None,
         measure_function: Callable,
         owner: object = None,
     ) -> str:
@@ -86,6 +88,8 @@ class GrpcService:
                     configuration_parameter_list,
                     input_parameters,
                     output_parameters,
+                    use_datastore_client,
+                    use_moniker_client,
                     measure_function,
                     owner,
                     service_info,

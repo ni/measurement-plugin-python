@@ -144,6 +144,8 @@ class MeasurementServiceServicerV3(v3_measurement_service_pb2_grpc.MeasurementSe
         configuration_parameter_list: list[ParameterMetadata],
         input_parameters: dict[str, ParameterType],
         output_parameters: dict[str, ParameterType],
+        use_datastore_client: str | None,
+        use_moniker_client: str | None,
         measure_function: Callable[..., AsyncGenerator[MeasureResponse, None, None]],
         owner: object,
         service_info: ServiceInfo,
@@ -158,6 +160,8 @@ class MeasurementServiceServicerV3(v3_measurement_service_pb2_grpc.MeasurementSe
         self._configuration_parameters_message_type = service_info.service_class + ".Configurations"
         self._input_parameters = input_parameters
         self._output_parameters = output_parameters
+        self._use_datastore_client = use_datastore_client
+        self._use_moniker_client = use_moniker_client
 
     def GetMetadata(  # noqa: N802 - function name should be lowercase
         self, _: v3_measurement_service_pb2.GetMetadataRequest, __: grpc.ServicerContext
@@ -267,11 +271,13 @@ class MeasurementServiceServicerV3(v3_measurement_service_pb2_grpc.MeasurementSe
                     MeasureRequest(moniker_client, self._input_parameters, request)
                     for request in requests
                 )
+                client_arguments = {}
+                if self._use_datastore_client:
+                    client_arguments[self._use_datastore_client] = ds_client
+                if self._use_moniker_client:
+                    client_arguments[self._use_moniker_client] = moniker_client
                 measure_responses = self._measure_function(
-                    **mapping_by_variable_name,
-                    requests=measure_requests,
-                    moniker_client=moniker_client,
-                    ds_client=ds_client,
+                    **mapping_by_variable_name, requests=measure_requests, **client_arguments
                 )
                 async for measure_response in measure_responses:
                     grpc_response = await measure_response.to_grpc_response(
