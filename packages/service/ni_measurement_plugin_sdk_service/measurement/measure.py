@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any, Awaitable
 
 from google.protobuf import any_pb2, timestamp_pb2
@@ -145,7 +145,7 @@ class MeasureResponse:
                 elif parameter_type == MonikerType.DoubleAnalogWaveform:
                     publishable_data.waveform.CopyFrom(measure_output.value)
                 timestamp = timestamp_pb2.Timestamp()
-                timestamp.FromDatetime(datetime.now(datetime.timezone.utc))
+                timestamp.FromDatetime(datetime.now(timezone.utc))
                 result = await ds_client.publish_data(
                     publishable_data,
                     data_store_pb2.PublishDataLocation.PUBLISH_DATA_LOCATION_LOCAL,
