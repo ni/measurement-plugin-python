@@ -159,12 +159,6 @@ class MeasurementServiceServicerV3(v3_measurement_service_pb2_grpc.MeasurementSe
         self._input_parameters = input_parameters
         self._output_parameters = output_parameters
 
-        try:
-            self._loop = asyncio.get_event_loop()
-        except RuntimeError:
-            self._loop = asyncio.new_event_loop()
-            asyncio.set_event_loop(self._loop)
-
     def GetMetadata(  # noqa: N802 - function name should be lowercase
         self, _: v3_measurement_service_pb2.GetMetadataRequest, __: grpc.ServicerContext
     ) -> v3_measurement_service_pb2.GetMetadataResponse:
@@ -243,20 +237,17 @@ class MeasurementServiceServicerV3(v3_measurement_service_pb2_grpc.MeasurementSe
             [parameter.field_name for parameter in self._configuration_metadata.values()],
         )
         pin_map_context = PinMapContext._from_grpc(first_request.pin_map_context)
-        measure_async = self._measure_async(
-            mapping_by_variable_name,
-            pin_map_context,
-            itertools.chain([first_request], requests),
-            context,
-        )
 
-        # Convert async generator to sync generator
-        while True:
-            try:
-                response = self._loop.run_until_complete(measure_async.__anext__())
-                yield response
-            except StopAsyncIteration:
-                break
+        responses = asyncio.run(
+            self._measure_async(
+                mapping_by_variable_name,
+                pin_map_context,
+                itertools.chain([first_request], requests),
+                context,
+            )
+        )
+        for response in responses:
+            yield response
 
     async def _measure_async(
         self,
@@ -264,8 +255,8 @@ class MeasurementServiceServicerV3(v3_measurement_service_pb2_grpc.MeasurementSe
         pin_map_context: PinMapContext,
         requests: Iterable[v3_measurement_service_pb2.MeasureRequest],
         context: grpc.ServicerContext,
-    ) -> AsyncGenerator[v3_measurement_service_pb2.MeasureResponse, None]:
-        """Async helper for the Measure method."""
+    ) -> list[v3_measurement_service_pb2.MeasureResponse]:
+        responses = []
         token = measurement_service_context.set(
             MeasurementServiceContext(context, pin_map_context, self._owner)
         )
@@ -283,10 +274,12 @@ class MeasurementServiceServicerV3(v3_measurement_service_pb2_grpc.MeasurementSe
                     grpc_response = await measure_response.to_grpc_response(
                         ds_client, self._output_parameters
                     )
-                    yield grpc_response
+                    responses.append(grpc_response)
             finally:
                 measurement_service_context.get().mark_complete()
                 measurement_service_context.reset(token)
+
+        return responses
 
     def _get_mapping_by_parameter_name(
         self, mapping_by_id: dict[int, Any], parameter_names: list[str]
