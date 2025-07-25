@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import enum
 import json
 import sys
 import threading
@@ -28,6 +29,7 @@ from ni_measurement_plugin_sdk_service.grpc.channelpool import (
 from ni_measurement_plugin_sdk_service.measurement.info import (
     DataType,
     MeasurementInfo,
+    ParameterType,
     ServiceInfo,
     TypeSpecialization,
 )
@@ -247,8 +249,8 @@ class MeasurementService:
         """Accessor for context-local state."""
 
         self._configuration_parameter_list: list[parameter_metadata.ParameterMetadata] = []
-        self._input_parameter_list: dict[str, str] = {}
-        self._output_parameter_list: dict[str, str] = {}
+        self._input_parameter_list: dict[str, ParameterType] = {}
+        self._output_parameter_list: dict[str, ParameterType] = {}
         self._measure_function: Callable = self._raise_measurement_method_not_registered
 
         self._initialization_lock = threading.RLock()
@@ -299,7 +301,7 @@ class MeasurementService:
                         grpc_channel_pool=self.channel_pool,
                     )
         return self._session_management_client
-
+    
     def register_measurement(self, measurement_function: _F) -> _F:
         """Register a function as the measurement function for a measurement service.
 
@@ -422,7 +424,7 @@ class MeasurementService:
             Callable that takes in Any Python Function and
             returns the same python function.
         """
-        self._input_parameter_list[display_name] = type.to_url()
+        self._input_parameter_list[display_name] = type
 
         def _input(func: _F) -> _F:
             return func
@@ -450,7 +452,7 @@ class MeasurementService:
             Callable that takes in Any Python Function and
             returns the same python function.
         """
-        self._output_parameter_list[display_name] = type.to_url()
+        self._output_parameter_list[display_name] = type
 
         def _output(func: _F) -> _F:
             return func

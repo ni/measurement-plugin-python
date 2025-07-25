@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import enum
 import logging
 from typing import Callable
 
@@ -16,13 +17,14 @@ from ni_measurement_plugin_sdk_service._internal.parameter.metadata import (
 from ni_measurement_plugin_sdk_service._internal.parameter.serialization_descriptors import (
     create_file_descriptor,
 )
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v3 import (
+from ni.measurementlink.measurement.v3 import (
     measurement_service_pb2_grpc as v3_measurement_service_pb2_grpc,
 )
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient, ServiceLocation
 from ni_measurement_plugin_sdk_service.grpc.loggers import ServerLogger
 from ni_measurement_plugin_sdk_service.measurement.info import (
     MeasurementInfo,
+    ParameterType,
     ServiceInfo,
 )
 
@@ -55,8 +57,8 @@ class GrpcService:
         measurement_info: MeasurementInfo,
         service_info: ServiceInfo,
         configuration_parameter_list: list[ParameterMetadata],
-        input_parameters: dict[str, str],
-        output_parameters: dict[str, str],
+        input_parameters: dict[str, ParameterType],
+        output_parameters: dict[str, ParameterType],
         measure_function: Callable,
         owner: object = None,
     ) -> str:

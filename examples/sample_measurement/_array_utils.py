@@ -4,14 +4,16 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types import array_pb2
+from ni.protobuf.types import array_pb2
 
 if TYPE_CHECKING:
     import numpy as np
     import numpy.typing as npt
 
 
-def double2darray_to_ndarray(double2darray: array_pb2.Double2DArray) -> npt.NDArray[np.float64]:
+def double2darray_to_ndarray(
+    double2darray: array_pb2.Double2DArray,
+) -> npt.NDArray[np.float64]:
     """Convert Double2DArray to numpy NDArray."""
     import numpy as np
 
@@ -20,7 +22,9 @@ def double2darray_to_ndarray(double2darray: array_pb2.Double2DArray) -> npt.NDAr
     )
 
 
-def ndarray_to_double2darray(ndarray: npt.NDArray[np.float64]) -> array_pb2.Double2DArray:
+def ndarray_to_double2darray(
+    ndarray: npt.NDArray[np.float64],
+) -> array_pb2.Double2DArray:
     """Convert numpy NDArray to Double2DArray."""
     return array_pb2.Double2DArray(
         data=ndarray.flatten().tolist(), rows=ndarray.shape[0], columns=ndarray.shape[1]
@@ -43,7 +47,9 @@ def double2darray_to_list(double2darray: array_pb2.Double2DArray) -> list[list[f
     return [data[i * columns : (i + 1) * columns] for i in range(rows)]
 
 
-def string2darray_to_ndarray(string2darray: array_pb2.String2DArray) -> npt.NDArray[np.str_]:
+def string2darray_to_ndarray(
+    string2darray: array_pb2.String2DArray,
+) -> npt.NDArray[np.str_]:
     """Convert String2DArray to numpy NDArray."""
     import numpy as np
 

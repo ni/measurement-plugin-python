@@ -10,9 +10,7 @@ import _array_utils
 import click
 import ni_measurement_plugin_sdk_service as nims
 from _helpers import configure_logging, verbosity_option
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types import (
-    array_pb2,
-)
+from ni.protobuf.types import array_pb2
 
 try:
     from _stubs import color_pb2
@@ -44,21 +42,32 @@ class Color(Enum):
 _list_of_lists_of_floats = [[1.0, 2.0, 3.0], [4.0, 5.0, 6.0], [7.0, 8.0, 9.0]]
 
 # Convert the list of lists to a Double2DArray
-_converted_double_2d_array = _array_utils.list_to_double2darray(_list_of_lists_of_floats)
+_converted_double_2d_array = _array_utils.list_to_double2darray(
+    _list_of_lists_of_floats
+)
 
 # Define a list of lists of strings
-_list_of_lists_of_string = [["String1", "String2", "String3"], ["String4", "String5", "String6"]]
+_list_of_lists_of_string = [
+    ["String1", "String2", "String3"],
+    ["String4", "String5", "String6"],
+]
 
 # Convert the list of lists to a String2DArray
-_converted_string_2d_array = _array_utils.list_to_string2darray(_list_of_lists_of_string)
+_converted_string_2d_array = _array_utils.list_to_string2darray(
+    _list_of_lists_of_string
+)
 
 
 @measurement_service.register_measurement
 @measurement_service.configuration("Float In", nims.DataType.Float, 0.06)
-@measurement_service.configuration("Double Array In", nims.DataType.DoubleArray1D, [0.1, 0.2, 0.3])
+@measurement_service.configuration(
+    "Double Array In", nims.DataType.DoubleArray1D, [0.1, 0.2, 0.3]
+)
 @measurement_service.configuration("Bool In", nims.DataType.Boolean, False)
 @measurement_service.configuration("String In", nims.DataType.String, "sample string")
-@measurement_service.configuration("Enum In", nims.DataType.Enum, Color.BLUE, enum_type=Color)
+@measurement_service.configuration(
+    "Enum In", nims.DataType.Enum, Color.BLUE, enum_type=Color
+)
 @measurement_service.configuration(
     "Protobuf Enum In",
     nims.DataType.Enum,

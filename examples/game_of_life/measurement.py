@@ -11,9 +11,7 @@ import click
 import grpc
 import ni_measurement_plugin_sdk_service as nims
 from _helpers import configure_logging, verbosity_option
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types import (
-    xydata_pb2,
-)
+from ni.protobuf.types import xydata_pb2
 
 service_directory = pathlib.Path(__file__).resolve().parent
 measurement_service = nims.MeasurementService(
@@ -30,7 +28,9 @@ INFINITE_GENERATIONS = -1
 @measurement_service.configuration("width", nims.DataType.UInt32, 100)
 @measurement_service.configuration("height", nims.DataType.UInt32, 100)
 @measurement_service.configuration("update_interval_msec", nims.DataType.UInt32, 100)
-@measurement_service.configuration("max_generations", nims.DataType.Int32, INFINITE_GENERATIONS)
+@measurement_service.configuration(
+    "max_generations", nims.DataType.Int32, INFINITE_GENERATIONS
+)
 @measurement_service.output("game_of_life", nims.DataType.DoubleXYData)
 @measurement_service.output("generation", nims.DataType.UInt32)
 def measure(
@@ -58,7 +58,9 @@ def measure(
             row_index += 1
         grid = _update_grid(grid)
         xydata_out = xydata
-        delay = max(0.0, update_interval_sec - (time.monotonic() - iteration_start_time))
+        delay = max(
+            0.0, update_interval_sec - (time.monotonic() - iteration_start_time)
+        )
         yield (xydata_out, generation)
 
         if cancellation_event.wait(delay):
@@ -82,7 +84,9 @@ def _initialize_xydata_and_frame(width: int, height: int) -> xydata_pb2.DoubleXY
     return xydata
 
 
-def _initialize_grid_with_seeded_data(rows: int, cols: int, probability: float = 0.6) -> Grid:
+def _initialize_grid_with_seeded_data(
+    rows: int, cols: int, probability: float = 0.6
+) -> Grid:
     return [[random.random() < probability for _ in range(cols)] for _ in range(rows)]
 
 

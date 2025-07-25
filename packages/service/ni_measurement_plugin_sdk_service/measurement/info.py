@@ -2,11 +2,16 @@
 
 from __future__ import annotations
 
+import abc
 import enum
 from pathlib import Path
-from typing import NamedTuple
+from typing import Any, NamedTuple
+from google.protobuf.message import Message
+from google.protobuf import wrappers_pb2
+from ni.protobuf.types import waveform_pb2, array_pb2, xydata_pb2
+from ni.measurements.data.v1 import data_store_pb2
 
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.discovery.v1 import (
+from ni.measurementlink.discovery.v1 import (
     discovery_service_pb2,
 )
 
@@ -91,7 +96,18 @@ class TypeSpecialization(enum.Enum):
     IOResource = "ioresource"
 
 
-class DataType(enum.Enum):
+class ParameterType(abc.Abc, enum.Enum):
+    @abc.abstractmethod
+    def to_url(self) -> str:
+        """Convert the parameter type to a URL."""
+        ...
+
+    def to_message(self) -> Message:
+        """Convert the parameter type to a message."""
+        ...
+
+
+class DataType(ParameterType):
     """Enum that represents the supported data types."""
 
     Int32 = 0
@@ -123,3 +139,106 @@ class DataType(enum.Enum):
     EnumArray1D = 110
     DoubleXYDataArray1D = 111
     IOResourceArray1D = 112
+
+    def to_url(self) -> str:
+        if self == DataType.Int32:
+            return "type.googleapis.com/google.protobuf.Int32Value"
+        elif self == DataType.Int64:
+            return "type.googleapis.com/google.protobuf.Int64Value"
+        elif self == DataType.UInt32:
+            return "type.googleapis.com/google.protobuf.UInt32Value"
+        elif self == DataType.UInt64:
+            return "type.googleapis.com/google.protobuf.UInt64Value"
+        elif self == DataType.Float:
+            return "type.googleapis.com/google.protobuf.FloatValue"
+        elif self == DataType.Double:
+            return "type.googleapis.com/google.protobuf.DoubleValue"
+        elif self == DataType.Boolean:
+            return "type.googleapis.com/google.protobuf.BooleanValue"
+        elif self == DataType.String:
+            return "type.googleapis.com/google.protobuf.StringData"
+        elif self == DataType.Pin:
+            return "type.googleapis.com/google.protobuf.PinValue"
+        elif self == DataType.Path:
+            return "type.googleapis.com/google.protobuf.PathValue"
+        elif self == DataType.Enum:
+            return "type.googleapis.com/google.protobuf.EnumValue"
+        elif self == DataType.DoubleXYData:
+            return "type.googleapis.com/ni.protobuf.types.DoubleXYData"
+        elif self == DataType.IOResource:
+            return "type.googleapis.com/ni.measurementlink.iodiscovery.v1.IOResource"
+        elif self == DataType.Double2DArray:
+            return "type.googleapis.com/ni.protobuf.types.Double2DArray"
+        elif self == DataType.String2DArray:
+            return "type.googleapis.com/ni.protobuf.types.String2DArray"
+        else:
+            raise ValueError(f"Unsupported DataType: {self}")
+
+    def to_message(self, value: Any) -> Message:
+        """Convert the DataType to a protobuf message."""
+        if self == DataType.Int32:
+            return wrappers_pb2.Int32Value(value=value)
+        elif self == DataType.Int64:
+            return wrappers_pb2.Int64Value(value=value)
+        elif self == DataType.UInt32:
+            return wrappers_pb2.UInt32Value(value=value)
+        elif self == DataType.UInt64:
+            return wrappers_pb2.UInt64Value(value=value)
+        elif self == DataType.Float:
+            return wrappers_pb2.FloatValue(value=value)
+        elif self == DataType.Double:
+            return wrappers_pb2.DoubleValue(value=value)
+        elif self == DataType.Boolean:
+            return wrappers_pb2.BoolValue(value=value)
+        elif self == DataType.String:
+            return wrappers_pb2.StringValue(value=value)
+        else:
+            raise ValueError(f"Unsupported DataType: {self}")
+
+
+class MonikerType(ParameterType):
+    """Enum that represents the moniker types for measurement inputs/outputs."""
+
+    ScalarData = enum.auto()
+    ScalarArray = enum.auto()
+    ConditionSet = enum.auto()
+    String2DArray = enum.auto()
+    Double2DArray = enum.auto()
+    DoubleXYData = enum.auto()
+    DoubleAnalogWaveform = enum.auto()
+
+    def to_url(self) -> str:
+        if self == MonikerType.ScalarData:
+            return "type.googleapis.com/ni.measurements.data.v1.ScalarData"
+        elif self == MonikerType.ScalarArray:
+            return "type.googleapis.com/ni.measurements.data.v1.ScalarArray"
+        elif self == MonikerType.ConditionSet:
+            return "type.googleapis.com/ni.measurements.data.v1.ConditionSet"
+        elif self == MonikerType.String2DArray:
+            return "type.googleapis.com/ni.protobuf.types.String2DArray"
+        elif self == MonikerType.Double2DArray:
+            return "type.googleapis.com/ni.protobuf.types.Double2DArray"
+        elif self == MonikerType.DoubleXYData:
+            return "type.googleapis.com/ni.protobuf.types.DoubleXYData"
+        elif self == MonikerType.DoubleAnalogWaveform:
+            return "type.googleapis.com/ni.protobuf.types.DoubleAnalogWaveform"
+        else:
+            raise ValueError(f"Unsupported MonikerType: {self}")
+
+    def to_message(self) -> Message:
+        if self == MonikerType.ScalarData:
+            return data_store_pb2.ScalarData()
+        elif self == MonikerType.ScalarArray:
+            return data_store_pb2.ScalarArray()
+        elif self == MonikerType.ConditionSet:
+            return data_store_pb2.ConditionSet()
+        elif self == MonikerType.String2DArray:
+            return array_pb2.String2DArray()
+        elif self == MonikerType.Double2DArray:
+            return array_pb2.Double2DArray()
+        elif self == MonikerType.DoubleXYData:
+            return xydata_pb2.DoubleXYData()
+        elif self == MonikerType.DoubleAnalogWaveform:
+            return waveform_pb2.DoubleAnalogWaveform()
+        else:
+            raise ValueError(f"Unsupported MonikerType: {self}")

@@ -9,8 +9,6 @@ from ni_measurement_plugin_sdk_service.measurement.info import (
     ServiceInfo,
 )
 from ni_measurement_plugin_sdk_service.measurement.service import MeasurementService
-from ni_measurement_plugin_sdk_service.moniker import MonikerType
-from ni_measurement_plugin_sdk_service import stubs
 
 __all__ = [
     "session_management",
@@ -18,8 +16,6 @@ __all__ = [
     "MeasurementInfo",
     "ServiceInfo",
     "MeasurementService",
-    "MonikerType",
-    "stubs",
 ]
 
 _logger = logging.getLogger(__name__)

@@ -20,7 +20,7 @@ from ni_measurement_plugin_sdk_service._internal.parameter.metadata import (
     ParameterMetadata,
     TypeSpecialization,
 )
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types import (
+from ni.protobuf.types import (
     xydata_pb2,
 )
 from tests.utilities.stubs.serialization import test_pb2

@@ -26,7 +26,7 @@ classifiers = [
 ]
 
 [tool.poetry.dependencies]
-python = ">=3.11, <3.14"
+python = ">=3.11, <3.12"
 # This package includes gRPC stubs that were generated with the version of grpcio-tools specified
 # below. Please keep the minimum grpcio version in sync with the grpcio-tools version. Otherwise,
 # the generated gRPC stubs may not work with the minimum grpcio version.
@@ -43,6 +43,11 @@ nidmm = { version = ">=1.4.4", extras = ["grpc"], optional = true }
 nifgen = { version = ">=1.4.4", extras = ["grpc"], optional = true }
 niscope = { version = ">=1.4.4", extras = ["grpc"], optional = true }
 niswitch = { version = ">=1.4.4", extras = ["grpc"], optional = true }
+ni-datamonikers-v1 = { git = "https://github.com/ni/ni-apis-python.git", branch = "users/pkurlak/add-services", subdirectory = "packages/ni.datamonikers.v1" }
+ni-measurements-data-v1 = { git = "https://github.com/ni/ni-apis-python.git", branch = "users/pkurlak/add-services", subdirectory = "packages/ni.measurements.data.v1" }
+ni-protobuf-types = { git = "https://github.com/ni/ni-apis-python.git", branch = "users/pkurlak/add-services", subdirectory = "packages/ni.protobuf.types" }
+ni-measurementlink-discovery-v1 = { git = "https://github.com/ni/ni-apis-python.git", branch = "users/pkurlak/add-services", subdirectory = "packages/ni.measurementlink.discovery.v1" }
+ni-measurementlink-measurement-v3 = { git = "https://github.com/ni/ni-apis-python.git", branch = "users/pkurlak/add-services", subdirectory = "packages/ni.measurementlink.measurement.v3" }
 
 [tool.poetry.extras]
 drivers = [

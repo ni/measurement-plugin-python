@@ -12,7 +12,7 @@ from ni_measurement_plugin_sdk_service._internal.parameter import (
     metadata,
     serialization_descriptors,
 )
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types import (
+from ni.protobuf.types import (
     xydata_pb2,
 )
 from tests.unit.test_decoder import (
