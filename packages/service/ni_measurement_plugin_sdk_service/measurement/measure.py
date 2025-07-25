@@ -45,13 +45,13 @@ class MeasureRequest:
         self, parameter_type: MonikerType, moniker: data_moniker_pb2.Moniker
     ):
         result = await self._moniker_client.read_from_moniker(moniker)
-        if result.value.type_url != parameter_type.to_url():
+        if result.type_url != parameter_type.to_url():
             raise ValueError(
                 f"Moniker type {result.value.type_url} does not match expected type {parameter_type.to_url()}"
             )
 
         value = parameter_type.to_message()
-        result.value.Unpack(value)
+        result.Unpack(value)
         return value
 
     async def __convert_from_value(self, parameter_type: DataType, data: any_pb2.Any):
