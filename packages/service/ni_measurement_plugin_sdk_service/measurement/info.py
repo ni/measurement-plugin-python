@@ -96,7 +96,10 @@ class TypeSpecialization(enum.Enum):
     IOResource = "ioresource"
 
 
-class ParameterType(abc.Abc, enum.Enum):
+class ABCEnumMeta(abc.ABCMeta, enum.EnumMeta): ...
+
+
+class ParameterType(abc.ABC, enum.Enum, metaclass=ABCEnumMeta):
     @abc.abstractmethod
     def to_url(self) -> str:
         """Convert the parameter type to a URL."""

@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import enum
 import json
 import sys
 import threading
@@ -12,7 +11,7 @@ from enum import Enum, EnumMeta
 from os import path
 from pathlib import Path
 from types import TracebackType
-from typing import TYPE_CHECKING, Any, Callable, Literal, Optional, TypeVar, Union
+from typing import TYPE_CHECKING, Any, Callable, Literal, TypeVar, Union
 
 import grpc
 from google.protobuf.descriptor import EnumDescriptor
@@ -33,7 +32,7 @@ from ni_measurement_plugin_sdk_service.measurement.info import (
     ServiceInfo,
     TypeSpecialization,
 )
-from ni_measurement_plugin_sdk_service.moniker import MonikerType
+from ni_measurement_plugin_sdk_service.measurement.info import MonikerType
 from ni_measurement_plugin_sdk_service.session_management import (
     MultiSessionReservation,
     PinMapContext,
@@ -301,7 +300,7 @@ class MeasurementService:
                         grpc_channel_pool=self.channel_pool,
                     )
         return self._session_management_client
-    
+
     def register_measurement(self, measurement_function: _F) -> _F:
         """Register a function as the measurement function for a measurement service.
 

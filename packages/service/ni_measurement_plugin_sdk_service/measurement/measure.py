@@ -9,7 +9,7 @@ from ni.measurementlink.measurement.v3 import (
     measurement_service_pb2 as v3_measurement_service_pb2,
 )
 
-from packages.service.ni_measurement_plugin_sdk_service.measurement.info import (
+from ni_measurement_plugin_sdk_service.measurement.info import (
     DataType,
     MonikerType,
     ParameterType,
