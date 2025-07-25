@@ -279,7 +279,7 @@ class MeasurementServiceServicerV3(v3_measurement_service_pb2_grpc.MeasurementSe
         signature = inspect.signature(self._measure_function)
         mapping_by_variable_name = {}
 
-        i = 0
+        i = 1
         for parameter in signature.parameters.values():
             if parameter.name in parameter_names:
                 mapping_by_variable_name[parameter.name] = mapping_by_id[i]
