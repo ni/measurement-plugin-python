@@ -1146,7 +1146,7 @@ protobuf = ">=4.21"
 type = "git"
 url = "https://github.com/ni/ni-apis-python.git"
 reference = "users/pkurlak/add-services"
-resolved_reference = "f41065d14a19c72b0f41803efddec53fedadfa4c"
+resolved_reference = "4a6fc49efa3d9f5170ace8005b1900536ebc7596"
 subdirectory = "packages/ni.apis.python"
 
 [[package]]
@@ -1171,7 +1171,7 @@ protobuf = ">=4.21"
 type = "git"
 url = "https://github.com/ni/ni-apis-python.git"
 reference = "users/pkurlak/add-services"
-resolved_reference = "f41065d14a19c72b0f41803efddec53fedadfa4c"
+resolved_reference = "4a6fc49efa3d9f5170ace8005b1900536ebc7596"
 subdirectory = "packages/ni.datamonikers.v1"
 
 [[package]]
@@ -1194,7 +1194,7 @@ protobuf = ">=4.21"
 type = "git"
 url = "https://github.com/ni/ni-apis-python.git"
 reference = "users/pkurlak/add-services"
-resolved_reference = "f41065d14a19c72b0f41803efddec53fedadfa4c"
+resolved_reference = "4a6fc49efa3d9f5170ace8005b1900536ebc7596"
 subdirectory = "packages/ni.measurementlink"
 
 [[package]]
@@ -1218,7 +1218,7 @@ pywin32 = "^311"
 type = "git"
 url = "https://github.com/ni/ni-apis-python.git"
 reference = "users/pkurlak/add-services"
-resolved_reference = "f41065d14a19c72b0f41803efddec53fedadfa4c"
+resolved_reference = "4a6fc49efa3d9f5170ace8005b1900536ebc7596"
 subdirectory = "packages/ni.measurementlink.discovery.v1"
 
 [[package]]
@@ -1240,7 +1240,7 @@ protobuf = ">=4.21"
 type = "git"
 url = "https://github.com/ni/ni-apis-python.git"
 reference = "users/pkurlak/add-services"
-resolved_reference = "f41065d14a19c72b0f41803efddec53fedadfa4c"
+resolved_reference = "4a6fc49efa3d9f5170ace8005b1900536ebc7596"
 subdirectory = "packages/ni.measurementlink.measurement.v3"
 
 [[package]]
@@ -1267,7 +1267,7 @@ protobuf = ">=4.21"
 type = "git"
 url = "https://github.com/ni/ni-apis-python.git"
 reference = "users/pkurlak/add-services"
-resolved_reference = "f41065d14a19c72b0f41803efddec53fedadfa4c"
+resolved_reference = "4a6fc49efa3d9f5170ace8005b1900536ebc7596"
 subdirectory = "packages/ni.measurements.data.v1"
 
 [[package]]
@@ -1289,7 +1289,7 @@ protobuf = ">=4.21"
 type = "git"
 url = "https://github.com/ni/ni-apis-python.git"
 reference = "users/pkurlak/add-services"
-resolved_reference = "f41065d14a19c72b0f41803efddec53fedadfa4c"
+resolved_reference = "4a6fc49efa3d9f5170ace8005b1900536ebc7596"
 subdirectory = "packages/ni.measurements.metadata.v1"
 
 [[package]]
@@ -1311,7 +1311,7 @@ protobuf = ">=4.21"
 type = "git"
 url = "https://github.com/ni/ni-apis-python.git"
 reference = "users/pkurlak/add-services"
-resolved_reference = "f41065d14a19c72b0f41803efddec53fedadfa4c"
+resolved_reference = "4a6fc49efa3d9f5170ace8005b1900536ebc7596"
 subdirectory = "packages/ni.protobuf.types"
 
 [[package]]
