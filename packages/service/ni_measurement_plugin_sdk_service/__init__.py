@@ -9,6 +9,11 @@ from ni_measurement_plugin_sdk_service.measurement.info import (
     ServiceInfo,
 )
 from ni_measurement_plugin_sdk_service.measurement.service import MeasurementService
+from ni_measurement_plugin_sdk_service.measurement.measure import (
+    MeasureRequest,
+    MeasureOutput,
+    MeasureResponse,
+)
 
 __all__ = [
     "session_management",
@@ -16,6 +21,9 @@ __all__ = [
     "MeasurementInfo",
     "ServiceInfo",
     "MeasurementService",
+    "MeasureRequest",
+    "MeasureResponse",
+    "MeasureOutput",
 ]
 
 _logger = logging.getLogger(__name__)
