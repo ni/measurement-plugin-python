@@ -240,7 +240,7 @@ class MeasurementServiceServicerV3(v3_measurement_service_pb2_grpc.MeasurementSe
         )
         mapping_by_variable_name = self._get_mapping_by_parameter_name(
             mapping_by_id,
-            first_request.inputs,
+            [parameter.field_name for parameter in self._configuration_metadata.values()],
         )
         pin_map_context = PinMapContext._from_grpc(first_request.pin_map_context)
         token = measurement_service_context.set(
@@ -273,14 +273,17 @@ class MeasurementServiceServicerV3(v3_measurement_service_pb2_grpc.MeasurementSe
                 measurement_service_context.reset(token)
 
     def _get_mapping_by_parameter_name(
-        self, mapping_by_id: dict[int, Any], inputs: list[v3_measurement_service_pb2.DataValue]
+        self, mapping_by_id: dict[int, Any], parameter_names: list[str]
     ) -> dict[str, Any]:
         """Transform a mapping by id into a mapping by parameter name (i.e. kwargs)."""
         signature = inspect.signature(self._measure_function)
         mapping_by_variable_name = {}
 
-        for i, parameter in enumerate(signature.parameters.values(), start=1):
-            mapping_by_variable_name[parameter.name] = mapping_by_id[i]
+        i = 0
+        for parameter in signature.parameters.values():
+            if parameter.name in parameter_names:
+                mapping_by_variable_name[parameter.name] = mapping_by_id[i]
+                i += 1
 
         return mapping_by_variable_name
 
