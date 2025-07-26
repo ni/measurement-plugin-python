@@ -26,15 +26,23 @@ class MeasureRequest:
         self._moniker_client = moniker_client
         self._inputs = inputs
         self._grpc_request = grpc_request
+
         self._input_positions = {key: i for i, key in enumerate(inputs.keys())}
 
     def __getattr__(self, input_name: str) -> Awaitable:
-        parameter_type = self._inputs[input_name]
-        position = self._input_positions[input_name]
+        suffix = "_moniker"
+        true_input_name = input_name.removesuffix(suffix)
+        has_moniker_suffix = true_input_name != input_name
+
+        parameter_type = self._inputs[true_input_name]
+        position = self._input_positions[true_input_name]
 
         if isinstance(parameter_type, MonikerType):
             moniker = self._grpc_request.inputs[position].moniker
-            return self.__convert_from_moniker(parameter_type, moniker)
+            if has_moniker_suffix:
+                return moniker
+            else:
+                return self.__convert_from_moniker(parameter_type, moniker)
         elif isinstance(parameter_type, DataType):
             data = self._grpc_request.inputs[position].value
             return self.__convert_from_value(parameter_type, data)
@@ -55,6 +63,11 @@ class MeasureRequest:
         return value
 
     async def __convert_from_value(self, parameter_type: DataType, data: any_pb2.Any):
+        if data.type_url != parameter_type.to_url():
+            raise ValueError(
+                f"Value type {data.type_url} does not match expected type {parameter_type.to_url()}"
+            )
+
         value = parameter_type.to_message()
         data.Unpack(value)
         return value
