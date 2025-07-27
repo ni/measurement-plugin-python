@@ -3,6 +3,7 @@ from datetime import datetime, timezone
 from typing import Any, Awaitable
 
 from google.protobuf import any_pb2, timestamp_pb2
+from ni.protobuf.types import scalar_pb2, array_pb2, xydata_pb2, waveform_pb2
 from ni.datamonikers.v1 import MonikerClient, data_moniker_pb2
 from ni.measurements.data.v1 import DataStoreClient, data_store_pb2
 from ni.measurementlink.measurement.v3 import (
@@ -142,21 +143,9 @@ class MeasureResponse:
                 output for output in self._measure_outputs if output.name == parameter_name
             )
             if isinstance(parameter_type, MonikerType):
-                publishable_data = data_store_pb2.PublishableData(name=measure_output.data_name)
-                if parameter_type == MonikerType.ScalarData:
-                    publishable_data.scalar_data.CopyFrom(measure_output.value)
-                elif (
-                    parameter_type == MonikerType.ScalarArray
-                    or parameter_type == MonikerType.String2DArray
-                    or parameter_type == MonikerType.Double2DArray
-                ):
-                    publishable_data.scalar_array.CopyFrom(measure_output.value)
-                elif parameter_type == MonikerType.ConditionSet:
-                    ...
-                elif parameter_type == MonikerType.DoubleXYData:
-                    publishable_data.x_y_data.CopyFrom(measure_output.value)
-                elif parameter_type == MonikerType.DoubleAnalogWaveform:
-                    publishable_data.waveform.CopyFrom(measure_output.value)
+                publishable_data = self.__to_publishable_data(
+                    parameter_name, parameter_type, measure_output
+                )
                 timestamp = timestamp_pb2.Timestamp()
                 timestamp.FromDatetime(datetime.now(timezone.utc))
                 result = await ds_client.publish_data(
@@ -173,3 +162,94 @@ class MeasureResponse:
                 data_values.append(v3_measurement_service_pb2.DataValue(value=any_value))
 
         return v3_measurement_service_pb2.MeasureResponse(outputs=data_values)
+
+    def __to_publishable_data(
+        self, parameter_name: str, parameter_type: MonikerType, output: MeasureOutput
+    ) -> data_store_pb2.PublishableData:
+        """Convert MeasureOutput to PublishableData."""
+        publishable_data = data_store_pb2.PublishableData(name=output.data_name)
+        if parameter_type == MonikerType.ScalarData:
+            if isinstance(output.value, scalar_pb2.Scalar):
+                scalar = output.value
+            else:
+                scalar = scalar_pb2.Scalar()
+                if isinstance(output.value, float):
+                    scalar.double_value = output.value
+                elif isinstance(output.value, int):
+                    scalar.int_value = output.value
+                elif isinstance(output.value, bool):
+                    scalar.bool_value = output.value
+                elif isinstance(output.value, str):
+                    scalar.string_value = output.value
+
+            publishable_data.scalar.CopyFrom(scalar)
+        elif parameter_type == MonikerType.ScalarArray:
+            if isinstance(output.value, data_store_pb2.ScalarArray):
+                scalar_array = output.value
+            else:
+                scalar_array = data_store_pb2.ScalarArray()
+                first_value = output.value[0]
+                if isinstance(first_value, float):
+                    scalar_array.double_array.values.extend(output.value)
+                elif isinstance(first_value, int):
+                    scalar_array.int32_array.values.extend(output.value)
+                elif isinstance(first_value, bool):
+                    scalar_array.bool_array.values.extend(output.value)
+                elif isinstance(first_value, str):
+                    scalar_array.string_array.values.extend(output.value)
+
+            publishable_data.scalar_array.CopyFrom(scalar_array)
+        elif parameter_type == MonikerType.String2DArray:
+            scalar_array = data_store_pb2.ScalarArray()
+            if isinstance(output.value, array_pb2.String2DArray):
+                scalar_array.string_array.values.extend(output.value.data)
+            else:
+                if not isinstance(output.value, tuple[int, int, list[str]]):
+                    raise ValueError(
+                        f"Expected {parameter_name} to be either a String2DArray or a tuple of (rows, columns, values)"
+                    )
+                _, _, values = output.value
+                scalar_array.string_array.values.extend(values)
+
+            publishable_data.scalar_array.CopyFrom(scalar_array)
+        elif parameter_type == MonikerType.Double2DArray:
+            scalar_array = data_store_pb2.ScalarArray()
+            if isinstance(output.value, array_pb2.Double2DArray):
+                scalar_array.double_array.values.extend(output.value.data)
+            else:
+                if not isinstance(output.value, tuple[int, int, list[float]]):
+                    raise ValueError(
+                        f"Expected {parameter_name} to be either a Double2DArray or a tuple of (rows, columns, values)"
+                    )
+                _, _, values = output.value
+                scalar_array.double_array.values.extend(values)
+
+            publishable_data.scalar_array.CopyFrom(scalar_array)
+        elif parameter_type == MonikerType.ConditionSet:
+            # TODO: Publish condition set
+            ...
+        elif parameter_type == MonikerType.DoubleXYData:
+            if isinstance(output.value, xydata_pb2.DoubleXYData):
+                xy_data = output.value
+            else:
+                xy_data = xydata_pb2.DoubleXYData()
+                if isinstance(output.value, tuple[list[float], list[float]]):
+                    x_values, y_values = output.value
+                    xy_data.x_data.extend(x_values)
+                    xy_data.y_data.extend(y_values)
+                else:
+                    raise ValueError(
+                        f"Expected {parameter_name} to be a DoubleXYData or a tuple of (x_values, y_values)"
+                    )
+
+            publishable_data.x_y_data.CopyFrom(xy_data)
+        elif parameter_type == MonikerType.DoubleAnalogWaveform:
+            if isinstance(output.value, waveform_pb2.DoubleAnalogWaveform):
+                waveform = output.value
+            else:
+                # TODO
+                raise NotImplementedError(f"Expected {parameter_name} to be a DoubleAnalogWaveform")
+
+            publishable_data.waveform.CopyFrom(waveform)
+
+        return publishable_data
