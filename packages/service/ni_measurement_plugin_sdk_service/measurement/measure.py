@@ -150,7 +150,6 @@ class MeasureResponse:
                 timestamp.FromDatetime(datetime.now(timezone.utc))
                 result = await ds_client.publish_data(
                     publishable_data,
-                    data_store_pb2.PublishDataLocation.PUBLISH_DATA_LOCATION_LOCAL,
                     timestamp,
                     measure_output.measurement_id,
                 )
