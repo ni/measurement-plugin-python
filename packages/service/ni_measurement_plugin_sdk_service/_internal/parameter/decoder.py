@@ -6,10 +6,9 @@ from typing import Any
 
 from google.protobuf import descriptor_pool, message_factory
 from google.protobuf.descriptor_pb2 import FieldDescriptorProto
+from google.protobuf.pyext.cpp_message import _message
 
-from ni_measurement_plugin_sdk_service._internal.parameter.metadata import (
-    ParameterMetadata,
-)
+from ni_measurement_plugin_sdk_service._internal.parameter.metadata import ParameterMetadata
 from ni_measurement_plugin_sdk_service._internal.parameter.serialization_descriptors import (
     is_protobuf,
 )
@@ -52,7 +51,13 @@ def deserialize_parameters(
         ):
             parameter_values[i] = None
         else:
+            if parameter_metadata.repeated:
+                if isinstance(value, _message.RepeatedScalarContainer):
+                    parameter_values[i] = list(value)
+                    continue
+
             parameter_values[i] = value
+
     return parameter_values
 
 

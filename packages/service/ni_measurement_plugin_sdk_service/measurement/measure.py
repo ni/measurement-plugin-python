@@ -166,6 +166,9 @@ class MeasureResponse:
         self, parameter_name: str, parameter_type: MonikerType, output: MeasureOutput
     ) -> data_store_pb2.PublishableData:
         """Convert MeasureOutput to PublishableData."""
+        if output.data_name is None:
+            raise ValueError(f"Output '{parameter_name}' must have a value for data_name")
+
         publishable_data = data_store_pb2.PublishableData(name=output.data_name)
         if parameter_type == MonikerType.ScalarData:
             if isinstance(output.value, scalar_pb2.Scalar):
