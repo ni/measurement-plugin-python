@@ -1516,15 +1516,15 @@ hightime = ">=0.2.0"
 
 [[package]]
 name = "nitypes"
-version = "0.1.0.dev5"
+version = "0.1.0.dev6"
 description = "Data types for NI Python APIs"
 optional = false
 python-versions = "<4.0,>=3.9"
 groups = ["main"]
 markers = "sys_platform == \"win32\" or sys_platform == \"linux\" or sys_platform != \"win32\" and sys_platform != \"linux\""
 files = [
-    {file = "nitypes-0.1.0.dev5-py3-none-any.whl", hash = "sha256:4f0e7ce6332b0911c3bd38083993ff2fb5a7cacf2a7c08397782e11fc106c50f"},
-    {file = "nitypes-0.1.0.dev5.tar.gz", hash = "sha256:cf5adce1acc0f74ce7f3d6e7d3aadecfd93b53ea6795850444e356adf3765004"},
+    {file = "nitypes-0.1.0.dev6-py3-none-any.whl", hash = "sha256:44ecc849d4a26137919a5406cbb103281d965102d0061682a939d58668de44ea"},
+    {file = "nitypes-0.1.0.dev6.tar.gz", hash = "sha256:37ae3494ecaa98d866ebe3c27898c21961c4f47082cfb7a921dc842debd74526"},
 ]
 
 [package.dependencies]

@@ -3,18 +3,13 @@ from datetime import datetime, timezone
 from typing import Any, Awaitable
 
 from google.protobuf import any_pb2, timestamp_pb2
-from ni.protobuf.types import scalar_pb2, array_pb2, xydata_pb2, waveform_pb2
+from google.protobuf.message import Message
 from ni.datamonikers.v1 import MonikerClient, data_moniker_pb2
+from ni.measurementlink.measurement.v3 import measurement_service_pb2 as v3_measurement_service_pb2
 from ni.measurements.data.v1 import DataStoreClient, data_store_pb2
-from ni.measurementlink.measurement.v3 import (
-    measurement_service_pb2 as v3_measurement_service_pb2,
-)
+from ni.protobuf.types import array_pb2, scalar_pb2, waveform_pb2, xydata_pb2
 
-from ni_measurement_plugin_sdk_service.measurement.info import (
-    DataType,
-    MonikerType,
-    ParameterType,
-)
+from ni_measurement_plugin_sdk_service.measurement.info import DataType, MonikerType, ParameterType
 
 
 class MeasureRequest:
@@ -30,7 +25,7 @@ class MeasureRequest:
 
         self._input_positions = {key: i for i, key in enumerate(inputs.keys())}
 
-    def __getattr__(self, input_name: str) -> Awaitable:
+    def __getattr__(self, input_name: str) -> Awaitable[Any] | data_moniker_pb2.Moniker:
         suffix = "_moniker"
         true_input_name = input_name.removesuffix(suffix)
         has_moniker_suffix = true_input_name != input_name
@@ -52,7 +47,7 @@ class MeasureRequest:
 
     async def __convert_from_moniker(
         self, parameter_type: MonikerType, moniker: data_moniker_pb2.Moniker
-    ):
+    ) -> Message:
         result = await self._moniker_client.read_from_moniker(moniker)
         if result.type_url != parameter_type.to_url():
             raise ValueError(
@@ -63,7 +58,7 @@ class MeasureRequest:
         result.Unpack(value)
         return value
 
-    async def __convert_from_value(self, parameter_type: DataType, data: any_pb2.Any):
+    async def __convert_from_value(self, parameter_type: DataType, data: any_pb2.Any) -> Message:
         if data.type_url != parameter_type.to_url():
             raise ValueError(
                 f"Value type {data.type_url} does not match expected type {parameter_type.to_url()}"
@@ -170,7 +165,7 @@ class MeasureResponse:
             raise ValueError(f"Output '{parameter_name}' must have a value for data_name")
 
         publishable_data = data_store_pb2.PublishableData(name=output.data_name)
-        if parameter_type == MonikerType.ScalarData:
+        if parameter_type == MonikerType.Scalar:
             if isinstance(output.value, scalar_pb2.Scalar):
                 scalar = output.value
             else:

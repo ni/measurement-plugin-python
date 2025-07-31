@@ -6,14 +6,12 @@ import abc
 import enum
 from pathlib import Path
 from typing import Any, NamedTuple
-from google.protobuf.message import Message
-from google.protobuf import wrappers_pb2
-from ni.protobuf.types import waveform_pb2, array_pb2, xydata_pb2
-from ni.measurements.data.v1 import data_store_pb2
 
-from ni.measurementlink.discovery.v1 import (
-    discovery_service_pb2,
-)
+from google.protobuf import wrappers_pb2
+from google.protobuf.message import Message
+from ni.measurementlink.discovery.v1 import discovery_service_pb2
+from ni.measurements.data.v1 import data_store_pb2
+from ni.protobuf.types import array_pb2, scalar_pb2, waveform_pb2, xydata_pb2
 
 
 class MeasurementInfo(NamedTuple):
@@ -202,7 +200,7 @@ class DataType(ParameterType):
 class MonikerType(ParameterType):
     """Enum that represents the moniker types for measurement inputs/outputs."""
 
-    ScalarData = enum.auto()
+    Scalar = enum.auto()
     ScalarArray = enum.auto()
     ConditionSet = enum.auto()
     String2DArray = enum.auto()
@@ -211,8 +209,8 @@ class MonikerType(ParameterType):
     DoubleAnalogWaveform = enum.auto()
 
     def to_url(self) -> str:
-        if self == MonikerType.ScalarData:
-            return "type.googleapis.com/ni.measurements.data.v1.ScalarData"
+        if self == MonikerType.Scalar:
+            return "type.googleapis.com/ni.protobuf.types.Scalar"
         elif self == MonikerType.ScalarArray:
             return "type.googleapis.com/ni.measurements.data.v1.ScalarArray"
         elif self == MonikerType.ConditionSet:
@@ -229,8 +227,8 @@ class MonikerType(ParameterType):
             raise ValueError(f"Unsupported MonikerType: {self}")
 
     def to_message(self) -> Message:
-        if self == MonikerType.ScalarData:
-            return data_store_pb2.ScalarData()
+        if self == MonikerType.Scalar:
+            return scalar_pb2.Scalar()
         elif self == MonikerType.ScalarArray:
             return data_store_pb2.ScalarArray()
         elif self == MonikerType.ConditionSet:

@@ -309,11 +309,11 @@ class MeasurementService:
         To declare a measurement function, use this idiom::
 
             @measurement_service.register_measurement
-            @measurement_serivce.input("input1", MonikerType.ScalarData)
+            @measurement_serivce.input("input1", MonikerType.ScalarArray)
             @measurement_service.configuration("Configuration 1", ...)
             @measurement_service.configuration("Configuration 2", ...)
-            @measurement_service.output("output1", MonikerType.ScalarData)
-            @measurement_service.output("output2", MonikerType.ScalarData)
+            @measurement_service.output("output1", MonikerType.ScalarArray)
+            @measurement_service.output("output2", MonikerType.ScalarArray)
             def measure(input1, configuration1, configuration2):
                 ...
                 return (output1, output2)
