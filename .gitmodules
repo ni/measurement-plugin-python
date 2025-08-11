@@ -1,3 +1,3 @@
 [submodule "third_party/ni-apis"]
 	path = third_party/ni-apis
-	url = https://github.com/pakdev/ni-apis.git
+	url = https://github.com/ni/ni-apis.git
