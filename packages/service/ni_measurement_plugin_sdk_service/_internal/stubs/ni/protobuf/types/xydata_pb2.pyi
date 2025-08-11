@@ -17,6 +17,7 @@ DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
 @typing.final
 class DoubleXYData(google.protobuf.message.Message):
     """XYData for a cartesian graph.
+
     x_data and y_data should contain the same number of values.
     If they do not, the smaller-sized array will be used to determine
     the number of XY points.

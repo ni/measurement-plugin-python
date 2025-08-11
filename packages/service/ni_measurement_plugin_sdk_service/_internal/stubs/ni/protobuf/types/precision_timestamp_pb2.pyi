@@ -14,7 +14,8 @@ DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
 
 @typing.final
 class PrecisionTimestamp(google.protobuf.message.Message):
-    """A PrecisionTimestamp represents a point in time expressed in NI Binary Time Format (NI-BTF).
+    """Represents a point in time expressed in NI Binary Time Format (NI-BTF).
+
     https://www.ni.com/docs/en-US/bundle/labwindows-cvi/page/cvi/libref/ni-btf.htm
     NI-BTF stores time values in Coordinated Universal Time (UTC) format.
     A PrecisionTimestamp is encoded as a count of seconds and fractions of seconds at
@@ -26,9 +27,7 @@ class PrecisionTimestamp(google.protobuf.message.Message):
     SECONDS_FIELD_NUMBER: builtins.int
     FRACTIONAL_SECONDS_FIELD_NUMBER: builtins.int
     seconds: builtins.int
-    """Represents the number of seconds since the epoch
-    1904-01-01T00:00:00Z.
-    """
+    """The number of seconds since the epoch (1904-01-01T00:00:00Z)."""
     fractional_seconds: builtins.int
     """Non-negative fractions of a second at 2^-64 resolution."""
     def __init__(

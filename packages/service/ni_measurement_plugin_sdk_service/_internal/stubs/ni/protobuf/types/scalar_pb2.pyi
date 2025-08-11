@@ -15,9 +15,7 @@ DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
 
 @typing.final
 class Scalar(google.protobuf.message.Message):
-    """A scalar data class, which encapsulates a scalar value and associated
-    attributes, including units.
-    """
+    """A scalar value with associated attributes, such as units."""
 
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -51,6 +49,7 @@ class Scalar(google.protobuf.message.Message):
     @property
     def attributes(self) -> google.protobuf.internal.containers.MessageMap[builtins.str, ni_protobuf_types_attribute_value_pb2.AttributeValue]:
         """The names and values of all scalar attributes.
+
         A scalar attribute is metadata attached to a scalar.
         It is represented in this message as a map associating the name of
         the attribute with the value described by AttributeValue.
