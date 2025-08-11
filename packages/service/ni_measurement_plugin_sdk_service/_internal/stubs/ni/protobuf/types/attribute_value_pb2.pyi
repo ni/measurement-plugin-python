@@ -12,6 +12,8 @@ DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
 
 @typing.final
 class AttributeValue(google.protobuf.message.Message):
+    """An attribute that can be attached to a scalar, vector, or similar message."""
+
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
     BOOL_VALUE_FIELD_NUMBER: builtins.int

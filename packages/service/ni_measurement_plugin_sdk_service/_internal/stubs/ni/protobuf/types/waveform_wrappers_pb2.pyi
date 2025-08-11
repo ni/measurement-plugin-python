@@ -17,10 +17,7 @@ DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
 
 @typing.final
 class DoubleAnalogWaveformArrayValue(google.protobuf.message.Message):
-    """Wrappers for common waveform message types. These types are useful
-    for embedding in the google.protobuf.Any type or in oneof fields.
-    Their use outside of these scenarios is discouraged.
-    """
+    """An array of double-precision analog waveforms."""
 
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -38,6 +35,8 @@ global___DoubleAnalogWaveformArrayValue = DoubleAnalogWaveformArrayValue
 
 @typing.final
 class I16AnalogWaveformArrayValue(google.protobuf.message.Message):
+    """An array of 16-bit integer waveforms."""
+
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
     WAVEFORMS_FIELD_NUMBER: builtins.int
@@ -54,6 +53,8 @@ global___I16AnalogWaveformArrayValue = I16AnalogWaveformArrayValue
 
 @typing.final
 class DoubleComplexWaveformArrayValue(google.protobuf.message.Message):
+    """An array of double-precision complex waveforms."""
+
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
     WAVEFORMS_FIELD_NUMBER: builtins.int
@@ -70,6 +71,8 @@ global___DoubleComplexWaveformArrayValue = DoubleComplexWaveformArrayValue
 
 @typing.final
 class I16ComplexWaveformArrayValue(google.protobuf.message.Message):
+    """An array of 16-bit integer complex waveforms."""
+
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
     WAVEFORMS_FIELD_NUMBER: builtins.int
@@ -86,6 +89,8 @@ global___I16ComplexWaveformArrayValue = I16ComplexWaveformArrayValue
 
 @typing.final
 class DoubleSpectrumArrayValue(google.protobuf.message.Message):
+    """An array of double-precision spectrums."""
+
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
     WAVEFORMS_FIELD_NUMBER: builtins.int
