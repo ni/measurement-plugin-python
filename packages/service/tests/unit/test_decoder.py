@@ -7,6 +7,7 @@ from enum import Enum, IntEnum
 
 import pytest
 from google.protobuf import any_pb2, descriptor_pb2, descriptor_pool, type_pb2
+from ni.protobuf.types import xydata_pb2
 
 from ni_measurement_plugin_sdk_service._annotations import (
     ENUM_VALUES_KEY,
@@ -20,7 +21,6 @@ from ni_measurement_plugin_sdk_service._internal.parameter.metadata import (
     ParameterMetadata,
     TypeSpecialization,
 )
-from ni.protobuf.types import xydata_pb2
 from tests.utilities.stubs.serialization import test_pb2
 from tests.utilities.stubs.serialization.bigmessage_pb2 import BigMessage
 

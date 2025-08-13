@@ -3,8 +3,8 @@ from __future__ import annotations
 from typing import NamedTuple
 
 from google.protobuf import type_pb2
-
 from ni.protobuf.types import array_pb2, xydata_pb2
+
 from ni_measurement_plugin_sdk_service.measurement.info import (
     DataType,
     TypeSpecialization,

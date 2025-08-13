@@ -1,7 +1,7 @@
 import numpy
 import numpy.typing
-
 from ni.protobuf.types import array_pb2
+
 from tests.utilities import _array_utils
 
 
