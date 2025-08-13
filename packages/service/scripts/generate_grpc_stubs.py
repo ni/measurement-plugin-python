@@ -17,10 +17,15 @@ STUBS_PROTO_FILES = list(STUBS_PROTO_PATH.rglob("*.proto"))
 # We still want to use session.proto from STUBS_PATH / "proto" until
 # we can upgrade in sync with nimi-python and nidaqmx-python
 # AB#2730545
-GRPC_DEVICE_PROTO_PATH = PROTO_PATH / "ni" / "grpcdevice" / "v1"
-NI_API_PROTO_FILES = list(
-    path for path in PROTO_PATH.rglob("*.proto") if not path.is_relative_to(GRPC_DEVICE_PROTO_PATH)
-)
+EXCLUDED_PROTO_PATHS = [
+    PROTO_PATH / "ni" / "grpcdevice" / "v1",
+    PROTO_PATH / "ni" / "panels" / "v1",
+    PROTO_PATH / "ni" / "protobuf" / "types",
+]
+NI_API_PROTO_FILES = [
+    path for path in PROTO_PATH.rglob("*.proto")
+    if not any(path.is_relative_to(excluded) for excluded in EXCLUDED_PROTO_PATHS)
+]
 
 TEST_STUBS_PATH = pathlib.Path(__file__).parent.parent / "tests" / "utilities" / "stubs"
 TEST_PROTO_PATH = TEST_STUBS_PATH
