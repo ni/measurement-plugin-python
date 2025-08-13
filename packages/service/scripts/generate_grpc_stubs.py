@@ -23,7 +23,8 @@ EXCLUDED_PROTO_PATHS = [
     PROTO_PATH / "ni" / "protobuf" / "types",
 ]
 NI_API_PROTO_FILES = [
-    path for path in PROTO_PATH.rglob("*.proto")
+    path
+    for path in PROTO_PATH.rglob("*.proto")
     if not any(path.is_relative_to(excluded) for excluded in EXCLUDED_PROTO_PATHS)
 ]
 
