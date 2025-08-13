@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import pytest
+
 from ni_measurement_plugin_sdk_service import _dotenvpath
 
 
