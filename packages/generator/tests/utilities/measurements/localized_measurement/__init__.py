@@ -5,10 +5,7 @@ from enum import Enum
 from pathlib import Path
 
 import ni_measurement_plugin_sdk_service as nims
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types import (
-    array_pb2,
-    xydata_pb2,
-)
+from ni.protobuf.types import array_pb2, xydata_pb2
 
 from tests.utilities.measurements.non_streaming_data_measurement._stubs import color_pb2
 

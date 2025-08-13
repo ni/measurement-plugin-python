@@ -11,9 +11,8 @@ import click
 import grpc
 import ni_measurement_plugin_sdk_service as nims
 from _helpers import configure_logging, verbosity_option
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types import (
-    xydata_pb2,
-)
+from ni.protobuf.types import xydata_pb2
+
 
 service_directory = pathlib.Path(__file__).resolve().parent
 measurement_service = nims.MeasurementService(
