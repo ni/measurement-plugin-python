@@ -40,12 +40,12 @@ def _get_script_or_exe_path() -> Path | None:
 
 
 def _get_caller_path() -> Path | None:
-    """Get the path of the module calling into ni_measurement_plugin_sdk_service, if possible."""
-    nims_path = _get_nims_path()
+    """Get the path of the module calling into this package, if possible."""
+    package_path = _get_package_path()
     for frame, _ in traceback.walk_stack(inspect.currentframe()):
         if frame.f_code.co_filename:
             module_path = Path(frame.f_code.co_filename)
-            if _exists(module_path) and not module_path.is_relative_to(nims_path):
+            if _exists(module_path) and not module_path.is_relative_to(package_path):
                 return module_path
 
     return None
@@ -66,8 +66,8 @@ else:
         return os.path.exists(path)
 
 
-def _get_nims_path() -> Path:
-    """Get the path of the ni_measurement_plugin_sdk_service package."""
-    nims_module = sys.modules["ni_measurement_plugin_sdk_service"]
-    assert nims_module.__file__ and nims_module.__file__.endswith("__init__.py")
-    return Path(nims_module.__file__).parent
+def _get_package_path() -> Path:
+    """Get the path of this package."""
+    package = sys.modules[__package__]
+    assert package.__file__ and package.__file__.endswith("__init__.py")
+    return Path(package.__file__).parent
