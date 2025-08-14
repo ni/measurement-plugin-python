@@ -65,7 +65,7 @@ extend_exclude = '\.tox/|_pb2(_grpc)?\.(py|pyi)$'
 line-length = 100
 
 [tool.ni-python-styleguide]
-extend_exclude = '.tox/,*_pb2_grpc.py,*_pb2_grpc.pyi,*_pb2.py,*_pb2.pyi'
+extend_exclude = 'tests/test_assets/example_renders/.tox/,*_pb2_grpc.py,*_pb2_grpc.pyi,*_pb2.py,*_pb2.pyi'
 
 [tool.mypy]
 files = "ni_measurement_plugin_sdk_generator/,tests/"
