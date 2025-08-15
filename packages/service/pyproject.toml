@@ -43,7 +43,7 @@ nidmm = { version = ">=1.4.4", extras = ["grpc"], optional = true }
 nifgen = { version = ">=1.4.4", extras = ["grpc"], optional = true }
 niscope = { version = ">=1.4.4", extras = ["grpc"], optional = true }
 niswitch = { version = ">=1.4.4", extras = ["grpc"], optional = true }
-ni-protobuf-types = { version = ">=0.1.0dev1", allow-prereleases = true }
+ni-protobuf-types = { version = ">=0.1.0dev2", allow-prereleases = true }
 
 
 [tool.poetry.extras]
@@ -88,14 +88,13 @@ types-psutil = ">=6.0"
 # NumPy dropped support for Python 3.8 before adding support for Python 3.12, so
 # we need to include multiple NumPy versions in poetry.lock.
 numpy = [
-  { version = ">=1.22", python = ">=3.9,<3.12", markers = "implementation_name != 'pypy'" },
-  { version = ">=1.26", python = ">=3.12,<3.13", markers = "implementation_name != 'pypy'" },
-  { version = ">=2.1", python = "^3.13", markers = "implementation_name != 'pypy'" },
+  { version = ">=1.22", python = ">=3.9,<3.12"},
+  { version = ">=1.26", python = ">=3.12,<3.13"},
+  { version = ">=2.1", python = "^3.13"},
 ]
 bandit = { version = ">=1.7", extras = ["toml"] }
 # Install traceloggingdynamic on Linux for type checking.
 traceloggingdynamic = { version = ">=1.0", platform = "linux" }
-nitypes = {version=">=0.1.0dev7", allow-prereleases=true}
 
 [tool.poetry.group.docs]
 optional = true
