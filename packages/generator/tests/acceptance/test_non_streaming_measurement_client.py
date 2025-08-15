@@ -8,9 +8,7 @@ from types import ModuleType
 from typing import Any
 
 import pytest
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types import (
-    array_pb2,
-)
+from ni.protobuf.types import array_pb2
 from ni_measurement_plugin_sdk_service.measurement.service import MeasurementService
 
 from tests.conftest import CliRunnerFunction

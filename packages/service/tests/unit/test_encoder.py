@@ -6,14 +6,12 @@ from enum import Enum, IntEnum
 
 import pytest
 from google.protobuf import descriptor_pb2, descriptor_pool
+from ni.protobuf.types import xydata_pb2
 
 from ni_measurement_plugin_sdk_service._internal.parameter import (
     encoder,
     metadata,
     serialization_descriptors,
-)
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types import (
-    xydata_pb2,
 )
 from tests.unit.test_decoder import (
     _get_big_message,

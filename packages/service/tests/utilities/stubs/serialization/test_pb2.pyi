@@ -9,7 +9,7 @@ import google.protobuf.descriptor
 import google.protobuf.internal.containers
 import google.protobuf.internal.enum_type_wrapper
 import google.protobuf.message
-import ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types.xydata_pb2 as ni_protobuf_types_xydata_pb2
+import ni.protobuf.types.xydata_pb2
 import sys
 import typing
 
@@ -115,9 +115,9 @@ class MeasurementParameter(google.protobuf.message.Message):
     @property
     def int_enum_array_data(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[global___Countries.ValueType]: ...
     @property
-    def xy_data(self) -> ni_protobuf_types_xydata_pb2.DoubleXYData: ...
+    def xy_data(self) -> ni.protobuf.types.xydata_pb2.DoubleXYData: ...
     @property
-    def xy_data_array(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[ni_protobuf_types_xydata_pb2.DoubleXYData]: ...
+    def xy_data_array(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[ni.protobuf.types.xydata_pb2.DoubleXYData]: ...
     def __init__(
         self,
         *,
@@ -141,8 +141,8 @@ class MeasurementParameter(google.protobuf.message.Message):
         enum_array_data: collections.abc.Iterable[global___DifferentColor.ValueType] | None = ...,
         int_enum_data: global___Countries.ValueType = ...,
         int_enum_array_data: collections.abc.Iterable[global___Countries.ValueType] | None = ...,
-        xy_data: ni_protobuf_types_xydata_pb2.DoubleXYData | None = ...,
-        xy_data_array: collections.abc.Iterable[ni_protobuf_types_xydata_pb2.DoubleXYData] | None = ...,
+        xy_data: ni.protobuf.types.xydata_pb2.DoubleXYData | None = ...,
+        xy_data_array: collections.abc.Iterable[ni.protobuf.types.xydata_pb2.DoubleXYData] | None = ...,
     ) -> None: ...
     def HasField(self, field_name: typing.Literal["xy_data", b"xy_data"]) -> builtins.bool: ...
     def ClearField(self, field_name: typing.Literal["bool_array_data", b"bool_array_data", "bool_data", b"bool_data", "double_array_data", b"double_array_data", "double_data", b"double_data", "enum_array_data", b"enum_array_data", "enum_data", b"enum_data", "float_array_data", b"float_array_data", "float_data", b"float_data", "int32_array_data", b"int32_array_data", "int32_data", b"int32_data", "int64_array_data", b"int64_array_data", "int64_data", b"int64_data", "int_enum_array_data", b"int_enum_array_data", "int_enum_data", b"int_enum_data", "string_array_data", b"string_array_data", "string_data", b"string_data", "uint32_array_data", b"uint32_array_data", "uint32_data", b"uint32_data", "uint64_array_data", b"uint64_array_data", "uint64_data", b"uint64_data", "xy_data", b"xy_data", "xy_data_array", b"xy_data_array"]) -> None: ...

@@ -9,7 +9,10 @@ import grpc_tools.protoc
 import pkg_resources
 
 STUBS_NAMESPACE = "ni_measurement_plugin_sdk_service._internal.stubs"
-PROTO_PARENT_NAMESPACES = ["ni.measurementlink", "nidevice_grpc", "ni.protobuf.types"]
+PROTO_PARENT_NAMESPACES = ["ni.measurementlink", "nidevice_grpc"]
+# Modules that are not provided by ni-apis-python and don't need
+# the stubs namespace prepended in import statements.
+NOT_IN_STUBS_NAMESPACE = ["ni.protobuf.types", "ni.panels.v1"]
 STUBS_PATH = pathlib.Path(__file__).parent.parent / STUBS_NAMESPACE.replace(".", "/")
 PROTO_PATH = pathlib.Path(__file__).parent.parent.parent.parent / "third_party" / "ni-apis"
 STUBS_PROTO_PATH = STUBS_PATH / "proto"
@@ -17,10 +20,16 @@ STUBS_PROTO_FILES = list(STUBS_PROTO_PATH.rglob("*.proto"))
 # We still want to use session.proto from STUBS_PATH / "proto" until
 # we can upgrade in sync with nimi-python and nidaqmx-python
 # AB#2730545
-GRPC_DEVICE_PROTO_PATH = PROTO_PATH / "ni" / "grpcdevice" / "v1"
-NI_API_PROTO_FILES = list(
-    path for path in PROTO_PATH.rglob("*.proto") if not path.is_relative_to(GRPC_DEVICE_PROTO_PATH)
-)
+EXCLUDED_PROTO_PATHS = [
+    PROTO_PATH / "ni" / "grpcdevice" / "v1",
+    PROTO_PATH / "ni" / "panels" / "v1",
+    PROTO_PATH / "ni" / "protobuf" / "types",
+]
+NI_API_PROTO_FILES = [
+    path
+    for path in PROTO_PATH.rglob("*.proto")
+    if not any(path.is_relative_to(excluded) for excluded in EXCLUDED_PROTO_PATHS)
+]
 
 TEST_STUBS_PATH = pathlib.Path(__file__).parent.parent / "tests" / "utilities" / "stubs"
 TEST_PROTO_PATH = TEST_STUBS_PATH
@@ -115,10 +124,16 @@ def fix_import_paths(
         if path.suffix == ".pyi":
             for name in imports_to_alias:
                 alias = name.replace(".", "_")
-                data = data.replace(
-                    f"import {name}\n".encode(),
-                    f"import {stubs_namespace}.{name} as {alias}\n".encode(),
-                )
+                if not any(module for module in NOT_IN_STUBS_NAMESPACE if module in name):
+                    data = data.replace(
+                        f"import {name}\n".encode(),
+                        f"import {stubs_namespace}.{name} as {alias}\n".encode(),
+                    )
+                else:
+                    data = data.replace(
+                        f"import {name}\n".encode(),
+                        f"import {name} as {alias}\n".encode(),
+                    )
                 data = data.replace(
                     f"{name}.".encode(),
                     f"{alias}.".encode(),

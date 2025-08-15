@@ -16,15 +16,9 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measur
     measurement_service_pb2 as v2_measurement_service_pb2,
     measurement_service_pb2_grpc as v2_measurement_service_pb2_grpc,
 )
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types.array_pb2 import (
-    Double2DArray,
-)
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types.array_pb2 import (
-    String2DArray,
-)
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types.xydata_pb2 import (
-    DoubleXYData,
-)
+from ni.protobuf.types.array_pb2 import Double2DArray
+from ni.protobuf.types.array_pb2 import String2DArray
+from ni.protobuf.types.xydata_pb2 import DoubleXYData
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
 from ni_measurement_plugin_sdk_service.measurement import WrongMessageTypeWarning

@@ -34,9 +34,9 @@ _V2_MEASUREMENT_SERVICE_INTERFACE = "ni.measurementlink.measurement.v2.Measureme
 
 _INVALID_CHARS = "`~!@#$%^&*()-+={}[]\\|:;',<>.?/ \n"
 
-_XY_DATA_IMPORT = "from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types.xydata_pb2 import DoubleXYData"
-_DOUBLE2DARRAY_DATA_IMPORT = "from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types.array_pb2 import Double2DArray"
-_STRING2DARRAY_DATA_IMPORT = "from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types.array_pb2 import String2DArray"
+_XY_DATA_IMPORT = "from ni.protobuf.types.xydata_pb2 import DoubleXYData"
+_DOUBLE2DARRAY_DATA_IMPORT = "from ni.protobuf.types.array_pb2 import Double2DArray"
+_STRING2DARRAY_DATA_IMPORT = "from ni.protobuf.types.array_pb2 import String2DArray"
 _PATH_IMPORT = "import pathlib"
 
 _PROTO_DATATYPE_TO_PYTYPE_LOOKUP = {

@@ -31,6 +31,7 @@ protobuf = ">=4.21"
 black = ">=24.8.0"
 click-option-group = ">=0.5.6"
 ni-measurement-plugin-sdk-service = {version = "^2.2.0"}
+ni-protobuf-types = { version = ">=0.1.0dev2", allow-prereleases = true }
 
 [tool.poetry.group.dev.dependencies]
 pytest = ">=7.2.0"
@@ -50,6 +51,13 @@ grpcio-tools = [
   {version = "1.59.0", python = ">=3.12,<3.13"},
   {version = "1.67.0", python = "^3.13"},
 ]
+# NumPy dropped support for Python 3.8 before adding support for Python 3.12, so
+# we need to include multiple NumPy versions in poetry.lock.
+numpy = [
+  { version = ">=1.22", python = ">=3.9,<3.12"},
+  { version = ">=1.26", python = ">=3.12,<3.13"},
+  { version = ">=2.1", python = "^3.13"},
+]
 
 [tool.poetry.scripts]
 ni-measurement-plugin-generator = "ni_measurement_plugin_sdk_generator.plugin:create_measurement"
@@ -64,7 +72,7 @@ extend_exclude = '\.tox/|_pb2(_grpc)?\.(py|pyi)$'
 line-length = 100
 
 [tool.ni-python-styleguide]
-extend_exclude = '.tox/,*_pb2_grpc.py,*_pb2_grpc.pyi,*_pb2.py,*_pb2.pyi'
+extend_exclude = 'tests/test_assets/example_renders/,.tox/,*_pb2_grpc.py,*_pb2_grpc.pyi,*_pb2.py,*_pb2.pyi'
 
 [tool.mypy]
 files = "ni_measurement_plugin_sdk_generator/,tests/"

@@ -4,9 +4,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types import (
-    array_pb2,
-)
+from ni.protobuf.types import array_pb2
 
 if TYPE_CHECKING:
     import numpy as np

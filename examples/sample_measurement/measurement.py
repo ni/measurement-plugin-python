@@ -10,7 +10,7 @@ import _array_utils
 import click
 import ni_measurement_plugin_sdk_service as nims
 from _helpers import configure_logging, verbosity_option
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types import (
+from ni.protobuf.types import (
     array_pb2,
 )
 

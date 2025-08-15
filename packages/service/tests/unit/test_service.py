@@ -6,13 +6,11 @@ import pathlib
 from enum import Enum
 
 import pytest
+from ni.protobuf.types import xydata_pb2
 from pytest_mock import MockerFixture
 
 from ni_measurement_plugin_sdk_service import _datatypeinfo
 from ni_measurement_plugin_sdk_service._annotations import TYPE_SPECIALIZATION_KEY
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types import (
-    xydata_pb2,
-)
 from ni_measurement_plugin_sdk_service.measurement.info import (
     DataType,
     TypeSpecialization,
