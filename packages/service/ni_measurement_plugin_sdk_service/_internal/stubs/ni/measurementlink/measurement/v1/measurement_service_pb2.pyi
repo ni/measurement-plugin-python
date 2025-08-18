@@ -12,7 +12,7 @@ import google.protobuf.descriptor
 import google.protobuf.internal.containers
 import google.protobuf.message
 import google.protobuf.type_pb2
-import ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.pin_map_context_pb2 as ni_measurementlink_pin_map_context_pb2
+import ni.measurementlink.pin_map_context_pb2
 import typing
 
 DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
@@ -72,7 +72,7 @@ class MeasureRequest(google.protobuf.message.Message):
         """
 
     @property
-    def pin_map_context(self) -> ni_measurementlink_pin_map_context_pb2.PinMapContext:
+    def pin_map_context(self) -> ni.measurementlink.pin_map_context_pb2.PinMapContext:
         """Optional. Specifies the pin map context for the measurement, if any. This field is optional in that callers
         may not always have a pin map context available to include in the request message. Each measurement will
         define if a valid pin map context is required in order to run or not and generate errors appropriately.
@@ -82,7 +82,7 @@ class MeasureRequest(google.protobuf.message.Message):
         self,
         *,
         configuration_parameters: google.protobuf.any_pb2.Any | None = ...,
-        pin_map_context: ni_measurementlink_pin_map_context_pb2.PinMapContext | None = ...,
+        pin_map_context: ni.measurementlink.pin_map_context_pb2.PinMapContext | None = ...,
     ) -> None: ...
     def HasField(self, field_name: typing.Literal["configuration_parameters", b"configuration_parameters", "pin_map_context", b"pin_map_context"]) -> builtins.bool: ...
     def ClearField(self, field_name: typing.Literal["configuration_parameters", b"configuration_parameters", "pin_map_context", b"pin_map_context"]) -> None: ...

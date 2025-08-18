@@ -8,7 +8,7 @@ import collections.abc
 import google.protobuf.descriptor
 import google.protobuf.internal.containers
 import google.protobuf.message
-import ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.pin_map_context_pb2 as ni_measurementlink_pin_map_context_pb2
+import ni.measurementlink.pin_map_context_pb2
 from ni_measurement_plugin_sdk_service._internal.stubs import session_pb2
 import typing
 
@@ -183,7 +183,7 @@ class ReserveSessionsRequest(google.protobuf.message.Message):
     Allowed values: 0 (non-blocking, fails immediately if resources cannot be reserved), -1 (infinite timeout), or any other positive numeric value (wait for that number of milliseconds)
     """
     @property
-    def pin_map_context(self) -> ni_measurementlink_pin_map_context_pb2.PinMapContext:
+    def pin_map_context(self) -> ni.measurementlink.pin_map_context_pb2.PinMapContext:
         """Optional. Includes the pin map ID for the pin map in the Pin Map Service, as well as the list of sites for the measurement. If unspecified, specify non-pin I/O resources for pin_or_relay_names."""
 
     @property
@@ -193,7 +193,7 @@ class ReserveSessionsRequest(google.protobuf.message.Message):
     def __init__(
         self,
         *,
-        pin_map_context: ni_measurementlink_pin_map_context_pb2.PinMapContext | None = ...,
+        pin_map_context: ni.measurementlink.pin_map_context_pb2.PinMapContext | None = ...,
         pin_or_relay_names: collections.abc.Iterable[builtins.str] | None = ...,
         instrument_type_id: builtins.str = ...,
         timeout_in_milliseconds: builtins.int = ...,
@@ -452,13 +452,13 @@ class GetMultiplexerSessionsRequest(google.protobuf.message.Message):
     If unspecified, information for all multiplexer types is returned.
     """
     @property
-    def pin_map_context(self) -> ni_measurementlink_pin_map_context_pb2.PinMapContext:
+    def pin_map_context(self) -> ni.measurementlink.pin_map_context_pb2.PinMapContext:
         """Required. Includes the pin map ID for the pin map in the Pin Map Service, as well as the list of sites for the measurement."""
 
     def __init__(
         self,
         *,
-        pin_map_context: ni_measurementlink_pin_map_context_pb2.PinMapContext | None = ...,
+        pin_map_context: ni.measurementlink.pin_map_context_pb2.PinMapContext | None = ...,
         multiplexer_type_id: builtins.str = ...,
     ) -> None: ...
     def HasField(self, field_name: typing.Literal["pin_map_context", b"pin_map_context"]) -> builtins.bool: ...

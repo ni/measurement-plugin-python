@@ -44,6 +44,7 @@ nifgen = { version = ">=1.4.4", extras = ["grpc"], optional = true }
 niscope = { version = ">=1.4.4", extras = ["grpc"], optional = true }
 niswitch = { version = ">=1.4.4", extras = ["grpc"], optional = true }
 ni-protobuf-types = { version = ">=0.1.0dev2", allow-prereleases = true }
+ni-measurementlink-proto = { version = ">=0.1.0dev1", allow-prereleases = true }
 
 
 [tool.poetry.extras]
