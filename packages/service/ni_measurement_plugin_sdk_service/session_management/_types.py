@@ -7,7 +7,7 @@ from enum import IntEnum
 from typing import Generic, NamedTuple, Protocol, TypeVar
 
 from ni_measurement_plugin_sdk_service._internal.stubs import session_pb2
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink import (
+from ni.measurementlink import (
     pin_map_context_pb2,
 )
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.sessionmanagement.v1 import (
