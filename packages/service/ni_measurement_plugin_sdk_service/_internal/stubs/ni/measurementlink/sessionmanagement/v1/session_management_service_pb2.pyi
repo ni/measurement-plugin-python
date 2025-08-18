@@ -18,6 +18,22 @@ DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
 class SessionInformation(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
+    @typing.final
+    class AnnotationsEntry(google.protobuf.message.Message):
+        DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+        KEY_FIELD_NUMBER: builtins.int
+        VALUE_FIELD_NUMBER: builtins.int
+        key: builtins.str
+        value: builtins.str
+        def __init__(
+            self,
+            *,
+            key: builtins.str = ...,
+            value: builtins.str = ...,
+        ) -> None: ...
+        def ClearField(self, field_name: typing.Literal["key", b"key", "value", b"value"]) -> None: ...
+
     SESSION_FIELD_NUMBER: builtins.int
     RESOURCE_NAME_FIELD_NUMBER: builtins.int
     CHANNEL_LIST_FIELD_NUMBER: builtins.int
@@ -25,6 +41,7 @@ class SessionInformation(google.protobuf.message.Message):
     SESSION_EXISTS_FIELD_NUMBER: builtins.int
     SESSION_RESERVED_FIELD_NUMBER: builtins.int
     CHANNEL_MAPPINGS_FIELD_NUMBER: builtins.int
+    ANNOTATIONS_FIELD_NUMBER: builtins.int
     resource_name: builtins.str
     """Resource name used to open this session in the driver.
     This field is readonly.
@@ -69,6 +86,12 @@ class SessionInformation(google.protobuf.message.Message):
         This field is readonly.
         """
 
+    @property
+    def annotations(self) -> google.protobuf.internal.containers.ScalarMap[builtins.str, builtins.str]:
+        """Optional. A set of annotations attached to the session. 
+        For example, the annotations can provide a description of the session or identify who reserved a session.
+        """
+
     def __init__(
         self,
         *,
@@ -79,9 +102,10 @@ class SessionInformation(google.protobuf.message.Message):
         session_exists: builtins.bool = ...,
         session_reserved: builtins.bool = ...,
         channel_mappings: collections.abc.Iterable[global___ChannelMapping] | None = ...,
+        annotations: collections.abc.Mapping[builtins.str, builtins.str] | None = ...,
     ) -> None: ...
     def HasField(self, field_name: typing.Literal["session", b"session"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["channel_list", b"channel_list", "channel_mappings", b"channel_mappings", "instrument_type_id", b"instrument_type_id", "resource_name", b"resource_name", "session", b"session", "session_exists", b"session_exists", "session_reserved", b"session_reserved"]) -> None: ...
+    def ClearField(self, field_name: typing.Literal["annotations", b"annotations", "channel_list", b"channel_list", "channel_mappings", b"channel_mappings", "instrument_type_id", b"instrument_type_id", "resource_name", b"resource_name", "session", b"session", "session_exists", b"session_exists", "session_reserved", b"session_reserved"]) -> None: ...
 
 global___SessionInformation = SessionInformation
 
@@ -123,10 +147,27 @@ global___ChannelMapping = ChannelMapping
 class MultiplexerSessionInformation(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
+    @typing.final
+    class AnnotationsEntry(google.protobuf.message.Message):
+        DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+        KEY_FIELD_NUMBER: builtins.int
+        VALUE_FIELD_NUMBER: builtins.int
+        key: builtins.str
+        value: builtins.str
+        def __init__(
+            self,
+            *,
+            key: builtins.str = ...,
+            value: builtins.str = ...,
+        ) -> None: ...
+        def ClearField(self, field_name: typing.Literal["key", b"key", "value", b"value"]) -> None: ...
+
     SESSION_FIELD_NUMBER: builtins.int
     RESOURCE_NAME_FIELD_NUMBER: builtins.int
     MULTIPLEXER_TYPE_ID_FIELD_NUMBER: builtins.int
     SESSION_EXISTS_FIELD_NUMBER: builtins.int
+    ANNOTATIONS_FIELD_NUMBER: builtins.int
     resource_name: builtins.str
     """Resource name is used to open this session in the driver.
     This field is readonly.
@@ -145,6 +186,12 @@ class MultiplexerSessionInformation(google.protobuf.message.Message):
         This field is readonly.
         """
 
+    @property
+    def annotations(self) -> google.protobuf.internal.containers.ScalarMap[builtins.str, builtins.str]:
+        """Optional. A set of annotations attached to the session. 
+        For example, the annotations can provide a description of the session or identify who reserved a session.
+        """
+
     def __init__(
         self,
         *,
@@ -152,9 +199,10 @@ class MultiplexerSessionInformation(google.protobuf.message.Message):
         resource_name: builtins.str = ...,
         multiplexer_type_id: builtins.str = ...,
         session_exists: builtins.bool = ...,
+        annotations: collections.abc.Mapping[builtins.str, builtins.str] | None = ...,
     ) -> None: ...
     def HasField(self, field_name: typing.Literal["session", b"session"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["multiplexer_type_id", b"multiplexer_type_id", "resource_name", b"resource_name", "session", b"session", "session_exists", b"session_exists"]) -> None: ...
+    def ClearField(self, field_name: typing.Literal["annotations", b"annotations", "multiplexer_type_id", b"multiplexer_type_id", "resource_name", b"resource_name", "session", b"session", "session_exists", b"session_exists"]) -> None: ...
 
 global___MultiplexerSessionInformation = MultiplexerSessionInformation
 
@@ -162,10 +210,27 @@ global___MultiplexerSessionInformation = MultiplexerSessionInformation
 class ReserveSessionsRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
+    @typing.final
+    class AnnotationsEntry(google.protobuf.message.Message):
+        DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+        KEY_FIELD_NUMBER: builtins.int
+        VALUE_FIELD_NUMBER: builtins.int
+        key: builtins.str
+        value: builtins.str
+        def __init__(
+            self,
+            *,
+            key: builtins.str = ...,
+            value: builtins.str = ...,
+        ) -> None: ...
+        def ClearField(self, field_name: typing.Literal["key", b"key", "value", b"value"]) -> None: ...
+
     PIN_MAP_CONTEXT_FIELD_NUMBER: builtins.int
     PIN_OR_RELAY_NAMES_FIELD_NUMBER: builtins.int
     INSTRUMENT_TYPE_ID_FIELD_NUMBER: builtins.int
     TIMEOUT_IN_MILLISECONDS_FIELD_NUMBER: builtins.int
+    ANNOTATIONS_FIELD_NUMBER: builtins.int
     instrument_type_id: builtins.str
     """Optional. Instrument type ID for the measurement. If unspecified, reserve sessions for all instrument types connected in the registered pin map resource.
     The session management service has built in instrument definitions using the following NI driver based instrument type ids:
@@ -190,6 +255,12 @@ class ReserveSessionsRequest(google.protobuf.message.Message):
     def pin_or_relay_names(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]:
         """Optional. List of I/O resources (pins, pin groups, relays, relay groups, or channels) to use for the measurement. If unspecified, reserve sessions for all pins and relays in the registered pin map resource."""
 
+    @property
+    def annotations(self) -> google.protobuf.internal.containers.ScalarMap[builtins.str, builtins.str]:
+        """Optional. A set of annotations to add to the session for the duration of the reservation. 
+        These annotations will automatically be cleared when the session is unreserved.
+        """
+
     def __init__(
         self,
         *,
@@ -197,9 +268,10 @@ class ReserveSessionsRequest(google.protobuf.message.Message):
         pin_or_relay_names: collections.abc.Iterable[builtins.str] | None = ...,
         instrument_type_id: builtins.str = ...,
         timeout_in_milliseconds: builtins.int = ...,
+        annotations: collections.abc.Mapping[builtins.str, builtins.str] | None = ...,
     ) -> None: ...
     def HasField(self, field_name: typing.Literal["pin_map_context", b"pin_map_context"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["instrument_type_id", b"instrument_type_id", "pin_map_context", b"pin_map_context", "pin_or_relay_names", b"pin_or_relay_names", "timeout_in_milliseconds", b"timeout_in_milliseconds"]) -> None: ...
+    def ClearField(self, field_name: typing.Literal["annotations", b"annotations", "instrument_type_id", b"instrument_type_id", "pin_map_context", b"pin_map_context", "pin_or_relay_names", b"pin_or_relay_names", "timeout_in_milliseconds", b"timeout_in_milliseconds"]) -> None: ...
 
 global___ReserveSessionsRequest = ReserveSessionsRequest
 
@@ -339,8 +411,25 @@ global___UnregisterSessionsResponse = UnregisterSessionsResponse
 class ReserveAllRegisteredSessionsRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
+    @typing.final
+    class AnnotationsEntry(google.protobuf.message.Message):
+        DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+        KEY_FIELD_NUMBER: builtins.int
+        VALUE_FIELD_NUMBER: builtins.int
+        key: builtins.str
+        value: builtins.str
+        def __init__(
+            self,
+            *,
+            key: builtins.str = ...,
+            value: builtins.str = ...,
+        ) -> None: ...
+        def ClearField(self, field_name: typing.Literal["key", b"key", "value", b"value"]) -> None: ...
+
     TIMEOUT_IN_MILLISECONDS_FIELD_NUMBER: builtins.int
     INSTRUMENT_TYPE_ID_FIELD_NUMBER: builtins.int
+    ANNOTATIONS_FIELD_NUMBER: builtins.int
     timeout_in_milliseconds: builtins.int
     """Optional. Timeout for the reservation request.
     Allowed values: 0 (non-blocking, fails immediately if resources cannot be reserved), -1 (infinite timeout), or any other positive numeric value (wait for that number of milliseconds)
@@ -357,13 +446,20 @@ class ReserveAllRegisteredSessionsRequest(google.protobuf.message.Message):
          "niRelayDriver"
     For custom instruments the user defined instrument type id is defined in the pin map file or custom session management plugin service.
     """
+    @property
+    def annotations(self) -> google.protobuf.internal.containers.ScalarMap[builtins.str, builtins.str]:
+        """Optional. A set of annotations to add to the session for the duration of the reservation. 
+        These annotations will automatically be cleared when the session is unreserved.
+        """
+
     def __init__(
         self,
         *,
         timeout_in_milliseconds: builtins.int = ...,
         instrument_type_id: builtins.str = ...,
+        annotations: collections.abc.Mapping[builtins.str, builtins.str] | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["instrument_type_id", b"instrument_type_id", "timeout_in_milliseconds", b"timeout_in_milliseconds"]) -> None: ...
+    def ClearField(self, field_name: typing.Literal["annotations", b"annotations", "instrument_type_id", b"instrument_type_id", "timeout_in_milliseconds", b"timeout_in_milliseconds"]) -> None: ...
 
 global___ReserveAllRegisteredSessionsRequest = ReserveAllRegisteredSessionsRequest
 
