@@ -15,7 +15,7 @@ PROTO_PARENT_NAMESPACES = [
     "ni.measurementlink.measurement.v2",
     "ni.measurementlink.pinmap.v1",
     "ni.measurementlink.sessionmanagement.v1",
-    "nidevice_grpc"
+    "nidevice_grpc",
 ]
 # Modules that are not provided by ni-apis-python and don't need
 # the stubs namespace prepended in import statements.
