@@ -11,7 +11,7 @@ from google.protobuf import symbol_database as _symbol_database
 _sym_db = _symbol_database.Default()
 
 
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink import pin_map_context_pb2 as ni_dot_measurementlink_dot_pin__map__context__pb2
+from ni.measurementlink import pin_map_context_pb2 as ni_dot_measurementlink_dot_pin__map__context__pb2
 from ni_measurement_plugin_sdk_service._internal.stubs import session_pb2 as session__pb2
 
 

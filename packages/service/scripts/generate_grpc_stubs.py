@@ -9,7 +9,14 @@ import grpc_tools.protoc
 import pkg_resources
 
 STUBS_NAMESPACE = "ni_measurement_plugin_sdk_service._internal.stubs"
-PROTO_PARENT_NAMESPACES = ["ni.measurementlink", "nidevice_grpc"]
+PROTO_PARENT_NAMESPACES = [
+    "ni.measurementlink.discovery.v1",
+    "ni.measurementlink.measurement.v1",
+    "ni.measurementlink.measurement.v2",
+    "ni.measurementlink.pinmap.v1",
+    "ni.measurementlink.sessionmanagement.v1",
+    "nidevice_grpc"
+]
 # Modules that are not provided by ni-apis-python and don't need
 # the stubs namespace prepended in import statements.
 NOT_IN_STUBS_NAMESPACE = ["ni.protobuf.types", "ni.panels.v1"]
@@ -40,6 +47,7 @@ TEST_PROTO_FILES = list(TEST_PROTO_PATH.rglob("*.proto"))
 def main():
     """Generate and fixup gRPC Python stubs."""
     remove_generated_files(STUBS_PATH, STUBS_PROTO_PATH)
+
     generate_python_files(STUBS_PATH, PROTO_PATH, NI_API_PROTO_FILES)
     generate_python_files(STUBS_PATH, STUBS_PROTO_PATH, STUBS_PROTO_FILES)
     fix_import_paths(STUBS_PATH, STUBS_PATH, STUBS_NAMESPACE, PROTO_PARENT_NAMESPACES)
