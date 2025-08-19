@@ -58,6 +58,7 @@ numpy = [
   { version = ">=1.26", python = ">=3.12,<3.13"},
   { version = ">=2.1", python = "^3.13"},
 ]
+ni-measurementlink-proto = { version = ">=0.1.0dev1", allow-prereleases = true }
 
 [tool.poetry.scripts]
 ni-measurement-plugin-generator = "ni_measurement_plugin_sdk_generator.plugin:create_measurement"
