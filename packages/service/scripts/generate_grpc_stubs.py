@@ -31,6 +31,7 @@ EXCLUDED_PROTO_PATHS = [
     PROTO_PATH / "ni" / "grpcdevice" / "v1",
     PROTO_PATH / "ni" / "panels" / "v1",
     PROTO_PATH / "ni" / "protobuf" / "types",
+    PROTO_PATH / "ni" / "measurementlink" / "discovery" / "v1",
     PROTO_PATH / "ni" / "measurementlink" / "pin_map_context.proto",
 ]
 NI_API_PROTO_FILES = [
