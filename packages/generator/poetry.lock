@@ -954,13 +954,13 @@ protobuf = ">=4.21"
 
 [[package]]
 name = "ni-protobuf-types"
-version = "0.1.0.dev2"
+version = "0.1.0.dev3"
 description = "Protobuf data types for NI gRPC APIs"
 optional = false
 python-versions = "<4.0,>=3.9"
 files = [
-    {file = "ni_protobuf_types-0.1.0.dev2-py3-none-any.whl", hash = "sha256:671eba9a39939047c16dcee740b037aea130634305516c9fb9006f13be99b8f3"},
-    {file = "ni_protobuf_types-0.1.0.dev2.tar.gz", hash = "sha256:373e0e4c41b8a168fdbcc674c165e6d9e09d6e9a5f77f7a99fa60e23763a5fb7"},
+    {file = "ni_protobuf_types-0.1.0.dev3-py3-none-any.whl", hash = "sha256:4b275f4d6f8575e607ce04482b7b1e98ace5467a7c6193ffd713e0dcd1f9eb08"},
+    {file = "ni_protobuf_types-0.1.0.dev3.tar.gz", hash = "sha256:d601902dea899e034ddb7be9db7ec1e2da2a7e671ab678596763571bc0c794e8"},
 ]
 
 [package.dependencies]
@@ -1716,4 +1716,4 @@ test = ["covdefaults (>=2.3)", "coverage (>=7.2.7)", "coverage-enable-subprocess
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "dd010b53c546fdae3eb5a371849f67f54e0686e094a33d8aab4dab52598de1e1"
+content-hash = "42dff59f070bf52ecca10c38566e21ce7c1fead7f5f906f59e2a88971fcab84a"
