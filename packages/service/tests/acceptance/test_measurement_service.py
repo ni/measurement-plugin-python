@@ -12,7 +12,6 @@ from os import path
 
 import pytest
 from google.protobuf import any_pb2
-
 from ni.measurementlink.measurement.v1 import (
     measurement_service_pb2 as v1_measurement_service_pb2,
     measurement_service_pb2_grpc as v1_measurement_service_pb2_grpc,
@@ -21,6 +20,7 @@ from ni.measurementlink.measurement.v2 import (
     measurement_service_pb2 as v2_measurement_service_pb2,
     measurement_service_pb2_grpc as v2_measurement_service_pb2_grpc,
 )
+
 from ni_measurement_plugin_sdk_service.measurement.service import MeasurementService
 from tests.utilities.measurements import loopback_measurement
 from tests.utilities.stubs.loopback.types_pb2 import Parameters, ProtobufColor

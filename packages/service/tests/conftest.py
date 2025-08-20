@@ -8,17 +8,17 @@ from collections.abc import Generator
 
 import grpc
 import pytest
-
-from ni_measurement_plugin_sdk_service import _featuretoggles
-from ni_measurement_plugin_sdk_service._featuretoggles import (
-    CodeReadiness,
-    FeatureToggle,
-)
 from ni.measurementlink.measurement.v1 import (
     measurement_service_pb2_grpc as v1_measurement_service_pb2_grpc,
 )
 from ni.measurementlink.measurement.v2 import (
     measurement_service_pb2_grpc as v2_measurement_service_pb2_grpc,
+)
+
+from ni_measurement_plugin_sdk_service import _featuretoggles
+from ni_measurement_plugin_sdk_service._featuretoggles import (
+    CodeReadiness,
+    FeatureToggle,
 )
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 from ni_measurement_plugin_sdk_service.discovery._support import (

@@ -7,11 +7,11 @@ from collections.abc import Generator
 import grpc
 import pytest
 from google.protobuf import any_pb2
-
 from ni.measurementlink.measurement.v2 import (
     measurement_service_pb2 as v2_measurement_service_pb2,
     measurement_service_pb2_grpc as v2_measurement_service_pb2_grpc,
 )
+
 from ni_measurement_plugin_sdk_service.measurement.service import MeasurementService
 from tests.utilities.measurements import streaming_data_measurement
 from tests.utilities.stubs.streamingdata.types_pb2 import Configurations, Outputs

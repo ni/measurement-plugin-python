@@ -5,16 +5,16 @@ from collections.abc import Generator, Iterable
 from typing import NamedTuple
 
 import pytest
-from ni.measurementlink.pin_map_context_pb2 import (
-    PinMapContext,
-)
-
 from ni.measurementlink.measurement.v2.measurement_service_pb2 import (
     MeasureRequest,
 )
 from ni.measurementlink.measurement.v2.measurement_service_pb2_grpc import (
     MeasurementServiceStub,
 )
+from ni.measurementlink.pin_map_context_pb2 import (
+    PinMapContext,
+)
+
 from ni_measurement_plugin_sdk_service.measurement.service import MeasurementService
 from ni_measurement_plugin_sdk_service.pin_map import PinMapClient
 from tests.utilities.measurements import niswitch_measurement
