@@ -10,10 +10,10 @@ from ni.measurementlink.pin_map_context_pb2 import (
     PinMapContext,
 )
 
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v2.measurement_service_pb2 import (
+from ni.measurementlink.measurement.v2.measurement_service_pb2 import (
     MeasureRequest,
 )
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v2.measurement_service_pb2_grpc import (
+from ni.measurementlink.measurement.v2.measurement_service_pb2_grpc import (
     MeasurementServiceStub,
 )
 from ni_measurement_plugin_sdk_service.measurement.service import MeasurementService

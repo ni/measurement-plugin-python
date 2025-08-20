@@ -8,7 +8,7 @@ import threading
 
 import grpc
 
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.pinmap.v1 import (
+from ni.measurementlink.pinmap.v1 import (
     pin_map_service_pb2,
     pin_map_service_pb2_grpc,
 )

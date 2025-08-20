@@ -9,10 +9,10 @@ import pytest
 from grpc import RpcError
 
 from ni_measurement_plugin_sdk_service._internal.service_manager import GrpcService
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.discovery.v1.discovery_service_pb2_grpc import (
+from ni.measurementlink.discovery.v1.discovery_service_pb2_grpc import (
     DiscoveryServiceStub,
 )
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v1 import (
+from ni.measurementlink.measurement.v1 import (
     measurement_service_pb2,
     measurement_service_pb2_grpc,
 )

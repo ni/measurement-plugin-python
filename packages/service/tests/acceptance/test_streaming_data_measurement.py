@@ -8,7 +8,7 @@ import grpc
 import pytest
 from google.protobuf import any_pb2
 
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v2 import (
+from ni.measurementlink.measurement.v2 import (
     measurement_service_pb2 as v2_measurement_service_pb2,
     measurement_service_pb2_grpc as v2_measurement_service_pb2_grpc,
 )

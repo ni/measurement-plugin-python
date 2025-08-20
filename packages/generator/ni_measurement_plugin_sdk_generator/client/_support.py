@@ -18,7 +18,7 @@ from google.protobuf.type_pb2 import Field
 from ni_measurement_plugin_sdk_service._internal.grpc_servicer import (
     frame_metadata_dict,
 )
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v2 import (
+from ni.measurementlink.measurement.v2 import (
     measurement_service_pb2 as v2_measurement_service_pb2,
     measurement_service_pb2_grpc as v2_measurement_service_pb2_grpc,
 )

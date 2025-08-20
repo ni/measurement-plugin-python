@@ -26,7 +26,7 @@ from ni_measurement_plugin_sdk_service._drivers import (
     closing_session,
     closing_session_with_ts_code_module_support,
 )
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.sessionmanagement.v1 import (
+from ni.measurementlink.sessionmanagement.v1 import (
     session_management_service_pb2,
 )
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient

@@ -8,10 +8,10 @@ import pytest
 from pytest_mock import MockerFixture
 
 from ni_measurement_plugin_sdk_service._internal.stubs import session_pb2
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.sessionmanagement.v1 import (
+from ni.measurementlink.sessionmanagement.v1 import (
     session_management_service_pb2,
 )
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.sessionmanagement.v1.session_management_service_pb2_grpc import (
+from ni.measurementlink.sessionmanagement.v1.session_management_service_pb2_grpc import (
     SessionManagementServiceStub,
 )
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
