@@ -15,12 +15,13 @@ import grpc
 from google.protobuf import descriptor_pool
 from google.protobuf.descriptor_pb2 import FieldDescriptorProto
 from google.protobuf.type_pb2 import Field
-from ni_measurement_plugin_sdk_service._internal.grpc_servicer import (
-    frame_metadata_dict,
-)
 from ni.measurementlink.measurement.v2 import (
     measurement_service_pb2 as v2_measurement_service_pb2,
     measurement_service_pb2_grpc as v2_measurement_service_pb2_grpc,
+)
+
+from ni_measurement_plugin_sdk_service._internal.grpc_servicer import (
+    frame_metadata_dict,
 )
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool

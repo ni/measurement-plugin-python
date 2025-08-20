@@ -5,6 +5,7 @@ from unittest.mock import Mock
 
 import grpc
 import pytest
+import session_pb2
 from ni.measurementlink.sessionmanagement.v1 import (
     session_management_service_pb2,
 )
@@ -13,7 +14,6 @@ from ni.measurementlink.sessionmanagement.v1.session_management_service_pb2_grpc
 )
 from pytest_mock import MockerFixture
 
-from ni_measurement_plugin_sdk_service._internal.stubs import session_pb2
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
 from ni_measurement_plugin_sdk_service.session_management import (
