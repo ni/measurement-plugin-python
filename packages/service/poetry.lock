@@ -1192,6 +1192,20 @@ ni-measurementlink-proto = ">=0.1.0dev0"
 protobuf = ">=4.21"
 
 [[package]]
+name = "ni-measurementlink-pinmap-v1-proto"
+version = "0.1.0.dev0"
+description = "Protobuf data types for NI pinmap gRPC APIs"
+optional = false
+python-versions = "<4.0,>=3.9"
+files = [
+    {file = "ni_measurementlink_pinmap_v1_proto-0.1.0.dev0-py3-none-any.whl", hash = "sha256:182e0774157457592dd02faf941ec34ebd83d94c9fc915e8f9d2cd14487c02ea"},
+    {file = "ni_measurementlink_pinmap_v1_proto-0.1.0.dev0.tar.gz", hash = "sha256:c54351cb010d9163865ae65db6fc9731e4d8da22ff4dda7d6ede1ab8e993470e"},
+]
+
+[package.dependencies]
+protobuf = ">=4.21"
+
+[[package]]
 name = "ni-measurementlink-proto"
 version = "0.1.0.dev1"
 description = "Protobuf data types for NI gRPC APIs"
@@ -2583,4 +2597,4 @@ niswitch = ["niswitch"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "8f1c3f53d169437e3ccfd5bbc0c3e417a2948c1565c94bd10eae550d91148c7a"
+content-hash = "1ff223b61bbf5b65bd3bbb663b291f29c7ca3806654bd13020c0b29759e1784f"
