@@ -1134,13 +1134,13 @@ types-protobuf = ">=4.24"
 
 [[package]]
 name = "ni-grpcdevice-v1-proto"
-version = "0.1.0.dev1"
+version = "0.1.0.dev2"
 description = "Protobuf generated code for the nidevice_grpc gRPC API"
 optional = false
 python-versions = "<4.0,>=3.9"
 files = [
-    {file = "ni_grpcdevice_v1_proto-0.1.0.dev1-py3-none-any.whl", hash = "sha256:03a7b651a56bdc3db16e4e3e0a35b6c5ee6483571582300e30369c55881c9d99"},
-    {file = "ni_grpcdevice_v1_proto-0.1.0.dev1.tar.gz", hash = "sha256:66c58e083a0e26a7864e367ee14070e6ce4961c2fc5df6672b20c1668489228f"},
+    {file = "ni_grpcdevice_v1_proto-0.1.0.dev2-py3-none-any.whl", hash = "sha256:081b87e1ef6ce8ee7764a12850bea7d0be1e709357c067a63134d1d2040454fc"},
+    {file = "ni_grpcdevice_v1_proto-0.1.0.dev2.tar.gz", hash = "sha256:00db5326098aecd013830d13d6d8ebb85a56a6470e57b5ec234136013267e557"},
 ]
 
 [package.dependencies]
@@ -2597,4 +2597,4 @@ niswitch = ["niswitch"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "1ff223b61bbf5b65bd3bbb663b291f29c7ca3806654bd13020c0b29759e1784f"
+content-hash = "d33a932ce077726885d52e24d4406abd12264f5762b31eff9f07fa5fb85e574a"
