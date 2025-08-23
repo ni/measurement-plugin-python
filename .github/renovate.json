@@ -11,7 +11,7 @@
                 "third_party/ni-apis"
             ],
             "extends": [
-                "schedule:weekly"
+                "schedule:monthly"
             ]
         }
     ]
