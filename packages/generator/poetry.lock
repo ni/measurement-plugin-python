@@ -912,13 +912,13 @@ types-protobuf = ">=4.24"
 
 [[package]]
 name = "ni-grpcdevice-v1-proto"
-version = "0.1.0.dev1"
+version = "0.1.0.dev2"
 description = "Protobuf generated code for the nidevice_grpc gRPC API"
 optional = false
 python-versions = "<4.0,>=3.9"
 files = [
-    {file = "ni_grpcdevice_v1_proto-0.1.0.dev1-py3-none-any.whl", hash = "sha256:03a7b651a56bdc3db16e4e3e0a35b6c5ee6483571582300e30369c55881c9d99"},
-    {file = "ni_grpcdevice_v1_proto-0.1.0.dev1.tar.gz", hash = "sha256:66c58e083a0e26a7864e367ee14070e6ce4961c2fc5df6672b20c1668489228f"},
+    {file = "ni_grpcdevice_v1_proto-0.1.0.dev2-py3-none-any.whl", hash = "sha256:081b87e1ef6ce8ee7764a12850bea7d0be1e709357c067a63134d1d2040454fc"},
+    {file = "ni_grpcdevice_v1_proto-0.1.0.dev2.tar.gz", hash = "sha256:00db5326098aecd013830d13d6d8ebb85a56a6470e57b5ec234136013267e557"},
 ]
 
 [package.dependencies]
@@ -937,10 +937,11 @@ develop = true
 [package.dependencies]
 deprecation = ">=2.1"
 grpcio = "^1.49.1"
-ni-grpcdevice-v1-proto = ">=0.1.0dev1"
+ni-grpcdevice-v1-proto = ">=0.1.0dev2"
 ni-measurementlink-discovery-v1-proto = ">=0.1.0dev0"
 ni-measurementlink-measurement-v1-proto = ">=0.1.0dev0"
 ni-measurementlink-measurement-v2-proto = ">=0.1.0dev0"
+ni-measurementlink-pinmap-v1-proto = ">=0.1.0dev0"
 ni-measurementlink-proto = ">=0.1.0dev1"
 ni-measurementlink-sessionmanagement-v1-proto = ">=0.1.0dev0"
 ni-protobuf-types = ">=0.1.0dev2"
@@ -1005,6 +1006,20 @@ files = [
 
 [package.dependencies]
 ni-measurementlink-proto = ">=0.1.0dev0"
+protobuf = ">=4.21"
+
+[[package]]
+name = "ni-measurementlink-pinmap-v1-proto"
+version = "0.1.0.dev0"
+description = "Protobuf data types for NI pinmap gRPC APIs"
+optional = false
+python-versions = "<4.0,>=3.9"
+files = [
+    {file = "ni_measurementlink_pinmap_v1_proto-0.1.0.dev0-py3-none-any.whl", hash = "sha256:182e0774157457592dd02faf941ec34ebd83d94c9fc915e8f9d2cd14487c02ea"},
+    {file = "ni_measurementlink_pinmap_v1_proto-0.1.0.dev0.tar.gz", hash = "sha256:c54351cb010d9163865ae65db6fc9731e4d8da22ff4dda7d6ede1ab8e993470e"},
+]
+
+[package.dependencies]
 protobuf = ">=4.21"
 
 [[package]]
@@ -1799,4 +1814,4 @@ test = ["covdefaults (>=2.3)", "coverage (>=7.2.7)", "coverage-enable-subprocess
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "da65392cff165017be3e46cc4513e7fa03d45e92946ec3767e42742ae86074c8"
+content-hash = "243ffdc99dc4df87aa2d7603591d74209db10e6d76397f13b56bbb602713cd64"
