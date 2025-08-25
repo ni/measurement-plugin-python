@@ -73,12 +73,11 @@ jobs:
         run:  rm -rf docs
       - name: Generate gRPC stubs
         run: |
-          find ni_measurement_plugin_sdk_service/_internal/stubs/ -name \*_pb2.py\* -o -name \*_pb2_grpc.py\* -delete
           find tests/utilities/stubs/ -name \*_pb2.py\* -o -name \*_pb2_grpc.py\* -delete
           poetry run python scripts/generate_grpc_stubs.py
       - name: Check for out-of-date gRPC stubs
         run:  git diff --exit-code
       - name: Revert gRPC stubs
         run: |
-          git clean -dfx ni_measurement_plugin_sdk_service/_internal/stubs/ tests/utilities/stubs/
-          git restore ni_measurement_plugin_sdk_service/_internal/stubs/ tests/utilities/stubs/
+          git clean -dfx tests/utilities/stubs/
+          git restore tests/utilities/stubs/

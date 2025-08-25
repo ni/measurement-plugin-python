@@ -2,10 +2,11 @@
 
 from __future__ import annotations
 
-from ni_measurement_plugin_sdk_service._internal.stubs import session_pb2
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.sessionmanagement.v1 import (
+import session_pb2
+from ni.measurementlink.sessionmanagement.v1 import (
     session_management_service_pb2,
 )
+
 from ni_measurement_plugin_sdk_service.session_management import (
     MultiplexerSessionInformation,
     SessionInformation,

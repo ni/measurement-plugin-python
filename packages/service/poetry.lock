@@ -1133,6 +1133,21 @@ protobuf = ">=4.25.3"
 types-protobuf = ">=4.24"
 
 [[package]]
+name = "ni-grpcdevice-v1-proto"
+version = "0.1.0.dev2"
+description = "Protobuf generated code for the nidevice_grpc gRPC API"
+optional = false
+python-versions = "<4.0,>=3.9"
+files = [
+    {file = "ni_grpcdevice_v1_proto-0.1.0.dev2-py3-none-any.whl", hash = "sha256:081b87e1ef6ce8ee7764a12850bea7d0be1e709357c067a63134d1d2040454fc"},
+    {file = "ni_grpcdevice_v1_proto-0.1.0.dev2.tar.gz", hash = "sha256:00db5326098aecd013830d13d6d8ebb85a56a6470e57b5ec234136013267e557"},
+]
+
+[package.dependencies]
+grpcio = ">=1.49.0,<2.0"
+protobuf = ">=4.21"
+
+[[package]]
 name = "ni-measurementlink-discovery-v1-proto"
 version = "0.1.0.dev0"
 description = "Protobuf data types for NI discovery gRPC APIs"
@@ -1144,6 +1159,79 @@ files = [
 ]
 
 [package.dependencies]
+protobuf = ">=4.21"
+
+[[package]]
+name = "ni-measurementlink-measurement-v1-proto"
+version = "0.1.0.dev0"
+description = "Protobuf data types for NI measurement gRPC APIs"
+optional = false
+python-versions = "<4.0,>=3.9"
+files = [
+    {file = "ni_measurementlink_measurement_v1_proto-0.1.0.dev0-py3-none-any.whl", hash = "sha256:507c7e733fbf38a3f7e1008c13979d2155c1dc58d0c90ecbc76c0d35c4e2417b"},
+    {file = "ni_measurementlink_measurement_v1_proto-0.1.0.dev0.tar.gz", hash = "sha256:75f106596cee66a5a83ebfd6ac4d8ec410cb77d8fe25b21d30eea89a60c2e354"},
+]
+
+[package.dependencies]
+ni-measurementlink-proto = ">=0.1.0dev0"
+protobuf = ">=4.21"
+
+[[package]]
+name = "ni-measurementlink-measurement-v2-proto"
+version = "0.1.0.dev0"
+description = "Protobuf data types for NI measurement gRPC APIs"
+optional = false
+python-versions = "<4.0,>=3.9"
+files = [
+    {file = "ni_measurementlink_measurement_v2_proto-0.1.0.dev0-py3-none-any.whl", hash = "sha256:f29c84120c19c5bf014150402bb6855786520955ce5cfa429fb3291237482e10"},
+    {file = "ni_measurementlink_measurement_v2_proto-0.1.0.dev0.tar.gz", hash = "sha256:1b99fe1d0735d21935aae75dbeb67eb1155a96738deaac769ce038a520213122"},
+]
+
+[package.dependencies]
+ni-measurementlink-proto = ">=0.1.0dev0"
+protobuf = ">=4.21"
+
+[[package]]
+name = "ni-measurementlink-pinmap-v1-proto"
+version = "0.1.0.dev0"
+description = "Protobuf data types for NI pinmap gRPC APIs"
+optional = false
+python-versions = "<4.0,>=3.9"
+files = [
+    {file = "ni_measurementlink_pinmap_v1_proto-0.1.0.dev0-py3-none-any.whl", hash = "sha256:182e0774157457592dd02faf941ec34ebd83d94c9fc915e8f9d2cd14487c02ea"},
+    {file = "ni_measurementlink_pinmap_v1_proto-0.1.0.dev0.tar.gz", hash = "sha256:c54351cb010d9163865ae65db6fc9731e4d8da22ff4dda7d6ede1ab8e993470e"},
+]
+
+[package.dependencies]
+protobuf = ">=4.21"
+
+[[package]]
+name = "ni-measurementlink-proto"
+version = "0.1.0.dev1"
+description = "Protobuf data types for NI gRPC APIs"
+optional = false
+python-versions = "<4.0,>=3.9"
+files = [
+    {file = "ni_measurementlink_proto-0.1.0.dev1-py3-none-any.whl", hash = "sha256:4357baca4822a1f4f8bb6ca10e8c00618ef85fa32da74c98501fb18bb26082ce"},
+    {file = "ni_measurementlink_proto-0.1.0.dev1.tar.gz", hash = "sha256:a3f3da9f789b72aa327205c4ee9041d6ba99a28e1695bf777cd71540fd60c8f6"},
+]
+
+[package.dependencies]
+protobuf = ">=4.21"
+
+[[package]]
+name = "ni-measurementlink-sessionmanagement-v1-proto"
+version = "0.1.0.dev0"
+description = "Protobuf data types for NI session management gRPC APIs"
+optional = false
+python-versions = "<4.0,>=3.9"
+files = [
+    {file = "ni_measurementlink_sessionmanagement_v1_proto-0.1.0.dev0-py3-none-any.whl", hash = "sha256:ebb82210224e1fd51cc753d593b81d1cf4ce3c04a9aa60c0529991d59db15def"},
+    {file = "ni_measurementlink_sessionmanagement_v1_proto-0.1.0.dev0.tar.gz", hash = "sha256:a3942a438cdf9377f3a9a085955f47411d97b4c75ac3a2dad6137736f3d5b534"},
+]
+
+[package.dependencies]
+nitypes = ">=0.1.0dev3"
 protobuf = ">=4.21"
 
 [[package]]
@@ -2509,4 +2597,4 @@ niswitch = ["niswitch"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "62ff25bc5f90d7a1a87a622cfb19f2a03c1014fce67a53a282fbe28dfe1290a7"
+content-hash = "d33a932ce077726885d52e24d4406abd12264f5762b31eff9f07fa5fb85e574a"
