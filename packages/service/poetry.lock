@@ -1133,6 +1133,21 @@ protobuf = ">=4.25.3"
 types-protobuf = ">=4.24"
 
 [[package]]
+name = "ni-grpc-extensions"
+version = "0.1.0.dev0"
+description = "gRPC Extensions"
+optional = false
+python-versions = "<4.0,>=3.9"
+files = [
+    {file = "ni_grpc_extensions-0.1.0.dev0-py3-none-any.whl", hash = "sha256:a5b574d8eae2c9b153cd80083d1f6f51c626ecdef7557d3663c1e16ae44730c0"},
+    {file = "ni_grpc_extensions-0.1.0.dev0.tar.gz", hash = "sha256:ed57ebe7eee0802066bf208a5a3e047127886c6fd316643b86b5b50782c1d7cb"},
+]
+
+[package.dependencies]
+grpcio = ">=1.49.0,<2.0"
+traceloggingdynamic = {version = ">=1.0", markers = "sys_platform == \"win32\""}
+
+[[package]]
 name = "ni-grpcdevice-v1-proto"
 version = "0.1.0.dev2"
 description = "Protobuf generated code for the nidevice_grpc gRPC API"
@@ -2597,4 +2612,4 @@ niswitch = ["niswitch"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "d33a932ce077726885d52e24d4406abd12264f5762b31eff9f07fa5fb85e574a"
+content-hash = "a65a4cf79f9ebd4a2fb367c98fbd802223b2542d6a548835af573b8f2235f75b"

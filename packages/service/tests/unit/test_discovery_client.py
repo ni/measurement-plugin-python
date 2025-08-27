@@ -32,6 +32,7 @@ from ni.measurementlink.discovery.v1.discovery_service_pb2_grpc import (
     DiscoveryServiceStub,
 )
 from pytest_mock import MockerFixture
+from ni_grpc_extensions.channelpool import GrpcChannelPool
 
 from ni_measurement_plugin_sdk_service._annotations import (
     SERVICE_PROGRAMMINGLANGUAGE_KEY,
@@ -46,7 +47,6 @@ from ni_measurement_plugin_sdk_service.discovery._support import (
     _open_key_file,
     _start_service,
 )
-from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
 from ni_measurement_plugin_sdk_service.measurement.info import (
     MeasurementInfo,
     ServiceInfo,

@@ -11,9 +11,9 @@ from ni.measurementlink.pinmap.v1 import (
     pin_map_service_pb2,
     pin_map_service_pb2_grpc,
 )
+from ni_grpc_extensions.channelpool import GrpcChannelPool
 
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
-from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
 
 _logger = logging.getLogger(__name__)
 

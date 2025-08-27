@@ -10,13 +10,13 @@ from unittest.mock import Mock
 import grpc
 import pytest
 from pytest_mock import MockerFixture
+from ni_grpc_extensions.channelpool import GrpcChannelPool
 
 from ni_measurement_plugin_sdk_service._internal import grpc_servicer
 from ni_measurement_plugin_sdk_service._internal.grpc_servicer import (
     MeasurementServiceContext,
 )
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
-from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
 from ni_measurement_plugin_sdk_service.measurement.service import MeasurementService
 from ni_measurement_plugin_sdk_service.session_management import (
     MultiSessionReservation,

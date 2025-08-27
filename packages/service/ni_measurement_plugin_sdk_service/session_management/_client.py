@@ -13,9 +13,9 @@ from ni.measurementlink.sessionmanagement.v1 import (
     session_management_service_pb2,
     session_management_service_pb2_grpc,
 )
+from ni_grpc_extensions.channelpool import GrpcChannelPool
 
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
-from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
 from ni_measurement_plugin_sdk_service.session_management._constants import (
     GRPC_SERVICE_CLASS,
     GRPC_SERVICE_INTERFACE_NAME,

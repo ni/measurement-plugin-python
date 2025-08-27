@@ -25,13 +25,13 @@ from typing import (
 from ni.measurementlink.sessionmanagement.v1 import (
     session_management_service_pb2,
 )
+from ni_grpc_extensions.channelpool import GrpcChannelPool
 
 from ni_measurement_plugin_sdk_service._drivers import (
     closing_session,
     closing_session_with_ts_code_module_support,
 )
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
-from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
 from ni_measurement_plugin_sdk_service.session_management._constants import (
     INSTRUMENT_TYPE_NI_DAQMX,
     INSTRUMENT_TYPE_NI_DCPOWER,

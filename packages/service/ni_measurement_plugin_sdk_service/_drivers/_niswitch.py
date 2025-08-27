@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import Any
 
 import niswitch
+from ni_grpc_extensions.channelpool import GrpcChannelPool
 
 from ni_measurement_plugin_sdk_service._configuration import (
     NISWITCH_MULTIPLEXER_OPTIONS,
@@ -12,7 +13,6 @@ from ni_measurement_plugin_sdk_service._drivers._grpcdevice import (
     get_insecure_grpc_device_server_channel,
 )
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
-from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
 from ni_measurement_plugin_sdk_service.session_management._types import (
     MultiplexerSessionInformation,
     SessionInformation,

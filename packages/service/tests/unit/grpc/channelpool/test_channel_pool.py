@@ -1,6 +1,6 @@
 import pytest
 
-from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
+from ni_grpc_extensions.channelpool import GrpcChannelPool
 
 
 @pytest.mark.parametrize(
