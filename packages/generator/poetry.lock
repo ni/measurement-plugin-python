@@ -911,6 +911,21 @@ protobuf = ">=4.25.3"
 types-protobuf = ">=4.24"
 
 [[package]]
+name = "ni-grpc-extensions"
+version = "0.1.0.dev1"
+description = "gRPC Extensions"
+optional = false
+python-versions = "<4.0,>=3.9"
+files = [
+    {file = "ni_grpc_extensions-0.1.0.dev1-py3-none-any.whl", hash = "sha256:171a16303a2cfcbd2f29ad5df448bf6b89b399be3ba52fc0c2e755c2e7075075"},
+    {file = "ni_grpc_extensions-0.1.0.dev1.tar.gz", hash = "sha256:99af79ab9054b15b8682c9540ea4e474236bfaab0b271b42731ba9fd2c5bb4c7"},
+]
+
+[package.dependencies]
+grpcio = ">=1.49.0,<2.0"
+traceloggingdynamic = {version = ">=1.0", markers = "sys_platform == \"win32\""}
+
+[[package]]
 name = "ni-grpcdevice-v1-proto"
 version = "0.1.0.dev2"
 description = "Protobuf generated code for the nidevice_grpc gRPC API"
@@ -937,6 +952,7 @@ develop = true
 [package.dependencies]
 deprecation = ">=2.1"
 grpcio = "^1.49.1"
+ni-grpc-extensions = ">=0.1.0dev1"
 ni-grpcdevice-v1-proto = ">=0.1.0dev2"
 ni-measurementlink-discovery-v1-proto = ">=0.1.0dev0"
 ni-measurementlink-measurement-v1-proto = ">=0.1.0dev0"
@@ -1814,4 +1830,4 @@ test = ["covdefaults (>=2.3)", "coverage (>=7.2.7)", "coverage-enable-subprocess
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "243ffdc99dc4df87aa2d7603591d74209db10e6d76397f13b56bbb602713cd64"
+content-hash = "fe9f738d8afac388c10f6e5c5347c7295ee9993b44892c5666110aa5c98f9308"
