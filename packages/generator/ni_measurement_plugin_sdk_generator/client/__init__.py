@@ -11,11 +11,11 @@ import black
 import click
 from click_option_group import RequiredMutuallyExclusiveOptionGroup, optgroup
 from mako.template import Template
+from ni.measurementlink.discovery.v1.client import DiscoveryClient
 from ni.measurementlink.measurement.v2 import (
     measurement_service_pb2 as v2_measurement_service_pb2,
 )
 from ni_grpc_extensions.channelpool import GrpcChannelPool
-from ni.measurementlink.discovery.v1 import DiscoveryClient
 
 from ni_measurement_plugin_sdk_generator.client._support import (
     create_class_name,
