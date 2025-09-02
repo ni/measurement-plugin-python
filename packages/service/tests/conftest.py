@@ -8,6 +8,10 @@ from collections.abc import Generator
 
 import grpc
 import pytest
+from ni.measurementlink.discovery.v1.client import DiscoveryClient
+from ni.measurementlink.discovery.v1.client._support import (
+    _get_registration_json_file_path,
+)
 from ni.measurementlink.measurement.v1 import (
     measurement_service_pb2_grpc as v1_measurement_service_pb2_grpc,
 )
@@ -19,10 +23,6 @@ from ni_measurement_plugin_sdk_service import _featuretoggles
 from ni_measurement_plugin_sdk_service._featuretoggles import (
     CodeReadiness,
     FeatureToggle,
-)
-from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
-from ni_measurement_plugin_sdk_service.discovery._support import (
-    _get_registration_json_file_path,
 )
 from ni_measurement_plugin_sdk_service.measurement.service import (
     GrpcChannelPool,

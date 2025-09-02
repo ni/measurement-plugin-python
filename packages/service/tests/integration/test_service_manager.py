@@ -7,6 +7,7 @@ from typing import cast
 import grpc
 import pytest
 from grpc import RpcError
+from ni.measurementlink.discovery.v1.client import DiscoveryClient
 from ni.measurementlink.discovery.v1.discovery_service_pb2_grpc import (
     DiscoveryServiceStub,
 )
@@ -16,7 +17,6 @@ from ni.measurementlink.measurement.v1 import (
 )
 
 from ni_measurement_plugin_sdk_service._internal.service_manager import GrpcService
-from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 from tests.utilities.fake_discovery_service import (
     FakeDiscoveryServiceError,
     FakeDiscoveryServiceStub,

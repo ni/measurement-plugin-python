@@ -14,6 +14,7 @@ from typing import Any, Callable
 
 import grpc
 from google.protobuf import any_pb2
+from ni.measurementlink.discovery.v1.client import ServiceInfo
 from ni.measurementlink.measurement.v1 import (
     measurement_service_pb2 as v1_measurement_service_pb2,
     measurement_service_pb2_grpc as v1_measurement_service_pb2_grpc,
@@ -28,10 +29,7 @@ from ni_measurement_plugin_sdk_service._internal.parameter.metadata import (
     ParameterMetadata,
 )
 from ni_measurement_plugin_sdk_service.measurement import WrongMessageTypeWarning
-from ni_measurement_plugin_sdk_service.measurement.info import (
-    MeasurementInfo,
-    ServiceInfo,
-)
+from ni_measurement_plugin_sdk_service.measurement.info import MeasurementInfo
 from ni_measurement_plugin_sdk_service.session_management import PinMapContext
 
 

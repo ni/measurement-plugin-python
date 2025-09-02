@@ -9,13 +9,13 @@ from collections.abc import Iterable, Mapping
 
 import google.protobuf.internal.containers
 import grpc
+from ni.measurementlink.discovery.v1.client import DiscoveryClient
 from ni.measurementlink.sessionmanagement.v1 import (
     session_management_service_pb2,
     session_management_service_pb2_grpc,
 )
 from ni_grpc_extensions.channelpool import GrpcChannelPool
 
-from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 from ni_measurement_plugin_sdk_service.session_management._constants import (
     GRPC_SERVICE_CLASS,
     GRPC_SERVICE_INTERFACE_NAME,

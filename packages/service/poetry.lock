@@ -1163,6 +1163,23 @@ grpcio = ">=1.49.0,<2.0"
 protobuf = ">=4.21"
 
 [[package]]
+name = "ni-measurementlink-discovery-v1-client"
+version = "0.1.0.dev0"
+description = "gRPC Client for NI Discovery Service"
+optional = false
+python-versions = "<4.0,>=3.9"
+files = [
+    {file = "ni_measurementlink_discovery_v1_client-0.1.0.dev0-py3-none-any.whl", hash = "sha256:b27abeddb3465e2be3a8142f0884eaeabff82d89040a76d026501d8527064167"},
+    {file = "ni_measurementlink_discovery_v1_client-0.1.0.dev0.tar.gz", hash = "sha256:b964d48bc7942fc1eb6bcc5b03ce1a3fb031e9fa19d7d1a92c3c85b92fc44c17"},
+]
+
+[package.dependencies]
+grpcio = ">=1.49.0,<2.0"
+ni-grpc-extensions = ">=0.1.0.dev0"
+ni-measurementlink-discovery-v1-proto = ">=0.1.0.dev0"
+pywin32 = {version = ">=303", markers = "sys_platform == \"win32\""}
+
+[[package]]
 name = "ni-measurementlink-discovery-v1-proto"
 version = "0.1.0.dev0"
 description = "Protobuf data types for NI discovery gRPC APIs"
@@ -2612,4 +2629,4 @@ niswitch = ["niswitch"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "c91b75899c7f5ea28d50f0315ad313fbb5cb6092481a9e5856c68a5e34f25162"
+content-hash = "a1379072a4fb65aacc83c4bd68c7afeddff106d1380dcab4d6e4a47862e45836"

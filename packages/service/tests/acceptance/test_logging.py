@@ -4,6 +4,7 @@ import re
 from collections.abc import Generator
 
 import pytest
+from ni.measurementlink.discovery.v1.client import DiscoveryClient
 from ni.measurementlink.measurement.v2 import (
     measurement_service_pb2 as v2_measurement_service_pb2,
     measurement_service_pb2_grpc as v2_measurement_service_pb2_grpc,
@@ -11,7 +12,6 @@ from ni.measurementlink.measurement.v2 import (
 from pytest import FixtureRequest, LogCaptureFixture
 
 from ni_measurement_plugin_sdk_service import session_management
-from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 from ni_measurement_plugin_sdk_service.measurement.service import MeasurementService
 from ni_measurement_plugin_sdk_service.pin_map import PinMapClient
 from ni_measurement_plugin_sdk_service.session_management import SessionManagementClient
