@@ -1134,13 +1134,13 @@ types-protobuf = ">=4.24"
 
 [[package]]
 name = "ni-grpc-extensions"
-version = "0.1.0.dev0"
+version = "0.1.0.dev1"
 description = "gRPC Extensions"
 optional = false
 python-versions = "<4.0,>=3.9"
 files = [
-    {file = "ni_grpc_extensions-0.1.0.dev0-py3-none-any.whl", hash = "sha256:a5b574d8eae2c9b153cd80083d1f6f51c626ecdef7557d3663c1e16ae44730c0"},
-    {file = "ni_grpc_extensions-0.1.0.dev0.tar.gz", hash = "sha256:ed57ebe7eee0802066bf208a5a3e047127886c6fd316643b86b5b50782c1d7cb"},
+    {file = "ni_grpc_extensions-0.1.0.dev1-py3-none-any.whl", hash = "sha256:171a16303a2cfcbd2f29ad5df448bf6b89b399be3ba52fc0c2e755c2e7075075"},
+    {file = "ni_grpc_extensions-0.1.0.dev1.tar.gz", hash = "sha256:99af79ab9054b15b8682c9540ea4e474236bfaab0b271b42731ba9fd2c5bb4c7"},
 ]
 
 [package.dependencies]
@@ -2612,4 +2612,4 @@ niswitch = ["niswitch"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "a65a4cf79f9ebd4a2fb367c98fbd802223b2542d6a548835af573b8f2235f75b"
+content-hash = "c91b75899c7f5ea28d50f0315ad313fbb5cb6092481a9e5856c68a5e34f25162"

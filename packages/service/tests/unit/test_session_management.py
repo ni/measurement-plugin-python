@@ -12,8 +12,8 @@ from ni.measurementlink.sessionmanagement.v1 import (
 from ni.measurementlink.sessionmanagement.v1.session_management_service_pb2_grpc import (
     SessionManagementServiceStub,
 )
-from pytest_mock import MockerFixture
 from ni_grpc_extensions.channelpool import GrpcChannelPool
+from pytest_mock import MockerFixture
 
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 from ni_measurement_plugin_sdk_service.session_management import (

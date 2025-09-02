@@ -9,8 +9,8 @@ from unittest.mock import Mock
 
 import grpc
 import pytest
-from pytest_mock import MockerFixture
 from ni_grpc_extensions.channelpool import GrpcChannelPool
+from pytest_mock import MockerFixture
 
 from ni_measurement_plugin_sdk_service._internal import grpc_servicer
 from ni_measurement_plugin_sdk_service._internal.grpc_servicer import (

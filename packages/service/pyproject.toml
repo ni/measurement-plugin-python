@@ -51,7 +51,7 @@ ni-measurementlink-pinmap-v1-proto = { version = ">=0.1.0dev0", allow-prerelease
 ni-measurementlink-proto = { version = ">=0.1.0dev1", allow-prereleases = true }
 ni-measurementlink-sessionmanagement-v1-proto = { version = ">=0.1.0dev0", allow-prereleases = true }
 ni-protobuf-types = { version = ">=0.1.0dev2", allow-prereleases = true }
-ni-grpc-extensions =  { version = ">=0.1.0dev0", allow-prereleases = true }
+ni-grpc-extensions =  { version = ">=0.1.0dev1", allow-prereleases = true }
 
 
 [tool.poetry.extras]
