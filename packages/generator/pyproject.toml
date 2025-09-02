@@ -31,6 +31,7 @@ protobuf = ">=4.21"
 black = ">=24.8.0"
 click-option-group = ">=0.5.6"
 ni-measurement-plugin-sdk-service = {version = "^2.2.0"}
+ni-measurementlink-discovery-v1-client = { version = ">=0.1.0dev0", allow-prereleases = true }
 ni-protobuf-types = { version = ">=0.1.0dev2", allow-prereleases = true }
 ni-grpcdevice-v1-proto = { version = ">=0.1.0dev2", allow-prereleases = true }
 ni-grpc-extensions =  { version = ">=0.1.0dev1", allow-prereleases = true }

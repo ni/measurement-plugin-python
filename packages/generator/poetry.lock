@@ -952,9 +952,8 @@ develop = true
 [package.dependencies]
 deprecation = ">=2.1"
 grpcio = "^1.49.1"
-ni-grpc-extensions = ">=0.1.0dev1"
 ni-grpcdevice-v1-proto = ">=0.1.0dev2"
-ni-measurementlink-discovery-v1-proto = ">=0.1.0dev0"
+ni-measurementlink-discovery-v1-client = ">=0.1.0dev0"
 ni-measurementlink-measurement-v1-proto = ">=0.1.0dev0"
 ni-measurementlink-measurement-v2-proto = ">=0.1.0dev0"
 ni-measurementlink-pinmap-v1-proto = ">=0.1.0dev0"
@@ -979,6 +978,23 @@ niswitch = ["niswitch[grpc] (>=1.4.4)"]
 [package.source]
 type = "directory"
 url = "../service"
+
+[[package]]
+name = "ni-measurementlink-discovery-v1-client"
+version = "0.1.0.dev0"
+description = "gRPC Client for NI Discovery Service"
+optional = false
+python-versions = "<4.0,>=3.9"
+files = [
+    {file = "ni_measurementlink_discovery_v1_client-0.1.0.dev0-py3-none-any.whl", hash = "sha256:b27abeddb3465e2be3a8142f0884eaeabff82d89040a76d026501d8527064167"},
+    {file = "ni_measurementlink_discovery_v1_client-0.1.0.dev0.tar.gz", hash = "sha256:b964d48bc7942fc1eb6bcc5b03ce1a3fb031e9fa19d7d1a92c3c85b92fc44c17"},
+]
+
+[package.dependencies]
+grpcio = ">=1.49.0,<2.0"
+ni-grpc-extensions = ">=0.1.0.dev0"
+ni-measurementlink-discovery-v1-proto = ">=0.1.0.dev0"
+pywin32 = {version = ">=303", markers = "sys_platform == \"win32\""}
 
 [[package]]
 name = "ni-measurementlink-discovery-v1-proto"
@@ -1830,4 +1846,4 @@ test = ["covdefaults (>=2.3)", "coverage (>=7.2.7)", "coverage-enable-subprocess
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "fe9f738d8afac388c10f6e5c5347c7295ee9993b44892c5666110aa5c98f9308"
+content-hash = "85551ba1dd0266956c9a27b68bf525f252d7831c1c5a9f4d1d7e7ae07e808b3c"
