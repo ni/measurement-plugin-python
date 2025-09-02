@@ -6,10 +6,6 @@ import enum
 from pathlib import Path
 from typing import NamedTuple
 
-from ni.measurementlink.discovery.v1 import (
-    discovery_service_pb2,
-)
-
 
 class MeasurementInfo(NamedTuple):
     """A named tuple providing information about a measurement."""
