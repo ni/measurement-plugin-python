@@ -796,7 +796,9 @@ def test___single_session_reserved___get_session_info___session_info_returned_wi
     reservation = SingleSessionReservation(
         session_management_client, create_nifake_session_infos(1)
     )
-    expected_session_info = SessionInformation("MySession0", "Dev0", "", "nifake", False, [], None)
+    expected_session_info = SessionInformation(
+        "MySession0", "Dev0", "", "nifake", False, [], None, {}
+    )
 
     assert reservation.session_info == expected_session_info
     assert reservation.session_info.session is None
@@ -822,9 +824,9 @@ def test___multiple_sessions_reserved___get_session_info___session_info_returned
 ) -> None:
     reservation = MultiSessionReservation(session_management_client, create_nifake_session_infos(3))
     expected_session_infos = [
-        SessionInformation("MySession0", "Dev0", "", "nifake", False, [], None),
-        SessionInformation("MySession1", "Dev1", "", "nifake", False, [], None),
-        SessionInformation("MySession2", "Dev2", "", "nifake", False, [], None),
+        SessionInformation("MySession0", "Dev0", "", "nifake", False, [], None, {}),
+        SessionInformation("MySession1", "Dev1", "", "nifake", False, [], None, {}),
+        SessionInformation("MySession2", "Dev2", "", "nifake", False, [], None, {}),
     ]
 
     assert reservation.session_info == expected_session_infos
