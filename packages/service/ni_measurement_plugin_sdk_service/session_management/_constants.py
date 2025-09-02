@@ -30,3 +30,12 @@ belong to a specific site.
 When querying connections, you can specify a site number of ``SITE_SYSTEM_PINS``
 to restrict the query to return only system pins.
 """
+
+# Constants for session client details annotations
+RESERVED_HOSTNAME = "ni/reserved.hostname"
+RESERVED_USERNAME = "ni/reserved.username"
+RESERVED_IPADDRESS = "ni/reserved.ipaddress"
+
+REGISTERED_HOSTNAME = "ni/registered.hostname"
+REGISTERED_USERNAME = "ni/registered.username"
+REGISTERED_IPADDRESS = "ni/registered.ipaddress"
