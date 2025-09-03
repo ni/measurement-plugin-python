@@ -19,8 +19,8 @@ from ni.measurementlink.measurement.v2 import (
 from ni.protobuf.types.array_pb2 import Double2DArray
 from ni.protobuf.types.array_pb2 import String2DArray
 from ni.protobuf.types.xydata_pb2 import DoubleXYData
-from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
-from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
+from ni_grpc_extensions.channelpool import GrpcChannelPool
+from ni.measurementlink.discovery.v1.client import DiscoveryClient
 from ni_measurement_plugin_sdk_service.measurement import WrongMessageTypeWarning
 from ni_measurement_plugin_sdk_service.measurement.client_support import (
     ParameterMetadata,
