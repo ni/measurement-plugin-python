@@ -28,6 +28,12 @@ from ni.measurementlink.discovery.v1.client import (
     ServiceInfo,
     ServiceLocation,
 )
+from ni.measurementlink.sessionmanagement.v1.client import (
+    MultiSessionReservation,
+    PinMapContext,
+    SessionManagementClient,
+    SingleSessionReservation,
+)
 from ni_grpc_extensions.channelpool import (  # re-export
     GrpcChannelPool as GrpcChannelPool,
 )
@@ -46,12 +52,6 @@ from ni_measurement_plugin_sdk_service.measurement.info import (
     DataType,
     MeasurementInfo,
     TypeSpecialization,
-)
-from ni_measurement_plugin_sdk_service.session_management import (
-    MultiSessionReservation,
-    PinMapContext,
-    SessionManagementClient,
-    SingleSessionReservation,
 )
 
 if TYPE_CHECKING:

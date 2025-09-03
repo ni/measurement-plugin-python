@@ -23,6 +23,7 @@ from ni.measurementlink.measurement.v2 import (
     measurement_service_pb2 as v2_measurement_service_pb2,
     measurement_service_pb2_grpc as v2_measurement_service_pb2_grpc,
 )
+from ni.measurementlink.sessionmanagement.v1.client import PinMapContext
 
 from ni_measurement_plugin_sdk_service._internal.parameter import decoder, encoder
 from ni_measurement_plugin_sdk_service._internal.parameter.metadata import (
@@ -30,7 +31,6 @@ from ni_measurement_plugin_sdk_service._internal.parameter.metadata import (
 )
 from ni_measurement_plugin_sdk_service.measurement import WrongMessageTypeWarning
 from ni_measurement_plugin_sdk_service.measurement.info import MeasurementInfo
-from ni_measurement_plugin_sdk_service.session_management import PinMapContext
 
 
 class MeasurementServiceContext:

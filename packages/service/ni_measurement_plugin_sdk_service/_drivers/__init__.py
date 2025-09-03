@@ -5,7 +5,7 @@ from __future__ import annotations
 import contextlib
 from typing import ContextManager, TypeVar
 
-from ni_measurement_plugin_sdk_service.session_management._types import (
+from ni.measurementlink.sessionmanagement.v1.client import (
     SessionInitializationBehavior,
 )
 

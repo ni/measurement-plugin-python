@@ -3,14 +3,15 @@ from __future__ import annotations
 import pathlib
 from contextlib import ExitStack
 
-from ni_measurement_plugin_sdk_service.pin_map import PinMapClient
-from ni_measurement_plugin_sdk_service.session_management import (
+from ni.measurementlink.sessionmanagement.v1.client import (
     INSTRUMENT_TYPE_NI_DCPOWER,
     INSTRUMENT_TYPE_NI_RELAY_DRIVER,
     INSTRUMENT_TYPE_NI_SCOPE,
     PinMapContext,
     SessionManagementClient,
 )
+
+from ni_measurement_plugin_sdk_service.pin_map import PinMapClient
 from tests.utilities.connection_subset import (
     ConnectionSubset,
     get_connection_subset,

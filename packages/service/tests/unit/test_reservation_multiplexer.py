@@ -9,12 +9,12 @@ import pytest
 from ni.measurementlink.sessionmanagement.v1 import (
     session_management_service_pb2,
 )
-
-from ni_measurement_plugin_sdk_service.session_management import (
+from ni.measurementlink.sessionmanagement.v1.client import (
     MultiplexerSessionInformation,
     MultiSessionReservation,
     SingleSessionReservation,
 )
+
 from tests.unit._reservation_utils import (
     construct_multiplexer_session,
     construct_session,

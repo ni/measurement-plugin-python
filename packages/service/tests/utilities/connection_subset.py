@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import NamedTuple, TypeVar
 
-from ni_measurement_plugin_sdk_service.session_management import (
+from ni.measurementlink.sessionmanagement.v1.client import (
     Connection,
     TypedConnection,
     TypedConnectionWithMultiplexer,

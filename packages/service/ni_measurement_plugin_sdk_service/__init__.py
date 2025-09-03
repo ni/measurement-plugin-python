@@ -4,12 +4,10 @@ import logging
 
 from ni.measurementlink.discovery.v1.client import ServiceInfo
 
-from ni_measurement_plugin_sdk_service import session_management
 from ni_measurement_plugin_sdk_service.measurement.info import DataType, MeasurementInfo
 from ni_measurement_plugin_sdk_service.measurement.service import MeasurementService
 
 __all__ = [
-    "session_management",
     "DataType",
     "MeasurementInfo",
     "ServiceInfo",

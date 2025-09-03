@@ -4,14 +4,14 @@ from typing import Any
 
 import nidaqmx
 from ni.measurementlink.discovery.v1.client import DiscoveryClient
+from ni.measurementlink.sessionmanagement.v1.client import (
+    SessionInformation,
+    SessionInitializationBehavior,
+)
 from ni_grpc_extensions.channelpool import GrpcChannelPool
 
 from ni_measurement_plugin_sdk_service._drivers._grpcdevice import (
     get_insecure_grpc_device_server_channel,
-)
-from ni_measurement_plugin_sdk_service.session_management._types import (
-    SessionInformation,
-    SessionInitializationBehavior,
 )
 
 _INITIALIZATION_BEHAVIOR = {

@@ -6,11 +6,11 @@ import session_pb2
 from ni.measurementlink.sessionmanagement.v1 import (
     session_management_service_pb2,
 )
-
-from ni_measurement_plugin_sdk_service.session_management import (
+from ni.measurementlink.sessionmanagement.v1.client import (
     MultiplexerSessionInformation,
     SessionInformation,
 )
+
 from tests.utilities import fake_driver, fake_multiplexer_driver
 
 
