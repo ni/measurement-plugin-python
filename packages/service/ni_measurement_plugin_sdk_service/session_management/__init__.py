@@ -29,6 +29,12 @@ from ni_measurement_plugin_sdk_service.session_management._constants import (
     INSTRUMENT_TYPE_NI_SWITCH_EXECUTIVE_VIRTUAL_DEVICE,
     INSTRUMENT_TYPE_NONE,
     SITE_SYSTEM_PINS,
+    RESERVED_HOSTNAME,
+    RESERVED_USERNAME,
+    RESERVED_IPADDRESS,
+    REGISTERED_HOSTNAME,
+    REGISTERED_USERNAME,
+    REGISTERED_IPADDRESS,
 )
 from ni_measurement_plugin_sdk_service.session_management._reservation import (
     BaseReservation,
@@ -84,6 +90,12 @@ __all__ = [
     "TypedConnectionWithMultiplexer",
     "TypedMultiplexerSessionInformation",
     "TypedSessionInformation",
+    "RESERVED_HOSTNAME",
+    "RESERVED_USERNAME",
+    "RESERVED_IPADDRESS",
+    "REGISTERED_HOSTNAME",
+    "REGISTERED_USERNAME",
+    "REGISTERED_IPADDRESS",
 ]
 
 
