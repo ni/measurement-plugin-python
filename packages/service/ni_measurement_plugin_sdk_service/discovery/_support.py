@@ -12,7 +12,7 @@ import time
 import typing
 from typing import Any
 
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.discovery.v1 import (
+from ni.measurementlink.discovery.v1 import (
     discovery_service_pb2,
 )
 

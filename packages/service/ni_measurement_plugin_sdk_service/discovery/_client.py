@@ -8,13 +8,13 @@ from collections.abc import Sequence
 
 import grpc
 from deprecation import deprecated
+from ni.measurementlink.discovery.v1 import (
+    discovery_service_pb2,
+    discovery_service_pb2_grpc,
+)
 
 from ni_measurement_plugin_sdk_service._annotations import (
     SERVICE_PROGRAMMINGLANGUAGE_KEY,
-)
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.discovery.v1 import (
-    discovery_service_pb2,
-    discovery_service_pb2_grpc,
 )
 from ni_measurement_plugin_sdk_service.discovery._support import (
     _get_discovery_service_address,

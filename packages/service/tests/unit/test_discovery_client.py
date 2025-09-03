@@ -13,12 +13,7 @@ from unittest.mock import Mock
 
 import grpc
 import pytest
-from pytest_mock import MockerFixture
-
-from ni_measurement_plugin_sdk_service._annotations import (
-    SERVICE_PROGRAMMINGLANGUAGE_KEY,
-)
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.discovery.v1.discovery_service_pb2 import (
+from ni.measurementlink.discovery.v1.discovery_service_pb2 import (
     ComputeNodeDescriptor as GrpcComputeNodeDescriptor,
     EnumerateComputeNodesResponse,
     EnumerateServicesRequest,
@@ -33,8 +28,13 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.discov
     UnregisterServiceRequest,
     UnregisterServiceResponse,
 )
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.discovery.v1.discovery_service_pb2_grpc import (
+from ni.measurementlink.discovery.v1.discovery_service_pb2_grpc import (
     DiscoveryServiceStub,
+)
+from pytest_mock import MockerFixture
+
+from ni_measurement_plugin_sdk_service._annotations import (
+    SERVICE_PROGRAMMINGLANGUAGE_KEY,
 )
 from ni_measurement_plugin_sdk_service.discovery import (
     ComputeNodeDescriptor,

@@ -6,10 +6,10 @@ from typing import Any
 from unittest.mock import Mock
 
 import pytest
-
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.sessionmanagement.v1 import (
+from ni.measurementlink.sessionmanagement.v1 import (
     session_management_service_pb2,
 )
+
 from ni_measurement_plugin_sdk_service.session_management import (
     SITE_SYSTEM_PINS,
     MultiSessionReservation,
