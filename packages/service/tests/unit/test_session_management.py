@@ -984,7 +984,7 @@ def session_management_client(
 ) -> SessionManagementClient:
     """Create a Client with a mock SessionManagementServiceStub."""
     mocker.patch(
-        "ni_measurement_plugin_sdk_service.session_management.SessionManagementClient._get_stub",
+        "ni.measurementlink.sessionmanagement.v1.client.SessionManagementClient._get_stub",
         return_value=session_management_stub,
     )
     client = SessionManagementClient(
