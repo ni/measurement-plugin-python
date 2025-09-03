@@ -952,13 +952,9 @@ develop = true
 [package.dependencies]
 deprecation = ">=2.1"
 grpcio = "^1.49.1"
-ni-grpcdevice-v1-proto = ">=0.1.0dev2"
-ni-measurementlink-discovery-v1-client = ">=0.1.0dev0"
 ni-measurementlink-measurement-v1-proto = ">=0.1.0dev0"
 ni-measurementlink-measurement-v2-proto = ">=0.1.0dev0"
-ni-measurementlink-pinmap-v1-proto = ">=0.1.0dev0"
-ni-measurementlink-proto = ">=0.1.0dev1"
-ni-measurementlink-sessionmanagement-v1-proto = ">=0.1.0dev0"
+ni-measurementlink-sessionmanagement-v1-client = ">=0.1.0dev0"
 ni-protobuf-types = ">=0.1.0dev2"
 protobuf = ">=4.21"
 python-decouple = ">=3.8"
@@ -1067,6 +1063,40 @@ files = [
 
 [package.dependencies]
 protobuf = ">=4.21"
+
+[[package]]
+name = "ni-measurementlink-sessionmanagement-v1-client"
+version = "0.1.0.dev0"
+description = "Client gRPC APIs for the session management service"
+optional = false
+python-versions = "<4.0,>=3.9"
+files = [
+    {file = "ni_measurementlink_sessionmanagement_v1_client-0.1.0.dev0-py3-none-any.whl", hash = "sha256:ee485890d07058e5cd679a7b0bdc60158771193b3da602b82768fe0398fab554"},
+    {file = "ni_measurementlink_sessionmanagement_v1_client-0.1.0.dev0.tar.gz", hash = "sha256:12f1362fbd01f3c2f7adc462361beb79dc4fe0db068140196b5af280d64ecdaf"},
+]
+
+[package.dependencies]
+deprecation = ">=2.1"
+ni-grpc-extensions = ">=0.1.0.dev0"
+ni-grpcdevice-v1-proto = ">=0.1.0.dev0"
+ni-measurementlink-discovery-v1-client = ">=0.1.0.dev0"
+ni-measurementlink-pinmap-v1-proto = ">=0.1.0.dev0"
+ni-measurementlink-proto = ">=0.1.0.dev0"
+ni-measurementlink-sessionmanagement-v1-proto = ">=0.1.0.dev0"
+protobuf = ">=4.21"
+python-decouple = ">=3.8"
+pywin32 = {version = ">=303", markers = "sys_platform == \"win32\""}
+traceloggingdynamic = {version = ">=1.0", markers = "sys_platform == \"win32\""}
+
+[package.extras]
+drivers = ["nidaqmx[grpc] (>=0.8.0)", "nidcpower[grpc] (>=1.4.4)", "nidigital[grpc] (>=1.4.4)", "nidmm[grpc] (>=1.4.4)", "nifgen[grpc] (>=1.4.4)", "niscope[grpc] (>=1.4.4)", "niswitch[grpc] (>=1.4.4)"]
+nidaqmx = ["nidaqmx[grpc] (>=0.8.0)"]
+nidcpower = ["nidcpower[grpc] (>=1.4.4)"]
+nidigital = ["nidigital[grpc] (>=1.4.4)"]
+nidmm = ["nidmm[grpc] (>=1.4.4)"]
+nifgen = ["nifgen[grpc] (>=1.4.4)"]
+niscope = ["niscope[grpc] (>=1.4.4)"]
+niswitch = ["niswitch[grpc] (>=1.4.4)"]
 
 [[package]]
 name = "ni-measurementlink-sessionmanagement-v1-proto"
