@@ -141,6 +141,13 @@ class SessionInformation(NamedTuple):
     This field is None until the appropriate initialize_session(s) method is called.
     """
 
+    annotations: dict[str, str] = {}
+    """Annotations to attach to the session.
+
+    This field is optional and can be used to store any additional metadata
+    related to the session.
+    """
+
     def _check_runtime_type(self, session_type: type) -> None:
         if not isinstance(self.session, session_type):
             raise TypeError(
@@ -164,6 +171,7 @@ class SessionInformation(NamedTuple):
             instrument_type_id=other.instrument_type_id,
             session_exists=other.session_exists,
             channel_mappings=[ChannelMapping._from_grpc_v1(m) for m in other.channel_mappings],
+            annotations=dict(other.annotations),
         )
 
     def _to_grpc_v1(
@@ -176,6 +184,7 @@ class SessionInformation(NamedTuple):
             instrument_type_id=self.instrument_type_id,
             session_exists=self.session_exists,
             channel_mappings=[m._to_grpc_v1() for m in self.channel_mappings],
+            annotations=self.annotations,
         )
 
 
@@ -255,6 +264,13 @@ class MultiplexerSessionInformation(NamedTuple):
     This field is None until the appropriate initialize_multiplexer_session(s) method is called.
     """
 
+    annotations: dict[str, str] = {}
+    """Annotations to attach to the session.
+
+    This field is optional and can be used to store any additional metadata
+    related to the session.
+    """
+
     def _check_runtime_type(self, multiplexer_session_type: type) -> None:
         if not isinstance(self.session, multiplexer_session_type):
             raise TypeError(
@@ -276,6 +292,7 @@ class MultiplexerSessionInformation(NamedTuple):
             resource_name=other.resource_name,
             multiplexer_type_id=other.multiplexer_type_id,
             session_exists=other.session_exists,
+            annotations=dict(other.annotations),
         )
 
     def _to_grpc_v1(self) -> session_management_service_pb2.MultiplexerSessionInformation:
@@ -284,6 +301,7 @@ class MultiplexerSessionInformation(NamedTuple):
             resource_name=self.resource_name,
             multiplexer_type_id=self.multiplexer_type_id,
             session_exists=self.session_exists,
+            annotations=self.annotations,
         )
 
 

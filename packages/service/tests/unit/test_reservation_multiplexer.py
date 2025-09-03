@@ -762,7 +762,7 @@ def test___reserved_single_session_with_single_multiplexer___get_multiplexer_ses
         create_nimultiplexer_session_infos(1),
     )
     expected_multiplexer_session_info = MultiplexerSessionInformation(
-        "MyMultiplexer0", "Mux0", "nimultiplexer", False, None
+        "MyMultiplexer0", "Mux0", "nimultiplexer", False, None, {}
     )
 
     assert reservation.multiplexer_session_info[0] == expected_multiplexer_session_info
@@ -778,9 +778,9 @@ def test___reserved_single_session_with_multiple_multiplexers___get_multiplexer_
         create_nimultiplexer_session_infos(3),
     )
     expected_multiplexer_session_infos = [
-        MultiplexerSessionInformation("MyMultiplexer0", "Mux0", "nimultiplexer", False, None),
-        MultiplexerSessionInformation("MyMultiplexer1", "Mux1", "nimultiplexer", False, None),
-        MultiplexerSessionInformation("MyMultiplexer2", "Mux2", "nimultiplexer", False, None),
+        MultiplexerSessionInformation("MyMultiplexer0", "Mux0", "nimultiplexer", False, None, {}),
+        MultiplexerSessionInformation("MyMultiplexer1", "Mux1", "nimultiplexer", False, None, {}),
+        MultiplexerSessionInformation("MyMultiplexer2", "Mux2", "nimultiplexer", False, None, {}),
     ]
 
     assert reservation.multiplexer_session_info == expected_multiplexer_session_infos
@@ -815,7 +815,7 @@ def test___reserved_multiple_sessions_with_single_multiplexer___get_multiplexer_
         create_nimultiplexer_session_infos(1),
     )
     expected_multiplexer_session_info = MultiplexerSessionInformation(
-        "MyMultiplexer0", "Mux0", "nimultiplexer", False, None
+        "MyMultiplexer0", "Mux0", "nimultiplexer", False, None, {}
     )
 
     assert reservation.multiplexer_session_info[0] == expected_multiplexer_session_info
@@ -831,9 +831,9 @@ def test___reserved_multiple_sessions_with_multiple_multiplexers___get_multiplex
         create_nimultiplexer_session_infos(3),
     )
     expected_multiplexer_session_infos = [
-        MultiplexerSessionInformation("MyMultiplexer0", "Mux0", "nimultiplexer", False, None),
-        MultiplexerSessionInformation("MyMultiplexer1", "Mux1", "nimultiplexer", False, None),
-        MultiplexerSessionInformation("MyMultiplexer2", "Mux2", "nimultiplexer", False, None),
+        MultiplexerSessionInformation("MyMultiplexer0", "Mux0", "nimultiplexer", False, None, {}),
+        MultiplexerSessionInformation("MyMultiplexer1", "Mux1", "nimultiplexer", False, None, {}),
+        MultiplexerSessionInformation("MyMultiplexer2", "Mux2", "nimultiplexer", False, None, {}),
     ]
 
     assert reservation.multiplexer_session_info == expected_multiplexer_session_infos
