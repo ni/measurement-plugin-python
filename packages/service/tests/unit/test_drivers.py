@@ -3,7 +3,7 @@ from ni.measurementlink.sessionmanagement.v1.client import (
     SessionInitializationBehavior,
 )
 
-from ni_measurement_plugin_sdk_service._drivers import (
+from ni.measurementlink.sessionmanagement.v1.client._drivers import (
     closing_session_with_ts_code_module_support,
 )
 from tests.utilities import fake_driver

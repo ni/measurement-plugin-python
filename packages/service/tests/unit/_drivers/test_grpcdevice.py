@@ -4,7 +4,7 @@ import pytest
 from ni.measurementlink.discovery.v1.client import ServiceLocation
 from pytest_mock import MockerFixture
 
-from ni_measurement_plugin_sdk_service._drivers._grpcdevice import (
+from ni.measurementlink.sessionmanagement.v1.client._drivers._grpcdevice import (
     SERVICE_CLASS,
     get_grpc_device_server_location,
     get_insecure_grpc_device_server_channel,
@@ -34,7 +34,7 @@ def test___use_grpc_device_server_false___get_grpc_device_server_location___retu
     mocker: MockerFixture,
 ) -> None:
     mocker.patch(
-        "ni_measurement_plugin_sdk_service._drivers._grpcdevice.USE_GRPC_DEVICE_SERVER", False
+        "ni.measurementlink.sessionmanagement.v1.client._drivers._grpcdevice.USE_GRPC_DEVICE_SERVER", False
     )
 
     service_location = get_grpc_device_server_location(
@@ -60,7 +60,7 @@ def test___grpc_device_server_address_set___get_grpc_device_server_location___re
     expected_location: ServiceLocation,
 ) -> None:
     mocker.patch(
-        "ni_measurement_plugin_sdk_service._drivers._grpcdevice.GRPC_DEVICE_SERVER_ADDRESS",
+        "ni.measurementlink.sessionmanagement.v1.client._drivers._grpcdevice.GRPC_DEVICE_SERVER_ADDRESS",
         grpc_device_server_address,
     )
 
@@ -111,7 +111,7 @@ def test___grpc_device_server_address_unsupported___get_grpc_device_server_locat
     expected_message: str,
 ) -> None:
     mocker.patch(
-        "ni_measurement_plugin_sdk_service._drivers._grpcdevice.GRPC_DEVICE_SERVER_ADDRESS",
+        "ni.measurementlink.sessionmanagement.v1.client._drivers._grpcdevice.GRPC_DEVICE_SERVER_ADDRESS",
         grpc_device_server_address,
     )
 
@@ -150,7 +150,7 @@ def test___use_grpc_device_server_false___get_insecure_grpc_device_server_channe
     mocker: MockerFixture,
 ) -> None:
     mocker.patch(
-        "ni_measurement_plugin_sdk_service._drivers._grpcdevice.USE_GRPC_DEVICE_SERVER", False
+        "ni.measurementlink.sessionmanagement.v1.client._drivers._grpcdevice.USE_GRPC_DEVICE_SERVER", False
     )
 
     returned_channel = get_insecure_grpc_device_server_channel(
@@ -167,7 +167,7 @@ def test___grpc_device_server_address_set___get_insecure_grpc_device_server_chan
     mocker: MockerFixture,
 ) -> None:
     mocker.patch(
-        "ni_measurement_plugin_sdk_service._drivers._grpcdevice.GRPC_DEVICE_SERVER_ADDRESS",
+        "ni.measurementlink.sessionmanagement.v1.client._drivers._grpcdevice.GRPC_DEVICE_SERVER_ADDRESS",
         "http://[::1]:31763",
     )
     grpc_channel_pool.get_channel.return_value = grpc_channel
