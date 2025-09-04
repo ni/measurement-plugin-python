@@ -2,13 +2,13 @@ from unittest.mock import Mock
 
 import pytest
 from ni.measurementlink.discovery.v1.client import ServiceLocation
-from pytest_mock import MockerFixture
-
 from ni.measurementlink.sessionmanagement.v1.client._drivers._grpcdevice import (
     SERVICE_CLASS,
     get_grpc_device_server_location,
     get_insecure_grpc_device_server_channel,
 )
+from pytest_mock import MockerFixture
+
 from tests.utilities import fake_driver
 
 
@@ -34,7 +34,8 @@ def test___use_grpc_device_server_false___get_grpc_device_server_location___retu
     mocker: MockerFixture,
 ) -> None:
     mocker.patch(
-        "ni.measurementlink.sessionmanagement.v1.client._drivers._grpcdevice.USE_GRPC_DEVICE_SERVER", False
+        "ni.measurementlink.sessionmanagement.v1.client._drivers._grpcdevice.USE_GRPC_DEVICE_SERVER",
+        False,
     )
 
     service_location = get_grpc_device_server_location(
@@ -150,7 +151,8 @@ def test___use_grpc_device_server_false___get_insecure_grpc_device_server_channe
     mocker: MockerFixture,
 ) -> None:
     mocker.patch(
-        "ni.measurementlink.sessionmanagement.v1.client._drivers._grpcdevice.USE_GRPC_DEVICE_SERVER", False
+        "ni.measurementlink.sessionmanagement.v1.client._drivers._grpcdevice.USE_GRPC_DEVICE_SERVER",
+        False,
     )
 
     returned_channel = get_insecure_grpc_device_server_channel(
