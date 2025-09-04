@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from types import TracebackType
 
-from ni_measurement_plugin_sdk_service.discovery._support import (
+from ni.measurementlink.discovery.v1.client._support import (
     _get_discovery_service_location,
     _get_key_file_path,
     _service_already_running,

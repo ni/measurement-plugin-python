@@ -6,17 +6,11 @@ from unittest.mock import Mock
 import grpc
 import pytest
 import session_pb2
+from ni.measurementlink.discovery.v1.client import DiscoveryClient
 from ni.measurementlink.sessionmanagement.v1 import (
     session_management_service_pb2,
 )
-from ni.measurementlink.sessionmanagement.v1.session_management_service_pb2_grpc import (
-    SessionManagementServiceStub,
-)
-from pytest_mock import MockerFixture
-
-from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
-from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
-from ni_measurement_plugin_sdk_service.session_management import (
+from ni.measurementlink.sessionmanagement.v1.client import (
     MultiplexerSessionInformation,
     MultiSessionReservation,
     PinMapContext,
@@ -25,6 +19,11 @@ from ni_measurement_plugin_sdk_service.session_management import (
     SingleSessionReservation,
     TypedSessionInformation,
 )
+from ni.measurementlink.sessionmanagement.v1.session_management_service_pb2_grpc import (
+    SessionManagementServiceStub,
+)
+from ni_grpc_extensions.channelpool import GrpcChannelPool
+from pytest_mock import MockerFixture
 
 
 def test___all_optional_args___reserve_session___sends_request_with_args(
@@ -583,7 +582,7 @@ def test___use_reservation_type___reports_deprecated_warning_and_aliases_to_mult
     session_management_client: SessionManagementClient,
 ) -> None:
     with pytest.deprecated_call():
-        from ni_measurement_plugin_sdk_service.session_management import Reservation
+        from ni.measurementlink.sessionmanagement.v1.client import Reservation
 
         reservation = Reservation(session_management_client, _create_grpc_session_infos(3))
 
@@ -985,7 +984,7 @@ def session_management_client(
 ) -> SessionManagementClient:
     """Create a Client with a mock SessionManagementServiceStub."""
     mocker.patch(
-        "ni_measurement_plugin_sdk_service.session_management.SessionManagementClient._get_stub",
+        "ni.measurementlink.sessionmanagement.v1.client.SessionManagementClient._get_stub",
         return_value=session_management_stub,
     )
     client = SessionManagementClient(

@@ -7,11 +7,11 @@ from collections.abc import Iterable, Sequence
 from typing import Tuple
 
 import niswitch
-
-import ni_measurement_plugin_sdk_service as nims
-from ni_measurement_plugin_sdk_service.session_management import (
+from ni.measurementlink.sessionmanagement.v1.client import (
     TypedConnectionWithMultiplexer,
 )
+
+import ni_measurement_plugin_sdk_service as nims
 
 service_directory = pathlib.Path(__file__).resolve().parent
 measurement_service = nims.MeasurementService(

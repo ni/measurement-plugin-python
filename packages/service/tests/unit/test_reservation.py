@@ -9,13 +9,13 @@ import pytest
 from ni.measurementlink.sessionmanagement.v1 import (
     session_management_service_pb2,
 )
-
-from ni_measurement_plugin_sdk_service.session_management import (
+from ni.measurementlink.sessionmanagement.v1.client import (
     SITE_SYSTEM_PINS,
     MultiSessionReservation,
     SessionInformation,
     SingleSessionReservation,
 )
+
 from tests.unit._reservation_utils import construct_session, create_grpc_session_infos
 from tests.utilities import fake_driver
 from tests.utilities.connection_subset import ConnectionSubset, get_connection_subset

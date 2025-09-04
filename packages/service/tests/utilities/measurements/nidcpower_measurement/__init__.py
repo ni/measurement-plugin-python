@@ -9,6 +9,7 @@ from typing import List
 
 import hightime
 import nidcpower
+from ni.measurementlink.sessionmanagement.v1.client import TypedConnection
 
 import ni_measurement_plugin_sdk_service as nims
 
@@ -72,7 +73,7 @@ def measure(
 
 
 def _source_measure_dc_voltage(
-    connections: Sequence[nims.session_management.TypedConnection[nidcpower.Session]],
+    connections: Sequence[TypedConnection[nidcpower.Session]],
 ) -> tuple[list[float], list[float]]:
     for connection in connections:
         channel = connection.session.channels[connection.channel_name]

@@ -23,6 +23,20 @@ from typing import (
 import grpc
 from deprecation import deprecated
 from google.protobuf.descriptor import EnumDescriptor
+from ni.measurementlink.discovery.v1.client import (
+    DiscoveryClient,
+    ServiceInfo,
+    ServiceLocation,
+)
+from ni.measurementlink.sessionmanagement.v1.client import (
+    MultiSessionReservation,
+    PinMapContext,
+    SessionManagementClient,
+    SingleSessionReservation,
+)
+from ni_grpc_extensions.channelpool import (  # re-export
+    GrpcChannelPool as GrpcChannelPool,
+)
 
 from ni_measurement_plugin_sdk_service import _datatypeinfo
 from ni_measurement_plugin_sdk_service._annotations import (
@@ -34,21 +48,10 @@ from ni_measurement_plugin_sdk_service._internal.parameter import (
     metadata as parameter_metadata,
 )
 from ni_measurement_plugin_sdk_service._internal.service_manager import GrpcService
-from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient, ServiceLocation
-from ni_measurement_plugin_sdk_service.grpc.channelpool import (  # re-export
-    GrpcChannelPool as GrpcChannelPool,
-)
 from ni_measurement_plugin_sdk_service.measurement.info import (
     DataType,
     MeasurementInfo,
-    ServiceInfo,
     TypeSpecialization,
-)
-from ni_measurement_plugin_sdk_service.session_management import (
-    MultiSessionReservation,
-    PinMapContext,
-    SessionManagementClient,
-    SingleSessionReservation,
 )
 
 if TYPE_CHECKING:

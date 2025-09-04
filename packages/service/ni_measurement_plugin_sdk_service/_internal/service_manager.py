@@ -7,12 +7,18 @@ import grpc
 from deprecation import deprecated
 from google.protobuf import descriptor_pool
 from grpc.framework.foundation import logging_pool
+from ni.measurementlink.discovery.v1.client import (
+    DiscoveryClient,
+    ServiceInfo,
+    ServiceLocation,
+)
 from ni.measurementlink.measurement.v1 import (
     measurement_service_pb2_grpc as v1_measurement_service_pb2_grpc,
 )
 from ni.measurementlink.measurement.v2 import (
     measurement_service_pb2_grpc as v2_measurement_service_pb2_grpc,
 )
+from ni_grpc_extensions.loggers import ServerLogger
 
 from ni_measurement_plugin_sdk_service._internal.grpc_servicer import (
     MeasurementServiceServicerV1,
@@ -24,12 +30,7 @@ from ni_measurement_plugin_sdk_service._internal.parameter.metadata import (
 from ni_measurement_plugin_sdk_service._internal.parameter.serialization_descriptors import (
     create_file_descriptor,
 )
-from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient, ServiceLocation
-from ni_measurement_plugin_sdk_service.grpc.loggers import ServerLogger
-from ni_measurement_plugin_sdk_service.measurement.info import (
-    MeasurementInfo,
-    ServiceInfo,
-)
+from ni_measurement_plugin_sdk_service.measurement.info import MeasurementInfo
 
 _logger = logging.getLogger(__name__)
 _V1_INTERFACE = "ni.measurementlink.measurement.v1.MeasurementService"

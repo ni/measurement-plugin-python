@@ -39,8 +39,9 @@ from ni.measurementlink.measurement.v2 import (
 % for module in custom_import_modules:
 ${module}
 % endfor
-from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
-from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
+from ni_grpc_extensions.channelpool import GrpcChannelPool
+from ni.measurementlink.discovery.v1.client import DiscoveryClient
+from ni.measurementlink.sessionmanagement.v1.client import PinMapContext
 % if output_metadata:
 from ni_measurement_plugin_sdk_service.measurement import WrongMessageTypeWarning
 % endif
@@ -53,7 +54,6 @@ from ni_measurement_plugin_sdk_service.measurement.client_support import (
     serialize_parameters,
 )
 from ni_measurement_plugin_sdk_service.pin_map import PinMapClient
-from ni_measurement_plugin_sdk_service.session_management import PinMapContext
 
 _logger = logging.getLogger(__name__)
 

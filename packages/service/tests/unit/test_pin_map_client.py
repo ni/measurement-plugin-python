@@ -8,6 +8,7 @@ from unittest.mock import Mock
 
 import grpc
 import pytest
+from ni.measurementlink.discovery.v1.client import DiscoveryClient
 from ni.measurementlink.pinmap.v1.pin_map_service_pb2 import (
     PinMap,
     UpdatePinMapFromXmlRequest,
@@ -15,10 +16,9 @@ from ni.measurementlink.pinmap.v1.pin_map_service_pb2 import (
 from ni.measurementlink.pinmap.v1.pin_map_service_pb2_grpc import (
     PinMapServiceStub,
 )
+from ni_grpc_extensions.channelpool import GrpcChannelPool
 from pytest_mock import MockerFixture
 
-from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
-from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
 from ni_measurement_plugin_sdk_service.pin_map._client import PinMapClient
 
 
