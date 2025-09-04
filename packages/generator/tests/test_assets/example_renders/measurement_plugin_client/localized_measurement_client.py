@@ -21,6 +21,7 @@ from ni.protobuf.types.array_pb2 import String2DArray
 from ni.protobuf.types.xydata_pb2 import DoubleXYData
 from ni_grpc_extensions.channelpool import GrpcChannelPool
 from ni.measurementlink.discovery.v1.client import DiscoveryClient
+from ni.measurementlink.sessionmanagement.v1.client import PinMapContext
 from ni_measurement_plugin_sdk_service.measurement import WrongMessageTypeWarning
 from ni_measurement_plugin_sdk_service.measurement.client_support import (
     ParameterMetadata,
@@ -29,7 +30,6 @@ from ni_measurement_plugin_sdk_service.measurement.client_support import (
     serialize_parameters,
 )
 from ni_measurement_plugin_sdk_service.pin_map import PinMapClient
-from ni.measurementlink.sessionmanagement.v1.client import PinMapContext
 
 _logger = logging.getLogger(__name__)
 
