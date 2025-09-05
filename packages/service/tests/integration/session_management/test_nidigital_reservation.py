@@ -2,12 +2,12 @@ import pathlib
 from contextlib import ExitStack
 
 import pytest
+from ni.measurementlink.pinmap.v1.client import PinMapClient
 from ni.measurementlink.sessionmanagement.v1.client import (
     PinMapContext,
     SessionManagementClient,
 )
 
-from ni_measurement_plugin_sdk_service.pin_map import PinMapClient
 from tests.utilities.connection_subset import ConnectionSubset, get_connection_subset
 
 
