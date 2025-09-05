@@ -22,7 +22,7 @@ from ni_measurement_plugin_sdk_service.measurement.client_support import (
     create_file_descriptor,
     serialize_parameters,
 )
-from ni_measurement_plugin_sdk_service.pin_map import PinMapClient
+from ni.measurementlink.pinmap.v1.client import PinMapClient
 
 _logger = logging.getLogger(__name__)
 
