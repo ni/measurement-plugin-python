@@ -3,12 +3,12 @@ from contextlib import ExitStack
 
 import niswitch
 import pytest
-
-from ni_measurement_plugin_sdk_service.pin_map import PinMapClient
-from ni_measurement_plugin_sdk_service.session_management import (
+from ni.measurementlink.sessionmanagement.v1.client import (
     PinMapContext,
     SessionManagementClient,
 )
+
+from ni_measurement_plugin_sdk_service.pin_map import PinMapClient
 from tests.utilities.connection_subset import (
     ConnectionSubset,
     get_connection_subset_with_multiplexer,

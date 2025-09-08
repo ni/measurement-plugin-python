@@ -6,13 +6,13 @@ from typing import Any
 from unittest.mock import ANY, Mock
 
 import pytest
-from pytest_mock import MockerFixture
-
-from ni_measurement_plugin_sdk_service.session_management import (
+from ni.measurementlink.sessionmanagement.v1.client import (
     INSTRUMENT_TYPE_NI_DCPOWER,
     MultiSessionReservation,
     SessionInitializationBehavior,
 )
+from pytest_mock import MockerFixture
+
 from tests.unit._drivers._driver_utils import (
     create_mock_session,
     create_mock_sessions,

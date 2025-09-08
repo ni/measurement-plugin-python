@@ -8,9 +8,9 @@ from contextlib import ExitStack
 from typing import List
 
 import niscope
+from ni.measurementlink.sessionmanagement.v1.client import TypedSessionInformation
 
 import ni_measurement_plugin_sdk_service as nims
-from ni_measurement_plugin_sdk_service.session_management import TypedSessionInformation
 
 service_directory = pathlib.Path(__file__).resolve().parent
 measurement_service = nims.MeasurementService(

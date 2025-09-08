@@ -8,28 +8,28 @@ from collections.abc import Generator
 
 import grpc
 import pytest
+from ni.measurementlink.discovery.v1.client import DiscoveryClient
+from ni.measurementlink.discovery.v1.client._support import (
+    _get_registration_json_file_path,
+)
 from ni.measurementlink.measurement.v1 import (
     measurement_service_pb2_grpc as v1_measurement_service_pb2_grpc,
 )
 from ni.measurementlink.measurement.v2 import (
     measurement_service_pb2_grpc as v2_measurement_service_pb2_grpc,
 )
+from ni.measurementlink.sessionmanagement.v1.client import SessionManagementClient
 
 from ni_measurement_plugin_sdk_service import _featuretoggles
 from ni_measurement_plugin_sdk_service._featuretoggles import (
     CodeReadiness,
     FeatureToggle,
 )
-from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
-from ni_measurement_plugin_sdk_service.discovery._support import (
-    _get_registration_json_file_path,
-)
 from ni_measurement_plugin_sdk_service.measurement.service import (
     GrpcChannelPool,
     MeasurementService,
 )
 from ni_measurement_plugin_sdk_service.pin_map import PinMapClient
-from ni_measurement_plugin_sdk_service.session_management import SessionManagementClient
 from tests.utilities.discovery_service_process import DiscoveryServiceProcess
 
 

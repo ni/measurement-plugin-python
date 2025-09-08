@@ -5,8 +5,8 @@ from types import ModuleType
 
 import grpc
 import pytest
+from ni.measurementlink.sessionmanagement.v1.client import PinMapContext
 from ni_measurement_plugin_sdk_service.measurement.service import MeasurementService
-from ni_measurement_plugin_sdk_service.session_management import PinMapContext
 
 from tests.conftest import CliRunnerFunction
 from tests.utilities.discovery_service_process import DiscoveryServiceProcess

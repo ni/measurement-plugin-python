@@ -1,11 +1,11 @@
 import pytest
-
-from ni_measurement_plugin_sdk_service._drivers import (
-    closing_session_with_ts_code_module_support,
-)
-from ni_measurement_plugin_sdk_service.session_management._types import (
+from ni.measurementlink.sessionmanagement.v1.client import (
     SessionInitializationBehavior,
 )
+from ni.measurementlink.sessionmanagement.v1.client._drivers import (
+    closing_session_with_ts_code_module_support,
+)
+
 from tests.utilities import fake_driver
 from tests.utilities.fake_driver import (
     SessionInitializationBehavior as FakeDriverSessionInitializationBehavior,

@@ -11,7 +11,7 @@ from typing import Any, Protocol
 
 import pytest
 from click.testing import CliRunner, Result
-from ni_measurement_plugin_sdk_service.discovery._support import (
+from ni.measurementlink.discovery.v1.client._support import (
     _get_registration_json_file_path,
 )
 from packaging.version import Version

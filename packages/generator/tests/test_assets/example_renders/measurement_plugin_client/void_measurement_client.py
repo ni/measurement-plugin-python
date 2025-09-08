@@ -14,15 +14,15 @@ from ni.measurementlink.measurement.v2 import (
     measurement_service_pb2 as v2_measurement_service_pb2,
     measurement_service_pb2_grpc as v2_measurement_service_pb2_grpc,
 )
-from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
-from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
+from ni_grpc_extensions.channelpool import GrpcChannelPool
+from ni.measurementlink.discovery.v1.client import DiscoveryClient
+from ni.measurementlink.sessionmanagement.v1.client import PinMapContext
 from ni_measurement_plugin_sdk_service.measurement.client_support import (
     ParameterMetadata,
     create_file_descriptor,
     serialize_parameters,
 )
 from ni_measurement_plugin_sdk_service.pin_map import PinMapClient
-from ni_measurement_plugin_sdk_service.session_management import PinMapContext
 
 _logger = logging.getLogger(__name__)
 
