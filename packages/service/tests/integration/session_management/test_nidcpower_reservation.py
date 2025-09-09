@@ -26,7 +26,10 @@ def test___single_session_reserved___initialize_nidcpower_session___creates_sing
         session_info = stack.enter_context(reservation.initialize_nidcpower_session())
 
         assert session_info.session is not None
-        assert session_info.session_name == "DCPower1/0" or session_info.session_name == "niDCPower-DCPower1/0"
+        assert (
+            session_info.session_name == "DCPower1/0"
+            or session_info.session_name == "niDCPower-DCPower1/0"
+        )
 
 
 def test___multiple_sessions_reserved___initialize_nidcpower_sessions___creates_multiple_sessions(

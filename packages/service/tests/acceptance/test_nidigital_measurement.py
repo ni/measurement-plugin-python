@@ -73,7 +73,7 @@ def test___multiple_sessions___measure___creates_multiple_sessions(
     configurations = Configurations(pin_names=["CS", "SCLK", "MOSI", "MISO"], multi_session=True)
 
     outputs = _measure(stub_v2, pin_map_context, configurations)
-    
+
     actual = _get_output(outputs)
     expected1 = [
         _MeasurementOutput(

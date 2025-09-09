@@ -175,7 +175,7 @@ _SMU_SINGLE_SESSION_CONFIGURATIONS = [
         ["DCPower1/2, DCPower1/3"],
         ["DCPower1/2, DCPower1/3"],
         ["DCPower1/2, DCPower1/3"],
-        expected_session_names2=["niDCPower-DCPower1/2, DCPower1/3"]
+        expected_session_names2=["niDCPower-DCPower1/2, DCPower1/3"],
     ),
     Configuration(
         "2Smu2ChannelGroup2Pin2Site.pinmap",
@@ -202,7 +202,7 @@ _SMU_SINGLE_SESSION_CONFIGURATIONS = [
         ["DCPower2/0, DCPower2/1"],
         ["DCPower2/0, DCPower2/1"],
         ["DCPower2/0, DCPower2/1"],
-        expected_session_names2=["niDCPower-DCPower2/0, DCPower2/1"]
+        expected_session_names2=["niDCPower-DCPower2/0, DCPower2/1"],
     ),
 ]
 
@@ -214,7 +214,10 @@ _SMU_MULTI_SESSION_CONFIGURATIONS = [
         ["DCPower1/0, DCPower1/1", "DCPower1/2, DCPower1/3"],
         ["DCPower1/0, DCPower1/1", "DCPower1/2, DCPower1/3"],
         ["DCPower1/0, DCPower1/1", "DCPower1/2, DCPower1/3"],
-        expected_session_names2=["niDCPower-DCPower1/0, DCPower1/1", "niDCPower-DCPower1/2, DCPower1/3"]
+        expected_session_names2=[
+            "niDCPower-DCPower1/0, DCPower1/1",
+            "niDCPower-DCPower1/2, DCPower1/3",
+        ],
     ),
     Configuration(
         "2Smu2ChannelGroup2Pin2Site.pinmap",
@@ -223,7 +226,10 @@ _SMU_MULTI_SESSION_CONFIGURATIONS = [
         ["DCPower1/0, DCPower1/1", "DCPower2/0, DCPower2/1"],
         ["DCPower1/0, DCPower1/1", "DCPower2/0, DCPower2/1"],
         ["DCPower1/0, DCPower1/1", "DCPower2/0, DCPower2/1"],
-        expected_session_names2=["niDCPower-DCPower1/0, DCPower1/1", "niDCPower-DCPower2/0, DCPower2/1"]
+        expected_session_names2=[
+            "niDCPower-DCPower1/0, DCPower1/1",
+            "niDCPower-DCPower2/0, DCPower2/1",
+        ],
     ),
 ]
 
@@ -267,7 +273,10 @@ def test___multi_session___measure___reserves_multiple_sessions(
 
     outputs = _measure(stub_v2, pin_map_context, configurations)
 
-    assert outputs.session_names == configuration.expected_session_names or outputs.session_names == configuration.expected_session_names2
+    assert (
+        outputs.session_names == configuration.expected_session_names
+        or outputs.session_names == configuration.expected_session_names2
+    )
     assert outputs.resource_names == configuration.expected_resource_names
     assert outputs.channel_lists == configuration.expected_channel_lists
 

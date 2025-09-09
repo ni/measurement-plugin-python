@@ -35,12 +35,8 @@ def test___single_session___measure___creates_single_session(
     outputs = _measure(stub_v2, pin_map_context, configurations)
 
     actual = _get_output(outputs)
-    expected1 = [
-        _MeasurementOutput("RelayDriver1", "RelayDriver1", "K0", "K0")
-    ]
-    expected2 = [
-        _MeasurementOutput("niRelayDriver-RelayDriver1", "RelayDriver1", "K0", "K0")
-    ]
+    expected1 = [_MeasurementOutput("RelayDriver1", "RelayDriver1", "K0", "K0")]
+    expected2 = [_MeasurementOutput("niRelayDriver-RelayDriver1", "RelayDriver1", "K0", "K0")]
     assert actual == expected1 or actual == expected2
 
 

@@ -70,6 +70,7 @@ def test___multiple_sessions___measure___creates_multiple_sessions(
     ]
     assert actual == expected1 or actual == expected2
 
+
 def _measure(
     stub_v2: MeasurementServiceStub,
     pin_map_context: PinMapContext,

@@ -42,8 +42,14 @@ def test___multiple_sessions_reserved___initialize_nifgen_sessions___creates_mul
         session_infos = stack.enter_context(reservation.initialize_nifgen_sessions())
 
         assert all([session_info.session is not None for session_info in session_infos])
-        assert session_infos[0].session_name == "FGEN1" or session_infos[0].session_name == "niFGen-FGEN1"
-        assert session_infos[1].session_name == "FGEN2" or session_infos[1].session_name == "niFGen-FGEN2"
+        assert (
+            session_infos[0].session_name == "FGEN1"
+            or session_infos[0].session_name == "niFGen-FGEN1"
+        )
+        assert (
+            session_infos[1].session_name == "FGEN2"
+            or session_infos[1].session_name == "niFGen-FGEN2"
+        )
 
 
 def test___session_created___get_nifgen_connection___returns_connection(
