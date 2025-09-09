@@ -954,6 +954,7 @@ deprecation = ">=2.1"
 grpcio = "^1.49.1"
 ni-measurementlink-measurement-v1-proto = ">=0.1.0dev0"
 ni-measurementlink-measurement-v2-proto = ">=0.1.0dev0"
+ni-measurementlink-pinmap-v1-client = ">=0.1.0dev0"
 ni-measurementlink-sessionmanagement-v1-client = ">=0.1.0dev0"
 ni-protobuf-types = ">=0.1.0dev2"
 protobuf = ">=4.21"
@@ -1035,6 +1036,26 @@ files = [
 [package.dependencies]
 ni-measurementlink-proto = ">=0.1.0dev0"
 protobuf = ">=4.21"
+
+[[package]]
+name = "ni-measurementlink-pinmap-v1-client"
+version = "0.1.0.dev0"
+description = "gRPC Client for NI Pin Map Service"
+optional = false
+python-versions = "<4.0,>=3.9"
+files = [
+    {file = "ni_measurementlink_pinmap_v1_client-0.1.0.dev0-py3-none-any.whl", hash = "sha256:b7c0bc49b8c83c45863847ef33526ba54f471877168dfb9c45d7f29f8dc2d3e7"},
+    {file = "ni_measurementlink_pinmap_v1_client-0.1.0.dev0.tar.gz", hash = "sha256:bfe711e3d24cfc27e82c0b6025c9b75396c86cb242eab3af206c5079fb85ca18"},
+]
+
+[package.dependencies]
+grpcio = ">=1.49.0,<2.0"
+ni-grpc-extensions = ">=0.1.0.dev0"
+ni-measurementlink-discovery-v1-client = ">=0.1.0.dev0"
+ni-measurementlink-measurement-v1-proto = ">=0.1.0.dev0"
+ni-measurementlink-measurement-v2-proto = ">=0.1.0.dev0"
+ni-measurementlink-pinmap-v1-proto = ">=0.1.0.dev0"
+ni-measurementlink-sessionmanagement-v1-client = ">=0.1.0.dev0"
 
 [[package]]
 name = "ni-measurementlink-pinmap-v1-proto"
@@ -1876,4 +1897,4 @@ test = ["covdefaults (>=2.3)", "coverage (>=7.2.7)", "coverage-enable-subprocess
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "85551ba1dd0266956c9a27b68bf525f252d7831c1c5a9f4d1d7e7ae07e808b3c"
+content-hash = "e7922b5a6626031ffe72dabb1ec849bdeddd15a74ce28e10c3c749c3d86f96a7"

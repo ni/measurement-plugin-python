@@ -14,9 +14,9 @@ from ni.measurementlink.measurement.v2.measurement_service_pb2_grpc import (
 from ni.measurementlink.pin_map_context_pb2 import (
     PinMapContext,
 )
+from ni.measurementlink.pinmap.v1.client import PinMapClient
 
 from ni_measurement_plugin_sdk_service.measurement.service import MeasurementService
-from ni_measurement_plugin_sdk_service.pin_map import PinMapClient
 from tests.utilities.measurements import nidaqmx_measurement
 from tests.utilities.stubs.nidaqmx.types_pb2 import Configurations, Outputs
 
