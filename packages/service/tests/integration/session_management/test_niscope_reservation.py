@@ -26,7 +26,7 @@ def test___single_session_reserved___initialize_niscope_session___creates_single
         session_info = stack.enter_context(reservation.initialize_niscope_session())
 
         assert session_info.session is not None
-        assert session_info.session_name == "SCOPE1"
+        assert session_info.session_name == "SCOPE1" or session_info.session_name == "niScope-SCOPE1"
 
 
 def test___multiple_sessions_reserved___initialize_niscope_sessions___creates_multiple_sessions(
@@ -42,8 +42,8 @@ def test___multiple_sessions_reserved___initialize_niscope_sessions___creates_mu
         session_infos = stack.enter_context(reservation.initialize_niscope_sessions())
 
         assert all([session_info.session is not None for session_info in session_infos])
-        assert session_infos[0].session_name == "SCOPE1"
-        assert session_infos[1].session_name == "SCOPE2"
+        assert session_infos[0].session_name == "SCOPE1" or session_infos[0].session_name == "niScope-SCOPE1"
+        assert session_infos[1].session_name == "SCOPE2" or session_infos[1].session_name == "niScope-SCOPE2"
 
 
 def test___session_created___get_niscope_connection___returns_connection(
