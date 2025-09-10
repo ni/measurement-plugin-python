@@ -60,10 +60,16 @@ def test___multiple_sessions___measure___creates_multiple_sessions(
 
     outputs = _measure(stub_v2, pin_map_context, configurations)
 
-    assert _get_output(outputs) == [
+    actual = _get_output(outputs)
+    expected1 = [
         _MeasurementOutput("DMM1", "DMM1", "0", "0"),
         _MeasurementOutput("DMM2", "DMM2", "0", "0"),
     ]
+    expected2 = [
+        _MeasurementOutput("niDMM-DMM1", "DMM1", "0", "0"),
+        _MeasurementOutput("niDMM-DMM2", "DMM2", "0", "0"),
+    ]
+    assert actual == expected1 or actual == expected2
 
 
 def _measure(

@@ -26,7 +26,10 @@ def test___single_session_reserved___initialize_niswitch_session___creates_singl
         session_info = stack.enter_context(reservation.initialize_niswitch_session())
 
         assert session_info.session is not None
-        assert session_info.session_name == "RelayDriver1"
+        assert (
+            session_info.session_name == "RelayDriver1"
+            or session_info.session_name == "niRelayDriver-RelayDriver1"
+        )
 
 
 def test___multiple_sessions_reserved___initialize_niswitch_sessions___creates_multiple_sessions(

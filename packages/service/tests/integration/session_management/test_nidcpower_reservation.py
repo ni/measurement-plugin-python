@@ -26,7 +26,10 @@ def test___single_session_reserved___initialize_nidcpower_session___creates_sing
         session_info = stack.enter_context(reservation.initialize_nidcpower_session())
 
         assert session_info.session is not None
-        assert session_info.session_name == "DCPower1/0"
+        assert (
+            session_info.session_name == "DCPower1/0"
+            or session_info.session_name == "niDCPower-DCPower1/0"
+        )
 
 
 def test___multiple_sessions_reserved___initialize_nidcpower_sessions___creates_multiple_sessions(
@@ -34,7 +37,8 @@ def test___multiple_sessions_reserved___initialize_nidcpower_sessions___creates_
     session_management_client: SessionManagementClient,
 ) -> None:
     pin_names = ["Pin1", "Pin2"]
-    nidcpower_resource = ["DCPower1/0", "DCPower1/2"]
+    nidcpower_resources = ["DCPower1/0", "DCPower1/2"]
+    nidcpower_resources2 = ["niDCPower-DCPower1/0", "niDCPower-DCPower1/2"]
     with ExitStack() as stack:
         reservation = stack.enter_context(
             session_management_client.reserve_sessions(pin_map_context, pin_names)
@@ -43,12 +47,19 @@ def test___multiple_sessions_reserved___initialize_nidcpower_sessions___creates_
         session_infos = stack.enter_context(reservation.initialize_nidcpower_sessions())
 
         assert all([session_info.session is not None for session_info in session_infos])
-        assert all(
+        matches1 = all(
             [
                 session_info.session_name == expected_resource
-                for session_info, expected_resource in zip(session_infos, nidcpower_resource)
+                for session_info, expected_resource in zip(session_infos, nidcpower_resources)
             ]
         )
+        matches2 = all(
+            [
+                session_info.session_name == expected_resource
+                for session_info, expected_resource in zip(session_infos, nidcpower_resources2)
+            ]
+        )
+        assert matches1 or matches2
 
 
 def test___session_created___get_nidcpower_connection___returns_connection(

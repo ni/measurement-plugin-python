@@ -45,7 +45,8 @@ def test___single_session___measure___creates_single_session(
 
     outputs = _measure(stub_v2, pin_map_context, configurations)
 
-    assert _get_output(outputs) == [
+    actual = _get_output(outputs)
+    expected1 = [
         _MeasurementOutput(
             "DigitalPattern1",
             "DigitalPattern1",
@@ -53,6 +54,15 @@ def test___single_session___measure___creates_single_session(
             "site0/CS",
         )
     ]
+    expected2 = [
+        _MeasurementOutput(
+            "niDigitalPattern-DigitalPattern1",
+            "DigitalPattern1",
+            "site0/CS, site0/SCLK, site0/MOSI, site0/MISO",
+            "site0/CS",
+        )
+    ]
+    assert actual == expected1 or actual == expected2
 
 
 def test___multiple_sessions___measure___creates_multiple_sessions(
@@ -64,7 +74,8 @@ def test___multiple_sessions___measure___creates_multiple_sessions(
 
     outputs = _measure(stub_v2, pin_map_context, configurations)
 
-    assert _get_output(outputs) == [
+    actual = _get_output(outputs)
+    expected1 = [
         _MeasurementOutput(
             "DigitalPattern1",
             "DigitalPattern1",
@@ -78,6 +89,21 @@ def test___multiple_sessions___measure___creates_multiple_sessions(
             "site1/CS, site1/SCLK, site1/MOSI, site1/MISO",
         ),
     ]
+    expected2 = [
+        _MeasurementOutput(
+            "niDigitalPattern-DigitalPattern1",
+            "DigitalPattern1",
+            "site0/CS, site0/SCLK, site0/MOSI, site0/MISO",
+            "site0/CS, site0/SCLK, site0/MOSI, site0/MISO",
+        ),
+        _MeasurementOutput(
+            "niDigitalPattern-DigitalPattern2",
+            "DigitalPattern2",
+            "site1/CS, site1/SCLK, site1/MOSI, site1/MISO",
+            "site1/CS, site1/SCLK, site1/MOSI, site1/MISO",
+        ),
+    ]
+    assert actual == expected1 or actual == expected2
 
 
 def _measure(

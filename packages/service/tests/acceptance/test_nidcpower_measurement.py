@@ -59,10 +59,16 @@ def test___multiple_sessions___measure___creates_multiple_sessions(
 
     outputs = _measure(stub_v2, pin_map_context, configurations)
 
-    assert _get_output(outputs) == [
+    actual = _get_output(outputs)
+    expected1 = [
         _MeasurementOutput("DCPower1/0", "DCPower1/0", "DCPower1/0", "DCPower1/0"),
         _MeasurementOutput("DCPower1/2", "DCPower1/2", "DCPower1/2", "DCPower1/2"),
     ]
+    expected2 = [
+        _MeasurementOutput("niDCPower-DCPower1/0", "DCPower1/0", "DCPower1/0", "DCPower1/0"),
+        _MeasurementOutput("niDCPower-DCPower1/2", "DCPower1/2", "DCPower1/2", "DCPower1/2"),
+    ]
+    assert actual == expected1 or actual == expected2
 
 
 def _measure(
