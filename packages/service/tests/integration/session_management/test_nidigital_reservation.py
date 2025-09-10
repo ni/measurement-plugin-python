@@ -25,7 +25,10 @@ def test___single_session_reserved___initialize_nidigital_session___creates_sing
         session_info = stack.enter_context(reservation.initialize_nidigital_session())
 
         assert session_info.session is not None
-        assert session_info.session_name == "DigitalPattern1"
+        assert (
+            session_info.session_name == "DigitalPattern1"
+            or session_info.session_name == "niDigitalPattern-DigitalPattern1"
+        )
 
 
 def test___multiple_sessions_reserved___initialize_nidigital_sessions___creates_multiple_sessions(

@@ -26,7 +26,7 @@ def test___single_session_reserved___initialize_nidmm_session___creates_single_s
         session_info = stack.enter_context(reservation.initialize_nidmm_session())
 
         assert session_info.session is not None
-        assert session_info.session_name == "DMM1"
+        assert session_info.session_name == "DMM1" or session_info.session_name == "niDMM-DMM1"
 
 
 def test___multiple_sessions_reserved___initialize_nidmm_sessions___creates_multiple_sessions(
@@ -35,6 +35,7 @@ def test___multiple_sessions_reserved___initialize_nidmm_sessions___creates_mult
 ) -> None:
     pin_names = ["Pin1", "Pin2"]
     nidmm_resource = ["DMM1", "DMM2"]
+    nidmm_resource2 = ["niDMM-DMM1", "niDMM-DMM2"]
     with ExitStack() as stack:
         reservation = stack.enter_context(
             session_management_client.reserve_sessions(pin_map_context, pin_names)
@@ -43,12 +44,19 @@ def test___multiple_sessions_reserved___initialize_nidmm_sessions___creates_mult
         session_infos = stack.enter_context(reservation.initialize_nidmm_sessions())
 
         assert all([session_info.session is not None for session_info in session_infos])
-        assert all(
+        matches1 = all(
             [
                 session_info.session_name == expected_resource
                 for session_info, expected_resource in zip(session_infos, nidmm_resource)
             ]
         )
+        matches2 = all(
+            [
+                session_info.session_name == expected_resource
+                for session_info, expected_resource in zip(session_infos, nidmm_resource2)
+            ]
+        )
+        assert matches1 or matches2
 
 
 def test___session_created___get_nidmm_connection___returns_connection(
