@@ -1,6 +1,9 @@
 """Redirects to the relocated session management types."""
 
 from ni.measurementlink.sessionmanagement.v1.client import (
+    GRPC_SERVICE_CLASS,
+    GRPC_SERVICE_INTERFACE_NAME,
+    INSTRUMENT_TYPE_NONE,
     INSTRUMENT_TYPE_NI_DCPOWER,
     INSTRUMENT_TYPE_NI_HSDIO,
     INSTRUMENT_TYPE_NI_RFSA,
@@ -15,12 +18,28 @@ from ni.measurementlink.sessionmanagement.v1.client import (
     INSTRUMENT_TYPE_NI_RELAY_DRIVER,
     INSTRUMENT_TYPE_NI_MODEL_BASED_INSTRUMENT,
     INSTRUMENT_TYPE_NI_SWITCH_EXECUTIVE_VIRTUAL_DEVICE,
+    SITE_SYSTEM_PINS,
+    BaseReservation,
+    ChannelMapping,
+    Connection,
+    MultiplexerSessionInformation,
+    MultiplexerSessionContainer,
+    MultiSessionReservation,
     PinMapContext,
+    SingleSessionReservation,
+    SessionInformation,
     SessionInitializationBehavior,
     SessionManagementClient,
+    TypedConnection,
+    TypedConnectionWithMultiplexer,
+    TypedMultiplexerSessionInformation,
+    TypedSessionInformation,
 )
 
 __all__ = [
+    "GRPC_SERVICE_CLASS",
+    "GRPC_SERVICE_INTERFACE_NAME",
+    "INSTRUMENT_TYPE_NONE",
     "INSTRUMENT_TYPE_NI_DCPOWER",
     "INSTRUMENT_TYPE_NI_HSDIO",
     "INSTRUMENT_TYPE_NI_RFSA",
@@ -35,7 +54,23 @@ __all__ = [
     "INSTRUMENT_TYPE_NI_RELAY_DRIVER",
     "INSTRUMENT_TYPE_NI_MODEL_BASED_INSTRUMENT",
     "INSTRUMENT_TYPE_NI_SWITCH_EXECUTIVE_VIRTUAL_DEVICE",
+    "SITE_SYSTEM_PINS",
+    "BaseReservation",
+    "ChannelMapping",
+    "Connection",
+    "MultiplexerSessionInformation",
+    "MultiplexerSessionContainer",
+    "MultiSessionReservation",
     "PinMapContext",
+    "SessionInformation",
     "SessionInitializationBehavior",
     "SessionManagementClient",
+    "SingleSessionReservation",
+    "TypedConnection",
+    "TypedConnectionWithMultiplexer",
+    "TypedMultiplexerSessionInformation",
+    "TypedSessionInformation",
 ]
+
+Client = SessionManagementClient
+"""Alias for compatibility with code that uses session_management.Client."""

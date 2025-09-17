@@ -5,7 +5,9 @@ from __future__ import annotations
 import enum
 from pathlib import Path
 from typing import NamedTuple
+from ni.measurementlink.discovery.v1.client import ServiceInfo
 
+__all__ = ["ServiceInfo"]
 
 class MeasurementInfo(NamedTuple):
     """A named tuple providing information about a measurement."""
