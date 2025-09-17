@@ -1,4 +1,12 @@
-"""Redirects to the relocated session management types."""
+"""Compatibility API for accessing the NI Session Management Service.
+
+The public API for accessing the NI Session Management Service has moved to the
+:mod:`ni.measurementlink.sessionmanagement.v1.client` package.
+
+The :mod:`ni_measurement_plugin_sdk_service.session_management` subpackage
+provides compatibility with existing applications and will be deprecated in a
+future release.
+"""
 
 from ni.measurementlink.sessionmanagement.v1.client import (
     GRPC_SERVICE_CLASS,

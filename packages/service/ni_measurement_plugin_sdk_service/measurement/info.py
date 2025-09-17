@@ -8,7 +8,7 @@ from typing import NamedTuple
 
 from ni.measurementlink.discovery.v1.client import ServiceInfo
 
-__all__ = ["ServiceInfo"]
+__all__ = ["ServiceInfo", "MeasurementInfo", "TypeSpecialization", "DataType"]
 
 
 class MeasurementInfo(NamedTuple):
