@@ -19,7 +19,7 @@ grpcio-tools = "1.49.1"
 mypy-protobuf = "^3.6.0"
 types-protobuf = ">=4.21"
 # Uncomment to use prerelease dependencies.
-# ni-measurement-plugin-sdk-service = {path = "../../packages/service", develop = true}
+ni-measurement-plugin-sdk-service = {path = "../../packages/service", develop = true}
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
