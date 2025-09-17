@@ -1,3 +1,5 @@
+"""Redirects to the relocated session management types."""
+
 from ni.measurementlink.sessionmanagement.v1.client import (
     INSTRUMENT_TYPE_NI_DCPOWER,
     PinMapContext,
@@ -9,5 +11,5 @@ __all__ = [
     "INSTRUMENT_TYPE_NI_DCPOWER",
     "PinMapContext",
     "SessionInitializationBehavior",
-    "SessionManagementClient"
+    "SessionManagementClient",
 ]
