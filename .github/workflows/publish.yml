@@ -1,0 +1,154 @@
+name: Publish NIMS
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: The environment to publish to.
+        default: 'none'
+        required: true
+        type: choice
+        options:
+          - none
+          - pypi
+          - testpypi
+
+env:
+  environment: ${{ github.event_name == 'release' && 'pypi' || inputs.environment }}
+  environment-info: |
+    {
+      "pypi": {
+        "base-url": "https://pypi.org",
+        "upload-url": "https://upload.pypi.org/legacy/"
+      },
+      "testpypi": {
+        "base-url": "https://test.pypi.org",
+        "upload-url": "https://test.pypi.org/legacy/"
+      }
+    }
+  package-name: |
+    {
+      "generator": "ni_measurement_plugin_sdk_generator",
+      "sdk": "ni_measurement_plugin_sdk",
+      "service": "ni_measurement_plugin_sdk_service"
+    }
+
+jobs:
+  # Do not call check_examples.yml because the examples may depend on the version we are releasing.
+  check_nimg:
+    name: Check generator
+    uses: ./.github/workflows/check_nimg.yml
+  check_nims:
+    name: Check service
+    uses: ./.github/workflows/check_nims.yml
+  build_package:
+    name: Build ${{ matrix.package }}
+    runs-on: ubuntu-latest
+    needs: [check_nimg, check_nims]
+    strategy:
+      matrix:
+        package: [generator, sdk, service]
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - name: Set up Python
+        uses: ni/python-actions/setup-python@f0276f7f58868ec0d0d1a86377287c9e6fe0c6e7 # v0.5.0
+      - name: Set up Poetry
+        uses: ni/python-actions/setup-poetry@f0276f7f58868ec0d0d1a86377287c9e6fe0c6e7 # v0.5.0
+      - name: Check project version
+        if: github.event_name == 'release'
+        uses: ni/python-actions/check-project-version@f0276f7f58868ec0d0d1a86377287c9e6fe0c6e7 # v0.5.0
+        with:
+          project-directory: ./packages/${{ matrix.package }}
+      - name: Build distribution packages
+        run: poetry build
+        working-directory: ./packages/${{ matrix.package }}
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: ${{ matrix.package }}-distribution-packages
+          path: dist/*
+  publish_package:
+    name: Publish ${{ matrix.package }} to PyPI
+    if: github.event_name == 'release' || inputs.environment != 'none'
+    runs-on: ubuntu-latest
+    needs: [build_package]
+    environment:
+      # This logic is duplicated because `name` doesn't support the `env` context.
+      name: ${{ github.event_name == 'release' && 'pypi' || inputs.environment }}
+      url: ${{ fromJson(env.environment-info)[env.environment].base-url }}/p/${{ fromJson(env.package-name)[matrix.package] }}
+    permissions:
+      id-token: write
+    strategy:
+      matrix:
+        package: [generator, sdk, service]
+    steps:
+    - name: Download build artifacts
+      uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5.0.0
+      with:
+        name: ${{ matrix.package }}-distribution-packages
+        path: dist/
+    - run: ls -lR
+    - name: Upload to ${{ env.environment }}
+      uses: pypa/gh-action-pypi-publish@76f52bc884231f62b9a034ebfe128415bbaabdfc # v1.12.4
+      with:
+        repository-url: ${{ fromJson(env.environment-info)[env.environment].upload-url }}
+  publish_examples:
+    name: Publish examples
+    runs-on: ubuntu-latest
+    needs: [check_nimg, check_nims]
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - name: Create archives of the examples
+        env:
+          EXAMPLE_ARCHIVE: measurement-plugin-python-examples-${{ github.event_name == 'release' && github.event.release.tag_name || github.ref_name }}
+        run: |
+          # Use --prefix for the tarball but not the zip file. Windows zip tools often create a directory automatically.
+          rm -rf dist
+          mkdir -p dist
+          git archive -o dist/${EXAMPLE_ARCHIVE}.zip ${GITHUB_REF}:examples/
+          git archive -o dist/${EXAMPLE_ARCHIVE}.tar.gz --prefix ${EXAMPLE_ARCHIVE}/ ${GITHUB_REF}:examples/
+      - name: Upload release assets
+        if: ${{ startsWith(github.event.release.target_commitish, 'main') || startsWith(github.event.release.target_commitish, 'releases/') }}
+        uses: ncipollo/release-action@bcfe5470707e8832e12347755757cec0eb3c22af # v1.18.0
+        with:
+          artifacts: "dist/measurement-plugin-python-examples-*"
+          allowUpdates: true
+          omitBodyDuringUpdate: true
+          omitDraftDuringUpdate: true
+          omitNameDuringUpdate: true
+          omitPrereleaseDuringUpdate: true
+          updateOnlyUnreleased: false
+  update_versions:
+    name: Update package versions
+    runs-on: ubuntu-latest
+    needs: [build_package]
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - name: Set up Python
+        uses: ni/python-actions/setup-python@f0276f7f58868ec0d0d1a86377287c9e6fe0c6e7 # v0.5.0
+      - name: Set up Poetry
+        uses: ni/python-actions/setup-poetry@f0276f7f58868ec0d0d1a86377287c9e6fe0c6e7 # v0.5.0
+      # Create one pull request that updates all three packages.
+      - name: Update generator project version
+        uses: ni/python-actions/update-project-version@f0276f7f58868ec0d0d1a86377287c9e6fe0c6e7 # v0.5.0
+        with:
+          project-directory: ./packages/generator
+          create-pull-request: false
+      - name: Update sdk project version
+        uses: ni/python-actions/update-project-version@f0276f7f58868ec0d0d1a86377287c9e6fe0c6e7 # v0.5.0
+        with:
+          project-directory: ./packages/sdk
+          create-pull-request: false
+      - name: Update service project version
+        uses: ni/python-actions/update-project-version@f0276f7f58868ec0d0d1a86377287c9e6fe0c6e7 # v0.5.0
+        with:
+          project-directory: ./packages/service
+          create-pull-request: true
