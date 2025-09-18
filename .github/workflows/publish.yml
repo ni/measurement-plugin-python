@@ -102,9 +102,13 @@ jobs:
     steps:
       - name: Check out repo
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - name: Get version
+        id: get-version
+        run: echo "version="$(poetry version --short)" >> "$GITHUB_OUTPUT"
+        working-directory: ./packages/service
       - name: Create archives of the examples
         env:
-          EXAMPLE_ARCHIVE: measurement-plugin-python-examples-${{ github.event_name == 'release' && github.event.release.tag_name || github.ref_name }}
+          EXAMPLE_ARCHIVE: measurement-plugin-python-examples-${{ steps.get-version.outputs.version }}
         run: |
           # Use --prefix for the tarball but not the zip file. Windows zip tools often create a directory automatically.
           rm -rf dist
