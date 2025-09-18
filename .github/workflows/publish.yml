@@ -69,7 +69,7 @@ jobs:
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: ${{ matrix.package }}-distribution-packages
-          path: dist/*
+          path: ./packages/${{ matrix.package }}/dist/*
   publish_package:
     name: Publish ${{ matrix.package }} to PyPI
     if: github.event_name == 'release' || inputs.environment != 'none'
