@@ -8,6 +8,7 @@ import collections.abc
 import google.protobuf.descriptor
 import google.protobuf.internal.containers
 import google.protobuf.message
+import ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types.array_pb2 as ni_protobuf_types_array_pb2
 import ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types.attribute_value_pb2 as ni_protobuf_types_attribute_value_pb2
 import typing
 
@@ -18,66 +19,6 @@ class Vector(google.protobuf.message.Message):
     """A vector value with associated attributes, such as units."""
 
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
-
-    @typing.final
-    class DoubleArray(google.protobuf.message.Message):
-        """These nested messages are only for use by Vector. They should not be
-        used outside of the Vector context.
-        """
-
-        DESCRIPTOR: google.protobuf.descriptor.Descriptor
-
-        VALUES_FIELD_NUMBER: builtins.int
-        @property
-        def values(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.float]: ...
-        def __init__(
-            self,
-            *,
-            values: collections.abc.Iterable[builtins.float] | None = ...,
-        ) -> None: ...
-        def ClearField(self, field_name: typing.Literal["values", b"values"]) -> None: ...
-
-    @typing.final
-    class Int32Array(google.protobuf.message.Message):
-        DESCRIPTOR: google.protobuf.descriptor.Descriptor
-
-        VALUES_FIELD_NUMBER: builtins.int
-        @property
-        def values(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.int]: ...
-        def __init__(
-            self,
-            *,
-            values: collections.abc.Iterable[builtins.int] | None = ...,
-        ) -> None: ...
-        def ClearField(self, field_name: typing.Literal["values", b"values"]) -> None: ...
-
-    @typing.final
-    class BoolArray(google.protobuf.message.Message):
-        DESCRIPTOR: google.protobuf.descriptor.Descriptor
-
-        VALUES_FIELD_NUMBER: builtins.int
-        @property
-        def values(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.bool]: ...
-        def __init__(
-            self,
-            *,
-            values: collections.abc.Iterable[builtins.bool] | None = ...,
-        ) -> None: ...
-        def ClearField(self, field_name: typing.Literal["values", b"values"]) -> None: ...
-
-    @typing.final
-    class StringArray(google.protobuf.message.Message):
-        DESCRIPTOR: google.protobuf.descriptor.Descriptor
-
-        VALUES_FIELD_NUMBER: builtins.int
-        @property
-        def values(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]: ...
-        def __init__(
-            self,
-            *,
-            values: collections.abc.Iterable[builtins.str] | None = ...,
-        ) -> None: ...
-        def ClearField(self, field_name: typing.Literal["values", b"values"]) -> None: ...
 
     @typing.final
     class AttributesEntry(google.protobuf.message.Message):
@@ -99,7 +40,7 @@ class Vector(google.protobuf.message.Message):
 
     ATTRIBUTES_FIELD_NUMBER: builtins.int
     DOUBLE_ARRAY_FIELD_NUMBER: builtins.int
-    INT32_ARRAY_FIELD_NUMBER: builtins.int
+    SINT32_ARRAY_FIELD_NUMBER: builtins.int
     BOOL_ARRAY_FIELD_NUMBER: builtins.int
     STRING_ARRAY_FIELD_NUMBER: builtins.int
     @property
@@ -112,24 +53,24 @@ class Vector(google.protobuf.message.Message):
         """
 
     @property
-    def double_array(self) -> global___Vector.DoubleArray: ...
+    def double_array(self) -> ni_protobuf_types_array_pb2.DoubleArray: ...
     @property
-    def int32_array(self) -> global___Vector.Int32Array: ...
+    def sint32_array(self) -> ni_protobuf_types_array_pb2.SInt32Array: ...
     @property
-    def bool_array(self) -> global___Vector.BoolArray: ...
+    def bool_array(self) -> ni_protobuf_types_array_pb2.BoolArray: ...
     @property
-    def string_array(self) -> global___Vector.StringArray: ...
+    def string_array(self) -> ni_protobuf_types_array_pb2.StringArray: ...
     def __init__(
         self,
         *,
         attributes: collections.abc.Mapping[builtins.str, ni_protobuf_types_attribute_value_pb2.AttributeValue] | None = ...,
-        double_array: global___Vector.DoubleArray | None = ...,
-        int32_array: global___Vector.Int32Array | None = ...,
-        bool_array: global___Vector.BoolArray | None = ...,
-        string_array: global___Vector.StringArray | None = ...,
+        double_array: ni_protobuf_types_array_pb2.DoubleArray | None = ...,
+        sint32_array: ni_protobuf_types_array_pb2.SInt32Array | None = ...,
+        bool_array: ni_protobuf_types_array_pb2.BoolArray | None = ...,
+        string_array: ni_protobuf_types_array_pb2.StringArray | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["bool_array", b"bool_array", "double_array", b"double_array", "int32_array", b"int32_array", "string_array", b"string_array", "value", b"value"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["attributes", b"attributes", "bool_array", b"bool_array", "double_array", b"double_array", "int32_array", b"int32_array", "string_array", b"string_array", "value", b"value"]) -> None: ...
-    def WhichOneof(self, oneof_group: typing.Literal["value", b"value"]) -> typing.Literal["double_array", "int32_array", "bool_array", "string_array"] | None: ...
+    def HasField(self, field_name: typing.Literal["bool_array", b"bool_array", "double_array", b"double_array", "sint32_array", b"sint32_array", "string_array", b"string_array", "value", b"value"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["attributes", b"attributes", "bool_array", b"bool_array", "double_array", b"double_array", "sint32_array", b"sint32_array", "string_array", b"string_array", "value", b"value"]) -> None: ...
+    def WhichOneof(self, oneof_group: typing.Literal["value", b"value"]) -> typing.Literal["double_array", "sint32_array", "bool_array", "string_array"] | None: ...
 
 global___Vector = Vector

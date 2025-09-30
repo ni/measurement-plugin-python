@@ -10,6 +10,7 @@ import collections.abc
 import google.protobuf.descriptor
 import google.protobuf.internal.containers
 import google.protobuf.message
+import ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types.attribute_value_pb2 as ni_protobuf_types_attribute_value_pb2
 import typing
 
 DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
@@ -25,18 +26,47 @@ class DoubleXYData(google.protobuf.message.Message):
 
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
+    @typing.final
+    class AttributesEntry(google.protobuf.message.Message):
+        DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+        KEY_FIELD_NUMBER: builtins.int
+        VALUE_FIELD_NUMBER: builtins.int
+        key: builtins.str
+        @property
+        def value(self) -> ni_protobuf_types_attribute_value_pb2.AttributeValue: ...
+        def __init__(
+            self,
+            *,
+            key: builtins.str = ...,
+            value: ni_protobuf_types_attribute_value_pb2.AttributeValue | None = ...,
+        ) -> None: ...
+        def HasField(self, field_name: typing.Literal["value", b"value"]) -> builtins.bool: ...
+        def ClearField(self, field_name: typing.Literal["key", b"key", "value", b"value"]) -> None: ...
+
     X_DATA_FIELD_NUMBER: builtins.int
     Y_DATA_FIELD_NUMBER: builtins.int
+    ATTRIBUTES_FIELD_NUMBER: builtins.int
     @property
     def x_data(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.float]: ...
     @property
     def y_data(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.float]: ...
+    @property
+    def attributes(self) -> google.protobuf.internal.containers.MessageMap[builtins.str, ni_protobuf_types_attribute_value_pb2.AttributeValue]:
+        """The names and values of all xy data attributes.
+
+        An attribute is metadata attached to a xy data.
+        It is represented in this message as a map associating the name of
+        the attribute with the value described by AttributeValue.
+        """
+
     def __init__(
         self,
         *,
         x_data: collections.abc.Iterable[builtins.float] | None = ...,
         y_data: collections.abc.Iterable[builtins.float] | None = ...,
+        attributes: collections.abc.Mapping[builtins.str, ni_protobuf_types_attribute_value_pb2.AttributeValue] | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["x_data", b"x_data", "y_data", b"y_data"]) -> None: ...
+    def ClearField(self, field_name: typing.Literal["attributes", b"attributes", "x_data", b"x_data", "y_data", b"y_data"]) -> None: ...
 
 global___DoubleXYData = DoubleXYData

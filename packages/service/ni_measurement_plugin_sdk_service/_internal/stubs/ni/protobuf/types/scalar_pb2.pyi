@@ -39,11 +39,11 @@ class Scalar(google.protobuf.message.Message):
 
     ATTRIBUTES_FIELD_NUMBER: builtins.int
     DOUBLE_VALUE_FIELD_NUMBER: builtins.int
-    INT32_VALUE_FIELD_NUMBER: builtins.int
+    SINT32_VALUE_FIELD_NUMBER: builtins.int
     BOOL_VALUE_FIELD_NUMBER: builtins.int
     STRING_VALUE_FIELD_NUMBER: builtins.int
     double_value: builtins.float
-    int32_value: builtins.int
+    sint32_value: builtins.int
     bool_value: builtins.bool
     string_value: builtins.str
     @property
@@ -60,12 +60,12 @@ class Scalar(google.protobuf.message.Message):
         *,
         attributes: collections.abc.Mapping[builtins.str, ni_protobuf_types_attribute_value_pb2.AttributeValue] | None = ...,
         double_value: builtins.float = ...,
-        int32_value: builtins.int = ...,
+        sint32_value: builtins.int = ...,
         bool_value: builtins.bool = ...,
         string_value: builtins.str = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["bool_value", b"bool_value", "double_value", b"double_value", "int32_value", b"int32_value", "string_value", b"string_value", "value", b"value"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["attributes", b"attributes", "bool_value", b"bool_value", "double_value", b"double_value", "int32_value", b"int32_value", "string_value", b"string_value", "value", b"value"]) -> None: ...
-    def WhichOneof(self, oneof_group: typing.Literal["value", b"value"]) -> typing.Literal["double_value", "int32_value", "bool_value", "string_value"] | None: ...
+    def HasField(self, field_name: typing.Literal["bool_value", b"bool_value", "double_value", b"double_value", "sint32_value", b"sint32_value", "string_value", b"string_value", "value", b"value"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["attributes", b"attributes", "bool_value", b"bool_value", "double_value", b"double_value", "sint32_value", b"sint32_value", "string_value", b"string_value", "value", b"value"]) -> None: ...
+    def WhichOneof(self, oneof_group: typing.Literal["value", b"value"]) -> typing.Literal["double_value", "sint32_value", "bool_value", "string_value"] | None: ...
 
 global___Scalar = Scalar
