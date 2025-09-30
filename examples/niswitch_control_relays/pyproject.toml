@@ -18,7 +18,7 @@ mypy = ">=1.0"
 types-grpcio = ">=1.0"
 # Uncomment to use prerelease dependencies.
 # niswitch = { git = "https://github.com/ni/nimi-python.git", subdirectory = "generated/niswitch", extras = ["grpc"] }
-ni-measurement-plugin-sdk-service = {path = "../../packages/service", develop = true}
+# ni-measurement-plugin-sdk-service = {path = "../../packages/service", develop = true}
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
