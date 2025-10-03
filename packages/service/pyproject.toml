@@ -43,6 +43,8 @@ nidmm = { version = ">=1.4.4", extras = ["grpc"], optional = true }
 nifgen = { version = ">=1.4.4", extras = ["grpc"], optional = true }
 niscope = { version = ">=1.4.4", extras = ["grpc"], optional = true }
 niswitch = { version = ">=1.4.4", extras = ["grpc"], optional = true }
+ni-grpc-extensions =  { version = "^1.0.0" }
+ni-measurementlink-discovery-v1-client = { version = "^1.0.0" }
 ni-measurementlink-measurement-v1-proto = { version = "^1.0.0" }
 ni-measurementlink-measurement-v2-proto = { version = "^1.0.0" }
 ni-measurementlink-pinmap-v1-client = { version = "^1.0.0" }
