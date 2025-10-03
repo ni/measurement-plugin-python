@@ -1002,7 +1002,7 @@ protobuf = ">=4.21"
 
 [[package]]
 name = "ni-measurement-plugin-sdk-service"
-version = "3.0.0-dev0"
+version = "3.0.0"
 description = "Measurement Plug-In Support for Python"
 optional = false
 python-versions = "^3.9"
@@ -1013,6 +1013,8 @@ develop = true
 [package.dependencies]
 deprecation = ">=2.1"
 grpcio = "^1.49.1"
+ni-grpc-extensions = "^1.0.0"
+ni-measurementlink-discovery-v1-client = "^1.0.0"
 ni-measurementlink-measurement-v1-proto = "^1.0.0"
 ni-measurementlink-measurement-v2-proto = "^1.0.0"
 ni-measurementlink-pinmap-v1-client = "^1.0.0"
@@ -2018,4 +2020,4 @@ test = ["covdefaults (>=2.3)", "coverage (>=7.2.7)", "coverage-enable-subprocess
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.9"
-content-hash = "adb8055a7fe42b467f6c4d9d5c8c73da80d32a9a3553de8fe132be5a06502b89"
+content-hash = "48eaf2b37f26c35fd1e7b7e9c82079e5bac617df8268450684422e6a6118063d"
