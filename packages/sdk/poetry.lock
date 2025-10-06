@@ -294,13 +294,13 @@ files = [
 
 [[package]]
 name = "ni-grpc-extensions"
-version = "0.1.0.dev1"
+version = "1.0.0"
 description = "gRPC Extensions"
 optional = false
 python-versions = "<4.0,>=3.9"
 files = [
-    {file = "ni_grpc_extensions-0.1.0.dev1-py3-none-any.whl", hash = "sha256:171a16303a2cfcbd2f29ad5df448bf6b89b399be3ba52fc0c2e755c2e7075075"},
-    {file = "ni_grpc_extensions-0.1.0.dev1.tar.gz", hash = "sha256:99af79ab9054b15b8682c9540ea4e474236bfaab0b271b42731ba9fd2c5bb4c7"},
+    {file = "ni_grpc_extensions-1.0.0-py3-none-any.whl", hash = "sha256:6b8181284370a53546ffd371d334f15e293cae5e9ff06fa2e467d1714bf7a03f"},
+    {file = "ni_grpc_extensions-1.0.0.tar.gz", hash = "sha256:6e066246ce9a4b4420f5e503769b23c31a49c430be6ebd72324c5b5a15c34ebb"},
 ]
 
 [package.dependencies]
@@ -309,13 +309,13 @@ traceloggingdynamic = {version = ">=1.0", markers = "sys_platform == \"win32\""}
 
 [[package]]
 name = "ni-grpcdevice-v1-proto"
-version = "0.1.0.dev2"
+version = "1.0.0"
 description = "Protobuf generated code for the nidevice_grpc gRPC API"
 optional = false
 python-versions = "<4.0,>=3.9"
 files = [
-    {file = "ni_grpcdevice_v1_proto-0.1.0.dev2-py3-none-any.whl", hash = "sha256:081b87e1ef6ce8ee7764a12850bea7d0be1e709357c067a63134d1d2040454fc"},
-    {file = "ni_grpcdevice_v1_proto-0.1.0.dev2.tar.gz", hash = "sha256:00db5326098aecd013830d13d6d8ebb85a56a6470e57b5ec234136013267e557"},
+    {file = "ni_grpcdevice_v1_proto-1.0.0-py3-none-any.whl", hash = "sha256:36dfe9484cc40e8e1c97fb9720555f06563b0180e4837177d1cbf000c3d8988e"},
+    {file = "ni_grpcdevice_v1_proto-1.0.0.tar.gz", hash = "sha256:62f087f85d390c2932e45ad03d365c750bd55e147b81b66ef853e13ff8538b19"},
 ]
 
 [package.dependencies]
@@ -324,7 +324,7 @@ protobuf = ">=4.21"
 
 [[package]]
 name = "ni-measurement-plugin-sdk-generator"
-version = "2.4.0-dev1"
+version = "3.1.0.dev0"
 description = "Measurement Plug-In Code Generator for Python"
 optional = false
 python-versions = "^3.9"
@@ -340,11 +340,12 @@ click = [
 click-option-group = ">=0.5.6"
 grpcio = "^1.49.1"
 Mako = "^1.2.1"
-ni-grpc-extensions = ">=0.1.0dev1"
-ni-grpcdevice-v1-proto = ">=0.1.0dev2"
-ni-measurement-plugin-sdk-service = "^2.2.0"
-ni-measurementlink-discovery-v1-client = ">=0.1.0dev0"
-ni-protobuf-types = ">=0.1.0dev2"
+ni-grpc-extensions = "^1.0.0"
+ni-grpcdevice-v1-proto = "^1.0.0"
+ni-measurement-plugin-sdk-service = ">=2.2.0"
+ni-measurementlink-discovery-v1-client = "^1.0.0"
+ni-measurementlink-pinmap-v1-client = "^1.0.0"
+ni-protobuf-types = "^1.0.0"
 protobuf = ">=4.21"
 
 [package.source]
@@ -353,7 +354,7 @@ url = "../generator"
 
 [[package]]
 name = "ni-measurement-plugin-sdk-service"
-version = "2.4.0-dev1"
+version = "3.1.0.dev0"
 description = "Measurement Plug-In Support for Python"
 optional = false
 python-versions = "^3.9"
@@ -363,10 +364,13 @@ develop = true
 [package.dependencies]
 deprecation = ">=2.1"
 grpcio = "^1.49.1"
-ni-measurementlink-measurement-v1-proto = ">=0.1.0dev0"
-ni-measurementlink-measurement-v2-proto = ">=0.1.0dev0"
-ni-measurementlink-sessionmanagement-v1-client = ">=0.1.0dev0"
-ni-protobuf-types = ">=0.1.0dev2"
+ni-grpc-extensions = "^1.0.0"
+ni-measurementlink-discovery-v1-client = "^1.0.0"
+ni-measurementlink-measurement-v1-proto = "^1.0.0"
+ni-measurementlink-measurement-v2-proto = "^1.0.0"
+ni-measurementlink-pinmap-v1-client = "^1.0.0"
+ni-measurementlink-sessionmanagement-v1-client = "^1.0.0"
+ni-protobuf-types = "^1.0.0"
 protobuf = ">=4.21"
 python-decouple = ">=3.8"
 pywin32 = {version = ">=303", markers = "sys_platform == \"win32\""}
@@ -388,30 +392,30 @@ url = "../service"
 
 [[package]]
 name = "ni-measurementlink-discovery-v1-client"
-version = "0.1.0.dev0"
+version = "1.0.0"
 description = "gRPC Client for NI Discovery Service"
 optional = false
 python-versions = "<4.0,>=3.9"
 files = [
-    {file = "ni_measurementlink_discovery_v1_client-0.1.0.dev0-py3-none-any.whl", hash = "sha256:b27abeddb3465e2be3a8142f0884eaeabff82d89040a76d026501d8527064167"},
-    {file = "ni_measurementlink_discovery_v1_client-0.1.0.dev0.tar.gz", hash = "sha256:b964d48bc7942fc1eb6bcc5b03ce1a3fb031e9fa19d7d1a92c3c85b92fc44c17"},
+    {file = "ni_measurementlink_discovery_v1_client-1.0.0-py3-none-any.whl", hash = "sha256:6a4c45d2517a7c6017a3b7dd817a6d7ebc8ebec318243c4f17778115a1a192a6"},
+    {file = "ni_measurementlink_discovery_v1_client-1.0.0.tar.gz", hash = "sha256:2aa2a0c55f6599ffa3ff05e67e6ff89360f22bf0082e512348a41997ddfde3f8"},
 ]
 
 [package.dependencies]
 grpcio = ">=1.49.0,<2.0"
-ni-grpc-extensions = ">=0.1.0.dev0"
-ni-measurementlink-discovery-v1-proto = ">=0.1.0.dev0"
+ni-grpc-extensions = ">=0.1.0.dev1"
+ni-measurementlink-discovery-v1-proto = ">=0.1.0.dev1"
 pywin32 = {version = ">=303", markers = "sys_platform == \"win32\""}
 
 [[package]]
 name = "ni-measurementlink-discovery-v1-proto"
-version = "0.1.0.dev0"
+version = "1.0.0"
 description = "Protobuf data types for NI discovery gRPC APIs"
 optional = false
 python-versions = "<4.0,>=3.9"
 files = [
-    {file = "ni_measurementlink_discovery_v1_proto-0.1.0.dev0-py3-none-any.whl", hash = "sha256:6e267ae51614703b9835d693264bf888b653e8e40b9a7f7455e99434e5e3d8e7"},
-    {file = "ni_measurementlink_discovery_v1_proto-0.1.0.dev0.tar.gz", hash = "sha256:190b62e4d0f59ff8ab4f06b34075d215ac85d4c6fe8b4fb8c4109af5ba07dfb8"},
+    {file = "ni_measurementlink_discovery_v1_proto-1.0.0-py3-none-any.whl", hash = "sha256:093eb4ffd27338fbea4909aea30afbd3090f482f3a1dcc98e63bbaf1a6b4da8b"},
+    {file = "ni_measurementlink_discovery_v1_proto-1.0.0.tar.gz", hash = "sha256:11353eefdecc49244783d76a332bc855589eb0bb8c882f53c8f9b0a47ca91115"},
 ]
 
 [package.dependencies]
@@ -419,13 +423,13 @@ protobuf = ">=4.21"
 
 [[package]]
 name = "ni-measurementlink-measurement-v1-proto"
-version = "0.1.0.dev0"
+version = "1.0.0"
 description = "Protobuf data types for NI measurement gRPC APIs"
 optional = false
 python-versions = "<4.0,>=3.9"
 files = [
-    {file = "ni_measurementlink_measurement_v1_proto-0.1.0.dev0-py3-none-any.whl", hash = "sha256:507c7e733fbf38a3f7e1008c13979d2155c1dc58d0c90ecbc76c0d35c4e2417b"},
-    {file = "ni_measurementlink_measurement_v1_proto-0.1.0.dev0.tar.gz", hash = "sha256:75f106596cee66a5a83ebfd6ac4d8ec410cb77d8fe25b21d30eea89a60c2e354"},
+    {file = "ni_measurementlink_measurement_v1_proto-1.0.0-py3-none-any.whl", hash = "sha256:d9049cbcb25ea3d99f37925989f33bd887352a3a7d217fe0cb900c069a96180d"},
+    {file = "ni_measurementlink_measurement_v1_proto-1.0.0.tar.gz", hash = "sha256:c896e176cde3038d8d2301977464372589764e70b9de7a2fefa620c0b79ac300"},
 ]
 
 [package.dependencies]
@@ -434,18 +438,38 @@ protobuf = ">=4.21"
 
 [[package]]
 name = "ni-measurementlink-measurement-v2-proto"
-version = "0.1.0.dev0"
+version = "1.0.0"
 description = "Protobuf data types for NI measurement gRPC APIs"
 optional = false
 python-versions = "<4.0,>=3.9"
 files = [
-    {file = "ni_measurementlink_measurement_v2_proto-0.1.0.dev0-py3-none-any.whl", hash = "sha256:f29c84120c19c5bf014150402bb6855786520955ce5cfa429fb3291237482e10"},
-    {file = "ni_measurementlink_measurement_v2_proto-0.1.0.dev0.tar.gz", hash = "sha256:1b99fe1d0735d21935aae75dbeb67eb1155a96738deaac769ce038a520213122"},
+    {file = "ni_measurementlink_measurement_v2_proto-1.0.0-py3-none-any.whl", hash = "sha256:3c10d8faa7aab46d417bcf040af8742ef2028c0c9974be04058312219a4135bf"},
+    {file = "ni_measurementlink_measurement_v2_proto-1.0.0.tar.gz", hash = "sha256:ff1e4db003466746fc982ff00a442223d1141f9e2888757f124b0609344d3453"},
 ]
 
 [package.dependencies]
 ni-measurementlink-proto = ">=0.1.0dev0"
 protobuf = ">=4.21"
+
+[[package]]
+name = "ni-measurementlink-pinmap-v1-client"
+version = "1.0.0"
+description = "gRPC Client for NI Pin Map Service"
+optional = false
+python-versions = "<4.0,>=3.9"
+files = [
+    {file = "ni_measurementlink_pinmap_v1_client-1.0.0-py3-none-any.whl", hash = "sha256:33ac08a927c5f8e8c6a2e045ebbde47ade71bc3c29c27c8ccc43feb69dcc5065"},
+    {file = "ni_measurementlink_pinmap_v1_client-1.0.0.tar.gz", hash = "sha256:ab3f276f00ae23239b436c154372adce72e6b06f1634527412d42732f4af8562"},
+]
+
+[package.dependencies]
+grpcio = ">=1.49.0,<2.0"
+ni-grpc-extensions = ">=0.1.0.dev0"
+ni-measurementlink-discovery-v1-client = ">=0.1.0.dev0"
+ni-measurementlink-measurement-v1-proto = ">=0.1.0.dev0"
+ni-measurementlink-measurement-v2-proto = ">=0.1.0.dev0"
+ni-measurementlink-pinmap-v1-proto = ">=0.1.0.dev0"
+ni-measurementlink-sessionmanagement-v1-client = ">=0.1.0.dev2"
 
 [[package]]
 name = "ni-measurementlink-pinmap-v1-proto"
@@ -477,13 +501,13 @@ protobuf = ">=4.21"
 
 [[package]]
 name = "ni-measurementlink-sessionmanagement-v1-client"
-version = "0.1.0.dev0"
+version = "1.0.0"
 description = "Client gRPC APIs for the session management service"
 optional = false
 python-versions = "<4.0,>=3.9"
 files = [
-    {file = "ni_measurementlink_sessionmanagement_v1_client-0.1.0.dev0-py3-none-any.whl", hash = "sha256:ee485890d07058e5cd679a7b0bdc60158771193b3da602b82768fe0398fab554"},
-    {file = "ni_measurementlink_sessionmanagement_v1_client-0.1.0.dev0.tar.gz", hash = "sha256:12f1362fbd01f3c2f7adc462361beb79dc4fe0db068140196b5af280d64ecdaf"},
+    {file = "ni_measurementlink_sessionmanagement_v1_client-1.0.0-py3-none-any.whl", hash = "sha256:f3cdb614304fd88221120a25cf0f4905264a4b3860a0b8d773b7827edecf5f90"},
+    {file = "ni_measurementlink_sessionmanagement_v1_client-1.0.0.tar.gz", hash = "sha256:8fac927209f01f76ca1e275cd24b4156de4625c9bd0b1ee845971e054963944f"},
 ]
 
 [package.dependencies]
@@ -493,7 +517,7 @@ ni-grpcdevice-v1-proto = ">=0.1.0.dev0"
 ni-measurementlink-discovery-v1-client = ">=0.1.0.dev0"
 ni-measurementlink-pinmap-v1-proto = ">=0.1.0.dev0"
 ni-measurementlink-proto = ">=0.1.0.dev0"
-ni-measurementlink-sessionmanagement-v1-proto = ">=0.1.0.dev0"
+ni-measurementlink-sessionmanagement-v1-proto = ">=0.1.0.dev2"
 protobuf = ">=4.21"
 python-decouple = ">=3.8"
 pywin32 = {version = ">=303", markers = "sys_platform == \"win32\""}
@@ -511,13 +535,13 @@ niswitch = ["niswitch[grpc] (>=1.4.4)"]
 
 [[package]]
 name = "ni-measurementlink-sessionmanagement-v1-proto"
-version = "0.1.0.dev1"
+version = "1.0.0"
 description = "Protobuf data types for NI session management gRPC APIs"
 optional = false
 python-versions = "<4.0,>=3.9"
 files = [
-    {file = "ni_measurementlink_sessionmanagement_v1_proto-0.1.0.dev1-py3-none-any.whl", hash = "sha256:5b1637d7c32c7c2ee10c872c23a4155b213b65fc9b753fd53dccd852f602b578"},
-    {file = "ni_measurementlink_sessionmanagement_v1_proto-0.1.0.dev1.tar.gz", hash = "sha256:0a08c9b25f0e30bdc7cbe8f8994fc20e4877361ad93391ef238c546bb98af7da"},
+    {file = "ni_measurementlink_sessionmanagement_v1_proto-1.0.0-py3-none-any.whl", hash = "sha256:d345f9939d9c324477615ec0603c84286f5cd75f50ec2876287c71bb5e9d4f35"},
+    {file = "ni_measurementlink_sessionmanagement_v1_proto-1.0.0.tar.gz", hash = "sha256:3929e4616298998910846d1ddba2c80a3deaeacb54eae996389ff5b01e4f7d5c"},
 ]
 
 [package.dependencies]
@@ -526,13 +550,13 @@ protobuf = ">=4.21"
 
 [[package]]
 name = "ni-protobuf-types"
-version = "0.1.0.dev4"
+version = "1.0.0"
 description = "Protobuf data types for NI gRPC APIs"
 optional = false
 python-versions = "<4.0,>=3.9"
 files = [
-    {file = "ni_protobuf_types-0.1.0.dev4-py3-none-any.whl", hash = "sha256:dceac83ca05c286e99b44898340f58b45eac91e9609444e252d89c17a7d7c1ff"},
-    {file = "ni_protobuf_types-0.1.0.dev4.tar.gz", hash = "sha256:11c6a486bcb3984078e100efac93b96d5a84d70f0d8035a2303eb5cf9c0b1532"},
+    {file = "ni_protobuf_types-1.0.0-py3-none-any.whl", hash = "sha256:a88d5e517ef825ef70734aab00e6fb44f78ceb7d40b5c1592af450b87e3745ae"},
+    {file = "ni_protobuf_types-1.0.0.tar.gz", hash = "sha256:d2b6dfbd57729e80a7f9fa23a446635eee5ad771dbb70045b88412d163e7d732"},
 ]
 
 [package.dependencies]
