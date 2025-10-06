@@ -22,48 +22,14 @@ jobs:
         id: setup-python
       - name: Set up Poetry
         uses: ni/python-actions/setup-poetry@9768589f3e50672173dad75a6fc181e4a85d33fa # v0.7.0
-      - name: Check for lock changes (ni-measurement-plugin-sdk-service)
-        run: poetry check --lock
-
-      # ni-measurement-plugin-sdk-service, all extras
-      - name: Restore cached virtualenv (ni-measurement-plugin-sdk-service, all extras)
-        uses: actions/cache/restore@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
-        id: restore-nims-all-extras
+      # ni-measurement-plugin-sdk-service, all extras, docs
+      - name: Analyze generator
+        uses: ni/python-actions/analyze-project@9768589f3e50672173dad75a6fc181e4a85d33fa # v0.7.0
         with:
-          path: packages/service/.venv
-          key: ni-measurement-plugin-sdk-service-all-extras-${{ runner.os }}-py${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('packages/service/poetry.lock') }}
-      - name: Install ni-measurement-plugin-sdk-service (all extras)
-        run: poetry install -v --all-extras
-      - name: Save cached virtualenv (ni-measurement-plugin-sdk-service, all extras)
-        uses: actions/cache/save@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
-        if: steps.restore-nims-all-extras.outputs.cache-hit != 'true'
-        with:
-          path: packages/service/.venv
-          key: ${{ steps.restore-nims-all-extras.outputs.cache-primary-key }}
-      - name: Lint ni-measurement-plugin-sdk-service
-        run: poetry run ni-python-styleguide lint
-      - name: Mypy static analysis (ni-measurement-plugin-sdk-service, Linux)
-        run:  poetry run mypy
-      - name: Mypy static analysis (ni-measurement-plugin-sdk-service, Windows)
-        run:  poetry run mypy --platform win32
+          project-directory: packages/service
+          install-args: --all-extras --with docs
       - name: Bandit security checks (ni-measurement-plugin-sdk-service)
         run:  poetry run bandit -c pyproject.toml -r ni_measurement_plugin_sdk_service
-
-      # ni-measurement-plugin-sdk-service, all extras, docs
-      - name: Restore cached virtualenv (ni-measurement-plugin-sdk-service, all extras, docs)
-        uses: actions/cache/restore@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
-        id: restore-nims-all-extras-docs
-        with:
-          path: packages/service/.venv
-          key: ni-measurement-plugin-sdk-service-all-extras-docs-${{ runner.os }}-py${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('packages/service/poetry.lock') }}
-      - name: Install ni-measurement-plugin-sdk-service (all extras, docs)
-        run: poetry install -v --all-extras --with docs
-      - name: Save cached virtualenv (ni-measurement-plugin-sdk-service, all extras, docs)
-        uses: actions/cache/save@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
-        if: steps.restore-nims-all-extras-docs.outputs.cache-hit != 'true'
-        with:
-          path: packages/service/.venv
-          key: ${{ steps.restore-nims-all-extras-docs.outputs.cache-primary-key }}
       - name: Build docs and check for errors/warnings
         run: |
           rm -rf docs

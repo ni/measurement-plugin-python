@@ -20,22 +20,10 @@ jobs:
         id: setup-python
       - name: Set up Poetry
         uses: ni/python-actions/setup-poetry@9768589f3e50672173dad75a6fc181e4a85d33fa # v0.7.0
-      - name: Check for lock changes (ni-measurement-plugin-sdk-generator)
-        run: poetry check --lock
-      - name: Cache virtualenv (ni-measurement-plugin-sdk-generator)
-        uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
-        id: cache
+      - name: Analyze generator
+        uses: ni/python-actions/analyze-project@9768589f3e50672173dad75a6fc181e4a85d33fa # v0.7.0
         with:
-          path: packages/generator/.venv
-          key: ni-measurement-plugin-sdk-generator-${{ runner.os }}-py${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('packages/generator/poetry.lock') }}
-      - name: Install ni-measurement-plugin-sdk-generator
-        run: poetry install -v
-      - name: Lint ni-measurement-plugin-sdk-generator
-        run: poetry run ni-python-styleguide lint
-      - name: Mypy static analysis (ni-measurement-plugin-sdk-generator, Linux)
-        run:  poetry run mypy
-      - name: Mypy static analysis (ni-measurement-plugin-sdk-generator, Windows)
-        run:  poetry run mypy --platform win32
+          project-directory: packages/generator
       - name: Bandit security checks (ni-measurement-plugin-sdk-generator, example_renders)
         run:  poetry run bandit -c pyproject.toml -r ni_measurement_plugin_sdk_generator tests/test_assets/example_renders
       - name: Generate gRPC stubs
