@@ -8,12 +8,10 @@ from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
 from ni_measurement_plugin_sdk_service.session_management import (
     INSTRUMENT_TYPE_NI_DIGITAL_PATTERN,
+    MultiSessionReservation,
     PinMapContext,
     SessionInitializationBehavior,
     SessionManagementClient,
-)
-from ni_measurement_plugin_sdk_service.session_management._reservation import (
-    MultiSessionReservation,
 )
 
 
