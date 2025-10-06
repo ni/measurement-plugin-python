@@ -11,10 +11,8 @@ from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
 from ni_measurement_plugin_sdk_service.session_management import (
     PinMapContext,
-    SessionManagementClient,
-)
-from ni_measurement_plugin_sdk_service.session_management._types import (
     SessionInitializationBehavior,
+    SessionManagementClient,
 )
 
 # Search for the `.env` file starting with this code module's parent directory.
