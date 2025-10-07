@@ -18,18 +18,21 @@ if TYPE_CHECKING:
 
 _PREFIX = "MEASUREMENT_PLUGIN"
 
+# Create the config instance - always available for imports
+_config = AutoConfig(str(get_dotenv_search_path()))
+
 if TYPE_CHECKING:
-    # Work around decouple's lack of type hints.
+    # Work around decouple's lack of type hints by redefining the type
     _T = TypeVar("_T")
 
-    def _config(
+    def __config_stub(
         option: str,
         default: _T | Undefined = undefined,
         cast: Callable[[str], _T] | Undefined = undefined,
     ) -> _T: ...
 
-else:
-    _config = AutoConfig(str(get_dotenv_search_path()))
+    # Tell type checker this is the real signature
+    _config = __config_stub
 
 
 # ----------------------------------------------------------------------
