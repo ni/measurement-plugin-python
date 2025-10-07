@@ -298,7 +298,7 @@ files = [
     {file = "click-8.3.0-py3-none-any.whl", hash = "sha256:9b9f285302c6e3064f4330c05f05b81945b2a39544279343e6e7c5f27a9baddc"},
     {file = "click-8.3.0.tar.gz", hash = "sha256:e7b8232224eba16f4ebe410c25ced9f7875cb5f3263ffc93cc3e8da705e229c4"},
 ]
-markers = {main = "(extra == \"drivers\" or extra == \"nidaqmx\") and python_version >= \"3.10\"", dev = "python_version >= \"3.10\"", docs = "python_version >= \"3.10\""}
+markers = {main = "python_version >= \"3.10\" and (extra == \"drivers\" or extra == \"nidaqmx\")", dev = "python_version >= \"3.10\"", docs = "python_version >= \"3.10\""}
 
 [package.dependencies]
 colorama = {version = "*", markers = "platform_system == \"Windows\""}
@@ -2866,8 +2866,8 @@ version = "1.0.1"
 description = "Generates Event Tracing for Windows events using TraceLogging"
 optional = false
 python-versions = ">=3.6"
-groups = ["main", "dev"]
-markers = "sys_platform == \"win32\" or sys_platform == \"linux\" or sys_platform == \"darwin\""
+groups = ["main"]
+markers = "sys_platform == \"win32\""
 files = [
     {file = "traceloggingdynamic-1.0.1-py3-none-any.whl", hash = "sha256:0e19da491a8960725b3622366487ae35f49d8f595bb2e4e5ce1795eb5928db7c"},
     {file = "traceloggingdynamic-1.0.1.tar.gz", hash = "sha256:d9dd4b291dd04c15e34181eed06f73fdf4ffa7b1f895b78217163def48ab1a52"},
@@ -2953,7 +2953,7 @@ description = "Provider of IANA time zone data"
 optional = true
 python-versions = ">=2"
 groups = ["main"]
-markers = "(extra == \"drivers\" or extra == \"nidaqmx\") and platform_system == \"Windows\""
+markers = "platform_system == \"Windows\" and (extra == \"drivers\" or extra == \"nidaqmx\")"
 files = [
     {file = "tzdata-2025.2-py2.py3-none-any.whl", hash = "sha256:1a403fada01ff9221ca8044d701868fa132215d84beb92242d9acd2147f667a8"},
     {file = "tzdata-2025.2.tar.gz", hash = "sha256:b60a638fcc0daffadf82fe0f57e53d06bdec2f36c4df66280ae79bce6bd6f2b9"},
@@ -3053,4 +3053,4 @@ niswitch = ["niswitch"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.9"
-content-hash = "4d18f4c7e37b52674e9a64c0c35afc0025f998fe0fa733d3e912f2b514a58c19"
+content-hash = "a3ac389b98b8893c2a2831abd8742dafb23bf173689a4219a81a3607cc52fcd2"
