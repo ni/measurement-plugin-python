@@ -7,6 +7,8 @@ on:
 jobs:
   check_nims:
     name: Check NIMS
+    env:
+      oldest-python-version: '3.9'
     strategy:
       matrix:
         os: [windows-latest, ubuntu-latest, macos-latest]
@@ -37,15 +39,15 @@ jobs:
       - name: Bandit security checks (ni-measurement-plugin-sdk-service)
         run:  poetry run bandit -c pyproject.toml -r ni_measurement_plugin_sdk_service
       - name: Generate gRPC stubs
-        if: matrix.python-version == '3.9'
+        if: matrix.python-version == env.oldest-python-version
         run: |
           find tests/utilities/stubs/ -name \*_pb2.py\* -o -name \*_pb2_grpc.py\* -delete
           poetry run python scripts/generate_grpc_stubs.py
       - name: Check for out-of-date gRPC stubs
-        if: matrix.python-version == '3.9'
+        if: matrix.python-version == env.oldest-python-version
         run:  git diff --exit-code
       - name: Revert gRPC stubs
-        if: matrix.python-version == '3.9'
+        if: matrix.python-version == env.oldest-python-version
         run: |
           git clean -dfx tests/utilities/stubs/
           git restore tests/utilities/stubs/
