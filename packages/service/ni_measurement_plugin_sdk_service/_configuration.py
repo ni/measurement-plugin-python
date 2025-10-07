@@ -22,11 +22,15 @@ _PREFIX = "MEASUREMENT_PLUGIN"
 _T = TypeVar("_T")
 
 if TYPE_CHECKING:
+
     def _config(
         option: str,
         default: _T | Undefined = undefined,
         cast: Callable[[str], _T] | Undefined = undefined,
-    ) -> _T: ...
+    ) -> _T:
+        """Get configuration value from environment or config file."""
+        ...
+
 else:
     _config = AutoConfig(str(get_dotenv_search_path()))
 
