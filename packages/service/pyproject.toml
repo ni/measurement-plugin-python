@@ -99,8 +99,9 @@ numpy = [
   { version = ">=2.1", python = "^3.13"},
 ]
 bandit = { version = ">=1.7", extras = ["toml"] }
-# Install traceloggingdynamic on Linux for type checking.
+# Install traceloggingdynamic on Linux and MacOS for type checking.
 traceloggingdynamic = { version = ">=1.0", platform = "linux" }
+traceloggingdynamic = { version = ">=1.0", platform = "darwin" }
 
 [tool.poetry.group.docs]
 optional = true
