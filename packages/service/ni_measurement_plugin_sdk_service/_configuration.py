@@ -27,6 +27,7 @@ if TYPE_CHECKING:
         default: _T | Undefined = undefined,
         cast: Callable[[str], _T] | Undefined = undefined,
     ) -> _T: ...
+
 else:
     _config = AutoConfig(str(get_dotenv_search_path()))
 
