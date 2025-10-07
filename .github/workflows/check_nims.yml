@@ -7,7 +7,11 @@ on:
 jobs:
   check_nims:
     name: Check NIMS
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
+        python-version: [3.9, 3.13]
+    runs-on: ${{ matrix.os }}
     defaults:
       run:
         # Set the working-directory for all steps in this job.
@@ -20,23 +24,17 @@ jobs:
       - name: Set up Python
         uses: ni/python-actions/setup-python@9768589f3e50672173dad75a6fc181e4a85d33fa # v0.7.0
         id: setup-python
+        with:
+          python-version: ${{ matrix.python-version }}
       - name: Set up Poetry
         uses: ni/python-actions/setup-poetry@9768589f3e50672173dad75a6fc181e4a85d33fa # v0.7.0
-      # ni-measurement-plugin-sdk-service, all extras, docs
       - name: Analyze generator
         uses: ni/python-actions/analyze-project@9768589f3e50672173dad75a6fc181e4a85d33fa # v0.7.0
         with:
           project-directory: packages/service
-          install-args: --all-extras --with docs
+          install-args: --all-extras
       - name: Bandit security checks (ni-measurement-plugin-sdk-service)
         run:  poetry run bandit -c pyproject.toml -r ni_measurement_plugin_sdk_service
-      - name: Build docs and check for errors/warnings
-        run: |
-          rm -rf docs
-          mkdir -p docs   
-          poetry run sphinx-build _docs_source docs -b html -W
-      - name: Revert docs
-        run:  rm -rf docs
       - name: Generate gRPC stubs
         run: |
           find tests/utilities/stubs/ -name \*_pb2.py\* -o -name \*_pb2_grpc.py\* -delete

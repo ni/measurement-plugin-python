@@ -12,6 +12,10 @@ jobs:
   check_nims:
     name: Check NIMS
     uses: ./.github/workflows/check_nims.yml
+  check_nims_docs:
+    name: Check NIMS docs
+    uses: ./.github/workflows/check_nims_docs.yml
+    needs: [check_nims]
   check_nimg:
     name: Check NIMG
     uses: ./.github/workflows/check_nimg.yml
