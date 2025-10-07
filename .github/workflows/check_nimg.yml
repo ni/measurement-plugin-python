@@ -34,12 +34,15 @@ jobs:
       - name: Bandit security checks (ni-measurement-plugin-sdk-generator, example_renders)
         run:  poetry run bandit -c pyproject.toml -r ni_measurement_plugin_sdk_generator tests/test_assets/example_renders
       - name: Generate gRPC stubs
+        if: matrix.python-version == '3.9'
         run: |
           find tests/utilities/measurements/non_streaming_data_measurement/_stubs -name \*_pb2.py\* -o -name \*_pb2_grpc.py\* -delete
           poetry run python scripts/generate_grpc_stubs.py
       - name: Check for out-of-date gRPC stubs
+        if: matrix.python-version == '3.9'
         run:  git diff --exit-code
       - name: Revert gRPC stubs
+        if: matrix.python-version == '3.9'
         run: |
           git clean -dfx tests/utilities/measurements/non_streaming_data_measurement/_stubs
           git restore tests/utilities/measurements/non_streaming_data_measurement/_stubs

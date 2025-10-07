@@ -2867,7 +2867,7 @@ description = "Generates Event Tracing for Windows events using TraceLogging"
 optional = false
 python-versions = ">=3.6"
 groups = ["main", "dev"]
-markers = "sys_platform == \"win32\" or sys_platform == \"linux\""
+markers = "sys_platform == \"win32\" or sys_platform == \"linux\" or sys_platform == \"darwin\""
 files = [
     {file = "traceloggingdynamic-1.0.1-py3-none-any.whl", hash = "sha256:0e19da491a8960725b3622366487ae35f49d8f595bb2e4e5ce1795eb5928db7c"},
     {file = "traceloggingdynamic-1.0.1.tar.gz", hash = "sha256:d9dd4b291dd04c15e34181eed06f73fdf4ffa7b1f895b78217163def48ab1a52"},
@@ -3053,4 +3053,4 @@ niswitch = ["niswitch"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.9"
-content-hash = "156f20176ad6808243ffd36d0b50c485e232998df51335016558a79048ff18f2"
+content-hash = "4d18f4c7e37b52674e9a64c0c35afc0025f998fe0fa733d3e912f2b514a58c19"
