@@ -30,8 +30,6 @@ if TYPE_CHECKING:
 
 else:
     _config = AutoConfig(str(get_dotenv_search_path()))
-    # Tell type checker this is the real signature
-    _config = __config_stub
 
 
 # ----------------------------------------------------------------------
