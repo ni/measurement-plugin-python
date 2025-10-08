@@ -49,7 +49,7 @@ jobs:
   build_package:
     name: Build ${{ matrix.package }}
     runs-on: ubuntu-latest
-    needs: [check_nimg, check_nims]
+    needs: [check_nimg, check_nims, check_nims_docs]
     strategy:
       matrix:
         package: [generator, sdk, service]
