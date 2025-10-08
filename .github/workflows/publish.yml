@@ -43,6 +43,9 @@ jobs:
   check_nims:
     name: Check service
     uses: ./.github/workflows/check_nims.yml
+  check_nims_docs:
+    name: Check NIMS docs
+    uses: ./.github/workflows/check_nims_docs.yml
   build_package:
     name: Build ${{ matrix.package }}
     runs-on: ubuntu-latest
