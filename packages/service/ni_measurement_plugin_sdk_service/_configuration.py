@@ -34,22 +34,6 @@ if TYPE_CHECKING:
 else:
     _config = AutoConfig(str(get_dotenv_search_path()))
 
-__all__ = [
-    "_PREFIX",
-    "_config",
-    "MIDriverOptions",
-    "NISwitchOptions",
-    "NIDCPOWER_OPTIONS",
-    "NIDIGITAL_OPTIONS",
-    "NIDMM_OPTIONS",
-    "NIFGEN_OPTIONS",
-    "NISCOPE_OPTIONS",
-    "NISWITCH_OPTIONS",
-    "NISWITCH_MULTIPLEXER_OPTIONS",
-    "USE_GRPC_DEVICE_SERVER",
-    "GRPC_DEVICE_SERVER_ADDRESS",
-]
-
 
 # ----------------------------------------------------------------------
 # NI Modular Instrument Driver Options
