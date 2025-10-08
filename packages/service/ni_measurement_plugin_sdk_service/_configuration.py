@@ -27,9 +27,7 @@ if TYPE_CHECKING:
         option: str,
         default: _T | Undefined = undefined,
         cast: Callable[[str], _T] | Undefined = undefined,
-    ) -> _T:
-        """Get configuration value from environment or config file."""
-        ...
+    ) -> _T: ...
 
 else:
     _config = AutoConfig(str(get_dotenv_search_path()))
