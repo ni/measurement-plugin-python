@@ -18,6 +18,12 @@ jobs:
   check_nimg:
     name: Check NIMG
     uses: ./.github/workflows/check_nimg.yml
+  checks_succeeded:
+    name: Checks succeeded
+    needs: [check_nims, check_nims_docs, check_nimg]
+    runs-on: ubuntu-latest
+    steps:
+      - run: exit 0
   check_examples:
     name: Check examples
     uses: ./.github/workflows/check_examples.yml
