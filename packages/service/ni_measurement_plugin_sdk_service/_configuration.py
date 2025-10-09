@@ -18,17 +18,19 @@ if TYPE_CHECKING:
 
 _PREFIX = "MEASUREMENT_PLUGIN"
 
-_config = AutoConfig(str(get_dotenv_search_path()))
+# Work around decouple's lack of type hints.
+_T = TypeVar("_T")
 
 if TYPE_CHECKING:
-    # Work around decouple's lack of type hints.
-    _T = TypeVar("_T")
 
     def _config(
         option: str,
         default: _T | Undefined = undefined,
         cast: Callable[[str], _T] | Undefined = undefined,
     ) -> _T: ...
+
+else:
+    _config = AutoConfig(str(get_dotenv_search_path()))
 
 
 # ----------------------------------------------------------------------

@@ -34,7 +34,6 @@ grpcio = "^1.49.1"
 protobuf = ">=4.21"
 pywin32 = { version = ">=303", platform = "win32" }
 deprecation = ">=2.1"
-traceloggingdynamic = { version = ">=1.0", platform = "win32" }
 python-decouple = ">=3.8"
 nidaqmx = { version = ">=0.8.0", extras = ["grpc"], optional = true }
 nidcpower = { version = ">=1.4.4", extras = ["grpc"], optional = true }
@@ -99,8 +98,6 @@ numpy = [
   { version = ">=2.1", python = "^3.13"},
 ]
 bandit = { version = ">=1.7", extras = ["toml"] }
-# Install traceloggingdynamic on Linux for type checking.
-traceloggingdynamic = { version = ">=1.0", platform = "linux" }
 
 [tool.poetry.group.docs]
 optional = true
