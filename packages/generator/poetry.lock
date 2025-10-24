@@ -100,28 +100,11 @@ files = [
 
 [[package]]
 name = "click"
-version = "8.1.8"
-description = "Composable command line interface toolkit"
-optional = false
-python-versions = ">=3.7"
-groups = ["main", "dev"]
-markers = "python_version == \"3.9\""
-files = [
-    {file = "click-8.1.8-py3-none-any.whl", hash = "sha256:63c132bbbed01578a06712a2d1f497bb62d9c1c0d329b7903a866228027263b2"},
-    {file = "click-8.1.8.tar.gz", hash = "sha256:ed53c9d8990d83c2a27deae68e4ee337473f6330c040a31d4225c9574d16096a"},
-]
-
-[package.dependencies]
-colorama = {version = "*", markers = "platform_system == \"Windows\""}
-
-[[package]]
-name = "click"
 version = "8.2.1"
 description = "Composable command line interface toolkit"
 optional = false
 python-versions = ">=3.10"
 groups = ["main", "dev"]
-markers = "python_version >= \"3.10\""
 files = [
     {file = "click-8.2.1-py3-none-any.whl", hash = "sha256:61a3265b914e850b85317d0b3109c7f8cd35a670f963866005d6ef1d5175a12b"},
     {file = "click-8.2.1.tar.gz", hash = "sha256:27c491cc05d968d271d5a1db13e3b5a184636d9d930f148c50b038f0d0646202"},
@@ -318,7 +301,7 @@ description = "Backport of PEP 654 (exception groups)"
 optional = false
 python-versions = ">=3.7"
 groups = ["dev"]
-markers = "python_version < \"3.11\""
+markers = "python_version == \"3.10\""
 files = [
     {file = "exceptiongroup-1.3.0-py3-none-any.whl", hash = "sha256:4d111e6e0c13d0644cad6ddaa7ed0261a0b36971f6d23e7ec9b4b9097da78a10"},
     {file = "exceptiongroup-1.3.0.tar.gz", hash = "sha256:b241f5885f560bc56a59ee63ca4c6a8bfa46ae4ad651af316d4e81817bb9fd88"},
@@ -1093,10 +1076,10 @@ protobuf = ">=4.21"
 
 [[package]]
 name = "ni-measurement-plugin-sdk-service"
-version = "3.0.0-dev0"
+version = "3.1.0.dev0"
 description = "Measurement Plug-In Support for Python"
 optional = false
-python-versions = "^3.9"
+python-versions = "^3.10"
 groups = ["main", "dev"]
 files = []
 develop = true
@@ -1104,6 +1087,8 @@ develop = true
 [package.dependencies]
 deprecation = ">=2.1"
 grpcio = "^1.49.1"
+ni-grpc-extensions = "^1.0.0"
+ni-measurementlink-discovery-v1-client = "^1.0.0"
 ni-measurementlink-measurement-v1-proto = "^1.0.0"
 ni-measurementlink-measurement-v2-proto = "^1.0.0"
 ni-measurementlink-pinmap-v1-client = "^1.0.0"
@@ -1112,7 +1097,6 @@ ni-protobuf-types = "^1.0.0"
 protobuf = ">=4.21"
 python-decouple = ">=3.8"
 pywin32 = {version = ">=303", markers = "sys_platform == \"win32\""}
-traceloggingdynamic = {version = ">=1.0", markers = "sys_platform == \"win32\""}
 
 [package.extras]
 drivers = ["nidaqmx[grpc] (>=0.8.0)", "nidcpower[grpc] (>=1.4.4)", "nidigital[grpc] (>=1.4.4)", "nidmm[grpc] (>=1.4.4)", "nifgen[grpc] (>=1.4.4)", "niscope[grpc] (>=1.4.4)", "niswitch[grpc] (>=1.4.4)"]
@@ -2044,7 +2028,7 @@ files = [
     {file = "tomli-2.2.1-py3-none-any.whl", hash = "sha256:cb55c73c5f4408779d0cf3eef9f762b9c9f147a77de7b258bef0a5628adc85cc"},
     {file = "tomli-2.2.1.tar.gz", hash = "sha256:cd45e1dc79c835ce60f7404ec8119f2eb06d38b1deba146f07ced3bbc44505ff"},
 ]
-markers = {main = "python_version < \"3.11\"", dev = "python_full_version <= \"3.11.0a6\""}
+markers = {main = "python_version == \"3.10\"", dev = "python_full_version <= \"3.11.0a6\""}
 
 [[package]]
 name = "tox"
@@ -2143,5 +2127,5 @@ test = ["covdefaults (>=2.3)", "coverage (>=7.2.7)", "coverage-enable-subprocess
 
 [metadata]
 lock-version = "2.1"
-python-versions = "^3.9"
-content-hash = "8cf77f5202ec95b0aeb4aa9b00ac410453bf97b3da15f2f88024601e2969b6a6"
+python-versions = "^3.10"
+content-hash = "efc80fb27607720d37864f6a4ae9f3ad53c901c09761766f9f032c995f8c2289"
