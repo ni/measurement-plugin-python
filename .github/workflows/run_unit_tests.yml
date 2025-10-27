@@ -12,7 +12,7 @@ jobs:
       matrix:
         os: [windows-latest, ubuntu-latest]
         # grpcio does not have binary wheels for pypy or free-threading, as of version 1.75.1.
-        python-version: [3.9, '3.10', 3.11, 3.12, 3.13, 3.14]
+        python-version: ['3.10', 3.11, 3.12, 3.13, 3.14]
       # Fail-fast skews the pass/fail ratio and seems to make pytest produce
       # incomplete JUnit XML results.
       fail-fast: false

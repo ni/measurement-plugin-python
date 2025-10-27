@@ -8,11 +8,11 @@ jobs:
   check_nimg:
     name: Check NIMG
     env:
-      oldest-python-version: '3.9'
+      oldest-python-version: '3.10'
     strategy:
       matrix:
         os: [windows-latest, ubuntu-latest, macos-latest]
-        python-version: [3.9, 3.14]
+        python-version: [3.10, 3.14]
     runs-on: ${{ matrix.os }}
     defaults:
       run:
