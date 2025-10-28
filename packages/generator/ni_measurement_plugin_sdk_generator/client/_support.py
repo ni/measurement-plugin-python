@@ -137,6 +137,11 @@ def get_configuration_and_output_metadata_by_index(
             annotations_dict["ni/enum.values"] = _validate_and_transform_enum_annotations(
                 configuration.annotations["ni/enum.values"]
             )
+
+        # In Python 3.13 and earlier, the ConfigurationParameter message sorted the annotation
+        # keys, but in Python 3.14, it started preserving order. Sort to keep tests passing.
+        annotations_dict = dict(sorted(annotations_dict.items()))
+
         configuration_parameter_list.append(
             ParameterMetadata.initialize(
                 display_name=configuration.name,
@@ -171,6 +176,11 @@ def get_configuration_and_output_metadata_by_index(
             annotations_dict["ni/enum.values"] = _validate_and_transform_enum_annotations(
                 output.annotations["ni/enum.values"]
             )
+
+        # In Python 3.13 and earlier, the ConfigurationParameter message sorted the annotation
+        # keys, but in Python 3.14, it started preserving order. Sort to keep tests passing.
+        annotations_dict = dict(sorted(annotations_dict.items()))
+
         output_parameter_list.append(
             ParameterMetadata.initialize(
                 display_name=output.name,
