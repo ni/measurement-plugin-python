@@ -3393,7 +3393,7 @@
 																				<value>2</value>
 																			</InterpreterSessionScope>
 																			<PythonVersion classname='Str'>
-																				<value>3.9</value>
+																				<value>3.10</value>
 																			</PythonVersion>
 																			<PythonVirtualEnvironmentPath classname='Str'>
 																				<value>.venv</value>
@@ -3842,7 +3842,7 @@
 																				<value>2</value>
 																			</InterpreterSessionScope>
 																			<PythonVersion classname='Str'>
-																				<value>3.9</value>
+																				<value>3.10</value>
 																			</PythonVersion>
 																			<PythonVirtualEnvironmentPath classname='Str'>
 																				<value>.venv</value>

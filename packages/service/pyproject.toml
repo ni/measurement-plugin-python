@@ -26,7 +26,7 @@ classifiers = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "^3.10"
 # This package includes gRPC stubs that were generated with the version of grpcio-tools specified
 # below. Please keep the minimum grpcio version in sync with the grpcio-tools version. Otherwise,
 # the generated gRPC stubs may not work with the minimum grpcio version.
@@ -75,7 +75,7 @@ ni-python-styleguide = ">=0.4.1"
 # When you update the grpcio-tools version, you should update the minimum grpcio version
 # and regenerate gRPC stubs.
 grpcio-tools = [
-  { version = "1.49.1", python = ">=3.9,<3.12" },
+  { version = "1.49.1", python = ">=3.10,<3.12" },
   { version = "1.59.0", python = ">=3.12,<3.13" },
   { version = "1.67.0", python = ">=3.13,<3.14" },
   { version = "1.75.1", python = "^3.14" },
@@ -94,7 +94,7 @@ types-psutil = ">=6.0"
 # NumPy dropped support for Python 3.8 before adding support for Python 3.12, so
 # we need to include multiple NumPy versions in poetry.lock.
 numpy = [
-  { version = ">=1.22", python = ">=3.9,<3.12"},
+  { version = ">=1.22", python = ">=3.10,<3.12"},
   { version = ">=1.26", python = ">=3.12,<3.13"},
   { version = ">=2.1", python = "^3.13"},
 ]
@@ -106,7 +106,7 @@ optional = true
 [tool.poetry.group.docs.dependencies]
 # The latest Sphinx requires a recent Python version.
 Sphinx = [
-  { version = "<8.0", python = ">=3.9,<3.11" },
+  { version = "<8.0", python = ">=3.10,<3.11" },
   { version = ">=8.2", python = ">=3.11,<3.13" },
 ]
 sphinx-rtd-theme = ">=1.0.0"
