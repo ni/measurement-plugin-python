@@ -38,7 +38,8 @@ pytest = ">=7.2.0"
 pytest-cov = ">=3.0.0"
 ni-python-styleguide = ">=0.4.1"
 mypy = ">=1.0"
-mypy-protobuf = ">=3.4"
+# mypy-protobuf 3.6 is the last version that supports protobuf v4.
+mypy-protobuf = ">=3.4,<3.7"
 types-protobuf = ">=4.21"
 types-grpcio = ">=1.0"
 # During development, use file paths to reference the latest source for packages

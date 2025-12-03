@@ -1283,14 +1283,14 @@ files = [
 
 [[package]]
 name = "mypy-protobuf"
-version = "3.7.0"
+version = "3.6.0"
 description = "Generate mypy stub files from protobuf specs"
 optional = false
 python-versions = ">=3.8"
 groups = ["dev"]
 files = [
-    {file = "mypy_protobuf-3.7.0-py3-none-any.whl", hash = "sha256:85256e9d4da935722ce8fbaa8d19397e1a2989aa8075c96577987de9fe7cea4d"},
-    {file = "mypy_protobuf-3.7.0.tar.gz", hash = "sha256:912fb281f7c7b3e3a7c9b8695712618a716fddbab70f6ad63eaf68eda80c5efe"},
+    {file = "mypy-protobuf-3.6.0.tar.gz", hash = "sha256:02f242eb3409f66889f2b1a3aa58356ec4d909cdd0f93115622e9e70366eca3c"},
+    {file = "mypy_protobuf-3.6.0-py3-none-any.whl", hash = "sha256:56176e4d569070e7350ea620262478b49b7efceba4103d468448f1d21492fd6c"},
 ]
 
 [package.dependencies]
@@ -2988,4 +2988,4 @@ niswitch = ["niswitch"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.10"
-content-hash = "8f231e5d3badcaee7b05d0655cd68642243323b88d63a486ad3ec6918ddd8f57"
+content-hash = "1c580fbcae87d451dcf28891267fced8767eb860fd726a146cbeed475eba2e46"
