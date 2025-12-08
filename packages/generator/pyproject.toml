@@ -40,7 +40,9 @@ ni-python-styleguide = ">=0.4.1"
 mypy = ">=1.0"
 # mypy-protobuf 3.6 is the last version that supports protobuf v4.
 mypy-protobuf = [
+  # requires protobuf v4 or later
   {version = ">=3.4,<3.7", python = ">=3.10,<3.14"},
+  # requires protobuf v6 or later
   {version = ">=3.4", python = "^3.14"}
 ]
 types-protobuf = ">=4.21"
