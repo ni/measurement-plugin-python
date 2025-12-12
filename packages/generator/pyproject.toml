@@ -39,7 +39,12 @@ pytest-cov = ">=3.0.0"
 ni-python-styleguide = ">=0.4.1"
 mypy = ">=1.0"
 # mypy-protobuf 3.6 is the last version that supports protobuf v4.
-mypy-protobuf = ">=3.4,<3.7"
+mypy-protobuf = [
+  # requires protobuf v4 or later
+  {version = ">=3.4,<3.7", python = ">=3.10,<3.14"},
+  # requires protobuf v6 or later
+  {version = ">=3.4", python = "^3.14"}
+]
 types-protobuf = ">=4.21"
 types-grpcio = ">=1.0"
 # During development, use file paths to reference the latest source for packages
@@ -48,9 +53,12 @@ ni-measurement-plugin-sdk-service = {path = "../../packages/service", develop = 
 bandit = { version = ">=1.7", extras = ["toml"] }
 tox = ">=4.0"
 grpcio-tools = [
+  # requires protobuf v4 or later
   {version = "1.49.1", python = ">=3.10,<3.12"},
   {version = "1.59.0", python = ">=3.12,<3.13"},
+  # requires protobuf v5 or later
   {version = "1.67.0", python = ">=3.13,<3.14"},
+  # requires protobuf v6 or later
   {version = "1.75.1", python = "^3.14"},
 ]
 # NumPy dropped support for Python 3.8 before adding support for Python 3.12, so
