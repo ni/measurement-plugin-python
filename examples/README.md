@@ -1,7 +1,7 @@
 
 ## Example Measurements
 
-These are example measurements for use with InstrumentStudio 2025 Q2 or later.
+These are example measurements for use with InstrumentStudio 2026 Q1 or later.
 
 For best results, use the example measurements corresponding to the version of InstrumentStudio
 that you are using. Newer examples may demonstrate features that are not available in older
@@ -9,6 +9,8 @@ versions of InstrumentStudio.
 
 | InstrumentStudio Version | Release | Download |
 | ------------------------ | -------- | ------- |
+| 2026 Q1                  | [3.1.0](https://github.com/ni/measurement-plugin-python/releases/tag/3.1.0) | [measurement-plugin-python-examples-3.1.0.zip](https://github.com/ni/measurement-plugin-python/releases/download/3.1.0/measurement-plugin-python-examples-3.1.0.zip) |
+| 2025 Q4                  | [3.0.1](https://github.com/ni/measurement-plugin-python/releases/tag/3.0.1) | [measurement-plugin-python-examples-3.0.1.zip](https://github.com/ni/measurement-plugin-python/releases/download/3.0.1/measurement-plugin-python-examples-3.0.1.zip) |
 | 2025 Q3                  | [2.3.1](https://github.com/ni/measurement-plugin-python/releases/tag/2.3.1) | [measurement-plugin-python-examples-2.3.1.zip](https://github.com/ni/measurement-plugin-python/releases/download/2.3.1/measurement-plugin-python-examples-2.3.1.zip) |
 | 2025 Q2                  | [2.3.0](https://github.com/ni/measurement-plugin-python/releases/tag/2.3.0) | [measurement-plugin-python-examples-2.3.0.zip](https://github.com/ni/measurement-plugin-python/releases/download/2.3.0/measurement-plugin-python-examples-2.3.0.zip) |
 | 2025 Q1                  | [2.2.0](https://github.com/ni/measurement-plugin-python/releases/tag/2.2.0) | [measurement-plugin-python-examples-2.2.0.zip](https://github.com/ni/measurement-plugin-python/releases/download/2.2.0/measurement-plugin-python-examples-2.2.0.zip) |
