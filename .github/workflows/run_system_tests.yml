@@ -27,7 +27,7 @@ jobs:
 
       # ni-measurement-plugin-sdk-service  
       - name: Cache virtualenv (ni-measurement-plugin-sdk-service)
-        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        uses: actions/cache@9255dc7a253b0ccc959486e2bca901246202afeb # v5.0.1
         id: cache-nims
         with:
           path: |
@@ -43,7 +43,7 @@ jobs:
 
       # ni-measurement-plugin-sdk-generator
       - name: Cache virtualenv (ni-measurement-plugin-sdk-generator)
-        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        uses: actions/cache@9255dc7a253b0ccc959486e2bca901246202afeb # v5.0.1
         id: cache-nimg
         with:
           path: |
@@ -58,7 +58,7 @@ jobs:
         working-directory: ./packages/generator
 
       - name: Upload test results
-        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         with:
           name: test_results_system_${{ matrix.configuration }}
           path: |
