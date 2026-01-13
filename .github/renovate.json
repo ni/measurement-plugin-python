@@ -12,7 +12,8 @@
             ],
             "extends": [
                 "schedule:monthly"
-            ]
+            ],
+            "minimumReleaseAge": "1 day"
         }
     ]
 }
