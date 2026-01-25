@@ -81,14 +81,14 @@ uvloop = ["uvloop (>=0.15.2)"]
 
 [[package]]
 name = "cachetools"
-version = "6.2.1"
+version = "6.2.4"
 description = "Extensible memoizing collections and decorators"
 optional = false
 python-versions = ">=3.9"
 groups = ["dev"]
 files = [
-    {file = "cachetools-6.2.1-py3-none-any.whl", hash = "sha256:09868944b6dde876dfd44e1d47e18484541eaf12f26f29b7af91b26cc892d701"},
-    {file = "cachetools-6.2.1.tar.gz", hash = "sha256:3f391e4bd8f8bf0931169baf7456cc822705f4e2a31f840d218f445b9a854201"},
+    {file = "cachetools-6.2.4-py3-none-any.whl", hash = "sha256:69a7a52634fed8b8bf6e24a050fb60bff1c9bd8f6d24572b99c32d4e71e62a51"},
+    {file = "cachetools-6.2.4.tar.gz", hash = "sha256:82c5c05585e70b6ba2d3ae09ea60b79548872185d2f24ae1f2709d37299fd607"},
 ]
 
 [[package]]
@@ -320,14 +320,14 @@ test = ["pytest (>=6)"]
 
 [[package]]
 name = "filelock"
-version = "3.20.0"
+version = "3.20.3"
 description = "A platform independent file lock."
 optional = false
 python-versions = ">=3.10"
 groups = ["dev"]
 files = [
-    {file = "filelock-3.20.0-py3-none-any.whl", hash = "sha256:339b4732ffda5cd79b13f4e2711a31b0365ce445d95d243bb996273d072546a2"},
-    {file = "filelock-3.20.0.tar.gz", hash = "sha256:711e943b4ec6be42e1d4e6690b48dc175c822967466bb31c0c293f34334c13f4"},
+    {file = "filelock-3.20.3-py3-none-any.whl", hash = "sha256:4b0dda527ee31078689fc205ec4f1c1bf7d56cf88b6dc9426c4f230e46c2dce1"},
+    {file = "filelock-3.20.3.tar.gz", hash = "sha256:18c57ee915c7ec61cff0ecf7f0f869936c7c30191bb0cf406f1341778d0834e1"},
 ]
 
 [[package]]
@@ -1132,14 +1132,14 @@ types-protobuf = ">=4.24"
 
 [[package]]
 name = "ni-grpc-extensions"
-version = "1.0.0"
+version = "1.1.0"
 description = "gRPC Extensions"
 optional = false
-python-versions = "<4.0,>=3.9"
+python-versions = "<4.0,>=3.10"
 groups = ["main", "dev"]
 files = [
-    {file = "ni_grpc_extensions-1.0.0-py3-none-any.whl", hash = "sha256:6b8181284370a53546ffd371d334f15e293cae5e9ff06fa2e467d1714bf7a03f"},
-    {file = "ni_grpc_extensions-1.0.0.tar.gz", hash = "sha256:6e066246ce9a4b4420f5e503769b23c31a49c430be6ebd72324c5b5a15c34ebb"},
+    {file = "ni_grpc_extensions-1.1.0-py3-none-any.whl", hash = "sha256:db0357acd244854f4acccf202c89fe6462b4283d264ed639f4e248e6cc86bc9b"},
+    {file = "ni_grpc_extensions-1.1.0.tar.gz", hash = "sha256:028ea33e5c5234bc050bf5dc99f5b61611531de8f012293e9d4c6985b7b37afb"},
 ]
 
 [package.dependencies]
@@ -1148,14 +1148,14 @@ traceloggingdynamic = {version = ">=1.0", markers = "sys_platform == \"win32\""}
 
 [[package]]
 name = "ni-grpcdevice-v1-proto"
-version = "1.0.0"
+version = "1.1.0"
 description = "Protobuf generated code for the nidevice_grpc gRPC API"
 optional = false
-python-versions = "<4.0,>=3.9"
+python-versions = "<4.0,>=3.10"
 groups = ["main", "dev"]
 files = [
-    {file = "ni_grpcdevice_v1_proto-1.0.0-py3-none-any.whl", hash = "sha256:36dfe9484cc40e8e1c97fb9720555f06563b0180e4837177d1cbf000c3d8988e"},
-    {file = "ni_grpcdevice_v1_proto-1.0.0.tar.gz", hash = "sha256:62f087f85d390c2932e45ad03d365c750bd55e147b81b66ef853e13ff8538b19"},
+    {file = "ni_grpcdevice_v1_proto-1.1.0-py3-none-any.whl", hash = "sha256:2784c4b3e64a9c1e6b743d26847b7a44bf781ab46a9e19b02b379c1e0bc6dcfb"},
+    {file = "ni_grpcdevice_v1_proto-1.1.0.tar.gz", hash = "sha256:ad14ab44e456a67d50a8fc38329e01dccae1732eab22a529c96eb3d5cb46370c"},
 ]
 
 [package.dependencies]
@@ -1164,7 +1164,7 @@ protobuf = ">=4.21"
 
 [[package]]
 name = "ni-measurement-plugin-sdk-service"
-version = "3.1.0.dev0"
+version = "3.2.0.dev0"
 description = "Measurement Plug-In Support for Python"
 optional = false
 python-versions = "^3.10"
@@ -1202,32 +1202,32 @@ url = "../service"
 
 [[package]]
 name = "ni-measurementlink-discovery-v1-client"
-version = "1.0.0"
+version = "1.1.0"
 description = "gRPC Client for NI Discovery Service"
 optional = false
-python-versions = "<4.0,>=3.9"
+python-versions = "<4.0,>=3.10"
 groups = ["main", "dev"]
 files = [
-    {file = "ni_measurementlink_discovery_v1_client-1.0.0-py3-none-any.whl", hash = "sha256:6a4c45d2517a7c6017a3b7dd817a6d7ebc8ebec318243c4f17778115a1a192a6"},
-    {file = "ni_measurementlink_discovery_v1_client-1.0.0.tar.gz", hash = "sha256:2aa2a0c55f6599ffa3ff05e67e6ff89360f22bf0082e512348a41997ddfde3f8"},
+    {file = "ni_measurementlink_discovery_v1_client-1.1.0-py3-none-any.whl", hash = "sha256:366dcc3b93627ed1ede488955637e0768b29cb7a375e59ac1020f4c53892d00c"},
+    {file = "ni_measurementlink_discovery_v1_client-1.1.0.tar.gz", hash = "sha256:831b6145cf8def0021cb00579b08a2ad1da5a19fdeedea4522a3cb4a30978c48"},
 ]
 
 [package.dependencies]
 grpcio = ">=1.49.0,<2.0"
-ni-grpc-extensions = ">=0.1.0.dev1"
-ni-measurementlink-discovery-v1-proto = ">=0.1.0.dev1"
+ni-grpc-extensions = ">=1.1.0"
+ni-measurementlink-discovery-v1-proto = ">=1.1.0"
 pywin32 = {version = ">=303", markers = "sys_platform == \"win32\""}
 
 [[package]]
 name = "ni-measurementlink-discovery-v1-proto"
-version = "1.0.0"
+version = "1.1.0"
 description = "Protobuf data types for NI discovery gRPC APIs"
 optional = false
-python-versions = "<4.0,>=3.9"
+python-versions = "<4.0,>=3.10"
 groups = ["main", "dev"]
 files = [
-    {file = "ni_measurementlink_discovery_v1_proto-1.0.0-py3-none-any.whl", hash = "sha256:093eb4ffd27338fbea4909aea30afbd3090f482f3a1dcc98e63bbaf1a6b4da8b"},
-    {file = "ni_measurementlink_discovery_v1_proto-1.0.0.tar.gz", hash = "sha256:11353eefdecc49244783d76a332bc855589eb0bb8c882f53c8f9b0a47ca91115"},
+    {file = "ni_measurementlink_discovery_v1_proto-1.1.0-py3-none-any.whl", hash = "sha256:6a3061ca858d3ee887987dc5130074fc439ce6c2b26fe6b3f9401da023461d43"},
+    {file = "ni_measurementlink_discovery_v1_proto-1.1.0.tar.gz", hash = "sha256:f9a9b4572ac5d169fad21ab56e2639abdb77979cf0dc3a88cdb71b2c783d009c"},
 ]
 
 [package.dependencies]
@@ -1235,67 +1235,67 @@ protobuf = ">=4.21"
 
 [[package]]
 name = "ni-measurementlink-measurement-v1-proto"
-version = "1.0.0"
+version = "1.1.1"
 description = "Protobuf data types for NI measurement gRPC APIs"
 optional = false
-python-versions = "<4.0,>=3.9"
+python-versions = "<4.0,>=3.10"
 groups = ["main", "dev"]
 files = [
-    {file = "ni_measurementlink_measurement_v1_proto-1.0.0-py3-none-any.whl", hash = "sha256:d9049cbcb25ea3d99f37925989f33bd887352a3a7d217fe0cb900c069a96180d"},
-    {file = "ni_measurementlink_measurement_v1_proto-1.0.0.tar.gz", hash = "sha256:c896e176cde3038d8d2301977464372589764e70b9de7a2fefa620c0b79ac300"},
+    {file = "ni_measurementlink_measurement_v1_proto-1.1.1-py3-none-any.whl", hash = "sha256:cb0e1e26f8d08829de46f5707061aacbbb6e42248811bac7eababbdd524f0196"},
+    {file = "ni_measurementlink_measurement_v1_proto-1.1.1.tar.gz", hash = "sha256:81b1d321d78b2f15e2cbd41316314f39a9446866928f29a69ed501bd911be6f7"},
 ]
 
 [package.dependencies]
-ni-measurementlink-proto = ">=0.1.0dev0"
+ni-measurementlink-proto = ">=1.1.0"
 protobuf = ">=4.21"
 
 [[package]]
 name = "ni-measurementlink-measurement-v2-proto"
-version = "1.0.0"
+version = "1.1.1"
 description = "Protobuf data types for NI measurement gRPC APIs"
 optional = false
-python-versions = "<4.0,>=3.9"
+python-versions = "<4.0,>=3.10"
 groups = ["main", "dev"]
 files = [
-    {file = "ni_measurementlink_measurement_v2_proto-1.0.0-py3-none-any.whl", hash = "sha256:3c10d8faa7aab46d417bcf040af8742ef2028c0c9974be04058312219a4135bf"},
-    {file = "ni_measurementlink_measurement_v2_proto-1.0.0.tar.gz", hash = "sha256:ff1e4db003466746fc982ff00a442223d1141f9e2888757f124b0609344d3453"},
+    {file = "ni_measurementlink_measurement_v2_proto-1.1.1-py3-none-any.whl", hash = "sha256:2776adb4402f58ad6fc23436349989eb92b74a718dcbb084aab65fcce3b43b51"},
+    {file = "ni_measurementlink_measurement_v2_proto-1.1.1.tar.gz", hash = "sha256:de236b4b02a03730be6d94b362edba01c1b11fb803436bd2a65fdb7bc95bf605"},
 ]
 
 [package.dependencies]
-ni-measurementlink-proto = ">=0.1.0dev0"
+ni-measurementlink-proto = ">=1.0.0"
 protobuf = ">=4.21"
 
 [[package]]
 name = "ni-measurementlink-pinmap-v1-client"
-version = "1.0.0"
+version = "1.1.0"
 description = "gRPC Client for NI Pin Map Service"
 optional = false
-python-versions = "<4.0,>=3.9"
+python-versions = "<4.0,>=3.10"
 groups = ["main", "dev"]
 files = [
-    {file = "ni_measurementlink_pinmap_v1_client-1.0.0-py3-none-any.whl", hash = "sha256:33ac08a927c5f8e8c6a2e045ebbde47ade71bc3c29c27c8ccc43feb69dcc5065"},
-    {file = "ni_measurementlink_pinmap_v1_client-1.0.0.tar.gz", hash = "sha256:ab3f276f00ae23239b436c154372adce72e6b06f1634527412d42732f4af8562"},
+    {file = "ni_measurementlink_pinmap_v1_client-1.1.0-py3-none-any.whl", hash = "sha256:2d758aa15addd78fde63e57a69e4c4cbb25e1689c4ce2e5d7b456c22c1b3607e"},
+    {file = "ni_measurementlink_pinmap_v1_client-1.1.0.tar.gz", hash = "sha256:ae5b406781544071ea46a5afb862daeb29e989ce67beb80972f88fb80135bc4f"},
 ]
 
 [package.dependencies]
 grpcio = ">=1.49.0,<2.0"
-ni-grpc-extensions = ">=0.1.0.dev0"
-ni-measurementlink-discovery-v1-client = ">=0.1.0.dev0"
-ni-measurementlink-measurement-v1-proto = ">=0.1.0.dev0"
-ni-measurementlink-measurement-v2-proto = ">=0.1.0.dev0"
-ni-measurementlink-pinmap-v1-proto = ">=0.1.0.dev0"
-ni-measurementlink-sessionmanagement-v1-client = ">=0.1.0.dev2"
+ni-grpc-extensions = ">=1.1.0"
+ni-measurementlink-discovery-v1-client = ">=1.1.0"
+ni-measurementlink-measurement-v1-proto = ">=1.1.1"
+ni-measurementlink-measurement-v2-proto = ">=1.1.1"
+ni-measurementlink-pinmap-v1-proto = ">=1.1.0"
+ni-measurementlink-sessionmanagement-v1-client = ">=1.1.0"
 
 [[package]]
 name = "ni-measurementlink-pinmap-v1-proto"
-version = "1.0.0"
+version = "1.1.0"
 description = "Protobuf data types for NI pinmap gRPC APIs"
 optional = false
-python-versions = "<4.0,>=3.9"
+python-versions = "<4.0,>=3.10"
 groups = ["main", "dev"]
 files = [
-    {file = "ni_measurementlink_pinmap_v1_proto-1.0.0-py3-none-any.whl", hash = "sha256:0dd3aaa2ab0985a07ac829aeb16cdb07a5568560e58724363e8164b7bc06783c"},
-    {file = "ni_measurementlink_pinmap_v1_proto-1.0.0.tar.gz", hash = "sha256:7feecc9ac4116e15b0ca5927d091618b86d0a30975c6d33c94b4b587b9268cad"},
+    {file = "ni_measurementlink_pinmap_v1_proto-1.1.0-py3-none-any.whl", hash = "sha256:c2334d2ffe4e11f776b0087ad25184b504faa63fa57ec3c7eb87e1a3234dd686"},
+    {file = "ni_measurementlink_pinmap_v1_proto-1.1.0.tar.gz", hash = "sha256:db6cef7969c6423349e6560850983008a269a3de0ca7dd623795d7153ede64c1"},
 ]
 
 [package.dependencies]
@@ -1303,14 +1303,14 @@ protobuf = ">=4.21"
 
 [[package]]
 name = "ni-measurementlink-proto"
-version = "1.0.0"
+version = "1.1.0"
 description = "Protobuf data types for NI gRPC APIs"
 optional = false
-python-versions = "<4.0,>=3.9"
+python-versions = "<4.0,>=3.10"
 groups = ["main", "dev"]
 files = [
-    {file = "ni_measurementlink_proto-1.0.0-py3-none-any.whl", hash = "sha256:afc9c0e86c4d7ee3385f36a78d69a980a05c587092a0087912a4df8c32e73761"},
-    {file = "ni_measurementlink_proto-1.0.0.tar.gz", hash = "sha256:2749ebc02c3063cb7e853097c9c87329ea9a9a61d2d14262caee51c9551a05ac"},
+    {file = "ni_measurementlink_proto-1.1.0-py3-none-any.whl", hash = "sha256:b7fb6c7b6c36a80d0a1e67fd47d2fa6cccfed993dd5047aa720b04f07c5a546e"},
+    {file = "ni_measurementlink_proto-1.1.0.tar.gz", hash = "sha256:4fca44af39715f8501d711944f4d6bae11f1b9ffa059a6995eb69770872c3fa5"},
 ]
 
 [package.dependencies]
@@ -1318,24 +1318,24 @@ protobuf = ">=4.21"
 
 [[package]]
 name = "ni-measurementlink-sessionmanagement-v1-client"
-version = "1.0.0"
+version = "1.1.0"
 description = "Client gRPC APIs for the session management service"
 optional = false
-python-versions = "<4.0,>=3.9"
+python-versions = "<4.0,>=3.10"
 groups = ["main", "dev"]
 files = [
-    {file = "ni_measurementlink_sessionmanagement_v1_client-1.0.0-py3-none-any.whl", hash = "sha256:f3cdb614304fd88221120a25cf0f4905264a4b3860a0b8d773b7827edecf5f90"},
-    {file = "ni_measurementlink_sessionmanagement_v1_client-1.0.0.tar.gz", hash = "sha256:8fac927209f01f76ca1e275cd24b4156de4625c9bd0b1ee845971e054963944f"},
+    {file = "ni_measurementlink_sessionmanagement_v1_client-1.1.0-py3-none-any.whl", hash = "sha256:90ddf2561f82c8b32d9e86908326c8e50c388f6e74c1ea2bac758f4e10553a3f"},
+    {file = "ni_measurementlink_sessionmanagement_v1_client-1.1.0.tar.gz", hash = "sha256:53348004828452fe0de3cae89e0aed4952a120254beb346b8764428373116038"},
 ]
 
 [package.dependencies]
 deprecation = ">=2.1"
-ni-grpc-extensions = ">=0.1.0.dev0"
-ni-grpcdevice-v1-proto = ">=0.1.0.dev0"
-ni-measurementlink-discovery-v1-client = ">=0.1.0.dev0"
-ni-measurementlink-pinmap-v1-proto = ">=0.1.0.dev0"
-ni-measurementlink-proto = ">=0.1.0.dev0"
-ni-measurementlink-sessionmanagement-v1-proto = ">=0.1.0.dev2"
+ni-grpc-extensions = ">=1.1.0"
+ni-grpcdevice-v1-proto = ">=1.1.0"
+ni-measurementlink-discovery-v1-client = ">=1.1.0"
+ni-measurementlink-pinmap-v1-proto = ">=1.1.0"
+ni-measurementlink-proto = ">=1.1.0"
+ni-measurementlink-sessionmanagement-v1-proto = ">=1.1.0"
 protobuf = ">=4.21"
 python-decouple = ">=3.8"
 pywin32 = {version = ">=303", markers = "sys_platform == \"win32\""}
@@ -1353,34 +1353,33 @@ niswitch = ["niswitch[grpc] (>=1.4.4)"]
 
 [[package]]
 name = "ni-measurementlink-sessionmanagement-v1-proto"
-version = "1.0.0"
+version = "1.1.0"
 description = "Protobuf data types for NI session management gRPC APIs"
 optional = false
-python-versions = "<4.0,>=3.9"
+python-versions = "<4.0,>=3.10"
 groups = ["main", "dev"]
 files = [
-    {file = "ni_measurementlink_sessionmanagement_v1_proto-1.0.0-py3-none-any.whl", hash = "sha256:d345f9939d9c324477615ec0603c84286f5cd75f50ec2876287c71bb5e9d4f35"},
-    {file = "ni_measurementlink_sessionmanagement_v1_proto-1.0.0.tar.gz", hash = "sha256:3929e4616298998910846d1ddba2c80a3deaeacb54eae996389ff5b01e4f7d5c"},
+    {file = "ni_measurementlink_sessionmanagement_v1_proto-1.1.0-py3-none-any.whl", hash = "sha256:e88d8beaf141e85f83daba1858a8b372df9d2c2671b3c4b0bb3b50e745e14585"},
+    {file = "ni_measurementlink_sessionmanagement_v1_proto-1.1.0.tar.gz", hash = "sha256:cedc461b7990bc496ac87a932ca32f7b9f6f1c73c8eb5bda71f5e60709ef76e1"},
 ]
 
 [package.dependencies]
-nitypes = ">=0.1.0dev3"
 protobuf = ">=4.21"
 
 [[package]]
 name = "ni-protobuf-types"
-version = "1.0.0"
+version = "1.1.0"
 description = "Protobuf data types for NI gRPC APIs"
 optional = false
-python-versions = "<4.0,>=3.9"
+python-versions = "<4.0,>=3.10"
 groups = ["main", "dev"]
 files = [
-    {file = "ni_protobuf_types-1.0.0-py3-none-any.whl", hash = "sha256:a88d5e517ef825ef70734aab00e6fb44f78ceb7d40b5c1592af450b87e3745ae"},
-    {file = "ni_protobuf_types-1.0.0.tar.gz", hash = "sha256:d2b6dfbd57729e80a7f9fa23a446635eee5ad771dbb70045b88412d163e7d732"},
+    {file = "ni_protobuf_types-1.1.0-py3-none-any.whl", hash = "sha256:0c21c096cf8577483dade081c571305fe8d4cc759ce2c780e7437129a375942c"},
+    {file = "ni_protobuf_types-1.1.0.tar.gz", hash = "sha256:98f0583405e219f6e128133c2f6c033f03cd83ebd3ce8098ad74ab99b8a253c1"},
 ]
 
 [package.dependencies]
-nitypes = ">=0.1.0dev8"
+nitypes = ">=1.1.0dev1"
 protobuf = ">=4.21"
 
 [[package]]
@@ -1416,14 +1415,14 @@ toml = ">=0.10.1"
 
 [[package]]
 name = "nitypes"
-version = "1.0.0"
+version = "1.1.0.dev1"
 description = "Data types for NI Python APIs"
 optional = false
 python-versions = "<4.0,>=3.9"
 groups = ["main", "dev"]
 files = [
-    {file = "nitypes-1.0.0-py3-none-any.whl", hash = "sha256:545dff978040fd92a68876023b8b6ff666c1d861ead1b3e7771108754bd57345"},
-    {file = "nitypes-1.0.0.tar.gz", hash = "sha256:dc5ecb8b5f52570c2311daaa60ce6dca9712d7151236ef1f5314ad6ac02e0bdc"},
+    {file = "nitypes-1.1.0.dev1-py3-none-any.whl", hash = "sha256:d98ad6e3f8b92db76b5c1c584431fa27d3e74cce6e20464e43ee0117b02fe089"},
+    {file = "nitypes-1.1.0.dev1.tar.gz", hash = "sha256:50b23e00cc6960996656c4c9ef0ca71dd267fc5c9ca481077b682c29190aa2d3"},
 ]
 
 [package.dependencies]
@@ -1631,14 +1630,14 @@ flake8 = ">=5.0.0"
 
 [[package]]
 name = "platformdirs"
-version = "4.5.0"
+version = "4.5.1"
 description = "A small Python package for determining appropriate platform-specific dirs, e.g. a `user data dir`."
 optional = false
 python-versions = ">=3.10"
 groups = ["main", "dev"]
 files = [
-    {file = "platformdirs-4.5.0-py3-none-any.whl", hash = "sha256:e578a81bb873cbb89a41fcc904c7ef523cc18284b7e3b3ccf06aca1403b7ebd3"},
-    {file = "platformdirs-4.5.0.tar.gz", hash = "sha256:70ddccdd7c99fc5942e9fc25636a8b34d04c24b335100223152c2803e4063312"},
+    {file = "platformdirs-4.5.1-py3-none-any.whl", hash = "sha256:d03afa3963c806a9bed9d5125c8f4cb2fdaf74a55ab60e5d59b3fde758104d31"},
+    {file = "platformdirs-4.5.1.tar.gz", hash = "sha256:61d5cdcc6065745cdd94f0f878977f8de9437be93de97c1c12f853c9c0cdcbda"},
 ]
 
 [package.extras]
@@ -1814,23 +1813,23 @@ windows-terminal = ["colorama (>=0.4.6)"]
 
 [[package]]
 name = "pyproject-api"
-version = "1.9.1"
+version = "1.10.0"
 description = "API to interact with the python pyproject.toml based projects"
 optional = false
-python-versions = ">=3.9"
+python-versions = ">=3.10"
 groups = ["dev"]
 files = [
-    {file = "pyproject_api-1.9.1-py3-none-any.whl", hash = "sha256:7d6238d92f8962773dd75b5f0c4a6a27cce092a14b623b811dba656f3b628948"},
-    {file = "pyproject_api-1.9.1.tar.gz", hash = "sha256:43c9918f49daab37e302038fc1aed54a8c7a91a9fa935d00b9a485f37e0f5335"},
+    {file = "pyproject_api-1.10.0-py3-none-any.whl", hash = "sha256:8757c41a79c0f4ab71b99abed52b97ecf66bd20b04fa59da43b5840bac105a09"},
+    {file = "pyproject_api-1.10.0.tar.gz", hash = "sha256:40c6f2d82eebdc4afee61c773ed208c04c19db4c4a60d97f8d7be3ebc0bbb330"},
 ]
 
 [package.dependencies]
 packaging = ">=25"
-tomli = {version = ">=2.2.1", markers = "python_version < \"3.11\""}
+tomli = {version = ">=2.3", markers = "python_version < \"3.11\""}
 
 [package.extras]
-docs = ["furo (>=2024.8.6)", "sphinx-autodoc-typehints (>=3.2)"]
-testing = ["covdefaults (>=2.3)", "pytest (>=8.3.5)", "pytest-cov (>=6.1.1)", "pytest-mock (>=3.14)", "setuptools (>=80.3.1)"]
+docs = ["furo (>=2025.9.25)", "sphinx-autodoc-typehints (>=3.5.1)"]
+testing = ["covdefaults (>=2.3)", "pytest (>=8.4.2)", "pytest-cov (>=7)", "pytest-mock (>=3.15.1)", "setuptools (>=80.9)"]
 
 [[package]]
 name = "pytest"
@@ -2131,28 +2130,28 @@ markers = {main = "python_version == \"3.10\"", dev = "python_full_version <= \"
 
 [[package]]
 name = "tox"
-version = "4.32.0"
+version = "4.34.1"
 description = "tox is a generic virtualenv management and test command line tool"
 optional = false
 python-versions = ">=3.10"
 groups = ["dev"]
 files = [
-    {file = "tox-4.32.0-py3-none-any.whl", hash = "sha256:451e81dc02ba8d1ed20efd52ee409641ae4b5d5830e008af10fe8823ef1bd551"},
-    {file = "tox-4.32.0.tar.gz", hash = "sha256:1ad476b5f4d3679455b89a992849ffc3367560bbc7e9495ee8a3963542e7c8ff"},
+    {file = "tox-4.34.1-py3-none-any.whl", hash = "sha256:5610d69708bab578d618959b023f8d7d5d3386ed14a2392aeebf9c583615af60"},
+    {file = "tox-4.34.1.tar.gz", hash = "sha256:ef1e82974c2f5ea02954d590ee0b967fad500c3879b264ea19efb9a554f3cc60"},
 ]
 
 [package.dependencies]
-cachetools = ">=6.2"
+cachetools = ">=6.2.4"
 chardet = ">=5.2"
 colorama = ">=0.4.6"
-filelock = ">=3.20"
+filelock = ">=3.20.2"
 packaging = ">=25"
-platformdirs = ">=4.5"
+platformdirs = ">=4.5.1"
 pluggy = ">=1.6"
-pyproject-api = ">=1.9.1"
+pyproject-api = ">=1.10"
 tomli = {version = ">=2.3", markers = "python_version < \"3.11\""}
 typing-extensions = {version = ">=4.15", markers = "python_version < \"3.11\""}
-virtualenv = ">=20.34"
+virtualenv = ">=20.35.4"
 
 [[package]]
 name = "traceloggingdynamic"
