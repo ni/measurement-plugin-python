@@ -34,6 +34,7 @@ env:
       "sdk": "ni_measurement_plugin_sdk",
       "service": "ni_measurement_plugin_sdk_service"
     }
+  poetry-version: 2.3.2
 
 jobs:
   # Do not call check_examples.yml because the examples may depend on the version we are releasing.
@@ -60,6 +61,8 @@ jobs:
         uses: ni/python-actions/setup-python@aa64e60612cb078b0c2ada666becbd70d4817d55 # v0.7.1
       - name: Set up Poetry
         uses: ni/python-actions/setup-poetry@aa64e60612cb078b0c2ada666becbd70d4817d55 # v0.7.1
+        with:
+          poetry-version: ${{ env.poetry-version }}
       - name: Check project version
         if: github.event_name == 'release'
         uses: ni/python-actions/check-project-version@aa64e60612cb078b0c2ada666becbd70d4817d55 # v0.7.1
@@ -109,6 +112,8 @@ jobs:
         uses: ni/python-actions/setup-python@aa64e60612cb078b0c2ada666becbd70d4817d55 # v0.7.1
       - name: Set up Poetry
         uses: ni/python-actions/setup-poetry@aa64e60612cb078b0c2ada666becbd70d4817d55 # v0.7.1
+        with:
+          poetry-version: ${{ env.poetry-version }}
       - name: Get version
         id: get-version
         run: echo "version=$(poetry version --short)" >> "$GITHUB_OUTPUT"
@@ -147,6 +152,8 @@ jobs:
         uses: ni/python-actions/setup-python@aa64e60612cb078b0c2ada666becbd70d4817d55 # v0.7.1
       - name: Set up Poetry
         uses: ni/python-actions/setup-poetry@aa64e60612cb078b0c2ada666becbd70d4817d55 # v0.7.1
+        with:
+          poetry-version: ${{ env.poetry-version }}
       # Create one pull request that updates all three packages.
       - name: Update generator project version
         uses: ni/python-actions/update-project-version@aa64e60612cb078b0c2ada666becbd70d4817d55 # v0.7.1
