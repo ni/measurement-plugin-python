@@ -21,6 +21,9 @@ types-protobuf = ">=4.21"
 # Uncomment to use prerelease dependencies.
 # ni-measurement-plugin-sdk-service = {path = "../../packages/service", develop = true}
 
+[tool.poetry.build-constraints]
+grpcio-tools = { setuptools = "<82" }
+
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"

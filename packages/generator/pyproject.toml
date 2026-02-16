@@ -74,6 +74,9 @@ ni-measurementlink-proto = { version = "^1.0.0" }
 ni-measurement-plugin-generator = "ni_measurement_plugin_sdk_generator.plugin:create_measurement"
 ni-measurement-plugin-client-generator = "ni_measurement_plugin_sdk_generator.client:create_client"
 
+[tool.poetry.build-constraints]
+grpcio-tools = { setuptools = "<82" }
+
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
