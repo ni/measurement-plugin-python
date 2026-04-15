@@ -27,7 +27,7 @@ jobs:
 
       # ni-measurement-plugin-sdk-service  
       - name: Cache virtualenv (ni-measurement-plugin-sdk-service)
-        uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v5.0.3
+        uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
         id: cache-nims
         with:
           path: |
@@ -43,7 +43,7 @@ jobs:
 
       # ni-measurement-plugin-sdk-generator
       - name: Cache virtualenv (ni-measurement-plugin-sdk-generator)
-        uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v5.0.3
+        uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
         id: cache-nimg
         with:
           path: |
