@@ -29,7 +29,7 @@ jobs:
 
       # ni-measurement-plugin-sdk-service, no extras
       - name: Restore cached virtualenv (ni-measurement-plugin-sdk-service, no extras)
-        uses: actions/cache/restore@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
+        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         id: restore-nims-no-extras
         with:
           path: packages/service/.venv
@@ -38,7 +38,7 @@ jobs:
         run: poetry install -v
         working-directory: ./packages/service
       - name: Save cached virtualenv (ni-measurement-plugin-sdk-service, no extras)
-        uses: actions/cache/save@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
+        uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         if: steps.restore-nims-no-extras.outputs.cache-hit != 'true'
         with:
           path: packages/service/.venv
@@ -49,7 +49,7 @@ jobs:
 
       # ni-measurement-plugin-sdk-service, all extras
       - name: Restore cached virtualenv (ni-measurement-plugin-sdk-service, all extras)
-        uses: actions/cache/restore@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
+        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         id: restore-nims-all-extras
         with:
           path: packages/service/.venv
@@ -58,7 +58,7 @@ jobs:
         run: poetry install -v --all-extras
         working-directory: ./packages/service
       - name: Save cached ni-measurement-plugin-sdk-service virtualenv (all extras)
-        uses: actions/cache/save@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
+        uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         if: steps.restore-nims-all-extras.outputs.cache-hit != 'true'
         with:
           path: packages/service/.venv
@@ -68,7 +68,7 @@ jobs:
         working-directory: ./packages/service
 
       - name: Upload test results
-        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: test_results_unit_${{ matrix.os }}_py${{ matrix.python-version }}
           path: ./packages/service/test_results/*.xml
