@@ -1,2 +1,25 @@
 [virtualenvs]
 in-project = true
+
+[solver]
+# Set min-release-age to 2 weeks, same as in https://github.com/ni/python-renovate-config
+min-release-age = 14
+min-release-age-exclude = [
+    "hightime",
+    "ni-grpc-extensions",
+    "ni-grpcdevice-v1-proto",
+    "ni-measurement-plugin-sdk-generator",
+    "ni-measurement-plugin-sdk-service",
+    "ni-measurementlink-discovery-v1-client",
+    "ni-measurementlink-discovery-v1-proto",
+    "ni-measurementlink-measurement-v1-proto",
+    "ni-measurementlink-measurement-v2-proto",
+    "ni-measurementlink-pinmap-v1-client",
+    "ni-measurementlink-pinmap-v1-proto",
+    "ni-measurementlink-proto",
+    "ni-measurementlink-sessionmanagement-v1-client",
+    "ni-measurementlink-sessionmanagement-v1-proto",
+    "ni-protobuf-types",
+    "ni-python-styleguide",
+    "nitypes",
+]
