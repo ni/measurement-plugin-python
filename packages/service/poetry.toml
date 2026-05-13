@@ -1,6 +1,6 @@
 [virtualenvs]
 in-project = true
 
-[repositories]
-[repositories.test-pypi]
-url = "https://test.pypi.org/legacy/"
+[solver]
+# Set min-release-age to 2 weeks, same as in https://github.com/ni/python-renovate-config
+min-release-age = 14
