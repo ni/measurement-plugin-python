@@ -12,10 +12,10 @@ from os import path
 from pathlib import Path
 from types import TracebackType
 from typing import (
-    TYPE_CHECKING,
     Any,
     Callable,
     Literal,
+    TYPE_CHECKING,
     TypeVar,
     Union,
 )
