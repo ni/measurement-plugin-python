@@ -12,10 +12,10 @@ from os import path
 from pathlib import Path
 from types import TracebackType
 from typing import (
-    TYPE_CHECKING,
     Any,
     Callable,
     Literal,
+    TYPE_CHECKING,
     TypeVar,
     Union,
 )
@@ -34,9 +34,7 @@ from ni.measurementlink.sessionmanagement.v1.client import (
     SessionManagementClient,
     SingleSessionReservation,
 )
-from ni_grpc_extensions.channelpool import (  # re-export
-    GrpcChannelPool as GrpcChannelPool,
-)
+from ni_grpc_extensions.channelpool import GrpcChannelPool  # re-export
 
 from ni_measurement_plugin_sdk_service import _datatypeinfo
 from ni_measurement_plugin_sdk_service._annotations import (
