@@ -35,6 +35,8 @@ env:
       "service": "ni_measurement_plugin_sdk_service"
     }
 
+permissions: {}
+
 jobs:
   # Do not call check_examples.yml because the examples may depend on the version we are releasing.
   check_nimg:
