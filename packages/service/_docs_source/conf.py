@@ -87,6 +87,41 @@ exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
 intersphinx_mapping = {
     "grpc": ("https://grpc.github.io/grpc/python/", None),
+    # Work around https://github.com/ni/ni-apis-python/issues/337 by using latest instead of stable
+    "ni_grpc_extensions": ("https://ni-grpc-extensions.readthedocs.io/en/latest/", None),
+    "ni.measurementlink.discovery.v1.client": (
+        "https://nimeasurementlinkdiscoveryv1client.readthedocs.io/en/latest/",
+        None,
+    ),
+    "ni.measurementlink.discovery.v1.proto": (
+        "https://nimeasurementlinkdiscoveryv1proto.readthedocs.io/en/latest/",
+        None,
+    ),
+    "ni.measurementlink.measurement.v1.proto": (
+        "https://nimeasurementlinkmeasurementv1proto.readthedocs.io/en/latest/",
+        None,
+    ),
+    "ni.measurementlink.measurement.v2.proto": (
+        "https://nimeasurementlinkmeasurementv2proto.readthedocs.io/en/latest/",
+        None,
+    ),
+    "ni.measurementlink.pinmap.v1.client": (
+        "https://nimeasurementlinkpinmapv1client.readthedocs.io/en/latest/",
+        None,
+    ),
+    "ni.measurementlink.pinmap.v1.proto": (
+        "https://nimeasurementlinkpinmapv1proto.readthedocs.io/en/latest/",
+        None,
+    ),
+    "ni.measurementlink.sessionmanagement.v1.client": (
+        "https://nimeasurementlinksessionmanagementclient.readthedocs.io/en/latest/",
+        None,
+    ),
+    "ni.measurementlink.sessionmanagement.v1.proto": (
+        "https://nimeasurementlinksessionmanagementv1proto.readthedocs.io/en/latest/",
+        None,
+    ),
+    "ni.protobuf.types": ("https://niprotobuftypes.readthedocs.io/en/latest/", None),
     "nidaqmx": ("https://nidaqmx-python.readthedocs.io/en/stable/", None),
     "nidcpower": ("https://nidcpower.readthedocs.io/en/stable/", None),
     "nidigital": ("https://nidigital.readthedocs.io/en/stable/", None),
