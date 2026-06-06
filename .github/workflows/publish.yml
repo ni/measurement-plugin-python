@@ -64,6 +64,8 @@ jobs:
         uses: ni/python-actions/setup-python@a2554c7e5680982d3355677b2290e48b60678744 # v0.8.0
       - name: Set up Poetry
         uses: ni/python-actions/setup-poetry@a2554c7e5680982d3355677b2290e48b60678744 # v0.8.0
+        with:
+          use-cache: false
       - name: Check project version
         if: github.event_name == 'release'
         uses: ni/python-actions/check-project-version@a2554c7e5680982d3355677b2290e48b60678744 # v0.8.0
@@ -115,6 +117,8 @@ jobs:
         uses: ni/python-actions/setup-python@a2554c7e5680982d3355677b2290e48b60678744 # v0.8.0
       - name: Set up Poetry
         uses: ni/python-actions/setup-poetry@a2554c7e5680982d3355677b2290e48b60678744 # v0.8.0
+        with:
+          use-cache: false
       - name: Get version
         id: get-version
         run: echo "version=$(poetry version --short)" >> "$GITHUB_OUTPUT"
@@ -155,6 +159,8 @@ jobs:
         uses: ni/python-actions/setup-python@a2554c7e5680982d3355677b2290e48b60678744 # v0.8.0
       - name: Set up Poetry
         uses: ni/python-actions/setup-poetry@a2554c7e5680982d3355677b2290e48b60678744 # v0.8.0
+        with:
+          use-cache: false
       # Create one pull request that updates all three packages.
       - name: Update generator project version
         uses: ni/python-actions/update-project-version@a2554c7e5680982d3355677b2290e48b60678744 # v0.8.0
