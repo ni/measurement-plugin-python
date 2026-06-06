@@ -132,7 +132,7 @@ jobs:
           mkdir -p dist
           git archive -o dist/${EXAMPLE_ARCHIVE}.zip ${GITHUB_REF}:examples/
           git archive -o dist/${EXAMPLE_ARCHIVE}.tar.gz --prefix ${EXAMPLE_ARCHIVE}/ ${GITHUB_REF}:examples/
-      - name: Upload release assets
+      - name: Upload release assets # zizmor: ignore[superfluous-actions]
         if: ${{ startsWith(github.event.release.target_commitish, 'main') || startsWith(github.event.release.target_commitish, 'releases/') }}
         uses: ncipollo/release-action@339a81892b84b4eeb0f6e744e4574d79d0d9b8dd # v1.21.0
         with:
