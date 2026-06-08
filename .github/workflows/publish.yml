@@ -57,12 +57,12 @@ jobs:
       - name: Check out repo
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - name: Set up Python
-        uses: ni/python-actions/setup-python@a2894c635a2cba635a1086c1f89796fec2c52f74 # v0.7.2
+        uses: ni/python-actions/setup-python@a2554c7e5680982d3355677b2290e48b60678744 # v0.8.0
       - name: Set up Poetry
-        uses: ni/python-actions/setup-poetry@a2894c635a2cba635a1086c1f89796fec2c52f74 # v0.7.2
+        uses: ni/python-actions/setup-poetry@a2554c7e5680982d3355677b2290e48b60678744 # v0.8.0
       - name: Check project version
         if: github.event_name == 'release'
-        uses: ni/python-actions/check-project-version@a2894c635a2cba635a1086c1f89796fec2c52f74 # v0.7.2
+        uses: ni/python-actions/check-project-version@a2554c7e5680982d3355677b2290e48b60678744 # v0.8.0
         with:
           project-directory: ./packages/${{ matrix.package }}
       - name: Build distribution packages
@@ -106,9 +106,9 @@ jobs:
       - name: Check out repo
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - name: Set up Python
-        uses: ni/python-actions/setup-python@a2894c635a2cba635a1086c1f89796fec2c52f74 # v0.7.2
+        uses: ni/python-actions/setup-python@a2554c7e5680982d3355677b2290e48b60678744 # v0.8.0
       - name: Set up Poetry
-        uses: ni/python-actions/setup-poetry@a2894c635a2cba635a1086c1f89796fec2c52f74 # v0.7.2
+        uses: ni/python-actions/setup-poetry@a2554c7e5680982d3355677b2290e48b60678744 # v0.8.0
       - name: Get version
         id: get-version
         run: echo "version=$(poetry version --short)" >> "$GITHUB_OUTPUT"
@@ -144,22 +144,22 @@ jobs:
       - name: Check out repo
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - name: Set up Python
-        uses: ni/python-actions/setup-python@a2894c635a2cba635a1086c1f89796fec2c52f74 # v0.7.2
+        uses: ni/python-actions/setup-python@a2554c7e5680982d3355677b2290e48b60678744 # v0.8.0
       - name: Set up Poetry
-        uses: ni/python-actions/setup-poetry@a2894c635a2cba635a1086c1f89796fec2c52f74 # v0.7.2
+        uses: ni/python-actions/setup-poetry@a2554c7e5680982d3355677b2290e48b60678744 # v0.8.0
       # Create one pull request that updates all three packages.
       - name: Update generator project version
-        uses: ni/python-actions/update-project-version@a2894c635a2cba635a1086c1f89796fec2c52f74 # v0.7.2
+        uses: ni/python-actions/update-project-version@a2554c7e5680982d3355677b2290e48b60678744 # v0.8.0
         with:
           project-directory: ./packages/generator
           create-pull-request: false
       - name: Update sdk project version
-        uses: ni/python-actions/update-project-version@a2894c635a2cba635a1086c1f89796fec2c52f74 # v0.7.2
+        uses: ni/python-actions/update-project-version@a2554c7e5680982d3355677b2290e48b60678744 # v0.8.0
         with:
           project-directory: ./packages/sdk
           create-pull-request: false
       - name: Update service project version
-        uses: ni/python-actions/update-project-version@a2894c635a2cba635a1086c1f89796fec2c52f74 # v0.7.2
+        uses: ni/python-actions/update-project-version@a2554c7e5680982d3355677b2290e48b60678744 # v0.8.0
         with:
           project-directory: ./packages/service
           create-pull-request: true
