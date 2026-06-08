@@ -8,6 +8,8 @@ on:
   workflow_call:
   workflow_dispatch:
 
+permissions: {}
+
 jobs:
   check_nims:
     name: Check NIMS
@@ -18,9 +20,14 @@ jobs:
   check_nimg:
     name: Check NIMG
     uses: ./.github/workflows/check_nimg.yml
+  check_workflows:
+    name: Check workflows
+    uses: ./.github/workflows/check_workflows.yml
+    permissions:
+      security-events: write
   checks_succeeded:
     name: Checks succeeded
-    needs: [check_nims, check_nims_docs, check_nimg]
+    needs: [check_nims, check_nims_docs, check_nimg, check_workflows]
     runs-on: ubuntu-latest
     steps:
       - run: exit 0

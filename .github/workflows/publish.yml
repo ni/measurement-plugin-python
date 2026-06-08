@@ -35,6 +35,8 @@ env:
       "service": "ni_measurement_plugin_sdk_service"
     }
 
+permissions: {}
+
 jobs:
   # Do not call check_examples.yml because the examples may depend on the version we are releasing.
   check_nimg:
@@ -56,10 +58,14 @@ jobs:
     steps:
       - name: Check out repo
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
       - name: Set up Python
         uses: ni/python-actions/setup-python@a2554c7e5680982d3355677b2290e48b60678744 # v0.8.0
       - name: Set up Poetry
         uses: ni/python-actions/setup-poetry@a2554c7e5680982d3355677b2290e48b60678744 # v0.8.0
+        with:
+          use-cache: false
       - name: Check project version
         if: github.event_name == 'release'
         uses: ni/python-actions/check-project-version@a2554c7e5680982d3355677b2290e48b60678744 # v0.8.0
@@ -105,10 +111,14 @@ jobs:
     steps:
       - name: Check out repo
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
       - name: Set up Python
         uses: ni/python-actions/setup-python@a2554c7e5680982d3355677b2290e48b60678744 # v0.8.0
       - name: Set up Poetry
         uses: ni/python-actions/setup-poetry@a2554c7e5680982d3355677b2290e48b60678744 # v0.8.0
+        with:
+          use-cache: false
       - name: Get version
         id: get-version
         run: echo "version=$(poetry version --short)" >> "$GITHUB_OUTPUT"
@@ -122,7 +132,7 @@ jobs:
           mkdir -p dist
           git archive -o dist/${EXAMPLE_ARCHIVE}.zip ${GITHUB_REF}:examples/
           git archive -o dist/${EXAMPLE_ARCHIVE}.tar.gz --prefix ${EXAMPLE_ARCHIVE}/ ${GITHUB_REF}:examples/
-      - name: Upload release assets
+      - name: Upload release assets # zizmor: ignore[superfluous-actions]
         if: ${{ startsWith(github.event.release.target_commitish, 'main') || startsWith(github.event.release.target_commitish, 'releases/') }}
         uses: ncipollo/release-action@339a81892b84b4eeb0f6e744e4574d79d0d9b8dd # v1.21.0
         with:
@@ -143,10 +153,14 @@ jobs:
     steps:
       - name: Check out repo
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
       - name: Set up Python
         uses: ni/python-actions/setup-python@a2554c7e5680982d3355677b2290e48b60678744 # v0.8.0
       - name: Set up Poetry
         uses: ni/python-actions/setup-poetry@a2554c7e5680982d3355677b2290e48b60678744 # v0.8.0
+        with:
+          use-cache: false
       # Create one pull request that updates all three packages.
       - name: Update generator project version
         uses: ni/python-actions/update-project-version@a2554c7e5680982d3355677b2290e48b60678744 # v0.8.0
