@@ -30,6 +30,7 @@ commands using NI-VISA.
 - NI-DCPower
 - NI-488.2 and/or NI-Serial
 - NI-VISA
+  - gRPC support requires NI-VISA 2024 Q1 or later and the NI-VISA gRPC Runtime package.
 - Recommended: TestStand 2021 SP1 or later
 - Optional: NI Instrument Simulator software
 
