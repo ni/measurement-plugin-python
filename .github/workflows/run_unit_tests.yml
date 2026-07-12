@@ -33,7 +33,7 @@ jobs:
 
       # ni-measurement-plugin-sdk-service, no extras
       - name: Restore cached virtualenv (ni-measurement-plugin-sdk-service, no extras)
-        uses: actions/cache/restore@2c8a9bd7457de244a408f35966fab2fb45fda9c8 # v6.0.0
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         id: restore-nims-no-extras
         with:
           path: packages/service/.venv
@@ -42,7 +42,7 @@ jobs:
         run: poetry install -v
         working-directory: ./packages/service
       - name: Save cached virtualenv (ni-measurement-plugin-sdk-service, no extras)
-        uses: actions/cache/save@2c8a9bd7457de244a408f35966fab2fb45fda9c8 # v6.0.0
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         if: steps.restore-nims-no-extras.outputs.cache-hit != 'true'
         with:
           path: packages/service/.venv
@@ -53,7 +53,7 @@ jobs:
 
       # ni-measurement-plugin-sdk-service, all extras
       - name: Restore cached virtualenv (ni-measurement-plugin-sdk-service, all extras)
-        uses: actions/cache/restore@2c8a9bd7457de244a408f35966fab2fb45fda9c8 # v6.0.0
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         id: restore-nims-all-extras
         with:
           path: packages/service/.venv
@@ -62,7 +62,7 @@ jobs:
         run: poetry install -v --all-extras
         working-directory: ./packages/service
       - name: Save cached ni-measurement-plugin-sdk-service virtualenv (all extras)
-        uses: actions/cache/save@2c8a9bd7457de244a408f35966fab2fb45fda9c8 # v6.0.0
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         if: steps.restore-nims-all-extras.outputs.cache-hit != 'true'
         with:
           path: packages/service/.venv
