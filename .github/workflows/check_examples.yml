@@ -22,7 +22,7 @@ jobs:
         uses: ni/python-actions/setup-poetry@a2554c7e5680982d3355677b2290e48b60678744 # v0.8.0
       # Updating poetry.lock for all of the examples takes over 6 minutes, so it's worth caching.
       - name: Cache poetry.lock
-        uses: actions/cache@2c8a9bd7457de244a408f35966fab2fb45fda9c8 # v6.0.0
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         id: cache-poetry-lock
         with:
           path: 'examples/**/poetry.lock'
@@ -39,7 +39,7 @@ jobs:
             echo "::endgroup::"
           done
       - name: Cache virtualenvs
-        uses: actions/cache@2c8a9bd7457de244a408f35966fab2fb45fda9c8 # v6.0.0
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         id: cache-venv
         with:
           path: 'examples/**/.venv'
