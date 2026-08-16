@@ -1743,132 +1743,138 @@ grpc = ["grpcio (>=1.49.0,<2.0)", "ni-grpcdevice-v1-proto (>=1.0.0)", "ni-protob
 
 [[package]]
 name = "nidcpower"
-version = "1.5.0"
+version = "1.6.0"
 description = "NI-DCPower Python API"
 optional = true
-python-versions = ">=3.9"
+python-versions = ">=3.10"
 groups = ["main"]
 markers = "extra == \"drivers\" or extra == \"nidcpower\""
 files = [
-    {file = "nidcpower-1.5.0-py3-none-any.whl", hash = "sha256:04e42b5af98dd5df1eccd4859a039cfaa541719b5532d395e922cf60833b8c53"},
-    {file = "nidcpower-1.5.0.tar.gz", hash = "sha256:fd09a3fa118ea44dfc0e6f91995fc0ab0a24d724b5e93ddb93d723a248d62246"},
+    {file = "nidcpower-1.6.0-py3-none-any.whl", hash = "sha256:532d0d461c12776c0880dcdd7a267e6a6e247324707b5bfae5e1e5e0c299084b"},
+    {file = "nidcpower-1.6.0.tar.gz", hash = "sha256:27cdc4bc119fe4395eae2f6a09c61d76596b53594dfafba40ebc2a8ae050a409"},
 ]
 
 [package.dependencies]
 grpcio = {version = ">=1.59.0,<2.0", optional = true, markers = "extra == \"grpc\""}
 hightime = ">=0.2.0"
+"ni.grpcdevice.v1.proto" = {version = ">=1.0.0", optional = true, markers = "extra == \"grpc\""}
 protobuf = {version = ">=4.21.6", optional = true, markers = "extra == \"grpc\""}
 
 [package.extras]
-grpc = ["grpcio (>=1.59.0,<2.0)", "protobuf (>=4.21.6)"]
+grpc = ["grpcio (>=1.59.0,<2.0)", "ni.grpcdevice.v1.proto (>=1.0.0)", "protobuf (>=4.21.6)"]
 
 [[package]]
 name = "nidigital"
-version = "1.4.9"
+version = "1.5.0"
 description = "NI-Digital Pattern Driver Python API"
 optional = true
-python-versions = ">=3.9"
+python-versions = ">=3.10"
 groups = ["main"]
 markers = "extra == \"drivers\" or extra == \"nidigital\""
 files = [
-    {file = "nidigital-1.4.9-py3-none-any.whl", hash = "sha256:589316e3a48672e2fdd7cd3b47b86f879191f7ab5790b9577a688eef7ce6a495"},
-    {file = "nidigital-1.4.9.tar.gz", hash = "sha256:5eac70ecc97c6f15d59097092ff82e79cfe8cfc4f903ae15886dbbaa9d18ffbf"},
+    {file = "nidigital-1.5.0-py3-none-any.whl", hash = "sha256:db215d9c1ebc9a518ffc68cf6e5979cbf433429da24049e13abe6b683beb4161"},
+    {file = "nidigital-1.5.0.tar.gz", hash = "sha256:114deab3a92b19bd5841d633536e5e97973f3dc660311b977f0ef9890db6db70"},
 ]
 
 [package.dependencies]
 grpcio = {version = ">=1.59.0,<2.0", optional = true, markers = "extra == \"grpc\""}
 hightime = ">=0.2.0"
+"ni.grpcdevice.v1.proto" = {version = ">=1.0.0", optional = true, markers = "extra == \"grpc\""}
 nitclk = "*"
 protobuf = {version = ">=4.21.6", optional = true, markers = "extra == \"grpc\""}
 
 [package.extras]
-grpc = ["grpcio (>=1.59.0,<2.0)", "protobuf (>=4.21.6)"]
+grpc = ["grpcio (>=1.59.0,<2.0)", "ni.grpcdevice.v1.proto (>=1.0.0)", "protobuf (>=4.21.6)"]
 
 [[package]]
 name = "nidmm"
-version = "1.4.9"
+version = "1.5.0"
 description = "NI-DMM Python API"
 optional = true
-python-versions = ">=3.9"
+python-versions = ">=3.10"
 groups = ["main"]
 markers = "extra == \"drivers\" or extra == \"nidmm\""
 files = [
-    {file = "nidmm-1.4.9-py3-none-any.whl", hash = "sha256:108180f5a3ca3f2d1c8ac3cda66692a2a58c869dab12456e02ff56042ed79aee"},
-    {file = "nidmm-1.4.9.tar.gz", hash = "sha256:7eaf388e35deb4c5c118e2d8bfd05647e5c93d63fb9d92059806a0ccd3e0780c"},
+    {file = "nidmm-1.5.0-py3-none-any.whl", hash = "sha256:707a77238965cddfb0c2361f75cbb648bbce37a233754aee3dc2f80df729f6c6"},
+    {file = "nidmm-1.5.0.tar.gz", hash = "sha256:0a5780b2ca5de62f814fc049ac446d17e5eee70012a4ea11bbd26ed9f238bfc6"},
 ]
 
 [package.dependencies]
 grpcio = {version = ">=1.59.0,<2.0", optional = true, markers = "extra == \"grpc\""}
 hightime = ">=0.2.0"
+"ni.grpcdevice.v1.proto" = {version = ">=1.0.0", optional = true, markers = "extra == \"grpc\""}
 protobuf = {version = ">=4.21.6", optional = true, markers = "extra == \"grpc\""}
 
 [package.extras]
-grpc = ["grpcio (>=1.59.0,<2.0)", "protobuf (>=4.21.6)"]
+grpc = ["grpcio (>=1.59.0,<2.0)", "ni.grpcdevice.v1.proto (>=1.0.0)", "protobuf (>=4.21.6)"]
 
 [[package]]
 name = "nifgen"
-version = "1.4.9"
+version = "1.5.0"
 description = "NI-FGEN Python API"
 optional = true
-python-versions = ">=3.9"
+python-versions = ">=3.10"
 groups = ["main"]
 markers = "extra == \"drivers\" or extra == \"nifgen\""
 files = [
-    {file = "nifgen-1.4.9-py3-none-any.whl", hash = "sha256:8d3617aae6ba5f0635eed17d14b2615e01166f62271a6a8124441ee500aee33d"},
-    {file = "nifgen-1.4.9.tar.gz", hash = "sha256:900f1ba20d2db643dd7c5ae04bbdff921d84e5fdf9baed0bbe4931e0cce1487d"},
+    {file = "nifgen-1.5.0-py3-none-any.whl", hash = "sha256:ea42b4e1f2842c51f339b6e4dd57118e15d0b3177673b04905e332c321827bd2"},
+    {file = "nifgen-1.5.0.tar.gz", hash = "sha256:a0b7b32088650d773c5736154b6e92732dfc69684c084d0cd18a16fdcb8ec927"},
 ]
 
 [package.dependencies]
 grpcio = {version = ">=1.59.0,<2.0", optional = true, markers = "extra == \"grpc\""}
 hightime = ">=0.2.0"
+"ni.grpcdevice.v1.proto" = {version = ">=1.0.0", optional = true, markers = "extra == \"grpc\""}
 nitclk = "*"
 protobuf = {version = ">=4.21.6", optional = true, markers = "extra == \"grpc\""}
 
 [package.extras]
-grpc = ["grpcio (>=1.59.0,<2.0)", "protobuf (>=4.21.6)"]
+grpc = ["grpcio (>=1.59.0,<2.0)", "ni.grpcdevice.v1.proto (>=1.0.0)", "protobuf (>=4.21.6)"]
 
 [[package]]
 name = "niscope"
-version = "1.4.9"
+version = "1.5.0"
 description = "NI-SCOPE Python API"
 optional = true
-python-versions = ">=3.9"
+python-versions = ">=3.10"
 groups = ["main"]
 markers = "extra == \"drivers\" or extra == \"niscope\""
 files = [
-    {file = "niscope-1.4.9-py3-none-any.whl", hash = "sha256:0b03f1e665ef22ba614defc476149500bc6ddf20e64534476d7496b4f58b30c0"},
-    {file = "niscope-1.4.9.tar.gz", hash = "sha256:e85493c9d3f707fac1b280352ea2c1cacd71fd733d6faf9a22a05853492fe87a"},
+    {file = "niscope-1.5.0-py3-none-any.whl", hash = "sha256:847a29072a17a2d1cba5af9061e81238a1919e852be7c7479b45ef9c5db7806b"},
+    {file = "niscope-1.5.0.tar.gz", hash = "sha256:adb1beb231839f4cd48b68b908a68f7ebfb88310d94fe3539e5cdd7b0216f161"},
 ]
 
 [package.dependencies]
 grpcio = {version = ">=1.59.0,<2.0", optional = true, markers = "extra == \"grpc\""}
 hightime = ">=0.2.0"
+"ni.grpcdevice.v1.proto" = {version = ">=1.0.0", optional = true, markers = "extra == \"grpc\""}
 nitclk = "*"
 protobuf = {version = ">=4.21.6", optional = true, markers = "extra == \"grpc\""}
 
 [package.extras]
-grpc = ["grpcio (>=1.59.0,<2.0)", "protobuf (>=4.21.6)"]
+grpc = ["grpcio (>=1.59.0,<2.0)", "ni.grpcdevice.v1.proto (>=1.0.0)", "protobuf (>=4.21.6)"]
 
 [[package]]
 name = "niswitch"
-version = "1.4.9"
+version = "1.5.0"
 description = "NI-SWITCH Python API"
 optional = true
-python-versions = ">=3.9"
+python-versions = ">=3.10"
 groups = ["main"]
 markers = "extra == \"drivers\" or extra == \"niswitch\""
 files = [
-    {file = "niswitch-1.4.9-py3-none-any.whl", hash = "sha256:416c5ececcaa47cfc68ffbc26ba5eaee5369ac68a06afd28c29fc04a75518edf"},
-    {file = "niswitch-1.4.9.tar.gz", hash = "sha256:0347702d2f4c83a428b149adef3baf782d53a367b1134aacd75424f17cc4742a"},
+    {file = "niswitch-1.5.0-py3-none-any.whl", hash = "sha256:ff5e8989ad3ef8ae97974294c62af9c0e51f96432001887e1018f4c11f277de2"},
+    {file = "niswitch-1.5.0.tar.gz", hash = "sha256:39b003bbb21a0651bc3ee1934fd0b19cb989a657f3f6b4bd515ace41c42c97c5"},
 ]
 
 [package.dependencies]
 grpcio = {version = ">=1.59.0,<2.0", optional = true, markers = "extra == \"grpc\""}
 hightime = ">=0.2.0"
+"ni.grpcdevice.v1.proto" = {version = ">=1.0.0", optional = true, markers = "extra == \"grpc\""}
 protobuf = {version = ">=4.21.6", optional = true, markers = "extra == \"grpc\""}
 
 [package.extras]
-grpc = ["grpcio (>=1.59.0,<2.0)", "protobuf (>=4.21.6)"]
+grpc = ["grpcio (>=1.59.0,<2.0)", "ni.grpcdevice.v1.proto (>=1.0.0)", "protobuf (>=4.21.6)"]
 
 [[package]]
 name = "nitclk"
@@ -3098,14 +3104,14 @@ files = [
 
 [[package]]
 name = "types-grpcio"
-version = "1.82.1.20260724"
+version = "1.83.0.20260730"
 description = "Typing stubs for grpcio"
 optional = false
 python-versions = ">=3.10"
 groups = ["dev"]
 files = [
-    {file = "types_grpcio-1.82.1.20260724-py3-none-any.whl", hash = "sha256:c980135304e8775f9afb92bbb9fa81cbe20bf76431d791657f97f776041943d6"},
-    {file = "types_grpcio-1.82.1.20260724.tar.gz", hash = "sha256:54bd54bf0f393c923c4aa937fa79c5720e00539381b258582d1ca69be444c8ce"},
+    {file = "types_grpcio-1.83.0.20260730-py3-none-any.whl", hash = "sha256:400e0517d088e90ecfe302a96f09728cb9c72508d835fa0793fce552cd4e1477"},
+    {file = "types_grpcio-1.83.0.20260730.tar.gz", hash = "sha256:e2b0532526a563dbb39aa6ee39fe0961488116ac1afec3065607532c93299b64"},
 ]
 
 [[package]]
