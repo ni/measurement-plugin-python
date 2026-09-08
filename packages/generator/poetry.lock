@@ -1447,14 +1447,14 @@ protobuf = ">=4.21"
 
 [[package]]
 name = "ni-python-styleguide"
-version = "0.5.1"
+version = "0.5.2"
 description = "NI's internal and external Python linter rules and plugins"
 optional = false
 python-versions = "<4.0,>=3.9"
 groups = ["dev"]
 files = [
-    {file = "ni_python_styleguide-0.5.1-py3-none-any.whl", hash = "sha256:3127122d3610502cf1407d820b1512d887da52c9c0d17f6ccdb1da3e13a06243"},
-    {file = "ni_python_styleguide-0.5.1.tar.gz", hash = "sha256:9b362135c816ba6e5907e5630bc492102f282c0971b4db371514bc01ee54a2a9"},
+    {file = "ni_python_styleguide-0.5.2-py3-none-any.whl", hash = "sha256:1d657dee729d8fd019b853bcd78478473fbffd20f9c23589146f2f9f148e1a2b"},
+    {file = "ni_python_styleguide-0.5.2.tar.gz", hash = "sha256:d6bc6a190ebff283ef9a184bcef96a6849611d1556890d1423512c8c2d296a52"},
 ]
 
 [package.dependencies]
@@ -2283,14 +2283,14 @@ files = [
 
 [[package]]
 name = "tox"
-version = "4.60.0"
+version = "4.60.1"
 description = "tox is a generic virtualenv management and test command line tool"
 optional = false
 python-versions = ">=3.10"
 groups = ["dev"]
 files = [
-    {file = "tox-4.60.0-py3-none-any.whl", hash = "sha256:175abbc4cdef615d66874c0843be4f44c353c14aab6d89939bb22246f84122bd"},
-    {file = "tox-4.60.0.tar.gz", hash = "sha256:6f93bb580d35e00fc69cfec1116eecbe21155f747753ca5019374f7c69b2eac9"},
+    {file = "tox-4.60.1-py3-none-any.whl", hash = "sha256:6f23a6417ad761b17c047e14b6e278968c09eb9b1fc00025269f82ec8327bc75"},
+    {file = "tox-4.60.1.tar.gz", hash = "sha256:2611b77ebe06fa571ae2f4176eaf644115d08891befb9c7cb705cb038d5ab38e"},
 ]
 
 [package.dependencies]
@@ -2338,14 +2338,14 @@ files = [
 
 [[package]]
 name = "types-protobuf"
-version = "7.34.1.20260816"
+version = "7.35.1.20260825"
 description = "Typing stubs for protobuf"
 optional = false
 python-versions = ">=3.10"
 groups = ["dev"]
 files = [
-    {file = "types_protobuf-7.34.1.20260816-py3-none-any.whl", hash = "sha256:2e3a225b3c21f0022daa34cec155f03858bb9aff9792947b8e71f0e9f1791fdb"},
-    {file = "types_protobuf-7.34.1.20260816.tar.gz", hash = "sha256:6f43846e7a3cc2621abfa79e2bb03461e6769a74cdae7462efaddf84580fd5c1"},
+    {file = "types_protobuf-7.35.1.20260825-py3-none-any.whl", hash = "sha256:5be41ee0ffcd2bf36e8b66cb90e58631f7bcf7cd31083b75de780f1218c96173"},
+    {file = "types_protobuf-7.35.1.20260825.tar.gz", hash = "sha256:37997789e1255571db9991fd80d1663cfb50a974820ff3eaa8e51139a9a6d65e"},
 ]
 
 [[package]]
