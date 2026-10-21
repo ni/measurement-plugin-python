@@ -1271,32 +1271,32 @@ url = "../service"
 
 [[package]]
 name = "ni-measurementlink-discovery-v1-client"
-version = "1.1.0"
+version = "1.2.0"
 description = "gRPC Client for NI Discovery Service"
 optional = false
 python-versions = "<4.0,>=3.10"
 groups = ["main", "dev"]
 files = [
-    {file = "ni_measurementlink_discovery_v1_client-1.1.0-py3-none-any.whl", hash = "sha256:366dcc3b93627ed1ede488955637e0768b29cb7a375e59ac1020f4c53892d00c"},
-    {file = "ni_measurementlink_discovery_v1_client-1.1.0.tar.gz", hash = "sha256:831b6145cf8def0021cb00579b08a2ad1da5a19fdeedea4522a3cb4a30978c48"},
+    {file = "ni_measurementlink_discovery_v1_client-1.2.0-py3-none-any.whl", hash = "sha256:652f5bd55d0fac6f0d9fbb6207cc7ef6505a3b8746e9fe2374b5d733c1690ad4"},
+    {file = "ni_measurementlink_discovery_v1_client-1.2.0.tar.gz", hash = "sha256:4de77ca1bebb19ee4906ab3c102401e63f432d668b32341807d3c05a20855139"},
 ]
 
 [package.dependencies]
 grpcio = ">=1.49.0,<2.0"
 ni-grpc-extensions = ">=1.1.0"
-ni-measurementlink-discovery-v1-proto = ">=1.1.0"
+ni-measurementlink-discovery-v1-proto = ">=1.2.0"
 pywin32 = {version = ">=303", markers = "sys_platform == \"win32\""}
 
 [[package]]
 name = "ni-measurementlink-discovery-v1-proto"
-version = "1.1.0"
+version = "1.2.0"
 description = "Protobuf data types for NI discovery gRPC APIs"
 optional = false
 python-versions = "<4.0,>=3.10"
 groups = ["main", "dev"]
 files = [
-    {file = "ni_measurementlink_discovery_v1_proto-1.1.0-py3-none-any.whl", hash = "sha256:6a3061ca858d3ee887987dc5130074fc439ce6c2b26fe6b3f9401da023461d43"},
-    {file = "ni_measurementlink_discovery_v1_proto-1.1.0.tar.gz", hash = "sha256:f9a9b4572ac5d169fad21ab56e2639abdb77979cf0dc3a88cdb71b2c783d009c"},
+    {file = "ni_measurementlink_discovery_v1_proto-1.2.0-py3-none-any.whl", hash = "sha256:06ceb4c94687b18469780739e0600f46695c73de816fef5fe1b4a3588fbe1e8f"},
+    {file = "ni_measurementlink_discovery_v1_proto-1.2.0.tar.gz", hash = "sha256:5b767048c60d5dea6d66b6c1e8c1bad7b2d7a8207e88d2d81444e96dfbaa8f36"},
 ]
 
 [package.dependencies]
@@ -1437,14 +1437,14 @@ protobuf = ">=4.21"
 
 [[package]]
 name = "ni-protobuf-types"
-version = "1.2.0"
+version = "1.3.0"
 description = "Protobuf data types for NI gRPC APIs"
 optional = false
 python-versions = "<4.0,>=3.10"
 groups = ["main", "dev"]
 files = [
-    {file = "ni_protobuf_types-1.2.0-py3-none-any.whl", hash = "sha256:461c4825571d0054fd5427664403c3d69fcd180c9c00868ac1911693dd9bf901"},
-    {file = "ni_protobuf_types-1.2.0.tar.gz", hash = "sha256:e8226f8ef44b104ffb1b1f6e416511c416be4d91bf5c2633db7ab58294e037bb"},
+    {file = "ni_protobuf_types-1.3.0-py3-none-any.whl", hash = "sha256:f4c8e1e6c2f229d1d6e2dd45a21d40c61fd576e50fc4a0276a391296e1e9f478"},
+    {file = "ni_protobuf_types-1.3.0.tar.gz", hash = "sha256:448c850934f57ee83862cc93fbf33c4b45b9f54d760279874cbfe8879eed412e"},
 ]
 
 [package.dependencies]
@@ -2289,14 +2289,14 @@ files = [
 
 [[package]]
 name = "tox"
-version = "4.64.4"
+version = "4.64.9"
 description = "tox is a generic virtualenv management and test command line tool"
 optional = false
 python-versions = ">=3.10"
 groups = ["dev"]
 files = [
-    {file = "tox-4.64.4-py3-none-any.whl", hash = "sha256:7158441d235d9e1b588f0e9f0547c07a45b3bd2f31530adb14ff5b3c1e84daeb"},
-    {file = "tox-4.64.4.tar.gz", hash = "sha256:99e2a36e75202bd468f68126be25f72b8d8483e4a27b65252d6f019e856e62fd"},
+    {file = "tox-4.64.9-py3-none-any.whl", hash = "sha256:1281e9ada1f39ef248f7962cb20024643d2c406cd5a27aa6ef68877fd48a79b2"},
+    {file = "tox-4.64.9.tar.gz", hash = "sha256:6e85d720e350f1fb598498f3b4e742d0afa0a1e2b2e5e8203452729a3fa1da2c"},
 ]
 
 [package.dependencies]
