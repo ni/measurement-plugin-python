@@ -24,12 +24,12 @@ jobs:
         with:
           persist-credentials: false
       - name: Set up Python
-        uses: ni/python-actions/setup-python@a2554c7e5680982d3355677b2290e48b60678744 # v0.8.0
+        uses: ni/python-actions/setup-python@dee640bba235ae28fdc6b7337c643bd06358ae90 # v0.9.0
         id: setup-python
         with:
           python-version: ${{ matrix.python-version }}
       - name: Set up Poetry
-        uses: ni/python-actions/setup-poetry@a2554c7e5680982d3355677b2290e48b60678744 # v0.8.0
+        uses: ni/python-actions/setup-poetry@dee640bba235ae28fdc6b7337c643bd06358ae90 # v0.9.0
 
       # ni-measurement-plugin-sdk-service, no extras
       - name: Restore cached virtualenv (ni-measurement-plugin-sdk-service, no extras)
@@ -72,7 +72,7 @@ jobs:
         working-directory: ./packages/service
 
       - name: Upload test results
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: test_results_unit_${{ matrix.os }}_py${{ matrix.python-version }}
           path: ./packages/service/test_results/*.xml
