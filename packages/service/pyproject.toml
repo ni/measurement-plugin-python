@@ -86,6 +86,7 @@ grpcio-tools = [
 pytest-cov = ">=3.0.0"
 pytest-mock = ">=3.0"
 tox = ">=4.0"
+setuptools = "<81"
 mypy = ">=1.0"
 # mypy-protobuf 3.6 is the last version that supports protobuf v4.
 mypy-protobuf = [
