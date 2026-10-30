@@ -2289,14 +2289,15 @@ files = [
 
 [[package]]
 name = "tox"
-version = "4.64.9"
+version = "4.65.0"
 description = "tox is a generic virtualenv management and test command line tool"
 optional = false
 python-versions = ">=3.10"
 groups = ["dev"]
+markers = "python_version < \"3.12\""
 files = [
-    {file = "tox-4.64.9-py3-none-any.whl", hash = "sha256:1281e9ada1f39ef248f7962cb20024643d2c406cd5a27aa6ef68877fd48a79b2"},
-    {file = "tox-4.64.9.tar.gz", hash = "sha256:6e85d720e350f1fb598498f3b4e742d0afa0a1e2b2e5e8203452729a3fa1da2c"},
+    {file = "tox-4.65.0-py3-none-any.whl", hash = "sha256:823ea3df020d7ede8f5df6ba4f374585063b39aa86140c098fbb97833543844e"},
+    {file = "tox-4.65.0.tar.gz", hash = "sha256:582c4adba07b8fbeca1454b528a512dfc66c19635154289c7032555dbc72d56c"},
 ]
 
 [package.dependencies]
@@ -2309,6 +2310,36 @@ pluggy = ">=1.6"
 pyproject-api = ">=1.10"
 python-discovery = ">=1.4.4"
 tomli = {version = ">=2.4", markers = "python_version < \"3.11\""}
+tomli-w = ">=1.2"
+typing-extensions = {version = ">=4.15", markers = "python_version < \"3.13\""}
+virtualenv = ">=21.1"
+
+[package.extras]
+completion = ["argcomplete (>=3.6.3)"]
+testing = ["devpi-process (>=1.1.1)", "pytest (>=9.0.2)", "pytest-mock (>=3.15.1)"]
+
+[[package]]
+name = "tox"
+version = "4.66.0"
+description = "tox is a generic virtualenv management and test command line tool"
+optional = false
+python-versions = ">=3.11"
+groups = ["dev"]
+markers = "python_version >= \"3.12\""
+files = [
+    {file = "tox-4.66.0-py3-none-any.whl", hash = "sha256:f12458756246e8be78934f011024dc952c25631008c7a935683fe5843408add4"},
+    {file = "tox-4.66.0.tar.gz", hash = "sha256:f9dc2cec9310a3ab5a560669cf860cf6ffad7d04733a0845c7ad7ac00d6b2808"},
+]
+
+[package.dependencies]
+cachetools = ">=7.0.3"
+colorama = ">=0.4.6"
+filelock = ">=3.25"
+packaging = ">=26"
+platformdirs = ">=4.9.4"
+pluggy = ">=1.6"
+pyproject-api = ">=1.10"
+python-discovery = ">=1.4.4"
 tomli-w = ">=1.2"
 typing-extensions = {version = ">=4.15", markers = "python_version < \"3.13\""}
 virtualenv = ">=21.1"
