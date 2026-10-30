@@ -41,13 +41,13 @@ jobs:
   # Do not call check_examples.yml because the examples may depend on the version we are releasing.
   check_nimg:
     name: Check generator
-    uses: ./.github/workflows/check_nimg.yml
+    uses: $/.github/workflows/check_nimg.yml
   check_nims:
     name: Check service
-    uses: ./.github/workflows/check_nims.yml
+    uses: $/.github/workflows/check_nims.yml
   check_nims_docs:
     name: Check NIMS docs
-    uses: ./.github/workflows/check_nims_docs.yml
+    uses: $/.github/workflows/check_nims_docs.yml
   build_package:
     name: Build ${{ matrix.package }}
     runs-on: ubuntu-latest

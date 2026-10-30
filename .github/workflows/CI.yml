@@ -13,16 +13,16 @@ permissions: {}
 jobs:
   check_nims:
     name: Check NIMS
-    uses: ./.github/workflows/check_nims.yml
+    uses: $/.github/workflows/check_nims.yml
   check_nims_docs:
     name: Check NIMS docs
-    uses: ./.github/workflows/check_nims_docs.yml
+    uses: $/.github/workflows/check_nims_docs.yml
   check_nimg:
     name: Check NIMG
-    uses: ./.github/workflows/check_nimg.yml
+    uses: $/.github/workflows/check_nimg.yml
   check_workflows:
     name: Check workflows
-    uses: ./.github/workflows/check_workflows.yml
+    uses: $/.github/workflows/check_workflows.yml
     permissions:
       security-events: write
   checks_succeeded:
@@ -33,18 +33,18 @@ jobs:
       - run: exit 0
   check_examples:
     name: Check examples
-    uses: ./.github/workflows/check_examples.yml
+    uses: $/.github/workflows/check_examples.yml
   run_unit_tests:
     name: Run unit tests
-    uses: ./.github/workflows/run_unit_tests.yml
+    uses: $/.github/workflows/run_unit_tests.yml
     needs: [check_nims]
   run_system_tests:
     name: Run system tests
-    uses: ./.github/workflows/run_system_tests.yml
+    uses: $/.github/workflows/run_system_tests.yml
     needs: [run_unit_tests]
   report_test_results:
     name: Report test results
-    uses: ./.github/workflows/report_test_results.yml
+    uses: $/.github/workflows/report_test_results.yml
     needs: [run_unit_tests, run_system_tests]
     if: always()
     permissions:
