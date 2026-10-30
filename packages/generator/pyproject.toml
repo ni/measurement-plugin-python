@@ -52,6 +52,7 @@ types-grpcio = ">=1.0"
 ni-measurement-plugin-sdk-service = {path = "../../packages/service", develop = true}
 bandit = { version = ">=1.7", extras = ["toml"] }
 tox = ">=4.0"
+setuptools = "<81"
 grpcio-tools = [
   # requires protobuf v4 or later
   {version = "1.49.1", python = ">=3.11,<3.12"},
