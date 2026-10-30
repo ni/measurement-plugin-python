@@ -10,12 +10,12 @@ jobs:
   check_nimg:
     name: Check NIMG
     env:
-      oldest-python-version: '3.10'
+      oldest-python-version: 3.11
     strategy:
       matrix:
         os: [windows-latest, ubuntu-latest]
         # Pin to 3.14.8 to workaround AB#4147280
-        python-version: ['3.10', '3.14.8']
+        python-version: [3.11, 3.14.8]
     runs-on: ${{ matrix.os }}
     defaults:
       run:
