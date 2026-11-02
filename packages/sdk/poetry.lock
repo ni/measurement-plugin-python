@@ -383,7 +383,7 @@ develop = true
 black = ">=24.8.0"
 click = ">=8.1.3"
 click-option-group = ">=0.5.6"
-grpcio = "^1.49.1"
+grpcio = "^1.67.0"
 Mako = "^1.2.1"
 ni-grpc-extensions = "^1.0.0"
 ni-grpcdevice-v1-proto = "^1.0.0"
@@ -391,7 +391,7 @@ ni-measurement-plugin-sdk-service = ">=2.2.0"
 ni-measurementlink-discovery-v1-client = "^1.0.0"
 ni-measurementlink-pinmap-v1-client = "^1.0.0"
 ni-protobuf-types = "^1.0.0"
-protobuf = ">=4.21"
+protobuf = ">=5.27.2"
 
 [package.source]
 type = "directory"
@@ -409,7 +409,7 @@ develop = true
 
 [package.dependencies]
 deprecation = ">=2.1"
-grpcio = "^1.49.1"
+grpcio = "^1.67.0"
 ni-grpc-extensions = "^1.0.0"
 ni-measurementlink-discovery-v1-client = "^1.0.0"
 ni-measurementlink-measurement-v1-proto = "^1.0.0"
@@ -417,7 +417,7 @@ ni-measurementlink-measurement-v2-proto = "^1.0.0"
 ni-measurementlink-pinmap-v1-client = "^1.0.0"
 ni-measurementlink-sessionmanagement-v1-client = "^1.0.0"
 ni-protobuf-types = "^1.0.0"
-protobuf = ">=4.21"
+protobuf = ">=5.27.2"
 python-decouple = ">=3.8"
 pywin32 = {version = ">=303", markers = "sys_platform == \"win32\""}
 
