@@ -21,16 +21,16 @@ jobs:
           submodules: true
           persist-credentials: false
       - name: Set up Python
-        uses: ni/python-actions/setup-python@dee640bba235ae28fdc6b7337c643bd06358ae90 # v0.9.0
+        uses: ni/python-actions/setup-python@36d77b6a215e106c33e30638943d5bc5233bef2f # v0.10.0
         id: setup-python
       - name: Set up Poetry
-        uses: ni/python-actions/setup-poetry@dee640bba235ae28fdc6b7337c643bd06358ae90 # v0.9.0
+        uses: ni/python-actions/setup-poetry@36d77b6a215e106c33e30638943d5bc5233bef2f # v0.10.0
       - name: Install ni-measurement-plugin-sdk-service (all extras, docs)
         run: poetry install -v --all-extras --with docs
       - name: Build docs and check for errors/warnings
         run: |
           rm -rf docs
-          mkdir -p docs   
+          mkdir -p docs
           poetry run sphinx-build _docs_source docs -b html -W
       - name: Revert docs
         run:  rm -rf docs
