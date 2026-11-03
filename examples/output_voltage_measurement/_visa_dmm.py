@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import pathlib
+import sys
 from enum import Enum
 from types import TracebackType
 from typing import TYPE_CHECKING
@@ -12,7 +13,10 @@ import pyvisa.resources
 import pyvisa.typing
 
 if TYPE_CHECKING:
-    from typing import Self
+    if sys.version_info >= (3, 11):
+        from typing import Self
+    else:
+        from typing_extensions import Self
 
 
 # Pin map instrument type constant for VISA DMM

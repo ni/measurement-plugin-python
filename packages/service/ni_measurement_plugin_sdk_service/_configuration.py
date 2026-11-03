@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import sys
 from typing import TYPE_CHECKING, Any, Callable, NamedTuple, TypeVar
 
 from decouple import AutoConfig, Undefined, undefined
@@ -9,7 +10,10 @@ from decouple import AutoConfig, Undefined, undefined
 from ni_measurement_plugin_sdk_service._dotenvpath import get_dotenv_search_path
 
 if TYPE_CHECKING:
-    from typing import Self
+    if sys.version_info >= (3, 11):
+        from typing import Self
+    else:
+        from typing_extensions import Self
 
 
 _PREFIX = "MEASUREMENT_PLUGIN"

@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from types import TracebackType
-from typing import Self
 
 from ni.measurementlink.discovery.v1.client._support import (
     _get_discovery_service_location,
@@ -11,6 +10,7 @@ from ni.measurementlink.discovery.v1.client._support import (
     _service_already_running,
     _start_service,
 )
+from typing_extensions import Self
 
 
 class DiscoveryServiceProcess:

@@ -53,8 +53,17 @@ def _get_caller_path() -> Path | None:
 
 # Path.exists() throws OSError when the path has invalid file characters.
 # https://github.com/python/cpython/issues/79487
-def _exists(path: Path) -> bool:
-    return path.exists()
+if sys.version_info >= (3, 10):
+
+    def _exists(path: Path) -> bool:
+        return path.exists()
+
+else:
+
+    def _exists(path: Path) -> bool:
+        import os
+
+        return os.path.exists(path)
 
 
 def _get_package_path() -> Path:
