@@ -15,7 +15,7 @@ ni-protobuf-types = { version = ">=0.1.0dev2", allow-prereleases = true }
 ni-python-styleguide = ">=0.4.1"
 mypy = ">=1.0"
 types-grpcio = ">=1.0"
-grpcio-tools = "1.49.1"
+grpcio-tools = ">=1.67.0"
 mypy-protobuf = "^3.6.0"
 types-protobuf = ">=4.21"
 # Uncomment to use prerelease dependencies.
