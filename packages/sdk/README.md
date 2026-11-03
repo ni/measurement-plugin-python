@@ -16,7 +16,7 @@ For installation and usage, see [Measurement Plug-In SDK Service for Python (`ni
 
 ## Dependencies
 
-- [Python >= 3.9](https://www.python.org/downloads/release/python-3913/)
+- [Python >= 3.11](https://www.python.org/downloads/release/python-3110/)
 - [mako >= 1.2.1, < 2.x](https://pypi.org/project/Mako/1.2.1/)
 - [click >= 8.1.3](https://pypi.org/project/click/8.1.3/)
 

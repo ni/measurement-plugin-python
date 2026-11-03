@@ -2,18 +2,14 @@
 
 from __future__ import annotations
 
-import sys
 from enum import Enum, IntEnum
 from types import TracebackType
 from typing import TYPE_CHECKING, Any, ContextManager
 
 if TYPE_CHECKING:
-    import grpc
+    from typing import Self
 
-    if sys.version_info >= (3, 11):
-        from typing import Self
-    else:
-        from typing_extensions import Self
+    import grpc
 
 
 GRPC_SERVICE_INTERFACE_NAME = "nifake_grpc.NiFake"

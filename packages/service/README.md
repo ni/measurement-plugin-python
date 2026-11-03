@@ -1,6 +1,6 @@
 # Measurement Plug-In SDK Service for Python
 
-- [Measurement Plug-In Service for Python](#measurement-plug-in-sdk-service-for-python)
+- [Measurement Plug-In SDK Service for Python](#measurement-plug-in-sdk-service-for-python)
   - [Introduction](#introduction)
   - [Dependencies](#dependencies)
   - [Documentation](#documentation)
@@ -34,7 +34,7 @@ InstrumentStudio and automated testing in TestStand.
 
 ## Dependencies
 
-- [Python >= 3.10](https://www.python.org/downloads/release/python-3100/)
+- [Python >= 3.11](https://www.python.org/downloads/release/python-3110/)
 - [grpcio >= 1.67.0, < 2.x](https://pypi.org/project/grpcio/1.67.0/)
 - [protobuf >= 4.21](https://pypi.org/project/protobuf/4.21.0/)
 - [pywin32 >= 303 (Only for Windows)](https://pypi.org/project/pywin32/303/)

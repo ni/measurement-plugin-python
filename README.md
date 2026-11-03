@@ -38,7 +38,7 @@ InstrumentStudio and automated testing in TestStand.
 
 ## Dependencies
 
-- [Python >= 3.10](https://www.python.org/downloads/release/python-3100/)
+- [Python >= 3.11](https://www.python.org/downloads/release/python-3110/)
 - [grpcio >= 1.67.0, < 2.x](https://pypi.org/project/grpcio/1.67.0/)
 - [protobuf >= 4.21](https://pypi.org/project/protobuf/4.21.0/)
 - [pywin32 >= 303 (Only for Windows)](https://pypi.org/project/pywin32/303/)
@@ -246,7 +246,7 @@ The generated client includes four APIs: `measure`, `stream_measure`, `register_
 
         ``` python
         from sample_measurement_client import SampleMeasurementClient
-        
+
         client = SampleMeasurementClient()
         outputs = client.measure()
         print(outputs)
@@ -256,7 +256,7 @@ The generated client includes four APIs: `measure`, `stream_measure`, `register_
 
         ``` python
         from sample_measurement_client import SampleMeasurementClient
-        
+
         client = SampleMeasurementClient()
         outputs_itr = client.stream_measure()
         for index, outputs in enumerate(outputs_itr):
@@ -267,7 +267,7 @@ The generated client includes four APIs: `measure`, `stream_measure`, `register_
 
         ``` python
         from sample_measurement_client import SampleMeasurementClient
-        
+
         client = SampleMeasurementClient()
         client.register_pin_map(pin_map_path)
         outputs = client.measure()
@@ -277,7 +277,7 @@ The generated client includes four APIs: `measure`, `stream_measure`, `register_
 
         ``` python
         from sample_measurement_client import SampleMeasurementClient
-        
+
         client = SampleMeasurementClient()
         client.pin_map_context = available_pin_map_context
         client.sites = [0, 1]
@@ -290,12 +290,12 @@ The generated client includes four APIs: `measure`, `stream_measure`, `register_
         ``` python
         from concurrent.futures import ThreadPoolExecutor
         from sample_measurement_client import SampleMeasurementClient
-        
+
         client = SampleMeasurementClient()
         with ThreadPoolExecutor() as executor:
             future = executor.submit(client.measure)
             client.cancel()
-            outputs = future.result()  # Raises grpc.RpcException with status code "CANCELLED" 
+            outputs = future.result()  # Raises grpc.RpcException with status code "CANCELLED"
         ```
 
 ---

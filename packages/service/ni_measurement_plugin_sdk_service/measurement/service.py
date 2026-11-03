@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import json
-import sys
 import threading
 import warnings
 from collections.abc import Iterable
@@ -53,17 +52,9 @@ from ni_measurement_plugin_sdk_service.measurement.info import (
 )
 
 if TYPE_CHECKING:
+    from typing import Self, TypeGuard
+
     from google.protobuf.internal.enum_type_wrapper import _EnumTypeWrapper
-
-    if sys.version_info >= (3, 10):
-        from typing import TypeGuard
-    else:
-        from typing_extensions import TypeGuard
-
-    if sys.version_info >= (3, 11):
-        from typing import Self
-    else:
-        from typing_extensions import Self
 
     SupportedEnumType = Union[type[Enum], _EnumTypeWrapper]
 
