@@ -35,7 +35,7 @@ InstrumentStudio and automated testing in TestStand.
 ## Dependencies
 
 - [Python >= 3.10](https://www.python.org/downloads/release/python-3100/)
-- [grpcio >= 1.49.1, < 2.x](https://pypi.org/project/grpcio/1.49.1/)
+- [grpcio >= 1.67.0, < 2.x](https://pypi.org/project/grpcio/1.67.0/)
 - [protobuf >= 4.21](https://pypi.org/project/protobuf/4.21.0/)
 - [pywin32 >= 303 (Only for Windows)](https://pypi.org/project/pywin32/303/)
 
