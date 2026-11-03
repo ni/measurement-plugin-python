@@ -61,7 +61,7 @@ grpcio-tools = [
 # NumPy dropped support for Python 3.8 before adding support for Python 3.12, so
 # we need to include multiple NumPy versions in poetry.lock.
 numpy = [
-  { version = ">=1.22", python = ">=3.11,<3.12"},
+  { version = ">=1.23.2", python = ">=3.11,<3.12"},
   { version = ">=1.26", python = ">=3.12,<3.13"},
   { version = ">=2.1", python = "^3.13"},
 ]
