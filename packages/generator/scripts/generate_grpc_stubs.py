@@ -3,9 +3,9 @@
 
 import pathlib
 from collections.abc import Sequence
+from importlib.resources import files
 
 import grpc_tools.protoc
-import pkg_resources
 
 STUBS_NAMESPACE = "tests.utilities.measurements.non_streaming_data_measurement._stubs"
 PROTO_PARENT_NAMESPACES = ["ni.measurementlink", "nidevice_grpc", "ni.protobuf.types"]
@@ -29,7 +29,7 @@ def generate_python_files(
     arguments = [
         "protoc",
         f"--proto_path={str(proto_path)}",
-        f"--proto_path={pkg_resources.resource_filename('grpc_tools', '_proto')}",
+        f"--proto_path={files('grpc_tools').joinpath('_proto')}",
         f"--python_out={str(stubs_path)}",
         f"--mypy_out={str(stubs_path)}",
         f"--grpc_python_out={str(stubs_path)}",
