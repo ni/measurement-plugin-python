@@ -25,7 +25,7 @@ def test___measurement_utilizing_yield_and_return___call_measurement___receives_
     )
 
     response_iterator = stub_v2.Measure(request)
-    responses = [response for response in response_iterator]
+    responses = [*response_iterator]
 
     for index, response in enumerate(responses):
         output = Outputs()
