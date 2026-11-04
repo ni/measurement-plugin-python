@@ -2,6 +2,7 @@
 ## Example Measurements
 
 These are example measurements for use with InstrumentStudio 2026 Q1 or later.
+The examples require [Python 3.11 or later](https://www.python.org/downloads/release/python-3110/).
 
 For best results, use the example measurements corresponding to the version of InstrumentStudio
 that you are using. Newer examples may demonstrate features that are not available in older
@@ -20,6 +21,9 @@ versions of InstrumentStudio.
 | Older versions | | See [releases](https://github.com/ni/measurement-plugin-python/releases) page |
 
 The TestStand sequence files associated with each example are saved in TestStand 2021 SP1.
+Their Python steps select Python 3.11 and use the example's `.venv` virtual environment.
+To run these steps, use a TestStand version that supports Python 3.11 and run
+`poetry env use 3.11` in the example's directory before `poetry install`.
 
 ### Available Example Measurements
 

@@ -25,7 +25,7 @@ See [GitHub's official documentation](https://help.github.com/articles/using-pul
 
 - (Optional) Install [Visual Studio Code](https://code.visualstudio.com/download).
 - Install Git.
-- Install Python and add it to the `PATH`. For the recommended Python version,
+- Install Python 3.11 or later and add it to the `PATH`. For the recommended Python version,
   see [Dependencies](README.md#dependencies).
 - Install [Poetry](https://python-poetry.org/docs/#installation). Version >= 1.8.2
 
