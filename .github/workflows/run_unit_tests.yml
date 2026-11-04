@@ -14,7 +14,7 @@ jobs:
       matrix:
         os: [windows-latest, ubuntu-latest]
         # grpcio does not have binary wheels for pypy or free-threading, as of version 1.75.1.
-        python-version: [3.11, 3.12, 3.13, 3.14]
+        python-version: [3.11, 3.12, 3.13, 3.14, 3.15]
       # Fail-fast skews the pass/fail ratio and seems to make pytest produce
       # incomplete JUnit XML results.
       fail-fast: false
@@ -71,9 +71,34 @@ jobs:
         run: poetry run pytest ./tests/unit -v --cov=ni_measurement_plugin_sdk_service --junitxml=test_results/nims-${{ matrix.os }}-py${{ matrix.python-version}}-all-extras.xml
         working-directory: ./packages/service
 
+      - name: Cache virtualenv (ni-measurement-plugin-sdk-generator)
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: packages/generator/.venv
+          key: ni-measurement-plugin-sdk-generator-${{ runner.os }}-py${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('packages/generator/poetry.lock') }}
+      - name: Install ni-measurement-plugin-sdk-generator
+        run: poetry install -v
+        working-directory: ./packages/generator
+      - name: Run generator unit and template-rendering tests and code coverage
+        run: poetry run pytest ./tests/unit ./tests/acceptance/test_plugin_generator.py -v --cov=ni_measurement_plugin_sdk_generator --junitxml=test_results/nimg-${{ matrix.os }}-py${{ matrix.python-version }}.xml
+        working-directory: ./packages/generator
+
+      - name: Cache virtualenv (ni-measurement-plugin-sdk)
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: packages/sdk/.venv
+          key: ni-measurement-plugin-sdk-${{ runner.os }}-py${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('packages/sdk/poetry.lock') }}
+      - name: Install and build ni-measurement-plugin-sdk
+        run: |
+          poetry install -v
+          poetry build
+        working-directory: ./packages/sdk
+
       - name: Upload test results
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: test_results_unit_${{ matrix.os }}_py${{ matrix.python-version }}
-          path: ./packages/service/test_results/*.xml
+          path: |
+            ./packages/service/test_results/*.xml
+            ./packages/generator/test_results/*.xml
         if: always()
