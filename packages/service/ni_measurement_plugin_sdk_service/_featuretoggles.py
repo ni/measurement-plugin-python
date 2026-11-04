@@ -3,22 +3,14 @@
 from __future__ import annotations
 
 import functools
-import sys
+from collections.abc import Callable
 from enum import Enum
-from typing import TYPE_CHECKING, Callable, TypeVar
+from typing import TYPE_CHECKING, TypeVar
 
-from ni_measurement_plugin_sdk_service._configuration import _PREFIX, _config
+from ni_measurement_plugin_sdk_service._configuration import _config, _PREFIX
 
 if TYPE_CHECKING:
-    if sys.version_info >= (3, 10):
-        from typing import ParamSpec
-    else:
-        from typing_extensions import ParamSpec
-
-    if sys.version_info >= (3, 11):
-        from typing import Self
-    else:
-        from typing_extensions import Self
+    from typing import ParamSpec, Self
 
     _P = ParamSpec("_P")
     _T = TypeVar("_T")

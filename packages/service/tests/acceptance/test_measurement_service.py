@@ -139,7 +139,7 @@ def test___measurement_service_v2___measure___returns_output(
         )
     )
     response_iterator = stub_v2.Measure(request)
-    responses = [response for response in response_iterator]
+    responses = [*response_iterator]
 
     serialized_parameter = _get_serialized_measurement_signature(
         float_in, double_array_in, bool_in, string_in, enum_in, protobuf_enum_in, string_array_in
@@ -211,7 +211,7 @@ def test___measurement_service_v2___measure_with_large_array___returns_output(
         )
     )
     response_iterator = stub_v2.Measure(request)
-    responses = [response for response in response_iterator]
+    responses = [*response_iterator]
 
     serialized_parameter = _get_serialized_measurement_signature(
         float_in, double_array_in, bool_in, string_in, enum_in, protobuf_enum_in, string_array_in

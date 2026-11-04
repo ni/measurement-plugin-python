@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import pathlib
-import sys
 from enum import Enum
 from types import TracebackType
 from typing import TYPE_CHECKING
@@ -13,10 +12,7 @@ import pyvisa.resources
 import pyvisa.typing
 
 if TYPE_CHECKING:
-    if sys.version_info >= (3, 11):
-        from typing import Self
-    else:
-        from typing_extensions import Self
+    from typing import Self
 
 
 # Pin map instrument type constant for VISA DMM
@@ -108,7 +104,7 @@ class Session:
         function_enum = _FUNCTION_TO_VALUE[function]
         resolution_value = _RESOLUTION_DIGITS_TO_VALUE[str(resolution_digits)]
 
-        self._session.write("CONF:%s %.g,%.g" % (function_enum, range, resolution_value))
+        self._session.write("CONF:{} {:.0g},{:.0g}".format(function_enum, range, resolution_value))
         self._check_error()
 
     def read(self) -> float:
@@ -123,7 +119,7 @@ class Session:
         fields = response.split(",", maxsplit=1)
         assert len(fields) >= 1
         if int(fields[0]) != 0:
-            raise RuntimeError("Instrument returned error %s: %s" % (fields[0], fields[1]))
+            raise RuntimeError("Instrument returned error {}: {}".format(fields[0], fields[1]))
 
     def _validate_id(self) -> None:
         """Check the selected instrument is proper and responding.."""

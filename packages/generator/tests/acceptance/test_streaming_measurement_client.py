@@ -39,12 +39,12 @@ def test___measurement_plugin_client___stream_measure___returns_output(
 
     response_iterator = measurement_plugin_client.stream_measure()
 
-    responses = [response for response in response_iterator]
+    responses = [*response_iterator]
     expected_output = [
         output_type(
             name="<Name>",
             index=index,
-            data=[data for data in range(index + 1)],
+            data=[*range(index + 1)],
         )
         for index in range(10)
     ]

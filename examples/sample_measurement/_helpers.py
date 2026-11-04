@@ -4,7 +4,8 @@ from __future__ import annotations
 
 import logging
 import pathlib
-from typing import Any, Callable, TypeVar
+from collections.abc import Callable
+from typing import Any, TypeVar
 
 import click
 

@@ -140,7 +140,7 @@ def test___measurement_plugin_client___stream_measure___returns_output(
 
     response_iterator = measurement_plugin_client.stream_measure()
 
-    responses = [response for response in response_iterator]
+    responses = [*response_iterator]
     assert len(responses) == 1
     # Enum values are not comparable due to differing imports.
     # So comparing values by converting them to string.
@@ -155,7 +155,7 @@ def test___measurement_plugin_client___stream_measure___converts_output_types(
 
     response_iterator = measurement_plugin_client.stream_measure()
 
-    responses = [response for response in response_iterator]
+    responses = [*response_iterator]
     assert len(responses) == 1
     _verify_output_types(responses[0], measurement_plugin_client_module)
 
