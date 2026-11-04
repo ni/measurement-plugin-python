@@ -71,12 +71,23 @@ jobs:
         run: poetry run pytest ./tests/unit -v --cov=ni_measurement_plugin_sdk_service --junitxml=test_results/nims-${{ matrix.os }}-py${{ matrix.python-version}}-all-extras.xml
         working-directory: ./packages/service
 
+      - name: Cache virtualenv (ni-measurement-plugin-sdk-generator)
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: packages/generator/.venv
+          key: ni-measurement-plugin-sdk-generator-${{ runner.os }}-py${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('packages/generator/poetry.lock') }}
       - name: Install ni-measurement-plugin-sdk-generator
         run: poetry install -v
         working-directory: ./packages/generator
       - name: Run generator unit and template-rendering tests and code coverage
         run: poetry run pytest ./tests/unit ./tests/acceptance/test_plugin_generator.py -v --cov=ni_measurement_plugin_sdk_generator --junitxml=test_results/nimg-${{ matrix.os }}-py${{ matrix.python-version }}.xml
         working-directory: ./packages/generator
+
+      - name: Cache virtualenv (ni-measurement-plugin-sdk)
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: packages/sdk/.venv
+          key: ni-measurement-plugin-sdk-${{ runner.os }}-py${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('packages/sdk/poetry.lock') }}
       - name: Install and build ni-measurement-plugin-sdk
         run: |
           poetry install -v
