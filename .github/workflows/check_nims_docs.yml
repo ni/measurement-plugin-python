@@ -21,10 +21,10 @@ jobs:
           submodules: true
           persist-credentials: false
       - name: Set up Python
-        uses: ni/python-actions/setup-python@36d77b6a215e106c33e30638943d5bc5233bef2f # v0.10.0
+        uses: ni/python-actions/setup-python@edaf1454897cb4cd5f6fc0757cb62dee455e57fd # v0.10.1
         id: setup-python
       - name: Set up Poetry
-        uses: ni/python-actions/setup-poetry@36d77b6a215e106c33e30638943d5bc5233bef2f # v0.10.0
+        uses: ni/python-actions/setup-poetry@edaf1454897cb4cd5f6fc0757cb62dee455e57fd # v0.10.1
       - name: Install ni-measurement-plugin-sdk-service (all extras, docs)
         run: poetry install -v --all-extras --with docs
       - name: Build docs and check for errors/warnings
