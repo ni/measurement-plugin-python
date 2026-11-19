@@ -37,6 +37,7 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.discov
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient, ServiceLocation
 from ni_measurement_plugin_sdk_service.discovery._support import (
     _get_discovery_service_address,
+    _get_legacy_key_file_path,
     _open_key_file,
     _start_service,
 )
@@ -307,6 +308,17 @@ def test___key_file_not_exist___open_key_file___raises_file_not_found_error(
 
         with pytest.raises(FileNotFoundError):
             _open_key_file(str(temp_discovery_key_file_path))
+
+
+def test___platform_without_machine_wide_key_file___get_legacy_key_file_path___returns_none(
+    mocker: MockerFixture,
+) -> None:
+    mocker.patch(
+        "ni_measurement_plugin_sdk_service.discovery._support._get_legacy_key_file_directory",
+        side_effect=NotImplementedError("Platform not supported"),
+    )
+
+    assert _get_legacy_key_file_path() is None
 
 
 def test___key_file_exist_after_poll___start_discovery_service___discovery_service_started(

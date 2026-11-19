@@ -262,11 +262,12 @@ def _get_key_file_path(cluster_id: str | None = None) -> pathlib.Path:
 
 
 def _get_legacy_key_file_path(cluster_id: str | None = None) -> pathlib.Path | None:
-    """Gets the path of the machine-wide key file, or None if it cannot be determined."""
+    """Gets the path of the machine-wide key file, or None if there isn't one."""
     try:
         return _get_legacy_key_file_directory() / _get_key_file_name(cluster_id)
-    except OSError:
-        # NIPUBAPPDATADIR is missing, for example when no NI installer has run.
+    except (NotImplementedError, OSError):
+        # The machine-wide key file exists only on Windows, and NIPUBAPPDATADIR may be missing,
+        # for example when no NI installer has run.
         return None
 
 
